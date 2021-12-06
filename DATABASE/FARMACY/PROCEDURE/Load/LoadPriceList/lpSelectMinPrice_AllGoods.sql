@@ -400,8 +400,9 @@ BEGIN
             LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId     = _tmpMinPrice_RemainsList.ObjectId
                                 AND GoodsPromo.JuridicalId = LastPriceList_find_View.JuridicalId
                                 
-        WHERE (COALESCE (Object_JuridicalGoods.MinimumLot, 0) = 0
-            OR Object_JuridicalGoods.IsPromo                  = FALSE
+        WHERE COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) > CURRENT_DATE + INTERVAL '200 DAY' 
+          AND (COALESCE (Object_JuridicalGoods.MinimumLot, 0) = 0
+               OR Object_JuridicalGoods.IsPromo                  = FALSE
               )
        )
   , tmpMinPrice_PriorityReprice as (SELECT DISTINCT tmpMinPrice_RemainsPrice.GoodsId

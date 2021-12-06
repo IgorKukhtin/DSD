@@ -595,6 +595,8 @@ type
     btnGoodsSPReceiptList: TcxButton;
     actGoodsSPReceiptList: TdsdOpenForm;
     MemDataMORIONCODE: TIntegerField;
+    spGetVIPOrder: TdsdStoredProc;
+    actCheckSelectionOrder: TOpenChoiceForm;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -7264,6 +7266,18 @@ begin
     ShowMessage('ѕрименен дисконт.'#13#10'ќткрытие отложенных чеков запрещено.'#13#10'≈сли надо применить дисконт сначало загрузите чек потом примените дисконтную программу.');
     exit;
   end;
+
+  spGetVIPOrder.ParamByName('inVIPOrder').Value := ceVIPLoad.Text;
+  spGetVIPOrder.ParamByName('outisMoreThanOne').Value := False;
+  spGetVIPOrder.ParamByName('outVIPOrder').Value := '';
+  spGetVIPOrder.Execute;
+
+  if spGetVIPOrder.ParamByName('outisMoreThanOne').Value = True then
+  begin
+    actCheckSelectionOrder.GuiParams.ParamByName('VIPOrder').Value := ceVIPLoad.Text;
+    if not actCheckSelectionOrder.Execute then Exit;
+    ceVIPLoad.Text := actCheckSelectionOrder.GuiParams.ParamByName('TextValue').Value;
+  end else ceVIPLoad.Text := spGetVIPOrder.ParamByName('outVIPOrder').Value;
 
   spisCheckCombine.ParamByName('inVIPOrder').Value := ceVIPLoad.Text;
   spisCheckCombine.ParamByName('outIsCheckCombine').Value := False;

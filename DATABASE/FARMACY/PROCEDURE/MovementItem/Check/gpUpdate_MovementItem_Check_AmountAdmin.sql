@@ -31,7 +31,7 @@ BEGIN
                                      AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
     WHERE Id = inMovementId;
 
-    IF vbUserId NOT IN (375661, 4183126, 8001630, 9560329) AND 
+    IF vbUserId NOT IN (3, 375661, 4183126, 8001630, 9560329) AND 
       (vbSPKindId <> zc_Enum_SPKind_1303() OR NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = 11041603))
     THEN
       RAISE EXCEPTION 'Изменение <Количества> вам запрещено.';

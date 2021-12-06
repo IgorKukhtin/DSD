@@ -136,6 +136,7 @@ BEGIN
                               FROM LoadPriceList
                                    INNER JOIN LoadPriceListItem ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
                                                                AND COALESCE (LoadPriceListItem.GoodsId, 0) <> 0
+                                                               AND COALESCE (LoadPriceListItem.ExpirationDate, zc_DateEnd()) > CURRENT_DATE + INTERVAL '200 DAY'
                                    -- товар "поставщика", если он есть в прайсах !!!а он есть!!!
                                    INNER JOIN Object_Goods_Juridical AS Object_JuridicalGoods
                                                                      ON Object_JuridicalGoods.GoodsMainId = LoadPriceListItem.GoodsId

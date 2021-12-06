@@ -6213,6 +6213,37 @@ inherited MainCashForm2: TMainCashForm2
         end>
       isShowModal = True
     end
+    object actCheckSelectionOrder: TOpenChoiceForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actCheckSelectionOrder'
+      FormName = 'TCheckSelectionOrderForm'
+      FormNameParam.Value = 'TCheckSelectionOrderForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'VIPOrder'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -9659,8 +9690,8 @@ inherited MainCashForm2: TMainCashForm2
       end>
     PackSize = 1
     AutoWidth = True
-    Left = 304
-    Top = 216
+    Left = 280
+    Top = 224
   end
   object spCheck_PairSunAmount: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Check_PairSunAmount'
@@ -9833,5 +9864,36 @@ inherited MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 872
     Top = 56
+  end
+  object spGetVIPOrder: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_GetVIPOrder'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inVIPOrder'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outVIPOrder'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisMoreThanOne'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    AutoWidth = True
+    Left = 360
+    Top = 224
   end
 end

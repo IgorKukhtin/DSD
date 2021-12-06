@@ -14,6 +14,7 @@ RETURNS TABLE (
   StatusCode Integer,
   TotalCount TFloat,
   TotalSumm TFloat,
+  UnitId Integer,
   UnitName TVarChar,
   CashRegisterName TVarChar,
   CashMemberId Integer,
@@ -137,6 +138,7 @@ BEGIN
             , Object_Status.ObjectCode                   AS StatusCode
             , MovementFloat_TotalCount.ValueData         AS TotalCount
             , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+            , Object_Unit.Id                             AS UnitId
             , Object_Unit.ValueData                      AS UnitName
             , Object_CashRegister.ValueData              AS CashRegisterName
             , MovementLinkObject_CheckMember.ObjectId    AS CashMemberId

@@ -34,7 +34,10 @@ BEGIN
     WHERE Id = inMovementId;
 
         -- сохранили Статус заказа
-    PERFORM lpInsertUpdate_MovementString (zc_MovementString_BookingStatus(), inMovementId, inBookingStatus);
+    IF vbStatusId = zc_Enum_Status_UnComplete()
+    THEN 
+      PERFORM lpInsertUpdate_MovementString (zc_MovementString_BookingStatus(), inMovementId, inBookingStatus);
+    END IF; 
     
     IF inBookingStatus = 'Cancelled'
     THEN

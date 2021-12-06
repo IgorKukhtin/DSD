@@ -206,7 +206,7 @@ BEGIN
                                             AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
                        INNER JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
                   WHERE MovementItem.ID = ioId
-                    AND (Object_Position.ObjectCode = 1 OR Object_Position.ObjectCode = 2 AND vbOperDate >= '01.12.2021')) AND
+                    AND (Object_Position.ObjectCode = 1 OR Object_Position.ObjectCode = 2 AND vbOperDate >= '01.01.2022')) AND
            NOT EXISTS(SELECT 1
                       FROM Movement
 

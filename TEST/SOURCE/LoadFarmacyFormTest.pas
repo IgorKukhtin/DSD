@@ -2752,6 +2752,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckCombineForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckCombineForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckSelectionOrderForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckSelectionOrderForm');
 end;
 
 procedure TLoadFormTest.LoadCheckLiki24FormTest;

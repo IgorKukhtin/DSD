@@ -4073,6 +4073,10 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\CreatePretension.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\CheckSelectionOrder.pas">
+				<Form>CheckSelectionOrderForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

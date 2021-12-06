@@ -56,7 +56,7 @@ BEGIN
 
         tmpUnitSum AS (SELECT MovementItem.UnitID
                             , MovementItem.OperDate
-                            , COALESCE(tmpContainer.Summa, 0) + COALESCE(MovementItem.Summa, 0) + COALESCE(SUM(ItemContainerPrev.Summa), 0) AS Summa
+                            , COALESCE(tmpContainer.Summa, 0) - COALESCE(MovementItem.Summa, 0) - COALESCE(SUM(ItemContainerPrev.Summa), 0) AS Summa
                        FROM tmpItemContainer AS MovementItem  
                         
                             LEFT JOIN tmpContainer ON tmpContainer.UnitID = MovementItem.UnitID    
@@ -103,9 +103,10 @@ BEGIN
                 
     CREATE TEMP TABLE tmpIncome ON COMMIT DROP AS
     (WITH
-       tmpMovement_Income AS (SELECT date_trunc ('quarter', Movement_Income.OperDate)   AS OperDate    
+       tmpMovement_Income AS (SELECT Movement_Income.Id                                 AS Id
+                                   , Movement_Income.OperDate                           AS OperDate    
                                    , MovementLinkObject_Juridical.ObjectId              AS JuridicalId
-                                   , SUM(MovementFloat_TotalSumm.ValueData)             AS TotalSumm
+                                   , MovementFloat_TotalSumm.ValueData                  AS TotalSumm
                               FROM Movement AS Movement_Income
 
                                    INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical
@@ -123,75 +124,69 @@ BEGIN
                                                           AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
                               WHERE Movement_Income.DescId = zc_Movement_Income()
-                                AND Movement_Income.StatusId = zc_Enum_Status_Complete()
-                              GROUP BY date_trunc ('quarter', Movement_Income.OperDate)
-                                     , MovementLinkObject_Juridical.ObjectId),
+                                AND Movement_Income.StatusId = zc_Enum_Status_Complete()),
                                      
-       tmpPayment_Income AS (SELECT date_trunc ('quarter', MovementItemContainer.OperDate)   AS OperDate    
-                                  , MovementLinkObject_Juridical.ObjectId              AS JuridicalId
-                                  , SUM(MovementItemContainer.Amount)                  AS TotalSumm
-                             FROM Movement AS Movement_Income
-
-                                  INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical
-                                                                ON MovementLinkObject_Juridical.MovementId = Movement_Income.Id
-                                                               AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-                                                               AND MovementLinkObject_Juridical.ObjectId <> 393053
-
-                                  INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                                        ON ObjectLink_Juridical_Retail.ObjectId = MovementLinkObject_Juridical.ObjectId
-                                                       AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                       AND ObjectLink_Juridical_Retail.ChildObjectId = 4
+       tmpPayment_Income AS (SELECT Movement_Income.Id                                 AS Id    
+                                  , Movement_Income.JuridicalId                        AS JuridicalId
+                                  , Movement_Income.OperDate                           AS OperDateIncome
+                                  , MovementItemContainer.OperDate                     AS OperDate    
+                                  , MovementItemContainer.Amount                       AS TotalSumm
+                             FROM tmpMovement_Income AS Movement_Income
 
                                   INNER JOIN Object AS Object_Movement
                                                     ON Object_Movement.ObjectCode = Movement_Income.Id
                                                    AND Object_Movement.DescId = zc_Object_PartionMovement()
                                   INNER JOIN Container ON Container.DescId = zc_Container_SummIncomeMovementPayment()
                                                       AND Container.ObjectId = Object_Movement.Id
-                                                      AND Container.KeyValue like '%,'||MovementLinkObject_Juridical.ObjectId||';%'
+                                                      AND Container.KeyValue like '%,'||Movement_Income.JuridicalId||';%'
                                   INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
                                                                   AND MovementItemContainer.MovementDescId in (zc_Movement_BankAccount(), zc_Movement_Payment())
+                             ),
+       tmpIncomeDate AS (SELECT DISTINCT date_trunc ('quarter', Movement.OperDate)   AS OperDate
+                         FROM tmpMovement_Income AS Movement 
+                         ),
+       tmpIncomQeuarter AS (SELECT Movement.Id
+                                 , Movement.JuridicalId
+                                 , IncomeDate.OperDate
+                                 , Movement.TotalSumm
+                            FROM tmpIncomeDate AS IncomeDate
+                             
+                                 INNER JOIN tmpMovement_Income AS Movement 
+                                                               ON Movement.OperDate < IncomeDate.OperDate
+                                                              AND Movement.OperDate >= IncomeDate.OperDate - interval '1 year'
+                               
+                            ),
+       tmpIncomQeuarterSum AS (SELECT Movement.JuridicalId
+                                    , Movement.OperDate
+                                    , SUM(Movement.TotalSumm)  AS TotalSumm
+                                FROM tmpIncomQeuarter AS Movement
+                                GROUP BY Movement.JuridicalId
+                                       , Movement.OperDate                                
+                                ),
+       tmpPayQeuarterSum AS (SELECT Payment_Income.JuridicalId
+                                  , IncomeDate.OperDate
+                                  , Sum(Payment_Income.TotalSumm) AS Summa
+                             FROM tmpIncomeDate AS IncomeDate
+                               
+                                  INNER JOIN tmpPayment_Income AS Payment_Income                    
+                                                               ON Payment_Income.OperDateIncome < IncomeDate.OperDate
+                                                              AND Payment_Income.OperDateIncome >= IncomeDate.OperDate - interval '1 year'
+                                                              AND Payment_Income.OperDate < IncomeDate.OperDate
 
-                             WHERE Movement_Income.DescId = zc_Movement_Income()
-                               AND Movement_Income.StatusId = zc_Enum_Status_Complete()
-                             GROUP BY date_trunc ('quarter', MovementItemContainer.OperDate)
-                                    , MovementLinkObject_Juridical.ObjectId),
-       tmpIncomeSum AS (SELECT Movement.JuridicalId
-                             , Movement.OperDate
-                             , COALESCE(Movement.TotalSumm, 0) + Sum(COALESCE(MovementPrev.TotalSumm, 0)) AS Summa
-                        FROM tmpMovement_Income AS Movement 
-                          
-                             LEFT JOIN tmpMovement_Income AS MovementPrev                    
-                                                          ON MovementPrev.JuridicalId = Movement.JuridicalId
-                                                         AND MovementPrev.OperDate < Movement.OperDate
-
-                        GROUP BY Movement.JuridicalId
-                               , Movement.OperDate
-                               , Movement.TotalSumm),
-       tmpPaymentSum AS (SELECT Movement.JuridicalId
-                              , Movement.OperDate
-                              , COALESCE(Movement.TotalSumm, 0) + Sum(COALESCE(MovementPrev.TotalSumm, 0)) AS Summa
-                         FROM tmpPayment_Income AS Movement 
-                          
-                              LEFT JOIN tmpPayment_Income AS MovementPrev                    
-                                                          ON MovementPrev.JuridicalId = Movement.JuridicalId
-                                                         AND MovementPrev.OperDate < Movement.OperDate
-
-                         GROUP BY Movement.JuridicalId
-                                , Movement.OperDate
-                                , Movement.TotalSumm)
+                             GROUP BY Payment_Income.JuridicalId
+                                    , IncomeDate.OperDate)
                                 
-       SELECT tmpJuridical.JuridicalId
-            , COALESCE(Movement.OperDate, tmpPaymentSum.OperDate) AS OperDate 
-            , (COALESCE(Movement.Summa) + COALESCE(tmpPaymentSum.Summa))::TFloat  AS Summa
-       FROM tmpIncomeSum AS Movement   
+       SELECT Movement.JuridicalId
+            , Movement.OperDate
+            , (Movement.TotalSumm + COALESCE(PayQeuarterSum.Summa, 0))::TFloat  AS Summa
+       FROM tmpIncomQeuarterSum AS Movement   
        
-            FULL JOIN tmpPaymentSum ON tmpPaymentSum.JuridicalId = Movement.JuridicalId
-                                   AND tmpPaymentSum.OperDate = Movement.OperDate
+            INNER JOIN tmpPayQeuarterSum AS PayQeuarterSum
+                                         ON PayQeuarterSum.JuridicalId = Movement.JuridicalId
+                                        AND PayQeuarterSum.OperDate = Movement.OperDate
 
-            INNER JOIN tmpJuridical ON tmpJuridical.JuridicalId = COALESCE( Movement.JuridicalId, tmpPaymentSum.JuridicalId)
-                           
-       ORDER BY tmpJuridical.JuridicalId
-              , COALESCE(Movement.OperDate, tmpPaymentSum.OperDate));   
+       ORDER BY Movement.JuridicalId
+              , Movement.OperDate);   
               
     -- ********* Итоговая таблица *************
                                 
