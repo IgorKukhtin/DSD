@@ -210,45 +210,7 @@ BEGIN
                  )
 
    --находим последнии оплаты
-   , tmpLastPayment AS (SELECT tmp.OperDate
-                             , tmp.JuridicalId
-                             , tmp.ContractId
-                             , tmp.AccountId
-                             , SUM (tmp.Amount) AS Amount
-                        FROM (SELECT MIContainer.OperDate
-                                   , CLO_Juridical.ObjectId AS JuridicalId
-                                   , CLO_Contract.ObjectId  AS ContractId
-                                   , Container.ObjectId     AS AccountId
-                                   , (MIContainer.Amount) AS Amount
-                                   , MAX (MIContainer.OperDate) OVER (PARTITION BY CLO_Juridical.ObjectId, CLO_Contract.ObjectId, Container.ObjectId) AS OperDate_max
-                              FROM ContainerLinkObject AS CLO_Juridical
-                                   INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
-
-                                   INNER JOIN MovementItemContainer AS MIContainer 
-                                                                    ON MIContainer.Containerid = Container.Id              --      
-                                                                   AND MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount())
-                                                                   AND MIContainer.Amount > 0
-                       
-                                   INNER JOIN ContainerLinkObject AS CLO_Contract
-                                                                  ON CLO_Contract.ContainerId = Container.Id
-                                                                 AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
-                       
-                                   INNER JOIN (SELECT DISTINCT RESULT.JuridicalId
-                                                    , RESULT.ContractId
-                                                    , RESULT.AccountId
-                                               FROM RESULT) AS tmpReport 
-                                                            ON tmpReport.JuridicalId = CLO_Juridical.ObjectId
-                                                           AND tmpReport.ContractId = CLO_Contract.ObjectId
-                                                           AND tmpReport.AccountId = Container.ObjectId
-           
-                              WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                              ) as tmp
-                        WHERE tmp.OperDate = tmp.OperDate_max
-                        GROUP BY tmp.OperDate
-                               , tmp.JuridicalId
-                               , tmp.ContractId
-                               , tmp.AccountId
-                        )
+   , tmpLastPayment AS (SELECT tt.* FROM gpSelect_Object_JuridicalDefermentPayment(inSession) AS tt)
 
      SELECT a.AccountId, a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.RetailName_main, a.OKPO, a.JuridicalGroupName
           , a.PartnerId, a.PartnerCode, a.PartnerName TVarChar
@@ -268,7 +230,7 @@ BEGIN
           , a.InfoMoneyId, a.InfoMoneyCode, a.InfoMoneyName
           , a.AreaName
           , tmpLastPayment.OperDate :: TDateTime AS PaymentDate
-          , tmpLastPayment.Amount   :: TFloat    AS PaymentAmount          
+          , tmpLastPayment.Amount   :: TFloat    AS PaymentAmount       
      FROM (
            SELECT 
                   Object_Account_View.AccountId
@@ -551,7 +513,7 @@ BEGIN
         -- последнии оплаты
         LEFT JOIN tmpLastPayment ON tmpLastPayment.JuridicalId = a.JuridicalId
                                 AND tmpLastPayment.ContractId = a.ContractId
-                                AND tmpLastPayment.AccountId = a.AccountId
+                                --AND tmpLastPayment.AccountId = a.AccountId
 
      WHERE a.DebetRemains <> 0 or a.KreditRemains <> 0
         or a.SaleSumm <> 0 or a.DefermentPaymentRemains <> 0

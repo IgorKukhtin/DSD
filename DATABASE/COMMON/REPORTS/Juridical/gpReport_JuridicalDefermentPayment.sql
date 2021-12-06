@@ -68,42 +68,8 @@ BEGIN
                                                            ) AS tmpReport
                    )
    --находим последнии оплаты
-   , tmpLastPayment AS (SELECT tmp.OperDate
-                             , tmp.JuridicalId
-                             , tmp.ContractId
-                             , tmp.AccountId
-                             , SUM (tmp.Amount) AS Amount
-                        FROM (SELECT MIContainer.OperDate
-                                   , CLO_Juridical.ObjectId AS JuridicalId
-                                   , CLO_Contract.ObjectId  AS ContractId
-                                   , Container.ObjectId     AS AccountId
-                                   , (-1 * MIContainer.Amount) AS Amount
-                                   , MAX (MIContainer.OperDate) OVER (PARTITION BY CLO_Juridical.ObjectId) AS OperDate_max
-                              FROM ContainerLinkObject AS CLO_Juridical
-                                   INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
-
-                                   INNER JOIN MovementItemContainer AS MIContainer 
-                                                                    ON MIContainer.Containerid = Container.Id              --      
-                                                                   AND MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount())
-                                                                   AND MIContainer.Amount < 0
-                       
-                                   INNER JOIN ContainerLinkObject AS CLO_Contract
-                                                                  ON CLO_Contract.ContainerId = Container.Id
-                                                                 AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
-                       
-                                   INNER JOIN (SELECT DISTINCT tmpReport.JuridicalId, tmpReport.ContractId, tmpReport.AccountId
-                                               FROM tmpReport) AS tmpReport 
-                                                               ON tmpReport.JuridicalId = CLO_Juridical.ObjectId
-                                                              AND tmpReport.ContractId = CLO_Contract.ObjectId 
-                       
-                              WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                       --AND CLO_Juridical.ObjectId = 862910 
-                              ) as tmp
-                        WHERE tmp.OperDate = tmp.OperDate_max
-                        GROUP BY tmp.OperDate
-                               , tmp.JuridicalId
-                               , tmp.ContractId
-                               , tmp.AccountId
+ --выбираем последнии оплаты
+   , tmpLastPayment AS ( SELECT tt.* FROM gpSelect_Object_JuridicalDefermentPayment(inSession) AS tt)
                         )
    ---
    SELECT tmpReport.*
@@ -112,7 +78,7 @@ BEGIN
    FROM tmpReport
         LEFT JOIN tmpLastPayment ON tmpLastPayment.JuridicalId = tmpReport.JuridicalId
                                 AND tmpLastPayment.ContractId = tmpReport.ContractId
-                                AND tmpLastPayment.AccountId = tmpReport.AccountId
+                                --AND tmpLastPayment.AccountId = tmpReport.AccountId
    ;
 
 END;

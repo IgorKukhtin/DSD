@@ -13,17 +13,17 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
     Height = 314
     TabOrder = 3
     ExplicitWidth = 1123
-    ExplicitHeight = 337
+    ExplicitHeight = 314
     ClientRectBottom = 314
     ClientRectRight = 1123
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1123
-      ExplicitHeight = 337
+      ExplicitHeight = 314
       inherited cxGrid: TcxGrid
         Width = 1123
         Height = 314
         ExplicitWidth = 1123
-        ExplicitHeight = 337
+        ExplicitHeight = 314
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item

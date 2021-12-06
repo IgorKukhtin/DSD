@@ -2499,11 +2499,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsTaxDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsTaxDialogForm');
   exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsForm');
   exit;
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsDialogForm');
     exit;
