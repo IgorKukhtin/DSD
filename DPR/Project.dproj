@@ -119,11 +119,11 @@
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
 			<Debugger_RunParams>/log </Debugger_RunParams>
-			<VerInfo_Build>134</VerInfo_Build>
+			<VerInfo_Build>137</VerInfo_Build>
 			<Icon_MainIcon>alan-64.ico</Icon_MainIcon>
 			<VerInfo_Release>10</VerInfo_Release>
 			<VerInfo_MinorVer>5</VerInfo_MinorVer>
-			<VerInfo_Keys>CompanyName=;FileVersion=1.5.10.134;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileVersion=1.5.10.137;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
 			<VerInfo_Locale>1033</VerInfo_Locale>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>
@@ -350,7 +350,6 @@
 					<Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
 					</Excluded_Packages>
 					<Source>
 						<Source Name="MainSource">Project.dpr</Source>
@@ -374,14 +373,14 @@
 							<Operation>1</Operation>
 							<Extensions>.dylib</Extensions>
 						</Platform>
-						<Platform Name="Win32">
-							<Operation>0</Operation>
-							<Extensions>.dll;.bpl</Extensions>
-						</Platform>
 						<Platform Name="OSX64">
 							<RemoteDir>Contents\MacOS</RemoteDir>
 							<Operation>1</Operation>
 							<Extensions>.dylib</Extensions>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+							<Extensions>.dll;.bpl</Extensions>
 						</Platform>
 						<Platform Name="OSX32">
 							<RemoteDir>Contents\MacOS</RemoteDir>
@@ -418,13 +417,13 @@
 						</Platform>
 					</DeployClass>
 					<DeployClass Name="ProjectiOSResource">
-						<Platform Name="iOSDevice32">
+						<Platform Name="iOSSimulator">
 							<Operation>1</Operation>
 						</Platform>
 						<Platform Name="iOSDevice64">
 							<Operation>1</Operation>
 						</Platform>
-						<Platform Name="iOSSimulator">
+						<Platform Name="iOSDevice32">
 							<Operation>1</Operation>
 						</Platform>
 					</DeployClass>
@@ -445,6 +444,16 @@
 						</Platform>
 						<Platform Name="Android">
 							<RemoteDir>res\drawable-xhdpi</RemoteDir>
+							<Operation>1</Operation>
+						</Platform>
+					</DeployClass>
+					<DeployClass Name="Android_LauncherIcon144">
+						<Platform Name="Android64">
+							<RemoteDir>res\drawable-xxhdpi</RemoteDir>
+							<Operation>1</Operation>
+						</Platform>
+						<Platform Name="Android">
+							<RemoteDir>res\drawable-xxhdpi</RemoteDir>
 							<Operation>1</Operation>
 						</Platform>
 					</DeployClass>
@@ -478,16 +487,6 @@
 							<Operation>1</Operation>
 						</Platform>
 					</DeployClass>
-					<DeployClass Name="Android_LauncherIcon144">
-						<Platform Name="Android64">
-							<RemoteDir>res\drawable-xxhdpi</RemoteDir>
-							<Operation>1</Operation>
-						</Platform>
-						<Platform Name="Android">
-							<RemoteDir>res\drawable-xxhdpi</RemoteDir>
-							<Operation>1</Operation>
-						</Platform>
-					</DeployClass>
 					<DeployClass Name="DebugSymbols">
 						<Platform Name="OSX32">
 							<RemoteDir>Contents\MacOS</RemoteDir>
@@ -501,18 +500,18 @@
 						</Platform>
 					</DeployClass>
 					<DeployClass Name="DependencyFramework">
-						<Platform Name="OSX64">
-							<RemoteDir>Contents\MacOS</RemoteDir>
-							<Operation>1</Operation>
-							<Extensions>.framework</Extensions>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
 						</Platform>
 						<Platform Name="OSX32">
 							<RemoteDir>Contents\MacOS</RemoteDir>
 							<Operation>1</Operation>
 							<Extensions>.framework</Extensions>
 						</Platform>
-						<Platform Name="Win32">
-							<Operation>0</Operation>
+						<Platform Name="OSX64">
+							<RemoteDir>Contents\MacOS</RemoteDir>
+							<Operation>1</Operation>
+							<Extensions>.framework</Extensions>
 						</Platform>
 					</DeployClass>
 					<DeployClass Name="Android_SplashImage426">
@@ -558,13 +557,13 @@
 						</Platform>
 					</DeployClass>
 					<DeployClass Name="ProjectiOSInfoPList">
-						<Platform Name="iOSDevice32">
+						<Platform Name="iOSSimulator">
 							<Operation>1</Operation>
 						</Platform>
 						<Platform Name="iOSDevice64">
 							<Operation>1</Operation>
 						</Platform>
-						<Platform Name="iOSSimulator">
+						<Platform Name="iOSDevice32">
 							<Operation>1</Operation>
 						</Platform>
 					</DeployClass>
@@ -646,11 +645,11 @@
 						<Platform Name="Android">
 							<Operation>0</Operation>
 						</Platform>
-						<Platform Name="Win32">
-							<Operation>0</Operation>
-						</Platform>
 						<Platform Name="OSX64">
 							<RemoteDir>Contents\Resources\StartUp\</RemoteDir>
+							<Operation>0</Operation>
+						</Platform>
+						<Platform Name="Win32">
 							<Operation>0</Operation>
 						</Platform>
 						<Platform Name="iOSDevice64">
@@ -723,14 +722,14 @@
 							<Operation>1</Operation>
 							<Extensions>.dylib</Extensions>
 						</Platform>
-						<Platform Name="Win32">
-							<Operation>0</Operation>
-							<Extensions>.bpl</Extensions>
-						</Platform>
 						<Platform Name="OSX64">
 							<RemoteDir>Contents\MacOS</RemoteDir>
 							<Operation>1</Operation>
 							<Extensions>.dylib</Extensions>
+						</Platform>
+						<Platform Name="Win32">
+							<Operation>0</Operation>
+							<Extensions>.bpl</Extensions>
 						</Platform>
 						<Platform Name="OSX32">
 							<RemoteDir>Contents\MacOS</RemoteDir>
@@ -867,7 +866,8 @@
 						</Platform>
 					</DeployClass>
 					<DeployClass Name="ProjectOutput" Required="true">
-						<Platform Name="iOSDevice32">
+						<Platform Name="OSX32">
+							<RemoteDir>Contents\MacOS</RemoteDir>
 							<Operation>1</Operation>
 						</Platform>
 						<Platform Name="Android">
@@ -894,8 +894,7 @@
 						<Platform Name="iOSSimulator">
 							<Operation>1</Operation>
 						</Platform>
-						<Platform Name="OSX32">
-							<RemoteDir>Contents\MacOS</RemoteDir>
+						<Platform Name="iOSDevice32">
 							<Operation>1</Operation>
 						</Platform>
 					</DeployClass>
@@ -977,16 +976,16 @@
 							<Operation>1</Operation>
 						</Platform>
 					</DeployClass>
-					<ProjectRoot Name="$(PROJECTNAME)" Platform="Linux64"/>
+					<ProjectRoot Name="$(PROJECTNAME).app" Platform="iOSSimulator"/>
 					<ProjectRoot Name="$(PROJECTNAME)" Platform="Android"/>
-					<ProjectRoot Name="$(PROJECTNAME).app" Platform="iOSDevice32"/>
+					<ProjectRoot Name="$(PROJECTNAME).app" Platform="OSX32"/>
 					<ProjectRoot Name="$(PROJECTNAME)" Platform="Win32"/>
 					<ProjectRoot Name="$(PROJECTNAME).app" Platform="OSX64"/>
 					<ProjectRoot Name="$(PROJECTNAME).app" Platform="iOSDevice64"/>
+					<ProjectRoot Name="$(PROJECTNAME)" Platform="Linux64"/>
 					<ProjectRoot Name="$(PROJECTNAME)" Platform="Android64"/>
 					<ProjectRoot Name="$(PROJECTNAME)" Platform="Win64"/>
-					<ProjectRoot Name="$(PROJECTNAME).app" Platform="iOSSimulator"/>
-					<ProjectRoot Name="$(PROJECTNAME).app" Platform="OSX32"/>
+					<ProjectRoot Name="$(PROJECTNAME).app" Platform="iOSDevice32"/>
 				</Deployment>
 				<Platforms>
 					<Platform value="Win64">True</Platform>
