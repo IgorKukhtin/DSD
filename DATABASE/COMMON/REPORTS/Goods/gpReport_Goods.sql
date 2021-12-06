@@ -654,7 +654,27 @@ BEGIN
                                            AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
                  )
 
-
+     -- выбираем последнюю запись из протокола - дата/врем€ + фио
+     , tmpProtocol1 AS (SELECT MovementProtocol.MovementId
+                             , MAX (MovementProtocol.Id) AS MaxId
+                        FROM (SELECT DISTINCT tmpMIContainer_group.MovementId 
+                              FROM tmpMIContainer_group
+                              WHERE tmpMIContainer_group.MovementId IS NOT NULL-- and 1=0
+                              ) AS tmp
+                             INNER JOIN MovementProtocol ON MovementProtocol.MovementId = tmp.MovementId
+                        GROUP BY MovementProtocol.MovementId
+                             )
+     , tmpProtocol AS (SELECT MovementProtocol.MovementId
+                            , MovementProtocol.UserId
+                            , MovementProtocol.OperDate
+                            , Object_User.ValueData AS UserName
+                       FROM tmpProtocol1
+                          INNER JOIN MovementProtocol ON MovementProtocol.MovementId = tmpProtocol1.MovementId
+                                                     AND MovementProtocol.Id = tmpProtocol1.MaxId
+                          LEFT JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
+                       )
+                       
+                       
    -- –≈«”Ћ№“ј“
   , tmpDataAll AS (SELECT Movement.Id AS MovementId
                         , Movement.InvNumber
@@ -828,6 +848,10 @@ BEGIN
                         --
                         , tmpWeekDay_doc.DayOfWeekName     ::TVarChar AS DayOfWeekName_doc      --день недели даты документа
                         , tmpWeekDay_partner.DayOfWeekName ::TVarChar AS DayOfWeekName_partner  --день недели даты покупател€
+                        
+                        , tmpProtocol.OperDate ::TDateTime AS OperDate_Protocol
+                        , tmpProtocol.UserName ::TVarChar  AS UserName_Protocol
+
                    FROM tmpMIContainer_group
                         LEFT JOIN Movement ON Movement.Id = tmpMIContainer_group.MovementId
                         LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -905,29 +929,12 @@ BEGIN
 
                         LEFT JOIN zfCalc_DayOfWeekName (Movement.OperDate) AS tmpWeekDay_doc ON 1=1
                         LEFT JOIN zfCalc_DayOfWeekName (MovementDate_OperDatePartner.ValueData) AS tmpWeekDay_partner ON 1=1
+
+                        LEFT JOIN tmpProtocol ON tmpProtocol.MovementId =  tmpMIContainer_group.MovementId
                    )
 
 
-     -- выбираем последнюю запись из протокола - дата/врем€ + фио
-     , tmpProtocol AS (SELECT tmp.MovementId
-                            , tmp.OperDate
-                            , tmp.UserId
-                            , Object_User.ValueData AS UserName
-                       FROM (SELECT MovementProtocol.MovementId
-                                  , MovementProtocol.Id
-                                  , MovementProtocol.UserId
-                                  , MovementProtocol.OperDate
-                                  , MAX (MovementProtocol.Id) OVER (PARTITION BY MovementProtocol.MovementId) AS MaxId
-                             FROM MovementProtocol
-                             WHERE MovementProtocol.MovementId IN (SELECT DISTINCT tmpDataAll.MovementId 
-                                                                   FROM tmpDataAll
-                                                                   WHERE tmpDataAll.MovementId IS NOT NULL
-                                                                   )
-                             --GROUP BY MovementProtocol.MovementId
-                             ) AS tmp
-                          LEFT JOIN Object AS Object_User ON Object_User.Id = tmp.UserId
-                       WHERE tmp.Id = tmp.MaxId
-                       )
+
 
 
    -- –≈«”Ћ№“ј“
@@ -1015,11 +1022,10 @@ BEGIN
         , CASE WHEN tmpDataAll.OperDate IS NULL THEN '' ELSE tmpDataAll.DayOfWeekName_doc END  ::TVarChar AS DayOfWeekName_doc --день недели даты документа
         , CASE WHEN tmpDataAll.OperDatePartner IS NULL THEN '' ELSE tmpDataAll.DayOfWeekName_partner END ::TVarChar AS DayOfWeekName_partner --день недели даты покупател€
 
-        , tmpProtocol.OperDate ::TDateTime AS OperDate_Protocol
-        , tmpProtocol.UserName ::TVarChar  AS UserName_Protocol
+        , tmpDataAll.OperDate_Protocol ::TDateTime AS OperDate_Protocol
+        , tmpDataAll.UserName_Protocol ::TVarChar  AS UserName_Protocol
 
    FROM tmpDataAll
-        LEFT JOIN tmpProtocol ON tmpProtocol.MovementId = tmpDataAll.MovementId
    GROUP BY tmpDataAll.MovementId
         , tmpDataAll.InvNumber
         , tmpDataAll.OperDate
@@ -1068,8 +1074,8 @@ BEGIN
         , tmpDataAll.EndSale_promo
         , CASE WHEN tmpDataAll.OperDate IS NULL THEN '' ELSE tmpDataAll.DayOfWeekName_doc END
         , CASE WHEN tmpDataAll.OperDatePartner IS NULL THEN '' ELSE tmpDataAll.DayOfWeekName_partner END
-        , tmpProtocol.OperDate
-        , tmpProtocol.UserName
+        , tmpDataAll.OperDate_Protocol
+        , tmpDataAll.UserName_Protocol
    ;
 
    END IF;
@@ -1077,7 +1083,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“ќ–»я –ј«–јЅќ“ »: ƒј“ј, ј¬“ќ–
@@ -1097,3 +1103,6 @@ ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, 
 -- тест
 -- SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2022', inEndDate:= '01.01.2022', inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 1826, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());
 -- SELECT * from gpReport_Goods(inStartDate := ('02.03.2022')::TDateTime , inEndDate := ('03.03.2022')::TDateTime , inUnitGroupId := 0 , inLocationId := 8451 , inGoodsGroupId := 1858 , inGoodsId := 341913 , inIsPartner := 'False' , inIsPartion := 'False', inSession := '5');
+
+
+-- (select * from gpReport_Goods (inStartDate := ('01.11.2021')::TDateTime , inEndDate := ('30.11.2021')::TDateTime , inUnitGroupId := 8417 , inLocationId := 8417 , inGoodsGroupId := 1840 , inGoodsId := 2649 , inIsPartner := 'True' , inIsPartion := 'True' ,  inSession := '9457'))

@@ -43,12 +43,18 @@ BEGIN
   CREATE TEMP TABLE _tmpData (JuridicalId Integer, ContractId Integer, OperDate TDateTime, Amount TFloat) ON COMMIT DROP;
   INSERT INTO _tmpData (JuridicalId, ContractId, OperDate, Amount)
   WITH
+    --поставщики
+    tmpPost AS (SELECT lfSelect_Object_Juridical_byGroup.JuridicalId FROM lfSelect_Object_Juridical_byGroup (8357 ) AS lfSelect_Object_Juridical_byGroup)
+
    --выбираем все юр.лица и договора
-    tmpJuridical AS (SELECT tmpJuridical.JuridicalId
+  , tmpJuridical AS (SELECT tmpJuridical.JuridicalId
                           , ObjectLink_Contract_Juridical.ObjectId AS ContractId
+                          , tmpJuridical.isPost
                      FROM
                          (SELECT Object_Juridical.Id AS JuridicalId
+                               , CASE WHEN tmpPost.JuridicalId IS NULL THEN FALSE ELSE TRUE END AS isPost -- поставщики
                           FROM Object AS Object_Juridical
+                               LEFT JOIN tmpPost ON tmpPost.JuridicalId = Object_Juridical.Id
                           WHERE Object_Juridical.DescId = zc_Object_Juridical()
                            AND Object_Juridical.isErased = FALSE
                            ) AS tmpJuridical
@@ -79,7 +85,7 @@ BEGIN
                                    , CLO_Juridical.ObjectId AS JuridicalId
                                    , CLO_Contract.ObjectId  AS ContractId
                                    --, Container.ObjectId     AS AccountId
-                                   , (-1 * MIContainer.Amount) AS Amount
+                                   , CASE WHEN tmpJuridical.isPost = FALSE THEN (-1 * MIContainer.Amount) ELSE MIContainer.Amount END AS Amount 
                                    , MAX (MIContainer.OperDate) OVER (PARTITION BY CLO_Juridical.ObjectId, CLO_Contract.ObjectId) AS OperDate_max
                               FROM ContainerLinkObject AS CLO_Juridical
                                    INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
@@ -88,7 +94,7 @@ BEGIN
                                                                   ON CLO_Contract.ContainerId = Container.Id
                                                                  AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
                        
-                                   INNER JOIN (SELECT DISTINCT tmpJuridical.JuridicalId, tmpJuridical.ContractId
+                                   INNER JOIN (SELECT DISTINCT tmpJuridical.JuridicalId, tmpJuridical.ContractId, tmpJuridical.isPost
                                                FROM tmpJuridical) AS tmpJuridical 
                                                                ON tmpJuridical.JuridicalId = CLO_Juridical.ObjectId
                                                               AND tmpJuridical.ContractId = CLO_Contract.ObjectId 
