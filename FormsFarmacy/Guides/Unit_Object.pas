@@ -427,6 +427,8 @@ type
     actUpdate_isOnlyTimingSUN: TdsdExecStoredProc;
     spUpdate_isOnlyTimingSUN: TdsdStoredProc;
     dxBarButton25: TdxBarButton;
+    isSP1303: TcxGridDBColumn;
+    EndDateSP1303: TcxGridDBColumn;
   private
     { Private declarations }
   public

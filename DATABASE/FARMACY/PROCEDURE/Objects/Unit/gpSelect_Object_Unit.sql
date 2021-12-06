@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , RouteSortingId integer, RouteSortingName TVarChar
              , AreaId Integer, AreaName TVarChar
              , UnitRePriceId Integer, UnitRePriceName TVarChar
-             , PartnerMedicalId Integer, PartnerMedicalName TVarChar
+             , PartnerMedicalId Integer, PartnerMedicalName TVarChar, isSP1303 Boolean, EndDateSP1303 TDateTime
              , DriverId Integer, DriverName TVarChar
              , ListDaySUN TVarChar, ListDaySUN_pi TVarChar
              , SUN_v1_Lock TVarChar, SUN_v2_Lock TVarChar, SUN_v4_Lock TVarChar
@@ -86,7 +86,16 @@ BEGIN
     tmpMasterSAUA AS (SELECT DISTINCT ObjectLink.ChildObjectId  AS UnitId      
                       FROM ObjectLink 
                       WHERE ObjectLink.DescId = zc_ObjectLink_Unit_UnitSAUA()
-                        AND ObjectLink.ChildObjectId <> 0)
+                        AND ObjectLink.ChildObjectId <> 0),
+    tmpContract AS (SELECT Contract.JuridicalBasisId
+                         , Contract.JuridicalId
+                         , Max(Contract.EndDate)::TDateTime   AS EndDate
+                    FROM gpSelect_Object_Contract (inSession) AS Contract 
+                    WHERE Contract.isErased = False 
+                      AND Contract.StartDate <= CURRENT_DATE 
+                      AND Contract.EndDate >= CURRENT_DATE
+                    GROUP BY Contract.JuridicalBasisId
+                           , Contract.JuridicalId)
                             
     SELECT 
         Object_Unit.Id                                       AS Id
@@ -137,6 +146,9 @@ BEGIN
 
       , COALESCE (Object_PartnerMedical.Id,0)          ::Integer  AS PartnerMedicalId
       , COALESCE (Object_PartnerMedical.ValueData, '') ::TVarChar AS PartnerMedicalName
+      
+      , COALESCE(tmpContract.JuridicalId , 0) <> 0           AS isSP1303
+      , tmpContract.EndDate                                  AS EndDateSP1303  
 
       , COALESCE (Object_Driver.Id,0)          ::Integer     AS DriverId
       , COALESCE (Object_Driver.ValueData, '') ::TVarChar    AS DriverName
@@ -689,6 +701,14 @@ BEGIN
                             
         LEFT JOIN tmpMasterSAUA AS tmpMasterSAUA
                                 ON tmpMasterSAUA.UnitId  = Object_Unit.Id 
+                                
+        LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Juridical 
+                             ON ObjectLink_PartnerMedical_Juridical.ObjectId = ObjectLink_Unit_PartnerMedical.ChildObjectId
+                            AND ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
+                                           
+        LEFT JOIN tmpContract AS tmpContract
+                              ON tmpContract.JuridicalBasisId  = ObjectLink_Unit_Juridical.ChildObjectId
+                             AND tmpContract.JuridicalId  =  ObjectLink_PartnerMedical_Juridical.ChildObjectId
 
     WHERE Object_Unit.DescId = zc_Object_Unit()
       AND (inisShowAll = True OR Object_Unit.isErased = False);

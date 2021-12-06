@@ -1134,7 +1134,8 @@ uses
   DataChoiceDialog in '..\..\FormsFarmacy\System\DataChoiceDialog.pas' {DataChoiceDialogForm: TParentForm},
   Report_TestingAttemptsUser in '..\..\FormsFarmacy\Report\Report_TestingAttemptsUser.pas' {Report_TestingAttemptsUserForm: TParentForm},
   CreatePretension in '..\..\FormsFarmacy\Document\CreatePretension.pas',
-  CheckSelectionOrder in '..\..\FormsFarmacy\Document\CheckSelectionOrder.pas' {CheckSelectionOrderForm: TParentForm};
+  CheckSelectionOrder in '..\..\FormsFarmacy\Document\CheckSelectionOrder.pas' {CheckSelectionOrderForm: TParentForm},
+  Report_FinancialMonitoring in '..\..\FormsFarmacy\Report\Report_FinancialMonitoring.pas' {Report_FinancialMonitoringForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

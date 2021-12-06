@@ -810,6 +810,22 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 90
           end
+          object isSP1303: TcxGridDBColumn
+            Caption = #1056#1072#1073#1086#1090#1072#1077#1090' '#1087#1086' '#1057#1055' 1303'
+            DataBinding.FieldName = 'isSP1303'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 72
+          end
+          object EndDateSP1303: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1087#1086' '#1057#1055' 1303'
+            DataBinding.FieldName = 'EndDateSP1303'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
           object isSP: TcxGridDBColumn
             Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091
             DataBinding.FieldName = 'isSP'

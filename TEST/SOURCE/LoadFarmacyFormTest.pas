@@ -1053,6 +1053,9 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FinancialMonitoringForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_FinancialMonitoringForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TestingAttemptsUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TestingAttemptsUserForm');
 
