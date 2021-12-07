@@ -1116,17 +1116,18 @@ AS  (SELECT
          -- Данные для - Реестр Документов - из zc_Movement_Transport
        , tmpMovement_Reestr AS
        (SELECT Movement.OperDate
-             , MIN (tmpUnit_Reestr.FromId) :: Integer AS FromId
+           --, MAX (COALESCE (tmpUnit_Reestr.FromId, 0)) :: Integer AS FromId
+             , CASE WHEN tmpUnit_Reestr.FromId > 0 THEN tmpUnit_Reestr.FromId ELSE 0 END :: Integer AS FromId
              , DATE_PART ('ISODOW', Movement.OperDate)  AS OperDate_num
                -- Подразделение - Сотрудник
-             , MIN (Object_Unit.Id) :: Integer AS UnitId, MIN (Object_Unit.ObjectCode) :: Integer AS UnitCode
-             , MIN (Object_Unit.ValueData) :: TVarChar AS UnitName
+             , MAX (COALESCE (Object_Unit.Id, 0)) :: Integer AS UnitId, MAX (COALESCE (Object_Unit.ObjectCode, 0)) :: Integer AS UnitCode
+             , MAX (COALESCE (Object_Unit.ValueData, '')) :: TVarChar AS UnitName
              -- , Movement.InvNumber AS UnitName
              -- , Movement.Id :: TVarChar AS UnitName
              , Object_PersonalDriver.Id AS PersonalId, Object_PersonalDriver.ObjectCode AS PersonalCode, Object_PersonalDriver.ValueData AS PersonalName
              , Object_Position.Id AS PositionId, Object_Position.ObjectCode AS PositionCode, Object_Position.ValueData AS PositionName
                -- Подразделение - из накладной реализации
-             , MIN (MovementLinkObject_From.ObjectId) :: Integer AS UnitId_from
+             , MAX (COALESCE (MovementLinkObject_From.ObjectId, 0)) :: Integer AS UnitId_from
                -- Подразделение - Автомобиль
              , OL_Car_Unit.ChildObjectId        AS UnitId_car
                -- Вес
@@ -1250,6 +1251,7 @@ AS  (SELECT
 
         GROUP BY Movement.OperDate
              --, tmpUnit_Reestr.FromId
+               , CASE WHEN tmpUnit_Reestr.FromId > 0 THEN tmpUnit_Reestr.FromId ELSE 0 END
              --, Object_Unit.Id, Object_Unit.ObjectCode, Object_Unit.ValueData
                , Object_PersonalDriver.Id, Object_PersonalDriver.ObjectCode, Object_PersonalDriver.ValueData
                , Object_Position.Id, Object_Position.ObjectCode, Object_Position.ValueData
