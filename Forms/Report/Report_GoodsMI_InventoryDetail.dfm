@@ -1,29 +1,29 @@
 inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080'>'
   ClientHeight = 390
-  ClientWidth = 819
+  ClientWidth = 899
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 835
+  ExplicitWidth = 915
   ExplicitHeight = 428
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 819
+    Width = 899
     Height = 307
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 819
     ExplicitHeight = 307
     ClientRectBottom = 307
-    ClientRectRight = 819
+    ClientRectRight = 899
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 819
       ExplicitHeight = 307
       inherited cxGrid: TcxGrid
-        Width = 819
+        Width = 899
         Height = 307
         ExplicitWidth = 819
         ExplicitHeight = 307
@@ -282,6 +282,7 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -293,7 +294,6 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -330,7 +330,7 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 86
           end
           object AmountOut_Sh: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. ('#1088#1072#1089#1093'.)'
@@ -341,17 +341,6 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object Summ: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
-            DataBinding.FieldName = 'Summ'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object SummOut_zavod: TcxGridDBColumn
@@ -404,10 +393,9 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 84
           end
           object AmountIn_Sh: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. ('#1087#1088#1080#1093')'
@@ -453,6 +441,17 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object Summ: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'.'
+            DataBinding.FieldName = 'Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
         end
       end
       object cbLocation: TcxCheckBox
@@ -475,7 +474,7 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
       end
       object cbPartionGoods: TcxCheckBox
         Left = 614
-        Top = 84
+        Top = 165
         Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
         Properties.ReadOnly = False
         TabOrder = 3
@@ -485,7 +484,7 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
     end
   end
   inherited Panel: TPanel
-    Width = 819
+    Width = 899
     Height = 57
     ExplicitWidth = 819
     ExplicitHeight = 57
@@ -606,6 +605,7 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       Hint = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object ExecuteDialog: TExecuteDialog
