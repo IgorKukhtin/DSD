@@ -102,7 +102,7 @@ BEGIN
      -- 
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParPartnerValue(), ioId, vbParPartnerValue);
      -- 
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_BonusValue(), vbMovementItemId, inAmountCurrency);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountCurrency(), vbMovementItemId, inAmountCurrency);
 
 
      -- Комментарий
