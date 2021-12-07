@@ -197,6 +197,15 @@ inherited TaxCorrectiveJournalChoiceForm: TTaxCorrectiveJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object isAuto: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+            DataBinding.FieldName = 'isAuto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+            Options.Editing = False
+            Width = 57
+          end
           object TaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
             DataBinding.FieldName = 'TaxKindName'
@@ -564,11 +573,6 @@ inherited TaxCorrectiveJournalChoiceForm: TTaxCorrectiveJournalChoiceForm
   end
   inherited ActionList: TActionList
     Left = 471
-    inherited actInsert: TdsdInsertUpdateAction
-      Enabled = False
-      FormName = 'TTaxCorrectiveForm'
-      FormNameParam.Value = 'TTaxCorrectiveForm'
-    end
     inherited actUpdate: TdsdInsertUpdateAction [3]
       FormName = 'TTaxCorrectiveForm'
       FormNameParam.Value = 'TTaxCorrectiveForm'
@@ -598,10 +602,19 @@ inherited TaxCorrectiveJournalChoiceForm: TTaxCorrectiveJournalChoiceForm
     inherited actInsertMask: TdsdInsertUpdateAction [4]
       Enabled = False
     end
-    inherited actUnComplete: TdsdChangeMovementStatus
+    inherited actRefresh: TdsdDataSetRefresh [5]
+    end
+    inherited actGridToExcel: TdsdGridToExcel [6]
+    end
+    inherited actInsert: TdsdInsertUpdateAction [7]
       Enabled = False
+      FormName = 'TTaxCorrectiveForm'
+      FormNameParam.Value = 'TTaxCorrectiveForm'
     end
     inherited actComplete: TdsdChangeMovementStatus
+      Enabled = False
+    end
+    inherited actUnComplete: TdsdChangeMovementStatus
       Enabled = False
     end
     inherited actSetErased: TdsdChangeMovementStatus

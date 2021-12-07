@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, OperDate TDateTim
              , InvNumberBranch TVarChar
              , Comment TVarChar
              , isINN Boolean
+             , isAuto Boolean
               )
 AS
 $BODY$
@@ -88,6 +89,7 @@ BEGIN
              , tmpInvNumber.InvNumberBranch         AS InvNumberBranch
              , ''                       :: TVarChar AS Comment
              , FALSE                    :: Boolean  AS isINN
+             , FALSE                    :: Boolean  AS isAuto
 
           FROM (SELECT CAST (NEXTVAL ('movement_taxcorrective_seq') AS TVarChar) AS InvNumber
                      , CASE WHEN inOperDate >= '01.01.2016'
@@ -150,7 +152,8 @@ BEGIN
                                                            , zc_MovementBoolean_Document()
                                                            , zc_MovementBoolean_Electron()
                                                            , zc_MovementBoolean_NPP_calc() 
-                                                           , zc_MovementBoolean_PriceWithVAT())
+                                                           , zc_MovementBoolean_PriceWithVAT()
+                                                           , zc_MovementBoolean_isAuto())
                             )
 
    , tmpMovementDate AS (SELECT MovementDate.*
@@ -241,6 +244,7 @@ BEGIN
            , MovementString_Comment.ValueData       AS Comment
 
            , CASE WHEN COALESCE (MovementString_FromINN.ValueData, '') <> '' THEN TRUE ELSE FALSE END AS isINN
+           , COALESCE (MovementBoolean_isAuto.ValueData, False)                           :: Boolean  AS isAuto
 
        FROM tmpMovement AS Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -270,6 +274,10 @@ BEGIN
             LEFT JOIN tmpMovementBoolean AS MovementBoolean_PriceWithVAT
                                          ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                         AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+            LEFT JOIN tmpMovementBoolean AS MovementBoolean_isAuto
+                                         ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                        AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
 
             LEFT JOIN tmpMovementString AS MovementString_InvNumberPartner
                                         ON MovementString_InvNumberPartner.MovementId =  Movement.Id
@@ -370,6 +378,8 @@ ALTER FUNCTION gpGet_Movement_TaxCorrective (Integer, Boolean, TDateTime, TVarCh
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+
+ 07.12.21         *
  10.03.20         *
  17.12.18         * InvNumberRegistered
  01.04.18         * 

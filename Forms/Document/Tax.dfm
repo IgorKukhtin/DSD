@@ -348,7 +348,7 @@ inherited TaxForm: TTaxForm
     end
     object edIsElectron: TcxCheckBox
       Left = 317
-      Top = 63
+      Top = 64
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
       TabOrder = 23
@@ -426,6 +426,15 @@ inherited TaxForm: TTaxForm
       Properties.ReadOnly = True
       TabOrder = 33
       Width = 197
+    end
+    object cbIsAuto: TcxCheckBox
+      Left = 317
+      Top = 43
+      Hint = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
+      Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+      Properties.ReadOnly = True
+      TabOrder = 34
+      Width = 143
     end
   end
   object cxLabel22: TcxLabel [2]
@@ -1467,6 +1476,13 @@ inherited TaxForm: TTaxForm
         Component = cbDisableNPP_auto
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAuto'
+        Value = Null
+        Component = cbIsAuto
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1870,8 +1886,7 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 376
-    Top = 16
+    Left = 240
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1927,7 +1942,7 @@ inherited TaxForm: TTaxForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 504
+    Left = 568
     Top = 16
   end
   object DocumentTaxKindGuides: TdsdGuides
@@ -1987,8 +2002,7 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 672
-    Top = 8
+    Left = 584
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Tax_Print'
@@ -2356,8 +2370,8 @@ inherited TaxForm: TTaxForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 808
-    Top = 8
+    Left = 752
+    Top = 65520
   end
   object spUpdateIsMedoc: TdsdStoredProc
     StoredProcName = 'gpUpdate_IsMedoc'

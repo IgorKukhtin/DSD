@@ -131,6 +131,15 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object isAuto: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+            DataBinding.FieldName = 'isAuto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+            Options.Editing = False
+            Width = 57
+          end
           object TaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
             DataBinding.FieldName = 'TaxKindName'
@@ -449,6 +458,9 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
   end
   inherited ActionList: TActionList
     Left = 471
+    inherited actMovementItemContainer: TdsdOpenForm
+      Enabled = False
+    end
     inherited actInsert: TdsdInsertUpdateAction
       Enabled = False
       FormName = 'TTaxForm'
@@ -484,16 +496,13 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
           MultiSelectSeparator = ','
         end>
     end
-    inherited actUnComplete: TdsdChangeMovementStatus
-      Enabled = False
-    end
     inherited actComplete: TdsdChangeMovementStatus
       Enabled = False
     end
-    inherited actSetErased: TdsdChangeMovementStatus
+    inherited actUnComplete: TdsdChangeMovementStatus
       Enabled = False
     end
-    inherited actMovementItemContainer: TdsdOpenForm
+    inherited actSetErased: TdsdChangeMovementStatus
       Enabled = False
     end
     object dsdChoiceGuides: TdsdChoiceGuides
@@ -518,7 +527,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         end
         item
           Name = 'OperDate_Tax'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -573,7 +582,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
       end
       item
         Name = 'inIsRegisterDate'
-        Value = 'False'
+        Value = False
         Component = edIsRegisterDate
         DataType = ftBoolean
         ParamType = ptInput

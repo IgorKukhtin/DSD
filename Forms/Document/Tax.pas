@@ -115,6 +115,7 @@ type
     actDisableNPP_auto: TdsdExecStoredProc;
     bbDisableNPP_auto: TdxBarButton;
     isName_new: TcxGridDBColumn;
+    cbIsAuto: TcxCheckBox;
   private
     { Private declarations }
   public

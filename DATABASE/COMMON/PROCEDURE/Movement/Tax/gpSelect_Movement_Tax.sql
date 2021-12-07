@@ -35,6 +35,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PersonalSigningName TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
              , isDisableNPP Boolean
+             , isAuto Boolean
               )
 AS
 $BODY$
@@ -148,7 +149,8 @@ BEGIN
            , Object_ReestrKind.Id                     AS ReestrKindId
            , Object_ReestrKind.ValueData              AS ReestrKindName
            
-           , COALESCE (MovementBoolean_DisableNPP_auto.ValueData, FALSE) :: Boolean isDisableNPP
+           , COALESCE (MovementBoolean_DisableNPP_auto.ValueData, FALSE) :: Boolean AS isDisableNPP
+           , COALESCE (MovementBoolean_isAuto.ValueData, False)          :: Boolean AS isAuto
 
        FROM (SELECT Movement.Id
              FROM tmpStatus
@@ -204,6 +206,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Medoc
                                       ON MovementBoolean_Medoc.MovementId =  Movement.Id
                                      AND MovementBoolean_Medoc.DescId = zc_MovementBoolean_Medoc()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                      ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                     AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
 
 	    LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
@@ -329,6 +335,7 @@ ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Integer, Boolean, Bo
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.12.21         *
  02.03.18         * add MovementString_ToINN
  01.12.16         * add ReestrKind
  06.10.16         * add inJuridicalBasisId

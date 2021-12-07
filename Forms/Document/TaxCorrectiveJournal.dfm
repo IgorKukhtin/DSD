@@ -189,6 +189,15 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object isAuto: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+            DataBinding.FieldName = 'isAuto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+            Options.Editing = False
+            Width = 57
+          end
           object TaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
             DataBinding.FieldName = 'TaxKindName'
@@ -635,14 +644,8 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Caption = 'macUpdate_NPP_Null'
       ImageIndex = 46
     end
-    inherited actRefresh: TdsdDataSetRefresh
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end
-        item
-          StoredProc = spGetInfo
-        end>
+    inherited actMovementItemContainer: TdsdOpenForm
+      Enabled = False
     end
     object actMedocFalse: TdsdExecStoredProc [5]
       Category = 'DSDLib'
@@ -712,19 +715,19 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Name = 'ShowAll'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'inMask'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -806,6 +809,17 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           MultiSelectSeparator = ','
         end>
     end
+    inherited actShowErased: TBooleanStoredProcAction [14]
+    end
+    inherited actRefresh: TdsdDataSetRefresh [15]
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spGetInfo
+        end>
+    end
     object actMovementCheck: TdsdOpenForm [16]
       Category = 'DSDLib'
       MoveParams = <>
@@ -827,8 +841,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end>
       isShowModal = False
     end
-    inherited actMovementItemContainer: TdsdOpenForm
-      Enabled = False
+    inherited actGridToExcel: TdsdGridToExcel [17]
     end
     object ExecuteDialog: TExecuteDialog [26]
       Category = 'DSDLib'
@@ -852,7 +865,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Name = 'DateRegistered'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'DateRegistered_notNull'
           DataType = ftDateTime
@@ -877,7 +890,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -1015,7 +1028,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Name = 'IsPartnerDate'
-          Value = 'False'
+          Value = False
           Component = edIsRegisterDate
           DataType = ftBoolean
           ParamType = ptInput
@@ -1519,7 +1532,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       end
       item
         Name = 'inIsRegisterDate'
-        Value = 'False'
+        Value = False
         Component = edIsRegisterDate
         DataType = ftBoolean
         ParamType = ptInput
@@ -1744,9 +1757,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    inherited dxBarStatic: TdxBarStatic
-      ShowCaption = False
     end
     inherited bbInsertMask: TdxBarButton
       Action = actInsertMaskMulti
@@ -2215,7 +2225,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Params = <
       item
         Name = 'inDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

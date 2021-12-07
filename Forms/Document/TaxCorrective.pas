@@ -154,6 +154,7 @@ type
     cxLabel18: TcxLabel;
     edInvNumberRegistered: TcxTextEdit;
     LineNumTaxNew: TcxGridDBColumn;
+    cbIsAuto: TcxCheckBox;
   private
     { Private declarations }
   public

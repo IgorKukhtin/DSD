@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , isCopy Boolean
              , isINN Boolean
              , isOKPO_Retail Boolean
+             , isAuto Boolean
              , Comment TVarChar
              , PersonalSigningName TVarChar
              , isNPP_calc Boolean, DateisNPP_calc TDateTime
@@ -168,6 +169,8 @@ BEGIN
            , COALESCE(MovementBoolean_isCopy.ValueData, FALSE)    :: Boolean  AS isCopy
            , CASE WHEN COALESCE (MovementString_FromINN.ValueData, '') <> '' THEN TRUE ELSE FALSE END AS isINN
            , CASE WHEN COALESCE (ObjectString_Retail_OKPO.ValueData, '') <> '' THEN TRUE ELSE FALSE END AS isOKPO_Retail
+           , COALESCE(MovementBoolean_isAuto.ValueData, FALSE)    :: Boolean  AS isAuto
+
            , MovementString_Comment.ValueData                                 AS Comment
 
            , COALESCE (Object_PersonalSigning.PersonalName, COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName, ''))  ::TVarChar    AS PersonalSigningName
@@ -236,6 +239,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                      ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                     AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
@@ -385,6 +392,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Integer, B
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 07.12.21         *
  06.10.16         * add inJuridicalBasisId
  04.12.15         * add isPartner
  06.04.15                        * add InvNumberRegistered, DateRegistered

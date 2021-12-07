@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, OperDate TDateTim
              , Comment TVarChar
              , isINN Boolean
              , isDisableNPP Boolean
+             , isAuto Boolean
               )
 AS
 $BODY$
@@ -86,6 +87,7 @@ BEGIN
              , ''                           :: TVarChar AS Comment
              , FALSE                        :: Boolean  AS isINN
              , FALSE                        :: Boolean  AS isDisableNPP
+             , FALSE                        :: Boolean  AS isAuto
 
           FROM (SELECT CAST (NEXTVAL ('movement_tax_seq') AS TVarChar) AS InvNumber
                      , CASE WHEN inOperDate >= '01.01.2016'
@@ -129,6 +131,7 @@ BEGIN
           , tmpMovementString  AS (SELECT * FROM MovementString     AS MS WHERE MS.MovementId = inMovementId)
           , tmpMovementBoolean AS (SELECT * FROM MovementBoolean    AS MB WHERE MB.MovementId = inMovementId)
           , tmpMLO             AS (SELECT * FROM MovementLinkObject AS ML WHERE ML.MovementId = inMovementId)
+
        -- Результат
        SELECT
              Movement.Id						AS Id
@@ -189,7 +192,8 @@ BEGIN
            , MovementString_InvNumberBranch.ValueData           AS InvNumberBranch
            , MovementString_Comment.ValueData                   AS Comment
            , CASE WHEN COALESCE (MovementString_ToINN.ValueData, '') <> '' THEN TRUE ELSE FALSE END AS isINN
-           , COALESCE (MovementBoolean_DisableNPP_auto.ValueData, FALSE) :: Boolean isDisableNPP
+           , COALESCE (MovementBoolean_DisableNPP_auto.ValueData, FALSE) :: Boolean  AS isDisableNPP
+           , COALESCE (MovementBoolean_isAuto.ValueData, False)          :: Boolean  AS isAuto
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -204,6 +208,9 @@ BEGIN
                                          ON MovementBoolean_DisableNPP_auto.MovementId = Movement.Id
                                         AND MovementBoolean_DisableNPP_auto.DescId = zc_MovementBoolean_DisableNPP_auto()
                                      
+            LEFT JOIN tmpMovementBoolean AS MovementBoolean_isAuto
+                                         ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                        AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
 
             LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                    ON MovementDate_DateRegistered.MovementId = Movement.Id
@@ -307,6 +314,7 @@ ALTER FUNCTION gpGet_Movement_Tax (Integer, Boolean, TDateTime, TVarChar) OWNER 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.12.21         *
  17.12.18         * InvNumberRegistered
  02.03.18         * MovementString_ToINN
  01.12.16         * add ReestrKind

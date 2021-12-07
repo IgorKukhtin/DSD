@@ -154,6 +154,15 @@ inherited TaxJournalForm: TTaxJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 68
           end
+          object isAuto: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+            DataBinding.FieldName = 'isAuto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+            Options.Editing = False
+            Width = 57
+          end
           object TaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
             DataBinding.FieldName = 'TaxKindName'
@@ -1876,8 +1885,8 @@ inherited TaxJournalForm: TTaxJournalForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_Tax'
-    Left = 376
-    Top = 112
+    Left = 368
+    Top = 168
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

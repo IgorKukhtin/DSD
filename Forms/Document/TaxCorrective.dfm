@@ -2,10 +2,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 668
   ClientWidth = 1114
-  ExplicitLeft = -341
-  ExplicitTop = -122
   ExplicitWidth = 1130
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -733,7 +731,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     end
     object edIsElectron: TcxCheckBox
       Left = 315
-      Top = 63
+      Top = 71
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
       TabOrder = 23
@@ -850,6 +848,15 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Properties.ReadOnly = True
       TabOrder = 39
       Width = 73
+    end
+    object cbIsAuto: TcxCheckBox
+      Left = 315
+      Top = 48
+      Hint = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
+      Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+      Properties.ReadOnly = True
+      TabOrder = 40
+      Width = 144
     end
   end
   object cbPartner: TcxCheckBox [2]
@@ -1160,14 +1167,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end
         item
           Name = 'inmask'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
@@ -1175,7 +1182,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end
         item
           Name = 'ShowAll'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1634,7 +1641,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'inMask'
-        Value = '0'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1698,7 +1705,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1751,21 +1758,21 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'Checked'
-        Value = 'False'
+        Value = False
         Component = edIsChecked
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
         Name = 'Document'
-        Value = 'False'
+        Value = False
         Component = edIsDocument
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
         Name = 'isElectron'
-        Value = 'False'
+        Value = False
         Component = edIsElectron
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1786,7 +1793,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1946,9 +1953,16 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'DateisNPP_calc'
-        Value = 'NULL'
+        Value = Null
         Component = edDateisNPP_calc
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAuto'
+        Value = Null
+        Component = cbIsAuto
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -1999,7 +2013,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'inChecked'
-        Value = 'False'
+        Value = False
         Component = edIsChecked
         DataType = ftBoolean
         ParamType = ptInput
@@ -2007,7 +2021,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'inDocument'
-        Value = 'False'
+        Value = False
         Component = edIsDocument
         DataType = ftBoolean
         ParamType = ptInput
@@ -2015,7 +2029,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'inPriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
@@ -2271,7 +2285,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2296,7 +2310,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'outAmountSumm'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -2527,7 +2541,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'inRegistered'
-        Value = 'False'
+        Value = False
         Component = edIsElectron
         DataType = ftBoolean
         ParamType = ptInput
@@ -2634,7 +2648,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'OperDate_Tax'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'OperDate_Tax'
         DataType = ftDateTime
@@ -2812,7 +2826,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 344
+    Left = 216
     Top = 8
   end
   object HeaderSaverIsDocument: THeaderSaver
@@ -2844,7 +2858,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'ioIsDocument'
-        Value = 'False'
+        Value = False
         Component = edIsDocument
         DataType = ftBoolean
         ParamType = ptInput
@@ -2926,7 +2940,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'outIsINN'
-        Value = 'False'
+        Value = False
         Component = cbINN
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -2971,6 +2985,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -2983,6 +2998,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 2
       end>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 982
     Top = 401
   end
