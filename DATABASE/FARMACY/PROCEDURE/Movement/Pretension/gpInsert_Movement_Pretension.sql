@@ -18,7 +18,12 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      --vbUserId := inSession;
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Pretension());
-
+     
+     IF COALESCE (inComment, '') = ''
+     THEN
+       RETURN;
+     END IF;  
+     
      ioId := lpInsertUpdate_Movement_Pretension(0
                                              , CAST (NEXTVAL ('movement_Pretension_seq') AS TVarChar) 
                                              , CURRENT_DATE

@@ -816,12 +816,9 @@ BEGIN
                               OR COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) = 0))                
          , tmpMovementProtocol AS (SELECT MovementProtocol.MovementId
                                         , MovementProtocol.OperDate
-                                        , CASE WHEN SUBSTRING(MovementProtocol.ProtocolData, POSITION('Статус' IN MovementProtocol.ProtocolData) + 22, 1) = 'П'
-                                               THEN TRUE ELSE FALSE END AS Status
-                                   FROM tmpMovement AS Movement
-  
-                                        INNER JOIN MovementProtocol ON MovementProtocol.MovementId = Movement.ID
-                                                                   AND COALESCE(MovementProtocol.UserId, 0) <> 0)
+                                   FROM MovementProtocol 
+                                   WHERE MovementProtocol.MovementId IN (SELECT Movement.ID FROM tmpMovement AS Movement)
+                                     AND COALESCE(MovementProtocol.UserId, 0) <> 0)
          , tmpProtocol AS (SELECT MovementProtocol.MovementId
                                 , MAX(MovementProtocol.OperDate) AS OperDate 
                            FROM tmpMovementProtocol AS MovementProtocol

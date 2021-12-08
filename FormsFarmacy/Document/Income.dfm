@@ -1943,6 +1943,32 @@
         end>
       isShowModal = False
     end
+    object actCreatePretension: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1057#1086#1079#1076#1072#1085#1080#1077' <'#1055#1088#1077#1090#1077#1085#1079#1080#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
+      Hint = #1057#1086#1079#1076#1072#1085#1080#1077' <'#1055#1088#1077#1090#1077#1085#1079#1080#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
+      ImageIndex = 39
+      FormName = 'TCreatePretensionForm'
+      FormNameParam.Value = 'TCreatePretensionForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Comment'
+          Value = ''
+          DataType = ftWideString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Top = 448
@@ -2138,6 +2164,10 @@
         end
         item
           Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2233,6 +2263,10 @@
     end
     object bbOpenReturnOut: TdxBarButton
       Action = actOpenReturnOut
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actCreatePretension
       Category = 0
     end
   end

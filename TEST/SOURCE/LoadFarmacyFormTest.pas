@@ -2934,6 +2934,12 @@ end;
 
 procedure TLoadFormTest.LoadPretensionFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPretensionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPretensionForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPretensionJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPretensionJournalForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCreatePretensionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCreatePretensionForm');
 end;

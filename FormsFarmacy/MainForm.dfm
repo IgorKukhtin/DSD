@@ -4855,6 +4855,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actPretensionJournal: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1055#1088#1077#1090#1077#1085#1079#1080#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      FormName = 'TPretensionJournalForm'
+      FormNameParam.Value = 'TPretensionJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5418,6 +5429,9 @@
       end
       object N289: TMenuItem
         Caption = '-'
+      end
+      object N332: TMenuItem
+        Action = actPretensionJournal
       end
       object N35: TMenuItem
         Action = actReturnOut

@@ -1225,7 +1225,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       MoveParams = <>
       Caption = #1057#1086#1079#1076#1072#1085#1080#1077' <'#1055#1088#1077#1090#1077#1085#1079#1080#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
       Hint = #1057#1086#1079#1076#1072#1085#1080#1077' <'#1055#1088#1077#1090#1077#1085#1079#1080#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
-      ImageIndex = 27
+      ImageIndex = 39
       FormName = 'TCreatePretensionForm'
       FormNameParam.Value = 'TCreatePretensionForm'
       FormNameParam.DataType = ftString

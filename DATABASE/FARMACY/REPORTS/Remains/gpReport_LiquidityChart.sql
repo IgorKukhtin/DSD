@@ -76,6 +76,8 @@ BEGIN
          FROM tmpUnitSum AS MovementItem   
                            
               INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementItem.UnitID
+              
+         WHERE MovementItem.OperDate >= '01.01.2017'
                             
          GROUP BY tmpUnit.JuridicalId
                 , MovementItem.OperDate
@@ -184,6 +186,8 @@ BEGIN
             INNER JOIN tmpPayQeuarterSum AS PayQeuarterSum
                                          ON PayQeuarterSum.JuridicalId = Movement.JuridicalId
                                         AND PayQeuarterSum.OperDate = Movement.OperDate
+
+       WHERE Movement.OperDate >= '01.01.2017'
 
        ORDER BY Movement.JuridicalId
               , Movement.OperDate);   

@@ -25,7 +25,6 @@ object Report_MonitoringCollectionSUNForm: TReport_MonitoringCollectionSUNForm
     Height = 31
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 1124
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -64,7 +63,6 @@ object Report_MonitoringCollectionSUNForm: TReport_MonitoringCollectionSUNForm
     Height = 383
     Align = alClient
     TabOrder = 5
-    ExplicitWidth = 1124
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -290,6 +288,12 @@ object Report_MonitoringCollectionSUNForm: TReport_MonitoringCollectionSUNForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 141
+      end
+      object Color_Deferred: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_Deferred'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -822,7 +826,22 @@ object Report_MonitoringCollectionSUNForm: TReport_MonitoringCollectionSUNForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = CountSend
+        BackGroundValueColumn = Color_Deferred
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CountDeferred
+        BackGroundValueColumn = Color_Deferred
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = DateDeferred
+        BackGroundValueColumn = Color_Deferred
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>

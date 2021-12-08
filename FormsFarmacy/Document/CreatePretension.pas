@@ -58,6 +58,12 @@ type
     cxmComment: TcxMemo;
     cxLabel5: TcxLabel;
     mactCreatePretension: TMultiAction;
+    spInsertMIPretension: TdsdStoredProc;
+    spInsertMovementPretension: TdsdStoredProc;
+    actInsertMovementPretension: TdsdExecStoredProc;
+    actInsertMIPretension: TdsdExecStoredProc;
+    mactCreateMIPretension: TMultiAction;
+    actOpenPretensionForm: TdsdOpenForm;
   private
     { Private declarations }
   public

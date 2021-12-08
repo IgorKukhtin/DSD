@@ -23,7 +23,7 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                PermanentDiscountID Integer, PermanentDiscountPercent TFloat,
                LoyaltySaveMoneyCount Integer, LoyaltySaveMoneyID Integer,
                SPKindId Integer, SPKindName TVarChar, SPTax TFloat, 
-               PartnerMedicalID Integer, PartnerMedicalName TVarChar,
+               PartnerMedicalID Integer, PartnerMedicalName TVarChar, isSP1303 Boolean, EndDateSP1303 TDateTime,
                isPromoCodeDoctor boolean, isTechnicalRediscount Boolean, 
                isGetHardwareData boolean, isPairedOnlyPromo Boolean, 
                DiscountExternalId integer, DiscountExternalCode integer, DiscountExternalName TVarChar,
@@ -209,6 +209,15 @@ BEGIN
                                 FROM Movement AS Promo
                                      INNER JOIN MovementItem PromoUnit ON Promo.id = PromoUnit.movementid AND promounit.descid = zc_MI_Child()
                                 WHERE Promo.id = 16904771 AND promounit.amount > 0 AND PromoUnit.objectid = vbUnitId)
+       , tmpContract AS (SELECT Contract.JuridicalBasisId
+                              , Contract.JuridicalId
+                              , Max(Contract.EndDate)::TDateTime   AS EndDate
+                         FROM gpSelect_Object_Contract (inSession) AS Contract 
+                         WHERE Contract.isErased = False 
+                           AND Contract.StartDate <= CURRENT_DATE 
+                           AND Contract.EndDate >= CURRENT_DATE
+                         GROUP BY Contract.JuridicalBasisId
+                                , Contract.JuridicalId)
 
    SELECT
          Object_Unit.Id                                      AS Id
@@ -280,6 +289,8 @@ BEGIN
        , COALESCE (ObjectFloat_SPKind_Tax.ValueData, 0) :: TFLoat AS Tax 
        , Object_PartnerMedical.ID                          AS PartnerMedicalID
        , Object_PartnerMedical.ValueData                   AS PartnerMedicalName
+       , COALESCE(tmpContract.JuridicalId, 0) <> 0         AS isSP1303
+       , tmpContract.EndDate                               AS EndDateSP1303  
        , COALESCE(tmpPromoCodeDoctor.ID, 0) <> 0           AS isPromoCodeDoctor
        , COALESCE (ObjectBoolean_TechnicalRediscount.ValueData, FALSE):: Boolean   AS isTechnicalRediscount
        , COALESCE(ObjectBoolean_GetHardwareData.ValueData, False) OR
@@ -441,6 +452,14 @@ BEGIN
         LEFT JOIN Object AS Object_DiscountCheck ON Object_DiscountCheck.Id = 13216391
 
         LEFT JOIN tmpPromoCodeDoctor ON 1 = 1
+
+        LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Juridical 
+                             ON ObjectLink_PartnerMedical_Juridical.ObjectId = ObjectLink_Unit_PartnerMedical.ChildObjectId
+                            AND ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
+                                           
+        LEFT JOIN tmpContract AS tmpContract
+                              ON tmpContract.JuridicalBasisId  = ObjectLink_Unit_Juridical.ChildObjectId
+                             AND tmpContract.JuridicalId  =  ObjectLink_PartnerMedical_Juridical.ChildObjectId
 
    WHERE Object_Unit.Id = vbUnitId
    --LIMIT 1

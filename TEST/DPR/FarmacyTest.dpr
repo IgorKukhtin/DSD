@@ -1135,7 +1135,9 @@ uses
   Report_TestingAttemptsUser in '..\..\FormsFarmacy\Report\Report_TestingAttemptsUser.pas' {Report_TestingAttemptsUserForm: TParentForm},
   CreatePretension in '..\..\FormsFarmacy\Document\CreatePretension.pas',
   CheckSelectionOrder in '..\..\FormsFarmacy\Document\CheckSelectionOrder.pas' {CheckSelectionOrderForm: TParentForm},
-  Report_FinancialMonitoring in '..\..\FormsFarmacy\Report\Report_FinancialMonitoring.pas' {Report_FinancialMonitoringForm: TParentForm};
+  Report_FinancialMonitoring in '..\..\FormsFarmacy\Report\Report_FinancialMonitoring.pas' {Report_FinancialMonitoringForm: TParentForm},
+  Pretension in '..\..\FormsFarmacy\Document\Pretension.pas' {PretensionForm: TParentForm},
+  PretensionJournal in '..\..\FormsFarmacy\Document\PretensionJournal.pas' {PretensionJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

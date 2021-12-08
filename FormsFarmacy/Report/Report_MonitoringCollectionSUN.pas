@@ -73,6 +73,7 @@ type
     DateDeferred: TcxGridDBColumn;
     CountSent: TcxGridDBColumn;
     DateSent: TcxGridDBColumn;
+    Color_Deferred: TcxGridDBColumn;
   private
   public
   end;

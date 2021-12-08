@@ -900,6 +900,8 @@ type
     N330: TMenuItem;
     actReport_FinancialMonitoring: TdsdOpenForm;
     N331: TMenuItem;
+    actPretensionJournal: TdsdOpenForm;
+    N332: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

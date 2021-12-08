@@ -3954,6 +3954,18 @@ begin
     Exit;
   End;
 
+  if not UnitConfigCDS.FieldByName('isSP1303').AsBoolean then
+  Begin
+    ShowMessage('Подразделение не подключено для погашение рецептов по программе 1303.');
+    Exit;
+  End;
+
+  if UnitConfigCDS.FieldByName('EndDateSP1303').AsDateTime < Date then
+  Begin
+    ShowMessage('Срок действия договора по программе 1303 закончился.');
+    Exit;
+  End;
+
   if (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
   begin
     ShowMessage('Применен соц проект.'#13#10'Для повторного применения обнулите чек..');
@@ -6336,6 +6348,21 @@ begin
       exit;
     end;
     FormParams.ParamByName('MedicalProgramSPId').Value := spAvailabilityCheckMedicalProgram.ParamByName('outMedicalProgramSPID').Value;
+  end;
+
+  if SPKindId = 4823010 then
+  begin
+    if not UnitConfigCDS.FieldByName('isSP1303').AsBoolean then
+    Begin
+      ShowMessage('Подразделение не подключено для погашение рецептов по программе 1303.');
+      Exit;
+    End;
+
+    if UnitConfigCDS.FieldByName('EndDateSP1303').AsDateTime < Date then
+    Begin
+      ShowMessage('Срок действия договора по программе 1303 закончился.');
+      Exit;
+    End;
   end;
 
   FormParams.ParamByName('PartnerMedicalId').Value := PartnerMedicalId;
