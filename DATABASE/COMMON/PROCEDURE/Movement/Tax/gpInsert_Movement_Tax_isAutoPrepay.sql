@@ -17,29 +17,31 @@ BEGIN
      -- временная таблица данные отчета  обороты по юр лицам по БН за период
      CREATE TEMP TABLE tmpReport (JuridicalId Integer, ContractId Integer, PartnerId Integer, Amount TFloat) ON COMMIT DROP;
      INSERT INTO tmpReport (JuridicalId, ContractId, PartnerId, Amount)
-     tmpReport AS (SELECT tmp.JuridicalId
-                        , tmp.ContractId
-                        , tmp.PartnerId
-                        , CASE WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A > 0 THEN (-1) * tmp.EndAmount_A
-                               WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A < 0 AND (-1) * tmp.EndAmount_A > (-1) * tmp.StartAmount_A THEN ((-1) * tmp.EndAmount_A - (-1) * tmp.StartAmount_A)
-                               ELSE 0
-                          END ::TFloat AS Amount
-                   FROM gpReport_JuridicalSold(inStartDate              := inStartDate ::TDateTime
-                                             , inEndDate                := inEndDate   ::TDateTime
-                                             , inAccountId              := 0
-                                             , inInfoMoneyId            := 0
-                                             , inInfoMoneyGroupId       := 0
-                                             , inInfoMoneyDestinationId := 0
-                                             , inPaidKindId             := zc_Enum_PaidKind_FirstForm()
-                                             , inBranchId               := 0
-                                             , inJuridicalGroupId       := 0
-                                             , inCurrencyId             := 0
-                                             , inIsPartionMovement      := 'False'
-                                             , inSession                := inSession
-                                               ) AS tmp
-                   WHERE (tmp.EndAmount_A < 0 AND tmp.StartAmount_A > 0)
-                      OR (tmp.EndAmount_A < 0 AND tmp.StartAmount_A < 0 AND (-1) * tmp.EndAmount_A > (-1) * tmp.StartAmount_A)
-                   )
+       SELECT tmp.JuridicalId
+            , tmp.ContractId
+            , tmp.PartnerId
+            , CASE WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A > 0 THEN (-1) * tmp.EndAmount_A
+                   WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A < 0 AND (-1) * tmp.EndAmount_A > (-1) * tmp.StartAmount_A THEN ((-1) * tmp.EndAmount_A - (-1) * tmp.StartAmount_A)
+                   ELSE 0
+              END ::TFloat AS Amount
+       FROM gpReport_JuridicalSold(inStartDate              := inStartDate ::TDateTime
+                                 , inEndDate                := inEndDate   ::TDateTime
+                                 , inAccountId              := 0
+                                 , inInfoMoneyId            := 0
+                                 , inInfoMoneyGroupId       := 0
+                                 , inInfoMoneyDestinationId := 0
+                                 , inPaidKindId             := zc_Enum_PaidKind_FirstForm()
+                                 , inBranchId               := 0
+                                 , inJuridicalGroupId       := 0
+                                 , inCurrencyId             := 0
+                                 , inIsPartionMovement      := 'False'
+                                 , inSession                := inSession
+                                   ) AS tmp
+       WHERE (tmp.EndAmount_A < 0 AND tmp.StartAmount_A > 0)
+          OR (tmp.EndAmount_A < 0 AND tmp.StartAmount_A < 0 AND (-1) * tmp.EndAmount_A > (-1) * tmp.StartAmount_A)
+          AND tmp.AccountId IN (9128, 9121, 9130, 9136, 9129)
+       limit 1 -- для теста
+      ;
 
      --создаем документы НН по предоплате
      PERFORM lpInsert_Movement_Tax_isAutoPrepay (inId                 := 0 ::Integer    -- Ключ объекта <Документ Налоговая>

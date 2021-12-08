@@ -40,9 +40,9 @@ BEGIN
      END IF;
 
      -- определ€ем ключ доступа
-     IF COALESCE (ioId, 0) = 0
+     IF COALESCE (inId, 0) = 0
      THEN vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Tax());
-     ELSE vbAccessKeyId:= (SELECT Movement.AccessKeyId FROM Movement WHERE Movement.Id = ioId);
+     ELSE vbAccessKeyId:= (SELECT Movement.AccessKeyId FROM Movement WHERE Movement.Id = inId);
      END IF;
 
      -- определ€етс€ филиал
@@ -167,7 +167,7 @@ BEGIN
                                            , inPrice              := 1
                                            , ioCountForPrice      := 1
                                            , inGoodsKindId        := NULL
-                                           , inUserId             := vbUserId
+                                           , inUserId             := inUserId
                                             );
 
 END;
