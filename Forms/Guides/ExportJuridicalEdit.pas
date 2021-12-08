@@ -20,7 +20,7 @@ uses
   Datasnap.DBClient, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
   cxDBLookupComboBox, dsdAddOn, cxPropertiesStore, dsdDB, dsdAction,
   Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
-  cxButtonEdit;
+  cxButtonEdit, cxCheckBox;
 
 type
   TExportJuridicalEditForm = class(TParentForm)
@@ -62,6 +62,7 @@ type
     ceContactPersonMail: TcxTextEdit;
     ceEmailKind: TcxButtonEdit;
     EmailKindGuides: TdsdGuides;
+    cbisAuto: TcxCheckBox;
   private
     { Private declarations }
   public

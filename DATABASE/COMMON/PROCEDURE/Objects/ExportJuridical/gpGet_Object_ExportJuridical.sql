@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ExportKindId Integer, ExportKindCode Integer, ExportKindName TVarChar
              , ContactPersonId Integer, ContactPersonCode Integer, ContactPersonName TVarChar
              , ContactPersonMail TVarChar
+             , isAuto Boolean
              , isErased boolean
              ) AS
 $BODY$
@@ -60,7 +61,8 @@ BEGIN
            , CAST ('' as TVarChar)  AS ContactPersonName
            , CAST ('' as TVarChar)  AS ContactPersonMail
 
-           , CAST (NULL AS Boolean) AS isErased
+           , CAST (FALSE AS Boolean) AS isAuto
+           , CAST (FALSE AS Boolean) AS isErased
 
        FROM Object AS Object_ExportJuridical
        WHERE Object_ExportJuridical.DescId = zc_Object_ExportJuridical();
@@ -100,6 +102,7 @@ BEGIN
            , Object_ContactPerson.ValueData   AS ContactPersonName
            , ObjectString_ContactPersonMail.ValueData  AS ContactPersonMail           
            
+           , COALESCE (ObjectBoolean_Auto.ValueData, FALSE) ::Boolean AS isAuto
            , Object_ExportJuridical.isErased AS isErased
            
        FROM Object AS Object_ExportJuridical
@@ -142,6 +145,10 @@ BEGIN
                                    ON ObjectString_ContactPersonMail.ObjectId = Object_ContactPerson.Id
                                   AND ObjectString_ContactPersonMail.DescId = zc_ObjectString_ContactPerson_Mail()
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Auto
+                                    ON ObjectBoolean_Auto.ObjectId = Object_ExportJuridical.Id
+                                   AND ObjectBoolean_Auto.DescId = zc_ObjectBoolean_ExportJuridical_Auto()
+
        WHERE Object_ExportJuridical.Id = inId;
       
    END IF;
@@ -154,6 +161,7 @@ ALTER FUNCTION gpGet_Object_ExportJuridical (Integer, TVarChar) OWNER TO postgre
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 09.12.21         * isAuto
  23.03.16         * 
         
 */

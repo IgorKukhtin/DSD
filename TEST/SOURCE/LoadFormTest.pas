@@ -1723,10 +1723,10 @@ begin
  {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportRouteJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportRouteJournalForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportJournalForm');
   exit;
@@ -2029,6 +2029,7 @@ end;
 
 procedure TLoadFormTest.LoadEmailForm;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TExportKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TExportKindForm');
 
@@ -2042,7 +2043,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TEmailKindForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmailKindEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEmailKindEditForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TExportJuridicalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TExportJuridicalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TExportJuridicalEditForm'));
@@ -2797,6 +2798,11 @@ end;
 
 procedure TLoadFormTest.LoadReportTransportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportRepairForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TransportRepairForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportRepairDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TransportRepairDialogForm');
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Transport_CostForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Transport_CostForm');

@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , Comment TVarChar, CommentStop TVarChar
              , BranchCode_ProfitLoss Integer, BranchName_ProfitLoss TVarChar
              , BranchCode Integer, BranchName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , CarName TVarChar, CarModelName TVarChar, CarTrailerName TVarChar
              , PersonalDriverName TVarChar
              , PersonalDriverMoreName TVarChar
@@ -120,6 +121,11 @@ BEGIN
 
            , Object_Branch_unit_car.ObjectCode    AS BranchCode
            , Object_Branch_unit_car.ValueData     AS BranchName
+
+           , Object_Unit_car.Id          AS UnitId
+           , Object_Unit_car.ObjectCode  AS UnitCode
+           , Object_Unit_car.ValueData   AS UnitName
+
            , Object_Car.ValueData                 AS CarName
            , Object_CarModel.ValueData            AS CarModelName
            , Object_CarTrailer.ValueData          AS CarTrailerName
@@ -201,10 +207,15 @@ BEGIN
                                          ON MovementLinkObject_Car.MovementId = Movement.Id
                                         AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
-            LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
-                                                       AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
-            LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch_car ON ObjectLink_Unit_Branch_car.ObjectId = ObjectLink_Car_Unit.ChildObjectId
-                                                              AND ObjectLink_Unit_Branch_car.DescId    = zc_ObjectLink_Unit_Branch()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_Unit 
+                                 ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
+            LEFT JOIN Object AS Object_Unit_car ON Object_Unit_car.Id = ObjectLink_Car_Unit.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch_car
+                                 ON ObjectLink_Unit_Branch_car.ObjectId = ObjectLink_Car_Unit.ChildObjectId
+                                AND ObjectLink_Unit_Branch_car.DescId    = zc_ObjectLink_Unit_Branch()
             LEFT JOIN Object AS Object_Branch_unit_car ON Object_Branch_unit_car.Id = ObjectLink_Unit_Branch_car.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id

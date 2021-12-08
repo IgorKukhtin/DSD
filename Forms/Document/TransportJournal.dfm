@@ -266,6 +266,13 @@ object TransportJournalForm: TTransportJournalForm
         HeaderHint = #1050#1086#1076' '#1092#1080#1083#1080#1072#1083#1072' ('#1054#1055#1080#1059')'
         Width = 55
       end
+      object UnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1072#1074#1090#1086#1084#1086#1073#1080#1083#1100')'
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
       object BranchName_ProfitLoss: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083' ('#1054#1055#1080#1059')'
         DataBinding.FieldName = 'BranchName_ProfitLoss'

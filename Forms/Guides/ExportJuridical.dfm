@@ -129,6 +129,14 @@ object ExportJuridicalForm: TExportJuridicalForm
         Options.Editing = False
         Width = 100
       end
+      object isAuto: TcxGridDBColumn
+        Caption = #1040#1074#1090#1086#1086#1090#1087#1088#1072#1074#1082#1072
+        DataBinding.FieldName = 'isAuto'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -547,10 +555,13 @@ object ExportJuridicalForm: TExportJuridicalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 168
     Top = 216
   end

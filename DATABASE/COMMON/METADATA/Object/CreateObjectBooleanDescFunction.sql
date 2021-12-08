@@ -1129,9 +1129,14 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_AllowedPlatesSUN', 'Разрешено перемещение пластинками в СУН' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_AllowedPlatesSUN');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_ExportJuridical_Auto() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_ExportJuridical_Auto'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ExportJuridical(), 'zc_ObjectBoolean_ExportJuridical_Auto', 'Автоотправка' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_ExportJuridical_Auto');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 08.12.21         * zc_ObjectBoolean_ExportJuridical_Auto
  03.12.21         * zc_ObjectBoolean_Goods_NameOrig
  23.11.21                                                                                                          * zc_ObjectBoolean_Goods_AllowedPlatesSUN
  17.11.21                                                                                                          * zc_ObjectBoolean_Unit_SUN_OnlyTiming

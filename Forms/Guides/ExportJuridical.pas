@@ -66,6 +66,7 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     ContactPersonMail: TcxGridDBColumn;
+    isAuto: TcxGridDBColumn;
   private
     { Private declarations }
   public

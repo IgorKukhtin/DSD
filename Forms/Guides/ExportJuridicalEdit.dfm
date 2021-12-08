@@ -59,7 +59,7 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 273
+    Width = 121
   end
   object cxLabel5: TcxLabel
     Left = 32
@@ -192,6 +192,16 @@
     TabOrder = 21
     Width = 273
   end
+  object cbisAuto: TcxCheckBox
+    Left = 208
+    Top = 22
+    Hint = #1040#1074#1090#1086#1086#1090#1087#1088#1072#1074#1082#1072
+    Caption = #1040#1074#1090#1086#1086#1090#1087#1088#1072#1074#1082#1072
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 22
+    Width = 97
+  end
   object ActionList: TActionList
     Left = 240
     Top = 80
@@ -235,12 +245,14 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -248,6 +260,7 @@
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEmailKindId'
@@ -255,6 +268,7 @@
         Component = EmailKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRetailId'
@@ -262,6 +276,7 @@
         Component = RetailGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId '
@@ -269,6 +284,7 @@
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId '
@@ -276,6 +292,7 @@
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -283,6 +300,7 @@
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inExportKindId'
@@ -290,6 +308,7 @@
         Component = ExportKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContactPersonId'
@@ -297,6 +316,15 @@
         Component = ContactPersonGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAuto'
+        Value = Null
+        Component = cbisAuto
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 320
@@ -308,6 +336,7 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 312
     Top = 96
@@ -323,23 +352,27 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RetailId'
         Value = ''
         Component = RetailGuides
         ComponentItem = 'key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RetailName'
@@ -347,6 +380,7 @@
         Component = RetailGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EmailKindId'
@@ -354,6 +388,7 @@
         Component = EmailKindGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EmailKindName'
@@ -361,12 +396,14 @@
         Component = EmailKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -374,12 +411,14 @@
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
@@ -387,12 +426,14 @@
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
@@ -400,12 +441,14 @@
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ExportKindId'
         Value = ''
         Component = ExportKindGuides
         ComponentItem = 'key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ExportKindName'
@@ -413,12 +456,14 @@
         Component = ExportKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContactPersonId'
         Value = Null
         Component = ContactPersonGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContactPersonName'
@@ -426,12 +471,21 @@
         Component = ContactPersonGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContactPersonMail'
         Value = Null
         Component = ceContactPersonMail
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAuto'
+        Value = Null
+        Component = cbisAuto
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 65528
@@ -453,14 +507,15 @@
     Top = 56
   end
   object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
-    Left = 168
-    Top = 65528
+    Left = 88
+    Top = 56
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -471,6 +526,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -479,6 +535,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 119
     Top = 159
@@ -488,6 +545,7 @@
     LookupControl = ceContract
     FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -498,6 +556,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -506,12 +565,14 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalId'
         Value = Null
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
@@ -519,6 +580,7 @@
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 207
     Top = 191
@@ -528,6 +590,7 @@
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -538,6 +601,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -546,6 +610,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 183
     Top = 239
@@ -555,6 +620,7 @@
     LookupControl = ceExportKind
     FormNameParam.Value = 'TExportKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TExportKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -565,6 +631,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -573,6 +640,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 231
     Top = 279
@@ -582,6 +650,7 @@
     LookupControl = ceRetail
     FormNameParam.Value = 'TRetailForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TRetailForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -592,6 +661,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -600,6 +670,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 183
     Top = 127
@@ -609,6 +680,7 @@
     LookupControl = ceContactPerson
     FormNameParam.Value = 'TContactPersonChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContactPersonChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -619,6 +691,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -627,6 +700,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Mail'
@@ -634,6 +708,7 @@
         Component = ceContactPersonMail
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 175
     Top = 327
@@ -643,6 +718,7 @@
     LookupControl = ceEmailKind
     FormNameParam.Value = 'TEmailKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TEmailKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -653,6 +729,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -661,6 +738,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 143
     Top = 87

@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ExportKindCode Integer, ExportKindName TVarChar
              , ContactPersonCode Integer, ContactPersonName TVarChar
              , ContactPersonMail TVarChar
+             , isAuto Boolean
              , isErased Boolean
              )
 AS
@@ -56,6 +57,7 @@ BEGIN
            , Object_ContactPerson.ValueData            AS ContactPersonName           
            , ObjectString_ContactPersonMail.ValueData  AS ContactPersonMail
               
+           , COALESCE (ObjectBoolean_Auto.ValueData, FALSE) ::Boolean AS isAuto
            , Object_ExportJuridical.isErased    AS isErased
            
        FROM Object AS Object_ExportJuridical
@@ -97,7 +99,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_ContactPersonMail
                                    ON ObjectString_ContactPersonMail.ObjectId = Object_ContactPerson.Id
                                   AND ObjectString_ContactPersonMail.DescId = zc_ObjectString_ContactPerson_Mail()
-           
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Auto
+                                    ON ObjectBoolean_Auto.ObjectId = Object_ExportJuridical.Id
+                                   AND ObjectBoolean_Auto.DescId = zc_ObjectBoolean_ExportJuridical_Auto()
      WHERE Object_ExportJuridical.DescId = zc_Object_ExportJuridical()
      
     ;

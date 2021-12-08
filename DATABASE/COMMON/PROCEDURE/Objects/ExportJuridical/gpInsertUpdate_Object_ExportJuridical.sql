@@ -1,6 +1,7 @@
  -- Function: gpInsertUpdate_Object_ExportJuridical(Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_ExportJuridical (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_ExportJuridical (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_ExportJuridical (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ExportJuridical(
    INOUT ioId                       Integer, 
@@ -12,7 +13,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ExportJuridical(
       IN inContractId               Integer, 
       IN inInfoMoneyId              Integer,
       IN inExportKindId             Integer,
-      IN inContactPersonId          Integer,        
+      IN inContactPersonId          Integer,  
+      IN inisAuto                   Boolean,      
       IN inSession                  TVarChar
       )
   RETURNS Integer AS
@@ -47,6 +49,9 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ExportJuridical_ContactPerson(), ioId, inContactPersonId);
 
+   -- сохранили свойство <Автоотправка>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ExportJuridical_Auto(), ioId, inisAuto);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
@@ -57,6 +62,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.12.21         *
  23.03.16         *
 */
 
