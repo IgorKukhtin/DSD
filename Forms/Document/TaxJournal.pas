@@ -147,8 +147,12 @@ type
     macUpdateINN: TMultiAction;
     bbUpdateINN: TdxBarButton;
     actOpenFormTaxCorrective: TdsdOpenForm;
-    bb: TdxBarButton;
+    bbOpenFormTaxCorrective: TdxBarButton;
     isDisableNPP: TcxGridDBColumn;
+    spInsert_isAutoPrepay: TdsdStoredProc;
+    actInsert_isAutoPrepay: TdsdExecStoredProc;
+    macInsert_isAutoPrepay: TMultiAction;
+    bbInsert_isAutoPrepay: TdxBarButton;
   private
     { Private declarations }
   public

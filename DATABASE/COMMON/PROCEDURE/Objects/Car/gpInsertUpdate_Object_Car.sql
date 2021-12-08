@@ -8,7 +8,9 @@ DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, 
 --DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Car(
    INOUT ioId                       Integer,     -- ид
@@ -23,7 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Car(
       IN inFuelMasterId             Integer,     -- Вид топлива (основной)
       IN inFuelChildId              Integer,     -- Вид топлива (дополнительный)
       IN inJuridicalId              Integer,     -- Юридическое лицо(стороннее)
-      IN inAssetId                  Integer,     -- Основные средства
+      --IN inAssetId                  Integer,     -- Основные средства
       IN inKoeffHoursWork           TFloat ,     -- коэфф. для модели Рабочее время из путевого листа
       IN inPartnerMin               TFloat ,     -- Кол-во минут на ТТ
       IN inLength                   TFloat ,     -- 
@@ -77,7 +79,7 @@ BEGIN
    -- сохранили связь с <юр.лицом>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_Juridical(), ioId, inJuridicalId);
    -- сохранили связь с <Осн.средством>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_Asset(), ioId, inAssetId);
+   --PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_Asset(), ioId, inAssetId);
    
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Car_KoeffHoursWork(), ioId, inKoeffHoursWork);
@@ -106,6 +108,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.12.21         * del inAssetId
  01.11.21         *
  05.10.21         *
  27.04.21         * PartnerMin

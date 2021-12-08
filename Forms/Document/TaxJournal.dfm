@@ -608,7 +608,20 @@ inherited TaxJournalForm: TTaxJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1052#1077#1076#1086#1082' - '#1053#1077#1090'"'
       ImageIndex = 72
     end
-    object actChecked: TdsdExecStoredProc [4]
+    object actInsert_isAutoPrepay: TdsdExecStoredProc [3]
+      Category = 'Prepay'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_isAutoPrepay
+      StoredProcList = <
+        item
+          StoredProc = spInsert_isAutoPrepay
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1099#1077' '#1087#1088#1077#1076#1086#1087#1083#1072#1090#1099
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1099#1077' '#1087#1088#1077#1076#1086#1087#1083#1072#1090#1099
+      ImageIndex = 56
+    end
+    object actChecked: TdsdExecStoredProc [5]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -621,7 +634,7 @@ inherited TaxJournalForm: TTaxJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
-    object actElectron: TdsdExecStoredProc [5]
+    object actElectron: TdsdExecStoredProc [6]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -634,7 +647,7 @@ inherited TaxJournalForm: TTaxJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 52
     end
-    object actDocument: TdsdExecStoredProc [6]
+    object actDocument: TdsdExecStoredProc [7]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -656,7 +669,7 @@ inherited TaxJournalForm: TTaxJournalForm
           StoredProc = spGetInfo
         end>
     end
-    object actInsertMaskMulti: TMultiAction [9]
+    object actInsertMaskMulti: TMultiAction [10]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -669,7 +682,7 @@ inherited TaxJournalForm: TTaxJournalForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
-    object actMovementCheck: TdsdOpenForm [11]
+    object actMovementCheck: TdsdOpenForm [12]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -1452,6 +1465,19 @@ inherited TaxJournalForm: TTaxJournalForm
         end>
       isShowModal = False
     end
+    object macInsert_isAutoPrepay: TMultiAction
+      Category = 'Prepay'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsert_isAutoPrepay
+        end>
+      QuestionBeforeExecute = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1087#1088#1077#1076#1086#1087#1083#1072#1090#1099' '#1079#1072' '#1074#1099#1073#1088#1072#1085#1085#1099#1081' '#1087#1077#1088#1080#1086#1076'?'
+      InfoAfterExecute = #1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1085#1099
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1087#1088#1077#1076#1086#1087#1083#1072#1090#1099
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1087#1088#1077#1076#1086#1087#1083#1072#1090#1099
+      ImageIndex = 56
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1584,7 +1610,7 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbOpenFormTaxCorrective'
         end
         item
           Visible = True
@@ -1625,6 +1651,14 @@ inherited TaxJournalForm: TTaxJournalForm
         item
           Visible = True
           ItemName = 'bbDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert_isAutoPrepay'
         end
         item
           Visible = True
@@ -1771,8 +1805,12 @@ inherited TaxJournalForm: TTaxJournalForm
       Action = macUpdateINN
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbOpenFormTaxCorrective: TdxBarButton
       Action = actOpenFormTaxCorrective
+      Category = 0
+    end
+    object bbInsert_isAutoPrepay: TdxBarButton
+      Action = macInsert_isAutoPrepay
       Category = 0
     end
   end
@@ -2449,5 +2487,30 @@ inherited TaxJournalForm: TTaxJournalForm
     PackSize = 1
     Left = 722
     Top = 272
+  end
+  object spInsert_isAutoPrepay: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_Tax_isAutoPrepay'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 416
+    Top = 403
   end
 end

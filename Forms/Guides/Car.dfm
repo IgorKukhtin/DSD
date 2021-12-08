@@ -27,6 +27,8 @@ object CarForm: TCarForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = 72
+    ExplicitTop = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -116,7 +118,7 @@ object CarForm: TCarForm
         Width = 100
       end
       object AssetCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1054#1057
+        Caption = #1050#1086#1076' '#1054#1057' ('#1080#1085#1092'.)'
         DataBinding.FieldName = 'AssetCode'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.;-,0.; ;'
@@ -126,7 +128,7 @@ object CarForm: TCarForm
         Width = 50
       end
       object AssetName: TcxGridDBColumn
-        Caption = #1054#1057
+        Caption = #1054#1057' ('#1080#1085#1092'.)'
         DataBinding.FieldName = 'AssetName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -134,7 +136,7 @@ object CarForm: TCarForm
         Width = 60
       end
       object AssetInvNumber: TcxGridDBColumn
-        Caption = #1048#1085#1074'. '#1085#1086#1084#1077#1088' '#1054#1057
+        Caption = #1048#1085#1074'. '#1085#1086#1084#1077#1088' '#1054#1057' ('#1080#1085#1092'.)'
         DataBinding.FieldName = 'AssetInvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

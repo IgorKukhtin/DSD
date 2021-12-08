@@ -188,7 +188,7 @@
   object cxLabel10: TcxLabel
     Left = 32
     Top = 359
-    Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086
+    Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086' ('#1080#1085#1092'.)'
   end
   object ceAsset: TcxButtonEdit
     Left = 32
@@ -196,6 +196,7 @@
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -448,14 +449,6 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAssetId'
-        Value = Null
-        Component = AssetGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inKoeffHoursWork'
         Value = Null
         Component = edKoeffHoursWork
@@ -509,6 +502,13 @@
         Component = edYear
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        Component = AssetGuides
+        ComponentItem = 'Key'
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -931,6 +931,7 @@
   object AssetGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceAsset
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TAssetForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -955,7 +956,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 167
-    Top = 358
+    Left = 247
+    Top = 366
   end
 end

@@ -198,10 +198,11 @@ BEGIN
                                AND ObjectLink_Car_Juridical.DescId = zc_ObjectLink_Car_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Car_Juridical.ChildObjectId            
 
-            LEFT JOIN ObjectLink AS ObjectLink_Car_Asset
-                                 ON ObjectLink_Car_Asset.ObjectId = Object_Car.Id
-                                AND ObjectLink_Car_Asset.DescId = zc_ObjectLink_Car_Asset()
-            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = ObjectLink_Car_Asset.ChildObjectId
+           -- информативно
+            LEFT JOIN ObjectLink AS ObjectLink_Asset_Car
+                                 ON ObjectLink_Asset_Car.ChildObjectId = Object_Car.Id
+                                AND ObjectLink_Asset_Car.DescId = zc_ObjectLink_Asset_Car()
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = ObjectLink_Asset_Car.ObjectId 
 
        WHERE Object_Car.Id = inId;
       
@@ -215,6 +216,7 @@ ALTER FUNCTION gpGet_Object_Car (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.12.21         *
  02.11.21         *
  01.11.21         * Weight
  05.10.21         *
