@@ -7,22 +7,22 @@ inherited PretensionForm: TPretensionForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 148
+    Top = 203
     Width = 1001
-    Height = 378
-    ExplicitTop = 148
+    Height = 323
+    ExplicitTop = 203
     ExplicitWidth = 1001
-    ExplicitHeight = 378
-    ClientRectBottom = 378
+    ExplicitHeight = 323
+    ClientRectBottom = 323
     ClientRectRight = 1001
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1001
-      ExplicitHeight = 354
+      ExplicitHeight = 299
       inherited cxGrid: TcxGrid
         Width = 1001
-        Height = 354
+        Height = 299
         ExplicitWidth = 1001
-        ExplicitHeight = 354
+        ExplicitHeight = 299
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -176,6 +176,18 @@ inherited PretensionForm: TPretensionForm
             HeaderAlignmentVert = vaCenter
             Width = 73
           end
+          object AmountCheck: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1086#1090#1083#1086#1078'. '#1095#1077#1082#1072#1093
+            DataBinding.FieldName = 'AmountCheck'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1093' '#1095#1077#1082#1072#1093
+            Options.Editing = False
+            Width = 77
+          end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
@@ -197,18 +209,6 @@ inherited PretensionForm: TPretensionForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
-          end
-          object AmountCheck: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1086#1090#1083#1086#1078'. '#1095#1077#1082#1072#1093
-            DataBinding.FieldName = 'AmountCheck'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1093' '#1095#1077#1082#1072#1093
-            Options.Editing = False
-            Width = 77
           end
           object AmountInIncome: TcxGridDBColumn
             AlternateCaption = #1042' '#1087#1088#1080#1093#1086#1076#1077
@@ -294,10 +294,10 @@ inherited PretensionForm: TPretensionForm
   end
   inherited DataPanel: TPanel
     Width = 1001
-    Height = 122
+    Height = 177
     TabOrder = 3
     ExplicitWidth = 1001
-    ExplicitHeight = 122
+    ExplicitHeight = 177
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Top = 22
@@ -336,13 +336,13 @@ inherited PretensionForm: TPretensionForm
       Width = 136
     end
     object cxLabel3: TcxLabel
-      Left = 434
+      Left = 226
       Top = 4
       Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
     end
     object edFrom: TcxButtonEdit
-      Left = 614
-      Top = 22
+      Left = 228
+      Top = 59
       Enabled = False
       Properties.Buttons = <
         item
@@ -351,10 +351,10 @@ inherited PretensionForm: TPretensionForm
         end>
       Properties.ReadOnly = True
       TabOrder = 4
-      Width = 170
+      Width = 154
     end
     object edTo: TcxButtonEdit
-      Left = 436
+      Left = 228
       Top = 22
       Enabled = False
       Properties.Buttons = <
@@ -367,26 +367,27 @@ inherited PretensionForm: TPretensionForm
       Width = 154
     end
     object cxLabel4: TcxLabel
-      Left = 614
-      Top = 4
+      Left = 228
+      Top = 40
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 149
-      Top = 47
+      Left = 114
+      Top = 126
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
       TabOrder = 10
       Width = 130
     end
     object cxLabel10: TcxLabel
-      Left = 282
-      Top = 42
+      Left = 8
+      Top = 125
       Caption = #1058#1080#1087' '#1053#1044#1057
     end
     object edNDSKind: TcxButtonEdit
-      Left = 282
-      Top = 59
+      Left = 8
+      Top = 142
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
@@ -396,142 +397,19 @@ inherited PretensionForm: TPretensionForm
       TabOrder = 12
       Width = 86
     end
-    object ceTotalSummMVAT: TcxCurrencyEdit
-      Left = 760
-      Top = 59
-      EditValue = 1111111.000000000000000000
-      Enabled = False
-      ParentFont = False
-      Properties.Alignment.Horz = taRightJustify
-      Properties.DisplayFormat = ',0.00;-,0.00'
-      Style.BorderColor = clBtnFace
-      Style.Font.Charset = DEFAULT_CHARSET
-      Style.Font.Color = clWindowText
-      Style.Font.Height = -11
-      Style.Font.Name = 'Tahoma'
-      Style.Font.Style = [fsBold]
-      Style.IsFontAssigned = True
-      StyleDisabled.BorderColor = clBtnFace
-      StyleDisabled.BorderStyle = ebsSingle
-      StyleDisabled.TextColor = clBtnText
-      TabOrder = 13
-      Width = 94
-    end
-    object ceTotalSummPVAT: TcxCurrencyEdit
-      Left = 881
-      Top = 59
-      EditValue = 1111111.000000000000000000
-      Enabled = False
-      ParentFont = False
-      Properties.Alignment.Horz = taRightJustify
-      Properties.DisplayFormat = ',0.00;-,0.00'
-      Style.BorderColor = clBtnFace
-      Style.Font.Charset = DEFAULT_CHARSET
-      Style.Font.Color = clWindowText
-      Style.Font.Height = -11
-      Style.Font.Name = 'Tahoma'
-      Style.Font.Style = [fsBold]
-      Style.IsFontAssigned = True
-      StyleDisabled.BorderColor = clBtnFace
-      StyleDisabled.BorderStyle = ebsSingle
-      StyleDisabled.TextColor = clBtnText
-      TabOrder = 14
-      Width = 94
-    end
-    object cxLabel7: TcxLabel
-      Left = 760
-      Top = 40
-      Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057':'
-      ParentFont = False
-      Style.Font.Charset = DEFAULT_CHARSET
-      Style.Font.Color = clWindowText
-      Style.Font.Height = -11
-      Style.Font.Name = 'Tahoma'
-      Style.Font.Style = [fsBold]
-      Style.IsFontAssigned = True
-    end
-    object cxLabel8: TcxLabel
-      Left = 894
-      Top = 40
-      Caption = #1057#1091#1084#1084#1072' c '#1053#1044#1057':'
-      ParentFont = False
-      Style.Font.Charset = DEFAULT_CHARSET
-      Style.Font.Color = clWindowText
-      Style.Font.Height = -11
-      Style.Font.Name = 'Tahoma'
-      Style.Font.Style = [fsBold]
-      Style.IsFontAssigned = True
-    end
     object cxLabel5: TcxLabel
-      Left = 485
-      Top = 41
+      Left = 8
+      Top = 82
       Caption = #8470' '#1087#1088#1080#1093#1086#1076#1072
     end
-    object edIncome: TcxButtonEdit
-      Left = 485
-      Top = 59
-      Enabled = False
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 18
-      Width = 147
-    end
-    object cxLabel6: TcxLabel
-      Left = 374
-      Top = 41
-      Caption = #1058#1080#1087' '#1074#1086#1079#1074#1088#1072#1090#1072
-    end
-    object edReturnType: TcxButtonEdit
-      Left = 374
-      Top = 59
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 20
-      Width = 108
-    end
-    object cxLabel9: TcxLabel
-      Left = 221
-      Top = 4
-      Caption = #8470' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-    end
-    object edInvNumberPartner: TcxTextEdit
-      Left = 221
-      Top = 22
-      Properties.ReadOnly = False
-      TabOrder = 22
-      Width = 105
-    end
-    object cxLabel11: TcxLabel
-      Left = 330
-      Top = 4
-      Caption = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-    end
-    object edOperDatePartner: TcxDateEdit
-      Left = 330
-      Top = 22
-      EditValue = 43248d
-      Properties.DateOnError = deNull
-      Properties.ReadOnly = True
-      Properties.SaveTime = False
-      Properties.ShowTime = False
-      TabOrder = 24
-      Width = 100
-    end
     object cxLabel12: TcxLabel
-      Left = 791
-      Top = 5
+      Left = 228
+      Top = 84
       Caption = #1070#1088#1083#1080#1094#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100
     end
     object edJuridical: TcxButtonEdit
-      Left = 791
-      Top = 22
+      Left = 228
+      Top = 101
       Enabled = False
       Properties.Buttons = <
         item
@@ -539,91 +417,51 @@ inherited PretensionForm: TPretensionForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 26
-      Width = 184
+      TabOrder = 15
+      Width = 154
     end
     object cxLabel13: TcxLabel
-      Left = 638
-      Top = 40
+      Left = 119
+      Top = 82
       Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076#1072
     end
     object deIncomeOperDate: TcxDateEdit
-      Left = 638
-      Top = 59
+      Left = 114
+      Top = 101
       EditValue = 42363d
       Enabled = False
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 28
+      TabOrder = 17
       Width = 100
-    end
-    object edJuridicalLegalAddress: TcxButtonEdit
-      Left = 114
-      Top = 96
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 29
-      Width = 254
-    end
-    object cxLabel14: TcxLabel
-      Left = 114
-      Top = 80
-      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1081' '#1072#1076#1088#1077#1089' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-    end
-    object edJuridicalActualAddress: TcxButtonEdit
-      Left = 374
-      Top = 96
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 31
-      Width = 258
-    end
-    object cxLabel16: TcxLabel
-      Left = 377
-      Top = 79
-      Caption = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1072#1076#1088#1077#1089' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-    end
-    object edAdjustingOurDate: TcxDateEdit
-      Left = 9
-      Top = 96
-      EditValue = 43248d
-      Properties.DateOnError = deNull
-      Properties.ReadOnly = True
-      Properties.SaveTime = False
-      Properties.ShowTime = False
-      TabOrder = 33
-      Width = 100
-    end
-    object cxLabel17: TcxLabel
-      Left = 9
-      Top = 79
-      Caption = #1050#1086#1088#1088'. '#1085#1072#1096#1077#1081' '#1076#1072#1090#1099
-    end
-    object edComment: TcxTextEdit
-      Left = 638
-      Top = 96
-      Properties.ReadOnly = False
-      TabOrder = 35
-      Width = 337
-    end
-    object cxLabel18: TcxLabel
-      Left = 638
-      Top = 80
-      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object cbisDeferred: TcxCheckBox
-      Left = 149
-      Top = 63
+      Left = 114
+      Top = 142
       Caption = #1054#1090#1083#1086#1078#1077#1085
       Properties.ReadOnly = True
-      TabOrder = 37
+      TabOrder = 18
       Width = 69
+    end
+    object edIncome: TcxTextEdit
+      Left = 8
+      Top = 101
+      Enabled = False
+      Properties.ReadOnly = False
+      TabOrder = 19
+      Width = 105
+    end
+    object cxmComment: TcxMemo
+      Left = 388
+      Top = 22
+      TabOrder = 20
+      Height = 141
+      Width = 609
+    end
+    object cxLabel6: TcxLabel
+      Left = 388
+      Top = 3
+      Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1276,35 +1114,31 @@ inherited PretensionForm: TPretensionForm
       item
         Name = 'InvNumberPartner'
         Value = Null
-        Component = edInvNumberPartner
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'OperDatePartner'
         Value = Null
-        Component = edOperDatePartner
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AdjustingOurDate'
+        Name = 'IncomeMovementId'
         Value = Null
-        Component = edAdjustingOurDate
-        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 416
   end
   inherited StatusGuides: TdsdGuides
-    Left = 64
+    Left = 80
     Top = 16
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Pretension'
-    Left = 24
-    Top = 24
+    Left = 32
+    Top = 16
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Pretension'
@@ -1408,43 +1242,15 @@ inherited PretensionForm: TPretensionForm
       item
         Name = 'IncomeInvNumber'
         Value = Null
-        Component = GuidesIncome
-        ComponentItem = 'TextValue'
+        Component = edIncome
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'IncomeMovementId'
         Value = Null
-        Component = GuidesIncome
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ReturnTypeId'
-        Value = Null
-        Component = ReturnTypeGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ReturnTypeName'
-        Value = Null
-        Component = ReturnTypeGuides
-        ComponentItem = 'TextValue'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumberPartner'
-        Value = Null
-        Component = edInvNumberPartner
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperDatePartner'
-        Value = Null
-        Component = edOperDatePartner
-        DataType = ftDateTime
+        Component = FormParams
+        ComponentItem = 'IncomeMovementId'
         MultiSelectSeparator = ','
       end
       item
@@ -1470,45 +1276,10 @@ inherited PretensionForm: TPretensionForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'LegalAddressId'
-        Value = Null
-        Component = GuidesJuridicalLegalAddress
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'LegalAddressName'
-        Value = Null
-        Component = GuidesJuridicalLegalAddress
-        ComponentItem = 'TextValue'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ActualAddressId'
-        Value = Null
-        Component = GuidesJuridicalActualAddress
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ActualAddressName'
-        Value = Null
-        Component = GuidesJuridicalActualAddress
-        ComponentItem = 'TextValue'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AdjustingOurDate'
-        Value = Null
-        Component = edAdjustingOurDate
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'Comment'
         Value = Null
-        Component = edComment
-        DataType = ftString
+        Component = cxmComment
+        DataType = ftWideString
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -1542,22 +1313,6 @@ inherited PretensionForm: TPretensionForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inInvNumberPartner'
-        Value = 0.000000000000000000
-        Component = edInvNumberPartner
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPriceWithVAT'
-        Value = False
-        Component = edPriceWithVAT
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inFromId'
         Value = ''
         Component = GuidesFrom
@@ -1574,50 +1329,18 @@ inherited PretensionForm: TPretensionForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inNDSKindId'
-        Value = ''
-        Component = NDSKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inParentId'
         Value = 0.000000000000000000
-        Component = GuidesIncome
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inReturnTypeId'
-        Value = ''
-        Component = ReturnTypeGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inLegalAddressId'
-        Value = ''
-        Component = GuidesJuridicalLegalAddress
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inActualAddressId'
-        Value = ''
-        Component = GuidesJuridicalActualAddress
-        ComponentItem = 'Key'
+        Component = FormParams
+        ComponentItem = 'IncomeMovementId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
         Value = Null
-        Component = edComment
-        DataType = ftString
+        Component = cxmComment
+        DataType = ftWideString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1649,19 +1372,14 @@ inherited PretensionForm: TPretensionForm
         Control = edPriceWithVAT
       end
       item
-        Control = edInvNumberPartner
       end
       item
-        Control = edReturnType
       end
       item
-        Control = edJuridicalActualAddress
       end
       item
-        Control = edJuridicalLegalAddress
       end
       item
-        Control = edComment
       end>
     Left = 200
     Top = 193
@@ -1850,14 +1568,12 @@ inherited PretensionForm: TPretensionForm
       item
         Name = 'TotalSummMVAT'
         Value = Null
-        Component = ceTotalSummMVAT
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSummPVAT'
         Value = Null
-        Component = ceTotalSummPVAT
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -1942,8 +1658,7 @@ inherited PretensionForm: TPretensionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 576
-    Top = 8
+    Left = 264
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1972,8 +1687,8 @@ inherited PretensionForm: TPretensionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 720
-    Top = 8
+    Left = 272
+    Top = 32
   end
   object NDSKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -2003,36 +1718,8 @@ inherited PretensionForm: TPretensionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 304
-    Top = 40
-  end
-  object ContractGuides: TdsdGuides
-    KeyField = 'Id'
-    FormNameParam.Value = 'TContractForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TContractForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 671
-    Top = 184
+    Left = 40
+    Top = 136
   end
   object spIncome_GoodsId: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementItem_Income_GoodsId'
@@ -2050,66 +1737,6 @@ inherited PretensionForm: TPretensionForm
     PackSize = 1
     Left = 264
     Top = 296
-  end
-  object GuidesIncome: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edIncome
-    isShowModal = True
-    FormNameParam.Value = 'TIncomeJournalForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TIncomeJournalForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesIncome
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesIncome
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 232
-    Top = 8
-  end
-  object ReturnTypeGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edReturnType
-    FormNameParam.Value = 'TReturnTypeForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TReturnTypeForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = ReturnTypeGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ReturnTypeGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 408
-    Top = 48
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
@@ -2137,8 +1764,8 @@ inherited PretensionForm: TPretensionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 696
-    Top = 56
+    Left = 264
+    Top = 80
   end
   object spUpdatePretension_PartnerData: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Pretension_PartnerData'
@@ -2156,7 +1783,6 @@ inherited PretensionForm: TPretensionForm
       item
         Name = 'inInvNumberPartner'
         Value = Null
-        Component = edInvNumberPartner
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2164,7 +1790,6 @@ inherited PretensionForm: TPretensionForm
       item
         Name = 'inOperDatePartner'
         Value = Null
-        Component = edOperDatePartner
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2172,7 +1797,6 @@ inherited PretensionForm: TPretensionForm
       item
         Name = 'inAdjustingOurDate'
         Value = Null
-        Component = edAdjustingOurDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2180,96 +1804,6 @@ inherited PretensionForm: TPretensionForm
     PackSize = 1
     Left = 648
     Top = 256
-  end
-  object GuidesJuridicalLegalAddress: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edJuridicalLegalAddress
-    FormNameParam.Value = 'TJuridicalLegalAddressForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TJuridicalLegalAddressForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesJuridicalLegalAddress
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesJuridicalLegalAddress
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalId'
-        Value = Null
-        Component = GuidesTo
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalName'
-        Value = Null
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    Left = 248
-    Top = 104
-  end
-  object GuidesJuridicalActualAddress: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edJuridicalActualAddress
-    FormNameParam.Value = 'TJuridicalActualAddressForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TJuridicalActualAddressForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesJuridicalActualAddress
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesJuridicalActualAddress
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalId'
-        Value = Null
-        Component = GuidesTo
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalName'
-        Value = Null
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    Left = 480
-    Top = 88
   end
   object spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Pretension'

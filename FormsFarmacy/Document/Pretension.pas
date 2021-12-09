@@ -13,7 +13,8 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator, cxImageComboBox,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  cxMemo;
 
 type
   TPretensionForm = class(TAncestorDocumentForm)
@@ -45,24 +46,10 @@ type
     edNDSKind: TcxButtonEdit;
     NDSKindGuides: TdsdGuides;
     Price: TcxGridDBColumn;
-    ContractGuides: TdsdGuides;
-    ceTotalSummMVAT: TcxCurrencyEdit;
-    ceTotalSummPVAT: TcxCurrencyEdit;
-    cxLabel7: TcxLabel;
-    cxLabel8: TcxLabel;
     actRefreshGoodsCode: TdsdExecStoredProc;
     bbRefreshGoodsCode: TdxBarButton;
     spIncome_GoodsId: TdsdStoredProc;
     cxLabel5: TcxLabel;
-    edIncome: TcxButtonEdit;
-    GuidesIncome: TdsdGuides;
-    cxLabel6: TcxLabel;
-    edReturnType: TcxButtonEdit;
-    ReturnTypeGuides: TdsdGuides;
-    cxLabel9: TcxLabel;
-    edInvNumberPartner: TcxTextEdit;
-    cxLabel11: TcxLabel;
-    edOperDatePartner: TcxDateEdit;
     AmountInIncome: TcxGridDBColumn;
     Remains: TcxGridDBColumn;
     WarningColor: TcxGridDBColumn;
@@ -76,21 +63,11 @@ type
     actPartnerDataDialog: TExecuteDialog;
     spUpdatePretension_PartnerData: TdsdStoredProc;
     actUpdatePretension_PartnerData: TdsdExecStoredProc;
-    edJuridicalLegalAddress: TcxButtonEdit;
-    cxLabel14: TcxLabel;
-    edJuridicalActualAddress: TcxButtonEdit;
-    cxLabel16: TcxLabel;
-    GuidesJuridicalLegalAddress: TdsdGuides;
-    GuidesJuridicalActualAddress: TdsdGuides;
-    edAdjustingOurDate: TcxDateEdit;
-    cxLabel17: TcxLabel;
     actPrintTTN: TdsdPrintAction;
     AmountOther: TcxGridDBColumn;
     actComplete: TdsdExecStoredProc;
     dxBarButton2: TdxBarButton;
     spMovementComplete: TdsdStoredProc;
-    edComment: TcxTextEdit;
-    cxLabel18: TcxLabel;
     cbisDeferred: TcxCheckBox;
     spUpdate_isDeferred_No: TdsdStoredProc;
     spUpdate_isDeferred_Yes: TdsdStoredProc;
@@ -102,6 +79,9 @@ type
     DeferredOut: TcxGridDBColumn;
     actPrintOptima: TdsdPrintAction;
     bbPrintOptima: TdxBarButton;
+    edIncome: TcxTextEdit;
+    cxmComment: TcxMemo;
+    cxLabel6: TcxLabel;
   private
     { Private declarations }
   public

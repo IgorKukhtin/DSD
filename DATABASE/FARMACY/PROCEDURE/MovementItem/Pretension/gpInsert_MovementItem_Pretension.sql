@@ -45,6 +45,8 @@ BEGIN
      
      PERFORM lpInsertUpdate_MovementItem_Pretension(0, ioMovementId, inMIParentId, inGoodsId, inAmount, inAmountManual, True, vbUserId);
 
+     -- пересчитали Итоговые суммы
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm_Pretension (inMovementId);
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

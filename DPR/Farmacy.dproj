@@ -70,7 +70,7 @@
 			<DCC_DcuOutput>..\DCU\Farmacy\$(ProductVersion)\$(Platform)</DCC_DcuOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
-			<VerInfo_Keys>CompanyName=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileVersion=1.2.8.28;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
 			<VerInfo_Locale>1033</VerInfo_Locale>
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
 			<DCC_UsePackage>cxLibraryRS16;dxPSCoreRS16;cxPivotGridOLAPRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;officeXPrt;cxPageControlRS16;vclimg;dxComnRS16;vcldb;dxADOServerModeRS16;cxPageControldxBarPopupMenuRS16;dxPSLnksRS16;dxBarExtItemsRS16;JclDeveloperTools;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;dxPScxExtCommonRS16;dxNavBarRS16;DBXOdbcDriver;dxPScxSSLnkRS16;vclactnband;dxServerModeRS16;bindcompvcl;Jcl;vclie;ipstudiowinclient;dsnapcon;vclx;dxFlowChartRS16;dxGDIPlusRS16;dxdborRS16;dxPScxPivotGridLnkRS16;dxCoreRS16;cxExportRS16;ZComponent;dxBarRS16;TeeDB;dxDBXServerModeRS16;cxSpreadSheetRS16;cxTreeListdxBarPopupMenuRS16;vclib;dxRibbonRS16;DBXSybaseASEDriver;cxTreeListRS16;vcldsnap;DBXDb2Driver;vcl;DBXMSSQLDriver;webdsnap;EhLib160;adortl;ZDbc;ZPlain;Tee;JclContainers;dxSkinsCoreRS16;dxmdsRS16;dxPScxCommonRS16;cxGridRS16;cxEditorsRS16;TeeUI;cxPivotGridRS16;ipstudiowin;cxSchedulerRS16;ZCore;vcltouch;websnap;VclSmp;dxTabbedMDIRS16;dxPSdxFCLnkRS16;dxThemeRS16;JclVcl;ZParseSql;dxBarDBNavRS16;$(DCC_UsePackage)</DCC_UsePackage>
@@ -90,7 +90,7 @@
 			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
 			<VerInfo_Locale>1033</VerInfo_Locale>
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
-			<VerInfo_Keys>CompanyName=;FileVersion=1.2.7.15;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileVersion=1.2.8.28;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
 			<AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
 			<UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
 			<UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
@@ -113,7 +113,6 @@
 			<AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<VerInfo_Keys>CompanyName=;FileVersion=1.2.7.16;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
 			<VerInfo_MinorVer>2</VerInfo_MinorVer>
 			<VerInfo_Build>16</VerInfo_Build>
 			<VerInfo_Release>7</VerInfo_Release>
@@ -141,15 +140,13 @@
 			<VerInfo_MinorVer>2</VerInfo_MinorVer>
 			<VerInfo_Release>4</VerInfo_Release>
 			<VerInfo_Locale>1033</VerInfo_Locale>
-			<VerInfo_Keys>CompanyName=;FileVersion=1.2.4.22;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
 			<BT_BuildType>Debug</BT_BuildType>
 			<Icon_MainIcon>mainicon.ico</Icon_MainIcon>
 			<AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
 			<Debugger_RunParams>/skipcheckconnect</Debugger_RunParams>
-			<VerInfo_Keys>CompanyName=;FileVersion=1.2.8.27;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
-			<VerInfo_Build>27</VerInfo_Build>
+			<VerInfo_Build>28</VerInfo_Build>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_MinorVer>2</VerInfo_MinorVer>

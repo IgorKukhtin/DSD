@@ -34,7 +34,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementBlob (zc_MovementBlob_Comment(), ioId, inComment);
     
      -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm_Pretension (ioId);
 
     -- !!!протокол через свойства конкретного объекта!!!
      IF vbIsInsert = FALSE

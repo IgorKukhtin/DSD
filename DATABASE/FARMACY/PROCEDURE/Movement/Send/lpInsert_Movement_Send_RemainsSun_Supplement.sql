@@ -717,12 +717,12 @@ BEGIN
                        COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0) <> 0))
      THEN
 
-       UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(SUM(_tmpRemains_all_Supplement.AmountRemains 
-                                                            - COALESCE(_tmpRemains_all_Supplement.AmountNotSend, 0))) 
-                                                         FROM _tmpRemains_all_Supplement 
-                                                         WHERE _tmpRemains_all_Supplement.GoodsId = _tmpRemains_all_Supplement.GoodsId
-                                                           AND (_tmpRemains_all_Supplement.AmountRemains - COALESCE(_tmpRemains_all_Supplement.AmountNotSend, 0)) > 0
-                                                           AND _tmpRemains_all_Supplement.UnitId = _tmpRemains_all_Supplement.UnitId)
+       UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(SUM(tmpRemains.AmountRemains 
+                                                            - COALESCE(tmpRemains.AmountNotSend, 0))) 
+                                                         FROM _tmpRemains_all_Supplement AS tmpRemains 
+                                                         WHERE tmpRemains.GoodsId = _tmpRemains_all_Supplement.GoodsId
+                                                           AND (tmpRemains.AmountRemains - COALESCE(tmpRemains.AmountNotSend, 0)) > 0
+                                                           AND tmpRemains.UnitId = _tmpRemains_all_Supplement.UnitId)
        FROM (SELECT _tmpGoods_SUN_Supplement.GoodsId
                   , _tmpGoods_SUN_Supplement.UnitOutId
                   , _tmpGoods_SUN_Supplement.UnitOut2Id
@@ -735,13 +735,13 @@ BEGIN
               COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0) = _tmpRemains_all_Supplement.UnitId);
                                                              
        
-       UPDATE _tmpRemains_all_Supplement SET GiveAway = - CEIL((SELECT SUM(_tmpRemains_all_Supplement.AmountRemains 
-                                                                           - COALESCE(_tmpRemains_all_Supplement.AmountNotSend, 0)) 
-                                                                FROM _tmpRemains_all_Supplement 
-                                                                WHERE _tmpRemains_all_Supplement.GoodsId = _tmpRemains_all_Supplement.GoodsId
-                                                                  AND (_tmpRemains_all_Supplement.AmountRemains - COALESCE(_tmpRemains_all_Supplement.AmountNotSend, 0)) > 0
-                                                                  AND (_tmpRemains_all_Supplement.UnitId = COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) OR
-                                                                       _tmpRemains_all_Supplement.UnitId = COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0))) / 
+       UPDATE _tmpRemains_all_Supplement SET GiveAway = - CEIL((SELECT SUM(tmpRemains.AmountRemains 
+                                                                           - COALESCE(tmpRemains.AmountNotSend, 0)) 
+                                                                FROM _tmpRemains_all_Supplement AS tmpRemains
+                                                                WHERE tmpRemains.GoodsId = _tmpRemains_all_Supplement.GoodsId
+                                                                  AND (tmpRemains.AmountRemains - COALESCE(tmpRemains.AmountNotSend, 0)) > 0
+                                                                  AND (tmpRemains.UnitId = COALESCE(_tmpGoods_SUN_Supplement.UnitOutId, 0) OR
+                                                                       tmpRemains.UnitId = COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0))) / 
                                                                (SELECT count(*) 
                                                                 FROM _tmpRemains_all_Supplement AS Remains_all
                                                                 WHERE Remains_all.GoodsId = _tmpRemains_all_Supplement.GoodsId
@@ -868,9 +868,9 @@ BEGIN
        AND _tmpRemains_all_Supplement.Need < (COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) - _tmpRemains_all_Supplement.AmountRemains);
        
 
- raise notice 'Value 05: % %', 
+/* raise notice 'Value 05: % %', 
     (SELECT Count(*) FROM _tmpRemains_all_Supplement WHERE COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) < 0), 
-    (SELECT Count(*) FROM _tmpRemains_all_Supplement WHERE COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 50);
+    (SELECT Count(*) FROM _tmpRemains_all_Supplement WHERE COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 50);*/
              
      -- 2.2. Подправили места где передача после округление больше чем остаток
      UPDATE _tmpRemains_all_Supplement SET Need = - floor(_tmpRemains_all_Supplement.AmountRemains)
@@ -880,11 +880,11 @@ BEGIN
                  (SELECT COUNT(*)
                   FROM _tmpRemains_all_Supplement WHERE _tmpRemains_all_Supplement.GoodsId = 35755 AND _tmpRemains_all_Supplement.GiveAway < 0);*/
                   
-    /* raise notice 'Value 05: %',
+/*     raise notice 'Value 05: %',
                  (SELECT COALESCE(_tmpRemains_all_Supplement.AmountRemains, 0)::TVArChar||'  '||
                          COALESCE(_tmpRemains_all_Supplement.Need, 0)::TVArChar||'  '||
                          COALESCE(_tmpRemains_all_Supplement.GiveAway, 0)::TVArChar 
-                  FROM _tmpRemains_all_Supplement WHERE _tmpRemains_all_Supplement.GoodsId = 35755 AND _tmpRemains_all_Supplement.UnitId = 13711869);*/
+                  FROM _tmpRemains_all_Supplement WHERE _tmpRemains_all_Supplement.GoodsId = 5215530 AND _tmpRemains_all_Supplement.UnitId = 9951517);*/
 
      -- 3. распределяем
      --
@@ -931,8 +931,8 @@ BEGIN
                                                                             
             -- найдем дисконтній товар
             LEFT JOIN _tmpGoods_DiscountExternal_Supplement AS _tmpGoods_DiscountExternal
-                                                           ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_all_Supplement.UnitId
-                                                          AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_all_Supplement.GoodsId
+                                                            ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_all_Supplement.UnitId
+                                                           AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_all_Supplement.GoodsId
 
        WHERE CASE WHEN COALESCE (GiveAway, 0) > 0 THEN COALESCE (GiveAway, 0) ELSE 
                - CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
@@ -979,13 +979,13 @@ BEGIN
          -- если данные закончились, тогда выход
          IF NOT FOUND THEN EXIT; END IF;
 
-/*             IF vbGoodsId = 17140
+/*             IF vbGoodsId = 5215530
              THEN
                raise notice 'Value 05: % % % % % % %', vbUnitId_from, vbUnitId_to, vbGoodsId, vbNeed, vbSurplus, CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END,
                  (SELECT _tmpRemains_all_Supplement.AmountRemains::TVArChar||'  '||_tmpRemains_all_Supplement.Need::TVArChar||'  '||_tmpRemains_all_Supplement.GiveAway::TVArChar 
                   FROM _tmpRemains_all_Supplement WHERE _tmpRemains_all_Supplement.UnitId = vbUnitId_from AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId);
-             END IF;*/
-
+             END IF;
+*/
          -- курсор2. - Потребность для vbGoodsId
          OPEN curResult_next FOR
              SELECT _tmpRemains_all_Supplement.UnitId
@@ -1051,13 +1051,13 @@ BEGIN
              -- если данные закончились, или все кол-во найдено тогда выход
              IF NOT FOUND OR FLOOR (vbSurplus) <= 0 THEN EXIT; END IF;
 
-             IF vbGoodsId = 17140
+/*             IF vbGoodsId = 17140
              THEN
                raise notice 'Value 05: % % % % % % %', vbUnitId_from, vbUnitId_to, vbGoodsId, vbNeed, vbSurplus, CASE WHEN vbSurplus > vbNeed THEN vbNeed ELSE vbSurplus END,
                  (SELECT _tmpRemains_all_Supplement.AmountRemains::TVArChar||'  '||_tmpRemains_all_Supplement.Need::TVArChar||'  '||_tmpRemains_all_Supplement.GiveAway::TVArChar 
                   FROM _tmpRemains_all_Supplement WHERE _tmpRemains_all_Supplement.UnitId = vbUnitId_from AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId);
              END IF;
-
+*/
              INSERT INTO _tmpResult_Supplement (UnitId_from, UnitId_to, GoodsId, Amount)
                VALUES (vbUnitId_from, vbUnitId_to, vbGoodsId, CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END);
 
@@ -1171,4 +1171,4 @@ $BODY$
 
 -- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('16.11.2021')::TDateTime ,  inSession := '3');
 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '5 DAY', inDriverId:= 0, inUserId:= 3);

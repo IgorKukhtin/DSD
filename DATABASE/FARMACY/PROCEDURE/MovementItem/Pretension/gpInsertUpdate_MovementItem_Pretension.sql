@@ -83,8 +83,9 @@ BEGIN
                                  AND Container.DescId = zc_Container_Count() 
     WHERE 
         MovementItem.Id = inParentId;
+
      -- пересчитали Итоговые суммы
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm_Pretension (inMovementId);
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

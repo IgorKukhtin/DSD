@@ -132,12 +132,15 @@ type
     cxDBPivotGrid1Field2: TcxDBPivotGridField;
     cxDBPivotGrid1Field3: TcxDBPivotGridField;
     cxDBPivotGrid1Field4: TcxDBPivotGridField;
+    cxDBPivotGrid1Field5: TcxDBPivotGridField;
     procedure actSetGoodsExecute(Sender: TObject);
     procedure actSetPromoExecute(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure actExportExelExecute(Sender: TObject);
     procedure actAddGoodsExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure cxDBPivotGrid1Field5GetDisplayText(Sender: TcxPivotGridField;
+      ACell: TcxPivotGridDataCellViewInfo; var AText: string);
   private
   public
   end;
@@ -244,6 +247,13 @@ begin
     cdsPromoGoods.Filtered := False;
     cdsPromoGoods.Filter := '';
   end;
+end;
+
+procedure TReport_Analysis_Remains_SellingForm.cxDBPivotGrid1Field5GetDisplayText(
+  Sender: TcxPivotGridField; ACell: TcxPivotGridDataCellViewInfo;
+  var AText: string);
+begin
+  if AText = 'True' then AText := 'Да' else AText := 'Нет';
 end;
 
 procedure TReport_Analysis_Remains_SellingForm.FormClose(Sender: TObject;

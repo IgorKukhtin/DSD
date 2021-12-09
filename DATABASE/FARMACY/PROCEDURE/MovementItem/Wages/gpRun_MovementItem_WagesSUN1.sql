@@ -72,8 +72,8 @@ BEGIN
 
               SELECT MovementLinkObject_From.ObjectId                                           AS UnitID
                    , CASE WHEN date_trunc('day', MovementDate_Insert.ValueData) = vbOparDate1 THEN - 200
-                          WHEN date_trunc('day', MovementDate_Insert.ValueData) = vbOparDate2 THEN - 200
-                          WHEN date_trunc('day', MovementDate_Insert.ValueData) = vbOparDate3 THEN - 350 END::TFloat AS SummaSUN1
+                          WHEN date_trunc('day', MovementDate_Insert.ValueData) = vbOparDate2 THEN - 400
+                          WHEN date_trunc('day', MovementDate_Insert.ValueData) = vbOparDate3 THEN - 750 END::TFloat AS SummaSUN1
                    , string_agg(Movement.InvNumber, ',')::TVarChar                              AS InvNumber
               FROM tmpMovement AS Movement
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -122,5 +122,5 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM Log_Run_Schedule_Function
+-- SELECT * FROM Log_Run_Schedule_Function order by Log_Run_Schedule_Function.DateInsert desc LIMIT 50
 -- SELECT * FROM gpRun_MovementItem_WagesSUN1 (inSession := zfCalc_UserAdmin())

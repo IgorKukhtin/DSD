@@ -3,7 +3,7 @@ object UnitAutoSUAForm: TUnitAutoSUAForm
   Top = 0
   Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1072#1074#1090#1086' '#1088#1072#1089#1095#1077#1090#1072' '#1057#1059#1040
   ClientHeight = 380
-  ClientWidth = 664
+  ClientWidth = 986
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,12 +18,13 @@ object UnitAutoSUAForm: TUnitAutoSUAForm
   object cxGrid: TcxGrid
     Left = 2
     Top = 26
-    Width = 662
+    Width = 984
     Height = 354
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 662
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -86,7 +87,48 @@ object UnitAutoSUAForm: TUnitAutoSUAForm
         DataBinding.FieldName = 'Longitude'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 76
+      end
+      object Calculation: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1088#1072#1073#1086#1090#1099' '#1057#1059#1040
+        DataBinding.FieldName = 'Calculation'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 91
+      end
+      object CountFinalSUA: TcxGridDBColumn
+        Caption = #1059#1095#1072#1089#1090#1080#1081' '#1074' '#1057#1059#1040
+        DataBinding.FieldName = 'CountFinalSUA'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 61
+      end
+      object AssortmentName1: TcxGridDBColumn
+        Caption = #1040#1087#1090#1077#1082#1072' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072' 1'
+        DataBinding.FieldName = 'AssortmentName1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 130
+      end
+      object AssortmentName2: TcxGridDBColumn
+        Caption = #1040#1087#1090#1077#1082#1072' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072' 2'
+        DataBinding.FieldName = 'AssortmentName2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 130
+      end
+      object AssortmentName3: TcxGridDBColumn
+        Caption = #1040#1087#1090#1077#1082#1072' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072' 3'
+        DataBinding.FieldName = 'AssortmentName3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 130
       end
     end
     object cxGridLevel: TcxGridLevel

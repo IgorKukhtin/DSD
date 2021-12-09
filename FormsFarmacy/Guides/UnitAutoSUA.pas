@@ -58,6 +58,11 @@ type
     spUpdateAutoUnit: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
     actChangeAutoUnit: TdsdExecStoredProc;
+    Calculation: TcxGridDBColumn;
+    CountFinalSUA: TcxGridDBColumn;
+    AssortmentName1: TcxGridDBColumn;
+    AssortmentName2: TcxGridDBColumn;
+    AssortmentName3: TcxGridDBColumn;
   private
     { Private declarations }
   public

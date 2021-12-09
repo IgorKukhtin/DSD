@@ -9,6 +9,8 @@ RETURNS TABLE (UnitId Integer, UnitName TVarChar,  JuridicalName TVarChar
 
              , DateAuto TDateTime
              , Latitude TVarChar, Longitude TVarChar, ORD Integer
+             , OperDateFinalSUA TDateTime, Calculation TDateTime, CountFinalSUA Integer
+             , FinalSUAProtocolId Integer, AssortmentName1 TVarChar, AssortmentName2 TVarChar, AssortmentName3 TVarChar
              
               )
 AS
@@ -72,6 +74,69 @@ BEGIN
        , tmpUnitData AS (SELECT tmpUnitDataInterim.UnitId
                               , tmpUnitDataInterim.MaxDateAuto + ((7 * tmpUnitDataInterim.Ord)::tvarchar||' DAY')::INTERVAL   AS DateAuto
                         FROM tmpUnitDataInterim)
+       , tmpMovement AS (SELECT Movement.Id                          AS Id
+                              , Movement.InvNumber                   AS InvNumber
+                              , Movement.OperDate                    AS OperDate
+                         FROM Movement
+                         WHERE Movement.DescId = zc_Movement_FinalSUA()
+                           AND Movement.StatusId = zc_Enum_Status_Complete()
+                         )
+       , tmpCalculation AS (SELECT MILinkObject_Unit.ObjectId                           AS UnitId
+                                 , Max(Movement.OperDate)::TDateTime                    AS OperDate
+                                 , Max(MovementDate_Calculation.ValueData)::TDateTime   AS Calculation
+                                 , COUNT(DISTINCT Movement.Id)::Integer                 AS CountFinalSUA
+                             FROM tmpMovement AS Movement
+
+                                  LEFT JOIN MovementDate AS MovementDate_Calculation
+                                                         ON MovementDate_Calculation.MovementId = Movement.Id
+                                                        AND MovementDate_Calculation.DescId = zc_MovementDate_Calculation()
+                                                        
+                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                         AND MovementItem.DescId = zc_MI_Master()
+                                                         AND MovementItem.isErased = False 
+
+                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                   ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                                  AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+
+                             GROUP BY MILinkObject_Unit.ObjectId)
+       , tmpFinalSUAProtocol AS (SELECT Max(Object_FinalSUAProtocol.Id)                         AS Id
+                                      , tmpUnit.Id                                              AS UnitId
+                                 FROM Object AS Object_FinalSUAProtocol
+                            
+                                      INNER JOIN ObjectDate AS ObjectDate_OperDate
+                                                            ON ObjectDate_OperDate.ObjectId = Object_FinalSUAProtocol.Id
+                                                           AND ObjectDate_OperDate.DescId = zc_ObjectDate_FinalSUAProtocol_OperDate()
+
+                                      INNER JOIN ObjectBlob AS ObjectBlob_Recipient
+                                                            ON ObjectBlob_Recipient.ObjectId = Object_FinalSUAProtocol.Id
+                                                           AND ObjectBlob_Recipient.DescId = zc_objectBlob_FinalSUAProtocol_Recipient()
+
+                                      INNER JOIN (SELECT T1.Id, T1.Code, T1.Name FROM gpSelect_Object_Unit (True, inSession) AS T1) AS tmpUnit
+                                                                      ON ','||ObjectBlob_Recipient.ValueData||',' LIKE '%,'||tmpUnit.Id::TVarChar||',%'
+                                                                      
+                                      INNER JOIN tmpCalculation ON tmpCalculation.UnitId = tmpUnit.Id 
+                                                               AND ObjectDate_OperDate.ValueData <= tmpCalculation.Calculation
+                                                                        
+                                WHERE Object_FinalSUAProtocol.DescId = zc_Object_FinalSUAProtocol()
+                                  AND Object_FinalSUAProtocol.isErased = False
+                                GROUP BY tmpUnit.Id 
+                                )
+       , tmpAssortment AS (SELECT Object_FinalSUAProtocol.Id     AS Id
+                                , tmpUnit.Code                   AS AssortmentCode
+                                , tmpUnit.Name                   AS AssortmentName
+                                , ROW_NUMBER() OVER (PARTITION BY Object_FinalSUAProtocol.Id ORDER BY tmpUnit.Name) AS Ord 
+                           FROM Object AS Object_FinalSUAProtocol
+                            
+                                INNER JOIN ObjectBlob AS ObjectBlob_Recipient
+                                                      ON ObjectBlob_Recipient.ObjectId = Object_FinalSUAProtocol.Id
+                                                     AND ObjectBlob_Recipient.DescId = zc_objectBlob_FinalSUAProtocol_Assortment()
+
+                                INNER JOIN (SELECT T1.Id, T1.Code, T1.Name FROM gpSelect_Object_Unit (True, inSession) AS T1) AS tmpUnit
+                                                     ON ','||ObjectBlob_Recipient.ValueData||',' LIKE '%,'||tmpUnit.Id::TVarChar||',%'
+                                  
+                           WHERE Object_FinalSUAProtocol.DescId = zc_Object_FinalSUAProtocol()
+                             AND Object_FinalSUAProtocol.isErased = False)
                               
     SELECT tmpUnit.UnitId
          , tmpUnit.UnitName
@@ -80,6 +145,13 @@ BEGIN
          , ObjectString_Latitude.ValueData                                          AS Latitude 
          , ObjectString_Longitude.ValueData                                         AS Longitude
          , tmpUnit.ORD::Integer                                                     AS ORD
+         , tmpCalculation.OperDate                                                  AS OperDateFinalSUA
+         , tmpCalculation.Calculation                                               AS Calculation
+         , tmpCalculation.CountFinalSUA                                             AS CountFinalSUA
+         , tmpFinalSUAProtocol.ID                                                   AS FinalSUAProtocolId 
+         , Assortment1.AssortmentName                                               AS AssortmentName1
+         , Assortment2.AssortmentName                                               AS AssortmentName2
+         , Assortment3.AssortmentName                                               AS AssortmentName3
     FROM tmpUnit
          LEFT JOIN ObjectString AS ObjectString_Latitude
                                 ON ObjectString_Latitude.ObjectId = tmpUnit.UnitId
@@ -91,6 +163,20 @@ BEGIN
                               ON ObjectDate_AutoSUA.ObjectId = tmpUnit.UnitId
                              AND ObjectDate_AutoSUA.DescId = zc_ObjectDate_Unit_AutoSUA()
          LEFT JOIN tmpUnitData ON tmpUnitData.UnitId = tmpUnit.UnitId
+         
+         LEFT JOIN tmpCalculation ON tmpCalculation.UnitId = tmpUnit.UnitId 
+         
+         LEFT JOIN tmpFinalSUAProtocol ON tmpFinalSUAProtocol.UnitId = tmpUnit.UnitId 
+         
+         LEFT JOIN tmpAssortment AS Assortment1
+                                 ON Assortment1.Id = tmpFinalSUAProtocol.Id 
+                                AND Assortment1.Ord = 1 
+         LEFT JOIN tmpAssortment AS Assortment2
+                                 ON Assortment2.Id = tmpFinalSUAProtocol.Id 
+                                AND Assortment2.Ord = 2
+         LEFT JOIN tmpAssortment AS Assortment3
+                                 ON Assortment3.Id = tmpFinalSUAProtocol.Id 
+                                AND Assortment3.Ord = 3
     ORDER BY tmpUnit.ORD;
              
 

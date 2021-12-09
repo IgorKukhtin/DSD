@@ -402,7 +402,8 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
       Width = 263
       Height = 8
       AlignSplitter = salTop
-      Control = Panel2
+      Control = Panel4
+      ExplicitTop = 602
     end
   end
   object cxSplitter1: TcxSplitter
@@ -542,6 +543,15 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
       DataBinding.FieldName = 'GoodsGroupPromoName'
       Visible = True
       UniqueName = #1043#1088#1091#1087#1087#1072' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+    end
+    object cxDBPivotGrid1Field5: TcxDBPivotGridField
+      AreaIndex = 16
+      AllowedAreas = [faColumn, faRow, faFilter]
+      IsCaptionAssigned = True
+      Caption = #1052#1072#1088#1082'. '#1082#1086#1085#1090#1088#1072#1082#1090
+      DataBinding.FieldName = 'isPromo'
+      Visible = True
+      UniqueName = #1052#1072#1088#1082'. '#1082#1086#1085#1090#1088#1072#1082#1090
     end
     object cxDBPivotGridField9: TcxDBPivotGridField
       AreaIndex = 4
