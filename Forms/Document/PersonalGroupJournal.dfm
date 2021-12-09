@@ -386,6 +386,7 @@ inherited PersonalGroupJournalForm: TPersonalGroupJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -394,7 +395,6 @@ inherited PersonalGroupJournalForm: TPersonalGroupJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'LineNum;GoodsGroupNameFull;GoodsName;GoodsKindName'
         end>
       Params = <
         item
@@ -404,8 +404,8 @@ inherited PersonalGroupJournalForm: TPersonalGroupJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_OrderExternal'
-      ReportNameParam.Value = 'PrintMovement_OrderExternal'
+      ReportName = 'PrintMovement_PersonalGroup'
+      ReportNameParam.Value = 'PrintMovement_PersonalGroup'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -603,6 +603,14 @@ inherited PersonalGroupJournalForm: TPersonalGroupJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -619,7 +627,7 @@ inherited PersonalGroupJournalForm: TPersonalGroupJournalForm
         end>
     end
     object bbPrint: TdxBarButton
-      Action = mactPrint_Order
+      Action = actPrint
       Category = 0
     end
   end
