@@ -21,6 +21,7 @@ inherited PretensionForm: TPretensionForm
       inherited cxGrid: TcxGrid
         Width = 1001
         Height = 299
+        ExplicitLeft = 72
         ExplicitWidth = 1001
         ExplicitHeight = 299
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -64,6 +65,16 @@ inherited PretensionForm: TPretensionForm
               Format = ',0.####'
               Kind = skSum
               Column = RemainsAll
+            end
+            item
+              Format = '+,0.###;-,0.###; ;'
+              Kind = skSum
+              Column = AmountDiff
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountIncome
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -108,6 +119,16 @@ inherited PretensionForm: TPretensionForm
               Format = ',0.####'
               Kind = skSum
               Column = RemainsAll
+            end
+            item
+              Format = '+,0.###;-,0.###; ;'
+              Kind = skSum
+              Column = AmountDiff
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountIncome
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -181,8 +202,16 @@ inherited PretensionForm: TPretensionForm
             HeaderAlignmentVert = vaCenter
             Width = 78
           end
+          object ReasonDifferencesName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1095#1080#1085#1072' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1103
+            DataBinding.FieldName = 'ReasonDifferencesName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 108
+          end
           object Amount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -191,24 +220,6 @@ inherited PretensionForm: TPretensionForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 73
-          end
-          object AmountManual: TcxGridDBColumn
-            Caption = #1060#1072#1082#1090'. '#1082#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'AmountManual'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 77
-          end
-          object AmountDiff: TcxGridDBColumn
-            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'AmountDiff'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = '+,0.###;-,0.###; ;'
-            Options.Editing = False
           end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -222,8 +233,8 @@ inherited PretensionForm: TPretensionForm
             Width = 60
           end
           object Summ: TcxGridDBColumn
-            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1089#1091#1084#1084#1072
-            DataBinding.FieldName = 'SummDiff'
+            Caption = 'C'#1091#1084#1084#1072
+            DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00'
@@ -232,10 +243,42 @@ inherited PretensionForm: TPretensionForm
             Options.Editing = False
             Width = 60
           end
+          object AmountIncome: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1089#1090#1072#1074'.'
+            DataBinding.FieldName = 'AmountIncome'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object AmountManual: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090'. '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'AmountManual'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 77
+          end
+          object AmountDiff: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'AmountDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '+,0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
           object AmountInIncome: TcxGridDBColumn
             AlternateCaption = #1042' '#1087#1088#1080#1093#1086#1076#1077
-            Caption = #1042' '#1087#1088#1080#1093#1086#1076#1077
+            Caption = #1042' '#1087#1088#1080#1093#1086#1076#1077' '#1089#1077#1081#1095#1072#1089
             DataBinding.FieldName = 'AmountInIncome'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 76
@@ -998,8 +1041,8 @@ inherited PretensionForm: TPretensionForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
-    Left = 782
-    Top = 217
+    Left = 502
+    Top = 385
   end
   inherited PopupMenu: TPopupMenu
     Left = 632
@@ -1345,8 +1388,8 @@ inherited PretensionForm: TPretensionForm
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
-    Left = 784
-    Top = 264
+    Left = 904
+    Top = 384
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Pretension_SetErased'
@@ -1403,6 +1446,23 @@ inherited PretensionForm: TPretensionForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inReasonDifferencesId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ReasonDifferencesId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountIncome'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountIncome'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmountManual'
         Value = Null
         Component = MasterCDS
@@ -1430,26 +1490,10 @@ inherited PretensionForm: TPretensionForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outAmountDiff'
+        Name = 'outSumm'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'AmountDiff'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outSummDiff'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummDiff'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountInIncome'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountInIncome'
+        ComponentItem = 'Summ'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1466,11 +1510,6 @@ inherited PretensionForm: TPretensionForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'WarningColor'
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 160

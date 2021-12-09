@@ -101,7 +101,7 @@ inherited CreatePretensionForm: TCreatePretensionForm
               Kind = skSum
             end
             item
-              Format = ',0.###'
+              Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Column = AmountManual
             end
@@ -114,6 +114,11 @@ inherited CreatePretensionForm: TCreatePretensionForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = Amount
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -216,6 +221,9 @@ inherited CreatePretensionForm: TCreatePretensionForm
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 73
@@ -739,7 +747,7 @@ inherited CreatePretensionForm: TCreatePretensionForm
     object mactCreatePretension: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
-      BeforeAction = actChechPretension
+      BeforeAction = mactChechPretension
       ActionList = <
         item
           Action = actInsertMovementPretension
@@ -847,6 +855,16 @@ inherited CreatePretensionForm: TCreatePretensionForm
           StoredProc = spChechPretension
         end>
       Caption = 'actChechPretension'
+    end
+    object mactChechPretension: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actChechPretension
+        end>
+      View = cxGridDBTableView
+      Caption = 'mactChechPretension'
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn [16]

@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer
              , OperDate TDateTime
              , BranchDate TDateTime, BranchUser TVarChar 
              , StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat
+             , TotalDeficit TFloat, TotalProficit TFloat
              , PriceWithVAT Boolean
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
@@ -67,7 +67,8 @@ BEGIN
            , Movement_Pretension_View.BranchUserName
            , Movement_Pretension_View.StatusCode
            , Movement_Pretension_View.StatusName
-           , Movement_Pretension_View.TotalCount
+           , Movement_Pretension_View.TotalDeficit
+           , Movement_Pretension_View.TotalProficit
            , Movement_Pretension_View.PriceWithVAT
            , Movement_Pretension_View.FromId
            , Movement_Pretension_View.FromName

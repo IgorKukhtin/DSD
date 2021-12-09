@@ -11,6 +11,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Pretension(
 RETURNS TABLE (Id Integer, ParentId integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat
+             , ReasonDifferencesId Integer
+             , ReasonDifferencesName TVarChar
+             , AmountIncome TFloat
              , AmountManual TFloat
              , AmountDiff TFloat
              , isChecked Boolean
@@ -139,6 +142,9 @@ BEGIN
                                , Object_Goods.ObjectCode          AS GoodsCode
                                , Object_Goods.ValueData           AS GoodsName
                                , MI_Pretension.Amount             AS Amount
+                               , Object_ReasonDifferences.Id          AS ReasonDifferencesId
+                               , Object_ReasonDifferences.ValueData   AS ReasonDifferencesName
+                               , MIFloat_Amount.ValueData         AS AmountIncome
                                , MIFloat_AmountManual.ValueData   AS AmountManual
                                , (COALESCE(MIFloat_AmountManual.ValueData, 0) - COALESCE(MI_Pretension.Amount,0))::TFloat AS AmountDiff
                                , MIBoolean_Checked.ValueData      AS isChecked
@@ -153,6 +159,9 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                            ON MIFloat_MovementItemId.MovementItemId = MI_Pretension.Id
                                                           AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
+                               LEFT JOIN MovementItemFloat AS MIFloat_Amount
+                                                           ON MIFloat_Amount.MovementItemId = MI_Pretension.Id
+                                                          AND MIFloat_Amount.DescId = zc_MIFloat_Amount()
                                LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
                                                            ON MIFloat_AmountManual.MovementItemId = MI_Pretension.Id
                                                           AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
@@ -160,6 +169,11 @@ BEGIN
                                LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
                                                              ON MIBoolean_Checked.MovementItemId = MI_Pretension.Id
                                                             AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
+
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
+                                                                ON MILinkObject_ReasonDifferences.MovementItemId = MI_Pretension.Id
+                                                               AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
+                               LEFT JOIN Object AS Object_ReasonDifferences ON Object_ReasonDifferences.Id = MILinkObject_ReasonDifferences.ObjectId
                           WHERE Movement_Pretension.Id = inMovementId
                          )
 
@@ -198,6 +212,9 @@ BEGIN
               , COALESCE(MovementItem_Pretension.GoodsCode, MovementItem_Income.GoodsCode) AS GoodsCode
               , COALESCE(MovementItem_Pretension.GoodsName, MovementItem_Income.GoodsName) AS GoodsName
               , MovementItem_Pretension.Amount                                             AS Amount
+              , MovementItem_Pretension.ReasonDifferencesId
+              , MovementItem_Pretension.ReasonDifferencesName
+              , MovementItem_Pretension.AmountIncome
               , MovementItem_Pretension.AmountManual
               , MovementItem_Pretension.AmountDiff
               , MovementItem_Pretension.isChecked
@@ -301,6 +318,9 @@ BEGIN
                                , Object_Goods.ObjectCode          AS GoodsCode
                                , Object_Goods.ValueData           AS GoodsName
                                , MI_Pretension.Amount             AS Amount
+                               , Object_ReasonDifferences.Id          AS ReasonDifferencesId
+                               , Object_ReasonDifferences.ValueData   AS ReasonDifferencesName
+                               , MIFloat_Amount.ValueData         AS AmountIncome
                                , MIFloat_AmountManual.ValueData   AS AmountManual
                                , (COALESCE(MIFloat_AmountManual.ValueData, 0) - COALESCE(MI_Pretension.Amount,0))::TFloat AS AmountDiff
                                , MIBoolean_Checked.ValueData      AS isChecked
@@ -315,6 +335,9 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                            ON MIFloat_MovementItemId.MovementItemId = MI_Pretension.Id
                                                           AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
+                               LEFT JOIN MovementItemFloat AS MIFloat_Amount
+                                                           ON MIFloat_Amount.MovementItemId = MI_Pretension.Id
+                                                          AND MIFloat_Amount.DescId = zc_MIFloat_Amount()
                                LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
                                                            ON MIFloat_AmountManual.MovementItemId = MI_Pretension.Id
                                                           AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
@@ -322,6 +345,11 @@ BEGIN
                                LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
                                                              ON MIBoolean_Checked.MovementItemId = MI_Pretension.Id
                                                             AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
+
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
+                                                                ON MILinkObject_ReasonDifferences.MovementItemId = MI_Pretension.Id
+                                                               AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
+                               LEFT JOIN Object AS Object_ReasonDifferences ON Object_ReasonDifferences.Id = MILinkObject_ReasonDifferences.ObjectId
                           WHERE Movement_Pretension.Id = inMovementId
                          )
 
@@ -374,6 +402,9 @@ BEGIN
               , MovementItem.GoodsCode
               , MovementItem.GoodsName
               , MovementItem.Amount
+              , MovementItem.ReasonDifferencesId
+              , MovementItem.ReasonDifferencesName
+              , MovementItem.AmountIncome
               , MovementItem.AmountManual
               , MovementItem.AmountDiff
               , MovementItem.isChecked

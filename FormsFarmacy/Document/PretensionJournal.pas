@@ -20,15 +20,14 @@ type
   TPretensionJournalForm = class(TAncestorJournalForm)
     FromName: TcxGridDBColumn;
     ToName: TcxGridDBColumn;
-    TotalCount: TcxGridDBColumn;
+    TotalDeficit: TcxGridDBColumn;
     bbTax: TdxBarButton;
     bbPrint: TdxBarButton;
     bbPrintTax_Us: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
-    TotalSumm: TcxGridDBColumn;
+    TotalProficit: TcxGridDBColumn;
     bbSendData: TdxBarButton;
-    TotalSummMVAT: TcxGridDBColumn;
     NDSKindName: TcxGridDBColumn;
     mactInsert: TMultiAction;
     spInsertMovement: TdsdStoredProc;

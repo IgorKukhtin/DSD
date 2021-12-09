@@ -69,6 +69,7 @@ type
     ChoiceReasonDifferences: TOpenChoiceForm;
     spChechPretension: TdsdStoredProc;
     actChechPretension: TdsdExecStoredProc;
+    mactChechPretension: TMultiAction;
   private
     { Private declarations }
   public

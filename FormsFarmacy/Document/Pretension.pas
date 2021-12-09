@@ -81,6 +81,8 @@ type
     actUpdate_ClearBranchDate: TdsdExecStoredProc;
     actDataChoiceDialog: TExecuteDialog;
     dxBarButton5: TdxBarButton;
+    ReasonDifferencesName: TcxGridDBColumn;
+    AmountIncome: TcxGridDBColumn;
   private
     { Private declarations }
   public

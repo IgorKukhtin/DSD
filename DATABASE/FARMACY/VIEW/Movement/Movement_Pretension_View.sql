@@ -9,7 +9,8 @@ SELECT       Movement.Id                                AS Id
            , Movement.StatusId                          AS StatusId
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
-           , MovementFloat_TotalCount.ValueData         AS TotalCount
+           , MovementFloat_TotalDeficit.ValueData       AS TotalDeficit
+           , MovementFloat_TotalProficit.ValueData      AS TotalProficit
            , MovementBlob_Comment.ValueData             AS Comment
            , MovementDate_Branch.ValueData              AS BranchDate
 
@@ -38,9 +39,12 @@ SELECT       Movement.Id                                AS Id
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId = Movement.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalDeficit
+                                    ON MovementFloat_TotalDeficit.MovementId = Movement.Id
+                                   AND MovementFloat_TotalDeficit.DescId = zc_MovementFloat_TotalDeficit()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalProficit
+                                    ON MovementFloat_TotalProficit.MovementId = Movement.Id
+                                   AND MovementFloat_TotalProficit.DescId = zc_MovementFloat_TotalProficit()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

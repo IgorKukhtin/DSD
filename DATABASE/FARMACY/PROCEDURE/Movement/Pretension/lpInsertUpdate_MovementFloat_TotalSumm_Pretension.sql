@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementFloat_TotalSumm_Pretension(
   RETURNS VOID AS
 $BODY$
 
-  DECLARE vbTotalCount   TFloat;
+  DECLARE vbTotalDeficit   TFloat;
+  DECLARE vbTotalProficit   TFloat;
 
 BEGIN
      IF COALESCE (inMovementId, 0) = 0
@@ -16,13 +17,11 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Элемент документа не сохранен.';
      END IF;
 
-     SELECT SUM(COALESCE(MIFloat_AmountManual.ValueData, 0) - COALESCE(MI_Pretension.Amount,0)) INTO vbTotalCount 
+     SELECT SUM(CASE WHEN COALESCE(MI_Pretension.Amount,0) < 0 THEN - COALESCE(MI_Pretension.Amount,0) END)
+          , SUM(CASE WHEN COALESCE(MI_Pretension.Amount,0) > 0 THEN COALESCE(MI_Pretension.Amount,0) END)
+     INTO vbTotalDeficit, vbTotalProficit
      FROM MovementItem AS MI_Pretension
      
-          LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
-                                      ON MIFloat_AmountManual.MovementItemId = MI_Pretension.Id
-                                     AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
-
           LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
                                         ON MIBoolean_Checked.MovementItemId = MI_Pretension.Id
                                        AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
@@ -34,7 +33,10 @@ BEGIN
 
 
       -- Сохранили свойство <Итого Сумма реализации>
-      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbTotalCount);
+      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalDeficit(), inMovementId, vbTotalDeficit);
+
+      -- Сохранили свойство <Итого Сумма реализации>
+      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalProficit(), inMovementId, vbTotalProficit);
 
 
 END;
