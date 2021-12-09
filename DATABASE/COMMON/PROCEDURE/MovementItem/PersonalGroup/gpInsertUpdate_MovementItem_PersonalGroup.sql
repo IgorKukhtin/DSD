@@ -20,6 +20,12 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalGroup());
+    
+    --проверка 
+    IF COALESCE (inPersonalId,0) = 0
+    THEN
+        RAISE EXCEPTION 'Ошибка.Не выбран сотрудник';
+    END IF;
 
     --Подразделение из шапки документа
     SELECT MovementLinkObject_Unit.ObjectId AS UnitId
