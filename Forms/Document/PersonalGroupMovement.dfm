@@ -442,8 +442,8 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_PersonalGroup'
-      ReportNameParam.Value = 'PrintMovement_PersonalGroup'
+      ReportName = #1044#1086#1082#1091#1084#1077#1085#1090'_'#1057#1087#1080#1089#1086#1082#1041#1088#1080#1075#1072#1076#1099
+      ReportNameParam.Value = #1044#1086#1082#1091#1084#1077#1085#1090'_'#1057#1087#1080#1089#1086#1082#1041#1088#1080#1075#1072#1076#1099
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
@@ -741,6 +741,14 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -1226,12 +1234,6 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId_Weighing'
-        Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
