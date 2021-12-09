@@ -53,6 +53,36 @@ BEGIN
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                 )
 
+ , tmpContainerLoss AS (SELECT MIContainer.MovementId               AS MovementId
+                             , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount
+                             , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() THEN -1 * MIContainer.Amount ELSE 0 END) AS Summa
+                             , ObjectFloat_Price.ValueData          AS Price
+                             , MIContainer.WhereObjectId_Analyzer   AS CarId
+                             , MIContainer.ObjectIntId_Analyzer     AS UnitId
+                             , MIContainer.ObjectExtId_Analyzer     AS BranchId
+                             , MIContainer.ObjectId_Analyzer        AS ObjectId
+                        FROM MovementItemContainer AS MIContainer
+                             LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                            ON CLO_PartionGoods.ContainerId = MIContainer.ContainerId
+                                                           AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
+
+                             LEFT JOIN ObjectFloat AS ObjectFloat_Price
+                                                   ON ObjectFloat_Price.ObjectId = Object_PartionGoods.Id
+                                                  AND ObjectFloat_Price.DescId   = zc_ObjectFloat_PartionGoods_Price()
+                        WHERE MIContainer.MovementId IN (SELECT DISTINCT  tmpMovLoss.MovementId FROM tmpMovLoss) 
+                          AND MIContainer.MovementDescId IN (zc_Movement_Loss())
+                 --  and MIContainer.MovementId = 21590008 
+                          AND MIContainer.ContainerId_analyzer IS NOT NULL
+                        GROUP BY MIContainer.MovementId, MIContainer.MovementDescId
+                               , MIContainer.ObjectId_Analyzer
+                               , MIContainer.WhereObjectId_Analyzer 
+                               , MIContainer.ObjectIntId_Analyzer 
+                               , MIContainer.ObjectExtId_Analyzer
+                               , MIContainer.ObjectId_Analyzer
+                               , ObjectFloat_Price.ValueData
+                       )
+
  , tmpMILos AS (SELECT CASE WHEN inIsMovement = TRUE THEN tmpMovLoss.MovementId ELSE 0    END AS MovementId
                      , CASE WHEN inIsMovement = TRUE THEN tmpMovLoss.OperDate   ELSE NULL END AS OperDate
                      , CASE WHEN inIsMovement = TRUE THEN tmpMovLoss.InvNumber  ELSE ''   END AS InvNumber
@@ -60,17 +90,24 @@ BEGIN
                      , tmpMovLoss.CarId
                      , tmpMovLoss.CarCode
                      , tmpMovLoss.CarName
-                     , MovementItem.ObjectId                         AS ObjectId
-                     , MILinkObject_Asset.ObjectId                   AS AssetId
-                     , MovementItem.Amount                           AS Amount
+                     , MovementItem.ObjectId        AS ObjectId
+                     , MILinkObject_Asset.ObjectId  AS AssetId
+                     , tmpContainerLoss.Amount      AS Amount
+                     , CASE WHEN COALESCE (tmpContainerLoss.Price,0) = 0 AND COALESCE (tmpContainerLoss.Amount,0) <> 0 THEN tmpContainerLoss.Summa / tmpContainerLoss.Amount ELSE tmpContainerLoss.Price END AS Price
+                     , tmpContainerLoss.Summa       AS Summa
                 FROM tmpMovLoss
                      INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovLoss.MovementId
                                             AND MovementItem.DescId     = zc_MI_Master()
                                             AND MovementItem.isErased   = FALSE
+                                            AND COALESCE (MovementItem.Amount,0) <> 0
 
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                       ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+
+                     LEFT JOIN tmpContainerLoss ON tmpContainerLoss.MovementId = tmpMovLoss.MovementId
+                                               --AND tmpContainerLoss.CarId = tmpMovLoss.CarId
+                                               AND tmpContainerLoss.ObjectId = MovementItem.ObjectId
                 )
 
  , tmpMIService AS (SELECT CASE WHEN inIsMovement = TRUE THEN Movement.Id ELSE 0 END          AS MovementId
@@ -126,13 +163,11 @@ BEGIN
                     , tmp.Price
                     , SUM (tmp.Summa)  AS Summa
                FROM (SELECT tmp.*
-                          , 0 AS Price
-                          , 0 AS Summa
-                      FROM tmpMILos AS tmp
-                     UNION
-                      SELECT tmp.*
-                      FROM tmpMIService AS tmp
-                     ) AS tmp
+                     FROM tmpMILos AS tmp
+                    UNION
+                     SELECT tmp.*
+                     FROM tmpMIService AS tmp
+                    ) AS tmp
                GROUP BY tmp.MovementId
                       , tmp.OperDate
                       , tmp.InvNumber
