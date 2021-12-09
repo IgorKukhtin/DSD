@@ -58,7 +58,7 @@ inherited PretensionForm: TPretensionForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountCheck
+              Column = AmountManual
             end
             item
               Format = ',0.####'
@@ -102,7 +102,7 @@ inherited PretensionForm: TPretensionForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountCheck
+              Column = AmountManual
             end
             item
               Format = ',0.####'
@@ -120,6 +120,9 @@ inherited PretensionForm: TPretensionForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          inherited colIsErased: TcxGridDBColumn
+            VisibleForCustomization = False
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -166,6 +169,18 @@ inherited PretensionForm: TPretensionForm
             Options.Editing = False
             Width = 100
           end
+          object CheckedName: TcxGridDBColumn
+            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
+            DataBinding.FieldName = 'CheckedName'
+            PropertiesClassName = 'TcxComboBoxProperties'
+            Properties.DropDownListStyle = lsFixedList
+            Properties.Items.Strings = (
+              #1040#1082#1090#1091#1072#1083#1100#1085#1072
+              #1053#1077#1072#1082#1090#1091#1072#1083#1100#1085#1072)
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 78
+          end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
@@ -174,19 +189,26 @@ inherited PretensionForm: TPretensionForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 73
           end
-          object AmountCheck: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1086#1090#1083#1086#1078'. '#1095#1077#1082#1072#1093
-            DataBinding.FieldName = 'AmountCheck'
+          object AmountManual: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090'. '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'AmountManual'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1093' '#1095#1077#1082#1072#1093
-            Options.Editing = False
             Width = 77
+          end
+          object AmountDiff: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'AmountDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '+,0.###;-,0.###; ;'
+            Options.Editing = False
           end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -200,8 +222,8 @@ inherited PretensionForm: TPretensionForm
             Width = 60
           end
           object Summ: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'Summ'
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1089#1091#1084#1084#1072
+            DataBinding.FieldName = 'SummDiff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00'
@@ -254,39 +276,6 @@ inherited PretensionForm: TPretensionForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 74
-          end
-          object AmountOther: TcxGridDBColumn
-            Caption = #1042' '#1074#1086#1079#1074#1088#1072#1090#1072#1093
-            DataBinding.FieldName = 'AmountOther'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 78
-          end
-          object DeferredSend: TcxGridDBColumn
-            Caption = #1042' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1093' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103#1093
-            DataBinding.FieldName = 'DeferredSend'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 84
-          end
-          object DeferredOut: TcxGridDBColumn
-            Caption = #1042' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1093' '#1074#1086#1079#1074#1088#1072#1090#1072#1093' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
-            DataBinding.FieldName = 'DeferredOut'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 84
           end
         end
       end
@@ -372,9 +361,10 @@ inherited PretensionForm: TPretensionForm
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 114
-      Top = 126
+      Left = 228
+      Top = 128
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+      Enabled = False
       Properties.ReadOnly = True
       TabOrder = 10
       Width = 130
@@ -430,15 +420,17 @@ inherited PretensionForm: TPretensionForm
       Top = 101
       EditValue = 42363d
       Enabled = False
+      Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 17
       Width = 100
     end
     object cbisDeferred: TcxCheckBox
-      Left = 114
-      Top = 142
+      Left = 228
+      Top = 144
       Caption = #1054#1090#1083#1086#1078#1077#1085
+      Enabled = False
       Properties.ReadOnly = True
       TabOrder = 18
       Width = 69
@@ -462,6 +454,21 @@ inherited PretensionForm: TPretensionForm
       Left = 388
       Top = 3
       Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+    end
+    object deBranchDate: TcxDateEdit
+      Left = 114
+      Top = 142
+      EditValue = 42363d
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 22
+      Width = 100
+    end
+    object cxLabel7: TcxLabel
+      Left = 119
+      Top = 123
+      Caption = #1044#1072#1090#1072' '#1087#1088#1080#1085#1103#1090#1080#1103
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -487,90 +494,14 @@ inherited PretensionForm: TPretensionForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actPrintTTN: TdsdPrintAction [8]
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
-      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
-      ImageIndex = 18
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1058#1058#1053
-      ReportNameParam.Value = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1058#1058#1053
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actPrintOptima: TdsdPrintAction [9]
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1054#1087#1090#1080#1084#1072
-      Hint = #1055#1077#1095#1072#1090#1100' '#1054#1087#1090#1080#1084#1072
-      ImageIndex = 17
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsName'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'('#1054#1087#1090#1080#1084#1072')'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'('#1054#1087#1090#1080#1084#1072')'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Caption = #1055#1077#1095#1072#1090#1100' '#1040#1082#1090#1072' '#1087#1086' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1040#1082#1090#1072' '#1087#1086' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -589,9 +520,10 @@ inherited PretensionForm: TPretensionForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportName = ''
+      ReportNameParam.Value = nil
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ActName'
       ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
@@ -610,7 +542,7 @@ inherited PretensionForm: TPretensionForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [15]
+    object actGoodsKindChoice: TOpenChoiceForm [13]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -685,41 +617,6 @@ inherited PretensionForm: TPretensionForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actRefreshGoodsCode: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spIncome_GoodsId
-      StoredProcList = <
-        item
-          StoredProc = spIncome_GoodsId
-        end
-        item
-          StoredProc = spGetTotalSumm
-        end
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1082#1086#1076#1086#1074
-      ImageIndex = 43
-    end
-    object mactEditPartnerData: TMultiAction
-      Category = 'PartnerData'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actPartnerDataDialog
-        end
-        item
-          Action = actUpdatePretension_PartnerData
-        end
-        item
-          Action = actRefresh
-        end>
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#8470' '#1080' '#1076#1072#1090#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#8470' '#1080' '#1076#1072#1090#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-      ImageIndex = 35
-    end
     object actPartnerDataDialog: TExecuteDialog
       Category = 'PartnerData'
       MoveParams = <>
@@ -757,17 +654,6 @@ inherited PretensionForm: TPretensionForm
         end>
       isShowModal = True
       OpenBeforeShow = True
-    end
-    object actUpdatePretension_PartnerData: TdsdExecStoredProc
-      Category = 'PartnerData'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdatePretension_PartnerData
-      StoredProcList = <
-        item
-          StoredProc = spUpdatePretension_PartnerData
-        end>
-      Caption = 'actUpdatePretension_PartnerData'
     end
     object actComplete: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -810,6 +696,60 @@ inherited PretensionForm: TPretensionForm
       Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
       Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
       ImageIndex = 52
+    end
+    object actDataChoiceDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actDataChoiceDialog'
+      FormName = 'TDataChoiceDialogForm'
+      FormNameParam.Value = 'TDataChoiceDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BranchDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1042#1074#1077#1076#1080#1090#1077' '#1076#1072#1090#1091' '#1087#1088#1080#1085#1103#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_BranchDate: TdsdExecStoredProc
+      Category = 'Deferred'
+      MoveParams = <>
+      BeforeAction = actDataChoiceDialog
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_BranchDate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_BranchDate
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1088#1080#1085#1103#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1088#1080#1085#1103#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
+      ImageIndex = 35
+    end
+    object actUpdate_ClearBranchDate: TdsdExecStoredProc
+      Category = 'Deferred'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_ClearBranchDate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ClearBranchDate
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1088#1080#1085#1103#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1088#1080#1085#1103#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
+      ImageIndex = 77
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1088#1080#1085#1103#1090#1080#1103' '#1090#1086#1074#1072#1088#1072'?'
     end
   end
   inherited MasterDS: TDataSource
@@ -903,10 +843,6 @@ inherited PretensionForm: TPretensionForm
         end
         item
           Visible = True
-          ItemName = 'bbRefreshGoodsCode'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -939,15 +875,7 @@ inherited PretensionForm: TPretensionForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintOptima'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintTTN'
         end
         item
           Visible = True
@@ -956,6 +884,10 @@ inherited PretensionForm: TPretensionForm
         item
           Visible = True
           ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton5'
         end
         item
           Visible = True
@@ -987,8 +919,11 @@ inherited PretensionForm: TPretensionForm
         end>
     end
     object bbPrintTTN: TdxBarButton [5]
-      Action = actPrintTTN
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
       Category = 0
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      Visible = ivAlways
+      ImageIndex = 18
     end
     object bbPrintTax: TdxBarButton [6]
       Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
@@ -1015,11 +950,13 @@ inherited PretensionForm: TPretensionForm
       ImageIndex = 41
     end
     object bbRefreshGoodsCode: TdxBarButton
-      Action = actRefreshGoodsCode
+      Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1082#1086#1076#1086#1074
       Category = 0
+      Visible = ivAlways
+      ImageIndex = 43
     end
     object dxBarButton1: TdxBarButton
-      Action = mactEditPartnerData
+      Action = actUpdate_BranchDate
       Category = 0
     end
     object dxBarButton2: TdxBarButton
@@ -1035,7 +972,14 @@ inherited PretensionForm: TPretensionForm
       Category = 0
     end
     object bbPrintOptima: TdxBarButton
-      Action = actPrintOptima
+      Caption = #1055#1077#1095#1072#1090#1100' '#1054#1087#1090#1080#1084#1072
+      Category = 0
+      Hint = #1055#1077#1095#1072#1090#1100' '#1054#1087#1090#1080#1084#1072
+      Visible = ivAlways
+      ImageIndex = 17
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actUpdate_ClearBranchDate
       Category = 0
     end
   end
@@ -1059,7 +1003,7 @@ inherited PretensionForm: TPretensionForm
   end
   inherited PopupMenu: TPopupMenu
     Left = 632
-    Top = 416
+    Top = 432
     object N2: TMenuItem
       Action = actMISetErased
     end
@@ -1091,8 +1035,8 @@ inherited PretensionForm: TPretensionForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ReportNameIncome'
-        Value = 'PrintMovement_Sale1'
+        Name = 'ActName'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1118,8 +1062,8 @@ inherited PretensionForm: TPretensionForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'OperDatePartner'
-        Value = Null
+        Name = 'BranchDate'
+        Value = '-700000'
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -1281,6 +1225,20 @@ inherited PretensionForm: TPretensionForm
         Component = cxmComment
         DataType = ftWideString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchDate'
+        Value = Null
+        Component = deBranchDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ActName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ActName'
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1372,6 +1330,7 @@ inherited PretensionForm: TPretensionForm
         Control = edPriceWithVAT
       end
       item
+        Control = cxmComment
       end
       item
       end
@@ -1391,13 +1350,13 @@ inherited PretensionForm: TPretensionForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Pretension_SetErased'
-    Left = 710
-    Top = 376
+    Left = 630
+    Top = 336
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Pretension_SetUnErased'
-    Left = 710
-    Top = 328
+    Left = 622
+    Top = 280
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Pretension'
@@ -1419,6 +1378,14 @@ inherited PretensionForm: TPretensionForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inParentId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ParentId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = MasterCDS
@@ -1436,6 +1403,15 @@ inherited PretensionForm: TPretensionForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountManual'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountManual'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPrice'
         Value = Null
         Component = MasterCDS
@@ -1445,18 +1421,27 @@ inherited PretensionForm: TPretensionForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inParentId'
+        Name = 'inCheckedName'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'ParentId'
+        ComponentItem = 'CheckedName'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outSumm'
+        Name = 'outAmountDiff'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Summ'
+        ComponentItem = 'AmountDiff'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummDiff'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummDiff'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1481,24 +1466,6 @@ inherited PretensionForm: TPretensionForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'WarningColor'
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -1551,8 +1518,7 @@ inherited PretensionForm: TPretensionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 368
-    Top = 272
+    Top = 344
   end
   inherited spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Summ'
@@ -1577,8 +1543,8 @@ inherited PretensionForm: TPretensionForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 420
-    Top = 188
+    Left = 396
+    Top = 276
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1587,26 +1553,20 @@ inherited PretensionForm: TPretensionForm
     ComponentList = <
       item
       end>
-    Left = 512
-    Top = 328
+    Left = 368
+    Top = 400
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 508
-    Top = 193
+    Left = 500
+    Top = 281
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 508
-    Top = 246
-  end
-  object PrintItemsSverkaCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 460
-    Top = 414
+    Left = 500
+    Top = 334
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Pretension_Print'
@@ -1629,8 +1589,8 @@ inherited PretensionForm: TPretensionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 343
-    Top = 208
+    Left = 295
+    Top = 272
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -1721,23 +1681,6 @@ inherited PretensionForm: TPretensionForm
     Left = 40
     Top = 136
   end
-  object spIncome_GoodsId: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MovementItem_Income_GoodsId'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 264
-    Top = 296
-  end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
@@ -1766,44 +1709,6 @@ inherited PretensionForm: TPretensionForm
       end>
     Left = 264
     Top = 80
-  end
-  object spUpdatePretension_PartnerData: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Pretension_PartnerData'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inInvNumberPartner'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDatePartner'
-        Value = Null
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAdjustingOurDate'
-        Value = Null
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 648
-    Top = 256
   end
   object spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Pretension'
@@ -1864,8 +1769,8 @@ inherited PretensionForm: TPretensionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 880
-    Top = 283
+    Left = 888
+    Top = 323
   end
   object spUpdate_isDeferred_Yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Pretension_Deferred'
@@ -1896,6 +1801,63 @@ inherited PretensionForm: TPretensionForm
       end>
     PackSize = 1
     Left = 880
-    Top = 219
+    Top = 275
+  end
+  object spUpdate_BranchDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Pretension_BranchDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BranchDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBranchDate'
+        Value = Null
+        Component = deBranchDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 736
+    Top = 331
+  end
+  object spUpdate_ClearBranchDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Pretension_ClearBranchDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBranchDate'
+        Value = Null
+        Component = deBranchDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 736
+    Top = 387
   end
 end

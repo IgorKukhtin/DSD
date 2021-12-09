@@ -5,12 +5,13 @@ DROP FUNCTION IF EXISTS gpUpdate_Movement_Pretension_BranchDate (Integer, TDateT
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_Pretension_BranchDate(
     IN inMovementId          Integer   , -- Ключ объекта <Документ Перемещение>
     IN inBranchDate          TDateTime , -- Дата документа
+   OUT outBranchDate         TDateTime , -- Дата документа
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS VOID AS
+RETURNS TDateTime AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbNeedComplete Boolean;
+   DECLARE vbStatusId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := inSession;
@@ -20,6 +21,22 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка. Документ не сохранен!';
     END IF;
+    
+    -- параметры документа
+    SELECT
+        Movement.StatusId
+    INTO
+        vbStatusId
+    FROM Movement
+    WHERE Movement.Id = inMovementId;
+
+    -- свойство меняем у не проведенных документов
+    IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_UnComplete()
+    THEN
+       RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);   
+    END IF;
+    
+    outBranchDate := inBranchDate;
     
     --Сохранили Корректировка нашей даты
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Branch(), inMovementId, inBranchDate);

@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_Income()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Pretension(Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Pretension(Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Pretension(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,9 +8,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Pretension(
     IN inParentId            Integer   , -- ссылка на родителя
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
+    IN inReasonDifferencesId Integer   , -- причину разногласия
+    IN inAmountIncome        TFloat    , -- Количество приход
     IN inAmountManual        TFloat    , -- Факт. кол-во
-    IN inisChecked           Boolean   , -- Состояние
-   OUT outSumm               TFloat    , -- Сумма
+    IN inPrice               TFloat    , -- Цена
+    IN inCheckedName         TVarChar  , -- Состояние
+   OUT outSumm               TFloat    , -- Сумма по притензии
    OUT outRemains            TFloat    , -- Остаток по приходу
    OUT outWarningColor       Integer   , -- Выделение крассным, если кол-во > остатка 
     IN inSession             TVarChar    -- сессия пользователя
@@ -21,11 +24,14 @@ $BODY$
    DECLARE vbMovementIncomeId Integer;
    DECLARE vbAmountIncome TFloat;
    DECLARE vbAmountOther TFloat;
+   DECLARE vbisChecked Boolean;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      --vbUserId := inSession;
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Pretension());
+     
+     vbisChecked := 'Актуальна' = inCheckedName;
      
      IF COALESCE(inAmount, 0) > 0
      THEN
@@ -61,9 +67,9 @@ BEGIN
        END IF;
      END IF;
      
-     outSumm := (inAmount*inPrice)::TFloat;
+     outSumm := (inAmount * inPrice)::TFloat;
      
-     ioId := lpInsertUpdate_MovementItem_Pretension(ioId, inMovementId, inParentId, inGoodsId, inAmount, inAmountManual, inisChecked, vbUserId);
+     ioId := lpInsertUpdate_MovementItem_Pretension(ioId, inMovementId, inParentId, inGoodsId, inAmount, inReasonDifferencesId, inAmountIncome, inAmountManual, vbisChecked, vbUserId);
 
     SELECT
         Container.Amount

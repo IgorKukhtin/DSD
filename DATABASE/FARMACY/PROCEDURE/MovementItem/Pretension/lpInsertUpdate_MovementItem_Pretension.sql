@@ -1,14 +1,16 @@
 	
 -- Function: gpInsertUpdate_MovementItem_Income()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Pretension(Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Pretension(Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Pretension(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inParentId            Integer   , -- ссылка на родителя
     IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- Количество
+    IN inAmount              TFloat    , -- Количество для претензии
+    IN inReasonDifferencesId Integer   , -- Товары
+    IN inAmountIncome        TFloat    , -- Количество приход
     IN inAmountManual        TFloat    , -- Факт. кол-во
     IN inisChecked           Boolean   , -- Состояние
     IN inUserId              Integer     -- сессия пользователя
@@ -28,7 +30,12 @@ BEGIN
      -- сохранили свойство <ссылка на родителя>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementItemId(), ioId, inParentId);
      -- сохранили свойство <Факт. кол-во>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Amount(), ioId, inAmountIncome);
+     -- сохранили свойство <Факт. кол-во>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual(), ioId, inAmountManual);
+
+     -- Сохранили <причину разногласия>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReasonDifferences(), ioId, inReasonDifferencesId);
 
      -- сохранили свойство <Состояние>
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Checked(), ioId, inisChecked);
@@ -48,4 +55,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Income (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+-- 

@@ -78,8 +78,10 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-  LoadReportFromFile('Счет для страховой компании', ReportPath + '\Счет для страховой компании.fr3');
-{
+  LoadReportFromFile('Акт по претензии Бадм', ReportPath + '\Акт по претензии Бадм.fr3');
+
+{  LoadReportFromFile('Счет для страховой компании', ReportPath + '\Счет для страховой компании.fr3');
+
   LoadReportFromFile('Возвратная ТТН', ReportPath + '\Возвратная ТТН.fr3');
   Exit;
 

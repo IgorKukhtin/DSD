@@ -36,7 +36,7 @@ type
     GuidesTo: TdsdGuides;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
+    AmountIncome: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     N2: TMenuItem;
     N3: TMenuItem;
@@ -64,6 +64,11 @@ type
     actInsertMIPretension: TdsdExecStoredProc;
     mactCreateMIPretension: TMultiAction;
     actOpenPretensionForm: TdsdOpenForm;
+    Amount: TcxGridDBColumn;
+    ReasonDifferencesName: TcxGridDBColumn;
+    ChoiceReasonDifferences: TOpenChoiceForm;
+    spChechPretension: TdsdStoredProc;
+    actChechPretension: TdsdExecStoredProc;
   private
     { Private declarations }
   public

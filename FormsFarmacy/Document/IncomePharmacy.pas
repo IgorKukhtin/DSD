@@ -129,6 +129,8 @@ type
     Color_ExpirationDatePh: TcxGridDBColumn;
     actCreatePretension: TdsdOpenForm;
     bbCreatePretension: TdxBarButton;
+    edComment: TcxTextEdit;
+    cxLabel18: TcxLabel;
   private
     { Private declarations }
   public

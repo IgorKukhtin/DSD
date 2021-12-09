@@ -437,6 +437,7 @@ begin
   FRequest_number := '';
   FMedication_request_id := '';
   FMedication_ID_List := '';
+  HelsiApi.FReject_Reason_Code := '';
 
   FRESTClient.BaseURL := FHelsi_be;
   FRESTClient.ContentType := 'application/x-www-form-urlencoded';
@@ -1147,6 +1148,7 @@ begin
             HelsiApi.InitReinitSession
           end;
     end;
+    if HelsiApi.FReject_Reason_Code <> '' then Break;
   end;
 
   if HelsiApi.FShow_eHealth then

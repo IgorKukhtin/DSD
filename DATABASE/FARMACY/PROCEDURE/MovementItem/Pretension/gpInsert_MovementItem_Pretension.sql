@@ -1,6 +1,6 @@
 -- Function: gpInsert_MovementItem_Pretension()
 
-DROP FUNCTION IF EXISTS gpInsert_MovementItem_Pretension(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_MovementItem_Pretension(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_MovementItem_Pretension(
  INOUT ioMovementId          Integer   , -- Ключ объекта <Документ>
@@ -10,6 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsert_MovementItem_Pretension(
     IN inMIParentId          Integer   , -- ссылка на родителя
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
+    IN inReasonDifferencesId Integer   , -- причину разногласия
+    IN inAmountIncome        TFloat    , -- Количество приход
     IN inAmountManual        TFloat    , -- Факт. кол-во
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -43,10 +45,10 @@ BEGIN
                                                         , vbUserId);     
      END IF;
      
-     PERFORM lpInsertUpdate_MovementItem_Pretension(0, ioMovementId, inMIParentId, inGoodsId, inAmount, inAmountManual, True, vbUserId);
+     PERFORM lpInsertUpdate_MovementItem_Pretension(0, ioMovementId, inMIParentId, inGoodsId, inAmount, inReasonDifferencesId, inAmountIncome, inAmountManual, True, vbUserId);
 
      -- пересчитали Итоговые суммы
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm_Pretension (inMovementId);
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm_Pretension (ioMovementId);
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

@@ -19,7 +19,6 @@ RETURNS TABLE (Id Integer
              , ToId Integer, ToName TVarChar
              , NDSKindId Integer, NDSKindName TVarChar, NDS TFloat
              , IncomeOperDate TDateTime, IncomeInvNumber TVarChar, JuridicalName TVarChar
-             , Comment TBlob
              , isDeferred Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -80,7 +79,6 @@ BEGIN
            , Movement_Pretension_View.IncomeOperDate
            , Movement_Pretension_View.IncomeInvNumber
            , Movement_Pretension_View.JuridicalName
-           , Movement_Pretension_View.Comment
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
@@ -127,4 +125,4 @@ ALTER FUNCTION gpSelect_Movement_Pretension (TDateTime, TDateTime, Boolean, TVar
 
 -- тест
 -- 
-SELECT * FROM gpSelect_Movement_Pretension (inStartDate:= '01.12.2021', inEndDate:= '01.01.2022', inIsErased := FALSE, inSession:= '2')
+SELECT * FROM gpSelect_Movement_Pretension (inStartDate:= '01.12.2021', inEndDate:= '01.01.2022', inIsErased := FALSE, inSession:= '3')

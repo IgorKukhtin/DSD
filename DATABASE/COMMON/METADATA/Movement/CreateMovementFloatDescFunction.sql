@@ -607,9 +607,19 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_PercentMarkup() RETURNS Integer AS $
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_PercentMarkup', '% наценки' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_PercentMarkup');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalDeficit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalDeficit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalDeficit', 'Итого количество недостачи' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalDeficit');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalProficit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalProficit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalProficit', 'Итого количество излишка' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalProficit');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 09.12.21                                                                                     * zc_MovementFloat_TotalDeficit, zc_MovementFloat_TotalProficit
  18.11.21         * zc_MovementFloat_TotalSummHouseAdd
  08.09.21                                                                                     * zc_MovementFloat_PercentMarkup
  07.09.21                                                                                     * zc_MovementFloat_QuestionStorekeeper, zc_MovementFloat_TimeStorekeeper

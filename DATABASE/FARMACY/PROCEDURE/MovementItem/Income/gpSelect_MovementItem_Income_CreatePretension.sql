@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer /*IdBarCode TVarChar,*/
              , PartnerGoodsCode TVarChar, PartnerGoodsName TVarChar
              , RetailName TVarChar
              , AreaName TVarChar
-             , Amount TFloat
+             , AmountIncome TFloat
              , Price TFloat
              , PriceWithVAT TFloat
              , MarginPercent TFloat
@@ -42,6 +42,7 @@ RETURNS TABLE (Id Integer /*IdBarCode TVarChar,*/
              , AVGIncomePriceWarning Boolean
              , AmountManual TFloat
              , AmountDiff TFloat
+             , Amount TFloat
              , ReasonDifferencesId Integer
              , ReasonDifferencesName TVarChar
              , OrderAmount TFloat
@@ -148,24 +149,6 @@ BEGIN
        WHERE MovementLinkObject_To.ObjectId = Object_MarginCategoryLink.UnitId OR COALESCE (Object_MarginCategoryLink.UnitId, 0) = 0
          AND Object_MarginCategoryLink.isErased = False;
 
-/*    SELECT ObjectFloat_CashSettings_UpperLimitPromoBonus.ValueData                  AS UpperLimitPromoBonus
-         , ObjectFloat_CashSettings_LowerLimitPromoBonus.ValueData                  AS LowerLimitPromoBonus
-         , ObjectFloat_CashSettings_MinPercentPromoBonus.ValueData                  AS MinPercentPromoBonus
-    INTO vbUpperLimitPromoBonus, vbLowerLimitPromoBonus, vbMinPercentPromoBonus
-    FROM Object AS Object_CashSettings
-         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_UpperLimitPromoBonus
-                               ON ObjectFloat_CashSettings_UpperLimitPromoBonus.ObjectId = Object_CashSettings.Id
-                              AND ObjectFloat_CashSettings_UpperLimitPromoBonus.DescId = zc_ObjectFloat_CashSettings_UpperLimitPromoBonus()
-         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_LowerLimitPromoBonus
-                               ON ObjectFloat_CashSettings_LowerLimitPromoBonus.ObjectId = Object_CashSettings.Id
-                              AND ObjectFloat_CashSettings_LowerLimitPromoBonus.DescId = zc_ObjectFloat_CashSettings_LowerLimitPromoBonus()
-         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_MinPercentPromoBonus
-                               ON ObjectFloat_CashSettings_MinPercentPromoBonus.ObjectId = Object_CashSettings.Id 
-                              AND ObjectFloat_CashSettings_MinPercentPromoBonus.DescId = zc_ObjectFloat_CashSettings_MinPercentPromoBonus()
-    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
-    LIMIT 1;
-*/
-   -- vbOrderId := (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.descid = zc_MovementLinkMovement_Order() AND MLM.MovementId = inMovementId);  --1084910
 
      RETURN QUERY
      WITH
@@ -286,7 +269,7 @@ BEGIN
                  LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
                                                   ON MILinkObject_ReasonDifferences.MovementItemId = MovementItem.Id
                                                  AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
-              WHERE MovementItem.Amount <> COALESCE(MIFloat_AmountManual.ValueData, 0) 
+              WHERE COALESCE(MILinkObject_ReasonDifferences.ObjectId, 0) <> 0
                  OR inShowAll = TRUE
                )
 
@@ -537,6 +520,7 @@ BEGIN
               END AS AVGIncomePriceWarning
             , MovementItem.AmountManual
             , (COALESCE(MovementItem.AmountManual,0) - COALESCE(MovementItem.Amount,0))::TFloat as AmountDiff
+            , (COALESCE(MovementItem.AmountManual,0) - COALESCE(MovementItem.Amount,0))::TFloat as Amount
             , Object_ReasonDifferences.Id                AS ReasonDifferencesId
             , Object_ReasonDifferences.ValueData         AS ReasonDifferencesName
             , COALESCE (tmpOrderMI.Amount,0)  ::TFloat   AS OrderAmount

@@ -19,7 +19,8 @@ RETURNS TABLE (Id Integer
              , IncomeMovementId Integer 
              , IncomeOperDate TDateTime, IncomeInvNumber TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
-             , Comment TBlob
+             , Comment TBlob, BranchDate TDateTime
+             , ActName TVarChar
 )
 AS
 $BODY$
@@ -56,6 +57,10 @@ BEGIN
            , Movement_Pretension_View.JuridicalId
            , Movement_Pretension_View.JuridicalName
            , Movement_Pretension_View.Comment
+           , Movement_Pretension_View.BranchDate
+           , CASE WHEN Movement_Pretension_View.ToId = 59611 THEN 'Акт по претензии Оптима'
+                  WHEN Movement_Pretension_View.ToId = 59612 THEN 'Акт по претензии Вента'
+                  ELSE 'Акт по претензии Бадм' END::TVarChar AS ActName
 
        FROM Movement_Pretension_View       
 
@@ -81,4 +86,4 @@ ALTER FUNCTION gpGet_Movement_Pretension (Integer, TVarChar) OWNER TO postgres;
 
 -- тест
 -- 
-select * from gpGet_Movement_Pretension(inMovementId := 7753659 ,  inSession := '3');
+select * from gpGet_Movement_Pretension(inMovementId := 26008006 ,  inSession := '3');

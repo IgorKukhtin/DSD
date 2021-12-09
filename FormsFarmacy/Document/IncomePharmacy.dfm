@@ -8,20 +8,20 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 146
     Width = 985
-    Height = 398
+    Height = 378
     ExplicitTop = 126
     ExplicitWidth = 985
     ExplicitHeight = 398
-    ClientRectBottom = 398
+    ClientRectBottom = 378
     ClientRectRight = 985
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 985
       ExplicitHeight = 374
       inherited cxGrid: TcxGrid
         Width = 985
-        Height = 374
+        Height = 354
         ExplicitWidth = 985
         ExplicitHeight = 374
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -383,10 +383,10 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
   end
   inherited DataPanel: TPanel
     Width = 985
-    Height = 100
+    Height = 120
     TabOrder = 3
     ExplicitWidth = 985
-    ExplicitHeight = 100
+    ExplicitHeight = 120
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Enabled = False
@@ -411,15 +411,15 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       ExplicitLeft = 114
     end
     inherited cxLabel15: TcxLabel
-      Top = 45
-      ExplicitTop = 45
+      Top = 43
+      ExplicitTop = 43
     end
     inherited ceStatus: TcxButtonEdit
       Left = 9
-      Top = 63
+      Top = 60
       TabOrder = 7
       ExplicitLeft = 9
-      ExplicitTop = 63
+      ExplicitTop = 60
       ExplicitWidth = 158
       ExplicitHeight = 22
       Width = 158
@@ -460,12 +460,12 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     end
     object cxLabel10: TcxLabel
       Left = 635
-      Top = 46
+      Top = 43
       Caption = #1058#1080#1087' '#1053#1044#1057
     end
     object edNDSKind: TcxButtonEdit
       Left = 635
-      Top = 63
+      Top = 60
       Enabled = False
       Properties.Buttons = <
         item
@@ -476,8 +476,8 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       Width = 86
     end
     object cxLabel12: TcxLabel
-      Left = 190
-      Top = 55
+      Left = 206
+      Top = 51
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085
     end
     object cxLabel11: TcxLabel
@@ -497,47 +497,60 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     end
     object cxLabel9: TcxLabel
       Left = 530
-      Top = 46
+      Top = 43
       Caption = #8470' '#1074' '#1072#1087#1090#1077#1082#1077
     end
     object edPointNumber: TcxTextEdit
       Left = 530
-      Top = 63
+      Top = 60
       Enabled = False
       Properties.ReadOnly = False
       TabOrder = 16
       Width = 99
     end
     object cbFarmacyShow: TcxCheckBox
-      Left = 173
-      Top = 53
+      Left = 189
+      Top = 49
       Action = mactFarmacyShow
       TabOrder = 17
       Width = 17
     end
     object cbisDocument: TcxCheckBox
-      Left = 249
-      Top = 53
+      Left = 187
+      Top = 70
       Caption = #1054#1088#1080#1075#1080#1085#1072#1083' '#1085#1072#1082#1083'. ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
       TabOrder = 18
       Width = 154
     end
     object cbisRegistered: TcxCheckBox
-      Left = 405
-      Top = 53
+      Left = 346
+      Top = 70
       Caption = #1052#1077#1076#1088#1077#1077#1089#1090#1088' Pfizer'
       Properties.ReadOnly = True
       TabOrder = 19
       Width = 119
     end
     object cbisConduct: TcxCheckBox
-      Left = 249
-      Top = 75
+      Left = 346
+      Top = 50
       Caption = #1055#1088#1086#1074#1077#1076#1077#1085' '#1087#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1091
       Properties.ReadOnly = True
       TabOrder = 20
       Width = 154
+    end
+    object edComment: TcxTextEdit
+      Left = 8
+      Top = 98
+      Enabled = False
+      Properties.ReadOnly = True
+      TabOrder = 21
+      Width = 516
+    end
+    object cxLabel18: TcxLabel
+      Left = 8
+      Top = 82
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
   end
   object cxLabel13: TcxLabel [2]
@@ -1630,7 +1643,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     Top = 416
   end
   inherited StatusGuides: TdsdGuides
-    Left = 80
+    Left = 72
     Top = 48
   end
   inherited spChangeStatus: TdsdStoredProc
@@ -1802,6 +1815,13 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Value = Null
         Component = cbisConduct
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -2106,8 +2126,8 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 192
-    Top = 16
+    Left = 400
+    Top = 8
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -2135,7 +2155,8 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 464
+    Left = 616
+    Top = 8
   end
   object NDSKindGuides: TdsdGuides
     KeyField = 'Id'

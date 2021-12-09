@@ -14,7 +14,7 @@ uses
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator, cxImageComboBox,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxMemo;
+  cxMemo, cxCheckComboBox;
 
 type
   TPretensionForm = class(TAncestorDocumentForm)
@@ -39,16 +39,13 @@ type
     bbTax: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
     bbPrintTTN: TdxBarButton;
-    PrintItemsSverkaCDS: TClientDataSet;
     Summ: TcxGridDBColumn;
     edPriceWithVAT: TcxCheckBox;
     cxLabel10: TcxLabel;
     edNDSKind: TcxButtonEdit;
     NDSKindGuides: TdsdGuides;
     Price: TcxGridDBColumn;
-    actRefreshGoodsCode: TdsdExecStoredProc;
     bbRefreshGoodsCode: TdxBarButton;
-    spIncome_GoodsId: TdsdStoredProc;
     cxLabel5: TcxLabel;
     AmountInIncome: TcxGridDBColumn;
     Remains: TcxGridDBColumn;
@@ -58,13 +55,8 @@ type
     GuidesJuridical: TdsdGuides;
     cxLabel13: TcxLabel;
     deIncomeOperDate: TcxDateEdit;
-    mactEditPartnerData: TMultiAction;
     dxBarButton1: TdxBarButton;
     actPartnerDataDialog: TExecuteDialog;
-    spUpdatePretension_PartnerData: TdsdStoredProc;
-    actUpdatePretension_PartnerData: TdsdExecStoredProc;
-    actPrintTTN: TdsdPrintAction;
-    AmountOther: TcxGridDBColumn;
     actComplete: TdsdExecStoredProc;
     dxBarButton2: TdxBarButton;
     spMovementComplete: TdsdStoredProc;
@@ -75,13 +67,20 @@ type
     spUpdateisDeferredNo: TdsdExecStoredProc;
     dxBarButton3: TdxBarButton;
     dxBarButton4: TdxBarButton;
-    DeferredSend: TcxGridDBColumn;
-    DeferredOut: TcxGridDBColumn;
-    actPrintOptima: TdsdPrintAction;
     bbPrintOptima: TdxBarButton;
     edIncome: TcxTextEdit;
     cxmComment: TcxMemo;
     cxLabel6: TcxLabel;
+    AmountDiff: TcxGridDBColumn;
+    CheckedName: TcxGridDBColumn;
+    spUpdate_BranchDate: TdsdStoredProc;
+    spUpdate_ClearBranchDate: TdsdStoredProc;
+    deBranchDate: TcxDateEdit;
+    cxLabel7: TcxLabel;
+    actUpdate_BranchDate: TdsdExecStoredProc;
+    actUpdate_ClearBranchDate: TdsdExecStoredProc;
+    actDataChoiceDialog: TExecuteDialog;
+    dxBarButton5: TdxBarButton;
   private
     { Private declarations }
   public

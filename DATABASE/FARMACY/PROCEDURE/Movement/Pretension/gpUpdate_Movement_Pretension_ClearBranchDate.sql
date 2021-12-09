@@ -4,9 +4,10 @@ DROP FUNCTION IF EXISTS gpUpdate_Movement_Pretension_ClearBranchDate (Integer, T
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_Pretension_ClearBranchDate(
     IN inMovementId          Integer   , -- Ключ объекта <Документ Перемещение>
+   OUT outBranchDate         TDateTime , -- Дата документа
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS VOID AS
+RETURNS TDateTime AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;
@@ -41,6 +42,8 @@ BEGIN
     THEN
        RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);   
     END IF;
+    
+    outBranchDate := Null;
        
     --Сохранили Корректировка нашей даты
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Branch(), inMovementId, Null);
