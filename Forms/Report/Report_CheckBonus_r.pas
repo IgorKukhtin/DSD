@@ -1,4 +1,4 @@
-unit Report_CheckBonus;
+unit Report_CheckBonus_r;
 
 interface
 
@@ -113,7 +113,6 @@ type
     cbGoods: TcxCheckBox;
     spGet_Check: TdsdStoredProc;
     actGet_Check: TdsdExecStoredProc;
-    CurrencyName_child: TcxGridDBColumn;
   private
     { Private declarations }
   public
