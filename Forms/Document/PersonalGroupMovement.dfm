@@ -442,8 +442,8 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = #1044#1086#1082#1091#1084#1077#1085#1090'_'#1057#1087#1080#1089#1086#1082#1041#1088#1080#1075#1072#1076#1099
-      ReportNameParam.Value = #1044#1086#1082#1091#1084#1077#1085#1090'_'#1057#1087#1080#1089#1086#1082#1041#1088#1080#1075#1072#1076#1099
+      ReportName = 'PrintMovement_PersonalGroup'
+      ReportNameParam.Value = 'PrintMovement_PersonalGroup'
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
