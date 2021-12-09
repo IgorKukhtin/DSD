@@ -49,7 +49,12 @@ BEGIN
           , tmp.ConditionKindId
           , COALESCE (tmp.BonusKindId,0) :: Integer AS BonusKindId
           , COALESCE (tmp.BranchId,0) :: Integer    AS BranchId
-     FROM gpReport_CheckBonus_Income (inStartDate:= inStartDate, inEndDate:= inEndDate, inPaidKindID:= inPaidKindID, inJuridicalId:= inJuridicalId, inBranchId:= inBranchId, inSession:= inSession) AS tmp
+     FROM gpReport_CheckBonus_Income (inStartDate   := inStartDate
+                                    , inEndDate     := inEndDate
+                                    , inPaidKindId  := inPaidKindId
+                                    , inJuridicalId := inJuridicalId
+                                    , inBranchId    := inBranchId
+                                    , inSession     := inSession) AS tmp
      WHERE COALESCE (tmp.Sum_Bonus,0) <> 0
      ;     
      

@@ -53,6 +53,14 @@ RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber
              , Sum_Return          TFloat
              , Sum_SaleReturnIn    TFloat
 
+             , Sum_CheckBonus_curr      TFloat
+             , Sum_Bonus_curr           TFloat
+             , Sum_Account_curr         TFloat
+             , Sum_AccountSendDebt_curr TFloat
+             , Sum_Sale_curr            TFloat
+             , Sum_Return_curr          TFloat
+             , Sum_SaleReturnIn_curr    TFloat
+
              , Sum_Sale_weight     TFloat
              , Sum_ReturnIn_weight TFloat
 
@@ -82,7 +90,9 @@ RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber
             , BusinessName          TVarChar
             , GoodsTagName          TVarChar
             , GoodsPlatformName     TVarChar
-            , GoodsGroupAnalystName TVarChar             
+            , GoodsGroupAnalystName TVarChar
+            , CurrencyId_child      Integer 
+            , CurrencyName_child    TVarChar
               )
 AS
 $BODY$
@@ -671,7 +681,7 @@ BEGIN
                                JOIN ContainerLinkObject AS ContainerLO_PaidKind ON ContainerLO_PaidKind.ContainerId = Container.Id
                                                                                AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                           WHERE Container.ObjectId IN (SELECT DISTINCT tmpAccount.AccountId FROM tmpAccount)
-                            AND Container.DescId = zc_Container_Summ()
+                            AND Container.DescId IN (zc_Container_Summ(), zc_Container_SummCurrency())
                          )
 
     , tmpContainer1 AS (SELECT DISTINCT
@@ -715,6 +725,13 @@ BEGIN
                                     , SUM (tmp.Sum_Account)         AS Sum_Account
                                     , SUM (tmp.Sum_AccountSendDebt) AS Sum_AccountSendDebt
                                     , SUM (tmp.Sum_Return)          AS Sum_Return -- возврат
+
+                                    , SUM (tmp.Sum_Sale_curr)            AS Sum_Sale_curr
+                                    , SUM (tmp.Sum_SaleReturnIn_curr)    AS Sum_SaleReturnIn_curr
+                                    , SUM (tmp.Sum_Account_curr)         AS Sum_Account_curr
+                                    , SUM (tmp.Sum_AccountSendDebt_curr) AS Sum_AccountSendDebt_curr
+                                    , SUM (tmp.Sum_Return_curr)          AS Sum_Return_curr
+
                                     , tmp.MovementDescId
                                     , tmp.MovementId
                                     , CASE WHEN inisDetail = TRUE OR inisGoods = TRUE THEN tmp.GoodsId ELSE 0 END AS GoodsId
@@ -755,6 +772,12 @@ BEGIN
                                                  END) AS Sum_AccountSendDebt
 
                                           ,  (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN -1 * COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Sum_Return  -- возврат
+
+                                          ,  0 AS Sum_Sale_curr
+                                          ,  0 AS Sum_SaleReturnIn_curr
+                                          ,  0 AS Sum_Account_curr
+                                          ,  0 AS Sum_AccountSendDebt_curr
+                                          ,  0 AS Sum_Return_curr
                                           --, CASE WHEN inisMovement = TRUE THEN MIContainer.MovementDescId ELSE 0 END  AS MovementDescId
                                           --, CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END      AS MovementId
                                           , MIContainer.MovementDescId  AS MovementDescId
@@ -790,6 +813,87 @@ BEGIN
                                                               AND ObjectLink_PersonalServiceList_Branch.DescId = zc_ObjectLink_PersonalServiceList_Branch()
 
                                      WHERE MIContainer.DescId = zc_MIContainer_Summ()
+                                       AND (MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < vbEndDate)
+                                       AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt(), zc_Movement_PriceCorrective())  -- взаимозачет убираем, чтоб он не влиял на бонусы
+                                       AND (COALESCE (ObjectLink_PersonalServiceList_Branch.ChildObjectId,0) = inBranchId OR inBranchId = 0)
+                                 UNION 
+                                     SELECT tmpContainer.JuridicalId
+                                          , tmpContainer.ContractId_child
+                                          , tmpContainer.ContractId_master
+                                          , tmpContainer.InfoMoneyId_child
+                                          , tmpContainer.PaidKindId_calc
+                                          , tmpContainer.PaidKindId_byBase
+                                          , tmpContainer.ContractConditionId
+
+                                          , COALESCE (ObjectLink_PersonalServiceList_Branch.ChildObjectId,0) AS BranchId
+                                          , CASE WHEN Object.DescId = zc_Object_Partner() THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
+                                                 ELSE 0
+                                            END    AS PartnerId
+
+                                          ,  0 AS Sum_Sale
+                                          ,  0 AS Sum_SaleReturnIn
+                                          ,  0 AS Sum_Account
+                                          ,  0 AS Sum_AccountSendDebt
+                                          ,  0 AS Sum_Return
+
+                                            -- Только продажи
+                                          ,  (CASE WHEN (MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_PriceCorrective()) AND tmpContainer.PaidKindId_calc = zc_Enum_PaidKind_SecondForm())
+                                                     OR (MIContainer.MovementDescId IN (zc_Movement_Sale()) AND tmpContainer.PaidKindId_calc <> zc_Enum_PaidKind_SecondForm())
+                                                        THEN COALESCE (MIContainer.Amount,0)
+                                                   ELSE 0
+                                              END) AS Sum_Sale_curr
+                                            -- продажи - возвраты
+                                          ,  (CASE WHEN (MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_PriceCorrective()) AND tmpContainer.PaidKindId_calc = zc_Enum_PaidKind_SecondForm())
+                                                     OR (MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) AND tmpContainer.PaidKindId_calc <> zc_Enum_PaidKind_SecondForm())
+                                                        THEN COALESCE (MIContainer.Amount, 0)
+                                                   ELSE 0
+                                              END) AS Sum_SaleReturnIn_curr
+                                            -- оплаты
+                                          ,  (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+                                                           THEN -1 * COALESCE (MIContainer.Amount, 0)
+                                                      ELSE 0
+                                                 END) AS Sum_Account_curr
+                                            -- оплаты + взаимозачет
+                                          ,  (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt())
+                                                           THEN -1 * COALESCE (MIContainer.Amount, 0)
+                                                      ELSE 0
+                                                 END) AS Sum_AccountSendDebt_curr
+
+                                          ,  (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN -1 * COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Sum_Return_curr  -- возврат
+
+                                          , MIContainer.MovementDescId  AS MovementDescId
+                                          , MIContainer.MovementId      AS MovementId
+
+                                        --если детализация или по товарам + товар - потом его свойства
+                                          , MIContainer.ObjectId_analyzer    AS GoodsId
+                                          , MIContainer.ObjectintId_analyzer AS GoodsKindId
+                                     FROM MovementItemContainer AS MIContainer
+                                          JOIN tmpContainer ON tmpContainer.ContainerId = MIContainer.ContainerId
+
+                                          LEFT JOIN Object ON Object.Id = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
+
+                                          -- для Базы БН получаем филиал по сотруднику из договора, по ведомости
+                                          LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalTrade
+                                                               ON ObjectLink_Contract_PersonalTrade.ObjectId = tmpContainer.ContractId_master
+                                                              AND ObjectLink_Contract_PersonalTrade.DescId = zc_ObjectLink_Contract_PersonalTrade()
+                                                              AND tmpContainer.PaidKindId_byBase = zc_Enum_PaidKind_FirstForm()
+
+                                          -- для Базы нал берем филиал по сотруднику из контрагента, по ведомости
+                                          LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                                               ON ObjectLink_Partner_PersonalTrade.ObjectId = CASE WHEN Object.DescId = zc_Object_Partner() THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END ELSE 0 END
+                                                              AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                                              AND (tmpContainer.PaidKindId_byBase = zc_Enum_PaidKind_SecondForm()
+                                                                  OR COALESCE (ObjectLink_Contract_PersonalTrade.ChildObjectId,0) = 0
+                                                                  )
+
+                                          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                                               ON ObjectLink_Personal_PersonalServiceList.ObjectId = COALESCE (ObjectLink_Contract_PersonalTrade.ChildObjectId, ObjectLink_Partner_PersonalTrade.ChildObjectId)
+                                                              AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+                                          LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Branch
+                                                               ON ObjectLink_PersonalServiceList_Branch.ObjectId = ObjectLink_Personal_PersonalServiceList.ChildObjectId
+                                                              AND ObjectLink_PersonalServiceList_Branch.DescId = zc_ObjectLink_PersonalServiceList_Branch()
+
+                                     WHERE MIContainer.DescId = zc_MIContainer_SummCurrency()
                                        AND (MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < vbEndDate)
                                        AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt(), zc_Movement_PriceCorrective())  -- взаимозачет убираем, чтоб он не влиял на бонусы
                                        AND (COALESCE (ObjectLink_PersonalServiceList_Branch.ChildObjectId,0) = inBranchId OR inBranchId = 0)
@@ -928,6 +1032,12 @@ BEGIN
                              , SUM (tmpGroup.Sum_AccountSendDebt) AS Sum_AccountSendDebt
                              , SUM (tmpGroup.Sum_Return)          AS Sum_Return
 
+                             , SUM (tmpGroup.Sum_Sale_curr)            AS Sum_Sale_curr
+                             , SUM (tmpGroup.Sum_SaleReturnIn_curr)    AS Sum_SaleReturnIn_curr
+                             , SUM (tmpGroup.Sum_Account_curr)         AS Sum_Account_curr
+                             , SUM (tmpGroup.Sum_AccountSendDebt_curr) AS Sum_AccountSendDebt_curr
+                             , SUM (tmpGroup.Sum_Return_curr)          AS Sum_Return_curr
+
                              , SUM (tmpWeight.Sale_AmountPartner_Weight)   AS Sum_Sale_weight
                              , SUM (tmpWeight.Return_AmountPartner_Weight) AS Sum_ReturnIn_weight
                              
@@ -983,6 +1093,11 @@ BEGIN
                              , tmpGroup.Sum_SaleReturnIn
                              , tmpGroup.Sum_Account
                              , tmpGroup.Sum_AccountSendDebt
+                             , tmpGroup.Sum_Sale_curr
+                             , tmpGroup.Sum_Return_curr
+                             , tmpGroup.Sum_SaleReturnIn_curr
+                             , tmpGroup.Sum_Account_curr
+                             , tmpGroup.Sum_AccountSendDebt_curr
                              , tmpGroup.Sum_Sale_weight
                              , tmpGroup.Sum_ReturnIn_weight
                              , tmpGroup.GoodsId
@@ -1068,6 +1183,23 @@ BEGIN
                                                        WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt() THEN (tmpMovement.Sum_AccountSendDebt / 100 * tmpContract.Value)
                                                   ELSE 0 END
                                           END  AS NUMERIC (16, 0)) AS Sum_Bonus
+
+                                  --в валюте
+                                  , CAST (CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSale()            THEN tmpMovement.Sum_Sale_curr
+                                               WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSaleReturn()      THEN tmpMovement.Sum_SaleReturnIn_curr
+                                               WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount()         THEN tmpMovement.Sum_Account_curr
+                                               WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt() THEN tmpMovement.Sum_AccountSendDebt_curr
+                                          ELSE 0 END  AS TFloat) AS Sum_CheckBonus_curr
+                                 --в валюте
+                                  , CAST (CASE WHEN (COALESCE (tmpContract.PercentRetBonus,0) <> 0 AND tmpMovement.PercentRetBonus_fact_weight > tmpContract.PercentRetBonus) THEN 0
+                                               ELSE
+                                                  CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSale()            THEN (tmpMovement.Sum_Sale_curr            / 100 * tmpContract.Value)
+                                                       WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSaleReturn()      THEN (tmpMovement.Sum_SaleReturnIn_curr    / 100 * tmpContract.Value)
+                                                       WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount()         THEN (tmpMovement.Sum_Account_curr         / 100 * tmpContract.Value)
+                                                       WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt() THEN (tmpMovement.Sum_AccountSendDebt_curr / 100 * tmpContract.Value)
+                                                  ELSE 0 END
+                                          END  AS NUMERIC (16, 0)) AS Sum_Bonus_curr
+
                                   , 0 :: TFloat                    AS Sum_BonusFact
                                   , 0 :: TFloat                    AS Sum_CheckBonusFact
                                   , 0 :: TFloat                    AS Sum_SaleFact
@@ -1076,6 +1208,13 @@ BEGIN
                                   , COALESCE (tmpMovement.Sum_Sale,0)            AS Sum_Sale
                                   , COALESCE (tmpMovement.Sum_Return,0)          AS Sum_Return
                                   , COALESCE (tmpMovement.Sum_SaleReturnIn,0)    AS Sum_SaleReturnIn
+
+                                  , COALESCE (tmpMovement.Sum_Account_curr,0)         AS Sum_Account_curr
+                                  , COALESCE (tmpMovement.Sum_AccountSendDebt_curr,0) AS Sum_AccountSendDebt_curr
+                                  , COALESCE (tmpMovement.Sum_Sale_curr,0)            AS Sum_Sale_curr
+                                  , COALESCE (tmpMovement.Sum_Return_curr,0)          AS Sum_Return_curr
+                                  , COALESCE (tmpMovement.Sum_SaleReturnIn_curr,0)    AS Sum_SaleReturnIn_curr
+
                                   , COALESCE (tmpMovement.Sum_Sale_weight,0)     AS Sum_Sale_weight
                                   , COALESCE (tmpMovement.Sum_ReturnIn_weight,0) AS Sum_ReturnIn_weight
 
@@ -1143,6 +1282,8 @@ BEGIN
 
                             , 0 :: TFloat                                    AS Sum_CheckBonus
                             , 0 :: TFloat                                    AS Sum_Bonus
+                            , 0 :: TFloat                                    AS Sum_CheckBonus_curr
+                            , 0 :: TFloat                                    AS Sum_Bonus_curr
                             , MovementItem.Amount                            AS Sum_BonusFact
                             , MIFloat_Summ.ValueData                         AS Sum_CheckBonusFact
                             , MIFloat_AmountPartner.ValueData                AS Sum_SaleFact
@@ -1152,6 +1293,12 @@ BEGIN
                             , 0 :: TFloat                                    AS Sum_Return
                             , 0 :: TFloat                                    AS Sum_SaleReturnIn
 
+                            , 0 :: TFloat                                    AS Sum_Account_curr
+                            , 0 :: TFloat                                    AS Sum_AccountSendDebt_curr
+                            , 0 :: TFloat                                    AS Sum_Sale_curr
+                            , 0 :: TFloat                                    AS Sum_Return_curr
+                            , 0 :: TFloat                                    AS Sum_SaleReturnIn_curr
+                                  
                             , 0 :: TFloat                                    AS Sum_Sale_weight
                             , 0 :: TFloat                                    AS Sum_ReturnIn_weight
                             , COALESCE (MIString_Comment.ValueData,'')       AS Comment
@@ -1272,6 +1419,8 @@ BEGIN
 
                             , 0 :: TFloat                       AS Sum_CheckBonus
                             , COALESCE (tmpData.Value,0)        AS Sum_Bonus
+                            , 0 :: TFloat                       AS Sum_CheckBonus_curr
+                            , 0 :: TFloat                       AS Sum_Bonus_curr
                             , 0 :: TFloat                       AS Sum_BonusFact
                             , 0 :: TFloat                       AS Sum_CheckBonusFact
                             , 0 :: TFloat                       AS Sum_SaleFact
@@ -1280,6 +1429,12 @@ BEGIN
                             , 0 :: TFloat                       AS Sum_Sale
                             , 0 :: TFloat                       AS Sum_Return
                             , 0 :: TFloat                       AS Sum_SaleReturnIn
+
+                            , 0 :: TFloat                       AS Sum_Account_curr
+                            , 0 :: TFloat                       AS Sum_AccountSendDebt_curr
+                            , 0 :: TFloat                       AS Sum_Sale_curr
+                            , 0 :: TFloat                       AS Sum_Return_curr
+                            , 0 :: TFloat                       AS Sum_SaleReturnIn_curr
 
                             , 0 :: TFloat                       AS Sum_Sale_weight
                             , 0 :: TFloat                       AS Sum_ReturnIn_weight
@@ -1349,6 +1504,15 @@ BEGIN
                          , tmpAll.Sum_Sale
                          , tmpAll.Sum_Return
                          , tmpAll.Sum_SaleReturnIn
+
+                         , tmpAll.Sum_CheckBonus_curr
+                         , tmpAll.Sum_Bonus_curr
+                         , tmpAll.Sum_Account_curr
+                         , tmpAll.Sum_AccountSendDebt_curr
+                         , tmpAll.Sum_Sale_curr
+                         , tmpAll.Sum_Return_curr
+                         , tmpAll.Sum_SaleReturnIn_curr
+
                          , tmpAll.Sum_Sale_weight
                          , tmpAll.Sum_ReturnIn_weight
                          , tmpAll.Comment
@@ -1391,12 +1555,21 @@ BEGIN
                          , SUM (tmpAll.Sum_CheckBonusFact)  AS Sum_CheckBonusFact
                          , SUM (tmpAll.Sum_Bonus)           AS Sum_Bonus
                          , SUM (tmpAll.Sum_BonusFact)*(-1)  AS Sum_BonusFact
+                         , SUM (tmpAll.Sum_CheckBonus_curr) AS Sum_CheckBonus_curr
+                         , SUM (tmpAll.Sum_Bonus_curr)      AS Sum_Bonus_curr
                          , SUM (tmpAll.Sum_SaleFact)        AS Sum_SaleFact
                          , SUM (tmpAll.Sum_Account)         AS Sum_Account
                          , SUM (tmpAll.Sum_AccountSendDebt) AS Sum_AccountSendDebt
                          , SUM (tmpAll.Sum_Sale)            AS Sum_Sale
                          , SUM (tmpAll.Sum_Return)          AS Sum_Return
                          , SUM (tmpAll.Sum_SaleReturnIn)    AS Sum_SaleReturnIn
+
+                         , SUM (tmpAll.Sum_Account_curr)         AS Sum_Account_curr
+                         , SUM (tmpAll.Sum_AccountSendDebt_curr) AS Sum_AccountSendDebt_curr
+                         , SUM (tmpAll.Sum_Sale_curr)            AS Sum_Sale_curr
+                         , SUM (tmpAll.Sum_Return_curr)          AS Sum_Return_curr
+                         , SUM (tmpAll.Sum_SaleReturnIn_curr)    AS Sum_SaleReturnIn_curr
+
 
                          , SUM (COALESCE (tmpAll.Sum_Sale_weight,0))     AS Sum_Sale_weight
                          , SUM (COALESCE (tmpAll.Sum_ReturnIn_weight,0)) AS Sum_ReturnIn_weight
@@ -1677,6 +1850,14 @@ BEGIN
             , CAST (tmpData.Sum_Return          AS TFloat) AS Sum_Return
             , CAST (tmpData.Sum_SaleReturnIn    AS TFloat) AS Sum_SaleReturnIn
 
+            , CAST (tmpData.Sum_CheckBonus_curr      AS TFloat) AS Sum_CheckBonus_curr
+            , CAST (tmpData.Sum_Bonus_curr           AS TFloat) AS Sum_Bonus_curr
+            , CAST (tmpData.Sum_Account_curr         AS TFloat) AS Sum_Account_curr
+            , CAST (tmpData.Sum_AccountSendDebt_curr AS TFloat) AS Sum_AccountSendDebt_curr
+            , CAST (tmpData.Sum_Sale_curr            AS TFloat) AS Sum_Sale_curr
+            , CAST (tmpData.Sum_Return_curr          AS TFloat) AS Sum_Return_curr
+            , CAST (tmpData.Sum_SaleReturnIn_curr    AS TFloat) AS Sum_SaleReturnIn_curr
+
             , CAST (tmpData.Sum_Sale_weight     AS TFloat) AS Sum_Sale_weight
             , CAST (tmpData.Sum_ReturnIn_weight AS TFloat) AS Sum_ReturnIn_weight
 
@@ -1709,6 +1890,9 @@ BEGIN
             , tmpData.GoodsTagName          ::TVarChar
             , tmpData.GoodsPlatformName     ::TVarChar
             , tmpData.GoodsGroupAnalystName ::TVarChar
+            
+            , Object_Currency_child.Id        ::Integer  AS CurrencyId_child
+            , Object_Currency_child.ValueData ::TVarChar AS CurrencyName_child
       FROM tmpData
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpData.PartnerId
@@ -1770,10 +1954,15 @@ BEGIN
 
             -- ограничиваем по супервайзерам, если выбрали физ.лицо
             LEFT JOIN tmpPersonal_byMember ON tmpPersonal_byMember.PersonalId = Object_Personal.PersonalId
-            
+
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpData.GoodsKindId
-            
+
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
+                                 ON ObjectLink_Contract_Currency.ObjectId = tmpData.ContractId_child
+                                AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
+            LEFT JOIN Object AS Object_Currency_child ON Object_Currency_child.Id = ObjectLink_Contract_Currency.ChildObjectId
+
        WHERE ((tmpPersonal_byMember.PersonalId IS NOT NULL AND inPaidKindId = zc_Enum_PaidKind_SecondForm()) OR inMemberId = 0)
          OR  inPaidKindId = zc_Enum_PaidKind_FirstForm()
        --
@@ -1852,6 +2041,14 @@ BEGIN
             , tmpData.Sum_Return
             , tmpData.Sum_SaleReturnIn
 
+            , 0  :: TFloat AS Sum_CheckBonus_curr
+            , 0  :: TFloat AS Sum_Bonus_curr
+            , 0  :: TFloat AS Sum_Account_curr
+            , 0  :: TFloat AS Sum_AccountSendDebt_curr
+            , 0  :: TFloat AS Sum_Sale_curr
+            , 0  :: TFloat AS Sum_Return_curr
+            , 0  :: TFloat AS Sum_SaleReturnIn_curr
+
             , tmpData.Sum_Sale_weight
             , tmpData.Sum_ReturnIn_weight
 
@@ -1883,7 +2080,10 @@ BEGIN
             , ''::TVarChar GoodsTagName
             , ''::TVarChar GoodsPlatformName
             , ''::TVarChar GoodsGroupAnalystName
-            
+
+            , Object_Currency_child.Id        ::Integer  AS CurrencyId_child
+            , Object_Currency_child.ValueData ::TVarChar AS CurrencyName_child
+
             /*, tmpData.GoodsCode             ::Integer
             , tmpData.GoodsName             ::TVarChar
             , tmpData.GoodsKindName         ::TVarChar 
@@ -1906,6 +2106,11 @@ BEGIN
                                     AND tmpObjectBonus.PartnerId   = COALESCE (tmpData.PartnerId, 0)
                                     AND tmpObjectBonus.ContractId_master = tmpData.ContractId_master
                                     AND tmpObjectBonus.ContractId_child  = tmpData.ContractId_child
+
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
+                                 ON ObjectLink_Contract_Currency.ObjectId = tmpData.ContractId_child
+                                AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
+            LEFT JOIN Object AS Object_Currency_child ON Object_Currency_child.Id = ObjectLink_Contract_Currency.ChildObjectId
 
           ;
 

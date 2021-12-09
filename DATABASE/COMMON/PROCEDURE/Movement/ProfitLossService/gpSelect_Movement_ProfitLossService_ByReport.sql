@@ -89,11 +89,13 @@ BEGIN
          , tmpReport AS (SELECT *
                          FROM gpReport_CheckBonus (inStartDate    := inStartDate                                --gpReport_CheckBonusTest2_old
                                                  , inEndDate      := inEndDate
-                                                 , inPaidKindID   := inPaidKindId
+                                                 , inPaidKindId   := inPaidKindId
                                                  , inJuridicalId  := inJuridicalId
                                                  , inBranchId     := inBranchId
                                                  , inMemberId     := inMemberId
                                                  , inIsMovement   := FALSE
+                                                 , inisDetail     := FALSE
+                                                 , inisGoods      := FALSE
                                                  , inSession      := inSession
                                                   ) AS tmp
                          WHERE inisReport = TRUE

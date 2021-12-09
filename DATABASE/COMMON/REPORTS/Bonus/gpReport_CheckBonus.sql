@@ -9,7 +9,7 @@ DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Inte
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
-    IN inStartDate           TDateTime ,  
+    IN inStartDate           TDateTime ,
     IN inEndDate             TDateTime ,
     IN inPaidKindID          Integer   ,
     IN inJuridicalId         Integer   ,
@@ -75,7 +75,17 @@ RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber
             , BusinessName          TVarChar
             , GoodsTagName          TVarChar
             , GoodsPlatformName     TVarChar
-            , GoodsGroupAnalystName TVarChar  
+            , GoodsGroupAnalystName TVarChar 
+
+            , CurrencyId_child         Integer
+            , CurrencyName_child       TVarChar
+            , Sum_CheckBonus_curr      TFloat
+            , Sum_Bonus_curr           TFloat
+            , Sum_Account_curr         TFloat
+            , Sum_AccountSendDebt_curr TFloat
+            , Sum_Sale_curr            TFloat
+            , Sum_Return_curr          TFloat
+            , Sum_SaleReturnIn_curr    TFloat
               ) 
 AS
 $BODY$
@@ -260,7 +270,16 @@ BEGIN
            , tmp.GoodsTagName          ::TVarChar
            , tmp.GoodsPlatformName     ::TVarChar
            , tmp.GoodsGroupAnalystName ::TVarChar
-            
+
+           , tmp.CurrencyId_child         ::Integer 
+           , tmp.CurrencyName_child       ::TVarChar
+           , tmp.Sum_CheckBonus_curr      ::TFloat
+           , tmp.Sum_Bonus_curr           ::TFloat
+           , tmp.Sum_Account_curr         ::TFloat
+           , tmp.Sum_AccountSendDebt_curr ::TFloat
+           , tmp.Sum_Sale_curr            ::TFloat
+           , tmp.Sum_Return_curr          ::TFloat
+           , tmp.Sum_SaleReturnIn_curr    ::TFloat
       FROM lpReport_CheckBonus (inStartDate    := inStartDate                                --gpReport_CheckBonusTest2_old
                               , inEndDate      := inEndDate
                               , inPaidKindID   := zc_Enum_PaidKind_FirstForm()
@@ -344,6 +363,16 @@ BEGIN
            , tmp.GoodsTagName          ::TVarChar
            , tmp.GoodsPlatformName     ::TVarChar
            , tmp.GoodsGroupAnalystName ::TVarChar
+
+           , tmp.CurrencyId_child         ::Integer 
+           , tmp.CurrencyName_child       ::TVarChar
+           , tmp.Sum_CheckBonus_curr      ::TFloat
+           , tmp.Sum_Bonus_curr           ::TFloat
+           , tmp.Sum_Account_curr         ::TFloat
+           , tmp.Sum_AccountSendDebt_curr ::TFloat
+           , tmp.Sum_Sale_curr            ::TFloat
+           , tmp.Sum_Return_curr          ::TFloat
+           , tmp.Sum_SaleReturnIn_curr    ::TFloat
       FROM lpReport_CheckBonus (inStartDate     := inStartDate                                --gpReport_CheckBonusTest2_old
                               , inEndDate       := inEndDate
                               , inPaidKindID    := zc_Enum_PaidKind_SecondForm()
@@ -404,4 +433,4 @@ $BODY$
 -- тест
 -- select * from gpReport_CheckBonus (inStartDate:= '15.03.2016', inEndDate:= '15.03.2016', inPaidKindID:= zc_Enum_PaidKind_FirstForm(), inJuridicalId:= 0, inBranchId:= 0, inSession:= zfCalc_UserAdmin());
 -- select * from gpReport_CheckBonus(inStartDate := ('28.05.2020')::TDateTime , inEndDate := ('28.05.2020')::TDateTime , inPaidKindId := 3 , inJuridicalId := 344240 , inBranchId :=  8374, inMemberId:=0 ,  inIsMovement := FALSE, inSession := '5');--
-select * from gpReport_CheckBonus(inStartDate := ('28.05.2020')::TDateTime , inEndDate := ('28.05.2020')::TDateTime , inPaidKindId := 3 , inJuridicalId := 344240 , inBranchId :=  8374, inMemberId:=0 ,  inIsMovement := FALSE,inisDetail := TRUE, inisGoods:= false, inSession := '5');--
+-- select * from gpReport_CheckBonus(inStartDate := ('28.05.2020')::TDateTime , inEndDate := ('28.05.2020')::TDateTime , inPaidKindId := 3 , inJuridicalId := 344240 , inBranchId :=  8374, inMemberId:=0 ,  inIsMovement := FALSE,inisDetail := TRUE, inisGoods:= false, inSession := '5');--

@@ -1,5 +1,5 @@
 inherited Report_CheckBonusForm: TReport_CheckBonusForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'(test)>'
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'>'
   ClientHeight = 341
   ClientWidth = 1180
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -1722,7 +1722,6 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     object macInsertByReportGrid: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
-      Enabled = False
       ActionList = <
         item
           Action = actGet_Check
@@ -1912,7 +1911,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_CheckBonusTest2'
+    StoredProcName = 'gpReport_CheckBonus'
     Params = <
       item
         Name = 'inStartDate'
@@ -2147,7 +2146,6 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     object bbInsertByReportGrid: TdxBarButton
       Action = macInsertByReportGrid
       Category = 0
-      UnclickAfterDoing = False
     end
     object bbOpenReportDetail: TdxBarButton
       Action = actOpenReportDetailForm

@@ -44,7 +44,12 @@ BEGIN
  then
      RAISE EXCEPTION 'Ошибка. test <%>'
                   , (SELECT SUM COALESCE (Value, 0)
-                     FROM gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inPaidKindID:= inPaidKindID, inJuridicalId:= inJuridicalId, inBranchId:= inBranchId, inSession:= inSession) AS tmp
+                     FROM gpReport_CheckBonus (inStartDate   := inStartDate
+                                             , inEndDate     := inEndDate
+                                             , inPaidKindId  := inPaidKindID
+                                             , inJuridicalId := inJuridicalId
+                                             , inBranchId    := inBranchId
+                                             , inSession     := inSession) AS tmp
                      WHERE Sum_Bonus <> 0
                      AND JuridicalId = 14884 -- БІЛЛА-Україна ПП
                     );
@@ -73,7 +78,15 @@ BEGIN
                                                       , inIsLoad            := TRUE                            :: Boolean
                                                       , inUserId            := vbUserId
                                                        )
-     FROM gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inPaidKindID:= inPaidKindID, inJuridicalId:= inJuridicalId, inBranchId:= inBranchId, inIsMovement:= FALSE, inSession:= inSession) AS tmp
+     FROM gpReport_CheckBonus (inStartDate   := inStartDate
+                             , inEndDate     := inEndDate
+                             , inPaidKindID  := inPaidKindId
+                             , inJuridicalId := inJuridicalId
+                             , inBranchId    := inBranchId
+                             , inIsMovement  := FALSE
+                             , inisDetail    := FALSE
+                             , inisGoods     := FALSE 
+                             , inSession     := inSession) AS tmp
      WHERE Sum_Bonus <> 0
     ;
 
@@ -85,6 +98,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.12.21         * новая gpReport_CheckBonus
  20.05.20         * add inBranchId
  09.12.15         * 
  03.12.14         *

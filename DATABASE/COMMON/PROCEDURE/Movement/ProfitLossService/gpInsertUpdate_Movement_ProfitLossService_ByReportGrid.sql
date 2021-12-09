@@ -61,7 +61,15 @@ BEGIN
                                                       , inIsLoad            := TRUE                            :: Boolean
                                                       , inUserId            := vbUserId
                                                        )
-     FROM gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inPaidKindID:= inPaidKindID, inJuridicalId:= inJuridicalId, inBranchId:= inBranchId, inisMovement:= FALSE, inSession:= inSession) AS tmp
+     FROM gpReport_CheckBonus (inStartDate  := inStartDate
+                             , inEndDate    := inEndDate
+                             , inPaidKindId := inPaidKindId
+                             , inJuridicalId:= inJuridicalId
+                             , inBranchId   := inBranchId
+                             , inisMovement := FALSE
+                             , inisDetail   := FALSE
+                             , inisGoods    := FALSE
+                             , inSession:= inSession) AS tmp
      WHERE tmp.Sum_Bonus <> 0 
        AND tmp.isSend = TRUE
      ;
@@ -79,6 +87,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.12.21         *
  27.09.20         *
 */
 
