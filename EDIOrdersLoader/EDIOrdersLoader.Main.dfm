@@ -97,8 +97,8 @@ object MainForm: TMainForm
       Caption = #1055#1077#1088#1080#1086#1076#1072' '#1087#1086':'
     end
     object StartButton: TcxButton
-      Left = 594
-      Top = 3
+      Left = 592
+      Top = 0
       Width = 58
       Height = 25
       Anchors = [akTop, akRight]
@@ -11029,6 +11029,124 @@ object MainForm: TMainForm
         end>
       Caption = 'actGet_Export_FileName_xls'
     end
+    object mactExport_xls_2244900110: TMultiAction
+      Category = 'Export_Email'
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'Id'
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actGet_Export_Email
+        end
+        item
+          Action = actGet_Export_FileName_xls
+        end
+        item
+          Action = actSPPrintSaleProcName
+        end
+        item
+          Action = actExport_fr3
+        end
+        item
+          Action = actSMTPFile
+        end
+        item
+          Action = actUpdate_isMail
+        end>
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' XLS - '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1060#1054#1055' '#1053#1077#1076#1072#1074#1085#1080#1081' '#1040#1053
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' XLS - '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1060#1054#1055' '#1053#1077#1076#1072#1074#1085#1080#1081' '#1040#1053
+      ImageIndex = 53
+    end
+    object actSPPrintSaleProcName: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportName
+      StoredProcList = <
+        item
+          StoredProc = spGetReportName
+        end>
+      Caption = 'actSPPrintSaleProcName'
+    end
+    object actExport_fr3: TdsdPrintAction
+      Category = 'Export_Email'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'Id'
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = 'actExport_fr3'
+      Hint = 'actExport_fr3'
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxXLSExport_find'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxXLSExport1_ShowDialog'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FileNameExport'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'FileName_xls'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+      ReportNameParam.Value = ''
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSale'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   object spHeaderOrder: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_EDIOrder'
@@ -11608,5 +11726,63 @@ object MainForm: TMainForm
     PackSize = 1
     Left = 192
     Top = 346
+  end
+  object spGetReportName: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Sale_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_sendEmail'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_Sale_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameSale'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 192
+    Top = 73
+  end
+  object PrintItemsSverkaCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 188
+    Top = 110
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_sendEmail'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 271
+    Top = 88
   end
 end

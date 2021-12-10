@@ -66,8 +66,8 @@ BEGIN
                  || '_' || zfConvert_DateTimeToStringY (COALESCE (tmpProtocol.OperDate, CURRENT_TIMESTAMP) :: TDateTime)
                  || '_' || Movement.InvNumber
 
-                 -- Logistik
-                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857())
+                 -- Logistik + Nedavn
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857(), zc_Enum_ExportKind_Nedavn2244900110())
                       THEN 'Doc_Alan'
                  || '_' || zfCalc_Text_replace (zfConvert_DateShortToString (MovementDate_OperDatePartner.ValueData), '.', '_')
                  || '_' || Movement.InvNumber
@@ -78,7 +78,7 @@ BEGIN
                       THEN 'xml'
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Dakort39135074(), zc_Enum_ExportKind_Avion40110917())
                       THEN 'csv'
-                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857())
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857(), zc_Enum_ExportKind_Nedavn2244900110())
                       THEN 'xls'
                     --THEN 'xlsx'
             END AS outDefaultFileExt
@@ -86,13 +86,13 @@ BEGIN
                       THEN FALSE
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Dakort39135074(), zc_Enum_ExportKind_Avion40110917())
                       THEN TRUE
-                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857())
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857(), zc_Enum_ExportKind_Nedavn2244900110())
                       THEN FALSE
             END AS outEncodingANSI
             
           , CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Glad2514900150()
                       THEN 'cxegExportToTextUTF8'
-                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857())
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857(), zc_Enum_ExportKind_Nedavn2244900110())
                       THEN 'cxegExportToExcel'
                  ELSE 'cxegExportToText'
             END AS outExportType
@@ -166,3 +166,5 @@ $BODY$
 -- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 3438890, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Brusn34604386()
 -- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 15595974, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Glad2514900150()
 -- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 17125578, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Avion40110917()
+-- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 21640170, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Nedavn2244900110()
+

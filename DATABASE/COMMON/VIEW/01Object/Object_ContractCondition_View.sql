@@ -18,6 +18,8 @@ AS
              , COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart())         :: TDateTime AS StartDate
              , COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())             :: TDateTime AS EndDate
 
+             , Object_ContractCondition.isErased                                              AS isErased
+
          FROM ObjectLink AS ObjectLink_ContractCondition_Contract
               LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                                    ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId

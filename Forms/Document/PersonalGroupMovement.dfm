@@ -748,6 +748,14 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1226,12 +1234,6 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId_Weighing'
-        Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

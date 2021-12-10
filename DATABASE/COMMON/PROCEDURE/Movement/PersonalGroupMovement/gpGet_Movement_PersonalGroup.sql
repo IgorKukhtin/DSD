@@ -46,7 +46,7 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('movement_PersonalGroup_seq') AS TVarChar) AS InvNumber
-             , inOperDate				AS OperDate
+             , CURRENT_DATE				AS OperDate
              , Object_Status.Code                       AS StatusCode
              , Object_Status.Name                       AS StatusName
              , Object_Unit.Id                           AS UnitId

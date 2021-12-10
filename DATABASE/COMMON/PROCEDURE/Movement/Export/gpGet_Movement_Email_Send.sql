@@ -59,7 +59,7 @@ BEGIN
                                                                         )
      SELECT CASE WHEN tmp.outExportKindId = zc_Enum_ExportKind_Glad2514900150()
                       THEN tmp.outFileName || '.xml'
-                 WHEN tmp.outExportKindId = zc_Enum_ExportKind_Logistik41750857()
+                 WHEN tmp.outExportKindId IN (zc_Enum_ExportKind_Logistik41750857(), zc_Enum_ExportKind_Nedavn2244900110())
                       THEN tmp.outFileName || '.xls'
                  ELSE tmp.outFileName
             END :: TVarChar AS Subject
@@ -67,7 +67,7 @@ BEGIN
           , gpGet_Mail.Value                     AS AddressFrom
           -- , tmpExportJuridical.ContactPersonMail :: TVarChar AS AddressTo
           , CASE WHEN vbUserId = 5 AND 1=1 THEN 'ashtu@ua.fm'
-               --WHEN tmp.outExportKindId = zc_Enum_ExportKind_Logistik41750857() THEN 'ashtu@ua.fm'
+               --WHEN tmp.outExportKindId IN (zc_Enum_ExportKind_Logistik41750857(), zc_Enum_ExportKind_Nedavn2244900110()) THEN 'ashtu@ua.fm'
                --WHEN vbUserId = 1329039 AND 1=1 THEN 'ashtu@ua.fm'
                  ELSE tmpExportJuridical.ContactPersonMail || ';ashtu@ua.fm'
             END :: TVarChar AS AddressTo
