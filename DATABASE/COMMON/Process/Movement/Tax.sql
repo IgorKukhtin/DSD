@@ -3,6 +3,9 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Movement_Tax() RETURNS I
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Movement_Tax_From_Kind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_Movement_Tax_From_Kind' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Movement_Tax_IsRegistered() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Movement_Tax_IsRegistered' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Movement_Tax_IsMedoc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Movement_Tax_IsMedoc' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Insert_Movement_TaxPrepay() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Insert_Movement_TaxPrepay' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+
+
 -- строки
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_MI_Tax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_MI_Tax' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_SetErased_MI_Tax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetErased_MI_Tax' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -12,6 +15,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_UnComplete_Tax() RETURNS Integer AS $
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Complete_Tax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Complete_Tax' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 -- CREATE OR REPLACE FUNCTION zc_Enum_Process_CompletePeriod_Tax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_CompletePeriod_Tax' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_SetErased_Tax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetErased_Tax' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+
 
 DO $$
 
@@ -41,6 +45,13 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Movement_Tax_I
                                   , inCode:= 4
                                   , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Tax())||'> - изменение <Медок (да/нет)>.'
                                   , inEnumName:= 'zc_Enum_Process_Update_Movement_Tax_IsMedoc');
+
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Insert_Movement_TaxPrepay()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 5
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Tax())||'> - авто формирование <накладных  предоплаты (да/нет)>.'
+                                  , inEnumName:= 'zc_Enum_Process_Insert_Movement_TaxPrepay');
+---
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_MI_Tax()
                                   , inDescId:= zc_Object_Process()
