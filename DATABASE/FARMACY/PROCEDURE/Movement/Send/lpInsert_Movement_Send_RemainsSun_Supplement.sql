@@ -717,9 +717,21 @@ BEGIN
                        COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0) <> 0))
      THEN
 
-       UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(SUM(tmpRemains.AmountRemains 
-                                                            - COALESCE(tmpRemains.AmountNotSend, 0))) 
+       UPDATE _tmpRemains_all_Supplement SET GiveAway = (SELECT FLOOR(SUM(tmpRemains.AmountRemains - tmpRemains.MCS
+                                                            - CASE WHEN tmpRemains.AmountNotSend > 
+                                                                       COALESCE(_tmpGoodsLayout_SUN_Supplement.Layout, 0) 
+                                                                       + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0) 
+                                                                   THEN tmpRemains.AmountNotSend
+                                                                   ELSE COALESCE(_tmpGoodsLayout_SUN_Supplement.Layout, 0) 
+                                                                      + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0) END))
                                                          FROM _tmpRemains_all_Supplement AS tmpRemains 
+                                                         
+                                                              LEFT JOIN _tmpGoodsLayout_SUN_Supplement ON _tmpGoodsLayout_SUN_Supplement.GoodsID = tmpRemains.GoodsId
+                                                                                                      AND _tmpGoodsLayout_SUN_Supplement.UnitId = tmpRemains.UnitId  
+
+                                                              LEFT JOIN _tmpGoods_PromoUnit_Supplement ON _tmpGoods_PromoUnit_Supplement.GoodsID = tmpRemains.GoodsId
+                                                                                                      AND _tmpGoods_PromoUnit_Supplement.UnitId = tmpRemains.UnitId  
+                                                                                                      
                                                          WHERE tmpRemains.GoodsId = _tmpRemains_all_Supplement.GoodsId
                                                            AND (tmpRemains.AmountRemains - COALESCE(tmpRemains.AmountNotSend, 0)) > 0
                                                            AND tmpRemains.UnitId = _tmpRemains_all_Supplement.UnitId)

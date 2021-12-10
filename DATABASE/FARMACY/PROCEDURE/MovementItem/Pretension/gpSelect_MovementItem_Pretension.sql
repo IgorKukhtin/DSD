@@ -1,4 +1,4 @@
--- Function: gpSelect_MovementItem_Income()
+-- Function: gpSelect_MovementItem_Pretension()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_Pretension (Integer, Boolean, Boolean, TVarChar);
 
@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, ParentId integer
              , isChecked Boolean
              , CheckedName TVarChar
              , Price TFloat
-             , SummDiff TFloat
+             , Summ TFloat
              , isErased Boolean
              , AmountInIncome TFloat
              , Remains TFloat
@@ -146,7 +146,7 @@ BEGIN
                                , Object_ReasonDifferences.ValueData   AS ReasonDifferencesName
                                , MIFloat_Amount.ValueData         AS AmountIncome
                                , MIFloat_AmountManual.ValueData   AS AmountManual
-                               , (COALESCE(MIFloat_AmountManual.ValueData, 0) - COALESCE(MI_Pretension.Amount,0))::TFloat AS AmountDiff
+                               , (COALESCE(MIFloat_AmountManual.ValueData, 0) - COALESCE( MIFloat_Amount.ValueData,0))::TFloat AS AmountDiff
                                , MIBoolean_Checked.ValueData      AS isChecked
                                , MI_Pretension.isErased
                           FROM Movement AS Movement_Pretension
@@ -220,7 +220,7 @@ BEGIN
               , MovementItem_Pretension.isChecked
               , CASE WHEN MovementItem.isChecked THEN 'Актуальна' ELSE 'Неактуальна' END::TVarChar AS CheckedName
               , MovementItem_Income.Price                                                  AS Price
-              , ROUND(COALESCE(MovementItem_Pretension.AmountDiff, 0) * MovementItem_Income.Price, 2 )::TFloat AS SummDiff
+              , ROUND(COALESCE(MovementItem_Pretension.Amount , 0) * MovementItem_Income.Price, 2 )::TFloat AS Summ
               , MovementItem_Pretension.isErased                                           AS isErased
               , MovementItem_Income.AmountInIncome                                         AS AmountInIncome
               , (COALESCE(MovementItem_Income.AmountRemains,0)
@@ -322,7 +322,7 @@ BEGIN
                                , Object_ReasonDifferences.ValueData   AS ReasonDifferencesName
                                , MIFloat_Amount.ValueData         AS AmountIncome
                                , MIFloat_AmountManual.ValueData   AS AmountManual
-                               , (COALESCE(MIFloat_AmountManual.ValueData, 0) - COALESCE(MI_Pretension.Amount,0))::TFloat AS AmountDiff
+                               , (COALESCE(MIFloat_AmountManual.ValueData, 0) - COALESCE( MIFloat_Amount.ValueData,0))::TFloat AS AmountDiff
                                , MIBoolean_Checked.ValueData      AS isChecked
                                , MI_Pretension.isErased
                           FROM Movement AS Movement_Pretension
@@ -410,7 +410,7 @@ BEGIN
               , MovementItem.isChecked
               , CASE WHEN MovementItem.isChecked THEN 'Актуальна' ELSE 'Неактуальна' END::TVarChar AS CheckedName
               , MovementItem_Income.Price
-              , ROUND(COALESCE(MovementItem.AmountDiff, 0) * MovementItem_Income.Price, 2 )::TFloat AS SummDiff
+              , ROUND(COALESCE(MovementItem.Amount , 0) * MovementItem_Income.Price, 2 )::TFloat AS Summ
               , MovementItem.isErased
               , MovementItem_Income.AmountInIncome
               , (COALESCE(MovementItem_Income.AmountRemains,0)

@@ -58,8 +58,8 @@ BEGIN
            , Movement_Pretension_View.JuridicalName
            , Movement_Pretension_View.Comment
            , Movement_Pretension_View.BranchDate
-           , CASE WHEN Movement_Pretension_View.ToId = 59611 THEN 'Акт по претензии Оптима'
-                  WHEN Movement_Pretension_View.ToId = 59612 THEN 'Акт по претензии Вента'
+           , CASE WHEN Movement_Pretension_View.ToId = 59611 THEN 'Акт по претензии Бадм'
+                  WHEN Movement_Pretension_View.ToId = 59612 THEN 'Акт по претензии Бадм'
                   ELSE 'Акт по претензии Бадм' END::TVarChar AS ActName
 
        FROM Movement_Pretension_View       
