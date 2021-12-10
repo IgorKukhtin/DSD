@@ -11,7 +11,18 @@ uses
   Data.DB, Datasnap.DBClient, cxStyles, dxSkinscxPCPainter, cxCustomData,
   cxFilter, cxData, cxDataStorage, cxDBData, dsdInternetAction, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxClasses,
-  cxGridCustomView, cxGrid, dsdExportToXLSAction;
+  cxGridCustomView, cxGrid, dsdExportToXLSAction, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue
+  ,frxBarcode, FastReportAddOn;
 
 type
   TMainForm = class(TForm)
@@ -94,6 +105,12 @@ type
     actExportToXLS_project: TdsdExportToXLS;
     actGet_Export_FileName_xls: TdsdExecStoredProc;
     spGet_Export_FileName_xls: TdsdStoredProc;
+    spGetReportName: TdsdStoredProc;
+    actSPPrintSaleProcName: TdsdExecStoredProc;
+    PrintItemsSverkaCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
+    actExport_fr3: TdsdPrintAction;
+    mactExport_xls_2244900110: TMultiAction;
     procedure TrayIconClick(Sender: TObject);
     procedure AppMinimize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -460,8 +477,11 @@ begin
           Application.ProcessMessages;
           // Попробовали отправить
           try
-              if FieldByName('isExcel').AsBoolean = TRUE
+              if FieldByName('ExportKindId').AsInteger = FieldByName('zc_Logistik41750857').AsInteger
               then mactExport_xls.Execute
+              else
+              if FieldByName('ExportKindId').AsInteger = FieldByName('zc_Nedavn2244900110').AsInteger
+              then mactExport_xls_2244900110.Execute
               else mactExport.Execute;
               //
               Application.ProcessMessages;

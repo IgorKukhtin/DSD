@@ -24,13 +24,18 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar
              ) AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyAll Boolean;
+   DECLARE vbAccessKeyAll   Boolean;
+   DECLARE vbAccessKey_Kiev Boolean;
+   DECLARE vbAccessKey_Lviv Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Car());
      vbUserId:= lpGetUserBySession (inSession);
      -- определяется - может ли пользовать видеть весь справочник
      vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
+
+     vbAccessKey_Kiev:= EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND AccessKeyId IN (zc_Enum_Process_AccessKey_TrasportKiev(), zc_Enum_Process_AccessKey_GuideKiev()));
+     vbAccessKey_Lviv:= EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND AccessKeyId IN (zc_Enum_Process_AccessKey_TrasportLviv(), zc_Enum_Process_AccessKey_GuideLviv()));
 
      -- Результат
      RETURN QUERY 
@@ -169,7 +174,10 @@ BEGIN
                                  ON ObjectString_InvNumber.ObjectId = Object_Asset.Id
                                 AND ObjectString_InvNumber.DescId = zc_ObjectString_Asset_InvNumber()
 
-     WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll = TRUE OR Object_Unit.Id = 8395) -- 21000 Транспорт - сбыт
+     WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll = TRUE OR Object_Unit.Id = 8395 -- 21000 Транспорт - сбыт
+         OR (vbAccessKey_Kiev = TRUE AND Object_Car.AccessKeyId IN (zc_Enum_Process_AccessKey_TrasportLviv(), zc_Enum_Process_AccessKey_GuideLviv()))
+         OR (vbAccessKey_Lviv = TRUE AND Object_Car.AccessKeyId IN (zc_Enum_Process_AccessKey_TrasportKiev(), zc_Enum_Process_AccessKey_GuideKiev()))
+           )
     ;
 
 END;

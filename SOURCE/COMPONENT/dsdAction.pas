@@ -3829,7 +3829,8 @@ begin
                    if PrefixFileNameExport <> '' then
                      FileNameExport := PrefixFileNameExport + FileNameExport;
                    if ExportDirectory <> '' then
-                     FileNameExport := ExportDirectory + '\' + FileNameExport;
+                     FileNameExport := ExportDirectory + '\' + FileNameExport
+                   else FileNameExport := FileNameExport;
                  end;
                  frxXLSExport1.FileName := FileNameExport;
                  frxXLSExport1.ShowDialog := frxXLSExport1_ShowDialog;

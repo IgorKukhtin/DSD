@@ -268,12 +268,14 @@ type
     spSelectPrintSign: TdsdStoredProc;
     actGet_Export_FileName_xls: TdsdExecStoredProc;
     actSelect_Export_xls: TdsdExecStoredProc;
-    actExportToXLS_project: TdsdExportToXLS;
     mactExport_xls: TMultiAction;
     dxBarButton1: TdxBarButton;
     spSelectPrintItem2244900110: TdsdStoredProc;
     mactExport_xls_2244900110: TMultiAction;
     bb: TdxBarButton;
+    dsdPrintAction1: TdsdPrintAction;
+    dsdPrintAction2: TdsdPrintAction;
+    actExport_fr3: TdsdPrintAction;
   private
     { Private declarations }
   public
