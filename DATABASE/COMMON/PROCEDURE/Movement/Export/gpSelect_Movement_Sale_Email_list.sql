@@ -14,6 +14,9 @@ RETURNS TABLE (MovementId Integer
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , JuridicalName_To TVarChar, OKPO_To TVarChar
              , RetailName TVarChar
+             , ExportKindId Integer
+             , zc_Logistik41750857 Integer
+             , zc_Nedavn2244900110 Integer
              , isExcel Boolean
               )
 AS
@@ -41,6 +44,13 @@ BEGIN
                                     WHERE tmp.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857()
                                                               )
                                     --AND inIsExcel = TRUE
+                                   UNION
+                                    SELECT DISTINCT tmp.PartnerId, tmp.ExportKindId
+                                    FROM lpSelect_Object_ExportJuridical_list() AS tmp
+                                    -- только для этого
+                                    WHERE tmp.ExportKindId IN (zc_Enum_ExportKind_Nedavn2244900110()
+                                                              )
+                                    --AND inIsExcel = TRUE
                                    )
                   , tmpMovement AS (SELECT Movement.Id AS MovementId
                                          , Movement.InvNumber
@@ -61,7 +71,7 @@ BEGIN
                                       AND Movement.DescId = zc_Movement_Sale()
                                       AND Movement.StatusId = zc_Enum_Status_Complete()
                                       AND MovementBoolean_Mail.MovementId IS NULL
-                                    --AND (MovementBoolean_Mail.MovementId IS NULL OR tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Logistik41750857()))
+                                    --AND (MovementBoolean_Mail.MovementId IS NULL OR tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Nedavn2244900110()))
                                   --LIMIT CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Logistik41750857() THEN 1 ELSE 100 END
                                    )
                , tmpMovProtocol AS (SELECT tmpMovement.*
@@ -86,6 +96,10 @@ BEGIN
              , ObjectHistory_JuridicalDetails_View.OKPO          AS OKPO_To
              , Object_Retail.ValueData                           AS RetailName
              
+             , tmpMovProtocol.ExportKindId                       AS ExportKindId
+             , zc_Enum_ExportKind_Logistik41750857() :: Integer  AS zc_Logistik41750857
+             , zc_Enum_ExportKind_Nedavn2244900110() :: Integer  AS zc_Nedavn2244900110
+
              , CASE WHEN tmpMovProtocol.ExportKindId = zc_Enum_ExportKind_Logistik41750857() THEN TRUE ELSE FALSE END :: Boolean AS isExcel
 
         FROM tmpMovProtocol
