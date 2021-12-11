@@ -115,6 +115,10 @@ type
     dxBarButton10: TdxBarButton;
     MovementItemProtocolFileOpenForm: TdsdOpenForm;
     dxBarButton11: TdxBarButton;
+    actSendClipboard: TdsdSendClipboardAction;
+    dxBarButton12: TdxBarButton;
+    spGetData: TdsdStoredProc;
+    actGetData: TdsdExecStoredProc;
   private
     { Private declarations }
   public

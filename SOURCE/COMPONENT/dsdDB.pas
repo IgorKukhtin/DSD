@@ -924,6 +924,7 @@ begin
       if not VarIsNull(FValue) AND (DataType = ftDateTime) then
       begin
         if (VarToStr(FValue) = 'NULL') OR (VarToStr(FValue) = '') OR (VarToStr(FValue) = '0') then Result := NULL
+        else if VarToStr(FValue) = '-700000' then Result := Date
         else if TryStrToDateTime(VarToStr(FValue), DT) then Result := FValue
         else Result := gfXSStrToDate(FValue)
       end

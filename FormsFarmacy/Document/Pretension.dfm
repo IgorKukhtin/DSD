@@ -1135,6 +1135,33 @@ inherited PretensionForm: TPretensionForm
         end>
       isShowModal = False
     end
+    object actGetData: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetData
+      StoredProcList = <
+        item
+          StoredProc = spGetData
+        end>
+      Caption = #1047#1072#1084#1077#1085#1080#1090#1100' '#1092#1072#1081#1083' '#1074' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
+      Hint = #1047#1072#1084#1077#1085#1080#1090#1100' '#1092#1072#1081#1083' '#1074' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
+      ImageIndex = 80
+    end
+    object actSendClipboard: TdsdSendClipboardAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actGetData
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1072#1082#1090#1091' '#1074' '#1073#1091#1092#1077#1088' '#1086#1073#1084#1077#1085#1072
+      Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1072#1082#1090#1091' '#1074' '#1073#1091#1092#1077#1088' '#1086#1073#1084#1077#1085#1072
+      ImageIndex = 31
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1086' '#1072#1082#1090#1091' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1099' '#1074' '#1073#1091#1092#1077#1088' '#1086#1073#1084#1077#1085#1072
+      TextParam.Value = ''
+      TextParam.Component = FormParams
+      TextParam.ComponentItem = 'TextClipbord'
+      TextParam.DataType = ftWideString
+      TextParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 280
@@ -1283,6 +1310,14 @@ inherited PretensionForm: TPretensionForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton12'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1292,10 +1327,6 @@ inherited PretensionForm: TPretensionForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           BeginGroup = True
@@ -1419,6 +1450,10 @@ inherited PretensionForm: TPretensionForm
       Action = MovementItemProtocolFileOpenForm
       Category = 0
     end
+    object dxBarButton12: TdxBarButton
+      Action = actSendClipboard
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
@@ -1492,14 +1527,14 @@ inherited PretensionForm: TPretensionForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumberPartner'
+        Name = 'TextClipbord'
         Value = Null
-        DataType = ftString
+        DataType = ftWideString
         MultiSelectSeparator = ','
       end
       item
         Name = 'BranchDate'
-        Value = '-700000'
+        Value = 44541d
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -2480,5 +2515,30 @@ inherited PretensionForm: TPretensionForm
     PackSize = 1
     Left = 622
     Top = 176
+  end
+  object spGetData: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Pretension_Data'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDataAct'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'TextClipbord'
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 440
+    Top = 192
   end
 end

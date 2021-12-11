@@ -793,6 +793,7 @@ initialization
   RegisterClass (TdsdSetVisibleAction);
   RegisterClass (TdsdDataToJsonAction);
   RegisterClass (TdsdSendTelegramBotAction);
+  RegisterClass (TdsdSendClipboardAction);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);

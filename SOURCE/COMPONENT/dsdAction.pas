@@ -4,7 +4,7 @@ unit dsdAction;
 
 interface
 
-uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj,
+uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj, Clipbrd,
   cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView, cxDBPivotGrid,
   cxGridDBTableView, frxClass, frxExportPDF, frxExportXLS, cxGridCustomView, Dialogs, Controls,
   dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, IdFTPCommon,
@@ -1336,6 +1336,26 @@ type
 
   end;
 
+  TdsdSendClipboardAction = class(TdsdCustomAction)
+  private
+    FParam: TdsdParam;
+  protected
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+    property QuestionBeforeExecute;
+    property InfoAfterExecute;
+
+    property TextParam: TdsdParam read FParam write FParam;
+  end;
+
 procedure Register;
 
 implementation
@@ -1400,6 +1420,7 @@ begin
   RegisterActions('DSDLib', [TdsdSetVisibleAction], TdsdSetVisibleAction);
   RegisterActions('DSDLib', [TdsdDataToJsonAction], TdsdDataToJsonAction);
   RegisterActions('DSDLib', [TdsdSendTelegramBotAction], TdsdSendTelegramBotAction);
+  RegisterActions('DSDLib', [TdsdSendClipboardAction], TdsdSendClipboardAction);
 
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
@@ -6273,6 +6294,35 @@ end;
 //    end;
 //  end else ShowMessage(FIdHTTP.ResponseText);
 //end;
+
+  {TdsdSendClipboardAction}
+
+constructor TdsdSendClipboardAction.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  FParam := TdsdParam.Create(nil);
+  FParam.DataType := ftString;
+  FParam.Value := '';
+end;
+
+destructor TdsdSendClipboardAction.Destroy;
+begin
+  FreeAndNil(FParam);
+
+  inherited;
+end;
+
+function TdsdSendClipboardAction.LocalExecute: Boolean;
+  var S, Json : String;
+  JsonToSend: TStringStream;
+begin
+  Result := True;
+
+  if FParam.Value <> '' then Clipboard.AsText := FParam.Value;
+
+end;
+
 
 initialization
 
