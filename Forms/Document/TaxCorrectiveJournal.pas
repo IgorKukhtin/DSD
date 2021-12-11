@@ -138,6 +138,10 @@ type
     macUpdate_NPP_Null: TMultiAction;
     macUpdate_NPP_Null_All: TMultiAction;
     bbUpdate_NPP_Null: TdxBarButton;
+    spInsert_isAutoPrepay: TdsdStoredProc;
+    actInsert_isAutoPrepay: TdsdExecStoredProc;
+    macInsert_isAutoPrepay: TMultiAction;
+    bbInsert_isAutoPrepay: TdxBarButton;
   private
     { Private declarations }
   public

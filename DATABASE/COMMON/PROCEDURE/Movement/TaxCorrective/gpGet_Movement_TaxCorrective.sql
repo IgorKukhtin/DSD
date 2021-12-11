@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS gpGet_Movement_TaxCorrective (Integer, Boolean, TDateTim
 CREATE OR REPLACE FUNCTION gpGet_Movement_TaxCorrective(
     IN inMovementId        Integer  , -- ключ Документа
     IN inMask              Boolean  ,
-    IN inOperDate          TDateTime, -- ключ Документа
+    IN inOperDate          TDateTime, -- ключ Документа 
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
