@@ -12,6 +12,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;
+   DECLARE vbBookingStatus TVarChar;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_...());
@@ -28,13 +29,16 @@ BEGIN
         RAISE EXCEPTION 'Документ не записан.';
     END IF;
     
-    SELECT StatusId
-    INTO vbStatusId
+    SELECT StatusId, COALESCE(MovementString_BookingStatus.ValueData, '')
+    INTO vbStatusId, vbBookingStatus
     FROM Movement
+         LEFT JOIN MovementString AS MovementString_BookingStatus
+                                  ON MovementString_BookingStatus.MovementId = Movement.Id
+                                 AND MovementString_BookingStatus.DescId = zc_MovementString_BookingStatus()
     WHERE Id = inMovementId;
 
         -- сохранили Статус заказа
-    IF vbStatusId = zc_Enum_Status_UnComplete()
+    IF vbBookingStatus <> inBookingStatus
     THEN 
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_BookingStatus(), inMovementId, inBookingStatus);
     END IF; 

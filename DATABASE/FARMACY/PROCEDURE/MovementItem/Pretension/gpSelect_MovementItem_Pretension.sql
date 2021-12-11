@@ -218,7 +218,7 @@ BEGIN
               , MovementItem_Pretension.AmountManual
               , MovementItem_Pretension.AmountDiff
               , MovementItem_Pretension.isChecked
-              , CASE WHEN MovementItem.isChecked THEN 'Актуальна' ELSE 'Неактуальна' END::TVarChar AS CheckedName
+              , CASE WHEN MovementItem_Pretension.isChecked THEN 'Актуальна' ELSE 'Неактуальна' END::TVarChar AS CheckedName
               , MovementItem_Income.Price                                                  AS Price
               , ROUND(COALESCE(MovementItem_Pretension.Amount , 0) * MovementItem_Income.Price, 2 )::TFloat AS Summ
               , MovementItem_Pretension.isErased                                           AS isErased
@@ -449,4 +449,6 @@ $BODY$
 */
 
 -- тест
-select * from gpSelect_MovementItem_Pretension(inMovementId := 8086637 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+
+
+select * from gpSelect_MovementItem_Pretension(inMovementId := 26008006 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');

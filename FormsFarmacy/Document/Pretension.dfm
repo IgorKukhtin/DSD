@@ -1,29 +1,28 @@
 inherited PretensionForm: TPretensionForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1077#1090#1077#1085#1079#1080#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
-  ClientHeight = 526
+  ClientHeight = 570
   ClientWidth = 1001
   ExplicitWidth = 1017
-  ExplicitHeight = 565
+  ExplicitHeight = 609
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 203
+    Top = 108
     Width = 1001
-    Height = 323
-    ExplicitTop = 203
+    Height = 462
+    ExplicitTop = 108
     ExplicitWidth = 1001
-    ExplicitHeight = 323
-    ClientRectBottom = 323
+    ExplicitHeight = 462
+    ClientRectBottom = 462
     ClientRectRight = 1001
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1001
-      ExplicitHeight = 299
+      ExplicitHeight = 438
       inherited cxGrid: TcxGrid
         Width = 1001
-        Height = 299
-        ExplicitLeft = 72
+        Height = 272
         ExplicitWidth = 1001
-        ExplicitHeight = 299
+        ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -322,14 +321,214 @@ inherited PretensionForm: TPretensionForm
           end
         end
       end
+      object Panel2: TPanel
+        Left = 0
+        Top = 272
+        Width = 1001
+        Height = 166
+        Align = alBottom
+        ShowCaption = False
+        TabOrder = 1
+        object Panel3: TPanel
+          Left = 1
+          Top = 1
+          Width = 608
+          Height = 164
+          Align = alLeft
+          ShowCaption = False
+          TabOrder = 0
+          object cxmComment: TcxMemo
+            Left = 1
+            Top = 22
+            Align = alBottom
+            TabOrder = 0
+            Height = 141
+            Width = 606
+          end
+          object cxLabel6: TcxLabel
+            Left = 11
+            Top = -1
+            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+          end
+        end
+        object Panel1: TPanel
+          Left = 609
+          Top = 1
+          Width = 391
+          Height = 164
+          Align = alClient
+          ShowCaption = False
+          TabOrder = 1
+          object cxGridFile: TcxGrid
+            Left = 1
+            Top = 22
+            Width = 389
+            Height = 141
+            Align = alBottom
+            PopupMenu = PopupMenu
+            TabOrder = 0
+            object cxGridDBTableViewFile: TcxGridDBTableView
+              Navigator.Buttons.CustomButtons = <>
+              DataController.DataSource = FileDS
+              DataController.Filter.Options = [fcoCaseInsensitive]
+              DataController.Summary.DefaultGroupSummaryItems = <
+                item
+                  Format = ',0.####'
+                  Kind = skSum
+                end
+                item
+                  Format = ',0.####'
+                  Kind = skSum
+                end
+                item
+                  Format = ',0.####'
+                  Kind = skSum
+                end
+                item
+                  Format = ',0.####'
+                  Kind = skSum
+                end
+                item
+                  Format = ',0.####'
+                  Kind = skSum
+                end
+                item
+                  Format = ',0.####'
+                  Kind = skSum
+                end
+                item
+                  Format = ',0.00'
+                  Kind = skSum
+                end
+                item
+                  Format = ',0.####'
+                  Kind = skSum
+                end
+                item
+                  Format = ',0.####'
+                  Kind = skSum
+                end
+                item
+                  Format = '+,0.###;-,0.###; ;'
+                  Kind = skSum
+                end
+                item
+                  Format = ',0.####;-,0.####; ;'
+                  Kind = skSum
+                end>
+              DataController.Summary.FooterSummaryItems = <
+                item
+                  Format = ',0.####'
+                  Kind = skSum
+                end
+                item
+                  Format = ',0.####'
+                  Kind = skSum
+                end
+                item
+                  Format = ',0.####'
+                  Kind = skSum
+                end
+                item
+                  Format = ',0.####'
+                  Kind = skSum
+                end
+                item
+                  Format = ',0.####'
+                  Kind = skSum
+                end
+                item
+                  Kind = skSum
+                end
+                item
+                  Format = ',0.####'
+                  Kind = skSum
+                end
+                item
+                  Format = ',0.00'
+                  Kind = skSum
+                end
+                item
+                  Format = ',0.####'
+                  Kind = skSum
+                end
+                item
+                  Format = ',0.####'
+                  Kind = skSum
+                end
+                item
+                  Format = '+,0.###;-,0.###; ;'
+                  Kind = skSum
+                end
+                item
+                  Format = ',0.####;-,0.####; ;'
+                  Kind = skSum
+                end>
+              DataController.Summary.SummaryGroups = <>
+              Images = dmMain.SortImageList
+              OptionsBehavior.GoToNextCellOnEnter = True
+              OptionsCustomize.ColumnHiding = True
+              OptionsCustomize.ColumnsQuickCustomization = True
+              OptionsData.Deleting = False
+              OptionsData.DeletingConfirmation = False
+              OptionsData.Inserting = False
+              OptionsView.ColumnAutoWidth = True
+              OptionsView.GroupByBox = False
+              OptionsView.HeaderAutoHeight = True
+              OptionsView.Indicator = True
+              Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+              object chisErased: TcxGridDBColumn
+                Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+                DataBinding.FieldName = 'isErased'
+                Visible = False
+                Options.Editing = False
+                VisibleForCustomization = False
+                Width = 50
+              end
+              object chNumber: TcxGridDBColumn
+                Caption = #8470' '#1087'/'#1087
+                DataBinding.FieldName = 'Number'
+                PropertiesClassName = 'TcxButtonEditProperties'
+                Properties.Buttons = <
+                  item
+                    Action = actChoiceGoods
+                    Default = True
+                    Kind = bkEllipsis
+                  end>
+                Properties.ReadOnly = True
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Options.Editing = False
+                Width = 45
+              end
+              object chFileName: TcxGridDBColumn
+                Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1092#1072#1081#1083#1072
+                DataBinding.FieldName = 'FileName'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Options.Editing = False
+                Width = 316
+              end
+            end
+            object cxGridLevelV: TcxGridLevel
+              GridView = cxGridDBTableViewFile
+            end
+          end
+          object cxLabel8: TcxLabel
+            Left = 5
+            Top = 0
+            Caption = #1055#1088#1080#1082#1088#1077#1087#1083#1077#1085#1085#1099#1077' '#1092#1072#1081#1083#1099
+          end
+        end
+      end
     end
   end
   inherited DataPanel: TPanel
     Width = 1001
-    Height = 177
+    Height = 82
     TabOrder = 3
     ExplicitWidth = 1001
-    ExplicitHeight = 177
+    ExplicitHeight = 82
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Top = 22
@@ -369,12 +568,12 @@ inherited PretensionForm: TPretensionForm
     end
     object cxLabel3: TcxLabel
       Left = 226
-      Top = 4
+      Top = 5
       Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
     end
     object edFrom: TcxButtonEdit
-      Left = 228
-      Top = 59
+      Left = 456
+      Top = 22
       Enabled = False
       Properties.Buttons = <
         item
@@ -383,7 +582,7 @@ inherited PretensionForm: TPretensionForm
         end>
       Properties.ReadOnly = True
       TabOrder = 4
-      Width = 154
+      Width = 246
     end
     object edTo: TcxButtonEdit
       Left = 228
@@ -396,16 +595,16 @@ inherited PretensionForm: TPretensionForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 154
+      Width = 222
     end
     object cxLabel4: TcxLabel
-      Left = 228
-      Top = 40
+      Left = 456
+      Top = 5
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 228
-      Top = 128
+      Left = 456
+      Top = 59
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       Enabled = False
       Properties.ReadOnly = True
@@ -413,13 +612,13 @@ inherited PretensionForm: TPretensionForm
       Width = 130
     end
     object cxLabel10: TcxLabel
-      Left = 8
-      Top = 125
+      Left = 364
+      Top = 40
       Caption = #1058#1080#1087' '#1053#1044#1057
     end
     object edNDSKind: TcxButtonEdit
-      Left = 8
-      Top = 142
+      Left = 364
+      Top = 59
       Enabled = False
       Properties.Buttons = <
         item
@@ -431,18 +630,18 @@ inherited PretensionForm: TPretensionForm
       Width = 86
     end
     object cxLabel5: TcxLabel
-      Left = 8
-      Top = 82
+      Left = 152
+      Top = 40
       Caption = #8470' '#1087#1088#1080#1093#1086#1076#1072
     end
     object cxLabel12: TcxLabel
-      Left = 228
-      Top = 84
+      Left = 708
+      Top = 5
       Caption = #1070#1088#1083#1080#1094#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100
     end
     object edJuridical: TcxButtonEdit
-      Left = 228
-      Top = 101
+      Left = 708
+      Top = 22
       Enabled = False
       Properties.Buttons = <
         item
@@ -454,13 +653,13 @@ inherited PretensionForm: TPretensionForm
       Width = 154
     end
     object cxLabel13: TcxLabel
-      Left = 119
-      Top = 82
+      Left = 263
+      Top = 40
       Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076#1072
     end
     object deIncomeOperDate: TcxDateEdit
-      Left = 114
-      Top = 101
+      Left = 258
+      Top = 59
       EditValue = 42363d
       Enabled = False
       Properties.ReadOnly = True
@@ -470,8 +669,8 @@ inherited PretensionForm: TPretensionForm
       Width = 100
     end
     object cbisDeferred: TcxCheckBox
-      Left = 228
-      Top = 144
+      Left = 609
+      Top = 59
       Caption = #1054#1090#1083#1086#1078#1077#1085
       Enabled = False
       Properties.ReadOnly = True
@@ -479,38 +678,26 @@ inherited PretensionForm: TPretensionForm
       Width = 69
     end
     object edIncome: TcxTextEdit
-      Left = 8
-      Top = 101
+      Left = 152
+      Top = 59
       Enabled = False
       Properties.ReadOnly = False
       TabOrder = 19
       Width = 105
     end
-    object cxmComment: TcxMemo
-      Left = 388
-      Top = 22
-      TabOrder = 20
-      Height = 141
-      Width = 609
-    end
-    object cxLabel6: TcxLabel
-      Left = 388
-      Top = 3
-      Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
-    end
     object deBranchDate: TcxDateEdit
-      Left = 114
-      Top = 142
+      Left = 708
+      Top = 59
       EditValue = 42363d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 22
+      TabOrder = 20
       Width = 100
     end
     object cxLabel7: TcxLabel
-      Left = 119
-      Top = 123
+      Left = 708
+      Top = 40
       Caption = #1044#1072#1090#1072' '#1087#1088#1080#1085#1103#1090#1080#1103
     end
   end
@@ -535,6 +722,19 @@ inherited PretensionForm: TPretensionForm
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectFile
+        end>
       RefreshOnTabSetChanges = True
     end
     inherited actPrint: TdsdPrintAction
@@ -794,14 +994,155 @@ inherited PretensionForm: TPretensionForm
       ImageIndex = 77
       QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1088#1080#1085#1103#1090#1080#1103' '#1090#1086#1074#1072#1088#1072'?'
     end
+    object actRefreshFile: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectFile
+      StoredProcList = <
+        item
+          StoredProc = spSelectFile
+        end>
+      Caption = 'actRefreshFile'
+    end
+    object actOpenFileDialog: TFileDialogAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      FileOpenDialog.FavoriteLinks = <>
+      FileOpenDialog.FileTypes = <>
+      FileOpenDialog.Options = []
+      Param.Value = Null
+      Param.Component = FormParams
+      Param.ComponentItem = 'FileName'
+      Param.DataType = ftString
+      Param.MultiSelectSeparator = ','
+    end
+    object actAddFile: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = '0'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'FileId'
+          ToParam.MultiSelectSeparator = ','
+        end>
+      AfterAction = actRefreshFile
+      BeforeAction = actOpenFileDialog
+      PostDataSetBeforeExecute = False
+      StoredProc = spAddFile
+      StoredProcList = <
+        item
+          StoredProc = spAddFile
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1092#1072#1081#1083' '#1074' '#1087#1088#1077#1090#1077#1085#1079#1080#1102
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1092#1072#1081#1083' '#1074' '#1087#1088#1077#1090#1077#1085#1079#1080#1102
+      ImageIndex = 54
+    end
+    object actUpdateFile: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefreshFile
+      BeforeAction = actOpenFileDialog
+      PostDataSetBeforeExecute = False
+      StoredProc = spAddFile
+      StoredProcList = <
+        item
+          StoredProc = spAddFile
+        end>
+      Caption = #1047#1072#1084#1077#1085#1080#1090#1100' '#1092#1072#1081#1083' '#1074' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
+      Hint = #1047#1072#1084#1077#1085#1080#1090#1100' '#1092#1072#1081#1083' '#1074' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
+      ImageIndex = 80
+    end
+    object actOpenFile: TShellExecuteAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Param.Value = Null
+      Param.Component = FileCDS
+      Param.ComponentItem = 'FileFullName'
+      Param.DataType = ftString
+      Param.MultiSelectSeparator = ','
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1092#1072#1081#1083
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1092#1072#1081#1083
+      ImageIndex = 60
+    end
+    object actErasedMIFile: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedMIFile
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIFile
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1060#1072#1081#1083' '#1080#1079' '#1087#1088#1077#1090#1077#1085#1079#1080#1080'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1060#1072#1081#1083' '#1080#1079' '#1087#1088#1077#1090#1077#1085#1079#1080#1080'>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = FileDS
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
+    end
+    object actUnErasedMIFile: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUnErasedMIFile
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIFile
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = FileDS
+    end
+    object MovementItemProtocolFileOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1087#1088#1080#1082#1088#1077#1087#1083#1077#1085#1085#1099#1093' '#1092#1072#1081#1083#1086#1074'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1087#1088#1080#1082#1088#1077#1087#1083#1077#1085#1085#1099#1093' '#1092#1072#1081#1083#1086#1074'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FileCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = FileCDS
+          ComponentItem = 'FileName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
-    Left = 16
-    Top = 384
+    Left = 280
+    Top = 192
   end
   inherited MasterCDS: TClientDataSet
-    Left = 80
-    Top = 392
+    Left = 344
+    Top = 192
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Pretension'
@@ -847,7 +1188,7 @@ inherited PretensionForm: TPretensionForm
   end
   inherited BarManager: TdxBarManager
     Left = 48
-    Top = 207
+    Top = 191
     DockControlHeights = (
       0
       0
@@ -918,14 +1259,6 @@ inherited PretensionForm: TPretensionForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarButton1'
         end
         item
@@ -959,6 +1292,43 @@ inherited PretensionForm: TPretensionForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton7'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton8'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton9'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton10'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton11'
         end>
     end
     object bbPrintTTN: TdxBarButton [5]
@@ -1025,6 +1395,30 @@ inherited PretensionForm: TPretensionForm
       Action = actUpdate_ClearBranchDate
       Category = 0
     end
+    object dxBarButton6: TdxBarButton
+      Action = actAddFile
+      Category = 0
+    end
+    object dxBarButton7: TdxBarButton
+      Action = actUpdateFile
+      Category = 0
+    end
+    object dxBarButton8: TdxBarButton
+      Action = actOpenFile
+      Category = 0
+    end
+    object dxBarButton9: TdxBarButton
+      Action = actErasedMIFile
+      Category = 0
+    end
+    object dxBarButton10: TdxBarButton
+      Action = actUnErasedMIFile
+      Category = 0
+    end
+    object dxBarButton11: TdxBarButton
+      Action = MovementItemProtocolFileOpenForm
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
@@ -1085,16 +1479,15 @@ inherited PretensionForm: TPretensionForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ReportNameIncomeTax'
+        Name = 'FileName'
         Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ReportNameIncomeBill'
-        Value = Null
-        DataType = ftString
+        Name = 'FileId'
+        Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1120,12 +1513,12 @@ inherited PretensionForm: TPretensionForm
   end
   inherited StatusGuides: TdsdGuides
     Left = 80
-    Top = 16
+    Top = 40
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Pretension'
     Left = 32
-    Top = 16
+    Top = 32
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Pretension'
@@ -1393,7 +1786,7 @@ inherited PretensionForm: TPretensionForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Pretension_SetErased'
-    Left = 630
+    Left = 622
     Top = 336
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
@@ -1747,7 +2140,7 @@ inherited PretensionForm: TPretensionForm
         MultiSelectSeparator = ','
       end>
     Left = 264
-    Top = 80
+    Top = 112
   end
   object spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Pretension'
@@ -1898,5 +2291,194 @@ inherited PretensionForm: TPretensionForm
     PackSize = 1
     Left = 736
     Top = 387
+  end
+  object FileCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 848
+    Top = 192
+  end
+  object FileDS: TDataSource
+    DataSet = FileCDS
+    Left = 768
+    Top = 192
+  end
+  object DBViewAddOnFile: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewFile
+    OnDblClickActionList = <
+      item
+        Action = actOpenFile
+      end>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <
+      item
+        ColorValueList = <>
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = 5
+      end>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 638
+    Top = 497
+  end
+  object spSelectFile: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_PretensionFile'
+    DataSet = FileCDS
+    DataSets = <
+      item
+        DataSet = FileCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 696
+    Top = 192
+  end
+  object spAddFile: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_Pretension_AddFile'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'FileId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFileName'
+        Value = '-700000'
+        Component = FormParams
+        ComponentItem = 'FileName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 920
+    Top = 187
+  end
+  object spUpdateFile: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_Pretension_AddFile'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FileName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 920
+    Top = 243
+  end
+  object spErasedMIFile: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_PretensionFile_SetErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = FileCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = FileCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 622
+    Top = 232
+  end
+  object spUnErasedMIFile: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_PretensionFile_SetUnErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = FileCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = FileCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 622
+    Top = 176
   end
 end

@@ -33,6 +33,11 @@ BEGIN
      
      vbisChecked := 'Актуальна' = inCheckedName;
      
+     IF COALESCE (ioId) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Вставка строк в претензию запрещено.';     
+     END IF;
+     
      IF COALESCE(inAmount, 0) > 0
      THEN
 

@@ -14,7 +14,7 @@ uses
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator, cxImageComboBox,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxMemo, cxCheckComboBox;
+  cxMemo, cxCheckComboBox, Document;
 
 type
   TPretensionForm = class(TAncestorDocumentForm)
@@ -83,6 +83,38 @@ type
     dxBarButton5: TdxBarButton;
     ReasonDifferencesName: TcxGridDBColumn;
     AmountIncome: TcxGridDBColumn;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    cxLabel8: TcxLabel;
+    cxGridFile: TcxGrid;
+    cxGridDBTableViewFile: TcxGridDBTableView;
+    chisErased: TcxGridDBColumn;
+    chNumber: TcxGridDBColumn;
+    chFileName: TcxGridDBColumn;
+    cxGridLevelV: TcxGridLevel;
+    Panel1: TPanel;
+    FileCDS: TClientDataSet;
+    FileDS: TDataSource;
+    DBViewAddOnFile: TdsdDBViewAddOn;
+    spSelectFile: TdsdStoredProc;
+    dxBarButton6: TdxBarButton;
+    actOpenFileDialog: TFileDialogAction;
+    actAddFile: TdsdExecStoredProc;
+    spAddFile: TdsdStoredProc;
+    actRefreshFile: TdsdExecStoredProc;
+    spUpdateFile: TdsdStoredProc;
+    actUpdateFile: TdsdExecStoredProc;
+    actErasedMIFile: TdsdUpdateErased;
+    actUnErasedMIFile: TdsdUpdateErased;
+    spErasedMIFile: TdsdStoredProc;
+    spUnErasedMIFile: TdsdStoredProc;
+    actOpenFile: TShellExecuteAction;
+    dxBarButton7: TdxBarButton;
+    dxBarButton8: TdxBarButton;
+    dxBarButton9: TdxBarButton;
+    dxBarButton10: TdxBarButton;
+    MovementItemProtocolFileOpenForm: TdsdOpenForm;
+    dxBarButton11: TdxBarButton;
   private
     { Private declarations }
   public

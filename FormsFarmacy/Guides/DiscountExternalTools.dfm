@@ -511,7 +511,7 @@ object DiscountExternalToolsForm: TDiscountExternalToolsForm
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Name'
+          ComponentItem = 'DiscountExternalName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -616,10 +616,12 @@ object DiscountExternalToolsForm: TDiscountExternalToolsForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 368
     Top = 128

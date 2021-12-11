@@ -54,7 +54,7 @@ BEGIN
           INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                       AND MovementLinkObject_Unit.ObjectId   = inUnitId
+                                       AND (MovementLinkObject_Unit.ObjectId   = inUnitId OR inUnitId = 0)
 
           INNER JOIN MovementString AS MovementString_BookingId
                                     ON MovementString_BookingId.MovementId = Movement.Id
@@ -112,4 +112,5 @@ $BODY$
 -- тест
 -- select * from Movement_Check_View where id = 20000230
 -- select lpInsertUpdate_MovementString (zc_MovementString_BookingStatus(), 20000230, '7.0');
-SELECT * FROM gpSelect_Movement_Check_Booking_Tabletki (183292 , '3');
+
+SELECT * FROM gpSelect_Movement_Check_Booking_Tabletki (0  , '3');

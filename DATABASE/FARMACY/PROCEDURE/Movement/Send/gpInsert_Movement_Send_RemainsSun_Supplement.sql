@@ -110,7 +110,7 @@ BEGIN
      -- Частим маркетинговые контракты
      IF EXISTS(SELECT _tmpResult_Supplement.MovementId FROM _tmpResult_Supplement WHERE _tmpResult_Supplement.MovementId > 0)
      THEN
-       PERFORM  gpUpdate_Movement_Promo_Supplement(Movement.Id, TRUE, inSession)
+       PERFORM  gpUpdate_Movement_Promo_Supplement(Movement.Id, TRUE, inSession)            
        FROM Movement
                                   
             INNER JOIN MovementBoolean AS MovementBoolean_Supplement
@@ -121,8 +121,23 @@ BEGIN
        WHERE Movement.DescId = zc_Movement_Promo();
        
        PERFORM gpUpdate_Goods_inSupplementSUN1(inGoodsMainId       := Object_Goods_Main.Id 
-                                            , inisSupplementSUN1  := False
-                                            , inSession           := inSession)
+                                             , inisSupplementSUN1  := False
+                                             , inSession           := inSession)
+             , gpUpdate_Goods_inSupplementSUN1Smudge(inGoodsMainId         := Object_Goods_Main.Id 
+                                                   , inisSupplementSmudge  := True
+                                                   , inSession             := inSession)
+             , gpUpdate_Goods_UnitSupplementSUN1Out(inGoodsMainId           := Object_Goods_Main.Id  
+                                                  , inUnitSupplementSUN1OutId := 0 
+                                                  , inSession := inSession)
+             , gpUpdate_Goods_UnitSupplementSUN2Out(inGoodsMainId           := Object_Goods_Main.Id  
+                                                  , inUnitSupplementSUN2OutId := 0 
+                                                  , inSession               := inSession)
+             , gpUpdate_Goods_SupplementMin(inGoodsMainId     := Object_Goods_Main.Id  
+                                          , inSupplementMin   := 0 
+                                          , inSession         := inSession)
+             , gpUpdate_Goods_SupplementMinPP(inGoodsMainId     := Object_Goods_Main.Id  
+                                            , inSupplementMinPP := 0 
+                                            , inSession         := inSession)
        FROM Object_Goods_Main 
        WHERE Object_Goods_Main.isSupplementSUN1 = True;
      END IF;
