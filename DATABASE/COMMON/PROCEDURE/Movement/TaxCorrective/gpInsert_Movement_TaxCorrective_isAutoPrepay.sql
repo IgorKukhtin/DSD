@@ -63,8 +63,8 @@ BEGIN
                                                          , inAmount             := (1 / (1+TaxPercent_View.Percent/100) * tmpReport.Amount) ::TFloat -- сумма предоплаты без НДС
                                                          , inFromId             := tmpReport.JuridicalId     ::Integer    -- От кого (в документе) 
                                                          , inToId               := Object_Juridical_Basis.Id ::Integer    -- Кому (в документе) --АЛАН
-                                                         , inPartnerId          := 0   ::Integer                      -- Контрагент
-                                                         , inContractId         := tmpReport.ContractId  ::Integer    -- Договора
+                                                         , inPartnerId          := 0                         ::Integer                      -- Контрагент
+                                                         , inContractId         := tmpReport.ContractId      ::Integer    -- Договора
                                                          , inDocumentTaxKindId  := zc_Enum_DocumentTaxKind_Prepay() ::Integer    -- Тип формирования налогового документа
                                                          , inUserId             := vbUserId ::Integer     -- пользователь 
                                                          )
