@@ -206,7 +206,7 @@ BEGIN
                                               AND MovementLinkMovement_Master_find.DescId = zc_MovementLinkMovement_Master()
                 -- корректировка - для "сводных" она одна
                 INNER JOIN Movement AS Movement_find ON Movement_find.Id       = COALESCE (MovementLinkMovement_Master_find.MovementId, Movement.Id)
-                                                    AND Movement_find.StatusId = zc_Enum_Status_Complete()
+                                                    AND (Movement_find.StatusId = zc_Enum_Status_Complete() OR Movement_find.Id = inMovementId)
                 LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
                                           ON MovementBoolean_isPartner.MovementId = MovementLinkMovement_Master.MovementChildId
                                          AND MovementBoolean_isPartner.DescId    = zc_MovementBoolean_isPartner()
