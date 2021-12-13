@@ -40,7 +40,7 @@ BEGIN
        WHERE (tmp.EndAmount_A > 0 AND tmp.StartAmount_A < 0)
           OR (tmp.EndAmount_A < 0 AND tmp.StartAmount_A < 0 AND (-1) * tmp.EndAmount_A < (-1) * tmp.StartAmount_A)
           AND tmp.AccountId IN (9128, 9121, 9130, 9136, 9129)
-       limit 1 -- для теста
+       --limit 1 -- для теста
       ;
 
 
