@@ -50,6 +50,12 @@ BEGIN
                                     -- только для этого
                                     WHERE tmp.ExportKindId IN (zc_Enum_ExportKind_Nedavn2244900110()
                                                               )
+                                   UNION
+                                    SELECT DISTINCT tmp.PartnerId, tmp.ExportKindId
+                                    FROM lpSelect_Object_ExportJuridical_list() AS tmp
+                                    -- только для этого
+                                    WHERE tmp.isAuto = TRUE
+                                                              )
                                     --AND inIsExcel = TRUE
                                    )
                   , tmpMovement AS (SELECT Movement.Id AS MovementId
