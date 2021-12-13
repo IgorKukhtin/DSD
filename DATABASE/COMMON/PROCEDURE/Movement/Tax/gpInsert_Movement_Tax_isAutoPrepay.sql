@@ -15,19 +15,18 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Insert_Movement_TaxPrepay());
      
      -- временная таблица данные отчета  обороты по юр лицам по БН за период
-     CREATE TEMP TABLE tmpReport (JuridicalId Integer, ContractId Integer, PartnerId Integer, Amount TFloat) ON COMMIT DROP;
-     INSERT INTO tmpReport (JuridicalId, ContractId, PartnerId, Amount)
+     CREATE TEMP TABLE tmpReport (JuridicalId Integer, ContractId Integer, Amount TFloat) ON COMMIT DROP;
+     INSERT INTO tmpReport (JuridicalId, ContractId,  Amount)
        SELECT tmp.JuridicalId
             , tmp.ContractId
-            , tmp.PartnerId
-            , CASE WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A > 0 THEN (-1) * tmp.EndAmount_A
-                   WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A < 0 AND (-1) * tmp.EndAmount_A > (-1) * tmp.StartAmount_A THEN ((-1) * tmp.EndAmount_A - (-1) * tmp.StartAmount_A)
-                   ELSE 0
-              END ::TFloat AS Amount
+            , SUM (CASE WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A > 0 THEN (-1) * tmp.EndAmount_A
+                        WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A < 0 AND (-1) * tmp.EndAmount_A > (-1) * tmp.StartAmount_A THEN ((-1) * tmp.EndAmount_A - (-1) * tmp.StartAmount_A)
+                        ELSE 0
+                   END) ::TFloat AS Amount
        FROM gpReport_JuridicalSold(inStartDate              := inStartDate ::TDateTime
                                  , inEndDate                := inEndDate   ::TDateTime
                                  , inAccountId              := 0
-                                 , inInfoMoneyId            := 0
+                                 , inInfoMoneyId            := zc_Enum_InfoMoney_30101()           --готовая продукция inInfoMoneyId := 8962
                                  , inInfoMoneyGroupId       := 0
                                  , inInfoMoneyDestinationId := 0
                                  , inPaidKindId             := zc_Enum_PaidKind_FirstForm()
@@ -40,8 +39,14 @@ BEGIN
        WHERE (tmp.EndAmount_A < 0 AND tmp.StartAmount_A > 0)
           OR (tmp.EndAmount_A < 0 AND tmp.StartAmount_A < 0 AND (-1) * tmp.EndAmount_A > (-1) * tmp.StartAmount_A)
           AND tmp.AccountId IN (9128, 9121, 9130, 9136, 9129)
+       GROUP BY tmp.JuridicalId
+              , tmp.ContractId
+       HAVING SUM (CASE WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A > 0 THEN (-1) * tmp.EndAmount_A
+                        WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A < 0 AND (-1) * tmp.EndAmount_A > (-1) * tmp.StartAmount_A THEN ((-1) * tmp.EndAmount_A - (-1) * tmp.StartAmount_A)
+                        ELSE 0
+                   END) > 0.2
      --  limit 1 -- для теста
-      ;
+      ; 
 
      --создаем документы НН по предоплате
      PERFORM lpInsert_Movement_Tax_isAutoPrepay (inId                 := 0 ::Integer    -- Ключ объекта <Документ Налоговая>
@@ -57,7 +62,7 @@ BEGIN
                                                , inAmount             := (1 / (1+TaxPercent_View.Percent/100) * tmpReport.Amount) ::TFloat -- сумма предоплаты без НДС
                                                , inFromId             := Object_Juridical_Basis.Id ::Integer    -- От кого (в документе)  --АЛАН
                                                , inToId               := tmpReport.JuridicalId ::Integer    -- Кому (в документе)
-                                               , inPartnerId          := tmpReport.PartnerId   ::Integer    -- Контрагент
+                                               , inPartnerId          := 0                     ::Integer    -- Контрагент
                                                , inContractId         := tmpReport.ContractId  ::Integer    -- Договора
                                                , inDocumentTaxKindId  := zc_Enum_DocumentTaxKind_Prepay() ::Integer    -- Тип формирования налогового документа
                                                , inUserId             := vbUserId ::Integer     -- пользователь 
@@ -67,7 +72,7 @@ BEGIN
          LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = zc_Juridical_Basis()
     WHERE COALESCE (tmpReport.Amount,0) <> 0;
 
-    
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
