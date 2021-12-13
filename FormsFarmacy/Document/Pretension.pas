@@ -108,7 +108,6 @@ type
     actUnErasedMIFile: TdsdUpdateErased;
     spErasedMIFile: TdsdStoredProc;
     spUnErasedMIFile: TdsdStoredProc;
-    actOpenFile: TShellExecuteAction;
     dxBarButton7: TdxBarButton;
     dxBarButton8: TdxBarButton;
     dxBarButton9: TdxBarButton;
@@ -119,6 +118,11 @@ type
     dxBarButton12: TdxBarButton;
     spGetData: TdsdStoredProc;
     actGetData: TdsdExecStoredProc;
+    PartnerGoodsName: TcxGridDBColumn;
+    spGetFTPParams: TdsdStoredProc;
+    actSendFTPFile: TdsdFTP;
+    actOpenFile: TdsdFTP;
+    actGetFTPParams: TdsdExecStoredProc;
   private
     { Private declarations }
   public

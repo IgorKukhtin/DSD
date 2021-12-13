@@ -12,17 +12,17 @@ inherited SaleForm: TSaleForm
     Width = 668
     Height = 292
     ExplicitTop = 250
-    ExplicitWidth = 680
+    ExplicitWidth = 668
     ExplicitHeight = 292
     ClientRectBottom = 292
     ClientRectRight = 668
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 680
+      ExplicitWidth = 668
       ExplicitHeight = 268
       inherited cxGrid: TcxGrid
         Width = 668
         Height = 170
-        ExplicitWidth = 680
+        ExplicitWidth = 668
         ExplicitHeight = 170
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -200,7 +200,6 @@ inherited SaleForm: TSaleForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 680
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -379,7 +378,6 @@ inherited SaleForm: TSaleForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitWidth = 680
       end
     end
   end
@@ -387,7 +385,7 @@ inherited SaleForm: TSaleForm
     Width = 668
     Height = 224
     TabOrder = 3
-    ExplicitWidth = 680
+    ExplicitWidth = 668
     ExplicitHeight = 224
     inherited edInvNumber: TcxTextEdit
       Left = 161
@@ -1415,6 +1413,18 @@ inherited SaleForm: TSaleForm
         Value = Null
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicSPForm'
+        Value = 'TMedicSP_ObjectForm'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = 'TMedicSP_ObjectForm'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 312
@@ -1730,6 +1740,14 @@ inherited SaleForm: TSaleForm
         Name = 'InsuranceCardNumber'
         Value = Null
         Component = edInsuranceCardNumber
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicSPForm'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MedicSPForm'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -2466,6 +2484,8 @@ inherited SaleForm: TSaleForm
     KeyField = 'Id'
     LookupControl = edMedicSP
     FormNameParam.Value = 'TMedicSP_ObjectForm'
+    FormNameParam.Component = FormParams
+    FormNameParam.ComponentItem = 'MedicSPForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMedicSP_ObjectForm'
@@ -2525,8 +2545,8 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 640
-    Top = 56
+    Left = 288
+    Top = 80
   end
   object spSelectPrintCheck: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Print'

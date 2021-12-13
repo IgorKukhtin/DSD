@@ -3231,6 +3231,9 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TCategory1303Form'));
     TdsdFormStorageFactory.GetStorage.Load('TCategory1303Form');
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSP_ICForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TMedicSP_ICForm');
+
     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicKashtanForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMedicKashtanForm');

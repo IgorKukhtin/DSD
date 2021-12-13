@@ -7,6 +7,27 @@ inherited SendCashSUNForm: TSendCashSUNForm
     inherited tsMain: TcxTabSheet
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsTo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ValueFrom
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ValueTo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = isPromo
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
@@ -165,10 +186,6 @@ inherited SendCashSUNForm: TSendCashSUNForm
             Visible = False
             VisibleForCustomization = False
           end
-          inherited ReasonDifferencesName: TcxGridDBColumn
-            Visible = False
-            VisibleForCustomization = False
-          end
           inherited ConditionsKeepName: TcxGridDBColumn
             Visible = False
             VisibleForCustomization = False
@@ -224,35 +241,25 @@ inherited SendCashSUNForm: TSendCashSUNForm
   inherited ceChecked: TcxCheckBox
     TabOrder = 5
   end
-  inherited spInsertMaskMIMaster: TdsdStoredProc [4]
+  inherited PrintItemsCDS: TClientDataSet [4]
   end
-  inherited spGetTotalSumm: TdsdStoredProc [5]
+  inherited PrintItemsSverkaCDS: TClientDataSet [5]
   end
-  inherited RefreshDispatcher: TRefreshDispatcher [6]
+  inherited spSelectPrint: TdsdStoredProc [6]
   end
-  inherited PrintHeaderCDS: TClientDataSet [7]
-    Left = 468
-    Top = 185
+  inherited GuidesFrom: TdsdGuides [7]
   end
-  inherited PrintItemsCDS: TClientDataSet [8]
+  inherited GuidesTo: TdsdGuides [8]
   end
-  inherited PrintItemsSverkaCDS: TClientDataSet [9]
+  inherited ActionList1: TActionList [9]
   end
-  inherited spSelectPrint: TdsdStoredProc [10]
+  inherited ActionList2: TActionList [10]
   end
-  inherited GuidesFrom: TdsdGuides [11]
+  inherited spMovementComplete: TdsdStoredProc [11]
   end
-  inherited GuidesTo: TdsdGuides [12]
+  inherited spInsert_Object_Price: TdsdStoredProc [12]
   end
-  inherited ActionList1: TActionList [13]
-  end
-  inherited ActionList2: TActionList [14]
-  end
-  inherited spMovementComplete: TdsdStoredProc [15]
-  end
-  inherited spInsert_Object_Price: TdsdStoredProc [16]
-  end
-  inherited spUpdate_isDeferred_Yes: TdsdStoredProc [17]
+  inherited spUpdate_isDeferred_Yes: TdsdStoredProc [13]
     Params = <
       item
         Name = 'inId'
@@ -277,7 +284,7 @@ inherited SendCashSUNForm: TSendCashSUNForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited spUpdate_isDeferred_No: TdsdStoredProc [18]
+  inherited spUpdate_isDeferred_No: TdsdStoredProc [14]
     Params = <
       item
         Name = 'inId'
@@ -302,25 +309,25 @@ inherited SendCashSUNForm: TSendCashSUNForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited spInsert_Send_WriteRestFromPoint: TdsdStoredProc [19]
+  inherited spInsert_Send_WriteRestFromPoint: TdsdStoredProc [15]
   end
-  inherited DetailDCS: TClientDataSet [20]
+  inherited DetailDCS: TClientDataSet [16]
   end
-  inherited DetailDS: TDataSource [21]
+  inherited DetailDS: TDataSource [17]
   end
-  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [22]
+  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [18]
   end
-  inherited spSelect_MI_Child: TdsdStoredProc [23]
+  inherited spSelect_MI_Child: TdsdStoredProc [19]
   end
-  inherited GuidesPartionDateKind: TdsdGuides [24]
+  inherited GuidesPartionDateKind: TdsdGuides [20]
   end
-  inherited spUpdate_SendOverdue: TdsdStoredProc [25]
+  inherited spUpdate_SendOverdue: TdsdStoredProc [21]
   end
-  inherited spInsertUpdateMIChild: TdsdStoredProc [26]
+  inherited spInsertUpdateMIChild: TdsdStoredProc [22]
   end
-  inherited GuidesDriverSun: TdsdGuides [27]
+  inherited GuidesDriverSun: TdsdGuides [23]
   end
-  inherited spUpdate_Movement_Received: TdsdStoredProc [28]
+  inherited spUpdate_Movement_Received: TdsdStoredProc [24]
     Params = <
       item
         Name = 'inMovementId'
@@ -346,7 +353,7 @@ inherited SendCashSUNForm: TSendCashSUNForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited spUpdate_Movement_Sent: TdsdStoredProc [29]
+  inherited spUpdate_Movement_Sent: TdsdStoredProc [25]
     Params = <
       item
         Name = 'inMovementId'
@@ -372,7 +379,7 @@ inherited SendCashSUNForm: TSendCashSUNForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited spUpdate_Movement_NotDisplaySUN: TdsdStoredProc [30]
+  inherited spUpdate_Movement_NotDisplaySUN: TdsdStoredProc [26]
     Params = <
       item
         Name = 'inMovementId'
@@ -398,9 +405,9 @@ inherited SendCashSUNForm: TSendCashSUNForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited spCreateLoss: TdsdStoredProc [31]
+  inherited spCreateLoss: TdsdStoredProc [27]
   end
-  inherited spUpdate_Movement_Confirmed: TdsdStoredProc [32]
+  inherited spUpdate_Movement_Confirmed: TdsdStoredProc [28]
     Params = <
       item
         Name = 'inMovementId'
@@ -434,17 +441,17 @@ inherited SendCashSUNForm: TSendCashSUNForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited spUpdate_MovementItem_ContainerId: TdsdStoredProc [33]
+  inherited spUpdate_MovementItem_ContainerId: TdsdStoredProc [29]
   end
-  inherited spMovementItem_ShowPUSH_Comment: TdsdStoredProc [34]
+  inherited spMovementItem_ShowPUSH_Comment: TdsdStoredProc [30]
   end
-  inherited spAddIncome: TdsdStoredProc [35]
+  inherited spAddIncome: TdsdStoredProc [31]
   end
-  inherited spErasedMIMasterDetail: TdsdStoredProc [36]
+  inherited spErasedMIMasterDetail: TdsdStoredProc [32]
   end
-  inherited spUnErasedMIMasterDetail: TdsdStoredProc [37]
+  inherited spUnErasedMIMasterDetail: TdsdStoredProc [33]
   end
-  inherited spUpdateSendLoss: TdsdStoredProc [38]
+  inherited spUpdateSendLoss: TdsdStoredProc [34]
     Params = <
       item
         Name = 'inMovementID'
@@ -463,9 +470,9 @@ inherited SendCashSUNForm: TSendCashSUNForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited PopupMenu: TPopupMenu [39]
+  inherited PopupMenu: TPopupMenu [35]
   end
-  inherited FormParams: TdsdFormParams [40]
+  inherited FormParams: TdsdFormParams [36]
     Params = <
       item
         Name = 'Id'
@@ -556,28 +563,28 @@ inherited SendCashSUNForm: TSendCashSUNForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited StatusGuides: TdsdGuides [41]
+  inherited StatusGuides: TdsdGuides [37]
   end
-  inherited spChangeStatus: TdsdStoredProc [42]
+  inherited spChangeStatus: TdsdStoredProc [38]
   end
-  inherited MasterCDS: TClientDataSet [43]
+  inherited MasterCDS: TClientDataSet [39]
   end
-  inherited spSelect: TdsdStoredProc [44]
+  inherited spSelect: TdsdStoredProc [40]
   end
-  inherited BarManager: TdxBarManager [45]
+  inherited BarManager: TdxBarManager [41]
     DockControlHeights = (
       0
       0
       26
       0)
   end
-  inherited DBViewAddOn: TdsdDBViewAddOn [46]
+  inherited DBViewAddOn: TdsdDBViewAddOn [42]
   end
-  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [47]
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [43]
   end
-  inherited cxPropertiesStore: TcxPropertiesStore [48]
+  inherited cxPropertiesStore: TcxPropertiesStore [44]
   end
-  inherited ActionList: TActionList [49]
+  inherited ActionList: TActionList [45]
     inherited actPartionGoodsChoiceForm: TOpenChoiceForm
       GuiParams = <
         item
@@ -683,9 +690,9 @@ inherited SendCashSUNForm: TSendCashSUNForm
         end>
     end
   end
-  inherited MasterDS: TDataSource [50]
+  inherited MasterDS: TDataSource [46]
   end
-  inherited spGet: TdsdStoredProc [51]
+  inherited spGet: TdsdStoredProc [47]
     Params = <
       item
         Name = 'inMovementId'
@@ -954,7 +961,7 @@ inherited SendCashSUNForm: TSendCashSUNForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited spInsertUpdateMovement: TdsdStoredProc [52]
+  inherited spInsertUpdateMovement: TdsdStoredProc [48]
     Params = <
       item
         Name = 'ioId'
@@ -1036,18 +1043,28 @@ inherited SendCashSUNForm: TSendCashSUNForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited GuidesFiller: TGuidesFiller [53]
+  inherited GuidesFiller: TGuidesFiller [49]
   end
-  inherited HeaderSaver: THeaderSaver [54]
+  inherited HeaderSaver: THeaderSaver [50]
   end
-  inherited RefreshAddOn: TRefreshAddOn [55]
+  inherited RefreshAddOn: TRefreshAddOn [51]
     DataSet = 'ClientDataSet'
   end
-  inherited spErasedMIMaster: TdsdStoredProc [56]
+  inherited spErasedMIMaster: TdsdStoredProc [52]
   end
-  inherited spUnErasedMIMaster: TdsdStoredProc [57]
+  inherited spUnErasedMIMaster: TdsdStoredProc [53]
   end
-  inherited spInsertUpdateMIMaster: TdsdStoredProc [58]
+  inherited spInsertUpdateMIMaster: TdsdStoredProc [54]
+  end
+  inherited spInsertMaskMIMaster: TdsdStoredProc [55]
+  end
+  inherited spGetTotalSumm: TdsdStoredProc [56]
+  end
+  inherited RefreshDispatcher: TRefreshDispatcher [57]
+  end
+  inherited PrintHeaderCDS: TClientDataSet [58]
+    Left = 468
+    Top = 185
   end
   inherited spGet_SendPartionDateChangeId: TdsdStoredProc
     Params = <

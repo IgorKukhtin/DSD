@@ -182,6 +182,14 @@ inherited PretensionForm: TPretensionForm
             Options.Editing = False
             Width = 70
           end
+          object PartnerGoodsName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            DataBinding.FieldName = 'PartnerGoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object MakerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
@@ -1017,6 +1025,65 @@ inherited PretensionForm: TPretensionForm
       Param.DataType = ftString
       Param.MultiSelectSeparator = ','
     end
+    object actGetFTPParams: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetFTPParams
+      StoredProcList = <
+        item
+          StoredProc = spGetFTPParams
+        end>
+      Caption = 'actRefreshFile'
+    end
+    object actSendFTPFile: TdsdFTP
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefreshFile
+      BeforeAction = actGetFTPParams
+      HostParam.Value = ''
+      HostParam.Component = FormParams
+      HostParam.ComponentItem = 'FtpHost'
+      HostParam.DataType = ftString
+      HostParam.MultiSelectSeparator = ','
+      PortParam.Value = 21
+      PortParam.Component = FormParams
+      PortParam.ComponentItem = 'FtpPort'
+      PortParam.MultiSelectSeparator = ','
+      UsernameParam.Value = ''
+      UsernameParam.Component = FormParams
+      UsernameParam.ComponentItem = 'FtpUsername'
+      UsernameParam.DataType = ftString
+      UsernameParam.MultiSelectSeparator = ','
+      PasswordParam.Value = ''
+      PasswordParam.Component = FormParams
+      PasswordParam.ComponentItem = 'FtpPassword'
+      PasswordParam.DataType = ftString
+      PasswordParam.MultiSelectSeparator = ','
+      DirParam.Value = ''
+      DirParam.Component = FormParams
+      DirParam.ComponentItem = 'FtpDir'
+      DirParam.DataType = ftString
+      DirParam.MultiSelectSeparator = ','
+      FullFileNameParam.Value = ''
+      FullFileNameParam.Component = FormParams
+      FullFileNameParam.ComponentItem = 'FileName'
+      FullFileNameParam.DataType = ftString
+      FullFileNameParam.MultiSelectSeparator = ','
+      FileNameFTPParam.Value = ''
+      FileNameFTPParam.Component = FormParams
+      FileNameFTPParam.ComponentItem = 'FtpFileName'
+      FileNameFTPParam.DataType = ftString
+      FileNameFTPParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      DownloadFolderParam.Value = ''
+      DownloadFolderParam.Component = FormParams
+      DownloadFolderParam.DataType = ftString
+      DownloadFolderParam.MultiSelectSeparator = ','
+      Caption = 'actSendFTPFile'
+    end
     object actAddFile: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <
@@ -1028,7 +1095,7 @@ inherited PretensionForm: TPretensionForm
           ToParam.ComponentItem = 'FileId'
           ToParam.MultiSelectSeparator = ','
         end>
-      AfterAction = actRefreshFile
+      AfterAction = actSendFTPFile
       BeforeAction = actOpenFileDialog
       PostDataSetBeforeExecute = False
       StoredProc = spAddFile
@@ -1043,28 +1110,67 @@ inherited PretensionForm: TPretensionForm
     object actUpdateFile: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
-      AfterAction = actRefreshFile
+      AfterAction = actSendFTPFile
       BeforeAction = actOpenFileDialog
       PostDataSetBeforeExecute = False
-      StoredProc = spAddFile
+      StoredProc = spUpdateFile
       StoredProcList = <
         item
-          StoredProc = spAddFile
+          StoredProc = spUpdateFile
         end>
       Caption = #1047#1072#1084#1077#1085#1080#1090#1100' '#1092#1072#1081#1083' '#1074' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
       Hint = #1047#1072#1084#1077#1085#1080#1090#1100' '#1092#1072#1081#1083' '#1074' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
       ImageIndex = 80
     end
-    object actOpenFile: TShellExecuteAction
+    object actOpenFile: TdsdFTP
       Category = 'DSDLib'
       MoveParams = <>
-      Param.Value = Null
-      Param.Component = FileCDS
-      Param.ComponentItem = 'FileFullName'
-      Param.DataType = ftString
-      Param.MultiSelectSeparator = ','
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1092#1072#1081#1083
-      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1092#1072#1081#1083
+      AfterAction = actRefreshFile
+      BeforeAction = actGetFTPParams
+      HostParam.Value = Null
+      HostParam.Component = FormParams
+      HostParam.ComponentItem = 'FtpHost'
+      HostParam.DataType = ftString
+      HostParam.MultiSelectSeparator = ','
+      PortParam.Value = Null
+      PortParam.Component = FormParams
+      PortParam.ComponentItem = 'FtpPort'
+      PortParam.MultiSelectSeparator = ','
+      UsernameParam.Value = ''
+      UsernameParam.Component = FormParams
+      UsernameParam.ComponentItem = 'FtpUsername'
+      UsernameParam.DataType = ftString
+      UsernameParam.MultiSelectSeparator = ','
+      PasswordParam.Value = Null
+      PasswordParam.Component = FormParams
+      PasswordParam.ComponentItem = 'FtpPassword'
+      PasswordParam.DataType = ftString
+      PasswordParam.MultiSelectSeparator = ','
+      DirParam.Value = Null
+      DirParam.Component = FormParams
+      DirParam.ComponentItem = 'FtpDir'
+      DirParam.DataType = ftString
+      DirParam.MultiSelectSeparator = ','
+      FullFileNameParam.Value = Null
+      FullFileNameParam.DataType = ftString
+      FullFileNameParam.MultiSelectSeparator = ','
+      FileNameFTPParam.Value = Null
+      FileNameFTPParam.Component = FileCDS
+      FileNameFTPParam.ComponentItem = 'FileNameFTP'
+      FileNameFTPParam.DataType = ftString
+      FileNameFTPParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.Component = FileCDS
+      FileNameParam.ComponentItem = 'FileName'
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      DownloadFolderParam.Value = ''
+      DownloadFolderParam.Component = FileCDS
+      DownloadFolderParam.ComponentItem = 'FolderTMP'
+      DownloadFolderParam.DataType = ftString
+      DownloadFolderParam.MultiSelectSeparator = ','
+      FTPOperation = ftpDownloadAndRun
+      Caption = 'actSendFTPFile'
       ImageIndex = 60
     end
     object actErasedMIFile: TdsdUpdateErased
@@ -1541,6 +1647,41 @@ inherited PretensionForm: TPretensionForm
       item
         Name = 'IncomeMovementId'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FtpHost'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FtpPort'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FtpUsername'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FtpPassword'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FtpDir'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FtpFileName'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 280
@@ -2427,6 +2568,14 @@ inherited PretensionForm: TPretensionForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileNameFTP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FtpFileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 920
@@ -2440,7 +2589,7 @@ inherited PretensionForm: TPretensionForm
       item
         Name = 'ioId'
         Value = '0'
-        Component = MasterCDS
+        Component = FileCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -2460,6 +2609,14 @@ inherited PretensionForm: TPretensionForm
         ComponentItem = 'FileName'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileNameFTP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FtpFileName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -2539,6 +2696,62 @@ inherited PretensionForm: TPretensionForm
       end>
     PackSize = 1
     Left = 440
+    Top = 192
+  end
+  object spGetFTPParams: TdsdStoredProc
+    StoredProcName = 'gpSelect_PretensionFTPParams'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inInvNumber'
+        Value = Null
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outHost'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FtpHost'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPort'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FtpPort'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUsername'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FtpUsername'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPassword'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FtpPassword'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDir'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FtpDir'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 520
     Top = 192
   end
 end

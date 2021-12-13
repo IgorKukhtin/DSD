@@ -12,17 +12,17 @@ inherited PretensionJournalForm: TPretensionJournalForm
     Height = 420
     TabOrder = 3
     ExplicitWidth = 807
-    ExplicitHeight = 412
+    ExplicitHeight = 420
     ClientRectBottom = 420
     ClientRectRight = 807
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 807
-      ExplicitHeight = 412
+      ExplicitHeight = 420
       inherited cxGrid: TcxGrid
         Width = 807
         Height = 420
         ExplicitWidth = 807
-        ExplicitHeight = 412
+        ExplicitHeight = 420
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -147,6 +147,14 @@ inherited PretensionJournalForm: TPretensionJournalForm
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Width = 88
+          end
+          object CheckedName: TcxGridDBColumn
+            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
+            DataBinding.FieldName = 'CheckedName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object FromName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077

@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer
              , NDSKindId Integer, NDSKindName TVarChar, NDS TFloat
              , IncomeOperDate TDateTime, IncomeInvNumber TVarChar, JuridicalName TVarChar
              , isDeferred Boolean
+             , CheckedName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
               )
@@ -57,7 +58,21 @@ BEGIN
                                                 AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
                         WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                         )
- 
+        , tmpMI AS (SELECT Movement_Pretension.Id
+                         , SUM(CASE WHEN MIBoolean_Checked.ValueData = True THEN 1 ELSE 0 END)      AS Checked
+                    FROM Movement AS Movement_Pretension
+                         LEFT JOIN MovementItem AS MI_Pretension
+                                                 ON MI_Pretension.MovementId = Movement_Pretension.Id
+                                                AND MI_Pretension.isErased  = FALSE
+                                                AND MI_Pretension.DescId     = zc_MI_Master()
+                         LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                                       ON MIBoolean_Checked.MovementItemId = MI_Pretension.Id
+                                                      AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
+                    WHERE Movement_Pretension.DescId = zc_Movement_Pretension()
+                      AND Movement_Pretension.OperDate BETWEEN inStartDate AND inEndDate
+                    GROUP BY Movement_Pretension.Id
+                   )
+
 
        SELECT
              Movement_Pretension_View.Id
@@ -81,6 +96,7 @@ BEGIN
            , Movement_Pretension_View.IncomeInvNumber
            , Movement_Pretension_View.JuridicalName
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
+           , CASE WHEN COALESCE (tmpMI.Checked, 1) > 0 THEN 'Актуальна' ELSE 'Неактуальна' END::TVarChar AS CheckedName
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
            , Object_Update.ValueData              AS UpdateName
@@ -109,6 +125,8 @@ BEGIN
                                         ON MLO_Update.MovementId = Movement_Pretension_View.Id
                                        AND MLO_Update.DescId = zc_MovementLinkObject_Update()
            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId 
+           
+           LEFT JOIN tmpMI ON tmpMI.ID = Movement_Pretension_View.Id
   ;
 
 

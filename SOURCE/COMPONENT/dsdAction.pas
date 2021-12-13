@@ -4799,9 +4799,12 @@ begin
       Exit;
     end;
 
-    if FFileNameFTPParam.Value = '' then
-      FileNameFTP :=  FFileNameParam.Value
-    else FileNameFTP :=  FFileNameFTPParam.Value +  TPath.GetExtension(FFileNameParam.Value);
+    if FFileNameFTPParam.Value <> '' then
+    begin
+      FileNameFTP :=  FFileNameFTPParam.Value;
+      if TPath.GetExtension(FileNameFTP) = '' then
+        FileNameFTP := FileNameFTP +  TPath.GetExtension(FFileNameParam.Value);
+    end else FileNameFTP :=  FFileNameParam.Value;
 
     if FDownloadFolderParam.Value <> '' then
     begin
@@ -4814,7 +4817,7 @@ begin
 
     if not ForceDirectories(ExtractFilePath(FullFileName)) then
     begin
-      ShowMessage('Ошибка создания директории для сохранения файлов инструкций. Покажите это окно системному администратору...');
+      ShowMessage('Ошибка создания директории для сохранения файлов. Покажите это окно системному администратору...');
       Exit;
     end;
   end;
@@ -4838,8 +4841,13 @@ begin
     // Изменяем директорий если надо
     try
       if FDirParam.Value <> '' then
+      begin
+        try
+          FIdFTP.MakeDir(FDirParam.Value);
+        except
+        end;
         FIdFTP.ChangeDir(FDirParam.Value)
-      else FIdFTP.ChangeDir('/');
+      end else FIdFTP.ChangeDir('/');
     except ON E: Exception DO
       begin
         ShowMessage(E.Message);

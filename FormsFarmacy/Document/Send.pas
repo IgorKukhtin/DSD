@@ -81,7 +81,6 @@ type
     edNumberSeats: TcxCurrencyEdit;
     edDay: TcxCurrencyEdit;
     ceChecked: TcxCheckBox;
-    ChoiceReasonDifferences: TOpenChoiceForm;
     edisComplete: TcxCheckBox;
     MinExpirationDate: TcxGridDBColumn;
     spMovementComplete: TdsdStoredProc;
