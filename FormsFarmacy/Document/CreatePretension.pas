@@ -70,6 +70,7 @@ type
     spChechPretension: TdsdStoredProc;
     actChechPretension: TdsdExecStoredProc;
     mactChechPretension: TMultiAction;
+    MakerName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -47,6 +47,7 @@ type
     isDeferred: TcxGridDBColumn;
     actPrintOptima: TdsdPrintAction;
     bbPrintOptima: TdxBarButton;
+    CheckedName: TcxGridDBColumn;
   private
     { Private declarations }
   public

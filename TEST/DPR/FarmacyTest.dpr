@@ -1137,7 +1137,8 @@ uses
   CheckSelectionOrder in '..\..\FormsFarmacy\Document\CheckSelectionOrder.pas' {CheckSelectionOrderForm: TParentForm},
   Report_FinancialMonitoring in '..\..\FormsFarmacy\Report\Report_FinancialMonitoring.pas' {Report_FinancialMonitoringForm: TParentForm},
   Pretension in '..\..\FormsFarmacy\Document\Pretension.pas' {PretensionForm: TParentForm},
-  PretensionJournal in '..\..\FormsFarmacy\Document\PretensionJournal.pas' {PretensionJournalForm: TParentForm};
+  PretensionJournal in '..\..\FormsFarmacy\Document\PretensionJournal.pas' {PretensionJournalForm: TParentForm},
+  MedicSP_IC in '..\..\FormsFarmacy\Guides\MedicSP_IC.pas' {MedicSP_ICForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PretensionFile(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , Number Integer, FileName TVarChar, FileFullName TVarChar
+             , Number Integer, FileName TVarChar, FileNameFTP TVarChar, FolderTMP TVarChar
              , isErased Boolean
               )
 AS
@@ -27,9 +27,10 @@ BEGIN
           WITH 
 
            PretensionFile AS (SELECT MI_PretensionFile.Id
-                                   , ROW_NUMBER() OVER (ORDER BY MI_PretensionFile.Id)::Integer AS Number
-                                   , zfExtract_FileName(MIString_FileName.ValueData)            AS FileName
-                                   , MIString_FileName.ValueData                                AS FileFullName
+                                   , ROW_NUMBER() OVER (ORDER BY MI_PretensionFile.Id)::Integer                AS Number
+                                   , MIString_FileName.ValueData                                               AS FileName
+                                   , MI_PretensionFile.Id::TVarChar                                            AS FileNameFTP
+                                   , 'tmpPretensionFile\'::TVarChar                                            AS FolderTMP
                                    , MI_PretensionFile.isErased
                               FROM Movement AS Movement_Pretension
                                    INNER JOIN MovementItem AS MI_PretensionFile
@@ -47,7 +48,8 @@ BEGIN
               MovementItem.Id
             , MovementItem.Number  
             , MovementItem.FileName
-            , MovementItem.FileFullName
+            , MovementItem.FileNameFTP
+            , MovementItem.FolderTMP
             , MovementItem.isErased
       FROM PretensionFile AS MovementItem
       WHERE (MovementItem.isErased  = FALSE OR inIsErased = TRUE)
@@ -65,4 +67,4 @@ $BODY$
 */
 
 -- тест
-select * from gpSelect_MovementItem_PretensionFile(inMovementId := 8086637 ,inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_PretensionFile(inMovementId := 26008006  ,inIsErased := 'False' ,  inSession := '3');

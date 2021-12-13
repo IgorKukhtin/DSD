@@ -45,6 +45,7 @@ RETURNS TABLE (Id Integer
              , SPKindName TVarChar
              , isDeferred Boolean
              , isNP Boolean
+             , MedicSPForm TVarChar 
              )
 AS
 $BODY$
@@ -107,6 +108,7 @@ BEGIN
           , COALESCE (Object_SPKind.ValueData, NULL) ::TVarChar  AS SPKindName 
           , FALSE::Boolean                                       AS isDeferred
           , CASE WHEN inSession IN ('8720522', '374175') THEN TRUE ELSE FALSE END::Boolean AS isNP
+          , 'TMedicSP_ObjectForm' ::TVarChar                     AS MedicSPForm
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
 
@@ -175,6 +177,8 @@ BEGIN
           , Movement_Sale.SPKindName 
           , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
           , COALESCE (MovementBoolean_NP.ValueData, FALSE) ::Boolean  AS isNP
+          , CASE WHEN COALESCE(Object_InsuranceCompanies.Id, 0) <> 0 
+                 THEN 'TMedicSP_ICForm' ELSE 'TMedicSP_ObjectForm' END ::TVarChar  AS MedicSPForm
           
         FROM Movement_Sale_View AS Movement_Sale
 

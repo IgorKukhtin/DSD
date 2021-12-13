@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Pretension_AddFile(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inFileName            TVarChar  , -- Имя файла
+   OUT outFileNameFTP        TVarChar  , -- Имя файла для FTP
     IN inSession             TVarChar    -- сессия пользователя
 )
 AS
@@ -17,13 +18,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      --vbUserId := inSession;
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Pretension());
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Pretension_Meneger());
                  
      IF EXISTS(SELECT MI_PretensionFile.Id
                FROM Movement AS Movement_Pretension
                     INNER JOIN MovementItem AS MI_PretensionFile
                                             ON MI_PretensionFile.MovementId = Movement_Pretension.Id
                                            AND MI_PretensionFile.DescId     = zc_MI_Child()
+                                           AND MI_PretensionFile.Id <> COALESCE (ioId, 0)
 
                     INNER JOIN MovementItemString AS MIString_FileName
                                                   ON MIString_FileName.MovementItemId = MI_PretensionFile.Id
@@ -42,10 +43,12 @@ BEGIN
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), 0, inMovementId, 0, NULL);
 
      -- сохранили свойство <Состояние>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_FileName(), ioId, inFileName);
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_FileName(), ioId, zfExtract_FileName(inFileName));
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);     
+     
+     outFileNameFTP = ioId::TVarChar;
      
 END;
 $BODY$
@@ -59,5 +62,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- 
-select * from gpInsertUpdate_MI_Pretension_AddFile(ioId := 0 , inMovementId := 26008007 , inFileName := 'D:\2\IMG_20200901_105225.jpg' ,  inSession := '3');
+-- select * from gpInsertUpdate_MI_Pretension_AddFile(ioId := 0 , inMovementId := 26008007 , inFileName := 'D:\2\IMG_20200901_105225.jpg' ,  inSession := '3');

@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, ParentId integer
              , WarningColor Integer
              , ExpirationDate TDateTime
              , PartionGoods TVarChar
+             , PartnerGoodsName TVarChar
              , MakerName TVarChar
              , AmountOther TFloat
               )
@@ -72,6 +73,7 @@ BEGIN
                                 , MIDate_ExpirationDate.ValueData            AS ExpirationDate
                                 , MIString_PartionGoods.ValueData            AS PartionGoods
                                 , ObjectString_Goods_Maker.ValueData         AS MakerName
+                                , COALESCE (MIString_GoodsName.ValueData, Object_PartnerGoods.ValueData)      AS PartnerGoodsName
                            FROM MovementItem AS MovementItem_Income
                                   LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem_Income.ObjectId
 
@@ -90,6 +92,12 @@ BEGIN
                                   LEFT JOIN ObjectString AS ObjectString_Goods_Maker
                                                         ON ObjectString_Goods_Maker.ObjectId = MILinkObject_Goods.ObjectId 
                                                        AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker() 
+
+                                  LEFT JOIN MovementItemString AS MIString_GoodsName
+                                                               ON MIString_GoodsName.MovementItemId = MovementItem_Income.Id
+                                                              AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
+
+                                  LEFT JOIN Object AS Object_PartnerGoods ON Object_PartnerGoods.Id = MILinkObject_Goods.ObjectId
                            WHERE MovementItem_Income.DescId     = zc_MI_Master()
                              AND MovementItem_Income.MovementId = vbMovementIncomeId
                              AND MovementItem_Income.isErased   = FALSE
@@ -118,6 +126,7 @@ BEGIN
                             , tmpIncome.MakerName
                             , tmpContainer.Amount     AS AmountRemains
                             , tmpContainer.MovementItemId
+                            , tmpIncome.PartnerGoodsName
                        FROM tmpIncome
                               LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = tmpIncome.Id
                        )
@@ -237,6 +246,7 @@ BEGIN
 
              , MovementItem_Income.ExpirationDate
              , MovementItem_Income.PartionGoods
+             , MovementItem_Income.PartnerGoodsName
              , MovementItem_Income.MakerName
              , ReturnOther.Amount                                                         AS AmountOther
          FROM Income AS MovementItem_Income
@@ -262,6 +272,7 @@ BEGIN
                                 , MIDate_ExpirationDate.ValueData            AS ExpirationDate
                                 , MIString_PartionGoods.ValueData            AS PartionGoods
                                 , ObjectString_Goods_Maker.ValueData         AS MakerName
+                                , COALESCE (MIString_GoodsName.ValueData, Object_PartnerGoods.ValueData)      AS PartnerGoodsName
                            FROM MovementItem AS MovementItem_Income
                                   LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem_Income.ObjectId
 
@@ -280,6 +291,12 @@ BEGIN
                                   LEFT JOIN ObjectString AS ObjectString_Goods_Maker
                                                          ON ObjectString_Goods_Maker.ObjectId = MILinkObject_Goods.ObjectId 
                                                         AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker() 
+                
+                                  LEFT JOIN MovementItemString AS MIString_GoodsName
+                                                               ON MIString_GoodsName.MovementItemId = MovementItem_Income.Id
+                                                              AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
+
+                                  LEFT JOIN Object AS Object_PartnerGoods ON Object_PartnerGoods.Id = MILinkObject_Goods.ObjectId
                          WHERE MovementItem_Income.DescId     = zc_MI_Master()
                              AND MovementItem_Income.MovementId = vbMovementIncomeId
                              AND MovementItem_Income.isErased = FALSE
@@ -307,6 +324,7 @@ BEGIN
                             , tmpIncome.PartionGoods
                             , tmpIncome.MakerName
                             , tmpContainer.Amount                AS AmountRemains
+                            , tmpIncome.PartnerGoodsName
                        FROM tmpIncome
                             LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = tmpIncome.Id
                         )
@@ -426,6 +444,7 @@ BEGIN
                 END AS WarningColor
              , MovementItem_Income.ExpirationDate
              , MovementItem_Income.PartionGoods
+             , MovementItem_Income.PartnerGoodsName
              , MovementItem_Income.MakerName
              , ReturnOther.Amount                         AS AmountOther
         FROM Pretension AS MovementItem

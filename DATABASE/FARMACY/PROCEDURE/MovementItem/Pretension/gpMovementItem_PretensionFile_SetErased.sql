@@ -15,7 +15,6 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
   vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_MI_Pretension());
-  vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Pretension_Meneger());
 
   -- устанавливаем новое значение
   outIsErased := TRUE;

@@ -172,7 +172,13 @@ inherited CreatePretensionForm: TCreatePretensionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 131
+            Width = 100
+          end
+          object MakerName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'MakerName'
+            Options.Editing = False
+            Width = 63
           end
           object ReasonDifferencesName: TcxGridDBColumn
             Caption = #1055#1088#1080#1095#1080#1085#1072' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1103
@@ -321,39 +327,12 @@ inherited CreatePretensionForm: TCreatePretensionForm
       Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
     end
   end
-  inherited GuidesFiller: TGuidesFiller [2]
-    GuidesList = <
-      item
-      end
-      item
-      end>
-    Left = 160
-    Top = 192
-  end
-  inherited HeaderSaver: THeaderSaver [3]
-    ControlList = <
-      item
-      end>
-    Left = 232
-    Top = 193
-  end
-  inherited RefreshAddOn: TRefreshAddOn [4]
-    FormName = 'TCreatePretensionJournal'
-    DataSet = 'MasterCDS'
-    Left = 616
-    Top = 280
-  end
-  inherited spErasedMIMaster: TdsdStoredProc [5]
-    StoredProcName = ''
-    Left = 390
-    Top = 408
-  end
-  inherited spUnErasedMIMaster: TdsdStoredProc [6]
+  inherited spUnErasedMIMaster: TdsdStoredProc [2]
     StoredProcName = ''
     Left = 390
     Top = 328
   end
-  inherited spInsertUpdateMIMaster: TdsdStoredProc [7]
+  inherited spInsertUpdateMIMaster: TdsdStoredProc [3]
     Params = <
       item
         Name = 'inAmount'
@@ -384,14 +363,14 @@ inherited CreatePretensionForm: TCreatePretensionForm
     Left = 160
     Top = 368
   end
-  inherited MasterDS: TDataSource [8]
+  inherited MasterDS: TDataSource [4]
     Top = 368
   end
-  inherited MasterCDS: TClientDataSet [9]
+  inherited MasterCDS: TClientDataSet [5]
     Left = 96
     Top = 280
   end
-  inherited spSelect: TdsdStoredProc [10]
+  inherited spSelect: TdsdStoredProc [6]
     StoredProcName = 'gpSelect_MovementItem_Income_CreatePretension'
     Params = <
       item
@@ -433,7 +412,7 @@ inherited CreatePretensionForm: TCreatePretensionForm
     Left = 160
     Top = 248
   end
-  inherited spInsertMaskMIMaster: TdsdStoredProc [11]
+  inherited spInsertMaskMIMaster: TdsdStoredProc [7]
     Params = <
       item
         Name = 'inAmount'
@@ -464,11 +443,11 @@ inherited CreatePretensionForm: TCreatePretensionForm
     Left = 288
     Top = 360
   end
-  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [12]
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [8]
     Left = 155
     Top = 416
   end
-  inherited cxPropertiesStore: TcxPropertiesStore [13]
+  inherited cxPropertiesStore: TcxPropertiesStore [9]
     Components = <
       item
         Component = Owner
@@ -481,7 +460,7 @@ inherited CreatePretensionForm: TCreatePretensionForm
     Left = 40
     Top = 432
   end
-  inherited BarManager: TdxBarManager [14]
+  inherited BarManager: TdxBarManager [10]
     Left = 80
     Top = 207
     DockControlHeights = (
@@ -646,7 +625,7 @@ inherited CreatePretensionForm: TCreatePretensionForm
       ImageIndex = 47
     end
   end
-  inherited ActionList: TActionList [15]
+  inherited ActionList: TActionList [11]
     Left = 39
     Top = 279
     inherited actRefresh: TdsdDataSetRefresh
@@ -867,11 +846,11 @@ inherited CreatePretensionForm: TCreatePretensionForm
       Caption = 'mactChechPretension'
     end
   end
-  inherited DBViewAddOn: TdsdDBViewAddOn [16]
+  inherited DBViewAddOn: TdsdDBViewAddOn [12]
     Left = 502
     Top = 409
   end
-  inherited PopupMenu: TPopupMenu [17]
+  inherited PopupMenu: TPopupMenu [13]
     Left = 512
     Top = 344
     object N2: TMenuItem
@@ -881,7 +860,7 @@ inherited CreatePretensionForm: TCreatePretensionForm
       Action = actMISetUnErased
     end
   end
-  inherited FormParams: TdsdFormParams [18]
+  inherited FormParams: TdsdFormParams [14]
     Params = <
       item
         Name = 'Id'
@@ -919,15 +898,15 @@ inherited CreatePretensionForm: TCreatePretensionForm
     Left = 288
     Top = 416
   end
-  inherited StatusGuides: TdsdGuides [19]
+  inherited StatusGuides: TdsdGuides [15]
     Left = 80
     Top = 48
   end
-  inherited spChangeStatus: TdsdStoredProc [20]
+  inherited spChangeStatus: TdsdStoredProc [16]
     Left = 80
     Top = 88
   end
-  inherited spGet: TdsdStoredProc [21]
+  inherited spGet: TdsdStoredProc [17]
     StoredProcName = 'gpGet_Movement_Income'
     Params = <
       item
@@ -1078,7 +1057,7 @@ inherited CreatePretensionForm: TCreatePretensionForm
     Left = 216
     Top = 248
   end
-  inherited spInsertUpdateMovement: TdsdStoredProc [22]
+  inherited spInsertUpdateMovement: TdsdStoredProc [18]
     Params = <
       item
         Name = 'inId'
@@ -1097,6 +1076,33 @@ inherited CreatePretensionForm: TCreatePretensionForm
       end>
     Left = 162
     Top = 312
+  end
+  inherited GuidesFiller: TGuidesFiller [19]
+    GuidesList = <
+      item
+      end
+      item
+      end>
+    Left = 160
+    Top = 192
+  end
+  inherited HeaderSaver: THeaderSaver [20]
+    ControlList = <
+      item
+      end>
+    Left = 232
+    Top = 193
+  end
+  inherited RefreshAddOn: TRefreshAddOn [21]
+    FormName = 'TCreatePretensionJournal'
+    DataSet = 'MasterCDS'
+    Left = 616
+    Top = 280
+  end
+  inherited spErasedMIMaster: TdsdStoredProc [22]
+    StoredProcName = ''
+    Left = 390
+    Top = 408
   end
   inherited spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Summ'
