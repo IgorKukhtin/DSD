@@ -159,7 +159,7 @@ BEGIN
                                                      , inGoodsId            := inDocumentTaxKindId
                                                      , inAmount             := inAmount
                                                      , inPrice              := 1
-                                                     , inPriceTax_calc      := 0
+                                                     , inPriceTax_calc      := 1
                                                      , ioCountForPrice      := 1
                                                      , inGoodsKindId        := NULL
                                                      , inUserId             := inUserId
