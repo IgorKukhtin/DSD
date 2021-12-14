@@ -23,8 +23,7 @@ $BODY$
    DECLARE vbUnitId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_PersonalGroup());
-     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Get_Movement_PersonalGroup());
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
