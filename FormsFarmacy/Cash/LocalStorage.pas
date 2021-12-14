@@ -107,6 +107,8 @@ begin
       AddBoolField(LocalDataBaseHead, 'ISMANUAL');   //Ручной выбор медикамента
       //***27.10.21
       AddIntField(LocalDataBaseHead,  'CAT1303ID');   //Категория 1303
+      //***26.10.21
+      AddBoolField(LocalDataBaseHead, 'ISERRORRO');   //ВИП чек по ошибке РРО
 
       LocalDataBaseHead.CreateTable;
     end

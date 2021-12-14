@@ -680,7 +680,6 @@ inherited PretensionForm: TPretensionForm
       Left = 609
       Top = 59
       Caption = #1054#1090#1083#1086#1078#1077#1085
-      Enabled = False
       Properties.ReadOnly = True
       TabOrder = 18
       Width = 69
@@ -1320,7 +1319,6 @@ inherited PretensionForm: TPretensionForm
     object actGet_ReturnOutId: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
-      AfterAction = actOpenReturnOut
       PostDataSetBeforeExecute = False
       StoredProc = spGet_ReturnOutId
       StoredProcList = <

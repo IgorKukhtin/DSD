@@ -68,7 +68,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isParticipDistribListDiff Boolean, isPauseDistribListDiff  Boolean, isRequestDistribListDiff Boolean
              , isBlockCommentSendTP Boolean, isOnlyTimingSUN Boolean
              , PharmacyManager TVarChar, PharmacyManagerPhone TVarChar
-             , TelegramId TVarChar
+             , TelegramId TVarChar, isErrorRROToVIP Boolean
 ) AS
 $BODY$
 BEGIN
@@ -275,6 +275,8 @@ BEGIN
       , ObjectString_PharmacyManagerPhone.ValueData                                      AS PharmacyManagerPhone
       
       , ObjectString_Unit_TelegramId.ValueData                                           AS TelegramId
+      
+      , COALESCE (ObjectBoolean_ErrorRROToVIP.ValueData, FALSE)           :: Boolean     AS isErrorRROToVIP
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -630,6 +632,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_BlockCommentSendTP
                                 ON ObjectBoolean_BlockCommentSendTP.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_BlockCommentSendTP.DescId = zc_ObjectBoolean_Unit_BlockCommentSendTP()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_ErrorRROToVIP
+                                ON ObjectBoolean_ErrorRROToVIP.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_ErrorRROToVIP.DescId = zc_ObjectBoolean_Unit_ErrorRROToVIP()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_OnlyTimingSUN
                                 ON ObjectBoolean_OnlyTimingSUN.ObjectId = Object_Unit.Id

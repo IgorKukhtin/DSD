@@ -15,6 +15,22 @@ $BODY$
    DECLARE vbMovementIncome Integer;
 BEGIN
 
+    -- Определить
+    SELECT Movement.OperDate,  MovementLinkObject_From.ObjectId, MLMovement_Income.MovementChildId
+    INTO vbOperDate, vbUnitId, vbMovementIncome
+    FROM Movement
+
+         LEFT JOIN MovementLinkMovement AS MLMovement_Income
+                                        ON MLMovement_Income.MovementId = Movement.Id
+                                       AND MLMovement_Income.DescId = zc_MovementLinkMovement_Income()
+
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                      ON MovementLinkObject_From.MovementId = Movement.Id
+                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+
+    WHERE Movement.Id = inMovementId;
+
+
     IF NOT EXISTS(SELECT 1
                   FROM MovementItem AS MI
                    
@@ -77,22 +93,6 @@ BEGIN
      -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
 
-
-    -- Определить
-    SELECT OperDate,  MovementLinkObject_From.ObjectId.ObjectId, MLMovement_Income.MovementChildId
-    INTO vbOperDate, vbUnitId, vbMovementIncome
-    FROM Movement
-
-         LEFT JOIN MovementLinkMovement AS MLMovement_Income
-                                        ON MLMovement_Income.MovementId = Movement.Id
-                                       AND MLMovement_Income.DescId = zc_MovementLinkMovement_Income()
-
-         LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                      ON MovementLinkObject_From.MovementId = Movement.Id
-                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-
-    WHERE Movement.Id = inMovementId;
-
     -- Определить
     vbAccountId:= lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000()         -- Запасы
                                              , inAccountDirectionId     := zc_Enum_AccountDirection_20100()     -- Cклад
@@ -108,7 +108,7 @@ BEGIN
             , zc_Movement_Pretension()
             , inMovementId
             , MI.Id
-            , MovementItemContainer.ContainerId
+            , MIContainer_Income.ContainerId
             , vbAccountId
             , MI.Amount
             , vbOperDate

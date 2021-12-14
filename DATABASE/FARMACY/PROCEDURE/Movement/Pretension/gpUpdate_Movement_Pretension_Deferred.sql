@@ -44,7 +44,15 @@ BEGIN
     
        IF inisDeferred = TRUE
        THEN
-           -- собственно проводки
+           IF EXISTS(SELECT 1
+                     FROM MovementLinkMovement 
+                     WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Pretension()
+                       AND MovementLinkMovement.MovementChildId = inMovementId)
+           THEN
+             RAISE EXCEPTION 'Отложка запрещена. Создан возврат поставщику.';       
+           END IF;
+           
+                      -- собственно проводки
            PERFORM lpComplete_Movement_Pretension(inMovementId  -- ключ Документа
                                                , vbUserId);    -- Пользователь  
        ELSE
@@ -71,3 +79,5 @@ LANGUAGE plpgsql VOLATILE;
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  02.12.21                                                       *
 */
+
+-- select * from gpUpdate_Movement_Pretension_Deferred(inMovementId := 26087688 , inisDeferred := 'True' ,  inSession := '3');

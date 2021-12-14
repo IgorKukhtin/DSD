@@ -11,18 +11,18 @@ inherited CheckDeferredForm: TCheckDeferredForm
     Width = 736
     Height = 433
     ExplicitWidth = 736
-    ExplicitHeight = 395
+    ExplicitHeight = 433
     ClientRectBottom = 433
     ClientRectRight = 736
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 736
-      ExplicitHeight = 395
+      ExplicitHeight = 433
       inherited cxGrid: TcxGrid
         Width = 273
         Height = 433
         Align = alLeft
         ExplicitWidth = 273
-        ExplicitHeight = 395
+        ExplicitHeight = 433
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -211,6 +211,13 @@ inherited CheckDeferredForm: TCheckDeferredForm
             Options.Editing = False
             Width = 91
           end
+          object isErrorRRO: TcxGridDBColumn
+            Caption = #1054#1096#1080#1073#1082#1072' '#1056#1056#1054
+            DataBinding.FieldName = 'isErrorRRO'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
           object Color_CalcDoc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_CalcDoc'
             Visible = False
@@ -227,7 +234,6 @@ inherited CheckDeferredForm: TCheckDeferredForm
         Height = 433
         HotZoneClassName = 'TcxMediaPlayer8Style'
         Control = cxGrid
-        ExplicitHeight = 395
       end
       object Panel1: TPanel
         Left = 281
@@ -238,9 +244,6 @@ inherited CheckDeferredForm: TCheckDeferredForm
         BevelOuter = bvNone
         Caption = 'Panel1'
         TabOrder = 2
-        ExplicitLeft = 312
-        ExplicitWidth = 369
-        ExplicitHeight = 409
         object cxGrid1: TcxGrid
           Left = 0
           Top = 0
@@ -249,9 +252,6 @@ inherited CheckDeferredForm: TCheckDeferredForm
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 0
-          ExplicitLeft = 105
-          ExplicitWidth = 264
-          ExplicitHeight = 395
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DataSource1

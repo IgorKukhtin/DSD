@@ -210,6 +210,7 @@ type
     actUpdate_OffsetVIP: TdsdExecStoredProc;
     spUpdate_OffsetVIP: TdsdStoredProc;
     dxBarButton19: TdxBarButton;
+    cbErrorRRO: TcxCheckBox;
   private
     { Private declarations }
   public

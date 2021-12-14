@@ -23,13 +23,14 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Integer, Boolean, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Boolean, Integer, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ ЧЕК>
     IN inDate                TDateTime , -- Дата/время документа
     IN inCashRegister        TVarChar  , -- Серийник кассового аппарата
     IN inPaidType            Integer   , -- тип оплаты
-    IN inManagerId           Integer   , -- Менеджер
+    IN inManagerId           Integer   , -- Менеджер    
     IN inBayer               TVarChar  , -- Покупатель ВИП
     IN inFiscalCheckNumber   TVarChar  , -- Номер фискального чека
     IN inNotMCS              Boolean   , -- Не участвует в расчете НТЗ
@@ -39,7 +40,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN inConfirmedKindName   TVarChar  , -- ***Статус заказа (Состояние VIP-чека)
     IN inInvNumberOrder      TVarChar  , -- ***Номер заказа (с сайта)
     IN inPartnerMedicalId    Integer   , -- Медицинское учреждение(Соц. проект)
-    IN inAmbulance           TVarChar  , --
+    IN inAmbulance           TVarChar  , --    
     IN inMedicSP             TVarChar  , -- ФИО врача (Соц. проект)
     IN inInvNumberSP         TVarChar  , -- номер рецепта (Соц. проект)
     IN inOperDateSP          TDateTime , -- дата рецепта (Соц. проект)
@@ -49,28 +50,29 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN inTotalSummPayAdd     TFloat    , -- Доплата по чеку
     IN inMemberSPID          Integer   , -- ФИО пациента
     IN inSiteDiscount        Boolean   , -- Скидка через сайт
-    IN inBankPOSTerminalId   Integer   , -- Банк POS терминала
+    IN inBankPOSTerminalId   Integer   , -- Банк POS терминала    
     IN inJackdawsChecksCode  Integer   , -- Тип галки
     IN inRoundingDown        Boolean   , -- Округление в низ
     IN inPartionDateKindID   Integer   , -- Тип срок/не срок
     IN inConfirmationCodeSP  TVarChar  , -- код подтверждения рецепта (Соц. проект)
-    IN inLoyaltySignID       Integer   , -- Регистрация промокода "Программа лояльности"
+    IN inLoyaltySignID       Integer   , -- Регистрация промокода "Программа лояльности"    
     IN inLoyaltySMID         Integer   , -- Программа лояльности накопительная
     IN inLoyaltySMDiscount   TFloat    , -- Сумма скидки по Программа лояльности накопительная
     IN inMedicForSale        TVarChar  , -- ФИО врача (на продажу)
     IN inBuyerForSale        TVarChar  , -- ФИО покупателя (на продажу)
-    IN inBuyerForSalePhone   TVarChar  , -- Телефон покупателя (на продажу)
+    IN inBuyerForSalePhone   TVarChar  , -- Телефон покупателя (на продажу)    
     IN inDistributionPromoList TVarChar  , -- Раздача акционных материалов.
     IN inMedicKashtanID      Integer   , -- ФИО врача (МИС «Каштан») 
     IN inMemberKashtanID     Integer   , -- ФИО пациента (МИС «Каштан»)
-    IN isCorrectMarketing    Boolean   , -- Корректировка суммы маркетинга в ЗП по подразделению
-    IN isCorrectIlliquidMarketing  Boolean   , -- Корректировка суммы нелеквидов в ЗП по подразделению
-    IN inDoctors             Boolean   , -- Врачи
-    IN inDiscountCommit      Boolean   , -- Дисконт проведен на сайте
+    IN inisCorrectMarketing  Boolean   , -- Корректировка суммы маркетинга в ЗП по подразделению
+    IN inisCorrectIlliquidMarketing  Boolean   , -- Корректировка суммы нелеквидов в ЗП по подразделению
+    IN inisDoctors           Boolean   , -- Врачи
+    IN inisDiscountCommit    Boolean   , -- Дисконт проведен на сайте
     IN inZReport             Integer   , -- Номер Z отчета
     IN inMedicalProgramSPID  Integer   , -- Медицинская программа соц. проектов
-    IN isManual              Boolean   , -- Ручной выбор медикамента
-    IN isCategory1303Id      Integer   , -- Группы населения по постановлению КМУ 1303
+    IN inisManual            Boolean   , -- Ручной выбор медикамента    
+    IN inCategory1303Id      Integer   , -- Группы населения по постановлению КМУ 1303
+    IN inisErrorRRO          Boolean   , -- ВИП чек по ошибке РРО
     IN inUserSession	     TVarChar  , -- сессия пользователя под которой создан чек в программе
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -208,7 +210,7 @@ BEGIN
             PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ConfirmedKind(), ioId, zc_Enum_ConfirmedKind_Complete());
         END IF;
         
-    ELSEIF COALESCE(inDiscountCommit, FALSE) = TRUE
+    ELSEIF COALESCE(inisDiscountCommit, FALSE) = TRUE OR COALESCE (inisErrorRRO, False) = True
     THEN
         -- Отмечаем документ как отложенный
         PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Deferred(), ioId, TRUE);
@@ -375,31 +377,31 @@ BEGIN
     END IF;
     
     -- сохранили отметку <Корректировка суммы маркетинга в ЗП по подразделению>
-    IF COALESCE(isCorrectMarketing, False) = True
+    IF COALESCE(inisCorrectMarketing, False) = True
     THEN
-      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_CorrectMarketing(), ioId, isCorrectMarketing);
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_CorrectMarketing(), ioId, inisCorrectMarketing);
     END IF;
     
     -- сохранили отметку <Корректировка суммы нелеквидов в ЗП по подразделению>
-    IF COALESCE(isCorrectIlliquidMarketing, False) = True
+    IF COALESCE(inisCorrectIlliquidMarketing, False) = True
     THEN
-      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_CorrectIlliquidMarketing(), ioId, isCorrectIlliquidMarketing);
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_CorrectIlliquidMarketing(), ioId, inisCorrectIlliquidMarketing);
     END IF;
 
-    IF inDoctors = TRUE OR EXISTS(SELECT * FROM MovementBoolean
-                                  WHERE MovementBoolean.MovementId = ioId
-                                    AND MovementBoolean.DescId = zc_MovementBoolean_Doctors())
+    IF inisDoctors = TRUE OR EXISTS(SELECT * FROM MovementBoolean
+                                    WHERE MovementBoolean.MovementId = ioId
+                                      AND MovementBoolean.DescId = zc_MovementBoolean_Doctors())
     THEN
       -- сохранили <>
-      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Doctors(), ioId, inDoctors);
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Doctors(), ioId, inisDoctors);
     END IF;
 
-    IF inDiscountCommit = TRUE OR EXISTS(SELECT * FROM MovementBoolean
+    IF inisDiscountCommit = TRUE OR EXISTS(SELECT * FROM MovementBoolean
                                          WHERE MovementBoolean.MovementId = ioId
                                            AND MovementBoolean.DescId = zc_MovementBoolean_DiscountCommit())
     THEN
       -- сохранили <>
-      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DiscountCommit(), ioId, inDiscountCommit);
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DiscountCommit(), ioId, inisDiscountCommit);
     END IF;
     
     IF COALESCE (inZReport, 0) <> 0
@@ -408,16 +410,22 @@ BEGIN
       PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ZReport(), ioId, inZReport);
     END IF;
     
-    IF COALESCE (isManual, False) = True
+    IF COALESCE (inisManual, False) = True
     THEN
       -- сохранили <>
-      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Manual(), ioId, isManual);
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Manual(), ioId, inisManual);
     END IF;
     
-    IF COALESCE (isCategory1303Id, 0) <> 0
+    IF COALESCE (inCategory1303Id, 0) <> 0
     THEN
       -- сохранили <>
-      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Category1303(), ioId, isCategory1303Id);                
+      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Category1303(), ioId, inCategory1303Id);                
+    END IF;
+
+    IF COALESCE (inisErrorRRO, False) = True
+    THEN
+      -- сохранили <>
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_ErrorRRO(), ioId, inisErrorRRO);
     END IF;
 
     -- сохранили протокол
@@ -427,7 +435,7 @@ BEGIN
     -- !!!ВРЕМЕННО для ТЕСТА!!!
     IF inSession = zfCalc_UserAdmin()
     THEN
-        RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inDoctors, inUserSession, inSession;
+        RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inisDoctors, inUserSession, inSession;
     END IF;
 
 

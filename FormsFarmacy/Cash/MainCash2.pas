@@ -794,6 +794,7 @@ type
     FStyle: TcxStyle;
 
     FError_Blink: Integer;
+    FErrorRRO: Boolean;
 
     aDistributionPromoId : array of Integer;
     aDistributionPromoAmount : array of Currency;
@@ -920,7 +921,7 @@ type
       ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
       AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors, AisDiscountCommit : Boolean;
       AMedicalProgramSPId: Integer; AisManual : Boolean; ACategory1303Id : Integer;
-      ANeedComplete: Boolean; AZReport : Integer; AFiscalCheckNumber: String;
+      ANeedComplete, AisErrorRRO: Boolean; AZReport : Integer; AFiscalCheckNumber: String;
       AID: Integer; out AUID: String): Boolean;
 
     procedure pGet_OldSP(var APartnerMedicalId: Integer;
@@ -1511,7 +1512,8 @@ begin
   if MessageDlg('Очистить все?', mtConfirmation, mbYesNo, 0) <> mrYes then
     exit;
 
-  if (FormParams.ParamByName('isDiscountCommit').Value = True) and
+  if ((FormParams.ParamByName('isDiscountCommit').Value = True) or
+     FErrorRRO AND UnitConfigCDS.FindField('isErrorRROToVIP').AsBoolean) and
      (FormParams.ParamByName('CheckId').Value = 0) then
   begin
     SaveLocal(CheckCDS, FormParams.ParamByName('ManagerId').Value,
@@ -1582,6 +1584,7 @@ begin
         FormParams.ParamByName('Category1303Id').Value,
 
         False, // NeedComplete
+        FErrorRRO, // isErrorRRO
         0,     // ZReport
         '',    // FiscalCheckNumber
         FormParams.ParamByName('CheckId').Value,  // ID чека
@@ -3833,6 +3836,7 @@ begin
         FormParams.ParamByName('Category1303Id').Value,
 
         True, // NeedComplete
+        False, // isErrorRRO
         ZReport,     // Номер Z отчета
         CheckNumber, // FiscalCheckNumber
         FormParams.ParamByName('CheckId').Value,  // ID чека
@@ -5602,6 +5606,7 @@ begin
     , FormParams.ParamByName('Category1303Id').Value
 
     , false // NeedComplete
+    , False // isErrorRRO
     , 0  // ZReport
     , '' // FiscalCheckNumber
     , FormParams.ParamByName('CheckId').Value // Id чека
@@ -5719,6 +5724,7 @@ begin
     , FormParams.ParamByName('Category1303Id').Value
 
     , false // NeedComplete
+    , False // isErrorRRO
     , 0  // ZReport
     , '' // FiscalCheckNumber
     , FormParams.ParamByName('CheckId').Value // Id чека
@@ -6814,6 +6820,7 @@ begin
     , FormParams.ParamByName('Category1303Id').Value
 
     , false // NeedComplete
+    , False // isErrorRRO
     , 0 // ZReport
     , '' // FiscalCheckNumber
     , FormParams.ParamByName('CheckId').Value // Id чека
@@ -10609,6 +10616,7 @@ begin
   Result := False;
   ACheckNumber := '';
   AZReport := 0;
+  FErrorRRO := False;
   try
     try
       if Assigned(Cash) AND NOT Cash.AlwaysSold and isFiscal then
@@ -10616,13 +10624,16 @@ begin
         AFiscalNumber := Cash.FiscalNumber;
         if not TryStrToInt64(AFiscalNumber, n) OR (Length(AFiscalNumber) < 10) then
         begin
+          FErrorRRO := True;
           if ShowPUSHMessageCash('После проведения предыдущего чека возникла ошибка…'#13#10#13#10 +
                                  '!!! Повторите пробитие чека после перезагрузки РРО !!!'#13#10#13#10 +
                                  'Если не пройдет - сделайте X отчет и повторите пробитие или'#13#10 +
                                  'Аннулируйте или закройте чек через FpWinX (раздел Продажи) или'#13#10 +
                                  'Отсоедините/Подключите кабель соединяющий РРО с ПК при выключенном РРО', cResult) then actPutCheckToCashExecute(Nil);
+
           Exit;
         end;
+        FErrorRRO := False;
       end
       else
         AFiscalNumber := '';
@@ -11889,7 +11900,7 @@ function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
   ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
   AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors, AisDiscountCommit : Boolean;
   AMedicalProgramSPId: Integer; AisManual : Boolean; ACategory1303Id : Integer;
-  ANeedComplete: Boolean; AZReport : Integer; AFiscalCheckNumber: String;
+  ANeedComplete, AisErrorRRO: Boolean; AZReport : Integer; AFiscalCheckNumber: String;
   AID: Integer; out AUID: String): Boolean;
 var
   NextVIPId: Integer;
@@ -12165,7 +12176,8 @@ begin
           AZReport,                   // Номер Z отчета
           AMedicalProgramSPId,       // Медицинская программа соц. проектов
           AisManual,                  // ручной выбор медикаментов
-          ACategory1303Id            // Категория 1303
+          ACategory1303Id,            // Категория 1303
+          AisErrorRRO                 // ВИП чек по ошибке РРО
           ]));
       End
       else
@@ -12287,6 +12299,8 @@ begin
         FLocalDataBaseHead.FieldByName('ISMANUAL').Value := AisManual;
         //Категория 1303
         FLocalDataBaseHead.FieldByName('CAT1303ID').Value := ACategory1303Id;
+        //ВИП чек по ошибке РРО
+        FLocalDataBaseHead.FieldByName('ISERRORRO').Value := AisErrorRRO;
         FLocalDataBaseHead.Post;
       End;
     except

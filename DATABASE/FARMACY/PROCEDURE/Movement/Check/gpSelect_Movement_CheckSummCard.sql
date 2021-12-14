@@ -43,6 +43,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isDeliverySite Boolean
              , SummaDelivery TFloat
              , CommentCustomer TVarChar
+             , isErrorRRO Boolean 
               )
 AS
 $BODY$
@@ -126,7 +127,7 @@ BEGIN
            , MovementFloat_SummaDelivery.ValueData                        AS SummaDelivery
 
            , MovementString_CommentCustomer.ValueData                     AS CommentCustomer
-
+           , COALESCE(MovementBoolean_ErrorRRO.ValueData, False)          AS isErrorRRO
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
                    , MovementLinkObject_CheckMember.ObjectId             AS MemberId
@@ -354,6 +355,11 @@ BEGIN
             LEFT JOIN Object AS Object_CancelReason ON Object_CancelReason.Id = MovementLinkObject_CancelReason.ObjectId
                                      
             LEFT JOIN (SELECT * FROM gpSelect_Object_CancelReason('3') AS CR ORDER BY CR.Code LIMIT 1) AS CancelReasonDefault ON 1 = 1 
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_ErrorRRO
+                                      ON MovementBoolean_ErrorRRO.MovementId = Movement_Check.Id
+                                     AND MovementBoolean_ErrorRRO.DescId = zc_MovementBoolean_ErrorRRO()
+
       ;
 
 END;

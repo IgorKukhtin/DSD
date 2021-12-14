@@ -198,6 +198,7 @@ BEGIN
             , COALESCE(MovementBoolean_DiscountCommit.ValueData, False)    AS isDiscountCommit
 
             , MovementString_CommentCustomer.ValueData                     AS CommentCustomer
+            , COALESCE(MovementBoolean_ErrorRRO.ValueData, False)          AS isErrorRRO
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id
@@ -380,6 +381,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_CommentCustomer
                                      ON MovementString_CommentCustomer.MovementId = Movement.Id
                                     AND MovementString_CommentCustomer.DescId = zc_MovementString_CommentCustomer()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_ErrorRRO
+                                      ON MovementBoolean_ErrorRRO.MovementId = Movement.Id
+                                     AND MovementBoolean_ErrorRRO.DescId = zc_MovementBoolean_ErrorRRO()
 
        WHERE tmpMov.isDeferred = True
          AND (inType = 0 OR inType = 1 AND tmpMov.isShowVIP = TRUE OR inType = 2 AND tmpMov.isShowTabletki = TRUE OR inType in (1, 3) AND tmpMov.isShowLiki24 = TRUE)

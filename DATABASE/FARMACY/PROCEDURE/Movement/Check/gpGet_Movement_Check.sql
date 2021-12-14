@@ -43,7 +43,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Delay Boolean
              , BuyerPhone TVarChar, BuyerName TVarChar, LoyaltySMDiscount TFloat, LoyaltySMSumma TFloat
              , isCorrectMarketing Boolean , isCorrectIlliquidMarketing Boolean, isDoctors Boolean
-             , isDiscountCommit Boolean, isManual Boolean, isOffsetVIP Boolean
+             , isDiscountCommit Boolean, isManual Boolean, isOffsetVIP Boolean, isErrorRRO Boolean
 )
 AS
 $BODY$
@@ -354,6 +354,7 @@ BEGIN
            , COALESCE(MovementBoolean_DiscountCommit.ValueData, False)    AS isDiscountCommit
            , COALESCE(MovementBoolean_Manual.ValueData, False)            AS isManual
            , COALESCE(MovementBoolean_OffsetVIP.ValueData, False)         AS isOffsetVIP
+           , COALESCE(MovementBoolean_ErrorRRO.ValueData, False)          AS isErrorRRO
 
         FROM tmpMovement AS Movement_Check
              LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
@@ -444,6 +445,11 @@ BEGIN
              LEFT JOIN MovementBoolean AS MovementBoolean_OffsetVIP
                                        ON MovementBoolean_OffsetVIP.MovementId = Movement_Check.Id
                                       AND MovementBoolean_OffsetVIP.DescId = zc_MovementBoolean_OffsetVIP()
+
+             LEFT JOIN MovementBoolean AS MovementBoolean_ErrorRRO
+                                       ON MovementBoolean_ErrorRRO.MovementId = Movement_Check.Id
+                                      AND MovementBoolean_ErrorRRO.DescId = zc_MovementBoolean_ErrorRRO()
+                                      
        WHERE Movement_Check.Id = inMovementId;
 
 END;

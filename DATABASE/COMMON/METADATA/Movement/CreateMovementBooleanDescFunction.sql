@@ -376,14 +376,18 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_UseSubject() RETURNS integer AS $B
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_UseSubject', 'Использовать тему из документа'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_UseSubject');
 
-
 CREATE OR REPLACE FUNCTION zc_MovementBoolean_Conduct() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_Conduct'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_Conduct', 'Проведен по количеству'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Conduct');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_ErrorRRO() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_ErrorRRO'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_ErrorRRO', 'ВИП чек по ошибке РРО'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_ErrorRRO');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 14.12.21                                                                                   * zc_MovementBoolean_ErrorRRO
  16.11.21                                                                                   * zc_MovementBoolean_Conduct
  01.11.21                                                                                   * zc_MovementBoolean_UseSubject
  29.10.21                                                                                   * zc_MovementBoolean_OffsetVIP

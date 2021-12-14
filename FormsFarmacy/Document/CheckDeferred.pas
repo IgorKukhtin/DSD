@@ -96,6 +96,7 @@ type
     CommentCustomer: TcxGridDBColumn;
     Panel1: TPanel;
     cxDBMemo1: TcxDBMemo;
+    isErrorRRO: TcxGridDBColumn;
   private
     { Private declarations }
   public

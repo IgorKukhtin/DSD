@@ -83,6 +83,7 @@ type
     bbUpdateNotMCS: TdxBarButton;
     isNotMCS: TcxGridDBColumn;
     CommentCustomer: TcxGridDBColumn;
+    isErrorRRO: TcxGridDBColumn;
   private
     { Private declarations }
   public

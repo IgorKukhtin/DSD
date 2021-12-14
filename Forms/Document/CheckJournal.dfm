@@ -569,6 +569,14 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 60
           end
+          object isErrorRRO: TcxGridDBColumn
+            Caption = #1042#1048#1055' '#1095#1077#1082' '#1087#1086' '#1086#1096#1080#1073#1082#1077' '#1056#1056#1054
+            DataBinding.FieldName = 'isErrorRRO'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
         end
       end
     end

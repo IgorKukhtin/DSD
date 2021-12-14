@@ -339,6 +339,8 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_ProcessOrder() , inDescId:= zc_Object_ContactPersonKind(), inCode:= 4, inName:= 'Обработка заказов'                   , inEnumName:= 'zc_Enum_ContactPersonKind_ProcessOrder');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_PriceListIn()  , inDescId:= zc_Object_ContactPersonKind(), inCode:= 5, inName:= 'Обработка прайса-поставщика'         , inEnumName:= 'zc_Enum_ContactPersonKind_PriceListIn');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_IncomeMMO()    , inDescId:= zc_Object_ContactPersonKind(), inCode:= 6, inName:= 'Обработка ММО прихода от поставщика' , inEnumName:= 'zc_Enum_ContactPersonKind_IncomeMMO');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContactPersonKind_Pretension()    , inDescId:= zc_Object_ContactPersonKind(), inCode:= 7, inName:= 'Обработка претензий' , inEnumName:= 'zc_Enum_ContactPersonKind_Pretension');
+
 
      -- !!! Типы счетов
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountKind_Active(), inDescId:= zc_Object_AccountKind(), inCode:= 1, inName:= 'Активный', inEnumName:= 'zc_Enum_AccountKind_Active');

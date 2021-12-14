@@ -98,6 +98,7 @@ type
     MedicalProgramSPName: TcxGridDBColumn;
     isManual: TcxGridDBColumn;
     isOffsetVIP: TcxGridDBColumn;
+    isErrorRRO: TcxGridDBColumn;
   private
     { Private declarations }
   public

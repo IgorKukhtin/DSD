@@ -31,7 +31,7 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                isPromoForSale Boolean, isCheckUKTZED Boolean, isGoodsUKTZEDRRO Boolean, isMessageByTime Boolean, isMessageByTimePD Boolean,
                LikiDneproURL TVarChar, LikiDneproToken TVarChar, LikiDneproId Integer,
                LikiDneproeHealthURL TVarChar, LikiDneproeLocation TVarChar, LikiDneproeHealthToken TVarChar,
-               isRemovingPrograms Boolean
+               isRemovingPrograms Boolean, isErrorRROToVIP Boolean
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -323,6 +323,7 @@ BEGIN
        , tmpCashSettings.isRemovingPrograms AND
          CASE WHEN EXISTS (SELECT 1 FROM ObjectLink_UserRole_View
          WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) THEN FALSE ELSE TRUE END AS isRemovingPrograms
+       , COALESCE (ObjectBoolean_ErrorRROToVIP.ValueData, FALSE)                  AS isErrorRROToVIP
 
    FROM Object AS Object_Unit
 
@@ -350,6 +351,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_MessageByTimePD
                                 ON ObjectBoolean_MessageByTimePD.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_MessageByTimePD.DescId = zc_ObjectBoolean_Unit_MessageByTimePD()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_ErrorRROToVIP
+                                ON ObjectBoolean_ErrorRROToVIP.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_ErrorRROToVIP.DescId = zc_ObjectBoolean_Unit_ErrorRROToVIP()
 
         LEFT JOIN ObjectString AS ObjectString_PromoForSale
                                ON ObjectString_PromoForSale.ObjectId = Object_Unit.Id 

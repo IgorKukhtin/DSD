@@ -97,6 +97,8 @@ type
     ISMANUAL  : boolean;       //Ручной выбор медикамента
     //***27.10.21
     CAT1303ID  : integer;         //Категория 1303
+    //***14.12.21
+    ISERRORRO  : boolean;       //ВИП чек по ошибке РРО
 
   end;
   TBodyRecord = record
@@ -1438,6 +1440,8 @@ begin
                 ISMANUAL := FieldByName('ISMANUAL').AsBoolean;
                 //***27.10.21
                 CAT1303ID := FieldByName('CAT1303ID').AsInteger;
+                //***14.12.21
+                ISERRORRO := FieldByName('ISERRORRO').AsBoolean;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1607,20 +1611,22 @@ begin
                   dsdSave.Params.AddParam('inMedicKashtanID', ftInteger, ptInput, Head.MEDICKID);
                   dsdSave.Params.AddParam('inMemberKashtanID', ftInteger, ptInput, Head.MEMBERKID);
                   //***19.03.21
-                  dsdSave.Params.AddParam('isCorrectMarketing', ftBoolean, ptInput, Head.ISCORRMARK);
-                  dsdSave.Params.AddParam('isCorrectIlliquidMarketing', ftBoolean, ptInput, Head.ISCORRIA);
+                  dsdSave.Params.AddParam('inisCorrectMarketing', ftBoolean, ptInput, Head.ISCORRMARK);
+                  dsdSave.Params.AddParam('inisCorrectIlliquidMarketing', ftBoolean, ptInput, Head.ISCORRIA);
                   //***15.08.21
-                  dsdSave.Params.AddParam('isDoctors', ftBoolean, ptInput, Head.ISDOCTORS);
+                  dsdSave.Params.AddParam('inisDoctors', ftBoolean, ptInput, Head.ISDOCTORS);
                   //***15.08.21
-                  dsdSave.Params.AddParam('isDiscountCommit', ftBoolean, ptInput, Head.ISDISCCOM);
+                  dsdSave.Params.AddParam('inisDiscountCommit', ftBoolean, ptInput, Head.ISDISCCOM);
                   //***01.09.21
                   dsdSave.Params.AddParam('inZReport', ftInteger, ptInput, Head.ZREPORT);
                   //***04.10.21
                   dsdSave.Params.AddParam('inMedicalProgramSP', ftInteger, ptInput, Head.MEDPRSPID);
                   //***26.10.21
-                  dsdSave.Params.AddParam('isManual', ftBoolean, ptInput, Head.ISMANUAL);
+                  dsdSave.Params.AddParam('inisManual', ftBoolean, ptInput, Head.ISMANUAL);
                   //***27.10.21
-                  dsdSave.Params.AddParam('isCategory1303Id', ftInteger, ptInput, Head.CAT1303ID);
+                  dsdSave.Params.AddParam('inCategory1303Id', ftInteger, ptInput, Head.CAT1303ID);
+                  //***14.12.21
+                  dsdSave.Params.AddParam('inisErrorRRO', ftBoolean, ptInput, Head.ISERRORRO);
 
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);

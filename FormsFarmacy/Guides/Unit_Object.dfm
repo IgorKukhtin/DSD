@@ -1017,6 +1017,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 105
           end
+          object isErrorRROToVIP: TcxGridDBColumn
+            Caption = #1055#1088#1080' '#1086#1096#1080#1073#1082#1077' '#1056#1056#1054' '#1095#1077#1082' '#1074' '#1042#1048#1055
+            DataBinding.FieldName = 'isErrorRROToVIP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080' '#1086#1096#1080#1073#1082#1077' '#1056#1056#1054' '#1080' '#1085#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1086#1084' '#1095#1077#1082#1077' '#1089#1086#1093#1088#1072#1085#1103#1090#1100' '#1077#1075#1086' '#1082#1072#1082' '#1042#1048#1055
+            Options.Editing = False
+            Width = 73
+          end
         end
       end
     end
@@ -3814,6 +3823,37 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       Caption = 'actUpdate_isOnlyTimingSUN'
     end
+    object mspUpdate_isErrorRROToVIP: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_isErrorRROToVIP
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#9#1055#1088#1080' '#1086#1096#1080#1073#1082#1077' '#1056#1056#1054' '#1080' '#1085#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1086#1084' '#1095#1077#1082#1077' '#1089#1086#1093#1088#1072#1085#1103#1090 +
+        #1100' '#1077#1075#1086' '#1082#1072#1082' '#1042#1048#1055'"?'
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#9#1055#1088#1080' '#1086#1096#1080#1073#1082#1077' '#1056#1056#1054' '#1080' '#1085#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1086#1084' '#1095#1077#1082#1077' '#1089#1086#1093#1088#1072#1085#1103#1090 +
+        #1100' '#1077#1075#1086' '#1082#1072#1082' '#1042#1048#1055'"'
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#9#1055#1088#1080' '#1086#1096#1080#1073#1082#1077' '#1056#1056#1054' '#1080' '#1085#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1086#1084' '#1095#1077#1082#1077' '#1089#1086#1093#1088#1072#1085#1103#1090 +
+        #1100' '#1077#1075#1086' '#1082#1072#1082' '#1042#1048#1055'"'
+      ImageIndex = 79
+    end
+    object actUpdate_isErrorRROToVIP: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isErrorRROToVIP
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isErrorRROToVIP
+        end>
+      Caption = 'spUpdate_isErrorRROToVIP'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -4549,6 +4589,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton26'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton11'
         end>
     end
@@ -4664,6 +4708,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton25: TdxBarButton
       Action = mactUpdate_isOnlyTimingSUN
+      Category = 0
+    end
+    object dxBarButton26: TdxBarButton
+      Action = mspUpdate_isErrorRROToVIP
       Category = 0
     end
   end
@@ -7564,7 +7612,39 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 616
-    Top = 99
+    Left = 600
+    Top = 91
+  end
+  object spUpdate_isErrorRROToVIP: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isErrorRROToVIP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisErrorRROToVIP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isErrorRROToVIP'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisErrorRROToVIP'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 736
+    Top = 91
   end
 end

@@ -75,7 +75,7 @@ BEGIN
              WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Pretension()
                AND MovementLinkMovement.MovementChildId = inMovementId)
    THEN
-     RAISE EXCEPTION 'Возврат по поставщику по претензии уже создан.';       
+     RAISE EXCEPTION 'Возврат поставщику по претензии уже создан.';       
    END IF;
 
    SELECT lpInsertUpdate_Movement_ReturnOut(0
@@ -127,15 +127,12 @@ BEGIN
       AND MI.Amount < 0
       AND MI.isErased = FALSE;
                        
-   -- сохранили протокол
-   PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
-   
    -- !!!ВРЕМЕННО для ТЕСТА!!!
-   IF inSession = zfCalc_UserAdmin()
+/*   IF inSession = zfCalc_UserAdmin()
    THEN
        RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inMovementId, vbMovementIncome, inSession;
    END IF;   
-
+*/
 END;
 $BODY$
 

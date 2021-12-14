@@ -429,6 +429,11 @@ type
     dxBarButton25: TdxBarButton;
     isSP1303: TcxGridDBColumn;
     EndDateSP1303: TcxGridDBColumn;
+    isErrorRROToVIP: TcxGridDBColumn;
+    mspUpdate_isErrorRROToVIP: TMultiAction;
+    actUpdate_isErrorRROToVIP: TdsdExecStoredProc;
+    spUpdate_isErrorRROToVIP: TdsdStoredProc;
+    dxBarButton26: TdxBarButton;
   private
     { Private declarations }
   public

@@ -226,6 +226,13 @@ inherited CheckDeferred_SearchForm: TCheckDeferred_SearchForm
             Options.Editing = False
             Width = 109
           end
+          object isErrorRRO: TcxGridDBColumn
+            Caption = #1054#1096#1080#1073#1082#1072' '#1056#1056#1054
+            DataBinding.FieldName = 'isErrorRRO'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
           object Color_CalcDoc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_CalcDoc'
             Visible = False
