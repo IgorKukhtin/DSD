@@ -23,13 +23,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Pretension());
 
-      -- проверка
-    IF COALESCE ((SELECT MovementBoolean_Deferred.ValueData FROM MovementBoolean  AS MovementBoolean_Deferred
-                  WHERE MovementBoolean_Deferred.MovementId = inMovementId
-                    AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()), FALSE) = TRUE
-    THEN
+       -- проверка
+     IF COALESCE ((SELECT MovementBoolean_Deferred.ValueData FROM MovementBoolean  AS MovementBoolean_Deferred
+                   WHERE MovementBoolean_Deferred.MovementId = inMovementId
+                     AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()), FALSE) = TRUE
+     THEN
          RAISE EXCEPTION 'Ошибка.Документ отложен, проведение запрещено!';
-    END IF;
+     END IF;
 
       -- параметры документа
      SELECT
@@ -48,24 +48,13 @@ BEGIN
         -- сохранили <Документ> c новой датой 
         PERFORM lpInsertUpdate_Movement (inMovementId, zc_Movement_Pretension(), vbInvNumber, outOperDate, vbParentID);
         
-/*     ELSE
-         IF ((outOperDate <> CURRENT_DATE) OR (outOperDate <> CURRENT_DATE + INTERVAL '1 MONTH')) AND (inIsCurrentData = FALSE)
-         THEN
-             -- проверка прав на проведение задним числом
-             vbUserId:= lpCheckRight (inSession, zc_Enum_Process_CompleteDate_Pretension());
-         END IF;*/
      END IF;
+          
 
-     -- Проверили перед проведением на достаточность наличия, НДС и пр.
-     PERFORM lpCheckComplete_Movement_Pretension (inMovementId);
-     
       -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm_Pretension (inMovementId);
      
-     -- собственно проводки
-/*     PERFORM lpComplete_Movement_Pretension(inMovementId, -- ключ Документа
-                                           vbUserId);    -- Пользователь                          
-*/
+
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
        -- Проверим а не провели за время отложки были прицеденты

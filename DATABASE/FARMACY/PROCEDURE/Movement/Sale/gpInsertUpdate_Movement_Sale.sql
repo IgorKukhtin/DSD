@@ -34,10 +34,12 @@ $BODY$
    DECLARE vbAddress TVarChar;
    DECLARE vbINN TVarChar; 
    DECLARE vbPassport TVarChar;
+   DECLARE vbPartnerMedicalMedicId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
     vbUserId := inSession;
+    vbPartnerMedicalMedicId := 0;
 
    IF COALESCE (inMemberSP, '') <> ''
       THEN
@@ -130,6 +132,7 @@ BEGIN
                                                              , inSession := inSession
                                                              );
           END IF;
+          
    END IF;
    
     -- сохранили <Документ>
@@ -155,7 +158,7 @@ BEGIN
    IF COALESCE (inPartnerMedicalId,0) <> 0 OR
       --COALESCE (inOperDateSP,Null) <> Null OR
       COALESCE (inInvNumberSP,'') <> '' OR
-      COALESCE (inMedicSP,'') <> '' OR
+      COALESCE (inMedicSP,'') <> '' AND inJuridicalId <> 1152890 OR
       COALESCE (inMemberSP,'') <> '' THEN
       
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_SP(), MovementItem.Id, True)

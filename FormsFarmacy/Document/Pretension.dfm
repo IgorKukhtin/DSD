@@ -1268,6 +1268,68 @@ inherited PretensionForm: TPretensionForm
       TextParam.DataType = ftWideString
       TextParam.MultiSelectSeparator = ','
     end
+    object actInsert_ReturnOut: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actOpenReturnOut
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_ReturnOut
+      StoredProcList = <
+        item
+          StoredProc = spInsert_ReturnOut
+        end>
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1074#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      Hint = #1057#1086#1079#1076#1072#1090#1100' '#1074#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      ImageIndex = 27
+      QuestionBeforeExecute = #1057#1086#1079#1076#1072#1090#1100' '#1074#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'?'
+    end
+    object actOpenReturnOut: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actGet_ReturnOutId
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1074#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1074#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      ImageIndex = 29
+      FormName = 'TReturnOutForm'
+      FormNameParam.Value = 'TReturnOutForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ReturnOutId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actGet_ReturnOutId: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actOpenReturnOut
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_ReturnOutId
+      StoredProcList = <
+        item
+          StoredProc = spGet_ReturnOutId
+        end>
+      Caption = 'actGet_ReturnOutId'
+      Hint = 'actGet_ReturnOutId'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 280
@@ -1424,6 +1486,18 @@ inherited PretensionForm: TPretensionForm
         end
         item
           Visible = True
+          ItemName = 'bbInsert_ReturnOut'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReturnOut'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1560,6 +1634,20 @@ inherited PretensionForm: TPretensionForm
       Action = actSendClipboard
       Category = 0
     end
+    object bbInsert_ReturnOut: TdxBarButton
+      Action = actInsert_ReturnOut
+      Category = 0
+    end
+    object dxBarButton14: TdxBarButton
+      Caption = 'New Button'
+      Category = 0
+      Hint = 'New Button'
+      Visible = ivAlways
+    end
+    object bbOpenReturnOut: TdxBarButton
+      Action = actOpenReturnOut
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
@@ -1682,6 +1770,11 @@ inherited PretensionForm: TPretensionForm
         Name = 'FtpFileName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReturnOutId'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 280
@@ -2536,8 +2629,8 @@ inherited PretensionForm: TPretensionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 696
-    Top = 192
+    Left = 712
+    Top = 184
   end
   object spAddFile: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_Pretension_AddFile'
@@ -2753,5 +2846,46 @@ inherited PretensionForm: TPretensionForm
     PackSize = 1
     Left = 520
     Top = 192
+  end
+  object spInsert_ReturnOut: TdsdStoredProc
+    StoredProcName = 'gpInsert_Pretension_ReturnOut'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 712
+    Top = 243
+  end
+  object spGet_ReturnOutId: TdsdStoredProc
+    StoredProcName = 'gpGet_Pretension_ReturnOut'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outReturnOutId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReturnOutId'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 712
+    Top = 299
   end
 end

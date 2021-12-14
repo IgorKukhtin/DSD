@@ -22,7 +22,7 @@ BEGIN
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Pretension(), inInvNumber, inOperDate, Null);
 
-     -- сохранили <Примечание>
+     -- сохранили <Приход>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Income(), ioId, inParentId);
 
      -- сохранили связь с <От кого (в документе)>

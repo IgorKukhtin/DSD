@@ -1,7 +1,7 @@
 object MedicSP_ICForm: TMedicSP_ICForm
   Left = 0
   Top = 0
-  Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072' ('#1057#1090#1088#1072#1093#1086#1074#1072#1103' '#1082#1086#1084#1087#1072#1085#1080#1103')'
+  Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
   ClientHeight = 344
   ClientWidth = 615
   Color = clBtnFace
@@ -27,8 +27,6 @@ object MedicSP_ICForm: TMedicSP_ICForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 91
-    ExplicitHeight = 253
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

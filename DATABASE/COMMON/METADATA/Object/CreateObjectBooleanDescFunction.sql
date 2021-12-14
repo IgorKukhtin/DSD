@@ -1137,10 +1137,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_DiscountExternal_NoSendSUN() RETURNS
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_DiscountExternal(), 'zc_ObjectBoolean_DiscountExternal_NoSendSUN', 'Не перемещать товар в СУН по участвующим подразделениям' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_DiscountExternal_NoSendSUN');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_ErrorRROToVIP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_ErrorRROToVIP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_ErrorRROToVIP', 'При ошибке РРО и не сохраненном чеке сохранять его как ВИП' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_ErrorRROToVIP');  
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 14.12.21                                                                                                          * zc_ObjectBoolean_Unit_ErrorRROToVIP
  10.12.21                                                                                                          * zc_ObjectBoolean_DiscountExternal_NoSendSUN
  08.12.21         * zc_ObjectBoolean_ExportJuridical_Auto
  03.12.21         * zc_ObjectBoolean_Goods_NameOrig

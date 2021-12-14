@@ -123,6 +123,14 @@ type
     actSendFTPFile: TdsdFTP;
     actOpenFile: TdsdFTP;
     actGetFTPParams: TdsdExecStoredProc;
+    spInsert_ReturnOut: TdsdStoredProc;
+    actInsert_ReturnOut: TdsdExecStoredProc;
+    actOpenReturnOut: TdsdOpenForm;
+    bbInsert_ReturnOut: TdxBarButton;
+    dxBarButton14: TdxBarButton;
+    bbOpenReturnOut: TdxBarButton;
+    spGet_ReturnOutId: TdsdStoredProc;
+    actGet_ReturnOutId: TdsdExecStoredProc;
   private
     { Private declarations }
   public

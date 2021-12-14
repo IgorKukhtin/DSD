@@ -177,7 +177,7 @@ BEGIN
           , Movement_Sale.SPKindName 
           , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
           , COALESCE (MovementBoolean_NP.ValueData, FALSE) ::Boolean  AS isNP
-          , CASE WHEN COALESCE(Object_InsuranceCompanies.Id, 0) <> 0 
+          , CASE WHEN COALESCE(Movement_Sale.JuridicalId, 0) = 1152890 
                  THEN 'TMedicSP_ICForm' ELSE 'TMedicSP_ObjectForm' END ::TVarChar  AS MedicSPForm
           
         FROM Movement_Sale_View AS Movement_Sale
