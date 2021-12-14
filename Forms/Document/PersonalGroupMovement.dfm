@@ -144,7 +144,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = False
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 233
