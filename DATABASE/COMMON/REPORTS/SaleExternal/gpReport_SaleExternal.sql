@@ -21,6 +21,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , GoodsPropertyName TVarChar
              , AmountSh TFloat
              , AmountKg TFloat
+             , TotalAmountKg TFloat
              , PartKg TFloat
              , TotalSumm_calc TFloat
              , TotalWeight_calc TFloat
@@ -313,9 +314,10 @@ BEGIN
                       , Movement.PartnerRealId
                       , Movement.PartnerRealName
                       , Movement.GoodsPropertyName
-                      , tmpMI.AmountSh   AS AmountSh
-                      , tmpMI.AmountKg   AS AmountKg
-                      , tmpMI.PartKg     AS PartKg
+                      , tmpMI.AmountSh       AS AmountSh
+                      , tmpMI.AmountKg       AS AmountKg
+                      , tmpMI.TotalAmountKg  AS TotalAmountKg
+                      , tmpMI.PartKg         AS PartKg
                  FROM tmpMovementAll AS Movement
                       LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
                       INNER JOIN tmpMI ON tmpMI.MovementId = Movement.Id
@@ -337,6 +339,7 @@ BEGIN
 
            , tmpData.AmountSh   :: TFloat
            , tmpData.AmountKg   :: TFloat
+           , tmpData.TotalAmountKg :: TFloat
            , tmpData.PartKg     :: TFloat
            
            , (COALESCE (tmpReport_rc.SaleReturn_Summ, tmpReport_ret.SaleReturn_Summ)     * tmpData.PartKg/100) :: TFloat AS TotalSumm_calc               -- Расчетная сумма продаж, грн (от факта)

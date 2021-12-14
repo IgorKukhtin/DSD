@@ -14,17 +14,17 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
     Height = 425
     TabOrder = 3
     ExplicitTop = 58
-    ExplicitWidth = 1218
+    ExplicitWidth = 1367
     ExplicitHeight = 425
     ClientRectBottom = 425
     ClientRectRight = 1367
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1218
+      ExplicitWidth = 1367
       ExplicitHeight = 425
       inherited cxGrid: TcxGrid
         Width = 1367
         Height = 425
-        ExplicitWidth = 1218
+        ExplicitWidth = 1367
         ExplicitHeight = 425
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -96,6 +96,11 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Return_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalAmountKg
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -171,6 +176,11 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Return_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalAmountKg
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -270,6 +280,16 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
           object AmountKg: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086', '#1082#1075
             DataBinding.FieldName = 'AmountKg'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object TotalAmountKg: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1050#1086#1083'-'#1074#1086', '#1082#1075' ('#1074#1085#1077#1096#1085#1103#1103' '#1087#1088#1086#1076'.)'
+            DataBinding.FieldName = 'TotalAmountKg'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -428,7 +448,7 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
   inherited Panel: TPanel
     Width = 1367
     Height = 32
-    ExplicitWidth = 1218
+    ExplicitWidth = 1367
     ExplicitHeight = 32
     inherited deStart: TcxDateEdit
       Left = 118
@@ -552,6 +572,7 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
       Caption = #1087#1086' '#1076#1086#1075#1086#1074#1072#1088#1072#1084' ('#1044#1072'/'#1053#1077#1090')'
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     inherited actRefresh: TdsdDataSetRefresh
@@ -680,7 +701,7 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -691,7 +712,7 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -902,7 +923,7 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -910,7 +931,7 @@ inherited Report_SaleExternalForm: TReport_SaleExternalForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

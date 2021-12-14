@@ -35,6 +35,10 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , isAuto Boolean
              , Comment TVarChar
              , PersonalSigningName TVarChar
+             , PersonalCode_Collation Integer
+             , PersonalName_Collation TVarChar
+             , UnitName_Collation TVarChar
+             , BranchName_Collation TVarChar
              , isNPP_calc Boolean, DateisNPP_calc TDateTime
               )
 AS
@@ -175,6 +179,11 @@ BEGIN
 
            , COALESCE (Object_PersonalSigning.PersonalName, COALESCE (ObjectString_PersonalBookkeeper.ValueData, Object_PersonalBookkeeper_View.PersonalName, ''))  ::TVarChar    AS PersonalSigningName
 
+           , Object_PersonalCollation.PersonalCode AS PersonalCode_Collation
+           , Object_PersonalCollation.PersonalName AS PersonalName_Collation
+           , Object_PersonalCollation.UnitName     AS UnitName_Collation
+           , Object_PersonalCollation.BranchName   AS BranchName_Collation
+
            , COALESCE (MovementBoolean_NPP_calc.ValueData, FALSE) ::Boolean AS isNPP_calc
            , COALESCE (MovementDate_NPP_calc.ValueData, Null) :: TDateTime  AS DateisNPP_calc
 
@@ -307,6 +316,11 @@ BEGIN
                                  ON ObjectLink_Contract_PersonalSigning.ObjectId = View_Contract_InvNumber.ContractId
                                 AND ObjectLink_Contract_PersonalSigning.DescId = zc_ObjectLink_Contract_PersonalSigning()
             LEFT JOIN Object_Personal_View AS Object_PersonalSigning ON Object_PersonalSigning.PersonalId = ObjectLink_Contract_PersonalSigning.ChildObjectId   
+
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalCollation
+                                 ON ObjectLink_Contract_PersonalCollation.ObjectId = View_Contract_InvNumber.ContractId
+                                AND ObjectLink_Contract_PersonalCollation.DescId = zc_ObjectLink_Contract_PersonalCollation()
+            LEFT JOIN Object_Personal_View AS Object_PersonalCollation ON Object_PersonalCollation.PersonalId = ObjectLink_Contract_PersonalCollation.ChildObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                            ON MovementLinkMovement_Master.MovementId = Movement.Id

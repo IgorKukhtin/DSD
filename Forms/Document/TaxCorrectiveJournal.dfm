@@ -14,17 +14,17 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Height = 459
     TabOrder = 3
     ExplicitTop = 76
-    ExplicitWidth = 1118
+    ExplicitWidth = 1097
     ExplicitHeight = 459
     ClientRectBottom = 459
     ClientRectRight = 1097
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1118
+      ExplicitWidth = 1097
       ExplicitHeight = 459
       inherited cxGrid: TcxGrid
         Width = 1097
         Height = 459
-        ExplicitWidth = 1118
+        ExplicitWidth = 1097
         ExplicitHeight = 459
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -476,6 +476,39 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             Options.Editing = False
             Width = 80
           end
+          object PersonalCode_Collation: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1089#1086#1090#1088'. '#1089#1074#1077#1088#1082#1072')'
+            DataBinding.FieldName = 'PersonalCode_Collation'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object PersonalName_Collation: TcxGridDBColumn
+            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1074#1077#1088#1082#1072')'
+            DataBinding.FieldName = 'PersonalName_Collation'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object UnitName_Collation: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1089#1086#1090#1088'. '#1089#1074#1077#1088#1082#1072')'
+            DataBinding.FieldName = 'UnitName_Collation'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object BranchName_Collation: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083' ('#1089#1086#1090#1088'. '#1089#1074#1077#1088#1082#1072')'
+            DataBinding.FieldName = 'BranchName_Collation'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
@@ -505,7 +538,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   inherited Panel: TPanel
     Width = 1097
     Height = 50
-    ExplicitWidth = 1118
+    ExplicitWidth = 1097
     ExplicitHeight = 50
     inherited deStart: TcxDateEdit
       EditValue = 42370d
