@@ -10,16 +10,24 @@ RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbStatusId Integer;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_PersonalGroup());
+
+     --получаем текущий статус документа
+     vbStatusId := (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId);
 
      -- ”дал€ем ƒокумент
      PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);
 
      --при распроведении или удалении - в табеле автоматом  удал€етс€ WorkTimeKind 
-     PERFORM gpInsertUpdate_MI_SheetWorkTime_byPersonalGroup(inMovementId, TRUE, inSession);
+     -- если статус Ќ≈ проведен , то данных в табеле уже нет, пропускаем этот шаг, выполн€ем только если проведен
+     IF vbStatusId = zc_Enum_Status_Complete()
+     THEN
+         PERFORM gpInsertUpdate_MI_SheetWorkTime_byPersonalGroup(inMovementId, TRUE, inSession);
+     END IF;
 
 END;
 $BODY$
