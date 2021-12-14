@@ -814,7 +814,7 @@ BEGIN
                                        AND (MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < vbEndDate)
                                        AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt(), zc_Movement_PriceCorrective())  -- взаимозачет убираем, чтоб он не влиял на бонусы
                                        AND (COALESCE (ObjectLink_PersonalServiceList_Branch.ChildObjectId,0) = inBranchId OR inBranchId = 0)
-                                 UNION 
+                                 UNION ALL
                                      SELECT tmpContainer.JuridicalId
                                           , tmpContainer.ContractId_child
                                           , tmpContainer.ContractId_master

@@ -41,8 +41,14 @@ BEGIN
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master_find
                                                ON MovementLinkMovement_Master_find.MovementChildId = MovementLinkMovement_Master.MovementChildId
                                               AND MovementLinkMovement_Master_find.DescId = zc_MovementLinkMovement_Master()
+
+                LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                          ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                         AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+
                 INNER JOIN Movement AS Movement_find ON Movement_find.Id  = COALESCE (MovementLinkMovement_Master_find.MovementId, Movement.Id)
                                                    -- AND Movement_find.StatusId = zc_Enum_Status_Complete()   -- док. предоплаты можно печатать и не проведенные
+                                                    AND (Movement_find.StatusId = zc_Enum_Status_Complete() OR COALESCE (MovementBoolean_isAuto.ValueData, FALSE) = TRUE)
                 LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                        ON MovementDate_DateRegistered.MovementId = Movement.Id
                                       AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
@@ -51,13 +57,14 @@ BEGIN
                                         AND MovementString_InvNumberRegistered.DescId     = zc_MovementString_InvNumberRegistered()
 
                 --zc_Enum_DocumentTaxKind_Prepay() ѕредоплата    -- “ип формировани€ налогового документа
-                LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                /*LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                              ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
                                             AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                         ---MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Prepay()
+                */
 
            WHERE Movement.Id = inMovementId
              AND Movement.DescId = zc_Movement_TaxCorrective()
-             AND (Movement_find.StatusId = zc_Enum_Status_Complete() OR MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Prepay())
           UNION
            SELECT CASE WHEN Movement_Master.OperDate < '01.03.2017' AND MovementDate_DateRegistered.ValueData >= '01.03.2017'
                             THEN Movement_Master.OperDate

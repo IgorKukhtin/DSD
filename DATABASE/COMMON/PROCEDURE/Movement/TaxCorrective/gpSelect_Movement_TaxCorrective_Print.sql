@@ -200,13 +200,19 @@ BEGIN
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                                ON MovementLinkMovement_Master.MovementId = Movement.Id
                                               AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+
+                LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                          ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                         AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+
                 -- печатаем всегда все корректировки дл€ док-нта ¬озврат
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master_find
                                                ON MovementLinkMovement_Master_find.MovementChildId = MovementLinkMovement_Master.MovementChildId
                                               AND MovementLinkMovement_Master_find.DescId = zc_MovementLinkMovement_Master()
                 -- корректировка - дл€ "сводных" она одна
                 INNER JOIN Movement AS Movement_find ON Movement_find.Id       = COALESCE (MovementLinkMovement_Master_find.MovementId, Movement.Id)
-                                                    AND (Movement_find.StatusId = zc_Enum_Status_Complete() OR Movement_find.Id = inMovementId)
+                                                    --AND (Movement_find.StatusId = zc_Enum_Status_Complete() OR Movement_find.Id = inMovementId)
+                                                    AND (Movement_find.StatusId = zc_Enum_Status_Complete() OR COALESCE (MovementBoolean_isAuto.ValueData, FALSE) = TRUE)  --дл€ автосозданных (предоплата) печатать всегда можно
                 LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
                                           ON MovementBoolean_isPartner.MovementId = MovementLinkMovement_Master.MovementChildId
                                          AND MovementBoolean_isPartner.DescId    = zc_MovementBoolean_isPartner()
