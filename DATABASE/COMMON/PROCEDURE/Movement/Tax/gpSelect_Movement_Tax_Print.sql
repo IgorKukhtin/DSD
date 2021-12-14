@@ -824,6 +824,10 @@ order by 4*/
                   WHEN tmpUKTZED.CodeUKTZED <> ''
                        THEN CASE WHEN vbIsLongUKTZED = TRUE THEN tmpUKTZED.CodeUKTZED ELSE SUBSTRING (tmpUKTZED.CodeUKTZED FROM 1 FOR 4) END
 
+                  -- для предоплаты
+                  WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
+                       THEN '1601009900'
+
                   WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101())
                        THEN '1601'
                   WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_21001(), zc_Enum_InfoMoney_30102())

@@ -39,7 +39,42 @@ BEGIN
 
      -- определяем ключ доступа
      IF COALESCE (ioId, 0) = 0
-     THEN vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Tax());
+     THEN IF inContractId > 0  AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
+          THEN -- Для Предоплаты
+               vbAccessKeyId:= CASE COALESCE ((SELECT ObjectLink_Unit_Branch.ChildObjectId
+                                               FROM ObjectLink AS OL
+                                                    INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                                          ON ObjectLink_Personal_Unit.ObjectId = OL.ChildObjectId
+                                                                         AND ObjectLink_Personal_Unit.DescId   = zc_ObjectLink_Personal_Unit()
+                                                    LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                                                         ON ObjectLink_Unit_Branch.ObjectId = ObjectLink_Personal_Unit.ChildObjectId
+                                                                        AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
+
+                                               WHERE OL.ObjectId = inContractId
+                                                 AND OL.DescId   = zc_ObjectLink_Contract_PersonalCollation()
+                                              ), 0)
+                          WHEN 8379 -- филиал Киев
+                               THEN zc_Enum_Process_AccessKey_DocumentKiev()
+                          WHEN 8374     -- филиал Одесса
+                               THEN zc_Enum_Process_AccessKey_DocumentOdessa()
+                          WHEN 8377 -- филиал Кр.Рог
+                               THEN zc_Enum_Process_AccessKey_DocumentKrRog()
+                          WHEN 8373 -- филиал Николаев (Херсон)
+                               THEN zc_Enum_Process_AccessKey_DocumentNikolaev()
+                          WHEN 8381 -- филиал Харьков"
+                               THEN zc_Enum_Process_AccessKey_DocumentKharkov()
+                          WHEN 8375 -- филиал Черкассы
+                               THEN zc_Enum_Process_AccessKey_DocumentCherkassi()
+                          WHEN 301310 -- филиал Запорожье
+                               THEN zc_Enum_Process_AccessKey_DocumentZaporozhye()
+                          WHEN 3080683 -- филиал Львов
+                               THEN zc_Enum_Process_AccessKey_DocumentLviv()
+                          ELSE lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Tax())
+                     END;
+
+          ELSE vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Tax());
+          END IF;
+
      ELSE vbAccessKeyId:= (SELECT Movement.AccessKeyId FROM Movement WHERE Movement.Id = ioId);
      END IF;
 
