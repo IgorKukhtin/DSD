@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpReport_TransportRepair(
     IN inEndDate       TDateTime , --
     IN inUnitId        Integer   , -- подразделение авто
     IN inCarId         Integer   , --
-    IN inIsMovement      Boolean   , --
+    IN inIsMovement    Boolean   , --
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, MovementDescName TVarChar
@@ -16,7 +16,7 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, Movem
              , UnitId Integer, UnitName TVarChar
              , BranchId Integer, BranchName TVarChar
              , PersonalDriverId Integer, PersonalDriverCode Integer, PersonalDriverName TVarChar
-             , Amount TFloat, Price TFloat, Summa TFloat            
+             , Amount TFloat, Price TFloat, Summa TFloat, SummaLoss TFloat, SummaService TFloat
              )
 AS
 $BODY$
@@ -54,8 +54,8 @@ BEGIN
                 )
 
  , tmpContainerLoss AS (SELECT MIContainer.MovementId               AS MovementId
-                             , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount
-                             , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() THEN -1 * MIContainer.Amount ELSE 0 END) AS Summa
+                             , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN -1 * COALESCE (MIContainer.Amount,0) ELSE 0 END) AS Amount
+                             , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() THEN -1 * COALESCE (MIContainer.Amount,0) ELSE 0 END)  AS Summa
                              , ObjectFloat_Price.ValueData          AS Price
                              , MIContainer.WhereObjectId_Analyzer   AS CarId
                              , MIContainer.ObjectIntId_Analyzer     AS UnitId
@@ -90,10 +90,11 @@ BEGIN
                      , tmpMovLoss.CarId
                      , tmpMovLoss.CarCode
                      , tmpMovLoss.CarName
-                     , MovementItem.ObjectId        AS ObjectId
+                     , CASE WHEN inIsMovement = TRUE THEN MovementItem.ObjectId ELSE 0 END     AS ObjectId
+                     --,  MovementItem.ObjectId     AS ObjectId
                      , MILinkObject_Asset.ObjectId  AS AssetId
-                     , tmpContainerLoss.Amount      AS Amount
-                     , CASE WHEN COALESCE (tmpContainerLoss.Price,0) = 0 AND COALESCE (tmpContainerLoss.Amount,0) <> 0 THEN tmpContainerLoss.Summa / tmpContainerLoss.Amount ELSE tmpContainerLoss.Price END AS Price
+                     , COALESCE (tmpContainerLoss.Amount,0)      AS Amount
+                     --, CASE WHEN COALESCE (tmpContainerLoss.Price,0) = 0 AND COALESCE (tmpContainerLoss.Amount,0) <> 0 THEN tmpContainerLoss.Summa / tmpContainerLoss.Amount ELSE tmpContainerLoss.Price END AS Price
                      , tmpContainerLoss.Summa       AS Summa
                 FROM tmpMovLoss
                      INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovLoss.MovementId
@@ -117,9 +118,10 @@ BEGIN
                          , tmpCar.Id         AS CarId
                          , tmpCar.ObjectCode AS CarCode
                          , tmpCar.ValueData  AS CarName
-                         , MILinkObject_InfoMoney.ObjectId AS ObjectId
-                         , MILinkObject_Asset.ObjectId     AS AssetId
-                         , MovementItem.Amount
+                         , CASE WHEN inIsMovement = TRUE THEN MILinkObject_InfoMoney.ObjectId ELSE 0 END AS ObjectId
+                         --, MILinkObject_InfoMoney.ObjectId AS ObjectId
+                         --, MILinkObject_Asset.ObjectId     AS AssetId
+                         , COALESCE (MovementItem.Amount,0) AS Amount
                          , MIFloat_Price.ValueData         AS Price
                          , MIFloat_Count.ValueData         AS Summa
                     FROM Movement
@@ -147,6 +149,7 @@ BEGIN
 
                     WHERE Movement.DescId = zc_Movement_Service()
                       AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                      AND Movement.StatusId = zc_Enum_Status_Complete()
                     )
  
  -- 
@@ -158,14 +161,40 @@ BEGIN
                     , tmp.CarCode
                     , tmp.CarName
                     , tmp.ObjectId
-                    , tmp.AssetId
-                    , SUM (tmp.Amount) AS Amount
-                    , tmp.Price
-                    , SUM (tmp.Summa)  AS Summa
-               FROM (SELECT tmp.*
+                    --, tmp.AssetId
+                    , SUM (COALESCE (tmp.Amount,0))        AS Amount
+                    --, tmp.Price
+                    , SUM (COALESCE (tmp.SummaLoss,0))     AS SummaLoss
+                    , SUM (COALESCE (tmp.SummaService,0))  AS SummaService
+                    , SUM (COALESCE (tmp.SummaLoss,0) + COALESCE (tmp.SummaService,0))  AS Summa
+               FROM (SELECT tmp.MovementId
+                          , tmp.OperDate
+                          , tmp.InvNumber
+                          , tmp.MovementDescId
+                          , tmp.CarId
+                          , tmp.CarCode
+                          , tmp.CarName
+                          , tmp.ObjectId
+                          --, tmp.AssetId
+                          , tmp.Amount AS Amount
+                          --, tmp.Price
+                          , tmp.Summa  AS SummaLoss
+                          , 0          AS SummaService
                      FROM tmpMILos AS tmp
-                    UNION
-                     SELECT tmp.*
+                    UNION ALL
+                     SELECT tmp.MovementId
+                          , tmp.OperDate
+                          , tmp.InvNumber
+                          , tmp.MovementDescId
+                          , tmp.CarId
+                          , tmp.CarCode
+                          , tmp.CarName
+                          , tmp.ObjectId
+                          --, tmp.AssetId
+                          , tmp.Amount AS Amount
+                          --, tmp.Price
+                          , 0          AS SummaLoss
+                          , tmp.Summa  AS SummaService
                      FROM tmpMIService AS tmp
                     ) AS tmp
                GROUP BY tmp.MovementId
@@ -176,8 +205,8 @@ BEGIN
                       , tmp.CarCode
                       , tmp.CarName
                       , tmp.ObjectId
-                      , tmp.AssetId
-                      , tmp.Price
+                      --, tmp.AssetId
+                      --, tmp.Price
                )
 
    --Результат
@@ -203,10 +232,13 @@ BEGIN
         , Object_PersonalDriver.Id         AS PersonalDriverId
         , Object_PersonalDriver.ObjectCode AS PersonalDriverCode
         , Object_PersonalDriver.ValueData  AS PersonalDriverName
-           
+
         , tmpData.Amount ::TFloat
-        , tmpData.Price  ::TFloat
-        , tmpData.Summa  ::TFloat
+        --, tmpData.Price  ::TFloat
+        , CASE WHEN COALESCE (tmpData.Amount,0) <> 0 THEN tmpData.Summa / tmpData.Amount ELSE 0 END ::TFloat AS Price
+        , tmpData.Summa        ::TFloat
+        , tmpData.SummaLoss    ::TFloat
+        , tmpData.SummaService ::TFloat
    FROM tmpData
        LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.MovementDescId
        

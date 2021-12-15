@@ -24,9 +24,6 @@ object Report_TransportRepairForm: TReport_TransportRepairForm
     Height = 303
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 115
-    ExplicitWidth = 1362
-    ExplicitHeight = 280
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -42,6 +39,16 @@ object Report_TransportRepairForm: TReport_TransportRepairForm
           Format = ',0.####'
           Kind = skSum
           Column = Summa
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummaLoss
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummaService
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -58,6 +65,16 @@ object Report_TransportRepairForm: TReport_TransportRepairForm
           Format = #1057#1090#1088#1086#1082': ,0 '
           Kind = skCount
           Column = CarName
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummaLoss
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummaService
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -172,7 +189,7 @@ object Report_TransportRepairForm: TReport_TransportRepairForm
         Width = 90
       end
       object Summa: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085'. '
+        Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072', '#1075#1088#1085'. '
         DataBinding.FieldName = 'Summa'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -181,6 +198,28 @@ object Report_TransportRepairForm: TReport_TransportRepairForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 90
+      end
+      object SummaLoss: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1089#1087#1080#1089#1072#1085#1080#1103', '#1075#1088#1085'. '
+        DataBinding.FieldName = 'SummaLoss'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 103
+      end
+      object SummaService: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1091#1089#1083#1091#1075#1080', '#1075#1088#1085'. '
+        DataBinding.FieldName = 'SummaService'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 99
       end
       object Price: TcxGridDBColumn
         Caption = #1062#1077#1085#1072
@@ -205,7 +244,6 @@ object Report_TransportRepairForm: TReport_TransportRepairForm
     Height = 66
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 1362
     object deStart: TcxDateEdit
       Left = 122
       Top = 7
