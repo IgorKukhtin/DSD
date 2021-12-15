@@ -76,8 +76,8 @@ type
     ceArea: TcxButtonEdit;
     AreaGuides: TdsdGuides;
     cxLabel14: TcxLabel;
-    cePersonalSheetWorkTime: TcxButtonEdit;
-    PersonalSheetWorkTimeGuides: TdsdGuides;
+    cePersonalHead: TcxButtonEdit;
+    GuidesPersonalHead: TdsdGuides;
     cxLabel15: TcxLabel;
     cxLabel16: TcxLabel;
     edAddress: TcxTextEdit;

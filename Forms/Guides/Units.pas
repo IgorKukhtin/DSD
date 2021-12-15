@@ -77,7 +77,7 @@ type
     AreaName: TcxGridDBColumn;
     PartnerCode: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
-    PersonalSheetWorkTimeName: TcxGridDBColumn;
+    PersonalHeadName: TcxGridDBColumn;
     UnitCode_HistoryCost: TcxGridDBColumn;
     UnitName_HistoryCost: TcxGridDBColumn;
     Address: TcxGridDBColumn;

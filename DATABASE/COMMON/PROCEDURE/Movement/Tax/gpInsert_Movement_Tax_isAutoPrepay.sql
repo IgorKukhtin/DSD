@@ -19,33 +19,38 @@ BEGIN
      INSERT INTO tmpReport (JuridicalId, ContractId,  Amount)
        SELECT tmp.JuridicalId
             , 0 AS ContractId--, tmp.ContractId
-            , SUM (CASE WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A >= 0 THEN (-1) * tmp.EndAmount_A
-                        WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A < 0 AND (-1) * tmp.EndAmount_A > (-1) * tmp.StartAmount_A THEN ((-1) * tmp.EndAmount_A - (-1) * tmp.StartAmount_A)
-                        ELSE 0
-                   END) ::TFloat AS Amount
-       FROM gpReport_JuridicalSold(inStartDate              := inStartDate ::TDateTime
-                                 , inEndDate                := inEndDate   ::TDateTime
-                                 , inAccountId              := 0
-                                 , inInfoMoneyId            := zc_Enum_InfoMoney_30101()           --готовая продукция inInfoMoneyId := 8962
-                                 , inInfoMoneyGroupId       := 0
-                                 , inInfoMoneyDestinationId := 0
-                                 , inPaidKindId             := zc_Enum_PaidKind_FirstForm()
-                                 , inBranchId               := 0
-                                 , inJuridicalGroupId       := 0
-                                 , inCurrencyId             := 0
-                                 , inIsPartionMovement      := 'False'
-                                 , inSession                := inSession
-                                   ) AS tmp
+            , (CASE WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A >= 0 THEN (-1) * tmp.EndAmount_A
+                    WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A < 0 AND (-1) * tmp.EndAmount_A > (-1) * tmp.StartAmount_A THEN ((-1) * tmp.EndAmount_A - (-1) * tmp.StartAmount_A)
+                    ELSE 0
+               END) ::TFloat AS Amount
+       FROM (SELECT tmp.JuridicalId
+                  , SUM (COALESCE (tmp.StartAmount_A,0)) AS StartAmount_A
+                  , SUM (COALESCE (tmp.EndAmount_A,0))   AS EndAmount_A
+             FROM gpReport_JuridicalSold(inStartDate              := inStartDate ::TDateTime
+                                       , inEndDate                := inEndDate   ::TDateTime
+                                       , inAccountId              := 0
+                                       , inInfoMoneyId            := zc_Enum_InfoMoney_30101()           --готовая продукция inInfoMoneyId := 8962
+                                       , inInfoMoneyGroupId       := 0
+                                       , inInfoMoneyDestinationId := 0
+                                       , inPaidKindId             := zc_Enum_PaidKind_FirstForm()
+                                       , inBranchId               := 0
+                                       , inJuridicalGroupId       := 0
+                                       , inCurrencyId             := 0
+                                       , inIsPartionMovement      := 'False'
+                                       , inSession                := inSession
+                                         ) AS tmp
+             WHERE tmp.AccountId IN (9128, 9121, 9130, 9136, 9129)
+             GROUP BY tmp.JuridicalId
+             ) AS tmp
        WHERE (tmp.EndAmount_A < 0 AND tmp.StartAmount_A >= 0)
           OR (tmp.EndAmount_A < 0 AND tmp.StartAmount_A < 0 AND (-1) * tmp.EndAmount_A > (-1) * tmp.StartAmount_A)
-          AND tmp.AccountId IN (9128, 9121, 9130, 9136, 9129)
-       GROUP BY tmp.JuridicalId
-              --, tmp.ContractId
+       /*
        HAVING SUM (CASE WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A >= 0 THEN (-1) * tmp.EndAmount_A
                         WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A < 0 AND (-1) * tmp.EndAmount_A > (-1) * tmp.StartAmount_A THEN ((-1) * tmp.EndAmount_A - (-1) * tmp.StartAmount_A)
                         ELSE 0
                    END) > 0.2
-     --  limit 1 -- для теста
+       */
+    -- limit 1 -- для теста
       ; 
 
      --создаем документы НН по предоплате
@@ -70,7 +75,7 @@ BEGIN
     FROM tmpReport
          LEFT JOIN TaxPercent_View ON inEndDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
          LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = zc_Juridical_Basis()
-    WHERE COALESCE (tmpReport.Amount,0) <> 0;
+    WHERE COALESCE (tmpReport.Amount,0) > 0.2;
 
 
 END;

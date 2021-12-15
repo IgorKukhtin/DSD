@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inRouteId                 Integer   , -- Маршрут
     IN inRouteSortingId          Integer   , -- Сортировка маршрутов
     IN inAreaId                  Integer   , -- регион
-    IN inPersonalSheetWorkTimeId Integer   , -- Сотрудник (доступ к табелю р.времени)
+    IN inPersonalHeadId          Integer   , -- Руководитель подразделения
     IN inSheetWorkTimeId         Integer   , -- Режим работы (Шаблон табеля р.вр.)
     IN inAddress                 TVarChar  , -- Адрес
     IN inComment                 TVarChar  , -- Примечание
@@ -43,12 +43,13 @@ BEGIN
    vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_Unit());
    -- !!! IF COALESCE (inCode, 0) = 0  THEN vbCode_calc := NULL; ELSE vbCode_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
 
-
+/*
    -- проверка
    IF inPersonalSheetWorkTimeId > 0
    THEN -- 
         RAISE EXCEPTION 'Ошибка.Нет прав заполнять <Сотрудник (доступ к табелю р.времени)>.';
    END IF;
+*/
 
    -- проверка уникальности <Наименование>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Unit(), inName);
@@ -101,7 +102,7 @@ BEGIN
    -- сохранили связь с <Регион>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Area(), ioId, inAreaId);
    -- сохранили связь с <Сотрудник (доступ к табелю р.времени)>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_PersonalSheetWorkTime(), ioId, inPersonalSheetWorkTimeId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_PersonalHead(), ioId, inPersonalHeadId);
    -- сохранили связь с <Режим работы (Шаблон табеля р.вр.)>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_SheetWorkTime(), ioId, inSheetWorkTimeId);
 
@@ -157,6 +158,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.12.21         * add PersonalHead
+                    dell PersonalSheetWorkTime
  04.10.21         * add inComment
  06.03.17         * add PartionGoodsKind
  16.11.16         * add inSheetWorkTimeId

@@ -241,13 +241,31 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 60
       end
-      object PersonalSheetWorkTimeName: TcxGridDBColumn
-        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1076#1086#1089#1090#1091#1087' '#1082' '#1090#1072#1073#1077#1083#1102' '#1088'.'#1074#1088#1077#1084#1077#1085#1080')'
-        DataBinding.FieldName = 'PersonalSheetWorkTimeName'
+      object PersonalHeadName: TcxGridDBColumn
+        Caption = #1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+        DataBinding.FieldName = 'PersonalHeadName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 120
+      end
+      object UnitName_Head: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1088#1091#1082#1086#1074'.)'
+        DataBinding.FieldName = 'UnitName_Head'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1103')'
+        Options.Editing = False
+        Width = 100
+      end
+      object BranchName_Head: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083' ('#1088#1091#1082#1086#1074'.)'
+        DataBinding.FieldName = 'BranchName_Head'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1060#1080#1083#1080#1072#1083' ('#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1103')'
+        Options.Editing = False
+        Width = 80
       end
       object isPartionGoodsKind: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1080' '#1087#1086' '#1074#1080#1076#1091' '#1091#1087#1072#1082'. '#1076#1083#1103' '#1089#1099#1088#1100#1103

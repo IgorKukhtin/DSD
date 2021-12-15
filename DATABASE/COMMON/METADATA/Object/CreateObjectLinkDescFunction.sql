@@ -527,6 +527,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_PersonalSheetWorkTime() RETURNS In
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Unit_PersonalSheetWorkTime', 'Связь подразделения с Сотрудником(доступ к табелю р.времени)', zc_Object_Unit(), zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_PersonalSheetWorkTime');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_PersonalHead() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_PersonalHead'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Unit_PersonalHead', 'Руководитель подразделения', zc_Object_Unit(), zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_PersonalHead');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_SheetWorkTime() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_SheetWorkTime'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Unit_SheetWorkTime', 'Связь подразделения с Режим работы (Шаблон табеля р.вр.)', zc_Object_Unit(), zc_Object_SheetWorkTime() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_SheetWorkTime');
@@ -2736,6 +2741,7 @@ SELECT 'zc_ObjectLink_SurchargeWages_User', 'Связь с пользователем', zc_Object_S
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 15.12.21         * zc_ObjectLink_Unit_PersonalHead
  25.11.21                                                                                      * zc_ObjectLink_SurchargeWages_...
  03.11.21         * zc_ObjectLink_Contract_Branch                                              * zc_ObjectLink_MedicalProgramSP_GroupMedicalProgramSP
  04.10.21                                                                                      * zc_ObjectLink_BanCommentSend_...

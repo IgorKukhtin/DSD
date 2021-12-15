@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RouteId Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingName TVarChar,
                AreaId Integer, AreaName TVarChar,
-               PersonalSheetWorkTimeId Integer, PersonalSheetWorkTimeName TVarChar,
+               PersonalHeadId Integer, PersonalHeadName TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
                isErased boolean, isLeaf boolean,
                isPartionDate boolean, isPartionGoodsKind boolean,
@@ -74,8 +74,8 @@ BEGIN
            , CAST (0 as Integer)    AS AreaId
            , CAST ('' as TVarChar)  AS AreaName
 
-           , CAST (0 as Integer)    AS PersonalSheetWorkTimeId
-           , CAST ('' as TVarChar)  AS PersonalSheetWorkTimeName
+           , CAST (0 as Integer)    AS PersonalHeadId
+           , CAST ('' as TVarChar)  AS PersonalHeadName
 
            , CAST (0 as Integer)    AS SheetWorkTimeId 
            , CAST ('' as TVarChar)  AS SheetWorkTimeName
@@ -128,8 +128,8 @@ BEGIN
            , Object_Area.Id                 AS AreaId
            , Object_Area.ValueData          AS AreaName
 
-           , Object_PersonalSheetWorkTime.Id        AS PersonalSheetWorkTimeId
-           , Object_PersonalSheetWorkTime.ValueData AS PersonalSheetWorkTimeName
+           , Object_PersonalHead.Id        AS PersonalHeadId
+           , Object_PersonalHead.ValueData AS PersonalHeadName
 
            , Object_SheetWorkTime.Id        AS SheetWorkTimeId 
            , Object_SheetWorkTime.ValueData AS SheetWorkTimeName
@@ -180,10 +180,10 @@ BEGIN
                                 AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_Unit_PersonalSheetWorkTime
-                                 ON ObjectLink_Unit_PersonalSheetWorkTime.ObjectId = NULL -- Object_Unit_View.Id 
-                                AND ObjectLink_Unit_PersonalSheetWorkTime.DescId   = zc_ObjectLink_Unit_PersonalSheetWorkTime()
-            LEFT JOIN Object AS Object_PersonalSheetWorkTime ON Object_PersonalSheetWorkTime.Id = ObjectLink_Unit_PersonalSheetWorkTime.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_PersonalHead
+                                 ON ObjectLink_Unit_PersonalHead.ObjectId = Object_Unit_View.Id 
+                                AND ObjectLink_Unit_PersonalHead.DescId   = zc_ObjectLink_Unit_PersonalHead()
+            LEFT JOIN Object AS Object_PersonalHead ON Object_PersonalHead.Id = ObjectLink_Unit_PersonalHead.ChildObjectId
         
             LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate
                                     ON ObjectBoolean_PartionDate.ObjectId = Object_Unit_View.Id
@@ -208,6 +208,8 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.12.21         * PersonalHead
+                    dell PersonalSheetWorkTime
  04.10.21         * Comment
  06.03.17         * add PartionGoodsKind
  16.11.16         * add SheetWorkTime

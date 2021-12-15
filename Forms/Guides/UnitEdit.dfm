@@ -269,9 +269,9 @@
   object cxLabel14: TcxLabel
     Left = 280
     Top = 291
-    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1090#1072#1073#1077#1083#1100' '#1088'.'#1074#1088#1077#1084#1077#1085#1080')'
+    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1100' '#1087#1086#1076#1088'.)'
   end
-  object cePersonalSheetWorkTime: TcxButtonEdit
+  object cePersonalHead: TcxButtonEdit
     Left = 280
     Top = 312
     Properties.Buttons = <
@@ -496,9 +496,9 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalSheetWorkTimeId'
+        Name = 'inPersonalHeadId'
         Value = Null
-        Component = PersonalSheetWorkTimeGuides
+        Component = GuidesPersonalHead
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -734,16 +734,16 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PersonalSheetWorkTimeId'
+        Name = 'PersonalHeadId'
         Value = Null
-        Component = PersonalSheetWorkTimeGuides
+        Component = GuidesPersonalHead
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PersonalSheetWorkTimeName'
+        Name = 'PersonalHeadName'
         Value = Null
-        Component = PersonalSheetWorkTimeGuides
+        Component = GuidesPersonalHead
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1186,9 +1186,9 @@
     Left = 336
     Top = 216
   end
-  object PersonalSheetWorkTimeGuides: TdsdGuides
+  object GuidesPersonalHead: TdsdGuides
     KeyField = 'Id'
-    LookupControl = cePersonalSheetWorkTime
+    LookupControl = cePersonalHead
     FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1198,7 +1198,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = PersonalSheetWorkTimeGuides
+        Component = GuidesPersonalHead
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1207,13 +1207,13 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = PersonalSheetWorkTimeGuides
+        Component = GuidesPersonalHead
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 303
+    Left = 367
     Top = 295
   end
   object SheetWorkTimeGuides: TdsdGuides

@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RouteId Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingName TVarChar,
                AreaId Integer, AreaName TVarChar,
-               PersonalSheetWorkTimeId Integer, PersonalSheetWorkTimeName TVarChar,
+               PersonalHeadId Integer, PersonalHeadCode Integer, PersonalHeadName TVarChar, UnitName_Head TVarChar, BranchName_Head TVarChar,
                PartnerCode Integer, PartnerName TVarChar,
                UnitId_HistoryCost Integer, UnitCode_HistoryCost Integer, UnitName_HistoryCost TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
@@ -128,9 +128,12 @@ BEGIN
            , Object_Area.Id                 AS AreaId
            , Object_Area.ValueData          AS AreaName
 
-           , Object_PersonalSheetWorkTime.Id            AS PersonalSheetWorkTimeId
-           , Object_PersonalSheetWorkTime.ValueData     AS PersonalSheetWorkTimeName
-         
+           , Object_PersonalHead.PersonalId    AS PersonalHeadId
+           , Object_PersonalHead.PersonalCode  AS PersonalHeadCode
+           , Object_PersonalHead.PersonalName  AS PersonalHeadName
+           , Object_PersonalHead.UnitName      AS UnitName_Head
+           , Object_PersonalHead.BranchName    AS BranchName_Head
+
            , 0 :: Integer                          AS PartnerCode
            , tmpPartner_Unit.PartnerName           AS PartnerName
 
@@ -188,10 +191,10 @@ BEGIN
                                 AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_Unit_PersonalSheetWorkTime
-                                 ON ObjectLink_Unit_PersonalSheetWorkTime.ObjectId = NULL -- Object_Unit_View.Id 
-                                AND ObjectLink_Unit_PersonalSheetWorkTime.DescId   = zc_ObjectLink_Unit_PersonalSheetWorkTime()
-            LEFT JOIN Object AS Object_PersonalSheetWorkTime ON Object_PersonalSheetWorkTime.Id = ObjectLink_Unit_PersonalSheetWorkTime.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_PersonalHead
+                                 ON ObjectLink_Unit_PersonalHead.ObjectId = Object_Unit_View.Id 
+                                AND ObjectLink_Unit_PersonalHead.DescId   = zc_ObjectLink_Unit_PersonalHead()
+            LEFT JOIN Object_Personal_View AS Object_PersonalHead ON Object_PersonalHead.PersonalId = ObjectLink_Unit_PersonalHead.ChildObjectId
         
             LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate
                                     ON ObjectBoolean_PartionDate.ObjectId = Object_Unit_View.Id
@@ -267,9 +270,12 @@ BEGIN
            , CAST (0 as Integer)    AS AreaId
            , CAST ('' as TVarChar)  AS AreaName
 
-           , CAST (0 as Integer)    AS PersonalSheetWorkTimeId
-           , CAST ('' as TVarChar)  AS PersonalSheetWorkTimeName
-
+           , CAST (0 as Integer)    AS PersonalHeadId
+           , CAST (0 as Integer)    AS PersonalHeadCode
+           , CAST ('' as TVarChar)  AS PersonalHeadName
+           , CAST ('' as TVarChar)  AS UnitName_Head
+           , CAST ('' as TVarChar)  AS BranchName_Head
+           
            , CAST (0 as Integer)    AS PartnerCode
            , CAST ('' as TVarChar)  AS PartnerName
 
@@ -340,8 +346,11 @@ BEGIN
            , CAST (0 as Integer)    AS AreaId
            , CAST ('' as TVarChar)  AS AreaName
 
-           , CAST (0 as Integer)    AS PersonalSheetWorkTimeId
-           , CAST ('' as TVarChar)  AS PersonalSheetWorkTimeName
+           , CAST (0 as Integer)    AS PersonalHeadId
+           , CAST (0 as Integer)    AS PersonalHeadCode
+           , CAST ('' as TVarChar)  AS PersonalHeadName
+           , CAST ('' as TVarChar)  AS UnitName_Head
+           , CAST ('' as TVarChar)  AS BranchName_Head
 
            , CAST (0 as Integer)    AS PartnerCode
            , CAST ('' as TVarChar)  AS PartnerName
@@ -370,6 +379,8 @@ ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.12.21         * add PersonalHead
+                    del PersonalSheetWorkTime
  04.10.21         * Comment
  05.04.19         * UnitId_HistoryCost
  06.03.17         * add isPartionGoodsKind
