@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, MemberId Integer
              , PositionId Integer, PositionName TVarChar
              , PositionLevelId Integer, PositionLevelName TVarChar
              , PersonalGroupId Integer, PersonalGroupName TVarChar
+             , WorkTimeKindId Integer, WorkTimeKindName TVarChar
              , UnitName_inf TVarChar, PositionName_inf TVarChar
              , Amount TFloat
              , isErased Boolean
@@ -55,6 +56,9 @@ BEGIN
             , Object_PositionLevel.ValueData AS PositionLevelName
             , Object_PersonalGroup.Id        AS PersonalGroupId
             , Object_PersonalGroup.ValueData AS PersonalGroupName
+            
+            , Object_WorkTimeKind.Id         AS WorkTimeKindId
+            , Object_WorkTimeKind.ValueData  AS WorkTimeKindName
 
             , View_Personal.UnitName         AS UnitName_inf
             , View_Personal.PositionName     AS PositionName_inf
@@ -80,6 +84,11 @@ BEGIN
                                  ON ObjectLink_Personal_PersonalGroup.ObjectId = View_Personal.PersonalId
                                 AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
             LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_WorkTimeKind
+                                             ON MILinkObject_WorkTimeKind.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
+            LEFT JOIN Object AS Object_WorkTimeKind ON Object_WorkTimeKind.Id = MILinkObject_WorkTimeKind.ObjectId
       ;
 
 END;
@@ -93,4 +102,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpSelect_MovementItem_PersonalRate (inMovementId:= 14521952, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_PersonalGroup (inMovementId:= 14521952, inIsErased:= TRUE, inSession:= '2')

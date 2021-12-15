@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_PersonalGroup()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalGroup (Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalGroup (Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalGroup (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalGroup(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -8,10 +9,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalGroup(
     IN inPersonalId            Integer   , -- Сотрудники
     IN inPositionId            Integer   , --
     IN inPositionLevelId       Integer   , --
-    IN inAmount                TFloat    , -- 
+    IN inWorkTimeKindId        Integer   , --
+ INOUT ioAmount                TFloat    , -- 
     IN inSession               TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAmount TFloat;
@@ -69,25 +71,31 @@ BEGIN
                        ) AS tmp
                        );
 
-
-     --проверка   можно менять inAmount но не больше чем Дневной план на человека из штатного расписания
+     --переопределяем кол-во часов если больничный или 
+     IF inWorkTimeKindId IN (zc_Enum_WorkTimeKind_HospitalDoc(), zc_Enum_WorkTimeKind_HolidayNoZp(), zc_Enum_WorkTimeKind_WorkDayOff()
+                            ,zc_Enum_WorkTimeKind_DayOff(), zc_Enum_WorkTimeKind_Skip())
+     THEN
+         ioAmount := 0;
+     END IF;
+     
+     --проверка   можно менять ioAmount но не больше чем Дневной план на человека из штатного расписания
      IF COALESCE (ioId,0) <> 0
      THEN
          vbAmount := (SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = ioId);
-         IF COALESCE (inAmount,0) > COALESCE (vbHoursDay,0) AND COALESCE (vbHoursDay,0) <> 0
+         IF COALESCE (ioAmount,0) > COALESCE (vbHoursDay,0) AND COALESCE (vbHoursDay,0) <> 0
          THEN
              RAISE EXCEPTION 'Ошибка.Дневной план не может превышать <%>', vbHoursDay;
          END IF;
      END IF;
 
-
      -- сохранили
-     ioId := lpInsertUpdate_MovementItem_PersonalGroup (ioId             := ioId
+     ioId := lpInsertUpdate_MovementItem_PersonalGroup (ioId              := ioId
                                                       , inMovementId      := inMovementId
                                                       , inPersonalId      := inPersonalId
                                                       , inPositionId      := inPositionId
                                                       , inPositionLevelId := inPositionLevelId
-                                                      , inAmount          := inAmount
+                                                      , inWorkTimeKindId  := inWorkTimeKindId
+                                                      , inAmount          := ioAmount
                                                       , inUserId          := vbUserId
                                                        ) AS tmp;
 
@@ -98,6 +106,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.12.21         *
  09.12.21         *
  22.11.21         *
 */

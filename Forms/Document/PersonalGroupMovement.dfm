@@ -132,7 +132,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 275
+            Width = 277
           end
           object PositionName: TcxGridDBColumn [2]
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
@@ -147,7 +147,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 233
+            Width = 213
           end
           object PositionLevelName: TcxGridDBColumn [3]
             Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
@@ -155,7 +155,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 163
+            Width = 106
           end
           object PersonalGroupName: TcxGridDBColumn [4]
             Caption = #8470' '#1073#1088#1080#1075#1072#1076#1099
@@ -165,7 +165,23 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
             Options.Editing = False
             Width = 80
           end
-          object Amount: TcxGridDBColumn [5]
+          object WorkTimeKindName: TcxGridDBColumn [5]
+            Caption = #1058#1080#1087' '#1088#1072#1073'. '#1074#1088#1077#1084#1077#1085#1080
+            DataBinding.FieldName = 'WorkTimeKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actWorkTimeKindChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1080#1087' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
+            Width = 83
+          end
+          object Amount: TcxGridDBColumn [6]
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1095#1072#1089#1086#1074
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -174,7 +190,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object UnitName_inf: TcxGridDBColumn [6]
+          object UnitName_inf: TcxGridDBColumn [7]
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'UnitName_inf'
             Visible = False
@@ -184,7 +200,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
             Options.Editing = False
             Width = 92
           end
-          object PositionName_inf: TcxGridDBColumn [7]
+          object PositionName_inf: TcxGridDBColumn [8]
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'PositionName_inf'
             Visible = False
@@ -480,6 +496,33 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
+    end
+    object actWorkTimeKindChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Partner_ObjectForm'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'WorkTimeKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'WorkTimeKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object actPositionChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -1135,12 +1178,20 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
+        Name = 'inWorkTimeKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WorkTimeKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAmount'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     Left = 160

@@ -42,9 +42,11 @@ BEGIN
                           , MILinkObject_Position.ObjectId            AS PositionId
                           , MILinkObject_PositionLevel.ObjectId       AS PositionLevelId
                           , ObjectLink_Personal_StorageLine.ChildObjectId AS StorageLineId
-                          , CASE WHEN MovementLinkObject_PairDay.ObjectId = 7438171 THEN zc_Enum_WorkTimeKind_WorkN() -- ночь
-                                 ELSE zc_Enum_WorkTimeKind_WorkD()--день
-                            END AS WorkTimeKindId
+                             /*, CASE WHEN MovementLinkObject_PairDay.ObjectId = 7438171 THEN zc_Enum_WorkTimeKind_WorkN() -- ночь
+                                    ELSE zc_Enum_WorkTimeKind_WorkD()--день
+                               END AS WorkTimeKindId
+                             */
+                          , MILinkObject_WorkTimeKind.ObjectId        AS WorkTimeKindId
                           , CASE WHEN inisDel = FALSE THEN MovementItem.Amount ELSE 0 END AS Amount
                      FROM Movement
                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -70,6 +72,10 @@ BEGIN
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_PositionLevel
                                                            ON MILinkObject_PositionLevel.MovementItemId = MovementItem.Id
                                                           AND MILinkObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
+
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_WorkTimeKind
+                                                           ON MILinkObject_WorkTimeKind.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
 
                           LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                                ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId

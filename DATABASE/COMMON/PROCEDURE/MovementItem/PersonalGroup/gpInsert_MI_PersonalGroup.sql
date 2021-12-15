@@ -11,6 +11,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbPersonalGroupId Integer;
+   DECLARE vbPairDayId Integer;
    DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -24,12 +25,18 @@ BEGIN
      --данные из шапки документа
      SELECT MovementLinkObject_Unit.ObjectId          AS UnitId
           , MovementLinkObject_PersonalGroup.ObjectId AS PersonalGroupId
+          , MovementLinkObject_PairDay.ObjectId       AS PairDayId
           , Movement.OperDate                         AS OperDate
-    INTO vbUnitId, vbPersonalGroupId, vbOperDate
+    INTO vbUnitId, vbPersonalGroupId, vbPairDayId, vbOperDate
      FROM MovementLinkObject AS MovementLinkObject_Unit
           LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalGroup
                                        ON MovementLinkObject_PersonalGroup.MovementId = MovementLinkObject_Unit.MovementId
                                       AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_PairDay
+                                       ON MovementLinkObject_PairDay.MovementId = MovementLinkObject_Unit.MovementId
+                                      AND MovementLinkObject_PairDay.DescId = zc_MovementLinkObject_PairDay()
+
           LEFT JOIN Movement ON Movement.Id = inMovementId
      WHERE MovementLinkObject_Unit.MovementId = inMovementId
        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit();
@@ -41,6 +48,9 @@ BEGIN
                                                       , inPersonalId      := tmp.PersonalId
                                                       , inPositionId      := tmp.PositionId
                                                       , inPositionLevelId := tmp.PositionLevelId
+                                                      , inWorkTimeKindId  := CASE WHEN vbPairDayId = 7438171 THEN zc_Enum_WorkTimeKind_WorkN() -- ночь
+                                                                                  ELSE zc_Enum_WorkTimeKind_WorkD()--день
+                                                                             END
                                                       , inAmount          := tmp.HoursDay
                                                       , inUserId          := vbUserId
                                                       ) 

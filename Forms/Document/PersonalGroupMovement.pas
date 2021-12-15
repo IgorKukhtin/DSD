@@ -65,6 +65,8 @@ type
     actRefreshMI: TdsdDataSetRefresh;
     PersonalGroupName: TcxGridDBColumn;
     GuidesPairDay: TdsdGuides;
+    actWorkTimeKindChoiceForm: TOpenChoiceForm;
+    WorkTimeKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
