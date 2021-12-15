@@ -273,7 +273,7 @@ BEGIN
                     WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_60301 = TRUE -- Прибыль будущих периодов + Бонусы от поставщиков
                          THEN _tmpItem.ObjectId -- из предыдущей проводки
 
-                    WHEN MILinkObject_Asset.ObjectId > 0
+                    WHEN MILinkObject_Asset.ObjectId > 0 AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
                          THEN _tmpItem.ObjectId -- дублируем УП, попадет в ОС
 
                     WHEN vbIsChild = TRUE
@@ -289,7 +289,7 @@ BEGIN
                     WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_60301 = TRUE -- Прибыль будущих периодов + Бонусы от поставщиков
                          THEN _tmpItem.ObjectDescId -- из предыдущей проводки
 
-                    WHEN MILinkObject_Asset.ObjectId > 0
+                    WHEN MILinkObject_Asset.ObjectId > 0 AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
                          THEN zc_Object_InfoMoney() -- дублируем УП, попадет в ОС
 
                     WHEN vbIsChild = TRUE
@@ -312,7 +312,7 @@ BEGIN
 
              , 0 AS ContainerId    -- сформируем позже
              , 0 AS AccountGroupId -- сформируем позже, или ...
-             , CASE WHEN MILinkObject_Asset.ObjectId > 0
+             , CASE WHEN MILinkObject_Asset.ObjectId > 0 AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
                          THEN -- определяется сразу здесь
                               COALESCE ((SELECT tmp.AccountDirectionId FROM lfGet_Object_Unit_byAccountDirection_Asset (_tmpItem.UnitId) AS tmp), 0)
                     ELSE 0 -- сформируем позже, или ...
@@ -363,7 +363,11 @@ BEGIN
 
              , 0 AS PartionMovementId                               -- не используется
              , 0 AS PartionGoodsId                                  -- сформируем позже, надо для Партии услуг (т.е. НЕ списываем в ОПиУ)
-             , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId -- надо для Партии услуг (т.е. НЕ списываем в ОПиУ)
+
+             , CASE WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                         THEN COALESCE (MILinkObject_Asset.ObjectId, 0) -- надо для Партии услуг (т.е. НЕ списываем в ОПиУ)
+                    ELSE 0
+               END AS AssetId
 
              , 0 AS AnalyzerId -- заполнено !!!только!!! для первой
              , 0 AS ObjectIntId_Analyzer
@@ -458,6 +462,7 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                               ON MILinkObject_Asset.MovementItemId = _tmpItem.MovementItemId
                                              AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                                             AND _tmpItem.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_70000()
 
         WHERE ObjectLink_Unit_Contract.ChildObjectId > 0 -- !!!если перевыставление!!!
           AND MILinkObject_Asset.ObjectId IS NULL        -- !!!если НЕ ОС!!!

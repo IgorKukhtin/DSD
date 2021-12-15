@@ -606,7 +606,7 @@ BEGIN
                        , Object_ContractKind.ValueData   AS ContractKindName
                        , ObjectDate_Signing.ValueData    AS ContractSigningDate
                        , COALESCE (ObjectString_PartnerCode.ValueData, '') :: TVarChar AS PartnerCode
-                       , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId             --уп.статья из договора
+                       , COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, 0) AS InfoMoneyId             --уп.статья из договора
                   FROM MovementLinkObject AS MovementLinkObject_Contract
                        LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
@@ -658,7 +658,9 @@ BEGIN
                                                        AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
                         INNER JOIN Movement AS Movement_child
                                             ON Movement_child.Id = MovementLinkMovement_Child.MovementChildId
-                                           AND Movement_child.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                           AND (Movement_child.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                                             OR vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
+                                               )
 
                         LEFT JOIN MovementDate AS MovementDate_DateRegistered_Child
                                                ON MovementDate_DateRegistered_Child.MovementId = Movement_child.Id
@@ -2204,7 +2206,9 @@ BEGIN
                                                ON MovementLinkMovement_Master_find.MovementChildId = MovementLinkMovement_Master.MovementChildId
                                               AND MovementLinkMovement_Master_find.DescId = zc_MovementLinkMovement_Master()
                 INNER JOIN Movement AS Movement_find ON Movement_find.Id  = COALESCE (MovementLinkMovement_Master_find.MovementId, Movement.Id)
-                                                    AND Movement_find.StatusId IN (zc_Enum_Status_Complete())
+                                                    AND (Movement_find.StatusId IN (zc_Enum_Status_Complete())
+                                                      OR vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
+                                                        )
            WHERE Movement.Id     = inMovementId
              AND Movement.DescId = zc_Movement_TaxCorrective()
           UNION
@@ -2216,7 +2220,9 @@ BEGIN
                                                 ON MovementLinkMovement_Master.MovementChildId = Movement.Id
                                                AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
                 INNER JOIN Movement AS Movement_Master ON Movement_Master.Id  = MovementLinkMovement_Master.MovementId
-                                                      AND Movement_Master.StatusId = zc_Enum_Status_Complete()
+                                                      AND (Movement_Master.StatusId = zc_Enum_Status_Complete()
+                                                        OR vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
+                                                          )
            WHERE Movement.Id     = inMovementId
              AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
           )

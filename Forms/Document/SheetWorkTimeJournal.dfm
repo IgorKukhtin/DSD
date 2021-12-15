@@ -684,10 +684,16 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
     object actPUSHMessage: TdsdShowPUSHMessage
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spPUSHMessage
+      StoredProc = spPUSHMessage_1
       StoredProcList = <
         item
-          StoredProc = spPUSHMessage
+          StoredProc = spPUSHMessage_1
+        end
+        item
+          StoredProc = spPUSHMessage_2
+        end
+        item
+          StoredProc = spPUSHMessage_3
         end>
       Caption = 'actPUSHMessage'
       PUSHMessageType = pmtInformation
@@ -940,11 +946,17 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
     Left = 416
     Top = 328
   end
-  object spPUSHMessage: TdsdStoredProc
+  object spPUSHMessage_1: TdsdStoredProc
     StoredProcName = 'gpGet_SheetWorkTime_ShowPUSH'
     DataSets = <>
     OutputType = otResult
     Params = <
+      item
+        Name = 'inNumber'
+        Value = 1
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'outShowMessage'
         Value = Null
@@ -963,7 +975,71 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 125
-    Top = 301
+    Left = 109
+    Top = 237
+  end
+  object spPUSHMessage_2: TdsdStoredProc
+    StoredProcName = 'gpGet_SheetWorkTime_ShowPUSH'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inNumber'
+        Value = 2
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 109
+    Top = 277
+  end
+  object spPUSHMessage_3: TdsdStoredProc
+    StoredProcName = 'gpGet_SheetWorkTime_ShowPUSH'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inNumber'
+        Value = 3
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 109
+    Top = 317
   end
 end

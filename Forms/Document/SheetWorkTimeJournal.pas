@@ -79,8 +79,10 @@ type
     MovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocolOpenForm: TdxBarButton;
     MovementProtocolOpenForm1: TdsdOpenForm;
-    spPUSHMessage: TdsdStoredProc;
+    spPUSHMessage_1: TdsdStoredProc;
     actPUSHMessage: TdsdShowPUSHMessage;
+    spPUSHMessage_2: TdsdStoredProc;
+    spPUSHMessage_3: TdsdStoredProc;
   private
   public
   end;

@@ -49,10 +49,10 @@ BEGIN
    --выбираем все юр.лица и договора
   , tmpJuridical AS (SELECT tmpJuridical.JuridicalId
                           , ObjectLink_Contract_Juridical.ObjectId AS ContractId
-                          , tmpJuridical.isPost
+                          , tmpJuridical.isIncome
                      FROM
                          (SELECT Object_Juridical.Id AS JuridicalId
-                               , CASE WHEN tmpPost.JuridicalId IS NULL THEN FALSE ELSE TRUE END AS isPost -- поставщики
+                               , CASE WHEN tmpPost.JuridicalId IS NULL THEN FALSE ELSE TRUE END AS isIncome -- поставщики
                           FROM Object AS Object_Juridical
                                LEFT JOIN tmpPost ON tmpPost.JuridicalId = Object_Juridical.Id
                           WHERE Object_Juridical.DescId = zc_Object_Juridical()
@@ -85,7 +85,7 @@ BEGIN
                                    , CLO_Juridical.ObjectId AS JuridicalId
                                    , CLO_Contract.ObjectId  AS ContractId
                                    --, Container.ObjectId     AS AccountId
-                                   , CASE WHEN tmpJuridical.isPost = FALSE THEN (-1 * MIContainer.Amount) ELSE MIContainer.Amount END AS Amount 
+                                   , CASE WHEN tmpJuridical.isIncome = FALSE THEN (-1 * MIContainer.Amount) ELSE MIContainer.Amount END AS Amount 
                                    , MAX (MIContainer.OperDate) OVER (PARTITION BY CLO_Juridical.ObjectId, CLO_Contract.ObjectId) AS OperDate_max
                               FROM ContainerLinkObject AS CLO_Juridical
                                    INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
@@ -94,7 +94,7 @@ BEGIN
                                                                   ON CLO_Contract.ContainerId = Container.Id
                                                                  AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
                        
-                                   INNER JOIN (SELECT DISTINCT tmpJuridical.JuridicalId, tmpJuridical.ContractId, tmpJuridical.isPost
+                                   INNER JOIN (SELECT DISTINCT tmpJuridical.JuridicalId, tmpJuridical.ContractId, tmpJuridical.isIncome
                                                FROM tmpJuridical) AS tmpJuridical 
                                                                ON tmpJuridical.JuridicalId = CLO_Juridical.ObjectId
                                                               AND tmpJuridical.ContractId = CLO_Contract.ObjectId 

@@ -172,7 +172,7 @@ order by 4*/
           
           , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)    AS isLongUKTZED
           
-          , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId             --уп.статья из договора
+          , COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, 0) AS InfoMoneyId -- уп.статья из договора
 
 
           , ObjectString_Goods.ValueData        :: TVarChar AS Goods_DocumentTaxKind
@@ -264,7 +264,7 @@ order by 4*/
      ;
 
      -- очень важная проверка
-     IF COALESCE (vbMovementId_Tax, 0) = 0 OR COALESCE (vbStatusId_Tax, 0) <> zc_Enum_Status_Complete()
+     IF COALESCE (vbMovementId_Tax, 0) = 0 OR (COALESCE (vbStatusId_Tax, 0) <> zc_Enum_Status_Complete() AND vbDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Prepay())
      THEN
          IF COALESCE (vbMovementId_Tax, 0) = 0
          THEN
@@ -682,7 +682,7 @@ order by 4*/
                                     ON ObjectBoolean_Vat.ObjectId = View_Contract.ContractId
                                    AND ObjectBoolean_Vat.DescId = zc_ObjectBoolean_Contract_Vat()
        WHERE Movement.Id =  vbMovementId_Tax
-         AND Movement.StatusId = zc_Enum_Status_Complete()
+         AND (Movement.StatusId = zc_Enum_Status_Complete() OR vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay())
       ;
      RETURN NEXT Cursor1;
 

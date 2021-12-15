@@ -36,6 +36,7 @@ BEGIN
      END IF;
      -- проверка
      IF COALESCE (inContractId, 0) = 0 -- AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+        AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлен договор.';
      END IF;

@@ -38,14 +38,14 @@ BEGIN
                                   AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                                   AND 1=0
                                )
-                                  
+
                                , 8451 );   -- по умолчанию цех упаковки
 
          RETURN QUERY
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('movement_PersonalGroup_seq') AS TVarChar) AS InvNumber
-             , CURRENT_DATE				AS OperDate
+             , CURRENT_DATE :: TDateTime                AS OperDate
              , Object_Status.Code                       AS StatusCode
              , Object_Status.Name                       AS StatusName
              , Object_Unit.Id                           AS UnitId
@@ -63,7 +63,7 @@ BEGIN
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = vbUnitId
          ;
-         
+
      ELSE
 
      RETURN QUERY

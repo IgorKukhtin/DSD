@@ -17,12 +17,13 @@ BEGIN
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();
 
+     -- сначала автоматом проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind - при распроведении или удалении - в табеле удаляется WorkTimeKind
+     PERFORM gpInsertUpdate_MI_SheetWorkTime_byPersonalGroup(inMovementId, FALSE, inSession);
+
      -- проводим Документ + сохранили протокол
      PERFORM lpComplete_Movement_PersonalGroup (inMovementId := inMovementId
                                               , inUserId     := vbUserId
                                              );
-     --автоматом проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind - при распроведении или удалении - в табеле удаляется WorkTimeKind
-     PERFORM gpInsertUpdate_MI_SheetWorkTime_byPersonalGroup(inMovementId, FALSE, inSession);
 
 END;
 $BODY$

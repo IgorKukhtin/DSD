@@ -33,12 +33,17 @@ BEGIN
 
      -- проверка
      IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+        AND inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Prepay()
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор>.';
      END IF;
 
      -- определяем ключ доступа
      IF COALESCE (ioId, 0) = 0
+        OR (inContractId > 0
+        AND inContractId <> COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_Contract()), 0)
+        AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
+           )
      THEN IF inContractId > 0  AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
           THEN -- Для Предоплаты
                vbAccessKeyId:= CASE COALESCE ((SELECT ObjectLink_Unit_Branch.ChildObjectId

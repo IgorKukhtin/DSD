@@ -164,7 +164,33 @@ BEGIN
         END IF;
     END IF;
 
-   --проверка если за этот день найден отпуск, выдавать сообщение при попытке исправить
+   -- проверка если за этот день найден Документ Список бригады, выдавать сообщение при попытке исправить
+   IF EXISTS (SELECT 1
+              FROM Movement AS Movement_PersonalGroup
+                   INNER JOIN MovementLinkObject AS MLO_Unit
+                                                 ON MLO_Unit.MovementId = Movement_PersonalGroup.Id
+                                                AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
+                                                AND MLO_Unit.ObjectId   = inUnitId
+                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement_PersonalGroup.Id
+                                          AND MovementItem.DescId     = zc_MI_Master()
+                                          AND MovementItem.isErased   = FALSE
+                   INNER JOIN Object_Personal_View ON Object_Personal_View.PersonalId = MovementItem.ObjectId
+                                                  AND Object_Personal_View.MemberId   = inMemberId
+               WHERE Movement_PersonalGroup.OperDate = inOperDate
+                 AND Movement_PersonalGroup.DescId   = zc_Movement_PersonalGroup()
+                 AND Movement_PersonalGroup.StatusId = zc_Enum_Status_Complete()
+               )
+    THEN
+        RAISE EXCEPTION 'Ошибка.У сотрудника <%> <%>  <%> на <%> сформированы данные в документе <Список бригады>.%Корректировка невозможна.'
+                               , lfGet_Object_ValueData_sh (inMemberId)
+                               , lfGet_Object_ValueData_sh (inPositionId)
+                               , lfGet_Object_ValueData_sh (inUnitId)
+                               , zfConvert_DateToString(inOperDate)
+                               , CHR (13)
+                                ;
+    END IF;
+
+   -- проверка если за этот день найден отпуск, выдавать сообщение при попытке исправить
    IF EXISTS (SELECT 1
                FROM MovementLinkObject AS MovementLinkObject_Member
                     INNER JOIN Movement AS Movement_MemberHoliday 
@@ -193,7 +219,7 @@ BEGIN
                                 ;
     END IF;
 
-   --проверка если за этот день найден отпуск, выдавать сообщение при попытке исправить
+   -- проверка если за этот день найден отпуск, выдавать сообщение при попытке исправить
    IF ioTypeId IN (zc_Enum_WorkTimeKind_Holiday(), zc_Enum_WorkTimeKind_HolidayNoZp())
       AND vbIsCheck = TRUE
    THEN
