@@ -14,7 +14,7 @@ uses
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, dxBarBuiltInMenu, cxNavigator, cxImageComboBox,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxMemo, cxCheckComboBox, Document;
+  cxMemo, cxCheckComboBox, Document, dsdInternetAction;
 
 type
   TPretensionForm = class(TAncestorDocumentForm)
@@ -131,6 +131,13 @@ type
     bbOpenReturnOut: TdxBarButton;
     spGet_ReturnOutId: TdsdStoredProc;
     actGet_ReturnOutId: TdsdExecStoredProc;
+    mactSMTPSend: TMultiAction;
+    bbSMTPSend: TdxBarButton;
+    mactGetAllFileFTP: TMultiAction;
+    actGetFileFTP: TdsdFTP;
+    spGetDocumentDataForEmail: TdsdStoredProc;
+    actGetDocumentDataForEmail: TdsdExecStoredProc;
+    actSMTPMultipleFile: TdsdSMTPMultipleFileAction;
   private
     { Private declarations }
   public

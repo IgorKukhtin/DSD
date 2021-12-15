@@ -1328,6 +1328,142 @@ inherited PretensionForm: TPretensionForm
       Caption = 'actGet_ReturnOutId'
       Hint = 'actGet_ReturnOutId'
     end
+    object actGetFileFTP: TdsdFTP
+      Category = 'DSDLib'
+      MoveParams = <>
+      HostParam.Value = Null
+      HostParam.Component = FormParams
+      HostParam.ComponentItem = 'FtpHost'
+      HostParam.DataType = ftString
+      HostParam.MultiSelectSeparator = ','
+      PortParam.Value = Null
+      PortParam.Component = FormParams
+      PortParam.ComponentItem = 'FtpPort'
+      PortParam.MultiSelectSeparator = ','
+      UsernameParam.Value = Null
+      UsernameParam.Component = FormParams
+      UsernameParam.ComponentItem = 'FtpUsername'
+      UsernameParam.DataType = ftString
+      UsernameParam.MultiSelectSeparator = ','
+      PasswordParam.Value = Null
+      PasswordParam.Component = FormParams
+      PasswordParam.ComponentItem = 'FtpPassword'
+      PasswordParam.DataType = ftString
+      PasswordParam.MultiSelectSeparator = ','
+      DirParam.Value = Null
+      DirParam.Component = FormParams
+      DirParam.ComponentItem = 'FtpDir'
+      DirParam.DataType = ftString
+      DirParam.MultiSelectSeparator = ','
+      FullFileNameParam.Value = Null
+      FullFileNameParam.Component = FileCDS
+      FullFileNameParam.ComponentItem = 'FileNameDownload'
+      FullFileNameParam.DataType = ftString
+      FullFileNameParam.MultiSelectSeparator = ','
+      FileNameFTPParam.Value = ''
+      FileNameFTPParam.Component = FileCDS
+      FileNameFTPParam.ComponentItem = 'FileNameFTP'
+      FileNameFTPParam.DataType = ftString
+      FileNameFTPParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.Component = FileCDS
+      FileNameParam.ComponentItem = 'FileName'
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      DownloadFolderParam.Value = ''
+      DownloadFolderParam.Component = FileCDS
+      DownloadFolderParam.ComponentItem = 'FolderTMP'
+      DownloadFolderParam.DataType = ftString
+      DownloadFolderParam.MultiSelectSeparator = ','
+      FTPOperation = ftpDownload
+      Caption = 'actGetFileFTP'
+    end
+    object mactGetAllFileFTP: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actGetFTPParams
+      ActionList = <
+        item
+          Action = actGetFileFTP
+        end>
+      View = cxGridDBTableViewFile
+      Caption = 'mactGetAllFileFTP'
+    end
+    object actGetDocumentDataForEmail: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetDocumentDataForEmail
+      StoredProcList = <
+        item
+          StoredProc = spGetDocumentDataForEmail
+        end>
+      Caption = 'actGetDocumentDataForEmail'
+    end
+    object actSMTPMultipleFile: TdsdSMTPMultipleFileAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Host.Value = Null
+      Host.Component = FormParams
+      Host.ComponentItem = 'Host'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Port.Value = 25
+      Port.Component = FormParams
+      Port.ComponentItem = 'Port'
+      Port.MultiSelectSeparator = ','
+      UserName.Value = Null
+      UserName.Component = FormParams
+      UserName.ComponentItem = 'UserName'
+      UserName.MultiSelectSeparator = ','
+      Password.Value = Null
+      Password.Component = FormParams
+      Password.ComponentItem = 'Password'
+      Password.DataType = ftString
+      Password.MultiSelectSeparator = ','
+      Body.Value = Null
+      Body.Component = FormParams
+      Body.ComponentItem = 'Body'
+      Body.DataType = ftWideString
+      Body.MultiSelectSeparator = ','
+      Subject.Value = Null
+      Subject.Component = FormParams
+      Subject.ComponentItem = 'Subject'
+      Subject.DataType = ftString
+      Subject.MultiSelectSeparator = ','
+      FromAddress.Value = Null
+      FromAddress.Component = FormParams
+      FromAddress.ComponentItem = 'AddressFrom'
+      FromAddress.DataType = ftString
+      FromAddress.MultiSelectSeparator = ','
+      ToAddress.Value = Null
+      ToAddress.Component = FormParams
+      ToAddress.ComponentItem = 'AddressTo'
+      ToAddress.MultiSelectSeparator = ','
+      FieldFileName.Value = 'FileNameDownload'
+      FieldFileName.DataType = ftString
+      FieldFileName.MultiSelectSeparator = ','
+      DataSet = FileCDS
+    end
+    object mactSMTPSend: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetDocumentDataForEmail
+        end
+        item
+          Action = mactGetAllFileFTP
+        end
+        item
+          Action = actSMTPMultipleFile
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1086#1090#1089#1083#1099#1082#1077' E-mail?'
+      InfoAfterExecute = 'E-mail '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1086#1090#1087#1088#1072#1074#1083#1077#1085
+      Caption = #1054#1090#1087#1088#1072#1074#1082#1072' E-mail'
+      Hint = #1054#1090#1087#1088#1072#1074#1082#1072' E-mail'
+      ImageIndex = 53
+    end
   end
   inherited MasterDS: TDataSource
     Left = 280
@@ -1496,6 +1632,14 @@ inherited PretensionForm: TPretensionForm
         end
         item
           Visible = True
+          ItemName = 'bbSMTPSend'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1646,6 +1790,10 @@ inherited PretensionForm: TPretensionForm
       Action = actOpenReturnOut
       Category = 0
     end
+    object bbSMTPSend: TdxBarButton
+      Action = mactSMTPSend
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
@@ -1772,6 +1920,47 @@ inherited PretensionForm: TPretensionForm
       end
       item
         Name = 'ReturnOutId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Body'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AddressFrom'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AddressTo'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Subject'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Host'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Port'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Password'
         Value = Null
         MultiSelectSeparator = ','
       end>
@@ -2885,5 +3074,79 @@ inherited PretensionForm: TPretensionForm
     PackSize = 1
     Left = 712
     Top = 299
+  end
+  object spGetDocumentDataForEmail: TdsdStoredProc
+    StoredProcName = 'gpGet_Pretension_DataForEmail'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Subject'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Subject'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Body'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Body'
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AddressFrom'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AddressFrom'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AddressTo'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AddressTo'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Host'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Host'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Port'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Port'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Password'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Password'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 496
+    Top = 456
   end
 end

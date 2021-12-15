@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PretensionFile(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , Number Integer, FileName TVarChar, FileNameFTP TVarChar, FolderTMP TVarChar
+             , Number Integer, FileName TVarChar, FileNameFTP TVarChar, FolderTMP TVarChar, FileNameDownload TVarChar
              , isErased Boolean
               )
 AS
@@ -31,6 +31,7 @@ BEGIN
                                    , MIString_FileName.ValueData                                               AS FileName
                                    , MI_PretensionFile.Id::TVarChar                                            AS FileNameFTP
                                    , 'tmpPretensionFile\'::TVarChar                                            AS FolderTMP
+                                   , ''::TVarChar                                                              AS FileNameDownload
                                    , MI_PretensionFile.isErased
                               FROM Movement AS Movement_Pretension
                                    INNER JOIN MovementItem AS MI_PretensionFile
@@ -50,6 +51,7 @@ BEGIN
             , MovementItem.FileName
             , MovementItem.FileNameFTP
             , MovementItem.FolderTMP
+            , MovementItem.FileNameDownload
             , MovementItem.isErased
       FROM PretensionFile AS MovementItem
       WHERE (MovementItem.isErased  = FALSE OR inIsErased = TRUE)

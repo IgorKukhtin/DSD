@@ -5,7 +5,7 @@ unit dsdInternetAction;
 interface
 
 uses
-  dsdAction, dsdDB, Classes, cxGrid {$IFDEF DELPHI103RIO}, Actions {$ENDIF}
+  dsdAction, dsdDB, Classes, cxGrid, DB {$IFDEF DELPHI103RIO}, Actions {$ENDIF}
 //, Vcl.Dialogs, Messages
   ;
 
@@ -63,6 +63,21 @@ type
     property FileName: String read FFileName write FFileName;
   end;
 
+  TdsdSMTPMultipleFileAction = class(TdsdSMTPAction)
+  private
+    FFieldFileNameParam: TdsdParam;
+    FDataSet: TDataSet;
+  protected
+    procedure FillAttachments; override;
+    procedure DeleteAttachments; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property FieldFileName: TdsdParam read FFieldFileNameParam write FFieldFileNameParam;
+    property DataSet: TDataSet read FDataSet write FDataSet;
+  end;
+
   procedure Register;
 
 implementation
@@ -78,6 +93,7 @@ begin
   RegisterActions('DSDLib', [TdsdSMTPAction], TdsdSMTPAction);
   RegisterActions('DSDLib', [TdsdSMTPGridAction], TdsdSMTPGridAction);
   RegisterActions('DSDLib', [TdsdSMTPFileAction], TdsdSMTPFileAction);
+  RegisterActions('DSDLib', [TdsdSMTPMultipleFileAction], TdsdSMTPMultipleFileAction);
 end;
 
 type
@@ -302,12 +318,72 @@ begin
 
   SetLength(FAttachments, 1);
   FAttachments[0] := FFileName;
+
+end;
+
+{ TdsdSMTPMultipleFileAction }
+
+constructor TdsdSMTPMultipleFileAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  FFieldFileNameParam := TdsdParam.Create;
+  FFieldFileNameParam.DataType := ftString;
+  FFieldFileNameParam.Value := '';
+end;
+
+destructor TdsdSMTPMultipleFileAction.Destroy;
+begin
+  FreeAndNil(FFieldFileNameParam);
+  inherited;
+end;
+
+procedure TdsdSMTPMultipleFileAction.DeleteAttachments;
+  var I : Integer;
+begin
+  inherited;
+  // Обязательно тут грохнуть файл!!!
+  for I := 0 to High(FAttachments) do
+    if FileExists(FAttachments[I]) then
+       DeleteFile(FAttachments[I]);
+
+  SetLength(FAttachments, 0);
+end;
+
+procedure TdsdSMTPMultipleFileAction.FillAttachments;
+begin
+  inherited;
+
+  if not Assigned(FDataSet) then 
+    raise Exception.Create('Не определен DataSet со списком отправляемых файлов.');
+  
+  if not FDataSet.Active or FDataSet.IsEmpty then 
+    raise Exception.Create('Нет файлов для отправки.');
+
+  if FFieldFileNameParam.Value = '' then 
+    raise Exception.Create('Не определено имя поля с названием файла.');
+
+  if not Assigned(FDataSet.Fields.FindField(FFieldFileNameParam.Value)) then 
+    raise Exception.Create('Нет поля с именем ' + FFieldFileNameParam.Value + ' в DataSet.');
+
+  FDataSet.First;
+  while not FDataSet.Eof do
+  begin
+    if FileExists(FDataSet.FieldByName(FFieldFileNameParam.Value).AsString) then
+    begin
+      SetLength(FAttachments, High(FAttachments) + 2);
+      FAttachments[High(FAttachments)] := FDataSet.FieldByName(FFieldFileNameParam.Value).AsString;
+    end else raise Exception.Create('Файл ' + FDataSet.FieldByName(FFieldFileNameParam.Value).AsString + ' не найден.');
+
+    FDataSet.Next;
+  end;
+
 end;
 
 initialization
   RegisterClass(TdsdSMTPAction);
   RegisterClass(TdsdSMTPGridAction);
   RegisterClass(TdsdSMTPFileAction);
+  RegisterClass(TdsdSMTPMultipleFileAction);
 
 
 end.

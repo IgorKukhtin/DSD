@@ -4793,6 +4793,8 @@ begin
 
   end else
   begin
+    FFullFileNameParam.Value := '';
+
     if FFileNameParam.Value = '' then
     begin
       ShowMessage('Файл не загружался на FTP.');
@@ -4867,7 +4869,10 @@ begin
                       if FIdFTP.DirectoryListing.Count > 0 then FIdFTP.Delete(FileNameFTP);
                       FFileNameParam.Value := '';
                     end;
-        else FIdFTP.Get(FileNameFTP, FullFileName, True);
+        else begin
+               FIdFTP.Get(FileNameFTP, FullFileName, True);
+               FFullFileNameParam.Value := FullFileName;
+             end;
       end;
 
     except ON E: Exception DO

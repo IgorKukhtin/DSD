@@ -18,6 +18,7 @@ $BODY$
    DECLARE vbEmployeeShow Boolean;
    DECLARE vbPositionCode Integer;
    DECLARE vbText TBlob;   
+   DECLARE vbUnitName TVarChar;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -28,6 +29,8 @@ BEGIN
        vbUnitKey := '0';
     END IF;
     vbUnitId := vbUnitKey::Integer;
+    
+    vbUnitName := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbUnitId);
 
     vbRetailId := (SELECT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
                    FROM ObjectLink AS ObjectLink_Unit_Juridical
@@ -524,6 +527,7 @@ BEGIN
    IF date_part('DAY',    CURRENT_DATE)::Integer in (1, 15)
      AND date_part('HOUR',  CURRENT_TIME)::Integer % 2 = 00
      AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 20
+     AND vbUnitName NOT ILIKE 'АП %'
    THEN
      INSERT INTO _PUSH (Id, Text) VALUES (10, 'ВНИМАНИЕ!!!'||Chr(13)||'ЖУРНАЛ ПОКАЗАНИЙ СЧЁТЧИКА ВОДЫ!!!'||Chr(13)||Chr(13)||'СЕГОДНЯ снять и внести показания в журнал!!!');
    END IF;
@@ -752,6 +756,9 @@ BEGIN
           , _PUSH.ValueParams                 AS ValueParams
           , COALESCE(_PUSH.isFormOpen, False) AS  isFormOpen
      FROM _PUSH;
+     
+     
+  -- raise notice 'Value: % %', vbUnitName, vbUnitName NOT ILIKE 'АП %';
 
 END;
 $BODY$

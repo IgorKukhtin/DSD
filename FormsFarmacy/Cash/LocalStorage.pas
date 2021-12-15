@@ -189,6 +189,8 @@ begin
         if FindField('ISMANUAL') = nil then AddBoolField(LFieldDefs, 'ISMANUAL');   //Ручной выбор медикамента
         //***27.10.21
         if FindField('CAT1303ID') = nil then AddIntField(LFieldDefs,  'CAT1303ID');     //Категория 1303
+        //***14.12.21
+        if FindField('ISERRORRO') = nil then AddBoolField(LFieldDefs,  'ISERRORRO');     //ВИП чек по ошибке РРО
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -279,7 +281,9 @@ begin
         //***26.10.21
         (FindField('ISMANUAL') = nil) or
         //***27.10.21
-        (FindField('CAT1303ID') = nil));
+        (FindField('CAT1303ID') = nil) or
+        //***14.12.21
+        (FindField('ISERRORRO') = nil));
 
       Close;
 
