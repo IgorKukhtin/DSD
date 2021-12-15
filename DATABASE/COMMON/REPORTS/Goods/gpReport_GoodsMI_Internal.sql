@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Internal (
     IN inStartDate    TDateTime ,
@@ -16,6 +17,8 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Internal (
     IN inIsMO_all     Boolean   ,
     IN inisComment    Boolean   , --показывать примечание
     IN inisSubjectDoc Boolean   , --показывать основания Да/Нет
+    IN inisDateDoc    Boolean   , --показывать Дата док-та (да/нет)
+    IN inisInvnumber  Boolean   , --показывать № док док-та (да/нет)
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -37,6 +40,7 @@ RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull
              , SubjectDocName  TVarChar
              , BranchCode_from Integer, BranchName_from TVarChar, UnitCode_from Integer, UnitName_from TVarChar, PositionName_from TVarChar
              , BranchCode_to Integer, BranchName_to TVarChar, UnitCode_to Integer, UnitName_to TVarChar, PositionName_to TVarChar
+             , OperDate  TDateTime, Invnumber TVarChar
              )
 AS
 $BODY$
@@ -264,6 +268,9 @@ BEGIN
                       , tmpCont.AccountId
                       , tmpCont.ArticleLossId
                       , tmpCont.ContainerId_Analyzer
+                      
+                      , CASE WHEN inisDateDoc = TRUE THEN Movement.OperDate ELSE NULL END   ::TDateTime AS OperDate
+                      , CASE WHEN inisInvnumber = TRUE THEN Movement.Invnumber ELSE '' END  ::TVarChar  AS Invnumber
 
                       , SUM (tmpCont.AmountOut) AS AmountOut
                       , SUM (tmpCont.SummOut) AS SummOut
@@ -277,6 +284,8 @@ BEGIN
 
                       , SUM (tmpCont.Amount_Send_pl) AS Amount_Send_pl
                  FROM tmpCont
+                      LEFT JOIN Movement ON Movement.Id = tmpCont.MovementId
+
                       LEFT JOIN tmpMovementString AS MovementString_Comment
                                                   ON MovementString_Comment.MovementId = tmpCont.MovementId
                       LEFT JOIN tmpSubjectDoc ON tmpSubjectDoc.MovementId = tmpCont.MovementId
@@ -290,6 +299,8 @@ BEGIN
                         , tmpCont.ArticleLossId
                         , tmpCont.ContainerId_Analyzer
                         , tmpSubjectDoc.SubjectDocName
+                        , CASE WHEN inisDateDoc = TRUE THEN Movement.OperDate ELSE NULL END
+                        , CASE WHEN inisInvnumber = TRUE THEN Movement.Invnumber ELSE '' END
                  )
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
@@ -364,6 +375,9 @@ BEGIN
          , Object_Unit_to.ValueData     AS UnitName_to
          , Object_Position_to.ValueData AS PositionName_to
 
+         , tmpOperationGroup.OperDate  ::TDateTime
+         , tmpOperationGroup.Invnumber ::TVarChar
+
      FROM (SELECT tmpContainer.ArticleLossId
                 , tmpContainer.ContainerId_Analyzer
                 , tmpContainer.UnitId
@@ -371,6 +385,8 @@ BEGIN
                 , tmpContainer.GoodsId
                 , tmpContainer.GoodsKindId
                 , CLO_PartionGoods.ObjectId AS PartionGoodsId
+                , tmpContainer.OperDate
+                , tmpContainer.Invnumber
                 , tmpContainer.Comment
                 , STRING_AGG (DISTINCT tmpContainer.SubjectDocName, '; ') AS SubjectDocName
                 --, tmpContainer.SubjectDocName          AS SubjectDocName
@@ -420,9 +436,11 @@ BEGIN
                       , tmpMI.Summ_ProfitLoss_send
                       , tmpMI.Amount_Send_pl
 
+                      , tmpMI.OperDate
+                      , tmpMI.Invnumber
+
                  FROM tmpMI
                       INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI.GoodsId
-
                  ) AS tmpContainer
                  LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = tmpContainer.AccountId
                  LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
@@ -437,6 +455,8 @@ BEGIN
                   , tmpContainer.GoodsKindId
                   , CLO_PartionGoods.ObjectId
                   , tmpContainer.Comment
+                  , tmpContainer.OperDate
+                  , tmpContainer.Invnumber
                   , CASE WHEN inisSubjectDoc = TRUE THEN tmpContainer.SubjectDocName ELSE '' END
           ) AS tmpOperationGroup
 
@@ -520,5 +540,20 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_Internal (inStartDate:= '12.02.2020'::TDateTime, inEndDate:= '12.02.2020'::TDateTime, inDescId:= zc_Movement_Send(), inFromId:= 0, inToId:= 0, inGoodsGroupId:= 0, inPriceListId:= 0, inIsMO_all:= FALSE, inisComment:= true, inSession := zfCalc_UserAdmin()); -- Склад Реализации
+--
+/*
+ SELECT * FROM gpReport_GoodsMI_Internal (
+  inStartDate:= '12.02.2020'::TDateTime
+, inEndDate:= '12.02.2020'::TDateTime
+, inDescId:= zc_Movement_Send()
+, inFromId:= 0, inToId:= 0
+, inGoodsGroupId:= 0
+, inPriceListId:= 0
+, inIsMO_all:= FALSE
+, inisComment:= true
+, inisSubjectDoc:= FALSE
+, inisDateDoc:= true
+, inisInvnumber:= true 
+, inSession := zfCalc_UserAdmin()); -- Склад Реализации
 
+*/

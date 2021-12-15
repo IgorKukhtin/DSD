@@ -3,7 +3,7 @@ object Report_GoodsMI_InternalDialogForm: TReport_GoodsMI_InternalDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
-  ClientHeight = 256
+  ClientHeight = 282
   ClientWidth = 447
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@ object Report_GoodsMI_InternalDialogForm: TReport_GoodsMI_InternalDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 98
-    Top = 225
+    Left = 90
+    Top = 245
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_GoodsMI_InternalDialogForm: TReport_GoodsMI_InternalDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 272
-    Top = 225
+    Left = 264
+    Top = 245
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -176,6 +176,28 @@ object Report_GoodsMI_InternalDialogForm: TReport_GoodsMI_InternalDialogForm
     ShowHint = True
     TabOrder = 18
     Width = 104
+  end
+  object cbDateDoc: TcxCheckBox
+    Left = 221
+    Top = 206
+    Hint = #1044#1072#1090#1072' '#1076#1086#1082'-'#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+    Caption = #1044#1072#1090#1072' '#1076#1086#1082'-'#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+    ParentShowHint = False
+    Properties.ReadOnly = False
+    ShowHint = True
+    TabOrder = 19
+    Width = 88
+  end
+  object cbInvnumber: TcxCheckBox
+    Left = 327
+    Top = 206
+    Hint = #8470' '#1076#1086#1082' '#1076#1086#1082'-'#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+    Caption = #8470' '#1076#1086#1082' '#1076#1086#1082'-'#1090#1072
+    ParentShowHint = False
+    Properties.ReadOnly = False
+    ShowHint = True
+    TabOrder = 20
+    Width = 99
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -325,9 +347,25 @@ object Report_GoodsMI_InternalDialogForm: TReport_GoodsMI_InternalDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isInvnumber'
+        Value = Null
+        Component = cbInvnumber
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDateDoc'
+        Value = Null
+        Component = cbDateDoc
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 192
-    Top = 208
+    Left = 184
+    Top = 223
   end
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'

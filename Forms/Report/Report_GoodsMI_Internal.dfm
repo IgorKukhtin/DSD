@@ -179,6 +179,11 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ_ProfitLoss_send
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -257,6 +262,22 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Invnumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'Invnumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
@@ -782,7 +803,7 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
     end
     object edInDescName: TcxTextEdit
       AlignWithMargins = True
-      Left = 865
+      Left = 1049
       Top = 5
       ParentCustomHint = False
       BeepOnEnter = False
@@ -796,7 +817,7 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       TabOrder = 6
-      Width = 199
+      Width = 153
     end
     object cxLabel3: TcxLabel
       Left = 226
@@ -879,7 +900,29 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
       Properties.ReadOnly = False
       ShowHint = True
       TabOrder = 15
-      Width = 104
+      Width = 98
+    end
+    object cbDateDoc: TcxCheckBox
+      Left = 850
+      Top = 5
+      Hint = #1044#1072#1090#1072' '#1076#1086#1082'-'#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+      Caption = #1044#1072#1090#1072' '#1076#1086#1082'-'#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+      ParentShowHint = False
+      Properties.ReadOnly = False
+      ShowHint = True
+      TabOrder = 16
+      Width = 88
+    end
+    object cbInvnumber: TcxCheckBox
+      Left = 943
+      Top = 5
+      Hint = #8470' '#1076#1086#1082' '#1076#1086#1082'-'#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+      Caption = #8470' '#1076#1086#1082' '#1076#1086#1082'-'#1090#1072
+      ParentShowHint = False
+      Properties.ReadOnly = False
+      ShowHint = True
+      TabOrder = 17
+      Width = 99
     end
   end
   object cxLabel7: TcxLabel [2]
@@ -1089,6 +1132,22 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
           Name = 'isMO_all'
           Value = Null
           Component = cbMO_all
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDateDoc'
+          Value = Null
+          Component = cbDateDoc
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isInvnumber'
+          Value = Null
+          Component = cbInvnumber
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1932,6 +1991,22 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         Name = 'inisSubjectDoc'
         Value = Null
         Component = cbSubjectDoc
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDateDoc'
+        Value = Null
+        Component = cbDateDoc
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisInvnumber'
+        Value = Null
+        Component = cbInvnumber
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

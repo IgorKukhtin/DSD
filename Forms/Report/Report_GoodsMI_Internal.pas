@@ -113,6 +113,8 @@ type
     bbReport_Goods: TdxBarButton;
     actPrintArticleLossPrice: TdsdPrintAction;
     bbPrintArticleLossPrice: TdxBarButton;
+    cbDateDoc: TcxCheckBox;
+    cbInvnumber: TcxCheckBox;
   private
     { Private declarations }
   public
