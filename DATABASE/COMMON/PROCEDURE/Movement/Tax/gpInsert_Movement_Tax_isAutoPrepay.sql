@@ -18,8 +18,8 @@ BEGIN
      CREATE TEMP TABLE tmpReport (JuridicalId Integer, ContractId Integer, Amount TFloat) ON COMMIT DROP;
      INSERT INTO tmpReport (JuridicalId, ContractId,  Amount)
        SELECT tmp.JuridicalId
-            , tmp.ContractId
-            , SUM (CASE WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A > 0 THEN (-1) * tmp.EndAmount_A
+            , 0 AS ContractId--, tmp.ContractId
+            , SUM (CASE WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A >= 0 THEN (-1) * tmp.EndAmount_A
                         WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A < 0 AND (-1) * tmp.EndAmount_A > (-1) * tmp.StartAmount_A THEN ((-1) * tmp.EndAmount_A - (-1) * tmp.StartAmount_A)
                         ELSE 0
                    END) ::TFloat AS Amount
@@ -36,12 +36,12 @@ BEGIN
                                  , inIsPartionMovement      := 'False'
                                  , inSession                := inSession
                                    ) AS tmp
-       WHERE (tmp.EndAmount_A < 0 AND tmp.StartAmount_A > 0)
+       WHERE (tmp.EndAmount_A < 0 AND tmp.StartAmount_A >= 0)
           OR (tmp.EndAmount_A < 0 AND tmp.StartAmount_A < 0 AND (-1) * tmp.EndAmount_A > (-1) * tmp.StartAmount_A)
           AND tmp.AccountId IN (9128, 9121, 9130, 9136, 9129)
        GROUP BY tmp.JuridicalId
-              , tmp.ContractId
-       HAVING SUM (CASE WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A > 0 THEN (-1) * tmp.EndAmount_A
+              --, tmp.ContractId
+       HAVING SUM (CASE WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A >= 0 THEN (-1) * tmp.EndAmount_A
                         WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A < 0 AND (-1) * tmp.EndAmount_A > (-1) * tmp.StartAmount_A THEN ((-1) * tmp.EndAmount_A - (-1) * tmp.StartAmount_A)
                         ELSE 0
                    END) > 0.2
