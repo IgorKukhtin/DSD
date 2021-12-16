@@ -1,25 +1,25 @@
 inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
-  ClientWidth = 1067
-  ExplicitWidth = 1083
+  ClientWidth = 1267
+  ExplicitWidth = 1283
   ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 163
-    Width = 1067
+    Width = 1267
     Height = 505
     ExplicitTop = 163
     ExplicitWidth = 1067
     ExplicitHeight = 505
     ClientRectBottom = 505
-    ClientRectRight = 1067
+    ClientRectRight = 1267
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1067
       ExplicitHeight = 481
       inherited cxGrid: TcxGrid
-        Width = 1067
+        Width = 1267
         Height = 481
         ExplicitWidth = 1067
         ExplicitHeight = 481
@@ -182,7 +182,7 @@ inherited TaxForm: TTaxForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1067
+    Width = 1267
     Height = 137
     TabOrder = 3
     ExplicitWidth = 1067
@@ -364,7 +364,7 @@ inherited TaxForm: TTaxForm
         end>
       TabOrder = 24
       Text = ' '
-      Width = 237
+      Width = 309
     end
     object cxLabel5: TcxLabel
       Left = 788
@@ -372,12 +372,12 @@ inherited TaxForm: TTaxForm
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
     end
     object cxLabel8: TcxLabel
-      Left = 943
+      Left = 914
       Top = 45
       Caption = #1053#1086#1084#1077#1088' '#1092#1080#1083#1080#1072#1083#1072
     end
     object edInvNumberBranch: TcxTextEdit
-      Left = 943
+      Left = 914
       Top = 63
       TabOrder = 27
       Width = 82
@@ -474,6 +474,22 @@ inherited TaxForm: TTaxForm
     Properties.ReadOnly = True
     TabOrder = 11
     Width = 73
+  end
+  object cxLabel14: TcxLabel [8]
+    Left = 1005
+    Top = 45
+    Caption = #1060#1080#1083#1080#1072#1083
+  end
+  object edBranch: TcxButtonEdit [9]
+    Left = 1005
+    Top = 63
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 13
+    Width = 92
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -926,6 +942,56 @@ inherited TaxForm: TTaxForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actBranchChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actBranchChoiceForm'
+      ImageIndex = 43
+      FormName = 'TBranch_ObjectForm'
+      FormNameParam.Value = 'TBranch_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BranchId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object macUpdateBranch: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      ActionList = <
+        item
+          Action = actBranchChoiceForm
+        end
+        item
+          Action = actUpdate_Branch
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1060#1080#1083#1080#1072#1083
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1060#1080#1083#1080#1072#1083
+      ImageIndex = 43
+    end
+    object actUpdate_Branch: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Branch
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Branch
+        end
+        item
+          StoredProc = spGet
+        end>
+      Caption = 'actUpdate_Branch'
+      ImageIndex = 43
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1039,6 +1105,14 @@ inherited TaxForm: TTaxForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -1126,6 +1200,10 @@ inherited TaxForm: TTaxForm
     end
     object bbDisableNPP_auto: TdxBarButton
       Action = actDisableNPP_auto
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macUpdateBranch
       Category = 0
     end
   end
@@ -1482,6 +1560,21 @@ inherited TaxForm: TTaxForm
         Value = Null
         Component = cbIsAuto
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchId'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchName'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -1972,8 +2065,8 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 648
-    Top = 88
+    Left = 728
+    Top = 96
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -2446,5 +2539,61 @@ inherited TaxForm: TTaxForm
     PackSize = 1
     Left = 72
     Top = 251
+  end
+  object GuidesBranch: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBranch
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TBranch_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBranch_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 1024
+    Top = 56
+  end
+  object spUpdate_Branch: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Tax_Branch'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'MovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'BranchId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 529
+    Top = 544
   end
 end

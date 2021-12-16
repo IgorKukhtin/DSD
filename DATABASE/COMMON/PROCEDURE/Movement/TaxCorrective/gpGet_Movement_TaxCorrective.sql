@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, OperDate TDateTim
              , DocumentMasterId Integer, DocumentMasterName TVarChar, isPartner Boolean
              , DocumentChildId Integer, DocumentChildName TVarChar
              , InvNumberBranch TVarChar
+             , BranchId Integer, BranchName TVarChar
              , Comment TVarChar
              , isINN Boolean
              , isAuto Boolean
@@ -87,6 +88,8 @@ BEGIN
              , 0                                    AS DocumentChildId
              , CAST ('' as TVarChar)                AS DocumentChildName
              , tmpInvNumber.InvNumberBranch         AS InvNumberBranch
+             , Object_Branch.Id                     AS BranchId
+             , Object_Branch.ValueData              AS BranchName
              , ''                       :: TVarChar AS Comment
              , FALSE                    :: Boolean  AS isINN
              , FALSE                    :: Boolean  AS isAuto
@@ -121,10 +124,41 @@ BEGIN
                                  
                             ELSE ''
                        END :: TVarChar AS InvNumberBranch
+
+                     , CASE WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentBread()
+                                 THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
+                            
+                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentDnepr()
+                                 THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
+     
+                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentKiev()
+                                 THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportKiev())
+     
+                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentOdessa()
+                                 THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportOdessa())
+                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentZaporozhye()
+                                 THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportZaporozhye())
+     
+                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentKrRog()
+                                 THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportKrRog())
+     
+                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentNikolaev()
+                                 THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportNikolaev())
+     
+                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentKharkov()
+                                 THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportKharkov())
+     
+                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentCherkassi()
+                                 THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportCherkassi())
+     
+                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentLviv()
+                                 THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportLviv())
+                       END  AS BranchId
                ) AS tmpInvNumber
           LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1=1
           LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
-          LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = zc_Juridical_Basis();
+          LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = zc_Juridical_Basis()
+          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpInvNumber.BranchId;
 
      ELSE
 
@@ -241,6 +275,9 @@ BEGIN
              END :: TVarChar AS DocumentChildName
            , MovementString_InvNumberBranch.ValueData                         AS InvNumberBranch
 
+           , Object_Branch.Id                       AS BranchId
+           , Object_Branch.ValueData                AS BranchName
+
            , MovementString_Comment.ValueData       AS Comment
 
            , CASE WHEN COALESCE (MovementString_FromINN.ValueData, '') <> '' THEN TRUE ELSE FALSE END AS isINN
@@ -345,6 +382,11 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
 
             LEFT JOIN Object_contract_invnumber_view AS Object_Contract ON Object_Contract.contractid = MovementLinkObject_Contract.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
+                                         ON MovementLinkObject_Branch.MovementId = Movement.Id
+                                        AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = MovementLinkObject_Branch.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_DocumentMaster
                                            ON MovementLinkMovement_DocumentMaster.MovementId = Movement.Id
