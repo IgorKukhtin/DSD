@@ -28,8 +28,8 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, Jur
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , AreaName TVarChar
-             , PaymentDate TDateTime
-             , PaymentAmount TFloat 
+             , PaymentDate TDateTime, PaymentAmount TFloat
+             , PaymentDate_jur TDateTime, PaymentAmount_jur TFloat
               )
 AS
 $BODY$
@@ -210,7 +210,11 @@ BEGIN
                  )
 
    --находим последнии оплаты
-   , tmpLastPayment AS (SELECT tt.* FROM gpSelect_Object_JuridicalDefermentPayment(inSession) AS tt)
+   , tmpLastPayment AS (SELECT tt.* 
+                             , MAX (tt.OperDate) OVER (PARTITION BY tt.JuridicalId) AS OperDate_jur
+                        FROM gpSelect_Object_JuridicalDefermentPayment(inSession) AS tt
+                        )
+
 
      SELECT a.AccountId, a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.RetailName_main, a.OKPO, a.JuridicalGroupName
           , a.PartnerId, a.PartnerCode, a.PartnerName TVarChar
@@ -229,8 +233,12 @@ BEGIN
           , a.InfoMoneyGroupName, a.InfoMoneyDestinationName
           , a.InfoMoneyId, a.InfoMoneyCode, a.InfoMoneyName
           , a.AreaName
+
           , tmpLastPayment.OperDate :: TDateTime AS PaymentDate
-          , tmpLastPayment.Amount   :: TFloat    AS PaymentAmount       
+          , tmpLastPayment.Amount   :: TFloat    AS PaymentAmount
+          , tmpLastPaymentJuridical.OperDate :: TDateTime AS PaymentDate_jur
+          , tmpLastPaymentJuridical.Amount   :: TFloat    AS PaymentAmount_jur
+      
      FROM (
            SELECT 
                   Object_Account_View.AccountId
@@ -514,7 +522,17 @@ BEGIN
         LEFT JOIN tmpLastPayment ON tmpLastPayment.JuridicalId = a.JuridicalId
                                 AND tmpLastPayment.ContractId = a.ContractId
                                 AND tmpLastPayment.PaidKindId = a.PaidKindId
-                                AND tmpLastPayment.PartnerId = a.PartnerId
+                                AND COALESCE (tmpLastPayment.PartnerId,0) = COALESCE (a.PartnerId,0)
+
+        LEFT JOIN (SELECT tmpLastPayment.JuridicalId
+                        , tmpLastPayment.OperDate
+                        , SUM (tmpLastPayment.Amount) AS Amount
+                   FROM tmpLastPayment
+                   WHERE tmpLastPayment.OperDate = tmpLastPayment.OperDate_jur
+                   GROUP BY tmpLastPayment.JuridicalId
+                          , tmpLastPayment.OperDate
+                   ) AS tmpLastPaymentJuridical
+                     ON tmpLastPaymentJuridical.JuridicalId = a.JuridicalId
 
      WHERE a.DebetRemains <> 0 or a.KreditRemains <> 0
         or a.SaleSumm <> 0 or a.DefermentPaymentRemains <> 0

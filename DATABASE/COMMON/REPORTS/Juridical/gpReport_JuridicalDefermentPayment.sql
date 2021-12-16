@@ -31,8 +31,8 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, Jur
              , AreaName TVarChar, AreaName_Partner TVarChar
              , BranchName_personal       TVarChar
              , BranchName_personal_trade TVarChar
-             , PaymentDate TDateTime
-             , PaymentAmount TFloat 
+             , PaymentDate TDateTime, PaymentAmount TFloat
+             , PaymentDate_jur TDateTime, PaymentAmount_jur TFloat
               )
 AS
 $BODY$
@@ -69,17 +69,34 @@ BEGIN
                    )
    --находим последнии оплаты
  --выбираем последнии оплаты
-   , tmpLastPayment AS ( SELECT tt.* FROM gpSelect_Object_JuridicalDefermentPayment(inSession) AS tt)
+   , tmpLastPayment AS (SELECT tt.*
+                             , MAX (tt.OperDate) OVER (PARTITION BY tt.JuridicalId) AS OperDate_jur
+                        FROM gpSelect_Object_JuridicalDefermentPayment(inSession) AS tt
+                       )
 
    ---
    SELECT tmpReport.*
         , tmpLastPayment.OperDate :: TDateTime AS PaymentDate
         , tmpLastPayment.Amount   :: TFloat    AS PaymentAmount
+        
+        , tmpLastPaymentJuridical.OperDate :: TDateTime AS PaymentDate_jur
+        , tmpLastPaymentJuridical.Amount   :: TFloat    AS PaymentAmount_jur
+        
    FROM tmpReport
         LEFT JOIN tmpLastPayment ON tmpLastPayment.JuridicalId = tmpReport.JuridicalId
                                 AND tmpLastPayment.ContractId = tmpReport.ContractId
                                 AND tmpLastPayment.PaidKindId = tmpReport.PaidKindId
-                                AND tmpLastPayment.PartnerId = tmpReport.PartnerId
+                                AND COALESCE (tmpLastPayment.PartnerId,0) = COALESCE (tmpReport.PartnerId,0)
+
+        LEFT JOIN (SELECT tmpLastPayment.JuridicalId
+                        , tmpLastPayment.OperDate
+                        , SUM (tmpLastPayment.Amount) AS Amount
+                   FROM tmpLastPayment
+                   WHERE tmpLastPayment.OperDate = tmpLastPayment.OperDate_jur
+                   GROUP BY tmpLastPayment.JuridicalId
+                          , tmpLastPayment.OperDate
+                   ) AS tmpLastPaymentJuridical
+                     ON tmpLastPaymentJuridical.JuridicalId = tmpReport.JuridicalId
    ;
 
 END;

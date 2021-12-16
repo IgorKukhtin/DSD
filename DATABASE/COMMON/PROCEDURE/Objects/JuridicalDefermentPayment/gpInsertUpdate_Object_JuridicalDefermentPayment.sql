@@ -89,7 +89,9 @@ BEGIN
                                    , CLO_Contract.ObjectId           AS ContractId
                                    , ContainerLO_PaidKind.ObjectId   AS PaidKindId
                                    , CASE WHEN ContainerLO_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() THEN MIContainer.ObjectId_Analyzer ELSE 0 END AS PartnerId
-                                   , CASE WHEN tmpJuridical.isIncome = FALSE THEN (-1 * MIContainer.Amount) ELSE MIContainer.Amount END AS Amount 
+                                   , CASE WHEN tmpJuridical.isIncome = FALSE AND MIContainer.isActive = FALSE THEN (-1 * MIContainer.Amount)
+                                          WHEN tmpJuridical.isIncome = TRUE THEN MIContainer.Amount
+                                          ELSE 0 END AS Amount 
                                    , MAX (MIContainer.OperDate) OVER (PARTITION BY CLO_Juridical.ObjectId, CLO_Contract.ObjectId)       AS OperDate_max
                               FROM ContainerLinkObject AS CLO_Juridical
                                    INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
@@ -115,6 +117,7 @@ BEGIN
                               WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                               ) as tmp
                         WHERE tmp.OperDate = tmp.OperDate_max
+                          AND COALESCE (tmp.Amount,0) <> 0
                         GROUP BY tmp.OperDate
                                , tmp.JuridicalId
                                , tmp.ContractId
@@ -142,7 +145,9 @@ BEGIN
                                    , CLO_Contract.ObjectId  AS ContractId
                                    , ContainerLO_PaidKind.ObjectId   AS PaidKindId
                                    , CASE WHEN ContainerLO_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() THEN MIContainer.ObjectId_Analyzer ELSE 0 END AS PartnerId
-                                   , (-1 * MIContainer.Amount) AS Amount
+                                   , CASE WHEN tmpJuridical.isIncome = FALSE AND MIContainer.isActive = FALSE THEN (-1 * MIContainer.Amount)
+                                          WHEN tmpJuridical.isIncome = TRUE THEN MIContainer.Amount
+                                          ELSE 0 END AS Amount
                                    , MAX (MIContainer.OperDate) OVER (PARTITION BY CLO_Juridical.ObjectId, CLO_Contract.ObjectId) AS OperDate_max
                               FROM ContainerLinkObject AS CLO_Juridical
                                    INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
@@ -151,7 +156,7 @@ BEGIN
                                                                   ON CLO_Contract.ContainerId = Container.Id
                                                                  AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
                        
-                                   INNER JOIN (SELECT DISTINCT tmpJuridical.JuridicalId, tmpJuridical.ContractId
+                                   INNER JOIN (SELECT DISTINCT tmpJuridical.JuridicalId, tmpJuridical.ContractId, tmpJuridical.isIncome
                                                FROM tmpJuridical_2 AS tmpJuridical) AS tmpJuridical 
                                                                ON tmpJuridical.JuridicalId = CLO_Juridical.ObjectId
                                                               AND tmpJuridical.ContractId = CLO_Contract.ObjectId 
@@ -197,7 +202,9 @@ BEGIN
                                    , CLO_Contract.ObjectId  AS ContractId
                                    , ContainerLO_PaidKind.ObjectId   AS PaidKindId
                                    , CASE WHEN ContainerLO_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() THEN MIContainer.ObjectId_Analyzer ELSE 0 END AS PartnerId
-                                   , (-1 * MIContainer.Amount) AS Amount
+                                   , CASE WHEN tmpJuridical.isIncome = FALSE AND MIContainer.isActive = FALSE THEN (-1 * MIContainer.Amount)
+                                          WHEN tmpJuridical.isIncome = TRUE THEN MIContainer.Amount
+                                          ELSE 0 END AS Amount
                                    , MAX (MIContainer.OperDate) OVER (PARTITION BY CLO_Juridical.ObjectId, CLO_Contract.ObjectId) AS OperDate_max
                               FROM ContainerLinkObject AS CLO_Juridical
                                    INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
@@ -206,7 +213,7 @@ BEGIN
                                                                   ON CLO_Contract.ContainerId = Container.Id
                                                                  AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
                        
-                                   INNER JOIN (SELECT DISTINCT tmpJuridical.JuridicalId, tmpJuridical.ContractId
+                                   INNER JOIN (SELECT DISTINCT tmpJuridical.JuridicalId, tmpJuridical.ContractId, tmpJuridical.isIncome
                                                FROM tmpJuridical_3 AS tmpJuridical) AS tmpJuridical 
                                                                ON tmpJuridical.JuridicalId = CLO_Juridical.ObjectId
                                                               AND tmpJuridical.ContractId = CLO_Contract.ObjectId 
@@ -251,7 +258,10 @@ BEGIN
                                    , CLO_Contract.ObjectId  AS ContractId
                                    , ContainerLO_PaidKind.ObjectId   AS PaidKindId
                                    , CASE WHEN ContainerLO_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() THEN MIContainer.ObjectId_Analyzer ELSE 0 END AS PartnerId
-                                   , (-1 * MIContainer.Amount) AS Amount
+                                   , CASE WHEN tmpJuridical.isIncome = FALSE AND MIContainer.isActive = FALSE THEN (-1 * MIContainer.Amount)
+                                          WHEN tmpJuridical.isIncome = TRUE THEN MIContainer.Amount
+                                          ELSE 0 END AS Amount
+
                                    , MAX (MIContainer.OperDate) OVER (PARTITION BY CLO_Juridical.ObjectId, CLO_Contract.ObjectId) AS OperDate_max
                               FROM ContainerLinkObject AS CLO_Juridical
                                    INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
@@ -260,7 +270,7 @@ BEGIN
                                                                   ON CLO_Contract.ContainerId = Container.Id
                                                                  AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
                        
-                                   INNER JOIN (SELECT DISTINCT tmpJuridical.JuridicalId, tmpJuridical.ContractId
+                                   INNER JOIN (SELECT DISTINCT tmpJuridical.JuridicalId, tmpJuridical.ContractId, tmpJuridical.isIncome
                                                FROM tmpJuridical_4 AS tmpJuridical) AS tmpJuridical 
                                                                ON tmpJuridical.JuridicalId = CLO_Juridical.ObjectId
                                                               AND tmpJuridical.ContractId = CLO_Contract.ObjectId 
@@ -355,8 +365,8 @@ BEGIN
  FROM _tmpData
       LEFT JOIN _tmpObject ON _tmpObject.JuridicalId = _tmpData.JuridicalId
                           AND _tmpObject.ContractId  = _tmpData.ContractId
-                          AND (_tmpObject.PaidKindId  = _tmpData.PaidKindId OR COALESCE (_tmpObject.PaidKindId,0))
-                          AND (_tmpObject.PartnerId   = _tmpData.PartnerId OR COALESCE (_tmpObject.PartnerId,0))
+                          AND (_tmpObject.PaidKindId  = _tmpData.PaidKindId)
+                          AND (_tmpObject.PartnerId   = _tmpData.PartnerId)
  ;
 
 
@@ -374,3 +384,13 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_JuridicalDefermentPayment (inStartDate:= '11.12.2021', inEndDate:= CURRENT_DATE, inSession:= '9457');
+
+/*
+  DELETE FROM ObjectLink WHERE ObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_JuridicalDefermentPayment());
+  DELETE FROM ObjectLink WHERE ChildObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_JuridicalDefermentPayment());
+ 
+  DELETE FROM ObjectFloat WHERE ObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_JuridicalDefermentPayment());
+ 
+  DELETE FROM ObjectDate WHERE ObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_JuridicalDefermentPayment());
+  DELETE FROM Object WHERE Id IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_JuridicalDefermentPayment());
+*/
