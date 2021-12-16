@@ -5,7 +5,9 @@ DROP FUNCTION IF EXISTS gpSelect_Object_JuridicalDefermentPayment (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalDefermentPayment(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, JuridicalId Integer, ContractId Integer, OperDate TDateTime, Amount TFloat) AS
+RETURNS TABLE (Id Integer, JuridicalId Integer, ContractId Integer
+             , PaidKindId Integer, PartnerId Integer
+             , OperDate TDateTime, Amount TFloat) AS
 $BODY$
 BEGIN
    
@@ -14,6 +16,8 @@ BEGIN
        SELECT Object_JuridicalDefermentPayment.Id
             , ObjectLink_JuridicalDefermentPayment_Juridical.ChildObjectId AS JuridicalId
             , ObjectLink_JuridicalDefermentPayment_Contract.ChildObjectId  AS ContractId
+            , ObjectLink_JuridicalDefermentPayment_PaidKind.ChildObjectId  AS PaidKindId
+            , ObjectLink_JuridicalDefermentPayment_Partner.ChildObjectId   AS PartnerId
             , ObjectDate_JuridicalDefermentPayment_OperDate.ValueData      AS OperDate
             , ObjectFloat_JuridicalDefermentPayment_Amount.ValueData       AS Amount
        FROM Object AS Object_JuridicalDefermentPayment
@@ -24,7 +28,15 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_JuridicalDefermentPayment_Contract
                                   ON ObjectLink_JuridicalDefermentPayment_Contract.ObjectId = Object_JuridicalDefermentPayment.Id
                                  AND ObjectLink_JuridicalDefermentPayment_Contract.DescId = zc_ObjectLink_JuridicalDefermentPayment_Contract()
-        
+
+             LEFT JOIN ObjectLink AS ObjectLink_JuridicalDefermentPayment_PaidKind
+                                  ON ObjectLink_JuridicalDefermentPayment_PaidKind.ObjectId = Object_JuridicalDefermentPayment.Id
+                                 AND ObjectLink_JuridicalDefermentPayment_PaidKind.DescId = zc_ObjectLink_JuridicalDefermentPayment_PaidKind()
+     
+             LEFT JOIN ObjectLink AS ObjectLink_JuridicalDefermentPayment_Partner
+                                  ON ObjectLink_JuridicalDefermentPayment_Partner.ObjectId = Object_JuridicalDefermentPayment.Id
+                                 AND ObjectLink_JuridicalDefermentPayment_Partner.DescId = zc_ObjectLink_JuridicalDefermentPayment_Partner()
+
             LEFT JOIN ObjectDate AS ObjectDate_JuridicalDefermentPayment_OperDate
                                  ON ObjectDate_JuridicalDefermentPayment_OperDate.ObjectId = Object_JuridicalDefermentPayment.Id
                                 AND ObjectDate_JuridicalDefermentPayment_OperDate.DescId = zc_ObjectDate_JuridicalDefermentPayment_OperDate()

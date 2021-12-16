@@ -1942,6 +1942,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalDefermentPayment_Contract() RE
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_JuridicalDefermentPayment_Contract', 'Договор', zc_Object_JuridicalDefermentPayment(), zc_Object_Contract() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalDefermentPayment_Contract');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalDefermentPayment_PaidKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalDefermentPayment_PaidKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_JuridicalDefermentPayment_PaidKind', 'Форма оплаты', zc_Object_JuridicalDefermentPayment(), zc_Object_PaidKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalDefermentPayment_PaidKind');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalDefermentPayment_Partner() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalDefermentPayment_Partner'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_JuridicalDefermentPayment_Partner', 'Контрагент', zc_Object_JuridicalDefermentPayment(), zc_Object_Partner() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalDefermentPayment_Partner');
+
 
 
 

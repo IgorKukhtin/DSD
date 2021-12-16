@@ -70,7 +70,7 @@ BEGIN
    --находим последнии оплаты
  --выбираем последнии оплаты
    , tmpLastPayment AS ( SELECT tt.* FROM gpSelect_Object_JuridicalDefermentPayment(inSession) AS tt)
-                        )
+
    ---
    SELECT tmpReport.*
         , tmpLastPayment.OperDate :: TDateTime AS PaymentDate
@@ -78,7 +78,8 @@ BEGIN
    FROM tmpReport
         LEFT JOIN tmpLastPayment ON tmpLastPayment.JuridicalId = tmpReport.JuridicalId
                                 AND tmpLastPayment.ContractId = tmpReport.ContractId
-                                --AND tmpLastPayment.AccountId = tmpReport.AccountId
+                                AND tmpLastPayment.PaidKindId = tmpReport.PaidKindId
+                                AND tmpLastPayment.PartnerId = tmpReport.PartnerId
    ;
 
 END;

@@ -513,7 +513,8 @@ BEGIN
         -- последнии оплаты
         LEFT JOIN tmpLastPayment ON tmpLastPayment.JuridicalId = a.JuridicalId
                                 AND tmpLastPayment.ContractId = a.ContractId
-                                --AND tmpLastPayment.AccountId = a.AccountId
+                                AND tmpLastPayment.PaidKindId = a.PaidKindId
+                                AND tmpLastPayment.PartnerId = a.PartnerId
 
      WHERE a.DebetRemains <> 0 or a.KreditRemains <> 0
         or a.SaleSumm <> 0 or a.DefermentPaymentRemains <> 0
