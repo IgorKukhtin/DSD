@@ -124,3 +124,54 @@ $BODY$
 
 -- тест
 --
+
+
+/* заполнение тустого типа раб. времени в сохр. документах
+WITH
+tmpMovement AS (SELECT Movement.Id 
+                     , MovementLinkObject_PairDay.ObjectId AS PairDayId
+                FROM Movement
+                    LEFT JOIN MovementLinkObject AS MovementLinkObject_PairDay
+                                                 ON MovementLinkObject_PairDay.MovementId = Movement.Id
+                                                AND MovementLinkObject_PairDay.DescId = zc_MovementLinkObject_PairDay()
+                WHERE Movement.DescId = zc_Movement_PersonalGroup()
+                  AND Movement.StatusId <>zc_Enum_Status_Erased() 
+                  )
+  
+, tmpMI AS (SELECT MovementItem.*
+                 
+            FROM MovementItem
+                
+            WHERE MovementItem.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
+              AND MovementItem.DescId = zc_MI_Master()
+              AND MovementItem.isErased = FALSE
+
+            )
+
+, tmpMILO AS (SELECT MovementItemLinkObject.*
+              FROM MovementItemLinkObject
+              WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+              and MovementItemLinkObject.DescId = zc_MILinkObject_WorkTimeKind()
+              )
+
+SELECT tmpMovement.Id AS MovementId
+     , tmpMovement.PairDayId
+     , tmpMI.Id AS MI_Id
+     , CASE WHEN tmpMovement.PairDayId = 7438171 THEN zc_Enum_WorkTimeKind_WorkN() -- ночь
+            ELSE zc_Enum_WorkTimeKind_WorkD()--день
+       END
+     , MILinkObject_WorkTimeKind.ObjectId AS WorkTimeKindId
+     , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_WorkTimeKind()
+                                            , tmpMI.Id
+                                            , CASE WHEN tmpMovement.PairDayId = 7438171 THEN zc_Enum_WorkTimeKind_WorkN() -- ночь
+                                                   ELSE zc_Enum_WorkTimeKind_WorkD()--день
+                                              END
+                                              )
+FROM tmpMovement
+     INNER JOIN tmpMI ON tmpMI.MovementId = tmpMovement.Id
+ LEFT JOIN tmpMILO AS MILinkObject_WorkTimeKind
+                                                  ON MILinkObject_WorkTimeKind.MovementItemId = tmpMI.Id 
+                                                 AND MILinkObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
+WHERE MILinkObject_WorkTimeKind.ObjectId IS NULL
+
+*/
