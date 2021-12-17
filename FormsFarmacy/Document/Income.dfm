@@ -153,6 +153,11 @@
               Format = ',0.00'
               Kind = skAverage
               Column = OrderPrice
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = PretensionAmount
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -706,6 +711,17 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 82
+          end
+          object PretensionAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
+            DataBinding.FieldName = 'PretensionAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 69
           end
         end
       end

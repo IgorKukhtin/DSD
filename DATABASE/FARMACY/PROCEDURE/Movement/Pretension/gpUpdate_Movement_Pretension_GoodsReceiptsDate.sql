@@ -1,10 +1,11 @@
--- Function: gpUpdate_Movement_Pretension_ClearBranchDate()
+-- Function: gpUpdate_Movement_Pretension_GoodsReceiptsDate()
 
-DROP FUNCTION IF EXISTS gpUpdate_Movement_Pretension_ClearBranchDate (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Pretension_GoodsReceiptsDate (Integer, TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Movement_Pretension_ClearBranchDate(
+CREATE OR REPLACE FUNCTION gpUpdate_Movement_Pretension_GoodsReceiptsDate(
     IN inMovementId          Integer   , -- Ключ объекта <Документ Перемещение>
-   OUT outBranchDate         TDateTime , -- Дата документа
+    IN inGoodsReceiptsDate   TDateTime , -- Дата поступления товара
+   OUT outGoodsReceiptsDate  TDateTime , -- Дата поступления товара
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS TDateTime AS
@@ -14,21 +15,13 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := inSession;
-    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Pretension_Meneger());
+    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Pretension_BranchDate());
     
     IF COALESCE (inMovementId,0) = 0
     THEN
         RAISE EXCEPTION 'Ошибка. Документ не сохранен!';
     END IF;
     
-    IF NOT EXISTS(SELECT 1 FROM MovementDate AS MovementDate_Branch
-                  WHERE MovementDate_Branch.MovementId = inMovementId
-                    AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
-                    AND MovementDate_Branch.ValueData IS NOT NULL)
-    THEN
-      RETURN;
-    END IF;
-
     -- параметры документа
     SELECT
         Movement.StatusId
@@ -43,16 +36,17 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);   
     END IF;
     
-    outBranchDate := Null;
-       
-    --Сохранили Корректировка нашей даты
-    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Branch(), inMovementId, Null);
+    outGoodsReceiptsDate := inGoodsReceiptsDate;
     
-    -- сохранили связь с <Кто установил>
-    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_User(), inMovementId, Null);
-
+    --Сохранили Дата поступления товара
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_GoodsReceipts(), inMovementId, inGoodsReceiptsDate);
+    
+/*    -- сохранили связь с <Кто установил>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_User(), inMovementId, vbUserId);
+*/
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, False);
+
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
@@ -63,3 +57,5 @@ LANGUAGE PLPGSQL VOLATILE;
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  02.12.21                                                       *
 */
+
+select * from gpUpdate_Movement_Pretension_GoodsReceiptsDate(inMovementId := 26008006 , inGoodsReceiptsDate := ('16.12.2021')::TDateTime ,  inSession := '3');

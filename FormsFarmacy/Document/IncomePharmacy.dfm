@@ -11,19 +11,19 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     Top = 146
     Width = 985
     Height = 378
-    ExplicitTop = 126
+    ExplicitTop = 146
     ExplicitWidth = 985
-    ExplicitHeight = 398
+    ExplicitHeight = 378
     ClientRectBottom = 378
     ClientRectRight = 985
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 985
-      ExplicitHeight = 374
+      ExplicitHeight = 354
       inherited cxGrid: TcxGrid
         Width = 985
         Height = 354
         ExplicitWidth = 985
-        ExplicitHeight = 374
+        ExplicitHeight = 354
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -118,6 +118,11 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = PretensionAmount
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -376,6 +381,15 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             DataBinding.FieldName = 'Color_ExpirationDatePh'
             Visible = False
             VisibleForCustomization = False
+          end
+          object PretensionAmount: TcxGridDBColumn
+            DataBinding.FieldName = 'PretensionAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
         end
       end

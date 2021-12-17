@@ -116,6 +116,14 @@ type
     bbDisableNPP_auto: TdxBarButton;
     isName_new: TcxGridDBColumn;
     cbIsAuto: TcxCheckBox;
+    cxLabel14: TcxLabel;
+    edBranch: TcxButtonEdit;
+    GuidesBranch: TdsdGuides;
+    spUpdate_Branch: TdsdStoredProc;
+    actBranchChoiceForm: TOpenChoiceForm;
+    macUpdateBranch: TMultiAction;
+    actUpdate_Branch: TdsdExecStoredProc;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

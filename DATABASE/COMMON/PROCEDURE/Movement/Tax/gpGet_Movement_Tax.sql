@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, OperDate TDateTim
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
+             , BranchId Integer, BranchName TVarChar
              , StartDateTax TDateTime
              , InvNumberBranch TVarChar
              , Comment TVarChar
@@ -81,7 +82,9 @@ BEGIN
              , 0                     			AS TaxKindId
              , CAST ('' as TVarChar) 			AS TaxKindName
              , 0                   		        AS ReestrKindId
-             , '' :: TVarChar                           AS ReestrKindName 
+             , '' :: TVarChar                           AS ReestrKindName
+             , Object_Branch.Id                         AS BranchId
+             , Object_Branch.ValueData                  AS BranchName
              , (DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '4 MONTH') :: TDateTime AS StartDateTax
              , tmpInvNumber.InvNumberBranch
              , ''                           :: TVarChar AS Comment
@@ -119,10 +122,40 @@ BEGIN
 
                             ELSE ''
                        END :: TVarChar AS InvNumberBranch
+                     , CASE WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentBread()
+                                 THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
+                            
+                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentDnepr()
+                                 THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
+     
+                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentKiev()
+                                 THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportKiev())
+     
+                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentOdessa()
+                                 THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportOdessa())
+                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentZaporozhye()
+                                 THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportZaporozhye())
+     
+                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentKrRog()
+                                 THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportKrRog())
+     
+                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentNikolaev()
+                                 THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportNikolaev())
+     
+                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentKharkov()
+                                 THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportKharkov())
+     
+                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentCherkassi()
+                                 THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportCherkassi())
+     
+                            WHEN lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) = zc_Enum_Process_AccessKey_DocumentLviv()
+                                 THEN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = zc_Enum_Process_AccessKey_TrasportLviv())
+                       END  AS BranchId
                ) AS tmpInvNumber
           LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1=1
           LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
-          LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = zc_Juridical_Basis();
+          LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = zc_Juridical_Basis()
+          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpInvNumber.BranchId;
 
      ELSE
 
@@ -187,6 +220,9 @@ BEGIN
 
            , Object_ReestrKind.Id             	                AS ReestrKindId
            , Object_ReestrKind.ValueData       	                AS ReestrKindName
+           
+           , Object_Branch.Id                                   AS BranchId
+           , Object_Branch.ValueData                            AS BranchName
 
            , (DATE_TRUNC ('MONTH', Movement.OperDate) - INTERVAL '4 MONTH') :: TDateTime AS StartDateTax
            , MovementString_InvNumberBranch.ValueData           AS InvNumberBranch
@@ -279,14 +315,13 @@ BEGIN
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
 
             LEFT JOIN tmpMLO AS MovementLinkObject_Contract
-                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-
+                             ON MovementLinkObject_Contract.MovementId = Movement.Id
+                            AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN object_contract_invnumber_view AS Object_Contract ON Object_Contract.contractid = MovementLinkObject_Contract.ObjectId
 
             LEFT JOIN tmpMovementString AS MovementString_InvNumberBranch
-                                     ON MovementString_InvNumberBranch.MovementId =  Movement.Id
-                                    AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
+                                        ON MovementString_InvNumberBranch.MovementId =  Movement.Id
+                                       AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                            ON MovementLinkMovement_Master.MovementChildId = Movement.Id
@@ -294,13 +329,18 @@ BEGIN
                                           AND MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Tax()
             LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementId
             LEFT JOIN tmpMovementBoolean AS MovementBoolean_Checked
-                                      ON MovementBoolean_Checked.MovementId = COALESCE (Movement_DocumentMaster.Id, Movement.Id)
-                                     AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+                                         ON MovementBoolean_Checked.MovementId = COALESCE (Movement_DocumentMaster.Id, Movement.Id)
+                                        AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
 
             LEFT JOIN tmpMLO AS MovementLinkObject_ReestrKind
-                                         ON MovementLinkObject_ReestrKind.MovementId = COALESCE (Movement_DocumentMaster.Id, Movement.Id)
-                                        AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
+                             ON MovementLinkObject_ReestrKind.MovementId = COALESCE (Movement_DocumentMaster.Id, Movement.Id)
+                            AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
+
+            LEFT JOIN tmpMLO AS MovementLinkObject_Branch
+                             ON MovementLinkObject_Branch.MovementId = Movement.Id
+                            AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = MovementLinkObject_Branch.ObjectId
 
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Tax();
@@ -314,6 +354,7 @@ ALTER FUNCTION gpGet_Movement_Tax (Integer, Boolean, TDateTime, TVarChar) OWNER 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 16.12.21         * BranchId
  07.12.21         *
  17.12.18         * InvNumberRegistered
  02.03.18         * MovementString_ToINN
@@ -328,5 +369,5 @@ ALTER FUNCTION gpGet_Movement_Tax (Integer, Boolean, TDateTime, TVarChar) OWNER 
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpGet_Movement_Tax (inMovementId:= 0, inOperDate:=CURRENT_DATE,inSession:= '2')
+-- SELECT * FROM gpGet_Movement_Tax (inMovementId:= 0, inMask:= FALSE, inOperDate:=CURRENT_DATE,inSession:= '5')
 -- SELECT * FROM gpGet_Movement_Tax (inMovementId := 40859, inMask:= FALSE, inOperDate := '25.01.2014',  inSession := '5');

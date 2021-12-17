@@ -1,24 +1,24 @@
--- Function: gpGet_Movement_Pretension_Data()
+-- Function: gpSelect_Movement_Pretension_Print()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_Pretension_Data (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Pretension_Print (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Movement_Pretension_Data(
-    IN inMovementId    Integer  , -- ключ Документа
-   OUT outDataAct      TBlob    , -- Данные 
-    IN inSession       TVarChar   -- сессия пользователя
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Pretension_Print(
+    IN inMovementId        Integer  , -- ключ Документа
+    IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TBlob
+RETURNS SETOF refcursor
 AS
 $BODY$
     DECLARE vbUserId Integer;
-    DECLARE vbComment TBlob;
-    DECLARE vbDataGoods TBlob;
 
+    DECLARE Cursor1 refcursor;
+    DECLARE Cursor2 refcursor;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Pretension());
     vbUserId:= inSession;
 
+    OPEN Cursor1 FOR
     WITH tmpObjectHistory AS (SELECT *
                               FROM ObjectHistory
                               WHERE ObjectHistory.DescId = zc_ObjectHistory_JuridicalDetails()
@@ -92,12 +92,59 @@ BEGIN
                              )
                              
       SELECT
-             Movement_Pretension_View.JuridicalName||Chr(13)||
-             Movement_Pretension_View.FromName||Chr(13)||
-             'Тел. '||ObjectString_Unit_Phone.ValueData||Chr(13)||
-             'Накладная №' ||Movement_Pretension_View.IncomeInvNumber||' от '||TO_CHAR (Movement_Pretension_View.IncomeOperDate, 'dd.mm.yyyy')
-           , Movement_Pretension_View.Comment  
-       INTO outDataAct, vbComment
+             Movement_Pretension_View.Id
+           , Movement_Pretension_View.InvNumber
+           , Movement_Pretension_View.OperDate
+           , Movement_Pretension_View.StatusCode
+           , Movement_Pretension_View.StatusName
+           , Movement_Pretension_View.PriceWithVAT
+           , Movement_Pretension_View.FromId
+           , Movement_Pretension_View.FromName
+           , Movement_Pretension_View.ToId
+           , Movement_Pretension_View.ToName
+           , Movement_Pretension_View.NDSKindId
+           , Movement_Pretension_View.NDSKindName
+           , Movement_Pretension_View.MovementIncomeId
+           , Movement_Pretension_View.IncomeOperDate
+           , Movement_Pretension_View.IncomeInvNumber
+           , Movement_Pretension_View.JuridicalId
+           , Movement_Pretension_View.JuridicalName
+           , Movement_Pretension_View.Comment
+           , Movement_Pretension_View.BranchDate
+           , ObjectString_Unit_Phone.ValueData                    AS Phone
+           , EXTRACT (DAY FROM Movement_Pretension_View.IncomeOperDate)::TVarChar             AS IncomeOperDateDay
+           , zfCalc_MonthNameUkr (Movement_Pretension_View.IncomeOperDate)||' '||
+             EXTRACT (YEAR FROM Movement_Pretension_View.IncomeOperDate)                      AS IncomeOperDateMonthYear
+           , EXTRACT (DAY FROM Movement_Pretension_View.OperDate)::TVarChar                   AS InOperDateDay
+           , zfCalc_MonthNameUkr (Movement_Pretension_View.OperDate)||' '||
+             EXTRACT (YEAR FROM Movement_Pretension_View.OperDate)                            AS InOperDateMonthYear
+           , EXTRACT (DAY FROM CURRENT_DATE)::TVarChar                                        AS OperDateDay
+           , zfCalc_MonthNameUkr (CURRENT_DATE)||' '||
+             EXTRACT (YEAR FROM CURRENT_DATE)                                                 AS OperDateMonthYear
+           , tmpJuridicalDetails.FullName
+           , tmpJuridicalDetails.MainName
+           , tmpJuridicalDetails.MainName_Cut
+           , ObjectString_Unit_Address.ValueData                  AS Address
+           , (CASE WHEN COALESCE(ObjectDate_MondayStart.ValueData ::Time,'00:00') <> '00:00' AND COALESCE(ObjectDate_MondayStart.ValueData ::Time,'00:00') <> '00:00'
+                   THEN 'Пн-Пт '||LEFT ((ObjectDate_MondayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_MondayEnd.ValueData::Time)::TVarChar,5)||'; '
+                   ELSE ''
+              END||'' ||
+              CASE WHEN COALESCE(ObjectDate_SaturdayStart.ValueData ::Time,'00:00') <> '00:00' AND COALESCE(ObjectDate_SaturdayEnd.ValueData ::Time,'00:00') <> '00:00'
+                   THEN 'Сб '||LEFT ((ObjectDate_SaturdayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_SaturdayEnd.ValueData::Time)::TVarChar,5)||'; '
+                   ELSE ''
+              END||''||
+              CASE WHEN COALESCE(ObjectDate_SundayStart.ValueData ::Time,'00:00') <> '00:00' AND COALESCE(ObjectDate_SundayEnd.ValueData ::Time,'00:00') <> '00:00'
+                   THEN 'Нд. '||LEFT ((ObjectDate_SundayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_SundayEnd.ValueData::Time)::TVarChar,5)
+                   ELSE ''
+              END) :: TVarChar AS TimeWork 
+           , COALESCE(ObjectString_PharmacyManager.ValueData, '__________________________')                                     AS PharmacyManager
+           , CASE WHEN ObjectString_PharmacyManager.ValueData = COALESCE(Object_Member.ValueData, Object_Insert.ValueData, '')
+             THEN '__________________________'
+             ELSE COALESCE(Object_Member.ValueData, Object_Insert.ValueData, '__________________________________') END                          AS Manager
+           , JuridicalDetailsTo.FullName                                                              AS FullNameTo
+           , COALESCE( COALESCE(Object_MemberUser.ValueData, Object_User.ValueData)||
+             COALESCE(', тел. '||ObjectString_Member_Phone.ValueData, '') , '_________________')||
+             COALESCE(', E-Mail '||ObjectString_Member_EMail.ValueData, '')            AS UserName
        FROM Movement_Pretension_View       
 
             LEFT JOIN ObjectString AS ObjectString_Unit_Address
@@ -162,13 +209,32 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Member_Phone
                                    ON ObjectString_Member_Phone.ObjectId = Object_MemberUser.Id
                                   AND ObjectString_Member_Phone.DescId = zc_ObjectString_Member_Phone()
+            LEFT JOIN ObjectString AS ObjectString_Member_EMail
+                                   ON ObjectString_Member_EMail.descid = zc_ObjectString_Member_EMail()
+                                  AND ObjectString_Member_EMail.ObjectId = Object_MemberUser.Id
                                   
        WHERE Movement_Pretension_View.Id = inMovementId;
+    RETURN NEXT Cursor1;
+
+
+    OPEN Cursor2 FOR
     
-        SELECT string_agg(COALESCE(Object_PartnerGoods.Name, Object_Goods.ValueData, '')||
-                          COALESCE(', '||Object_PartnerGoods.MakerName, '')||' '||
-                          zfConvert_FloatToString(MI_Pretension.Amount)||' '||COALESCE(Object_ReasonDifferences.ValueData, ''), Chr(13))
-        INTO vbDataGoods
+        SELECT MI_Pretension.Id
+             , MIFloat_MovementItemId.ValueData::Integer   AS ParentId
+             , MI_Pretension.ObjectId           AS GoodsId
+             , Object_Goods.ObjectCode          AS GoodsCode
+             , Object_Goods.ValueData           AS GoodsName
+             , MI_Pretension.Amount             AS Amount
+             , Object_ReasonDifferences.Id          AS ReasonDifferencesId
+             , Object_ReasonDifferences.ValueData   AS ReasonDifferencesName
+             , MIFloat_Amount.ValueData         AS AmountIncome
+             , MIFloat_AmountManual.ValueData   AS AmountManual
+             , (COALESCE(MIFloat_AmountManual.ValueData, 0) - COALESCE( MIFloat_Amount.ValueData,0))::TFloat AS AmountDiff
+             , MIBoolean_Checked.ValueData      AS isChecked
+             , MI_Pretension.isErased
+             , Object_PartnerGoods.Code         AS PartnerGoodsCode
+             , COALESCE(Object_PartnerGoods.Name, Object_Goods.ValueData)       AS PartnerGoodsName
+             , COALESCE(', '||Object_PartnerGoods.MakerName, '')                      AS MakerName
         FROM Movement AS Movement_Pretension
              INNER JOIN MovementItem AS MI_Pretension
                                      ON MI_Pretension.MovementId = Movement_Pretension.Id
@@ -202,22 +268,12 @@ BEGIN
              
         WHERE Movement_Pretension.Id = inMovementId
           AND MIBoolean_Checked.ValueData = True;
-          
-          
-    IF COALESCE (vbDataGoods, '') <> ''
-    THEN 
-      outDataAct := outDataAct||Chr(13)||Chr(13)||vbDataGoods;
-    END IF;
 
-    IF COALESCE (vbComment, '') <> ''
-    THEN 
-      outDataAct := outDataAct||Chr(13)||Chr(13)||'Комментарий: '||vbComment;
-    END IF;
-    
+    RETURN NEXT Cursor2;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_Pretension_Data (Integer,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Pretension_Print (Integer,TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -226,4 +282,4 @@ ALTER FUNCTION gpGet_Movement_Pretension_Data (Integer,TVarChar) OWNER TO postgr
 */
 
 
-select * from gpGet_Movement_Pretension_Data(inMovementId := 26008006 ,  inSession := '3');
+select * from gpSelect_Movement_Pretension_Print(inMovementId := 26008006 ,  inSession := '3');

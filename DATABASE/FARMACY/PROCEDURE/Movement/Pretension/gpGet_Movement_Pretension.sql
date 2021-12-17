@@ -19,8 +19,9 @@ RETURNS TABLE (Id Integer
              , IncomeMovementId Integer 
              , IncomeOperDate TDateTime, IncomeInvNumber TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
-             , Comment TBlob, BranchDate TDateTime
+             , Comment TBlob, BranchDate TDateTime, GoodsReceiptsDate TDateTime
              , ActName TVarChar
+             , ActExportDir TVarChar, ActExportName TVarChar, ActFileName TVarChar
 )
 AS
 $BODY$
@@ -58,9 +59,13 @@ BEGIN
            , Movement_Pretension_View.JuridicalName
            , Movement_Pretension_View.Comment
            , Movement_Pretension_View.BranchDate
+           , Movement_Pretension_View.GoodsReceiptsDate
            , CASE WHEN Movement_Pretension_View.ToId = 59611 THEN 'Акт по претензии Бадм'
                   WHEN Movement_Pretension_View.ToId = 59612 THEN 'Акт по претензии Бадм'
-                  ELSE 'Акт по претензии Бадм' END::TVarChar AS ActName
+                  ELSE 'Акт по претензии Бадм' END::TVarChar        AS ActName
+           , 'tmpPretensionFile'::TVarChar                          AS ActExportDir
+           , ('Акт '||Movement_Pretension_View.InvNumber)::TVarChar AS ActExportName
+           , ('tmpPretensionFile\'||'Акт '||Movement_Pretension_View.InvNumber||'.pdf')::TVarChar AS ActFileName
 
        FROM Movement_Pretension_View       
 
@@ -85,5 +90,5 @@ ALTER FUNCTION gpGet_Movement_Pretension (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- 
-select * from gpGet_Movement_Pretension(inMovementId := 26008006 ,  inSession := '3');
+-- select * from gpGet_Movement_Pretension(inMovementId := 26008006 ,  inSession := '3');
+

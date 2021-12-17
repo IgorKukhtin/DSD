@@ -507,7 +507,15 @@ inherited PretensionForm: TPretensionForm
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 45
+                Width = 56
+              end
+              object chisAct: TcxGridDBColumn
+                Caption = #1040#1082#1090
+                DataBinding.FieldName = 'isAct'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Options.Editing = False
+                Width = 43
               end
               object chFileName: TcxGridDBColumn
                 Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1092#1072#1081#1083#1072
@@ -515,7 +523,7 @@ inherited PretensionForm: TPretensionForm
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 316
+                Width = 276
               end
             end
             object cxGridLevelV: TcxGridLevel
@@ -612,7 +620,7 @@ inherited PretensionForm: TPretensionForm
     end
     object edPriceWithVAT: TcxCheckBox
       Left = 456
-      Top = 59
+      Top = 42
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       Enabled = False
       Properties.ReadOnly = True
@@ -677,8 +685,8 @@ inherited PretensionForm: TPretensionForm
       Width = 100
     end
     object cbisDeferred: TcxCheckBox
-      Left = 609
-      Top = 59
+      Left = 456
+      Top = 61
       Caption = #1054#1090#1083#1086#1078#1077#1085
       Properties.ReadOnly = True
       TabOrder = 18
@@ -693,8 +701,8 @@ inherited PretensionForm: TPretensionForm
       Width = 105
     end
     object deBranchDate: TcxDateEdit
-      Left = 708
-      Top = 59
+      Left = 592
+      Top = 61
       EditValue = 42363d
       Properties.ReadOnly = True
       Properties.SaveTime = False
@@ -703,9 +711,25 @@ inherited PretensionForm: TPretensionForm
       Width = 100
     end
     object cxLabel7: TcxLabel
-      Left = 708
-      Top = 40
-      Caption = #1044#1072#1090#1072' '#1087#1088#1080#1085#1103#1090#1080#1103
+      Left = 592
+      Top = 42
+      Caption = #1044#1072#1090#1072' '#1079#1072#1082#1088#1099#1090#1080#1103' ('#1088#1077#1096#1077#1085#1080#1103')'
+    end
+    object deGoodsReceiptsDate: TcxDateEdit
+      Left = 735
+      Top = 59
+      EditValue = 42363d
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 22
+      Width = 100
+    end
+    object cxLabel9: TcxLabel
+      Left = 735
+      Top = 42
+      Hint = #1044#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1090#1086#1074#1072#1088#1072' '#1082' '#1085#1072#1084' '#1085#1072' '#1089#1082#1083#1072#1076
+      Caption = #1044#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1090#1086#1074#1072#1088#1072
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -966,7 +990,7 @@ inherited PretensionForm: TPretensionForm
         end
         item
           Name = 'Label'
-          Value = #1042#1074#1077#1076#1080#1090#1077' '#1076#1072#1090#1091' '#1087#1088#1080#1085#1103#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
+          Value = #1044#1072#1090#1072' '#1079#1072#1082#1088#1099#1090#1080#1103' ('#1088#1077#1096#1077#1085#1080#1103') '#1087#1088#1077#1090#1077#1085#1079#1080#1080
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -983,8 +1007,8 @@ inherited PretensionForm: TPretensionForm
         item
           StoredProc = spUpdate_BranchDate
         end>
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1088#1080#1085#1103#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1088#1080#1085#1103#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1079#1072#1082#1088#1099#1090#1080#1103' ('#1088#1077#1096#1077#1085#1080#1103')'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1079#1072#1082#1088#1099#1090#1080#1103' ('#1088#1077#1096#1077#1085#1080#1103')'
       ImageIndex = 35
     end
     object actUpdate_ClearBranchDate: TdsdExecStoredProc
@@ -996,10 +1020,10 @@ inherited PretensionForm: TPretensionForm
         item
           StoredProc = spUpdate_ClearBranchDate
         end>
-      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1088#1080#1085#1103#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
-      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1088#1080#1085#1103#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1090#1091' '#1079#1072#1082#1088#1099#1090#1080#1103' ('#1088#1077#1096#1077#1085#1080#1103')'
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1090#1091' '#1079#1072#1082#1088#1099#1090#1080#1103' ('#1088#1077#1096#1077#1085#1080#1103')'
       ImageIndex = 77
-      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1088#1080#1085#1103#1090#1080#1103' '#1090#1086#1074#1072#1088#1072'?'
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1090#1091' '#1079#1072#1082#1088#1099#1090#1080#1103' ('#1088#1077#1096#1077#1085#1080#1103')?'
     end
     object actRefreshFile: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1464,6 +1488,192 @@ inherited PretensionForm: TPretensionForm
       Hint = #1054#1090#1087#1088#1072#1074#1082#1072' E-mail'
       ImageIndex = 53
     end
+    object actGoodsReceiptsDataChoiceDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actGoodsReceiptsDataChoiceDialog'
+      FormName = 'TDataChoiceDialogForm'
+      FormNameParam.Value = 'TDataChoiceDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'OperDate'
+          Value = 44541d
+          Component = FormParams
+          ComponentItem = 'GoodsReceiptsDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1044#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1090#1086#1074#1072#1088#1072
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_GoodsReceiptsDate: TdsdExecStoredProc
+      Category = 'Deferred'
+      MoveParams = <>
+      BeforeAction = actGoodsReceiptsDataChoiceDialog
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_GoodsReceiptsDate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_GoodsReceiptsDate
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1090#1086#1074#1072#1088#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1090#1086#1074#1072#1088#1072
+      ImageIndex = 67
+    end
+    object actPrintToFile: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1040#1082#1090#1072' '#1087#1086' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1040#1082#1090#1072' '#1087#1086' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport_find'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport1_ShowDialog'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ExportDirectory'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ActExportDir'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FileNameExport'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ActExportName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ActName'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actInsertUpdateFileAct: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateFileAct
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateFileAct
+        end>
+      Caption = 'actInsertUpdateFileAct'
+    end
+    object actSendFTPFileAct: TdsdFTP
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actGetFTPParams
+      HostParam.Value = Null
+      HostParam.Component = FormParams
+      HostParam.ComponentItem = 'FtpHost'
+      HostParam.DataType = ftString
+      HostParam.MultiSelectSeparator = ','
+      PortParam.Value = Null
+      PortParam.Component = FormParams
+      PortParam.ComponentItem = 'FtpPort'
+      PortParam.MultiSelectSeparator = ','
+      UsernameParam.Value = Null
+      UsernameParam.Component = FormParams
+      UsernameParam.ComponentItem = 'FtpUsername'
+      UsernameParam.DataType = ftString
+      UsernameParam.MultiSelectSeparator = ','
+      PasswordParam.Value = Null
+      PasswordParam.Component = FormParams
+      PasswordParam.ComponentItem = 'FtpPassword'
+      PasswordParam.DataType = ftString
+      PasswordParam.MultiSelectSeparator = ','
+      DirParam.Value = Null
+      DirParam.Component = FormParams
+      DirParam.ComponentItem = 'FtpDir'
+      DirParam.DataType = ftString
+      DirParam.MultiSelectSeparator = ','
+      FullFileNameParam.Value = Null
+      FullFileNameParam.Component = FormParams
+      FullFileNameParam.ComponentItem = 'ActFileName'
+      FullFileNameParam.DataType = ftString
+      FullFileNameParam.MultiSelectSeparator = ','
+      FileNameFTPParam.Value = Null
+      FileNameFTPParam.Component = FormParams
+      FileNameFTPParam.ComponentItem = 'FtpFileName'
+      FileNameFTPParam.DataType = ftString
+      FileNameFTPParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      DownloadFolderParam.Value = ''
+      DownloadFolderParam.Component = FormParams
+      DownloadFolderParam.DataType = ftString
+      DownloadFolderParam.MultiSelectSeparator = ','
+      Caption = 'actSendFTPFileAct'
+    end
+    object mactPrintToFile: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPrintToFile
+        end
+        item
+          Action = actInsertUpdateFileAct
+        end
+        item
+          Action = actSendFTPFileAct
+        end
+        item
+          Action = actRefreshFile
+        end>
+      QuestionBeforeExecute = 'C'#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1040#1082#1090' '#1087#1086' '#1087#1088#1077#1090#1077#1085#1079#1080#1080' '#1080' '#1087#1086#1076#1082#1083#1102#1095#1077#1085#1080#1077' '#1077#1075#1086' '#1082' '#1092#1072#1081#1083#1072#1084'?'
+      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1040#1082#1090#1072' '#1087#1086' '#1087#1088#1077#1090#1077#1085#1079#1080#1080' '#1080' '#1087#1086#1076#1082#1083#1102#1095#1077#1085#1080#1077' '#1077#1075#1086' '#1082' '#1092#1072#1081#1083#1072#1084
+      Hint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1040#1082#1090#1072' '#1087#1086' '#1087#1088#1077#1090#1077#1085#1079#1080#1080' '#1080' '#1087#1086#1076#1082#1083#1102#1095#1077#1085#1080#1077' '#1077#1075#1086' '#1082' '#1092#1072#1081#1083#1072#1084
+      ImageIndex = 30
+    end
   end
   inherited MasterDS: TDataSource
     Left = 280
@@ -1584,6 +1794,18 @@ inherited PretensionForm: TPretensionForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton13'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_GoodsReceiptsDate'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1684,6 +1906,9 @@ inherited PretensionForm: TPretensionForm
           ItemName = 'dxBarButton11'
         end>
     end
+    inherited dxBarStatic: TdxBarStatic
+      Width = 15
+    end
     object bbPrintTTN: TdxBarButton [5]
       Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
       Category = 0
@@ -1704,6 +1929,9 @@ inherited PretensionForm: TPretensionForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       Visible = ivAlways
       ImageIndex = 18
+    end
+    inherited bbStatic: TdxBarStatic
+      Width = 15
     end
     inherited bbAddMask: TdxBarButton
       Visible = ivNever
@@ -1794,6 +2022,14 @@ inherited PretensionForm: TPretensionForm
       Action = mactSMTPSend
       Category = 0
     end
+    object bbUpdate_GoodsReceiptsDate: TdxBarButton
+      Action = actUpdate_GoodsReceiptsDate
+      Category = 0
+    end
+    object dxBarButton13: TdxBarButton
+      Action = mactPrintToFile
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
@@ -1874,7 +2110,7 @@ inherited PretensionForm: TPretensionForm
       end
       item
         Name = 'BranchDate'
-        Value = 44541d
+        Value = Null
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -1962,6 +2198,30 @@ inherited PretensionForm: TPretensionForm
       item
         Name = 'Password'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsReceiptsDate'
+        Value = Null
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ActExportDir'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ActExportName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ActFileName'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 280
@@ -2126,10 +2386,41 @@ inherited PretensionForm: TPretensionForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'GoodsReceiptsDate'
+        Value = Null
+        Component = deGoodsReceiptsDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ActName'
         Value = Null
         Component = FormParams
         ComponentItem = 'ActName'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ActExportDir'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ActExportDir'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ActExportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ActExportName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ActFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ActFileName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -2721,8 +3012,8 @@ inherited PretensionForm: TPretensionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 736
-    Top = 331
+    Left = 712
+    Top = 347
   end
   object spUpdate_ClearBranchDate: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Pretension_ClearBranchDate'
@@ -2842,7 +3133,7 @@ inherited PretensionForm: TPretensionForm
       end
       item
         Name = 'inFileName'
-        Value = '-700000'
+        Value = Null
         Component = FormParams
         ComponentItem = 'FileName'
         DataType = ftString
@@ -3148,5 +3439,72 @@ inherited PretensionForm: TPretensionForm
     PackSize = 1
     Left = 496
     Top = 456
+  end
+  object spUpdate_GoodsReceiptsDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Pretension_GoodsReceiptsDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsReceiptsDate'
+        Value = 44541d
+        Component = FormParams
+        ComponentItem = 'GoodsReceiptsDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsReceiptsDate'
+        Value = 42363d
+        Component = deGoodsReceiptsDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 176
+    Top = 467
+  end
+  object spInsertUpdateFileAct: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_Pretension_AddFileAct'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ActFileName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileNameFTP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FtpFileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 496
+    Top = 507
   end
 end

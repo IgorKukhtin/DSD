@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PretensionFile(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , Number Integer, FileName TVarChar, FileNameFTP TVarChar, FolderTMP TVarChar, FileNameDownload TVarChar
+             , Number Integer, FileName TVarChar, isAct Boolean
+             , FileNameFTP TVarChar, FolderTMP TVarChar, FileNameDownload TVarChar
              , isErased Boolean
               )
 AS
@@ -29,6 +30,7 @@ BEGIN
            PretensionFile AS (SELECT MI_PretensionFile.Id
                                    , ROW_NUMBER() OVER (ORDER BY MI_PretensionFile.Id)::Integer                AS Number
                                    , MIString_FileName.ValueData                                               AS FileName
+                                   , COALESCE(MIBoolean_Checked.ValueData, FALSE)                              AS isAct
                                    , MI_PretensionFile.Id::TVarChar                                            AS FileNameFTP
                                    , 'tmpPretensionFile\'::TVarChar                                            AS FolderTMP
                                    , ''::TVarChar                                                              AS FileNameDownload
@@ -42,6 +44,10 @@ BEGIN
                                                                 ON MIString_FileName.MovementItemId = MI_PretensionFile.Id
                                                                AND MIString_FileName.DescId = zc_MIString_FileName()
 
+                                   LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                                                 ON MIBoolean_Checked.MovementItemId = MI_PretensionFile.Id
+                                                                AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
+
                               WHERE Movement_Pretension.Id = inMovementId
                              )
 
@@ -49,6 +55,7 @@ BEGIN
               MovementItem.Id
             , MovementItem.Number  
             , MovementItem.FileName
+            , MovementItem.isAct
             , MovementItem.FileNameFTP
             , MovementItem.FolderTMP
             , MovementItem.FileNameDownload

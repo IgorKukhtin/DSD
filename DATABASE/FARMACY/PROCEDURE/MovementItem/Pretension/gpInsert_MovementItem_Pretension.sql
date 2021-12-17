@@ -27,7 +27,7 @@ BEGIN
      --vbUserId := inSession;
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Pretension());
      
-     IF COALESCE (inAmount, 0) = COALESCE (inAmountManual, 0)
+     IF COALESCE (inAmount, 0) = 0
      THEN
        RETURN;
      END IF;

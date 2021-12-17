@@ -2428,10 +2428,10 @@ inherited Sale_OrderForm: TSale_OrderForm
       Category = 'Print_TTN'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGetReportNameTransport
+      StoredProc = spGetReporNameTTN
       StoredProcList = <
         item
-          StoredProc = spGetReportNameTransport
+          StoredProc = spGetReporNameTTN
         end>
       Caption = 'actPrint_Transport_ReportName'
     end

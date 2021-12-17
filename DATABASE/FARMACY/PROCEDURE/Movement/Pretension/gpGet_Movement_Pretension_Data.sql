@@ -165,9 +165,9 @@ BEGIN
                                   
        WHERE Movement_Pretension_View.Id = inMovementId;
     
-        SELECT string_agg(COALESCE(Object_PartnerGoods.Name, Object_Goods.ValueData, '')||Chr(13)||
-                          COALESCE(Object_PartnerGoods.MakerName||Chr(13), '')||
-                          zfConvert_FloatToString(MI_Pretension.Amount)||' причина '||COALESCE(Object_ReasonDifferences.ValueData, ''), Chr(13))
+        SELECT string_agg(COALESCE(Object_PartnerGoods.Name, Object_Goods.ValueData, '')||
+                          COALESCE(', '||Object_PartnerGoods.MakerName, '')||' '||
+                          zfConvert_FloatToString(MI_Pretension.Amount)||' '||COALESCE(Object_ReasonDifferences.ValueData, ''), Chr(13))
         INTO vbDataGoods
         FROM Movement AS Movement_Pretension
              INNER JOIN MovementItem AS MI_Pretension
@@ -213,7 +213,7 @@ BEGIN
     THEN 
       outDataAct := outDataAct||Chr(13)||Chr(13)||'Комментарий: '||vbComment;
     END IF;
-    
+        
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

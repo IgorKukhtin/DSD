@@ -155,6 +155,14 @@ type
     edInvNumberRegistered: TcxTextEdit;
     LineNumTaxNew: TcxGridDBColumn;
     cbIsAuto: TcxCheckBox;
+    cxLabel19: TcxLabel;
+    edBranch: TcxButtonEdit;
+    GuidesBranch: TdsdGuides;
+    spUpdate_Branch: TdsdStoredProc;
+    actBranchChoiceForm: TOpenChoiceForm;
+    actUpdate_Branch: TdsdExecStoredProc;
+    macUpdateBranch: TMultiAction;
+    bbUpdateBranch: TdxBarButton;
   private
     { Private declarations }
   public

@@ -1,28 +1,28 @@
 inherited TaxCorrectiveForm: TTaxCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 668
-  ClientWidth = 1114
-  ExplicitWidth = 1130
+  ClientWidth = 1116
+  ExplicitWidth = 1132
   ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 163
-    Width = 1114
+    Width = 1116
     Height = 505
     Properties.ActivePage = cxTabSheet1
     ExplicitTop = 163
     ExplicitWidth = 1114
     ExplicitHeight = 505
     ClientRectBottom = 505
-    ClientRectRight = 1114
+    ClientRectRight = 1116
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1114
+      ExplicitWidth = 1192
       ExplicitHeight = 481
       inherited cxGrid: TcxGrid
-        Width = 1114
+        Width = 1116
         Height = 481
-        ExplicitWidth = 1114
+        ExplicitWidth = 1192
         ExplicitHeight = 481
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -286,14 +286,16 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#8470' '#1087'/'#1087
       ImageIndex = 1
+      ExplicitWidth = 1114
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 1114
+        Width = 1116
         Height = 481
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitWidth = 1114
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -565,7 +567,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1114
+    Width = 1116
     Height = 137
     TabOrder = 3
     ExplicitWidth = 1114
@@ -857,6 +859,22 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Properties.ReadOnly = True
       TabOrder = 40
       Width = 144
+    end
+    object cxLabel19: TcxLabel
+      Left = 984
+      Top = 86
+      Caption = #1060#1080#1083#1080#1072#1083
+    end
+    object edBranch: TcxButtonEdit
+      Left = 984
+      Top = 103
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 42
+      Width = 125
     end
   end
   object cbPartner: TcxCheckBox [2]
@@ -1237,6 +1255,21 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Category = 'DSDLib'
       MoveParams = <>
     end
+    object actUpdate_Branch: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Branch
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Branch
+        end
+        item
+          StoredProc = spGet
+        end>
+      Caption = 'actUpdate_Branch'
+      ImageIndex = 43
+    end
     object actUpdateINN: TdsdDataSetRefresh
       Category = 'INN'
       MoveParams = <>
@@ -1351,6 +1384,41 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         #1048#1071'. '#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100' ?'
       InfoAfterExecute = #1059#1044#1040#1051#1045#1053#1067' '#1042#1057#1045' '#1076#1072#1085#1085#1085#1099#1077' '#1076#1083#1103' '#8470' '#1087'/'#1087
     end
+    object actBranchChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actBranchChoiceForm'
+      ImageIndex = 43
+      FormName = 'TBranch_ObjectForm'
+      FormNameParam.Value = 'TBranch_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'BranchId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object macUpdateBranch: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      ActionList = <
+        item
+          Action = actBranchChoiceForm
+        end
+        item
+          Action = actUpdate_Branch
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1060#1080#1083#1080#1072#1083
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1060#1080#1083#1080#1072#1083
+      ImageIndex = 43
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1464,6 +1532,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateBranch'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -1563,6 +1639,10 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     end
     object bbUpdateMI_NPP_Null: TdxBarButton
       Action = actUpdateMI_NPP_Null
+      Category = 0
+    end
+    object bbUpdateBranch: TdxBarButton
+      Action = macUpdateBranch
       Category = 0
     end
   end
@@ -1963,6 +2043,21 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Value = Null
         Component = cbIsAuto
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchId'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchName'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -3131,5 +3226,61 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     PackSize = 1
     Left = 696
     Top = 345
+  end
+  object GuidesBranch: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBranch
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TBranch_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBranch_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 1040
+    Top = 104
+  end
+  object spUpdate_Branch: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Tax_Branch'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'MovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'BranchId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 593
+    Top = 576
   end
 end

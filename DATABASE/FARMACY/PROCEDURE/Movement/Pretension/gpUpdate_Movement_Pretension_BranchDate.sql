@@ -15,7 +15,7 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := inSession;
-    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Pretension_BranchDate());
+    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Pretension_Meneger());
     
     IF COALESCE (inMovementId,0) = 0
     THEN
