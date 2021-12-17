@@ -40,7 +40,7 @@ RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull
              , SubjectDocName  TVarChar
              , BranchCode_from Integer, BranchName_from TVarChar, UnitCode_from Integer, UnitName_from TVarChar, PositionName_from TVarChar
              , BranchCode_to Integer, BranchName_to TVarChar, UnitCode_to Integer, UnitName_to TVarChar, PositionName_to TVarChar
-             , OperDate  TDateTime, Invnumber TVarChar
+             , OperDate  TDateTime, DayOfWeekName TVarChar, Invnumber TVarChar
              )
 AS
 $BODY$
@@ -375,8 +375,9 @@ BEGIN
          , Object_Unit_to.ValueData     AS UnitName_to
          , Object_Position_to.ValueData AS PositionName_to
 
-         , tmpOperationGroup.OperDate  ::TDateTime
-         , tmpOperationGroup.Invnumber ::TVarChar
+         , tmpOperationGroup.OperDate    ::TDateTime
+         , tmpWeekDay.DayOfWeekName_Full ::TVarChar  AS DayOfWeekName
+         , tmpOperationGroup.Invnumber   ::TVarChar
 
      FROM (SELECT tmpContainer.ArticleLossId
                 , tmpContainer.ContainerId_Analyzer
@@ -522,6 +523,8 @@ BEGIN
                               AND ObjectLink_Unit_Branch_to.DescId   = zc_ObjectLink_Unit_Branch()
           LEFT JOIN Object AS Object_Branch_to ON Object_Branch_to.Id = ObjectLink_Unit_Branch_to.ChildObjectId
 
+          LEFT JOIN zfCalc_DayOfWeekName (tmpOperationGroup.OperDate) AS tmpWeekDay ON tmpOperationGroup.OperDate IS NOT NULL --1=1
+
   ;
 
 END;
@@ -531,6 +534,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.12.21         * 
  29.04.20         * zc_Movement_SendAsset()
  13.02.20         *
  18.12.19         * add цена по виду

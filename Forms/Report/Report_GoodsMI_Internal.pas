@@ -115,6 +115,7 @@ type
     bbPrintArticleLossPrice: TdxBarButton;
     cbDateDoc: TcxCheckBox;
     cbInvnumber: TcxCheckBox;
+    DayOfWeekName: TcxGridDBColumn;
   private
     { Private declarations }
   public
