@@ -27,7 +27,8 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, Jur
              , SaleSumm TFloat, DefermentPaymentRemains TFloat
              , SaleSumm1 TFloat, SaleSumm2 TFloat, SaleSumm3 TFloat, SaleSumm4 TFloat, SaleSumm5 TFloat
              , Condition TVarChar, StartContractDate TDateTime, Remains TFloat
-             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , AreaName TVarChar, AreaName_Partner TVarChar
              , BranchName_personal       TVarChar
              , BranchName_personal_trade TVarChar

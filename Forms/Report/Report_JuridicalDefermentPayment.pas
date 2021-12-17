@@ -102,6 +102,8 @@ type
     ExecuteDialogLastPayment: TExecuteDialog;
     macUpdate_LastPayment: TMultiAction;
     bbUpdate_LastPayment: TdxBarButton;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
   private
     { Private declarations }
   public

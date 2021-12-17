@@ -29,7 +29,8 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, Jur
              , SaleSumm TFloat, DefermentPaymentRemains TFloat
              , SaleSumm1 TFloat, SaleSumm2 TFloat, SaleSumm3 TFloat, SaleSumm4 TFloat, SaleSumm5 TFloat
              , Condition TVarChar, StartContractDate TDateTime, Remains TFloat
-             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , AreaName TVarChar, AreaName_Partner TVarChar
              , BranchName_personal       TVarChar
              , BranchName_personal_trade TVarChar
@@ -140,7 +141,7 @@ BEGIN
              , a.SaleSumm, a.DefermentPaymentRemains
              , a.SaleSumm1, a.SaleSumm2, a.SaleSumm3, a.SaleSumm4, a.SaleSumm5
              , a.Condition, a.StartContractDate, a.Remains
-             , a.InfoMoneyGroupName, a.InfoMoneyDestinationName, a.InfoMoneyCode, a.InfoMoneyName
+             , a.InfoMoneyGroupName, a.InfoMoneyDestinationName, a.InfoMoneyId, a.InfoMoneyCode, a.InfoMoneyName
              , a.AreaName, a.AreaName_Partner
              
              , a.BranchName_personal       ::TVarChar
@@ -245,6 +246,7 @@ BEGIN
          
                , Object_InfoMoney_View.InfoMoneyGroupName
                , Object_InfoMoney_View.InfoMoneyDestinationName
+               , Object_InfoMoney_View.InfoMoneyId
                , Object_InfoMoney_View.InfoMoneyCode
                , Object_InfoMoney_View.InfoMoneyName
          
@@ -484,6 +486,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 17.12.21         * add InfoMoneyId
  12.11.21         *
  05.07.21         * add lp + inStartDate_sale, inEndDate_sale
  13.09.14                                        * add inJuridicalGroupId
