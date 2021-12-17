@@ -1642,6 +1642,8 @@ BEGIN
                                                        AND COALESCE (tmpAll.PercentRetBonus,0) = 0
                     WHERE (tmpAll.Sum_CheckBonus <> 0
                        OR tmpAll.Sum_Bonus <> 0
+                       OR tmpAll.Sum_Bonus_curr <> 0
+                       OR tmpAll.Sum_CheckBonus_curr <> 0
                        OR tmpAll.Sum_BonusFact <> 0)
                      --OR vbUserId = 5
                     )
