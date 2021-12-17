@@ -13,6 +13,7 @@ SELECT       Movement.Id                                AS Id
            , MovementFloat_TotalProficit.ValueData      AS TotalProficit
            , MovementBlob_Comment.ValueData             AS Comment
            , MovementDate_Branch.ValueData              AS BranchDate
+           , MovementDate_GoodsReceipts.ValueData       AS GoodsReceiptsDate
 
            , MovementIncome.PriceWithVAT                AS PriceWithVAT
            , MovementLinkObject_From.ObjectId           AS FromId
@@ -62,6 +63,9 @@ SELECT       Movement.Id                                AS Id
             LEFT JOIN MovementDate    AS MovementDate_Branch
                                       ON MovementDate_Branch.MovementId =  Movement.Id
                                      AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
+            LEFT JOIN MovementDate    AS MovementDate_GoodsReceipts
+                                      ON MovementDate_GoodsReceipts.MovementId =  Movement.Id
+                                     AND MovementDate_GoodsReceipts.DescId = zc_MovementDate_GoodsReceipts()
 
             LEFT JOIN MovementBlob  AS MovementBlob_Comment
                                     ON MovementBlob_Comment.MovementId =  Movement.Id

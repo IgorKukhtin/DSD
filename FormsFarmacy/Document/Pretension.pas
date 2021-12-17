@@ -138,6 +138,19 @@ type
     spGetDocumentDataForEmail: TdsdStoredProc;
     actGetDocumentDataForEmail: TdsdExecStoredProc;
     actSMTPMultipleFile: TdsdSMTPMultipleFileAction;
+    deGoodsReceiptsDate: TcxDateEdit;
+    cxLabel9: TcxLabel;
+    actGoodsReceiptsDataChoiceDialog: TExecuteDialog;
+    actUpdate_GoodsReceiptsDate: TdsdExecStoredProc;
+    spUpdate_GoodsReceiptsDate: TdsdStoredProc;
+    bbUpdate_GoodsReceiptsDate: TdxBarButton;
+    mactPrintToFile: TMultiAction;
+    dxBarButton13: TdxBarButton;
+    actPrintToFile: TdsdPrintAction;
+    actSendFTPFileAct: TdsdFTP;
+    spInsertUpdateFileAct: TdsdStoredProc;
+    actInsertUpdateFileAct: TdsdExecStoredProc;
+    chisAct: TcxGridDBColumn;
   private
     { Private declarations }
   public

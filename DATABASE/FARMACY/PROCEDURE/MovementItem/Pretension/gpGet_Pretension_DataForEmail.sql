@@ -26,6 +26,7 @@ $BODY$
   DECLARE vbZakazName TVarChar;
   DECLARE vbFromId Integer;
   DECLARE vbStatusId Integer;
+  DECLARE vbUserName TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
@@ -49,6 +50,22 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Отправка претензии поставщику в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);   
    END IF;
    
+   IF NOT EXISTS(SELECT MI_PretensionFile.Id
+             FROM Movement AS Movement_Pretension
+                  INNER JOIN MovementItem AS MI_PretensionFile
+                                          ON MI_PretensionFile.MovementId = Movement_Pretension.Id
+                                         AND MI_PretensionFile.DescId     = zc_MI_Child()
+
+                  INNER JOIN MovementItemBoolean AS MIBoolean_Checked
+                                                ON MIBoolean_Checked.MovementItemId = MI_PretensionFile.Id
+                                               AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
+                                               AND MIBoolean_Checked.ValueData = TRUE
+
+             WHERE Movement_Pretension.Id = inId)
+   THEN
+       RAISE EXCEPTION 'Ошибка.Не сохранен файл акта.%Выполните пункт меню <Формирование Акта по претензии и подключение его к файлам>.', CHR(13)||CHR(13);   
+   END IF;
+
    -- еще
    SELECT tmp.Mail, tmp.JuridicalId_unit, tmp.JuridicalName, tmp.ToId, tmp.InvNumber
           INTO vbMail, vbJuridicalId_unit, vbJuridicalName, vbFromId, vbInvNumber
@@ -205,20 +222,32 @@ BEGIN
 
 
     -- еще
-/*    SELECT ObjectString.valuedata, ObjectBlob_EMailSign.ValueData
-           INTO vbUserMail, vbUserMailSign
+    SELECT ObjectString.valuedata
+         , ObjectBlob_EMailSign.ValueData||COALESCE(', '||ObjectString.valuedata, '')
+         , COALESCE(Object_MemberUser.ValueData, '')||
+           COALESCE(', тел. '||ObjectString_Member_Phone.ValueData, '')||
+           COALESCE(', E-Mail '||ObjectString.ValueData, '')            AS UserName
+    INTO vbUserMail, vbUserMailSign, vbUserName
     FROM ObjectLink AS User_Link_Member
+         LEFT JOIN Object AS Object_MemberUser ON Object_MemberUser.Id = User_Link_Member.ChildObjectId
          LEFT JOIN ObjectString ON ObjectString.descid = zc_ObjectString_Member_EMail()
                                AND ObjectString.ObjectId = User_Link_Member.ChildObjectId
+         LEFT JOIN ObjectString AS ObjectString_Member_Phone
+                                ON ObjectString_Member_Phone.ObjectId = User_Link_Member.ChildObjectId
+                               AND ObjectString_Member_Phone.DescId = zc_ObjectString_Member_Phone()
          LEFT JOIN ObjectBlob AS ObjectBlob_EMailSign
                               ON ObjectBlob_EMailSign.ObjectId = User_Link_Member.ChildObjectId
                              AND ObjectBlob_EMailSign.DescId =  zc_ObjectBlob_Member_EMailSign()
-    WHERE User_Link_Member.ObjectId = vbUserId AND User_Link_Member.DescId = zc_objectlink_user_member();
-*/
+    WHERE User_Link_Member.ObjectId = vbUserId 
+      AND User_Link_Member.DescId = zc_objectlink_user_member()
+      AND vbUserId <> 3;
+
 
     -- еще
     IF COALESCE(vbUserMail, '') = '' THEN
-       vbUserMail := '';
+       vbUserMail := '';       
+    ELSE
+       vbUserMail := ','||vbUserMail;
     END IF;
 
     -- еще
@@ -293,8 +322,13 @@ BEGIN
          REPLACE (vbSubject, '#1#', '#' || vbInvNumber || '#') :: TVarChar AS Subject
 
          -- Body 
-       , (CASE WHEN COALESCE (vbUnitData, '') <> '' THEN '<b>'||vbUnitData||'</b>'|| CHR (13) || CHR (13) ELSE '' END
-      || COALESCE (vbUnitSign, '') || '<br>' || COALESCE (vbUserMailSign, '')) :: TBlob AS Body
+       , ('Добрый день.'|| CHR (13) ||
+         'Информация по претензии во вложении.'|| CHR (13)|| CHR (13) ||
+         'Ждем ответа от Вас.'|| CHR (13)|| CHR (13) ||
+         'По вопросам подачи претензии, просьба обращаться к '|| COALESCE (vbUserName, '')|| CHR (13) || CHR (13) ||
+         'P.S. Ниже данные точки, по которой подаётся данная претензия'|| CHR (13) || CHR (13) ||       
+         CASE WHEN COALESCE (vbUnitData, '') <> '' THEN '<b>'||vbUnitData||'</b>'|| CHR (13) || CHR (13) ELSE '' END ||
+         COALESCE (vbUnitSign, '') || '<br>' || COALESCE (vbUserMailSign, '')) :: TBlob AS Body
 
          -- Body
        , gpGet_Mail.Value            AS AddressFrom     --*** zc_Mail_From() --'zakaz_family-neboley@mail.ru'::TVarChar,
@@ -327,5 +361,4 @@ $BODY$
 
 -- тест
 -- 
---
-SELECT * From gpGet_Pretension_DataForEmail (inId:= 26087688  /*25521089*/    , inSession:= '3');
+-- SELECT * From gpGet_Pretension_DataForEmail (inId:= 26119121  , inSession:= '3');

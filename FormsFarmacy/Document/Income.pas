@@ -194,6 +194,7 @@ type
     cbisConduct: TcxCheckBox;
     actCreatePretension: TdsdOpenForm;
     dxBarButton4: TdxBarButton;
+    PretensionAmount: TcxGridDBColumn;
   private
     { Private declarations }
   public

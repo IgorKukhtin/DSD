@@ -131,6 +131,7 @@ type
     bbCreatePretension: TdxBarButton;
     edComment: TcxTextEdit;
     cxLabel18: TcxLabel;
+    PretensionAmount: TcxGridDBColumn;
   private
     { Private declarations }
   public
