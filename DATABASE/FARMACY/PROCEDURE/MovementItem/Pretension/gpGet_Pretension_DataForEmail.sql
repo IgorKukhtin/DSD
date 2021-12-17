@@ -30,7 +30,7 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
-   vbUserId := lpGetUserBySession (inSession);
+    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Pretension_Meneger());
 
    IF COALESCE(inId, 0) = 0 THEN
        RAISE EXCEPTION 'Ошибка.Документ не сохранен.';   
@@ -322,13 +322,14 @@ BEGIN
          REPLACE (vbSubject, '#1#', '#' || vbInvNumber || '#') :: TVarChar AS Subject
 
          -- Body 
-       , ('Добрый день.'|| CHR (13) ||
+       , ('<b>ВНИМАНИЕ !!! Ящик  '||gpGet_User.Value||'  работает в авторежиме.  Не отсылайте на него ответ. Он не будет прочитан. Ящик для переписки указан ниже в контактах менеджера.</b>'|| CHR (13) || CHR (13) ||
+         'Добрый день.'|| CHR (13) ||
          'Информация по претензии во вложении.'|| CHR (13)|| CHR (13) ||
          'Ждем ответа от Вас.'|| CHR (13)|| CHR (13) ||
          'По вопросам подачи претензии, просьба обращаться к '|| COALESCE (vbUserName, '')|| CHR (13) || CHR (13) ||
          'P.S. Ниже данные точки, по которой подаётся данная претензия'|| CHR (13) || CHR (13) ||       
-         CASE WHEN COALESCE (vbUnitData, '') <> '' THEN '<b>'||vbUnitData||'</b>'|| CHR (13) || CHR (13) ELSE '' END ||
-         COALESCE (vbUnitSign, '') || '<br>' || COALESCE (vbUserMailSign, '')) :: TBlob AS Body
+         CASE WHEN COALESCE (vbUnitData, '') <> '' THEN vbUnitData|| CHR (13) || CHR (13) ELSE '' END ||
+         COALESCE (vbUnitSign, '') || '<br>' || COALESCE ('<b>'||vbUserMailSign||'</b>', '')) :: TBlob AS Body
 
          -- Body
        , gpGet_Mail.Value            AS AddressFrom     --*** zc_Mail_From() --'zakaz_family-neboley@mail.ru'::TVarChar,
@@ -361,4 +362,5 @@ $BODY$
 
 -- тест
 -- 
--- SELECT * From gpGet_Pretension_DataForEmail (inId:= 26119121  , inSession:= '3');
+--
+SELECT * From gpGet_Pretension_DataForEmail (inId:= 26120242     , inSession:= '183242');

@@ -33,6 +33,10 @@ type
     destructor Destroy; override;
 
     function LoadBookings(ASerialNumber : Integer) : boolean;
+    function LoadСancelledOrders(ASerialNumber : Integer) : boolean;
+
+    function CancelReason(ASerialNumber : Integer; ABookingId : String; ACancelReasonId : Integer;
+                          AJSONAItems: TJSONArray) : boolean;
 
     function UpdateStaus(ASerialNumber : Integer;
                          ABookingId, AId, AStatusNew, ACode, ACustomer, ACustomerPhone, ACancelReason : String;
@@ -205,6 +209,7 @@ function TTabletkiAPI.LoadBookings(ASerialNumber : Integer) : boolean;
 begin
 
   Result := False;
+  FErrorsText := '';
   S := FUserName + ':' + FPassword;
 
   FRESTClient.BaseURL := FBaseURL;
@@ -295,6 +300,177 @@ begin
   end;
 
 end;
+
+function TTabletkiAPI.LoadСancelledOrders(ASerialNumber : Integer) : boolean;
+  var jValue : TJSONValue;
+      JSONA: TJSONArray;
+      JSONAI: TJSONArray;
+      I, J : integer;
+      bookingId, S : string;
+begin
+
+  Result := False;
+  FErrorsText := '';
+  S := FUserName + ':' + FPassword;
+
+  FRESTClient.BaseURL := FBaseURL;
+  FRESTClient.ContentType := 'application/x-www-form-urlencoded';
+
+  FRESTRequest.ClearBody;
+  FRESTRequest.Method := TRESTRequestMethod.rmGET;
+  FRESTRequest.Resource := 'cancelledOrdersByCustomer/' + IntToStr(ASerialNumber);
+  // required parameters
+  FRESTRequest.Params.Clear;
+  FRESTRequest.AddParameter('Accept', 'application/json', TRESTRequestParameterKind.pkHTTPHEADER,
+                                                                          [TRESTRequestParameterOption.poDoNotEncode]);
+  FRESTRequest.AddParameter('Authorization', 'Basic ' + EncodeBase64(BytesOf(S)), TRESTRequestParameterKind.pkHTTPHEADER,
+                                                                          [TRESTRequestParameterOption.poDoNotEncode]);
+  try
+    FRESTRequest.Execute;
+  except
+  end;
+
+  if FRESTResponse.ContentType = 'application/json' then
+  begin
+    jValue := FRESTResponse.JSONValue;
+
+    if jValue is TJSONArray then
+    begin
+      JSONA := jValue.GetValue<TJSONArray>;
+
+      if InitCDS then
+      begin
+        for I := 0 to JSONA.Count - 1 do
+        begin
+          jValue := JSONA.Items[I];
+
+          bookingId := DelDoubleQuote(jValue.FindValue('id'));
+
+          FBookingsHeadCDS.Last;
+          FBookingsHeadCDS.Append;
+          FBookingsHeadCDS.FieldByName('bookingId').AsString := bookingId;
+          FBookingsHeadCDS.FieldByName('code').AsInteger := jValue.GetValue<TJSONNumber>('code').AsInt;
+          FBookingsHeadCDS.FieldByName('statusID').AsString := DelDoubleQuote(jValue.FindValue('statusID'));
+          FBookingsHeadCDS.FieldByName('dateTimeCreated').AsDateTime := JSONStrToDate(jValue.FindValue('dateTimeCreated'));
+          FBookingsHeadCDS.FieldByName('customer').AsString := DelDoubleQuote(jValue.FindValue('customer'));
+          FBookingsHeadCDS.FieldByName('customerPhone').AsString := DelDoubleQuote(jValue.FindValue('customerPhone'));
+          FBookingsHeadCDS.FieldByName('customerEmail').AsString := DelDoubleQuote(jValue.FindValue('customerEmail'));
+          FBookingsHeadCDS.FieldByName('branchID').AsString := DelDoubleQuote(jValue.FindValue('branchID'));
+          FBookingsHeadCDS.FieldByName('externalNmb').AsString := DelDoubleQuote(jValue.FindValue('externalNmb'));
+          FBookingsHeadCDS.FieldByName('docAdditionalInfo').AsString := DelDoubleQuote(jValue.FindValue('docAdditionalInfo'));
+          FBookingsHeadCDS.FieldByName('customerAdditionalInfo').AsString := DelDoubleQuote(jValue.FindValue('customerAdditionalInfo'));
+          FBookingsHeadCDS.FieldByName('reserveSource').AsString := DelDoubleQuote(jValue.FindValue('reserveSource'));
+          FBookingsHeadCDS.FieldByName('cancelReason').AsString := DelDoubleQuote(jValue.FindValue('cancelReason'));
+
+          FBookingsHeadCDS.Post;
+
+          JSONAI := jValue.GetValue<TJSONArray>('rows');
+          for J := 0 to JSONAI.Count - 1 do
+          begin
+            jValue := JSONAI.Items[J];
+
+            FBookingsBodyCDS.Last;
+            FBookingsBodyCDS.Append;
+            FBookingsBodyCDS.FieldByName('bookingId').AsString := bookingId;
+            FBookingsBodyCDS.FieldByName('goodsCode').AsInteger := StrToInt(DelDoubleQuote(jValue.FindValue('goodsCode')));
+            FBookingsBodyCDS.FieldByName('goodsName').AsString := DelDoubleQuote(jValue.FindValue('goodsName'));
+            FBookingsBodyCDS.FieldByName('goodsProducer').AsString := DelDoubleQuote(jValue.FindValue('goodsProducer'));
+            FBookingsBodyCDS.FieldByName('qty').AsCurrency := jValue.GetValue<TJSONNumber>('qty').AsDouble;
+            FBookingsBodyCDS.FieldByName('price').AsCurrency := jValue.GetValue<TJSONNumber>('price').AsDouble;
+            FBookingsBodyCDS.FieldByName('qtyShip').AsCurrency := jValue.GetValue<TJSONNumber>('qtyShip').AsDouble;
+            FBookingsBodyCDS.FieldByName('priceShip').AsCurrency := jValue.GetValue<TJSONNumber>('priceShip').AsDouble;
+            FBookingsBodyCDS.FieldByName('needOrder').AsInteger := jValue.GetValue<TJSONNumber>('needOrder').AsInt;
+            FBookingsBodyCDS.Post;
+          end;
+        end;
+        Result := True;
+      end;
+    end else if (jValue.FindValue('error') <> Nil) and (not jValue.FindValue('error').Null) then
+    begin
+      jValue := jValue.FindValue('error');
+      FErrorsText := DelDoubleQuote(jValue.FindValue('message')) + #13#10 +
+                     DelDoubleQuote(jValue.FindValue('details'));
+    end else
+    begin
+      FErrorsText := 'Ошибка получения заказов.'#13#10 + jValue.ToString;
+    end;
+
+  end else
+  begin
+    FErrorsText := 'Ошибка получения заказов.'#13#10 + FRESTResponse.Content;
+  end;
+
+end;
+
+function TTabletkiAPI.CancelReason(ASerialNumber : Integer; ABookingId : String; ACancelReasonId : Integer;
+                      AJSONAItems: TJSONArray) : boolean;
+  var jValue : TJSONValue;
+      jsonBody: TJSONArray;
+      jsonItem: TJSONObject;
+      JSONA: TJSONArray;
+      S : string;
+begin
+
+  Result := False;
+  FErrorsText := '';
+  S := FUserName + ':' + FPassword;
+
+  jsonBody := TJSONArray.Create;
+  try
+    jsonItem := TJSONObject.Create;
+    jsonItem.AddPair('id', TJSONString.Create(AbookingId)).
+             AddPair('id_CancelReason', TJSONNumber.Create(ACancelReasonId)).
+             AddPair('rows', AJSONAItems);
+    jsonBody.AddElement(jsonItem);
+
+    FRESTClient.BaseURL := FBaseURL;
+    FRESTClient.ContentType := 'application/json';
+
+    FRESTRequest.ClearBody;
+    FRESTRequest.Method := TRESTRequestMethod.rmPOST;
+    FRESTRequest.Resource := 'cancelledOrders';
+    // required parameters
+    FRESTRequest.Params.Clear;
+    FRESTRequest.AddParameter('Accept', 'application/json', TRESTRequestParameterKind.pkHTTPHEADER,
+                                                                            [TRESTRequestParameterOption.poDoNotEncode]);
+    FRESTRequest.AddParameter('Authorization', 'Basic ' + EncodeBase64(BytesOf(S)), TRESTRequestParameterKind.pkHTTPHEADER,
+                                                                            [TRESTRequestParameterOption.poDoNotEncode]);
+
+    FRESTRequest.Body.Add(jsonBody.ToString, TRESTContentType.ctAPPLICATION_JSON);
+
+    try
+      FRESTRequest.Execute;
+    except
+    end;
+  finally
+    jsonBody.Destroy;
+  end;
+
+  if FRESTResponse.ContentType = 'application/json' then
+  begin
+    jValue := FRESTResponse.JSONValue;
+
+    if (jValue.FindValue('processedDocs') <> Nil) and (not jValue.FindValue('processedDocs').Null) then
+    begin
+      JSONA := jValue.GetValue<TJSONArray>('processedDocs');
+      if JSONA.Count > 0 then
+      begin
+        jValue := JSONA.Items[0];
+        Result := ABookingId = DelDoubleQuote(jValue.FindValue('id'));
+      end;
+    end else if (jValue.FindValue('error') <> Nil) and (not jValue.FindValue('error').Null) then
+    begin
+      jValue := jValue.FindValue('error');
+      FErrorsText := DelDoubleQuote(jValue.FindValue('message')) + #13#10 +
+                     DelDoubleQuote(jValue.FindValue('details'));
+    end else
+    begin
+      FErrorsText := 'Ошибка изменения статуса.'#13#10 + jValue.ToString;
+    end;
+  end else if FRESTResponse.StatusCode = 200 then Result := True
+  else FErrorsText := 'Ошибка изменения статуса.'#13#10 +  FRESTResponse.StatusText;
+end;
+
 
 function TTabletkiAPI.UpdateStaus(ASerialNumber : Integer;
                                   ABookingId, AId, AStatusNew, ACode, ACustomer, ACustomerPhone, ACancelReason : String;

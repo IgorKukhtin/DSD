@@ -71,6 +71,8 @@ type
     actChechPretension: TdsdExecStoredProc;
     mactChechPretension: TMultiAction;
     MakerName: TcxGridDBColumn;
+    gpGet_ExistsPretension: TdsdStoredProc;
+    actGet_ExistsPretension: TdsdExecStoredProc;
   private
     { Private declarations }
   public

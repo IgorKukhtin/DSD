@@ -48,9 +48,22 @@ BEGIN
                                                       AND MIContainer_Income.MovementID = vbMovementIncome
                                                       AND MIContainer_Income.DescId = zc_MIContainer_Count()
 
+                       LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
+                                                        ON MILinkObject_ReasonDifferences.MovementItemId = MI.Id
+                                                       AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
+
+                       LEFT JOIN ObjectBoolean AS PriceSite_Deficit
+                                               ON PriceSite_Deficit.ObjectId = MILinkObject_ReasonDifferences.ObjectId
+                                              AND PriceSite_Deficit.DescId = zc_ObjectBoolean_ReasonDifferences_Deficit()
+                                                   
+                       LEFT JOIN ObjectBoolean AS PriceSite_Substandard
+                                               ON PriceSite_Substandard.ObjectId = MILinkObject_ReasonDifferences.ObjectId
+                                              AND PriceSite_Substandard.DescId = zc_ObjectBoolean_ReasonDifferences_Substandard()
+
                    WHERE MI.MovementId = inMovementId
                      AND MI.DescId = zc_MI_Master()
-                     AND MI.Amount < 0
+                     AND (MI.Amount < 0 AND COALESCE (PriceSite_Deficit.ValueData, FALSE) = TRUE OR
+                          MI.Amount > 0 AND COALESCE (PriceSite_Substandard.ValueData, FALSE) = TRUE)
                      AND MI.isErased = FALSE)
     THEN
       RAISE EXCEPTION 'Нет данных для отложки документа';    
@@ -73,9 +86,22 @@ BEGIN
                                                   AND MIContainer_Income.MovementID = vbMovementIncome
                                                   AND MIContainer_Income.DescId = zc_MIContainer_Count()
 
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
+                                                    ON MILinkObject_ReasonDifferences.MovementItemId = MI.Id
+                                                   AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
+
+                   LEFT JOIN ObjectBoolean AS PriceSite_Deficit
+                                           ON PriceSite_Deficit.ObjectId = MILinkObject_ReasonDifferences.ObjectId
+                                          AND PriceSite_Deficit.DescId = zc_ObjectBoolean_ReasonDifferences_Deficit()
+                                                   
+                   LEFT JOIN ObjectBoolean AS PriceSite_Substandard
+                                           ON PriceSite_Substandard.ObjectId = MILinkObject_ReasonDifferences.ObjectId
+                                          AND PriceSite_Substandard.DescId = zc_ObjectBoolean_ReasonDifferences_Substandard()
+
                WHERE MI.MovementId = inMovementId
                  AND MI.DescId = zc_MI_Master()
-                 AND MI.Amount < 0
+                 AND (MI.Amount < 0 AND COALESCE (PriceSite_Deficit.ValueData, FALSE) = TRUE OR
+                      MI.Amount > 0 AND COALESCE (PriceSite_Substandard.ValueData, FALSE) = TRUE)
                  AND MI.isErased = FALSE
                  AND COALESCE (MIContainer_Income.Id, 0) = 0)
     THEN
@@ -110,7 +136,7 @@ BEGIN
             , MI.Id
             , MIContainer_Income.ContainerId
             , vbAccountId
-            , MI.Amount
+            , CASE WHEN COALESCE (PriceSite_Deficit.ValueData, FALSE) = TRUE THEN MI.Amount ELSE - MI.Amount END
             , vbOperDate
             , MI.ObjectId                    AS ObjectId_analyzer
             , vbUnitId                       AS WhereObjectId_analyzer
@@ -130,13 +156,22 @@ BEGIN
                                            AND MIContainer_Income.MovementID = vbMovementIncome
                                            AND MIContainer_Income.DescId = zc_MIContainer_Count()
                                         
-                                        
-                                        
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
+                                             ON MILinkObject_ReasonDifferences.MovementItemId = MI.Id
+                                            AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
 
-
+            LEFT JOIN ObjectBoolean AS PriceSite_Deficit
+                                    ON PriceSite_Deficit.ObjectId = MILinkObject_ReasonDifferences.ObjectId
+                                   AND PriceSite_Deficit.DescId = zc_ObjectBoolean_ReasonDifferences_Deficit()
+                                                   
+            LEFT JOIN ObjectBoolean AS PriceSite_Substandard
+                                    ON PriceSite_Substandard.ObjectId = MILinkObject_ReasonDifferences.ObjectId
+                                   AND PriceSite_Substandard.DescId = zc_ObjectBoolean_ReasonDifferences_Substandard()
+            
        WHERE MI.MovementId = inMovementId
          AND MI.DescId = zc_MI_Master()
-         AND MI.Amount < 0
+         AND (MI.Amount < 0 AND COALESCE (PriceSite_Deficit.ValueData, FALSE) = TRUE OR
+              MI.Amount > 0 AND COALESCE (PriceSite_Substandard.ValueData, FALSE) = TRUE)
          AND MI.isErased = FALSE;
 
        -- Проводки если затронуты контейнера сроков
@@ -188,4 +223,4 @@ $BODY$
 */
 
 -- тест
--- 
+-- select * from gpUpdate_Movement_Pretension_Deferred(inMovementId := 26127658 , inisDeferred := 'True' ,  inSession := '3');

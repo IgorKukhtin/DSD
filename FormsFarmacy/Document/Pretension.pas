@@ -151,6 +151,10 @@ type
     spInsertUpdateFileAct: TdsdStoredProc;
     actInsertUpdateFileAct: TdsdExecStoredProc;
     chisAct: TcxGridDBColumn;
+    deSentDate: TcxDateEdit;
+    cxLabel11: TcxLabel;
+    spUpdate_SentDate: TdsdStoredProc;
+    actUpdate_SentDate: TdsdExecStoredProc;
   private
     { Private declarations }
   public

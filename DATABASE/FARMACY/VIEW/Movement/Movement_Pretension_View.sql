@@ -14,6 +14,7 @@ SELECT       Movement.Id                                AS Id
            , MovementBlob_Comment.ValueData             AS Comment
            , MovementDate_Branch.ValueData              AS BranchDate
            , MovementDate_GoodsReceipts.ValueData       AS GoodsReceiptsDate
+           , MovementDate_Sent.ValueData                AS SentDate
 
            , MovementIncome.PriceWithVAT                AS PriceWithVAT
            , MovementLinkObject_From.ObjectId           AS FromId
@@ -66,6 +67,9 @@ SELECT       Movement.Id                                AS Id
             LEFT JOIN MovementDate    AS MovementDate_GoodsReceipts
                                       ON MovementDate_GoodsReceipts.MovementId =  Movement.Id
                                      AND MovementDate_GoodsReceipts.DescId = zc_MovementDate_GoodsReceipts()
+            LEFT JOIN MovementDate    AS MovementDate_Sent
+                                      ON MovementDate_Sent.MovementId =  Movement.Id
+                                     AND MovementDate_Sent.DescId = zc_MovementDate_Sent()
 
             LEFT JOIN MovementBlob  AS MovementBlob_Comment
                                     ON MovementBlob_Comment.MovementId =  Movement.Id
@@ -91,4 +95,4 @@ ALTER TABLE Movement_Pretension_View
 */
 
 -- тест
--- SELECT * FROM Movement_Pretension_View where id = 7753659
+-- SELECT * FROM Movement_Pretension_View LIMIT 100

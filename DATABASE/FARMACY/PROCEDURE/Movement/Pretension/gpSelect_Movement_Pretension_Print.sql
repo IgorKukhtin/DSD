@@ -115,9 +115,9 @@ BEGIN
            , EXTRACT (DAY FROM Movement_Pretension_View.IncomeOperDate)::TVarChar             AS IncomeOperDateDay
            , zfCalc_MonthNameUkr (Movement_Pretension_View.IncomeOperDate)||' '||
              EXTRACT (YEAR FROM Movement_Pretension_View.IncomeOperDate)                      AS IncomeOperDateMonthYear
-           , EXTRACT (DAY FROM Movement_Pretension_View.OperDate)::TVarChar                   AS InOperDateDay
-           , zfCalc_MonthNameUkr (Movement_Pretension_View.OperDate)||' '||
-             EXTRACT (YEAR FROM Movement_Pretension_View.OperDate)                            AS InOperDateMonthYear
+           , EXTRACT (DAY FROM COALESCE(Movement_Pretension_View.GoodsReceiptsDate, Movement_Pretension_View.OperDate))::TVarChar  AS InOperDateDay
+           , zfCalc_MonthNameUkr (COALESCE(Movement_Pretension_View.GoodsReceiptsDate, Movement_Pretension_View.OperDate))||' '||
+             EXTRACT (YEAR FROM COALESCE(Movement_Pretension_View.GoodsReceiptsDate, Movement_Pretension_View.OperDate))           AS InOperDateMonthYear
            , EXTRACT (DAY FROM CURRENT_DATE)::TVarChar                                        AS OperDateDay
            , zfCalc_MonthNameUkr (CURRENT_DATE)||' '||
              EXTRACT (YEAR FROM CURRENT_DATE)                                                 AS OperDateMonthYear

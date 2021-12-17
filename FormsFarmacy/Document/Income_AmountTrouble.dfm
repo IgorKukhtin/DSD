@@ -1,24 +1,24 @@
 inherited Income_AmountTroubleForm: TIncome_AmountTroubleForm
   Caption = #1055#1088#1086#1073#1083#1077#1084#1085#1099#1077' '#1090#1086#1074#1072#1088#1099' '#1074' '#1087#1088#1080#1093#1086#1076#1077
   ClientHeight = 407
-  ClientWidth = 796
+  ClientWidth = 811
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 812
+  ExplicitWidth = 827
   ExplicitHeight = 446
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 796
+    Width = 811
     Height = 381
     ExplicitWidth = 796
     ExplicitHeight = 381
     ClientRectBottom = 381
-    ClientRectRight = 796
+    ClientRectRight = 811
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 796
       ExplicitHeight = 381
       inherited cxGrid: TcxGrid
-        Width = 796
+        Width = 811
         Height = 381
         ExplicitWidth = 796
         ExplicitHeight = 381
@@ -38,6 +38,11 @@ inherited Income_AmountTroubleForm: TIncome_AmountTroubleForm
               Format = '+,0.###;-,0.###; ;'
               Kind = skSum
               Column = AmountDiff
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = PretensionAmount
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -79,12 +84,22 @@ inherited Income_AmountTroubleForm: TIncome_AmountTroubleForm
             DataBinding.FieldName = 'AmountManual'
             Width = 69
           end
+          object PretensionAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
+            DataBinding.FieldName = 'PretensionAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Options.Editing = False
+            Width = 77
+          end
           object AmountDiff: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072
             DataBinding.FieldName = 'AmountDiff'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = '+,0.###;-,0.###; ;'
             Options.Editing = False
+            Width = 61
           end
           object ReasonDifferencesName: TcxGridDBColumn
             Caption = #1055#1088#1080#1095#1080#1085#1072' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1103

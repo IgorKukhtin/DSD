@@ -82,6 +82,7 @@ type
     code: TcxGridDBColumn;
     cbGoodsCode: TcxGridDBColumn;
     chCancelReason: TcxGridDBColumn;
+    btnCancelledOrders: TButton;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnSaveBookingsClick(Sender: TObject);
@@ -91,6 +92,7 @@ type
     procedure btnLoadBookingsClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btnOpenBookingClick(Sender: TObject);
+    procedure btnCancelledOrdersClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -207,6 +209,19 @@ begin
   end;
 end;
 
+procedure TMainForm.btnCancelledOrdersClick(Sender: TObject);
+begin
+  if not qryUnit.Active then Exit;
+  if qryUnit.IsEmpty then Exit;
+  Add_Log('Àïòåêà: ' + qryUnit.FieldByName('Name').AsString);
+
+  if not TabletkiAPI.LoadÑancelledOrders(qryUnit.FieldByName('SerialNumber').AsInteger) then
+  begin
+     if TabletkiAPI.ErrorsText = '' then Add_Log('Íåò íîâûõ çàêàçîâ.')
+     else Add_Log(TabletkiAPI.ErrorsText);
+  end;
+end;
+
 procedure TMainForm.btnLoadBookingsClick(Sender: TObject);
 begin
   if not qryUnit.Active then Exit;
@@ -288,7 +303,7 @@ var
   Urgently : boolean;
   Status : string;
 
-  function GetJSONAItems : TJSONArray;
+  function GetJSONItems : TJSONArray;
     var  jsonItem: TJSONObject;
   begin
     Result := TJSONArray.Create;
@@ -312,6 +327,22 @@ var
     end;
   end;
 
+  function GetJSONAItemsCancelReason : TJSONArray;
+    var  jsonItem: TJSONObject;
+  begin
+    Result := TJSONArray.Create;
+
+    qryCheckBody.First;
+    while not qryCheckBody.Eof do
+    begin
+      jsonItem := TJSONObject.Create;
+      jsonItem.AddPair('goodsCode', TJSONString.Create(qryCheckBody.FieldByName('GoodsCode').AsString));
+      jsonItem.AddPair('qty', TJSONNumber.Create(qryCheckBody.FieldByName('Amount').AsCurrency));
+      Result.AddElement(jsonItem);
+      qryCheckBody.Next;
+    end;
+  end;
+
 begin
   if not qryCheckHead.Active then Exit;
   if qryCheckHead.IsEmpty then Exit;
@@ -322,6 +353,17 @@ begin
     qryCheckHead.First;
     while not qryCheckHead.Eof do
     begin
+
+      if qryCheckHead.FieldByName('CancelReasonID').AsInteger > 0 then
+      begin
+        if not TabletkiAPI.CancelReason(qryUnit.FieldByName('SerialNumber').AsInteger,
+                                        qryCheckHead.FieldByName('BookingId').AsString,
+                                        qryCheckHead.FieldByName('CancelReasonId').AsInteger,
+                                        GetJSONAItemsCancelReason) then
+        begin
+          Add_Log(TabletkiAPI.ErrorsText);
+        end
+      end;
 
       if Status = '7.0' then
       begin
@@ -340,7 +382,7 @@ begin
                                    qryCheckHead.FieldByName('BayerPhone').AsString,
                                    qryCheckHead.FieldByName('CancelReason').AsString,
                                    qryCheckHead.FieldByName('OperDate').AsDateTime,
-                                   GetJSONAItems) then
+                                   GetJSONItems) then
         begin
           spUpdateMovementStatus.Params.ParamByName('inMovementId').AsInteger := qryCheckHead.FieldByName('Id').AsInteger;
           spUpdateMovementStatus.Params.ParamByName('inBookingStatus').AsString := qryCheckHead.FieldByName('BookingStatusNew').AsString;

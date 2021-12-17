@@ -31,7 +31,19 @@ inherited ReasonDifferencesForm: TReasonDifferencesForm
           object Name: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
-            Width = 393
+            Width = 286
+          end
+          object isDeficit: TcxGridDBColumn
+            Caption = #1053#1077#1076#1086#1074#1086#1079
+            DataBinding.FieldName = 'isDeficit'
+            HeaderHint = #1053#1077#1076#1086#1089#1090#1072#1095#1072
+            Width = 60
+          end
+          object isSubstandard: TcxGridDBColumn
+            Caption = #1053#1077#1082#1086#1085#1076#1080#1094#1080#1103
+            DataBinding.FieldName = 'isSubstandard'
+            HeaderHint = #1053#1077#1082#1086#1085#1076#1080#1094#1080#1103
+            Width = 58
           end
           object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -44,6 +56,17 @@ inherited ReasonDifferencesForm: TReasonDifferencesForm
     end
   end
   inherited ActionList: TActionList
+    inherited actRefresh: TdsdDataSetRefresh
+      AfterAction = actSetVisibleAction
+      StoredProc = spGet_Visible
+      StoredProcList = <
+        item
+          StoredProc = spGet_Visible
+        end
+        item
+          StoredProc = spSelect
+        end>
+    end
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <
         item
@@ -99,6 +122,28 @@ inherited ReasonDifferencesForm: TReasonDifferencesForm
         end>
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
+    end
+    object actSetVisibleAction: TdsdSetVisibleAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSetVisibleAction'
+      SetVisibleParams = <
+        item
+          Component = isDeficit
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'Visible'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = isSubstandard
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'Visible'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end>
     end
   end
   inherited MasterDS: TDataSource
@@ -233,9 +278,55 @@ inherited ReasonDifferencesForm: TReasonDifferencesForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeficit'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isDeficit'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSubstandard'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSubstandard'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
     Top = 144
+  end
+  object spGet_Visible: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_ReasonDifferences_Visible'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outVisible'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Visible'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 216
+    Top = 88
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Visible'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    Left = 320
+    Top = 96
   end
 end

@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer
              , InvNumber TVarChar
              , OperDate TDateTime
              , BranchDate TDateTime, BranchUser TVarChar
-             , GoodsReceiptsDate TDateTime 
+             , GoodsReceiptsDate TDateTime, SentDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalDeficit TFloat, TotalProficit TFloat
              , PriceWithVAT Boolean
@@ -82,6 +82,7 @@ BEGIN
            , Movement_Pretension_View.BranchDate
            , Movement_Pretension_View.BranchUserName
            , Movement_Pretension_View.GoodsReceiptsDate
+           , Movement_Pretension_View.SentDate
            , Movement_Pretension_View.StatusCode
            , Movement_Pretension_View.StatusName
            , Movement_Pretension_View.TotalDeficit

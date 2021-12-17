@@ -702,7 +702,7 @@ inherited PretensionForm: TPretensionForm
     end
     object deBranchDate: TcxDateEdit
       Left = 592
-      Top = 61
+      Top = 59
       EditValue = 42363d
       Properties.ReadOnly = True
       Properties.SaveTime = False
@@ -730,6 +730,21 @@ inherited PretensionForm: TPretensionForm
       Top = 42
       Hint = #1044#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1090#1086#1074#1072#1088#1072' '#1082' '#1085#1072#1084' '#1085#1072' '#1089#1082#1083#1072#1076
       Caption = #1044#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1090#1086#1074#1072#1088#1072
+    end
+    object deSentDate: TcxDateEdit
+      Left = 868
+      Top = 22
+      Properties.Kind = ckDateTime
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 24
+      Width = 126
+    end
+    object cxLabel11: TcxLabel
+      Left = 868
+      Top = 5
+      Caption = #1044#1072#1090#1072' '#1087#1086#1076#1072#1095#1080' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1481,6 +1496,12 @@ inherited PretensionForm: TPretensionForm
         end
         item
           Action = actSMTPMultipleFile
+        end
+        item
+          Action = actUpdate_SentDate
+        end
+        item
+          Action = actRefresh
         end>
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1086#1090#1089#1083#1099#1082#1077' E-mail?'
       InfoAfterExecute = 'E-mail '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1086#1090#1087#1088#1072#1074#1083#1077#1085
@@ -1652,6 +1673,17 @@ inherited PretensionForm: TPretensionForm
       DownloadFolderParam.DataType = ftString
       DownloadFolderParam.MultiSelectSeparator = ','
       Caption = 'actSendFTPFileAct'
+    end
+    object actUpdate_SentDate: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SentDate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SentDate
+        end>
+      Caption = 'actUpdate_SentDate'
     end
     object mactPrintToFile: TMultiAction
       Category = 'DSDLib'
@@ -2390,6 +2422,13 @@ inherited PretensionForm: TPretensionForm
         Value = Null
         Component = deGoodsReceiptsDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SentDate'
+        Value = Null
+        Component = deSentDate
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
@@ -3506,5 +3545,22 @@ inherited PretensionForm: TPretensionForm
     PackSize = 1
     Left = 496
     Top = 507
+  end
+  object spUpdate_SentDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Pretension_SentDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 336
+    Top = 483
   end
 end

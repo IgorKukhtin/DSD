@@ -250,6 +250,14 @@ inherited PretensionJournalForm: TPretensionJournalForm
             Options.Editing = False
             Width = 58
           end
+          object SentDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086#1076#1072#1095#1080' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
+            DataBinding.FieldName = 'SentDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
           object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'

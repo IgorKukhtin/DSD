@@ -199,7 +199,7 @@ object MainForm: TMainForm
     end
     object btnAll: TButton
       Left = 16
-      Top = 0
+      Top = 2
       Width = 97
       Height = 25
       Caption = #1042#1089#1077' '#1076#1077#1081#1089#1090#1074#1080#1103'!'
@@ -223,6 +223,15 @@ object MainForm: TMainForm
       Caption = #1047#1072#1082#1072#1079#1099' '#1076#1083#1103' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1089#1090#1072#1090#1091#1089#1072
       TabOrder = 4
       OnClick = btnOpenBookingClick
+    end
+    object btnCancelledOrders: TButton
+      Left = 136
+      Top = 2
+      Width = 65
+      Height = 25
+      Caption = #1054#1090#1082#1072#1079#1099
+      TabOrder = 5
+      OnClick = btnCancelledOrdersClick
     end
   end
   object Panel3: TPanel

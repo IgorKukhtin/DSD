@@ -66,6 +66,7 @@ BEGIN
       PERFORM lpInsertUpdate_MovementItemLinkContainer(inMovementItemId := inMovementItemID, inUserId := vbUserId);
     ELSE
       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionDateKind(), inMovementItemID, 0);
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePartionDate(), inMovementItemID, 0);
     END IF;
     
     IF COALESCE(inPartionDateKindId, 0) <> 0 AND COALESCE(vbInvNumberOrder, '') <> ''
@@ -85,6 +86,7 @@ BEGIN
       IF COALESCE(vbPrice, 0) > 0 AND COALESCE(vbPricePD, 0) > 0 AND vbPrice > vbPricePD
       THEN
         PERFORM gpUpdate_MovementIten_Check_Price(inMovementId := inMovementId, inMovementItemID := inMovementItemID, inPrice := vbPricePD, inSession := zfCalc_UserAdmin());
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PricePartionDate(), inMovementItemID, vbPricePD);
       END IF;
     END IF;
     

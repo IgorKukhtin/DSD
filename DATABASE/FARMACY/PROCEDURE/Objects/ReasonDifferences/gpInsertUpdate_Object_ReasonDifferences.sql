@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_ReasonDifferences()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReasonDifferences(Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReasonDifferences(Integer, Integer, TVarChar, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReasonDifferences(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Причина разногласия>
  INOUT ioCode                    Integer   ,    -- Код объекта <Причина разногласия>
     IN inName                    TVarChar  ,    -- Название объекта <Причина разногласия>
+    IN inisDeficit               Boolean   ,    -- Недостача
+    IN inisSubstandard           Boolean   ,    -- Некондиция
     IN inSession                 TVarChar       -- Сессия пользователя
 )
 AS
@@ -28,12 +30,17 @@ BEGIN
    -- сохранили объект
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ReasonDifferences(), ioCode, inName, NULL);
 
+   -- сохранили св-во < Недостача>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReasonDifferences_Deficit(), ioId, inisDeficit);
+   -- сохранили св-во < Некондиция>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReasonDifferences_Substandard(), ioId, inisSubstandard);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_ReasonDifferences(Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_ReasonDifferences(Integer, Integer, TVarChar, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/

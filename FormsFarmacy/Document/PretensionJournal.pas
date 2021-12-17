@@ -49,6 +49,7 @@ type
     bbPrintOptima: TdxBarButton;
     CheckedName: TcxGridDBColumn;
     GoodsReceiptsDate: TcxGridDBColumn;
+    SentDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

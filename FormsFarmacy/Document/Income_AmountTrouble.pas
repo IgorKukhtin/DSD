@@ -11,7 +11,7 @@ uses
   cxButtonEdit, dsdAction, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, dsdDB, Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar,
   cxClasses, Datasnap.DBClient, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
-  cxGridCustomView, cxGrid, cxPC;
+  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit;
 
 type
   TIncome_AmountTroubleForm = class(TAncestorEnumForm)
@@ -28,6 +28,7 @@ type
     actSetEqual: TdsdExecStoredProc;
     spUpdate_MovementItem_Income_AmountManual: TdsdStoredProc;
     dsdUpdateDataSet1: TdsdUpdateDataSet;
+    PretensionAmount: TcxGridDBColumn;
   private
     { Private declarations }
   public

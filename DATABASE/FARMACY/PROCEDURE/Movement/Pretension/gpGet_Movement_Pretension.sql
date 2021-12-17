@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer
              , IncomeMovementId Integer 
              , IncomeOperDate TDateTime, IncomeInvNumber TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
-             , Comment TBlob, BranchDate TDateTime, GoodsReceiptsDate TDateTime
+             , Comment TBlob, BranchDate TDateTime, GoodsReceiptsDate TDateTime, SentDate TDateTime
              , ActName TVarChar
              , ActExportDir TVarChar, ActExportName TVarChar, ActFileName TVarChar
 )
@@ -60,6 +60,7 @@ BEGIN
            , Movement_Pretension_View.Comment
            , Movement_Pretension_View.BranchDate
            , Movement_Pretension_View.GoodsReceiptsDate
+           , Movement_Pretension_View.SentDate
            , CASE WHEN Movement_Pretension_View.ToId = 59611 THEN 'Акт по претензии Бадм'
                   WHEN Movement_Pretension_View.ToId = 59612 THEN 'Акт по претензии Бадм'
                   ELSE 'Акт по претензии Бадм' END::TVarChar        AS ActName
@@ -75,7 +76,7 @@ BEGIN
 
       WHERE Movement_Pretension_View.Id = inMovementId;
 
-       END IF;
+      END IF;
 
 END;
 $BODY$

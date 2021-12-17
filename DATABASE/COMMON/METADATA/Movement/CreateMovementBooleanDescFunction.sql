@@ -384,9 +384,19 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_ErrorRRO() RETURNS integer AS $BOD
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_ErrorRRO', 'ВИП чек по ошибке РРО'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_ErrorRRO');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_ReasonDifferences_Deficit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_ReasonDifferences_Deficit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ReasonDifferences(), 'zc_ObjectBoolean_ReasonDifferences_Deficit', 'Недостача' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_ReasonDifferences_Deficit');  
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_ReasonDifferences_Substandard() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_ReasonDifferences_Substandard'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ReasonDifferences(), 'zc_ObjectBoolean_ReasonDifferences_Substandard', 'Некондиция' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_ReasonDifferences_Substandard');  
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 17.12.21                                                                                   * zc_ObjectBoolean_ReasonDifferences_Deficit, zc_ObjectBoolean_ReasonDifferences_Substandard
  14.12.21                                                                                   * zc_MovementBoolean_ErrorRRO
  16.11.21                                                                                   * zc_MovementBoolean_Conduct
  01.11.21                                                                                   * zc_MovementBoolean_UseSubject

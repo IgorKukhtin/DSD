@@ -383,6 +383,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             VisibleForCustomization = False
           end
           object PretensionAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
             DataBinding.FieldName = 'PretensionAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 3
@@ -390,6 +391,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 73
           end
         end
       end
