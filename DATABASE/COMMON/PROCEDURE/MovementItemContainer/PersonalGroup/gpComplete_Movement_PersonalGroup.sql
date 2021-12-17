@@ -14,6 +14,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_PersonalGroup());
 
+
+     -- Проверка
+     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ уже проведен.';
+     END IF;
+
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();
 
@@ -24,6 +31,13 @@ BEGIN
      PERFORM lpComplete_Movement_PersonalGroup (inMovementId := inMovementId
                                               , inUserId     := vbUserId
                                              );
+
+
+-- !!! ВРЕМЕННО !!!
+IF vbUserId = 5 AND 1=1 THEN
+    RAISE EXCEPTION 'Admin - Test = OK';
+END IF;
+
 
 END;
 $BODY$

@@ -68,7 +68,9 @@ BEGIN
                     OR (MovementBoolean_ClosedAuto.ValueData = TRUE AND MovementDate_TimeClose.ValueData <= CURRENT_TIMESTAMP)
                       )
                )
-     --OR vbUserId = 5
+   --OR vbUserId = 5
+  --AND vbUserId <> 5
+
     THEN
         RAISE EXCEPTION 'Ошибка.Период закрыт с <%>.'
                       , (SELECT CASE WHEN MovementBoolean_ClosedAuto.ValueData = TRUE
@@ -108,7 +110,7 @@ BEGIN
                      AND Object_Personal_View.PositionId = inPositionId
                      AND Object_Personal_View.isErased   = FALSE
                   )
-     AND vbUserId <> 5
+   --AND vbUserId <> 5
     THEN
         RAISE EXCEPTION 'Ошибка.В справочнике Сотрудников <%> <%>  <%> не найден.'
                       , lfGet_Object_ValueData_sh (inMemberId)
@@ -126,7 +128,7 @@ BEGIN
                      AND Object_Personal_View.MemberId   = inMemberId
                      AND Object_Personal_View.PositionId = inPositionId
                   )
-       AND vbUserId <> 5
+     --AND vbUserId <> 5
     THEN
         IF EXISTS (SELECT 1
                          FROM Object_Personal_View
@@ -174,6 +176,10 @@ BEGIN
                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement_PersonalGroup.Id
                                           AND MovementItem.DescId     = zc_MI_Master()
                                           AND MovementItem.isErased   = FALSE
+                   INNER JOIN MovementLinkObject AS MLO_PersonalGroup
+                                                 ON MLO_PersonalGroup.MovementId = MovementItem.Id 
+                                                AND MLO_PersonalGroup.DescId         = zc_MovementLinkObject_PersonalGroup()
+                                                AND MLO_PersonalGroup.ObjectId       = inPersonalGroupId
                    INNER JOIN Object_Personal_View ON Object_Personal_View.PersonalId = MovementItem.ObjectId
                                                   AND Object_Personal_View.MemberId   = inMemberId
                WHERE Movement_PersonalGroup.OperDate = inOperDate
@@ -181,10 +187,16 @@ BEGIN
                  AND Movement_PersonalGroup.StatusId = zc_Enum_Status_Complete()
                )
     THEN
-        RAISE EXCEPTION 'Ошибка.У сотрудника <%> <%>  <%> на <%> сформированы данные в документе <Список бригады>.%Корректировка невозможна.'
+        RAISE EXCEPTION 'Ошибка.%У сотрудника <%>%<%>%<%>%<%>%на <%> сформированы данные%в документе <Список бригады>.Корректировка невозможна.'
+                               , CHR (13)
                                , lfGet_Object_ValueData_sh (inMemberId)
+                               , CHR (13)
                                , lfGet_Object_ValueData_sh (inPositionId)
+                               , CHR (13)
+                               , lfGet_Object_ValueData_sh (inPersonalGroupId)
+                               , CHR (13)
                                , lfGet_Object_ValueData_sh (inUnitId)
+                               , CHR (13)
                                , zfConvert_DateToString(inOperDate)
                                , CHR (13)
                                 ;
@@ -223,11 +235,14 @@ BEGIN
    IF ioTypeId IN (zc_Enum_WorkTimeKind_Holiday(), zc_Enum_WorkTimeKind_HolidayNoZp())
       AND vbIsCheck = TRUE
    THEN
-        RAISE EXCEPTION 'Ошибка. У сотрудника <%> <%>  <%> на <%> уже установлен отпуск.Корретировка заблокирована.'
+        RAISE EXCEPTION 'Ошибка.У сотрудника <%> <%>  <%>%на <%>%нет прав устанавливать отпуск в табеле.%Только в документе <Приказ по отпускам>.'
                                , lfGet_Object_ValueData_sh (inMemberId)
                                , lfGet_Object_ValueData_sh (inPositionId)
                                , lfGet_Object_ValueData_sh (inUnitId)
+                               , CHR (13)
                                , zfConvert_DateToString(inOperDate)
+                               , CHR (13)
+                               , CHR (13)
                                 ;
     END IF;
 
@@ -399,7 +414,7 @@ BEGIN
         PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
     END IF;
 
-    if vbUserId = 5 AND 1=1
+    if vbUserId = 5 AND 1=0
     then
         RAISE EXCEPTION 'Admin.<%> <%> <%> <%> <%>  -  <%>  <%>'
                           , zfConvert_DateToString (inOperDate)

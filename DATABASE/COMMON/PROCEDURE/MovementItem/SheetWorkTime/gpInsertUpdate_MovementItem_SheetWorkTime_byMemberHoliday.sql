@@ -10,16 +10,81 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHol
 RETURNS VOID
 AS
 $BODY$
+   DECLARE vbUserId Integer;
    DECLARE vbStartDate TDateTime;
    DECLARE vbEndDAte   TDateTime;
    DECLARE vbMemberId   Integer;
    DECLARE vbWorkTimeKindId Integer;
+   DECLARE vbMovementId_check Integer;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+    IF zfConvert_StringToNumber (inSession) < 0
+    THEN vbUserId := lpGetUserBySession ((ABS (inSession :: Integer)) :: TVarChar);
+    ELSE vbUserId := lpGetUserBySession (inSession);
+    END IF;
+
+
      -- даты нач и окончания отпуска
      vbStartDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId_mh AND MovementDate.DescId = zc_MovementDate_BeginDateStart());
      vbEndDAte  := (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId_mh AND MovementDate.DescId = zc_MovementDate_BeginDateEnd());
      vbMemberId := (SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId_mh AND MovementLinkObject.DescId = zc_MovementLinkObject_Member());
      vbWorkTimeKindId := (SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId_mh AND MovementLinkObject.DescId = zc_MovementLinkObject_WorkTimeKind());
+
+
+     -- Проверка что ЗП не начислена
+     vbMovementId_check:= (WITH tmpOperDate_all AS (SELECT GENERATE_SERIES (vbStartDate, vbEndDate, '1 DAY' :: INTERVAL) AS OperDate)
+                                  , tmpOperDate AS (SELECT DISTINCT DATE_TRUNC ('MONTH', tmpOperDate_all.OperDate) AS OperDate FROM tmpOperDate_all)
+                                  , tmpMovement AS (SELECT MovementLinkObject_Member.ObjectId   AS MemberId
+                                                         , ObjectLink_Personal_Member.ObjectId  AS PersonalId
+                                                    FROM Movement
+                                                         LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
+                                                                                      ON MovementLinkObject_Member.MovementId = Movement.Id
+                                                                                     AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+                                                         LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                                              ON ObjectLink_Personal_Member.ChildObjectId = MovementLinkObject_Member.ObjectId
+                                                                             AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                                                    WHERE Movement.Id = inMovementId_mh
+                                                   )
+                                  , tmpContainer AS (SELECT CLO_Personal.ContainerId
+                                                     FROM tmpMovement
+                                                          INNER JOIN ContainerLinkObject AS CLO_Personal
+                                                                                         ON CLO_Personal.ObjectId = tmpMovement.PersonalId
+                                                                                        AND CLO_Personal.DescId   = zc_ContainerLinkObject_Personal()
+                                                          INNER JOIN Container ON Container.Id     = CLO_Personal.ContainerId
+                                                                              AND Container.DescId = zc_Container_Summ()
+                                                        --INNER JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                        --                               ON CLO_InfoMoney.ContainerId = Container.Id
+                                                        --                              AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+                                                          INNER JOIN ContainerLinkObject AS CLO_ServiceDate
+                                                                                         ON CLO_ServiceDate.ContainerId = CLO_Personal.ContainerId
+                                                                                        AND CLO_ServiceDate.DescId      = zc_ContainerLinkObject_ServiceDate()
+                                                          INNER JOIN ObjectDate AS ObjectDate_Service
+                                                                                ON ObjectDate_Service.ObjectId  = CLO_ServiceDate.ObjectId
+                                                                               AND ObjectDate_Service.DescId    = zc_ObjectDate_ServiceDate_Value()
+                                                                               AND ObjectDate_Service.ValueData IN (SELECT DISTINCT tmpOperDate.OperDate FROM tmpOperDate)
+                                                    )
+                             SELECT MIContainer.MovementId
+                             FROM tmpContainer
+                                  INNER JOIN MovementItemContainer AS MIContainer
+                                                                   ON MIContainer.ContainerId    = tmpContainer.ContainerId
+                                                                  AND MIContainer.MovementDescId = zc_Movement_PersonalService()
+                                                                  AND MIContainer.Amount         <> 0
+                             LIMIT 1
+                          );
+
+     -- Проверка что ЗП не начислена
+     IF vbMovementId_check > 0
+     THEN
+         RAISE EXCEPTION 'Табель заблокирован.%Обратитесь к экономисту.%Найдена вендомость начисления <%>%№ <%> от <%>.'
+                        , CHR (13)
+                        , CHR (13)
+                        , lfGet_Object_ValueData_sh ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = vbMovementId_check AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList()))
+                        , CHR (13)
+                        , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_check)
+                        , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_check))
+                         ;
+     END IF;
+     
 
 
      -- автоматом проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind - при распроведении или удалении - в табеле удаляется WorkTimeKind
@@ -83,6 +148,12 @@ BEGIN
                                    AND ObjectString_ShortName.DescId = zc_objectString_WorkTimeKind_ShortName()
      ) AS tmp
      ;
+
+-- !!! ВРЕМЕННО !!!
+IF vbUserId = 5 AND 1=1 THEN
+    RAISE EXCEPTION 'Admin - Test = OK';
+END IF;
+
 
 END;
 $BODY$

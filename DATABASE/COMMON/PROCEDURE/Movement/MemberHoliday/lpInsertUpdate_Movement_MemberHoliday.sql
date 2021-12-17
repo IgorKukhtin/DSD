@@ -29,9 +29,10 @@ BEGIN
      -- 1. Распроводим Документ
      IF ioId > 0
      THEN
+         -- сначала распроведение
          PERFORM lpUnComplete_Movement (inMovementId := ioId
                                       , inUserId     := inUserId);
-         --при распроведении или удалении - в табеле удаляется WorkTimeKind
+         -- потом удаление - в табеле удаляется WorkTimeKind
          PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(ioId, TRUE, (-1 * inUserId)::TVarChar);
      END IF;
      
@@ -71,13 +72,15 @@ BEGIN
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), ioId, inUserId);
      END IF;
 
-     -- 5.2. проводим Документ + сохранили протокол
+  
+     -- 5.1. сначала проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind - при распроведении или удалении - в табеле удаляется WorkTimeKind
+     PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(ioId, FALSE, (-1 * inUserId)::TVarChar);
+
+     -- 5.2. потом проводим Документ + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := ioId
                                 , inDescId     := zc_Movement_MemberHoliday()
                                 , inUserId     := inUserId
                                  );
-     --автоматом проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind - при распроведении или удалении - в табеле удаляется WorkTimeKind
-     PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(ioId, FALSE, (-1 * inUserId)::TVarChar);
 
 END;
 $BODY$

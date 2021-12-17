@@ -70,7 +70,7 @@ BEGIN
     IF inNumber = 2
     THEN
         -- Проверка - Инфо-2
-        IF EXTRACT (DAY FROM CURRENT_DATE) IN (1,15,14)
+        IF EXTRACT (DAY FROM CURRENT_DATE) IN (1,15)
         THEN
             outText:= 'Внимание!!!!'
            ||CHR(13)||'Просьба сообщить в Отдел кадров'

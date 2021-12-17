@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpComplete_Movement_MemberHoliday (Integer, TVarChar);
 CREATE OR REPLACE FUNCTION gpComplete_Movement_MemberHoliday(
     IN inMovementId        Integer               , -- ключ Документа
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
-)                              
+)
 RETURNS VOID
 AS
 $BODY$
@@ -14,14 +14,21 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_MemberHoliday());
 
-     -- проводим Документ + сохранили протокол
+      -- автоматом проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind - при распроведении или удалении - в табеле удаляется WorkTimeKind
+     PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(inMovementId, FALSE, (-1 * vbUserId)::TVarChar);
+
+    -- проводим Документ + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := zc_Movement_MemberHoliday()
                                 , inUserId     := vbUserId
                                  );
 
-     --автоматом проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind - при распроведении или удалении - в табеле удаляется WorkTimeKind
-     PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(inMovementId, FALSE, (-1 * vbUserId)::TVarChar);
+ -- !!! ВРЕМЕННО !!!
+IF vbUserId = 5 AND 1=1 THEN
+    RAISE EXCEPTION 'Admin - Test = OK';
+END IF;
+
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
