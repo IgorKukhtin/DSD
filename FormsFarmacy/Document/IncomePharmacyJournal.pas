@@ -71,6 +71,8 @@ type
     actExecStoredSetVisible: TdsdExecStoredProc;
     isConduct: TcxGridDBColumn;
     DateConduct: TcxGridDBColumn;
+    spPUSHComplete: TdsdStoredProc;
+    actPUSHInfo: TdsdShowPUSHMessage;
   private
     { Private declarations }
   public

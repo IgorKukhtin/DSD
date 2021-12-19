@@ -404,6 +404,9 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
       FormName = 'TIncomePharmacyForm'
       FormNameParam.Value = 'TIncomePharmacyForm'
     end
+    inherited actComplete: TdsdChangeMovementStatus
+      BeforeAction = actPUSHInfo
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -749,6 +752,21 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
           StoredProc = spSetVisible
         end>
       Caption = 'actExecStoredSetVisible'
+    end
+    object actPUSHInfo: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHComplete
+      StoredProcList = <
+        item
+          StoredProc = spPUSHComplete
+        end
+        item
+        end
+        item
+        end>
+      Caption = 'actPUSHInfo'
+      PUSHMessageType = pmtInformation
     end
   end
   inherited MasterDS: TDataSource
@@ -1287,5 +1305,39 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
     PackSize = 1
     Left = 184
     Top = 307
+  end
+  object spPUSHComplete: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_IncomePretension'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 522
+    Top = 336
   end
 end

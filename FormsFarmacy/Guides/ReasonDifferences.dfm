@@ -31,19 +31,19 @@ inherited ReasonDifferencesForm: TReasonDifferencesForm
           object Name: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
-            Width = 286
+            Width = 275
           end
           object isDeficit: TcxGridDBColumn
             Caption = #1053#1077#1076#1086#1074#1086#1079
             DataBinding.FieldName = 'isDeficit'
             HeaderHint = #1053#1077#1076#1086#1089#1090#1072#1095#1072
-            Width = 60
+            Width = 62
           end
-          object isSubstandard: TcxGridDBColumn
-            Caption = #1053#1077#1082#1086#1085#1076#1080#1094#1080#1103
-            DataBinding.FieldName = 'isSubstandard'
+          object isSurplus: TcxGridDBColumn
+            Caption = #1048#1079#1083#1080#1096#1077#1082
+            DataBinding.FieldName = 'isSurplus'
             HeaderHint = #1053#1077#1082#1086#1085#1076#1080#1094#1080#1103
-            Width = 58
+            Width = 61
           end
           object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -137,7 +137,7 @@ inherited ReasonDifferencesForm: TReasonDifferencesForm
           ValueParam.MultiSelectSeparator = ','
         end
         item
-          Component = isSubstandard
+          Component = isSurplus
           ValueParam.Value = Null
           ValueParam.Component = FormParams
           ValueParam.ComponentItem = 'Visible'
@@ -289,10 +289,10 @@ inherited ReasonDifferencesForm: TReasonDifferencesForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisSubstandard'
+        Name = 'inisSurplus'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'isSubstandard'
+        ComponentItem = 'isSurplus'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

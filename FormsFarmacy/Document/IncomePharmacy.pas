@@ -132,6 +132,8 @@ type
     edComment: TcxTextEdit;
     cxLabel18: TcxLabel;
     PretensionAmount: TcxGridDBColumn;
+    spPUSHComplete: TdsdStoredProc;
+    actPUSHComplete: TdsdShowPUSHMessage;
   private
     { Private declarations }
   public

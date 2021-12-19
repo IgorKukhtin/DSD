@@ -33,7 +33,7 @@ type
     spInsertUpdate_Object_ReasonDifferences: TdsdStoredProc;
     isErased: TcxGridDBColumn;
     isDeficit: TcxGridDBColumn;
-    isSubstandard: TcxGridDBColumn;
+    isSurplus: TcxGridDBColumn;
     actSetVisibleAction: TdsdSetVisibleAction;
     spGet_Visible: TdsdStoredProc;
     FormParams: TdsdFormParams;

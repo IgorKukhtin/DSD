@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_Pretension_SentDate(
     IN inMovementId          Integer   , -- Ключ объекта <Документ Перемещение>
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TDateTime AS
+RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;

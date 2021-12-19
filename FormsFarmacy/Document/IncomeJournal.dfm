@@ -661,6 +661,9 @@ inherited IncomeJournalForm: TIncomeJournalForm
           MultiSelectSeparator = ','
         end>
     end
+    inherited actComplete: TdsdChangeMovementStatus
+      BeforeAction = actPUSHInfo
+    end
     object actisDocument: TdsdExecStoredProc [23]
       Category = 'DSDLib'
       MoveParams = <>
@@ -1163,6 +1166,21 @@ inherited IncomeJournalForm: TIncomeJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1072#1087#1090#1077#1082#1080
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1072#1087#1090#1077#1082#1080
       ImageIndex = 67
+    end
+    object actPUSHInfo: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHComplete
+      StoredProcList = <
+        item
+          StoredProc = spPUSHComplete
+        end
+        item
+        end
+        item
+        end>
+      Caption = 'actPUSHInfo'
+      PUSHMessageType = pmtInformation
     end
   end
   inherited MasterDS: TDataSource
@@ -1910,5 +1928,39 @@ inherited IncomeJournalForm: TIncomeJournalForm
     PackSize = 1
     Left = 816
     Top = 211
+  end
+  object spPUSHComplete: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_IncomePretension'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 546
+    Top = 368
   end
 end

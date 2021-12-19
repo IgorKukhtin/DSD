@@ -121,6 +121,11 @@ inherited PretensionJournalForm: TPretensionJournalForm
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = TotalSubstandard
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -213,6 +218,17 @@ inherited PretensionJournalForm: TPretensionJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 71
+          end
+          object TotalSubstandard: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1085#1077#1082#1086#1085#1076#1080#1094#1080#1080
+            DataBinding.FieldName = 'TotalSubstandard'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 69
           end
           object NDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057

@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReasonDifferences(
  INOUT ioCode                    Integer   ,    -- Код объекта <Причина разногласия>
     IN inName                    TVarChar  ,    -- Название объекта <Причина разногласия>
     IN inisDeficit               Boolean   ,    -- Недостача
-    IN inisSubstandard           Boolean   ,    -- Некондиция
+    IN inisSurplus           Boolean   ,    -- Некондиция
     IN inSession                 TVarChar       -- Сессия пользователя
 )
 AS
@@ -33,7 +33,7 @@ BEGIN
    -- сохранили св-во < Недостача>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReasonDifferences_Deficit(), ioId, inisDeficit);
    -- сохранили св-во < Некондиция>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReasonDifferences_Substandard(), ioId, inisSubstandard);
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReasonDifferences_Surplus(), ioId, inisSurplus);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

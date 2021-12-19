@@ -107,6 +107,8 @@ type
     isUseNDSKind: TcxGridDBColumn;
     isConduct: TcxGridDBColumn;
     DateConduct: TcxGridDBColumn;
+    spPUSHComplete: TdsdStoredProc;
+    actPUSHInfo: TdsdShowPUSHMessage;
   private
     { Private declarations }
   public

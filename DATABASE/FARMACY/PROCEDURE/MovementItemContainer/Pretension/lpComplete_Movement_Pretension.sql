@@ -56,14 +56,14 @@ BEGIN
                                                ON PriceSite_Deficit.ObjectId = MILinkObject_ReasonDifferences.ObjectId
                                               AND PriceSite_Deficit.DescId = zc_ObjectBoolean_ReasonDifferences_Deficit()
                                                    
-                       LEFT JOIN ObjectBoolean AS PriceSite_Substandard
-                                               ON PriceSite_Substandard.ObjectId = MILinkObject_ReasonDifferences.ObjectId
-                                              AND PriceSite_Substandard.DescId = zc_ObjectBoolean_ReasonDifferences_Substandard()
+                       LEFT JOIN ObjectBoolean AS PriceSite_Surplus
+                                               ON PriceSite_Surplus.ObjectId = MILinkObject_ReasonDifferences.ObjectId
+                                              AND PriceSite_Surplus.DescId = zc_ObjectBoolean_ReasonDifferences_Surplus()
 
                    WHERE MI.MovementId = inMovementId
                      AND MI.DescId = zc_MI_Master()
                      AND (MI.Amount < 0 AND COALESCE (PriceSite_Deficit.ValueData, FALSE) = TRUE OR
-                          MI.Amount > 0 AND COALESCE (PriceSite_Substandard.ValueData, FALSE) = TRUE)
+                          MI.Amount > 0 AND COALESCE (PriceSite_Deficit.ValueData, FALSE) = FALSE AND COALESCE (PriceSite_Surplus.ValueData, FALSE) = FALSE)
                      AND MI.isErased = FALSE)
     THEN
       RAISE EXCEPTION 'Нет данных для отложки документа';    
@@ -94,14 +94,14 @@ BEGIN
                                            ON PriceSite_Deficit.ObjectId = MILinkObject_ReasonDifferences.ObjectId
                                           AND PriceSite_Deficit.DescId = zc_ObjectBoolean_ReasonDifferences_Deficit()
                                                    
-                   LEFT JOIN ObjectBoolean AS PriceSite_Substandard
-                                           ON PriceSite_Substandard.ObjectId = MILinkObject_ReasonDifferences.ObjectId
-                                          AND PriceSite_Substandard.DescId = zc_ObjectBoolean_ReasonDifferences_Substandard()
+                   LEFT JOIN ObjectBoolean AS PriceSite_Surplus
+                                           ON PriceSite_Surplus.ObjectId = MILinkObject_ReasonDifferences.ObjectId
+                                          AND PriceSite_Surplus.DescId = zc_ObjectBoolean_ReasonDifferences_Surplus()
 
                WHERE MI.MovementId = inMovementId
                  AND MI.DescId = zc_MI_Master()
                  AND (MI.Amount < 0 AND COALESCE (PriceSite_Deficit.ValueData, FALSE) = TRUE OR
-                      MI.Amount > 0 AND COALESCE (PriceSite_Substandard.ValueData, FALSE) = TRUE)
+                      MI.Amount > 0 AND COALESCE (PriceSite_Deficit.ValueData, FALSE) = FALSE AND COALESCE (PriceSite_Surplus.ValueData, FALSE) = FALSE)
                  AND MI.isErased = FALSE
                  AND COALESCE (MIContainer_Income.Id, 0) = 0)
     THEN
@@ -164,14 +164,14 @@ BEGIN
                                     ON PriceSite_Deficit.ObjectId = MILinkObject_ReasonDifferences.ObjectId
                                    AND PriceSite_Deficit.DescId = zc_ObjectBoolean_ReasonDifferences_Deficit()
                                                    
-            LEFT JOIN ObjectBoolean AS PriceSite_Substandard
-                                    ON PriceSite_Substandard.ObjectId = MILinkObject_ReasonDifferences.ObjectId
-                                   AND PriceSite_Substandard.DescId = zc_ObjectBoolean_ReasonDifferences_Substandard()
+            LEFT JOIN ObjectBoolean AS PriceSite_Surplus
+                                    ON PriceSite_Surplus.ObjectId = MILinkObject_ReasonDifferences.ObjectId
+                                   AND PriceSite_Surplus.DescId = zc_ObjectBoolean_ReasonDifferences_Surplus()
             
        WHERE MI.MovementId = inMovementId
          AND MI.DescId = zc_MI_Master()
          AND (MI.Amount < 0 AND COALESCE (PriceSite_Deficit.ValueData, FALSE) = TRUE OR
-              MI.Amount > 0 AND COALESCE (PriceSite_Substandard.ValueData, FALSE) = TRUE)
+              MI.Amount > 0 AND COALESCE (PriceSite_Deficit.ValueData, FALSE) = FALSE AND COALESCE (PriceSite_Surplus.ValueData, FALSE) = FALSE)
          AND MI.isErased = FALSE;
 
        -- Проводки если затронуты контейнера сроков

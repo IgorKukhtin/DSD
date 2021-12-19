@@ -15,7 +15,7 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbisDeficit Boolean;
-  DECLARE vbisSubstandard Boolean;
+  DECLARE vbisSurplus Boolean;
   DECLARE vbIsErased Boolean;
 BEGIN
 
@@ -28,9 +28,9 @@ BEGIN
     
       SELECT 
             COALESCE (PriceSite_Deficit.ValueData, FALSE)
-          , COALESCE (PriceSite_Substandard.ValueData, FALSE)
+          , COALESCE (PriceSite_Surplus.ValueData, FALSE)
           , Object_ReasonDifferences.IsErased
-      INTO vbisDeficit, vbisSubstandard, vbIsErased    
+      INTO vbisDeficit, vbisSurplus, vbIsErased    
       FROM 
            Object AS Object_ReasonDifferences
 
@@ -38,9 +38,9 @@ BEGIN
                                    ON PriceSite_Deficit.ObjectId = Object_ReasonDifferences.Id
                                   AND PriceSite_Deficit.DescId = zc_ObjectBoolean_ReasonDifferences_Deficit()
                                        
-           LEFT JOIN ObjectBoolean AS PriceSite_Substandard
-                                   ON PriceSite_Substandard.ObjectId = Object_ReasonDifferences.Id
-                                  AND PriceSite_Substandard.DescId = zc_ObjectBoolean_ReasonDifferences_Substandard()
+           LEFT JOIN ObjectBoolean AS PriceSite_Surplus
+                                   ON PriceSite_Surplus.ObjectId = Object_ReasonDifferences.Id
+                                  AND PriceSite_Surplus.DescId = zc_ObjectBoolean_ReasonDifferences_Surplus()
                                   
       WHERE Object_ReasonDifferences.Id = inReasonDifferencesId;  
       

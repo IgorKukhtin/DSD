@@ -664,6 +664,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         end>
     end
     inherited actCompleteMovement: TChangeGuidesStatus
+      BeforeAction = actPUSHComplete
       StoredProcList = <
         item
           StoredProc = spChangeStatus
@@ -1275,6 +1276,21 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         end>
       isShowModal = True
     end
+    object actPUSHComplete: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHComplete
+      StoredProcList = <
+        item
+          StoredProc = spPUSHComplete
+        end
+        item
+        end
+        item
+        end>
+      Caption = 'actPUSHInfo'
+      PUSHMessageType = pmtInformation
+    end
   end
   inherited MasterDS: TDataSource
     Top = 376
@@ -1664,8 +1680,8 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Income'
-    Left = 80
-    Top = 88
+    Left = 152
+    Top = 48
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Income'
@@ -2700,5 +2716,39 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     PackSize = 1
     Left = 592
     Top = 248
+  end
+  object spPUSHComplete: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_IncomePretension'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 698
+    Top = 432
   end
 end

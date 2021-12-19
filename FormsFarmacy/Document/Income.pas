@@ -195,6 +195,8 @@ type
     actCreatePretension: TdsdOpenForm;
     dxBarButton4: TdxBarButton;
     PretensionAmount: TcxGridDBColumn;
+    spPUSHComplete: TdsdStoredProc;
+    actPUSHInfo: TdsdShowPUSHMessage;
   private
     { Private declarations }
   public

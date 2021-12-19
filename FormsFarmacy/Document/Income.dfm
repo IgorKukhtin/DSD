@@ -1196,6 +1196,7 @@
         end>
     end
     inherited actCompleteMovement: TChangeGuidesStatus [10]
+      BeforeAction = actPUSHInfo
       StoredProcList = <
         item
           StoredProc = spChangeStatus
@@ -1786,6 +1787,7 @@
     object actComplete: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      BeforeAction = actPUSHInfo
       PostDataSetBeforeExecute = False
       StoredProc = spMovementComplete
       StoredProcList = <
@@ -1984,6 +1986,21 @@
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actPUSHInfo: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHComplete
+      StoredProcList = <
+        item
+          StoredProc = spPUSHComplete
+        end
+        item
+        end
+        item
+        end>
+      Caption = 'actPUSHInfo'
+      PUSHMessageType = pmtInformation
     end
   end
   inherited MasterDS: TDataSource
@@ -4213,5 +4230,39 @@
     PackSize = 1
     Left = 256
     Top = 344
+  end
+  object spPUSHComplete: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_IncomePretension'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 706
+    Top = 424
   end
 end

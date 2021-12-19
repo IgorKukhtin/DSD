@@ -11,6 +11,7 @@ SELECT       Movement.Id                                AS Id
            , Object_Status.ValueData                    AS StatusName
            , MovementFloat_TotalDeficit.ValueData       AS TotalDeficit
            , MovementFloat_TotalProficit.ValueData      AS TotalProficit
+           , MovementFloat_TotalSubstandard.ValueData   AS TotalSubstandard
            , MovementBlob_Comment.ValueData             AS Comment
            , MovementDate_Branch.ValueData              AS BranchDate
            , MovementDate_GoodsReceipts.ValueData       AS GoodsReceiptsDate
@@ -47,6 +48,9 @@ SELECT       Movement.Id                                AS Id
             LEFT JOIN MovementFloat AS MovementFloat_TotalProficit
                                     ON MovementFloat_TotalProficit.MovementId = Movement.Id
                                    AND MovementFloat_TotalProficit.DescId = zc_MovementFloat_TotalProficit()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSubstandard
+                                    ON MovementFloat_TotalSubstandard.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSubstandard.DescId = zc_MovementFloat_TotalSubstandard()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

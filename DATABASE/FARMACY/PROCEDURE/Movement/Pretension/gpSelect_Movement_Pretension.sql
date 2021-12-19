@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer
              , BranchDate TDateTime, BranchUser TVarChar
              , GoodsReceiptsDate TDateTime, SentDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , TotalDeficit TFloat, TotalProficit TFloat
+             , TotalDeficit TFloat, TotalProficit TFloat, TotalSubstandard TFloat
              , PriceWithVAT Boolean
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
@@ -87,6 +87,7 @@ BEGIN
            , Movement_Pretension_View.StatusName
            , Movement_Pretension_View.TotalDeficit
            , Movement_Pretension_View.TotalProficit
+           , Movement_Pretension_View.TotalSubstandard
            , Movement_Pretension_View.PriceWithVAT
            , Movement_Pretension_View.FromId
            , Movement_Pretension_View.FromName

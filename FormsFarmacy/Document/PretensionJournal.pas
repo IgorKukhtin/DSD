@@ -50,6 +50,7 @@ type
     CheckedName: TcxGridDBColumn;
     GoodsReceiptsDate: TcxGridDBColumn;
     SentDate: TcxGridDBColumn;
+    TotalSubstandard: TcxGridDBColumn;
   private
     { Private declarations }
   public
