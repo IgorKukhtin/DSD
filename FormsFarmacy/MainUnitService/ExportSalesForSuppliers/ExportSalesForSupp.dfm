@@ -1765,7 +1765,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         Left = 0
         Top = 0
         Width = 901
-        Height = 31
+        Height = 57
         Align = alTop
         TabOrder = 0
         object btnDanhsonPharmaEmail: TButton
@@ -1835,12 +1835,39 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
           TabOrder = 7
           OnClick = btnDanhsonPharmaMonthExecuteClick
         end
+        object btnDanhsonPharmaReturnInMonthExecute: TButton
+          Left = 613
+          Top = 27
+          Width = 90
+          Height = 25
+          Caption = #1047#1072' '#1084#1077#1089#1103#1094
+          TabOrder = 8
+          OnClick = btnDanhsonPharmaReturnInMonthExecuteClick
+        end
+        object btnDanhsonPharmaReturnInWeekExecute: TButton
+          Left = 517
+          Top = 27
+          Width = 90
+          Height = 25
+          Caption = #1047#1072' '#1085#1077#1076#1077#1083#1102
+          TabOrder = 9
+          OnClick = btnDanhsonPharmaReturnInWeekExecuteClick
+        end
+        object btnDanhsonPharmaReturnInExecute: TButton
+          Left = 423
+          Top = 27
+          Width = 90
+          Height = 25
+          Caption = #1042#1086#1079#1074#1088#1072#1090#1099
+          TabOrder = 10
+          OnClick = btnDanhsonPharmaReturnInExecuteClick
+        end
       end
       object grDanhsonPharma: TcxGrid
         Left = 0
-        Top = 31
+        Top = 57
         Width = 901
-        Height = 484
+        Height = 458
         Align = alClient
         TabOrder = 1
         object grDanhsonPharmaDBTableView: TcxGridDBTableView
@@ -2549,8 +2576,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
   end
   object dsReport_Upload_DanhsonPharma: TDataSource
     DataSet = qryReport_Upload_DanhsonPharma
-    Left = 792
-    Top = 304
+    Left = 784
+    Top = 360
   end
   object qryReport_Upload_DanhsonPharma: TZQuery
     Connection = ZConnection1
@@ -2648,7 +2675,125 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         ParamType = ptUnknown
       end>
     Left = 788
-    Top = 224
+    Top = 216
+    ParamData = <
+      item
+        DataType = ftUnknown
+        Name = 'StartDate'
+        ParamType = ptUnknown
+      end
+      item
+        DataType = ftUnknown
+        Name = 'EndDate'
+        ParamType = ptUnknown
+      end>
+  end
+  object qryReport_Upload_DanhsonPharmaReturnIn: TZQuery
+    Connection = ZConnection1
+    SQL.Strings = (
+      'SELECT MovementCheck_Promo.*'
+      
+        '     , ObjectFloat_NDSKind_NDS.ValueData                        ' +
+        '    AS NDS'
+      
+        '     , '#39#1055#1088#1086#1074#1077#1076#1077#1085#39'                                               ' +
+        '                      AS StatusName'
+      
+        '     , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN '#39 +
+        #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#39' ELSE '#39'???'#39' END AS ItemName'
+      
+        '     , Object_MedicForSale.ValueData                            ' +
+        '    AS MedicForSaleName'
+      
+        '     , COALESCE(Object_BuyerForSale.ValueData, MovementString_Co' +
+        'mment.ValueData)                     AS BuyerForSaleName'
+      
+        '     , ObjectString_BuyerForSale_Phone.ValueData                ' +
+        '    AS Phone'
+      
+        'FROM gpReport_Sale_PartialReturnIn(:StartDate, :EndDate, 0, 9526' +
+        '799, '#39'3'#39') AS MovementCheck_Promo'
+      ''
+      
+        '     LEFT JOIN Movement AS Movement ON Movement.Id =  MovementCh' +
+        'eck_Promo.Id'
+      ''
+      '     LEFT JOIN MovementFloat AS MovementFloat_MovementId'
+      
+        '                             ON MovementFloat_MovementId.Movemen' +
+        'tId = MovementCheck_Promo.Id'
+      
+        '                            AND MovementFloat_MovementId.DescId ' +
+        '    =  zc_MovementFloat_MovementId()'
+      ''
+      
+        '     LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Obj' +
+        'ect_Goods_Retail.Id = MovementCheck_Promo.GoodsId'
+      
+        '     LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_' +
+        'Goods_Main.Id = Object_Goods_Retail.GoodsMainId'
+      ''
+      '     LEFT OUTER JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS'
+      
+        '                                 ON ObjectFloat_NDSKind_NDS.Obje' +
+        'ctId = Object_Goods_Main.NDSKindId'
+      ''
+      
+        '     LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicFor' +
+        'Sale'
+      
+        '                                  ON MovementLinkObject_MedicFor' +
+        'Sale.MovementId =  CAST(MovementFloat_MovementId.ValueData as In' +
+        'teger)'
+      
+        '                                 AND MovementLinkObject_MedicFor' +
+        'Sale.DescId = zc_MovementLinkObject_MedicForSale()'
+      
+        '     LEFT JOIN Object AS Object_MedicForSale ON Object_MedicForS' +
+        'ale.Id = MovementLinkObject_MedicForSale.ObjectId'
+      ''
+      
+        '     LEFT JOIN MovementLinkObject AS MovementLinkObject_BuyerFor' +
+        'Sale'
+      
+        '                                  ON MovementLinkObject_BuyerFor' +
+        'Sale.MovementId =  CAST(MovementFloat_MovementId.ValueData as In' +
+        'teger)'
+      
+        '                                 AND MovementLinkObject_BuyerFor' +
+        'Sale.DescId = zc_MovementLinkObject_BuyerForSale()'
+      
+        '     LEFT JOIN Object AS Object_BuyerForSale ON Object_BuyerForS' +
+        'ale.Id = MovementLinkObject_BuyerForSale.ObjectId'
+      ''
+      '     LEFT JOIN ObjectString AS ObjectString_BuyerForSale_Phone'
+      
+        '                       ON ObjectString_BuyerForSale_Phone.Object' +
+        'Id = MovementLinkObject_BuyerForSale.ObjectId'
+      
+        '                      AND ObjectString_BuyerForSale_Phone.DescId' +
+        ' = zc_ObjectString_BuyerForSale_Phone()'
+      ''
+      '     LEFT JOIN MovementString AS MovementString_Comment'
+      
+        '                              ON MovementString_Comment.Movement' +
+        'Id = CAST(MovementFloat_MovementId.ValueData as Integer)'
+      
+        '                             AND MovementString_Comment.DescId =' +
+        ' zc_MovementString_Comment()')
+    Params = <
+      item
+        DataType = ftUnknown
+        Name = 'StartDate'
+        ParamType = ptUnknown
+      end
+      item
+        DataType = ftUnknown
+        Name = 'EndDate'
+        ParamType = ptUnknown
+      end>
+    Left = 788
+    Top = 296
     ParamData = <
       item
         DataType = ftUnknown

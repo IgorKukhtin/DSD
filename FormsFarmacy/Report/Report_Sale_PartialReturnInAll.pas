@@ -1,4 +1,4 @@
-unit CalculationPartialSale;
+unit Report_Sale_PartialReturnInAll;
 
 interface
 
@@ -17,25 +17,30 @@ uses
   cxCurrencyEdit;
 
 type
-  TCalculationPartialSaleForm = class(TAncestorReportForm)
-    FormParams: TdsdFormParams;
-    JuridicalName: TcxGridDBColumn;
+  TReport_Sale_PartialReturnInAllForm = class(TAncestorReportForm)
+    UnitName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    FromName: TcxGridDBColumn;
-    Summa: TcxGridDBColumn;
-    actFormPartialSale: TMultiAction;
-    actExecFormPartialSale: TdsdExecStoredProc;
+    GoodsName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     dxBarButton1: TdxBarButton;
-    spFormPartialSale: TdsdStoredProc;
-    actReport_Sale_PartialSale: TdsdOpenForm;
+    cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
     dxBarButton2: TdxBarButton;
-    actReport_Sale_PartialSaleAll: TdsdOpenForm;
-    bbReport_Sale_PartialSaleAll: TdxBarButton;
-    actReport_Income_PartialSale: TdsdOpenForm;
+    GoodsCode: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    Summ: TcxGridDBColumn;
+    PriceSale: TcxGridDBColumn;
+    SummSale: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    edFrom: TcxButtonEdit;
+    edJuridical: TcxButtonEdit;
+    GuidesFrom: TdsdGuides;
+    GuidesJuridical: TdsdGuides;
     dxBarButton3: TdxBarButton;
-    actReport_Sale_PartialReturnInAll: TdsdOpenForm;
-    dxBarButton4: TdxBarButton;
+    FromName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -47,6 +52,6 @@ implementation
 {$R *.dfm}
 initialization
 
-  RegisterClass(TCalculationPartialSaleForm);
+  RegisterClass(TReport_Sale_PartialReturnInAllForm);
 
 end.

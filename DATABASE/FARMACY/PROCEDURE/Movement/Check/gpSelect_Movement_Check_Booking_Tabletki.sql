@@ -111,7 +111,7 @@ BEGIN
                      WHERE tmpMovement.BookingStatus = '2.0'
                        AND tmpMovement.BookingStatusNew = '4.0'
                        AND MIFloat_AmountOrder.ValueData > MovementItem.Amount
-                       AND (MIFloat_AmountOrder.ValueData - MovementItem.Amount) > 0.01
+                       AND (MIFloat_AmountOrder.ValueData - MovementItem.Amount) > 0.1
                     )
          , tmpCancelReason AS (SELECT DISTINCT tmpMI.ID
                                FROM tmpMI 

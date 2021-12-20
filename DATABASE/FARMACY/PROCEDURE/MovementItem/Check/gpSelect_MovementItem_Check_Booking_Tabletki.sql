@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Check_Booking_Tabletki(
 RETURNS TABLE (Id Integer, MovementId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MakerName TVarChar
              , AmountOrder TFloat, Amount TFloat
-             , Price TFloat
+             , Price TFloat, isCancelReason Boolean
               )
 AS
 $BODY$
@@ -52,6 +52,8 @@ BEGIN
           , MIFloat_AmountOrder.ValueData       AS AmountOrder
           , MovementItem.Amount
           , MIFloat_Price.ValueData             AS Price
+          , (MIFloat_AmountOrder.ValueData > MovementItem.Amount) AND 
+            (MIFloat_AmountOrder.ValueData - MovementItem.Amount) > 0.1 AS isCancelReason
      FROM tmpMI AS MovementItem
 
           LEFT JOIN tmpMIFloat AS MIFloat_Price
@@ -75,4 +77,4 @@ $BODY$
 
 -- тест
 --
-SELECT * FROM gpSelect_MovementItem_Check_Booking_Tabletki (183292 , '3');
+SELECT * FROM gpSelect_MovementItem_Check_Booking_Tabletki (0 , '3');

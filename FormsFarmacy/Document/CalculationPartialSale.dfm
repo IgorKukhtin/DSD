@@ -240,6 +240,19 @@ inherited CalculationPartialSaleForm: TCalculationPartialSaleForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Sale_PartialReturnInAll: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1042#1086#1079#1074#1088#1072#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      Hint = #1042#1086#1079#1074#1088#1072#1090#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      ImageIndex = 21
+      FormName = 'TReport_Sale_PartialReturnInAllForm'
+      FormNameParam.Value = 'TReport_Sale_PartialReturnInAllForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 296
@@ -307,6 +320,10 @@ inherited CalculationPartialSaleForm: TCalculationPartialSaleForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -332,6 +349,10 @@ inherited CalculationPartialSaleForm: TCalculationPartialSaleForm
     end
     object dxBarButton3: TdxBarButton
       Action = actReport_Income_PartialSale
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actReport_Sale_PartialReturnInAll
       Category = 0
     end
   end

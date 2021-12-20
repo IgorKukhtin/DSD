@@ -152,9 +152,9 @@
         <DCCReference Include="frx27.dcp"/>
         <DCCReference Include="frxe27.dcp"/>
         <DCCReference Include="frxDB27.dcp"/>
-        <DCCReference Include="ZLibEx.dcp"/>
-        <DCCReference Include="GMLib_D_Sydney10.dcp"/>
-        <DCCReference Include="GMLib_D_Sydney10_VCL.dcp"/>
+        <DCCReference Include="ZLibExD27.dcp"/>
+        <DCCReference Include="GMLib_D27.dcp"/>
+        <DCCReference Include="GMLib_D27_VCL.dcp"/>
         <DCCReference Include="cxSchedulerRS27.dcp"/>
         <DCCReference Include="dxSkinsCoreRS27.dcp"/>
         <DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>

@@ -1138,7 +1138,9 @@ uses
   Report_FinancialMonitoring in '..\..\FormsFarmacy\Report\Report_FinancialMonitoring.pas' {Report_FinancialMonitoringForm: TParentForm},
   Pretension in '..\..\FormsFarmacy\Document\Pretension.pas' {PretensionForm: TParentForm},
   PretensionJournal in '..\..\FormsFarmacy\Document\PretensionJournal.pas' {PretensionJournalForm: TParentForm},
-  MedicSP_IC in '..\..\FormsFarmacy\Guides\MedicSP_IC.pas' {MedicSP_ICForm: TParentForm};
+  MedicSP_IC in '..\..\FormsFarmacy\Guides\MedicSP_IC.pas' {MedicSP_ICForm: TParentForm},
+  Report_Sale_PartialReturnInAll in '..\..\FormsFarmacy\Report\Report_Sale_PartialReturnInAll.pas' {Report_Sale_PartialReturnInAllForm: TParentForm},
+  Report_Sale_PartialReturnInAllDialog in '..\..\FormsFarmacy\Report\Report_Sale_PartialReturnInAllDialog.pas' {Report_Sale_PartialReturnInAllDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

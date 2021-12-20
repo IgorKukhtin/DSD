@@ -1053,13 +1053,19 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FinancialMonitoringForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_PartialReturnInAllForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_PartialReturnInAllForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_PartialReturnInAllDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_PartialReturnInAllDialogForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FinancialMonitoringForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FinancialMonitoringForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TestingAttemptsUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TestingAttemptsUserForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SummaInsuranceCompaniesForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SummaInsuranceCompaniesForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SummaInsuranceCompaniesForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SummaInsuranceCompaniesDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SummaInsuranceCompaniesDialogForm');

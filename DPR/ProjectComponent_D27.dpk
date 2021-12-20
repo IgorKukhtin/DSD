@@ -61,9 +61,9 @@ requires
   frx27,
   frxe27,
   frxDB27,
-  ZLibEx,
-  GMLib_D_Sydney10,
-  GMLib_D_Sydney10_VCL,
+  ZLibExD27,
+  GMLib_D27,
+  GMLib_D27_VCL,
   cxSchedulerRS27,
   dxSkinsCoreRS27;
 

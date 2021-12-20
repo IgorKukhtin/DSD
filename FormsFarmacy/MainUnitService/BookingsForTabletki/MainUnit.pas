@@ -103,7 +103,7 @@ type
   public
     { Public declarations }
     procedure Add_Log(AMessage:String);
-    procedure Add_LogTest(AMessage:String);
+    procedure Add_LogSend(AMessage: String);
 
     procedure AllDriver;
   end;
@@ -135,14 +135,14 @@ begin
   end;
 end;
 
-procedure TMainForm.Add_LogTest(AMessage: String);
+procedure TMainForm.Add_LogSend(AMessage: String);
 var
   F: TextFile;
 
 begin
   try
-    AssignFile(F,ChangeFileExt(Application.ExeName,'_Test.log'));
-    if not fileExists(ChangeFileExt(Application.ExeName,'_Test.log')) then
+    AssignFile(F,ChangeFileExt(Application.ExeName,'_Send.log'));
+    if not fileExists(ChangeFileExt(Application.ExeName,'_Send.log')) then
       Rewrite(F)
     else
       Append(F);
@@ -362,7 +362,10 @@ begin
                                         GetJSONAItemsCancelReason) then
         begin
           Add_Log(TabletkiAPI.ErrorsText);
-        end
+        end else
+        begin
+          Add_LogSend(qryCheckHead.FieldByName('Id').AsString + ' ' + GetJSONAItemsCancelReason.ToString);
+        end;
       end;
 
       if Status = '7.0' then
@@ -388,6 +391,9 @@ begin
           spUpdateMovementStatus.Params.ParamByName('inBookingStatus').AsString := qryCheckHead.FieldByName('BookingStatusNew').AsString;
           spUpdateMovementStatus.Params.ParamByName('inSession').AsString := '3';
           spUpdateMovementStatus.ExecProc;
+        end else
+        begin
+          Add_Log(TabletkiAPI.ErrorsText);
         end;
       end else if qryCheckHead.FieldByName('BookingStatus').AsString <> qryCheckHead.FieldByName('BookingStatusNew').AsString then
       begin

@@ -1,8 +1,8 @@
--- Function: gpReport_Sale_PartialSale()
+-- Function: gpReport_Sale_PartialReturnIn()
 
-DROP FUNCTION IF EXISTS gpReport_Sale_PartialSale (TDateTime, TDateTime, Integer ,Integer ,TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Sale_PartialReturnIn (TDateTime, TDateTime, Integer ,Integer ,TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_Sale_PartialSale(
+CREATE OR REPLACE FUNCTION gpReport_Sale_PartialReturnIn(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inJuridicalId   Integer ,
@@ -128,11 +128,11 @@ BEGIN
         , MovementItem.ObjectId                      AS GoodsId
         , Object_Goods.ObjectCode                    AS GoodsCode
         , Object_Goods.ValueData                     AS GoodsName
-        , (-1.0 * MovementItemContainer.Amount)::TFloat                               AS Amount
+        , MovementItemContainer.Amount               AS Amount
         , tmpIncomeList.Price                        AS Price
-        , Round(-1.0 *tmpIncomeList.Price * MovementItemContainer.Amount , 2)::TFloat AS Summa
+        , Round(tmpIncomeList.Price * MovementItemContainer.Amount , 2)::TFloat AS  Summa
         , MIFloat_Price.ValueData                    AS PriceSale
-        , zfCalc_SummaCheck(COALESCE (-1.0 * MovementItemContainer.Amount, 0) * MIFloat_Price.ValueData
+        , zfCalc_SummaCheck(COALESCE (MovementItemContainer.Amount, 0) * MIFloat_Price.ValueData
                           , COALESCE (MB_RoundingDown.ValueData, False)
                           , COALESCE (MB_RoundingTo10.ValueData, False)
                           , COALESCE (MB_RoundingTo50.ValueData, False)) AS SummSale
@@ -141,7 +141,7 @@ BEGIN
         INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerID = Container.ID
                                         AND MovementItemContainer.OperDate >= inStartDate
                                         AND MovementItemContainer.OperDate < inEndDate + INTERVAL '1 DAY'
-                                        AND MovementItemContainer.MovementDescId in (zc_Movement_Check(), zc_Movement_Sale())
+                                        AND MovementItemContainer.MovementDescId in (zc_Movement_ReturnIn())
 
         INNER JOIN Movement AS Movement ON Movement.ID = MovementItemContainer.MovementId
 
@@ -182,11 +182,11 @@ $BODY$
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Øàáëèé Î.Â.
- 06.11.20                                                       *
+ 20.12.21                                                       *
 
 */
 
 -- òåñò
--- 
-SELECT * FROM gpReport_Sale_PartialSale (inStartDate := CURRENT_DATE - INTERVAL '7 DAY',  inEndDate := CURRENT_DATE,  inJuridicalId := 13310756, inFromId := 9526799, inSession:= '3')
+--
+ SELECT * FROM gpReport_Sale_PartialReturnIn (inStartDate := CURRENT_DATE - INTERVAL '7 DAY',  inEndDate := CURRENT_DATE,  inJuridicalId := 13310756, inFromId := 9526799, inSession:= '3')
                               

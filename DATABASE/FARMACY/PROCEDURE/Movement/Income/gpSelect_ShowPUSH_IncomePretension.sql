@@ -67,10 +67,13 @@ BEGIN
            INNER JOIN tnpMI ON tnpMI.ID = tmpMovement.Id
       ;  
 
-      outShowMessage := True;
-      outPUSHType := 3;
-      outText := 'ВНИМАНИЕ !!!'||chr(13)||chr(13)||'По этой приходной накладной у вас создана претензия  '||chr(13)||vbText||chr(13)||chr(13)||
-                 'Просьба следить за Актуальностью данной претензии !';
+      IF COALESCE (vbText, '') <> ''
+      THEN
+        outShowMessage := True;
+        outPUSHType := 3;
+        outText := 'ВНИМАНИЕ !!!'||chr(13)||chr(13)||'По этой приходной накладной у вас создана претензия  '||chr(13)||vbText||chr(13)||chr(13)||
+                   'Просьба следить за Актуальностью данной претензии !';
+      END IF;
     END IF;
 
 

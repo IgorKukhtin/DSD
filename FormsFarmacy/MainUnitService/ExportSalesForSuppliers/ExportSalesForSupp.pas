@@ -237,6 +237,10 @@ type
     DanhsonPharmaBuyerForSalePhone: TcxGridDBColumn;
     btnDanhsonPharmaWeekExecute: TButton;
     btnDanhsonPharmaMonthExecute: TButton;
+    qryReport_Upload_DanhsonPharmaReturnIn: TZQuery;
+    btnDanhsonPharmaReturnInMonthExecute: TButton;
+    btnDanhsonPharmaReturnInWeekExecute: TButton;
+    btnDanhsonPharmaReturnInExecute: TButton;
     procedure btnBaDMExecuteClick(Sender: TObject);
     procedure btnBaDMExportClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -269,6 +273,9 @@ type
     procedure btnDanhsonPharmaAllClick(Sender: TObject);
     procedure btnDanhsonPharmaWeekExecuteClick(Sender: TObject);
     procedure btnDanhsonPharmaMonthExecuteClick(Sender: TObject);
+    procedure btnDanhsonPharmaReturnInExecuteClick(Sender: TObject);
+    procedure btnDanhsonPharmaReturnInWeekExecuteClick(Sender: TObject);
+    procedure btnDanhsonPharmaReturnInMonthExecuteClick(Sender: TObject);
   private
     { Private declarations }
     FileNameBaDM_byUnit: String;
@@ -700,9 +707,24 @@ begin
     Application.ProcessMessages;
     btnDanhsonPharmaEmailClick(nil);
     Application.ProcessMessages;
+
+    btnDanhsonPharmaReturnInMonthExecuteClick(nil);
+    Application.ProcessMessages;
+    btnDanhsonPharmaExportClick(nil);
+    Application.ProcessMessages;
+    btnDanhsonPharmaEmailClick(nil);
+    Application.ProcessMessages;
+
     if DayOfTheWeek(IncDay(DanhsonPharmaDate.Date)) = 1 then
     begin
       btnDanhsonPharmaWeekExecuteClick(nil);
+      Application.ProcessMessages;
+      btnDanhsonPharmaExportClick(nil);
+      Application.ProcessMessages;
+      btnDanhsonPharmaEmailClick(nil);
+      Application.ProcessMessages;
+
+      btnDanhsonPharmaReturnInWeekExecuteClick(nil);
       Application.ProcessMessages;
       btnDanhsonPharmaExportClick(nil);
       Application.ProcessMessages;
@@ -712,6 +734,13 @@ begin
     if DayOf(IncDay(DanhsonPharmaDate.Date)) = 1 then
     begin
       btnDanhsonPharmaMonthExecuteClick(nil);
+      Application.ProcessMessages;
+      btnDanhsonPharmaExportClick(nil);
+      Application.ProcessMessages;
+      btnDanhsonPharmaEmailClick(nil);
+      Application.ProcessMessages;
+
+      btnDanhsonPharmaReturnInMonthExecuteClick(nil);
       Application.ProcessMessages;
       btnDanhsonPharmaExportClick(nil);
       Application.ProcessMessages;
@@ -767,6 +796,7 @@ procedure TExportSalesForSuppForm.btnDanhsonPharmaExecuteClick(Sender: TObject);
 begin
   Add_Log('Начало Формирования отчета Дансон фарма');
 
+  dsReport_Upload_DanhsonPharma.DataSet := qryReport_Upload_DanhsonPharma;
   qryReport_Upload_DanhsonPharma.Close;
   qryReport_Upload_DanhsonPharma.Params.ParamByName('StartDate').Value := DanhsonPharmaDate.Date;
   qryReport_Upload_DanhsonPharma.Params.ParamByName('EndDate').Value := DanhsonPharmaDate.Date;
@@ -809,6 +839,7 @@ procedure TExportSalesForSuppForm.btnDanhsonPharmaMonthExecuteClick(
 begin
   Add_Log('Начало Формирования отчета Дансон фарма за месяц');
 
+  dsReport_Upload_DanhsonPharma.DataSet := qryReport_Upload_DanhsonPharma;
   qryReport_Upload_DanhsonPharma.Close;
   qryReport_Upload_DanhsonPharma.Params.ParamByName('StartDate').Value := StartOfTheMonth(DanhsonPharmaDate.Date);
   qryReport_Upload_DanhsonPharma.Params.ParamByName('EndDate').Value := DanhsonPharmaDate.Date;
@@ -827,6 +858,81 @@ begin
      FormatDateTime('DD_MM_YYYY', StartOfTheMonth(DanhsonPharmaDate.Date)) + '_' +
      FormatDateTime('DD_MM_YYYY', DanhsonPharmaDate.Date) + '.xls';
 
+end;
+
+procedure TExportSalesForSuppForm.btnDanhsonPharmaReturnInExecuteClick(
+  Sender: TObject);
+begin
+  Add_Log('Начало Формирования отчета возвраты Дансон фарма');
+
+  dsReport_Upload_DanhsonPharma.DataSet := qryReport_Upload_DanhsonPharmaReturnIn;
+  qryReport_Upload_DanhsonPharmaReturnIn.Close;
+  qryReport_Upload_DanhsonPharmaReturnIn.Params.ParamByName('StartDate').Value := DanhsonPharmaDate.Date;
+  qryReport_Upload_DanhsonPharmaReturnIn.Params.ParamByName('EndDate').Value := DanhsonPharmaDate.Date;
+
+  try
+    qryReport_Upload_DanhsonPharmaReturnIn.Open;
+  except
+    on E:Exception do
+    begin
+      Add_Log(E.Message);
+      Exit;
+    end;
+  end;
+
+  FileNameDanhsonPharma := 'DanhsonPharmaReturn_' + FormatDateTime('DD_MM_YYYY', DanhsonPharmaDate.Date) + '.xls';
+
+end;
+
+procedure TExportSalesForSuppForm.btnDanhsonPharmaReturnInMonthExecuteClick(
+  Sender: TObject);
+begin
+  Add_Log('Начало Формирования отчета возвраты Дансон фарма за месяц');
+
+  dsReport_Upload_DanhsonPharma.DataSet := qryReport_Upload_DanhsonPharmaReturnIn;
+  qryReport_Upload_DanhsonPharmaReturnIn.Close;
+  qryReport_Upload_DanhsonPharmaReturnIn.Params.ParamByName('StartDate').Value := StartOfTheMonth(DanhsonPharmaDate.Date);
+  qryReport_Upload_DanhsonPharmaReturnIn.Params.ParamByName('EndDate').Value := DanhsonPharmaDate.Date;
+
+  try
+    qryReport_Upload_DanhsonPharmaReturnIn.Open;
+  except
+    on E:Exception do
+    begin
+      Add_Log(E.Message);
+      Exit;
+    end;
+  end;
+
+  FileNameDanhsonPharma := 'DanhsonPharmaReturnPeriod_' +
+     FormatDateTime('DD_MM_YYYY', StartOfTheMonth(DanhsonPharmaDate.Date)) + '_' +
+     FormatDateTime('DD_MM_YYYY', DanhsonPharmaDate.Date) + '.xls';
+
+end;
+
+procedure TExportSalesForSuppForm.btnDanhsonPharmaReturnInWeekExecuteClick(
+  Sender: TObject);
+begin
+  Add_Log('Начало Формирования отчета возвраты Дансон фарма за неделю');
+
+  dsReport_Upload_DanhsonPharma.DataSet := qryReport_Upload_DanhsonPharmaReturnIn;
+  qryReport_Upload_DanhsonPharmaReturnIn.Close;
+  qryReport_Upload_DanhsonPharmaReturnIn.Params.ParamByName('StartDate').Value := IncDay(DanhsonPharmaDate.Date, - 6);
+  qryReport_Upload_DanhsonPharmaReturnIn.Params.ParamByName('EndDate').Value := DanhsonPharmaDate.Date;
+
+  try
+    qryReport_Upload_DanhsonPharmaReturnIn.Open;
+  except
+    on E:Exception do
+    begin
+      Add_Log(E.Message);
+      Exit;
+    end;
+  end;
+
+  FileNameDanhsonPharma := 'DanhsonPharmaReturnPeriod_' +
+     FormatDateTime('DD_MM_YYYY', IncDay(DanhsonPharmaDate.Date, - 6)) + '_' +
+     FormatDateTime('DD_MM_YYYY', DanhsonPharmaDate.Date) + '.xls';
 end;
 
 procedure TExportSalesForSuppForm.btnMDMPfizerAllClick(Sender: TObject);
@@ -1566,8 +1672,9 @@ end;
 
 procedure TExportSalesForSuppForm.btnDanhsonPharmaWeekExecuteClick(Sender: TObject);
 begin
-  Add_Log('Начало Формирования отчета Дансон фарма зв неделю');
+  Add_Log('Начало Формирования отчета Дансон фарма за неделю');
 
+  dsReport_Upload_DanhsonPharma.DataSet := qryReport_Upload_DanhsonPharma;
   qryReport_Upload_DanhsonPharma.Close;
   qryReport_Upload_DanhsonPharma.Params.ParamByName('StartDate').Value := IncDay(DanhsonPharmaDate.Date, - 6);
   qryReport_Upload_DanhsonPharma.Params.ParamByName('EndDate').Value := DanhsonPharmaDate.Date;

@@ -5837,15 +5837,19 @@ var
   JSONObject: TJSONObject;
 
   procedure AddParamToJSON(AName: string; AValue: Variant; ADataType: TFieldType);
-    var intValue: integer;
+    var intValue: integer; n : Double;
   begin
     if AValue = NULL then
       JSONObject.AddPair(LowerCase(AName), TJSONNull.Create)
     else if ADataType = ftDateTime then
       JSONObject.AddPair(LowerCase(AName), FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', AValue))
     else if ADataType = ftFloat then
-      JSONObject.AddPair(LowerCase(AName), TJSONNumber.Create(AValue))
-    else if ADataType = ftInteger then
+    begin
+      if TryStrToFloat(AValue, n) then
+        JSONObject.AddPair(LowerCase(AName), TJSONNumber.Create(n))
+      else
+        JSONObject.AddPair(LowerCase(AName), TJSONNull.Create);
+    end else if ADataType = ftInteger then
     begin
       if TryStrToInt(AValue, intValue) then
         JSONObject.AddPair(LowerCase(AName), TJSONNumber.Create(intValue))
