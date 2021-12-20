@@ -155,6 +155,7 @@ type
     cxLabel11: TcxLabel;
     spUpdate_SentDate: TdsdStoredProc;
     actUpdate_SentDate: TdsdExecStoredProc;
+    actSetEnabled: TdsdSetEnabledAction;
   private
     { Private declarations }
   public

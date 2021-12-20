@@ -768,6 +768,7 @@ inherited PretensionForm: TPretensionForm
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
+      AfterAction = actSetEnabled
       StoredProcList = <
         item
           StoredProc = spGet
@@ -1208,7 +1209,8 @@ inherited PretensionForm: TPretensionForm
       DownloadFolderParam.DataType = ftString
       DownloadFolderParam.MultiSelectSeparator = ','
       FTPOperation = ftpDownloadAndRun
-      Caption = 'actSendFTPFile'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1092#1072#1081#1083' '#1080' '#1086#1090#1082#1088#1099#1090#1100' '#1076#1083#1103' '#1087#1088#1086#1089#1084#1086#1090#1088#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1092#1072#1081#1083' '#1080' '#1086#1090#1082#1088#1099#1090#1100' '#1076#1083#1103' '#1087#1088#1086#1089#1084#1086#1090#1088#1072
       ImageIndex = 60
     end
     object actErasedMIFile: TdsdUpdateErased
@@ -1705,6 +1707,140 @@ inherited PretensionForm: TPretensionForm
       Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1040#1082#1090#1072' '#1087#1086' '#1087#1088#1077#1090#1077#1085#1079#1080#1080' '#1080' '#1087#1086#1076#1082#1083#1102#1095#1077#1085#1080#1077' '#1077#1075#1086' '#1082' '#1092#1072#1081#1083#1072#1084
       Hint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1040#1082#1090#1072' '#1087#1086' '#1087#1088#1077#1090#1077#1085#1079#1080#1080' '#1080' '#1087#1086#1076#1082#1083#1102#1095#1077#1085#1080#1077' '#1077#1075#1086' '#1082' '#1092#1072#1081#1083#1072#1084
       ImageIndex = 30
+    end
+    object actSetEnabled: TdsdSetEnabledAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSetEnabled'
+      SetEnabledParams = <
+        item
+          Component = ceStatus
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isMeneger'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = actComplete
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isMeneger'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = mactPrintToFile
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isMeneger'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = deSentDate
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isMeneger'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = edInvNumber
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isMeneger'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = edOperDate
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isMeneger'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = actUpdate_BranchDate
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isMeneger'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = actUpdate_ClearBranchDate
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isMeneger'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = spUpdateisDeferredYes
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isMeneger'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = spUpdateisDeferredNo
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isMeneger'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = actSendClipboard
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isMeneger'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = actInsert_ReturnOut
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isMeneger'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = actOpenReturnOut
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isMeneger'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = mactSMTPSend
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isMeneger'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = cbisDeferred
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isMeneger'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = deBranchDate
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isMeneger'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end>
     end
   end
   inherited MasterDS: TDataSource
@@ -2251,9 +2387,9 @@ inherited PretensionForm: TPretensionForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ActFileName'
+        Name = 'isMeneger'
         Value = Null
-        DataType = ftString
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 280
@@ -2261,12 +2397,12 @@ inherited PretensionForm: TPretensionForm
   end
   inherited StatusGuides: TdsdGuides
     Left = 80
-    Top = 40
+    Top = 24
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Pretension'
     Left = 32
-    Top = 32
+    Top = 24
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Pretension'
@@ -2460,6 +2596,14 @@ inherited PretensionForm: TPretensionForm
         Component = FormParams
         ComponentItem = 'ActFileName'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMeneger'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isMeneger'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 216

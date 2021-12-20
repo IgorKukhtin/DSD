@@ -24,19 +24,35 @@ RETURNS TABLE (Id Integer
              , CheckedName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
+             , isMeneger
               )
 
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
+   DECLARE vbUnitKey TVarChar;
+   DECLARE vbUnitId Integer;
 BEGIN
 
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
      vbUserId:= lpGetUserBySession (inSession);
-
+     
+     
+     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+               WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy()) -- Для роли "Кассир аптеки"
+     THEN     
+       vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+       IF vbUnitKey = '' THEN
+          vbUnitKey := '-1';
+       END IF;
+       vbUnitId := vbUnitKey::Integer;
+     ELSE
+       vbUnitId := 0;
+     END IF;
+     
      -- определяется <Торговая сеть>
      vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
@@ -46,11 +62,6 @@ BEGIN
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
-        , tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
-        , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
-                         UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
-                              )
-
         , tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
                         FROM ObjectLink AS ObjectLink_Unit_Juridical
                            INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
@@ -58,6 +69,7 @@ BEGIN
                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                                                 AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
                         WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                          AND (ObjectLink_Unit_Juridical.ObjectId = vbUnitId OR vbUnitId = 0)
                         )
         , tmpMI AS (SELECT Movement_Pretension.Id
                          , SUM(CASE WHEN MIBoolean_Checked.ValueData = True THEN 1 ELSE 0 END)      AS Checked
@@ -106,8 +118,8 @@ BEGIN
            , Object_Update.ValueData              AS UpdateName
            , MovementDate_Update.ValueData        AS UpdateDate
        FROM tmpUnit
-           LEFT JOIN Movement_Pretension_View ON Movement_Pretension_View.FromId = tmpUnit.UnitId
-                                            AND Movement_Pretension_View.OperDate BETWEEN inStartDate AND inEndDate
+           INNER JOIN Movement_Pretension_View ON Movement_Pretension_View.FromId = tmpUnit.UnitId
+                                              AND Movement_Pretension_View.OperDate BETWEEN inStartDate AND inEndDate
            INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_Pretension_View.StatusId
 
            LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
@@ -147,5 +159,5 @@ ALTER FUNCTION gpSelect_Movement_Pretension (TDateTime, TDateTime, Boolean, TVar
 */
 
 -- тест
--- 
-SELECT * FROM gpSelect_Movement_Pretension (inStartDate:= '01.12.2021', inEndDate:= '01.01.2022', inIsErased := FALSE, inSession:= '3')
+-- SELECT * FROM gpSelect_Movement_Pretension (inStartDate:= '01.12.2021', inEndDate:= '01.01.2022', inIsErased := FALSE, inSession:= '3')
+select * from gpSelect_Movement_Pretension(instartdate := ('01.12.2021')::TDateTime , inenddate := ('20.12.2021')::TDateTime , inIsErased := 'True' ,  inSession := '11868044');

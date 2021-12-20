@@ -1356,6 +1356,41 @@ type
     property TextParam: TdsdParam read FParam write FParam;
   end;
 
+  TdsdSetEnabledParamsItem = class(TCollectionItem)
+  private
+    FComponent: TComponent;
+    FParam: TdsdParam;
+    procedure SetComponent(const Value: TComponent);
+  protected
+    function GetDisplayName: string; override;
+  public
+    constructor Create(Collection: TCollection); overload; override;
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+  published
+    property Component: TComponent read FComponent write SetComponent;
+    property ValueParam: TdsdParam read FParam write FParam;
+  end;
+
+  TdsdSetEnabledAction = class(TdsdCustomAction)
+  private
+
+    FSetEnabledParams: TOwnedCollection;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+    property SetEnabledParams: TOwnedCollection read FSetEnabledParams write FSetEnabledParams;
+  end;
+
 procedure Register;
 
 implementation
@@ -1421,6 +1456,7 @@ begin
   RegisterActions('DSDLib', [TdsdDataToJsonAction], TdsdDataToJsonAction);
   RegisterActions('DSDLib', [TdsdSendTelegramBotAction], TdsdSendTelegramBotAction);
   RegisterActions('DSDLib', [TdsdSendClipboardAction], TdsdSendClipboardAction);
+  RegisterActions('DSDLib', [TdsdSetEnabledAction], TdsdSetEnabledAction);
 
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
@@ -5778,8 +5814,9 @@ begin
        TcxGridColumn(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component).VisibleForCustomization := TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.Value;
      end else if IsPublishedProp(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component, 'Visible') then
      begin
-        if TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.DataType = ftBoolean then
-          SetVariantProp(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component, 'Visible', TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.Value)
+        if TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.DataType = ftBoolean
+         then
+          SetPropValue(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component, 'Visible', TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.Value)
      end;
   end;
 
@@ -6340,6 +6377,105 @@ begin
 
 end;
 
+{ TdsdSetEnabledParamsItem }
+
+constructor TdsdSetEnabledParamsItem.Create(Collection: TCollection);
+begin
+  inherited;
+  FParam := TdsdParam.Create(Nil);
+  FParam.DataType := ftBoolean;
+end;
+
+destructor TdsdSetEnabledParamsItem.Destroy;
+begin
+  FParam.Free;
+  inherited Destroy;
+end;
+
+function TdsdSetEnabledParamsItem.GetDisplayName: string;
+begin
+  result := inherited;
+  if FParam.Name <> '' then result := FParam.Name
+  else if Assigned(FParam.Component) then
+    result := FParam.Component.Name + ' ' + FParam.ComponentItem
+  else Result := inherited;;
+end;
+
+procedure TdsdSetEnabledParamsItem.Assign(Source: TPersistent);
+var Owner: TComponent;
+begin
+  if Source is TdsdSetEnabledParamsItem then
+  begin
+     FParam.Assign(TdsdSetEnabledParamsItem(Source).ValueParam);
+     FComponent := TdsdSetEnabledParamsItem(Source).FComponent;
+  end
+  else
+    inherited Assign(Source);
+end;
+
+procedure TdsdSetEnabledParamsItem.SetComponent(const Value: TComponent);
+begin
+  if Value <> FComponent then
+  begin
+     if Assigned(Collection) and Assigned(Value) then
+        Value.FreeNotification(TComponent(Collection.Owner));
+     FComponent := Value;
+  end
+end;
+
+{  TdsdSetEnabledAction  }
+
+constructor TdsdSetEnabledAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  FSetEnabledParams := TOwnedCollection.Create(Self, TdsdSetEnabledParamsItem);
+end;
+
+destructor TdsdSetEnabledAction.Destroy;
+begin
+  FreeAndNil(FSetEnabledParams);
+
+  inherited;
+end;
+
+procedure TdsdSetEnabledAction.Notification(AComponent: TComponent;
+  Operation: TOperation);
+var i: integer;
+begin
+  inherited;
+  if csDestroying in ComponentState then
+     exit;
+  if (Operation = opRemove) then
+  begin
+    for i := 0 to FSetEnabledParams.Count - 1 do
+    begin
+       if TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).Component = AComponent then
+            TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).Component := nil;
+       if TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).FParam.Component = AComponent then
+           TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).FParam.Component := nil;
+    end;
+  end;
+end;
+
+function TdsdSetEnabledAction.LocalExecute: Boolean;
+var i: integer;
+begin
+  inherited;
+  Result := True;
+
+  for i := 0 to FSetEnabledParams.Count - 1 do  if Assigned(TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).Component) then
+  begin
+     if TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).Component is TcxGridColumn then
+     begin
+       TcxGridColumn(TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).Component).Editing := TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).FParam.Value;
+     end else if IsPublishedProp(TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).Component, 'Enabled') then
+     begin
+        if TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).FParam.DataType = ftBoolean then
+          SetPropValue(TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).Component, 'Enabled', TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).FParam.Value)
+     end;
+  end;
+
+end;
 
 initialization
 

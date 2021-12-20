@@ -22,10 +22,12 @@ RETURNS TABLE (Id Integer
              , Comment TBlob, BranchDate TDateTime, GoodsReceiptsDate TDateTime, SentDate TDateTime
              , ActName TVarChar
              , ActExportDir TVarChar, ActExportName TVarChar, ActFileName TVarChar
+             , isMeneger Boolean
 )
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbisMeneger Boolean;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -36,6 +38,9 @@ BEGIN
      THEN
        RAISE EXCEPTION 'Ошибка. Создание "Претензий поставщику" создаеться из прихода.';
      ELSE
+     
+     vbisMeneger := NOT EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+                               WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy());
 
      RETURN QUERY
        SELECT
@@ -67,7 +72,7 @@ BEGIN
            , 'tmpPretensionFile'::TVarChar                          AS ActExportDir
            , ('Акт '||Movement_Pretension_View.InvNumber)::TVarChar AS ActExportName
            , ('tmpPretensionFile\'||'Акт '||Movement_Pretension_View.InvNumber||'.pdf')::TVarChar AS ActFileName
-
+           , vbisMeneger                                            AS isMeneger
        FROM Movement_Pretension_View       
 
            LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
@@ -92,4 +97,3 @@ ALTER FUNCTION gpGet_Movement_Pretension (Integer, TVarChar) OWNER TO postgres;
 
 -- тест
 -- select * from gpGet_Movement_Pretension(inMovementId := 26008006 ,  inSession := '3');
-

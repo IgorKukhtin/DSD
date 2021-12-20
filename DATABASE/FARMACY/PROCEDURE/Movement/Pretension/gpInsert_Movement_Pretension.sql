@@ -19,6 +19,8 @@ BEGIN
      --vbUserId := inSession;
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Pretension());
      
+     ioId := 0;
+     
      IF COALESCE (inComment, '') = ''
      THEN
        RETURN;
