@@ -71,8 +71,12 @@ BEGIN
    --находим последнии оплаты
  --выбираем последнии оплаты
    , tmpLastPayment AS (SELECT tt.*
+                             , ObjectLink_Contract_InfoMoney.ChildObjectId          AS InfoMoneyId
                              , MAX (tt.OperDate) OVER (PARTITION BY tt.JuridicalId) AS OperDate_jur
                         FROM gpSelect_Object_JuridicalDefermentPayment(inSession) AS tt
+                             JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                             ON ObjectLink_Contract_InfoMoney.ObjectId = tt.ContractId
+                                            AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
                        )
 
    ---
@@ -90,14 +94,17 @@ BEGIN
                                 AND COALESCE (tmpLastPayment.PartnerId,0) = COALESCE (tmpReport.PartnerId,0)
 
         LEFT JOIN (SELECT tmpLastPayment.JuridicalId
+                        , tmpLastPayment.InfoMoneyId
                         , tmpLastPayment.OperDate
                         , SUM (tmpLastPayment.Amount) AS Amount
                    FROM tmpLastPayment
                    WHERE tmpLastPayment.OperDate = tmpLastPayment.OperDate_jur
                    GROUP BY tmpLastPayment.JuridicalId
                           , tmpLastPayment.OperDate
+                          , tmpLastPayment.InfoMoneyId
                    ) AS tmpLastPaymentJuridical
                      ON tmpLastPaymentJuridical.JuridicalId = tmpReport.JuridicalId
+                    AND tmpLastPaymentJuridical.InfoMoneyId = tmpReport.InfoMoneyId
    ;
 
 END;
@@ -130,3 +137,5 @@ $BODY$
 -- тест
 -- SELECT * FROM gpReport_JuridicalDefermentPayment (inOperDate:= CURRENT_DATE, inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(),  inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());
 -- SELECT * FROM gpReport_JuridicalDefermentPayment (inOperDate:= CURRENT_DATE, inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_SecondForm(), inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());
+
+--select * from gpReport_JuridicalDefermentPayment(inOperDate := ('19.12.2021')::TDateTime , inEmptyParam := ('01.05.2013')::TDateTime , inAccountId := 9128 , inPaidKindId := 3 , inBranchId := 0 , inJuridicalGroupId := 0 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
