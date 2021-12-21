@@ -151,18 +151,28 @@ BEGIN
                             )
                            ;
         ELSE
-            RAISE EXCEPTION 'ќшибка. —отрудник <%> <%>  <%> уволен с <%>.¬вод в табеле закрыт.'
-                          , lfGet_Object_ValueData_sh (inMemberId)
-                          , lfGet_Object_ValueData_sh (inPositionId)
-                          , lfGet_Object_ValueData_sh (inUnitId)
-                          , (SELECT zfConvert_DateToString (MAX (Object_Personal_View.DateOut))
+            --дата увольнени€   - рабочий день, иначе ¬вод в табеле закрыт
+            IF EXISTS (SELECT 1
                              FROM Object_Personal_View
-                             WHERE Object_Personal_View.DateOut    <= vbEndDate
+                             WHERE Object_Personal_View.DateOut    < inOperDate
                                AND Object_Personal_View.UnitId     = inUnitId
                                AND Object_Personal_View.MemberId   = inMemberId
                                AND Object_Personal_View.PositionId = inPositionId
                             )
-                           ;
+            THEN
+                RAISE EXCEPTION 'ќшибка. —отрудник <%> <%>  <%> уволен с <%>.¬вод в табеле закрыт.'
+                              , lfGet_Object_ValueData_sh (inMemberId)
+                              , lfGet_Object_ValueData_sh (inPositionId)
+                              , lfGet_Object_ValueData_sh (inUnitId)
+                              , (SELECT zfConvert_DateToString (MAX (Object_Personal_View.DateOut))
+                                 FROM Object_Personal_View
+                                 WHERE Object_Personal_View.DateOut    <= vbEndDate
+                                   AND Object_Personal_View.UnitId     = inUnitId
+                                   AND Object_Personal_View.MemberId   = inMemberId
+                                   AND Object_Personal_View.PositionId = inPositionId
+                                )
+                               ;
+            END IF;
         END IF;
     END IF;
 
