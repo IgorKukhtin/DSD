@@ -134,6 +134,8 @@ type
     PretensionAmount: TcxGridDBColumn;
     spPUSHComplete: TdsdStoredProc;
     actPUSHComplete: TdsdShowPUSHMessage;
+    spPUSHNewPretension: TdsdStoredProc;
+    actPUSHNewPretension: TdsdShowPUSHMessage;
   private
     { Private declarations }
   public

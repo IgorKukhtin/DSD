@@ -126,6 +126,21 @@ inherited PretensionJournalForm: TPretensionJournalForm
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Column = TotalSubstandard
+            end
+            item
+              Format = #1050#1086#1083'-'#1074#1086' '#1087#1088#1077#1090#1077#1085#1079#1080#1081' 0'
+              Kind = skCount
+              Column = FromName
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = TotalSummActual
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = TotalSummNotActual
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -229,6 +244,26 @@ inherited PretensionJournalForm: TPretensionJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 69
+          end
+          object TotalSummActual: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1072#1082#1090#1091#1072#1083'. '#1087#1086#1079#1080#1094#1080#1081', '#1075#1088#1085'.'
+            DataBinding.FieldName = 'TotalSummActual'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
+          end
+          object TotalSummNotActual: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1085#1077' '#1072#1082#1090#1091#1083#1100#1085'. '#1087#1086#1079#1080#1094#1080#1081', '#1075#1088#1085'.'
+            DataBinding.FieldName = 'TotalSummNotActual'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
           end
           object NDSKindName: TcxGridDBColumn
             Caption = #1053#1044#1057

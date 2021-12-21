@@ -9,12 +9,13 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Pretension(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , InvNumber TVarChar
+             , InvNumber Integer
              , OperDate TDateTime
              , BranchDate TDateTime, BranchUser TVarChar
              , GoodsReceiptsDate TDateTime, SentDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalDeficit TFloat, TotalProficit TFloat, TotalSubstandard TFloat
+             , TotalSummActual TFloat, TotalSummNotActual TFloat
              , PriceWithVAT Boolean
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
@@ -24,7 +25,6 @@ RETURNS TABLE (Id Integer
              , CheckedName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
-             , isMeneger
               )
 
 AS
@@ -73,6 +73,7 @@ BEGIN
                         )
         , tmpMI AS (SELECT Movement_Pretension.Id
                          , SUM(CASE WHEN MIBoolean_Checked.ValueData = True THEN 1 ELSE 0 END)      AS Checked
+                         , Count(MI_Pretension.Id)::Integer                                         AS CountMI
                     FROM Movement AS Movement_Pretension
                          LEFT JOIN MovementItem AS MI_Pretension
                                                  ON MI_Pretension.MovementId = Movement_Pretension.Id
@@ -89,7 +90,7 @@ BEGIN
 
        SELECT
              Movement_Pretension_View.Id
-           , Movement_Pretension_View.InvNumber
+           , Movement_Pretension_View.InvNumber::Integer
            , Movement_Pretension_View.OperDate
            , Movement_Pretension_View.BranchDate
            , Movement_Pretension_View.BranchUserName
@@ -100,6 +101,8 @@ BEGIN
            , Movement_Pretension_View.TotalDeficit
            , Movement_Pretension_View.TotalProficit
            , Movement_Pretension_View.TotalSubstandard
+           , Movement_Pretension_View.TotalSummActual
+           , Movement_Pretension_View.TotalSummNotActual
            , Movement_Pretension_View.PriceWithVAT
            , Movement_Pretension_View.FromId
            , Movement_Pretension_View.FromName
@@ -112,7 +115,9 @@ BEGIN
            , Movement_Pretension_View.IncomeInvNumber
            , Movement_Pretension_View.JuridicalName
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
-           , CASE WHEN COALESCE (tmpMI.Checked, 1) > 0 THEN 'Актуальна' ELSE 'Неактуальна' END::TVarChar AS CheckedName
+           , CASE WHEN COALESCE (tmpMI.Checked, 1) > 0 OR 
+                       COALESCE (tmpMI.CountMI, 0) = 0 /*AND COALESCE (Movement_Pretension_View.Comment::Text, '') <> ''*/
+                  THEN 'Актуальна' ELSE 'Неактуальна' END::TVarChar AS CheckedName
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
            , Object_Update.ValueData              AS UpdateName

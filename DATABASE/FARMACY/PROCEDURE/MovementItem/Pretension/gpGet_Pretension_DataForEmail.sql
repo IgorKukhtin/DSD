@@ -27,6 +27,7 @@ $BODY$
   DECLARE vbFromId Integer;
   DECLARE vbStatusId Integer;
   DECLARE vbUserName TVarChar;
+  DECLARE vbSentDate TDateTime;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
@@ -38,16 +39,24 @@ BEGIN
 
    -- параметры документа
    SELECT
-       Movement.StatusId
+       Movement.StatusId, MovementDate_Sent.ValueData                AS SentDate
    INTO
-       vbStatusId
+       vbStatusId, vbSentDate
    FROM Movement
+        LEFT JOIN MovementDate AS MovementDate_Sent
+                               ON MovementDate_Sent.MovementId =  Movement.Id
+                              AND MovementDate_Sent.DescId = zc_MovementDate_Sent()
    WHERE Movement.Id = inId;
    
    -- Создаем проведенных документов
    IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_UnComplete()
    THEN
        RAISE EXCEPTION 'Ошибка.Отправка претензии поставщику в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);   
+   END IF;
+   
+   IF vbSentDate IS NOT NULL
+   THEN
+       RAISE EXCEPTION 'Ошибка.Претензия отправлена.%Для повторной отправки очистите дату отправки.', CHR(13)||CHR(13);   
    END IF;
    
    IF NOT EXISTS(SELECT MI_PretensionFile.Id

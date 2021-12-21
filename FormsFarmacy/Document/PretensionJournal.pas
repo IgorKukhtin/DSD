@@ -51,6 +51,8 @@ type
     GoodsReceiptsDate: TcxGridDBColumn;
     SentDate: TcxGridDBColumn;
     TotalSubstandard: TcxGridDBColumn;
+    TotalSummActual: TcxGridDBColumn;
+    TotalSummNotActual: TcxGridDBColumn;
   private
     { Private declarations }
   public
