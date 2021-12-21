@@ -114,7 +114,7 @@ BEGIN
                         , tmpLastPayment.PaidKindId
                         , tmpLastPayment.OperDate
                         , tmpLastPayment.Amount
-                        , ROW_NUMBER() OVER(PARTITION BY tmpLastPayment.JuridicalId, tmpLastPayment.PaidKindId. tmpLastPayment.InfoMoneyId ORDER BY tmpLastPayment.OperDate DESC) AS Ord
+                        , ROW_NUMBER() OVER(PARTITION BY tmpLastPayment.JuridicalId, tmpLastPayment.PaidKindId, tmpLastPayment.InfoMoneyId ORDER BY tmpLastPayment.OperDate DESC) AS Ord
                    FROM tmpLastPayment
                   ) AS tmpLastPaymentJuridical
                     ON tmpLastPaymentJuridical.JuridicalId = tmpReport.JuridicalId
