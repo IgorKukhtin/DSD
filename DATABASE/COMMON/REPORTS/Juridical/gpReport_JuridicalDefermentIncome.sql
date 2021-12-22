@@ -210,10 +210,30 @@ BEGIN
                  )
 
    --находим последнии оплаты
-   , tmpLastPayment AS (SELECT tt.* 
-                             , MAX (tt.OperDate) OVER (PARTITION BY tt.JuridicalId) AS OperDate_jur
-                        FROM gpSelect_Object_JuridicalDefermentPayment(inSession) AS tt
-                        )
+   , tmpLastPayment_all AS (SELECT tt.JuridicalId
+                                 , tt.ContractId
+                                 , tt.PaidKindId
+                                 , COALESCE (tt.PartnerId, 0) AS PartnerId
+                                 , tt.OperDate
+                                 , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
+                                 , tt.Amount
+                            FROM gpSelect_Object_JuridicalDefermentPayment(inSession) AS tt
+                                 JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                                 ON ObjectLink_Contract_InfoMoney.ObjectId = tt.ContractId
+                                                AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                           )
+     -- находим последнии оплаты
+   , tmpLastPayment AS (SELECT tt.JuridicalId
+                             , tt.PaidKindId
+                             , tt.InfoMoneyId
+                             , tt.OperDate
+                             , SUM (tt.Amount) AS Amount
+                        FROM tmpLastPayment_all AS tt
+                        GROUP BY tt.JuridicalId
+                               , tt.PaidKindId
+                               , tt.InfoMoneyId
+                               , tt.OperDate
+                       )
 
 
      SELECT a.AccountId, a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.RetailName_main, a.OKPO, a.JuridicalGroupName
@@ -236,6 +256,7 @@ BEGIN
 
           , tmpLastPayment.OperDate :: TDateTime AS PaymentDate
           , tmpLastPayment.Amount   :: TFloat    AS PaymentAmount
+          
           , tmpLastPaymentJuridical.OperDate :: TDateTime AS PaymentDate_jur
           , tmpLastPaymentJuridical.Amount   :: TFloat    AS PaymentAmount_jur
       
@@ -519,20 +540,24 @@ BEGIN
 
            ) AS a
         -- последнии оплаты
-        LEFT JOIN tmpLastPayment ON tmpLastPayment.JuridicalId = a.JuridicalId
-                                AND tmpLastPayment.ContractId = a.ContractId
-                                AND tmpLastPayment.PaidKindId = a.PaidKindId
-                                AND COALESCE (tmpLastPayment.PartnerId,0) = COALESCE (a.PartnerId,0)
+        LEFT JOIN tmpLastPayment_all AS tmpLastPayment
+                                     ON tmpLastPayment.JuridicalId = a.JuridicalId
+                                    AND tmpLastPayment.ContractId  = a.ContractId
+                                    AND tmpLastPayment.PaidKindId  = a.PaidKindId
+                                    AND tmpLastPayment.PartnerId   = COALESCE (a.PartnerId,0)
 
         LEFT JOIN (SELECT tmpLastPayment.JuridicalId
+                        , tmpLastPayment.InfoMoneyId
+                        , tmpLastPayment.PaidKindId
                         , tmpLastPayment.OperDate
-                        , SUM (tmpLastPayment.Amount) AS Amount
+                        , tmpLastPayment.Amount
+                        , ROW_NUMBER() OVER(PARTITION BY tmpLastPayment.JuridicalId, tmpLastPayment.PaidKindId, tmpLastPayment.InfoMoneyId ORDER BY tmpLastPayment.OperDate DESC) AS Ord
                    FROM tmpLastPayment
-                   WHERE tmpLastPayment.OperDate = tmpLastPayment.OperDate_jur
-                   GROUP BY tmpLastPayment.JuridicalId
-                          , tmpLastPayment.OperDate
-                   ) AS tmpLastPaymentJuridical
-                     ON tmpLastPaymentJuridical.JuridicalId = a.JuridicalId
+                  ) AS tmpLastPaymentJuridical
+                    ON tmpLastPaymentJuridical.JuridicalId = a.JuridicalId
+                   AND tmpLastPaymentJuridical.PaidKindId  = a.PaidKindId
+                   AND tmpLastPaymentJuridical.InfoMoneyId = a.InfoMoneyId
+                   AND tmpLastPaymentJuridical.Ord = 1
 
      WHERE a.DebetRemains <> 0 or a.KreditRemains <> 0
         or a.SaleSumm <> 0 or a.DefermentPaymentRemains <> 0
