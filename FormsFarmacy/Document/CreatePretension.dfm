@@ -1,26 +1,26 @@
 inherited CreatePretensionForm: TCreatePretensionForm
   Caption = #1057#1086#1079#1076#1072#1085#1080#1077' <'#1055#1088#1077#1090#1077#1085#1079#1080#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
-  ClientHeight = 524
-  ClientWidth = 856
-  ExplicitWidth = 872
-  ExplicitHeight = 563
+  ClientHeight = 538
+  ClientWidth = 855
+  ExplicitWidth = 871
+  ExplicitHeight = 577
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 199
-    Width = 856
-    Height = 325
+    Width = 855
+    Height = 339
     ExplicitTop = 199
     ExplicitWidth = 856
     ExplicitHeight = 325
-    ClientRectBottom = 325
-    ClientRectRight = 856
+    ClientRectBottom = 339
+    ClientRectRight = 855
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 856
       ExplicitHeight = 301
       inherited cxGrid: TcxGrid
-        Width = 856
-        Height = 301
+        Width = 855
+        Height = 315
         ExplicitWidth = 856
         ExplicitHeight = 301
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -239,7 +239,7 @@ inherited CreatePretensionForm: TCreatePretensionForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 856
+    Width = 855
     Height = 173
     TabOrder = 3
     ExplicitWidth = 856
@@ -327,263 +327,24 @@ inherited CreatePretensionForm: TCreatePretensionForm
       Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
     end
   end
-  inherited FormParams: TdsdFormParams [2]
-    Params = <
-      item
-        Name = 'Id'
-        Value = Null
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Key'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ShowAll'
-        Value = False
-        Component = actShowAll
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Comment'
-        Value = Null
-        Component = cxmComment
-        DataType = ftWideString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PretensionId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end>
-    Left = 288
-    Top = 416
-  end
-  inherited StatusGuides: TdsdGuides [3]
-    Left = 80
-    Top = 48
-  end
-  inherited spChangeStatus: TdsdStoredProc [4]
-    Left = 80
-    Top = 88
-  end
-  inherited spGet: TdsdStoredProc [5]
-    StoredProcName = 'gpGet_Movement_Income'
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber'
-        Value = ''
-        Component = edInvNumber
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperDate'
-        Value = 0d
-        Component = edOperDate
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'StatusCode'
-        Value = ''
-        Component = StatusGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'StatusName'
-        Value = ''
-        Component = StatusGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PriceWithVAT'
-        Value = False
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'FromId'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'FromName'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ToId'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ToName'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'NDSKindId'
-        Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'NDSKindName'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaymentDate'
-        Value = Null
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BranchDate'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumberBranch'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Checked'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isDocument'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isRegistered'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'JuridicalId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'JuridicalName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isConduct'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-    Left = 216
-    Top = 248
-  end
-  inherited spInsertUpdateMovement: TdsdStoredProc [6]
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inChecked'
-        Value = ''
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 162
-    Top = 312
-  end
-  inherited GuidesFiller: TGuidesFiller [7]
-    GuidesList = <
-      item
-      end
-      item
-      end>
-    Left = 160
-    Top = 192
-  end
-  inherited HeaderSaver: THeaderSaver [8]
-    ControlList = <
-      item
-      end>
-    Left = 232
-    Top = 193
-  end
-  inherited RefreshAddOn: TRefreshAddOn [9]
-    FormName = 'TCreatePretensionJournal'
-    DataSet = 'MasterCDS'
-    Left = 616
-    Top = 280
-  end
-  inherited spErasedMIMaster: TdsdStoredProc [10]
+  inherited spErasedMIMaster: TdsdStoredProc [2]
     StoredProcName = ''
     Left = 390
     Top = 408
   end
-  inherited MasterDS: TDataSource [11]
+  inherited MasterDS: TDataSource [3]
     Top = 368
   end
-  inherited MasterCDS: TClientDataSet [12]
+  inherited MasterCDS: TClientDataSet [4]
     Left = 96
     Top = 280
   end
-  inherited spUnErasedMIMaster: TdsdStoredProc [13]
+  inherited spUnErasedMIMaster: TdsdStoredProc [5]
     StoredProcName = ''
     Left = 390
     Top = 328
   end
-  inherited spInsertUpdateMIMaster: TdsdStoredProc [14]
+  inherited spInsertUpdateMIMaster: TdsdStoredProc [6]
     Params = <
       item
         Name = 'inAmount'
@@ -614,11 +375,11 @@ inherited CreatePretensionForm: TCreatePretensionForm
     Left = 160
     Top = 368
   end
-  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [15]
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [7]
     Left = 155
     Top = 416
   end
-  inherited cxPropertiesStore: TcxPropertiesStore [16]
+  inherited cxPropertiesStore: TcxPropertiesStore [8]
     Components = <
       item
         Component = Owner
@@ -631,7 +392,7 @@ inherited CreatePretensionForm: TCreatePretensionForm
     Left = 40
     Top = 432
   end
-  inherited spSelect: TdsdStoredProc [17]
+  inherited spSelect: TdsdStoredProc [9]
     StoredProcName = 'gpSelect_MovementItem_Income_CreatePretension'
     Params = <
       item
@@ -673,7 +434,7 @@ inherited CreatePretensionForm: TCreatePretensionForm
     Left = 160
     Top = 248
   end
-  inherited ActionList: TActionList [18]
+  inherited ActionList: TActionList [10]
     Left = 39
     Top = 279
     inherited actRefresh: TdsdDataSetRefresh
@@ -776,6 +537,9 @@ inherited CreatePretensionForm: TCreatePretensionForm
       MoveParams = <>
       BeforeAction = mactChechPretension
       ActionList = <
+        item
+          Action = actPUSHNewPretension
+        end
         item
           Action = actInsertMovementPretension
         end
@@ -907,8 +671,51 @@ inherited CreatePretensionForm: TCreatePretensionForm
         end>
       Caption = 'actGet_ExistsPretension'
     end
+    object actDataToJson: TdsdDataToJsonAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      DataSource = MasterDS
+      JsonParam.Value = Null
+      JsonParam.Component = FormParams
+      JsonParam.ComponentItem = 'Json'
+      JsonParam.DataType = ftWideString
+      JsonParam.MultiSelectSeparator = ','
+      PairParams = <
+        item
+          FieldName = 'Id'
+          PairName = 'Id'
+        end
+        item
+          FieldName = 'GoodsId'
+          PairName = 'GoodsId'
+        end
+        item
+          FieldName = 'ReasonDifferencesId'
+          PairName = 'ReasonDifferencesId'
+        end
+        item
+          FieldName = 'Amount'
+          PairName = 'Amount'
+        end>
+      Caption = 'actDataToJson'
+    end
+    object actPUSHNewPretension: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actDataToJson
+      StoredProc = spPUSHNewPretension
+      StoredProcList = <
+        item
+          StoredProc = spPUSHNewPretension
+        end
+        item
+        end
+        item
+        end>
+      Caption = 'actPUSHNewPretension'
+    end
   end
-  inherited BarManager: TdxBarManager [19]
+  inherited BarManager: TdxBarManager [11]
     Left = 80
     Top = 207
     DockControlHeights = (
@@ -1073,11 +880,11 @@ inherited CreatePretensionForm: TCreatePretensionForm
       ImageIndex = 47
     end
   end
-  inherited DBViewAddOn: TdsdDBViewAddOn [20]
+  inherited DBViewAddOn: TdsdDBViewAddOn [12]
     Left = 502
     Top = 409
   end
-  inherited PopupMenu: TPopupMenu [21]
+  inherited PopupMenu: TPopupMenu [13]
     Left = 512
     Top = 344
     object N2: TMenuItem
@@ -1086,6 +893,251 @@ inherited CreatePretensionForm: TCreatePretensionForm
     object N3: TMenuItem
       Action = actMISetUnErased
     end
+  end
+  inherited FormParams: TdsdFormParams [14]
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = cxmComment
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PretensionId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Json'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    Left = 288
+    Top = 416
+  end
+  inherited StatusGuides: TdsdGuides [15]
+    Left = 80
+    Top = 48
+  end
+  inherited spChangeStatus: TdsdStoredProc [16]
+    Left = 80
+    Top = 88
+  end
+  inherited spGet: TdsdStoredProc [17]
+    StoredProcName = 'gpGet_Movement_Income'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber'
+        Value = ''
+        Component = edInvNumber
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = 0d
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StatusCode'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StatusName'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FromId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FromName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NDSKindId'
+        Value = ''
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NDSKindName'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaymentDate'
+        Value = Null
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchDate'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberBranch'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Checked'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDocument'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isRegistered'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isConduct'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    Left = 216
+    Top = 248
+  end
+  inherited spInsertUpdateMovement: TdsdStoredProc [18]
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChecked'
+        Value = ''
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 162
+    Top = 312
+  end
+  inherited GuidesFiller: TGuidesFiller [19]
+    GuidesList = <
+      item
+      end
+      item
+      end>
+    Left = 160
+    Top = 192
+  end
+  inherited HeaderSaver: THeaderSaver [20]
+    ControlList = <
+      item
+      end>
+    Left = 232
+    Top = 193
+  end
+  inherited RefreshAddOn: TRefreshAddOn [21]
+    FormName = 'TCreatePretensionJournal'
+    DataSet = 'MasterCDS'
+    Left = 616
+    Top = 280
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     Params = <
@@ -1420,5 +1472,48 @@ inherited CreatePretensionForm: TCreatePretensionForm
     PackSize = 1
     Left = 296
     Top = 248
+  end
+  object spPUSHNewPretension: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_PUSHCreatePretension'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJSON'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Json'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 594
+    Top = 384
   end
 end

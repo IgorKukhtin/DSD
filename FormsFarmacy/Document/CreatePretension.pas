@@ -73,6 +73,9 @@ type
     MakerName: TcxGridDBColumn;
     gpGet_ExistsPretension: TdsdStoredProc;
     actGet_ExistsPretension: TdsdExecStoredProc;
+    spPUSHNewPretension: TdsdStoredProc;
+    actPUSHNewPretension: TdsdShowPUSHMessage;
+    actDataToJson: TdsdDataToJsonAction;
   private
     { Private declarations }
   public

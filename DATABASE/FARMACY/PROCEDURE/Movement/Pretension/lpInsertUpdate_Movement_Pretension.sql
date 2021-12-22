@@ -44,13 +44,12 @@ BEGIN
          -- сохранили свойство <Пользователь (корректировка)>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), ioId, inUserId);
      ELSE
-         IF vbIsInsert = TRUE
-         THEN
-             -- сохранили свойство <Дата создания>
-             PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
-             -- сохранили свойство <Пользователь (создание)>
-             PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
-         END IF;
+         -- сохранили свойство <Дата создания>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили свойство <Пользователь (создание)>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
+         --Сохранили Дата поступления товара
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_GoodsReceipts(), ioId, inOperDate);
      END IF;
 
      -- сохранили протокол

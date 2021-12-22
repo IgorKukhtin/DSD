@@ -151,13 +151,13 @@ type
     colisPromoBonus: TcxGridDBColumn;
     cdsResultisPromoBonus: TBooleanField;
     colRepricePromo: TcxGridDBColumn;
-    colJuridicalPromoName: TcxGridDBColumn;
-    colContractPromoName: TcxGridDBColumn;
+    colJuridicalPromoOneName: TcxGridDBColumn;
+    colContractPromoOneName: TcxGridDBColumn;
     colNewPricePromo: TcxGridDBColumn;
     colPriceDiffPromo: TcxGridDBColumn;
     cdsResultRepricePromo: TBooleanField;
-    cdsResultJuridicalPromoName: TStringField;
-    cdsResultContractPromoName: TStringField;
+    cdsResultJuridicalPromoOneName: TStringField;
+    cdsResultContractPromoOneName: TStringField;
     cdsResultNewPricePromo: TCurrencyField;
     cdsResultPriceDiffPromo: TCurrencyField;
     procedure FormCreate(Sender: TObject);
@@ -518,8 +518,8 @@ begin
           cdsResult.FieldByName('Contract_Percent').AsCurrency := AllGoodsPriceCDS.FieldByName('Contract_Percent').AsCurrency;
           cdsResult.FieldByName('AreaName').AsString := AllGoodsPriceCDS.FieldByName('AreaName').AsString;
           cdsResult.FieldByName('RepricePromo').AsBoolean := AllGoodsPriceCDS.FieldByName('RepricePromo').AsBoolean;
-          cdsResult.FieldByName('JuridicalPromoName').AsString := AllGoodsPriceCDS.FieldByName('JuridicalPromoName').AsString;
-          cdsResult.FieldByName('ContractPromoName').AsString := AllGoodsPriceCDS.FieldByName('ContractPromoName').AsString;
+          cdsResult.FieldByName('JuridicalPromoOneName').AsString := AllGoodsPriceCDS.FieldByName('JuridicalPromoOneName').AsString;
+          cdsResult.FieldByName('ContractPromoOneName').AsString := AllGoodsPriceCDS.FieldByName('ContractPromoOneName').AsString;
           cdsResult.FieldByName('NewPricePromo').AsCurrency := AllGoodsPriceCDS.FieldByName('NewPricePromo').AsCurrency;
           cdsResult.FieldByName('PriceDiffPromo').AsCurrency := AllGoodsPriceCDS.FieldByName('PriceDiffPromo').AsCurrency;
           cdsResult.Post;

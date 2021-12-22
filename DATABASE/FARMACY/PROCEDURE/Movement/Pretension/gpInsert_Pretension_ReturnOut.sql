@@ -62,9 +62,22 @@ BEGIN
                                                    ON MIFloat_MovementItemId.MovementItemId = MI.Id
                                                   AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
                                                     
+                      LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
+                                                       ON MILinkObject_ReasonDifferences.MovementItemId = MI.Id
+                                                      AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
+
+                      LEFT JOIN ObjectBoolean AS PriceSite_Deficit
+                                              ON PriceSite_Deficit.ObjectId = MILinkObject_ReasonDifferences.ObjectId
+                                             AND PriceSite_Deficit.DescId = zc_ObjectBoolean_ReasonDifferences_Deficit()
+                                                               
+                      LEFT JOIN ObjectBoolean AS PriceSite_Surplus
+                                              ON PriceSite_Surplus.ObjectId = MILinkObject_ReasonDifferences.ObjectId
+                                             AND PriceSite_Surplus.DescId = zc_ObjectBoolean_ReasonDifferences_Surplus()
+
                   WHERE MI.MovementId = inMovementId
                     AND MI.DescId = zc_MI_Master()
-                    AND MI.Amount < 0
+                    AND (MI.Amount < 0 AND COALESCE (PriceSite_Deficit.ValueData, FALSE) = TRUE OR
+                         MI.Amount > 0 AND COALESCE (PriceSite_Deficit.ValueData, FALSE) = FALSE AND COALESCE (PriceSite_Surplus.ValueData, FALSE) = FALSE)
                     AND MI.isErased = FALSE)
    THEN
      RAISE EXCEPTION 'Нет данных для создания возврата.';    
@@ -102,7 +115,7 @@ BEGIN
    PERFORM lpInsertUpdate_MovementItem_ReturnOut (0
                                                 , vbReturnOutId
                                                 , MI.ObjectId
-                                                , (- 1.0 * MI.Amount) :: TFloat
+                                                , Abs(MI.Amount) :: TFloat
                                                 , COALESCE (MIFloat_Price.ValueData, 0)
                                                 , MIFloat_MovementItemId.ValueData :: Integer
                                                 , vbUserId
@@ -121,18 +134,31 @@ BEGIN
         LEFT JOIN MovementItemFloat AS MIFloat_Price
                                     ON MIFloat_Price.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+        LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
+                                         ON MILinkObject_ReasonDifferences.MovementItemId = MI.Id
+                                        AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
+
+        LEFT JOIN ObjectBoolean AS PriceSite_Deficit
+                                ON PriceSite_Deficit.ObjectId = MILinkObject_ReasonDifferences.ObjectId
+                               AND PriceSite_Deficit.DescId = zc_ObjectBoolean_ReasonDifferences_Deficit()
+                                                               
+        LEFT JOIN ObjectBoolean AS PriceSite_Surplus
+                                ON PriceSite_Surplus.ObjectId = MILinkObject_ReasonDifferences.ObjectId
+                               AND PriceSite_Surplus.DescId = zc_ObjectBoolean_ReasonDifferences_Surplus()
                                    
     WHERE MI.MovementId = inMovementId
       AND MI.DescId = zc_MI_Master()
-      AND MI.Amount < 0
+      AND (MI.Amount < 0 AND COALESCE (PriceSite_Deficit.ValueData, FALSE) = TRUE OR
+           MI.Amount > 0 AND COALESCE (PriceSite_Deficit.ValueData, FALSE) = FALSE AND COALESCE (PriceSite_Surplus.ValueData, FALSE) = FALSE)
       AND MI.isErased = FALSE;
                        
    -- !!!ВРЕМЕННО для ТЕСТА!!!
-/*   IF inSession = zfCalc_UserAdmin()
+   IF inSession = zfCalc_UserAdmin()
    THEN
        RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inMovementId, vbMovementIncome, inSession;
    END IF;   
-*/
+
 END;
 $BODY$
 

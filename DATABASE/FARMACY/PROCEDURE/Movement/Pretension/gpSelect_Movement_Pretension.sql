@@ -116,7 +116,7 @@ BEGIN
            , Movement_Pretension_View.JuridicalName
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
            , CASE WHEN COALESCE (tmpMI.Checked, 1) > 0 OR 
-                       COALESCE (tmpMI.CountMI, 0) = 0 /*AND COALESCE (Movement_Pretension_View.Comment::Text, '') <> ''*/
+                       COALESCE (tmpMI.CountMI, 0) = 0 AND COALESCE (Movement_Pretension_View.Comment::Text, '') <> ''
                   THEN 'Актуальна' ELSE 'Неактуальна' END::TVarChar AS CheckedName
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate

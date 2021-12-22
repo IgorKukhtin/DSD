@@ -148,7 +148,6 @@ inherited PretensionJournalForm: TPretensionJournalForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -157,15 +156,18 @@ inherited PretensionJournalForm: TPretensionJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 55
           end
           inherited colOperDate: TcxGridDBColumn [1]
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 74
           end
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 88
           end
           object CheckedName: TcxGridDBColumn
@@ -181,6 +183,7 @@ inherited PretensionJournalForm: TPretensionJournalForm
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 125
           end
           object ToName: TcxGridDBColumn
@@ -188,6 +191,7 @@ inherited PretensionJournalForm: TPretensionJournalForm
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 143
           end
           object GoodsReceiptsDate: TcxGridDBColumn
@@ -204,14 +208,14 @@ inherited PretensionJournalForm: TPretensionJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072' '#1092#1072#1082#1090'. '#1087#1077#1088#1077#1076#1072#1095#1080' '#1090#1086#1074#1072#1088#1072' '#1074#1086#1076#1080#1090#1077#1083#1102' '#1087#1086#1089#1090'-'#1082#1072
-            Options.Editing = False
             Width = 105
           end
           object BranchUser: TcxGridDBColumn
-            Caption = #1050#1090#1086' '#1079#1072#1082#1088#1099#1090#1080#1103' ('#1088#1077#1096#1077#1085#1080#1103')'
+            Caption = #1050#1090#1086' '#1079#1072#1082#1088#1099#1083' ('#1088#1077#1096#1080#1083')'
             DataBinding.FieldName = 'BranchUser'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 121
           end
           object TotalDeficit: TcxGridDBColumn
@@ -222,6 +226,7 @@ inherited PretensionJournalForm: TPretensionJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 73
           end
           object TotalProficit: TcxGridDBColumn
@@ -232,6 +237,7 @@ inherited PretensionJournalForm: TPretensionJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 71
           end
           object TotalSubstandard: TcxGridDBColumn
@@ -270,6 +276,7 @@ inherited PretensionJournalForm: TPretensionJournalForm
             DataBinding.FieldName = 'NDSKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 56
           end
           object JuridicalName: TcxGridDBColumn
@@ -277,6 +284,7 @@ inherited PretensionJournalForm: TPretensionJournalForm
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 113
           end
           object IncomeOperDate: TcxGridDBColumn
@@ -284,6 +292,7 @@ inherited PretensionJournalForm: TPretensionJournalForm
             DataBinding.FieldName = 'IncomeOperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 71
           end
           object IncomeInvNumber: TcxGridDBColumn
@@ -291,6 +300,7 @@ inherited PretensionJournalForm: TPretensionJournalForm
             DataBinding.FieldName = 'IncomeInvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 77
           end
           object isDeferred: TcxGridDBColumn
@@ -523,12 +533,24 @@ inherited PretensionJournalForm: TPretensionJournalForm
       Category = 'PartnerData'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdatePretension_PartnerData
+      StoredProc = spUpdatePretension_BranchDate
       StoredProcList = <
         item
-          StoredProc = spUpdatePretension_PartnerData
+          StoredProc = spUpdatePretension_BranchDate
         end>
-      Caption = 'actUpdatePretension_PartnerData'
+      Caption = 'actUpdatePretension_BranchDate'
+    end
+    object dsdUpdateDataSet1: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdatePretension_BranchDate
+      StoredProcList = <
+        item
+          StoredProc = spUpdatePretension_BranchDate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = MasterDS
     end
     object DataSetPost1: TDataSetPost
       Category = 'PartnerData'
@@ -934,8 +956,8 @@ inherited PretensionJournalForm: TPretensionJournalForm
     Left = 192
     Top = 288
   end
-  object spUpdatePretension_PartnerData: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Pretension_PartnerData'
+  object spUpdatePretension_BranchDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Pretension_BranchDate'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -948,28 +970,10 @@ inherited PretensionJournalForm: TPretensionJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inInvNumberPartner'
-        Value = ''
-        Component = FormParams
-        ComponentItem = 'InvNumberPartner'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDatePartner'
+        Name = 'inBranchDate'
         Value = 42381d
-        Component = FormParams
-        ComponentItem = 'OperDatePartner'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAdjustingOurDate'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'AdjustingOurDate'
+        Component = MasterCDS
+        ComponentItem = 'BranchDate'
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','

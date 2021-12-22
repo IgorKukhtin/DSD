@@ -35,7 +35,7 @@ type
     IncomeOperDate: TcxGridDBColumn;
     IncomeInvNumber: TcxGridDBColumn;
     actUpdatePretension_PartnerData: TdsdExecStoredProc;
-    spUpdatePretension_PartnerData: TdsdStoredProc;
+    spUpdatePretension_BranchDate: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
     DataSetPost1: TDataSetPost;
     actPrintTTN: TdsdPrintAction;
@@ -53,6 +53,7 @@ type
     TotalSubstandard: TcxGridDBColumn;
     TotalSummActual: TcxGridDBColumn;
     TotalSummNotActual: TcxGridDBColumn;
+    dsdUpdateDataSet1: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
