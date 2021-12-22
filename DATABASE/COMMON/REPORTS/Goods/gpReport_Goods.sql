@@ -123,6 +123,12 @@ BEGIN
                              WHERE MovementProtocol.MovementId IN (SELECT DISTINCT gpReport.MovementId 
                                                                    FROM gpReport
                                                                    WHERE gpReport.MovementId IS NOT NULL)
+                                 AND MovementProtocol.UserId NOT IN (zc_Enum_Process_Auto_PrimeCost()
+                                                                   , zc_Enum_Process_Auto_ReComplete()
+                                                                   , zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_Send(), zc_Enum_Process_Auto_PartionClose()
+                                                                   , zc_Enum_Process_Auto_Defroster()
+                                                                   -- , zfCalc_UserAdmin() :: Integer -- временно: !!!для Админа - НЕТ ограничений!!!
+                                                                    )
                              --GROUP BY MovementProtocol.MovementId
                              ) AS tmp
                           LEFT JOIN Object AS Object_User ON Object_User.Id = tmp.UserId
@@ -662,6 +668,12 @@ BEGIN
                               WHERE tmpMIContainer_group.MovementId IS NOT NULL-- and 1=0
                               ) AS tmp
                              INNER JOIN MovementProtocol ON MovementProtocol.MovementId = tmp.MovementId
+                                                        AND MovementProtocol.UserId NOT IN (zc_Enum_Process_Auto_PrimeCost()
+                                                                                          , zc_Enum_Process_Auto_ReComplete()
+                                                                                          , zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_Send(), zc_Enum_Process_Auto_PartionClose()
+                                                                                          , zc_Enum_Process_Auto_Defroster()
+                                                                                          -- , zfCalc_UserAdmin() :: Integer -- временно: !!!для Админа - НЕТ ограничений!!!
+                                                                                           )
                         GROUP BY MovementProtocol.MovementId
                              )
      , tmpProtocol AS (SELECT MovementProtocol.MovementId
@@ -1103,6 +1115,3 @@ $BODY$
 -- тест
 -- SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2022', inEndDate:= '01.01.2022', inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 1826, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());
 -- SELECT * from gpReport_Goods(inStartDate := ('02.03.2022')::TDateTime , inEndDate := ('03.03.2022')::TDateTime , inUnitGroupId := 0 , inLocationId := 8451 , inGoodsGroupId := 1858 , inGoodsId := 341913 , inIsPartner := 'False' , inIsPartion := 'False', inSession := '5');
-
-
--- (select * from gpReport_Goods (inStartDate := ('01.11.2021')::TDateTime , inEndDate := ('30.11.2021')::TDateTime , inUnitGroupId := 8417 , inLocationId := 8417 , inGoodsGroupId := 1840 , inGoodsId := 2649 , inIsPartner := 'True' , inIsPartion := 'True' ,  inSession := '9457'))

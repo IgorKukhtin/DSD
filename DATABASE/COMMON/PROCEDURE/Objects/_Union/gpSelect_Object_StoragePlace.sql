@@ -28,12 +28,14 @@ BEGIN
     UNION ALL
      SELECT Object_Car.Id
           , Object_Car.ObjectCode AS Code     
-          , Object_Car.ValueData AS Name
+          , (Object_Car.ValueData || COALESCE ( ' ' || Object.ValueData, '')) :: TVarChar AS Name
           , ObjectDesc.ItemName
           , Object_Car.isErased
      FROM Object AS Object_Car
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Car.DescId
-     WHERE Object_Car.DescId = zc_Object_Car()
+          LEFT JOIN ObjectLink AS ObjectLink_Car ON ObjectLink_Car.DescId = zc_ObjectLink_Asset_Car() AND ObjectLink_Car.ObjectId = Object_Car.Id
+          LEFT JOIN Object  ON Object.Id = ObjectLink_Car.ChildObjectId
+     WHERE Object_Car.DescId IN (zc_Object_Car()) -- , zc_Object_Asset()
        AND vbUserId NOT IN (SELECT UserId FROM tmpUserTransport)
     UNION ALL
      SELECT Object_Member.Id

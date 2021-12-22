@@ -37,7 +37,7 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
        , COALESCE (ObjectBoolean_Main.ValueData, FALSE)           AS isMain
        , COALESCE (ObjectBoolean_Official.ValueData, FALSE)       AS isOfficial
 
-       , Object_StorageLine.Id                            AS StorageLineId
+       , COALESCE (Object_StorageLine.Id, 0)              AS StorageLineId
        , Object_StorageLine.ObjectCode                    AS StorageLineCode
        , Object_StorageLine.ValueData                     AS StorageLineName
        

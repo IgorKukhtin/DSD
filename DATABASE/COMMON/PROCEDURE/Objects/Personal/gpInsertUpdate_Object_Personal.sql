@@ -62,13 +62,20 @@ BEGIN
    -- END IF;
 
    -- проверка  уникальности для свойств: <ФИО> + <Подразделение> + <Должность> + <Разряд должности>
-   IF EXISTS (SELECT 1 FROM Object_Personal_View WHERE PersonalName = vbName AND UnitId = inUnitId AND PositionId = COALESCE (inPositionId, 0) AND PositionLevelId = COALESCE (inPositionLevelId, 0) AND PersonalId <> COALESCE(ioId, 0)) THEN
-      RAISE EXCEPTION 'Значение <%> для подразделения: <%> должность: <%> разряд должности: <%> не уникально в справочнике <%>.'
+   IF EXISTS (SELECT 1 FROM Object_Personal_View WHERE PersonalName = vbName AND UnitId = inUnitId AND PositionId = COALESCE (inPositionId, 0) AND PositionLevelId = COALESCE (inPositionLevelId, 0) AND StorageLineId = COALESCE (inStorageLineId, 0) AND PersonalId <> COALESCE(ioId, 0)) THEN
+      RAISE EXCEPTION 'Значение <%>%для подразделения: <%>%должность: <%>% % %не уникально в справочнике <%>.'
                     , vbName
+                    , CHR (13)
                     , lfGet_Object_ValueData_sh (inUnitId)
+                    , CHR (13)
                     , lfGet_Object_ValueData_sh (inPositionId)
-                    , COALESCE (lfGet_Object_ValueData_sh (inPositionLevelId), '')
-                    , (SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Personal());
+
+                    , CASE WHEN inPositionLevelId > 0 THEN CHR (13) || 'разряд должности: ' || '<' || lfGet_Object_ValueData_sh (inPositionLevelId) || '>' ELSE '' END
+                    , CASE WHEN inStorageLineId > 0 THEN CHR (13) || 'линия производства: ' || '<' || lfGet_Object_ValueData_sh (inStorageLineId) || '>' ELSE '' END
+
+                    , CHR (13)
+                    , (SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Personal())
+                     ;
    END IF;
    -- Основное место работы - только одно
    IF inIsMain = TRUE
@@ -135,6 +142,12 @@ BEGIN
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+
+   -- для Админа
+   IF vbUserId IN (5, 9457)
+   THEN
+       RAISE EXCEPTION 'Ошибка.test=ok';
+   END IF;
 
 END;
 $BODY$
