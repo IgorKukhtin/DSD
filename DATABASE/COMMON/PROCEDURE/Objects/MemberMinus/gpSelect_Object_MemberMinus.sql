@@ -15,7 +15,9 @@ RETURNS TABLE (Id Integer, Name TVarChar
              , BankAccountFromId Integer, BankAccountFromCode Integer, BankAccountFromName TVarChar, BankName_From TVarChar
              , BankAccountToId Integer, BankAccountToCode Integer, BankAccountToName TVarChar, BankName_To TVarChar
              , DetailPayment TVarChar, BankAccountTo TVarChar
+             , Number TVarChar
              , TotalSumm TFloat, Summ TFloat
+             , Tax TFloat
              , isChild Boolean
              , isToShort Boolean
              , isErased Boolean) AS
@@ -65,8 +67,10 @@ BEGIN
                               , Object_Bank_to.ValueData              AS BankName_To
                               , ObjectString_DetailPayment.ValueData  AS DetailPayment
                               , ObjectString_BankAccountTo.ValueData  AS BankAccountTo
+                              , COALESCE (ObjectString_Number.ValueData,'')::TVarChar   AS Number
                               , COALESCE (ObjectFloat_TotalSumm.ValueData, 0) :: TFloat AS TotalSumm
                               , COALESCE (ObjectFloat_Summ.ValueData, 0)      :: TFloat AS Summ
+                              , COALESCE (ObjectFloat_Tax.ValueData, 0)       :: TFloat AS Tax
                               , COALESCE (ObjectBoolean_Child.ValueData, FALSE) :: Boolean AS isChild
                               , Object_MemberMinus.isErased           AS isErased
                           FROM Object AS Object_MemberMinus
@@ -109,6 +113,10 @@ BEGIN
                                                       ON ObjectString_BankAccountTo.ObjectId = Object_MemberMinus.Id
                                                      AND ObjectString_BankAccountTo.DescId = zc_ObjectString_MemberMinus_BankAccountTo()
 
+                               LEFT JOIN ObjectString AS ObjectString_Number
+                                                      ON ObjectString_Number.ObjectId = Object_MemberMinus.Id
+                                                     AND ObjectString_Number.DescId = zc_ObjectString_MemberMinus_Number()
+
                                LEFT JOIN ObjectString AS ObjectString_INN_from
                                                       ON ObjectString_INN_from.ObjectId = MemberMinus_From.Id
                                                      AND ObjectString_INN_from.DescId = zc_ObjectString_Member_INN()
@@ -127,6 +135,10 @@ BEGIN
                                LEFT JOIN ObjectFloat AS ObjectFloat_Summ
                                                      ON ObjectFloat_Summ.ObjectId = Object_MemberMinus.Id
                                                     AND ObjectFloat_Summ.DescId = zc_ObjectFloat_MemberMinus_Summ()
+
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Tax
+                                                     ON ObjectFloat_Tax.ObjectId = Object_MemberMinus.Id
+                                                    AND ObjectFloat_Tax.DescId = zc_ObjectFloat_MemberMinus_Tax()
 
                                LEFT JOIN ObjectLink AS ObjectLink_Bank_From
                                                     ON ObjectLink_Bank_From.ObjectId = Object_BankAccountFrom.Id
@@ -169,9 +181,11 @@ BEGIN
                
              , tmpMemberMinus.DetailPayment
              , tmpMemberMinus.BankAccountTo
+             , tmpMemberMinus.Number ::TVarChar
     
              , tmpMemberMinus.TotalSumm
              , tmpMemberMinus.Summ
+             , tmpMemberMinus.Tax ::TFloat
              
              , COALESCE (tmpMemberMinus.isChild, FALSE) ::Boolean AS isChild
              , CASE WHEN LENGTH (tmpMemberMinus.ToName) > 36 THEN TRUE ELSE FALSE END :: Boolean AS isToShort
@@ -213,9 +227,11 @@ BEGIN
                        
              , ObjectString_DetailPayment.ValueData  AS DetailPayment
              , ObjectString_BankAccountTo.ValueData  AS BankAccountTo
+             , COALESCE (ObjectString_Number.ValueData,'')::TVarChar   AS Number
     
              , COALESCE (ObjectFloat_TotalSumm.ValueData, 0) :: TFloat AS TotalSumm
              , COALESCE (ObjectFloat_Summ.ValueData, 0)      :: TFloat AS Summ
+             , COALESCE (ObjectFloat_Tax.ValueData, 0)       :: TFloat AS Tax
 
              , COALESCE (ObjectBoolean_Child.ValueData, FALSE) :: Boolean AS isChild
              , CASE WHEN LENGTH (Object_To.ValueData) > 36 THEN TRUE ELSE FALSE END :: Boolean AS isToShort
@@ -259,6 +275,10 @@ BEGIN
                                      ON ObjectString_BankAccountTo.ObjectId = Object_MemberMinus.Id
                                     AND ObjectString_BankAccountTo.DescId = zc_ObjectString_MemberMinus_BankAccountTo()
 
+              LEFT JOIN ObjectString AS ObjectString_Number
+                                     ON ObjectString_Number.ObjectId = Object_MemberMinus.Id
+                                    AND ObjectString_Number.DescId = zc_ObjectString_MemberMinus_Number()
+
               LEFT JOIN ObjectString AS ObjectString_INN_from
                                      ON ObjectString_INN_from.ObjectId = MemberMinus_From.Id
                                     AND ObjectString_INN_from.DescId = zc_ObjectString_Member_INN()
@@ -277,6 +297,10 @@ BEGIN
               LEFT JOIN ObjectFloat AS ObjectFloat_Summ
                                     ON ObjectFloat_Summ.ObjectId = Object_MemberMinus.Id
                                    AND ObjectFloat_Summ.DescId = zc_ObjectFloat_MemberMinus_Summ()
+
+              LEFT JOIN ObjectFloat AS ObjectFloat_Tax
+                                    ON ObjectFloat_Tax.ObjectId = Object_MemberMinus.Id
+                                   AND ObjectFloat_Tax.DescId = zc_ObjectFloat_MemberMinus_Tax()
 
               LEFT JOIN ObjectLink AS ObjectLink_Bank_From
                                    ON ObjectLink_Bank_From.ObjectId = Object_BankAccountFrom.Id
@@ -299,6 +323,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.12.21         *
  20.11.20         *
  07.10.20         *
  04.09.20         *

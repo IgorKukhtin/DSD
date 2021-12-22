@@ -156,6 +156,13 @@ type
     spUpdate_SentDate: TdsdStoredProc;
     actUpdate_SentDate: TdsdExecStoredProc;
     actSetEnabled: TdsdSetEnabledAction;
+    actUpdate_SetSentDate: TdsdExecStoredProc;
+    actUpdate_ClearSentDate: TdsdExecStoredProc;
+    spUpdate_ClearSentDate: TdsdStoredProc;
+    spUpdate_SetSentDate: TdsdStoredProc;
+    bbUpdate_SetSentDate: TdxBarButton;
+    bbUpdate_ClearSentDate: TdxBarButton;
+    actDataTimeChoiceDialog: TExecuteDialog;
   private
     { Private declarations }
   public

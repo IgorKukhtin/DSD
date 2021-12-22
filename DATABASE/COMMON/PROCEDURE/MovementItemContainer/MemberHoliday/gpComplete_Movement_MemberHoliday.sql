@@ -14,7 +14,10 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_MemberHoliday());
 
-      -- автоматом проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind - при распроведении или удалении - в табеле удаляется WorkTimeKind
+     --проверка  по дням список бригады, если его внесли в какой-то день выдавать ошибку что он есть  документе № дата и т.д.
+     PERFORM gpGet_MemberHoliday_Check_byPersonalGroup (inMovementId, inSession);
+     
+     -- автоматом проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind - при распроведении или удалении - в табеле удаляется WorkTimeKind
      PERFORM gpInsertUpdate_MovementItem_SheetWorkTime_byMemberHoliday(inMovementId, FALSE, (-1 * vbUserId)::TVarChar);
 
     -- проводим Документ + сохранили протокол

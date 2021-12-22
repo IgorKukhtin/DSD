@@ -30,12 +30,16 @@ BEGIN
                                                        ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                                       AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
                                                       AND MILinkObject_Position.ObjectId = inPositionId
+                     INNER JOIN MovementItemLinkObject AS MILinkObject_PositionLevel
+                                                      ON MILinkObject_PositionLevel.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
+                                                     AND MILinkObject_PositionLevel.ObjectId = inPositionLevelId
                 WHERE MovementItem.MovementId = inMovementId
                   AND MovementItem.Id <> ioId
                   AND MovementItem.ObjectId = inPersonalId
                 )
      THEN
-         RAISE EXCEPTION 'Ошибка.В документе уже существует <%> <%>.Дублирование запрещено.', lfGet_Object_ValueData (inPersonalId), lfGet_Object_ValueData (inPositionId);
+         RAISE EXCEPTION 'Ошибка.В документе уже существует <%> <%> <%>.Дублирование запрещено.', lfGet_Object_ValueData (inPersonalId), lfGet_Object_ValueData (inPositionId), lfGet_Object_ValueData (inPositionLevelId);
      END IF;
 
      -- определяется признак Создание/Корректировка

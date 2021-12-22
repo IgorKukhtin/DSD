@@ -875,6 +875,19 @@ BEGIN
                      'TReturnOutPharmacyJournalForm', 'Возврат поставщику', 
                      '', '', '');
        END IF;
+
+       vbText := gpGet_Movement_Pretension_PUSH_Actual (inSession:= inSession);
+        
+       IF COALESCE (vbText, '') <> ''
+       THEN         
+         INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
+         VALUES (22, 'По вашей аптеке созданы ПРЕТЕНЗИИ ПОСТАВЩИКУ, находящиеся в статусе АКТУАЛЬНА !!!'||CHR(13)|| 
+                     'Перейдите в Журнал претензий по кнопке.'||CHR(13)|| 
+                     'Если позиции ВНУТРИ НАКЛАДНОЙ ПО ПРЕТЕНЗИИ уже НЕ АКТУЛЬНЫ (вопрос решен) -  ПРОСЬБА ИЗМЕНИТЬ в соответствующей колонке  статус.'||CHR(13)|| 
+                     'Окончательное закрытие накладной по претензии в фармаси - обязанность менеджера по претензиям.', 
+                     'TPretensionJournalForm', 'Претензии поставщику', 
+                     '', '', '');
+       END IF;
      END IF;
 
    END IF;

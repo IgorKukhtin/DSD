@@ -4,7 +4,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberMinus(Integer, TVarChar, TVa
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberMinus(Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberMinus(Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberMinus(Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberMinus(Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberMinus(Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberMinus(Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MemberMinus(
  INOUT ioId                    Integer   ,    -- ключ объекта < >
@@ -12,15 +13,17 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MemberMinus(
     IN inBankAccountTo         TVarChar  ,    -- № счета получателя платежа
     IN inDetailPayment         TVarChar  ,    -- Назначение платежа
     IN inINN_to                TVarChar  ,    -- ОКПО/ИНН получателя
-    IN inToShort               TVarChar  ,    -- Юр. лицо (сокращенное значение) 	
+    IN inToShort               TVarChar  ,    -- Юр. лицо (сокращенное значение) 
+    IN inNumber                TVarChar  ,    -- 
     IN inFromId                Integer   ,    -- Физические лица
     IN inToId                  Integer   ,    -- Физические лица(сторонние) / Юридические лица
  INOUT ioBankAccountFromId     Integer   ,    -- IBAN плательщика платежа
     IN inBankAccountToId       Integer   ,    -- IBAN получателя платежа
-    IN inBankAccountId_main    Integer   ,    --
+    IN inBankAccountId_main    Integer   ,    --№ исполнительного листа
    OUT outBankAccountFromName  TVarChar  ,    --
     IN inTotalSumm             TFloat    ,     -- Сумма Итого
     IN inSumm                  TFloat    ,     -- Сумма к удержанию ежемесячно
+    IN inTax                   TFloat    ,     -- % удержания
    OUT outisToShort            Boolean   ,     -- > 36 символов
     IN inisChild               Boolean   ,     -- Алименты (да/нет)
     IN inSession               TVarChar        -- сессия пользователя
@@ -51,7 +54,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_MemberMinus_BankAccountTo(), ioId, inBankAccountTo);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_MemberMinus_ToShort(), ioId, inToShort);
-   
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_MemberMinus_Number(), ioId, inNumber);
+      
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_MemberMinus_From(), ioId, inFromId);
    -- сохранили свойство <>
@@ -69,6 +74,9 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MemberMinus_Summ(), ioId, inSumm);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MemberMinus_Tax(), ioId, inTax);
 
    SELECT CASE WHEN Object_To.DescId = zc_Object_Juridical() THEN ObjectHistory_JuridicalDetails_View.OKPO
                ELSE ObjectString_INN_to.ValueData
@@ -112,6 +120,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.12.21         *
  04.09.20         *
 */
 

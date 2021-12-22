@@ -734,6 +734,7 @@ inherited PretensionForm: TPretensionForm
     object deSentDate: TcxDateEdit
       Left = 868
       Top = 22
+      EditValue = 44551d
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
       Properties.SaveTime = False
@@ -1840,7 +1841,77 @@ inherited PretensionForm: TPretensionForm
           ValueParam.ComponentItem = 'isMeneger'
           ValueParam.DataType = ftBoolean
           ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = actUpdate_SetSentDate
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isMeneger'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = actUpdate_ClearSentDate
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isMeneger'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
         end>
+    end
+    object actDataTimeChoiceDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actDataChoiceDialog'
+      FormName = 'TDataTimeDialogForm'
+      FormNameParam.Value = 'TDataTimeDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BranchDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1044#1072#1090#1072' '#1087#1086#1076#1072#1095#1080' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_SetSentDate: TdsdExecStoredProc
+      Category = 'Deferred'
+      MoveParams = <>
+      BeforeAction = actDataTimeChoiceDialog
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SetSentDate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SetSentDate
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1086#1076#1072#1095#1080' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1086#1076#1072#1095#1080' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
+      ImageIndex = 78
+    end
+    object actUpdate_ClearSentDate: TdsdExecStoredProc
+      Category = 'Deferred'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_ClearSentDate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ClearSentDate
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1086#1076#1072#1095#1080' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1086#1076#1072#1095#1080' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
+      ImageIndex = 76
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1086#1076#1072#1095#1080' '#1087#1088#1077#1090#1077#1085#1079#1080#1080'?'
     end
   end
   inherited MasterDS: TDataSource
@@ -2030,6 +2101,18 @@ inherited PretensionForm: TPretensionForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_SetSentDate'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_ClearSentDate'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -2196,6 +2279,15 @@ inherited PretensionForm: TPretensionForm
     end
     object dxBarButton13: TdxBarButton
       Action = mactPrintToFile
+      Category = 0
+    end
+    object bbUpdate_SetSentDate: TdxBarButton
+      Action = actUpdate_SetSentDate
+      Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091'   '#1087#1086#1076#1072#1095#1080' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
+    end
+    object bbUpdate_ClearSentDate: TdxBarButton
+      Action = actUpdate_ClearSentDate
       Category = 0
     end
   end
@@ -2390,6 +2482,12 @@ inherited PretensionForm: TPretensionForm
         Name = 'isMeneger'
         Value = Null
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SentDate'
+        Value = Null
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 280
@@ -3219,8 +3317,8 @@ inherited PretensionForm: TPretensionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 736
-    Top = 387
+    Left = 712
+    Top = 395
   end
   object FileCDS: TClientDataSet
     Aggregates = <>
@@ -3706,5 +3804,62 @@ inherited PretensionForm: TPretensionForm
     PackSize = 1
     Left = 336
     Top = 483
+  end
+  object spUpdate_ClearSentDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Pretension_ClearSentDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSentDate'
+        Value = 42363d
+        Component = deSentDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 768
+    Top = 499
+  end
+  object spUpdate_SetSentDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Pretension_SetSentDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSentDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BranchDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSentDate'
+        Value = 42363d
+        Component = deSentDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 768
+    Top = 451
   end
 end

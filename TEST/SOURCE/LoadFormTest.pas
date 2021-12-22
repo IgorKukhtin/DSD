@@ -2618,13 +2618,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPaymentForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPaymentDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPaymentDialogForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentIncomeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentIncomeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentIncomeDialogForm');
   exit;
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTaxDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxDialogForm');
 
@@ -3691,7 +3691,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMemberMinusForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberMinusEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberMinusEditForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberExternal_Juridical_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberExternal_Juridical_ObjectForm');
 end;

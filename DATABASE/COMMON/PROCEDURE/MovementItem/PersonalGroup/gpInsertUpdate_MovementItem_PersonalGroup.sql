@@ -46,7 +46,7 @@ BEGIN
                                                      INNER JOIN ObjectLink AS ObjectLink_StaffList_Position
                                                                            ON ObjectLink_StaffList_Position.ObjectId = Object_StaffList.Id
                                                                           AND ObjectLink_StaffList_Position.DescId = zc_ObjectLink_StaffList_Position()
-                                                                          AND ObjectLink_StaffList_Position.ChildObjectId = 12452 ---inPositionId
+                                                                          AND ObjectLink_StaffList_Position.ChildObjectId = inPositionId  --12452 ---
                                                      LEFT JOIN ObjectLink AS ObjectLink_StaffList_PositionLevel
                                                                           ON ObjectLink_StaffList_PositionLevel.ObjectId = Object_StaffList.Id
                                                                          AND ObjectLink_StaffList_PositionLevel.DescId = zc_ObjectLink_StaffList_PositionLevel()

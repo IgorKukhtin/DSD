@@ -62,6 +62,10 @@ type
     cxLabel7: TcxLabel;
     edToShort: TcxTextEdit;
     cbisChild: TcxCheckBox;
+    edTax: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
+    cxLabel13: TcxLabel;
+    edNumber: TcxTextEdit;
   private
     { Private declarations }
   public

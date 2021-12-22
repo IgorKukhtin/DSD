@@ -3870,6 +3870,11 @@ begin
                      FileNameExport := PrefixFileNameExport + FileNameExport;
                    if ExportDirectory <> '' then
                      FileNameExport := ExportDirectory + '\' + FileNameExport;
+                   try
+                     if not DirectoryExists(ExpandFileName(ExtractFilePath(FileNameExport))) then
+                       ForceDirectories(ExpandFileName(ExtractFilePath(FileNameExport)));
+                   except
+                   end;
                  end;
                  frxPDFExport1.FileName := FileNameExport;
                  frxPDFExport1.ShowDialog := frxPDFExport1_ShowDialog;
@@ -3888,6 +3893,11 @@ begin
                    if ExportDirectory <> '' then
                      FileNameExport := ExportDirectory + '\' + FileNameExport
                    else FileNameExport := FileNameExport;
+                   try
+                     if not DirectoryExists(ExpandFileName(ExtractFilePath(FileNameExport))) then
+                       ForceDirectories(ExpandFileName(ExtractFilePath(FileNameExport)));
+                   except
+                   end;
                  end;
                  frxXLSExport1.FileName := FileNameExport;
                  frxXLSExport1.ShowDialog := frxXLSExport1_ShowDialog;

@@ -1157,6 +1157,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_MemberMinus_Summ() RETURNS Integer AS 
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_MemberMinus_Summ', zc_Object_MemberMinus(), 'Сумма к удержанию ежемесячно' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MemberMinus_Summ');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_MemberMinus_Tax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MemberMinus_Tax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_MemberMinus_Tax', zc_Object_MemberMinus(), '% удержания' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MemberMinus_Tax');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_OrderPeriodKind_Week() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_OrderPeriodKind_Week'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_OrderPeriodKind_Week', zc_Object_WorkTimeKind(), 'Кол-во недель' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_OrderPeriodKind_Week');
@@ -2190,6 +2195,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 22.12.21         * zc_ObjectFloat_MemberMinus_Tax
  02.12.21                                                                                      * zc_ObjectFloat_CashSettings_PercentUntilNextSUN
  25.11.21                                                                                      * zc_ObjectFloat_SurchargeWages_Summa
  25.11.21                                                                                      * zc_ObjectFloat_CashSettings_PercentIC

@@ -2,7 +2,7 @@ object MemberMinusEditForm: TMemberMinusEditForm
   Left = 0
   Top = 0
   Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
-  ClientHeight = 534
+  ClientHeight = 570
   ClientWidth = 382
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,18 +18,18 @@ object MemberMinusEditForm: TMemberMinusEditForm
   TextHeight = 13
   object edName: TcxTextEdit
     Left = 43
-    Top = 460
+    Top = 504
     TabOrder = 0
     Width = 296
   end
   object cxLabel1: TcxLabel
     Left = 43
-    Top = 442
+    Top = 486
     Caption = #1055#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 71
-    Top = 496
+    Left = 78
+    Top = 537
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@ object MemberMinusEditForm: TMemberMinusEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 221
-    Top = 496
+    Left = 228
+    Top = 537
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -141,7 +141,7 @@ object MemberMinusEditForm: TMemberMinusEditForm
   end
   object cxLabel2: TcxLabel
     Left = 43
-    Top = 399
+    Top = 397
     Hint = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1072
     Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1072
     ParentShowHint = False
@@ -149,7 +149,7 @@ object MemberMinusEditForm: TMemberMinusEditForm
   end
   object edDetailPayment: TcxTextEdit
     Left = 43
-    Top = 417
+    Top = 415
     TabOrder = 17
     Width = 296
   end
@@ -161,7 +161,7 @@ object MemberMinusEditForm: TMemberMinusEditForm
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
     TabOrder = 18
-    Width = 296
+    Width = 171
   end
   object edSumm: TcxCurrencyEdit
     Left = 43
@@ -210,6 +210,35 @@ object MemberMinusEditForm: TMemberMinusEditForm
     ShowHint = True
     TabOrder = 24
     Width = 122
+  end
+  object edTax: TcxCurrencyEdit
+    Left = 228
+    Top = 283
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    TabOrder = 25
+    Width = 111
+  end
+  object cxLabel8: TcxLabel
+    Left = 228
+    Top = 266
+    Caption = ' '#9'% '#1091#1076#1077#1088#1078#1072#1085#1080#1103
+  end
+  object cxLabel13: TcxLabel
+    Left = 43
+    Top = 440
+    Hint = #8470' '#1080#1089#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1075#1086' '#1083#1080#1089#1090#1072
+    Caption = #8470' '#1080#1089#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1075#1086' '#1083#1080#1089#1090#1072
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object edNumber: TcxTextEdit
+    Left = 43
+    Top = 458
+    TabOrder = 28
+    Width = 296
   end
   object ActionList: TActionList
     Left = 344
@@ -298,6 +327,14 @@ object MemberMinusEditForm: TMemberMinusEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inNumber'
+        Value = Null
+        Component = edNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inFromId'
         Value = ''
         Component = GuidesFrom
@@ -357,6 +394,14 @@ object MemberMinusEditForm: TMemberMinusEditForm
         Name = 'inSumm'
         Value = Null
         Component = edSumm
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTax'
+        Value = Null
+        Component = edTax
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -531,6 +576,20 @@ object MemberMinusEditForm: TMemberMinusEditForm
         Component = cbisChild
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Number'
+        Value = Null
+        Component = edNumber
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Tax'
+        Value = Null
+        Component = edTax
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 328
@@ -676,7 +735,7 @@ object MemberMinusEditForm: TMemberMinusEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 171
-    Top = 247
+    Left = 115
+    Top = 255
   end
 end

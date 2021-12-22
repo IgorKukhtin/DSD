@@ -1253,6 +1253,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     object actCreatePretension: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
+      BeforeAction = actPUSHNewPretension
       Caption = #1057#1086#1079#1076#1072#1085#1080#1077' <'#1055#1088#1077#1090#1077#1085#1079#1080#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
       Hint = #1057#1086#1079#1076#1072#1085#1080#1077' <'#1055#1088#1077#1090#1077#1085#1079#1080#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
       ImageIndex = 39
@@ -1290,6 +1291,20 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         end>
       Caption = 'actPUSHInfo'
       PUSHMessageType = pmtInformation
+    end
+    object actPUSHNewPretension: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHNewPretension
+      StoredProcList = <
+        item
+          StoredProc = spPUSHNewPretension
+        end
+        item
+        end
+        item
+        end>
+      Caption = 'actPUSHNewPretension'
     end
   end
   inherited MasterDS: TDataSource
@@ -2750,5 +2765,39 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     PackSize = 1
     Left = 698
     Top = 432
+  end
+  object spPUSHNewPretension: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_IncomeNewPretension'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 914
+    Top = 264
   end
 end

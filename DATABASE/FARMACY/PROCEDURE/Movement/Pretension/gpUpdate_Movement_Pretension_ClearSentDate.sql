@@ -1,11 +1,10 @@
--- Function: gpUpdate_Movement_Pretension_BranchDate()
+-- Function: gpUpdate_Movement_Pretension_ClearSentDate()
 
-DROP FUNCTION IF EXISTS gpUpdate_Movement_Pretension_BranchDate (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Pretension_ClearSentDate (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Movement_Pretension_BranchDate(
+CREATE OR REPLACE FUNCTION gpUpdate_Movement_Pretension_ClearSentDate(
     IN inMovementId          Integer   , -- Ключ объекта <Документ Перемещение>
-    IN inBranchDate          TDateTime , -- Дата документа
-   OUT outBranchDate         TDateTime , -- Дата документа
+   OUT outSentDate         TDateTime , -- Дата документа
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS TDateTime AS
@@ -15,13 +14,21 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := inSession;
-    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Pretension_BranchDate());
+    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Pretension_Meneger());
     
     IF COALESCE (inMovementId,0) = 0
     THEN
         RAISE EXCEPTION 'Ошибка. Документ не сохранен!';
     END IF;
     
+    IF NOT EXISTS(SELECT 1 FROM MovementDate AS MovementDate_Branch
+                  WHERE MovementDate_Branch.MovementId = inMovementId
+                    AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
+                    AND MovementDate_Branch.ValueData IS NOT NULL)
+    THEN
+      RETURN;
+    END IF;
+
     -- параметры документа
     SELECT
         Movement.StatusId
@@ -36,17 +43,13 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);   
     END IF;
     
-    outBranchDate := inBranchDate;
-    
+    outSentDate := Null;
+       
     --Сохранили Корректировка нашей даты
-    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Branch(), inMovementId, inBranchDate);
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Sent(), inMovementId, Null);
     
-    -- сохранили связь с <Кто установил>
-    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_User(), inMovementId, vbUserId);
-
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, False);
-
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

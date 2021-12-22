@@ -97,6 +97,14 @@ object MemberMinusForm: TMemberMinusForm
         HeaderAlignmentVert = vaCenter
         Width = 168
       end
+      object Number: TcxGridDBColumn
+        Caption = #8470' '#1080#1089#1087'-'#1075#1086' '#1083#1080#1089#1090#1072
+        DataBinding.FieldName = 'Number'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #8470' '#1080#1089#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1075#1086' '#1083#1080#1089#1090#1072
+        Width = 122
+      end
       object FromName: TcxGridDBColumn
         Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
         DataBinding.FieldName = 'FromName'
@@ -235,6 +243,16 @@ object MemberMinusForm: TMemberMinusForm
         HeaderHint = #1057#1091#1084#1084#1072' '#1082' '#1091#1076#1077#1088#1078#1072#1085#1080#1102' '#1077#1078#1077#1084#1077#1089#1103#1095#1085#1086
         Width = 133
       end
+      object Tax: TcxGridDBColumn
+        Caption = '% '#1091#1076#1077#1088#1078'.'
+        DataBinding.FieldName = 'Tax'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '% '#1091#1076#1077#1088#1078#1072#1085#1080#1103
+        Width = 70
+      end
       object Name: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
@@ -266,7 +284,7 @@ object MemberMinusForm: TMemberMinusForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 2
+    TabOrder = 1
     Text = #1056'/'#1089#1095#1077#1090' '#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072
     Width = 189
   end
@@ -977,6 +995,7 @@ object MemberMinusForm: TMemberMinusForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -1045,6 +1064,15 @@ object MemberMinusForm: TMemberMinusForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inNumber'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Number'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inFromId'
         Value = ''
         Component = ClientDataSet
@@ -1106,6 +1134,15 @@ object MemberMinusForm: TMemberMinusForm
         Value = 0.000000000000000000
         Component = ClientDataSet
         ComponentItem = 'Summ'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTax'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Tax'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
