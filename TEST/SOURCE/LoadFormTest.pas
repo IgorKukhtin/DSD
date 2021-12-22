@@ -3691,7 +3691,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMemberMinusForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberMinusEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberMinusEditForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberExternal_Juridical_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberExternal_Juridical_ObjectForm');
 end;

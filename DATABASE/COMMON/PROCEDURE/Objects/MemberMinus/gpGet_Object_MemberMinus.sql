@@ -14,7 +14,9 @@ RETURNS TABLE (Id Integer, Name TVarChar
              , BankAccountFromId Integer, BankAccountFromName TVarChar
              , BankAccountToId Integer, BankAccountToName TVarChar
              , DetailPayment TVarChar, BankAccountTo TVarChar
+             , Number TVarChar
              , TotalSumm TFloat, Summ TFloat
+             , Tax TFloat
              , isChild Boolean
              ) AS
 $BODY$BEGIN
@@ -45,9 +47,11 @@ $BODY$BEGIN
 
            , CAST ('' as TVarChar)  AS DetailPayment
            , CAST ('' as TVarChar)  AS BankAccountTo
+           , CAST ('' as TVarChar)  AS Number
            
            , 0 :: TFloat            AS TotalSumm
            , 0 :: TFloat            AS Summ
+           , 0 :: TFloat            AS Tax
            , FALSE ::Boolean        AS isChild
           ;
    ELSE
@@ -75,8 +79,12 @@ $BODY$BEGIN
          , ObjectString_DetailPayment.ValueData AS DetailPayment
          , ObjectString_BankAccountTo.ValueData AS BankAccountTo
 
+         , COALESCE (ObjectString_Number.ValueData,'')::TVarChar   AS Number
+
          , COALESCE (ObjectFloat_TotalSumm.ValueData, 0) :: TFloat AS TotalSumm
          , COALESCE (ObjectFloat_Summ.ValueData, 0)      :: TFloat AS Summ
+         , COALESCE (ObjectFloat_Tax.ValueData, 0)       :: TFloat AS Tax
+
          , COALESCE (ObjectBoolean_Child.ValueData, FALSE) :: Boolean AS isChild
          
      FROM OBJECT AS Object_MemberMinus
@@ -104,6 +112,10 @@ $BODY$BEGIN
                                   ON ObjectBoolean_Child.ObjectId = Object_MemberMinus.Id
                                  AND ObjectBoolean_Child.DescId = zc_ObjectBoolean_MemberMinus_Child()
 
+          LEFT JOIN ObjectString AS ObjectString_Number
+                                 ON ObjectString_Number.ObjectId = Object_MemberMinus.Id
+                                AND ObjectString_Number.DescId = zc_ObjectString_MemberMinus_Number()
+
           LEFT JOIN ObjectString AS ObjectString_ToShort
                                  ON ObjectString_ToShort.ObjectId = Object_MemberMinus.Id
                                 AND ObjectString_ToShort.DescId = zc_ObjectString_MemberMinus_ToShort()
@@ -130,6 +142,10 @@ $BODY$BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_Summ
                                 ON ObjectFloat_Summ.ObjectId = Object_MemberMinus.Id
                                AND ObjectFloat_Summ.DescId = zc_ObjectFloat_MemberMinus_Summ()
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_Tax
+                                ON ObjectFloat_Tax.ObjectId = Object_MemberMinus.Id
+                               AND ObjectFloat_Tax.DescId = zc_ObjectFloat_MemberMinus_Tax()
        WHERE Object_MemberMinus.Id = CASE WHEN COALESCE (inId, 0) = 0 THEN inMaskId ELSE inId END;
    END IF;
    
@@ -142,6 +158,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.12.21         *
  20.11.20
  04.09.20         *
 */

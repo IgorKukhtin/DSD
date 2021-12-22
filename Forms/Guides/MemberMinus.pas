@@ -84,6 +84,8 @@ type
     isToShort: TcxGridDBColumn;
     DescName_to: TcxGridDBColumn;
     isChild: TcxGridDBColumn;
+    Number: TcxGridDBColumn;
+    Tax: TcxGridDBColumn;
   private
     { Private declarations }
   public
