@@ -71,10 +71,15 @@ BEGIN
                                       ON MovementLinkObject_CheckSourceKind.MovementId =  Movement.Id
                                      AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
 
+         LEFT JOIN MovementBoolean AS MovementBoolean_AutoVIPforSales
+                                   ON MovementBoolean_AutoVIPforSales.MovementId = Movement.Id
+                                  AND MovementBoolean_AutoVIPforSales.DescId = zc_MovementBoolean_AutoVIPforSales()
+
     WHERE CASE WHEN MovementDate_Delay.ValueData is not Null THEN MovementDate_Delay.ValueData
                WHEN MovementDate_UserConfirmedKind.ValueData is not Null THEN MovementDate_UserConfirmedKind.ValueData
                WHEN MovementLinkObject_CheckSourceKind.ObjectId = zc_Enum_CheckSourceKind_Tabletki() THEN Movement.OperDate
-               ELSE Movement.OperDate + INTERVAL '5 DAY' END <= DATE_TRUNC ('DAY', CURRENT_DATE) - INTERVAL '2 DAY') AS Movement;
+               ELSE Movement.OperDate + INTERVAL '5 DAY' END <= DATE_TRUNC ('DAY', CURRENT_DATE) - INTERVAL '2 DAY'
+      AND COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False) = False) AS Movement;
                
 END;
 $BODY$

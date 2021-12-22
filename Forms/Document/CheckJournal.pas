@@ -99,6 +99,7 @@ type
     isManual: TcxGridDBColumn;
     isOffsetVIP: TcxGridDBColumn;
     isErrorRRO: TcxGridDBColumn;
+    isAutoVIPforSales: TcxGridDBColumn;
   private
     { Private declarations }
   public

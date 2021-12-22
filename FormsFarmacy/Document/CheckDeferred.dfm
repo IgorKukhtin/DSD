@@ -218,6 +218,14 @@ inherited CheckDeferredForm: TCheckDeferredForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
+          object isAutoVIPforSales: TcxGridDBColumn
+            Caption = #1042#1048#1055' '#1095#1077#1082' '#1076#1083#1103' '#1087#1088#1086#1076#1072#1078
+            DataBinding.FieldName = 'isAutoVIPforSales'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
+          end
           object Color_CalcDoc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_CalcDoc'
             Visible = False
@@ -694,6 +702,14 @@ inherited CheckDeferredForm: TCheckDeferredForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'isDiscountCommit'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAutoVIPforSales'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'isAutoVIPforSales'
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>

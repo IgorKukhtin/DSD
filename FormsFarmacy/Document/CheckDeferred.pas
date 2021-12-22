@@ -97,6 +97,7 @@ type
     Panel1: TPanel;
     cxDBMemo1: TcxDBMemo;
     isErrorRRO: TcxGridDBColumn;
+    isAutoVIPforSales: TcxGridDBColumn;
   private
     { Private declarations }
   public
