@@ -1143,7 +1143,7 @@ object MemberMinusForm: TMemberMinusForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Tax'
-        DataType = ftString
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
