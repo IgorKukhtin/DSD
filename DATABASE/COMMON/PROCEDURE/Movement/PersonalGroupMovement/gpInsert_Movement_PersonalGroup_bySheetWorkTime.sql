@@ -25,7 +25,7 @@ BEGIN
    -- сохранили
      PERFORM lpInsert_Movement_PersonalGroup_bySheetWorkTime (inOperDate        := tmp.OperDate
                                                             , inUnitId          := inUnitId
-                                                            , inPersonalGroupId := tmp.PersonalGroupId
+                                                            , inPersonalGroupId := COALESCE (tmp.PersonalGroupId,0)
                                                             , inPairDayId       := CASE WHEN tmp.WorkTimeKindId = zc_Enum_WorkTimeKind_WorkN() THEN 7438171  -- ночь  vbPairDayId
                                                                                         ELSE 7438170  --день
                                                                                    END
@@ -69,6 +69,7 @@ BEGIN
                                                                   ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id
                                                                  AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup()
                             WHERE MovementLinkObject_Unit.ObjectId = inUnitId
+                            AND COALESCE(MIObject_PersonalGroup.ObjectId, 0) <> 0
                             )
              --сотрудники подразделения
            , tmpPersonal AS (SELECT Object_Personal_View.MemberId

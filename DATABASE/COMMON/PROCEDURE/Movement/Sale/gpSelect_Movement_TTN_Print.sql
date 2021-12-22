@@ -537,7 +537,7 @@ BEGIN
                    ) AS TFloat) AS TotalWeight_BruttoT_old
 
 --------------------
-           , CAST ((tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ) / 1000
+           , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ) / 1000
                  + (COALESCE (tmpMI.BoxCount, 0) * COALESCE (tmpObject_GoodsPropertyValue.GoodsBox_Weight, 0) )/ 1000
                  + -- плюс Вес Упаковок (пакетов)
                    CASE WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) > 0

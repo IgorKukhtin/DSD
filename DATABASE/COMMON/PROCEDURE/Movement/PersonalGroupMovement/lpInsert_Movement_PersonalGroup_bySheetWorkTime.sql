@@ -24,7 +24,6 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalGroup());
 
-
      --пробуем найти сохраненный документ ключ дата +подразделение +Группа + Вид Смены
      vbMovementId := (SELECT Movement.Id
                       FROM Movement
@@ -32,10 +31,10 @@ BEGIN
                                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                                         AND MovementLinkObject_Unit.ObjectId = inUnitId
-                           INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalGroup
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalGroup
                                                          ON MovementLinkObject_PersonalGroup.MovementId = Movement.Id
                                                         AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
-                                                        AND MovementLinkObject_PersonalGroup.ObjectId = inPersonalGroupId
+                                                        --AND MovementLinkObject_PersonalGroup.ObjectId = inPersonalGroupId
                            INNER JOIN MovementLinkObject AS MovementLinkObject_PairDay
                                                          ON MovementLinkObject_PairDay.MovementId = Movement.Id
                                                         AND MovementLinkObject_PairDay.DescId = zc_MovementLinkObject_PairDay()
@@ -43,6 +42,7 @@ BEGIN
                       WHERE Movement.OperDate = inOperDate
                          AND Movement.DescId = zc_Movement_PersonalGroup()
                          AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                         AND COALESCE (MovementLinkObject_PersonalGroup.ObjectId,0) = COALESCE (inPersonalGroupId,0)
                       );
 
      IF COALESCE (vbMovementId,0) = 0
