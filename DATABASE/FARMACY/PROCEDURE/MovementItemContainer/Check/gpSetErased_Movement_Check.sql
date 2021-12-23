@@ -100,6 +100,15 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. Документ проведен сначала разпроведите его.';     
     END IF;
 
+    IF EXISTS (SELECT 1 FROM MovementBoolean AS MovementBoolean_AutoVIPforSales
+               WHERE MovementBoolean_AutoVIPforSales.MovementId = inMovementId
+                 AND MovementBoolean_AutoVIPforSales.DescId = zc_MovementBoolean_AutoVIPforSales()
+                 AND MovementBoolean_AutoVIPforSales.ValueData = TRUE) 
+       AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+    THEN
+        RAISE EXCEPTION 'Ошибка. Удалять ВИП чек для резерва под продажи запрещено.';    
+    END IF;
+    
     -- Если есть распределение по партиям удаляем
     IF EXISTS(SELECT * FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescID = zc_MI_Child() AND MovementItem.isErased = False)
     THEN

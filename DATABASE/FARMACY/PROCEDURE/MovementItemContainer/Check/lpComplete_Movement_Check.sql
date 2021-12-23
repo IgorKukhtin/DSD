@@ -33,6 +33,15 @@ $BODY$
    DECLARE vbSummChangePercent TFloat;
 BEGIN
 
+    IF EXISTS (SELECT 1 FROM MovementBoolean AS MovementBoolean_AutoVIPforSales
+               WHERE MovementBoolean_AutoVIPforSales.MovementId = inMovementId
+                 AND MovementBoolean_AutoVIPforSales.DescId = zc_MovementBoolean_AutoVIPforSales()
+                 AND MovementBoolean_AutoVIPforSales.ValueData = TRUE)
+    THEN
+        RAISE EXCEPTION 'Ошибка. Изменять статус ВИП чек для резерва под продажи запрещено.';    
+    END IF;
+    
+    
      -- Проверим чтоб сроковый товар был прикреплен к партиям и был остаток
      IF EXISTS(SELECT 1
                FROM MovementItem AS MI

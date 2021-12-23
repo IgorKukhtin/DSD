@@ -48,6 +48,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                MultiplicitySale TFloat,
                isMultiplicityError boolean,
                isStaticCode boolean,
+               isVIPforSales boolean,
 
                PartionDateKindId_check   Integer,
                Price_check               TFloat,
@@ -736,6 +737,7 @@ BEGIN
                                             WHERE ObjectLink_GoodsDivisionLock_Unit.DescId        = zc_ObjectLink_GoodsDivisionLock_Unit()
                                               AND ObjectLink_GoodsDivisionLock_Unit.ChildObjectId = vbUnitId
                                             )
+                 , tmpGoodsAutoVIPforSalesCash AS (SELECT  T1.GoodsId FROM gpSelect_Goods_AutoVIPforSalesCash (inUnitId := vbUnitId , inSession:= inSession) AS T1)
  
 
         -- Результат
@@ -1130,6 +1132,7 @@ BEGIN
           , Object_Goods_Main.isMultiplicityError                  AS isMultiplicityError
           , (COALESCE(Object_Goods_Retail.SummaWages, 0) <> 0 or 
              COALESCE(Object_Goods_Retail.PercentWages, 0) <> 0)::Boolean                     AS isStaticCode
+          , COALESCE (tmpGoodsAutoVIPforSalesCash.GoodsId, 0) > 0                             AS isVIPforSales
 
           , CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
           , zfCalc_PriceCash(CashSessionSnapShot.Price, 
@@ -1137,7 +1140,7 @@ BEGIN
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)               AS Price_check
           , CashSessionSnapShot.PriceWithVAT        AS PriceWithVAT_check
           , CashSessionSnapShot.PartionDateDiscount AS PartionDateDiscount_check
-
+          
          FROM
             CashSessionSnapShot
 
@@ -1227,6 +1230,8 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsUKTZEDRRO
                                    ON ObjectBoolean_GoodsUKTZEDRRO.ObjectId = vbUnitId
                                   AND ObjectBoolean_GoodsUKTZEDRRO.DescId = zc_ObjectBoolean_Unit_GoodsUKTZEDRRO()
+                                  
+           LEFT JOIN tmpGoodsAutoVIPforSalesCash ON tmpGoodsAutoVIPforSalesCash.GoodsId = CashSessionSnapShot.ObjectId
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId
         ORDER BY

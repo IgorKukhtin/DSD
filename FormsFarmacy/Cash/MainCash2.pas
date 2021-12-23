@@ -1687,6 +1687,7 @@ begin
   FormParams.ParamByName('isManual').Value := False;
   FormParams.ParamByName('Category1303Id').Value := 0;
   FormParams.ParamByName('Category1303Name').Value := '';
+  FormParams.ParamByName('isAutoVIPforSales').Value := False;
 
   ClearFilterAll;
 
@@ -2012,6 +2013,8 @@ begin
   if (FormParams.ParamByName('InvNumberOrder').AsString <> '') then
     lblCashMember.Caption := lblCashMember.Caption + ' * ' + '№ ' +
       FormParams.ParamByName('InvNumberOrder').AsString;
+  if FormParams.ParamByName('isAutoVIPforSales').Value = TRUE then
+    lblCashMember.Caption := lblCashMember.Caption + ' ВИП чек для резерва под продажи';
 
   lblBayer.Caption := FormParams.ParamByName('BayerName').AsString;
   ceSummCard.Value := FormParams.ParamByName('SummCard').Value;
@@ -3216,6 +3219,12 @@ begin
   if pnlPosition.Visible then
   begin
     ShowMessage('Ошибка. Закончите подбор медикаментов по рецепту.');
+    exit;
+  end;
+
+  if FormParams.ParamByName('isAutoVIPforSales').Value = TRUE then
+  begin
+    ShowMessage('Ошибка. ВИП чек для резерва под продажи проводить запрещено.');
     exit;
   end;
 
@@ -6749,15 +6758,20 @@ begin
     exit;
   end;
 
-  if not VIPDialogExecute(ManagerID, ManagerName, BayerName) then
-    exit;
-  //
-  FormParams.ParamByName('ManagerId').Value := ManagerID;
-  FormParams.ParamByName('ManagerName').Value := ManagerName;
-  FormParams.ParamByName('BayerName').Value := BayerName;
-  if FormParams.ParamByName('ConfirmedKindName').Value = '' then
-    FormParams.ParamByName('ConfirmedKindName').Value := 'подтвержден';
-  ConfirmedKindName_calc := FormParams.ParamByName('ConfirmedKindName').Value;
+  if FormParams.ParamByName('isAutoVIPforSales').Value = FALSE then
+  begin
+
+    if not VIPDialogExecute(ManagerID, ManagerName, BayerName) then
+      exit;
+    //
+    FormParams.ParamByName('ManagerId').Value := ManagerID;
+    FormParams.ParamByName('ManagerName').Value := ManagerName;
+    FormParams.ParamByName('BayerName').Value := BayerName;
+    if FormParams.ParamByName('ConfirmedKindName').Value = '' then
+      FormParams.ParamByName('ConfirmedKindName').Value := 'подтвержден';
+    ConfirmedKindName_calc := FormParams.ParamByName('ConfirmedKindName').Value;
+  end else if MessageDlg('Сохранить ВИП чек для резерва под продажи?', mtConfirmation, mbYesNo, 0) <> mrYes then exit;
+
   //
   if SaveLocal(CheckCDS, ManagerID, ManagerName, BayerName
     // ***16.08.16
@@ -8061,6 +8075,14 @@ begin
     exit;
   if not Assigned(SourceClientDataSet) then
     SourceClientDataSet := RemainsCDS;
+
+  if (nAmount > 0) and (FormParams.ParamByName('isAutoVIPforSales').Value = TRUE) and
+     not SourceClientDataSet.FieldByName('isVIPforSales').AsBoolean  then
+  begin
+    ShowMessage('Ошибка. Товар запрещен для вставки в ВИП чек для резерва под продажи.');
+    exit;
+  end;
+
   if SoldRegim AND (nAmount > 0) and
     (nAmount > SourceClientDataSet.FieldByName('Remains').asCurrency) then
   begin
@@ -10305,6 +10327,7 @@ begin
   FormParams.ParamByName('isManual').Value := False;
   FormParams.ParamByName('Category1303Id').Value := 0;
   FormParams.ParamByName('Category1303Name').Value := '';
+  FormParams.ParamByName('isAutoVIPforSales').Value := False;
 
   FFiscalNumber := '';
   pnlVIP.Visible := false;

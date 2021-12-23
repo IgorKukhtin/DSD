@@ -15,34 +15,9 @@ inherited CheckLiki24_SearchForm: TCheckLiki24_SearchForm
       end
     end
   end
-  inherited spMovementSetErased: TdsdStoredProc [1]
+  inherited DBViewAddOn: TdsdDBViewAddOn [1]
   end
-  inherited spConfirmedKind_Complete: TdsdStoredProc [2]
-  end
-  inherited spConfirmedKind_UnComplete: TdsdStoredProc [3]
-  end
-  inherited spMovementSetErasedSite: TdsdStoredProc [4]
-  end
-  inherited FormParams: TdsdFormParams [5]
-  end
-  inherited spPUSHSetErased: TdsdStoredProc [6]
-  end
-  inherited SPUpdate_NotMCS: TdsdStoredProc [7]
-  end
-  inherited MasterDS: TDataSource [12]
-  end
-  inherited MasterCDS: TClientDataSet [13]
-  end
-  inherited spSelect: TdsdStoredProc [14]
-    Params = <
-      item
-        Name = 'inType'
-        Value = 3
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-  end
-  inherited BarManager: TdxBarManager [15]
+  inherited BarManager: TdxBarManager [2]
     DockControlHeights = (
       0
       0
@@ -112,11 +87,28 @@ inherited CheckLiki24_SearchForm: TCheckLiki24_SearchForm
         end>
     end
   end
-  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [16]
+  inherited MasterDS: TDataSource [3]
   end
-  inherited cxPropertiesStore: TcxPropertiesStore [17]
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [4]
   end
-  inherited ActionList: TActionList [18]
+  inherited ClientDataSet1: TClientDataSet [5]
+  end
+  inherited MasterCDS: TClientDataSet [6]
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore [7]
+  end
+  inherited DataSource1: TDataSource [8]
+  end
+  inherited spSelect: TdsdStoredProc [9]
+    Params = <
+      item
+        Name = 'inType'
+        Value = 3
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited ActionList: TActionList [10]
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <
         item
@@ -346,9 +338,26 @@ inherited CheckLiki24_SearchForm: TCheckLiki24_SearchForm
           ComponentItem = 'isDiscountCommit'
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAutoVIPforSales'
+          Component = MasterCDS
+          ComponentItem = 'isAutoVIPforSales'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
     end
   end
-  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [19]
+  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [11]
+  end
+  inherited spMovementSetErased: TdsdStoredProc [12]
+  end
+  inherited spConfirmedKind_Complete: TdsdStoredProc [13]
+  end
+  inherited spConfirmedKind_UnComplete: TdsdStoredProc [14]
+  end
+  inherited spMovementSetErasedSite: TdsdStoredProc [15]
+  end
+  inherited PopupMenu: TPopupMenu [16]
   end
 end

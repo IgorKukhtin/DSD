@@ -17,60 +17,49 @@ inherited CheckVIPForm: TCheckVIPForm
           end
         end
       end
-      inherited cxGrid1: TcxGrid
-        inherited cxGridDBTableView1: TcxGridDBTableView
-          Styles.Content = nil
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
+      inherited Panel1: TPanel
+        inherited cxGrid1: TcxGrid
+          inherited cxGridDBTableView1: TcxGridDBTableView
+            Styles.Content = nil
+            Styles.Inactive = nil
+            Styles.Selection = nil
+            Styles.Footer = nil
+            Styles.Header = nil
+          end
+        end
+        inherited cxDBMemo1: TcxDBMemo
+          Style.IsFontAssigned = True
         end
       end
     end
   end
-  inherited spSelect: TdsdStoredProc [1]
-    Params = <
-      item
-        Name = 'inType'
-        Value = 1
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-  end
-  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [2]
-  end
-  inherited cxPropertiesStore: TcxPropertiesStore [3]
-  end
-  inherited BarManager: TdxBarManager [4]
-    DockControlHeights = (
-      0
-      0
-      26
-      0)
-  end
-  inherited ActionList: TActionList [5]
+  inherited ActionList: TActionList [1]
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Bayer'
           MultiSelectSeparator = ','
         end
         item
           Name = 'CashMemberId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'CashMemberId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'CashMember'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'CashMember'
           DataType = ftString
@@ -78,12 +67,14 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'DiscountExternalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'DiscountExternalId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'DiscountExternalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'DiscountExternalName'
           DataType = ftString
@@ -91,6 +82,7 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'DiscountCardNumber'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'DiscountCardNumber'
           DataType = ftString
@@ -98,6 +90,7 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'ConfirmedKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ConfirmedKindName'
           DataType = ftString
@@ -105,6 +98,7 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'BayerPhone'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'BayerPhone'
           DataType = ftString
@@ -112,6 +106,7 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'InvNumberOrder'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InvNumberOrder'
           DataType = ftString
@@ -119,6 +114,7 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'ConfirmedKindClientName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ConfirmedKindClientName'
           DataType = ftString
@@ -126,12 +122,14 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'PartnerMedicalId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerMedicalId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerMedicalName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerMedicalName'
           DataType = ftString
@@ -139,6 +137,7 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'Ambulance'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Ambulance'
           DataType = ftString
@@ -146,6 +145,7 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'MedicSP'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'MedicSP'
           DataType = ftString
@@ -153,6 +153,7 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'InvNumberSP'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InvNumberSP'
           DataType = ftString
@@ -168,12 +169,14 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'SPKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'SPKindId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'SPKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'SPKindName'
           DataType = ftString
@@ -181,6 +184,7 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'SPTax'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'SPTax'
           DataType = ftFloat
@@ -188,18 +192,21 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'ManualDiscount'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'ManualDiscount'
           MultiSelectSeparator = ','
         end
         item
           Name = 'PromoCodeID'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PromoCodeID'
           MultiSelectSeparator = ','
         end
         item
           Name = 'PromoName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PromoName'
           DataType = ftString
@@ -207,6 +214,7 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'PromoCodeGUID'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PromoCodeGUID'
           DataType = ftString
@@ -214,6 +222,7 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'PromoCodeChangePercent'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PromoCodeChangePercent'
           DataType = ftFloat
@@ -221,12 +230,14 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'MemberSPId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberSPId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'SiteDiscount'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'SiteDiscount'
           DataType = ftFloat
@@ -234,12 +245,14 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'PartionDateKindId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartionDateKindId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'PartionDateKindName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartionDateKindName'
           DataType = ftString
@@ -247,6 +260,7 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'AmountMonth'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'AmountMonth'
           DataType = ftFloat
@@ -254,6 +268,7 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'LoyaltyChangeSumma'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'LoyaltyChangeSumma'
           DataType = ftFloat
@@ -261,6 +276,7 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'SummCard'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'SummCard'
           DataType = ftFloat
@@ -268,6 +284,7 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'isBanAdd'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'isBanAdd'
           DataType = ftBoolean
@@ -275,8 +292,17 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Name = 'isDiscountCommit'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'isDiscountCommit'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAutoVIPforSales'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'isAutoVIPforSales'
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -308,38 +334,58 @@ inherited CheckVIPForm: TCheckVIPForm
         end>
     end
   end
-  inherited MasterDS: TDataSource [6]
+  inherited MasterDS: TDataSource [2]
   end
-  inherited MasterCDS: TClientDataSet [7]
+  inherited MasterCDS: TClientDataSet [3]
   end
-  inherited spPUSHSetErased: TdsdStoredProc [8]
+  inherited spPUSHSetErased: TdsdStoredProc [4]
   end
-  inherited SPUpdate_NotMCS: TdsdStoredProc [9]
+  inherited SPUpdate_NotMCS: TdsdStoredProc [5]
   end
-  inherited spMovementSetErased: TdsdStoredProc [10]
+  inherited spMovementSetErased: TdsdStoredProc [6]
   end
-  inherited spConfirmedKind_Complete: TdsdStoredProc [11]
+  inherited spConfirmedKind_Complete: TdsdStoredProc [7]
   end
-  inherited spConfirmedKind_UnComplete: TdsdStoredProc [12]
+  inherited spConfirmedKind_UnComplete: TdsdStoredProc [8]
   end
-  inherited spUpdateMovementItemAmount: TdsdStoredProc [13]
+  inherited spUpdateMovementItemAmount: TdsdStoredProc [9]
   end
-  inherited PopupMenu: TPopupMenu [14]
+  inherited PopupMenu: TPopupMenu [10]
   end
-  inherited DBViewAddOn: TdsdDBViewAddOn [15]
+  inherited DBViewAddOn: TdsdDBViewAddOn [11]
   end
-  inherited spSmashCheck: TdsdStoredProc [16]
+  inherited spSmashCheck: TdsdStoredProc [12]
   end
-  inherited spUpdateOperDate: TdsdStoredProc [17]
+  inherited spUpdateOperDate: TdsdStoredProc [13]
   end
-  inherited spMovementSetErasedSite: TdsdStoredProc [18]
+  inherited spMovementSetErasedSite: TdsdStoredProc [14]
   end
-  inherited ClientDataSet1: TClientDataSet [19]
+  inherited ClientDataSet1: TClientDataSet [15]
   end
-  inherited DataSource1: TDataSource [20]
+  inherited DataSource1: TDataSource [16]
   end
-  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [21]
+  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [17]
   end
-  inherited FormParams: TdsdFormParams [22]
+  inherited FormParams: TdsdFormParams [18]
+  end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [19]
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore [20]
+  end
+  inherited spSelect: TdsdStoredProc [21]
+    Params = <
+      item
+        Name = 'inType'
+        Value = 1
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited BarManager: TdxBarManager [22]
+    DockControlHeights = (
+      0
+      0
+      26
+      0)
   end
 end

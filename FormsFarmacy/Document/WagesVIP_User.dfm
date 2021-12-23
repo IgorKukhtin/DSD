@@ -72,8 +72,8 @@ object WagesVIP_UserForm: TWagesVIP_UserForm
   object edHoursWork: TcxCurrencyEdit
     Left = 160
     Top = 153
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = '0.##'
     Properties.ReadOnly = True
     TabOrder = 7
     Width = 121

@@ -11,7 +11,8 @@ uses
   cxCurrencyEdit, cxButtonEdit, dxSkinsdxBarPainter, dsdDB, Vcl.Menus, dsdAddOn,
   dxBarExtItems, dxBar, cxClasses, Datasnap.DBClient, dsdAction, Vcl.ActnList,
   cxPropertiesStore, cxSplitter, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxPC;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxPC,
+  cxContainer, cxTextEdit, cxMemo, cxDBEdit, Vcl.ExtCtrls;
 
 type
   TCheckSiteForm = class(TCheckDeferredForm)

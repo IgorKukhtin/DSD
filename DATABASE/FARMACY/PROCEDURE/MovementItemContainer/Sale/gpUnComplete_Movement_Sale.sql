@@ -36,7 +36,7 @@ BEGIN
                                          AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
         WHERE Movement.Id = inMovementId) = zc_Enum_SPKind_1303()                    -- Постановление 1303
     THEN
-      IF  (vbUserId <> 235009)
+      IF  (vbUserId <> 235009) AND (vbUserId <> 3)
       THEN
         RAISE EXCEPTION 'Распроведение Продажи Постановление 1303 вам запрещено.';
       END IF;
@@ -82,6 +82,30 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка. По одному или более товарам есть документ переучета позже даты текущего перемещения. Отмена проведения документа запрещена!';
     END IF;*/
+
+
+    -- Проверяем VIP чек для продажи         
+    IF EXISTS(SELECT * FROM gpSelect_Goods_AutoVIPforSalesCash (inUnitId := vbUnitId , inSession:= inSession) 
+              WHERE GoodsId IN (SELECT DISTINCT MovementItem.ObjectId
+                                FROM MovementItemContainer
+                                     INNER JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemId
+                                WHERE MovementItemContainer.MovementId = inMovementId
+                                  AND MovementItemContainer.DescId = zc_MIContainer_Count()))
+    THEN
+      PERFORM gpInsertUpdate_MovementItem_Check_VIPforSales (inUnitId   := vbUnitId
+                                                           , inGoodsId  := MovementItem.ObjectId
+                                                           , inAmount   := - SUM(MovementItemContainer.Amount)
+                                                           , inSession  := inSession
+                                                            )
+      FROM MovementItemContainer
+           INNER JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemId
+           INNER JOIN (SELECT * FROM gpSelect_Goods_AutoVIPforSalesCash (inUnitId := vbUnitId , inSession:= inSession)) AS GoodsVIP 
+                      ON GoodsVIP.GoodsId = MovementItem.ObjectId 
+      WHERE MovementItemContainer.MovementId =inMovementId
+        AND MovementItemContainer.DescId = zc_MIContainer_Count()
+      GROUP BY MovementItem.ObjectId;                  
+    END IF;
+
     -- Распроводим Документ
     PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);

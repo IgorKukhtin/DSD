@@ -26,6 +26,16 @@ BEGIN
     -- поиск нового значение
     vbConfirmedKindId:= (SELECT Object.Id FROM ObjectString JOIN Object ON Object.Id = ObjectString.ObjectId AND Object.DescId = zc_Object_ConfirmedKind() WHERE LOWER (ObjectString.ValueData) = LOWER (inDescName) AND ObjectString.DescId = zc_ObjectString_Enum());
     ouConfirmedKindName:= COALESCE ((SELECT Object.ValueData FROM Object WHERE Object.Id = vbConfirmedKindId), '');
+    
+    IF EXISTS (SELECT 1 FROM MovementBoolean AS MovementBoolean_AutoVIPforSales
+               WHERE MovementBoolean_AutoVIPforSales.MovementId = inMovementId
+                 AND MovementBoolean_AutoVIPforSales.DescId = zc_MovementBoolean_AutoVIPforSales()
+                 AND MovementBoolean_AutoVIPforSales.ValueData = TRUE)
+    THEN
+        ouConfirmedKindName:= '';
+        vbConfirmedKindId:= 0;
+        RAISE EXCEPTION 'Ошибка. Изменять статус ВИП чек для резерва под продажи запрещено.';    
+    END IF;
 
     -- Проверка - ?разрешается менять только за последние 7 дней? + если кто-то другое НЕ подтвердил
     IF NOT EXISTS (SELECT 1

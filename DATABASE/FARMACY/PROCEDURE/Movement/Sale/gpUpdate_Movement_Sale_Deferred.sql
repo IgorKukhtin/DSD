@@ -79,6 +79,28 @@ BEGIN
                                           , 0             -- ключ строки Документа
                                           , vbUserId);    -- Пользователь  
        ELSE
+           -- Проверяем VIP чек для продажи         
+           IF EXISTS(SELECT * FROM gpSelect_Goods_AutoVIPforSalesCash (inUnitId := vbUnitId , inSession:= inSession) 
+                     WHERE GoodsId IN (SELECT DISTINCT MovementItem.ObjectId
+                                       FROM MovementItemContainer
+                                            INNER JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemId
+                                       WHERE MovementItemContainer.MovementId = inMovementId
+                                         AND MovementItemContainer.DescId = zc_MIContainer_Count()))
+           THEN
+             PERFORM gpInsertUpdate_MovementItem_Check_VIPforSales (inUnitId   := vbUnitId
+                                                                  , inGoodsId  := MovementItem.ObjectId
+                                                                  , inAmount   := - SUM(MovementItemContainer.Amount)
+                                                                  , inSession  := inSession
+                                                                   )
+             FROM MovementItemContainer
+                  INNER JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemId
+                  INNER JOIN (SELECT * FROM gpSelect_Goods_AutoVIPforSalesCash (inUnitId := vbUnitId , inSession:= inSession)) AS GoodsVIP 
+                             ON GoodsVIP.GoodsId = MovementItem.ObjectId 
+             WHERE MovementItemContainer.MovementId =inMovementId
+               AND MovementItemContainer.DescId = zc_MIContainer_Count()
+             GROUP BY MovementItem.ObjectId;                  
+           END IF;
+
            -- убираем проводки
            PERFORM lpUnComplete_Movement (inMovementId
                                         , vbUserId);
@@ -102,3 +124,4 @@ LANGUAGE plpgsql VOLATILE;
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
  01.08.19                                                                      *
+ */
