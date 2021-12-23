@@ -110,6 +110,7 @@ end if;
                                                              , inSummCompensationRecalc := 0
                                                              , inSummAuditAdd           := COALESCE (MIFloat_SummAuditAdd.ValueData, 0)
                                                              , inSummHouseAdd           := COALESCE (MIFloat_SummHouseAdd.ValueData, 0)
+                                                             , inNumber                 := MIString_Number.ValueData ::TVarChar
                                                              , inComment                := MIString_Comment.ValueData
                                                              , inInfoMoneyId            := MILinkObject_InfoMoney.ObjectId
                                                              , inUnitId                 := MILinkObject_Unit.ObjectId
@@ -142,6 +143,9 @@ end if;
                LEFT JOIN MovementItemString AS MIString_Comment
                                             ON MIString_Comment.MovementItemId = MovementItem.Id
                                            AND MIString_Comment.DescId = zc_MIString_Comment()
+               LEFT JOIN MovementItemString AS MIString_Number
+                                            ON MIString_Number.MovementItemId = MovementItem.Id
+                                           AND MIString_Number.DescId = zc_MIString_Number()
 
                LEFT JOIN MovementItemFloat AS MIFloat_SummService
                                            ON MIFloat_SummService.MovementItemId = MovementItem.Id
@@ -238,6 +242,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 23.12.21         * add Number
  25.03.20         * SummAuditAdd
  17.11.19         * ограничиваем должностью
  15.10.19         *

@@ -21,10 +21,15 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, In
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);*/
+/*DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);*/
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                                   , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+                                                                   , TVarChar, TVarChar
+                                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -62,7 +67,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
     IN inSummAuditAdd           TFloat    , -- Сумма доплата за аудит
     IN inSummHouseAdd           TFloat    , -- Сумма Компенсация жилья 
 
-    IN inComment                TVarChar  , -- 
+    IN inNumber                 TVarChar  , -- № исполнительного листа
+    IN inComment                TVarChar  , --
     IN inInfoMoneyId            Integer   , -- Статьи назначения
     IN inUnitId                 Integer   , -- Подразделение
     IN inPositionId             Integer   , -- Должность
@@ -347,6 +353,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummHospOthRecalc(), ioId, inSummHospOthRecalc);
 
      -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Number(), ioId, inNumber);
+     -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
      -- сохранили связь с <>
@@ -378,6 +386,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 23.12.21         * inNumber
  06.05.21         * inUnitFineSubjectId
  28.04.21         * inFineSubjectId
  25.03.20         * inSummAuditAdd
