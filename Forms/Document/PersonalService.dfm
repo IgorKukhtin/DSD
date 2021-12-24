@@ -21,6 +21,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
       inherited cxGrid: TcxGrid
         Width = 1483
         Height = 258
+        ExplicitLeft = -3
+        ExplicitTop = 224
         ExplicitWidth = 1483
         ExplicitHeight = 258
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -3576,6 +3578,30 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 41
       WithoutNext = True
     end
+    object actInsertUpdate_MemberMinus: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_MemberMinus
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_MemberMinus
+        end>
+      Caption = 'actInsertUpdate_MemberMinus'
+      ImageIndex = 60
+    end
+    object macInsertUpdate_MemberMinus: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdate_MemberMinus
+        end>
+      QuestionBeforeExecute = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1074' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1074#1099#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1074' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
+      ImageIndex = 60
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -3765,6 +3791,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertUpdate_MemberMinus'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdateMISignYes'
         end
         item
@@ -3915,6 +3949,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     object bbStartLoad_mm: TdxBarButton
       Action = macStartLoad_mm
+      Category = 0
+    end
+    object bbInsertUpdate_MemberMinus: TdxBarButton
+      Action = macInsertUpdate_MemberMinus
       Category = 0
     end
   end
@@ -4272,8 +4310,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_PersonalService_SetErased'
-    Left = 766
-    Top = 352
+    Left = 670
+    Top = 328
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_PersonalService_SetUnErased'
@@ -5433,8 +5471,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 800
-    Top = 256
+    Left = 848
+    Top = 328
   end
   object GuidesMember: TdsdGuides
     KeyField = 'Id'
@@ -6095,5 +6133,22 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 976
     Top = 320
+  end
+  object spInsertUpdate_MemberMinus: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_MemberMinus_byPersonalService'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 616
+    Top = 288
   end
 end

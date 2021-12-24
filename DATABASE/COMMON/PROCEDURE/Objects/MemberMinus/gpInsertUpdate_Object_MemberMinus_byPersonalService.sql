@@ -1,8 +1,8 @@
--- Function: InsertUpdate_Object_MemberMinus_byPersonalService()
+-- Function: gpInsertUpdate_Object_MemberMinus_byPersonalService()
 
-DROP FUNCTION IF EXISTS InsertUpdate_Object_MemberMinus_byPersonalService (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberMinus_byPersonalService (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION InsertUpdate_Object_MemberMinus_byPersonalService(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MemberMinus_byPersonalService(
     IN inMovementId             Integer   , -- Ключ объекта <Документ>
     IN inSession                TVarChar    -- сессия пользователя
 )
@@ -13,7 +13,8 @@ $BODY$
    DECLARE vbNumber TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_MemberMinus());
+     --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_MemberMinus());
+     vbUserId:= lpGetUserBySession (inSession);
 
      CREATE TEMP TABLE tmpMemberMinus ON COMMIT DROP AS 
      WITH
@@ -33,14 +34,10 @@ BEGIN
              , CASE WHEN COALESCE (tmp.Tax,0) = 0 THEN 100 ELSE tmp.Tax END AS Tax
              , tmp.Number
              , tmp.isChild
-             , SUM (tmp.Summ) AS Summ
+             , (tmp.Summ) AS Summ
         FROM gpSelect_Object_MemberMinus (FALSE, FALSE, inSession) AS tmp
              LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = tmp.FromId
         WHERE tmp.isErased = FALSE
-        GROUP BY tmp.FromId
-             , tmpPersonal.PersonalId
-             , tmpPersonal.PositionId
-             , tmp.Tax, tmp.Number, tmp.isChild
         ;
 
 
@@ -48,6 +45,7 @@ BEGIN
         WITH
           --Данные из док. по оплатам алиментов и пр.удержаний
           tmpMI_All AS (SELECT tmp.*
+                             , CASE WHEN COALESCE (tmp.SummChildRecalc,0) <> 0 THEN TRUE ELSE FALSE END isChild 
                         FROM gpSelect_MovementItem_PersonalService(21646761 , FALSE, FALSE, inSession) AS tmp
                         WHERE COALESCE (tmp.SummChildRecalc,0) <> 0
                            OR COALESCE (tmp.SummMinusExtRecalc,0) <> 0
@@ -57,7 +55,7 @@ BEGIN
             SELECT tmpMemberMinus.MemberId
                  , tmpMI_All.Number
                  , tmpMemberMinus.Tax
-                 , CASE WHEN COALESCE (tmpMI_All.SummChildRecalc,0) <> 0 THEN TRUE ELSE FALSE END isChild 
+                 , tmpMI_All.isChild 
                  , SUM (CASE WHEN COALESCE (tmpMemberMinus.isChild,TRUE) = TRUE THEN COALESCE (tmpMI_All.SummChildRecalc,0) ELSE COALESCE (tmpMI_All.SummMinusExtRecalc,0) END) AS TotalSummMinus
                  , SUM ((CASE WHEN COALESCE (tmpMemberMinus.isChild,TRUE) = TRUE THEN COALESCE (tmpMI_All.SummChildRecalc,0) ELSE COALESCE (tmpMI_All.SummMinusExtRecalc,0) END) * COALESCE (tmpMemberMinus.Tax,100) / 100) AS SummMinus
             FROM tmpMI_All
@@ -66,7 +64,7 @@ BEGIN
             GROUP BY tmpMemberMinus.MemberId
                    , tmpMI_All.Number
                    , tmpMemberMinus.Tax
-                   , tmpMemberMinus.isChild 
+                   , tmpMI_All.isChild
             HAVING SUM (CASE WHEN COALESCE (tmpMemberMinus.isChild,TRUE) = TRUE THEN COALESCE (tmpMI_All.SummChildRecalc,0) ELSE COALESCE (tmpMI_All.SummMinusExtRecalc,0) END) <> 0
          ;
 
@@ -75,15 +73,15 @@ BEGIN
         INTO vbMemberId, vbNumber
      FROM (SELECT tmpData.Number
                 , tmpData.MemberId
-                , tmpCalc.TotalSummMinus
-                , SUM (tmpCalc.Tax)       AS Tax
-                , SUM (tmpCalc.SummMinus) AS SummMinus
+                , tmpData.TotalSummMinus
+                , SUM (tmpData.Tax)       AS Tax
+                , SUM (tmpData.SummMinus) AS SummMinus
            FROM tmpData
-           GROUP BY tmpCalc.MemberId
-                  , tmpCalc.TotalSummMinus
+           GROUP BY tmpData.MemberId
+                  , tmpData.TotalSummMinus
                   , tmpData.Number
-           HAVING SUM (tmpCalc.Tax) <> 100
-               OR SUM (tmpCalc.SummMinus) <> tmpCalc.TotalSummMinus
+           HAVING SUM (tmpData.Tax) <> 100
+               OR SUM (tmpData.SummMinus) <> tmpData.TotalSummMinus
            LIMIT 1
            ) AS tmp;
 
@@ -142,65 +140,3 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  23.12.21         *
 */
-
--- тест
--- select * from gpInsertUpdate_MI_PersonalService_byMemberMinus(inMovementId := 18002434 ,  inSession := '5');
-
-/*
-
-    WITH
-          tmpPersonal AS (SELECT lfSelect.MemberId
-                               , lfSelect.PersonalId
-                               , lfSelect.PositionId
-                               , lfSelect.isMain
-                               , lfSelect.UnitId
-                          FROM lfSelect_Object_Member_findPersonal ('5') AS lfSelect
-                          WHERE lfSelect.Ord = 1
-                         )
-      , tmpMemberMinus AS ( SELECT tmp.FromId  AS MemberId
-             , tmpPersonal.PersonalId
-             , tmpPersonal.PositionId
-             , CASE WHEN COALESCE (tmp.Tax,0) = 0 THEN 80 ELSE tmp.Tax END AS Tax
-, tmp.Number
-, tmp.isChild
-             , SUM (tmp.Summ) AS Summ
-             
-        FROM gpSelect_Object_MemberMinus (FALSE, FALSE, '5') AS tmp
-             LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = tmp.FromId
-        WHERE tmp.isErased = FALSE
-        GROUP BY tmp.FromId
-             , tmpPersonal.PersonalId
-             , tmpPersonal.PositionId
-             , tmp.Tax, tmp.Number, tmp.isChild
-              )
-
-           , tmpMI_All AS (SELECT tmp.*
-                          FROM gpSelect_MovementItem_PersonalService(21646761 , FALSE, FALSE, '5') AS tmp
-                          WHERE COALESCE (tmp.SummChildRecalc,0) <> 0
-                             OR COALESCE (tmp.SummMinusExtRecalc,0) <> 0
-                         )
-
-           , tmpCalc AS (SELECT tmpMemberMinus.MemberId
-                 , tmpMI_All.PersonalId
-                 , CASE WHEN COALESCE (tmpMemberMinus.isChild,TRUE) = TRUE THEN COALESCE (tmpMI_All.SummChildRecalc,0) ELSE COALESCE (tmpMI_All.SummMinusExtRecalc,0) END AS TotalSummMinus
-                 , tmpMemberMinus.Tax
-                 , tmpMemberMinus.isChild 
-                 , ((CASE WHEN COALESCE (tmpMemberMinus.isChild,TRUE) = TRUE THEN COALESCE (tmpMI_All.SummChildRecalc,0) ELSE COALESCE (tmpMI_All.SummMinusExtRecalc,0) END) * COALESCE (tmpMemberMinus.Tax,100) / 100) AS SummMinus
- 
-            FROM tmpMI_All
-                 LEFT JOIN tmpMemberMinus ON tmpMemberMinus.PersonalId = tmpMI_All.PersonalId
-                                        -- AND tmpMemberMinus.Number = tmpMI_All.Number
-            WHERE CASE WHEN tmpMemberMinus.isChild = TRUE THEN COALESCE (tmpMI_All.SummChildRecalc,0) ELSE COALESCE (tmpMI_All.SummMinusExtRecalc,0) END <> 0
-           )
-
-SELECT tmpCalc.MemberId
-, tmpCalc.TotalSummMinus
- , SUM (tmpCalc.Tax) AS Tax
-, SUM (tmpCalc.SummMinus) AS SummMinus
-FROM tmpCalc
-GROUP BY tmpCalc.MemberId
-       , tmpCalc.TotalSummMinus
-HAVING SUM (tmpCalc.Tax) <> 100
-OR SUM (tmpCalc.SummMinus) <> tmpCalc.TotalSummMinus
-
-           */
