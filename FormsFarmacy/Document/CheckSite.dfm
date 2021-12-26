@@ -13,42 +13,31 @@ inherited CheckSiteForm: TCheckSiteForm
           Styles.Header = nil
         end
       end
-      inherited cxGrid1: TcxGrid
-        inherited cxGridDBTableView1: TcxGridDBTableView
-          Styles.Content = nil
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
+      inherited Panel1: TPanel
+        inherited cxGrid1: TcxGrid
+          inherited cxGridDBTableView1: TcxGridDBTableView
+            Styles.Content = nil
+            Styles.Inactive = nil
+            Styles.Selection = nil
+            Styles.Footer = nil
+            Styles.Header = nil
+          end
+        end
+        inherited cxDBMemo1: TcxDBMemo
+          Style.IsFontAssigned = True
         end
       end
     end
   end
-  inherited spMovementSetErased: TdsdStoredProc [1]
+  inherited spPUSHSetErased: TdsdStoredProc [1]
   end
-  inherited spConfirmedKind_Complete: TdsdStoredProc [2]
+  inherited SPUpdate_NotMCS: TdsdStoredProc [2]
   end
-  inherited spConfirmedKind_UnComplete: TdsdStoredProc [3]
+  inherited MasterDS: TDataSource [3]
   end
-  inherited spUpdateMovementItemAmount: TdsdStoredProc [4]
+  inherited MasterCDS: TClientDataSet [4]
   end
-  inherited spSmashCheck: TdsdStoredProc [5]
-  end
-  inherited spUpdateOperDate: TdsdStoredProc [6]
-  end
-  inherited spMovementSetErasedSite: TdsdStoredProc [7]
-  end
-  inherited FormParams: TdsdFormParams [8]
-  end
-  inherited spPUSHSetErased: TdsdStoredProc [9]
-  end
-  inherited SPUpdate_NotMCS: TdsdStoredProc [10]
-  end
-  inherited MasterDS: TDataSource [11]
-  end
-  inherited MasterCDS: TClientDataSet [12]
-  end
-  inherited spSelect: TdsdStoredProc [13]
+  inherited spSelect: TdsdStoredProc [5]
     Params = <
       item
         Name = 'inType'
@@ -57,18 +46,18 @@ inherited CheckSiteForm: TCheckSiteForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited BarManager: TdxBarManager [14]
+  inherited BarManager: TdxBarManager [6]
     DockControlHeights = (
       0
       0
       26
       0)
   end
-  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [15]
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [7]
   end
-  inherited cxPropertiesStore: TcxPropertiesStore [16]
+  inherited cxPropertiesStore: TcxPropertiesStore [8]
   end
-  inherited ActionList: TActionList [17]
+  inherited ActionList: TActionList [9]
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <
         item
@@ -299,6 +288,13 @@ inherited CheckSiteForm: TCheckSiteForm
           ComponentItem = 'isDiscountCommit'
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAutoVIPforSales'
+          Component = MasterCDS
+          ComponentItem = 'isAutoVIPforSales'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
     end
     inherited actCheckCash: TdsdOpenForm
@@ -328,14 +324,30 @@ inherited CheckSiteForm: TCheckSiteForm
         end>
     end
   end
-  inherited DBViewAddOn: TdsdDBViewAddOn [18]
+  inherited DBViewAddOn: TdsdDBViewAddOn [10]
   end
-  inherited PopupMenu: TPopupMenu [19]
+  inherited PopupMenu: TPopupMenu [11]
   end
-  inherited ClientDataSet1: TClientDataSet [20]
+  inherited ClientDataSet1: TClientDataSet [12]
   end
-  inherited DataSource1: TDataSource [21]
+  inherited DataSource1: TDataSource [13]
   end
-  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [22]
+  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [14]
+  end
+  inherited spMovementSetErased: TdsdStoredProc [15]
+  end
+  inherited spConfirmedKind_Complete: TdsdStoredProc [16]
+  end
+  inherited spConfirmedKind_UnComplete: TdsdStoredProc [17]
+  end
+  inherited spUpdateMovementItemAmount: TdsdStoredProc [18]
+  end
+  inherited spSmashCheck: TdsdStoredProc [19]
+  end
+  inherited spUpdateOperDate: TdsdStoredProc [20]
+  end
+  inherited spMovementSetErasedSite: TdsdStoredProc [21]
+  end
+  inherited FormParams: TdsdFormParams [22]
   end
 end

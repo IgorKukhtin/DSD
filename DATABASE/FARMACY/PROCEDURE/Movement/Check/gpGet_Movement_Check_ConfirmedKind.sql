@@ -44,6 +44,12 @@ BEGIN
                                                                  ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                                 AND MovementLinkObject_Unit.DescId     = zc_MovementLinkObject_Unit()
                                                                 AND MovementLinkObject_Unit.ObjectId   = vbUnitId
+
+                                   LEFT JOIN MovementBoolean AS MovementBoolean_AutoVIPforSales
+                                                             ON MovementBoolean_AutoVIPforSales.MovementId = Movement.Id
+                                                            AND MovementBoolean_AutoVIPforSales.DescId = zc_MovementBoolean_AutoVIPforSales()
+                                                            
+                              WHERE COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False) = False
                              )
              , tmpMLO_ConfirmedKind AS (SELECT MLO_ConfirmedKind.*
                                         FROM MovementLinkObject AS MLO_ConfirmedKind

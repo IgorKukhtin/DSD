@@ -288,6 +288,7 @@ end if;
                                                                         , inSummCompensationRecalc := 0
                                                                         , inSummAuditAdd           := 0
                                                                         , inSummHouseAdd           := 0
+                                                                        , inNumber                 := ''
                                                                         , inComment                := ''
                                                                         , inInfoMoneyId            := vbInfoMoneyId_def
                                                                         , inUnitId                 := inUnitId

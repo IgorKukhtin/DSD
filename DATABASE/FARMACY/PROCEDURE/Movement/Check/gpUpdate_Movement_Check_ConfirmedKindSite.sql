@@ -43,6 +43,15 @@ BEGIN
       RETURN;
     END IF;
 
+    IF EXISTS (SELECT 1 FROM MovementBoolean AS MovementBoolean_AutoVIPforSales
+               WHERE MovementBoolean_AutoVIPforSales.MovementId = inMovementId
+                 AND MovementBoolean_AutoVIPforSales.DescId = zc_MovementBoolean_AutoVIPforSales()
+                 AND MovementBoolean_AutoVIPforSales.ValueData = TRUE)
+    THEN
+      raise notice 'Пропустили %', 'Изменять статус ВИП чек для резерва под продажи запрещено.';    
+      RETURN;
+    END IF;
+
       -- подправили количество в пределах 0.05 длч таблеток
     IF vbSourceKindId = zc_Enum_CheckSourceKind_Tabletki()
     THEN

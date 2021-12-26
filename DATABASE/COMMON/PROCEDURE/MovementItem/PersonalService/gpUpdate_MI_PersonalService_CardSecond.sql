@@ -390,6 +390,7 @@ END IF;
                                                         , inSummCompensationRecalc := 0
                                                         , inSummAuditAdd           := 0
                                                         , inSummHouseAdd           := 0
+                                                        , inNumber             := ''
                                                         , inComment            := ''
                                                         , inInfoMoneyId        := _tmpMI.InfoMoneyId
                                                         , inUnitId             := _tmpMI.UnitId

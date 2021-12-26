@@ -37,6 +37,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , DayCompensation TFloat, PriceCompensation TFloat
              , DayVacation TFloat, DayHoliday TFloat, DayWork TFloat
              , DayAudit TFloat
+             , Number TVarChar
              , Comment TVarChar
              , isErased Boolean
              , isAuto Boolean
@@ -344,7 +345,8 @@ BEGIN
             , MIFloat_DayWork.ValueData                 ::TFloat AS DayWork
             , MIFloat_DayAudit.ValueData                ::TFloat AS DayAudit
 
-            , MIString_Comment.ValueData       AS Comment
+            , MIString_Number.ValueData   ::TVarChar AS Number
+            , MIString_Comment.ValueData             AS Comment
             , tmpAll.isErased
             , COALESCE (MIBoolean_isAuto.ValueData, FALSE)      :: Boolean   AS isAuto
             , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE) :: Boolean   AS isBankOut
@@ -358,6 +360,10 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = tmpAll.MovementItemId
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
+
+            LEFT JOIN MovementItemString AS MIString_Number
+                                         ON MIString_Number.MovementItemId = tmpAll.MovementItemId
+                                        AND MIString_Number.DescId = zc_MIString_Number()
 
             LEFT JOIN MovementItemFloat AS MIFloat_SummToPay
                                         ON MIFloat_SummToPay.MovementItemId = tmpAll.MovementItemId

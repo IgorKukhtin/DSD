@@ -84,6 +84,7 @@ type
     isNotMCS: TcxGridDBColumn;
     CommentCustomer: TcxGridDBColumn;
     isErrorRRO: TcxGridDBColumn;
+    isAutoVIPforSales: TcxGridDBColumn;
   private
     { Private declarations }
   public

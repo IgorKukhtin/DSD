@@ -14,6 +14,7 @@ $BODY$
    DECLARE vbJuridicalId Integer;
    DECLARE vbSaleDate TDateTime;
    DECLARE vbIsDeferred Boolean;
+   DECLARE vbError TVarChar;
 BEGIN
 
     -- Отложен
@@ -55,6 +56,50 @@ BEGIN
     WHERE
         Movement_Sale.Id = inMovementId;
 
+    -- Проверяем VIP чек для продажи         
+    IF EXISTS(SELECT * FROM gpSelect_Goods_AutoVIPforSalesCash (inUnitId := vbUnitId , inSession:= inUserId::TVarChar) 
+              WHERE GoodsId IN (SELECT DISTINCT MovementItem.ObjectId
+                                FROM MovementItem
+                                WHERE MovementItem.MovementId = inMovementId
+                                  AND MovementItem.IsErased = FALSE
+                                  AND COALESCE(MovementItem.Amount,0) > 0
+                                  AND (MovementItem.Id = inMovementItemId OR COALESCE (inMovementItemId, 0) = 0)))
+    THEN
+      PERFORM gpInsertUpdate_MovementItem_Check_VIPforSales (inUnitId   := vbUnitId
+                                                           , inGoodsId  := T1.GoodsId
+                                                           , inAmount   := - T1.Amount
+                                                           , inSession  := inUserId::TVarChar
+                                                            )
+      FROM (WITH HeldBy AS(-- уже проведено
+                           SELECT MovementItemContainer.MovementItemId   AS MovementItemId
+                                , SUM(- MovementItemContainer.Amount)      AS Amount
+                           FROM MovementItemContainer
+                           WHERE MovementItemContainer.MovementId = inMovementId
+                           GROUP BY MovementItemContainer.MovementItemId
+                          ),
+                 Sale AS( -- строки документа продажи
+                            SELECT
+                                 MovementItem.ObjectId                                AS ObjectId
+                               , SUM(MovementItem.Amount - COALESCE(HeldBy.Amount,0)) AS Amount
+                            FROM MovementItem
+                                 LEFT OUTER JOIN HeldBy AS HeldBy
+                                                        ON MovementItem.Id = HeldBy.MovementItemId
+                            WHERE MovementItem.MovementId = inMovementId
+                              AND MovementItem.IsErased = FALSE
+                              AND (COALESCE(MovementItem.Amount,0) - COALESCE(HeldBy.Amount,0)) > 0
+                              AND (MovementItem.Id = inMovementItemId OR COALESCE (inMovementItemId, 0) = 0)
+                            GROUP BY MovementItem.ObjectId 
+                        ),
+                 VIPforSalesCash AS (SELECT * FROM gpSelect_Goods_AutoVIPforSalesCash (inUnitId := vbUnitId , inSession:= inUserId::TVarChar))
+                         
+            SELECT Sale.ObjectId  AS GoodsId
+                 , Sale.Amount
+            FROM Sale 
+                         
+                 INNER JOIN VIPforSalesCash ON VIPforSalesCash.GoodsId = Sale.ObjectId) AS T1;          
+        
+    END IF;
+    
     -- А сюда товары
     WITH
         HeldBy AS(-- уже проведено
@@ -284,6 +329,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.  Шаблий О.В.
+ 23.12.21                                                                                   *
  11.05.20                                                                                   *               
  01.08.19                                                                                   *
  13.10.15                                                                     *

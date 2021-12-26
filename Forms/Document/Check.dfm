@@ -2490,6 +2490,12 @@ inherited CheckForm: TCheckForm
         Value = 0.000000000000000000
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormCaption'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 56
     Top = 397
@@ -2900,6 +2906,14 @@ inherited CheckForm: TCheckForm
         Value = Null
         Component = cbErrorRRO
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Caption'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormCaption'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 112
@@ -3421,8 +3435,8 @@ inherited CheckForm: TCheckForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 712
-    Top = 104
+    Left = 648
+    Top = 112
   end
   object DetailDCS: TClientDataSet
     Aggregates = <>

@@ -30,6 +30,12 @@ CREATE OR REPLACE FUNCTION zc_MIString_Description() RETURNS Integer AS $BODY$BE
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_Description', 'Описание задания' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Description');
 
+CREATE OR REPLACE FUNCTION zc_MIString_Number() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Number'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_Number', '№ исполнительного листа' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Number');
+
+
+
 ----!!!!!!Farmacy
 CREATE OR REPLACE FUNCTION zc_MIString_SertificatNumber() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_SertificatNumber'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemStringDesc (Code, ItemName)

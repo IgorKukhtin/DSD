@@ -58,6 +58,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isManual Boolean
              , isOffsetVIP Boolean
              , isErrorRRO Boolean
+             , isAutoVIPforSales Boolean
               )
 AS
 $BODY$
@@ -177,6 +178,7 @@ BEGIN
            
            , COALESCE(MovementBoolean_OffsetVIP.ValueData, False)         AS isOffsetVIP
            , COALESCE(MovementBoolean_ErrorRRO.ValueData, False)          AS isErrorRRO
+           , COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False)   AS isAutoVIPforSales
            
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -477,6 +479,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_ErrorRRO
                                       ON MovementBoolean_ErrorRRO.MovementId = Movement_Check.Id
                                      AND MovementBoolean_ErrorRRO.DescId = zc_MovementBoolean_ErrorRRO()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_AutoVIPforSales
+                                      ON MovementBoolean_AutoVIPforSales.MovementId = Movement_Check.Id
+                                     AND MovementBoolean_AutoVIPforSales.DescId = zc_MovementBoolean_AutoVIPforSales()
       ;
 
 END;

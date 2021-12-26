@@ -31,6 +31,9 @@ $BODY$
    DECLARE vbSaldo     TFloat;
    DECLARE vbPriceCalc TFloat;
    DECLARE vbPersent   TFloat;
+   DECLARE vbisVIPforSales Boolean;
+   DECLARE vbAmountVIP TFloat;
+   
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
@@ -43,7 +46,7 @@ BEGIN
                                WHERE Object_Goods_Retail.Id = inGoodsId), zc_Enum_NDSKind_Medical());
     
     END IF;
-
+    
     -- Получили признак отложен
     SELECT COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean
          , Movement_Sale.UnitId
@@ -137,13 +140,33 @@ BEGIN
     THEN
       RAISE EXCEPTION 'Ошибка. % % ', ioPriceSale, vbPriceCalc;
     END IF;*/
-
+    
+    
+    IF EXISTS(SELECT * FROM gpSelect_Goods_AutoVIPforSalesCash (inUnitId := vbUnitId , inSession:= inSession) WHERE GoodsId = inGoodsId)
+    THEN
+      vbisVIPforSales := False;
+      vbAmountVIP := COALESCE ((SELECT Amount FROM gpSelect_Goods_AutoVIPforSalesCash (inUnitId := vbUnitId , inSession:= inSession) WHERE GoodsId = inGoodsId), 0);        
+    ELSE
+      vbisVIPforSales := True;
+      vbAmountVIP := 0;    
+    END IF;
+    
     -- Сохранили начальное количество для отложеных чеков
     IF vbIsDeferred = TRUE AND COALESCE (ioId, 0) <> 0
     THEN
       vbAmount := COALESCE ((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = ioId), 0);
     ELSE
       vbAmount := 0;
+    END IF;
+    
+    IF vbAmount + vbAmountVIP < inAmount
+    THEN
+      IF vbAmount + vbAmountVIP = 0
+      THEN
+        RAISE EXCEPTION 'Ошибка. По товару не установлен резерв аптекой для продажи.';    
+      ELSE
+        RAISE EXCEPTION 'Ошибка. Аптекой для продажи установлен резерв % шт. вы пытаетесь отпустить % шт.', vbAmount + vbAmountVIP, inAmount;          
+      END IF;
     END IF;
 
     IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
@@ -254,6 +277,17 @@ BEGIN
 
       IF inAmount < vbAmount
       THEN
+        -- Проверяем VIP чек для продажи         
+        IF EXISTS(SELECT * FROM gpSelect_Goods_AutoVIPforSalesCash (inUnitId := vbUnitId , inSession:= inSession) 
+                  WHERE GoodsId = inGoodsId)
+        THEN
+          PERFORM gpInsertUpdate_MovementItem_Check_VIPforSales (inUnitId   := vbUnitId
+                                                               , inGoodsId  := inGoodsId
+                                                               , inAmount   := vbAmount
+                                                               , inSession  := inSession
+                                                                );                  
+        END IF;
+
         -- Распроводим строку Документ
         PERFORM lpDelete_MovementItemContainerOne (inMovementId := inMovementId
                                                  , inMovementItemId := ioId);

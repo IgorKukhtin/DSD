@@ -166,7 +166,8 @@ BEGIN
             , Object_SPKind.ValueData     AS SPKindName
             , ObjectFloat_SPTax.ValueData AS SPTax
 
-            , CASE WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND tmpErr.MovementId > 0 AND 
+            , CASE WHEN COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False) = TRUE THEN zfCalc_Color (0, 255, 255)
+                   WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND tmpErr.MovementId > 0 AND 
                         COALESCE(MovementFloat_TotalCount.ValueData, 0) > 0 THEN 16440317 -- бледно крассный / розовый
                    WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND tmpErr.MovementId IS NULL AND 
                         COALESCE(MovementFloat_TotalCount.ValueData, 0) > 0 THEN zc_Color_Yelow() -- желтый
@@ -199,6 +200,7 @@ BEGIN
 
             , MovementString_CommentCustomer.ValueData                     AS CommentCustomer
             , COALESCE(MovementBoolean_ErrorRRO.ValueData, False)          AS isErrorRRO
+            , COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False)   AS isAutoVIPforSales
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id
@@ -385,6 +387,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_ErrorRRO
                                       ON MovementBoolean_ErrorRRO.MovementId = Movement.Id
                                      AND MovementBoolean_ErrorRRO.DescId = zc_MovementBoolean_ErrorRRO()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_AutoVIPforSales
+                                      ON MovementBoolean_AutoVIPforSales.MovementId = Movement.Id
+                                     AND MovementBoolean_AutoVIPforSales.DescId = zc_MovementBoolean_AutoVIPforSales()
 
        WHERE tmpMov.isDeferred = True
          AND (inType = 0 OR inType = 1 AND tmpMov.isShowVIP = TRUE OR inType = 2 AND tmpMov.isShowTabletki = TRUE OR inType in (1, 3) AND tmpMov.isShowLiki24 = TRUE)

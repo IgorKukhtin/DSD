@@ -1,9 +1,12 @@
--- Function: gpInsertUpdate_MI_PersonalService_byMemberMinus()
+-- Function: gpInsertUpdate_MI_PersonalService_Load()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_byMemberMinus (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Load (Integer, TVarChar, TVarChar, TFloat, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PersonalService_byMemberMinus(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PersonalService_Load(
     IN inMovementId             Integer   , -- Ключ объекта <Документ>
+    IN inINN_from               TVarChar  , --ИНН получателя
+    IN inNumber                 TVarChar  , --
+    IN inAmount                 TFloat    , 
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
@@ -13,71 +16,53 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_PersonalService());
 
-     
 
      -- Выбираем данные из справочника MemberMinus
      CREATE TEMP TABLE tmpMemberMinus ON COMMIT DROP AS 
-            (WITH
-                 tmpPersonal AS (SELECT lfSelect.MemberId
-                                      , lfSelect.PersonalId
-                                      , lfSelect.PositionId
-                                      , lfSelect.isMain
-                                      , lfSelect.UnitId
-                                 FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
-                                 WHERE lfSelect.Ord = 1
-                                )
+     (WITH
+          tmpPersonal AS (SELECT lfSelect.MemberId
+                               , lfSelect.PersonalId
+                               , lfSelect.PositionId
+                               , lfSelect.isMain
+                               , lfSelect.UnitId
+                          FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                          WHERE lfSelect.Ord = 1
+                         )
+     --получаем из MemberMinus нужного сотрудника
+     SELECT DISTINCT
+            ObjectLink_MemberMinus_From.ChildObjectId AS MemberId
+          , tmpPersonal.PersonalId
+          , tmpPersonal.PositionId
+          , tmpPersonal.isMain
+          , tmpPersonal.UnitId
+          , ObjectLink_Personal_PersonalServiceList.ChildObjectId AS PersonalServiceListId
+          , (CASE WHEN COALESCE (ObjectBoolean_Child.ValueData, FALSE) = FALSE THEN inAmount ELSE 0 END) :: TFloat AS SummMinusExtRecalc
+          , (CASE WHEN COALESCE (ObjectBoolean_Child.ValueData, FALSE) = TRUE  THEN inAmount ELSE 0 END) :: TFloat AS SummChildRecalc
+     FROM ObjectString AS ObjectString_INN_from
 
-             SELECT ObjectLink_MemberMinus_From.ChildObjectId AS MemberId
-                  , tmpPersonal.PersonalId
-                  , tmpPersonal.PositionId
-                  , tmpPersonal.isMain
-                  , tmpPersonal.UnitId
-                  , ObjectLink_Personal_PersonalServiceList.ChildObjectId AS PersonalServiceListId
-                  , MIString_Number.ValueData AS Number
-                  , SUM (CASE WHEN COALESCE (ObjectBoolean_Child.ValueData, FALSE) = FALSE THEN COALESCE (ObjectFloat_Summ.ValueData, 0) ELSE 0 END) :: TFloat AS SummMinusExtRecalc
-                  , SUM (CASE WHEN COALESCE (ObjectBoolean_Child.ValueData, FALSE) = TRUE  THEN COALESCE (ObjectFloat_Summ.ValueData, 0) ELSE 0 END) :: TFloat AS SummChildRecalc
+          LEFT JOIN ObjectLink AS ObjectLink_MemberMinus_From
+                               ON ObjectLink_MemberMinus_From.ChildObjectId= ObjectString_INN_from.ObjectId
+                              AND ObjectLink_MemberMinus_From.DescId = zc_ObjectLink_MemberMinus_From()
 
-                  --, SUM (CASE WHEN Object_To.DescId = zc_Object_Juridical() THEN COALESCE (ObjectFloat_Summ.ValueData, 0) ELSE 0 END) :: TFloat AS SummMinusExtRecalc
-                  --, SUM (CASE WHEN Object_To.DescId = zc_Object_Juridical() THEN 0 ELSE COALESCE (ObjectFloat_Summ.ValueData, 0) END) :: TFloat AS SummChildRecalc
-             FROM Object AS Object_MemberMinus
-                   LEFT JOIN ObjectLink AS ObjectLink_MemberMinus_From
-                                        ON ObjectLink_MemberMinus_From.ObjectId = Object_MemberMinus.Id
-                                       AND ObjectLink_MemberMinus_From.DescId = zc_ObjectLink_MemberMinus_From()
-         
-                   LEFT JOIN ObjectLink AS ObjectLink_MemberMinus_To
-                                        ON ObjectLink_MemberMinus_To.ObjectId = Object_MemberMinus.Id
-                                       AND ObjectLink_MemberMinus_To.DescId = zc_ObjectLink_MemberMinus_To()
-                   --LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_MemberMinus_To.ChildObjectId
-                   
-                   LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_MemberMinus_From.ChildObjectId
+          INNER JOIN ObjectString AS ObjectString_Number
+                                  ON ObjectString_Number.ObjectId = ObjectLink_MemberMinus_From.ObjectId
+                                 AND ObjectString_Number.DescId = zc_ObjectString_MemberMinus_Number()
+                                 AND ObjectString_Number.ValueData = TRIM (inNumber)
 
-                   LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
-                                        ON ObjectLink_Personal_PersonalServiceList.ObjectId = tmpPersonal.PersonalId
-                                       AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Child
+                                  ON ObjectBoolean_Child.ObjectId = ObjectLink_MemberMinus_From.ObjectId
+                                 AND ObjectBoolean_Child.DescId = zc_ObjectBoolean_MemberMinus_Child()
 
-                   LEFT JOIN ObjectFloat AS ObjectFloat_Summ
-                                         ON ObjectFloat_Summ.ObjectId = Object_MemberMinus.Id
-                                        AND ObjectFloat_Summ.DescId = zc_ObjectFloat_MemberMinus_Summ()
+          LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_MemberMinus_From.ChildObjectId
 
-                   LEFT JOIN ObjectBoolean AS ObjectBoolean_Child
-                                           ON ObjectBoolean_Child.ObjectId = Object_MemberMinus.Id
-                                          AND ObjectBoolean_Child.DescId = zc_ObjectBoolean_MemberMinus_Child()
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                               ON ObjectLink_Personal_PersonalServiceList.ObjectId = tmpPersonal.PersonalId
+                              AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
 
-                   LEFT JOIN MovementItemString AS MIString_Number
-                                                ON MIString_Number.MovementItemId = Object_MemberMinus.Id
-                                               AND MIString_Number.DescId = zc_MIString_Number()
+     WHERE  ObjectString_INN_from.DescId IN (zc_ObjectString_MemberExternal_INN(), zc_ObjectString_Member_INN())
+           AND ObjectString_INN_from.ValueData = TRIM(inINN_from)
+     );
 
-             WHERE Object_MemberMinus.DescId = zc_Object_MemberMinus()
-               AND Object_MemberMinus.isErased = FALSE
-             GROUP BY ObjectLink_MemberMinus_From.ChildObjectId
-                    --, ObjectLink_MemberMinus_To.ChildObjectId
-                    , tmpPersonal.PersonalId
-                    , tmpPersonal.PositionId
-                    , tmpPersonal.isMain
-                    , tmpPersonal.UnitId
-                    , ObjectLink_Personal_PersonalServiceList.ChildObjectId
-                    , MIString_Number.ValueData
-              );
      -- Выбираем сохраненные данные из документа
      CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
             (SELECT tmp.*
@@ -110,7 +95,7 @@ BEGIN
                                                         , inSummCompensationRecalc:= COALESCE (tmpMI.SummCompensationRecalc,0)              ::TFloat
                                                         , inSummAuditAdd          := COALESCE (tmpMI.SummAuditAdd,0)                        ::TFloat
                                                         , inSummHouseAdd          := COALESCE (tmpMI.SummHouseAdd,0)                        ::TFloat
-                                                        , inNumber                := COALESCE (tmpMemberMinus.Number, tmpMI.Number, '')     ::TVarChar
+                                                        , inNumber                := TRIM(inNumber)                                         ::TVarChar
                                                         , inComment               := COALESCE (tmpMI.Comment, '')                           ::TVarChar
                                                         , inInfoMoneyId           := zc_Enum_InfoMoney_60101()                              ::Integer
                                                         , inUnitId                := COALESCE (tmpMemberMinus.UnitId, tmpMI.UnitId)         ::Integer
@@ -124,19 +109,9 @@ BEGIN
      FROM tmpMemberMinus
           LEFT JOIN tmpMI ON tmpMI.PersonalId = tmpMemberMinus.PersonalId
                          AND tmpMI.MemberId = tmpMemberMinus.MemberId
-                         AND COALESCE (tmpMI.Number,'') = COALESCE (tmpMemberMinus.Number,'')
+                         AND tmpMI.Number = inNumber
      ;
      
-     -- если в спр.Удержаний нет сотрудника а в док. есть - удаляем его из документа
-     PERFORM lpSetErased_MovementItem (inMovementItemId:= tmpMI.Id, inUserId:= vbUserId)
-     FROM tmpMI
-          LEFT JOIN tmpMemberMinus ON tmpMemberMinus.PersonalId = tmpMI.PersonalId
-                                  AND tmpMemberMinus.MemberId = tmpMI.MemberId
-                                  AND COALESCE (tmpMemberMinus.Number,'') = COALESCE (tmpMI.Number,'')
-     WHERE tmpMemberMinus.MemberId IS NULL;
-
-     
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -145,7 +120,6 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  23.12.21         *
- 11.11.20         *
 */
 
 -- тест

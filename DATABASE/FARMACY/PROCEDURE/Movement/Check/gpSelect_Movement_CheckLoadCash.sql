@@ -50,7 +50,8 @@ RETURNS TABLE (
   LoyaltyChangeSumma TFloat,
   SummCard TFloat,
   isBanAdd boolean,
-  isDiscountCommit Boolean
+  isDiscountCommit Boolean, 
+  isAutoVIPforSales Boolean
  )
 AS
 $BODY$
@@ -207,6 +208,7 @@ BEGIN
             , COALESCE(MovementFloat_TotalSummCard.ValueData, 0)::TFloat                AS SummCard
             , CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) in (zc_Enum_CheckSourceKind_Tabletki(), zc_Enum_CheckSourceKind_Liki24()) THEN TRUE ELSE FALSE END AS isBanAdd
             , COALESCE(MovementBoolean_DiscountCommit.ValueData, False)                 AS isDiscountCommit
+            , COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False)                AS isAutoVIPforSales
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id
@@ -378,6 +380,9 @@ BEGIN
                                       ON MovementBoolean_DiscountCommit.MovementId = Movement.Id
                                      AND MovementBoolean_DiscountCommit.DescId = zc_MovementBoolean_DiscountCommit()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_AutoVIPforSales
+                                      ON MovementBoolean_AutoVIPforSales.MovementId = Movement.Id
+                                     AND MovementBoolean_AutoVIPforSales.DescId = zc_MovementBoolean_AutoVIPforSales()
        ;
 
 END;

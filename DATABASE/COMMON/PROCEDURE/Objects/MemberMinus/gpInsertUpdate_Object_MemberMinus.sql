@@ -14,12 +14,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MemberMinus(
     IN inDetailPayment         TVarChar  ,    -- Назначение платежа
     IN inINN_to                TVarChar  ,    -- ОКПО/ИНН получателя
     IN inToShort               TVarChar  ,    -- Юр. лицо (сокращенное значение) 
-    IN inNumber                TVarChar  ,    -- 
+    IN inNumber                TVarChar  ,    -- № исполнительного листа
     IN inFromId                Integer   ,    -- Физические лица
     IN inToId                  Integer   ,    -- Физические лица(сторонние) / Юридические лица
  INOUT ioBankAccountFromId     Integer   ,    -- IBAN плательщика платежа
     IN inBankAccountToId       Integer   ,    -- IBAN получателя платежа
-    IN inBankAccountId_main    Integer   ,    --№ исполнительного листа
+    IN inBankAccountId_main    Integer   ,    --
    OUT outBankAccountFromName  TVarChar  ,    --
     IN inTotalSumm             TFloat    ,     -- Сумма Итого
     IN inSumm                  TFloat    ,     -- Сумма к удержанию ежемесячно

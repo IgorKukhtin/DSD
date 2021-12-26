@@ -236,7 +236,7 @@ type
     cxKoeff: TcxGridDBColumn;
     ExportEmailCDS: TClientDataSet;
     ExportEmailDS: TDataSource;
-    bb: TdxBarButton;
+    bbExportCSV: TdxBarButton;
     spGet_Export_EmailCSV: TdsdStoredProc;
     actGet_Export_EmailCSV: TdsdExecStoredProc;
     spGet_Export_FileNameCSV: TdsdStoredProc;
@@ -248,6 +248,15 @@ type
     mactExportCSV: TMultiAction;
     cbMail: TcxCheckBox;
     actRefreshGet: TdsdDataSetRefresh;
+    spGetImportSetting_mm: TdsdStoredProc;
+    actDoLoad_mm: TExecuteImportSettingsAction;
+    actGetImportSetting_mm: TdsdExecStoredProc;
+    macStartLoad_mm: TMultiAction;
+    bbStartLoad_mm: TdxBarButton;
+    spInsertUpdate_MemberMinus: TdsdStoredProc;
+    actInsertUpdate_MemberMinus: TdsdExecStoredProc;
+    macInsertUpdate_MemberMinus: TMultiAction;
+    bbInsertUpdate_MemberMinus: TdxBarButton;
   private
     { Private declarations }
   public
