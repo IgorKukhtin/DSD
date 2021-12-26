@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document-Invoice>
+  <Invoice-Header>
+    <InvoiceNumber>665_TN_1</InvoiceNumber>
+    <InvoiceDate>2021-10-29</InvoiceDate>
+    <DocumentFunctionCode>TN</DocumentFunctionCode>
+    <ContractNumber>12121212</ContractNumber>
+    <ContractDate>2021-10-25</ContractDate>
+  </Invoice-Header>
+  <Invoice-Reference>
+    <Order>
+      <BuyerOrderNumber>665_ord_ftp_7</BuyerOrderNumber>
+      <BuyerOrderDate>2021-10-29</BuyerOrderDate>
+    </Order>
+  </Invoice-Reference>
+  <Invoice-Parties>
+    <Buyer>
+      <ILN>4824034000005</ILN>
+      <TaxID>1020301020</TaxID>
+      <UtilizationRegisterNumber>34554362</UtilizationRegisterNumber>
+      <Name>ТОВ &quot;Фоззі-Фуд&quot;</Name>
+    </Buyer>
+    <Seller>
+      <ILN>9864065732181</ILN>
+      <TaxID>1010101016</TaxID>
+      <UtilizationRegisterNumber>34554363</UtilizationRegisterNumber>
+      <Name>FelEx_1</Name>
+    </Seller>
+    <DeliveryPoint>
+      <ILN>4824034000005</ILN>
+      <Name>ТОВ &quot;Фоззі-Фуд&quot;</Name>
+      <CityName>м. Вишневе</CityName>
+      <StreetAndNumber>вул. Промислова, 5</StreetAndNumber>
+      <PostalCode>8132</PostalCode>
+    </DeliveryPoint>
+    <Payer>
+      <ILN>4824034000005</ILN>
+      <Name>ТОВ &quot;Фоззі-Фуд&quot;</Name>
+      <CityName>м. Вишневе</CityName>
+      <StreetAndNumber>вул. Промислова, 5</StreetAndNumber>
+      <PostalCode>8132</PostalCode>
+    </Payer>
+  </Invoice-Parties>
+  <Invoice-Lines>
+    <Line>
+      <Line-Item>
+        <LineNumber>1</LineNumber>
+        <EAN>123456789</EAN>
+        <BuyerItemCode>222222222</BuyerItemCode>
+        <ExternalItemCode>111111111</ExternalItemCode>
+        <ItemDescription>Вот ка</ItemDescription>
+        <InvoiceQuantity>3</InvoiceQuantity>
+        <BuyerUnitOfMeasure>шт</BuyerUnitOfMeasure>
+        <InvoiceUnitNetPrice>12.00000</InvoiceUnitNetPrice>
+        <TaxRate>20</TaxRate>
+        <GrossAmount>43.20</GrossAmount>
+        <TaxAmount>7.20</TaxAmount>
+        <NetAmount>36.00</NetAmount>
+      </Line-Item>
+    </Line>
+    <Line>
+      <Line-Item>
+        <LineNumber>2</LineNumber>
+        <EAN>4820000000001</EAN>
+        <BuyerItemCode>212121212</BuyerItemCode>
+        <ExternalItemCode>1233</ExternalItemCode>
+        <ItemDescription>Пив ко</ItemDescription>
+        <InvoiceQuantity>3</InvoiceQuantity>
+        <BuyerUnitOfMeasure>шт</BuyerUnitOfMeasure>
+        <InvoiceUnitNetPrice>5.68000</InvoiceUnitNetPrice>
+        <TaxRate>20</TaxRate>
+        <GrossAmount>20.46</GrossAmount>
+        <TaxAmount>3.42</TaxAmount>
+        <NetAmount>17.04</NetAmount>
+      </Line-Item>
+    </Line>
+  </Invoice-Lines>
+  <Invoice-Summary>
+    <TotalLines>2</TotalLines>
+    <TotalNetAmount>53.04</TotalNetAmount>
+    <TotalTaxAmount>10.62</TotalTaxAmount>
+    <TotalGrossAmount>63.66</TotalGrossAmount>
+  </Invoice-Summary>
+</Document-Invoice>

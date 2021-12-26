@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xdb="http://www.borland.com/schemas/delphi/10.0/XMLDataBinding">
+  <element xmlns="http://www.w3.org/2001/XMLSchema" name="Document-Invoice" type="Document-InvoiceType"/>
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="Document-InvoiceType"><annotation>
+      <appinfo xdb:docElement="Document-Invoice"/>
+    </annotation>
+    <sequence>
+      <element name="Invoice-Header" type="Invoice-HeaderType"/>
+      <element name="Invoice-Reference" type="Invoice-ReferenceType"/>
+      <element name="Invoice-Parties" type="Invoice-PartiesType"/>
+      <element name="Invoice-Lines" type="Invoice-LinesType"/>
+      <element name="Invoice-Summary" type="Invoice-SummaryType"/>
+    </sequence>
+  </complexType>
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="Invoice-HeaderType">
+    <sequence>
+      <element name="InvoiceNumber" type="xs:string"/>
+      <element name="InvoiceDate" type="xs:string"/>
+      <element name="DocumentFunctionCode" type="xs:string"/>
+      <element name="ContractNumber" type="xs:integer"/>
+      <element name="ContractDate" type="xs:string"/>
+    </sequence>
+  </complexType>
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="Invoice-ReferenceType">
+    <sequence>
+      <element name="Order" type="OrderType"/>
+    </sequence>
+  </complexType>
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="OrderType">
+    <sequence>
+      <element name="BuyerOrderNumber" type="xs:string"/>
+      <element name="BuyerOrderDate" type="xs:string"/>
+    </sequence>
+  </complexType>
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="Invoice-PartiesType">
+    <sequence>
+      <element name="Buyer" type="BuyerType"/>
+      <element name="Seller" type="SellerType"/>
+      <element name="DeliveryPoint" type="DeliveryPointType"/>
+      <element name="Payer" type="PayerType"/>
+    </sequence>
+  </complexType>
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="BuyerType">
+    <sequence>
+      <element name="ILN" type="xs:integer"/>
+      <element name="TaxID" type="xs:integer"/>
+      <element name="UtilizationRegisterNumber" type="xs:integer"/>
+      <element name="Name" type="xs:string"/>
+    </sequence>
+  </complexType>
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="SellerType">
+    <sequence>
+      <element name="ILN" type="xs:integer"/>
+      <element name="TaxID" type="xs:integer"/>
+      <element name="UtilizationRegisterNumber" type="xs:integer"/>
+      <element name="Name" type="xs:string"/>
+    </sequence>
+  </complexType>
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="DeliveryPointType">
+    <sequence>
+      <element name="ILN" type="xs:integer"/>
+      <element name="Name" type="xs:string"/>
+      <element name="CityName" type="xs:string"/>
+      <element name="StreetAndNumber" type="xs:string"/>
+      <element name="PostalCode" type="xs:integer"/>
+    </sequence>
+  </complexType>
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="PayerType">
+    <sequence>
+      <element name="ILN" type="xs:integer"/>
+      <element name="Name" type="xs:string"/>
+      <element name="CityName" type="xs:string"/>
+      <element name="StreetAndNumber" type="xs:string"/>
+      <element name="PostalCode" type="xs:integer"/>
+    </sequence>
+  </complexType>
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="Invoice-LinesType">
+    <sequence>
+      <element name="Line" type="LineType" maxOccurs="unbounded"/>
+    </sequence>
+  </complexType>
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="LineType">
+    <sequence>
+      <element name="Line-Item" type="Line-ItemType"/>
+    </sequence>
+  </complexType>
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="Line-ItemType">
+    <sequence>
+      <element name="LineNumber" type="xs:integer"/>
+      <element name="EAN" type="xs:integer"/>
+      <element name="BuyerItemCode" type="xs:integer"/>
+      <element name="ExternalItemCode" type="xs:integer"/>
+      <element name="ItemDescription" type="xs:string"/>
+      <element name="InvoiceQuantity" type="xs:integer"/>
+      <element name="BuyerUnitOfMeasure" type="xs:string"/>
+      <element name="InvoiceUnitNetPrice" type="xs:string"/>
+      <element name="TaxRate" type="xs:integer"/>
+      <element name="GrossAmount" type="xs:string"/>
+      <element name="TaxAmount" type="xs:string"/>
+      <element name="NetAmount" type="xs:string"/>
+    </sequence>
+  </complexType>
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="Invoice-SummaryType">
+    <sequence>
+      <element name="TotalLines" type="xs:integer"/>
+      <element name="TotalNetAmount" type="xs:string"/>
+      <element name="TotalTaxAmount" type="xs:string"/>
+      <element name="TotalGrossAmount" type="xs:string"/>
+    </sequence>
+  </complexType>
+</xs:schema>
