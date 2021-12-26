@@ -96,7 +96,7 @@ BEGIN
             , ObjectFloat_WeightTare.ValueData AS WeightTare
             , ObjectFloat_CountForWeight.ValueData ::TFloat AS CountForWeight
             , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)   :: Boolean AS isPartionCount
-            , COALESCE (ObjectBoolean_PartionSumm.ValueData, TRUE)     :: Boolean AS isPartionSumm
+            , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)    :: Boolean AS isPartionSumm
 
             , CASE WHEN Object_Goods_basis.Id > 0 AND Object_Goods_basis.Id <> COALESCE (Object_Goods_main.Id, 0) THEN TRUE ELSE FALSE END :: Boolean AS isCheck_basis
             , CASE WHEN Object_Goods_main.Id  > 0 AND Object_Goods_main. Id <> COALESCE (Object_Goods.Id,      0) THEN TRUE ELSE FALSE END :: Boolean AS isCheck_main
