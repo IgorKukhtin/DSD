@@ -110,8 +110,8 @@ inherited CardFuelKindForm: TCardFuelKindForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 56
-    Top = 96
+    Left = 24
+    Top = 152
   end
   inherited MasterCDS: TClientDataSet
     Top = 88

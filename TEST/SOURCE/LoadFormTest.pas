@@ -4046,12 +4046,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTicketFuelEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTicketFuelEditForm');
   //
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCardFuelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCardFuelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCardFuelEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCardFuelEditForm');
 
-  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCardFuelKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCardFuelKindForm');
 end;

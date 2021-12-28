@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_CardFuel (Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_CardFuel (Integer, Integer, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_CardFuel (Integer, Integer, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CardFuel(
  INOUT ioId                Integer   , -- Ключ объекта <Топливные карты>
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CardFuel(
     IN inPaidKindId        Integer   , -- ссылка на Виды форм оплаты
     IN inJuridicalId       Integer   , -- ссылка на Юр.лица
     IN inGoodsId           Integer   , -- ссылка на Товары
+    IN inCardFuelKindId    Integer   , -- Cтатус
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -68,17 +70,21 @@ BEGIN
    -- сохранили связь с <Товары>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_CardFuel_Goods(), ioId, inGoodsId);
 
+   -- сохранили связь с <Статус>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_CardFuel_CardFuelKind(), ioId, inCardFuelKindId);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_CardFuel (Integer, Integer, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer,TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_CardFuel (Integer, Integer, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer,TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.12.21         * add inCardFuelKindId
  14.01.16         * add inLimitFuel
  08.12.13                                        * add inAccessKeyId
  16.10.13                                        * add inLimit

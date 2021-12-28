@@ -25,6 +25,13 @@ $BODY$BEGIN
                                    ON ObjectString_Enum.ObjectId = Object.Id
                                   AND ObjectString_Enum.DescId = zc_ObjectString_Enum()
        WHERE Object.DescId = zc_Object_CardFuelKind()
+    UNION
+       SELECT 
+             Null      AS Id 
+           , Null      AS Code
+           , 'Удалить' ::TVarChar AS Name
+           , ''        ::TVarChar AS EnumName
+           , False     AS isErased
      ;
   
 END;$BODY$
