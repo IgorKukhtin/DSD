@@ -47,6 +47,8 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
 
               , OperDate_Protocol TDateTime
               , UserName_Protocol TVarChar
+              , OperDate_Protocol_auto TDateTime
+              , UserName_Protocol_auto TVarChar
                )
 AS
 $BODY$
@@ -109,42 +111,68 @@ BEGIN
                                               , inSession     := inSession
                                                ) AS gpReport
                       )
-     -- выбираем последнюю запись из протокола - дата/врем€ + фио
-     , tmpProtocol AS (SELECT tmp.MovementId
-                            , tmp.OperDate
-                            , tmp.UserId
-                            , Object_User.ValueData AS UserName
-                       FROM (SELECT MovementProtocol.MovementId
-                                  , MovementProtocol.Id
-                                  , MovementProtocol.UserId
-                                  , MovementProtocol.OperDate
-                                  , MAX (MovementProtocol.Id) OVER (PARTITION BY MovementProtocol.MovementId) AS MaxId
-                             FROM MovementProtocol
-                             WHERE MovementProtocol.MovementId IN (SELECT DISTINCT gpReport.MovementId 
-                                                                   FROM gpReport
-                                                                   WHERE gpReport.MovementId IS NOT NULL)
-                                 AND MovementProtocol.UserId NOT IN (zc_Enum_Process_Auto_PrimeCost()
-                                                                   , zc_Enum_Process_Auto_ReComplete()
-                                                                   , zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_Send(), zc_Enum_Process_Auto_PartionClose()
-                                                                   , zc_Enum_Process_Auto_Defroster()
-                                                                   -- , zfCalc_UserAdmin() :: Integer -- временно: !!!дл€ јдмина - Ќ≈“ ограничений!!!
-                                                                    )
-                             --GROUP BY MovementProtocol.MovementId
+       -- выбираем последнюю запись из протокола - дата/врем€ + фио
+     , tmpProtocol1 AS (SELECT MovementProtocol.MovementId
+                             , MAX (CASE WHEN MovementProtocol.UserId NOT IN (zc_Enum_Process_Auto_PrimeCost()
+                                                                            , zc_Enum_Process_Auto_ReComplete()
+                                                                            , zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_Send(), zc_Enum_Process_Auto_PartionClose()
+                                                                            , zc_Enum_Process_Auto_Defroster()
+                                                                             )
+                                              THEN MovementProtocol.Id
+                                         ELSE 0
+                                    END) AS MaxId
+                             , MAX (CASE WHEN MovementProtocol.UserId     IN (zc_Enum_Process_Auto_PrimeCost()
+                                                                             )
+                                              THEN MovementProtocol.Id
+                                         ELSE 0
+                                    END) AS MaxId_Auto_Auto
+                             , MAX (CASE WHEN MovementProtocol.UserId     IN (zc_Enum_Process_Auto_ReComplete()
+                                                                            , zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_Send(), zc_Enum_Process_Auto_PartionClose()
+                                                                            , zc_Enum_Process_Auto_Defroster()
+                                                                             )
+                                              THEN MovementProtocol.Id
+                                         ELSE 0
+                                    END) AS MaxId_Auto
+                        FROM (SELECT DISTINCT gpReport.MovementId
+                              FROM gpReport
+                              WHERE gpReport.MovementId IS NOT NULL AND 1=0
                              ) AS tmp
-                          LEFT JOIN Object AS Object_User ON Object_User.Id = tmp.UserId
-                       WHERE tmp.Id = tmp.MaxId
+                             INNER JOIN MovementProtocol ON MovementProtocol.MovementId = tmp.MovementId
+                        GROUP BY MovementProtocol.MovementId
                        )
-     ----
+     , tmpProtocol AS (SELECT MovementProtocol.MovementId
+                            , MovementProtocol.UserId
+                            , MovementProtocol.OperDate
+                            , Object_User.ValueData AS UserName
+
+                            , MovementProtocol_auto.OperDate AS OperDate_auto
+                            , Object_User_auto.ValueData     AS UserName_auto
+
+                       FROM tmpProtocol1
+                            INNER JOIN MovementProtocol ON MovementProtocol.MovementId = tmpProtocol1.MovementId
+                                                       AND MovementProtocol.Id         = CASE WHEN tmpProtocol1.MaxId > 0 THEN tmpProtocol1.MaxId ELSE tmpProtocol1.MaxId_auto END
+                            LEFT JOIN MovementProtocol AS MovementProtocol_auto
+                                                       ON MovementProtocol_auto.MovementId = tmpProtocol1.MovementId
+                                                      AND MovementProtocol_auto.Id         = tmpProtocol1.MaxId_Auto_Auto
+                            LEFT JOIN Object AS Object_User      ON Object_User.Id      = MovementProtocol.UserId
+                            LEFT JOIN Object AS Object_User_auto ON Object_User_auto.Id = MovementProtocol_auto.UserId
+                      )
+     -- –≈«”Ћ№“ј“
      SELECT gpReport.*
-          , tmpProtocol.OperDate ::TDateTime AS OperDate_Protocol
-          , tmpProtocol.UserName ::TVarChar  AS UserName_Protocol
+          , tmpProtocol.OperDate      ::TDateTime AS OperDate_Protocol
+          , tmpProtocol.UserName      ::TVarChar  AS UserName_Protocol
+          , tmpProtocol.OperDate_auto ::TDateTime AS OperDate_Protocol_auto
+          , tmpProtocol.UserName_auto ::TVarChar  AS UserName_Protocol_auto
      FROM gpReport
           LEFT JOIN tmpProtocol ON tmpProtocol.MovementId = gpReport.MovementId
          
          ;
-    ELSE
+ 
+ 
+   ELSE
 
-    RETURN QUERY
+   -- –≈«”Ћ№“ј“
+   RETURN QUERY
     WITH tmpWhere AS (SELECT lfSelect.UnitId AS LocationId, zc_ContainerLinkObject_Unit() AS DescId, inGoodsId AS GoodsId FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect WHERE inLocationId = 0
                      UNION
                       SELECT lfSelect.UnitId AS LocationId, zc_ContainerLinkObject_Unit() AS DescId, inGoodsId AS GoodsId FROM lfSelect_Object_Unit_byGroup (inLocationId) AS lfSelect WHERE inLocationId <> 0
@@ -660,34 +688,53 @@ BEGIN
                                            AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
                  )
 
-     -- выбираем последнюю запись из протокола - дата/врем€ + фио
+       -- выбираем последнюю запись из протокола - дата/врем€ + фио
      , tmpProtocol1 AS (SELECT MovementProtocol.MovementId
-                             , MAX (MovementProtocol.Id) AS MaxId
+                             , MAX (CASE WHEN MovementProtocol.UserId NOT IN (zc_Enum_Process_Auto_PrimeCost()
+                                                                            , zc_Enum_Process_Auto_ReComplete()
+                                                                            , zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_Send(), zc_Enum_Process_Auto_PartionClose()
+                                                                            , zc_Enum_Process_Auto_Defroster()
+                                                                             )
+                                              THEN MovementProtocol.Id
+                                         ELSE 0
+                                    END) AS MaxId
+                             , MAX (CASE WHEN MovementProtocol.UserId     IN (zc_Enum_Process_Auto_PrimeCost()
+                                                                             )
+                                              THEN MovementProtocol.Id
+                                         ELSE 0
+                                    END) AS MaxId_Auto_Auto
+                             , MAX (CASE WHEN MovementProtocol.UserId     IN (zc_Enum_Process_Auto_ReComplete()
+                                                                            , zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_Send(), zc_Enum_Process_Auto_PartionClose()
+                                                                            , zc_Enum_Process_Auto_Defroster()
+                                                                             )
+                                              THEN MovementProtocol.Id
+                                         ELSE 0
+                                    END) AS MaxId_Auto
                         FROM (SELECT DISTINCT tmpMIContainer_group.MovementId 
                               FROM tmpMIContainer_group
-                              WHERE tmpMIContainer_group.MovementId IS NOT NULL-- and 1=0
+                              WHERE tmpMIContainer_group.MovementId IS NOT NULL-- AND 1=0
                               ) AS tmp
-                             INNER JOIN MovementProtocol ON MovementProtocol.MovementId = tmp.MovementId
-                                                        AND MovementProtocol.UserId NOT IN (zc_Enum_Process_Auto_PrimeCost()
-                                                                                          , zc_Enum_Process_Auto_ReComplete()
-                                                                                          , zc_Enum_Process_Auto_Kopchenie(), zc_Enum_Process_Auto_Pack(), zc_Enum_Process_Auto_Send(), zc_Enum_Process_Auto_PartionClose()
-                                                                                          , zc_Enum_Process_Auto_Defroster()
-                                                                                          -- , zfCalc_UserAdmin() :: Integer -- временно: !!!дл€ јдмина - Ќ≈“ ограничений!!!
-                                                                                           )
+                              INNER JOIN MovementProtocol ON MovementProtocol.MovementId = tmp.MovementId
                         GROUP BY MovementProtocol.MovementId
-                             )
+                       )
      , tmpProtocol AS (SELECT MovementProtocol.MovementId
                             , MovementProtocol.UserId
                             , MovementProtocol.OperDate
                             , Object_User.ValueData AS UserName
+
+                            , MovementProtocol_auto.OperDate AS OperDate_auto
+                            , Object_User_auto.ValueData     AS UserName_auto
+
                        FROM tmpProtocol1
-                          INNER JOIN MovementProtocol ON MovementProtocol.MovementId = tmpProtocol1.MovementId
-                                                     AND MovementProtocol.Id = tmpProtocol1.MaxId
-                          LEFT JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
-                       )
-                       
-                       
-   -- –≈«”Ћ№“ј“
+                            INNER JOIN MovementProtocol ON MovementProtocol.MovementId = tmpProtocol1.MovementId
+                                                       AND MovementProtocol.Id         = CASE WHEN tmpProtocol1.MaxId > 0 THEN tmpProtocol1.MaxId ELSE tmpProtocol1.MaxId_auto END
+                            LEFT JOIN MovementProtocol AS MovementProtocol_auto
+                                                       ON MovementProtocol_auto.MovementId = tmpProtocol1.MovementId
+                                                      AND MovementProtocol_auto.Id         = tmpProtocol1.MaxId_Auto_Auto
+                            LEFT JOIN Object AS Object_User      ON Object_User.Id      = MovementProtocol.UserId
+                            LEFT JOIN Object AS Object_User_auto ON Object_User_auto.Id = MovementProtocol_auto.UserId
+                      )
+    -- –≈«”Ћ№“ј“
   , tmpDataAll AS (SELECT Movement.Id AS MovementId
                         , Movement.InvNumber
                         , Movement.OperDate
@@ -861,8 +908,10 @@ BEGIN
                         , tmpWeekDay_doc.DayOfWeekName     ::TVarChar AS DayOfWeekName_doc      --день недели даты документа
                         , tmpWeekDay_partner.DayOfWeekName ::TVarChar AS DayOfWeekName_partner  --день недели даты покупател€
                         
-                        , tmpProtocol.OperDate ::TDateTime AS OperDate_Protocol
-                        , tmpProtocol.UserName ::TVarChar  AS UserName_Protocol
+                        , tmpProtocol.OperDate      ::TDateTime AS OperDate_Protocol
+                        , tmpProtocol.UserName      ::TVarChar  AS UserName_Protocol
+                        , tmpProtocol.OperDate_auto ::TDateTime AS OperDate_Protocol_auto
+                        , tmpProtocol.UserName_auto ::TVarChar  AS UserName_Protocol_auto
 
                    FROM tmpMIContainer_group
                         LEFT JOIN Movement ON Movement.Id = tmpMIContainer_group.MovementId
@@ -1034,8 +1083,10 @@ BEGIN
         , CASE WHEN tmpDataAll.OperDate IS NULL THEN '' ELSE tmpDataAll.DayOfWeekName_doc END  ::TVarChar AS DayOfWeekName_doc --день недели даты документа
         , CASE WHEN tmpDataAll.OperDatePartner IS NULL THEN '' ELSE tmpDataAll.DayOfWeekName_partner END ::TVarChar AS DayOfWeekName_partner --день недели даты покупател€
 
-        , tmpDataAll.OperDate_Protocol ::TDateTime AS OperDate_Protocol
-        , tmpDataAll.UserName_Protocol ::TVarChar  AS UserName_Protocol
+        , tmpDataAll.OperDate_Protocol      ::TDateTime AS OperDate_Protocol
+        , tmpDataAll.UserName_Protocol      ::TVarChar  AS UserName_Protocol
+        , tmpDataAll.OperDate_Protocol_auto ::TDateTime AS OperDate_Protocol_auto
+        , tmpDataAll.UserName_Protocol_auto ::TVarChar  AS UserName_Protocol_auto
 
    FROM tmpDataAll
    GROUP BY tmpDataAll.MovementId
@@ -1088,6 +1139,8 @@ BEGIN
         , CASE WHEN tmpDataAll.OperDatePartner IS NULL THEN '' ELSE tmpDataAll.DayOfWeekName_partner END
         , tmpDataAll.OperDate_Protocol
         , tmpDataAll.UserName_Protocol
+        , tmpDataAll.OperDate_Protocol_auto
+        , tmpDataAll.UserName_Protocol_auto
    ;
 
    END IF;
@@ -1095,7 +1148,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“ќ–»я –ј«–јЅќ“ »: ƒј“ј, ј¬“ќ–

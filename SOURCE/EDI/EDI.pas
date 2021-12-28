@@ -46,7 +46,7 @@ type
     FDirectory: string;
     FDirectoryError: string;
     FisEDISaveLocal: boolean;
-    procedure InsertUpdateOrder(ORDER: IXMLORDERType;
+    procedure InsertUpdateOrder(ORDER: OrderXML.IXMLORDERType;
       spHeader, spList: TdsdStoredProc; lFileName : String);
     function fIsExistsOrder(lFileName : String) : Boolean;
     function InsertUpdateComDoc(ЕлектроннийДокумент
@@ -153,7 +153,7 @@ uses Windows, VCL.ActnList, DesadvXML, SysUtils, Dialogs, SimpleGauge,
   Variants, UtilConvert, ComObj, DeclarXML, InvoiceXML, DateUtils,
   FormStorage, UnilWin, OrdrspXML, StrUtils, StatusXML, RecadvXML
   , DesadvFozzXML, OrderSpFozzXML, IftminFozzXML
-//  , DOCUMENTINVOICE_TN_XML, DOCUMENTINVOICE_PRN_XML
+  , DOCUMENTINVOICE_TN_XML, DOCUMENTINVOICE_PRN_XML
   ;
 
 procedure Register;
@@ -2793,7 +2793,7 @@ begin
     Result:= FExistsOrder.ParamByName('outIsExists').Value = TRUE;
 end;
 
-procedure TEDI.InsertUpdateOrder(ORDER: IXMLORDERType;
+procedure TEDI.InsertUpdateOrder(ORDER: OrderXML.IXMLORDERType;
   spHeader, spList: TdsdStoredProc; lFileName : String);
 var
   MovementId, GoodsPropertyId: integer;
@@ -3305,7 +3305,7 @@ var
   //s : String;
   i: integer;
   Stream: TStringStream;
-  ORDER: IXMLORDERType;
+  ORDER: OrderXML.IXMLORDERType;
   DocData: TDateTime;
   fIsDelete : Boolean; // add 10.08.2018
   s, err_msg : String;
@@ -3352,7 +3352,7 @@ begin
                       FIdFTP.Connect;
                     FIdFTP.ChangeDir(Directory);
                     FIdFTP.Get(List[i], Stream);
-                    ORDER := LoadORDER(Utf8ToAnsi(Stream.DataString));
+                    ORDER := OrderXML.LoadORDER(Utf8ToAnsi(Stream.DataString));
                     // загружаем в базенку
 //  gc_isDebugMode:= TRUE;
 //  gc_isShowTimeMode:= TRUE;

@@ -112,6 +112,8 @@ type
     EndSale_promo: TcxGridDBColumn;
     DayOfWeekName_doc: TcxGridDBColumn;
     DayOfWeekName_partner: TcxGridDBColumn;
+    OperDate_Protocol_auto: TcxGridDBColumn;
+    UserName_Protocol_auto: TcxGridDBColumn;
   private
     { Private declarations }
   public

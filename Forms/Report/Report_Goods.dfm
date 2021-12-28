@@ -4,8 +4,9 @@ inherited Report_GoodsForm: TReport_GoodsForm
   ClientWidth = 1071
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -177
   ExplicitWidth = 1087
-  ExplicitHeight = 379
+  ExplicitHeight = 380
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -929,20 +930,40 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Width = 70
           end
           object OperDate_Protocol: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1086#1089#1083'. '#1082#1086#1088#1088'. '#1076#1086#1082'.)'
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077')'
             DataBinding.FieldName = 'OperDate_Protocol'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1086#1089#1083#1077#1076#1085#1077#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072')'
             Options.Editing = False
-            Width = 93
+            Width = 100
           end
           object UserName_Protocol: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1086#1089#1083'. '#1082#1086#1088#1088'. '#1076#1086#1082'.)'
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077')'
             DataBinding.FieldName = 'UserName_Protocol'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1086#1089#1083#1077#1076#1085#1077#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072')'
             Options.Editing = False
-            Width = 106
+            Width = 100
+          end
+          object OperDate_Protocol_auto: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1072#1074#1090#1086'-'#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077')'
+            DataBinding.FieldName = 'OperDate_Protocol_auto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1086#1089#1083#1077#1076#1085#1077#1077' '#1072#1074#1090#1086'-'#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072')'
+            Options.Editing = False
+            Width = 120
+          end
+          object UserName_Protocol_auto: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1072#1074#1090#1086'-'#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077')'
+            DataBinding.FieldName = 'UserName_Protocol_auto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1086#1089#1083#1077#1076#1085#1077#1077' '#1072#1074#1090#1086'-'#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072')'
+            Options.Editing = False
+            Width = 120
           end
         end
       end

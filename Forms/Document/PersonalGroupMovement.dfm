@@ -3,7 +3,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
   ClientHeight = 426
   ClientWidth = 915
   ExplicitWidth = 931
-  ExplicitHeight = 464
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -723,25 +723,6 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = False
-        Component = actShowAll
-        DataType = ftBoolean
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 0d
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 208
@@ -776,6 +757,14 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
         item
           Visible = True
           ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
         end
         item
           Visible = True
