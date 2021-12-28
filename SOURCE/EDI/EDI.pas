@@ -153,7 +153,8 @@ uses Windows, VCL.ActnList, DesadvXML, SysUtils, Dialogs, SimpleGauge,
   Variants, UtilConvert, ComObj, DeclarXML, InvoiceXML, DateUtils,
   FormStorage, UnilWin, OrdrspXML, StrUtils, StatusXML, RecadvXML
   , DesadvFozzXML, OrderSpFozzXML, IftminFozzXML
-  , DOCUMENTINVOICE_TN_XML, DOCUMENTINVOICE_PRN_XML;
+//  , DOCUMENTINVOICE_TN_XML, DOCUMENTINVOICE_PRN_XML
+  ;
 
 procedure Register;
 begin
@@ -2453,8 +2454,8 @@ end;
 procedure TEDI.DESADVSave(HeaderDataSet, ItemsDataSet: TDataSet);
 var
   DESADV: DesadvXML.IXMLDESADVType;
-  //DESADV_fozz: DesadvFozzXML.IXMLDESADVType;
-  DESADV_fozz: DOCUMENTINVOICE_PRN_XML.IXMLDESADVType;
+  DESADV_fozz: DesadvFozzXML.IXMLDESADVType;
+  //DESADV_fozz: DOCUMENTINVOICE_PRN_XML.IXMLDESADVType;
   Stream: TStream;
   i: integer;
   FileName: string;
