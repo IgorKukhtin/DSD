@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  cxCurrencyEdit;
+  cxCurrencyEdit, cxButtonEdit;
 
 type
   TCardFuelForm = class(TParentForm)
@@ -65,6 +65,10 @@ type
     clLimitMoney: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    CardFuelKindName: TcxGridDBColumn;
+    spUpdateObject: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    actOpenChoiceFormCardFuelKind: TOpenChoiceForm;
 
   private
     { Private declarations }

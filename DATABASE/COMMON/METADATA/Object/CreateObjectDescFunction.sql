@@ -986,6 +986,10 @@ CREATE OR REPLACE FUNCTION zc_Object_JuridicalDefermentPayment() RETURNS Integer
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_JuridicalDefermentPayment', 'Последние оплаты' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_JuridicalDefermentPayment');
 
+CREATE OR REPLACE FUNCTION zc_Object_CardFuelKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_CardFuelKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_CardFuelKind', 'Статус Топливные карты' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CardFuelKind');
+
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --!!! Аптека

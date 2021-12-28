@@ -56,6 +56,9 @@ type
     cxLabel6: TcxLabel;
     cxLabel8: TcxLabel;
     ceLimitFuel: TcxCurrencyEdit;
+    cxLabel9: TcxLabel;
+    edCardFuelKind: TcxButtonEdit;
+    GuidesCardFuelKind: TdsdGuides;
 
   private
     { Private declarations }

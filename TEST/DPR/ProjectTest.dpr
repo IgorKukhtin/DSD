@@ -1337,8 +1337,7 @@ uses
   Report_TransportRepair in '..\..\Forms\Report\Report_TransportRepair.pas' {Report_TransportRepairForm: TParentForm},
   Report_TransportRepairDialog in '..\..\Forms\Report\Report_TransportRepairDialog.pas' {Report_TransportRepairDialogForm: TParentForm},
   EDI in '..\..\SOURCE\EDI\EDI.pas',
-  DOCUMENTINVOICE_PRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
-  DOCUMENTINVOICE_TN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas';
+  CardFuelKind in '..\..\Forms\Kind\CardFuelKind.pas' {CardFuelKindForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

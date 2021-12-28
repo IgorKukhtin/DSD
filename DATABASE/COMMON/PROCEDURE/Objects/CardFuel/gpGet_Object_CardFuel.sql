@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , GoodsId Integer, GoodsName TVarChar
+             , CardFuelKindId Integer, CardFuelKindName TVarChar
              , isErased Boolean
              ) AS
 $BODY$
@@ -45,7 +46,10 @@ BEGIN
 
            , CAST (0 as Integer)   AS GoodsId 
            , CAST ('' as TVarChar) AS GoodsName                      
-            
+
+           , CAST (0 as Integer)   AS CardFuelKindId
+           , CAST ('' as TVarChar) AS CardFuelKindName
+
            , CAST (NULL AS Boolean) AS isErased
            ;
    ELSE
@@ -72,7 +76,10 @@ BEGIN
            
            , Object_Goods.Id         AS GoodsId 
            , Object_Goods.ValueData  AS GoodsName            
-            
+
+           , Object_CardFuelKind.Id        AS CardFuelKindId
+           , Object_CardFuelKind.ValueData AS CardFuelKindName
+
            , Object_CardFuel.isErased   AS isErased
            
        FROM Object AS Object_CardFuel
@@ -102,7 +109,11 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_CardFuel_Goods ON ObjectLink_CardFuel_Goods.ObjectId = Object_CardFuel.Id
                                                              AND ObjectLink_CardFuel_Goods.DescId = zc_ObjectLink_CardFuel_Goods()
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_CardFuel_Goods.ChildObjectId
-            
+
+            LEFT JOIN ObjectLink AS ObjectLink_CardFuel_CardFuelKind
+                                 ON ObjectLink_CardFuel_CardFuelKind.ObjectId = Object_CardFuel.Id
+                                AND ObjectLink_CardFuel_CardFuelKind.DescId = zc_ObjectLink_CardFuel_CardFuelKind()
+            LEFT JOIN Object AS Object_CardFuelKind ON Object_CardFuelKind.Id = ObjectLink_CardFuel_CardFuelKind.ChildObjectId
        WHERE Object_CardFuel.Id = inId;
    END IF;
   

@@ -1089,6 +1089,18 @@ BEGIN
 END $$;
 
 
+DO $$
+BEGIN
+
+     -- !!! Статус Топливные карты
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_CardFuelKind_Active(),  inDescId:= zc_Object_CardFuelKind(), inCode:= 1, inName:= 'Активна'       , inEnumName:= 'zc_Enum_CardFuelKind_Active');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_CardFuelKind_Reserve(), inDescId:= zc_Object_CardFuelKind(), inCode:= 2, inName:= 'Резерв'        , inEnumName:= 'zc_Enum_CardFuelKind_Reserve');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_CardFuelKind_Locked(),  inDescId:= zc_Object_CardFuelKind(), inCode:= 3, inName:= 'Заблокирована' , inEnumName:= 'zc_Enum_CardFuelKind_Locked');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_CardFuelKind_Lost(),    inDescId:= zc_Object_CardFuelKind(), inCode:= 4, inName:= 'Утеряна'       , inEnumName:= 'zc_Enum_CardFuelKind_Lost');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_CardFuelKind_Damaged(), inDescId:= zc_Object_CardFuelKind(), inCode:= 5, inName:= 'Повреждена'    , inEnumName:= 'zc_Enum_CardFuelKind_Damaged');
+    
+
+END $$;
 
 
 /* Закомментил, т.к. 1 раз добавили и харэ

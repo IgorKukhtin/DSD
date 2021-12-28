@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1087#1083#1080#1074#1085#1099#1077' '#1082#1072#1088#1090#1099'>'
-  ClientHeight = 463
-  ClientWidth = 369
+  ClientHeight = 518
+  ClientWidth = 351
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 80
-    Top = 427
+    Left = 56
+    Top = 475
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 224
-    Top = 427
+    Left = 200
+    Top = 475
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -167,6 +167,23 @@
     TabOrder = 19
     Width = 56
   end
+  object cxLabel9: TcxLabel
+    Left = 35
+    Top = 411
+    Caption = #1057#1090#1072#1090#1091#1089
+  end
+  object edCardFuelKind: TcxButtonEdit
+    Left = 35
+    Top = 430
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 21
+    Width = 273
+  end
   object ActionList: TActionList
     Left = 320
     Top = 96
@@ -210,12 +227,14 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -223,6 +242,7 @@
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inLimit'
@@ -230,6 +250,7 @@
         Component = ceLimit
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inLimitFuel'
@@ -237,36 +258,50 @@
         Component = ceLimitFuel
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalDriverId'
         Value = ''
         Component = PersonalDriverGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCarId'
         Value = ''
         Component = CarGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
         Value = ''
         Component = PaidKindGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
         Value = ''
         Component = JuridicalGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
         Value = ''
         Component = GoodsGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCardFuelKindId'
+        Value = Null
+        Component = GuidesCardFuelKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 320
@@ -278,6 +313,7 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 80
@@ -293,23 +329,27 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalDriverId'
         Value = ''
         Component = PersonalDriverGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalDriverName'
@@ -317,12 +357,14 @@
         Component = PersonalDriverGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarId'
         Value = ''
         Component = CarGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarName'
@@ -330,12 +372,14 @@
         Component = CarGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
         Value = ''
         Component = PaidKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
@@ -343,12 +387,14 @@
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -356,12 +402,14 @@
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsId'
         Value = ''
         Component = GoodsGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsName'
@@ -369,18 +417,36 @@
         Component = GoodsGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'LimitMoney'
         Value = 0.000000000000000000
         Component = ceLimit
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'LimitFuel'
         Value = Null
         Component = ceLimitFuel
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CardFuelKindId'
+        Value = Null
+        Component = GuidesCardFuelKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CardFuelKindName'
+        Value = Null
+        Component = GuidesCardFuelKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 320
@@ -410,6 +476,7 @@
     LookupControl = ceGoods
     FormNameParam.Value = 'TGoods_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoods_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -420,6 +487,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -428,6 +496,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 207
     Top = 373
@@ -437,6 +506,7 @@
     LookupControl = cePersonalDriver
     FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -447,6 +517,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -455,6 +526,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 183
     Top = 165
@@ -464,6 +536,7 @@
     LookupControl = ceCar
     FormNameParam.Value = 'TCarForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -474,6 +547,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -482,6 +556,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 167
     Top = 221
@@ -491,6 +566,7 @@
     LookupControl = cePaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -501,6 +577,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -509,6 +586,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 215
     Top = 269
@@ -518,6 +596,7 @@
     LookupControl = ceJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -528,6 +607,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -536,8 +616,39 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 159
     Top = 325
+  end
+  object GuidesCardFuelKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCardFuelKind
+    FormNameParam.Value = 'TCardFuelKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCardFuelKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCardFuelKind
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCardFuelKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 167
+    Top = 430
   end
 end

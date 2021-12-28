@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PaidKindId Integer, PaidKindCode Integer, PaidKindName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , CardFuelKindId Integer, CardFuelKindName TVarChar
              , isErased Boolean
              ) AS
 $BODY$
@@ -53,7 +54,10 @@ BEGIN
            
            , Object_Goods.Id         AS GoodsId 
            , Object_Goods.ObjectCode AS GoodsCode
-           , Object_Goods.ValueData  AS GoodsName            
+           , Object_Goods.ValueData  AS GoodsName    
+           
+           , Object_CardFuelKind.Id        AS CardFuelKindId
+           , Object_CardFuelKind.ValueData AS CardFuelKindName
             
            , Object_CardFuel.isErased   AS isErased
            
@@ -88,7 +92,11 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_CardFuel_Goods ON ObjectLink_CardFuel_Goods.ObjectId = Object_CardFuel.Id
                                                              AND ObjectLink_CardFuel_Goods.DescId = zc_ObjectLink_CardFuel_Goods()
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_CardFuel_Goods.ChildObjectId
-   
+
+            LEFT JOIN ObjectLink AS ObjectLink_CardFuel_CardFuelKind
+                                 ON ObjectLink_CardFuel_CardFuelKind.ObjectId = Object_CardFuel.Id
+                                AND ObjectLink_CardFuel_CardFuelKind.DescId = zc_ObjectLink_CardFuel_CardFuelKind()
+            LEFT JOIN Object AS Object_CardFuelKind ON Object_CardFuelKind.Id = ObjectLink_CardFuel_CardFuelKind.ChildObjectId
 
    WHERE Object_CardFuel.DescId = zc_Object_CardFuel()
      -- AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
@@ -103,6 +111,7 @@ ALTER FUNCTION gpSelect_Object_CardFuel (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 28.12.21         * add CardFuelKindName
  14.01.16         * add LimitFuel
  02.09.14                                        * rem AccessKey...
  14.12.13                                        * add vbAccessKeyAll
