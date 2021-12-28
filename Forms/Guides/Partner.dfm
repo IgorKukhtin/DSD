@@ -104,6 +104,15 @@ object PartnerForm: TPartnerForm
         Options.Editing = False
         Width = 46
       end
+      object ShortName: TcxGridDBColumn
+        Tag = 80
+        Caption = #1059#1089#1083#1086#1074#1085#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'ShortName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 93
+      end
       object Category: TcxGridDBColumn
         Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1058#1058
         DataBinding.FieldName = 'Category'

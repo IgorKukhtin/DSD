@@ -166,6 +166,7 @@ type
     macUpdate_UnitMobile_list: TMultiAction;
     macUpdate_UnitMobile: TMultiAction;
     bbUpdate_UnitMobile: TdxBarButton;
+    ShortName: TcxGridDBColumn;
   private
     { Private declarations }
   public
