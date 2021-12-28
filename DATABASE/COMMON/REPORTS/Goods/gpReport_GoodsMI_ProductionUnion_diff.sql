@@ -21,16 +21,22 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              , PartionGoods TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
+             
              , Amount TFloat, HeadCount TFloat, Summ TFloat
-             , ChildPartionGoods TVarChar, ChildGoodsGroupName TVarChar, ChildGoodsCode Integer, ChildGoodsName TVarChar, ChildGoodsKindName TVarChar
+             , ChildPartionGoods TVarChar, ChildGoodsGroupName TVarChar
+             , ChildGoodsCode Integer, ChildGoodsName TVarChar, ChildGoodsKindName TVarChar
              , ChildAmount TFloat, ChildSumm TFloat
              , AmountDel TFloat
              , MainPrice TFloat, ChildPrice TFloat
 
-             , Amount_Weight      TFloat 
-             , ChildAmount_Weight TFloat
-             , Amount_weight_diff TFloat
+             , TotalAmount_Weight      TFloat 
+             , TotalChildAmount_Weight TFloat
+             , TotalAmount_weight_diff TFloat
              , Summ_diff          TFloat
+             , MeasureName TVarChar
+             , MeasureName_child TVarChar
+             , Amount_weight TFloat
+             , ChildAmount_weight TFloat
              )   
 AS
 $BODY$
@@ -250,6 +256,7 @@ BEGIN
                                 , tmpMI_ContainerOut.GoodsKindId 
                                 , CASE WHEN inIsPartion = FALSE THEN 0 ELSE COALESCE (ContainerLO_PartionGoods.ObjectId, 0) END
                         )
+
          , tmpOperationGroup AS (SELECT tmpMI_in.MovementId
                                       , tmpMI_in.isPeresort
                                       , tmpMI_in.DocumentKindId
@@ -359,12 +366,25 @@ BEGIN
            , CASE WHEN tmpOperationGroup.OperCount     <> 0 THEN tmpOperationGroup.OperSumm     / tmpOperationGroup.OperCount     ELSE 0 END :: TFloat AS MainPrice
            , CASE WHEN tmpOperationGroup.OperCount_out <> 0 THEN tmpOperationGroup.OperSumm_out / tmpOperationGroup.OperCount_out ELSE 0 END :: TFloat AS ChildPrice
 
-           --вес приход, рвсход и разница к кг, грн
-           , COALESCE (tmpOperationGroup.OperCount_Weight,0)  ::TFloat AS Amount_Weight
-           , COALESCE (tmpOperationGroup.TotalCount_weight,0) ::TFloat AS ChildAmount_Weight
-           , (COALESCE (tmpOperationGroup.OperCount_Weight,0) - COALESCE (tmpOperationGroup.TotalCount_weight,0)) :: TFloat AS Amount_weight_diff
+           --вес приход, расход и разница к кг, грн
+           , COALESCE (tmpOperationGroup.OperCount_Weight,0)  ::TFloat AS TotalAmount_Weight
+           , COALESCE (tmpOperationGroup.TotalCount_weight,0) ::TFloat AS TotalChildAmount_Weight
+           , (COALESCE (tmpOperationGroup.OperCount_Weight,0) - COALESCE (tmpOperationGroup.TotalCount_weight,0)) :: TFloat AS TotalAmount_weight_diff
            , (COALESCE (tmpOperationGroup.OperSumm,0) - COALESCE (tmpOperationGroup.TotalSumm_out,0))             :: TFloat AS Summ_diff
-
+           
+           -- 
+           , Object_Measure.ValueData         ::TVarChar          AS MeasureName
+           , Object_Measure_child.ValueData   ::TVarChar          AS MeasureName_child
+           , (tmpOperationGroup.OperCount
+            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData
+                   WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_kg() THEN 1
+                   ELSE 0
+              END) ::TFloat AS AmountWeight
+           , (tmpOperationGroup.OperCount_out
+            * CASE WHEN ObjectLink_Goods_Measure_child.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight_child.ValueData
+                   WHEN ObjectLink_Goods_Measure_child.ChildObjectId = zc_Measure_kg() THEN 1
+                   ELSE 0
+              END) ::TFloat AS ChildAmount_weight
       FROM tmpOperationGroup
 
              LEFT JOIN Movement ON Movement.Id = tmpOperationGroup.MovementId
@@ -389,6 +409,23 @@ BEGIN
              LEFT JOIN Object AS Object_PartionGoodsChild ON Object_PartionGoodsChild.Id = tmpOperationGroup.PartionGoodsId_out
 
              LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = tmpOperationGroup.DocumentKindId
+
+             --
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = tmpOperationGroup.GoodsId
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                   ON ObjectFloat_Weight.ObjectId = tmpOperationGroup.GoodsId
+                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+             --Child
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure_child
+                                  ON ObjectLink_Goods_Measure_child.ObjectId = tmpOperationGroup.GoodsId_out
+                                 AND ObjectLink_Goods_Measure_child.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Measure_child ON Object_Measure_child.Id = ObjectLink_Goods_Measure_child.ChildObjectId
+             LEFT JOIN ObjectFloat AS ObjectFloat_Weight_child
+                                   ON ObjectFloat_Weight_child.ObjectId = tmpOperationGroup.GoodsId_out
+                                  AND ObjectFloat_Weight_child.DescId = zc_ObjectFloat_Goods_Weight()
   ;
          
 END;

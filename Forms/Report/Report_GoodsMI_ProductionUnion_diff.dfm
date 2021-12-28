@@ -52,17 +52,17 @@ inherited Report_GoodsMI_ProductionUnion_diffForm: TReport_GoodsMI_ProductionUni
             item
               Format = ',0.####'
               Kind = skSum
-              Column = ChildAmount_Weight
+              Column = TotalChildAmount_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_Weight
+              Column = TotalAmount_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_weight_diff
+              Column = TotalAmount_weight_diff
             end
             item
               Format = ',0.####'
@@ -72,6 +72,16 @@ inherited Report_GoodsMI_ProductionUnion_diffForm: TReport_GoodsMI_ProductionUni
               Format = ',0.####'
               Kind = skSum
               Column = Summ_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ChildAmount_weight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -92,17 +102,17 @@ inherited Report_GoodsMI_ProductionUnion_diffForm: TReport_GoodsMI_ProductionUni
             item
               Format = ',0.####'
               Kind = skSum
-              Column = ChildAmount_Weight
+              Column = TotalChildAmount_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_Weight
+              Column = TotalAmount_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_weight_diff
+              Column = TotalAmount_weight_diff
             end
             item
               Format = ',0.####'
@@ -112,6 +122,16 @@ inherited Report_GoodsMI_ProductionUnion_diffForm: TReport_GoodsMI_ProductionUni
               Format = ',0.####'
               Kind = skSum
               Column = Summ_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ChildAmount_weight
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -190,6 +210,14 @@ inherited Report_GoodsMI_ProductionUnion_diffForm: TReport_GoodsMI_ProductionUni
             Options.Editing = False
             Width = 70
           end
+          object MeasureName: TcxGridDBColumn
+            Caption = #1045#1076' '#1080#1079#1084' ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 64
+          end
           object PartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'PartionGoods'
@@ -212,6 +240,16 @@ inherited Report_GoodsMI_ProductionUnion_diffForm: TReport_GoodsMI_ProductionUni
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+          end
+          object Amount_weight: TcxGridDBColumn
+            Caption = #1042#1077#1089' ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'Amount_weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -268,6 +306,14 @@ inherited Report_GoodsMI_ProductionUnion_diffForm: TReport_GoodsMI_ProductionUni
             Options.Editing = False
             Width = 64
           end
+          object MeasureName_child: TcxGridDBColumn
+            Caption = #1045#1076' '#1080#1079#1084' ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'MeasureName_child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 64
+          end
           object ChildPartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'ChildPartionGoods'
@@ -279,6 +325,16 @@ inherited Report_GoodsMI_ProductionUnion_diffForm: TReport_GoodsMI_ProductionUni
           object ChildAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'ChildAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object ChildAmount_weight: TcxGridDBColumn
+            Caption = #1042#1077#1089' ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'ChildAmount_weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -314,9 +370,9 @@ inherited Report_GoodsMI_ProductionUnion_diffForm: TReport_GoodsMI_ProductionUni
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076'/ '#1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
             Width = 90
           end
-          object Amount_Weight: TcxGridDBColumn
+          object TotalAmount_Weight: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076' ('#1074#1077#1089')'
-            DataBinding.FieldName = 'Amount_Weight'
+            DataBinding.FieldName = 'TotalAmount_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -324,9 +380,9 @@ inherited Report_GoodsMI_ProductionUnion_diffForm: TReport_GoodsMI_ProductionUni
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object ChildAmount_Weight: TcxGridDBColumn
+          object TotalChildAmount_Weight: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076' ('#1074#1077#1089')'
-            DataBinding.FieldName = 'ChildAmount_Weight'
+            DataBinding.FieldName = 'TotalChildAmount_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -334,9 +390,9 @@ inherited Report_GoodsMI_ProductionUnion_diffForm: TReport_GoodsMI_ProductionUni
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object Amount_weight_diff: TcxGridDBColumn
+          object TotalAmount_weight_diff: TcxGridDBColumn
             Caption = #1054#1090#1082#1083'. '#1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076'/ '#1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076' ('#1074#1077#1089')'
-            DataBinding.FieldName = 'Amount_weight_diff'
+            DataBinding.FieldName = 'TotalAmount_weight_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

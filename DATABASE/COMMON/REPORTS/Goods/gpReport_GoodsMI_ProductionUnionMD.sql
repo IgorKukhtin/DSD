@@ -296,7 +296,13 @@ BEGIN
            , Object_GoodsKind.ValueData                         AS GoodsKindName
            , COALESCE (Object_Unit.Id,0)                        AS UnitId
            , Object_Unit.ValueData                              AS UnitName
-
+           -- вес
+           , Object_Measure.ValueData         ::TVarChar          AS MeasureName
+           , (tmpOperationGroup.Amount
+            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData
+                   WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_kg() THEN 1
+                   ELSE 0
+              END) ::TFloat AS Amount_weight
       FROM (
             SELECT CASE WHEN inGroupMovement = TRUE THEN tmpMI.InvNumber ELSE '' END                        AS InvNumber
                  , CASE WHEN inGroupMovement = TRUE THEN tmpMI.OperDate ELSE CAST (Null AS TDateTime) END   AS OperDate
@@ -371,6 +377,15 @@ BEGIN
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpOperationGroup.UnitId
 
+             --
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = tmpOperationGroup.GoodsId
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                   ON ObjectFloat_Weight.ObjectId = tmpOperationGroup.GoodsId
+                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
       ORDER BY
               tmpOperationGroup.InvNumber
@@ -586,6 +601,13 @@ BEGIN
 
            , CASE WHEN tmpOperationGroup.ChildAmount <> 0 THEN COALESCE ((tmpOperationGroup.ChildSumm / tmpOperationGroup.ChildAmount) ,0) ELSE 0 END  :: TFloat  AS ChildPrice
 
+           -- вес
+           , Object_Measure.ValueData         ::TVarChar          AS MeasureName_child
+           , (tmpOperationGroup.ChildAmount
+            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData
+                   WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_kg() THEN 1
+                   ELSE 0
+              END) ::TFloat AS ChildAmount_weight
       FROM (
             SELECT CASE WHEN inGroupMovement = TRUE THEN tmpMI.MovementItemId ELSE 0 END        AS MovementItemId
                  , CASE WHEN inGroupPartion = TRUE  THEN tmpMI.PartionGoodsId ELSE 0 END        AS PartionGoodsId
@@ -684,6 +706,16 @@ BEGIN
 -- child
              LEFT JOIN Object AS Object_InfoMoneyDetailChild ON Object_InfoMoneyDetailChild.Id = tmpOperationGroup.ChildInfoMoneyDetailId
              LEFT JOIN Object AS Object_GoodsKindChild ON Object_GoodsKindChild.Id = tmpOperationGroup.ChildGoodsKindId
+
+             --
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = tmpOperationGroup.ChildGoodsId
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                   ON ObjectFloat_Weight.ObjectId = tmpOperationGroup.ChildGoodsId
+                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
        ;
 
      RETURN NEXT Cursor2;

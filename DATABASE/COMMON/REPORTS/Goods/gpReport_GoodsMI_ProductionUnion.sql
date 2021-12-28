@@ -26,6 +26,10 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              , ChildAmount TFloat, ChildSumm TFloat
              , AmountDel TFloat
              , MainPrice TFloat, ChildPrice TFloat
+             , MeasureName TVarChar
+             , MeasureName_child TVarChar
+             , Amount_weight TFloat
+             , ChildAmount_weight TFloat
              )   
 AS
 $BODY$
@@ -103,9 +107,10 @@ BEGIN
 			     INNER JOIN _tmpFromGroup ON _tmpFromGroup.FromId = MIContainer.ObjectExtId_Analyzer
  		             INNER JOIN _tmpToGroup   ON _tmpToGroup.ToId     = MIContainer.WhereObjectId_Analyzer
  		             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
+
                              LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
-                                                        ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
-                                                       AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
+                                                       ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
+                                                      AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
                              LEFT JOIN MovementLinkObject AS MLO_DocumentKind
                                                           ON MLO_DocumentKind.MovementId = MIContainer.MovementId
                                                          AND MLO_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
@@ -158,8 +163,8 @@ BEGIN
  		             INNER JOIN _tmpToGroup   ON _tmpToGroup.ToId     = MIContainer.ObjectExtId_Analyzer
  		             INNER JOIN _tmpChildGoods ON _tmpChildGoods.ChildGoodsId = MIContainer.ObjectId_Analyzer
                              LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
-                                                        ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
-                                                       AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
+                                                       ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
+                                                      AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
                              LEFT JOIN MovementLinkObject AS MLO_DocumentKind
                                                           ON MLO_DocumentKind.MovementId = MIContainer.MovementId
                                                          AND MLO_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
@@ -214,6 +219,19 @@ BEGIN
            , CASE WHEN tmpOperationGroup.OperCount     <> 0 THEN tmpOperationGroup.OperSumm     / tmpOperationGroup.OperCount     ELSE 0 END :: TFloat AS MainPrice
            , CASE WHEN tmpOperationGroup.OperCount_out <> 0 THEN tmpOperationGroup.OperSumm_out / tmpOperationGroup.OperCount_out ELSE 0 END :: TFloat AS ChildPrice
 
+           -- вес
+           , Object_Measure.ValueData         ::TVarChar          AS MeasureName
+           , Object_Measure_child.ValueData   ::TVarChar          AS MeasureName_child
+           , (tmpOperationGroup.OperCount
+            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData
+                   WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_kg() THEN 1
+                   ELSE 0
+              END) ::TFloat AS Amount_weight
+           , (tmpOperationGroup.OperCount_out
+            * CASE WHEN ObjectLink_Goods_Measure_child.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight_child.ValueData
+                   WHEN ObjectLink_Goods_Measure_child.ChildObjectId = zc_Measure_kg() THEN 1
+                   ELSE 0
+              END) ::TFloat AS ChildAmount_weight
       FROM (SELECT tmpMI_in.MovementId
                  , tmpMI_in.isPeresort
                  , tmpMI_in.DocumentKindId
@@ -302,6 +320,25 @@ BEGIN
              LEFT JOIN Object AS Object_PartionGoodsChild ON Object_PartionGoodsChild.Id = tmpOperationGroup.PartionGoodsId_out
 
              LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = tmpOperationGroup.DocumentKindId
+
+             --
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = tmpOperationGroup.GoodsId
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                   ON ObjectFloat_Weight.ObjectId = tmpOperationGroup.GoodsId
+                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+             --Child
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure_child
+                                  ON ObjectLink_Goods_Measure_child.ObjectId = tmpOperationGroup.GoodsId_out
+                                 AND ObjectLink_Goods_Measure_child.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Measure_child ON Object_Measure_child.Id = ObjectLink_Goods_Measure_child.ChildObjectId
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_Weight_child
+                                   ON ObjectFloat_Weight_child.ObjectId = tmpOperationGroup.GoodsId_out
+                                  AND ObjectFloat_Weight_child.DescId = zc_ObjectFloat_Goods_Weight()
 
        /*ORDER BY Movement.InvNumber
               , Movement.OperDate
