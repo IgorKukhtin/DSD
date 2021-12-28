@@ -1347,6 +1347,8 @@ type
     miReport_GoodsMI_InventoryDetail: TMenuItem;
     actReport_TransportRepair: TdsdOpenForm;
     miReport_TransportRepair: TMenuItem;
+    actCardFuelKind: TdsdOpenForm;
+    miCardFuelKind: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

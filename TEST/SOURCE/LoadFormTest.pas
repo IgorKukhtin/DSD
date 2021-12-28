@@ -4032,6 +4032,7 @@ end;
 
 procedure TLoadFormTest.LoadFuelFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFuelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFuelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFuelEditForm'));
@@ -4049,6 +4050,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCardFuelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCardFuelEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCardFuelEditForm');
+
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCardFuelKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCardFuelKindForm');
 end;
 
 procedure TLoadFormTest.LoadCarModelFormTest;
