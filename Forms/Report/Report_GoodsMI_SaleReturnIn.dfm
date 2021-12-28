@@ -344,6 +344,24 @@
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 58
+          end
+          object DayOfWeekName_full: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
+            DataBinding.FieldName = 'DayOfWeekName_full'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 59
+          end
           object BranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
@@ -1331,7 +1349,7 @@
       Width = 120
     end
     object cxLabel10: TcxLabel
-      Left = 8
+      Left = 136
       Top = 58
       Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1075#1076#1072' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1083#1080#1089#1100' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1055#1088#1086#1076#1072#1078#1072'/'#1074#1086#1079#1074#1088#1072#1090
       Caption = '!'#1074#1072#1078#1085#1086'! '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1072#1082#1090#1091#1072#1083#1100#1085#1086#1089#1090#1080' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072' :'
@@ -1339,7 +1357,7 @@
       ShowHint = True
     end
     object edProtocolDateOlapSR: TcxDateEdit
-      Left = 306
+      Left = 429
       Top = 57
       EditValue = 42370d
       Enabled = False
@@ -1348,10 +1366,10 @@
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 21
-      Width = 140
+      Width = 107
     end
     object cxLabel11: TcxLabel
-      Left = 452
+      Left = 542
       Top = 58
       Hint = 
         #1055#1086' '#1082#1072#1082#1091#1102' '#1076#1072#1090#1091' '#1074#1082#1083#1102#1095#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1055#1088#1086#1076#1072#1078#1072'/'#1074#1086#1079#1074#1088 +
@@ -1361,7 +1379,7 @@
       ShowHint = True
     end
     object edEndDateOlapSR: TcxDateEdit
-      Left = 661
+      Left = 751
       Top = 57
       EditValue = 42370d
       Enabled = False
@@ -1371,7 +1389,7 @@
       Width = 85
     end
     object cxLabel12: TcxLabel
-      Left = 755
+      Left = 838
       Top = 58
       Hint = 
         #1040#1082#1090#1091#1072#1083#1080#1079#1072#1094#1080#1103' '#1076#1072#1085#1085#1099#1093' '#1087#1088#1086#1080#1089#1093#1086#1076#1080#1090' 1 '#1088#1072#1079' '#1074' '#1089#1091#1090#1082#1080', '#1087#1086#1089#1083#1077' '#1095#1077#1075#1086' '#1073#1099#1089#1090#1088#1077#1077 +
@@ -1381,6 +1399,13 @@
         #1076#1072#1085#1085#1099#1093', '#1074' '#1086#1090#1095#1077#1090' '#1085#1077' '#1087#1086#1087#1072#1076#1072#1102#1090
       ParentShowHint = False
       ShowHint = True
+    end
+    object cbIsDate: TcxCheckBox
+      Left = 39
+      Top = 54
+      Caption = #1055#1086' '#1076#1072#1090#1072#1084
+      TabOrder = 25
+      Width = 74
     end
   end
   object cbPartner: TcxCheckBox [2]
@@ -1880,6 +1905,14 @@
           DataType = ftBoolean
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsDate'
+          Value = Null
+          Component = cbIsDate
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -2055,6 +2088,14 @@
         Value = Null
         Component = FormParams
         ComponentItem = 'isOLAP'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDate'
+        Value = Null
+        Component = cbIsDate
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

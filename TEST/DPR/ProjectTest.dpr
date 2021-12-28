@@ -401,7 +401,6 @@ uses
   EdiTest in '..\SOURCE\EDI\EdiTest.pas',
   ComDocXML in '..\..\SOURCE\EDI\ComDocXML.pas',
   DeclarXML in '..\..\SOURCE\EDI\DeclarXML.pas',
-  EDI in '..\..\SOURCE\EDI\EDI.pas',
   MeDocXML in '..\..\SOURCE\MeDOC\MeDocXML.pas',
   MeDOC in '..\..\SOURCE\MeDOC\MeDOC.pas',
   DesadvXML in '..\..\SOURCE\EDI\DesadvXML.pas',
@@ -1336,7 +1335,8 @@ uses
   Report_GoodsMI_InventoryDetailDialog in '..\..\Forms\Report\Report_GoodsMI_InventoryDetailDialog.pas' {Report_GoodsMI_InventoryDetailDialogForm: TParentForm},
   Report_GoodsMI_InventoryDetail in '..\..\Forms\Report\Report_GoodsMI_InventoryDetail.pas' {Report_GoodsMI_InventoryDetailForm: TParentForm},
   Report_TransportRepair in '..\..\Forms\Report\Report_TransportRepair.pas' {Report_TransportRepairForm: TParentForm},
-  Report_TransportRepairDialog in '..\..\Forms\Report\Report_TransportRepairDialog.pas' {Report_TransportRepairDialogForm: TParentForm};
+  Report_TransportRepairDialog in '..\..\Forms\Report\Report_TransportRepairDialog.pas' {Report_TransportRepairDialogForm: TParentForm},
+  EDI in '..\..\SOURCE\EDI\EDI.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

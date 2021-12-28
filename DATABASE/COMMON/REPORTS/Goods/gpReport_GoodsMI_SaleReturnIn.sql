@@ -2,7 +2,9 @@
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
     IN inStartDate    TDateTime ,
@@ -21,6 +23,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
     IN inIsGoodsKind  Boolean   , --
     IN inIsContract   Boolean   , --
     IN inIsOLAP       Boolean   , --
+    IN inIsDate       Boolean   , --
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -63,6 +66,8 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Sale_Summ_opt      TFloat -- сумма по опт прайсу, грн
              , isTop Boolean
              , PaidKindId Integer, PaidKindName TVarChar
+             , OperDate TDateTime
+             , DayOfWeekName_Full TVarChar
               )
 AS
 $BODY$
@@ -137,6 +142,8 @@ BEGIN
             , FALSE AS isTop
             , 0 AS PaidKindId
             , '' ::TVarChar AS PaidKindName
+            , NULL ::TDateTime AS OperDate 
+            , ''   ::TVarChar  AS DayOfWeekName_Full
        FROM gpReport_GoodsMI_SaleReturnIn_OLD (inStartDate
                                              , inEndDate
                                              , inBranchId
@@ -162,7 +169,9 @@ BEGIN
             , 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
             , FALSE AS isTop
             , 0 AS PaidKindId
-            , '' ::TVarChar AS PaidKindName
+            , ''   ::TVarChar AS PaidKindName
+            , NULL ::TDateTime AS OperDate 
+            , ''   ::TVarChar  AS DayOfWeekName_Full
        FROM gpReport_GoodsMI_SaleReturnIn_OLD_TWO (inStartDate
                                                  , inEndDate
                                                  , inBranchId
@@ -295,6 +304,8 @@ BEGIN
                                   --, 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
                                     , gpReport.PaidKindId
                                     , gpReport.PaidKindName
+                                    , gpReport.OperDate            ::TDateTime
+                                    , gpReport.DayOfWeekName_Full  ::TVarChar
                                FROM gpReport_GoodsMI_SaleReturnIn_Olap (inStartDate
                                                                       , vbEndDate_olap
                                                                       , inBranchId
@@ -315,6 +326,7 @@ BEGIN
                                                                       , vbIsPartner_where
                                                                       , vbIsGoods_where
                                                                       , EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin(), 10898, 326391) AND UserId = vbUserId) -- Отчеты (управленцы) + Аналитики по продажам
+                                                                      , inIsDate
                                                                       , inSession
                                                                        ) AS gpReport
                               )
@@ -353,6 +365,8 @@ BEGIN
                                   --, 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
                                     , gpReport.PaidKindId
                                     , gpReport.PaidKindName
+                                    , gpReport.OperDate           ::TDateTime
+                                    , gpReport.DayOfWeekName_Full ::TVarChar
                                FROM gpReport_GoodsMI_SaleReturnIn (vbEndDate_olap + INTERVAL '1 DAY'
                                                                  , inEndDate
                                                                  , inBranchId
@@ -369,6 +383,7 @@ BEGIN
                                                                  , inIsGoodsKind
                                                                  , inIsContract
                                                                  , FALSE -- inIsOLAP
+                                                                 , inIsDate
                                                                  , inSession
                                                                   ) AS gpReport
                                WHERE vbEndDate_olap < inEndDate
@@ -418,6 +433,9 @@ BEGIN
             
             , gpReport.PaidKindId
             , gpReport.PaidKindName
+
+            , gpReport.OperDate           ::TDateTime AS OperDate 
+            , gpReport.DayOfWeekName_Full ::TVarChar  AS DayOfWeekName_Full
        FROM tmpData AS gpReport
        GROUP BY gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
               , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
@@ -440,6 +458,8 @@ BEGIN
               , gpReport.isTop
               , gpReport.PaidKindId
               , gpReport.PaidKindName
+              , gpReport.OperDate
+              , gpReport.DayOfWeekName_Full
                ;
        --
        RETURN;
@@ -604,6 +624,7 @@ BEGIN
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10800() THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Return_SummCost
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_40200() THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Return_SummCost_40200
 
+                              , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE NULL END ::TDateTime AS OperDate
                          FROM tmpAnalyzer
                               INNER JOIN MovementItemContainer AS MIContainer
                                                                ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
@@ -650,6 +671,7 @@ BEGIN
                                 , MILinkObject_Business.ObjectId
                                 , ContainerLO_Juridical.ObjectId
                                 , ContainerLO_InfoMoney.ObjectId
+                                , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE NULL END
                         )
 
  , tmpOperationGroup AS (SELECT CASE WHEN inIsPartner  = TRUE  THEN tmpOperationGroup2.JuridicalId ELSE 0 END AS JuridicalId
@@ -664,6 +686,7 @@ BEGIN
                               , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END     AS GoodsId
                               , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END AS GoodsKindId
                               , ContainerLO_PaidKind.ObjectId AS PaidKindId
+                              , tmpOperationGroup2.OperDate
 
                               , SUM (tmpOperationGroup2.Promo_Summ)  AS Promo_Summ
                               , SUM (tmpOperationGroup2.Sale_Summ)   AS Sale_Summ
@@ -732,6 +755,7 @@ BEGIN
                                 , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END
                                 , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END
                                 , ContainerLO_PaidKind.ObjectId
+                                , tmpOperationGroup2.OperDate
                         )
 
            -- выбираем данные по признаку товара ТОП из GoodsByGoodsKind
@@ -862,6 +886,9 @@ BEGIN
          , CASE WHEN _tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END :: Boolean AS isTop
          , Object_PaidKind.Id        AS PaidKindId
          , Object_PaidKind.ValueData AS PaidKindName
+
+         , tmpOperationGroup.OperDate    ::TDateTime
+         , tmpWeekDay.DayOfWeekName_Full ::TVarChar AS DayOfWeekName_Full         
      FROM tmpOperationGroup
 
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
@@ -955,6 +982,8 @@ BEGIN
 
           LEFT JOIN _tmpTOP ON _tmpTOP.GoodsId = tmpOperationGroup.GoodsId
                            AND COALESCE (_tmpTOP.GoodsKindId,0) = COALESCE (tmpOperationGroup.GoodsKindId,0)
+
+          LEFT JOIN zfCalc_DayOfWeekName (tmpOperationGroup.OperDate) AS tmpWeekDay ON 1=1
     ;
 
 END;
@@ -964,6 +993,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.12.21         * add OperDate
  25.08.21         * add PaidKind
  06.05.21         * 
  29.04.21         * add PartnerCategory

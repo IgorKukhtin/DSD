@@ -1160,7 +1160,6 @@
 			<DCCReference Include="..\SOURCE\EDI\EdiTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\ComDocXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\DeclarXML.pas"/>
-			<DCCReference Include="..\..\SOURCE\EDI\EDI.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\MeDocXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\MeDOC.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\DesadvXML.pas"/>
@@ -4628,6 +4627,7 @@
 				<Form>Report_TransportRepairDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\EDI\EDI.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

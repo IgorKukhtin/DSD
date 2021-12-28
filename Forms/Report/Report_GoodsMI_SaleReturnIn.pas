@@ -137,6 +137,9 @@ type
     edEndDateOlapSR: TcxDateEdit;
     spGetGlobalConst_DateOlapSR: TdsdStoredProc;
     cxLabel12: TcxLabel;
+    cbIsDate: TcxCheckBox;
+    OperDate: TcxGridDBColumn;
+    DayOfWeekName_full: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,7 +1,8 @@
 -- Function: gpReport_Goods_Movement ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn_Olap (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn_Olap (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn_Olap (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn_Olap (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn_Olap (
     IN inStartDate    TDateTime ,
@@ -24,6 +25,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn_Olap (
     IN inIsPartner_where    Boolean   , -- ***
     IN inIsGoods_where      Boolean   , -- ***
     IN inIsCost             Boolean   , -- ***
+    IN inIsDate             Boolean   , -- ***
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -56,7 +58,9 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Return_Amount_40200_Weight TFloat
              , ReturnPercent TFloat
              , isTop Boolean
-             , PaidKindId Integer, PaidKindName TVarChar             
+             , PaidKindId Integer, PaidKindName TVarChar
+             , OperDate TDateTime
+             , DayOfWeekName_Full TVarChar
               )
 AS
 $BODY$
@@ -231,6 +235,7 @@ BEGIN
                               , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.StreetKindId   END AS StreetKindId
                               , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.StreetId       END AS StreetId
                               , SoldTable.PaidKindId
+                              , CASE WHEN inIsDate = TRUE THEN SoldTable.OperDate ELSE NULL END ::TDateTime AS OperDate
 
                               , SUM (SoldTable.Actions_Summ) AS Promo_Summ
                               , SUM (SoldTable.Sale_Summ)    AS Sale_Summ
@@ -316,6 +321,7 @@ BEGIN
                               , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.StreetKindId   END
                               , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.StreetId       END
                               , SoldTable.PaidKindId
+                              , CASE WHEN inIsDate = TRUE THEN SoldTable.OperDate ELSE NULL END
                          HAVING SUM (SoldTable.Actions_Summ) <> 0
                              OR SUM (SoldTable.Sale_Summ)    <> 0
                              OR SUM (SoldTable.Return_Summ)  <> 0
@@ -464,6 +470,9 @@ BEGIN
 
          , Object_PaidKind.Id        AS PaidKindId
          , Object_PaidKind.ValueData AS PaidKindName
+
+         , tmpOperationGroup.OperDate    ::TDateTime
+         , tmpWeekDay.DayOfWeekName_Full ::TVarChar AS DayOfWeekName_Full
      FROM tmpOperationGroup
           -- LEFT JOIN _tmp_noDELETE_Partner ON _tmp_noDELETE_Partner.FromId = tmpOperationGroup.PartnerId AND 1 = 0
 
@@ -522,6 +531,8 @@ BEGIN
 
           LEFT JOIN _tmpTOP ON _tmpTOP.GoodsId = tmpOperationGroup.GoodsId
                            AND COALESCE (_tmpTOP.GoodsKindId,0) = COALESCE (tmpOperationGroup.GoodsKindId,0)
+
+          LEFT JOIN zfCalc_DayOfWeekName (tmpOperationGroup.OperDate) AS tmpWeekDay ON 1=1
     ;
 
 END;

@@ -51,6 +51,7 @@ type
     GuidesPaidKind: TdsdGuides;
     GuidesTradeMark: TdsdGuides;
     GuidesInfoMoney: TdsdGuides;
+    cbIsDate: TcxCheckBox;
   private
     { Private declarations }
   public
