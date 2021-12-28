@@ -1336,7 +1336,9 @@ uses
   Report_GoodsMI_InventoryDetail in '..\..\Forms\Report\Report_GoodsMI_InventoryDetail.pas' {Report_GoodsMI_InventoryDetailForm: TParentForm},
   Report_TransportRepair in '..\..\Forms\Report\Report_TransportRepair.pas' {Report_TransportRepairForm: TParentForm},
   Report_TransportRepairDialog in '..\..\Forms\Report\Report_TransportRepairDialog.pas' {Report_TransportRepairDialogForm: TParentForm},
-  EDI in '..\..\SOURCE\EDI\EDI.pas';
+  EDI in '..\..\SOURCE\EDI\EDI.pas',
+  DOCUMENTINVOICE_PRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
+  DOCUMENTINVOICE_TN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}
