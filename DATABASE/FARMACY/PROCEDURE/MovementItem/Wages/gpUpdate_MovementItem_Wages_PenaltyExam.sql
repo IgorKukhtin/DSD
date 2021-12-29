@@ -38,18 +38,18 @@ BEGIN
     END IF;
 
     IF EXISTS(SELECT 1  FROM MovementItem
-              WHERE MovementItem.MovementID = inMovementId
+              WHERE MovementItem.MovementID = vbMovementId
                 AND MovementItem.ObjectID = inUserId
                 AND MovementItem.DescId = zc_MI_Master())
     THEN
       SELECT MovementItem.ID
       INTO vbId
       FROM MovementItem
-      WHERE MovementItem.MovementID = inMovementId
+      WHERE MovementItem.MovementID = vbMovementId
         AND MovementItem.ObjectID = inUserId
         AND MovementItem.DescId = zc_MI_Master();
 
-       -- сохранили свойство <Маркетинг>
+       -- сохранили свойство <Штраф по сдаче экзамена>
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PenaltyExam(), vbId, 500);
 
       -- сохранили протокол

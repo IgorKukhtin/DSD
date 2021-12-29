@@ -101,6 +101,8 @@ type
     bbUpdateisBonusClose_No: TdxBarButton;
     macUpdateisBonusClose_Yes: TMultiAction;
     macUpdateisBonusClose_No: TMultiAction;
+    actProtocolEraseOpenForm: TdsdOpenForm;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

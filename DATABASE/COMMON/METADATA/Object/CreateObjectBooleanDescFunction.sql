@@ -1149,10 +1149,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_ReasonDifferences_Surplus() RETURNS 
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_ReasonDifferences(), 'zc_ObjectBoolean_ReasonDifferences_Surplus', 'Излишек' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_ReasonDifferences_Surplus');  
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_EliminateColdSUN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_EliminateColdSUN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_EliminateColdSUN', 'Исключать Холод из СУН' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_EliminateColdSUN');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 24.12.21                                                                                   * zc_ObjectBoolean_CashSettings_EliminateColdSUN
  17.12.21                                                                                   * zc_ObjectBoolean_ReasonDifferences_Deficit, zc_ObjectBoolean_ReasonDifferences_Surplus
  14.12.21                                                                                                          * zc_ObjectBoolean_Unit_ErrorRROToVIP
  10.12.21                                                                                                          * zc_ObjectBoolean_DiscountExternal_NoSendSUN

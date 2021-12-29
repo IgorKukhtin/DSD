@@ -15,6 +15,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_TestingUser(
 )
 RETURNS Integer AS
 $BODY$
+  DECLARE vbUserId Integer;
   DECLARE vbAttempts Integer = 0;
   DECLARE vbResult TFloat = 0;
   DECLARE vbMovement Integer;
@@ -22,7 +23,10 @@ $BODY$
   DECLARE vbDateTest TDateTime;
   DECLARE vbPositionCode Integer;
   DECLARE vbPassed Boolean;
+  DECLARE text_var1 Text;
 BEGIN
+  -- проверка прав пользователя на вызов процедуры
+  vbUserId := inSession;
 
   -- приводим дату к первому числу месяца
   vbOperDate := date_trunc('month', inDateTest);
@@ -137,9 +141,15 @@ BEGIN
     END IF;
     
      -- Начисляем 500 грн штрафа
-    IF vbPositionCode = 1 AND vbPassed = False AND inPassed = False  AND COALESCE(inLastMonth, FALSE) = FALSE AND inDateTest >= '01.11.2021' AND vbAttempts = 10
+    IF vbPositionCode = 1 AND vbPassed = False AND inPassed = False  AND inDateTest >= '01.11.2021' AND vbAttempts = 10
     THEN
-      PERFORM gpUpdate_MovementItem_Wages_PenaltyExam (inOperDate := inDateTest, inUserID := inUserId, inSession := zfCalc_UserAdmin());
+      BEGIN
+        PERFORM gpUpdate_MovementItem_Wages_PenaltyExam (inOperDate := inDateTest, inUserID := inUserId, inSession := zfCalc_UserAdmin());
+      EXCEPTION
+         WHEN others THEN
+           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+         PERFORM lpLog_Run_Schedule_Function('lpInsertUpdate_MovementItem_TestingUser', True, text_var1::TVarChar, vbUserId);
+      END;    
     END IF;
       
   END IF;

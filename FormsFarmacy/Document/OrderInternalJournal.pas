@@ -40,6 +40,8 @@ type
     MasterInvNumber: TcxGridDBColumn;
     actPUSHDiscount: TdsdShowPUSHMessage;
     spPUSHDiscount: TdsdStoredProc;
+    spPUSHPartionGoodsDate: TdsdStoredProc;
+    actPUSHPartionGoodsDate: TdsdShowPUSHMessage;
   private
     { Private declarations }
   public

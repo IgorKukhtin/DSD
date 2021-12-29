@@ -81,6 +81,7 @@ $BODY$
 
    DECLARE curRemains        refcursor;
    DECLARE curResult_partion refcursor;
+   DECLARE vbisEliminateColdSUN Boolean;
    
 BEGIN
      --
@@ -97,6 +98,15 @@ BEGIN
                          ELSE 1500
                     END;*/
 
+
+     SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN
+     FROM Object AS Object_CashSettings
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
+                                  ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN()
+     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+     LIMIT 1;
 
      -- все Подразделения для схемы SUN
      DELETE FROM _tmpUnit_SUN;
@@ -1254,6 +1264,7 @@ BEGIN
            AND Object_ConditionsKeep.ValueData NOT ILIKE '%прохладное%'
               )
            OR Object_ConditionsKeep.ValueData IS NULL
+           OR vbisEliminateColdSUN = FALSE
         GROUP BY _tmpRemains_Partion.UnitId
                , _tmpRemains_calc.UnitId
        ;
@@ -2045,4 +2056,3 @@ WHERE Movement.OperDate  >= '01.01.2019'
      CREATE TEMP TABLE _tmpResult_child (MovementId Integer, UnitId_from Integer, UnitId_to Integer, ParentId Integer, ContainerId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
 
 -- SELECT * FROM lpInsert_Movement_Send_RemainsSun_over_old (inOperDate:= CURRENT_DATE - INTERVAL '0 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
-

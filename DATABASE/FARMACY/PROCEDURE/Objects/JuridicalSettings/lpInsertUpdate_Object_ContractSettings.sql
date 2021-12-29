@@ -24,16 +24,17 @@ BEGIN
    -- ищем элемент <Установки для договоров> по связи торг.сеть - договор - регион
    vbId := (SELECT ObjectLink_MainJuridical.ObjectId AS Id
             FROM ObjectLink AS ObjectLink_MainJuridical
-                 INNER JOIN ObjectLink AS ObjectLink_Contract
-                                       ON ObjectLink_Contract.ObjectId = ObjectLink_MainJuridical.ObjectId
-                                      AND ObjectLink_Contract.DescId = zc_ObjectLink_ContractSettings_Contract()
-                                      AND ObjectLink_Contract.ChildObjectId = inContractId
+                 LEFT JOIN ObjectLink AS ObjectLink_Contract
+                                      ON ObjectLink_Contract.ObjectId = ObjectLink_MainJuridical.ObjectId
+                                     AND ObjectLink_Contract.DescId = zc_ObjectLink_ContractSettings_Contract()
+                                     --AND ObjectLink_Contract.ChildObjectId = inContractId
                  LEFT JOIN ObjectLink AS ObjectLink_Area                                                     -- поставила left и перенесла условие в WHERE, т.к. если не был сохранен регион записывается по новой и задваивается
                                        ON ObjectLink_Area.ObjectId = ObjectLink_MainJuridical.ObjectId
                                       AND ObjectLink_Area.DescId = zc_ObjectLink_ContractSettings_Area()
                                       --AND (COALESCE (ObjectLink_Area.ChildObjectId, 0) = inAreaId)
             WHERE ObjectLink_MainJuridical.DescId = zc_ObjectLink_ContractSettings_MainJuridical()
               AND ObjectLink_MainJuridical.ChildObjectId = inMainJuridicalId
+              AND (COALESCE (ObjectLink_Contract.ChildObjectId, 0) = inContractId)
               AND (COALESCE (ObjectLink_Area.ChildObjectId, 0) = inAreaId)
             LIMIT 1 -- вдруг задвоится                                 
             );
@@ -58,22 +59,23 @@ BEGIN
    PERFORM lpUpdate_Object_isErased (inObjectId:= ObjectLink_MainJuridical.ObjectId, inUserId:= vbUserId)
          , lpInsert_ObjectProtocol (vbId, vbUserId)                                                      --  сохранили протокол 
    FROM ObjectLink AS ObjectLink_MainJuridical
-        INNER JOIN ObjectLink AS ObjectLink_Contract
-                              ON ObjectLink_Contract.ObjectId = ObjectLink_MainJuridical.ObjectId
-                             AND ObjectLink_Contract.DescId = zc_ObjectLink_ContractSettings_Contract()
-                             AND ObjectLink_Contract.ChildObjectId = inContractId
+        LEFT JOIN ObjectLink AS ObjectLink_Contract
+                             ON ObjectLink_Contract.ObjectId = ObjectLink_MainJuridical.ObjectId
+                            AND ObjectLink_Contract.DescId = zc_ObjectLink_ContractSettings_Contract()
+                            --AND ObjectLink_Contract.ChildObjectId = inContractId
         LEFT JOIN ObjectLink AS ObjectLink_Area
                               ON ObjectLink_Area.ObjectId = ObjectLink_MainJuridical.ObjectId
                              AND ObjectLink_Area.DescId = zc_ObjectLink_ContractSettings_Area()
                              --AND (COALESCE (ObjectLink_Area.ChildObjectId, 0) = inAreaId)
    WHERE ObjectLink_MainJuridical.DescId = zc_ObjectLink_ContractSettings_MainJuridical()
      AND ObjectLink_MainJuridical.ChildObjectId = inMainJuridicalId
+     AND (COALESCE (ObjectLink_Contract.ChildObjectId, 0) = inContractId)
      AND (COALESCE (ObjectLink_Area.ChildObjectId, 0) = inAreaId);
    
    outisErased := (SELECT Object.isErased FROM Object WHERE Object.Id = vbId AND Object.DescId = zc_Object_ContractSettings());
 
-   -- сохранили протокол -
-   -- PERFORM lpInsert_ObjectProtocol (vbId, vbUserId);
+   --сохранили протокол -
+   --PERFORM lpInsert_ObjectProtocol (vbId, vbUserId);
  
 
 END;

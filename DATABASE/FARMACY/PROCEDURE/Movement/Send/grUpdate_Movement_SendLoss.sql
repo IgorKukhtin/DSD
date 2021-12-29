@@ -149,66 +149,68 @@ BEGIN
 
    ELSE
 
-     IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
+     -- сохранили признак
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SendLoss(), inMovementId, NOT inisSendLoss);
+
+     IF COALESCE (vbStatusId, 0) = zc_Enum_Status_Complete()
+     THEN
+       
+       PERFORM gpUnComplete_Movement_Send (inMovementId    := inMovementId
+                                         , inSession       := inSession);
+                                         
+       PERFORM lpInsertUpdate_MovementItem_Send (ioId                  := MovementItem.Id  
+                                               , inMovementId          := inMovementId
+                                               , inGoodsId             := MovementItem.ObjectId  
+                                               , inAmount              := MovementItem.Amount * 2
+                                               , inAmountManual        := MovementItem.Amount * 2
+                                               , inAmountStorage       := MovementItem.Amount * 2
+                                               , inReasonDifferencesId := MILinkObject_ReasonDifferences.ObjectId
+                                               , inCommentSendID       := MILinkObject_CommentSend.ObjectId
+                                               , inUserId              := vbUserId
+                                                )
+       FROM MovementItem
+       
+         LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
+                                          ON MILinkObject_ReasonDifferences.MovementItemId = MovementItem.Id
+                                         AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
+         LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
+                                          ON MILinkObject_CommentSend.MovementItemId = MovementItem.Id
+                                         AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
+                                         
+       WHERE MovementItem.MovementId = inMovementId
+         AND MovementItem.DescId = zc_MI_Master()
+         AND MovementItem.Amount > 0
+         AND MovementItem.isErased = FALSE;
+      
+       PERFORM lpInsertUpdate_MovementItem_Send_Child (ioId                  := MovementItem.Id
+                                                     , inParentId            := MIMaster.Id
+                                                     , inMovementId          := inMovementId
+                                                     , inGoodsId             := MovementItem.ObjectId
+                                                     , inAmount              := MovementItem.Amount * 2
+                                                     , inContainerId         := MovementItemFloat.ValueData::Integer
+                                                     , inUserId              := vbUserId
+                                                      )
+       FROM MovementItem AS MIMaster
+
+            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                   AND MovementItem.ParentId = MIMaster.Id
+                                   AND MovementItem.DescId = zc_MI_Child()
+                                   AND MovementItem.Amount > 0                                 
+            INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
+                                        AND MovementItemFloat.DescId = zc_MIFloat_ContainerId()
+                                        
+       WHERE MIMaster.MovementId = inMovementId
+         AND MIMaster.DescId = zc_MI_Master()
+         AND MIMaster.Amount > 0
+         AND MIMaster.isErased = FALSE;
+       
+       PERFORM gpUpdate_Movement_Send_Deferred (inMovementId   := inMovementId
+                                              , inisDeferred   := True
+                                              , inSession      := inSession);     
+     ELSEIF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
         RAISE EXCEPTION 'Ошибка. Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
      END IF;
-   
-     -- сохранили признак
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SendLoss(), inMovementId, NOT inisSendLoss);
-     
-     PERFORM gpUnComplete_Movement_Send (inMovementId    := inMovementId
-                                       , inSession       := inSession);
-                                       
-     PERFORM lpInsertUpdate_MovementItem_Send (ioId                  := MovementItem.Id  
-                                             , inMovementId          := inMovementId
-                                             , inGoodsId             := MovementItem.ObjectId  
-                                             , inAmount              := MovementItem.Amount * 2
-                                             , inAmountManual        := MovementItem.Amount * 2
-                                             , inAmountStorage       := MovementItem.Amount * 2
-                                             , inReasonDifferencesId := MILinkObject_ReasonDifferences.ObjectId
-                                             , inCommentSendID       := MILinkObject_CommentSend.ObjectId
-                                             , inUserId              := vbUserId
-                                              )
-     FROM MovementItem
-     
-       LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
-                                        ON MILinkObject_ReasonDifferences.MovementItemId = MovementItem.Id
-                                       AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
-       LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
-                                        ON MILinkObject_CommentSend.MovementItemId = MovementItem.Id
-                                       AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
-                                       
-     WHERE MovementItem.MovementId = inMovementId
-       AND MovementItem.DescId = zc_MI_Master()
-       AND MovementItem.Amount > 0
-       AND MovementItem.isErased = FALSE;
-    
-     PERFORM lpInsertUpdate_MovementItem_Send_Child (ioId                  := MovementItem.Id
-                                                   , inParentId            := MIMaster.Id
-                                                   , inMovementId          := inMovementId
-                                                   , inGoodsId             := MovementItem.ObjectId
-                                                   , inAmount              := MovementItem.Amount * 2
-                                                   , inContainerId         := MovementItemFloat.ValueData::Integer
-                                                   , inUserId              := vbUserId
-                                                    )
-     FROM MovementItem AS MIMaster
-
-          INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                 AND MovementItem.ParentId = MIMaster.Id
-                                 AND MovementItem.DescId = zc_MI_Child()
-                                 AND MovementItem.Amount > 0                                 
-          INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
-                                      AND MovementItemFloat.DescId = zc_MIFloat_ContainerId()
-                                      
-     WHERE MIMaster.MovementId = inMovementId
-       AND MIMaster.DescId = zc_MI_Master()
-       AND MIMaster.Amount > 0
-       AND MIMaster.isErased = FALSE;
-     
-     PERFORM gpUpdate_Movement_Send_Deferred (inMovementId   := inMovementId
-                                            , inisDeferred   := True
-                                            , inSession      := inSession);     
    END IF;
 
    PERFORM * FROM grInsertUpdate_Movement_LossSendLossUnit (inUnitID := vbUnitIdFrom, inSession:= '3');

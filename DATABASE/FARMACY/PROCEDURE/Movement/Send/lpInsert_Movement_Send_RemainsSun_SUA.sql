@@ -47,6 +47,7 @@ $BODY$
    DECLARE vbDayIncome_max   Integer;
    DECLARE vbDaySendSUN_max  Integer;
    DECLARE vbDaySendSUNAll_max Integer;
+   DECLARE vbisEliminateColdSUN Boolean;
 BEGIN
      --
      vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', inUserId);
@@ -55,6 +56,15 @@ BEGIN
                               THEN (SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbObjectId AND ObjectFloat.DescId = zc_ObjectFloat_Retail_SummSUN())
                          ELSE 1500
                     END;
+
+     SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN
+     FROM Object AS Object_CashSettings
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
+                                  ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN()
+     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+     LIMIT 1;
 
      -- день недели
      vbDOW_curr:= (SELECT CASE WHEN tmp.RetV = 0 THEN 7 ELSE tmp.RetV END
@@ -1000,7 +1010,7 @@ BEGIN
              INNER JOIN Object AS Object_Goods ON Object_Goods.Id        = tmpObject_Price.GoodsId
                                               AND Object_Goods.ValueData NOT ILIKE 'ААА%'
              -- если товар среди парных
-             LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun
+             LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun_SUA.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun_SUA
                        ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = tmpObject_Price.GoodsId
 
              -- НЕ отбросили !!холод!!
@@ -1438,6 +1448,7 @@ BEGIN
                                 AND (Object_ConditionsKeep.ValueData ILIKE '%холод%'
                                   OR Object_ConditionsKeep.ValueData ILIKE '%прохладное%'
                                     )
+                                AND vbisEliminateColdSUN = TRUE
                              )
              -- отбросили !!НОТ!!
            , tmpGoods_NOT AS (SELECT OB_Goods_NOT.ObjectId

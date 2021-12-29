@@ -73,7 +73,7 @@ BEGIN
                                    ON MovementDate_Deferred.MovementId = Movement.Id
                                   AND MovementDate_Deferred.DescId = zc_MovementDate_Deferred()
 
-       WHERE ObjectLink_Driver.ChildObjectId = inDriver OR inDriver = 0
+       WHERE (ObjectLink_Driver.ChildObjectId = inDriver OR inDriver = 0)
          AND MovementDate_Deferred.ValueData >= inOperDate
        GROUP BY COALESCE (MovementBoolean_Urgently.ValueData, FALSE)::Boolean
            , Object_From.ValueData

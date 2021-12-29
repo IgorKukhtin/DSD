@@ -104,6 +104,7 @@ $BODY$
 
    DECLARE vbGoodsId_PairSun Integer;
    DECLARE vbPrice_PairSun   TFloat;
+   DECLARE vbisEliminateColdSUN Boolean;
 
 BEGIN
      --
@@ -133,6 +134,14 @@ BEGIN
                          ELSE 1500
                     END;
 
+     SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN
+     FROM Object AS Object_CashSettings
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
+                                  ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN()
+     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+     LIMIT 1;
 
      -- !!! накопительно баланс только по срокам
      vbDate_balance_partion:= '22.01.2020';
@@ -1040,12 +1049,6 @@ BEGIN
           -- Исключения по техническим переучетам
           AND COALESCE (tmpGoods_TP_exception.GoodsId, 0) = 0
 
-        /*WHERE (Object_ConditionsKeep.ValueData NOT ILIKE '%холод%'
-           AND Object_ConditionsKeep.ValueData NOT ILIKE '%прохладное%'
-              )
-           OR Object_ConditionsKeep.ValueData IS NULL
-        */
-
         -- !!!только с таким НТЗ!!!
         -- WHERE tmpObject_Price.MCSValue >= 0.5
         -- !!!отключил, взяли все!!!
@@ -1728,6 +1731,7 @@ BEGIN
                                 AND (Object_ConditionsKeep.ValueData ILIKE '%холод%'
                                   OR Object_ConditionsKeep.ValueData ILIKE '%прохладное%'
                                     )
+                                AND vbisEliminateColdSUN = TRUE
                              )
              -- отбросили !!НОТ!!
            , tmpGoods_NOT AS (SELECT OB_Goods_NOT.ObjectId
@@ -1969,6 +1973,7 @@ BEGIN
             AND tmpConditionsKeep.ValueData NOT ILIKE '%прохладное%'
                )
             OR tmpConditionsKeep.ValueData IS NULL
+            OR vbisEliminateColdSUN = False
               )
           AND _tmpUnit_SunExclusion.UnitId_to IS NULL
 

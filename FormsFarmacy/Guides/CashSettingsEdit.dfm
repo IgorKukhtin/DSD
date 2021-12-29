@@ -407,6 +407,16 @@ object CashSettingsEditForm: TCashSettingsEditForm
     Top = 448
     Caption = #1055#1088#1086#1094#1077#1085#1090' '#1076#1083#1103' '#1087#1086#1076#1089#1074#1077#1090#1082#1080' '#1082#1086#1084#1077#1085#1090#1072' "'#1055#1088#1086#1076#1072#1085#1086'/'#1055#1088#1086#1076#1072#1078#1072' '#1076#1086' '#1089#1083#1077#1076' '#1057#1059#1053'"'
   end
+  object cbEliminateColdSUN: TcxCheckBox
+    Left = 531
+    Top = 137
+    Hint = #1048#1089#1082#1083#1102#1095#1072#1090#1100' '#1061#1086#1083#1086#1076' '#1080#1079' '#1057#1059#1053
+    Caption = #1048#1089#1082#1083#1102#1095#1072#1090#1100' '#1061#1086#1083#1086#1076' '#1080#1079' '#1057#1059#1053
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 55
+    Width = 338
+  end
   object ActionList: TActionList
     Left = 344
     Top = 76
@@ -669,6 +679,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisEliminateColdSUN'
+        Value = Null
+        Component = cbEliminateColdSUN
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -881,6 +899,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Value = Null
         Component = cePercentUntilNextSUN
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isEliminateColdSUN'
+        Value = Null
+        Component = cbEliminateColdSUN
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

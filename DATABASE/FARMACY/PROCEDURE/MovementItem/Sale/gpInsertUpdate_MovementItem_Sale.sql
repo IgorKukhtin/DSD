@@ -144,10 +144,10 @@ BEGIN
     
     IF EXISTS(SELECT * FROM gpSelect_Goods_AutoVIPforSalesCash (inUnitId := vbUnitId , inSession:= inSession) WHERE GoodsId = inGoodsId)
     THEN
-      vbisVIPforSales := False;
+      vbisVIPforSales := True;
       vbAmountVIP := COALESCE ((SELECT Amount FROM gpSelect_Goods_AutoVIPforSalesCash (inUnitId := vbUnitId , inSession:= inSession) WHERE GoodsId = inGoodsId), 0);        
     ELSE
-      vbisVIPforSales := True;
+      vbisVIPforSales := False;
       vbAmountVIP := 0;    
     END IF;
     
@@ -159,7 +159,7 @@ BEGIN
       vbAmount := 0;
     END IF;
     
-    IF vbAmount + vbAmountVIP < inAmount
+    IF vbisVIPforSales = TRUE AND vbAmount + vbAmountVIP < inAmount
     THEN
       IF vbAmount + vbAmountVIP = 0
       THEN

@@ -3,7 +3,7 @@
   ClientHeight = 431
   ClientWidth = 916
   ExplicitWidth = 932
-  ExplicitHeight = 469
+  ExplicitHeight = 470
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -665,6 +665,36 @@
       Caption = #1059#1095#1080#1090#1099#1074#1072#1090#1100' '#1073#1086#1085#1091#1089#1099
       Hint = #1059#1095#1080#1090#1099#1074#1072#1090#1100' '#1073#1086#1085#1091#1089#1099
     end
+    object actProtocolEraseOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1091#1076#1072#1083#1077#1085#1080#1081
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1091#1076#1072#1083#1077#1085#1080#1081
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractSettingsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 88
@@ -792,6 +822,10 @@
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -853,6 +887,10 @@
     end
     object bbUpdateisBonusClose_No: TdxBarButton
       Action = macUpdateisBonusClose_No
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actProtocolEraseOpenForm
       Category = 0
     end
   end
@@ -989,7 +1027,7 @@
       end
       item
         Name = 'inEndDate'
-        Value = 0
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'EndDate'
         DataType = ftDateTime
@@ -1056,7 +1094,7 @@
       end
       item
         Name = 'inisPriceClose'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1088,7 +1126,7 @@
       end
       item
         Name = 'inisPriceClose'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1120,7 +1158,7 @@
       end
       item
         Name = 'inisPriceCloseOrder'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1144,7 +1182,7 @@
       end
       item
         Name = 'inisPriceCloseOrder'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1236,11 +1274,14 @@
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 768
     Top = 248
   end
@@ -1302,7 +1343,7 @@
       end
       item
         Name = 'inisBonusClose'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1326,7 +1367,7 @@
       end
       item
         Name = 'inisBonusClose'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

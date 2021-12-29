@@ -36,6 +36,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TelegramBotToken TVarChar
              , PercentIC TFloat
              , PercentUntilNextSUN TFloat
+             , isEliminateColdSUN Boolean
              ) AS
 $BODY$
 BEGIN
@@ -77,6 +78,7 @@ BEGIN
         , ObjectString_CashSettings_TelegramBotToken.ValueData                     AS TelegramBotToken
         , ObjectFloat_CashSettings_PercentIC.ValueData                             AS PercentIC
         , ObjectFloat_CashSettings_PercentUntilNextSUN.ValueData                   AS PercentUntilNextSUN
+        , COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE)   AS isEliminateColdSUN
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -138,6 +140,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_PairedOnlyPromo
                                 ON ObjectBoolean_CashSettings_PairedOnlyPromo.ObjectId = Object_CashSettings.Id 
                                AND ObjectBoolean_CashSettings_PairedOnlyPromo.DescId = zc_ObjectBoolean_CashSettings_PairedOnlyPromo()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
+                                ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_RequireUkrName
                                 ON ObjectBoolean_CashSettings_RequireUkrName.ObjectId = Object_CashSettings.Id 

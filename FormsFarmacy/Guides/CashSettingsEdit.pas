@@ -80,6 +80,7 @@ type
     cePercentIC: TcxCurrencyEdit;
     cePercentUntilNextSUN: TcxCurrencyEdit;
     cxLabel24: TcxLabel;
+    cbEliminateColdSUN: TcxCheckBox;
   private
     { Private declarations }
   public

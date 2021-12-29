@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, 
                                                            TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TFloat, Integer, Boolean, 
-                                                           Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TFloat, TFloat, TVarChar);
+                                                           Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -34,6 +34,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inTelegramBotToken           TVarChar  ,     -- Токен телеграм бота
     IN inPercentIC                  TFloat    ,     -- Процент от продажи страховым компаниям для з/п фармацевтам
     IN inPercentUntilNextSUN        TFloat    ,     -- Процент для подсветки комента "Продано/Продажа до след СУН"
+    IN inisEliminateColdSUN         Boolean   ,     -- Исключать Холод из СУН
     IN inSession                    TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -104,6 +105,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_RequireUkrName(), vbID, inisRequireUkrName);
    -- сохранили Удаление сторонних программ
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_RemovingPrograms(), vbID, inisRemovingPrograms);
+
+   -- сохранили Исключать Холод из СУН
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_EliminateColdSUN(), vbID, inisEliminateColdSUN);
 
    -- сохранили Порог цены Сэмплов от
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_CashSettings_PriceSamples(), vbID, inPriceSamples);

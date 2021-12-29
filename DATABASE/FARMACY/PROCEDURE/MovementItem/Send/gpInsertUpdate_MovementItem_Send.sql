@@ -286,7 +286,7 @@ BEGIN
     
     IF vbIsSUN = FALSE AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
       AND vbFromId NOT IN (1529734, 8156016) 
-      AND vbUnitId NOT IN (17146811) 
+      AND vbUnitId NOT IN (17146811, 18712420) 
       AND COALESCE (vbAmountStorage, 0) = COALESCE (inAmountStorage, 0)
       AND COALESCE (inAmountStorage, 0) > 0
       AND EXISTS(SELECT ObjectLink_Unit_Parent.ChildObjectId 

@@ -138,7 +138,7 @@ BEGIN
           --  LEFT JOIN tmpArea  AS Object_Area ON Object_Area.JuridicalId = ObjectLink_JuridicalRetail.ObjectId
 
             LEFT JOIN tmpContractSettings ON tmpContractSettings.MainJuridicalId = Object_MainJuridical.Id
-                                         AND tmpContractSettings.ContractId = Contract.Id
+                                         AND (COALESCE (tmpContractSettings.ContractId, 0) = COALESCE (Contract.Id, 0))
                                          AND (COALESCE (tmpContractSettings.AreaId, 0) = COALESCE (Object_Area.Id, 0))
             --   
             LEFT JOIN LoadPriceList ON LoadPriceList.ContractId           = LastPriceList_View.ContractId

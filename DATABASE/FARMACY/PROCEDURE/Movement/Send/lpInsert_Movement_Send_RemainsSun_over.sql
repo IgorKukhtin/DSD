@@ -98,6 +98,7 @@ $BODY$
 
    DECLARE vbGoodsId_PairSun Integer;
    DECLARE vbPrice_PairSun   TFloat;
+   DECLARE vbisEliminateColdSUN Boolean;
 
 BEGIN
 
@@ -116,6 +117,15 @@ BEGIN
                               THEN (SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbObjectId AND ObjectFloat.DescId = zc_ObjectFloat_Retail_SummSUN())
                          ELSE 1500
                     END;
+
+     SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN
+     FROM Object AS Object_CashSettings
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
+                                  ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN()
+     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+     LIMIT 1;
 
      -- все Подразделения для схемы SUN-v2
      DELETE FROM _tmpUnit_SUN;
@@ -1422,6 +1432,7 @@ BEGIN
                                 AND (Object_ConditionsKeep.ValueData ILIKE '%холод%'
                                   OR Object_ConditionsKeep.ValueData ILIKE '%прохладное%'
                                     )
+                                AND vbisEliminateColdSUN = TRUE
                              )
              -- отбросили !!НОТ!!
            , tmpGoods_NOT AS (SELECT OB_Goods_NOT.ObjectId
