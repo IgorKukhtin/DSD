@@ -2800,6 +2800,12 @@ end;
 
 procedure TLoadFormTest.LoadReportTransportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportTireForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TransportTireForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportTireDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TransportTireDialogForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportRepairForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportRepairForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportRepairDialogForm'));
