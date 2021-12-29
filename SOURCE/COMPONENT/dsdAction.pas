@@ -3862,7 +3862,8 @@ begin
             //
             if frxPDFExport_find = true then
             begin
-                 frxPDFExport1:= TfrxPDFExport.Create(Self);
+               frxPDFExport1:= TfrxPDFExport.Create(Self);
+               try
                  if FileNameExport <> '' then
                  begin
                    FileNameExport := FileNameExport + '.pdf';
@@ -3879,12 +3880,16 @@ begin
                  frxPDFExport1.FileName := FileNameExport;
                  frxPDFExport1.ShowDialog := frxPDFExport1_ShowDialog;
                  FReport.Export(frxPDFExport1);
+               finally
+                 FreeAndNil(frxPDFExport1);
+               end;
             end
 
             else
             if frxXLSExport_find = true then
             begin
-                 frxXLSExport1:= TfrxXLSExport.Create(Self);
+               frxXLSExport1:= TfrxXLSExport.Create(Self);
+               try
                  if FileNameExport <> '' then
                  begin
                    FileNameExport := FileNameExport + '.xls';
@@ -3902,6 +3907,9 @@ begin
                  frxXLSExport1.FileName := FileNameExport;
                  frxXLSExport1.ShowDialog := frxXLSExport1_ShowDialog;
                  FReport.Export(frxXLSExport1);
+               finally
+                 FreeAndNil(frxXLSExport1);
+               end;
             end
 
             else ShowPreparedReport;
