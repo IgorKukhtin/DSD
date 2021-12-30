@@ -24,6 +24,7 @@ object Report_TransportTireForm: TReport_TransportTireForm
     Height = 332
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -80,7 +81,7 @@ object Report_TransportTireForm: TReport_TransportTireForm
       OptionsView.HeaderAutoHeight = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object OperDate_SendIn: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1084'. ('#1087#1088#1080#1093#1086#1076')'
+        Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1084'. ('#1074#1099#1076#1072#1083#1080' '#1085#1072' '#1072#1074#1090#1086')'
         DataBinding.FieldName = 'OperDate_SendIn'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -88,7 +89,7 @@ object Report_TransportTireForm: TReport_TransportTireForm
         Width = 68
       end
       object InvNumber_SendIn: TcxGridDBColumn
-        Caption = #8470' '#1087#1077#1088#1077#1084'. ('#1087#1088#1080#1093#1086#1076')'
+        Caption = #8470' '#1087#1077#1088#1077#1084'. ('#1074#1099#1076#1072#1083#1080' '#1085#1072' '#1072#1074#1090#1086')'
         DataBinding.FieldName = 'InvNumber_SendIn'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -104,7 +105,7 @@ object Report_TransportTireForm: TReport_TransportTireForm
         Width = 103
       end
       object OperDate_SendOut: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1084'. ('#1088#1072#1089#1093#1086#1076')'
+        Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1084'. ('#1074#1077#1088#1085#1091#1083#1080' '#1085#1072' '#1089#1082#1083#1072#1076')'
         DataBinding.FieldName = 'OperDate_SendOut'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -112,7 +113,7 @@ object Report_TransportTireForm: TReport_TransportTireForm
         Width = 68
       end
       object InvNumber_SendOut: TcxGridDBColumn
-        Caption = #8470' '#1087#1077#1088#1077#1084'. ('#1088#1072#1089#1093#1086#1076')'
+        Caption = #8470' '#1087#1077#1088#1077#1084'. ('#1074#1077#1088#1085#1091#1083#1080' '#1085#1072' '#1089#1082#1083#1072#1076')'
         DataBinding.FieldName = 'InvNumber_SendOut'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -128,7 +129,7 @@ object Report_TransportTireForm: TReport_TransportTireForm
         Width = 103
       end
       object OperDate_TransportStartt: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1087'.'#1083'. ('#1089#1090#1072#1088#1090')'
+        Caption = #1044#1072#1090#1072' '#1087'.'#1083'. ('#1087#1077#1088#1074#1099#1081')'
         DataBinding.FieldName = 'OperDate_TransportStartt'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -136,7 +137,7 @@ object Report_TransportTireForm: TReport_TransportTireForm
         Width = 68
       end
       object InvNumber_TransportStart: TcxGridDBColumn
-        Caption = #8470' '#1087'.'#1083'. ('#1089#1090#1072#1088#1090')'
+        Caption = #8470' '#1087'.'#1083'. ('#1087#1077#1088#1074#1099#1081')'
         DataBinding.FieldName = 'InvNumber_TransportStart'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -145,7 +146,7 @@ object Report_TransportTireForm: TReport_TransportTireForm
         Width = 69
       end
       object OperDate_TransportEnd: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1087'.'#1083'. ('#1092#1080#1085#1080#1096')'
+        Caption = #1044#1072#1090#1072' '#1087'.'#1083'. ('#1087#1086#1089#1083#1077#1076#1085#1080#1081')'
         DataBinding.FieldName = 'OperDate_TransportEnd'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -153,7 +154,7 @@ object Report_TransportTireForm: TReport_TransportTireForm
         Width = 68
       end
       object InvNumber_TransportEnd: TcxGridDBColumn
-        Caption = #8470' '#1087'.'#1083'. ('#1092#1080#1085#1080#1096')'
+        Caption = #8470' '#1087'.'#1083'. ('#1087#1086#1089#1083#1077#1076#1085#1080#1081')'
         DataBinding.FieldName = 'InvNumber_TransportEnd'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -428,6 +429,38 @@ object Report_TransportTireForm: TReport_TransportTireForm
           ItemName = 'dxBarStatic1'
         end
         item
+          Visible = True
+          ItemName = 'bbOpenFormSendIn'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormSendOut'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormReportCar'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormReportUnit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbToExcel'
@@ -458,6 +491,22 @@ object Report_TransportTireForm: TReport_TransportTireForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbOpenFormSendIn: TdxBarButton
+      Action = actOpenFormSendIn
+      Category = 0
+    end
+    object bbOpenFormSendOut: TdxBarButton
+      Action = actOpenFormSendOut
+      Category = 0
+    end
+    object bbOpenFormReportCar: TdxBarButton
+      Action = actOpenFormReportCar
+      Category = 0
+    end
+    object bbOpenFormReportUnit: TdxBarButton
+      Action = actOpenFormReportUnit
       Category = 0
     end
   end
@@ -606,6 +655,346 @@ object Report_TransportTireForm: TReport_TransportTireForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actOpenFormTransportEnd: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090'> '#1092#1080#1085#1080#1096
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090'> '#1092#1080#1085#1080#1096
+      ImageIndex = 68
+      FormName = 'TTransportForm'
+      FormNameParam.Value = 'TTransportForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MovementId_SendIn'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42094d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenFormTransportStart: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090'> '#1089#1090#1072#1088#1090
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090'> '#1089#1090#1072#1088#1090
+      ImageIndex = 49
+      FormName = 'TTransportForm'
+      FormNameParam.Value = 'TTransportForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MovementId_TransportStart'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42094d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenFormSendOut: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'> '#1074#1077#1088#1085#1091#1083#1080' '#1085#1072' '#1089#1082#1083#1072#1076
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'> '#1074#1077#1088#1085#1091#1083#1080' '#1085#1072' '#1089#1082#1083#1072#1076
+      ImageIndex = 48
+      FormName = 'TSendForm'
+      FormNameParam.Value = 'TSendForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MovementId_SendOut'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42094d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenFormSendIn: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'> '#1074#1099#1076#1072#1083#1080' '#1085#1072' '#1072#1074#1090#1086
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'> '#1074#1099#1076#1072#1083#1080' '#1085#1072' '#1072#1074#1090#1086
+      ImageIndex = 47
+      FormName = 'TSendForm'
+      FormNameParam.Value = 'TSendForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = ''
+          Component = ClientDataSet
+          ComponentItem = 'MovementId_SendIn'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42094d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenFormReportUnit: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'> ('#1087#1086' '#1089#1082#1083#1072#1076#1091')'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'> ('#1087#1086' '#1089#1082#1083#1072#1076#1091')'
+      ImageIndex = 26
+      FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = 'TReport_GoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 44562d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 44562d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'FromId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'FromName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsPartner'
+          Value = True
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenFormReportCar: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'> ('#1087#1086' '#1072#1074#1090#1086')'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'> ('#1087#1086' '#1072#1074#1090#1086')'
+      ImageIndex = 26
+      FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = 'TReport_GoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 44562d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 44562d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CarId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CarName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsPartner'
+          Value = True
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object spReport: TdsdStoredProc

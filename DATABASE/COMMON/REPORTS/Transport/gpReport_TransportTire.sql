@@ -23,11 +23,12 @@ RETURNS TABLE (MovementId_SendIn Integer
              , MovementId_TransportEnd Integer
              , OperDate_TransportEnd TDateTime
              , InvNumber_TransportEnd TVarChar
-             , FromName TVarChar, ToName TVarChar
+             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , CarId Integer, CarCode Integer, CarName TVarChar
              , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar
              , UnitId_Car Integer, UnitCode_Car Integer, UnitName_Car TVarChar
              , PersonalDriverId Integer, PersonalDriverCode Integer, PersonalDriverName TVarChar
+             , GoodsGroupId Integer, GoodsGroupName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount_in   TFloat
              , Amount_out  TFloat
@@ -49,7 +50,7 @@ BEGIN
                                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
                                                 AND ObjectLink_Goods_GoodsGroup.ChildObjectId = 2034  --группа резина
                       WHERE Object_Goods.DescId = zc_Object_Goods()
-                        AND Object_Goods.Id = 1208042
+                      --  AND Object_Goods.Id = 1208042
                       )
 
        , tmpCar AS (SELECT Object.Id AS CarId
@@ -193,7 +194,9 @@ BEGIN
                           , tmpSend_Out.MovementId      AS MovementId_out
                           , tmpTransport.MovementId_Start AS MovementId_Start
                           , tmpTransport.MovementId_End   AS MovementId_End
+                          , tmpSend_In.FromId
                           , tmpSend_In.FromName
+                          , tmpSend_Out.ToId
                           , tmpSend_Out.ToName
                           , tmpSend_In.GoodsId
                           , tmpSend_In.Amount           AS Amount_in
@@ -221,7 +224,9 @@ BEGIN
          , Movement_TransportEnd.OperDate  AS OperDate_TransportEnd
          , Movement_TransportEnd.InvNumber AS InvNumber_TransportEnd
 
+         , tmpData.FromId
          , tmpData.FromName
+         , tmpData.ToId
          , tmpData.ToName
 
          , Object_Car.Id         AS CarId
@@ -240,6 +245,9 @@ BEGIN
          , Object_PersonalDriver.ObjectCode   AS PersonalDriverCode
          , Object_PersonalDriver.ValueData    AS PersonalDriverName
 
+         , Object_GoodsGroup.Id        AS GoodsGroupId
+         , Object_GoodsGroup.ValueData AS GoodsGroupName
+
          , Object_Goods.Id         AS GoodsId
          , Object_Goods.ObjectCode AS GoodsCode
          , Object_Goods.ValueData  AS GoodsName
@@ -255,6 +263,11 @@ BEGIN
          
          LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpData.CarId
          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                              ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                             AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+         LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
          LEFT JOIN ObjectLink AS Car_CarModel
                               ON Car_CarModel.ObjectId = Object_Car.Id
