@@ -4,10 +4,8 @@ inherited SendJournalForm: TSendJournalForm
   ClientWidth = 876
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -229
-  ExplicitTop = -113
   ExplicitWidth = 892
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

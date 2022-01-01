@@ -71,6 +71,16 @@ type
     Amount_in: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    actOpenFormSendIn: TdsdOpenForm;
+    bbOpenFormSendIn: TdxBarButton;
+    actOpenFormTransportEnd: TdsdOpenForm;
+    actOpenFormTransportStart: TdsdOpenForm;
+    actOpenFormSendOut: TdsdOpenForm;
+    bbOpenFormSendOut: TdxBarButton;
+    bbOpenFormReportCar: TdxBarButton;
+    bbOpenFormReportUnit: TdxBarButton;
+    actOpenFormReportCar: TdsdOpenForm;
+    actOpenFormReportUnit: TdsdOpenForm;
   private
   public
   end;
