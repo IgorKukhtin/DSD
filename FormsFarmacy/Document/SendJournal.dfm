@@ -528,6 +528,14 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 71
           end
+          object isSendLossFrom: TcxGridDBColumn
+            Caption = #1042' '#1087#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077' '#1085#1072' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
+            DataBinding.FieldName = 'isSendLossFrom'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 81
+          end
         end
       end
     end

@@ -384,10 +384,14 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_ErrorRRO() RETURNS integer AS $BOD
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_ErrorRRO', 'ВИП чек по ошибке РРО'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_ErrorRRO');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_SendLossFrom() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_SendLossFrom'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_SendLossFrom', 'В полное списание на отправителя'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_SendLossFrom');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 29.12.21                                                                                   * zc_MovementBoolean_SendLossFrom
  14.12.21                                                                                   * zc_MovementBoolean_ErrorRRO
  16.11.21                                                                                   * zc_MovementBoolean_Conduct
  01.11.21                                                                                   * zc_MovementBoolean_UseSubject

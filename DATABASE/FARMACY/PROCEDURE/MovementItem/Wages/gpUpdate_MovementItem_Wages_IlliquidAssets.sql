@@ -38,6 +38,16 @@ BEGIN
 
     IF COALESCE (vbMovementId, 0) = 0
     THEN
+      -- сохранили <Документ>
+      vbMovementId := lpInsertUpdate_Movement_Wages (ioId              := 0
+                                                   , inInvNumber       := CAST (NEXTVAL ('Movement_Wages_seq')  AS TVarChar) 
+                                                   , inOperDate        := DATE_TRUNC ('MONTH', inOperDate)
+                                                   , inUserId          := vbUserId
+                                                     );
+    END IF;
+
+    IF COALESCE (vbMovementId, 0) = 0
+    THEN
       RAISE EXCEPTION 'Ошибка. Документ ЗП не найден.';
     END IF;
 

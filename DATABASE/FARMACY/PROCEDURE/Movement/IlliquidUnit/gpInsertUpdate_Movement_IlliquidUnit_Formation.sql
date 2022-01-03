@@ -37,8 +37,8 @@ BEGIN
                                                         AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
                                                         AND COALESCE (MovementLinkObject_CashRegister.ObjectId, 0) <> 0
 
-                      WHERE Movement.OperDate >= inOperDate
-                        AND Movement.OperDate < inOperDate + INTERVAL '1 MONTH'
+                      WHERE Movement.OperDate >= inOperDate - INTERVAL '1 MONTH'
+                        AND Movement.OperDate < inOperDate + INTERVAL '1 DAY'
                         AND Movement.StatusId = zc_Enum_Status_Complete()
                         AND Movement.DescId = zc_Movement_Check()
                       )

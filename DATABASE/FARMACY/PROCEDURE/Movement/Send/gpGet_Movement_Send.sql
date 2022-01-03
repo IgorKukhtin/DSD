@@ -23,7 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isVIP Boolean, isUrgently Boolean, isConfirmed Boolean, ConfirmedText TVarChar
              , NumberSeats Integer
              , isBanFiscalSale Boolean
-             , isSendLoss Boolean
+             , isSendLoss Boolean, isSendLossFrom Boolean
              , SetFocused TVarChar
               )
 AS
@@ -83,6 +83,7 @@ BEGIN
              , CAST (0 AS Integer)                              AS NumberSeats
              , FALSE                                            AS isBanFiscalSale
              , FALSE                                            AS isSendLoss
+             , FALSE                                            AS isSendLossFrom
              , ''::TVarChar                                     AS SetFocused 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -129,6 +130,7 @@ BEGIN
            , MovementFloat_NumberSeats.ValueData::Integer       AS NumberSeats
            , COALESCE (MovementBoolean_BanFiscalSale.ValueData, FALSE)    ::Boolean AS isBanFiscalSale           
            , COALESCE (MovementBoolean_SendLoss.ValueData, FALSE)         ::Boolean AS isSendLoss           
+           , COALESCE (MovementBoolean_SendLossFrom.ValueData, FALSE)     ::Boolean AS isSendLossFrom           
            , CASE WHEN Object_To.Id = vbUnitId
                    AND COALESCE (MovementBoolean_Sent.ValueData, FALSE) = True
                    AND COALESCE (MovementBoolean_Received.ValueData, FALSE) = False
@@ -222,6 +224,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_SendLoss
                                       ON MovementBoolean_SendLoss.MovementId = Movement.Id
                                      AND MovementBoolean_SendLoss.DescId = zc_MovementBoolean_SendLoss()
+            LEFT JOIN MovementBoolean AS MovementBoolean_SendLossFrom
+                                      ON MovementBoolean_SendLossFrom.MovementId = Movement.Id
+                                     AND MovementBoolean_SendLossFrom.DescId = zc_MovementBoolean_SendLossFrom()
 
             LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
                                     ON MovementFloat_MCSPeriod.MovementId =  Movement.Id

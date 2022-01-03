@@ -203,6 +203,10 @@ type
     dxBarButton9: TdxBarButton;
     actPrintFP: TdsdOpenStaticForm;
     dxBarButton10: TdxBarButton;
+    cbSendLossFrom: TcxCheckBox;
+    spUpdateSendLossFrom: TdsdStoredProc;
+    actUpdateSendLossFrom: TdsdExecStoredProc;
+    dxBarButton11: TdxBarButton;
   private
     { Private declarations }
   public
