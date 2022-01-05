@@ -7,22 +7,22 @@ inherited PretensionForm: TPretensionForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 108
+    Top = 145
     Width = 1001
-    Height = 462
-    ExplicitTop = 108
+    Height = 425
+    ExplicitTop = 145
     ExplicitWidth = 1001
-    ExplicitHeight = 462
-    ClientRectBottom = 462
+    ExplicitHeight = 425
+    ClientRectBottom = 425
     ClientRectRight = 1001
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1001
-      ExplicitHeight = 438
+      ExplicitHeight = 401
       inherited cxGrid: TcxGrid
         Width = 1001
-        Height = 272
+        Height = 235
         ExplicitWidth = 1001
-        ExplicitHeight = 272
+        ExplicitHeight = 235
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -331,7 +331,7 @@ inherited PretensionForm: TPretensionForm
       end
       object Panel2: TPanel
         Left = 0
-        Top = 272
+        Top = 235
         Width = 1001
         Height = 166
         Align = alBottom
@@ -541,10 +541,10 @@ inherited PretensionForm: TPretensionForm
   end
   inherited DataPanel: TPanel
     Width = 1001
-    Height = 82
+    Height = 119
     TabOrder = 3
     ExplicitWidth = 1001
-    ExplicitHeight = 82
+    ExplicitHeight = 119
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Top = 22
@@ -571,13 +571,13 @@ inherited PretensionForm: TPretensionForm
       ExplicitLeft = 114
     end
     inherited cxLabel15: TcxLabel
-      Top = 40
-      ExplicitTop = 40
+      Top = 79
+      ExplicitTop = 79
     end
     inherited ceStatus: TcxButtonEdit
-      Top = 58
+      Top = 95
       TabOrder = 7
-      ExplicitTop = 58
+      ExplicitTop = 95
       ExplicitWidth = 136
       ExplicitHeight = 22
       Width = 136
@@ -619,8 +619,8 @@ inherited PretensionForm: TPretensionForm
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 456
-      Top = 42
+      Left = 8
+      Top = 43
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       Enabled = False
       Properties.ReadOnly = True
@@ -629,12 +629,12 @@ inherited PretensionForm: TPretensionForm
     end
     object cxLabel10: TcxLabel
       Left = 364
-      Top = 40
+      Top = 79
       Caption = #1058#1080#1087' '#1053#1044#1057
     end
     object edNDSKind: TcxButtonEdit
       Left = 364
-      Top = 59
+      Top = 96
       Enabled = False
       Properties.Buttons = <
         item
@@ -647,17 +647,17 @@ inherited PretensionForm: TPretensionForm
     end
     object cxLabel5: TcxLabel
       Left = 152
-      Top = 40
+      Top = 79
       Caption = #8470' '#1087#1088#1080#1093#1086#1076#1072
     end
     object cxLabel12: TcxLabel
-      Left = 708
-      Top = 5
+      Left = 228
+      Top = 42
       Caption = #1070#1088#1083#1080#1094#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100
     end
     object edJuridical: TcxButtonEdit
-      Left = 708
-      Top = 22
+      Left = 228
+      Top = 59
       Enabled = False
       Properties.Buttons = <
         item
@@ -666,16 +666,16 @@ inherited PretensionForm: TPretensionForm
         end>
       Properties.ReadOnly = True
       TabOrder = 15
-      Width = 154
+      Width = 222
     end
     object cxLabel13: TcxLabel
       Left = 263
-      Top = 40
+      Top = 79
       Caption = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076#1072
     end
     object deIncomeOperDate: TcxDateEdit
       Left = 258
-      Top = 59
+      Top = 96
       EditValue = 42363d
       Enabled = False
       Properties.ReadOnly = True
@@ -685,8 +685,8 @@ inherited PretensionForm: TPretensionForm
       Width = 100
     end
     object cbisDeferred: TcxCheckBox
-      Left = 456
-      Top = 61
+      Left = 8
+      Top = 62
       Caption = #1054#1090#1083#1086#1078#1077#1085
       Properties.ReadOnly = True
       TabOrder = 18
@@ -694,14 +694,14 @@ inherited PretensionForm: TPretensionForm
     end
     object edIncome: TcxTextEdit
       Left = 152
-      Top = 59
+      Top = 96
       Enabled = False
       Properties.ReadOnly = False
       TabOrder = 19
       Width = 105
     end
     object deBranchDate: TcxDateEdit
-      Left = 592
+      Left = 456
       Top = 59
       EditValue = 42363d
       Properties.ReadOnly = True
@@ -711,12 +711,12 @@ inherited PretensionForm: TPretensionForm
       Width = 100
     end
     object cxLabel7: TcxLabel
-      Left = 592
+      Left = 456
       Top = 42
       Caption = #1044#1072#1090#1072' '#1079#1072#1082#1088#1099#1090#1080#1103' ('#1088#1077#1096#1077#1085#1080#1103')'
     end
     object deGoodsReceiptsDate: TcxDateEdit
-      Left = 735
+      Left = 599
       Top = 59
       EditValue = 42363d
       Properties.ReadOnly = True
@@ -726,14 +726,14 @@ inherited PretensionForm: TPretensionForm
       Width = 100
     end
     object cxLabel9: TcxLabel
-      Left = 735
+      Left = 599
       Top = 42
       Hint = #1044#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1090#1086#1074#1072#1088#1072' '#1082' '#1085#1072#1084' '#1085#1072' '#1089#1082#1083#1072#1076
       Caption = #1044#1072#1090#1072' '#1087#1086#1089#1090#1091#1087#1083#1077#1085#1080#1103' '#1090#1086#1074#1072#1088#1072
     end
     object deSentDate: TcxDateEdit
-      Left = 868
-      Top = 22
+      Left = 456
+      Top = 96
       EditValue = 44551d
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
@@ -743,8 +743,8 @@ inherited PretensionForm: TPretensionForm
       Width = 126
     end
     object cxLabel11: TcxLabel
-      Left = 868
-      Top = 5
+      Left = 456
+      Top = 79
       Caption = #1044#1072#1090#1072' '#1087#1086#1076#1072#1095#1080' '#1087#1088#1077#1090#1077#1085#1079#1080#1080
     end
   end
@@ -1852,6 +1852,14 @@ inherited PretensionForm: TPretensionForm
         end
         item
           Component = actUpdate_ClearSentDate
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isMeneger'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = actUpdate_GoodsReceiptsDate
           ValueParam.Value = Null
           ValueParam.Component = FormParams
           ValueParam.ComponentItem = 'isMeneger'

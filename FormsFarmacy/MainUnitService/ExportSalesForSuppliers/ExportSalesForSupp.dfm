@@ -2593,8 +2593,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         '     , CASE WHEN Movement.DescId = zc_Movement_Check() THEN '#39#1055#1088#1086 +
         #1076#1072#1078#1080' '#1082#1072#1089#1089#39' ELSE '#39#1055#1088#1086#1076#1072#1078#1080' '#1073#1077#1079#1085#1072#1083#39' END AS ItemName'
       
-        '     , Object_MedicForSale.ValueData                            ' +
-        '    AS MedicForSaleName'
+        '     , COALESCE(Object_MedicForSale.ValueData, Object_MedicSP.Va' +
+        'lueData)                             AS MedicForSaleName'
       
         '     , COALESCE(Object_BuyerForSale.ValueData, MovementString_Co' +
         'mment.ValueData)                     AS BuyerForSaleName'
@@ -2662,6 +2662,16 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       
         '                             AND MovementString_Comment.DescId =' +
         ' zc_MovementString_Comment()'
+      '     LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicSP'
+      
+        '                                  ON MovementLinkObject_MedicSP.' +
+        'MovementId = Movement.Id'
+      
+        '                                 AND MovementLinkObject_MedicSP.' +
+        'DescId = zc_MovementLinkObject_MedicSP()'
+      
+        '     LEFT JOIN Object AS Object_MedicSP ON Object_MedicSP.Id = M' +
+        'ovementLinkObject_MedicSP.ObjectId'
       '')
     Params = <
       item

@@ -88,7 +88,7 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 58
+            Width = 52
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -96,7 +96,18 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 293
+            Width = 260
+          end
+          object Koeff: TcxGridDBColumn
+            Caption = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090
+            DataBinding.FieldName = 'Koeff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
           end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -105,7 +116,7 @@ inherited PromoUnitForm: TPromoUnitForm
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 84
+            Width = 74
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -115,7 +126,7 @@ inherited PromoUnitForm: TPromoUnitForm
             Properties.DisplayFormat = ',0.000'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 86
+            Width = 75
           end
           object AmountPlanMax: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080
@@ -125,7 +136,7 @@ inherited PromoUnitForm: TPromoUnitForm
             Properties.DisplayFormat = ',0.000'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 84
+            Width = 73
           end
           object Summ: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
@@ -135,7 +146,7 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 95
+            Width = 84
           end
           object SummPlanMax: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080
@@ -145,7 +156,7 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 95
+            Width = 82
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -153,7 +164,7 @@ inherited PromoUnitForm: TPromoUnitForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Width = 265
+            Width = 197
           end
         end
       end
@@ -380,6 +391,57 @@ inherited PromoUnitForm: TPromoUnitForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100
       ImageIndex = 41
     end
+    object actExecuteDialogKoeff: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialogKoeff'
+      FormName = 'TSummaDialogForm'
+      FormNameParam.Value = 'TSummaDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Summa'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Koeff'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1042#1074#1086#1076' '#1082#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1072
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdateKoeff: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateKoeff
+      StoredProcList = <
+        item
+          StoredProc = spUpdateKoeff
+        end>
+      Caption = 'actUpdateKoeff'
+    end
+    object mactUpdateKoeff: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actExecuteDialogKoeff
+      ActionList = <
+        item
+          Action = actUpdateKoeff
+        end>
+      View = cxGridDBTableView
+      Caption = #1042#1085#1077#1089#1090#1080' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1082#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1072
+      Hint = #1042#1085#1077#1089#1090#1080' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1082#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1072
+      ImageIndex = 40
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_PromoUnit'
@@ -447,6 +509,14 @@ inherited PromoUnitForm: TPromoUnitForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateKoeff'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -467,6 +537,10 @@ inherited PromoUnitForm: TPromoUnitForm
     end
     object bbactStartLoad: TdxBarButton
       Action = actStartLoad
+      Category = 0
+    end
+    object bbUpdateKoeff: TdxBarButton
+      Action = mactUpdateKoeff
       Category = 0
     end
   end
@@ -522,6 +596,7 @@ inherited PromoUnitForm: TPromoUnitForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Koeff'
         Value = Null
         DataType = ftFloat
         ParamType = ptUnknown
@@ -990,5 +1065,31 @@ inherited PromoUnitForm: TPromoUnitForm
     PackSize = 1
     Left = 784
     Top = 160
+  end
+  object spUpdateKoeff: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_PromoUnit_Koeff'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeff'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Koeff'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 798
+    Top = 248
   end
 end

@@ -874,9 +874,8 @@ BEGIN
        AND _tmpRemains_all_Supplement.UnitId = T1.UnitId;
        
      -- 2.2. Подправили места по размазке не менее
-     UPDATE _tmpRemains_all_Supplement SET Need = ceil(COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) - _tmpRemains_all_Supplement.AmountRemains)
+     UPDATE _tmpRemains_all_Supplement SET Need = ceil(COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0))
      WHERE COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0
-       AND _tmpRemains_all_Supplement.AmountRemains < COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0)
        AND _tmpRemains_all_Supplement.Need < (COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) - _tmpRemains_all_Supplement.AmountRemains);
        
 
@@ -906,7 +905,8 @@ BEGIN
              , _tmpRemains_all_Supplement.GoodsId
              , CASE WHEN COALESCE (GiveAway, 0) > 0 THEN COALESCE (GiveAway, 0) ELSE 
                - CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
-                 CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True
+                 CASE WHEN (_tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True) AND 
+                           COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= 0
                       THEN - _tmpRemains_all_Supplement.AmountRemains
                       ELSE TRUNC(_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
                                                             + CASE WHEN _tmpRemains_all_Supplement.AmountNotSend > 
@@ -917,7 +917,8 @@ BEGIN
                                                                       + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0) END)
                       END
                  ELSE
-                 TRUNC (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True
+                 TRUNC (CASE WHEN (_tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True) AND 
+                           COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= 0
                              THEN - _tmpRemains_all_Supplement.AmountRemains
                              ELSE FLOOR(_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
                                                                    + CASE WHEN _tmpRemains_all_Supplement.AmountNotSend > 
@@ -948,7 +949,8 @@ BEGIN
 
        WHERE CASE WHEN COALESCE (GiveAway, 0) > 0 THEN COALESCE (GiveAway, 0) ELSE 
                - CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
-                 CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True
+                 CASE WHEN (_tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True) AND 
+                           COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= 0
                       THEN - _tmpRemains_all_Supplement.AmountRemains
                       ELSE TRUNC(_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
                                                             + CASE WHEN _tmpRemains_all_Supplement.AmountNotSend > 
@@ -959,7 +961,8 @@ BEGIN
                                                                       + COALESCE(_tmpGoods_PromoUnit_Supplement.Amount, 0) END)
                       END
                  ELSE
-                 TRUNC (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True
+                 TRUNC (CASE WHEN (_tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True) AND 
+                                   COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= 0
                              THEN - _tmpRemains_all_Supplement.AmountRemains
                              ELSE FLOOR(_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
                                                                    + CASE WHEN _tmpRemains_all_Supplement.AmountNotSend > 

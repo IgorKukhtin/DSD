@@ -43,6 +43,13 @@ BEGIN
                                                         , inParentId
                                                         , ''
                                                         , vbUserId);     
+
+       --Сохранили Дата поступления товара
+       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_GoodsReceipts(), ioMovementId, MovementDate_Branch.ValueData)
+       FROM MovementDate AS MovementDate_Branch
+       WHERE MovementDate_Branch.MovementId = inParentId
+         AND MovementDate_Branch.DescId = zc_MovementDate_Branch();
+         
      END IF;
      
      PERFORM lpInsertUpdate_MovementItem_Pretension(0, ioMovementId, inMIParentId, inGoodsId, inAmount, inReasonDifferencesId, inAmountIncome, inAmountManual, True, vbUserId);

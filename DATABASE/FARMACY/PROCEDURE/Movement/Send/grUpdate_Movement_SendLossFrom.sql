@@ -119,11 +119,11 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
      END IF;
      
-/*     IF inisSendLossFrom = FALSE AND (vbisSUN <> TRUE  OR vbisDeferred <> TRUE OR vbisSent <> TRUE OR vbisReceived = TRUE)
+     IF inisSendLossFrom = FALSE AND (vbisSUN <> TRUE  OR vbisDeferred <> TRUE OR vbisSent <> TRUE OR vbisReceived = TRUE)
      THEN
         RAISE EXCEPTION 'Ошибка. Для установки <В полное списание> документ должен быть с признаками <Перемещение по СУН>, <Отложен>, <Отправлен> и не <Получен>.';
      END IF;
-*/
+
      -- сохранили признак
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SendLossFrom(), inMovementId, NOT inisSendLossFrom);
 

@@ -35,6 +35,11 @@ BEGIN
                                              , inComment
                                              , vbUserId);
 
+    --Сохранили Дата поступления товара
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_GoodsReceipts(), ioId, MovementDate_Branch.ValueData)
+    FROM MovementDate AS MovementDate_Branch
+    WHERE MovementDate_Branch.MovementId = inParentId
+      AND MovementDate_Branch.DescId = zc_MovementDate_Branch();
 
 END;
 $BODY$

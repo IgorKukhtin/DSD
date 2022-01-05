@@ -41,6 +41,12 @@ type
     spInsertUpdate_MI_PromoUnit_Set_Zero: TdsdStoredProc;
     spGetImportSettingId: TdsdStoredProc;
     bbactStartLoad: TdxBarButton;
+    Koeff: TcxGridDBColumn;
+    mactUpdateKoeff: TMultiAction;
+    actExecuteDialogKoeff: TExecuteDialog;
+    bbUpdateKoeff: TdxBarButton;
+    spUpdateKoeff: TdsdStoredProc;
+    actUpdateKoeff: TdsdExecStoredProc;
   private
     { Private declarations }
   public
