@@ -2455,13 +2455,18 @@ procedure TEDI.DESADVSave(HeaderDataSet, ItemsDataSet: TDataSet);
 var
   DESADV: DesadvXML.IXMLDESADVType;
   DESADV_fozz: DesadvFozzXML.IXMLDESADVType;
+  DESADV_fozz_Amount: DOCUMENTINVOICE_TN_XML.IXMLDocumentInvoiceType;
+  DESADV_fozz_Price : DOCUMENTINVOICE_PRN_XML.IXMLDocumentInvoiceType;
   //DESADV_fozz: DOCUMENTINVOICE_PRN_XML.IXMLDESADVType;
   Stream: TStream;
   i: integer;
   FileName: string;
   lNumber: string;
+  AmountSummNoVAT_fozz: Double;
+  VATPercent_fozz: Integer;
 begin
-  if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
+  if (HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE)
+     and (1=0)
   then begin
             // Создать XML
             DESADV_fozz := DesadvFozzXML.NewDESADV;
@@ -2565,6 +2570,226 @@ begin
               end;
             end;
   end
+  else
+  if (HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE)
+     and (1=1)
+  then begin
+            // 1.1. Создать XML - fozzy - Amount
+            DESADV_fozz_Amount := DOCUMENTINVOICE_TN_XML.NewDocumentInvoice;
+            // Номер повідомлення про відвантаження
+            DESADV_fozz_Amount.InvoiceHeader.InvoiceNumber := HeaderDataSet.FieldByName('InvNumber').asString;
+            // Дата документа
+            DESADV_fozz_Amount.InvoiceHeader.InvoiceDate := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+            //Код типу документа: TN - накладна за кількістю
+            DESADV_fozz_Amount.InvoiceHeader.DocumentFunctionCode := 'TN';
+            // Номер договору на поставку
+            DESADV_fozz_Amount.InvoiceHeader.ContractNumber := HeaderDataSet.FieldByName('ContractName').asString;
+            // Дата договору
+            DESADV_fozz_Amount.InvoiceHeader.ContractDate := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
+            // Номер замовлення
+            DESADV_fozz_Amount.InvoiceReference.Order.BuyerOrderNumber := HeaderDataSet.FieldByName('InvNumberOrder').asString;
+            // Дата замовлення
+            DESADV_fozz_Amount.InvoiceReference.Order.BuyerOrderDate := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDateOrder').asDateTime);
+
+            // Глобальний номер розташування (GLN) контрагента - GLN покупця
+            if HeaderDataSet.FieldByName('BuyerGLNCode').asString <> ''
+            then DESADV_fozz_Amount.InvoiceParties.Buyer.ILN := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
+            // Податковий ідентифікаційний номер - покупця
+            if HeaderDataSet.FieldByName('INN_To').asString <> ''
+            then DESADV_fozz_Amount.InvoiceParties.Buyer.TaxID := HeaderDataSet.FieldByName('INN_To').asString;
+            // Код ЄДРПОУ - покупця
+            if HeaderDataSet.FieldByName('OKPO_To').asString <> ''
+            then DESADV_fozz_Amount.InvoiceParties.Buyer.UtilizationRegisterNumber := HeaderDataSet.FieldByName('OKPO_To').asString;
+            // Назва контрагента
+            DESADV_fozz_Amount.InvoiceParties.Buyer.Name := HeaderDataSet.FieldByName('JuridicalName_To').asString;
+
+
+            // Глобальний номер розташування (GLN) контрагента - GLN продавця
+            if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+            then DESADV_fozz_Amount.InvoiceParties.Seller.ILN := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
+            // Податковий ідентифікаційний номер - продавця
+            if HeaderDataSet.FieldByName('INN_From').asString <> ''
+            then DESADV_fozz_Amount.InvoiceParties.Seller.TaxID := HeaderDataSet.FieldByName('INN_From').asString;
+            // Код ЄДРПОУ - продавця
+            if HeaderDataSet.FieldByName('OKPO_From').asString <> ''
+            then DESADV_fozz_Amount.InvoiceParties.Seller.UtilizationRegisterNumber := HeaderDataSet.FieldByName('OKPO_From').asString;
+            // Назва продавця
+            DESADV_fozz_Amount.InvoiceParties.Seller.Name := HeaderDataSet.FieldByName('JuridicalName_From').asString;
+
+            // Глобальний номер розташування (GLN) контрагента - GLN Точка доставки
+            if HeaderDataSet.FieldByName('DELIVERYPLACEGLNCode').asString <> ''
+            then DESADV_fozz_Amount.InvoiceParties.DeliveryPoint.ILN := HeaderDataSet.FieldByName('DELIVERYPLACEGLNCode').asString;
+            // Юридична особа об’єкту доставки
+            DESADV_fozz_Amount.InvoiceParties.DeliveryPoint.Name := HeaderDataSet.FieldByName('JuridicalName_To').asString;
+            // Місто - Точка доставки
+            DESADV_fozz_Amount.InvoiceParties.DeliveryPoint.CityName := HeaderDataSet.FieldByName('CityName_To').asString;
+            // Вулиця і номер будинку - Точка доставки
+            DESADV_fozz_Amount.InvoiceParties.DeliveryPoint.StreetAndNumber := HeaderDataSet.FieldByName('StreetName_To').asString;
+            // Поштовий код - Точка доставки
+            //try DESADV_fozz_Amount.InvoiceParties.DeliveryPoint.PostalCode := StrToInt(HeaderDataSet.FieldByName('PostalCode_To').asString);except end;
+
+
+
+            with ItemsDataSet do
+            begin
+              First;
+              i := 1;
+              while not Eof do
+              begin
+                with DESADV_fozz_Amount.InvoiceLines.Add do
+                begin
+                  // Номер товарної позиції
+                  LineItem.LineNumber := i;
+                  // Штрихкод продукту
+                  LineItem.EAN := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
+                  // Артикул в БД покупця
+                  LineItem.BuyerItemCode := ItemsDataSet.FieldByName('ArticleGLN_Juridical').asString;
+                  // Найменування товарної позиції
+                  LineItem.ItemDescription := ItemsDataSet.FieldByName('GoodsName').asString;
+                  // кількість, що поставляється
+                  LineItem.InvoiceQuantity := ItemsDataSet.FieldByName('AmountPartner').AsFloat;
+                  // BuyerUnitOfMeasure
+                  LineItem.BuyerUnitOfMeasure := ItemsDataSet.FieldByName('MeasureName').asString;
+
+                end;
+                inc(i);
+                Next;
+              end;
+            end;
+
+
+            // 1.2. Создать XML - fozzy - Price
+            AmountSummNoVAT_fozz:= 0;
+            VATPercent_fozz:= 0;
+            //
+            DESADV_fozz_Price := DOCUMENTINVOICE_PRN_XML.NewDocumentInvoice;
+            // Номер повідомлення про відвантаження
+            DESADV_fozz_Amount.InvoiceHeader.InvoiceNumber := HeaderDataSet.FieldByName('InvNumber').asString;
+            // Дата документа
+            DESADV_fozz_Price.InvoiceHeader.InvoiceDate := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+            //Код типу документа: TN - накладна за кількістю
+            DESADV_fozz_Price.InvoiceHeader.DocumentFunctionCode := 'PRN';
+            // Номер договору на поставку
+            DESADV_fozz_Price.InvoiceHeader.ContractNumber := HeaderDataSet.FieldByName('ContractName').asString;
+            // Дата договору
+            DESADV_fozz_Price.InvoiceHeader.ContractDate := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
+            // Загальна кількість накладних
+            DESADV_fozz_Price.InvoiceHeader.InvoiceQuantity := 1;
+            // Порядковий номер накладної
+            DESADV_fozz_Price.InvoiceHeader.InvoiceSequences := 1;
+            // Номер замовлення
+            DESADV_fozz_Price.InvoiceReference.Order.BuyerOrderNumber := HeaderDataSet.FieldByName('InvNumberOrder').asString;
+            // Дата замовлення
+            DESADV_fozz_Price.InvoiceReference.Order.BuyerOrderDate := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDateOrder').asDateTime);
+            // Номер документу-підстави (Накладної за кількістю)
+            //DESADV_fozz_Amount.InvoiceReference.Invoice.OriginalInvoiceNumber := HeaderDataSet.FieldByName('InvNumber').asString;
+            // Дата складання документу-підстави (Накладної за кількістю)
+            //DESADV_fozz_Price.InvoiceReference.Invoice.OriginalInvoiceDate := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+
+            // Глобальний номер розташування (GLN) контрагента - GLN покупця
+            if HeaderDataSet.FieldByName('BuyerGLNCode').asString <> ''
+            then DESADV_fozz_Price.InvoiceParties.Buyer.ILN := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
+            // Податковий ідентифікаційний номер - покупця
+            if HeaderDataSet.FieldByName('INN_To').asString <> ''
+            then DESADV_fozz_Price.InvoiceParties.Buyer.TaxID := HeaderDataSet.FieldByName('INN_To').asString;
+            // Код ЄДРПОУ - покупця
+            if HeaderDataSet.FieldByName('OKPO_To').asString <> ''
+            then DESADV_fozz_Price.InvoiceParties.Buyer.UtilizationRegisterNumber := HeaderDataSet.FieldByName('OKPO_To').asString;
+            // Назва контрагента
+            DESADV_fozz_Price.InvoiceParties.Buyer.Name := HeaderDataSet.FieldByName('JuridicalName_To').asString;
+
+
+            // Глобальний номер розташування (GLN) контрагента - GLN продавця
+            if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+            then DESADV_fozz_Price.InvoiceParties.Seller.ILN := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
+            // Податковий ідентифікаційний номер - продавця
+            if HeaderDataSet.FieldByName('INN_From').asString <> ''
+            then DESADV_fozz_Price.InvoiceParties.Seller.TaxID := HeaderDataSet.FieldByName('INN_From').asString;
+            // Код ЄДРПОУ - продавця
+            if HeaderDataSet.FieldByName('OKPO_From').asString <> ''
+            then DESADV_fozz_Price.InvoiceParties.Seller.UtilizationRegisterNumber := HeaderDataSet.FieldByName('OKPO_From').asString;
+            // Назва продавця
+            DESADV_fozz_Price.InvoiceParties.Seller.Name := HeaderDataSet.FieldByName('JuridicalName_From').asString;
+
+            // Глобальний номер розташування (GLN) контрагента - GLN Точка доставки
+            if HeaderDataSet.FieldByName('DELIVERYPLACEGLNCode').asString <> ''
+            then DESADV_fozz_Price.InvoiceParties.DeliveryPoint.ILN := HeaderDataSet.FieldByName('DELIVERYPLACEGLNCode').asString;
+            // Юридична особа об’єкту доставки
+            DESADV_fozz_Price.InvoiceParties.DeliveryPoint.Name := HeaderDataSet.FieldByName('JuridicalName_To').asString;
+            // Місто - Точка доставки
+            DESADV_fozz_Price.InvoiceParties.DeliveryPoint.CityName := HeaderDataSet.FieldByName('CityName_To').asString;
+            // Вулиця і номер будинку - Точка доставки
+            DESADV_fozz_Price.InvoiceParties.DeliveryPoint.StreetAndNumber := HeaderDataSet.FieldByName('StreetName_To').asString;
+            // Поштовий код - Точка доставки
+            //try DESADV_fozz_Price.InvoiceParties.DeliveryPoint.PostalCode := StrToInt(HeaderDataSet.FieldByName('PostalCode_To').asString);except end;
+
+            // Глобальний номер розташування (GLN) контрагента - GLN Платник
+            if HeaderDataSet.FieldByName('BuyerGLNCode').asString <> ''
+            then DESADV_fozz_Price.InvoiceParties.Payer.ILN := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
+            // Назва контрагента - Платник
+            DESADV_fozz_Price.InvoiceParties.Payer.Name := HeaderDataSet.FieldByName('JuridicalName_To').asString;
+            // Місто - Платник
+            DESADV_fozz_Price.InvoiceParties.Payer.CityName := 'м. Київ';
+            // Місто - Платник
+            DESADV_fozz_Price.InvoiceParties.Payer.StreetAndNumber := 'вул. Бутлерова, буд.1';
+
+
+            with ItemsDataSet do
+            begin
+              First;
+              i := 1;
+              while not Eof do
+              begin
+                with DESADV_fozz_Price.InvoiceLines.Add do
+                begin
+                  // Номер товарної позиції
+                  LineItem.LineNumber := i;
+                  // Штрихкод продукту
+                  LineItem.EAN := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
+                  // Артикул в БД покупця
+                  LineItem.BuyerItemCode := ItemsDataSet.FieldByName('ArticleGLN_Juridical').asString;
+                  // код УКТЗЕД
+                  LineItem.ExternalItemCode := ItemsDataSet.FieldByName('GoodsCodeUKTZED').asString;
+                  // Найменування товарної позиції
+                  LineItem.ItemDescription := ItemsDataSet.FieldByName('GoodsName').asString;
+                  // кількість, що поставляється
+                  LineItem.InvoiceQuantity := ItemsDataSet.FieldByName('AmountPartner').AsFloat;
+                  // BuyerUnitOfMeasure
+                  LineItem.BuyerUnitOfMeasure := ItemsDataSet.FieldByName('MeasureName').asString;
+
+                  // Ціна однієї одиниці без ПДВ
+                  LineItem.InvoiceUnitNetPrice := ItemsDataSet.FieldByName('PriceNoVAT').AsFloat;
+                  // Ціна однієї одиниці без ПДВ
+                  //LineItem.InvoiceUnitGrossPrice := ItemsDataSet.FieldByName('PriceWVAT').AsFloat;
+                  // Ставка податку (ПДВ,%):
+                  LineItem.TaxRate := ItemsDataSet.FieldByName('VATPercent').AsInteger;
+
+                  // Сума з ПДВ
+                  LineItem.GrossAmount := ItemsDataSet.FieldByName('AmountSummWVAT').AsFloat;
+                  // Сума податку
+                  LineItem.TaxAmount := ItemsDataSet.FieldByName('AmountSummWVAT').AsFloat - ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat;
+                  // Сума без ПДВ
+                  LineItem.NetAmount := ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat;
+                  //
+                  AmountSummNoVAT_fozz:= AmountSummNoVAT_fozz + ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat;
+                  VATPercent_fozz:= ItemsDataSet.FieldByName('VATPercent').AsInteger;
+                end;
+                inc(i);
+                Next;
+              end;
+            end;
+            //
+            // Кількість рядків в документі
+            DESADV_fozz_Price.InvoiceSummary.TotalLines := i;
+            // Загальна сума без ПДВ
+            DESADV_fozz_Price.InvoiceSummary.TotalNetAmount := AmountSummNoVAT_fozz;
+            // Сума ПДВ
+            DESADV_fozz_Price.InvoiceSummary.TotalNetAmount := Round(100 * AmountSummNoVAT_fozz * (1 + VATPercent_fozz/100)) / 100 - AmountSummNoVAT_fozz;
+            // Загальна сума з ПДВ
+            DESADV_fozz_Price.InvoiceSummary.TotalGrossAmount := Round(100 * AmountSummNoVAT_fozz * (1 + VATPercent_fozz/100)) / 100;
+
+
+  end
   else begin
             // Создать XML
             DESADV := DesadvXML.NewDESADV;
@@ -2635,28 +2860,30 @@ begin
   try
     if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
     then begin
-              DESADV_fozz.OwnerDocument.SaveToStream(Stream);
-              lNumber:= DESADV_fozz.NUMBER
+              DESADV_fozz_Amount.OwnerDocument.SaveToStream(Stream);
+              lNumber:= DESADV_fozz_Amount.InvoiceHeader.InvoiceNumber;
+              //
+              FileName := 'DOCUMENTINVOICE_TN_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + lNumber + '.xml';
          end
     else begin DESADV.OwnerDocument.SaveToStream(Stream);
-              lNumber:= DESADV.NUMBER
+              lNumber:= DESADV.NUMBER;
+              //
+              FileName := 'desadv_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + lNumber + '.xml';
          end;
-    //
-    FileName := 'desadv_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + lNumber + '.xml';
     // !временно!
     if (FisEDISaveLocal) or (HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE)
    //or (1=1)
     then
        try
          if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
-         then DESADV_fozz.OwnerDocument.SaveToFile(FileName)
+         then DESADV_fozz_Amount.OwnerDocument.SaveToFile(FileName)
          else DESADV     .OwnerDocument.SaveToFile(FDirectoryError + FileName);
        except
          if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
-         then DESADV_fozz.OwnerDocument.SaveToFile(FileName)
+         then DESADV_fozz_Amount.OwnerDocument.SaveToFile(FileName)
          else DESADV     .OwnerDocument.SaveToFile(FileName);
        end;
-    // здесь созранили на ftp
+    // здесь сохранили на ftp
     PutStreamToFTP(Stream, FileName, '/outbox');
     //
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
@@ -2667,13 +2894,57 @@ begin
 
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
         HeaderDataSet.FieldByName('EDIId').asInteger;
-      FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
-        'Документ DESADV отправлен на FTP';
+      if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
+      then
+        FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
+          'Документ DOCUMENTINVOICE_TN отправлен на FTP'
+      else
+        FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
+          'Документ DESADV отправлен на FTP';
       FInsertEDIEvents.Execute;
     end;
   finally
     Stream.Free;
   end;
+  //
+  //
+  // Send XML - fozzy - Price
+  if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
+  then
+  try
+    Stream := TMemoryStream.Create;
+    //
+    DESADV_fozz_Price.OwnerDocument.SaveToStream(Stream);
+    lNumber:= DESADV_fozz_Price.InvoiceHeader.InvoiceNumber;
+    //
+    FileName := 'DOCUMENTINVOICE_PRN_' + FormatDateTime('yyyymmddhhnn', Now) + '_' + lNumber + '.xml';
+    // !временно!
+       try
+         DESADV_fozz_Price.OwnerDocument.SaveToFile(FileName)
+       except
+         DESADV_fozz_Price.OwnerDocument.SaveToFile(FileName)
+       end;
+    // здесь сохранили на ftp
+    PutStreamToFTP(Stream, FileName, '/outbox');
+    //
+    if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
+    begin
+      FUpdateEDIErrorState.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('EDIId').asInteger;
+      FUpdateEDIErrorState.ParamByName('inIsError').Value := false;
+      FUpdateEDIErrorState.Execute;
+
+      FInsertEDIEvents.ParamByName('inMovementId').Value :=
+        HeaderDataSet.FieldByName('EDIId').asInteger;
+      if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
+      then
+        FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
+          'Документ DOCUMENTINVOICE_PRN отправлен на FTP';
+      FInsertEDIEvents.Execute;
+    end;
+  finally
+    Stream.Free;
+  end;
+
 end;
 
 destructor TEDI.Destroy;

@@ -44,12 +44,16 @@ BEGIN
                                                                               AND CLO_Member.DescId = zc_ContainerLinkObject_Member()
                                                                             --  AND CLO_Member.ObjectId > 0
 
+                                   LEFT JOIN ContainerLinkObject AS CLO_Car ON CLO_Car.ContainerId = Container.Id
+                                                                           AND CLO_Car.DescId      = zc_ContainerLinkObject_Car()
+                                                                           --  AND CLO_Car.ObjectId > 0
+
                                    LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = Container.Id
                                                                                     AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
 
                               WHERE (Container.ObjectId = inGoodsId OR inGoodsId = 0)
                                 AND Container.DescId = zc_Container_Count()
-                                AND (CLO_Unit.ObjectId = inUnitId OR CLO_Member.ObjectId = inUnitId OR inUnitId = 0)
+                                AND (CLO_Unit.ObjectId = inUnitId OR CLO_Member.ObjectId = inUnitId OR CLO_Car.ObjectId = inUnitId OR inUnitId = 0)
                                 AND (Container.Amount <> 0 OR inShowAll = TRUE)
 
                              UNION
@@ -66,12 +70,16 @@ BEGIN
                                                                               AND CLO_Member.DescId = zc_ContainerLinkObject_Member()
                                                                             --  AND CLO_Member.ObjectId > 0
 
+                                   LEFT JOIN ContainerLinkObject AS CLO_Car ON CLO_Car.ContainerId = Container.Id
+                                                                           AND CLO_Car.DescId      = zc_ContainerLinkObject_Car()
+                                                                           --  AND CLO_Car.ObjectId > 0
+
                                    LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = Container.Id
                                                                                     AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
 
                               WHERE (Container.ObjectId = inGoodsId OR inGoodsId = 0)
                                 AND Container.DescId = zc_Container_Count()
-                                AND (CLO_Unit.ObjectId = inUnitId OR CLO_Member.ObjectId = inUnitId)
+                                AND (CLO_Unit.ObjectId = inUnitId OR CLO_Member.ObjectId = inUnitId OR CLO_Car.ObjectId = inUnitId)
                                 AND Container.Amount <> 0
                                 AND CLO_PartionGoods.ObjectId <> 0
                              )

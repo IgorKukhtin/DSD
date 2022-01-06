@@ -1,18 +1,20 @@
 -- Function: lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, Integer)
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, Integer, Integer, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ContainerCount_Goods (
-    IN inOperDate               TDateTime, 
-    IN inUnitId                 Integer , 
-    IN inCarId                  Integer , 
-    IN inMemberId               Integer , 
-    IN inInfoMoneyDestinationId Integer , 
-    IN inGoodsId                Integer , 
-    IN inGoodsKindId            Integer , 
-    IN inIsPartionCount         Boolean , 
-    IN inPartionGoodsId         Integer , 
-    IN inAssetId                Integer , 
+    IN inOperDate               TDateTime,
+    IN inUnitId                 Integer ,
+    IN inCarId                  Integer ,
+    IN inMemberId               Integer ,
+    IN inInfoMoneyDestinationId Integer ,
+    IN inInfoMoneyId            Integer ,
+    IN inGoodsId                Integer ,
+    IN inGoodsKindId            Integer ,
+    IN inIsPartionCount         Boolean ,
+    IN inPartionGoodsId         Integer ,
+    IN inAssetId                Integer ,
     IN inBranchId               Integer , -- эта аналитика нужна для филиала
     IN inAccountId              Integer   -- эта аналитика нужна для "товар в пути / виртуальный склад"
 )
@@ -89,6 +91,27 @@ BEGIN
                                                  , inObjectId_2        := inAssetId
                                                  , inDescId_3          := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN zc_ContainerLinkObject_Account() ELSE NULL END
                                                  , inObjectId_3        := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN inAccountId ELSE NULL END
+                                                  );
+     ELSE
+     -- 20103 Запчасти и Ремонты + Шины
+     IF inInfoMoneyId IN (zc_Enum_InfoMoney_20103())
+         AND inPartionGoodsId > 0
+                           -- 0)Товар 1)Автомобиль / Физ.лицо(МО) / Подразделение 2)Партия товара 2)Основные средства(для которого закуплено ТМЦ) 3) Партия
+     THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
+                                                 , inParentId          := NULL
+                                                 , inObjectId          := inGoodsId
+                                                 , inJuridicalId_basis := NULL
+                                                 , inBusinessId        := NULL
+                                                 , inObjectCostDescId  := NULL
+                                                 , inObjectCostId      := NULL
+                                                 , inDescId_1          := CASE WHEN inCarId <> 0 THEN zc_ContainerLinkObject_Car() WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
+                                                 , inObjectId_1        := CASE WHEN inCarId <> 0 THEN inCarId                      WHEN inMemberId <> 0 THEN inMemberId                      ELSE CASE WHEN inUnitId <> 0 THEN inUnitId ELSE zc_Juridical_Basis() END END
+                                                 , inDescId_2          := zc_ContainerLinkObject_AssetTo()
+                                                 , inObjectId_2        := inAssetId
+                                                 , inDescId_3          := zc_ContainerLinkObject_PartionGoods()
+                                                 , inObjectId_3        := inPartionGoodsId
+                                                 , inDescId_4          := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN zc_ContainerLinkObject_Account() ELSE NULL END
+                                                 , inObjectId_4        := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN inAccountId ELSE NULL END
                                                   );
      ELSE
      -- 20100 Запчасти и Ремонты
@@ -168,7 +191,7 @@ BEGIN
                                                                                WHEN inOperDate >= '01.01.2017'
                                                                                     THEN inGoodsKindId
                                                                                ELSE 0
-                                                                          END 
+                                                                          END
                                                  , inDescId_3          := CASE WHEN inPartionGoodsId <> 0 THEN zc_ContainerLinkObject_PartionGoods() ELSE NULL END
                                                  , inObjectId_3        := CASE WHEN inPartionGoodsId <> 0 THEN inPartionGoodsId ELSE NULL END
                                                  , inDescId_4          := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN zc_ContainerLinkObject_Account() ELSE NULL END
@@ -195,6 +218,7 @@ BEGIN
      END IF;
      END IF;
      END IF;
+     END IF;
 
      -- Возвращаем значение
      RETURN (vbContainerId);
@@ -202,7 +226,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, Integer, Integer, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

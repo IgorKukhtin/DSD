@@ -357,6 +357,8 @@ BEGIN
                              )
                          -- только не ОС
                          AND tmpMI.ContainerId_asset = 0
+                         -- только не Шины
+                         AND tmpMI.InfoMoneyId <> zc_Enum_InfoMoney_20103() -- Запчасти и Ремонты + Шины
                       )
         , tmpContainer_calc
                    AS (SELECT tmpContainer_find.ContainerId
@@ -499,6 +501,10 @@ BEGIN
                                                      AND (_tmpItem.isPartionCount = TRUE OR _tmpItem.isPartionSumm = TRUE)
                                                         THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoods)
 
+                                                    WHEN vbOperDate >= zc_DateStart_PartionGoods_20103()
+                                                     AND _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_20103() -- Запчасти и Ремонты + Шины
+                                                        THEN lpInsertFind_Object_PartionGoods (inValue:= _tmpItem.PartionGoods)
+
                                                     WHEN vbIsPartionDate_Unit = TRUE
                                                      AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                            , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
@@ -546,6 +552,7 @@ BEGIN
                                                                                 , inCarId                  := vbCarId
                                                                                 , inMemberId               := vbMemberId
                                                                                 , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                                                , inInfoMoneyId            := _tmpItem.InfoMoneyId
                                                                                 , inGoodsId                := _tmpItem.GoodsId
                                                                                 , inGoodsKindId            := _tmpItem.GoodsKindId
                                                                                 , inIsPartionCount         := _tmpItem.isPartionCount

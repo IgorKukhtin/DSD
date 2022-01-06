@@ -59,24 +59,24 @@ type
     function Get_InvoiceNumber: UnicodeString;
     function Get_InvoiceDate: UnicodeString;
     function Get_DocumentFunctionCode: UnicodeString;
-    function Get_ContractNumber: Integer;
+    function Get_ContractNumber: UnicodeString;
     function Get_ContractDate: UnicodeString;
-    function Get_InvoiceQuantity: Integer;
+    function Get_InvoiceQuantity: Double;
     function Get_InvoiceSequences: Integer;
     procedure Set_InvoiceNumber(Value: UnicodeString);
     procedure Set_InvoiceDate(Value: UnicodeString);
     procedure Set_DocumentFunctionCode(Value: UnicodeString);
-    procedure Set_ContractNumber(Value: Integer);
+    procedure Set_ContractNumber(Value: UnicodeString);
     procedure Set_ContractDate(Value: UnicodeString);
-    procedure Set_InvoiceQuantity(Value: Integer);
+    procedure Set_InvoiceQuantity(Value: Double);
     procedure Set_InvoiceSequences(Value: Integer);
     { Methods & Properties }
     property InvoiceNumber: UnicodeString read Get_InvoiceNumber write Set_InvoiceNumber;
     property InvoiceDate: UnicodeString read Get_InvoiceDate write Set_InvoiceDate;
     property DocumentFunctionCode: UnicodeString read Get_DocumentFunctionCode write Set_DocumentFunctionCode;
-    property ContractNumber: Integer read Get_ContractNumber write Set_ContractNumber;
+    property ContractNumber: UnicodeString read Get_ContractNumber write Set_ContractNumber;
     property ContractDate: UnicodeString read Get_ContractDate write Set_ContractDate;
-    property InvoiceQuantity: Integer read Get_InvoiceQuantity write Set_InvoiceQuantity;
+    property InvoiceQuantity: Double read Get_InvoiceQuantity write Set_InvoiceQuantity;
     property InvoiceSequences: Integer read Get_InvoiceSequences write Set_InvoiceSequences;
   end;
 
@@ -125,18 +125,18 @@ type
   IXMLBuyerType = interface(IXMLNode)
     ['{0AC97C57-0606-4E5A-911B-7DA4B25E953B}']
     { Property Accessors }
-    function Get_ILN: Integer;
-    function Get_TaxID: Integer;
-    function Get_UtilizationRegisterNumber: Integer;
+    function Get_ILN: UnicodeString;
+    function Get_TaxID: UnicodeString;
+    function Get_UtilizationRegisterNumber: UnicodeString;
     function Get_Name: UnicodeString;
-    procedure Set_ILN(Value: Integer);
-    procedure Set_TaxID(Value: Integer);
-    procedure Set_UtilizationRegisterNumber(Value: Integer);
+    procedure Set_ILN(Value: UnicodeString);
+    procedure Set_TaxID(Value: UnicodeString);
+    procedure Set_UtilizationRegisterNumber(Value: UnicodeString);
     procedure Set_Name(Value: UnicodeString);
     { Methods & Properties }
-    property ILN: Integer read Get_ILN write Set_ILN;
-    property TaxID: Integer read Get_TaxID write Set_TaxID;
-    property UtilizationRegisterNumber: Integer read Get_UtilizationRegisterNumber write Set_UtilizationRegisterNumber;
+    property ILN: UnicodeString read Get_ILN write Set_ILN;
+    property TaxID: UnicodeString read Get_TaxID write Set_TaxID;
+    property UtilizationRegisterNumber: UnicodeString read Get_UtilizationRegisterNumber write Set_UtilizationRegisterNumber;
     property Name: UnicodeString read Get_Name write Set_Name;
   end;
 
@@ -145,18 +145,18 @@ type
   IXMLSellerType = interface(IXMLNode)
     ['{CDD0E883-555C-4058-AB66-CF3B55EC1EA4}']
     { Property Accessors }
-    function Get_ILN: Integer;
-    function Get_TaxID: Integer;
-    function Get_UtilizationRegisterNumber: Integer;
+    function Get_ILN: UnicodeString;
+    function Get_TaxID: UnicodeString;
+    function Get_UtilizationRegisterNumber: UnicodeString;
     function Get_Name: UnicodeString;
-    procedure Set_ILN(Value: Integer);
-    procedure Set_TaxID(Value: Integer);
-    procedure Set_UtilizationRegisterNumber(Value: Integer);
+    procedure Set_ILN(Value: UnicodeString);
+    procedure Set_TaxID(Value: UnicodeString);
+    procedure Set_UtilizationRegisterNumber(Value: UnicodeString);
     procedure Set_Name(Value: UnicodeString);
     { Methods & Properties }
-    property ILN: Integer read Get_ILN write Set_ILN;
-    property TaxID: Integer read Get_TaxID write Set_TaxID;
-    property UtilizationRegisterNumber: Integer read Get_UtilizationRegisterNumber write Set_UtilizationRegisterNumber;
+    property ILN: UnicodeString read Get_ILN write Set_ILN;
+    property TaxID: UnicodeString read Get_TaxID write Set_TaxID;
+    property UtilizationRegisterNumber: UnicodeString read Get_UtilizationRegisterNumber write Set_UtilizationRegisterNumber;
     property Name: UnicodeString read Get_Name write Set_Name;
   end;
 
@@ -165,22 +165,22 @@ type
   IXMLDeliveryPointType = interface(IXMLNode)
     ['{F1041905-A7D4-42C4-9A3E-4FC2C3DC78FA}']
     { Property Accessors }
-    function Get_ILN: Integer;
+    function Get_ILN: UnicodeString;
     function Get_Name: UnicodeString;
     function Get_CityName: UnicodeString;
     function Get_StreetAndNumber: UnicodeString;
-    function Get_PostalCode: Integer;
-    procedure Set_ILN(Value: Integer);
+    function Get_PostalCode: UnicodeString;
+    procedure Set_ILN(Value: UnicodeString);
     procedure Set_Name(Value: UnicodeString);
     procedure Set_CityName(Value: UnicodeString);
     procedure Set_StreetAndNumber(Value: UnicodeString);
-    procedure Set_PostalCode(Value: Integer);
+    procedure Set_PostalCode(Value: UnicodeString);
     { Methods & Properties }
-    property ILN: Integer read Get_ILN write Set_ILN;
+    property ILN: UnicodeString read Get_ILN write Set_ILN;
     property Name: UnicodeString read Get_Name write Set_Name;
     property CityName: UnicodeString read Get_CityName write Set_CityName;
     property StreetAndNumber: UnicodeString read Get_StreetAndNumber write Set_StreetAndNumber;
-    property PostalCode: Integer read Get_PostalCode write Set_PostalCode;
+    property PostalCode: UnicodeString read Get_PostalCode write Set_PostalCode;
   end;
 
 { IXMLPayerType }
@@ -188,22 +188,22 @@ type
   IXMLPayerType = interface(IXMLNode)
     ['{75DA7D0D-0B0E-4CD0-A721-44FD8BB075B8}']
     { Property Accessors }
-    function Get_ILN: Integer;
+    function Get_ILN: UnicodeString;
     function Get_Name: UnicodeString;
     function Get_CityName: UnicodeString;
     function Get_StreetAndNumber: UnicodeString;
-    function Get_PostalCode: Integer;
-    procedure Set_ILN(Value: Integer);
+    function Get_PostalCode: UnicodeString;
+    procedure Set_ILN(Value: UnicodeString);
     procedure Set_Name(Value: UnicodeString);
     procedure Set_CityName(Value: UnicodeString);
     procedure Set_StreetAndNumber(Value: UnicodeString);
-    procedure Set_PostalCode(Value: Integer);
+    procedure Set_PostalCode(Value: UnicodeString);
     { Methods & Properties }
-    property ILN: Integer read Get_ILN write Set_ILN;
+    property ILN: UnicodeString read Get_ILN write Set_ILN;
     property Name: UnicodeString read Get_Name write Set_Name;
     property CityName: UnicodeString read Get_CityName write Set_CityName;
     property StreetAndNumber: UnicodeString read Get_StreetAndNumber write Set_StreetAndNumber;
-    property PostalCode: Integer read Get_PostalCode write Set_PostalCode;
+    property PostalCode: UnicodeString read Get_PostalCode write Set_PostalCode;
   end;
 
 { IXMLInvoiceLinesType }
@@ -234,42 +234,42 @@ type
     ['{0CC13060-56DA-4788-A707-6FF4B6D7B62E}']
     { Property Accessors }
     function Get_LineNumber: Integer;
-    function Get_EAN: Integer;
-    function Get_BuyerItemCode: Integer;
-    function Get_ExternalItemCode: Integer;
+    function Get_EAN: UnicodeString;
+    function Get_BuyerItemCode: UnicodeString;
+    function Get_ExternalItemCode: UnicodeString;
     function Get_ItemDescription: UnicodeString;
-    function Get_InvoiceQuantity: Integer;
+    function Get_InvoiceQuantity: Double;
     function Get_BuyerUnitOfMeasure: UnicodeString;
-    function Get_InvoiceUnitNetPrice: UnicodeString;
+    function Get_InvoiceUnitNetPrice: Double;
     function Get_TaxRate: Integer;
-    function Get_GrossAmount: UnicodeString;
-    function Get_TaxAmount: UnicodeString;
-    function Get_NetAmount: UnicodeString;
+    function Get_GrossAmount: Double;
+    function Get_TaxAmount: Double;
+    function Get_NetAmount: Double;
     procedure Set_LineNumber(Value: Integer);
-    procedure Set_EAN(Value: Integer);
-    procedure Set_BuyerItemCode(Value: Integer);
-    procedure Set_ExternalItemCode(Value: Integer);
+    procedure Set_EAN(Value: UnicodeString);
+    procedure Set_BuyerItemCode(Value: UnicodeString);
+    procedure Set_ExternalItemCode(Value: UnicodeString);
     procedure Set_ItemDescription(Value: UnicodeString);
-    procedure Set_InvoiceQuantity(Value: Integer);
+    procedure Set_InvoiceQuantity(Value: Double);
     procedure Set_BuyerUnitOfMeasure(Value: UnicodeString);
-    procedure Set_InvoiceUnitNetPrice(Value: UnicodeString);
+    procedure Set_InvoiceUnitNetPrice(Value: Double);
     procedure Set_TaxRate(Value: Integer);
-    procedure Set_GrossAmount(Value: UnicodeString);
-    procedure Set_TaxAmount(Value: UnicodeString);
-    procedure Set_NetAmount(Value: UnicodeString);
+    procedure Set_GrossAmount(Value: Double);
+    procedure Set_TaxAmount(Value: Double);
+    procedure Set_NetAmount(Value: Double);
     { Methods & Properties }
     property LineNumber: Integer read Get_LineNumber write Set_LineNumber;
-    property EAN: Integer read Get_EAN write Set_EAN;
-    property BuyerItemCode: Integer read Get_BuyerItemCode write Set_BuyerItemCode;
-    property ExternalItemCode: Integer read Get_ExternalItemCode write Set_ExternalItemCode;
+    property EAN: UnicodeString read Get_EAN write Set_EAN;
+    property BuyerItemCode: UnicodeString read Get_BuyerItemCode write Set_BuyerItemCode;
+    property ExternalItemCode: UnicodeString read Get_ExternalItemCode write Set_ExternalItemCode;
     property ItemDescription: UnicodeString read Get_ItemDescription write Set_ItemDescription;
-    property InvoiceQuantity: Integer read Get_InvoiceQuantity write Set_InvoiceQuantity;
+    property InvoiceQuantity: Double read Get_InvoiceQuantity write Set_InvoiceQuantity;
     property BuyerUnitOfMeasure: UnicodeString read Get_BuyerUnitOfMeasure write Set_BuyerUnitOfMeasure;
-    property InvoiceUnitNetPrice: UnicodeString read Get_InvoiceUnitNetPrice write Set_InvoiceUnitNetPrice;
+    property InvoiceUnitNetPrice: Double read Get_InvoiceUnitNetPrice write Set_InvoiceUnitNetPrice;
     property TaxRate: Integer read Get_TaxRate write Set_TaxRate;
-    property GrossAmount: UnicodeString read Get_GrossAmount write Set_GrossAmount;
-    property TaxAmount: UnicodeString read Get_TaxAmount write Set_TaxAmount;
-    property NetAmount: UnicodeString read Get_NetAmount write Set_NetAmount;
+    property GrossAmount: Double read Get_GrossAmount write Set_GrossAmount;
+    property TaxAmount: Double read Get_TaxAmount write Set_TaxAmount;
+    property NetAmount: Double read Get_NetAmount write Set_NetAmount;
   end;
 
 { IXMLInvoiceSummaryType }
@@ -278,18 +278,18 @@ type
     ['{8D01893B-4CED-4125-ABE6-3470448AB3E2}']
     { Property Accessors }
     function Get_TotalLines: Integer;
-    function Get_TotalNetAmount: UnicodeString;
-    function Get_TotalTaxAmount: UnicodeString;
-    function Get_TotalGrossAmount: UnicodeString;
+    function Get_TotalNetAmount: Double;
+    function Get_TotalTaxAmount: Double;
+    function Get_TotalGrossAmount: Double;
     procedure Set_TotalLines(Value: Integer);
-    procedure Set_TotalNetAmount(Value: UnicodeString);
-    procedure Set_TotalTaxAmount(Value: UnicodeString);
-    procedure Set_TotalGrossAmount(Value: UnicodeString);
+    procedure Set_TotalNetAmount(Value: Double);
+    procedure Set_TotalTaxAmount(Value: Double);
+    procedure Set_TotalGrossAmount(Value: Double);
     { Methods & Properties }
     property TotalLines: Integer read Get_TotalLines write Set_TotalLines;
-    property TotalNetAmount: UnicodeString read Get_TotalNetAmount write Set_TotalNetAmount;
-    property TotalTaxAmount: UnicodeString read Get_TotalTaxAmount write Set_TotalTaxAmount;
-    property TotalGrossAmount: UnicodeString read Get_TotalGrossAmount write Set_TotalGrossAmount;
+    property TotalNetAmount: Double read Get_TotalNetAmount write Set_TotalNetAmount;
+    property TotalTaxAmount: Double read Get_TotalTaxAmount write Set_TotalTaxAmount;
+    property TotalGrossAmount: Double read Get_TotalGrossAmount write Set_TotalGrossAmount;
   end;
 
 { Forward Decls }
@@ -330,16 +330,16 @@ type
     function Get_InvoiceNumber: UnicodeString;
     function Get_InvoiceDate: UnicodeString;
     function Get_DocumentFunctionCode: UnicodeString;
-    function Get_ContractNumber: Integer;
+    function Get_ContractNumber: UnicodeString;
     function Get_ContractDate: UnicodeString;
-    function Get_InvoiceQuantity: Integer;
+    function Get_InvoiceQuantity: Double;
     function Get_InvoiceSequences: Integer;
     procedure Set_InvoiceNumber(Value: UnicodeString);
     procedure Set_InvoiceDate(Value: UnicodeString);
     procedure Set_DocumentFunctionCode(Value: UnicodeString);
-    procedure Set_ContractNumber(Value: Integer);
+    procedure Set_ContractNumber(Value: UnicodeString);
     procedure Set_ContractDate(Value: UnicodeString);
-    procedure Set_InvoiceQuantity(Value: Integer);
+    procedure Set_InvoiceQuantity(Value: Double);
     procedure Set_InvoiceSequences(Value: Integer);
   end;
 
@@ -382,13 +382,13 @@ type
   TXMLBuyerType = class(TXMLNode, IXMLBuyerType)
   protected
     { IXMLBuyerType }
-    function Get_ILN: Integer;
-    function Get_TaxID: Integer;
-    function Get_UtilizationRegisterNumber: Integer;
+    function Get_ILN: UnicodeString;
+    function Get_TaxID: UnicodeString;
+    function Get_UtilizationRegisterNumber: UnicodeString;
     function Get_Name: UnicodeString;
-    procedure Set_ILN(Value: Integer);
-    procedure Set_TaxID(Value: Integer);
-    procedure Set_UtilizationRegisterNumber(Value: Integer);
+    procedure Set_ILN(Value: UnicodeString);
+    procedure Set_TaxID(Value: UnicodeString);
+    procedure Set_UtilizationRegisterNumber(Value: UnicodeString);
     procedure Set_Name(Value: UnicodeString);
   end;
 
@@ -397,13 +397,13 @@ type
   TXMLSellerType = class(TXMLNode, IXMLSellerType)
   protected
     { IXMLSellerType }
-    function Get_ILN: Integer;
-    function Get_TaxID: Integer;
-    function Get_UtilizationRegisterNumber: Integer;
+    function Get_ILN: UnicodeString;
+    function Get_TaxID: UnicodeString;
+    function Get_UtilizationRegisterNumber: UnicodeString;
     function Get_Name: UnicodeString;
-    procedure Set_ILN(Value: Integer);
-    procedure Set_TaxID(Value: Integer);
-    procedure Set_UtilizationRegisterNumber(Value: Integer);
+    procedure Set_ILN(Value: UnicodeString);
+    procedure Set_TaxID(Value: UnicodeString);
+    procedure Set_UtilizationRegisterNumber(Value: UnicodeString);
     procedure Set_Name(Value: UnicodeString);
   end;
 
@@ -412,16 +412,16 @@ type
   TXMLDeliveryPointType = class(TXMLNode, IXMLDeliveryPointType)
   protected
     { IXMLDeliveryPointType }
-    function Get_ILN: Integer;
+    function Get_ILN: UnicodeString;
     function Get_Name: UnicodeString;
     function Get_CityName: UnicodeString;
     function Get_StreetAndNumber: UnicodeString;
-    function Get_PostalCode: Integer;
-    procedure Set_ILN(Value: Integer);
+    function Get_PostalCode: UnicodeString;
+    procedure Set_ILN(Value: UnicodeString);
     procedure Set_Name(Value: UnicodeString);
     procedure Set_CityName(Value: UnicodeString);
     procedure Set_StreetAndNumber(Value: UnicodeString);
-    procedure Set_PostalCode(Value: Integer);
+    procedure Set_PostalCode(Value: UnicodeString);
   end;
 
 { TXMLPayerType }
@@ -429,16 +429,16 @@ type
   TXMLPayerType = class(TXMLNode, IXMLPayerType)
   protected
     { IXMLPayerType }
-    function Get_ILN: Integer;
+    function Get_ILN: UnicodeString;
     function Get_Name: UnicodeString;
     function Get_CityName: UnicodeString;
     function Get_StreetAndNumber: UnicodeString;
-    function Get_PostalCode: Integer;
-    procedure Set_ILN(Value: Integer);
+    function Get_PostalCode: UnicodeString;
+    procedure Set_ILN(Value: UnicodeString);
     procedure Set_Name(Value: UnicodeString);
     procedure Set_CityName(Value: UnicodeString);
     procedure Set_StreetAndNumber(Value: UnicodeString);
-    procedure Set_PostalCode(Value: Integer);
+    procedure Set_PostalCode(Value: UnicodeString);
   end;
 
 { TXMLInvoiceLinesType }
@@ -469,29 +469,29 @@ type
   protected
     { IXMLLineItemType }
     function Get_LineNumber: Integer;
-    function Get_EAN: Integer;
-    function Get_BuyerItemCode: Integer;
-    function Get_ExternalItemCode: Integer;
+    function Get_EAN: UnicodeString;
+    function Get_BuyerItemCode: UnicodeString;
+    function Get_ExternalItemCode: UnicodeString;
     function Get_ItemDescription: UnicodeString;
-    function Get_InvoiceQuantity: Integer;
+    function Get_InvoiceQuantity: Double;
     function Get_BuyerUnitOfMeasure: UnicodeString;
-    function Get_InvoiceUnitNetPrice: UnicodeString;
+    function Get_InvoiceUnitNetPrice: Double;
     function Get_TaxRate: Integer;
-    function Get_GrossAmount: UnicodeString;
-    function Get_TaxAmount: UnicodeString;
-    function Get_NetAmount: UnicodeString;
+    function Get_GrossAmount: Double;
+    function Get_TaxAmount: Double;
+    function Get_NetAmount: Double;
     procedure Set_LineNumber(Value: Integer);
-    procedure Set_EAN(Value: Integer);
-    procedure Set_BuyerItemCode(Value: Integer);
-    procedure Set_ExternalItemCode(Value: Integer);
+    procedure Set_EAN(Value: UnicodeString);
+    procedure Set_BuyerItemCode(Value: UnicodeString);
+    procedure Set_ExternalItemCode(Value: UnicodeString);
     procedure Set_ItemDescription(Value: UnicodeString);
-    procedure Set_InvoiceQuantity(Value: Integer);
+    procedure Set_InvoiceQuantity(Value: Double);
     procedure Set_BuyerUnitOfMeasure(Value: UnicodeString);
-    procedure Set_InvoiceUnitNetPrice(Value: UnicodeString);
+    procedure Set_InvoiceUnitNetPrice(Value: Double);
     procedure Set_TaxRate(Value: Integer);
-    procedure Set_GrossAmount(Value: UnicodeString);
-    procedure Set_TaxAmount(Value: UnicodeString);
-    procedure Set_NetAmount(Value: UnicodeString);
+    procedure Set_GrossAmount(Value: Double);
+    procedure Set_TaxAmount(Value: Double);
+    procedure Set_NetAmount(Value: Double);
   end;
 
 { TXMLInvoiceSummaryType }
@@ -500,13 +500,13 @@ type
   protected
     { IXMLInvoiceSummaryType }
     function Get_TotalLines: Integer;
-    function Get_TotalNetAmount: UnicodeString;
-    function Get_TotalTaxAmount: UnicodeString;
-    function Get_TotalGrossAmount: UnicodeString;
+    function Get_TotalNetAmount: Double;
+    function Get_TotalTaxAmount: Double;
+    function Get_TotalGrossAmount: Double;
     procedure Set_TotalLines(Value: Integer);
-    procedure Set_TotalNetAmount(Value: UnicodeString);
-    procedure Set_TotalTaxAmount(Value: UnicodeString);
-    procedure Set_TotalGrossAmount(Value: UnicodeString);
+    procedure Set_TotalNetAmount(Value: Double);
+    procedure Set_TotalTaxAmount(Value: Double);
+    procedure Set_TotalGrossAmount(Value: Double);
   end;
 
 { Global Functions }
@@ -606,12 +606,12 @@ begin
   ChildNodes['DocumentFunctionCode'].NodeValue := Value;
 end;
 
-function TXMLInvoiceHeaderType.Get_ContractNumber: Integer;
+function TXMLInvoiceHeaderType.Get_ContractNumber: UnicodeString;
 begin
   Result := ChildNodes['ContractNumber'].NodeValue;
 end;
 
-procedure TXMLInvoiceHeaderType.Set_ContractNumber(Value: Integer);
+procedure TXMLInvoiceHeaderType.Set_ContractNumber(Value: UnicodeString);
 begin
   ChildNodes['ContractNumber'].NodeValue := Value;
 end;
@@ -626,12 +626,12 @@ begin
   ChildNodes['ContractDate'].NodeValue := Value;
 end;
 
-function TXMLInvoiceHeaderType.Get_InvoiceQuantity: Integer;
+function TXMLInvoiceHeaderType.Get_InvoiceQuantity: Double;
 begin
   Result := ChildNodes['InvoiceQuantity'].NodeValue;
 end;
 
-procedure TXMLInvoiceHeaderType.Set_InvoiceQuantity(Value: Integer);
+procedure TXMLInvoiceHeaderType.Set_InvoiceQuantity(Value: Double);
 begin
   ChildNodes['InvoiceQuantity'].NodeValue := Value;
 end;
@@ -714,32 +714,32 @@ end;
 
 { TXMLBuyerType }
 
-function TXMLBuyerType.Get_ILN: Integer;
+function TXMLBuyerType.Get_ILN: UnicodeString;
 begin
   Result := ChildNodes['ILN'].NodeValue;
 end;
 
-procedure TXMLBuyerType.Set_ILN(Value: Integer);
+procedure TXMLBuyerType.Set_ILN(Value: UnicodeString);
 begin
   ChildNodes['ILN'].NodeValue := Value;
 end;
 
-function TXMLBuyerType.Get_TaxID: Integer;
+function TXMLBuyerType.Get_TaxID: UnicodeString;
 begin
   Result := ChildNodes['TaxID'].NodeValue;
 end;
 
-procedure TXMLBuyerType.Set_TaxID(Value: Integer);
+procedure TXMLBuyerType.Set_TaxID(Value: UnicodeString);
 begin
   ChildNodes['TaxID'].NodeValue := Value;
 end;
 
-function TXMLBuyerType.Get_UtilizationRegisterNumber: Integer;
+function TXMLBuyerType.Get_UtilizationRegisterNumber: UnicodeString;
 begin
   Result := ChildNodes['UtilizationRegisterNumber'].NodeValue;
 end;
 
-procedure TXMLBuyerType.Set_UtilizationRegisterNumber(Value: Integer);
+procedure TXMLBuyerType.Set_UtilizationRegisterNumber(Value: UnicodeString);
 begin
   ChildNodes['UtilizationRegisterNumber'].NodeValue := Value;
 end;
@@ -756,32 +756,32 @@ end;
 
 { TXMLSellerType }
 
-function TXMLSellerType.Get_ILN: Integer;
+function TXMLSellerType.Get_ILN: UnicodeString;
 begin
   Result := ChildNodes['ILN'].NodeValue;
 end;
 
-procedure TXMLSellerType.Set_ILN(Value: Integer);
+procedure TXMLSellerType.Set_ILN(Value: UnicodeString);
 begin
   ChildNodes['ILN'].NodeValue := Value;
 end;
 
-function TXMLSellerType.Get_TaxID: Integer;
+function TXMLSellerType.Get_TaxID: UnicodeString;
 begin
   Result := ChildNodes['TaxID'].NodeValue;
 end;
 
-procedure TXMLSellerType.Set_TaxID(Value: Integer);
+procedure TXMLSellerType.Set_TaxID(Value: UnicodeString);
 begin
   ChildNodes['TaxID'].NodeValue := Value;
 end;
 
-function TXMLSellerType.Get_UtilizationRegisterNumber: Integer;
+function TXMLSellerType.Get_UtilizationRegisterNumber: UnicodeString;
 begin
   Result := ChildNodes['UtilizationRegisterNumber'].NodeValue;
 end;
 
-procedure TXMLSellerType.Set_UtilizationRegisterNumber(Value: Integer);
+procedure TXMLSellerType.Set_UtilizationRegisterNumber(Value: UnicodeString);
 begin
   ChildNodes['UtilizationRegisterNumber'].NodeValue := Value;
 end;
@@ -798,12 +798,12 @@ end;
 
 { TXMLDeliveryPointType }
 
-function TXMLDeliveryPointType.Get_ILN: Integer;
+function TXMLDeliveryPointType.Get_ILN: UnicodeString;
 begin
   Result := ChildNodes['ILN'].NodeValue;
 end;
 
-procedure TXMLDeliveryPointType.Set_ILN(Value: Integer);
+procedure TXMLDeliveryPointType.Set_ILN(Value: UnicodeString);
 begin
   ChildNodes['ILN'].NodeValue := Value;
 end;
@@ -838,24 +838,24 @@ begin
   ChildNodes['StreetAndNumber'].NodeValue := Value;
 end;
 
-function TXMLDeliveryPointType.Get_PostalCode: Integer;
+function TXMLDeliveryPointType.Get_PostalCode: UnicodeString;
 begin
   Result := ChildNodes['PostalCode'].NodeValue;
 end;
 
-procedure TXMLDeliveryPointType.Set_PostalCode(Value: Integer);
+procedure TXMLDeliveryPointType.Set_PostalCode(Value: UnicodeString);
 begin
   ChildNodes['PostalCode'].NodeValue := Value;
 end;
 
 { TXMLPayerType }
 
-function TXMLPayerType.Get_ILN: Integer;
+function TXMLPayerType.Get_ILN: UnicodeString;
 begin
   Result := ChildNodes['ILN'].NodeValue;
 end;
 
-procedure TXMLPayerType.Set_ILN(Value: Integer);
+procedure TXMLPayerType.Set_ILN(Value: UnicodeString);
 begin
   ChildNodes['ILN'].NodeValue := Value;
 end;
@@ -890,12 +890,12 @@ begin
   ChildNodes['StreetAndNumber'].NodeValue := Value;
 end;
 
-function TXMLPayerType.Get_PostalCode: Integer;
+function TXMLPayerType.Get_PostalCode: UnicodeString;
 begin
   Result := ChildNodes['PostalCode'].NodeValue;
 end;
 
-procedure TXMLPayerType.Set_PostalCode(Value: Integer);
+procedure TXMLPayerType.Set_PostalCode(Value: UnicodeString);
 begin
   ChildNodes['PostalCode'].NodeValue := Value;
 end;
@@ -950,32 +950,32 @@ begin
   ChildNodes['LineNumber'].NodeValue := Value;
 end;
 
-function TXMLLineItemType.Get_EAN: Integer;
+function TXMLLineItemType.Get_EAN: UnicodeString;
 begin
   Result := ChildNodes['EAN'].NodeValue;
 end;
 
-procedure TXMLLineItemType.Set_EAN(Value: Integer);
+procedure TXMLLineItemType.Set_EAN(Value: UnicodeString);
 begin
   ChildNodes['EAN'].NodeValue := Value;
 end;
 
-function TXMLLineItemType.Get_BuyerItemCode: Integer;
+function TXMLLineItemType.Get_BuyerItemCode: UnicodeString;
 begin
   Result := ChildNodes['BuyerItemCode'].NodeValue;
 end;
 
-procedure TXMLLineItemType.Set_BuyerItemCode(Value: Integer);
+procedure TXMLLineItemType.Set_BuyerItemCode(Value: UnicodeString);
 begin
   ChildNodes['BuyerItemCode'].NodeValue := Value;
 end;
 
-function TXMLLineItemType.Get_ExternalItemCode: Integer;
+function TXMLLineItemType.Get_ExternalItemCode: UnicodeString;
 begin
   Result := ChildNodes['ExternalItemCode'].NodeValue;
 end;
 
-procedure TXMLLineItemType.Set_ExternalItemCode(Value: Integer);
+procedure TXMLLineItemType.Set_ExternalItemCode(Value: UnicodeString);
 begin
   ChildNodes['ExternalItemCode'].NodeValue := Value;
 end;
@@ -990,12 +990,12 @@ begin
   ChildNodes['ItemDescription'].NodeValue := Value;
 end;
 
-function TXMLLineItemType.Get_InvoiceQuantity: Integer;
+function TXMLLineItemType.Get_InvoiceQuantity: Double;
 begin
   Result := ChildNodes['InvoiceQuantity'].NodeValue;
 end;
 
-procedure TXMLLineItemType.Set_InvoiceQuantity(Value: Integer);
+procedure TXMLLineItemType.Set_InvoiceQuantity(Value: Double);
 begin
   ChildNodes['InvoiceQuantity'].NodeValue := Value;
 end;
@@ -1010,12 +1010,12 @@ begin
   ChildNodes['BuyerUnitOfMeasure'].NodeValue := Value;
 end;
 
-function TXMLLineItemType.Get_InvoiceUnitNetPrice: UnicodeString;
+function TXMLLineItemType.Get_InvoiceUnitNetPrice: Double;
 begin
-  Result := ChildNodes['InvoiceUnitNetPrice'].Text;
+  Result := ChildNodes['InvoiceUnitNetPrice'].NodeValue;
 end;
 
-procedure TXMLLineItemType.Set_InvoiceUnitNetPrice(Value: UnicodeString);
+procedure TXMLLineItemType.Set_InvoiceUnitNetPrice(Value: Double);
 begin
   ChildNodes['InvoiceUnitNetPrice'].NodeValue := Value;
 end;
@@ -1030,32 +1030,32 @@ begin
   ChildNodes['TaxRate'].NodeValue := Value;
 end;
 
-function TXMLLineItemType.Get_GrossAmount: UnicodeString;
+function TXMLLineItemType.Get_GrossAmount: Double;
 begin
-  Result := ChildNodes['GrossAmount'].Text;
+  Result := ChildNodes['GrossAmount'].NodeValue;
 end;
 
-procedure TXMLLineItemType.Set_GrossAmount(Value: UnicodeString);
+procedure TXMLLineItemType.Set_GrossAmount(Value: Double);
 begin
   ChildNodes['GrossAmount'].NodeValue := Value;
 end;
 
-function TXMLLineItemType.Get_TaxAmount: UnicodeString;
+function TXMLLineItemType.Get_TaxAmount: Double;
 begin
-  Result := ChildNodes['TaxAmount'].Text;
+  Result := ChildNodes['TaxAmount'].NodeValue;
 end;
 
-procedure TXMLLineItemType.Set_TaxAmount(Value: UnicodeString);
+procedure TXMLLineItemType.Set_TaxAmount(Value: Double);
 begin
   ChildNodes['TaxAmount'].NodeValue := Value;
 end;
 
-function TXMLLineItemType.Get_NetAmount: UnicodeString;
+function TXMLLineItemType.Get_NetAmount: Double;
 begin
-  Result := ChildNodes['NetAmount'].Text;
+  Result := ChildNodes['NetAmount'].NodeValue;
 end;
 
-procedure TXMLLineItemType.Set_NetAmount(Value: UnicodeString);
+procedure TXMLLineItemType.Set_NetAmount(Value: Double);
 begin
   ChildNodes['NetAmount'].NodeValue := Value;
 end;
@@ -1072,32 +1072,32 @@ begin
   ChildNodes['TotalLines'].NodeValue := Value;
 end;
 
-function TXMLInvoiceSummaryType.Get_TotalNetAmount: UnicodeString;
+function TXMLInvoiceSummaryType.Get_TotalNetAmount: Double;
 begin
-  Result := ChildNodes['TotalNetAmount'].Text;
+  Result := ChildNodes['TotalNetAmount'].NodeValue;
 end;
 
-procedure TXMLInvoiceSummaryType.Set_TotalNetAmount(Value: UnicodeString);
+procedure TXMLInvoiceSummaryType.Set_TotalNetAmount(Value: Double);
 begin
   ChildNodes['TotalNetAmount'].NodeValue := Value;
 end;
 
-function TXMLInvoiceSummaryType.Get_TotalTaxAmount: UnicodeString;
+function TXMLInvoiceSummaryType.Get_TotalTaxAmount: Double;
 begin
-  Result := ChildNodes['TotalTaxAmount'].Text;
+  Result := ChildNodes['TotalTaxAmount'].NodeValue;
 end;
 
-procedure TXMLInvoiceSummaryType.Set_TotalTaxAmount(Value: UnicodeString);
+procedure TXMLInvoiceSummaryType.Set_TotalTaxAmount(Value: Double);
 begin
   ChildNodes['TotalTaxAmount'].NodeValue := Value;
 end;
 
-function TXMLInvoiceSummaryType.Get_TotalGrossAmount: UnicodeString;
+function TXMLInvoiceSummaryType.Get_TotalGrossAmount: Double;
 begin
-  Result := ChildNodes['TotalGrossAmount'].Text;
+  Result := ChildNodes['TotalGrossAmount'].NodeValue;
 end;
 
-procedure TXMLInvoiceSummaryType.Set_TotalGrossAmount(Value: UnicodeString);
+procedure TXMLInvoiceSummaryType.Set_TotalGrossAmount(Value: Double);
 begin
   ChildNodes['TotalGrossAmount'].NodeValue := Value;
 end;

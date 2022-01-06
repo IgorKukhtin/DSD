@@ -684,6 +684,10 @@ BEGIN
                                                      AND (_tmpItem.isPartionCount = TRUE OR _tmpItem.isPartionSumm = TRUE)
                                                         THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoods)
 
+                                                    WHEN _tmpItem.OperDate >= zc_DateStart_PartionGoods_20103()
+                                                     AND _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_20103() -- Запчасти и Ремонты + Шины
+                                                        THEN lpInsertFind_Object_PartionGoods (inValue:= _tmpItem.PartionGoods)
+
                                                     WHEN _tmpItem.isPartionDate_From = TRUE
                                                      AND _tmpItem.PartionGoodsDate_From <> zc_DateEnd()
                                                      AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
@@ -710,6 +714,10 @@ BEGIN
                                                END
                          , PartionGoodsId_To = CASE WHEN _tmpItem.PartionGoodsId_To > 0
                                                          THEN _tmpItem.PartionGoodsId_To
+
+                                                    WHEN _tmpItem.OperDate >= zc_DateStart_PartionGoods_20103()
+                                                     AND _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_20103() -- Запчасти и Ремонты + Шины
+                                                        THEN lpInsertFind_Object_PartionGoods (inValue:= _tmpItem.PartionGoods)
 
                                                     WHEN (_tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
@@ -898,7 +906,7 @@ BEGIN
                                                     ELSE lpInsertFind_Object_PartionGoods ('')
                                                END
      WHERE _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
-        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Прочие ТМЦ
+        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
@@ -946,6 +954,7 @@ BEGIN
                                                                                     , inCarId                  := _tmpItem.CarId_From
                                                                                     , inMemberId               := _tmpItem.MemberId_From
                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                                                    , inInfoMoneyId            := _tmpItem.InfoMoneyId
                                                                                     , inGoodsId                := _tmpItem.GoodsId
                                                                                     , inGoodsKindId            := CASE WHEN vbIsPartionGoodsKind_Unit_From = FALSE
                                                                                                                         -- Мясное сырье
@@ -1024,6 +1033,7 @@ BEGIN
                                                                                     , inCarId                  := _tmpItem.CarId_To
                                                                                     , inMemberId               := _tmpItem.MemberId_To
                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                                                    , inInfoMoneyId            := _tmpItem.InfoMoneyId
                                                                                     , inGoodsId                := _tmpItem.GoodsId
                                                                                     , inGoodsKindId            := CASE WHEN vbIsPartionGoodsKind_Unit_To = FALSE
                                                                                                                         -- Мясное сырье

@@ -46,7 +46,7 @@ BEGIN
 
 
      -- проверка
-     IF inStartDate < inEndDate - INTERVAL '1 YEAR'
+     IF inStartDate < inEndDate - INTERVAL '1 YEAR' AND COALESCE (inJuridicalId, 0) = 0
      THEN
          -- RAISE EXCEPTION 'Ошибка.Выбранный период с <%> по <%> больше 1 года.Необходимо установить меньше период.', zfConvert_DateToString (inStartDate), zfConvert_DateToString (inEndDate);
          inStartDate:= inEndDate - INTERVAL '6 MONTH';
