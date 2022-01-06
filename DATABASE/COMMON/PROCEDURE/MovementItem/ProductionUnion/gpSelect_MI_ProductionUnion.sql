@@ -27,6 +27,7 @@ BEGIN
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , Object_Measure.ValueData              AS MeasureName
             , CAST (NULL AS TFloat)                 AS Amount
+            , CAST (NULL AS TFloat)                 AS Amount_weight 
 
             , CAST (NULL AS Boolean)                AS isPartionClose
             , CAST (NULL AS TDateTime)              AS PartionGoodsDate
@@ -112,6 +113,12 @@ BEGIN
 
             , MovementItem.Amount               AS Amount
 
+            , (MovementItem.Amount
+            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData
+                   WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_kg() THEN 1
+                   ELSE 0
+              END)                    :: TFloat AS Amount_weight
+
             , MIBoolean_PartionClose.ValueData  AS isPartionClose
             , MIDate_PartionGoods.ValueData     AS PartionGoodsDate
             , MIString_PartionGoods.ValueData   AS PartionGoods
@@ -178,6 +185,10 @@ BEGIN
                                   ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalKVK
                                               ON MILinkObject_PersonalKVK.MovementItemId = MovementItem.Id
@@ -266,6 +277,11 @@ BEGIN
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
             , MovementItem.Amount               AS Amount
+            , (MovementItem.Amount
+            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData
+                   WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_kg() THEN 1
+                   ELSE 0
+              END)                    :: TFloat AS Amount_weight
 
             , MIBoolean_PartionClose.ValueData  AS isPartionClose
             , MIDate_PartionGoods.ValueData     AS PartionGoodsDate
@@ -335,6 +351,10 @@ BEGIN
                                   ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalKVK
                                               ON MILinkObject_PersonalKVK.MovementItemId = MovementItem.Id
@@ -422,6 +442,12 @@ BEGIN
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
   
             , MovementItem.Amount               AS Amount
+            , (MovementItem.Amount
+            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData
+                   WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_kg() THEN 1
+                   ELSE 0
+              END)                    :: TFloat AS Amount_weight
+
             , MovementItem.ParentId             AS ParentId
 
             , MIFloat_AmountReceipt.ValueData   AS AmountReceipt
@@ -519,6 +545,10 @@ BEGIN
                                   ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                   ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id

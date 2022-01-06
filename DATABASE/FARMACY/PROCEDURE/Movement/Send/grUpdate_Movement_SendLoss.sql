@@ -17,6 +17,8 @@ $BODY$
    DECLARE vbisSUN       Boolean;
    DECLARE vbisSent      Boolean;
    DECLARE vbisReceived  Boolean;
+   DECLARE vbisSendLoss  Boolean;
+   DECLARE vbisSendLossFrom  Boolean;
    DECLARE vbOperDate    TDateTime;
 BEGIN
 
@@ -38,7 +40,9 @@ BEGIN
         , COALESCE (MovementBoolean_SUN.ValueData, FALSE)     ::Boolean AS isSUN
         , COALESCE (MovementBoolean_Sent.ValueData, FALSE)::Boolean     AS isSent
         , COALESCE (MovementBoolean_Received.ValueData, FALSE)::Boolean AS isReceived
-   INTO vbStatusId, vbOperDate, vbUnitIdFrom, vbUnitIdTo, vbisDeferred, vbisSUN, vbisSent, vbisReceived
+        , COALESCE (MovementBoolean_SendLoss.ValueData, FALSE)        AS isSendLoss
+        , COALESCE (MovementBoolean_SendLossFrom.ValueData, FALSE)      AS isSendLossFrom
+   INTO vbStatusId, vbOperDate, vbUnitIdFrom, vbUnitIdTo, vbisDeferred, vbisSUN, vbisSent, vbisReceived, vbisSendLoss, vbisSendLossFrom
    FROM Movement
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -70,13 +74,22 @@ BEGIN
                                      AND MovementBoolean_Confirmed.DescId = zc_MovementBoolean_Confirmed()
 
    WHERE Movement.Id = inMovementId;
+   
+   IF vbisSendLoss <> inisSendLoss
+   THEN
+      RAISE EXCEPTION 'Ошибка. Признак <В полное списание> изменился из вне обновите форму и повторите попытку.';
+   END IF;  
+
+   IF vbisSendLossFrom = TRUE
+   THEN
+      RAISE EXCEPTION 'Ошибка. Установлен признак <В полное списание на отправителя> изменение признака <В полное списание> запрещено.';
+   END IF;  
 
    IF date_trunc('month', CURRENT_DATE) <> date_trunc('month', vbOperDate)
    THEN
       RAISE EXCEPTION 'Ошибка. Изменение признака <В полное списание> можно только на документы текущего месяца.';
    END IF;
-  
-
+      
    IF COALESCE (inisSendLoss, False) = False
    THEN
 

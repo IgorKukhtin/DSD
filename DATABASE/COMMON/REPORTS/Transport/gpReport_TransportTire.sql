@@ -30,6 +30,7 @@ RETURNS TABLE (MovementId_SendIn Integer
              , PersonalDriverId Integer, PersonalDriverCode Integer, PersonalDriverName TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , PartionGoodsId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
              , Amount_in   TFloat
              , Amount_out  TFloat
              , Amount_km   TFloat
@@ -72,8 +73,12 @@ BEGIN
        , tmpSend_In AS (SELECT Movement.OperDate              AS OperDate
                              , MovementLinkObject_To.ObjectId AS CarId
                              , MovementItem.ObjectId          AS GoodsId
+                             , COALESCE (Object_PartionGoods.Id,0 ) AS PartionGoodsId
+                             , COALESCE (Object_PartionGoods.ValueData, MIString_PartionGoods.ValueData) :: TVarChar AS PartionGoods
+                             , MIDate_PartionGoods.ValueData AS PartionGoodsDate
                              , MovementItem.Amount            AS Amount
                              , Movement.Id                    AS MovementId
+                             , MovementItem.Id                AS MI_Id
                              , Object_From.Id                 AS FromId
                              , Object_From.ValueData          AS FromName
                         FROM Movement
@@ -94,7 +99,18 @@ BEGIN
                                               AND MovementItem.DescId     = zc_MI_Master()
                                               AND MovementItem.isErased   = FALSE
                                               AND COALESCE (MovementItem.Amount,0) > 0
-                             INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId 
+                             INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
+                                                              ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
+                                                             AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
+                             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = MILinkObject_PartionGoods.ObjectId
+                             LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
+                                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                                        ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                                       AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                         WHERE Movement.DescId = zc_Movement_Send()
                           AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                           AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -104,14 +120,22 @@ BEGIN
        , tmpSend_Out AS (SELECT tmp.OperDate
                               , tmp.CarId
                               , tmp.GoodsId
+                              , tmp.PartionGoodsId
+                              , tmp.PartionGoods
+                              , tmp.PartionGoodsDate
                               , tmp.Amount
                               , tmp.MovementId
+                              , tmp.MI_Id
                               , tmp.ToId
                               , tmp.ToName
                          FROM (SELECT Movement.Id              AS MovementId
+                                    , MovementItem.Id          AS MI_Id
                                     , Movement.OperDate        AS OperDate
                                     , MovementLinkObject_From.ObjectId AS CarId
                                     , MovementItem.ObjectId          AS GoodsId
+                                    , COALESCE (Object_PartionGoods.Id,0 ) AS PartionGoodsId
+                                    , COALESCE (Object_PartionGoods.ValueData, MIString_PartionGoods.ValueData) :: TVarChar AS PartionGoods
+                                    , MIDate_PartionGoods.ValueData AS PartionGoodsDate
                                     , MovementItem.Amount            AS Amount
                                     , Object_To.Id                   AS ToId
                                     , Object_To.ValueData            AS ToName
@@ -137,6 +161,17 @@ BEGIN
                                                      AND COALESCE (MovementItem.Amount,0) > 0
                                                      AND MovementItem.ObjectId = tmpSend_In.GoodsId
                                     --INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+
+                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
+                                                                     ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
+                                                                    AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
+                                    LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = MILinkObject_PartionGoods.ObjectId
+                                    LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                                 ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
+                                                                AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                                    LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                                               ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                                              AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                                WHERE Movement.DescId = zc_Movement_Send()
                                  AND Movement.StatusId = zc_Enum_Status_Complete()
                                )AS tmp
@@ -189,6 +224,34 @@ BEGIN
                           GROUP BY tmpMov.CarId
                           )
 
+---партии
+      , tmpMIContainer AS (SELECT tmp.MovementItemId
+                                , tmp.PartionGoodsId
+                                , tmp.PartionGoods
+                                , tmp.PartionDate
+                           FROM (SELECT MIContainer.MovementItemId            AS MovementItemId
+                                      , Object_PartionGoods.Id                AS PartionGoodsId
+                                      , CASE WHEN Object_PartionGoods.ValueData = '0' THEN '' ELSE Object_PartionGoods.ValueData END AS PartionGoods
+                                      , ObjectDate_Value.ValueData            AS PartionDate
+
+                                      , ROW_NUMBER() OVER (PARTITION BY MIContainer.ObjectId_Analyzer ORDER BY ABS (MIContainer.Amount) DESC) AS Ord
+                                 FROM MovementItemContainer AS MIContainer
+                                      INNER JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                                     ON CLO_PartionGoods.ContainerId = MIContainer.ContainerId
+                                                                    AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                                      LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
+
+                                      LEFT JOIN ObjectDate AS ObjectDate_Value
+                                                           ON ObjectDate_Value.ObjectId = Object_PartionGoods.Id
+                                                          AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+                                 WHERE MIContainer.MovementId IN (SELECT DISTINCT tmpSend_In.MovementId FROM tmpSend_In UNION SELECT DISTINCT tmpSend_Out.MovementId FROM tmpSend_Out)
+                                   AND MIContainer.DescId                 = zc_MIContainer_Count()
+                                ) AS tmp
+                           WHERE tmp.Ord = 1 -- !!!берем только ОДНУ партию!!!
+                          )
+
+
+
        , tmpData AS (SELECT tmpSend_In.CarId
                           , tmpSend_In.MovementId       AS MovementId_in
                           , tmpSend_Out.MovementId      AS MovementId_out
@@ -199,12 +262,18 @@ BEGIN
                           , tmpSend_Out.ToId
                           , tmpSend_Out.ToName
                           , tmpSend_In.GoodsId
+                          , COALESCE (tmpMIContainer.PartionGoodsId, tmpSend_In.PartionGoodsId)     AS PartionGoodsId
+                          , COALESCE (tmpMIContainer.PartionGoods, tmpSend_In.PartionGoods)         AS PartionGoods
+                          , COALESCE (tmpMIContainer.PartionDate, tmpSend_In.PartionGoodsDate)      AS PartionGoodsDate
                           , tmpSend_In.Amount           AS Amount_in
                           , tmpSend_Out.Amount          AS Amount_out
                           , tmpTransport.Amount_km
                      FROM tmpSend_In
-                         LEFT JOIN tmpSend_Out ON tmpSend_Out.CarId = tmpSend_In.CarId AND tmpSend_Out.GoodsId = tmpSend_In.GoodsId
+                         LEFT JOIN tmpSend_Out ON tmpSend_Out.CarId = tmpSend_In.CarId
+                                              AND tmpSend_Out.GoodsId = tmpSend_In.GoodsId
                          LEFT JOIN tmpTransport ON tmpTransport.CarId = tmpSend_In.CarId
+
+                         LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = tmpSend_In.MI_Id
                      )
 
 
@@ -251,7 +320,13 @@ BEGIN
          , Object_Goods.Id         AS GoodsId
          , Object_Goods.ObjectCode AS GoodsCode
          , Object_Goods.ValueData  AS GoodsName
-         
+
+         --  , COALESCE (tmpMIContainer.PartionGoodsId, Object_PartionGoods.Id,0 ) AS PartionGoodsId
+         --  , COALESCE (tmpMIContainer.PartionGoods, Object_PartionGoods.ValueData, MIString_PartionGoods.ValueData) :: TVarChar AS PartionGoods
+         , tmpData.PartionGoodsId ::Integer
+         , tmpData.PartionGoods   :: TVarChar
+         , tmpData.PartionGoodsDate ::TDateTime
+
          , tmpData.Amount_in   ::TFloat
          , tmpData.Amount_out  ::TFloat
          , tmpData.Amount_km   ::TFloat
@@ -263,6 +338,7 @@ BEGIN
          
          LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpData.CarId
          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
+         --LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpData.PartionGoodsId
 
          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                               ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id

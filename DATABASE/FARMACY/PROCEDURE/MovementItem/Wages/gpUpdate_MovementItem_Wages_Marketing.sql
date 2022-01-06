@@ -29,6 +29,18 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка. Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
     END IF;
+    
+    
+    IF COALESCE (vbMovementId, 0) = 0
+    THEN
+      -- сохранили <Документ>
+      vbMovementId := lpInsertUpdate_Movement_Wages (ioId              := 0
+                                                   , inInvNumber       := CAST (NEXTVAL ('Movement_Wages_seq')  AS TVarChar) 
+                                                   , inOperDate        := DATE_TRUNC ('MONTH', inOperDate)
+                                                   , inUserId          := vbUserId
+                                                     );
+    END IF;
+    
 
     IF COALESCE (vbMovementId, 0) = 0
     THEN

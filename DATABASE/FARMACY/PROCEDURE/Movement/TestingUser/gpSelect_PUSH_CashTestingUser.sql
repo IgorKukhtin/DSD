@@ -90,7 +90,7 @@ BEGIN
                                               AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()
 
                      WHERE Object_User.DescId = zc_Object_User()
-                       AND (Object_Position.ObjectCode = 1 OR Object_Position.ObjectCode = 2 AND vbDateStart >= '01.12.2021')
+                       AND (Object_Position.ObjectCode = 1 OR Object_Position.ObjectCode = 2 AND vbDateStart >= '01.02.2022')
                        AND COALESCE (Object_Unit.ValueData ) <> ''
                        AND Object_User.isErased = False
                      GROUP BY Object_User.Id

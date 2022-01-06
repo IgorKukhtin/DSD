@@ -24,7 +24,6 @@ object Report_TransportTireForm: TReport_TransportTireForm
     Height = 332
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -211,6 +210,13 @@ object Report_TransportTireForm: TReport_TransportTireForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 148
+      end
+      object PartionGoods: TcxGridDBColumn
+        Caption = #1055#1072#1088#1090#1080#1103
+        DataBinding.FieldName = 'PartionGoods'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
       end
       object Amount_in: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076

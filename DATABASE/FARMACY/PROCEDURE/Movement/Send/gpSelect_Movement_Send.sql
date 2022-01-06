@@ -33,7 +33,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , NumberSeats Integer
              , ConfirmedText TVarChar
              , isBanFiscalSale Boolean
-             , isSendLoss Boolean
+             , isSendLoss Boolean, isSendLossFrom Boolean
               )
 
 AS
@@ -179,6 +179,7 @@ BEGIN
                   
            , COALESCE (MovementBoolean_BanFiscalSale.ValueData, FALSE)    ::Boolean AS isBanFiscalSale           
            , COALESCE (MovementBoolean_SendLoss.ValueData, FALSE)         ::Boolean AS isSendLoss           
+           , COALESCE (MovementBoolean_SendLossFrom.ValueData, FALSE)     ::Boolean AS isSendLossFrom        
 
            --, date_part('day', MovementDate_Insert.ValueData - Movement.OperDate) ::TFloat AS InsertDateDiff 
            --, date_part('day', MovementDate_Update.ValueData - Movement.OperDate) ::TFloat AS UpdateDateDiff
@@ -286,6 +287,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_SendLoss
                                       ON MovementBoolean_SendLoss.MovementId = Movement.Id
                                      AND MovementBoolean_SendLoss.DescId = zc_MovementBoolean_SendLoss()
+            LEFT JOIN MovementBoolean AS MovementBoolean_SendLossFrom
+                                      ON MovementBoolean_SendLossFrom.MovementId = Movement.Id
+                                     AND MovementBoolean_SendLossFrom.DescId = zc_MovementBoolean_SendLossFrom()
 
             LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
                                     ON MovementFloat_MCSPeriod.MovementId =  Movement.Id

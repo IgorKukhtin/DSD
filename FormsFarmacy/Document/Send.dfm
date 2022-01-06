@@ -1009,8 +1009,8 @@ inherited SendForm: TSendForm
       Width = 46
     end
     object cbConfirmed: TcxCheckBox
-      Left = 799
-      Top = 73
+      Left = 784
+      Top = 90
       Hint = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1086' '#1089#1073#1086#1088' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' VIP'
       ParentFont = False
       ParentShowHint = False
@@ -1034,8 +1034,8 @@ inherited SendForm: TSendForm
       Width = 64
     end
     object edConfirmed: TcxTextEdit
-      Left = 816
-      Top = 74
+      Left = 801
+      Top = 90
       TabStop = False
       AutoSize = False
       ParentColor = True
@@ -1048,7 +1048,7 @@ inherited SendForm: TSendForm
       Width = 125
     end
     object cbisBanFiscalSale: TcxCheckBox
-      Left = 799
+      Left = 784
       Top = 39
       Hint = #1055#1077#1088#1077#1084#1077#1097#1072#1090#1100' '#1090#1086#1074#1072#1088' '#1090#1086#1083#1100#1082#1086' '#1079#1072#1087#1088#1077#1097#1077#1085#1085#1099#1081' '#1082' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1077
       AutoSize = False
@@ -1062,7 +1062,7 @@ inherited SendForm: TSendForm
       Width = 126
     end
     object cbSendLoss: TcxCheckBox
-      Left = 799
+      Left = 784
       Top = 56
       Hint = #1055#1077#1088#1077#1084#1077#1097#1072#1090#1100' '#1090#1086#1074#1072#1088' '#1090#1086#1083#1100#1082#1086' '#1079#1072#1087#1088#1077#1097#1077#1085#1085#1099#1081' '#1082' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1077
       AutoSize = False
@@ -1074,6 +1074,20 @@ inherited SendForm: TSendForm
       TabOrder = 36
       Height = 21
       Width = 126
+    end
+    object cbSendLossFrom: TcxCheckBox
+      Left = 784
+      Top = 73
+      Hint = #1055#1077#1088#1077#1084#1077#1097#1072#1090#1100' '#1090#1086#1074#1072#1088' '#1090#1086#1083#1100#1082#1086' '#1079#1072#1087#1088#1077#1097#1077#1085#1085#1099#1081' '#1082' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1081' '#1087#1088#1086#1076#1072#1078#1077
+      AutoSize = False
+      Caption = #1042' '#1087#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077' '#1085#1072' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
+      ParentFont = False
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 37
+      Height = 21
+      Width = 208
     end
   end
   object ceChecked: TcxCheckBox [2]
@@ -1994,6 +2008,21 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
+    object actUpdateSendLossFrom: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateSendLossFrom
+      StoredProcList = <
+        item
+          StoredProc = spUpdateSendLossFrom
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1042' '#1087#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077' '#1085#1072' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1042' '#1087#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077' '#1085#1072' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103'"'
+      ImageIndex = 76
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1042' '#1087#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077' '#1085#1072' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103'"?'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 424
@@ -2221,6 +2250,10 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton11'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2313,6 +2346,10 @@ inherited SendForm: TSendForm
     end
     object dxBarButton10: TdxBarButton
       Action = actPrintFP
+      Category = 0
+    end
+    object dxBarButton11: TdxBarButton
+      Action = actUpdateSendLossFrom
       Category = 0
     end
   end
@@ -2711,6 +2748,13 @@ inherited SendForm: TSendForm
         Component = FormParams
         ComponentItem = 'SetFocused'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSendLossFrom'
+        Value = Null
+        Component = cbSendLossFrom
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -4260,8 +4304,8 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 886
-    Top = 496
+    Left = 878
+    Top = 472
   end
   object spGet_SendPartionDateChangeId: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_SendPartionDateChangeId'
@@ -4286,5 +4330,30 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 385
     Top = 325
+  end
+  object spUpdateSendLossFrom: TdsdStoredProc
+    StoredProcName = 'grUpdate_Movement_SendLossFrom'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSendLossFrom'
+        Value = False
+        Component = cbSendLossFrom
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 878
+    Top = 528
   end
 end

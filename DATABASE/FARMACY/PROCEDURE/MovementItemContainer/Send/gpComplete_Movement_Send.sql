@@ -40,6 +40,7 @@ $BODY$
   DECLARE vResortAdd        TFloat;
   DECLARE vResortAddCount   Integer;
   DECLARE vbisSendLoss      Boolean;
+  DECLARE vbisSendLossFrom  Boolean;
 BEGIN
     vbUserId:= inSession;
 
@@ -77,7 +78,8 @@ BEGIN
         COALESCE (MovementBoolean_VIP.ValueData, FALSE),
         COALESCE (MovementString_Comment.ValueData, ''), 
         COALESCE (MovementBoolean_BanFiscalSale.ValueData, FALSE),
-        COALESCE (MovementBoolean_SendLoss.ValueData, FALSE)
+        COALESCE (MovementBoolean_SendLoss.ValueData, FALSE), 
+        COALESCE (MovementBoolean_SendLossFrom.ValueData, FALSE)
     INTO
         outOperDate,
         vbInvNumber,
@@ -92,7 +94,8 @@ BEGIN
         vbisVIP,
         vbComment,
         vbisBanFiscalSale,
-        vbisSendLoss
+        vbisSendLoss,
+        vbisSendLossFrom
     FROM Movement
         INNER JOIN MovementLinkObject AS Movement_From
                                       ON Movement_From.MovementId = Movement.Id
@@ -130,8 +133,17 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_SendLoss
                                   ON MovementBoolean_SendLoss.MovementId = Movement.Id
                                  AND MovementBoolean_SendLoss.DescId = zc_MovementBoolean_SendLoss()
+        LEFT JOIN MovementBoolean AS MovementBoolean_SendLossFrom
+                                  ON MovementBoolean_SendLossFrom.MovementId = Movement.Id
+                                 AND MovementBoolean_SendLossFrom.DescId = zc_MovementBoolean_SendLossFrom()
+
     WHERE Movement.Id = inMovementId;
     
+    IF vbisSendLossFrom = True
+    THEN
+       RAISE EXCEPTION 'Ошибка. Установлен признак <В полное списание на отправителя> проведение запрещено.';
+    END IF;  
+
     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
               WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy()) -- Для роли "Кассир аптеки"
     THEN
@@ -546,6 +558,7 @@ BEGIN
 
   UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
   WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

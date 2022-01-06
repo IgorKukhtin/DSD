@@ -111,6 +111,7 @@ type
     macPrintFilter: TMultiAction;
     bbPrintFilter: TdxBarButton;
     actDirectoryDialog: TFileDialogAction;
+    isSendLossFrom: TcxGridDBColumn;
   private
     { Private declarations }
   public
