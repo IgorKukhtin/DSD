@@ -2663,7 +2663,7 @@ begin
             //
             DESADV_fozz_Price := DOCUMENTINVOICE_PRN_XML.NewDocumentInvoice;
             // Номер повідомлення про відвантаження
-            DESADV_fozz_Amount.InvoiceHeader.InvoiceNumber := HeaderDataSet.FieldByName('InvNumber').asString;
+            DESADV_fozz_Price.InvoiceHeader.InvoiceNumber := HeaderDataSet.FieldByName('InvNumber').asString;
             // Дата документа
             DESADV_fozz_Price.InvoiceHeader.InvoiceDate := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
             //Код типу документа: TN - накладна за кількістю
@@ -2904,6 +2904,9 @@ begin
     end;
   finally
     Stream.Free;
+    //
+    if HeaderDataSet.FieldByName('isSchema_fozz').asBoolean = TRUE
+    then DeleteFile(FileName);
   end;
   //
   //
@@ -2942,6 +2945,8 @@ begin
     end;
   finally
     Stream.Free;
+    //
+    DeleteFile(FileName);
   end;
 
 end;
