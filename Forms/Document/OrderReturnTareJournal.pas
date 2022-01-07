@@ -29,7 +29,6 @@ uses
 
 type
   TOrderReturnTareJournalForm = class(TAncestorJournalForm)
-    FromName: TcxGridDBColumn;
     TotalCount: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
@@ -47,14 +46,14 @@ type
     actPrintSaleOrderTax: TdsdPrintAction;
     spGetImportSettingId: TdsdStoredProc;
     bbStartLoad: TdxBarButton;
-    GoodsPropertyName: TcxGridDBColumn;
-    PartnerName_from: TcxGridDBColumn;
     bbStartLoadNovus: TdxBarButton;
     bbStartLoadMetro: TdxBarButton;
     bbStartLoadFora: TdxBarButton;
     bbStartLoadSilpo: TdxBarButton;
     spDelete_Movement: TdsdStoredProc;
     bb: TdxBarButton;
+    InvNumber_Transport_Full: TcxGridDBColumn;
+    OperDate_Transport: TcxGridDBColumn;
   private
     { Private declarations }
   public

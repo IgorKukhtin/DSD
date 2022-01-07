@@ -1,13 +1,15 @@
 -- Function: lpInsertUpdate_Movement_OrderReturnTare()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderReturnTare (Integer, TVarChar, TDateTime, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderReturnTare (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderReturnTare(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
-    IN inInvNumber           TVarChar  , -- Номер документа
-    IN inOperDate            TDateTime , -- Дата документа
-    IN inComment             TVarChar  , --
-    IN inUserId              Integer     -- пользователь
+ INOUT ioId                    Integer   , -- Ключ объекта <Документ Перемещение>
+    IN inInvNumber             TVarChar  , -- Номер документа
+    IN inOperDate              TDateTime , -- Дата документа
+    IN inMovementId_Transport  Integer   , -- Путевой лист
+    IN inComment               TVarChar  , --
+    IN inUserId                Integer     -- пользователь
 )
 RETURNS Integer
 AS
@@ -21,6 +23,9 @@ BEGIN
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_OrderReturnTare(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
+
+     -- сохранили связь с документом <Транспорт>
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Transport(), ioId, inMovementId_Transport);
 
       -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);

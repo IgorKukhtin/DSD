@@ -118,6 +118,7 @@ type
     procedure LoadOrderSaleFormTest;
     procedure LoadOrderIncomeFormTest;
     procedure LoadOrderInternalFormTest;
+    procedure LoadOrderReturnTareFormTest;
     procedure LoadOrderExternalFormTest;
     procedure LoadOrderTypeFormTest;
     procedure LoadPartnerFormTest;
@@ -1072,6 +1073,16 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalBasisJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalBasisJournalForm');
 
+end;
+
+
+ procedure TLoadFormTest.LoadOrderReturnTareFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderReturnTareForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderReturnTareForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderReturnTareJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderReturnTareJournalForm');
 end;
 
 procedure TLoadFormTest.LoadOrderExternalFormTest;

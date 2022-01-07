@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Movement_OrderReturnTare()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderReturnTare (Integer, TVarChar, TDateTime, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderReturnTare (Integer, TVarChar, TDateTime, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderReturnTare(
  INOUT ioId                      Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber               TVarChar  , -- Номер документа
     IN inOperDate                TDateTime , -- Дата документа
+    IN inMovementId_Transport    Integer   , -- Путевой лист
     IN inComment                 TVarChar  , -- Примечание
     IN inSession                 TVarChar    -- сессия пользователя
 )
@@ -24,7 +26,8 @@ BEGIN
      FROM lpInsertUpdate_Movement_OrderReturnTare (ioId        := ioId
                                                  , inInvNumber := inInvNumber
                                                  , inOperDate  := inOperDate
-                                                 , inComment   := inisPrintComment
+                                                 , inMovementId_Transport := inMovementId_Transport
+                                                 , inComment   := inComment
                                                  , inUserId    := vbUserId
                                                 ) AS tmp;
 

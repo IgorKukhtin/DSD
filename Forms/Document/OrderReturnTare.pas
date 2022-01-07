@@ -34,7 +34,7 @@ type
     GoodsName: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
-    actGoodsKindChoice: TOpenChoiceForm;
+    actPartnerChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
