@@ -1351,6 +1351,8 @@ type
     miCardFuelKind: TMenuItem;
     actReport_TransportTire: TdsdOpenForm;
     miReport_TransportTire: TMenuItem;
+    actOrderReturnTare: TdsdOpenForm;
+    miOrderReturnTare: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
