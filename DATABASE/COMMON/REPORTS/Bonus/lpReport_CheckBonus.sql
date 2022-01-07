@@ -205,8 +205,11 @@ BEGIN
                               , tmpContractCondition.PaidKindId_byBase
                                 -- Форма оплаты - в какой надо начислить БОНУСЫ
                               , tmpContractCondition.PaidKindId_calc
-                                -- если нужно считать по условиям - для НАЛ
-                              , CASE WHEN tmpContractCondition.PaidKindId_calc = zc_Enum_PaidKind_SecondForm() THEN tmpContractCondition.ContractConditionId ELSE 0 END AS ContractConditionId
+                              
+                              -- если нужно считать по условиям - для НАЛ
+                              --, CASE WHEN tmpContractCondition.PaidKindId_calc = zc_Enum_PaidKind_SecondForm() THEN tmpContractCondition.ContractConditionId ELSE 0 END AS ContractConditionId
+                              --07,01,2022 - для БН тоже огр. по выбранным контрагентам
+                              , tmpContractCondition.ContractConditionId
                          FROM tmpContract_full
 
                                   INNER JOIN tmpContractCondition
@@ -238,6 +241,7 @@ BEGIN
                      --!!!WHERE tmpContract_full.PaidKindId = inPaidKindId
                          )
            -- Для нал еще zc_Object_ContractConditionPartner - если выбраны то бонусы только на них считаем
+              -- 07.01.2020 - для БН аналогично как и НАЛ
          , tmpCCPartner AS (SELECT tmp.ContractId
                                  , tmp.ContractConditionId
                                  , tmp.JuridicalId
@@ -295,7 +299,8 @@ BEGIN
                                        , tmpCCPartner.PaidKindId_byBase
                                        , tmpCCPartner.PaidKindId_calc
                                          -- если нужно считать по условиям - для НАЛ
-                                       , CASE WHEN tmpCCPartner.PaidKindId_calc = zc_Enum_PaidKind_SecondForm() THEN tmpCCPartner.ContractConditionId ELSE 0 END AS ContractConditionId
+                                       --, CASE WHEN tmpCCPartner.PaidKindId_calc = zc_Enum_PaidKind_SecondForm() THEN tmpCCPartner.ContractConditionId ELSE 0 END AS ContractConditionId
+                                       , tmpCCPartner.ContractConditionId
                                   FROM tmpCCPartner
                                        LEFT JOIN tmpContractPartner_all ON tmpContractPartner_all.ContractConditionId = tmpCCPartner.ContractConditionId
                                                                         AND tmpContractPartner_all.PartnerId           = tmpCCPartner.PartnerId
