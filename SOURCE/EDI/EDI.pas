@@ -2457,7 +2457,6 @@ var
   DESADV_fozz: DesadvFozzXML.IXMLDESADVType;
   DESADV_fozz_Amount: DOCUMENTINVOICE_TN_XML.IXMLDocumentInvoiceType;
   DESADV_fozz_Price : DOCUMENTINVOICE_PRN_XML.IXMLDocumentInvoiceType;
-  //DESADV_fozz: DOCUMENTINVOICE_PRN_XML.IXMLDESADVType;
   Stream: TStream;
   i: integer;
   FileName: string;
