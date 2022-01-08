@@ -74,12 +74,10 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalCountSh
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalCountKg
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -126,17 +124,14 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalCountSh
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalCountKg
             end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = FromName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -163,55 +158,29 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
-            Width = 55
+            Width = 137
           end
-          object FromName: TcxGridDBColumn
-            Caption = #1054#1090' '#1082#1086#1075#1086
-            DataBinding.FieldName = 'FromName'
+          object OperDate_Transport: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1055#1051')'
+            DataBinding.FieldName = 'OperDate_Transport'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 107
-          end
-          object PartnerName_from: TcxGridDBColumn
-            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
-            DataBinding.FieldName = 'PartnerName_from'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' ('#1087#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090')'
             Options.Editing = False
-            Width = 104
+            Width = 93
           end
-          object GoodsPropertyName: TcxGridDBColumn
-            Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
-            DataBinding.FieldName = 'GoodsPropertyName'
+          object InvNumber_Transport_Full: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1055#1051
+            DataBinding.FieldName = 'InvNumber_Transport_Full'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082'. '#1087#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
             Options.Editing = False
-            Width = 117
+            Width = 123
           end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object TotalCountSh: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'.'
-            DataBinding.FieldName = 'TotalCountSh'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object TotalCountKg: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089
-            DataBinding.FieldName = 'TotalCountKg'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -237,6 +206,20 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
           object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
             DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 138
+          end
+          object UpdateDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
+            DataBinding.FieldName = 'UpdateDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 115
+          end
+          object UpdateName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1082#1086#1088#1088'.'
+            DataBinding.FieldName = 'UpdateName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 138

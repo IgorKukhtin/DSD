@@ -11,18 +11,18 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
     Width = 854
     Height = 438
     ExplicitTop = 126
-    ExplicitWidth = 1002
-    ExplicitHeight = 476
+    ExplicitWidth = 854
+    ExplicitHeight = 438
     ClientRectBottom = 438
     ClientRectRight = 854
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1002
-      ExplicitHeight = 452
+      ExplicitWidth = 854
+      ExplicitHeight = 414
       inherited cxGrid: TcxGrid
         Width = 854
         Height = 414
-        ExplicitWidth = 1002
-        ExplicitHeight = 452
+        ExplicitWidth = 854
+        ExplicitHeight = 414
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -159,7 +159,6 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object PartnerCode: TcxGridDBColumn [4]
@@ -177,14 +176,13 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actGoodsKindChoice
+                Action = actPartnerChoice
                 Default = True
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 315
           end
           inherited colIsErased: TcxGridDBColumn
@@ -199,8 +197,7 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
     Width = 854
     Height = 100
     TabOrder = 3
-    ExplicitTop = 4
-    ExplicitWidth = 1002
+    ExplicitWidth = 854
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -440,13 +437,13 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [15]
+    object actPartnerChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'GoodsKindForm'
-      FormName = 'TGoodsKindForm'
-      FormNameParam.Value = ''
+      FormName = 'TPartner_ObjectForm'
+      FormNameParam.Value = 'TPartner_ObjectForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -454,14 +451,14 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsKindId'
+          ComponentItem = 'PartnerId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsKindName'
+          ComponentItem = 'PartnerName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -788,7 +785,7 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
     Top = 48
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_PartnerCode'
+    StoredProcName = 'gpUpdate_Status_OrderReturnTare'
     Left = 128
     Top = 32
   end
@@ -922,16 +919,10 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inFromId'
+        Name = 'inMovementId_Transport'
         Value = ''
         Component = GuidesTransport
         ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsPropertyId'
-        Value = 0d
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1040,10 +1031,10 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsKindId'
+        Name = 'inPartnerId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'GoodsKindId'
+        ComponentItem = 'PartnerId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1167,10 +1158,10 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
   object GuidesTransport: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTransport
-    FormNameParam.Value = 'TPartnerExternalForm'
+    FormNameParam.Value = 'TTransportJournalChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPartnerExternalForm'
+    FormName = 'TTransportJournalChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1182,7 +1173,7 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'InvNumber_Full'
         Value = ''
         Component = GuidesTransport
         ComponentItem = 'TextValue'

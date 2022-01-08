@@ -40,12 +40,13 @@ BEGIN
 
              , CAST ('' as TVarChar) 		              AS Comment
 
-             , CAST ('' AS TVarChar)                          AS InsertNameName
-             , CAST (Null AS TDateTime)                       AS InsertDate
+             , Object_Insert.ValueData                        AS InsertName
+             , CURRENT_TIMESTAMP ::TDateTime                  AS InsertDate
              , CAST ('' AS TVarChar)                          AS UpdateName
              , CAST (Null AS TDateTime)                       AS UpdateDate
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
          ;
 
      ELSE
@@ -59,7 +60,8 @@ BEGIN
            , Object_Status.ValueData          AS StatusName
 
            , Movement_Transport.Id            AS MovementId_Transport
-           , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Full
+           --, ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Full
+           , zfCalc_PartionMovementName (Movement_Transport.DescId, MovementDesc.ItemName, Movement_Transport.InvNumber, Movement_Transport.OperDate) AS InvNumber_Transport_Full
            
            , MovementString_Comment.ValueData AS Comment
 
@@ -96,6 +98,7 @@ BEGIN
                                            ON MovementLinkMovement_Transport.MovementId = Movement.Id
                                           AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
             LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
+            LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_Transport.DescId
 
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_OrderReturnTare();

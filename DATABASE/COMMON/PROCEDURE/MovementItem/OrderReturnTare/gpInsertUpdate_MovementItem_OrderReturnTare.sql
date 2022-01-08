@@ -1,13 +1,14 @@
 -- Function: gpInsertUpdate_MovementItem_OrderReturnTare()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderReturnTare (Integer, Integer, Integer, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderReturnTare (Integer, Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderReturnTare(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId             Integer   , -- Ключ объекта <Документ Возврат покупателя>
     IN inGoodsId                Integer   , -- Товары
-    IN inAmount                 TFloat    , -- Количество
     IN inPartnerId              Integer   , -- контрагент
+    IN inAmount                 TFloat    , -- Количество
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -20,12 +21,12 @@ BEGIN
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem_OrderReturnTare (ioId           := ioId
-                                                     , inMovementId   := inMovementId
-                                                     , inGoodsId      := inGoodsId
-                                                     , inAmount       := inAmount
-                                                     , inPartnerId  := inPartnerId
-                                                     , inUserId       := vbUserId
-                                                      ) AS tmp;
+                                                        , inMovementId   := inMovementId
+                                                        , inGoodsId      := inGoodsId
+                                                        , inPartnerId    := inPartnerId
+                                                        , inAmount       := inAmount
+                                                        , inUserId       := vbUserId
+                                                         ) AS tmp;
 
 END;
 $BODY$

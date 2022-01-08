@@ -1,12 +1,13 @@
 -- Function: gpSelect_Movement_OrderReturnTare()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderReturnTare (TDateTime, TDateTime, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderReturnTare (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderReturnTare(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
-    IN inIsErased          Boolean ,
     IN inJuridicalBasisId  Integer ,
+    IN inIsErased          Boolean ,
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -46,7 +47,9 @@ BEGIN
            , Movement_Transport.Id            AS MovementId_Transport
            , Movement_Transport.InvNumber     AS InvNumber_Transport
            , Movement_Transport.OperDate      AS OperDate_Transport
-           , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Full
+           --, ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Full
+           , zfCalc_PartionMovementName (Movement_Transport.DescId, MovementDesc.ItemName, Movement_Transport.InvNumber, Movement_Transport.OperDate) AS InvNumber_Transport_Full
+           
            , Object_Car.ValueData             AS CarName
            , Object_CarModel.ValueData        AS CarModelName
            , View_PersonalDriver.PersonalName AS PersonalDriverName
@@ -91,6 +94,7 @@ BEGIN
                                            ON MovementLinkMovement_Transport.MovementId = Movement.Id
                                           AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
             LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
+            LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_Transport.DescId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                          ON MovementLinkObject_Car.MovementId = Movement_Transport.Id
