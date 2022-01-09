@@ -196,35 +196,15 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Component\UpdaterTest.pas"/>
 			<DCCReference Include="..\SOURCE\dbObjectTest.pas"/>
-			<DCCReference Include="..\..\FormsBoat\Guides\User.pas">
-				<Form>UserForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\UserEdit.pas">
-				<Form>UserEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\SourceMerlin\Objects\All\RoleTest.pas"/>
 			<DCCReference Include="..\SourceMerlin\Objects\All\UserTest.pas"/>
 			<DCCReference Include="..\SOURCE\Form\ParentFormTest.pas">
 				<Form>TestForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Objects.pas">
-				<Form>ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ObjectDesc.pas">
-				<Form>ObjectDescForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\SourceMerlin\Objects\All\ActionTest.pas"/>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorMain.pas">
 				<Form>AncestorMainForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Protocol.pas">
-				<Form>ProtocolForm</Form>
-				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorReport.pas">
 				<Form>AncestorReportForm</Form>
@@ -246,27 +226,11 @@
 				<Form>LookAndFillSettingsForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdXMLTransform.pas"/>
-			<DCCReference Include="..\..\FormsBoat\Guides\Role.pas">
-				<Form>RoleForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\RoleEdit.pas">
-				<Form>RoleEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Action.pas">
 				<Form>ActionForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\UserProtocol.pas">
-				<Form>UserProtocol</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\SourceMerlin\Container\CommonContainerProcedureTest.pas"/>
-			<DCCReference Include="..\..\FormsBoat\System\MovementDescForms.pas">
-				<Form>MovementDescDataForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdPivotGrid.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdExportToXLSAction.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdExportToXMLAction.pas"/>
@@ -290,680 +254,80 @@
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\MeDocXML.pas"/>
-			<DCCReference Include="..\..\FormsBoat\Guides\Language.pas">
-				<Form>LanguageForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\LanguageEdit.pas">
-				<Form>LanguageEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\TranslateWord.pas">
-				<Form>TranslateWordForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\TranslateWordEdit.pas">
-				<Form>TranslateWordEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Brand.pas">
-				<Form>BrandForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\BrandEdit.pas">
-				<Form>BrandEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdModelEdit.pas">
-				<Form>ProdModelEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdModel.pas">
-				<Form>ProdModelForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdEngine.pas">
-				<Form>ProdEngineForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdEngineEdit.pas">
-				<Form>ProdEngineEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdColorGroup.pas">
-				<Form>ProdColorGroupForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdOptions.pas">
-				<Form>ProdOptionsForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdColorGroupEdit.pas">
-				<Form>ProdColorGroupEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdOptionsEdit.pas">
-				<Form>ProdOptionsEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdColor_goods.pas">
-				<Form>ProdColor_goodsForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdColorEdit.pas">
-				<Form>ProdColorEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Product.pas">
-				<Form>ProductForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProductEdit.pas">
-				<Form>ProductEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Import\ImportSettings.pas">
-				<Form>ImportSettingsForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Import\ImportType.pas">
-				<Form>ImportTypeForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdOptItemsEdit.pas">
-				<Form>ProdOptItemsEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdColorItemsEdit.pas">
-				<Form>ProdColorItemsEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdOptPattern.pas">
-				<Form>ProdOptPatternForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdOptPatternEdit.pas">
-				<Form>ProdOptPatternEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdColorPatternEdit.pas">
-				<Form>ProdColorPatternEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdColorPattern.pas">
-				<Form>ProdColorPatternForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdColorItems.pas">
-				<Form>ProdColorItemsForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdOptItems.pas">
-				<Form>ProdOptItemsForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Units.pas">
-				<Form>UnitForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\UnitEdit.pas">
-				<Form>UnitEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Unit_Object.pas">
-				<Form>Unit_ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\MemberEdit.pas">
-				<Form>MemberEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Member.pas">
-				<Form>MemberForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Client.pas">
-				<Form>ClientForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ClientEdit.pas">
-				<Form>ClientEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Partner.pas">
-				<Form>PartnerForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\PartnerEdit.pas">
-				<Form>PartnerEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Position.pas">
-				<Form>PositionForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\PositionEdit.pas">
-				<Form>PositionEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\PersonalEdit.pas">
-				<Form>PersonalEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Personal_Object.pas">
-				<Form>Personal_ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Personal.pas">
-				<Form>PersonalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\CountryEdit.pas">
-				<Form>CountryEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Country.pas">
-				<Form>CountryForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\PLZ.pas">
-				<Form>PLZForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\PLZEdit.pas">
-				<Form>PLZEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ModelEtiketenEdit.pas">
-				<Form>ModelEtiketenEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ModelEtiketen.pas">
-				<Form>ModelEtiketenForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\InfoMoney.pas">
-				<Form>InfoMoneyForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\InfoMoney_Object.pas">
-				<Form>InfoMoney_ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\InfoMoneyEdit.pas">
-				<Form>InfoMoneyEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\GoodsGroup.pas">
-				<Form>GoodsGroupForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\GoodsGroup_Object.pas">
-				<Form>GoodsGroup_ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\GoodsGroupEdit.pas">
-				<Form>GoodsGroupEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\InfoMoneyGroupEdit.pas">
-				<Form>InfoMoneyGroupEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\InfoMoneyGroup.pas">
-				<Form>InfoMoneyGroupForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\InfoMoneyGroup_Object.pas">
-				<Form>InfoMoneyGroup_ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\InfoMoneyDestination_Object.pas">
-				<Form>InfoMoneyDestination_ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\InfoMoneyDestinationEdit.pas">
-				<Form>InfoMoneyDestinationEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\InfoMoneyDestination.pas">
-				<Form>InfoMoneyDestinationForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Bank.pas">
-				<Form>BankForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\BankEdit.pas">
-				<Form>BankEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Measure.pas">
-				<Form>MeasureForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\MeasureEdit.pas">
-				<Form>MeasureEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\GoodsTypeEdit.pas">
-				<Form>GoodsTypeEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\GoodsType.pas">
-				<Form>GoodsTypeForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\GoodsTag.pas">
-				<Form>GoodsTagForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\GoodsTagEdit.pas">
-				<Form>GoodsTagEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\GoodsSize.pas">
-				<Form>GoodsSizeForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\GoodsSizeEdit.pas">
-				<Form>GoodsSizeEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\DiscountParner.pas">
-				<Form>DiscountParnerForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\DiscountParnerEdit.pas">
-				<Form>DiscountParnerEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Goods.pas">
-				<Form>GoodsForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\GoodsEdit.pas">
-				<Form>GoodsEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\GoodsTree.pas">
-				<Form>GoodsTreeForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\PriceList.pas">
-				<Form>PriceListForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\PriceList_Object.pas">
-				<Form>PriceList_ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\PriceListEdit.pas">
-				<Form>PriceListEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\PriceListGoodsItem.pas">
-				<Form>PriceListGoodsItemForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\PriceListGoodsItemEdit.pas">
-				<Form>PriceListGoodsItemEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\PriceListItem.pas">
-				<Form>PriceListItemForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Kind\TaxKind.pas">
-				<Form>TaxKindForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdAddOn.pas"/>
-			<DCCReference Include="..\..\FormsBoat\Guides\ReceiptProdModelEdit.pas">
-				<Form>ReceiptProdModelEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ReceiptGoodsEdit.pas">
-				<Form>ReceiptGoodsEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ReceiptGoods.pas">
-				<Form>ReceiptGoodsForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Kind\ProdColorKind.pas">
-				<Form>ProdColorKindForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ColorPattern.pas">
-				<Form>ColorPatternForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ColorPatternEdit.pas">
-				<Form>ColorPatternEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ReceiptLevel.pas">
-				<Form>ReceiptLevelForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ReceiptLevelEdit.pas">
-				<Form>ReceiptLevelEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ReceiptService.pas">
-				<Form>ReceiptServiceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ReceiptServiceEdit.pas">
-				<Form>ReceiptServiceEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Union_Goods_ReceiptService.pas">
-				<Form>Union_Goods_ReceiptServiceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ReceiptProdModel.pas">
-				<Form>ReceiptProdModelForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\TranslateMessage.pas">
-				<Form>TranslateMessageForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProdColor.pas">
-				<Form>ProdColorForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\Movement_PeriodDialog.pas">
-				<Form>Movement_PeriodDialogForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\Invoice.pas">
-				<Form>InvoiceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Kind\PaidKind.pas">
-				<Form>PaidKindForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Union_ClientPartner.pas">
-				<Form>Union_ClientPartnerForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\BankAccount.pas">
-				<Form>BankAccountForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\BankAccountEdit.pas">
-				<Form>BankAccountEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Currency.pas">
-				<Form>CurrencyForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Currency_Object.pas">
-				<Form>Currency_ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\CurrencyEdit.pas">
-				<Form>CurrencyEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\MoneyPlace_Object.pas">
-				<Form>MoneyPlace_ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\BankAccountJournal.pas">
-				<Form>BankAccountJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\BankAccountMovement.pas">
-				<Form>BankAccountMovementForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\InvoiceJournalChoice.pas">
-				<Form>InvoiceJournalChoiceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\Income.pas">
-				<Form>IncomeForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\IncomeJournal.pas">
-				<Form>IncomeJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\IncomeJournalChoice.pas">
-				<Form>IncomeJournalChoiceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Kind\TaxKindEdit.pas">
-				<Form>TaxKindEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\OrderClientJournal.pas">
-				<Form>OrderClientJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201011.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201211.pas"/>
-			<DCCReference Include="..\..\FormsBoat\Document\IncomeCostJournal.pas">
-				<Form>IncomeCostJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\IncomeCost.pas">
-				<Form>IncomeCostForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\CostJournalChoice.pas">
-				<Form>CostJournalChoiceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Account.pas">
-				<Form>AccountForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\AccountEdit.pas">
-				<Form>AccountEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\AccountDirection.pas">
-				<Form>AccountDirectionForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\AccountDirectionEdit.pas">
-				<Form>AccountDirectionEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\AccountGroup.pas">
-				<Form>AccountGroupForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\AccountGroupEdit.pas">
-				<Form>AccountGroupEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\MovementItemContainer.pas">
-				<Form>MovementItemContainerForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Report\Report_Balance.pas">
-				<Form>Report_BalanceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Report\Report_BalanceDialog.pas">
-				<Form>Report_BalanceDialogForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Report\Report_Goods_RemainsCurrentDialog.pas">
-				<Form>Report_Goods_RemainsCurrentDialogForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Report\Report_Goods_RemainsCurrent.pas">
-				<Form>Report_Goods_RemainsCurrentForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\InvoiceJournal.pas">
-				<Form>InvoiceJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\BankAccountJournalByInvoice.pas">
-				<Form>BankAccountJournalByInvoiceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\OrderClient.pas">
-				<Form>OrderClientForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201012.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201212.pas"/>
-			<DCCReference Include="..\..\FormsBoat\System\MovementProtocol.pas">
-				<Form>MovementProtocolForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\System\MovementItemProtocol.pas">
-				<Form>MovementItemProtocolForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\System\MovementProtocol_Info.pas">
-				<Form>MovementProtocol_InfoForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Report\Report_MovementIncome.pas">
-				<Form>Report_MovementIncomeForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Report\Report_MovementIncomeDialog.pas">
-				<Form>Report_MovementIncomeDialogForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\Union_OrderJournalChoice.pas">
-				<Form>Union_OrderJournalChoiceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Report\Report_GoodsDialog.pas">
-				<Form>Report_GoodsDialogForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Report\Report_Goods.pas">
-				<Form>Report_GoodsForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\PartionGoodsChoice.pas">
-				<Form>PartionGoodsChoiceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\OrderPartner.pas">
-				<Form>OrderPartnerForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\OrderPartnerJournal.pas">
-				<Form>OrderPartnerJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Report\Report_OrderClientDialog.pas">
-				<Form>Report_OrderClientDialogForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Report\Report_OrderClient.pas">
-				<Form>Report_OrderClientForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\OrderClientJournalChoice.pas">
-				<Form>OrderClientJournalChoiceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\DocTag.pas">
-				<Form>DocTagForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\DocTagEdit.pas">
-				<Form>DocTagEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProductDocumentPhotoEdit.pas">
-				<Form>ProductDocumentPhotoEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\IncomeCostJournalByInvoice.pas">
-				<Form>IncomeCostJournalByInvoiceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\OrderClientJournalReserve.pas">
-				<Form>OrderClientJournalReserveForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\SendJournal.pas">
-				<Form>SendJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\Send.pas">
-				<Form>SendForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\LossJournal.pas">
-				<Form>LossJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\Loss.pas">
-				<Form>LossForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\ProductionUnion.pas">
-				<Form>ProductionUnionForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\ProductionUnionJournal.pas">
-				<Form>ProductionUnionJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\ProductionPersonalJournal.pas">
-				<Form>ProductionPersonalJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\ProductionPersonal.pas">
-				<Form>ProductionPersonalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ReceiptGoodsChoice.pas">
-				<Form>ReceiptGoodsChoiceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\DialogPswSms.pas">
 				<Form>DialogPswSmsForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Report\Report_ProductionPersonalDialog.pas">
-				<Form>Report_ProductionPersonalDialogForm</Form>
+			<DCCReference Include="..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas"/>
+			<DCCReference Include="..\..\FormsMerlin\Import\ImportSettings.pas">
+				<Form>ImportSettingsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Report\Report_ProductionPersonal.pas">
-				<Form>Report_ProductionPersonalForm</Form>
+			<DCCReference Include="..\..\FormsMerlin\Import\ImportType.pas">
+				<Form>ImportTypeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\Sale.pas">
-				<Form>SaleForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\SaleJournal.pas">
-				<Form>SaleJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\System\FormsUnit.pas">
+			<DCCReference Include="..\..\FormsMerlin\System\FormsUnit.pas">
 				<Form>FormsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\IncomeItemEdit.pas">
-				<Form>IncomeItemEditForm</Form>
+			<DCCReference Include="..\..\FormsMerlin\System\MovementDescForms.pas">
+				<Form>MovementDescDataForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Document\IncomeEdit.pas">
-				<Form>IncomeEditForm</Form>
+			<DCCReference Include="..\..\FormsMerlin\System\MovementItemProtocol.pas">
+				<Form>MovementItemProtocolForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas"/>
-			<DCCReference Include="..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas"/>
+			<DCCReference Include="..\..\FormsMerlin\System\MovementProtocol.pas">
+				<Form>MovementProtocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\Position.pas">
+				<Form>PositionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\PositionEdit.pas">
+				<Form>PositionEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\Role.pas">
+				<Form>RoleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\RoleEdit.pas">
+				<Form>RoleEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\Unit_Object.pas">
+				<Form>Unit_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\UnitEdit.pas">
+				<Form>UnitEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\Units.pas">
+				<Form>UnitForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\User.pas">
+				<Form>UserForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\UserEdit.pas">
+				<Form>UserEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\UserProtocol.pas">
+				<Form>UserProtocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
