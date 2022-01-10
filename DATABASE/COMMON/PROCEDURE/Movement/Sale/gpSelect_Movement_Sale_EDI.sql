@@ -959,6 +959,8 @@ BEGIN
                   ELSE '0'
               END :: TVarChar AS GoodsCodeUKTZED
 
+           , vbVATPercent                    AS VATPercent
+
            , tmpMI.Amount                    AS Amount
            , tmpMI.AmountPartner             AS AmountPartner
            , tmpMI_Order.Amount              AS AmountOrder
