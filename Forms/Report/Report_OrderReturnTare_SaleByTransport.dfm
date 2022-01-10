@@ -233,8 +233,8 @@ inherited Report_OrderReturnTare_SaleByTransportForm: TReport_OrderReturnTare_Sa
     end
     object cxLabel25: TcxLabel
       Left = 9
-      Top = -1
-      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
+      Top = 0
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090
     end
     object edPromo: TcxButtonEdit
       Left = 9
