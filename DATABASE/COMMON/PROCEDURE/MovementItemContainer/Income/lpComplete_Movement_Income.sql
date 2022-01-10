@@ -1254,7 +1254,11 @@ BEGIN
                                                 AND (_tmpItem.isPartionCount OR _tmpItem.isPartionSumm)
                                                    THEN lpInsertFind_Object_PartionGoods (inValue:= _tmpItem.PartionGoods)
 
-                                               WHEN vbIsPartionDate_Unit
+                                               WHEN vbOperDate >= zc_DateStart_PartionGoods_20103()
+                                                AND _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_20103() -- Запчасти и Ремонты + Шины
+                                                   THEN lpInsertFind_Object_PartionGoods (inValue:= _tmpItem.PartionGoods)
+
+                                               WHEN vbIsPartionDate_Unit = TRUE
                                                 AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                    THEN lpInsertFind_Object_PartionGoods (inOperDate:= _tmpItem.PartionGoodsDate)
                                                WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
@@ -1273,6 +1277,7 @@ BEGIN
                                                ELSE lpInsertFind_Object_PartionGoods ('')
                                           END
      WHERE _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+        OR _tmpItem.InfoMoneyId            = zc_Enum_InfoMoney_20103()            -- Запчасти и Ремонты + Шины
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
@@ -2095,6 +2100,7 @@ END IF;
                                                                                      , inCarId                  := NULL
                                                                                      , inMemberId               := NULL
                                                                                      , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                                                     , inInfoMoneyId            := NULL
                                                                                      , inGoodsId                := _tmpItem.GoodsId
                                                                                      , inGoodsKindId            := NULL
                                                                                      , inIsPartionCount         := FALSE
@@ -2274,6 +2280,7 @@ END IF;
                                                                                      , inCarId                  := NULL
                                                                                      , inMemberId               := NULL
                                                                                      , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_20400() -- ГСМ
+                                                                                     , inInfoMoneyId            := NULL
                                                                                      , inGoodsId                := _tmpItem.GoodsId
                                                                                      , inGoodsKindId            := NULL
                                                                                      , inIsPartionCount         := FALSE
@@ -2601,6 +2608,7 @@ END IF;
                                                                                 , inCarId                  := vbCarId
                                                                                 , inMemberId               := vbMemberId_To
                                                                                 , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                                                , inInfoMoneyId            := _tmpItem.InfoMoneyId
                                                                                 , inGoodsId                := _tmpItem.GoodsId
                                                                                 , inGoodsKindId            := _tmpItem.GoodsKindId
                                                                                 , inIsPartionCount         := _tmpItem.isPartionCount
@@ -2622,6 +2630,7 @@ END IF;
                                                                                 , inCarId                  := vbCarId
                                                                                 , inMemberId               := vbMemberId_To
                                                                                 , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                                                , inInfoMoneyId            := _tmpItem.InfoMoneyId
                                                                                 , inGoodsId                := _tmpItem.GoodsId
                                                                                 , inGoodsKindId            := _tmpItem.GoodsKindId
                                                                                 , inIsPartionCount         := _tmpItem.isPartionCount
@@ -2714,6 +2723,7 @@ END IF;
                                                                                           , inCarId                  := NULL
                                                                                           , inMemberId               := vbMemberId_Driver
                                                                                           , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                                                          , inInfoMoneyId            := _tmpItem.InfoMoneyId
                                                                                           , inGoodsId                := _tmpItem.GoodsId_TicketFuel
                                                                                           , inGoodsKindId            := NULL
                                                                                           , inIsPartionCount         := NULL

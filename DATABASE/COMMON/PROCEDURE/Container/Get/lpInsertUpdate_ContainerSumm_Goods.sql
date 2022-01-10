@@ -3,22 +3,22 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_ContainerSumm_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ContainerSumm_Goods (
-    IN inOperDate               TDateTime, 
-    IN inUnitId                 Integer , 
-    IN inCarId                  Integer , 
-    IN inMemberId               Integer , 
+    IN inOperDate               TDateTime,
+    IN inUnitId                 Integer ,
+    IN inCarId                  Integer ,
+    IN inMemberId               Integer ,
     IN inBranchId               Integer , -- эта аналитика нужна для филиала
-    IN inJuridicalId_basis      Integer , 
-    IN inBusinessId             Integer , 
-    IN inAccountId              Integer , 
-    IN inInfoMoneyDestinationId Integer , 
-    IN inInfoMoneyId            Integer , 
-    IN inInfoMoneyId_Detail     Integer , 
-    IN inContainerId_Goods      Integer , 
-    IN inGoodsId                Integer , 
-    IN inGoodsKindId            Integer , 
-    IN inIsPartionSumm          Boolean , 
-    IN inPartionGoodsId         Integer , 
+    IN inJuridicalId_basis      Integer ,
+    IN inBusinessId             Integer ,
+    IN inAccountId              Integer ,
+    IN inInfoMoneyDestinationId Integer ,
+    IN inInfoMoneyId            Integer ,
+    IN inInfoMoneyId_Detail     Integer ,
+    IN inContainerId_Goods      Integer ,
+    IN inGoodsId                Integer ,
+    IN inGoodsKindId            Integer ,
+    IN inIsPartionSumm          Boolean ,
+    IN inPartionGoodsId         Integer ,
     IN inAssetId                Integer
 )
   RETURNS Integer
@@ -123,9 +123,34 @@ END IF;
                                                   );
 
      ELSE
+     -- 20103 Запчасти и Ремонты + Шины
+     IF inInfoMoneyId IN (zc_Enum_InfoMoney_20103())
+         AND inPartionGoodsId > 0
+                           -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Автомобиль / Физ.лицо(МО) / Подразделение  2)Товар 3)Основные средства(для которого закуплено ТМЦ) 4)Статьи назначения 5)Статьи назначения(детализация с/с) 6)!Партия товара!
+     THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                 , inParentId          := inContainerId_Goods
+                                                 , inObjectId          := inAccountId
+                                                 , inJuridicalId_basis := inJuridicalId_basis
+                                                 , inBusinessId        := inBusinessId
+                                                 , inObjectCostDescId  := NULL
+                                                 , inObjectCostId      := NULL
+                                                 , inDescId_1   := zc_ContainerLinkObject_Goods()
+                                                 , inObjectId_1 := inGoodsId
+                                                 , inDescId_2   := CASE WHEN inCarId <> 0 THEN zc_ContainerLinkObject_Car() WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
+                                                 , inObjectId_2 := CASE WHEN inCarId <> 0 THEN inCarId                      WHEN inMemberId <> 0 THEN inMemberId                      ELSE CASE WHEN inUnitId <> 0 THEN inUnitId ELSE zc_Juridical_Basis() END END
+                                                 , inDescId_3   := zc_ContainerLinkObject_InfoMoneyDetail()
+                                                 , inObjectId_3 := inInfoMoneyId_Detail
+                                                 , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
+                                                 , inObjectId_4 := inInfoMoneyId
+                                                 , inDescId_5   := zc_ContainerLinkObject_AssetTo()
+                                                 , inObjectId_5 := inAssetId
+                                                 , inDescId_6   := zc_ContainerLinkObject_PartionGoods()
+                                                 , inObjectId_6 := inPartionGoodsId
+                                                  );
+     ELSE
      -- 20100 Запчасти и Ремонты
      IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100())
-                           -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Автомобиль / Физ.лицо(МО) / Подразделение  2)Товар 3)Основные средства(для которого закуплено ТМЦ) 4)Статьи назначения 5)Статьи назначения(детализация с/с) 6)!Партия товара! 
+                           -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Автомобиль / Физ.лицо(МО) / Подразделение  2)Товар 3)Основные средства(для которого закуплено ТМЦ) 4)Статьи назначения 5)Статьи назначения(детализация с/с) 6)!Партия товара!
      THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                  , inParentId          := inContainerId_Goods
                                                  , inObjectId          := inAccountId
@@ -213,7 +238,7 @@ END IF;
                                                                                        WHEN inOperDate >= '01.01.2017'
                                                                                             THEN inGoodsKindId
                                                                                        ELSE 0
-                                                                                  END 
+                                                                                  END
                                                                 , inDescId_5   := zc_ContainerLinkObject_InfoMoney()
                                                                 , inObjectId_5 := inInfoMoneyId
                                                                 , inDescId_6   := CASE WHEN inPartionGoodsId <> 0 THEN zc_ContainerLinkObject_PartionGoods() ELSE NULL END
@@ -265,6 +290,7 @@ END IF;
      END IF;
      END IF;
      END IF;
+     END IF;
 
      -- Возвращаем значение
      RETURN (vbContainerId);
@@ -272,7 +298,6 @@ END IF;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_ContainerSumm_Goods (TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

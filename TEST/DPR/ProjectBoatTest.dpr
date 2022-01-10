@@ -286,7 +286,9 @@ uses
   SaleJournal in '..\..\FormsBoat\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
   FormsUnit in '..\..\FormsBoat\System\FormsUnit.pas' {FormsForm: TParentForm},
   IncomeItemEdit in '..\..\FormsBoat\Document\IncomeItemEdit.pas' {IncomeItemEditForm: TParentForm},
-  IncomeEdit in '..\..\FormsBoat\Document\IncomeEdit.pas' {IncomeEditForm: TParentForm};
+  IncomeEdit in '..\..\FormsBoat\Document\IncomeEdit.pas' {IncomeEditForm: TParentForm},
+  DOCUMENTINVOICE_PRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
+  DOCUMENTINVOICE_TN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

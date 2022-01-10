@@ -1,0 +1,159 @@
+program MerlinTest;
+
+
+
+uses
+  Forms,
+  DUnitTestRunner,
+  SysUtils,
+  dbCreateStructureTest in '..\SourceMerlin\Structure\dbCreateStructureTest.pas',
+  dbMetadataTest in '..\SourceMerlin\Metadata\dbMetadataTest.pas',
+  dbProcedureTest in '..\SourceMerlin\dbProcedureTest.pas',
+  zLibUtil in '..\SOURCE\zLibUtil.pas',
+  CommonFunctionTest in '..\SourceMerlin\Function\CommonFunctionTest.pas',
+  UtilConst in '..\SourceMerlin\UtilConst.pas',
+  dbEnumTest in '..\SourceMerlin\dbEnumTest.pas',
+  ProcessTest in '..\SourceMerlin\Process\ProcessTest.pas',
+  dbCreateViewTest in '..\SourceMerlin\View\dbCreateViewTest.pas',
+  DefaultsTest in '..\SourceMerlin\Defaults\DefaultsTest.pas',
+  CommonData in '..\..\SOURCE\CommonData.pas',
+  Authentication in '..\..\SOURCE\Authentication.pas',
+  FormStorage in '..\..\SOURCE\FormStorage.pas',
+  ParentForm in '..\..\SOURCE\ParentForm.pas' {ParentForm},
+  Storage in '..\..\SOURCE\Storage.pas',
+  UtilConvert in '..\..\SOURCE\UtilConvert.pas',
+  dsdAction in '..\..\SOURCE\COMPONENT\dsdAction.pas',
+  dsdDB in '..\..\SOURCE\COMPONENT\dsdDB.pas',
+  dsdGuides in '..\..\SOURCE\COMPONENT\dsdGuides.pas',
+  DataModul in '..\..\SOURCE\DataModul.pas' {dmMain: TDataModule},
+  dbTest in '..\SOURCE\dbTest.pas',
+  ChoicePeriod in '..\..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
+  Defaults in '..\..\SOURCE\COMPONENT\Defaults.pas',
+  UnilWin in '..\..\SOURCE\UnilWin.pas',
+  MessagesUnit in '..\..\SOURCE\MessagesUnit.pas' {MessagesForm},
+  SimpleGauge in '..\..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm},
+  Document in '..\..\SOURCE\COMPONENT\Document.pas',
+  Log in '..\..\SOURCE\Log.pas',
+  ExternalData in '..\..\SOURCE\COMPONENT\ExternalData.pas',
+  ExternalSave in '..\..\SOURCE\COMPONENT\ExternalSave.pas',
+  VKDBFDataSet in '..\..\SOURCE\DBF\VKDBFDataSet.pas',
+  VKDBFPrx in '..\..\SOURCE\DBF\VKDBFPrx.pas',
+  VKDBFUtil in '..\..\SOURCE\DBF\VKDBFUtil.pas',
+  VKDBFMemMgr in '..\..\SOURCE\DBF\VKDBFMemMgr.pas',
+  VKDBFCrypt in '..\..\SOURCE\DBF\VKDBFCrypt.pas',
+  VKDBFGostCrypt in '..\..\SOURCE\DBF\VKDBFGostCrypt.pas',
+  VKDBFCDX in '..\..\SOURCE\DBF\VKDBFCDX.pas',
+  VKDBFIndex in '..\..\SOURCE\DBF\VKDBFIndex.pas',
+  VKDBFSorters in '..\..\SOURCE\DBF\VKDBFSorters.pas',
+  VKDBFCollate in '..\..\SOURCE\DBF\VKDBFCollate.pas',
+  VKDBFParser in '..\..\SOURCE\DBF\VKDBFParser.pas',
+  VKDBFNTX in '..\..\SOURCE\DBF\VKDBFNTX.pas',
+  VKDBFSortedList in '..\..\SOURCE\DBF\VKDBFSortedList.pas',
+  ObjectTest in '..\SourceMerlin\Objects\ObjectTest.pas',
+  cxGridAddOn in '..\..\SOURCE\DevAddOn\cxGridAddOn.pas',
+  AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
+  AncestorData in '..\..\Forms\Ancestor\AncestorData.pas' {AncestorDataForm: TParentForm},
+  AncestorDBGrid in '..\..\Forms\Ancestor\AncestorDBGrid.pas' {AncestorDBGridForm: TParentForm},
+  AncestorDialog in '..\..\Forms\Ancestor\AncestorDialog.pas' {AncestorDialogForm: TParentForm},
+  AncestorDocument in '..\..\Forms\Ancestor\AncestorDocument.pas' {AncestorDocumentForm: TParentForm},
+  AncestorDocumentMC in '..\..\Forms\Ancestor\AncestorDocumentMC.pas' {AncestorDocumentMCForm: TParentForm},
+  AncestorEditDialog in '..\..\Forms\Ancestor\AncestorEditDialog.pas' {AncestorEditDialogForm: TParentForm},
+  AncestorEnum in '..\..\Forms\Ancestor\AncestorEnum.pas' {AncestorEnumForm: TParentForm},
+  AncestorGuides in '..\..\Forms\Ancestor\AncestorGuides.pas' {AncestorGuidesForm: TParentForm},
+  AncestorJournal in '..\..\Forms\Ancestor\AncestorJournal.pas' {AncestorJournalForm: TParentForm},
+  AboutBoxUnit in '..\..\SOURCE\AboutBoxUnit.pas' {AboutBox},
+  UpdaterTest in '..\SOURCE\Component\UpdaterTest.pas',
+  dbObjectTest in '..\SOURCE\dbObjectTest.pas',
+  RoleTest in '..\SourceMerlin\Objects\All\RoleTest.pas',
+  UserTest in '..\SourceMerlin\Objects\All\UserTest.pas',
+  ParentFormTest in '..\SOURCE\Form\ParentFormTest.pas' {TestForm: TParentForm},
+  ActionTest in '..\SourceMerlin\Objects\All\ActionTest.pas',
+  AncestorMain in '..\..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
+  AncestorReport in '..\..\Forms\Ancestor\AncestorReport.pas' {AncestorReportForm: TParentForm},
+  Vcl.Dialogs,
+  dsdDataSetDataLink in '..\..\SOURCE\COMPONENT\dsdDataSetDataLink.pas',
+  dsdException in '..\..\SOURCE\dsdException.pas',
+  EDI in '..\..\SOURCE\EDI\EDI.pas',
+  ComDocXML in '..\..\SOURCE\EDI\ComDocXML.pas',
+  OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
+  DeclarXML in '..\..\SOURCE\EDI\DeclarXML.pas',
+  DesadvXML in '..\..\SOURCE\EDI\DesadvXML.pas',
+  InvoiceXML in '..\..\SOURCE\EDI\InvoiceXML.pas',
+  OrdrspXML in '..\..\SOURCE\EDI\OrdrspXML.pas',
+  RecadvXML in '..\..\SOURCE\EDI\RecadvXML.pas',
+  StatusXML in '..\..\SOURCE\EDI\StatusXML.pas',
+  dsdInternetAction in '..\..\SOURCE\COMPONENT\dsdInternetAction.pas',
+  LookAndFillSettings in '..\..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
+  dsdXMLTransform in '..\..\SOURCE\COMPONENT\dsdXMLTransform.pas',
+  Action in '..\..\Forms\Action.pas' {ActionForm: TParentForm},
+  CommonContainerProcedureTest in '..\SourceMerlin\Container\CommonContainerProcedureTest.pas',
+  dsdPivotGrid in '..\..\SOURCE\COMPONENT\dsdPivotGrid.pas',
+  dsdExportToXLSAction in '..\..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
+  dsdExportToXMLAction in '..\..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
+  ExternalLoad in '..\..\SOURCE\COMPONENT\ExternalLoad.pas',
+  PUSHMessage in '..\..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
+  DesadvFozzXML in '..\..\SOURCE\EDI\DesadvFozzXML.pas',
+  IftminFozzXML in '..\..\SOURCE\EDI\IftminFozzXML.pas',
+  OrderSpFozzXML in '..\..\SOURCE\EDI\OrderSpFozzXML.pas',
+  MainForm in '..\..\FormsMerlin\MainForm.pas' {MainForm},
+  dbProcedureMerlinTest in '..\SourceMerlin\dbProcedureMerlinTest.pas',
+  LoadMerlinFormTest in '..\SourceMerlin\LoadMerlinFormTest.pas',
+  LoadMerlinReportTest in '..\SourceMerlin\LoadMerlinReportTest.pas',
+  dsdTranslator in '..\..\SOURCE\COMPONENT\dsdTranslator.pas',
+  MeDOC in '..\..\SOURCE\MeDOC\MeDOC.pas',
+  IFIN_J1201009 in '..\..\SOURCE\MeDOC\IFIN_J1201009.pas',
+  IFIN_J1201209 in '..\..\SOURCE\MeDOC\IFIN_J1201209.pas',
+  Medoc_J1201010 in '..\..\SOURCE\MeDOC\Medoc_J1201010.pas',
+  Medoc_J1201210 in '..\..\SOURCE\MeDOC\Medoc_J1201210.pas',
+  MeDocXML in '..\..\SOURCE\MeDOC\MeDocXML.pas',
+  dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
+  Medoc_J1201011 in '..\..\SOURCE\MeDOC\Medoc_J1201011.pas',
+  Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas',
+  Medoc_J1201012 in '..\..\SOURCE\MeDOC\Medoc_J1201012.pas',
+  Medoc_J1201212 in '..\..\SOURCE\MeDOC\Medoc_J1201212.pas',
+  DialogPswSms in '..\..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
+  DOCUMENTINVOICE_PRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
+  DOCUMENTINVOICE_TN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
+  ImportSettings in '..\..\FormsMerlin\Import\ImportSettings.pas' {ImportSettingsForm: TParentForm},
+  ImportType in '..\..\FormsMerlin\Import\ImportType.pas' {ImportTypeForm: TParentForm},
+  FormsUnit in '..\..\FormsMerlin\System\FormsUnit.pas' {FormsForm: TParentForm},
+  MovementDescForms in '..\..\FormsMerlin\System\MovementDescForms.pas' {MovementDescDataForm: TParentForm},
+  MovementItemProtocol in '..\..\FormsMerlin\System\MovementItemProtocol.pas' {MovementItemProtocolForm: TParentForm},
+  MovementProtocol in '..\..\FormsMerlin\System\MovementProtocol.pas' {MovementProtocolForm: TParentForm},
+  Position in '..\..\FormsMerlin\Guides\Position.pas' {PositionForm: TParentForm},
+  PositionEdit in '..\..\FormsMerlin\Guides\PositionEdit.pas' {PositionEditForm: TParentForm},
+  Role in '..\..\FormsMerlin\Guides\Role.pas' {RoleForm: TParentForm},
+  RoleEdit in '..\..\FormsMerlin\Guides\RoleEdit.pas' {RoleEditForm: TParentForm},
+  Unit_Object in '..\..\FormsMerlin\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm},
+  UnitEdit in '..\..\FormsMerlin\Guides\UnitEdit.pas' {UnitEditForm: TParentForm},
+  Units in '..\..\FormsMerlin\Guides\Units.pas' {UnitForm: TParentForm},
+  User in '..\..\FormsMerlin\Guides\User.pas' {UserForm: TParentForm},
+  UserEdit in '..\..\FormsMerlin\Guides\UserEdit.pas' {UserEditForm: TParentForm},
+  UserProtocol in '..\..\FormsMerlin\Guides\UserProtocol.pas' {UserProtocolForm: TParentForm};
+
+{$R *.res}
+{$R DevExpressRus.res}
+
+begin
+  ConnectionPath := '..\INIT\Boat_init.php';
+  EnumPath := '..\DATABASE\Boat\METADATA\Enum\';
+  CreateStructurePath := '..\DATABASE\Boat\STRUCTURE\';
+  LocalViewPath := '..\DATABASE\Boat\View\';
+  LocalProcedurePath := '..\DATABASE\Boat\PROCEDURE\';
+  LocalProcessPath := '..\DATABASE\Boat\PROCESS\';
+
+  dsdProject := prBoat;
+  //dsdProject := prProject;
+
+  if FindCmdLineSwitch('realProjectBoat', true)
+  then gc_AdminPassword := 'qsxqsxw1'
+  else gc_AdminPassword := 'Админ';
+
+  gc_ProgramName := 'ProjectBoat.exe';
+
+  Application.Initialize;
+  gc_isSetDefault := true;
+  Application.CreateForm(TdmMain, dmMain);
+  Application.Run;
+  DUnitTestRunner.RunRegisteredTests;
+end.

@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SaleExternal(
     IN inGoodsKindId            Integer   , -- Виды товаров
     IN inSession                TVarChar    -- сессия пользователя
 )
-RETURNS RECORD AS
+RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPriceWithVAT Boolean;

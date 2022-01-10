@@ -1339,7 +1339,11 @@ uses
   EDI in '..\..\SOURCE\EDI\EDI.pas',
   CardFuelKind in '..\..\Forms\Kind\CardFuelKind.pas' {CardFuelKindForm: TParentForm},
   Report_TransportTireDialog in '..\..\Forms\Report\Report_TransportTireDialog.pas' {Report_TransportTireDialogForm: TParentForm},
-  Report_TransportTire in '..\..\Forms\Report\Report_TransportTire.pas' {Report_TransportTireForm: TParentForm};
+  Report_TransportTire in '..\..\Forms\Report\Report_TransportTire.pas' {Report_TransportTireForm: TParentForm},
+  OrderReturnTare in '..\..\Forms\Document\OrderReturnTare.pas' {OrderReturnTareForm: TParentForm},
+  OrderReturnTareJournal in '..\..\Forms\Document\OrderReturnTareJournal.pas' {OrderReturnTareJournalForm: TParentForm},
+  DOCUMENTINVOICE_TN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
+  DOCUMENTINVOICE_PRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

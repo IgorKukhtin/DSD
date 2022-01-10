@@ -143,7 +143,7 @@ BEGIN
 
 
    IF inValuePrice <> 0 AND inPriceListId <> 0
-      AND ((vbIsUpdate = FALSE) OR NOT EXISTS (SELECT 1 FROM gpSelect_ObjectHistory_PriceListGoodsItem(inPriceListId := inPriceListId, inGoodsId :=ioId, inSession := inSession) as tmp LIMIT 1))
+      AND ((vbIsUpdate = FALSE) OR NOT EXISTS (SELECT 1 FROM gpSelect_ObjectHistory_PriceListGoodsItem (inPriceListId:= inPriceListId, inGoodsId:= ioId, inGoodsKindId:= 0, inSession := inSession) as tmp LIMIT 1))
    THEN
        PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId := 0
                                                          , inPriceListId := inPriceListId
