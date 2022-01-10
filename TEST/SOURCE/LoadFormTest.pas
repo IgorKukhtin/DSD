@@ -1083,6 +1083,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderReturnTareJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderReturnTareJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderReturnTare_SaleByTransportForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderReturnTare_SaleByTransportForm');
+
 end;
 
 procedure TLoadFormTest.LoadOrderExternalFormTest;

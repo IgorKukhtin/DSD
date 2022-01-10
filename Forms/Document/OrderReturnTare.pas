@@ -64,6 +64,11 @@ type
     PartnerCode: TcxGridDBColumn;
     InsertRecord: TInsertRecord;
     bbInsertRecord: TdxBarButton;
+    spInsertUpdate_MI_byTransport: TdsdStoredProc;
+    HeaderExit: THeaderExit;
+    actInsertUpdate_MI_byTransport: TdsdExecStoredProc;
+    actReport_OrderReturnTare_SaleByTransport: TdsdOpenForm;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
