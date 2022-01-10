@@ -92,10 +92,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
 
 //
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectDescForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TObjectDescForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRoleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleEditForm'));
@@ -113,14 +109,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserProtocolForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProtocolForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TProtocolForm');
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerForm');
 
 end;
 

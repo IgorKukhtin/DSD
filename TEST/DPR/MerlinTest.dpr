@@ -129,7 +129,8 @@ uses
   Units in '..\..\FormsMerlin\Guides\Units.pas' {UnitForm: TParentForm},
   User in '..\..\FormsMerlin\Guides\User.pas' {UserForm: TParentForm},
   UserEdit in '..\..\FormsMerlin\Guides\UserEdit.pas' {UserEditForm: TParentForm},
-  UserProtocol in '..\..\FormsMerlin\Guides\UserProtocol.pas' {UserProtocolForm: TParentForm};
+  UserProtocol in '..\..\FormsMerlin\Guides\UserProtocol.pas' {UserProtocolForm: TParentForm},
+  Protocol in '..\..\FormsMerlin\Guides\Protocol.pas' {ProtocolForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
