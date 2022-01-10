@@ -144,7 +144,7 @@ inherited Report_OrderReturnTare_SaleByTransportForm: TReport_OrderReturnTare_Sa
           end
           object PartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
-            DataBinding.FieldName = 'FromName'
+            DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -247,21 +247,23 @@ inherited Report_OrderReturnTare_SaleByTransportForm: TReport_OrderReturnTare_Sa
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 209
+      Width = 364
     end
     object cxLabel4: TcxLabel
-      Left = 224
+      Left = 379
       Top = -1
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
+      Visible = False
     end
     object deOperdate: TcxDateEdit
-      Left = 224
+      Left = 379
       Top = 17
       EditValue = 41640d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 7
+      Visible = False
       Width = 85
     end
   end

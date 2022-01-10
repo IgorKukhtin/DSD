@@ -1343,7 +1343,8 @@ uses
   OrderReturnTare in '..\..\Forms\Document\OrderReturnTare.pas' {OrderReturnTareForm: TParentForm},
   OrderReturnTareJournal in '..\..\Forms\Document\OrderReturnTareJournal.pas' {OrderReturnTareJournalForm: TParentForm},
   DOCUMENTINVOICE_TN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
-  DOCUMENTINVOICE_PRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas';
+  DOCUMENTINVOICE_PRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
+  Report_OrderReturnTare_SaleByTransport in '..\..\Forms\Report\Report_OrderReturnTare_SaleByTransport.pas' {Report_OrderReturnTare_SaleByTransportForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
