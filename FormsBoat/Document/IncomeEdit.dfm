@@ -21,7 +21,7 @@ object IncomeEditForm: TIncomeEditForm
     Top = 345
     Width = 75
     Height = 25
-    Action = actInsertUpdate
+    Action = actUpdate_summ_after
     TabOrder = 9
   end
   object cxButton2: TcxButton
@@ -35,19 +35,19 @@ object IncomeEditForm: TIncomeEditForm
     TabOrder = 10
   end
   object cxLabel18: TcxLabel
-    Left = 16
+    Left = 15
     Top = 65
     Caption = '1. Summe EK :'
   end
   object ceTotalSummMVAT: TcxCurrencyEdit
-    Left = 158
-    Top = 64
+    Left = 155
+    Top = 60
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     Style.Color = clGradientInactiveCaption
     TabOrder = 12
-    Width = 74
+    Width = 75
   end
   object cxLabel12: TcxLabel
     Left = 150
@@ -79,138 +79,138 @@ object IncomeEditForm: TIncomeEditForm
     Width = 129
   end
   object cxLabel1: TcxLabel
-    Left = 47
-    Top = 88
+    Left = 48
+    Top = 91
     Caption = '- Rabbat %'
   end
   object ceDiscountTax: TcxCurrencyEdit
-    Left = 158
-    Top = 87
+    Left = 155
+    Top = 90
     Hint = '% '#1089#1082#1080#1076#1082#1080
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     ShowHint = True
     TabOrder = 0
-    Width = 74
+    Width = 75
   end
   object cxLabel3: TcxLabel
-    Left = 47
-    Top = 112
+    Left = 48
+    Top = 115
     Caption = '- Rabbat Brutto'
   end
-  object ceSummTaxMVAT: TcxCurrencyEdit
-    Left = 158
-    Top = 111
+  object ceSummTaxPVAT: TcxCurrencyEdit
+    Left = 156
+    Top = 114
     Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     ShowHint = True
     TabOrder = 1
-    Width = 74
+    Width = 75
   end
   object cxLabel7: TcxLabel
-    Left = 47
-    Top = 136
+    Left = 48
+    Top = 142
     Caption = '- Rabbat Netto'
   end
-  object ceSummTaxPVAT: TcxCurrencyEdit
-    Left = 158
-    Top = 135
+  object ceSummTaxMVAT: TcxCurrencyEdit
+    Left = 155
+    Top = 141
     Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     ShowHint = True
     TabOrder = 2
-    Width = 74
+    Width = 75
   end
   object cxLabel9: TcxLabel
-    Left = 16
-    Top = 165
+    Left = 15
+    Top = 175
     Caption = '2. Zwischensumme :'
   end
   object cxLabel11: TcxLabel
-    Left = 298
-    Top = 87
+    Left = 300
+    Top = 91
     Caption = '+ Porto Netto'
   end
   object cxLabel13: TcxLabel
-    Left = 298
-    Top = 111
+    Left = 300
+    Top = 115
     Caption = '+ Verpackung Netto'
   end
   object cxLabel15: TcxLabel
-    Left = 298
-    Top = 135
+    Left = 300
+    Top = 142
     Caption = '+ Versicherung Netto'
   end
   object ceSummInsur: TcxCurrencyEdit
-    Left = 409
-    Top = 134
+    Left = 410
+    Top = 141
     Hint = #1057#1090#1088#1072#1093#1086#1074#1082#1072' '#1088#1072#1089#1093#1086#1076#1099', '#1073#1077#1079' '#1053#1044#1057
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     ShowHint = True
     TabOrder = 5
-    Width = 74
+    Width = 75
   end
   object ceSummPack: TcxCurrencyEdit
-    Left = 409
-    Top = 110
+    Left = 410
+    Top = 114
     Hint = #1059#1087#1072#1082#1086#1074#1082#1072' '#1088#1072#1089#1093#1086#1076#1099', '#1073#1077#1079' '#1053#1044#1057
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     ShowHint = True
     TabOrder = 4
-    Width = 74
+    Width = 75
   end
   object ceSummPost: TcxCurrencyEdit
-    Left = 409
-    Top = 86
+    Left = 410
+    Top = 90
     Hint = #1055#1086#1095#1090#1086#1074#1099#1077' '#1088#1072#1089#1093#1086#1076#1099', '#1073#1077#1079' '#1053#1044#1057
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     ShowHint = True
     TabOrder = 3
-    Width = 74
+    Width = 75
   end
   object ceSumm2: TcxCurrencyEdit
-    Left = 158
-    Top = 164
+    Left = 155
+    Top = 171
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     Style.Color = clGradientInactiveCaption
     TabOrder = 24
-    Width = 74
+    Width = 75
   end
   object cxLabel16: TcxLabel
     Left = 267
-    Top = 165
+    Top = 175
     Caption = '3. Zwischensumme :'
   end
   object cxLabel17: TcxLabel
-    Left = 47
+    Left = 48
     Top = 216
     Caption = '- Scontobetr %'
   end
   object cxLabel19: TcxLabel
-    Left = 47
-    Top = 240
+    Left = 48
+    Top = 241
     Caption = '- Scontobetr Brutto'
   end
   object cxLabel20: TcxLabel
-    Left = 47
+    Left = 48
     Top = 264
     Caption = '- Scontobetr Netto'
   end
-  object ceTotalSummTaxPVAT: TcxCurrencyEdit
-    Left = 158
+  object ceTotalSummTaxMVAT: TcxCurrencyEdit
+    Left = 155
     Top = 263
     Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057' '#1080#1090#1086#1075#1086
     ParentShowHint = False
@@ -218,10 +218,10 @@ object IncomeEditForm: TIncomeEditForm
     Properties.DisplayFormat = ',0.####'
     ShowHint = True
     TabOrder = 8
-    Width = 74
+    Width = 75
   end
-  object ceTotalSummTaxMVAT: TcxCurrencyEdit
-    Left = 158
+  object ceTotalSummTaxPVAT: TcxCurrencyEdit
+    Left = 155
     Top = 239
     Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057' '#1080#1090#1086#1075#1086
     ParentShowHint = False
@@ -229,10 +229,10 @@ object IncomeEditForm: TIncomeEditForm
     Properties.DisplayFormat = ',0.####'
     ShowHint = True
     TabOrder = 7
-    Width = 74
+    Width = 75
   end
   object ceTotalDiscountTax: TcxCurrencyEdit
-    Left = 158
+    Left = 155
     Top = 215
     Hint = '% '#1089#1082#1080#1076#1082#1080' '#1080#1090#1086#1075#1086
     ParentShowHint = False
@@ -240,36 +240,41 @@ object IncomeEditForm: TIncomeEditForm
     Properties.DisplayFormat = ',0.####'
     ShowHint = True
     TabOrder = 6
-    Width = 74
+    Width = 75
   end
   object ceSumm3: TcxCurrencyEdit
-    Left = 409
-    Top = 164
+    Left = 410
+    Top = 174
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     Style.Color = clGradientInactiveCaption
     TabOrder = 29
-    Width = 74
+    Width = 75
   end
   object cxLabel10: TcxLabel
-    Left = 16
-    Top = 292
+    Left = 15
+    Top = 291
     Caption = '4. Gesamt :'
   end
   object ceTotalSumm: TcxCurrencyEdit
-    Left = 158
-    Top = 291
+    Left = 155
+    Top = 290
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     Style.Color = clGradientInactiveCaption
     TabOrder = 31
-    Width = 74
+    Width = 75
   end
   object ActionList: TActionList
     Left = 8
     Top = 248
+    object actFormClose: TdsdFormClose
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -280,52 +285,33 @@ object IncomeEditForm: TIncomeEditForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actInsertUpdate: TdsdInsertUpdateGuides
+    object actUpdate_summ_before: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Price
+      StoredProc = spUpdate_summ_before
       StoredProcList = <
         item
-          StoredProc = spUpdate_Price
-        end>
-      Caption = 'Ok'
-    end
-    object actFormClose: TdsdFormClose
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-    end
-    object actRefreshOperPriceList: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spUpdate_Price
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Price
+          StoredProc = spUpdate_summ_before
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actUpdate_PriceWithoutPersent: TdsdExecStoredProc
+    object actUpdate_summ_after: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Price
+      StoredProc = spUpdate_summ_before
       StoredProcList = <
         item
-          StoredProc = spUpdate_Price
+          StoredProc = spUpdate_summ_before
         end>
-      Caption = #1088#1072#1089#1095#1077#1090' '#1074#1093'. '#1094#1077#1085#1099' '#1073#1077#1079' '#1087#1088#1086#1094#1077#1085#1090#1072
-      Hint = #1088#1072#1089#1095#1077#1090' '#1074#1093'. '#1094#1077#1085#1099' '#1073#1077#1079' '#1087#1088#1086#1094#1077#1085#1090#1072
-      ImageIndex = 56
+      Caption = 'Ok'
     end
   end
-  object spInsertUpdate: TdsdStoredProc
+  object spUpdate_summ_after: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MIEdit_Income'
     DataSets = <>
     OutputType = otResult
@@ -397,7 +383,7 @@ object IncomeEditForm: TIncomeEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 452
+    Left = 436
     Top = 328
   end
   object FormParams: TdsdFormParams
@@ -465,16 +451,16 @@ object IncomeEditForm: TIncomeEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'SummTaxMVAT'
+        Name = 'SummTaxPVAT'
         Value = Null
-        Component = ceSummTaxMVAT
+        Component = ceSummTaxPVAT
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'SummTaxPVAT'
+        Name = 'SummTaxMVAT'
         Value = Null
-        Component = ceSummTaxPVAT
+        Component = ceSummTaxMVAT
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -521,16 +507,16 @@ object IncomeEditForm: TIncomeEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TotalSummTaxMVAT'
+        Name = 'TotalSummTaxPVAT'
         Value = Null
-        Component = ceTotalSummTaxMVAT
+        Component = ceTotalSummTaxPVAT
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TotalSummTaxPVAT'
+        Name = 'TotalSummTaxMVAT'
         Value = Null
-        Component = ceTotalSummTaxPVAT
+        Component = ceTotalSummTaxMVAT
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -594,8 +580,8 @@ object IncomeEditForm: TIncomeEditForm
     Left = 223
     Top = 15
   end
-  object spUpdate_Price: TdsdStoredProc
-    StoredProcName = 'gpUpdate_IncomeEdit'
+  object spUpdate_summ_before: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Income_summ'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -604,6 +590,13 @@ object IncomeEditForm: TIncomeEditForm
         Value = Null
         Component = FormParams
         ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsBefore'
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -624,17 +617,17 @@ object IncomeEditForm: TIncomeEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioSummTaxMVAT'
-        Value = Null
-        Component = ceSummTaxMVAT
+        Name = 'ioSummTaxPVAT'
+        Value = 0.000000000000000000
+        Component = ceSummTaxPVAT
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioSummTaxPVAT'
-        Value = 0.000000000000000000
-        Component = ceSummTaxPVAT
+        Name = 'ioSummTaxMVAT'
+        Value = Null
+        Component = ceSummTaxMVAT
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -672,17 +665,17 @@ object IncomeEditForm: TIncomeEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioTotalSummTaxMVAT'
+        Name = 'ioTotalSummTaxPVAT'
         Value = Null
-        Component = ceTotalSummTaxMVAT
+        Component = ceTotalSummTaxPVAT
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioTotalSummTaxPVAT'
+        Name = 'ioTotalSummTaxMVAT'
         Value = Null
-        Component = ceTotalSummTaxPVAT
+        Component = ceTotalSummTaxMVAT
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -718,10 +711,10 @@ object IncomeEditForm: TIncomeEditForm
         Control = ceDiscountTax
       end
       item
-        Control = ceSummTaxMVAT
+        Control = ceSummTaxPVAT
       end
       item
-        Control = ceSummTaxPVAT
+        Control = ceSummTaxMVAT
       end
       item
         Control = ceSummPost
@@ -736,12 +729,12 @@ object IncomeEditForm: TIncomeEditForm
         Control = ceTotalDiscountTax
       end
       item
-        Control = ceTotalSummTaxMVAT
+        Control = ceTotalSummTaxPVAT
       end
       item
-        Control = ceTotalSummTaxPVAT
+        Control = ceTotalSummTaxMVAT
       end>
-    Action = actRefreshOperPriceList
+    Action = actUpdate_summ_before
     Left = 328
     Top = 208
   end
@@ -751,10 +744,10 @@ object IncomeEditForm: TIncomeEditForm
         Control = ceDiscountTax
       end
       item
-        Control = ceSummTaxMVAT
+        Control = ceSummTaxPVAT
       end
       item
-        Control = ceSummTaxPVAT
+        Control = ceSummTaxMVAT
       end
       item
         Control = ceSummPost
@@ -769,10 +762,10 @@ object IncomeEditForm: TIncomeEditForm
         Control = ceTotalDiscountTax
       end
       item
-        Control = ceTotalSummTaxMVAT
+        Control = ceTotalSummTaxPVAT
       end
       item
-        Control = ceTotalSummTaxPVAT
+        Control = ceTotalSummTaxMVAT
       end
       item
         Control = cxButton1

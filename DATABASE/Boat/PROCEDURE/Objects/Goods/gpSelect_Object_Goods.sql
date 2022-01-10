@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , Article TVarChar, ArticleVergl TVarChar, EAN TVarChar, ASIN TVarChar, MatchCode TVarChar
+             , Article TVarChar, Article_all TVarChar, ArticleVergl TVarChar, EAN TVarChar, ASIN TVarChar, MatchCode TVarChar
              , FeeNumber TVarChar, GoodsGroupNameFull TVarChar, Comment TVarChar
              , PartnerDate TDateTime
              , isArc Boolean
@@ -77,6 +77,7 @@ BEGIN
             , Object_Goods.ObjectCode             AS Code
             , Object_Goods.ValueData              AS Name
             , ObjectString_Article.ValueData      AS Article
+            , REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (ObjectString_Article.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '') :: TVarChar AS Article_all
             , ObjectString_ArticleVergl.ValueData AS ArticleVergl
             , ObjectString_EAN.ValueData          AS EAN
             , ObjectString_ASIN.ValueData         AS ASIN

@@ -24,8 +24,8 @@ uses
 type
   TIncomeItemEditForm = class(TParentForm)
     cxLabel1: TcxLabel;
-    cxButton1: TcxButton;
-    cxButton2: TcxButton;
+    cxButtonOK: TcxButton;
+    cxButtonCancel: TcxButton;
     ActionList: TActionList;
     spInsertUpdate: TdsdStoredProc;
     FormParams: TdsdFormParams;
@@ -34,7 +34,7 @@ type
     actInsertUpdate: TdsdInsertUpdateGuides;
     actFormClose: TdsdFormClose;
     cxPropertiesStore: TcxPropertiesStore;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     edGoodsName: TcxButtonEdit;
     GuidesGoods: TdsdGuides;
     cxLabel18: TcxLabel;
@@ -48,12 +48,11 @@ type
     cxLabel12: TcxLabel;
     edFrom: TcxButtonEdit;
     GuidesFrom: TdsdGuides;
-    spGet_OperPriceList: TdsdStoredProc;
+    spGet_MI_Income_Price: TdsdStoredProc;
     actRefresh_Price: TdsdDataSetRefresh;
     spUpdate_Price: TdsdStoredProc;
-    actUpdate_PriceWithoutPersent: TdsdExecStoredProc;
     cxLabel14: TcxLabel;
-    edInvNumber: TcxTextEdit;
+    edGoodsCode: TcxTextEdit;
     cxLabel3: TcxLabel;
     edArticle: TcxTextEdit;
     ceDiscountTax: TcxCurrencyEdit;
@@ -62,9 +61,15 @@ type
     ceOperPrice: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
     ceSummIn: TcxCurrencyEdit;
-    HeaderChanger: THeaderChanger;
-    dsdDataSetRefresh1: TdsdDataSetRefresh;
     HeaderExit: THeaderExit;
+    GuidesFiller: TGuidesFiller;
+    ceEmpfPrice: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    ceComment: TcxTextEdit;
+    cxLabel16: TcxLabel;
+    cePartNumber: TcxTextEdit;
+    cxLabel9: TcxLabel;
+    EnterMoveNext: TEnterMoveNext;
   private
     { Private declarations }
   public

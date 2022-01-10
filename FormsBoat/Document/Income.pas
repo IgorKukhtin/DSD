@@ -86,8 +86,8 @@ type
     GuidesFiller: TGuidesFiller;
     actInsertUpdateMovement: TdsdExecStoredProc;
     bbInsertUpdateMovement: TdxBarButton;
-    SetErased: TdsdUpdateErased;
-    SetUnErased: TdsdUpdateErased;
+    actSetErased: TdsdUpdateErased;
+    actSetUnErased: TdsdUpdateErased;
     actShowErased: TBooleanStoredProcAction;
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;
@@ -98,9 +98,9 @@ type
     IsErased: TcxGridDBColumn;
     StatusGuides: TdsdGuides;
     spChangeStatus: TdsdStoredProc;
-    UnCompleteMovement: TChangeGuidesStatus;
-    CompleteMovement: TChangeGuidesStatus;
-    DeleteMovement: TChangeGuidesStatus;
+    actUnCompleteMovement: TChangeGuidesStatus;
+    actCompleteMovement: TChangeGuidesStatus;
+    actDeleteMovement: TChangeGuidesStatus;
     ceStatus: TcxButtonEdit;
     Comment: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
@@ -114,9 +114,8 @@ type
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     bbCalcAmountPartner: TdxBarControlContainerItem;
-    actGoodsKindChoice: TOpenChoiceForm;
     spInsertMaskMIMaster: TdsdStoredProc;
-    actAddMask: TdsdExecStoredProc;
+    actInsertMask: TdsdExecStoredProc;
     bbAddMask: TdxBarButton;
     actGoodsChoiceForm: TOpenChoiceForm;
     cxLabel16: TcxLabel;
@@ -129,7 +128,6 @@ type
     actShowErasedCost: TBooleanStoredProcAction;
     bbShowErasedCost: TdxBarButton;
     spUpdateOrder: TdsdStoredProc;
-    InsertRecordGoods: TInsertRecord;
     bbInsertRecordGoods: TdxBarButton;
     bbPrintSticker: TdxBarButton;
     bbPrintStickerTermo: TdxBarButton;
@@ -152,7 +150,7 @@ type
     actSetErasedCost: TdsdChangeMovementStatus;
     actUnCompleteCost: TdsdChangeMovementStatus;
     InsertRecordCost: TInsertRecord;
-    CostJournalChoiceForm: TOpenChoiceForm;
+    actCostJournalChoiceForm: TOpenChoiceForm;
     MovementCostProtocolOpenForm: TdsdOpenForm;
     bbMovementCostProtocolOpenForm: TdxBarButton;
     CostPrice: TcxGridDBColumn;
@@ -187,7 +185,7 @@ type
     spInsertUpdateReceiptChild: TdsdStoredProc;
     Amount_unit: TcxGridDBColumn;
     spErasedMIchild: TdsdStoredProc;
-    SetErasedChild: TdsdUpdateErased;
+    actSetErasedChild: TdsdUpdateErased;
     bbSetErasedChild: TdxBarButton;
     InvNumber_OrderPartner_Full_ch2: TcxGridDBColumn;
     CIN_ch2: TcxGridDBColumn;
@@ -229,6 +227,8 @@ type
     cxLabel22: TcxLabel;
     ceTotalSummTaxPVAT: TcxCurrencyEdit;
     EnterMoveNext: TEnterMoveNext;
+    mactUpdateActionMovement: TMultiAction;
+    actInsertAction: TdsdInsertUpdateAction;
   private
   public
   end;

@@ -622,7 +622,16 @@ end if;
                                                    ELSE 0
                                               END) AS CountSendOnPriceOut_10900
 
-                                       , SUM (CASE WHEN _tmpContainer.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
+                                       , SUM (CASE 
+                                                  when inUserId = 5
+                                                   and MIContainer.MovementId in (21051995 , 21057967 , 21059620)
+                                                       then -1 * MIContainer.Amount
+                                                  when inUserId = 5
+                                                       then -1 * MIContainer.Amount
+                                       
+                                       
+                                       
+                                                   WHEN _tmpContainer.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
                                                     -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_SaleAsset())
                                                     AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400() -- Кол-во, реализация, у покупателя

@@ -1,8 +1,8 @@
 object IncomeItemEditForm: TIncomeItemEditForm
   Left = 0
   Top = 0
-  Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088' '#1087#1088#1080#1093#1086#1076#1072'>'
-  ClientHeight = 281
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1087#1088#1080#1093#1086#1076#1072'>'
+  ClientHeight = 288
   ClientWidth = 520
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,112 +17,112 @@ object IncomeItemEditForm: TIncomeItemEditForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxLabel1: TcxLabel
-    Left = 8
-    Top = 113
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+    Left = 148
+    Top = 53
+    Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
   end
-  object cxButton1: TcxButton
-    Left = 263
-    Top = 233
+  object cxButtonOK: TcxButton
+    Left = 134
+    Top = 247
     Width = 75
     Height = 25
     Action = actInsertUpdate
-    Default = True
-    TabOrder = 5
+    TabOrder = 6
   end
-  object cxButton2: TcxButton
-    Left = 400
-    Top = 233
+  object cxButtonCancel: TcxButton
+    Left = 287
+    Top = 247
     Width = 75
     Height = 25
     Action = actFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 6
+    TabOrder = 10
   end
   object edGoodsName: TcxButtonEdit
-    Left = 8
-    Top = 130
+    Left = 148
+    Top = 71
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 0
-    Width = 495
+    TabOrder = 7
+    Width = 363
   end
   object cxLabel18: TcxLabel
     Left = 8
-    Top = 162
+    Top = 99
     Caption = #1050#1086#1083'-'#1074#1086
   end
   object ceAmount: TcxCurrencyEdit
     Left = 8
-    Top = 179
+    Top = 116
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 2
-    Width = 74
+    TabOrder = 0
+    Width = 54
   end
   object cxLabel2: TcxLabel
-    Left = 97
-    Top = 162
+    Left = 69
+    Top = 99
     Hint = #1042#1093'. '#1094#1077#1085#1072
     Caption = 'EK Netto'
     ParentShowHint = False
     ShowHint = True
   end
   object ceOperPrice_orig: TcxCurrencyEdit
-    Left = 97
-    Top = 179
-    Hint = #1042#1093'. '#1094#1077#1085#1072
+    Left = 69
+    Top = 116
+    Hint = #1042#1093'. '#1094#1077#1085#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####; -,0.####; '
     Properties.EditFormat = ',0.####; -,0.####; '
     ShowHint = True
-    TabOrder = 3
-    Width = 91
+    TabOrder = 1
+    Width = 64
   end
   object cxLabel8: TcxLabel
-    Left = 97
-    Top = 218
-    Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
+    Left = 431
+    Top = 99
+    Caption = 'Ladenpreis'
   end
   object ceOperPriceList: TcxCurrencyEdit
-    Left = 97
-    Top = 235
+    Left = 431
+    Top = 116
+    Hint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####; -,0.####; '
     Properties.EditFormat = ',0.####; -,0.####; '
-    TabOrder = 4
-    Width = 91
+    TabOrder = 9
+    Width = 80
   end
   object cxLabel10: TcxLabel
-    Left = 438
-    Top = 69
+    Left = 8
+    Top = 237
     Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
     Visible = False
   end
   object ceCountForPrice: TcxCurrencyEdit
-    Left = 439
-    Top = 86
+    Left = 9
+    Top = 252
     EditValue = 1.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
-    TabOrder = 12
+    TabOrder = 16
     Visible = False
     Width = 73
   end
   object cxLabel12: TcxLabel
-    Left = 150
+    Left = 148
     Top = 8
     Caption = 'Lieferanten'
   end
   object edFrom: TcxButtonEdit
-    Left = 150
+    Left = 148
     Top = 26
     Properties.Buttons = <
       item
@@ -130,89 +130,127 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 1
-    Width = 353
+    TabOrder = 8
+    Width = 364
   end
   object cxLabel14: TcxLabel
     Left = 8
-    Top = 8
+    Top = 53
     Caption = 'Interne Nr'
   end
-  object edInvNumber: TcxTextEdit
+  object edGoodsCode: TcxTextEdit
     Left = 8
-    Top = 26
+    Top = 71
     Properties.ReadOnly = True
-    TabOrder = 15
-    Width = 129
+    TabOrder = 19
+    Width = 125
   end
   object cxLabel3: TcxLabel
     Left = 8
-    Top = 68
+    Top = 8
     Caption = 'Artikel Nr'
   end
   object edArticle: TcxTextEdit
     Left = 8
-    Top = 86
-    TabOrder = 17
-    Width = 90
+    Top = 26
+    TabOrder = 21
+    Width = 125
   end
   object ceDiscountTax: TcxCurrencyEdit
-    Left = 201
-    Top = 179
+    Left = 8
+    Top = 159
     Hint = '% '#1089#1082#1080#1076#1082#1080
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####; -,0.####; '
     Properties.EditFormat = ',0.####; -,0.####; '
     ShowHint = True
-    TabOrder = 18
-    Width = 91
+    TabOrder = 2
+    Width = 125
   end
   object cxLabel4: TcxLabel
-    Left = 201
-    Top = 162
+    Left = 8
+    Top = 142
     Hint = '% '#1089#1082#1080#1076#1082#1080
     Caption = 'zus.Rabbat in %'
   end
   object cxLabel5: TcxLabel
-    Left = 307
-    Top = 162
+    Left = 148
+    Top = 142
     Hint = #1062#1077#1085#1072' '#1074#1093'. '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080' '#1074' '#1101#1083#1077#1084#1077#1085#1090#1077
     Caption = 'Buchungs EK'
   end
   object ceOperPrice: TcxCurrencyEdit
-    Left = 307
-    Top = 179
-    Hint = #1062#1077#1085#1072' '#1074#1093'. '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080' '#1074' '#1101#1083#1077#1084#1077#1085#1090#1077
+    Left = 148
+    Top = 159
+    Hint = #1042#1093'. '#1094#1077#1085#1072' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####; -,0.####; '
     Properties.EditFormat = ',0.####; -,0.####; '
     ShowHint = True
-    TabOrder = 21
-    Width = 91
+    TabOrder = 3
+    Width = 80
   end
   object cxLabel6: TcxLabel
-    Left = 412
-    Top = 162
+    Left = 241
+    Top = 142
     Hint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080
     Caption = 'Gesamt EK'
   end
   object ceSummIn: TcxCurrencyEdit
-    Left = 412
-    Top = 179
+    Left = 241
+    Top = 159
     Hint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####; -,0.####; '
     Properties.EditFormat = ',0.####; -,0.####; '
     ShowHint = True
-    TabOrder = 23
-    Width = 91
+    TabOrder = 4
+    Width = 80
+  end
+  object ceEmpfPrice: TcxCurrencyEdit
+    Left = 431
+    Top = 159
+    Hint = #1062#1077#1085#1072' '#1088#1077#1082#1086#1084#1077#1085#1076#1086#1074#1072#1085#1085#1072#1103' '#1073#1077#1079' '#1053#1044#1057
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####; -,0.####; '
+    Properties.EditFormat = ',0.####; -,0.####; '
+    TabOrder = 25
+    Width = 80
+  end
+  object cxLabel7: TcxLabel
+    Left = 431
+    Top = 142
+    Caption = 'Empf. VK'
+  end
+  object ceComment: TcxTextEdit
+    Left = 148
+    Top = 207
+    TabOrder = 27
+    Width = 363
+  end
+  object cxLabel16: TcxLabel
+    Left = 148
+    Top = 190
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object cePartNumber: TcxTextEdit
+    Left = 8
+    Top = 207
+    Hint = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
+    TabOrder = 5
+    Width = 125
+  end
+  object cxLabel9: TcxLabel
+    Left = 8
+    Top = 190
+    Caption = 'S/N'
   end
   object ActionList: TActionList
-    Left = 8
-    Top = 216
+    Left = 24
+    Top = 20
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -221,7 +259,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         item
           StoredProc = spGet
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Caption = 'actRefresh'
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
@@ -230,27 +268,12 @@ object IncomeItemEditForm: TIncomeItemEditForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Price
+      StoredProc = spInsertUpdate
       StoredProcList = <
         item
-          StoredProc = spUpdate_Price
+          StoredProc = spInsertUpdate
         end>
-      Caption = 'Ok'
-    end
-    object dsdDataSetRefresh1: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      StoredProc = spGet_OperPriceList
-      StoredProcList = <
-        item
-          StoredProc = spGet_OperPriceList
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
+      Caption = #1054#1082
     end
     object actFormClose: TdsdFormClose
       MoveParams = <>
@@ -259,37 +282,24 @@ object IncomeItemEditForm: TIncomeItemEditForm
     object actRefresh_Price: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spUpdate_Price
+      StoredProc = spGet_MI_Income_Price
       StoredProcList = <
         item
-          StoredProc = spUpdate_Price
+          StoredProc = spGet_MI_Income_Price
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Caption = 'actRefresh_Price'
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actUpdate_PriceWithoutPersent: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Price
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Price
-        end>
-      Caption = #1088#1072#1089#1095#1077#1090' '#1074#1093'. '#1094#1077#1085#1099' '#1073#1077#1079' '#1087#1088#1086#1094#1077#1085#1090#1072
-      Hint = #1088#1072#1089#1095#1077#1090' '#1074#1093'. '#1094#1077#1085#1099' '#1073#1077#1079' '#1087#1088#1086#1094#1077#1085#1090#1072
-      ImageIndex = 56
-    end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MIEdit_Income'
+    StoredProcName = 'gpInsertUpdate_MovementItem_Income'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
+        Name = 'ioId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
@@ -305,10 +315,10 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCountForPrice'
-        Value = 1.000000000000000000
-        Component = ceCountForPrice
-        DataType = ftFloat
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -329,15 +339,15 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperPrice'
-        Value = Null
-        Component = ceOperPrice
+        Name = 'inCountForPrice'
+        Value = 1.000000000000000000
+        Component = ceCountForPrice
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDiscountTax'
+        Name = 'ioDiscountTax'
         Value = Null
         Component = ceDiscountTax
         DataType = ftFloat
@@ -345,7 +355,55 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inSummIn'
+        Name = 'ioOperPrice'
+        Value = Null
+        Component = ceOperPrice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummIn'
+        Value = Null
+        Component = ceSummIn
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount_old'
+        Value = Null
+        Component = ceAmount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPrice_orig_old'
+        Value = Null
+        Component = ceOperPrice_orig
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscountTax_old'
+        Value = Null
+        Component = ceDiscountTax
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPrice_old'
+        Value = Null
+        Component = ceOperPrice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummIn_old'
         Value = Null
         Component = ceSummIn
         DataType = ftFloat
@@ -359,10 +417,34 @@ object IncomeItemEditForm: TIncomeItemEditForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEmpfPrice'
+        Value = Null
+        Component = ceEmpfPrice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartNumber'
+        Value = Null
+        Component = cePartNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 348
-    Top = 72
+    Top = 57
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -373,9 +455,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber'
+        Name = 'MovementId'
         Value = Null
-        Component = edInvNumber
         MultiSelectSeparator = ','
       end
       item
@@ -394,14 +475,44 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MovementId'
+        Name = 'GoodsId'
         Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'SummIn_inf'
-        Value = '0'
-        DataType = ftString
+        Name = 'Amount_old'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperPrice_orig_old'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountTax_old'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperPrice_old'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummIn_old'
+        Value = Null
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -421,6 +532,14 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'GoodsId'
         Value = Null
         Component = GuidesGoods
@@ -433,6 +552,12 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Component = GuidesGoods
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsCode'
+        Value = Null
+        Component = edGoodsCode
         MultiSelectSeparator = ','
       end
       item
@@ -450,23 +575,16 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CountForPrice'
-        Value = Null
-        Component = ceCountForPrice
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperPriceList'
-        Value = Null
-        Component = ceOperPriceList
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'OperPrice_orig'
         Value = Null
         Component = ceOperPrice_orig
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountForPrice'
+        Value = Null
+        Component = ceCountForPrice
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -490,10 +608,77 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Component = ceSummIn
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperPriceList'
+        Value = Null
+        Component = ceOperPriceList
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EmpfPrice'
+        Value = Null
+        Component = ceEmpfPrice
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartNumber'
+        Value = Null
+        Component = cePartNumber
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount_old'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Amount_old'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperPrice_orig'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperPrice_orig_old'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountTax'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DiscountTax_old'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperPrice'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperPrice_old'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummIn'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SummIn_old'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 392
-    Top = 112
+    Top = 97
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -508,21 +693,20 @@ object IncomeItemEditForm: TIncomeItemEditForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 176
-    Top = 56
+    Top = 41
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 176
-    Top = 216
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 408
+    Top = 219
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsName
-    DisableGuidesOpen = True
     FormNameParam.Value = 'TGoodsForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -542,84 +726,41 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsGroupId'
+        Name = 'Code'
         Value = Null
+        Component = edGoodsCode
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsGroupName'
+        Name = 'Article'
         Value = Null
+        Component = edArticle
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MeasureId'
+        Name = 'EKPrice'
         Value = Null
+        Component = ceOperPrice_orig
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MeasureName'
+        Name = 'BasisPrice'
         Value = Null
-        DataType = ftString
+        Component = ceOperPriceList
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CompositionId'
+        Name = 'EmpfPrice'
         Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CompositionName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsInfoId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsInfoName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'LineFabricaId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'LineFabricaName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'LabelId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'LabelName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CompositionGroupId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CompositionGroupName'
-        Value = Null
-        DataType = ftString
+        Component = ceEmpfPrice
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 105
-    Top = 62
+    Top = 47
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -651,21 +792,13 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Left = 319
     Top = 15
   end
-  object spGet_OperPriceList: TdsdStoredProc
+  object spGet_MI_Income_Price: TdsdStoredProc
     StoredProcName = 'gpGet_MI_Income_Price'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmount'
+        Name = 'ioAmount'
         Value = Null
         Component = ceAmount
         DataType = ftFloat
@@ -681,19 +814,27 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioDiscountTax'
-        Value = 0.000000000000000000
-        Component = ceDiscountTax
+        Name = 'inCountForPrice'
+        Value = Null
+        Component = ceCountForPrice
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperPrice'
+        Name = 'ioDiscountTax'
+        Value = 0.000000000000000000
+        Component = ceDiscountTax
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioOperPrice'
         Value = 0.000000000000000000
         Component = ceOperPrice
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -701,41 +842,91 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Value = 0.000000000000000000
         Component = ceSummIn
         DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount_old'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Amount_old'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Amount'
+        Name = 'inOperPrice_orig_old'
         Value = Null
-        Component = ceAmount
+        Component = FormParams
+        ComponentItem = 'OperPrice_orig_old'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscountTax_old'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DiscountTax_old'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPrice_old'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperPrice_old'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummIn_old'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SummIn_old'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Amount_old'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'OperPrice_orig'
+        Name = 'ioOperPrice_orig'
         Value = Null
-        Component = ceOperPrice_orig
+        Component = FormParams
+        ComponentItem = 'OperPrice_orig_old'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DiscountTax'
+        Name = 'ioDiscountTax'
         Value = Null
-        Component = ceDiscountTax
+        Component = FormParams
+        ComponentItem = 'DiscountTax_old'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'OperPrice'
+        Name = 'ioOperPrice'
         Value = Null
-        Component = ceOperPrice
+        Component = FormParams
+        ComponentItem = 'OperPrice_old'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'SummIn'
+        Name = 'ioSummIn'
         Value = Null
-        Component = ceSummIn
+        Component = FormParams
+        ComponentItem = 'SummIn_old'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -797,15 +988,6 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inSummIn_inf'
-        Value = 0.000000000000000000
-        Component = FormParams
-        ComponentItem = 'SummIn_inf'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inOperPriceList'
         Value = Null
         Component = ceOperPriceList
@@ -814,30 +996,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 376
-    Top = 176
-  end
-  object HeaderChanger: THeaderChanger
-    IdParam.Value = Null
-    IdParam.MultiSelectSeparator = ','
-    ChangerList = <
-      item
-        Control = ceAmount
-      end
-      item
-        Control = ceOperPrice_orig
-      end
-      item
-        Control = ceDiscountTax
-      end
-      item
-        Control = ceOperPrice
-      end
-      item
-        Control = ceSummIn
-      end>
-    Left = 264
-    Top = 61
+    Left = 229
+    Top = 94
   end
   object HeaderExit: THeaderExit
     ExitList = <
@@ -858,6 +1018,47 @@ object IncomeItemEditForm: TIncomeItemEditForm
       end>
     Action = actRefresh_Price
     Left = 352
-    Top = 232
+    Top = 156
+  end
+  object GuidesFiller: TGuidesFiller
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
+    GuidesList = <
+      item
+        Guides = GuidesGoods
+      end>
+    ActionItemList = <
+      item
+      end>
+    Left = 80
+    Top = 24
+  end
+  object EnterMoveNext: TEnterMoveNext
+    EnterMoveNextList = <
+      item
+        Control = ceAmount
+      end
+      item
+        Control = ceOperPrice_orig
+      end
+      item
+        Control = ceDiscountTax
+      end
+      item
+        Control = ceOperPrice
+      end
+      item
+        Control = ceSummIn
+      end
+      item
+        Control = cePartNumber
+      end
+      item
+        Control = cxButtonOK
+      end>
+    Left = 336
+    Top = 120
   end
 end
