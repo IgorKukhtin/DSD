@@ -131,7 +131,15 @@ uses
   UserEdit in '..\..\FormsMerlin\Guides\UserEdit.pas' {UserEditForm: TParentForm},
   UserProtocol in '..\..\FormsMerlin\Guides\UserProtocol.pas' {UserProtocolForm: TParentForm},
   Protocol in '..\..\FormsMerlin\Guides\Protocol.pas' {ProtocolForm: TParentForm},
-  UnitTree in '..\..\FormsMerlin\Guides\UnitTree.pas' {UnitTreeForm: TParentForm};
+  UnitTree in '..\..\FormsMerlin\Guides\UnitTree.pas' {UnitTreeForm: TParentForm},
+  Currency in '..\..\FormsMerlin\Guides\Currency.pas' {CurrencyForm: TParentForm},
+  Currency_Object in '..\..\FormsMerlin\Guides\Currency_Object.pas' {Currency_ObjectForm: TParentForm},
+  CurrencyEdit in '..\..\FormsMerlin\Guides\CurrencyEdit.pas' {CurrencyEditForm: TParentForm},
+  CashTree in '..\..\FormsMerlin\Guides\CashTree.pas' {CashTreeForm: TParentForm},
+  Cash in '..\..\FormsMerlin\Guides\Cash.pas' {CashForm: TParentForm},
+  Cash_Object in '..\..\FormsMerlin\Guides\Cash_Object.pas' {Cash_ObjectForm: TParentForm},
+  PaidKind in '..\..\FormsMerlin\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
+  CashEdit in '..\..\FormsMerlin\Guides\CashEdit.pas' {CashEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

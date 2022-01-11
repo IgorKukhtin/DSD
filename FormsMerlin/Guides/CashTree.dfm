@@ -1,7 +1,7 @@
-object UnitTreeForm: TUnitTreeForm
+object CashTreeForm: TCashTreeForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1054#1090#1076#1077#1083#1099'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1072#1089#1089#1099'>'
   ClientHeight = 403
   ClientWidth = 811
   Color = clBtnFace
@@ -106,6 +106,14 @@ object UnitTreeForm: TUnitTreeForm
         SortOrder = soAscending
         Width = 20
       end
+      object NPP: TcxGridDBColumn
+        Caption = #8470' '#1087'.'#1087'.'
+        DataBinding.FieldName = 'NPP'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
@@ -122,21 +130,13 @@ object UnitTreeForm: TUnitTreeForm
         SortOrder = soAscending
         Width = 193
       end
-      object Phone: TcxGridDBColumn
-        Caption = #1058#1077#1083#1077#1092#1086#1085
-        DataBinding.FieldName = 'Phone'
+      object ShortName: TcxGridDBColumn
+        Caption = #1057#1086#1082#1088'. '#1085#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'ShortName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 119
-      end
-      object Comment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -146,6 +146,22 @@ object UnitTreeForm: TUnitTreeForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 94
+      end
+      object CurrencyName: TcxGridDBColumn
+        Caption = #1042#1072#1083#1102#1090#1072
+        DataBinding.FieldName = 'CurrencyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object PaidKindName: TcxGridDBColumn
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+        DataBinding.FieldName = 'PaidKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -316,7 +332,7 @@ object UnitTreeForm: TUnitTreeForm
     end
     object bbUnitChoiceForm: TdxBarButton
       Action = dsdOpenUnitForm
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1086#1090#1076#1077#1083#1086#1074
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1050#1072#1089#1089
       Category = 0
       ImageIndex = 28
     end
@@ -350,8 +366,8 @@ object UnitTreeForm: TUnitTreeForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TUnitEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TCashEditForm'
+      FormNameParam.Value = 'TCashEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -370,8 +386,8 @@ object UnitTreeForm: TUnitTreeForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TUnitEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TCashEditForm'
+      FormNameParam.Value = 'TCashEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -392,7 +408,11 @@ object UnitTreeForm: TUnitTreeForm
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <>
+      StoredProc = spErased
+      StoredProcList = <
+        item
+          StoredProc = spErased
+        end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 46
@@ -435,7 +455,11 @@ object UnitTreeForm: TUnitTreeForm
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <>
+      StoredProc = spUnErased
+      StoredProcList = <
+        item
+          StoredProc = spUnErased
+        end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 32776
@@ -447,8 +471,8 @@ object UnitTreeForm: TUnitTreeForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'dsdOpenUnitForm'
-      FormName = 'TUnitForm'
-      FormNameParam.Value = ''
+      FormName = 'TCashForm'
+      FormNameParam.Value = 'TCashForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -486,7 +510,7 @@ object UnitTreeForm: TUnitTreeForm
     end
   end
   object spTree: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Unit_Tree'
+    StoredProcName = 'gpSelect_Object_Cash_Tree'
     DataSet = TreeDataSet
     DataSets = <
       item
@@ -513,7 +537,7 @@ object UnitTreeForm: TUnitTreeForm
     Top = 152
   end
   object spGrid: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Unit'
+    StoredProcName = 'gpSelect_Object_Cash'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -574,5 +598,53 @@ object UnitTreeForm: TUnitTreeForm
     PropertiesCellList = <>
     Left = 432
     Top = 240
+  end
+  object spErased: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased_Cash'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 112
+  end
+  object spUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased_Cash'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 600
+    Top = 136
   end
 end

@@ -73,8 +73,8 @@ object UnitEditForm: TUnitEditForm
     Caption = #1058#1077#1083#1077#1092#1086#1085
   end
   object cxLabel7: TcxLabel
-    Left = 10
-    Top = 135
+    Left = 8
+    Top = 138
     Caption = #1043#1088#1091#1087#1087#1072
   end
   object ceParent: TcxButtonEdit

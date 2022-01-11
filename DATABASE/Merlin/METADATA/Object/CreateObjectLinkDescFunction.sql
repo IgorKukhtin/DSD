@@ -33,9 +33,14 @@ SELECT 'zc_ObjectLink_Protocol_Update', 'Пользователь (корректировка)', zc_Objec
 
 -- Add Project_Merlin
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Cash_Parent() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Cash_Parent'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Cash_Parent', 'Касса', zc_Object_Cash(), zc_Object_Cash() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Cash_Parent');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.01.22         *
  10.01.22                                        * 
 */

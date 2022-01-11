@@ -50,6 +50,8 @@ type
     actDocTag: TdsdOpenForm;
     actUnit: TdsdOpenForm;
     N1: TMenuItem;
+    actCashTree: TdsdOpenForm;
+    miCashTree: TMenuItem;
   private
     { Private declarations }
   public

@@ -32,7 +32,7 @@ BEGIN
            , ObjectString_Phone.ValueData    AS Phone
            , ObjectString_GroupNameFull.ValueData AS GroupNameFull
            , ObjectString_Comment.ValueData  AS Comment
-           , Object_Parent.Id                AS ParentId
+           , COALESCE (Object_Parent.Id,0)   AS ParentId
            , Object_Parent.ValueData         AS ParentName
 
            , Object_Insert.ValueData         AS InsertName
@@ -43,9 +43,7 @@ BEGIN
            , Object_Unit.isErased            AS isErased
 
        FROM Object AS Object_Unit
-            LEFT JOIN ObjectString AS ObjectString_Address
-                                   ON ObjectString_Address.ObjectId = Object_Unit.Id
-                                  AND ObjectString_Address.DescId = zc_ObjectString_Unit_Address()
+
             LEFT JOIN ObjectString AS ObjectString_Phone
                                    ON ObjectString_Phone.ObjectId = Object_Unit.Id
                                   AND ObjectString_Phone.DescId = zc_ObjectString_Unit_Phone()

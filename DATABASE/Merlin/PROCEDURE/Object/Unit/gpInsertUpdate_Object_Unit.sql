@@ -26,7 +26,7 @@ BEGIN
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 
    -- Если код не установлен, определяем его как последний+1
-   ioCode:=lfGet_ObjectCode (ioCode, zc_Object_User()); 
+   ioCode:=lfGet_ObjectCode (ioCode, zc_Object_Unit()); 
 
    -- проверка прав уникальности для свойства <Наименование >
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Unit(), inName, vbUserId);
@@ -41,7 +41,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Phone(), ioId, inPhone);
    -- сохранили Примечание
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Comment(), ioId, inComment);
-   -- сохранили Примечание
+   -- сохранили группа
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_GroupNameFull(), ioId, vbGroupNameFull);
       
    -- сохранили связь с <Група>
