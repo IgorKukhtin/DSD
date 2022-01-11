@@ -1,7 +1,7 @@
 object Unit_ObjectForm: TUnit_ObjectForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1082#1083#1072#1076#1099'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1054#1090#1076#1077#1083#1099'>'
   ClientHeight = 376
   ClientWidth = 633
   Color = clBtnFace
@@ -43,6 +43,24 @@ object Unit_ObjectForm: TUnit_ObjectForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object GroupNameFull: TcxGridDBColumn
+        Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
+        DataBinding.FieldName = 'GroupNameFull'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 126
+      end
+      object ParentName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'ParentName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 165
+      end
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
@@ -58,16 +76,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 339
-      end
-      object Address: TcxGridDBColumn
-        Caption = #1040#1076#1088#1077#1089
-        DataBinding.FieldName = 'Address'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 100
+        Width = 201
       end
       object Phone: TcxGridDBColumn
         Caption = #1058#1077#1083#1077#1092#1086#1085
@@ -77,42 +86,6 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 100
-      end
-      object JuridicalName: TcxGridDBColumn
-        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-        DataBinding.FieldName = 'JuridicalName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 165
-      end
-      object ParentName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072
-        DataBinding.FieldName = 'ParentName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 165
-      end
-      object ChildName: TcxGridDBColumn
-        Caption = #1057#1082#1083#1072#1076
-        DataBinding.FieldName = 'ChildName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 165
-      end
-      object AccountDirectionName: TcxGridDBColumn
-        Caption = #1057#1095#1077#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'AccountDirectionName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 120
       end
       object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

@@ -52,12 +52,10 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    JuridicalName: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
-    Address: TcxGridDBColumn;
+    GroupNameFull: TcxGridDBColumn;
     Phone: TcxGridDBColumn;
     ParentName: TcxGridDBColumn;
-    ChildName: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     Comment: TcxGridDBColumn;

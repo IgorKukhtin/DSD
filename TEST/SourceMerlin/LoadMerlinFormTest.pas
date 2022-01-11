@@ -161,6 +161,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitTreeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnitTreeForm');
 end;
 
 

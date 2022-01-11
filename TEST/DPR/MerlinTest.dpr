@@ -130,27 +130,27 @@ uses
   User in '..\..\FormsMerlin\Guides\User.pas' {UserForm: TParentForm},
   UserEdit in '..\..\FormsMerlin\Guides\UserEdit.pas' {UserEditForm: TParentForm},
   UserProtocol in '..\..\FormsMerlin\Guides\UserProtocol.pas' {UserProtocolForm: TParentForm},
-  Protocol in '..\..\FormsMerlin\Guides\Protocol.pas' {ProtocolForm: TParentForm};
+  Protocol in '..\..\FormsMerlin\Guides\Protocol.pas' {ProtocolForm: TParentForm},
+  UnitTree in '..\..\FormsMerlin\Guides\UnitTree.pas' {UnitTreeForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
 
 begin
-  ConnectionPath := '..\INIT\Boat_init.php';
-  EnumPath := '..\DATABASE\Boat\METADATA\Enum\';
-  CreateStructurePath := '..\DATABASE\Boat\STRUCTURE\';
-  LocalViewPath := '..\DATABASE\Boat\View\';
-  LocalProcedurePath := '..\DATABASE\Boat\PROCEDURE\';
-  LocalProcessPath := '..\DATABASE\Boat\PROCESS\';
-
+  ConnectionPath := '..\INIT\Merlin_init.php';
+  EnumPath := '..\DATABASE\Merlin\METADATA\Enum\';
+  CreateStructurePath := '..\DATABASE\Merlin\STRUCTURE\';
+  LocalViewPath := '..\DATABASE\Merlin\View\';
+  LocalProcedurePath := '..\DATABASE\Merlin\PROCEDURE\';
+  LocalProcessPath := '..\DATABASE\Merlin\PROCESS\';
   dsdProject := prBoat;
   //dsdProject := prProject;
 
-  if FindCmdLineSwitch('realProjectBoat', true)
+  if FindCmdLineSwitch('realMerlin', true)
   then gc_AdminPassword := 'qsxqsxw1'
   else gc_AdminPassword := 'Админ';
 
-  gc_ProgramName := 'ProjectBoat.exe';
+  gc_ProgramName := 'Merlin.exe';
 
   Application.Initialize;
   gc_isSetDefault := true;

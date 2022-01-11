@@ -13,6 +13,11 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 
 -- Add Project_Merlin
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_GroupNameFull() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_GroupNameFull'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Unit_GroupNameFull', zc_Object_Unit(), 'Полное название группы' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_GroupNameFull');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

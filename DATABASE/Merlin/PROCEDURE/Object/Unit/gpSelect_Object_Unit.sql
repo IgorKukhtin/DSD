@@ -7,12 +7,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Unit(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , Address TVarChar, Phone TVarChar
+             , Phone TVarChar, GroupNameFull TVarChar
              , Comment TVarChar
-             , JuridicalName TVarChar, ParentName TVarChar, ChildName TVarChar
-             , AccountDirectionId Integer, AccountDirectionCode Integer, AccountDirectionName TVarChar
-             , InsertName TVarChar
-             , InsertDate TDateTime
+             , ParentId Integer, ParentName TVarChar
+             , InsertName TVarChar, InsertDate TDateTime
+             , UpdateName TVarChar, UpdateDate TDateTime
              , isErased boolean)
 AS
 $BODY$
@@ -30,20 +29,17 @@ BEGIN
              Object_Unit.Id                  AS Id
            , Object_Unit.ObjectCode          AS Code
            , Object_Unit.ValueData           AS Name
-           , ObjectString_Address.ValueData  AS Address
            , ObjectString_Phone.ValueData    AS Phone
+           , ObjectString_GroupNameFull.ValueData AS GroupNameFull
            , ObjectString_Comment.ValueData  AS Comment
-           , Object_Juridical.ValueData      AS JuridicalName
+           , Object_Parent.Id                AS ParentId
            , Object_Parent.ValueData         AS ParentName
-           , Object_Child.ValueData          AS ChildName
-
-           , Object_AccountDirection.Id         AS AccountDirectionId
-           , Object_AccountDirection.ObjectCode AS AccountDirectionCode
-           , Object_AccountDirection.ValueData  AS AccountDirectionName
 
            , Object_Insert.ValueData         AS InsertName
            , ObjectDate_Insert.ValueData     AS InsertDate
-
+           , Object_Update.ValueData         AS UpdateName
+           , ObjectDate_Update.ValueData     AS UpdateDate
+           
            , Object_Unit.isErased            AS isErased
 
        FROM Object AS Object_Unit
@@ -53,29 +49,17 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Phone
                                    ON ObjectString_Phone.ObjectId = Object_Unit.Id
                                   AND ObjectString_Phone.DescId = zc_ObjectString_Unit_Phone()
+            LEFT JOIN ObjectString AS ObjectString_GroupNameFull
+                                   ON ObjectString_GroupNameFull.ObjectId = Object_Unit.Id
+                                  AND ObjectString_GroupNameFull.DescId = zc_ObjectString_Unit_GroupNameFull()
             LEFT JOIN ObjectString AS ObjectString_Comment
                                    ON ObjectString_Comment.ObjectId = Object_Unit.Id
                                   AND ObjectString_Comment.DescId = zc_ObjectString_Unit_Comment()
-
-            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
-                                 ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
-                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                                  ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
                                 AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
             LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
-
-            LEFT JOIN ObjectLink AS ObjectLink_Unit_Child
-                                 ON ObjectLink_Unit_Child.ObjectId = Object_Unit.Id
-                                AND ObjectLink_Unit_Child.DescId = zc_ObjectLink_Unit_Child()
-            LEFT JOIN Object AS Object_Child ON Object_Child.Id = ObjectLink_Unit_Child.ChildObjectId
-
-            LEFT JOIN ObjectLink AS ObjectLink_Unit_AccountDirection
-                                 ON ObjectLink_Unit_AccountDirection.ObjectId = Object_Unit.Id
-                                AND ObjectLink_Unit_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
-            LEFT JOIN Object AS Object_AccountDirection ON Object_AccountDirection.Id = ObjectLink_Unit_AccountDirection.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Insert
                                  ON ObjectLink_Insert.ObjectId = Object_Unit.Id
@@ -85,6 +69,15 @@ BEGIN
             LEFT JOIN ObjectDate AS ObjectDate_Insert
                                  ON ObjectDate_Insert.ObjectId = Object_Unit.Id
                                 AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Update
+                                 ON ObjectLink_Update.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
+            LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId
+
+            LEFT JOIN ObjectDate AS ObjectDate_Update
+                                 ON ObjectDate_Update.ObjectId = Object_Unit.Id
+                                AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()
 
      WHERE Object_Unit.DescId = zc_Object_Unit()
        AND (Object_Unit.isErased = FALSE OR inIsShowAll = TRUE)
@@ -97,8 +90,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 22.09.21         *
- 22.10.20         *
+ 11.01.22         *
 */
 
 -- тест

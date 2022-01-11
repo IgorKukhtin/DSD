@@ -1,20 +1,14 @@
--- Function: gpInsertUpdate_Object_Unit (Integer, TVarChar,  Integer, TVarChar)
+-- Function: gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar,  Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Подразделения> 
  INOUT ioCode                     Integer   ,    -- Код объекта <Подразделения> 
     IN inName                     TVarChar  ,    -- Название объекта <Подразделения>
-    IN inAddress                  TVarChar  ,    -- Адрес
     IN inPhone                    TVarChar  ,    -- Телефон
     IN inComment                  TVarChar  ,    -- Примечание
-    IN inJuridicalId              Integer   ,    -- ключ объекта <Юридические лица> 
     IN inParentId                 Integer   ,    -- ключ объекта <Група> 
-    IN inChildId                  Integer   ,    -- ключ объекта <Склад>
-    IN inAccountDirectionId       Integer   ,    -- Аналитики счетов - направления
     IN inSession                  TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -22,6 +16,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbGroupNameFull TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Unit());
@@ -39,27 +34,29 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Unit(), ioCode, inName);
 
-   -- сохранили Адрес
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Address(), ioId, inAddress);
+   -- расчетно свойство <Полное название группы>
+   vbGroupNameFull:= lfGet_Object_TreeNameFull (inParentId, zc_ObjectLink_Unit_Parent());
+
    -- сохранили Телефон
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Phone(), ioId, inPhone);
    -- сохранили Примечание
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Comment(), ioId, inComment);
-   
-   -- сохранили связь с <Юридические лица>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_Juridical(), ioId, inJuridicalId);
+   -- сохранили Примечание
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_GroupNameFull(), ioId, vbGroupNameFull);
+      
    -- сохранили связь с <Група>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_Parent(), ioId, inParentId);
-   -- сохранили связь с <Склад>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_Child(), ioId, inChildId);
-   -- сохранили связь с <Аналитики счетов - направления>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_AccountDirection(), ioId, inAccountDirectionId);
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
       -- сохранили свойство <Пользователь (создание)>
       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), ioId, vbUserId);
+   ELSE
+      -- сохранили свойство <Дата корр>
+      PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), ioId, CURRENT_TIMESTAMP);
+      -- сохранили свойство <Пользователь корр>
+      PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Update(), ioId, vbUserId);   
    END IF;
 
    -- сохранили протокол
@@ -74,9 +71,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 22.09.21         *
- 22.10.20         *
+ 11.01.22         *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Unit()
+--

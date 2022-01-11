@@ -38,24 +38,13 @@ type
     edCode: TcxCurrencyEdit;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    cxLabel3: TcxLabel;
-    ceJuridical: TcxButtonEdit;
-    edAddress: TcxTextEdit;
-    cxLabel4: TcxLabel;
     edPhone: TcxTextEdit;
     cxLabel5: TcxLabel;
     cxLabel7: TcxLabel;
     ceParent: TcxButtonEdit;
     GuidesParent: TdsdGuides;
-    cxLabel8: TcxLabel;
-    ceChild: TcxButtonEdit;
-    GuidesChild: TdsdGuides;
     cxLabel6: TcxLabel;
     edComment: TcxTextEdit;
-    GuidesJuridical: TdsdGuides;
-    ceAccountDirection: TcxButtonEdit;
-    GuidesAccountDirection: TdsdGuides;
-    cxLabel9: TcxLabel;
   private
     { Private declarations }
   public

@@ -23,7 +23,7 @@ type
     miCurrency: TMenuItem;
     actMember: TdsdOpenForm;
     miMember: TMenuItem;
-    actUnit: TdsdOpenForm;
+    actUnitTree: TdsdOpenForm;
     miUnit: TMenuItem;
     miPosition: TMenuItem;
     miPersonal: TMenuItem;
@@ -48,6 +48,8 @@ type
     actTaxKindEdit: TdsdOpenForm;
     actReport_Goods: TdsdOpenForm;
     actDocTag: TdsdOpenForm;
+    actUnit: TdsdOpenForm;
+    N1: TMenuItem;
   private
     { Private declarations }
   public
