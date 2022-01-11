@@ -143,8 +143,8 @@ begin
   LocalViewPath := '..\DATABASE\Merlin\View\';
   LocalProcedurePath := '..\DATABASE\Merlin\PROCEDURE\';
   LocalProcessPath := '..\DATABASE\Merlin\PROCESS\';
-  dsdProject := prBoat;
-  //dsdProject := prProject;
+
+  dsdProject := prMerlin;
 
   if FindCmdLineSwitch('realMerlin', true)
   then gc_AdminPassword := 'qsxqsxw1'
