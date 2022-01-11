@@ -33,7 +33,7 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalCount
+              Column = TotalCountTare
             end
             item
               Format = ',0.####'
@@ -83,7 +83,7 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalCount
+              Column = TotalCountTare
             end
             item
               Format = ',0.####'
@@ -178,9 +178,9 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
             Options.Editing = False
             Width = 123
           end
-          object TotalCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'TotalCount'
+          object TotalCountTare: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099
+            DataBinding.FieldName = 'TotalCountTare'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

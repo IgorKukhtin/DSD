@@ -4399,6 +4399,17 @@ inherited ReturnInForm: TReturnInForm
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103'>'
       ImageIndex = 26
     end
+    object actInsert_MI_byOrderReturnTare: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI_byOrderReturnTare
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI_byOrderReturnTare
+        end>
+      Caption = 'actInsert_MI_byOrderReturnTare'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 24
@@ -7792,5 +7803,47 @@ inherited ReturnInForm: TReturnInForm
     PackSize = 1
     Left = 1267
     Top = 274
+  end
+  object spInsert_MI_byOrderReturnTare: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_ReturnIn_byOrderReturnTare'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Order'
+        Value = '0'
+        Component = SaleChoiceGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 538
+    Top = 208
+  end
+  object HeaderExit: THeaderExit
+    ExitList = <
+      item
+        Control = edInvNumberSale
+      end
+      item
+      end
+      item
+      end
+      item
+      end
+      item
+      end>
+    Action = actInsert_MI_byOrderReturnTare
+    Left = 640
+    Top = 208
   end
 end

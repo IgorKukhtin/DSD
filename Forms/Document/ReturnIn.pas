@@ -293,6 +293,9 @@ type
     actGet_checkopen_Tax: TdsdExecStoredProc;
     bbGet_checkopen_Sale: TdxBarButton;
     bbGet_checkopen_Tax: TdxBarButton;
+    spInsert_MI_byOrderReturnTare: TdsdStoredProc;
+    actInsert_MI_byOrderReturnTare: TdsdExecStoredProc;
+    HeaderExit: THeaderExit;
   private
     { Private declarations }
   public

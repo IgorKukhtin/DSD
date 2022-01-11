@@ -29,7 +29,7 @@ uses
 
 type
   TOrderReturnTareJournalForm = class(TAncestorJournalForm)
-    TotalCount: TcxGridDBColumn;
+    TotalCountTare: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;

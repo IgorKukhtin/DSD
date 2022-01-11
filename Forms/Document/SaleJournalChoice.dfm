@@ -633,6 +633,18 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
             Options.Editing = False
             Width = 120
           end
+          object DescName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'DescName'
+            Options.Editing = False
+            Width = 80
+          end
+          object InvNumber_Transport_Full: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1055#1051
+            DataBinding.FieldName = 'InvNumber_Transport_Full'
+            Options.Editing = False
+            Width = 90
+          end
         end
       end
     end
@@ -673,6 +685,9 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
   end
   inherited ActionList: TActionList
     Left = 471
+    inherited actMovementItemContainer: TdsdOpenForm
+      Enabled = False
+    end
     inherited actInsert: TdsdInsertUpdateAction
       Enabled = False
       FormName = 'TTaxForm'
@@ -708,16 +723,13 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
           MultiSelectSeparator = ','
         end>
     end
-    inherited actUnComplete: TdsdChangeMovementStatus
-      Enabled = False
-    end
     inherited actComplete: TdsdChangeMovementStatus
       Enabled = False
     end
-    inherited actSetErased: TdsdChangeMovementStatus
+    inherited actUnComplete: TdsdChangeMovementStatus
       Enabled = False
     end
-    inherited actMovementItemContainer: TdsdOpenForm
+    inherited actSetErased: TdsdChangeMovementStatus
       Enabled = False
     end
     object dsdChoiceGuides: TdsdChoiceGuides
@@ -742,7 +754,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -818,7 +830,7 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
       end
       item
         Name = 'inIsPartnerDate'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1015,14 +1027,14 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','

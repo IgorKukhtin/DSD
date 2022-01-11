@@ -125,7 +125,7 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 120
+            Width = 201
           end
           object GoodsCode: TcxGridDBColumn [1]
             Caption = #1050#1086#1076
@@ -149,7 +149,7 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 255
+            Width = 248
           end
           object Amount: TcxGridDBColumn [3]
             Caption = #1050#1086#1083'-'#1074#1086
