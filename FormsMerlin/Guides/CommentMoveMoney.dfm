@@ -1,7 +1,7 @@
-object CurrencyForm: TCurrencyForm
+object CommentMoveMoneyForm: TCommentMoveMoneyForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1072#1083#1102#1090#1099'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1044#1074#1080#1078#1077#1085#1080#1077' '#1076#1077#1085#1077#1075'>'
   ClientHeight = 375
   ClientWidth = 532
   Color = clBtnFace
@@ -280,10 +280,10 @@ object CurrencyForm: TCurrencyForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -297,8 +297,8 @@ object CurrencyForm: TCurrencyForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TCurrencyEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TCommentMoveMoneyEditForm'
+      FormNameParam.Value = 'TCommentMoveMoneyEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -318,8 +318,8 @@ object CurrencyForm: TCurrencyForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TCurrencyEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TCommentMoveMoneyEditForm'
+      FormNameParam.Value = 'TCommentMoveMoneyEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -432,8 +432,8 @@ object CurrencyForm: TCurrencyForm
       isShowModal = False
     end
   end
-  object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Currency'
+  object spSelect: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_CommentMoveMoney'
     DataSet = ClientDataSet
     DataSets = <
       item

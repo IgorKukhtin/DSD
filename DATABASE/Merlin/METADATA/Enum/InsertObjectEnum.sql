@@ -22,6 +22,11 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_SecondForm(), inDescId:= zc_Object_PaidKind(), inCode:= 2, inName:= 'Нал', inEnumName:= 'zc_Enum_PaidKind_SecondForm');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_CardForm()  , inDescId:= zc_Object_PaidKind(), inCode:= 3, inName:= 'Карта', inEnumName:= 'zc_Enum_PaidKind_CardForm');
 
+     -- !!! Типы Приход/расход
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_InfoMoney_In(),  inDescId:= zc_Object_InfoMoneyKind(), inCode:= 1, inName:= 'Приход', inEnumName:= 'zc_Enum_InfoMoney_In');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_InfoMoney_Out(), inDescId:= zc_Object_InfoMoneyKind(), inCode:= 2, inName:= 'Расход', inEnumName:= 'zc_Enum_InfoMoney_Out');
+
+
 
 END $$;
 

@@ -52,6 +52,13 @@ type
     N1: TMenuItem;
     actCashTree: TdsdOpenForm;
     miCashTree: TMenuItem;
+    actCommentMoveMoney: TdsdOpenForm;
+    actCommentInfoMoney: TdsdOpenForm;
+    miCommentInfoMoney: TMenuItem;
+    miCommentMoveMoney: TMenuItem;
+    N2: TMenuItem;
+    actInfoMoneyDetail: TdsdOpenForm;
+    miInfoMoneyDetail: TMenuItem;
   private
     { Private declarations }
   public

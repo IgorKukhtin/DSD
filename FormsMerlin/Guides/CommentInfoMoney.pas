@@ -1,4 +1,4 @@
-unit Currency;
+unit CommentInfoMoney;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   dsdAddOn, dxBarExtItems;
 
 type
-  TCurrencyForm = class(TParentForm)
+  TCommentInfoMoneyForm = class(TParentForm)
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
@@ -39,7 +39,7 @@ type
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     isErased: TcxGridDBColumn;
@@ -58,6 +58,7 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     spErasedUnErased: TdsdStoredProc;
+    InfoMoneyKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -69,6 +70,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TCurrencyForm);
+  RegisterClass(TCommentInfoMoneyForm);
 
 end.

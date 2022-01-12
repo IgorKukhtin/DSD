@@ -1,7 +1,7 @@
-﻿object CurrencyEditForm: TCurrencyEditForm
+﻿object CommentMoveMoneyEditForm: TCommentMoveMoneyEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1042#1072#1083#1102#1090#1091'>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1044#1074#1080#1078#1077#1085#1080#1077' '#1076#1077#1085#1077#1075'>'
   ClientHeight = 170
   ClientWidth = 338
   Color = clBtnFace
@@ -24,7 +24,7 @@
   end
   object cxLabel1: TcxLabel
     Left = 40
-    Top = 52
+    Top = 53
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
@@ -96,7 +96,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Currency'
+    StoredProcName = 'gpInsertUpdate_Object_CommentMoveMoney'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -139,7 +139,7 @@
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Currency'
+    StoredProcName = 'gpGet_Object_CommentMoveMoney'
     DataSets = <>
     OutputType = otResult
     Params = <

@@ -1,8 +1,8 @@
-﻿object CashEditForm: TCashEditForm
+﻿object InfoMoneyEditForm: TInfoMoneyEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1072#1089#1089#1091'>'
-  ClientHeight = 278
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1090#1072#1090#1100#1080' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
+  ClientHeight = 286
   ClientWidth = 335
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -59,16 +59,16 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 0
-    Width = 124
+    Width = 273
   end
-  object cxLabel4: TcxLabel
+  object cxLabel2: TcxLabel
     Left = 40
-    Top = 142
-    Caption = #1042#1072#1083#1102#1090#1072
+    Top = 143
+    Caption = #1058#1080#1087' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
   end
-  object ceCurrency: TcxButtonEdit
+  object ceInfoMoneyKind: TcxButtonEdit
     Left = 40
-    Top = 162
+    Top = 166
     Properties.Buttons = <
       item
         Default = True
@@ -76,16 +76,16 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 124
+    Width = 273
   end
-  object cxLabel2: TcxLabel
-    Left = 192
-    Top = 143
-    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+  object cxLabel7: TcxLabel
+    Left = 40
+    Top = 95
+    Caption = #1043#1088#1091#1087#1087#1072
   end
-  object cePaidKind: TcxButtonEdit
-    Left = 192
-    Top = 162
+  object ceParent: TcxButtonEdit
+    Left = 40
+    Top = 115
     Properties.Buttons = <
       item
         Default = True
@@ -93,50 +93,21 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 121
+    Width = 273
   end
-  object edShortName: TcxTextEdit
+  object cbService: TcxCheckBox
     Left = 40
-    Top = 116
+    Top = 202
+    Caption = #1055#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1102
     TabOrder = 10
-    Width = 273
+    Width = 103
   end
-  object cxLabel3: TcxLabel
-    Left = 40
-    Top = 97
-    Caption = #1057#1086#1082#1088'. '#1085#1072#1079#1074#1072#1085#1080#1077
-  end
-  object cxLabel7: TcxLabel
-    Left = 40
-    Top = 188
-    Caption = #1043#1088#1091#1087#1087#1072
-  end
-  object ceParent: TcxButtonEdit
-    Left = 40
-    Top = 208
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 13
-    Width = 273
-  end
-  object edNPP: TcxCurrencyEdit
-    Left = 192
-    Top = 26
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 3
-    Properties.DisplayFormat = ',0.###'
-    TabOrder = 14
-    Width = 121
-  end
-  object cxLabel29: TcxLabel
-    Left = 192
-    Top = 7
-    Caption = #8470' '#1087'.'#1087'.'
+  object cbUserAll: TcxCheckBox
+    Left = 186
+    Top = 202
+    Caption = #1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084
+    TabOrder = 11
+    Width = 92
   end
   object ActionList: TActionList
     Left = 320
@@ -173,7 +144,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Cash'
+    StoredProcName = 'gpInsertUpdate_Object_InfoMoney'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -193,7 +164,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCashName'
+        Name = 'inName'
         Value = ''
         Component = edName
         DataType = ftString
@@ -201,32 +172,25 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inShortName'
+        Name = 'inisService'
         Value = ''
-        Component = edShortName
-        DataType = ftString
+        Component = cbService
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inNPP'
+        Name = 'inisUserAll'
         Value = ''
-        Component = edNPP
-        DataType = ftFloat
+        Component = cbUserAll
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCurrencyId'
-        Value = ''
-        Component = GuidesCurrency
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPaidKindId'
+        Name = 'inInfoMoneyKindId'
         Value = Null
-        Component = PaidKindGuides
+        Component = GuidesInfoMoneyKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -251,11 +215,11 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 240
-    Top = 8
+    Left = 280
+    Top = 80
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Cash'
+    StoredProcName = 'gpGet_Object_InfoMoney'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -281,24 +245,17 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ShortName'
+        Name = 'isService'
         Value = ''
-        Component = edShortName
-        DataType = ftString
+        Component = cbService
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CurrencyId'
+        Name = 'isUserAll'
         Value = ''
-        Component = GuidesCurrency
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CurrencyName'
-        Value = ''
-        Component = GuidesCurrency
-        ComponentItem = 'TextValue'
+        Component = cbUserAll
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
@@ -317,56 +274,23 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PaidKindId'
+        Name = 'InfoMoneyKindId'
         Value = Null
-        Component = PaidKindGuides
+        Component = GuidesInfoMoneyKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PaidKindName'
+        Name = 'InfoMoneyKindName'
         Value = Null
-        Component = PaidKindGuides
+        Component = GuidesInfoMoneyKind
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'NPP'
-        Value = ''
-        Component = edNPP
-        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
     Top = 96
-  end
-  object GuidesCurrency: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceCurrency
-    FormNameParam.Value = 'TCurrencyForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TCurrencyForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesCurrency
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesCurrency
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    Top = 157
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -385,11 +309,11 @@
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 8
-    Top = 64
+    Top = 40
   end
-  object PaidKindGuides: TdsdGuides
+  object GuidesInfoMoneyKind: TdsdGuides
     KeyField = 'Id'
-    LookupControl = cePaidKind
+    LookupControl = ceInfoMoneyKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -399,14 +323,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesInfoMoneyKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesInfoMoneyKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -440,7 +364,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 134
-    Top = 195
+    Left = 126
+    Top = 99
   end
 end

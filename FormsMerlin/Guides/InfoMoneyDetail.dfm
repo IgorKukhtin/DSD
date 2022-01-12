@@ -1,9 +1,9 @@
-object CurrencyForm: TCurrencyForm
+object InfoMoneyDetailForm: TInfoMoneyDetailForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1072#1083#1102#1090#1099'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientHeight = 375
-  ClientWidth = 532
+  ClientWidth = 567
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object CurrencyForm: TCurrencyForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 532
+    Width = 567
     Height = 349
     Align = alClient
     TabOrder = 0
@@ -52,14 +52,22 @@ object CurrencyForm: TCurrencyForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 44
+        Width = 48
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 226
+        Width = 246
+      end
+      object InfoMoneyKindName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
+        DataBinding.FieldName = 'InfoMoneyKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 103
       end
       object colInsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
@@ -67,7 +75,7 @@ object CurrencyForm: TCurrencyForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 77
+        Width = 74
       end
       object colUpdateName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
@@ -84,7 +92,7 @@ object CurrencyForm: TCurrencyForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 49
+        Width = 47
       end
       object colUpdateDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
@@ -280,10 +288,10 @@ object CurrencyForm: TCurrencyForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -297,8 +305,8 @@ object CurrencyForm: TCurrencyForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TCurrencyEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TInfoMoneyDetailEditForm'
+      FormNameParam.Value = 'TInfoMoneyDetailEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -318,8 +326,8 @@ object CurrencyForm: TCurrencyForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TCurrencyEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TInfoMoneyDetailEditForm'
+      FormNameParam.Value = 'TInfoMoneyDetailEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -432,8 +440,8 @@ object CurrencyForm: TCurrencyForm
       isShowModal = False
     end
   end
-  object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Currency'
+  object spSelect: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_InfoMoneyDetail'
     DataSet = ClientDataSet
     DataSets = <
       item

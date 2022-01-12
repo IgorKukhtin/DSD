@@ -1,8 +1,8 @@
-﻿object CurrencyEditForm: TCurrencyEditForm
+﻿object InfoMoneyDetailEditForm: TInfoMoneyDetailEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1042#1072#1083#1102#1090#1091'>'
-  ClientHeight = 170
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
+  ClientHeight = 204
   ClientWidth = 338
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -24,12 +24,12 @@
   end
   object cxLabel1: TcxLabel
     Left = 40
-    Top = 52
+    Top = 53
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 72
-    Top = 123
+    Top = 171
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 216
-    Top = 123
+    Top = 171
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -50,7 +50,7 @@
   end
   object Код: TcxLabel
     Left = 40
-    Top = 6
+    Top = 7
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit
@@ -61,9 +61,26 @@
     TabOrder = 5
     Width = 273
   end
+  object cxLabel2: TcxLabel
+    Left = 40
+    Top = 98
+    Caption = #1058#1080#1087' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
+  end
+  object ceInfoMoneyKind: TcxButtonEdit
+    Left = 40
+    Top = 118
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 273
+  end
   object ActionList: TActionList
-    Left = 296
-    Top = 72
+    Left = 320
+    Top = 56
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -96,7 +113,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Currency'
+    StoredProcName = 'gpInsertUpdate_Object_InfoMoneyDetail'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -122,6 +139,14 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyKindId'
+        Value = Null
+        Component = GuidesInfoMoneyKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -139,7 +164,7 @@
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Currency'
+    StoredProcName = 'gpGet_Object_InfoMoneyDetail'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -163,10 +188,25 @@
         Value = 0.000000000000000000
         Component = ceCode
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyKindId'
+        Value = Null
+        Component = GuidesInfoMoneyKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyKindName'
+        Value = Null
+        Component = GuidesInfoMoneyKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 168
-    Top = 96
+    Left = 280
+    Top = 128
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -188,7 +228,34 @@
     Top = 40
   end
   object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
-    Left = 48
-    Top = 88
+    Left = 8
+    Top = 112
+  end
+  object GuidesInfoMoneyKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoneyKind
+    FormNameParam.Value = 'TInfoMoneyKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoneyKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInfoMoneyKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInfoMoneyKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 152
+    Top = 133
   end
 end

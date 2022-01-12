@@ -368,6 +368,50 @@
 				<Form>CashEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\CommentInfoMoney.pas">
+				<Form>CommentInfoMoneyForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\CommentInfoMoneyEdit.pas">
+				<Form>CommentInfoMoneyEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\CommentMoveMoney.pas">
+				<Form>CommentMoveMoneyForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\CommentMoveMoneyEdit.pas">
+				<Form>CommentMoveMoneyEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Kind\InfoMoneyKind.pas">
+				<Form>InfoMoneyKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\InfoMoneyDetail.pas">
+				<Form>InfoMoneyDetailForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\InfoMoneyDetailEdit.pas">
+				<Form>InfoMoneyDetailEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\InfoMoneyEdit.pas">
+				<Form>InfoMoneyEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\InfoMoney_Object.pas">
+				<Form>InfoMoney_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\InfoMoney.pas">
+				<Form>InfoMoneyForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\InfoMoneyTree.pas">
+				<Form>InfoMoneyTreeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
