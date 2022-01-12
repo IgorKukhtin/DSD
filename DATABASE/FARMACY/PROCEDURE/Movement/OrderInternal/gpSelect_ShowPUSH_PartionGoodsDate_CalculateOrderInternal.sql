@@ -45,6 +45,8 @@ BEGIN
 
 
                       WHERE MovementItem.CalcAmountAll > 0
+                      
+                      ORDER BY MovementItem.PartionGoodsDate
                       ),
         tmpNTZ AS (SELECT string_agg(Object_Goods_Main.ObjectCode||' - '||Object_Goods_Main.Name||Chr(13)||
                                      '   —–Œ  √ŒƒÕŒ—“» : '||zfConvert_DateShortToString (tmpMI_All.PartionGoodsDate)||' '|| COALESCE(tmpMI_All.Comment, ''), Chr(13)) AS Goods
@@ -98,4 +100,4 @@ LANGUAGE plpgsql VOLATILE;
 
 -- SELECT * FROM gpSelect_ShowPUSH_PartionGoodsDate_CalculateOrderInternal(22749117, '3')
 
-select * from gpSelect_ShowPUSH_PartionGoodsDate_CalculateOrderInternal(inMovementID := 26210458  ,  inSession := '3');
+select * from gpSelect_ShowPUSH_PartionGoodsDate_CalculateOrderInternal(inMovementID := 26370299   ,  inSession := '3');

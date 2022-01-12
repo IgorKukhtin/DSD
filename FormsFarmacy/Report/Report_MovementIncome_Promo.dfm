@@ -41,6 +41,16 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
               Format = ',0.####'
               Kind = skSum
               Column = SummSIP
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = Summa
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaWithVAT
             end>
           OptionsData.Editing = False
           Styles.Content = nil
@@ -89,7 +99,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Width = 64
           end
           object PriceWithVAT: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1053#1044#1057
+            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'PriceWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
@@ -97,6 +107,16 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 66
+          end
+          object SummaWithVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
+            DataBinding.FieldName = 'SummaWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 65
           end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1073#1077#1079' '#1053#1044#1057')'
@@ -108,6 +128,16 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 72
+          end
+          object Summa: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1073#1077#1079' '#1053#1044#1057')'
+            DataBinding.FieldName = 'Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object PriceSale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
@@ -407,7 +437,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -512,7 +542,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -520,7 +550,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

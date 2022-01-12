@@ -1052,14 +1052,14 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_PartialReturnInAllForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_PartialReturnInAllForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_PartialReturnInAllDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_PartialReturnInAllDialogForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FinancialMonitoringForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FinancialMonitoringForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FinancialMonitoringForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TestingAttemptsUserForm'));
@@ -1610,12 +1610,12 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_byReportBadmForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUnit_byReportBadmForm');
     exit;
-}
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MinPrice_onGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MinPrice_onGoodsForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MinPrice_onGoodsDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MinPrice_onGoodsDialogForm');
- {   exit;
+    exit;
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckPromoForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckPromoForm');

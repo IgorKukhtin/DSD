@@ -56,6 +56,7 @@ type
     actUpdate_isBarCodeLoad: TdsdExecStoredProc;
     bbUpdate_isMorionCodeLoad: TdxBarButton;
     bbUpdate_isBarCodeLoad: TdxBarButton;
+    Code: TcxGridDBColumn;
   private
     { Private declarations }
   public

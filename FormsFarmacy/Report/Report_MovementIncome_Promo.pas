@@ -48,6 +48,8 @@ type
     SummSIP: TcxGridDBColumn;
     GoodsGroupPromoName: TcxGridDBColumn;
     MorionCode: TcxGridDBColumn;
+    Summa: TcxGridDBColumn;
+    SummaWithVAT: TcxGridDBColumn;
   private
     { Private declarations }
   public

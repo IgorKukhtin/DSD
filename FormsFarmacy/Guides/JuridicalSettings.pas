@@ -103,6 +103,7 @@ type
     macUpdateisBonusClose_No: TMultiAction;
     actProtocolEraseOpenForm: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
+    Code: TcxGridDBColumn;
   private
     { Private declarations }
   public

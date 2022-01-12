@@ -47,6 +47,8 @@ RETURNS TABLE (Id Integer
 
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
+
+             , GoodsCode Integer, GoodsName TVarChar
               )
 
 AS
@@ -76,15 +78,77 @@ BEGIN
                      UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                      UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
-    , tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
-                    FROM ObjectLink AS ObjectLink_Unit_Juridical
-                      INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                           ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                          AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                          AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
-                    WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                      AND (ObjectLink_Unit_Juridical.ObjectId = vbUnitId OR vbUnitId = 0)
-                    )
+           , tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+                           FROM ObjectLink AS ObjectLink_Unit_Juridical
+                             INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                  ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                 AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
+                           WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                             AND (ObjectLink_Unit_Juridical.ObjectId = vbUnitId OR vbUnitId = 0)
+                           )
+           , tmpDansonPharma AS (SELECT DISTINCT Object_Goods.ID  AS GoodsId
+                                 FROM gpSelect_MovementItem_Promo(inMovementId := 20813880 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3') AS T1
+                                      INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = T1.goodsid
+                                      INNER JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.GoodsMainId = Object_Goods_Retail.GoodsMainId
+                                 )
+           , tmpMovement_Sale_View AS (SELECT Movement_Sale.Id
+                                            , Movement_Sale.InvNumber
+                                            , Movement_Sale.OperDate
+                                            , Movement_Sale.StatusCode
+                                            , Movement_Sale.StatusName
+                                            , Movement_Sale.TotalCount
+                                            , Movement_Sale.TotalSumm
+                                            , Movement_Sale.TotalSummSale
+                                            , Movement_Sale.TotalSummPrimeCost
+                                            , Movement_Sale.UnitId
+                                            , Movement_Sale.UnitName
+                                            , Movement_Sale.JuridicalId
+                                            , Movement_Sale.JuridicalName
+                                            , Movement_Sale.PaidKindId
+                                            , Movement_Sale.PaidKindName
+                                            , Movement_Sale.Comment
+
+                                            , Movement_Sale.OperDateSP
+                                            , Movement_Sale.PartnerMedicalName
+                                            , Movement_Sale.InvNumberSP
+                                            , Movement_Sale.MedicSPid
+                                            , Movement_Sale.MedicSPName
+                                            , Movement_Sale.MemberSPId
+                                            , Movement_Sale.MemberSPName 
+                                            , Movement_Sale.GroupMemberSPName
+
+                                            , Movement_Sale.SPKindId
+                                            , Movement_Sale.SPKindName 
+                                          FROM
+                                              tmpUnit
+                                              LEFT JOIN Movement_Sale_View AS Movement_Sale ON Movement_Sale.UnitId = tmpUnit.UnitId
+                                                                          AND Movement_Sale.OperDate BETWEEN inStartDate AND inEndDate
+                                              INNER JOIN tmpStatus ON Movement_Sale.StatusId = tmpStatus.StatusId)
+                                              
+           , tmpMI_Sale AS (SELECT MovementItem.MovementId
+                                 , MIN(MovementItem.ObjectId)  AS GoodsId
+                                 , count(*)::Integer           AS GoodsCount
+                            FROM tmpMovement_Sale_View AS Movement_Sale 
+                            
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement_Sale.Id
+                                                        AND MovementItem.DescId = zc_MI_Master()
+                                                        AND MovementItem.isErased = FALSE
+                            GROUP BY MovementItem.MovementId)
+           , tmpMI AS (SELECT MI_Sale.MovementId
+                            , MI_Sale.GoodsId
+                            , Object_Goods_Main.ObjectCode   AS GoodsCode
+                            , Object_Goods_Main.Name         AS GoodsName
+                       FROM tmpMI_Sale AS MI_Sale 
+                            
+                            INNER JOIN tmpDansonPharma ON tmpDansonPharma.GoodsId = MI_Sale.GoodsId
+                                                   
+                            INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MI_Sale.goodsid
+                            INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
+                            
+                       WHERE MI_Sale.GoodsCount = 1
+                       )
+           
         -- Результат
         SELECT
             Movement_Sale.Id
@@ -140,12 +204,12 @@ BEGIN
           , MovementDate_Insert.ValueData        AS InsertDate
           , Object_Update.ValueData              AS UpdateName
           , MovementDate_Update.ValueData        AS UpdateDate
-        FROM
-            tmpUnit
-            LEFT JOIN Movement_Sale_View AS Movement_Sale ON Movement_Sale.UnitId = tmpUnit.UnitId
-                                        AND Movement_Sale.OperDate BETWEEN inStartDate AND inEndDate
-            INNER JOIN tmpStatus ON Movement_Sale.StatusId = tmpStatus.StatusId
-            
+          
+          , tmpMI.GoodsCode
+          , tmpMI.GoodsName
+
+        FROM tmpMovement_Sale_View AS Movement_Sale 
+         
             LEFT JOIN MovementLinkMovement AS MLM_Child
                                            ON MLM_Child.MovementId = Movement_Sale.Id
                                           AND MLM_Child.descId = zc_MovementLinkMovement_Child()
@@ -196,6 +260,8 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_InsuranceCardNumber
                                    ON ObjectString_InsuranceCardNumber.ObjectId = Object_MemberIC.Id
                                   AND ObjectString_InsuranceCardNumber.DescId = zc_ObjectString_MemberIC_InsuranceCardNumber() 
+                                  
+            LEFT JOIN tmpMI ON tmpMI.MovementId = Movement_Sale.Id
        ;
 
 END;
@@ -217,4 +283,5 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, TVarChar) 
 
 -- тест
 -- 
-SELECT * FROM gpSelect_Movement_Sale (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inIsErased := FALSE, inSession:= zfCalc_UserAdmin());
+
+select * from gpSelect_Movement_Sale(inStartDate := ('01.12.2021')::TDateTime , inEndDate := ('31.12.2021')::TDateTime , inIsErased := 'False' ,  inSession := '3');

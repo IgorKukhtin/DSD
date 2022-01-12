@@ -49,6 +49,7 @@ type
     actChoiceMemberIC: TOpenChoiceForm;
     actExecInsert_InsuranceCompanies: TdsdExecStoredProc;
     spInsert_InsuranceCompanies: TdsdStoredProc;
+    GoodsCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

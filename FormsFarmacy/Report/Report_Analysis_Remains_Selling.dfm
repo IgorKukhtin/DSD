@@ -23,6 +23,15 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
     Height = 31
     Align = alTop
     TabOrder = 0
+    object lblProggres1: TLabel
+      Left = 499
+      Top = 1
+      Width = 22
+      Height = 13
+      Alignment = taCenter
+      Caption = '0 / 0'
+      Visible = False
+    end
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -50,6 +59,20 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
       Left = 200
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object ProgressBar1: TProgressBar
+      Left = 461
+      Top = 15
+      Width = 84
+      Height = 10
+      TabOrder = 4
+      Visible = False
+    end
+    object cxLabel3: TcxLabel
+      Left = 401
+      Top = 6
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072':'
+      Visible = False
     end
   end
   object cxDBPivotGrid: TcxDBPivotGrid
@@ -403,7 +426,6 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
       Height = 8
       AlignSplitter = salTop
       Control = Panel4
-      ExplicitTop = 602
     end
   end
   object cxSplitter1: TcxSplitter
@@ -424,6 +446,8 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
     Groups = <>
     OptionsView.RowGrandTotalWidth = 252
     TabOrder = 8
+    ExplicitLeft = 2
+    ExplicitTop = 56
     object cxDBPivotGridField1: TcxDBPivotGridField
       AreaIndex = 0
       AllowedAreas = [faColumn, faRow, faFilter]
@@ -839,10 +863,10 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = dsdStoredProcUnit
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = dsdStoredProcUnit
         end
         item
           StoredProc = dsdStoredProcGoods
@@ -964,6 +988,18 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
         DataSet = ClientDataSet
       end>
     Params = <
+      item
+        Name = 'inOrd'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inStartDate'
         Value = 41640d
@@ -1124,5 +1160,30 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
     Params = <>
     Left = 40
     Top = 448
+  end
+  object dsdStoredProcUnit: TdsdStoredProc
+    StoredProcName = 'gpReport_Analysis_Remains_SellingUnit'
+    DataSet = cdsPromoUnit
+    DataSets = <
+      item
+        DataSet = cdsPromoUnit
+      end>
+    Params = <>
+    PackSize = 1
+    AfterExecute = dsdStoredProcUnitAfterExecute
+    Left = 448
+    Top = 328
+  end
+  object cdsPromoUnit: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 456
+    Top = 384
+  end
+  object ClientDataSetTemp: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 448
+    Top = 432
   end
 end

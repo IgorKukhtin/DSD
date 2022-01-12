@@ -6,7 +6,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, Winapi.ShellAPI, System.SysUtils, System.Variants,
-  System.Classes, Vcl.Graphics, DateUtils,
+  System.Classes, Vcl.Graphics, DateUtils, Math,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
@@ -516,10 +516,14 @@ begin
     begin
       if (ClientDataSet.FieldByName('Amount').AsCurrency = 0) or
         (ClientDataSet.FieldByName('AmountPlanTab').AsCurrency = 0) or
-        (ClientDataSet.FieldByName('Amount').AsCurrency < ClientDataSet.FieldByName('AmountPlanTab').AsCurrency) then Inc(FCountO);
+        (ClientDataSet.FieldByName('Amount').AsCurrency * IfThen( ClientDataSet.FieldByName('Koeff' + FUnit.Strings[FUnitCalck]).IsNull,
+         ClientDataSet.FieldByName('Koeff').AsCurrency,
+         ClientDataSet.FieldByName('Koeff' + FUnit.Strings[FUnitCalck]).AsCurrency) < ClientDataSet.FieldByName('AmountPlanTab').AsCurrency) then Inc(FCountO);
       if (ClientDataSet.FieldByName('Amount').AsCurrency = 0) or
         (ClientDataSet.FieldByName('AmountPlan').AsCurrency = 0) or
-        (ClientDataSet.FieldByName('Amount').AsCurrency < ClientDataSet.FieldByName('AmountPlan').AsCurrency) then Inc(FCountAllO);
+        (ClientDataSet.FieldByName('Amount').AsCurrency * IfThen( ClientDataSet.FieldByName('Koeff' + FUnit.Strings[FUnitCalck]).IsNull,
+         ClientDataSet.FieldByName('Koeff').AsCurrency,
+         ClientDataSet.FieldByName('Koeff' + FUnit.Strings[FUnitCalck]).AsCurrency) < ClientDataSet.FieldByName('AmountPlan').AsCurrency) then Inc(FCountAllO);
       ClientDataSet.Edit;
       if ClientDataSet.FieldByName('AmountPlanTab').AsCurrency >= 0.1 then
       begin

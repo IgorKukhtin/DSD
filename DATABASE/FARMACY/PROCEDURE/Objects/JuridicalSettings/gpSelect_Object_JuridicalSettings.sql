@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalSettings(
     IN inIsShowErased   Boolean,       -- показать удаденные Да/Нет
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Name TVarChar,
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RetailId Integer, RetailName TVarChar,
                JuridicalId Integer, JuridicalName TVarChar, 
                isBonusVirtual Boolean,
@@ -93,6 +93,7 @@ BEGIN
 
        SELECT 
              JuridicalSettings.JuridicalSettingsId              AS Id
+           , Object_JuridicalSettings.ObjectCode                AS Code
            , Object_JuridicalSettings.ValueData                 AS Name 
            , Object_Retail.Id                                   AS RetailId
            , Object_Retail.ValueData                            AS RetailName
@@ -262,3 +263,5 @@ LANGUAGE plpgsql VOLATILE;
 -- тест 
 -- SELECT * FROM gpSelect_Object_JuridicalSettings22 (True,'2')
 -- select * from gpSelect_Object_JuridicalSettings(inIsShowErased := 'False' ,  inSession := '3')
+
+select * from gpSelect_Object_JuridicalSettings(inIsShowErased := 'False' ,  inSession := '3');

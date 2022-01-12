@@ -12,7 +12,7 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ImportType());
    
-  IF date_part('isodow', CURRENT_DATE)::Integer in (1, 6, 7)
+  IF date_part('isodow', CURRENT_DATE)::Integer in (6, 7)
   THEN
     RETURN;
   END IF;

@@ -24,6 +24,14 @@ inherited ContractForm: TContractForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object Code: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'Code'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 49
+          end
           object Name: TcxGridDBColumn
             Caption = #1053#1086#1084#1077#1088' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'Name'

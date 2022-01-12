@@ -133,6 +133,12 @@ type
     cxDBPivotGrid1Field3: TcxDBPivotGridField;
     cxDBPivotGrid1Field4: TcxDBPivotGridField;
     cxDBPivotGrid1Field5: TcxDBPivotGridField;
+    ProgressBar1: TProgressBar;
+    lblProggres1: TLabel;
+    cxLabel3: TcxLabel;
+    dsdStoredProcUnit: TdsdStoredProc;
+    cdsPromoUnit: TClientDataSet;
+    ClientDataSetTemp: TClientDataSet;
     procedure actSetGoodsExecute(Sender: TObject);
     procedure actSetPromoExecute(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -141,6 +147,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure cxDBPivotGrid1Field5GetDisplayText(Sender: TcxPivotGridField;
       ACell: TcxPivotGridDataCellViewInfo; var AText: string);
+    procedure dsdStoredProcUnitAfterExecute(Sender: TObject);
   private
   public
   end;
@@ -254,6 +261,61 @@ procedure TReport_Analysis_Remains_SellingForm.cxDBPivotGrid1Field5GetDisplayTex
   var AText: string);
 begin
   if AText = 'True' then AText := 'Да' else AText := 'Нет';
+end;
+
+procedure TReport_Analysis_Remains_SellingForm.dsdStoredProcUnitAfterExecute(
+  Sender: TObject);
+var nORD : Integer;
+begin
+  try
+    cxDBPivotGrid1.DataController.DataSource := Nil;
+    cdsPromoUnit.First;
+
+    lblProggres1.Caption := IntToStr(cdsPromoUnit.RecNo)+' / '+IntToStr(cdsPromoUnit.RecordCount);
+    lblProggres1.Repaint;
+    ProgressBar1.Position := cdsPromoUnit.RecNo;
+    ProgressBar1.Max := cdsPromoUnit.RecordCount;
+    ProgressBar1.Repaint;
+    Application.ProcessMessages;
+
+    cxLabel3.Visible := True;
+    lblProggres1.Visible := True;
+    ProgressBar1.Visible := True;
+    nORD := 1;
+    dsdStoredProc.ParamByName('inOrd').Value := nORD;
+    dsdStoredProc.ParamByName('inUnitId').Value := cdsPromoUnit.FieldByName('UnitId').AsInteger;
+    dsdStoredProc.Execute;
+    if not ClientDataSet.IsEmpty then Inc(nORD);
+    dsdStoredProc.DataSet := ClientDataSetTemp;
+    cdsPromoUnit.Next;
+    while not cdsPromoUnit.Eof do
+    begin
+
+      lblProggres1.Caption := IntToStr(cdsPromoUnit.RecNo)+' / '+IntToStr(cdsPromoUnit.RecordCount);
+      lblProggres1.Repaint;
+      ProgressBar1.Position := cdsPromoUnit.RecNo;
+      ProgressBar1.Repaint;
+      Application.ProcessMessages;
+
+      ClientDataSetTemp.Close;
+      dsdStoredProc.ParamByName('inOrd').Value := nORD;
+      dsdStoredProc.ParamByName('inUnitId').Value := cdsPromoUnit.FieldByName('UnitId').AsInteger;
+      dsdStoredProc.Execute;
+      if not ClientDataSetTemp.IsEmpty then
+      begin
+        ClientDataSet.AppendData(ClientDataSetTemp.Data, False);
+        Inc(nORD);
+      end;
+      cdsPromoUnit.Next;
+    end;
+  finally
+    dsdStoredProc.DataSet := ClientDataSet;
+    cxDBPivotGrid1.DataController.DataSource := DataSource;
+    cxLabel3.Visible := False;
+    lblProggres1.Visible := False;
+    ProgressBar1.Visible := False;
+    Application.ProcessMessages;
+  end;
 end;
 
 procedure TReport_Analysis_Remains_SellingForm.FormClose(Sender: TObject;

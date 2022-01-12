@@ -31,14 +31,22 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalSettings(
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
+   DECLARE vbCode_calc Integer;  
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_JuridicalSettings());
    vbUserId:= inSession;
    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
+   IF COALESCE (ioId, 0) = 0
+   THEN
+     vbCode_calc:= lfGet_ObjectCode (0, zc_Object_JuridicalSettings());
+   ELSE
+     vbCode_calc:= (SELECT ObjectCode from Object WHERE Object.Id = ioId);
+   END IF;
+
    -- сохранили объект
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_JuridicalSettings(), 0, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_JuridicalSettings(), vbCode_calc, inName);
 
    -- сохранили связь с <Торговой сетью>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalSettings_Retail(), ioId, vbObjectId);

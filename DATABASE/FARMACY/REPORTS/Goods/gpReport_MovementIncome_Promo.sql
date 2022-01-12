@@ -29,7 +29,9 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
              , JuridicalName TVarChar  --Юр. лицо
              , RetailName TVarChar     --Торговая сеть
              , Price TFloat            --Цена в документе
+             , Summa TFloat            --Сумма в документе
              , PriceWithVAT TFloat     --Цена прихода с НДС 
+             , SummaWithVAT TFloat     --Сумма прихода с НДС 
              , PriceSale TFloat        --Цена продажи
              , PriceSIP TFloat         --Цена СИП
              , SummSIP TFloat          --Сумма СИП
@@ -409,9 +411,13 @@ BEGIN
             , tmpMov.JuridicalName
             , tmpMov.RetailName 
             , tmpMovMI.Price
+            , Round(tmpMovMI.Amount * tmpMovMI.Price, 2) ::TFloat  AS Summa
             , CASE WHEN COALESCE(tmpMov.PriceWithVAT,False) = TRUE THEN tmpMovMI.Price
                    ELSE (tmpMovMI.Price * (1 + tmpMov.NDS /100))::TFloat
               END AS PriceWithVAT
+            , Round(tmpMovMI.Amount * CASE WHEN COALESCE(tmpMov.PriceWithVAT,False) = TRUE THEN tmpMovMI.Price
+                                           ELSE (tmpMovMI.Price * (1 + tmpMov.NDS /100))::TFloat
+                                      END, 2) ::TFloat  AS SummaWithVAT
 
             , tmpMovMI.PriceSale  
             
@@ -474,3 +480,5 @@ $BODY$
 -- SELECT * FROM gpReport_MovementIncome_Promo_22 (inMakerId:= 2336655, inStartDate:= '21.11.2016', inEndDate:= '25.11.2016', inSession:= '2')
 --SELECT * FROM gpReport_MovementIncome_Promo_22 (inMakerId:= 2336655, inStartDate:= '01.12.2016', inEndDate:= '03.12.2016', inSession:= '2')
 --select * from gpReport_MovementIncome_Promo(inMakerId := 6145049  , inStartDate := ('01.12.2018')::TDateTime , inEndDate := ('01.01.2019')::TDateTime ,  inSession := '3'::TVarChar);
+
+select * from gpReport_MovementIncome_Promo(inMakerId := 15451717 , inStartDate := ('01.12.2021')::TDateTime , inEndDate := ('11.01.2022')::TDateTime ,  inSession := '3');

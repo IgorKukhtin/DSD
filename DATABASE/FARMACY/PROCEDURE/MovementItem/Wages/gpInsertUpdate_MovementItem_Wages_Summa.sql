@@ -161,12 +161,15 @@ BEGIN
          vbAmountCard <>  COALESCE (inAmountCard, 0)
       THEN
         vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Wages());
-      ELSE
-        IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), 12084491, 1633980))
-        THEN
-          RAISE EXCEPTION 'Изменение сумм "Маркетинга" и "Нелеквидов" вам запрещено.';
-        END IF;        
-      END IF;
+      END IF;        
+            
+      IF (vbMarketing <>  COALESCE (inMarketing, 0) OR
+         vbIlliquidAssets <>  COALESCE (inIlliquidAssets, 0)) AND
+         NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), 12084491))
+      THEN
+        RAISE EXCEPTION 'Изменение сумм "Маркетинга" и "Нелеквидов" вам запрещено.';
+      END IF;        
+
       
        -- сохранили свойство <Отпуск / Больничный>
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HolidaysHospital(), ioId, inHolidaysHospital);
