@@ -7,6 +7,7 @@ IN inId integer,
 IN Session tvarchar)
   RETURNS void AS
 $BODY$
+  DECLARE vbDescId Integer;
 BEGIN
 
 /*
@@ -23,7 +24,7 @@ BEGIN
   DELETE FROM ObjectHistory  WHERE ObjectId = inId;
   DELETE FROM DefaultValue  WHERE UserKeyId = inId;
   DELETE FROM MovementItemProtocol WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
-  DELETE FROM MovementItemReport WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
+--  DELETE FROM MovementItemReport WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
   DELETE FROM MovementItemContainer WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
   DELETE FROM MovementItemString WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
   DELETE FROM MovementItemFloat WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
@@ -33,8 +34,21 @@ BEGIN
   DELETE FROM MovementItemLinkObject WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
   DELETE FROM MovementLinkObject WHERE ObjectId = inId;
   DELETE FROM MovementItem WHERE ObjectId = inId;
+  DELETE FROM ContainerLinkObject WHERE ContainerId in (SELECT Id FROM Container WHERE ObjectId = inId);
   DELETE FROM Container WHERE ObjectId = inId;
   DELETE FROM ContainerLinkObject WHERE ObjectId = inId;
+  -- truncate table movementitemcontainer
+
+  DELETE FROM ContainerLinkObjectDesc WHERE ObjectDescId in (select id FROM ObjectDesc where id between 1 and 7);
+  DELETE FROM ObjectLinkDesc WHERE ChildObjectDescId in (select id FROM ObjectDesc where id between 1 and 7);
+  DELETE FROM ObjectLinkDesc WHERE DescId = vbObjectDescId;
+  DELETE FROM ObjectStringDesc WHERE DescId = vbObjectDescId;
+  DELETE FROM ObjectBLOBDesc WHERE DescId = vbObjectDescId;
+  DELETE FROM ObjectFloatDesc WHERE DescId = vbObjectDescId;
+  DELETE FROM ObjectBooleanDesc WHERE DescId = vbObjectDescId;
+  DELETE FROM ObjectDateDesc WHERE DescId = vbObjectDescId;
+  DELETE FROM ObjectDesc WHERE Id = vbObjectDescId;
+
 */
   DELETE FROM ObjectLink WHERE ObjectId = inId;
   -- DELETE FROM ObjectLink WHERE ChildObjectId = inId;

@@ -328,6 +328,46 @@
 				<Form>UserProtocolForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\Protocol.pas">
+				<Form>ProtocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\UnitTree.pas">
+				<Form>UnitTreeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\Currency.pas">
+				<Form>CurrencyForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\Currency_Object.pas">
+				<Form>Currency_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\CurrencyEdit.pas">
+				<Form>CurrencyEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\CashTree.pas">
+				<Form>CashTreeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\Cash.pas">
+				<Form>CashForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\Cash_Object.pas">
+				<Form>Cash_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Kind\PaidKind.pas">
+				<Form>PaidKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\CashEdit.pas">
+				<Form>CashEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

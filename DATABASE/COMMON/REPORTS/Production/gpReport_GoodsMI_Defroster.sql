@@ -266,6 +266,7 @@ BEGIN
      FROM tmpMI_All
           LEFT JOIN tmpMI_Separate ON tmpMI_Separate.GoodsId = tmpMI_All.GoodsId
                                   AND tmpMI_Separate.PartionGoodsId = tmpMI_All.PartionGoodsId
+                                  AND tmpMI_Separate.GoodsKindId = tmpMI_All.GoodsKindId
 
           LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMI_All.PartionGoodsId
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_All.GoodsId

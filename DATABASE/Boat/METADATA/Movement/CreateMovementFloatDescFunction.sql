@@ -35,9 +35,9 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummPVAT() RETURNS Integer AS $
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummPVAT', 'Итого сумма по документу (с НДС)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummPVAT');
 
-CREATE OR REPLACE FUNCTION zc_movementfloat_discountnexttax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_movementfloat_discountnexttax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_MovementFloat_DiscountNextTax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DiscountNextTax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
-  SELECT 'zc_movementfloat_discountnexttax', '(-)% Скидки (+)% Наценки дополнительный' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_movementfloat_discountnexttax');
+  SELECT 'zc_MovementFloat_DiscountNextTax', '(-)% Скидки (+)% Наценки дополнительный' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DiscountNextTax');
 
  CREATE OR REPLACE FUNCTION zc_MovementFloat_AmountCost() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountCost'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
@@ -55,41 +55,80 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalCountChild() RETURNS Integer AS
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalCountChild', 'Итого количество (расход)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalCountChild');
 
+
 CREATE OR REPLACE FUNCTION zc_MovementFloat_DiscountTax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DiscountTax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
-  SELECT 'zc_MovementFloat_DiscountTax', 'Rabbat % /% скидки' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DiscountTax');
-
-CREATE OR REPLACE FUNCTION zc_MovementFloat_SummTaxMVAT() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummTaxMVAT'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO MovementFloatDesc(Code, ItemName)
-  SELECT 'zc_MovementFloat_SummTaxMVAT', 'Rabbat Brutto /Сумма скидки с НДС' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummTaxMVAT');
+  SELECT 'zc_MovementFloat_DiscountTax', '% скидки' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DiscountTax');
 
 CREATE OR REPLACE FUNCTION zc_MovementFloat_SummTaxPVAT() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummTaxPVAT'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
-  SELECT 'zc_MovementFloat_SummTaxPVAT', 'Rabbat Netto /Сумма скидки без НДС' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummTaxPVAT');
+  SELECT 'zc_MovementFloat_SummTaxPVAT', 'Сумма скидки с НДС' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummTaxPVAT');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_SummTaxMVAT() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummTaxMVAT'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_SummTaxMVAT', 'Сумма скидки без НДС' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummTaxMVAT');
 
 CREATE OR REPLACE FUNCTION zc_MovementFloat_SummPost() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummPost'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
-  SELECT 'zc_MovementFloat_SummPost', 'Porto Netto /Почтовые расходы, без НДС' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummPost');
+  SELECT 'zc_MovementFloat_SummPost', 'Почтовые расходы, без НДС' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummPost');
 
 CREATE OR REPLACE FUNCTION zc_MovementFloat_SummPack() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummPack'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
-  SELECT 'zc_MovementFloat_SummPack', 'Verpackung Netto /Упаковка расходы, без НДС' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummPack');
+  SELECT 'zc_MovementFloat_SummPack', 'Упаковка расходы, без НДС' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummPack');
 
 CREATE OR REPLACE FUNCTION zc_MovementFloat_SummInsur() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummInsur'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
-  SELECT 'zc_MovementFloat_SummInsur', 'Versicherung Netto /Страховка расходы, без НДС' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummInsur');
+  SELECT 'zc_MovementFloat_SummInsur', 'Страховка расходы, без НДС' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummInsur');
 
 CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalDiscountTax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalDiscountTax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
-  SELECT 'zc_MovementFloat_TotalDiscountTax', 'Scontobetr % /% скидки итого' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalDiscountTax');
-
-CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummTaxMVAT() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTaxMVAT'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO MovementFloatDesc(Code, ItemName)
-  SELECT 'zc_MovementFloat_TotalSummTaxMVAT', 'Scontobetr Brutto /Сумма скидки с НДС итого' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTaxMVAT');
+  SELECT 'zc_MovementFloat_TotalDiscountTax', '% скидки, итого' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalDiscountTax');
 
 CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummTaxPVAT() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTaxPVAT'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
-  SELECT 'zc_MovementFloat_TotalSummTaxPVAT', 'Scontobetr Netto /Сумма скидки без НДС итого' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTaxPVAT');
+  SELECT 'zc_MovementFloat_TotalSummTaxPVAT', 'Сумма скидки с НДС, итого' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTaxPVAT');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummTaxMVAT() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTaxMVAT'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSummTaxMVAT', 'Сумма скидки без НДС, итого' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTaxMVAT');
+
+
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_DiscountTax_calc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DiscountTax_calc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_DiscountTax_calc', '% скидки (расч.)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DiscountTax_calc');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_SummTaxPVAT_calc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummTaxPVAT_calc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_SummTaxPVAT_calc', 'Сумма скидки с НДС (расч.)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummTaxPVAT_calc');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_SummTaxMVAT_calc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummTaxMVAT_calc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_SummTaxMVAT_calc', 'Сумма скидки без НДС (расч.)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummTaxMVAT_calc');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_SummPost_calc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummPost_calc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_SummPost_calc', 'Почтовые расходы, без НДС (расч.)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummPost_calc');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_SummPack_calc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummPack_calc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_SummPack_calc', 'Упаковка расходы, без НДС (расч.)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummPack_calc');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_SummInsur_calc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummInsur_calc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_SummInsur_calc', 'Страховка расходы, без НДС (расч.)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummInsur_calc');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalDiscountTax_calc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalDiscountTax_calc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalDiscountTax_calc', '% скидки, итого (расч.)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalDiscountTax_calc');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummTaxPVAT_calc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTaxPVAT_calc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSummTaxPVAT_calc', 'Сумма скидки с НДС, итого (расч.)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTaxPVAT_calc');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummTaxMVAT_calc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTaxMVAT_calc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSummTaxMVAT_calc', 'Сумма скидки без НДС, итого (расч.)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTaxMVAT_calc');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

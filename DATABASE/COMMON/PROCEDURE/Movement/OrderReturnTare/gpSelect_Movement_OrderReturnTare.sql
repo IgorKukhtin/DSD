@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderReturnTare(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime, InvNumber_Transport_Full TVarChar
              , CarName TVarChar, CarModelName TVarChar, PersonalDriverName TVarChar
+             , TotalCountTare TFloat
              , Comment TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -54,6 +55,7 @@ BEGIN
            , Object_CarModel.ValueData        AS CarModelName
            , View_PersonalDriver.PersonalName AS PersonalDriverName
            
+           , MovementFloat_TotalCountTare.ValueData  ::TFloat AS TotalCountTare
            , MovementString_Comment.ValueData AS Comment
 
            , Object_Insert.ValueData          AS InsertName
@@ -68,6 +70,10 @@ BEGIN
             ) AS Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountTare
+                                    ON MovementFloat_TotalCountTare.MovementId = Movement.Id
+                                   AND MovementFloat_TotalCountTare.DescId = zc_MovementFloat_TotalCountTare()
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id

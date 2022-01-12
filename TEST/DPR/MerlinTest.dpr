@@ -129,27 +129,36 @@ uses
   Units in '..\..\FormsMerlin\Guides\Units.pas' {UnitForm: TParentForm},
   User in '..\..\FormsMerlin\Guides\User.pas' {UserForm: TParentForm},
   UserEdit in '..\..\FormsMerlin\Guides\UserEdit.pas' {UserEditForm: TParentForm},
-  UserProtocol in '..\..\FormsMerlin\Guides\UserProtocol.pas' {UserProtocolForm: TParentForm};
+  UserProtocol in '..\..\FormsMerlin\Guides\UserProtocol.pas' {UserProtocolForm: TParentForm},
+  Protocol in '..\..\FormsMerlin\Guides\Protocol.pas' {ProtocolForm: TParentForm},
+  UnitTree in '..\..\FormsMerlin\Guides\UnitTree.pas' {UnitTreeForm: TParentForm},
+  Currency in '..\..\FormsMerlin\Guides\Currency.pas' {CurrencyForm: TParentForm},
+  Currency_Object in '..\..\FormsMerlin\Guides\Currency_Object.pas' {Currency_ObjectForm: TParentForm},
+  CurrencyEdit in '..\..\FormsMerlin\Guides\CurrencyEdit.pas' {CurrencyEditForm: TParentForm},
+  CashTree in '..\..\FormsMerlin\Guides\CashTree.pas' {CashTreeForm: TParentForm},
+  Cash in '..\..\FormsMerlin\Guides\Cash.pas' {CashForm: TParentForm},
+  Cash_Object in '..\..\FormsMerlin\Guides\Cash_Object.pas' {Cash_ObjectForm: TParentForm},
+  PaidKind in '..\..\FormsMerlin\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
+  CashEdit in '..\..\FormsMerlin\Guides\CashEdit.pas' {CashEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
 
 begin
-  ConnectionPath := '..\INIT\Boat_init.php';
-  EnumPath := '..\DATABASE\Boat\METADATA\Enum\';
-  CreateStructurePath := '..\DATABASE\Boat\STRUCTURE\';
-  LocalViewPath := '..\DATABASE\Boat\View\';
-  LocalProcedurePath := '..\DATABASE\Boat\PROCEDURE\';
-  LocalProcessPath := '..\DATABASE\Boat\PROCESS\';
+  ConnectionPath := '..\INIT\Merlin_init.php';
+  EnumPath := '..\DATABASE\Merlin\METADATA\Enum\';
+  CreateStructurePath := '..\DATABASE\Merlin\STRUCTURE\';
+  LocalViewPath := '..\DATABASE\Merlin\View\';
+  LocalProcedurePath := '..\DATABASE\Merlin\PROCEDURE\';
+  LocalProcessPath := '..\DATABASE\Merlin\PROCESS\';
 
-  dsdProject := prBoat;
-  //dsdProject := prProject;
+  dsdProject := prMerlin;
 
-  if FindCmdLineSwitch('realProjectBoat', true)
+  if FindCmdLineSwitch('realMerlin', true)
   then gc_AdminPassword := 'qsxqsxw1'
   else gc_AdminPassword := 'Админ';
 
-  gc_ProgramName := 'ProjectBoat.exe';
+  gc_ProgramName := 'Merlin.exe';
 
   Application.Initialize;
   gc_isSetDefault := true;

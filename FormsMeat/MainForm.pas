@@ -1353,6 +1353,8 @@ type
     miReport_TransportTire: TMenuItem;
     actOrderReturnTare: TdsdOpenForm;
     miOrderReturnTare: TMenuItem;
+    actReport_OrderReturnTare: TdsdOpenForm;
+    miReport_OrderReturnTare: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

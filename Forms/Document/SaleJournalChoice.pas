@@ -54,6 +54,8 @@ type
     PartnerGuides: TdsdGuides;
     PaymentDate: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    DescName: TcxGridDBColumn;
+    InvNumber_Transport_Full: TcxGridDBColumn;
   private
     { Private declarations }
   public

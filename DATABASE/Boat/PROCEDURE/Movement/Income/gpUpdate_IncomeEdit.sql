@@ -1,23 +1,25 @@
- -- Function: gpUpdate_MI_Income_Price()
+ -- Function: gpUpdate_Movement_Income_summ()
 
 DROP FUNCTION IF EXISTS gpUpdate_IncomeEdit (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Income_summ (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Income_summ (Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
-
-CREATE OR REPLACE FUNCTION gpUpdate_IncomeEdit(
-    IN inId                    Integer   , -- Ключ объекта <Элемент документа>
-    IN inTotalSummMVAT         TFloat    , -- 
- INOUT ioDiscountTax           TFloat    , -- 
- INOUT ioSummTaxMVAT           TFloat    , -- 
- INOUT ioSummTaxPVAT           TFloat    , -- 
-    IN inSummPost              TFloat    , -- 
-    IN inSummPack              TFloat    , -- 
-    IN inSummInsur             TFloat    , -- 
- INOUT ioTotalDiscountTax      TFloat    , -- 
- INOUT ioTotalSummTaxMVAT      TFloat    , -- 
- INOUT ioTotalSummTaxPVAT      TFloat    , -- 
-   OUT outSumm2                TFloat    , -- 
-   OUT outSumm3                TFloat    , -- 
-   OUT outSumm4                TFloat    , -- 
+CREATE OR REPLACE FUNCTION gpUpdate_Movement_Income_summ(
+    IN inId                    Integer   , -- Ключ объекта <Документ>
+    IN inIsBefore              Boolean   , -- временный расчет на форме, тогда промежуточно сохраняем в ..._calc
+    IN inTotalSummMVAT         TFloat    , -- Сумма по элементам (без НДС, но с учетом скидки в элементах, если была)
+ INOUT ioDiscountTax           TFloat    , -- 1.1. % скидки
+ INOUT ioSummTaxPVAT           TFloat    , -- 1.2. Сумма скидки с НДС
+ INOUT ioSummTaxMVAT           TFloat    , -- 1.2. Сумма скидки без НДС
+    IN inSummPost              TFloat    , -- 2.1. Почтовые расходы, без НДС
+    IN inSummPack              TFloat    , -- 2.2. Упаковка расходы, без НДС
+    IN inSummInsur             TFloat    , -- 2.3. Страховка расходы, без НДС
+ INOUT ioTotalDiscountTax      TFloat    , -- 3.1. % скидки итого
+ INOUT ioTotalSummTaxPVAT      TFloat    , -- 3.3. Сумма скидки с НДС итого
+ INOUT ioTotalSummTaxMVAT      TFloat    , -- 3.2. Сумма скидки без НДС итого
+   OUT outSumm2                TFloat    , -- сумма без НДС, после п.1.
+   OUT outSumm3                TFloat    , -- сумма без НДС, после п.2.
+   OUT outSumm4                TFloat    , -- сумма без НДС, после п.3. -
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -34,7 +36,6 @@ $BODY$
    DECLARE vbTotalDiscountTax TFloat;
    DECLARE vbTotalSummTaxMVAT TFloat;
    DECLARE vbTotalSummTaxPVAT TFloat;
-
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      --vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_MI_Income_Price());
@@ -42,15 +43,15 @@ BEGIN
 
 
      -- проверка - документ должен быть сохранен
-     IF COALESCE (inId, 0) = 0 THEN 
+     IF COALESCE (inId, 0) = 0 THEN
 
-        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Элемент не сохранен.' :: TVarChar
-                                              , inProcedureName := 'gpUpdate_IncomeEdit'   :: TVarChar
+        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Документ не сохранен.' :: TVarChar
+                                              , inProcedureName := 'gpUpdate_Movement_Income_summ'   :: TVarChar
                                               , inUserId        := vbUserId);
      END IF;
 
-    --% НДС из шапки документа
-    vbVATPercent := (SELECT MovementFloat_VATPercent.ValueData 
+    -- % НДС из шапки документа
+    vbVATPercent := (SELECT MovementFloat_VATPercent.ValueData
                      FROM Movement AS Movement_Income
                          LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                                  ON MovementFloat_VATPercent.MovementId = Movement_Income.Id
@@ -58,88 +59,121 @@ BEGIN
                      WHERE Movement_Income.Id = inId
                        AND Movement_Income.DescId = zc_Movement_Income());
 
-     -- Получаем сохраненные параметры
-     --vbTotalSummMVAT    := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TotalSummMVAT());
-     vbDiscountTax      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_DiscountTax());
-     vbSummTaxMVAT      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_SummTaxMVAT());
-     vbSummTaxPVAT      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_SummTaxPVAT());
-     vbSummPost         := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_SummPost());
-     vbSummPack         := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_SummPack());
-     vbSummInsur        := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_SummInsur());
-     vbTotalDiscountTax := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TotalDiscountTax());
-     vbTotalSummTaxMVAT := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TotalSummTaxMVAT());
-     vbTotalSummTaxPVAT := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TotalSummTaxPVAT());
-
---RAISE EXCEPTION '0. vbPravilo <%> ' , vbPravilo;
-     
-     -- если ничего не поменялось сразу выходим
-     IF vbDiscountTax = ioDiscountTax AND vbSummTaxMVAT = ioSummTaxMVAT AND vbSummTaxPVAT = ioSummTaxPVAT 
-    AND vbSummPost = inSummPost AND vbSummPack = inSummPack AND vbSummInsur = inSummInsur
-    AND vbTotalDiscountTax = ioTotalDiscountTax AND vbTotalSummTaxMVAT = ioTotalSummTaxMVAT AND vbTotalSummTaxPVAT = ioTotalSummTaxPVAT
+     -- если надо только сохранить
+     IF inIsBefore = FALSE
      THEN
-         RETURN;
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountTax(), inId, ioDiscountTax);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTaxPVAT(), inId, ioSummTaxPVAT);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTaxMVAT(), inId, ioSummTaxMVAT);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummPost(), inId, inSummPost);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummPack(), inId, inSummPack);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummInsur(), inId, inSummInsur);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalDiscountTax(), inId, ioTotalDiscountTax);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummTaxMVAT(), inId, ioTotalSummTaxMVAT);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummTaxPVAT(), inId, ioTotalSummTaxPVAT);
+     ELSE
+
+         -- Получаем сохраненные параметры - для расчета в эдит форме
+         vbDiscountTax      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_DiscountTax_calc());
+         vbSummTaxPVAT      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_SummTaxPVAT_calc());
+         vbSummTaxMVAT      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_SummTaxMVAT_calc());
+         --
+         vbSummPost         := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_SummPost_calc());
+         vbSummPack         := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_SummPack_calc());
+         vbSummInsur        := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_SummInsur_calc());
+         --
+         vbTotalDiscountTax := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TotalDiscountTax_calc());
+         vbTotalSummTaxMVAT := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TotalSummTaxMVAT_calc());
+         vbTotalSummTaxPVAT := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TotalSummTaxPVAT_calc());
+
+
+         -- если ничего не поменялось
+         IF vbDiscountTax = ioDiscountTax AND vbSummTaxMVAT = ioSummTaxMVAT AND vbSummTaxPVAT = ioSummTaxPVAT
+            AND vbSummPost = inSummPost AND vbSummPack = inSummPack AND vbSummInsur = inSummInsur
+            AND vbTotalDiscountTax = ioTotalDiscountTax AND vbTotalSummTaxMVAT = ioTotalSummTaxMVAT AND vbTotalSummTaxPVAT = ioTotalSummTaxPVAT
+         THEN
+             -- !!!выход!!!
+             RETURN;
+         END IF;
+
+         -- изменился % скидки
+         IF COALESCE (vbDiscountTax,0) <> COALESCE (ioDiscountTax,0)
+         THEN
+             -- расчет Сумма без НДС
+            ioSummTaxMVAT := (inTotalSummMVAT / 100 * ioDiscountTax);
+             -- расчет Сумма с НДС
+            ioSummTaxPVAT := zfCalc_SummWVAT (ioSummTaxMVAT, vbVATPercent);
+         END IF;
+
+         -- изменилась Сумма скидки с НДС
+         IF COALESCE (vbSummTaxPVAT,0) <> COALESCE (ioSummTaxPVAT,0)
+         THEN
+             -- расчет Сумма без НДС
+             ioSummTaxMVAT := zfCalc_Summ_NoVAT (ioSummTaxPVAT, vbVATPercent);
+             -- расчет % скидки
+             ioDiscountTax := CAST ((CASE WHEN inTotalSummMVAT <> 0 THEN ioSummTaxMVAT*100 / inTotalSummMVAT ELSE 0 END) AS NUMERIC (16,1));
+         END IF;
+
+         -- изменилась Сумма скидки с НДС
+         IF COALESCE (vbSummTaxPVAT,0) <> COALESCE (ioSummTaxPVAT,0)
+         THEN
+             ioDiscountTax := CAST ((CASE WHEN inTotalSummMVAT <> 0 THEN ioSummTaxPVAT*100 / inTotalSummMVAT ELSE 0 END) AS NUMERIC (16,1));
+             ioSummTaxMVAT := zfCalc_SummWVAT (ioSummTaxPVAT, vbVATPercent);
+         END IF;
+
+
+         outSumm2 := COALESCE (inTotalSummMVAT,0) - COALESCE (ioSummTaxPVAT,0);
+         outSumm3 := COALESCE (outSumm2,0) + COALESCE (inSummPack,0) + COALESCE (inSummPost,0) + COALESCE (inSummInsur,0);
+
+         IF COALESCE (vbTotalDiscountTax,0) <> COALESCE (ioTotalDiscountTax,0)
+         THEN
+             ioTotalSummTaxPVAT := (outSumm3 / 100 * ioTotalDiscountTax);
+             ioTotalSummTaxMVAT := zfCalc_SummWVAT (ioTotalSummTaxPVAT, vbVATPercent);
+         END IF;
+
+         IF COALESCE (vbTotalSummTaxPVAT,0) <> COALESCE (ioTotalSummTaxPVAT,0)
+         THEN
+             ioTotalDiscountTax := CAST ((CASE WHEN outSumm3 <> 0 THEN ioTotalSummTaxPVAT * 100 / outSumm3 ELSE 0 END) AS NUMERIC (16,1));
+             ioTotalSummTaxMVAT := zfCalc_SummWVAT (ioTotalSummTaxPVAT, vbVATPercent);
+         END IF;
+
+         IF COALESCE (vbTotalSummTaxMVAT,0) <> COALESCE (ioTotalSummTaxMVAT,0)
+         THEN
+             ioTotalSummTaxPVAT := zfCalc_Summ_NoVAT (ioTotalSummTaxMVAT, vbVATPercent);
+             ioTotalDiscountTax := CAST ((CASE WHEN outSumm3 <> 0 THEN ioTotalSummTaxPVAT*100 / outSumm3 ELSE 0 END) AS NUMERIC (16,1));
+         END IF;
+
+         outSumm4 := COALESCE (outSumm3,0) - COALESCE (ioTotalSummTaxPVAT,0);
+
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountTax(), inId, ioDiscountTax);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTaxPVAT(), inId, ioSummTaxPVAT);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTaxMVAT(), inId, ioSummTaxMVAT);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummPost(), inId, inSummPost);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummPack(), inId, inSummPack);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummInsur(), inId, inSummInsur);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalDiscountTax(), inId, ioTotalDiscountTax);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummTaxMVAT(), inId, ioTotalSummTaxMVAT);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummTaxPVAT(), inId, ioTotalSummTaxPVAT);
+
      END IF;
-     
-     --определяем что поменялось
-     IF COALESCE (vbDiscountTax,0) <> COALESCE (ioDiscountTax,0)
-     THEN
-        ioSummTaxPVAT := (inTotalSummMVAT / 100 * ioDiscountTax);
-        ioSummTaxMVAT := zfCalc_SummWVAT (ioSummTaxPVAT, vbVATPercent);
-     END IF;
-
-     IF COALESCE (vbSummTaxPVAT,0) <> COALESCE (ioSummTaxPVAT,0)
-     THEN
-         ioDiscountTax := CAST ((CASE WHEN inTotalSummMVAT <> 0 THEN ioSummTaxPVAT*100 / inTotalSummMVAT ELSE 0 END) AS NUMERIC (16,1));
-         ioSummTaxMVAT := zfCalc_SummWVAT (ioSummTaxPVAT, vbVATPercent);
-     END IF; 
-
-     IF COALESCE (vbSummTaxMVAT,0) <> COALESCE (ioSummTaxMVAT,0)
-     THEN
-         ioSummTaxPVAT := zfCalc_Summ_NoVAT (ioSummTaxMVAT, vbVATPercent);
-         ioDiscountTax := CAST ((CASE WHEN inTotalSummMVAT <> 0 THEN ioSummTaxPVAT*100 / inTotalSummMVAT ELSE 0 END) AS NUMERIC (16,1));
-     END IF; 
-
-     outSumm2 := COALESCE (inTotalSummMVAT,0) - COALESCE (ioSummTaxPVAT,0);
-     outSumm3 := COALESCE (outSumm2,0) + COALESCE (inSummPack,0) + COALESCE (inSummPost,0) + COALESCE (inSummInsur,0);
-
-     IF COALESCE (vbTotalDiscountTax,0) <> COALESCE (ioTotalDiscountTax,0)
-     THEN
-         ioTotalSummTaxPVAT := (outSumm3 / 100 * ioTotalDiscountTax);
-         ioTotalSummTaxMVAT := zfCalc_SummWVAT (ioTotalSummTaxPVAT, vbVATPercent);
-     END IF;
-
-     IF COALESCE (vbTotalSummTaxPVAT,0) <> COALESCE (ioTotalSummTaxPVAT,0)
-     THEN
-         ioTotalDiscountTax := CAST ((CASE WHEN outSumm3 <> 0 THEN ioTotalSummTaxPVAT * 100 / outSumm3 ELSE 0 END) AS NUMERIC (16,1));
-         ioTotalSummTaxMVAT := zfCalc_SummWVAT (ioTotalSummTaxPVAT, vbVATPercent);
-     END IF;
-
-     IF COALESCE (vbTotalSummTaxMVAT,0) <> COALESCE (ioTotalSummTaxMVAT,0)
-     THEN
-         ioTotalSummTaxPVAT := zfCalc_Summ_NoVAT (ioTotalSummTaxMVAT, vbVATPercent);
-         ioTotalDiscountTax := CAST ((CASE WHEN outSumm3 <> 0 THEN ioTotalSummTaxPVAT*100 / outSumm3 ELSE 0 END) AS NUMERIC (16,1));
-     END IF; 
-
-     outSumm4 := COALESCE (outSumm3,0) - COALESCE (ioTotalSummTaxPVAT,0);
-
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountTax(), inId, ioDiscountTax);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTaxPVAT(), inId, ioSummTaxPVAT);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTaxMVAT(), inId, ioSummTaxMVAT);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummPost(), inId, inSummPost);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummPack(), inId, inSummPack);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummInsur(), inId, inSummInsur);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalDiscountTax(), inId, ioTotalDiscountTax);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummTaxMVAT(), inId, ioTotalSummTaxMVAT);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummTaxPVAT(), inId, ioTotalSummTaxPVAT);
 
 END;
 $BODY$
@@ -152,4 +186,4 @@ $BODY$
 */
 
 -- тест
--- 
+--

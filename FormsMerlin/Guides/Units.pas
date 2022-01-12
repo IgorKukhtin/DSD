@@ -61,12 +61,9 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    JuridicalName: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
-    Address: TcxGridDBColumn;
     Phone: TcxGridDBColumn;
     ParentName: TcxGridDBColumn;
-    ChildName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
   private
     { Private declarations }

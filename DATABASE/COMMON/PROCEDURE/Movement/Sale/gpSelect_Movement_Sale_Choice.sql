@@ -40,9 +40,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isMedoc Boolean
              , EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean
              , isError Boolean
-             , InvNumber_Full TVarChar
+             , InvNumber_Full TVarChar, DescName TVarChar
              , Comment TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
+             , InvNumber_Transport_Full TVarChar
               )
 AS
 $BODY$
@@ -74,6 +75,24 @@ BEGIN
                          UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                          UNION SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId WHERE vbIsXleb = TRUE
                               )
+        --документы Заявка на возврат тары
+        , tmpOrderReturnTare AS (SELECT DISTINCT Movement.Id
+                                 FROM tmpStatus
+                                      JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                                   AND Movement.DescId = zc_Movement_OrderReturnTare()
+                                                   AND Movement.StatusId = tmpStatus.StatusId
+                                     -- JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
+                                      JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                       AND MovementItem.DescId = zc_MI_Master()
+                                                       AND MovementItem.isErased = FALSE
+
+                                      INNER JOIN MovementItemLinkObject AS MILinkObject_Partner
+                                                                       ON MILinkObject_Partner.MovementItemId = MovementItem.Id
+                                                                      AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
+                                                                      AND MILinkObject_Partner.ObjectId = inPartnerId
+                                 )
+
+
      SELECT
              Movement.Id                                    AS Id
            , Movement.InvNumber                             AS InvNumber
@@ -152,11 +171,14 @@ BEGIN
 
            , NULL :: Boolean                                          AS isError
 
-           , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, MovementDate_OperDatePartner.ValueData) AS InvNumber_Full
+           , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) ) AS InvNumber_Full
+           , MovementDesc.ItemName                  AS DescName
            , MovementString_Comment.ValueData       AS Comment
 
            , Object_ReestrKind.Id             		    AS ReestrKindId
            , Object_ReestrKind.ValueData       		    AS ReestrKindName
+           
+           , zfCalc_PartionMovementName (Movement_Transport.DescId, MovementDesc_Transport.ItemName, Movement_Transport.InvNumber, Movement_Transport.OperDate) ::TVarChar AS InvNumber_Transport_Full
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -180,9 +202,13 @@ BEGIN
              WHERE inIsPartnerDate = TRUE
                AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+            UNION ALL
+            --Заявка на возврат тары
+             SELECT tmpOrderReturnTare.Id
+             FROM tmpOrderReturnTare
             ) AS tmpMovement
 
-            LEFT JOIN Movement ON Movement.id = tmpMovement.id
+            LEFT JOIN Movement ON Movement.id = tmpMovement.Id
             LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -277,6 +303,12 @@ BEGIN
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
+            --
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
+                                           ON MovementLinkMovement_Transport.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
+            LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
+            LEFT JOIN MovementDesc AS MovementDesc_Transport ON MovementDesc_Transport.Id = Movement_Transport.DescId
            ;
 
 END;
@@ -291,4 +323,4 @@ ALTER FUNCTION gpSelect_Movement_Sale_Choice (TDateTime, TDateTime, Boolean, Boo
 */
 
 -- тест
--- select * from gpSelect_Movement_Sale_Choice(instartdate := ('01.01.2015')::TDateTime , inenddate := ('07.01.2015')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inPartnerId := 17474 ,  inSession := '5');
+-- select * from gpSelect_Movement_Sale_Choice(instartdate := ('07.01.2022')::TDateTime , inenddate := ('07.01.2022')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inPartnerId := 0 ,  inSession := '5');

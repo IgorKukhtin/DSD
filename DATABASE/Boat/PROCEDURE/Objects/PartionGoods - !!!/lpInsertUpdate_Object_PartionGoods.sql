@@ -3,10 +3,8 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_PartionGoods (Integer, Integer, Integer, Integer
                                                           , TDateTime, Integer
                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                          , Integer, Integer, Integer, Integer, Integer, Integer, Integer
-                                                          , TFloat, Integer
+                                                          , Integer, TFloat, Integer
                                                            );
-
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_PartionGoods(
     IN inMovementItemId         Integer,       -- Ключ партии
     IN inMovementId             Integer,       -- Ключ Документа
@@ -22,12 +20,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_PartionGoods(
     IN inEmpfPrice              TFloat,        -- Цена рекоменд. без НДС
     IN inOperPriceList          TFloat,        -- Цена продажи, !!!грн!!!
     IN inOperPriceList_old      TFloat,        -- Цена продажи, ДО изменения строки
-    IN inGoodsGroupId           Integer,       -- Группа товара
-    IN inGoodsTagId             Integer,       -- Категория
-    IN inGoodsTypeId            Integer,       -- Тип детали 
-    IN inGoodsSizeId            Integer,       -- Размер
-    IN inProdColorId            Integer,       -- Цвет
-    IN inMeasureId              Integer,       -- Единица измерения
     IN inTaxKindId              Integer,       -- Тип НДС (!информативно!)
     IN inTaxKindValue           TFloat,        -- Значение НДС (!информативно!)
     IN inUserId                 Integer        --
@@ -41,12 +33,32 @@ $BODY$
    DECLARE vbId_sale_ch       Integer;
    DECLARE vbId_sale_part     Integer;
    DECLARE vbMovementDescId   Integer;
+
+   DECLARE vbGoodsGroupId     Integer;
+   DECLARE vbGoodsTagId       Integer;
+   DECLARE vbGoodsTypeId      Integer;
+   DECLARE vbGoodsSizeId      Integer;
+   DECLARE vbProdColorId      Integer;
+   DECLARE vbMeasureId        Integer;
 BEGIN
      -- заменили
      IF COALESCE (inCountForPrice, 0) = 0 THEN inCountForPrice:= 1; END IF;
 
+     -- нашли - Группа товара
+     vbGoodsGroupId:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId = zc_ObjectLink_Goods_GoodsGroup());
+     -- нашли - Категория
+     vbGoodsTagId  := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId = zc_ObjectLink_Goods_GoodsTag());
+     -- нашли - Тип детали
+     vbGoodsTypeId := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId = zc_ObjectLink_Goods_GoodsType());
+     -- нашли - Размер
+     vbGoodsSizeId := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId = zc_ObjectLink_Goods_GoodsSize());
+     -- нашли - Цвет
+     vbProdColorId := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId = zc_ObjectLink_Goods_ProdColor());
+     -- нашли - Единица измерения
+     vbMeasureId   := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId = zc_ObjectLink_Goods_Measure());
+
         -- есть ли ПРОВЕДЕННЫЕ документы - все
-        vbId_sale_part:= (SELECT MovementItem.Id
+      /*vbId_sale_part:= (SELECT MovementItem.Id
                           FROM MovementItem
                                INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
                                                   AND Movement.StatusId = zc_Enum_Status_Complete() -- !!!только проведенные!!!
@@ -58,7 +70,7 @@ AND 1=0
                             -- AND MovementItem.DescId = ...   -- !!!любой Desc!!!
                           ORDER BY Movement.OperDate DESC
                           LIMIT 1
-                         );
+                         );*/
 
      IF inMovementItemId > 0 AND (-- и еще раз проверим Цену
                                   inEKPrice       <> (SELECT COALESCE (Object_PartionGoods.EKPrice, 0)       FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inMovementItemId)
@@ -273,15 +285,15 @@ AND 1=0
                                                  THEN --(SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (zc_DateEnd() - INTERVAL '1 DAY', zc_PriceList_Basis(), inObjectId) AS tmp)
                                             WHEN vbPriceList_change = TRUE
                                                  THEN inOperPriceList
-                                            ELSE 
+                                            ELSE
                                                  Object_PartionGoods.OperPriceList
                                        END*/
-              , GoodsGroupId         = inGoodsGroupId
-              , GoodsTagId           = zfConvert_IntToNull (inGoodsTagId)
-              , GoodsTypeId          = zfConvert_IntToNull (inGoodsTypeId)
-              , GoodsSizeId          = zfConvert_IntToNull (inGoodsSizeId)
-              , ProdColorId          = zfConvert_IntToNull (inProdColorId)
-              , MeasureId            = inMeasureId
+              , GoodsGroupId         = vbGoodsGroupId
+              , GoodsTagId           = zfConvert_IntToNull (vbGoodsTagId)
+              , GoodsTypeId          = zfConvert_IntToNull (vbGoodsTypeId)
+              , GoodsSizeId          = zfConvert_IntToNull (vbGoodsSizeId)
+              , ProdColorId          = zfConvert_IntToNull (vbProdColorId)
+              , MeasureId            = vbMeasureId
               , TaxKindId            = inTaxKindId
               , TaxValue             = inTaxKindValue
      WHERE Object_PartionGoods.MovementItemId = inMovementItemId;
@@ -302,8 +314,8 @@ AND 1=0
                                                                     THEN (SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (zc_DateEnd() - INTERVAL '1 DAY', zc_PriceList_Basis(), inObjectId) AS tmp)
                                                                  ELSE inOperPriceList
                                                             END*/
-                                       , inGoodsGroupId, zfConvert_IntToNull (inGoodsTagId), zfConvert_IntToNull (inGoodsTypeId)
-                                       , zfConvert_IntToNull (inGoodsSizeId), zfConvert_IntToNull (inProdColorId), inMeasureId
+                                       , vbGoodsGroupId, zfConvert_IntToNull (vbGoodsTagId), zfConvert_IntToNull (vbGoodsTypeId)
+                                       , zfConvert_IntToNull (vbGoodsSizeId), zfConvert_IntToNull (vbProdColorId), vbMeasureId
                                        , inTaxKindId, inTaxKindValue
                                        , TRUE, TRUE
                                         );
@@ -319,8 +331,8 @@ AND 1=0
 
      -- !!!меняем у остальных партий - все св-ва!!!
     /*UPDATE Object_PartionGoods SET FabrikaId              = zfConvert_IntToNull (inFabrikaId)
-                                  , GoodsGroupId           = inGoodsGroupId
-                                  , MeasureId              = inMeasureId
+                                  , GoodsGroupId           = vbGoodsGroupId
+                                  , MeasureId              = vbMeasureId
                                   , CompositionId          = zfConvert_IntToNull (inCompositionId)
                                   , GoodsInfoId            = zfConvert_IntToNull (inGoodsInfoId)
                                   , LineFabricaId          = zfConvert_IntToNull (inLineFabricaId)

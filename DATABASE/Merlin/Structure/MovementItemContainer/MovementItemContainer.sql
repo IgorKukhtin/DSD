@@ -17,7 +17,6 @@ CREATE TABLE MovementItemContainer(
    AnalyzerId              Integer     NULL, -- “ипы аналитик (проводки)
    AccountId               Integer     NULL, -- —чет
    ObjectId_analyzer       Integer NOT NULL, -- MovementItem.ObjectId
-   PartionId               Integer     NULL, -- MovementItem.PartionId
    WhereObjectId_analyzer  Integer     NULL, -- ћесто учета
    AccountId_analyzer      Integer     NULL, -- —чет - корреспондент
 
@@ -34,7 +33,6 @@ CREATE TABLE MovementItemContainer(
    CONSTRAINT fk_MovementItemContainer_ContainerId       FOREIGN KEY (ContainerId)        REFERENCES Container(Id),
    CONSTRAINT fk_MovementItemContainer_ParentId          FOREIGN KEY (ParentId)           REFERENCES MovementItemContainer(Id),
    CONSTRAINT fk_MovementItemContainer_ObjectId_analyzer FOREIGN KEY (ObjectId_analyzer)  REFERENCES Object(Id),
-   CONSTRAINT fk_MovementItemContainer_PartionId         FOREIGN KEY (PartionId)          REFERENCES Object_PartionGoods(MovementItemId)
 );
 
 -------------------------------------------------------------------------------
@@ -45,7 +43,6 @@ CREATE INDEX idx_MovementItemContainer_ContainerId                   ON Movement
 CREATE INDEX idx_MovementItemContainer_ContainerId_OperDate          ON MovementItemContainer (ContainerId, OperDate);
 CREATE INDEX idx_MovementItemContainer_ContainerId_Analyzer_OperDate ON MovementItemContainer (ContainerId_Analyzer, OperDate);
 CREATE INDEX idx_MovementItemContainer_AnalyzerId_OperDate           ON MovementItemContainer (AnalyzerId, OperDate);
-CREATE INDEX idx_MovementItemContainer_PartionId_OperDate            ON MovementItemContainer (PartionId, OperDate);
 
 CREATE INDEX idx_MovementItemContainer_OperDate_DescId_MovementDescId_WhereObjectId_Analyzer ON MovementItemContainer (OperDate,DescId,MovementDescId,WhereObjectId_Analyzer);
 -- !!! CREATE INDEX idx_MovementItemContainer_ContainerId_OperDate_DescId ON MovementItemContainer (ContainerId, OperDate, DescId);
@@ -55,7 +52,6 @@ CREATE INDEX idx_MovementItemContainer_OperDate_DescId_MovementDescId_WhereObjec
 
 CREATE INDEX idx_MovementItemContainer_MovementItemId    ON MovementItemContainer (MovementItemId);
 CREATE INDEX idx_MovementItemContainer_ParentId          ON MovementItemContainer (ParentId);
-CREATE INDEX idx_MovementItemContainer_PartionId         ON MovementItemContainer (PartionId);
 
 -- CREATE INDEX idx_MovementItemContainer_ObjectId_analyzer ON MovementItemContainer (ObjectId_analyzer);
 CREATE INDEX idx_MovementItemContainer_ObjectId_Analyzer_AnalyzerId ON MovementItemContainer (ObjectId_Analyzer, AnalyzerId);

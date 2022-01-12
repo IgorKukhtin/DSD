@@ -1,4 +1,4 @@
- -- FunctiON: lpReport_CheckBonus ()
+-- FunctiON: lpReport_CheckBonus ()
 
 DROP FUNCTION IF EXISTS lpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
@@ -724,7 +724,7 @@ BEGIN
                                   , tmpContainer.ContractConditionId
 
                                   , COALESCE (ObjectLink_PersonalServiceList_Branch.ChildObjectId,0) AS BranchId
-                                  , CASE WHEN Object.DescId = zc_Object_Partner() THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
+                                  , CASE WHEN Object.DescId = zc_Object_Partner() THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
                                          ELSE 0
                                     END    AS PartnerId
                                     -- Только продажи
@@ -768,7 +768,7 @@ BEGIN
                              FROM MovementItemContainer AS MIContainer
                                   JOIN tmpContainer ON tmpContainer.ContainerId = MIContainer.ContainerId
 
-                                  LEFT JOIN Object ON Object.Id = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
+                                  LEFT JOIN Object ON Object.Id = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
 
                                   -- для Базы БН получаем филиал по сотруднику из договора, по ведомости
                                   LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalTrade
@@ -778,7 +778,7 @@ BEGIN
 
                                   -- для Базы нал берем филиал по сотруднику из контрагента, по ведомости
                                   LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                                       ON ObjectLink_Partner_PersonalTrade.ObjectId = CASE WHEN Object.DescId = zc_Object_Partner() THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END ELSE 0 END
+                                                       ON ObjectLink_Partner_PersonalTrade.ObjectId = CASE WHEN Object.DescId = zc_Object_Partner() THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END ELSE 0 END
                                                       AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
                                                       AND (tmpContainer.PaidKindId_byBase = zc_Enum_PaidKind_SecondForm()
                                                           OR COALESCE (ObjectLink_Contract_PersonalTrade.ChildObjectId,0) = 0
@@ -868,7 +868,7 @@ BEGIN
                                                                                                     AND tmpPartner.PaidKindId_byBase  = tmpContainer.PaidKindId_byBase
                                                                                                     AND tmpPartner.ContractConditionId= tmpContainer.ContractConditionId
 
-                                          LEFT JOIN Object ON Object.Id = COALESCE (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END , tmpPartner.PartnerId)
+                                          LEFT JOIN Object ON Object.Id = COALESCE (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END , tmpPartner.PartnerId)
 
                                           -- для Базы БН получаем филиал по сотруднику из договора, по ведомости
                                           LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalTrade
@@ -878,7 +878,7 @@ BEGIN
 
                                           -- для Базы нал берем филиал по сотруднику из контрагента, по ведомости
                                           LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                                               ON ObjectLink_Partner_PersonalTrade.ObjectId = CASE WHEN Object.DescId = zc_Object_Partner() THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END ELSE 0 END
+                                                               ON ObjectLink_Partner_PersonalTrade.ObjectId = CASE WHEN Object.DescId = zc_Object_Partner() THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END ELSE 0 END
                                                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
                                                               AND (tmpContainer.PaidKindId_byBase = zc_Enum_PaidKind_SecondForm()
                                                                   OR COALESCE (ObjectLink_Contract_PersonalTrade.ChildObjectId,0) = 0
@@ -1699,7 +1699,7 @@ BEGIN
                                    , MovementFloat_TotalCountPartner.ValueData  AS TotalCountPartner
                                    , CASE WHEN tmpMov.MovementDescId IN (zc_Movement_ReturnIn(), zc_Movement_PriceCorrective()) THEN (-1) * MovementFloat_TotalSumm.ValueData
                                           WHEN tmpMov.MovementDescId = zc_Movement_Sale() THEN MovementFloat_TotalSumm.ValueData
-                                          WHEN tmpMov.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()) THEN MovementItem.Amount --MovementFloat_TotalSumm
+                                          WHEN tmpMov.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt()) THEN MovementItem.Amount --MovementFloat_TotalSumm
                                      END AS TotalSumm
                               FROM (SELECT DISTINCT tmpData.MovementId, tmpData.MovementDescId FROM tmpData) AS tmpMov
                                   LEFT JOIN Movement ON Movement.Id = tmpMov.MovementId
@@ -1741,11 +1741,11 @@ BEGIN
                                   LEFT JOIN MovementFloat AS MovementFloat_AmountSumm
                                                           ON MovementFloat_AmountSumm.MovementId = Movement.Id
                                                          AND MovementFloat_AmountSumm.DescId = zc_MovementFloat_Amount()
-                                                         AND tmpMov.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+                                                         AND tmpMov.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt())
 
                                   LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                         AND MovementItem.DescId = zc_MI_Master()
-                                                        AND tmpMov.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+                                                        AND tmpMov.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt())
 
                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                                                    ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
@@ -1854,6 +1854,8 @@ BEGIN
             , Object_Retail.ValueData                       AS RetailName
             , Object_PersonalTrade.PersonalId               AS PersonalTradeId
             , Object_PersonalTrade.PersonalCode             AS PersonalTradeCode
+          --, case when vbUserId = 5 then tmpData.ContractId_master else Object_PersonalTrade.PersonalCode end :: Integer AS PersonalTradeCode
+
             , Object_PersonalTrade.PersonalName             AS PersonalTradeName
             , Object_Personal.PersonalId                    AS PersonalId
             , Object_Personal.PersonalCode                  AS PersonalCode
@@ -2227,3 +2229,4 @@ select 2,
              , SUM (PartKg   )
 from lpReport_CheckBonus (inStartDate:= '01.07.2021', inEndDate:= '31.07.2021', inPaidKindID:= zc_Enum_PaidKind_SecondForm(), inJuridicalId:= 0, inBranchId:= 0, inMemberId:= 0,inisMovement:= false, inSession:= zfCalc_UserAdmin())
 order by 1
+*/

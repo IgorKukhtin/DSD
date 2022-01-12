@@ -125,7 +125,7 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 120
+            Width = 201
           end
           object GoodsCode: TcxGridDBColumn [1]
             Caption = #1050#1086#1076
@@ -149,7 +149,7 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 255
+            Width = 248
           end
           object Amount: TcxGridDBColumn [3]
             Caption = #1050#1086#1083'-'#1074#1086
@@ -353,11 +353,13 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
       ImageIndex = 0
     end
     inherited actInsertUpdateMovement: TdsdExecStoredProc
+      StoredProc = spInsertUpdate_MI_byTransport
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateMovement
+          StoredProc = spInsertUpdate_MI_byTransport
         end
         item
+          StoredProc = spInsertUpdateMovement
         end>
     end
     object actPrintNoGroup: TdsdPrintAction [9]
@@ -583,6 +585,54 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actInsertUpdate_MI_byTransport: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_MI_byTransport
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_MI_byTransport
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = 'actInsertUpdate_MI_byTransport'
+    end
+    object actReport_OrderReturnTare_SaleByTransport: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1057#1087#1080#1089#1086#1082' '#1053#1072#1082#1083#1072#1076#1085#1099#1093' '#1087#1086' '#1074#1086#1079#1074#1088#1072#1090#1085#1086#1081' '#1090#1072#1088#1077
+      Hint = #1057#1087#1080#1089#1086#1082' '#1053#1072#1082#1083#1072#1076#1085#1099#1093' '#1087#1086' '#1074#1086#1079#1074#1088#1072#1090#1085#1086#1081' '#1090#1072#1088#1077
+      ImageIndex = 26
+      FormName = 'TReport_OrderReturnTare_SaleByTransportForm'
+      FormNameParam.Value = 'TReport_OrderReturnTare_SaleByTransportForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = GuidesTransport
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = Null
+          Component = GuidesTransport
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = edOperDate
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 24
@@ -663,6 +713,18 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -707,6 +769,10 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
     end
     object bbInsertRecord: TdxBarButton
       Action = InsertRecord
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actReport_OrderReturnTare_SaleByTransport
       Category = 0
     end
   end
@@ -956,16 +1022,15 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
         Control = edOperDate
       end
       item
-      end
-      item
-        Control = edTransport
-      end
-      item
-      end
-      item
-      end
-      item
         Control = ceComment
+      end
+      item
+      end
+      item
+      end
+      item
+      end
+      item
       end
       item
       end
@@ -1181,7 +1246,65 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 312
+    Left = 296
     Top = 16
+  end
+  object spInsertUpdate_MI_byTransport: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_OrderReturnTare_byTransport'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Transport'
+        Value = ''
+        Component = GuidesTransport
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber'
+        Value = Null
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 242
+    Top = 384
+  end
+  object HeaderExit: THeaderExit
+    ExitList = <
+      item
+        Control = edTransport
+      end
+      item
+      end
+      item
+      end
+      item
+      end
+      item
+      end>
+    Action = actInsertUpdate_MI_byTransport
+    Left = 640
+    Top = 184
   end
 end

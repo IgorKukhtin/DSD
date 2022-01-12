@@ -5,11 +5,12 @@ DROP FUNCTION IF EXISTS lpGet_ObjectHistory_PriceListItem (TDateTime, Integer, I
 CREATE OR REPLACE FUNCTION lpGet_ObjectHistory_PriceListItem(
     IN inOperDate           TDateTime , -- Дата действия
     IN inPriceListId        Integer   , -- ключ 
-    IN inGoodsId            Integer   , -- Товар
+    IN inGoodsId            Integer     -- Товар
 )                              
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , StartDate TDateTime, EndDate TDateTime
-             , ValuePrice TFloat)
+             , ValuePrice TFloat
+              )
 AS
 $BODY$
 BEGIN
@@ -68,5 +69,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpGet_ObjectHistory_PriceListItem (CURRENT_TIMESTAMP, zc_PriceList_ProductionSeparate(), 0, 1)
--- SELECT * FROM lpGet_ObjectHistory_PriceListItem (CURRENT_TIMESTAMP, zc_PriceList_Basis(), 0, 0)
+-- SELECT * FROM lpGet_ObjectHistory_PriceListItem (CURRENT_TIMESTAMP, zc_PriceList_Basis(), 0)

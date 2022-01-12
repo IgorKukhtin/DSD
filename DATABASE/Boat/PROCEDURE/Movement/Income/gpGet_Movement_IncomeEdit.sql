@@ -9,14 +9,14 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_IncomeEdit(
 RETURNS TABLE (Id Integer
              , TotalSummMVAT TFloat
              , DiscountTax TFloat
-             , SummTaxMVAT TFloat
              , SummTaxPVAT TFloat
+             , SummTaxMVAT TFloat
              , SummPost TFloat
              , SummPack TFloat
              , SummInsur TFloat
              , TotalDiscountTax TFloat
-             , TotalSummTaxMVAT TFloat
              , TotalSummTaxPVAT TFloat
+             , TotalSummTaxMVAT TFloat
              , Summ2 TFloat
              , Summ3 TFloat
              , Summ4 TFloat
@@ -39,22 +39,34 @@ BEGIN
         SELECT 
                Movement_Income.Id
              , MovementFloat_TotalSummMVAT.ValueData     :: TFloat AS TotalSummMVAT
+               -- 1.1.
              , MovementFloat_DiscountTax.ValueData       :: TFloat AS DiscountTax
-             , MovementFloat_SummTaxMVAT.ValueData       :: TFloat AS SummTaxMVAT
+               -- 1.2.
              , MovementFloat_SummTaxPVAT.ValueData       :: TFloat AS SummTaxPVAT
+               -- 1.3.
+             , MovementFloat_SummTaxMVAT.ValueData       :: TFloat AS SummTaxMVAT
+               -- 2.1.
              , MovementFloat_SummPost.ValueData          :: TFloat AS SummPost
+               -- 2.2.
              , MovementFloat_SummPack.ValueData          :: TFloat AS SummPack
+               -- 2.3.
              , MovementFloat_SummInsur.ValueData         :: TFloat AS SummInsur
+               -- 3.1.
              , MovementFloat_TotalDiscountTax.ValueData  :: TFloat AS TotalDiscountTax
-             , MovementFloat_TotalSummTaxMVAT.ValueData  :: TFloat AS TotalSummTaxMVAT
+               -- 3.2.
              , MovementFloat_TotalSummTaxPVAT.ValueData  :: TFloat AS TotalSummTaxPVAT
+               -- 3.3.
+             , MovementFloat_TotalSummTaxMVAT.ValueData  :: TFloat AS TotalSummTaxMVAT
+               -- сумма без НДС, после п.1.
              , (COALESCE (MovementFloat_TotalSummMVAT.ValueData,0)
                 - COALESCE (MovementFloat_SummTaxPVAT.ValueData,0))      :: TFloat AS Summ2
+               -- сумма без НДС, после п.2.
              , (COALESCE (MovementFloat_TotalSummMVAT.ValueData,0) 
                 - COALESCE (MovementFloat_SummTaxPVAT.ValueData,0) 
                 + COALESCE (MovementFloat_SummPost.ValueData,0)
                 + COALESCE (MovementFloat_SummPack.ValueData,0)
                 + COALESCE (MovementFloat_SummInsur.ValueData,0))        :: TFloat AS Summ3
+               -- сумма без НДС, после п.3.
              , (COALESCE (MovementFloat_TotalSummMVAT.ValueData,0) 
                 - COALESCE (MovementFloat_SummTaxPVAT.ValueData,0) 
                 + COALESCE (MovementFloat_SummPost.ValueData,0)
