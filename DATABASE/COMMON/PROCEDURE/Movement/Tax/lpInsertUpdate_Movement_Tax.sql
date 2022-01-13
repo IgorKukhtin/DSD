@@ -77,6 +77,11 @@ BEGIN
                           ELSE lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Tax())
                      END;
 
+          ELSEIF COALESCE (inContractId, 0) = 0 AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
+          THEN
+              -- потом
+              vbAccessKeyId:= 0;
+
           ELSE vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Tax());
           END IF;
 
@@ -113,7 +118,7 @@ BEGIN
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportLviv())
                   END;
      -- проверка
-     IF COALESCE (vbBranchId, 0) = 0
+     IF COALESCE (vbBranchId, 0) = 0 AND (inContractId > 0 OR inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Prepay())
      THEN
          RAISE EXCEPTION 'Ошибка.Невозможно определить <Филиал>.';
      END IF;

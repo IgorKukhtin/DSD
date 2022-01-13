@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_Tax_Branch (
 RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAccessKeyId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- изменения только для zc_Enum_DocumentTaxKind_Prepay
@@ -32,8 +33,38 @@ BEGIN
      END IF;
 
      -- сохранили связь с <филиал>
-     --PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), inMovementId, inBranchId);
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), inMovementId, inBranchId);
 
+     -- определяется 
+     vbAccessKeyId:= CASE WHEN inBranchId = (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr())
+                               THEN zc_Enum_Process_AccessKey_DocumentDnepr()
+   
+                          WHEN inBranchId = (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKiev())
+                               THEN zc_Enum_Process_AccessKey_DocumentKiev()
+   
+                          WHEN inBranchId = (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportOdessa())
+                               THEN zc_Enum_Process_AccessKey_DocumentOdessa()
+
+                          WHEN inBranchId = (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportZaporozhye())
+                               THEN zc_Enum_Process_AccessKey_DocumentZaporozhye()
+   
+                          WHEN inBranchId = (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKrRog())
+                               THEN zc_Enum_Process_AccessKey_DocumentKrRog()
+   
+                          WHEN inBranchId = (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportNikolaev())
+                               THEN zc_Enum_Process_AccessKey_DocumentNikolaev()
+   
+                          WHEN inBranchId = (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKharkov())
+                               THEN zc_Enum_Process_AccessKey_DocumentKharkov()
+   
+                          WHEN inBranchId = (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportCherkassi())
+                               THEN zc_Enum_Process_AccessKey_DocumentCherkassi()
+   
+                          WHEN inBranchId = (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportLviv())
+                               THEN zc_Enum_Process_AccessKey_DocumentLviv()
+                     END;
+     -- !!!замена!!!
+     UPDATE Movement SET AccessKeyId = vbAccessKeyId WHERE Movement.Id = inMovementId AND vbAccessKeyId > 0;
 
 END;
 $BODY$

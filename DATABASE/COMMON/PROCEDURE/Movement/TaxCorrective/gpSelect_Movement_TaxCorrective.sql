@@ -141,17 +141,17 @@ BEGIN
                               AND (Movement_DocumentMaster.StatusId <> zc_Enum_Status_Complete()
                                 OR Movement.OperDate <> CASE WHEN Movement_DocumentMaster.DescId = zc_Movement_ReturnIn() THEN MovementDate_OperDatePartner_Master.ValueData ELSE Movement_DocumentMaster.OperDate END
                                 OR (COALESCE (MovementLinkObject_Partner.ObjectId, -1) <> COALESCE (MovementLinkObject_Partner_Master.ObjectId, COALESCE (MovementLinkObject_From_Master.ObjectId, -2))
-                                    AND MovementLinkObject_DocumentTaxKind.ObjectId NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
+                                    AND tmpMovement.DocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
                                    )
                                 OR COALESCE (MovementLinkObject_From.ObjectId, -1) <> CASE WHEN Movement_DocumentMaster.DescId = zc_Movement_ReturnIn() THEN COALESCE (ObjectLink_Partner_Juridical_Master.ChildObjectId, -2) ELSE COALESCE (MovementLinkObject_From_Master.ObjectId, -2) END
                                 OR COALESCE (MovementLinkObject_Contract.ObjectId, -1) <> CASE WHEN Movement_DocumentMaster.DescId = zc_Movement_TransferDebtIn() THEN COALESCE (MovementLinkObject_ContractFrom_Master.ObjectId, -2) ELSE COALESCE (MovementLinkObject_Contract_Master.ObjectId, -2) END
-                                OR COALESCE (MovementLinkObject_DocumentTaxKind.ObjectId, -1) <> COALESCE (MovementLinkObject_DocumentTaxKind_Master.ObjectId, -2)
+                                OR COALESCE (tmpMovement.DocumentTaxKindId, -1) <> COALESCE (MovementLinkObject_DocumentTaxKind_Master.ObjectId, -2)
                                   )
                              )
                           OR (MovementLinkMovement_Child.MovementChildId IS NOT NULL
                               AND (Movement_DocumentChild.StatusId <> zc_Enum_Status_Complete()
                                 OR (COALESCE (MovementLinkObject_Partner.ObjectId, -1) <> COALESCE (MovementLinkObject_Partner_Child.ObjectId, -2)
-                                    AND MovementLinkObject_DocumentTaxKind.ObjectId NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
+                                    AND tmpMovement.DocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
                                    )
                                 OR COALESCE (MovementLinkObject_From.ObjectId, -1) <> COALESCE (MovementLinkObject_To_Child.ObjectId, -2)
                                 OR COALESCE (MovementLinkObject_Contract.ObjectId, -1) <> COALESCE (MovementLinkObject_Contract_Child.ObjectId, -2)
@@ -188,18 +188,41 @@ BEGIN
            , COALESCE (MovementDate_NPP_calc.ValueData, Null) :: TDateTime  AS DateisNPP_calc
 
        FROM (SELECT Movement.Id
+                  , MovementLinkObject_Branch.ObjectId           AS BranchId
+                  , MovementLinkObject_DocumentTaxKind.ObjectId  AS DocumentTaxKindId
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate AND Movement.DescId = zc_Movement_TaxCorrective() AND Movement.StatusId = tmpStatus.StatusId
-                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                  LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
+                                               ON MovementLinkObject_Branch.MovementId = Movement.Id
+                                              AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                               ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                              AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
              WHERE inIsRegisterDate = FALSE
+               AND (tmpRoleAccessKey.AccessKeyId > 0
+                    OR (MovementLinkObject_Branch.ObjectId IS NULL AND MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Prepay())
+                   )
+
             UNION ALL
-             SELECT MovementDate_DateRegistered.MovementId AS Id
+             SELECT MovementDate_DateRegistered.MovementId       AS Id
+                  , MovementLinkObject_Branch.ObjectId           AS BranchId
+                  , MovementLinkObject_DocumentTaxKind.ObjectId  AS DocumentTaxKindId
              FROM MovementDate AS MovementDate_DateRegistered
                   JOIN Movement ON Movement.Id = MovementDate_DateRegistered.MovementId AND Movement.DescId = zc_Movement_TaxCorrective()
                   JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
-                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                  LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
+                                               ON MovementLinkObject_Branch.MovementId = Movement.Id
+                                              AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                               ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                              AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
              WHERE inIsRegisterDate = TRUE AND MovementDate_DateRegistered.ValueData BETWEEN inStartDate AND inEndDate
                AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
+               AND (tmpRoleAccessKey.AccessKeyId > 0
+                    OR (MovementLinkObject_Branch.ObjectId IS NULL AND MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Prepay())
+                   )
             ) AS tmpMovement
 
             JOIN Movement ON Movement.id = tmpMovement.id
@@ -300,11 +323,8 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
-                                         ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
-                                        AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
-
-            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
+            LEFT JOIN Object AS Object_Branch  ON Object_Branch.Id  = tmpMovement.BranchId
+            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = tmpMovement.DocumentTaxKindId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -356,11 +376,6 @@ BEGIN
                                       ON MovementBoolean_isPartner.MovementId = Movement_DocumentMaster.Id
                                      AND MovementBoolean_isPartner.DescId = zc_MovementBoolean_isPartner()
                                      
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
-                                         ON MovementLinkObject_Branch.MovementId = Movement.Id
-                                        AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
-            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = MovementLinkObject_Branch.ObjectId
-
             LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
                                  ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = Object_Branch.Id
                                 AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
