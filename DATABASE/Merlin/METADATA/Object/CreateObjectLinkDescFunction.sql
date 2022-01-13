@@ -37,10 +37,30 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Cash_Parent() RETURNS Integer AS $BODY$
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Cash_Parent', 'Касса', zc_Object_Cash(), zc_Object_Cash() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Cash_Parent');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_CommentInfoMoney_InfoMoneyKind() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommentInfoMoney_InfoMoneyKind'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_CommentInfoMoney_InfoMoneyKind', 'Тип Приход/расход', zc_Object_CommentInfoMoney(), zc_Object_InfoMoneyKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommentInfoMoney_InfoMoneyKind');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_InfoMoneyDetail_InfoMoneyKind() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_InfoMoneyDetail_InfoMoneyKind'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_InfoMoneyDetail_InfoMoneyKind', 'Тип Приход/расход', zc_Object_InfoMoneyDetail(), zc_Object_InfoMoneyKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_InfoMoneyDetail_InfoMoneyKind');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_InfoMoney_InfoMoneyKind() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_InfoMoney_InfoMoneyKind'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_InfoMoney_InfoMoneyKind', 'Тип Приход/расход', zc_Object_InfoMoney(), zc_Object_InfoMoneyKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_InfoMoney_InfoMoneyKind');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_InfoMoney_Parent() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_InfoMoney_Parent'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_InfoMoney_Parent', 'Статья Приход/расход', zc_Object_InfoMoney(), zc_Object_InfoMoney() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_InfoMoney_Parent');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 11.01.22         *
+ 12.01.22         * zc_ObjectLink_CommentInfoMoney_InfoMoneyKind
+                    zc_ObjectLink_InfoMoneyDetail_InfoMoneyKind
+                    zc_ObjectLink_InfoMoney_InfoMoneyKind
+                    zc_ObjectLink_InfoMoney_Parent
+ 11.01.22         * zc_ObjectLink_Cash_Parent
  10.01.22                                        * 
 */

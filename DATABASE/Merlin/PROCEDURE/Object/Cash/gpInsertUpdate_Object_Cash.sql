@@ -16,11 +16,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Cash(
   RETURNS integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsInsert Boolean;
    DECLARE vbGroupNameFull TVarChar;
  BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Cash());
    vbUserId:= lpGetUserBySession (inSession);
+
+   -- определяем признак Создание/Корректировка
+   vbIsInsert:= COALESCE (ioId, 0) = 0;
 
    -- Если код не установлен, определяем его каи последний+1
    inCode := lfGet_ObjectCode (inCode, zc_Object_Cash());
@@ -48,6 +52,19 @@ $BODY$
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Cash_Parent(), ioId, inParentId);
    -- сохранили
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Cash_PaidKind(), ioId, inPaidKindId);
+
+
+   IF vbIsInsert = TRUE THEN
+      -- сохранили свойство <Дата создания>
+      PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
+      -- сохранили свойство <Пользователь (создание)>
+      PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), ioId, vbUserId);
+   ELSE
+      -- сохранили свойство <Дата корр>
+      PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), ioId, CURRENT_TIMESTAMP);
+      -- сохранили свойство <Пользователь корр>
+      PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Update(), ioId, vbUserId);   
+   END IF;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

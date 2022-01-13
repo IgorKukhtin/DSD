@@ -74,29 +74,19 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 7
     Width = 124
   end
   object cxLabel2: TcxLabel
-    Left = 192
-    Top = 142
+    Left = 189
+    Top = 143
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-  end
-  object cePaidKind: TcxButtonEdit
-    Left = 192
-    Top = 162
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 9
-    Width = 121
   end
   object edShortName: TcxTextEdit
     Left = 40
     Top = 116
-    TabOrder = 10
+    TabOrder = 9
     Width = 273
   end
   object cxLabel3: TcxLabel
@@ -109,7 +99,34 @@
     Top = 188
     Caption = #1043#1088#1091#1087#1087#1072
   end
-  object ceParent: TcxButtonEdit
+  object edNPP: TcxCurrencyEdit
+    Left = 192
+    Top = 26
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    TabOrder = 12
+    Width = 121
+  end
+  object cxLabel29: TcxLabel
+    Left = 192
+    Top = 7
+    Caption = #8470' '#1087'.'#1087'.'
+  end
+  object edPaidKind: TcxButtonEdit
+    Left = 189
+    Top = 162
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 14
+    Width = 124
+  end
+  object edParent: TcxButtonEdit
     Left = 40
     Top = 208
     Properties.Buttons = <
@@ -118,23 +135,8 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 13
+    TabOrder = 15
     Width = 273
-  end
-  object edNPP: TcxCurrencyEdit
-    Left = 192
-    Top = 26
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 3
-    Properties.DisplayFormat = ',0.###'
-    TabOrder = 14
-    Width = 121
-  end
-  object cxLabel29: TcxLabel
-    Left = 192
-    Top = 7
-    Caption = #8470' '#1087'.'#1087'.'
   end
   object ActionList: TActionList
     Left = 320
@@ -224,7 +226,7 @@
       item
         Name = 'inPaidKindId'
         Value = Null
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -317,14 +319,14 @@
       item
         Name = 'PaidKindId'
         Value = Null
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
         Value = Null
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -385,48 +387,47 @@
     Left = 8
     Top = 64
   end
-  object PaidKindGuides: TdsdGuides
+  object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
-    LookupControl = cePaidKind
+    LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 232
-    Top = 165
+    Left = 237
+    Top = 149
   end
   object GuidesParent: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceParent
+    LookupControl = edParent
     FormNameParam.Value = 'TCash_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCash_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
         Component = GuidesParent
         ComponentItem = 'Key'
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -435,10 +436,9 @@
         Component = GuidesParent
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 134
-    Top = 195
+    Left = 176
+    Top = 187
   end
 end

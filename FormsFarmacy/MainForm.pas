@@ -902,6 +902,10 @@ type
     N331: TMenuItem;
     actPretensionJournal: TdsdOpenForm;
     N332: TMenuItem;
+    actReport_Layout_NotLinkPriceList: TdsdOpenForm;
+    N333: TMenuItem;
+    actReport_Layout_OutOrder: TdsdOpenForm;
+    N334: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

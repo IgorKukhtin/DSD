@@ -1140,7 +1140,9 @@ uses
   PretensionJournal in '..\..\FormsFarmacy\Document\PretensionJournal.pas' {PretensionJournalForm: TParentForm},
   MedicSP_IC in '..\..\FormsFarmacy\Guides\MedicSP_IC.pas' {MedicSP_ICForm: TParentForm},
   Report_Sale_PartialReturnInAll in '..\..\FormsFarmacy\Report\Report_Sale_PartialReturnInAll.pas' {Report_Sale_PartialReturnInAllForm: TParentForm},
-  Report_Sale_PartialReturnInAllDialog in '..\..\FormsFarmacy\Report\Report_Sale_PartialReturnInAllDialog.pas' {Report_Sale_PartialReturnInAllDialogForm: TParentForm};
+  Report_Sale_PartialReturnInAllDialog in '..\..\FormsFarmacy\Report\Report_Sale_PartialReturnInAllDialog.pas' {Report_Sale_PartialReturnInAllDialogForm: TParentForm},
+  Report_Layout_NotLinkPriceList in '..\..\FormsFarmacy\Report\Report_Layout_NotLinkPriceList.pas' {Report_Layout_NotLinkPriceListForm: TParentForm},
+  Report_Layout_OutOrder in '..\..\FormsFarmacy\Report\Report_Layout_OutOrder.pas' {Report_Layout_OutOrderForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

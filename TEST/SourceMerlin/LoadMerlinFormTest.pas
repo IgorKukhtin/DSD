@@ -18,11 +18,14 @@ type
     procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
     procedure LoadCashFormTest;
+    procedure LoadCommentFormTest;
     procedure LoadCurrencyFormTest;
+    procedure LoadInfoMoneyFormTest;
     procedure LoadKindFormTest;
     procedure LoadImportSettingsFormTest;
     procedure LoadImportTypeFormTest;
     procedure LoadMemberFormTest;
+    procedure LoadInfoMoneyDetailFormTest;
     procedure LoadPositionFormTest;
     procedure LoadReportFormTest;
     procedure LoadServiceFormTest;
@@ -151,6 +154,29 @@ begin
 
 end;
 
+procedure TLoadFormTest.LoadCommentFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentInfoMoneyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCommentInfoMoneyForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentInfoMoneyEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCommentInfoMoneyEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentMoveMoneyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCommentMoveMoneyForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentMoveMoneyEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCommentMoveMoneyEditForm');
+end;
+
+
+procedure TLoadFormTest.LoadInfoMoneyDetailFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDetailForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDetailForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDetailEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDetailEditForm');
+end;
+
+
 procedure TLoadFormTest.LoadCurrencyFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyForm'));
@@ -159,6 +185,19 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCurrency_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCurrencyEditForm');
+end;
+
+procedure TLoadFormTest.LoadInfoMoneyFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoney_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoney_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyTreeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyTreeForm');
 end;
 
 procedure TLoadFormTest.LoadMemberFormTest;
@@ -174,6 +213,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPaidKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPaidKindForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyKindForm');
 end;
 
 procedure TLoadFormTest.LoadPositionFormTest;

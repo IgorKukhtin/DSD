@@ -24,7 +24,7 @@
   end
   object cxLabel1: TcxLabel
     Left = 40
-    Top = 48
+    Top = 52
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
@@ -50,8 +50,8 @@
   end
   object Код: TcxLabel
     Left = 40
-    Top = 3
-    Caption = #1052#1077#1078#1076#1091#1085#1072#1088#1086#1076#1085#1099#1081' '#1082#1086#1076
+    Top = 6
+    Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit
     Left = 40

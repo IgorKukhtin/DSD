@@ -25,6 +25,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Cash_ShortName() RETURNS Integer AS $
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Cash_ShortName', zc_Object_Cash(), 'Сокращенное название кассы' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Cash_ShortName');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_InfoMoney_GroupNameFull() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_InfoMoney_GroupNameFull'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_InfoMoney_GroupNameFull', zc_Object_InfoMoney(), 'Полное название группы' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_InfoMoney_GroupNameFull');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

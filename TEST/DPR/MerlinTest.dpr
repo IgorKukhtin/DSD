@@ -139,7 +139,20 @@ uses
   Cash in '..\..\FormsMerlin\Guides\Cash.pas' {CashForm: TParentForm},
   Cash_Object in '..\..\FormsMerlin\Guides\Cash_Object.pas' {Cash_ObjectForm: TParentForm},
   PaidKind in '..\..\FormsMerlin\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
-  CashEdit in '..\..\FormsMerlin\Guides\CashEdit.pas' {CashEditForm: TParentForm};
+  CashEdit in '..\..\FormsMerlin\Guides\CashEdit.pas' {CashEditForm: TParentForm},
+  CommentInfoMoney in '..\..\FormsMerlin\Guides\CommentInfoMoney.pas' {CommentInfoMoneyForm: TParentForm},
+  CommentInfoMoneyEdit in '..\..\FormsMerlin\Guides\CommentInfoMoneyEdit.pas' {CommentInfoMoneyEditForm: TParentForm},
+  CommentMoveMoney in '..\..\FormsMerlin\Guides\CommentMoveMoney.pas' {CommentMoveMoneyForm: TParentForm},
+  CommentMoveMoneyEdit in '..\..\FormsMerlin\Guides\CommentMoveMoneyEdit.pas' {CommentMoveMoneyEditForm: TParentForm},
+  InfoMoneyKind in '..\..\FormsMerlin\Kind\InfoMoneyKind.pas' {InfoMoneyKindForm: TParentForm},
+  InfoMoneyDetail in '..\..\FormsMerlin\Guides\InfoMoneyDetail.pas' {InfoMoneyDetailForm: TParentForm},
+  InfoMoneyDetailEdit in '..\..\FormsMerlin\Guides\InfoMoneyDetailEdit.pas' {InfoMoneyDetailEditForm: TParentForm},
+  InfoMoneyEdit in '..\..\FormsMerlin\Guides\InfoMoneyEdit.pas' {InfoMoneyEditForm: TParentForm},
+  InfoMoney_Object in '..\..\FormsMerlin\Guides\InfoMoney_Object.pas' {InfoMoney_ObjectForm: TParentForm},
+  InfoMoney in '..\..\FormsMerlin\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm},
+  InfoMoneyTree in '..\..\FormsMerlin\Guides\InfoMoneyTree.pas' {InfoMoneyTreeForm: TParentForm},
+  MemberEdit in '..\..\FormsMerlin\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
+  Member in '..\..\FormsMerlin\Guides\Member.pas' {MemberForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
