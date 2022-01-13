@@ -29,12 +29,12 @@ $BODY$
    inCode := lfGet_ObjectCode (inCode, zc_Object_InfoMoney());
     
    -- проверка прав уникальности для свойства <Наименование Касса>  
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_InfoMoney(), inInfoMoneyName);
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_InfoMoney(), inName);
    -- проверка прав уникальности для свойства <Код Кассы>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_InfoMoney(), inCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_InfoMoney(), inCode, inInfoMoneyName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_InfoMoney(), inCode, inName);
 
    -- расчетно свойство <Полное название группы>
    vbGroupNameFull:= lfGet_Object_TreeNameFull (inParentId, zc_ObjectLink_InfoMoney_Parent());

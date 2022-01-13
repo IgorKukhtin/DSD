@@ -1,4 +1,4 @@
-unit InfoMoneyTree;
+unit Member;
 
 interface
 
@@ -9,11 +9,11 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
-  Vcl.ActnList, DataModul, cxTL, cxTLdxBarBuiltInMenu,
-  cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit, ParentForm, dsdDB, dsdAction,
-  cxSplitter, dsdAddOn, dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
-  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
-  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
+  cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
   dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
   dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
   dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
@@ -21,14 +21,15 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox,
-  dxBarExtItems, cxImageComboBox;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxCurrencyEdit;
 
 type
-  TInfoMoneyTreeForm = class(TParentForm)
-    TreeDS: TDataSource;
-    TreeDataSet: TClientDataSet;
+  TMemberForm = class(TParentForm)
+    cxGridLevel: TcxGridLevel;
+    cxGrid: TcxGrid;
+    DataSource: TDataSource;
+    MasterCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
@@ -37,39 +38,28 @@ type
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    spTree: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
-    cxDBTreeList: TcxDBTreeList;
-    ceParentName: TcxDBTreeListColumn;
-    cxSplitter1: TcxSplitter;
+    actSetErased: TdsdUpdateErased;
+    actSetUnErased: TdsdUpdateErased;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
+    actGridToExcel: TdsdGridToExcel;
+    bbToExcel: TdxBarButton;
+    dxBarStatic: TdxBarStatic;
+    bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
-    cxGridLevel: TcxGridLevel;
-    cxGrid: TcxGrid;
-    GridDS: TDataSource;
-    ClientDataSet: TClientDataSet;
-    spGrid: TdsdStoredProc;
     Code: TcxGridDBColumn;
     Name: TcxGridDBColumn;
-    isErased: TcxGridDBColumn;
-    dsdDBTreeAddOn: TdsdDBTreeAddOn;
-    bbChoice: TdxBarButton;
+    Erased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dxBarStatic: TdxBarStatic;
-    isLeaf: TcxGridDBColumn;
-    dsdChoiceGuides: TdsdChoiceGuides;
+    actChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    bbUnitChoiceForm: TdxBarButton;
-    dsdOpenUnitForm: TdsdOpenForm;
-    isService: TcxGridDBColumn;
     actProtocol: TdsdOpenForm;
-    bbProtocol: TdxBarButton;
-    isUserAll: TcxGridDBColumn;
-    InfoMoneyKindName: TcxGridDBColumn;
+    bbProtocolOpenForm: TdxBarButton;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
     spErasedUnErased: TdsdStoredProc;
   private
     { Private declarations }
@@ -82,6 +72,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TInfoMoneyTreeForm);
+  RegisterClass(TMemberForm);
 
 end.

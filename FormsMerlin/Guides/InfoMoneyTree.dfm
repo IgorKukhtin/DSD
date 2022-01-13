@@ -402,10 +402,10 @@ object InfoMoneyTreeForm: TInfoMoneyTreeForm
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErased
+      StoredProc = spErasedUnErased
       StoredProcList = <
         item
-          StoredProc = spErased
+          StoredProc = spErasedUnErased
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -449,10 +449,10 @@ object InfoMoneyTreeForm: TInfoMoneyTreeForm
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spUnErased
+      StoredProc = spErasedUnErased
       StoredProcList = <
         item
-          StoredProc = spUnErased
+          StoredProc = spErasedUnErased
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -593,8 +593,8 @@ object InfoMoneyTreeForm: TInfoMoneyTreeForm
     Left = 432
     Top = 240
   end
-  object spErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_InfoMoney'
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -605,40 +605,9 @@ object InfoMoneyTreeForm: TInfoMoneyTreeForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsErased'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 504
-    Top = 112
-  end
-  object spUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_InfoMoney'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inObjectId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsErased'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 600
-    Top = 136
+    Left = 584
+    Top = 192
   end
 end

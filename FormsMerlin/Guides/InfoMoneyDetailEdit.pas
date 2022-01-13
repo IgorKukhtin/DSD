@@ -30,7 +30,7 @@ type
     dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     cxLabel2: TcxLabel;
-    ceInfoMoneyKind: TcxButtonEdit;
+    edInfoMoneyKind: TcxButtonEdit;
     GuidesInfoMoneyKind: TdsdGuides;
   private
     { Private declarations }

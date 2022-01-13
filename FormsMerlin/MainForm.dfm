@@ -21,7 +21,11 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actUnitTree: TdsdOpenForm [1]
+    inherited actInfoMoney: TdsdOpenForm [1]
+      Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1089#1087#1080#1089#1086#1082')'
+      FormNameParam.Value = 'TInfoMoneyForm'
+    end
+    object actUnitTree: TdsdOpenForm [2]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1054#1090#1076#1077#1083#1099
@@ -32,7 +36,19 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actTaxKindEdit: TdsdOpenForm [2]
+    object actInfoMoneyTree: TdsdOpenForm [3]
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080'\'#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      Hint = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      FormName = 'TInfoMoneyTreeForm'
+      FormNameParam.Value = 'TInfoMoneyTreeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actTaxKindEdit: TdsdOpenForm [4]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1058#1080#1087#1099' '#1053#1044#1057' ('#1082#1086#1088#1088'.)'
@@ -43,7 +59,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actUnit: TdsdOpenForm [3]
+    object actUnit: TdsdOpenForm [5]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1054#1090#1076#1077#1083#1099' ('#1089#1087#1080#1089#1086#1082')'
@@ -54,7 +70,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actInfoMoneyDetail: TdsdOpenForm [4]
+    object actInfoMoneyDetail: TdsdOpenForm [6]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
@@ -65,7 +81,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actCashTree: TdsdOpenForm [5]
+    object actCashTree: TdsdOpenForm [7]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1050#1072#1089#1089#1099
@@ -76,7 +92,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actCommentMoveMoney: TdsdOpenForm [6]
+    object actCommentMoveMoney: TdsdOpenForm [8]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1044#1074#1080#1078#1077#1085#1080#1077' '#1076#1077#1085#1077#1075
@@ -87,7 +103,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actCommentInfoMoney: TdsdOpenForm [7]
+    object actCommentInfoMoney: TdsdOpenForm [9]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
@@ -98,7 +114,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actDocTag: TdsdOpenForm [8]
+    object actDocTag: TdsdOpenForm [10]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1094#1080#1080
@@ -109,7 +125,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actTranslateMessage: TdsdOpenForm [9]
+    object actTranslateMessage: TdsdOpenForm [11]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1077#1088#1077#1074#1086#1076' '#1057#1086#1086#1073#1097#1077#1085#1080#1081
@@ -120,7 +136,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actProdColorKind: TdsdOpenForm [10]
+    object actProdColorKind: TdsdOpenForm [12]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1042#1080#1076#1099' Boat Structure'
@@ -131,10 +147,16 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    inherited actExit: TFileExit
+    inherited actExit: TFileExit [13]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
     end
-    object actUser: TdsdOpenForm [15]
+    inherited actAbout: TAction [14]
+    end
+    inherited actUpdateProgram: TAction [15]
+    end
+    inherited actLookAndFeel: TAction [16]
+    end
+    object actUser: TdsdOpenForm [17]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
@@ -145,7 +167,13 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actForms: TdsdOpenForm [19]
+    inherited actImportSettings: TdsdOpenForm [18]
+    end
+    inherited actImportGroup: TdsdOpenForm [19]
+    end
+    inherited actImportType: TdsdOpenForm [20]
+    end
+    object actForms: TdsdOpenForm [21]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1086#1081' '#1089#1080#1089#1090#1077#1084#1086#1081
@@ -157,7 +185,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actRole: TdsdOpenForm [20]
+    object actRole: TdsdOpenForm [22]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1056#1086#1083#1080
@@ -168,14 +196,24 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    inherited actImportExportLink: TdsdOpenForm
+    inherited actImportExportLink: TdsdOpenForm [23]
       Enabled = False
     end
-    inherited actAccount: TdsdOpenForm [30]
+    inherited actProtocolUser: TdsdOpenForm [24]
     end
-    inherited actProfitLossGroup: TdsdOpenForm [31]
+    inherited actProtocolMovement: TdsdOpenForm [25]
     end
-    inherited actProfitLossDirection: TdsdOpenForm [32]
+    inherited actProtocol: TdsdOpenForm [26]
+    end
+    inherited actInfoMoneyGroup: TdsdOpenForm [27]
+    end
+    inherited actInfoMoneyDestination: TdsdOpenForm [28]
+    end
+    inherited actAccount: TdsdOpenForm [31]
+    end
+    inherited actProfitLossGroup: TdsdOpenForm [32]
+    end
+    inherited actProfitLossDirection: TdsdOpenForm [33]
     end
     object actCurrency: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
@@ -351,6 +389,18 @@ inherited MainForm: TMainForm
       end
       object miCommentMoveMoney: TMenuItem
         Action = actCommentMoveMoney
+      end
+      object N4: TMenuItem
+        Caption = '-'
+      end
+      object N3: TMenuItem
+        Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077
+        object miInfoMoneyTree: TMenuItem
+          Action = actInfoMoneyTree
+        end
+        object miInfoMoney: TMenuItem
+          Action = actInfoMoney
+        end
       end
     end
     inherited miService: TMenuItem

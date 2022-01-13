@@ -44,15 +44,15 @@ type
     ceCurrency: TcxButtonEdit;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     cxLabel2: TcxLabel;
-    cePaidKind: TcxButtonEdit;
-    PaidKindGuides: TdsdGuides;
     edShortName: TcxTextEdit;
     cxLabel3: TcxLabel;
     cxLabel7: TcxLabel;
-    ceParent: TcxButtonEdit;
-    GuidesParent: TdsdGuides;
     edNPP: TcxCurrencyEdit;
     cxLabel29: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    GuidesPaidKind: TdsdGuides;
+    edParent: TcxButtonEdit;
+    GuidesParent: TdsdGuides;
   private
     { Private declarations }
   public

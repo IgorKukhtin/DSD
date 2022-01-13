@@ -59,6 +59,11 @@ type
     N2: TMenuItem;
     actInfoMoneyDetail: TdsdOpenForm;
     miInfoMoneyDetail: TMenuItem;
+    actInfoMoneyTree: TdsdOpenForm;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    miInfoMoney: TMenuItem;
+    miInfoMoneyTree: TMenuItem;
   private
     { Private declarations }
   public

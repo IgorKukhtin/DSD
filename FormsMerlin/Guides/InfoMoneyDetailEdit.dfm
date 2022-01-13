@@ -63,12 +63,12 @@
   end
   object cxLabel2: TcxLabel
     Left = 40
-    Top = 98
+    Top = 97
     Caption = #1058#1080#1087' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
   end
-  object ceInfoMoneyKind: TcxButtonEdit
+  object edInfoMoneyKind: TcxButtonEdit
     Left = 40
-    Top = 118
+    Top = 114
     Properties.Buttons = <
       item
         Default = True
@@ -233,12 +233,12 @@
   end
   object GuidesInfoMoneyKind: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceInfoMoneyKind
+    LookupControl = edInfoMoneyKind
     FormNameParam.Value = 'TInfoMoneyKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoneyKindForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -255,7 +255,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 152
-    Top = 133
+    Left = 168
+    Top = 117
   end
 end

@@ -1,98 +1,68 @@
--- Function: gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar)
+-- Function: gpInsertUpdate_Object_Member()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar,TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, TVarChar, TVarChar,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
- INOUT ioId           Integer,       -- Ключ объекта <Физические лица>    
- INOUT ioCode         Integer,       -- Код объекта <Физические лица>     
-    IN inName         TVarChar,      -- Название объекта ФИО <Физические лица>
-    IN inINN          TVarChar,      -- ИНН
-    IN inComment      TVarChar,      -- Примечание
-    IN inEMail        TVarChar,      -- E-Mail
-    IN inSession      TVarChar       -- сессия пользователя
+ INOUT ioId	          Integer   ,    -- ключ объекта <> 
+    IN inCode             Integer   ,    -- код объекта <> 
+    IN inName             TVarChar  ,    -- Название объекта <> 
+    IN inEMail            TVarChar  ,    -- 
+    IN inComment          TVarChar  ,    -- 
+    IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS RECORD
-AS
+  RETURNS integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
-   DECLARE vbName TVarChar;
-   DECLARE vbCode Integer;
-   DECLARE vbPersonal Integer;
-BEGIN
-
+ BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Member());
+   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Member());
    vbUserId:= lpGetUserBySession (inSession);
 
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-    -- Если код не установлен, определяем его как последний+1
-   ioCode:= lfGet_ObjectCode (ioCode, zc_Object_Member()); 
-   
-   IF COALESCE (vbIsInsert, FALSE) = FALSE
-   THEN
-       -- определяем параметры, т.к. значения должны быть синхронизированы с объектом <сотрудники>
-       SELECT ObjectCode, ValueData INTO vbCode, vbName FROM Object WHERE Id = ioId;
-   END IF;
-
-
-   -- проверка уникальности для свойства <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Member(), inName, vbUserId); 
+   -- Если код не установлен, определяем его каи последний+1
+   inCode := lfGet_ObjectCode (inCode, zc_Object_Member());
+    
+   -- проверка прав уникальности для свойства <Наименование >  
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Member(), inName);
+   -- проверка прав уникальности для свойства <Код Кассы>
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Member(), inCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Member(), ioCode, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Member(), inCode, inName);
 
-   -- сохранили ИНН
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Member_INN(), ioId, inINN);
-   -- сохранили Примечание  
+   -- сохранили группа
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Member_Comment(), ioId, inComment);
-   -- сохранили E-Mail
+   -- сохранили
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Member_EMail(), ioId, inEMail);
+
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
       -- сохранили свойство <Пользователь (создание)>
       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), ioId, vbUserId);
-   END IF;
-   
-   --Когда меняется ФИО zc_Object_Member - автоматом менять ValueData у сотрудника
-   IF COALESCE (vbName,'') <> COALESCE (inName,'')
-   THEN
-       vbPersonal:= (SELECT ObjectLink.ObjectId
-                     FROM ObjectLink
-                     WHERE ObjectLink.DescId = zc_ObjectLink_Personal_Member()
-                       AND ObjectLink.ChildObjectId = ioId
-                       );
-
-       IF COALESCE (vbPersonal,0) <> 0
-       THEN
-           -- сохранили <Объект>
-           PERFORM lpInsertUpdate_Object (vbPersonal, zc_Object_Personal(), vbCode, inName);
-       END IF;
-
+   ELSE
+      -- сохранили свойство <Дата корр>
+      PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), ioId, CURRENT_TIMESTAMP);
+      -- сохранили свойство <Пользователь корр>
+      PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Update(), ioId, vbUserId);   
    END IF;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
-
-END;
-$BODY$
-
-LANGUAGE plpgsql VOLATILE;
-
-
-
-/*-------------------------------------------------------------------------------*/
+   
+END;$BODY$
+  LANGUAGE plpgsql VOLATILE;
+  
+ /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-22.07.21          *
-22.10.20          *
+ 11.01.22         *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Member()
+--

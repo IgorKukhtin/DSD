@@ -1,4 +1,4 @@
-unit InfoMoneyEdit;
+unit MemberEdit;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   dxSkinXmas2008Blue, dsdAddOn, cxButtonEdit;
 
 type
-  TInfoMoneyEditForm = class(TParentForm)
+  TMemberEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -40,14 +40,10 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    edEMail: TcxTextEdit;
+    cxLabel3: TcxLabel;
     cxLabel2: TcxLabel;
-    ceInfoMoneyKind: TcxButtonEdit;
-    GuidesInfoMoneyKind: TdsdGuides;
-    cxLabel7: TcxLabel;
-    cbService: TcxCheckBox;
-    cbUserAll: TcxCheckBox;
-    edParent: TcxButtonEdit;
-    GuidesParent: TdsdGuides;
+    edComment: TcxTextEdit;
   private
     { Private declarations }
   public
@@ -60,6 +56,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TInfoMoneyEditForm);
+  RegisterClass(TMemberEditForm);
 
 end.

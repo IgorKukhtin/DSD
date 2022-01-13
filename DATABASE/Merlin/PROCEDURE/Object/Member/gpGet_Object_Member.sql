@@ -1,67 +1,58 @@
-Ôªø-- Function: gpGet_Object_Member()
+-- Function: gpGet_Object_Member (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Object_Member (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Member(
-    IN inId          Integer,       -- 
-    IN inSession     TVarChar       -- —Å–µ—Å—Å–∏—è –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è
+    IN inId          Integer,       --  
+    IN inSession     TVarChar       -- ÚÂÍÛ˘ËÈ ÔÓÎ¸ÁÓ‚‡ÚÂÎ¸ 
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, INN TVarChar, Comment TVarChar, EMail TVarChar) 
-  AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , Comment TVarChar
+             , EMail TVarChar
+               ) AS
 $BODY$
 BEGIN
 
-  -- –ø—Ä–æ–≤–µ—Ä–∫–∞ –ø—Ä–∞–≤ –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è –Ω–∞ –≤—ã–∑–æ–≤ –ø—Ä–æ—Ü–µ–¥—É—Ä—ã
-  -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Member());
+--   PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
-  IF COALESCE (inId, 0) = 0
+   IF COALESCE (inId, 0) = 0
    THEN
-       RETURN QUERY
+       RETURN QUERY 
        SELECT
-              0 :: Integer                             AS Id
-           , lfGet_ObjectCode(0, zc_Object_Member())   AS Code
-           , '' :: TVarChar                            AS Name
-           , '' :: TVarChar                            AS INN
-           , '' :: TVarChar                            AS Comment
-           , '' :: TVarChar                            AS EMail
-       ;
+             CAST (0 as Integer)    AS Id
+           , lfGet_ObjectCode(0, zc_Object_Member()) AS Code
+           , CAST ('' as TVarChar)  AS Name
+           , CAST ('' as TVarChar)  AS Comment
+           , CAST ('' as TVarChar)  AS EMail
+           ;
    ELSE
-       RETURN QUERY
-       SELECT
-             Object.Id         AS Id
-           , Object.ObjectCode AS Code
-           , Object.ValueData  AS Name
-           , OS_Member_INN.ValueData  AS INN
-           , OS_Member_Comment.ValueData  AS Comment
-           , OS_Member_EMail.ValueData  AS EMail
-       FROM Object
-           LEFT JOIN ObjectString AS OS_Member_INN
-                 ON OS_Member_INN.ObjectId = Object.Id
-                AND OS_Member_INN.DescId = zc_ObjectString_Member_INN()       
-
-           LEFT JOIN ObjectString AS OS_Member_Comment
-                 ON OS_Member_Comment.ObjectId = Object.Id
-                AND OS_Member_Comment.DescId = zc_ObjectString_Member_Comment()
-           LEFT JOIN ObjectString AS OS_Member_EMail
-                 ON OS_Member_EMail.ObjectId = Object.Id
-                AND OS_Member_EMail.DescId = zc_ObjectString_Member_EMail()
-       
-       WHERE Object.Id = inId;
-   END IF;
-
+       RETURN QUERY 
+       SELECT 
+             Object_Member.Id               AS Id
+           , Object_Member.ObjectCode       AS Code
+           , Object_Member.ValueData        AS Name
+           , ObjectString_Comment.ValueData AS Comment
+           , ObjectString_EMail.ValueData   AS EMail       
+       FROM Object AS Object_Member
+        LEFT JOIN ObjectString AS ObjectString_Comment
+                               ON ObjectString_Comment.ObjectId = Object_Member.Id
+                              AND ObjectString_Comment.DescId = zc_ObjectString_Member_Comment()
+        LEFT JOIN ObjectString AS ObjectString_EMail
+                               ON ObjectString_EMail.ObjectId = Object_Member.Id
+                              AND ObjectString_EMail.DescId = zc_ObjectString_Member_EMail()                      
+       WHERE Object_Member.Id = inId;
+   END IF;  
+  
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
 
-/*-------------------------------------------------------------------------------*/
-/*
- –ò–°–¢–û–†–ò–Ø –†–ê–ó–†–ê–ë–û–¢–ö–ò: –î–ê–¢–ê, –ê–í–¢–û–†
-               –§–µ–ª–æ–Ω—é–∫ –ò.–í.   –ö—É—Ö—Ç–∏–Ω –ò.–í.   –ö–ª–∏–º–µ–Ω—Ç—å–µ–≤ –ö.–ò.   –ü–æ–ª—è—Ç—ã–∫–∏–Ω –ê.–ê.
-08.05.17                                                          *
-06.03.17                                                          *
-20.02.17                                                          *
+/*-------------------------------------------------------------------------------
+ »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
+               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.01.22         *
 */
 
--- —Ç–µ—Å—Ç
--- SELECT * FROM gpSelect_Member (1,'2')
+-- ÚÂÒÚ
+-- SELECT * FROM gpGet_Object_Member (1, zfCalc_UserAdmin())

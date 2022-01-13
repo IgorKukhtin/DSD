@@ -150,7 +150,9 @@ uses
   InfoMoneyEdit in '..\..\FormsMerlin\Guides\InfoMoneyEdit.pas' {InfoMoneyEditForm: TParentForm},
   InfoMoney_Object in '..\..\FormsMerlin\Guides\InfoMoney_Object.pas' {InfoMoney_ObjectForm: TParentForm},
   InfoMoney in '..\..\FormsMerlin\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm},
-  InfoMoneyTree in '..\..\FormsMerlin\Guides\InfoMoneyTree.pas' {InfoMoneyTreeForm: TParentForm};
+  InfoMoneyTree in '..\..\FormsMerlin\Guides\InfoMoneyTree.pas' {InfoMoneyTreeForm: TParentForm},
+  MemberEdit in '..\..\FormsMerlin\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
+  Member in '..\..\FormsMerlin\Guides\Member.pas' {MemberForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
