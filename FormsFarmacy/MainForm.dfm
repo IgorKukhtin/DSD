@@ -4866,6 +4866,28 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Layout_NotLinkPriceList: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1058#1086#1074#1072#1088' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' '#1085#1077' '#1089#1074#1103#1079#1072#1085#1085#1099#1081' '#1089' '#1090#1086#1074#1072#1088#1086#1084' '#1074#1099#1082#1083#1072#1076#1082#1080
+      FormName = 'TReport_Layout_NotLinkPriceListForm'
+      FormNameParam.Value = 'TReport_Layout_NotLinkPriceListForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_Layout_OutOrder: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1042#1099#1082#1083#1072#1076#1082#1072' '#1074#1085#1077' '#1079#1072#1082#1072#1079#1072
+      FormName = 'TReport_Layout_OutOrderForm'
+      FormNameParam.Value = 'TReport_Layout_OutOrderForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5650,6 +5672,12 @@
       end
       object N323: TMenuItem
         Action = actReport_TopListDiffGoods
+      end
+      object N333: TMenuItem
+        Action = actReport_Layout_NotLinkPriceList
+      end
+      object N334: TMenuItem
+        Action = actReport_Layout_OutOrder
       end
     end
     object N36: TMenuItem [5]
