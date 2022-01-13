@@ -12,17 +12,17 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Height = 505
     Properties.ActivePage = cxTabSheet1
     ExplicitTop = 163
-    ExplicitWidth = 1114
+    ExplicitWidth = 1116
     ExplicitHeight = 505
     ClientRectBottom = 505
     ClientRectRight = 1116
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1192
+      ExplicitWidth = 1116
       ExplicitHeight = 481
       inherited cxGrid: TcxGrid
         Width = 1116
         Height = 481
-        ExplicitWidth = 1192
+        ExplicitWidth = 1116
         ExplicitHeight = 481
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -286,7 +286,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#8470' '#1087'/'#1087
       ImageIndex = 1
-      ExplicitWidth = 1114
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -295,7 +294,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitWidth = 1114
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -570,7 +568,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Width = 1116
     Height = 137
     TabOrder = 3
-    ExplicitWidth = 1114
+    ExplicitWidth = 1116
     ExplicitHeight = 137
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1417,7 +1415,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1060#1080#1083#1080#1072#1083
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1060#1080#1083#1080#1072#1083
-      ImageIndex = 43
+      ImageIndex = 60
     end
   end
   inherited MasterDS: TDataSource

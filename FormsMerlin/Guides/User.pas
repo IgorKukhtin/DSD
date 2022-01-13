@@ -75,9 +75,6 @@ type
     HorSplitter: TcxSplitter;
     actChoiceUnit: TOpenChoiceForm;
     actUpdatePeriodClose: TdsdUpdateDataSet;
-    UnitCode_Personal: TcxGridDBColumn;
-    UnitName_Personal: TcxGridDBColumn;
-    PositionName: TcxGridDBColumn;
     User_: TcxGridDBColumn;
     spInsertUpdateUser: TdsdStoredProc;
     actUpdateDataSetUser: TdsdUpdateDataSet;
@@ -86,7 +83,7 @@ type
     actProtocolRole: TdsdOpenForm;
     bbProtocolRole: TdxBarButton;
     spUnErased: TdsdStoredProc;
-    LanguageName: TcxGridDBColumn;
+    isSign: TcxGridDBColumn;
   private
     { Private declarations }
   public

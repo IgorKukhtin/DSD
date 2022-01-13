@@ -18,7 +18,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxCheckBox;
 
 type
   TUserEditForm = class(TParentForm)
@@ -42,9 +43,7 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     edPassword: TcxTextEdit;
     cxLabel2: TcxLabel;
-    cxLabel4: TcxLabel;
-    edLanguage: TcxButtonEdit;
-    GuidesLanguage: TdsdGuides;
+    cbSign: TcxCheckBox;
   private
     { Private declarations }
   public

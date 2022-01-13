@@ -1353,6 +1353,21 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object macUpdateBranch: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      ActionList = <
+        item
+          Action = actBranchChoiceForm
+        end
+        item
+          Action = actUpdate_Branch
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1060#1080#1083#1080#1072#1083
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1060#1080#1083#1080#1072#1083
+      ImageIndex = 60
+    end
     object IFinListAction: TMedocCorrectiveAction
       Category = 'TaxLib'
       MoveParams = <>
@@ -1556,6 +1571,40 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1086#1095#1085#1099#1077' '#1053#1072#1082#1083#1072#1076#1085#1099#1077' '#1087#1088#1077#1076#1086#1087#1083#1072#1090#1099
       ImageIndex = 56
     end
+    object actBranchChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actBranchChoiceForm'
+      ImageIndex = 60
+      FormName = 'TBranch_ObjectForm'
+      FormNameParam.Value = 'TBranch_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'BranchId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actUpdate_Branch: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Branch
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Branch
+        end
+        item
+        end>
+      Caption = 'actUpdate_Branch'
+      ImageIndex = 60
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1721,6 +1770,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         item
           Visible = True
           ItemName = 'bbUpdate_NPP_Null'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateBranch'
         end
         item
           Visible = True
@@ -1901,6 +1958,10 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     end
     object bbInsert_isAutoPrepay: TdxBarButton
       Action = macInsert_isAutoPrepay
+      Category = 0
+    end
+    object bbUpdateBranch: TdxBarButton
+      Action = macUpdateBranch
       Category = 0
     end
   end
@@ -2481,5 +2542,30 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     PackSize = 1
     Left = 648
     Top = 411
+  end
+  object spUpdate_Branch: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Tax_Branch'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'MovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'BranchId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 953
+    Top = 184
   end
 end

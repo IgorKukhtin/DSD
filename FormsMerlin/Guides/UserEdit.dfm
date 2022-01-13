@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
-  ClientHeight = 298
+  ClientHeight = 245
   ClientWidth = 303
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 45
-    Top = 261
+    Top = 206
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 189
-    Top = 261
+    Top = 206
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -60,7 +60,7 @@
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = False
     TabOrder = 5
-    Width = 273
+    Width = 60
   end
   object cxLabel3: TcxLabel
     Left = 13
@@ -91,22 +91,12 @@
     Top = 101
     Caption = #1055#1072#1088#1086#1083#1100
   end
-  object cxLabel4: TcxLabel
-    Left = 13
-    Top = 201
-    Caption = #1071#1079#1099#1082
-  end
-  object edLanguage: TcxButtonEdit
-    Left = 13
-    Top = 221
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 11
-    Width = 273
+  object cbSign: TcxCheckBox
+    Left = 118
+    Top = 26
+    Caption = #1055#1086#1076#1087#1080#1089#1072#1085#1080#1077' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1086#1082
+    TabOrder = 10
+    Width = 168
   end
   object ActionList: TActionList
     Left = 269
@@ -178,17 +168,17 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMemberId'
-        Value = ''
-        Component = GuidesMember
-        ComponentItem = 'Key'
+        Name = 'inisSign'
+        Value = Null
+        Component = cbSign
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inLanguageId'
-        Value = Null
-        Component = GuidesLanguage
+        Name = 'inMemberId'
+        Value = ''
+        Component = GuidesMember
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -257,36 +247,10 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UserSign'
+        Name = 'isSign'
         Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UserSeal'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UserKey'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'LanguageId'
-        Value = Null
-        Component = GuidesLanguage
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'LanguageName'
-        Value = Null
-        Component = GuidesLanguage
-        ComponentItem = 'TextValue'
-        DataType = ftString
+        Component = cbSign
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -338,32 +302,5 @@
     StorageType = stStream
     Left = 229
     Top = 136
-  end
-  object GuidesLanguage: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edLanguage
-    FormNameParam.Value = 'TLanguageForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TLanguageForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesLanguage
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesLanguage
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    Left = 125
-    Top = 215
   end
 end

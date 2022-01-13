@@ -11,17 +11,17 @@ inherited TaxForm: TTaxForm
     Width = 1267
     Height = 505
     ExplicitTop = 163
-    ExplicitWidth = 1067
+    ExplicitWidth = 1267
     ExplicitHeight = 505
     ClientRectBottom = 505
     ClientRectRight = 1267
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1067
+      ExplicitWidth = 1267
       ExplicitHeight = 481
       inherited cxGrid: TcxGrid
         Width = 1267
         Height = 481
-        ExplicitWidth = 1067
+        ExplicitWidth = 1267
         ExplicitHeight = 481
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -185,7 +185,7 @@ inherited TaxForm: TTaxForm
     Width = 1267
     Height = 137
     TabOrder = 3
-    ExplicitWidth = 1067
+    ExplicitWidth = 1267
     ExplicitHeight = 137
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -947,7 +947,7 @@ inherited TaxForm: TTaxForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'actBranchChoiceForm'
-      ImageIndex = 43
+      ImageIndex = 60
       FormName = 'TBranch_ObjectForm'
       FormNameParam.Value = 'TBranch_ObjectForm'
       FormNameParam.DataType = ftString
@@ -975,7 +975,7 @@ inherited TaxForm: TTaxForm
         end>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1060#1080#1083#1080#1072#1083
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1060#1080#1083#1080#1072#1083
-      ImageIndex = 43
+      ImageIndex = 60
     end
     object actUpdate_Branch: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -990,7 +990,7 @@ inherited TaxForm: TTaxForm
           StoredProc = spGet
         end>
       Caption = 'actUpdate_Branch'
-      ImageIndex = 43
+      ImageIndex = 60
     end
   end
   inherited MasterDS: TDataSource

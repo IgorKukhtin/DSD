@@ -38,6 +38,7 @@ object UserForm: TUserForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
@@ -66,35 +67,6 @@ object UserForm: TUserForm
         Options.Editing = False
         Width = 192
       end
-      object UnitCode_Personal: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1087'. '#1089#1086#1090#1088'.'
-        DataBinding.FieldName = 'UnitCode_Personal'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1076' '#1087#1086#1076#1088'. '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
-        Options.Editing = False
-        Width = 55
-      end
-      object UnitName_Personal: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1089#1086#1090#1088'.'
-        DataBinding.FieldName = 'UnitName_Personal'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
-        Options.Editing = False
-        Width = 142
-      end
-      object PositionName: TcxGridDBColumn
-        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
-        DataBinding.FieldName = 'PositionName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 104
-      end
       object User_: TcxGridDBColumn
         DataBinding.FieldName = 'User_'
         HeaderAlignmentHorz = taCenter
@@ -102,11 +74,12 @@ object UserForm: TUserForm
         Options.Editing = False
         Width = 87
       end
-      object LanguageName: TcxGridDBColumn
-        Caption = #1071#1079#1099#1082
-        DataBinding.FieldName = 'LanguageName'
+      object isSign: TcxGridDBColumn
+        Caption = #1055#1086#1076#1087'. '#1082#1086#1088#1088'.'
+        DataBinding.FieldName = 'isSign'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1076#1087#1080#1089#1072#1085#1080#1077' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1086#1082
         Options.Editing = False
         Width = 145
       end
@@ -737,6 +710,7 @@ object UserForm: TUserForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -780,6 +754,7 @@ object UserForm: TUserForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -854,6 +829,7 @@ object UserForm: TUserForm
     OnDblClickActionList = <>
     ActionItemList = <>
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -885,7 +861,7 @@ object UserForm: TUserForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inName'
+        Name = 'inUserName'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Name'
@@ -903,10 +879,10 @@ object UserForm: TUserForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPrinterName'
+        Name = 'inisSign'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PrinterName'
+        ComponentItem = 'isSign'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

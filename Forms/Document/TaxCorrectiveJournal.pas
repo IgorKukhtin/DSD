@@ -142,6 +142,11 @@ type
     actInsert_isAutoPrepay: TdsdExecStoredProc;
     macInsert_isAutoPrepay: TMultiAction;
     bbInsert_isAutoPrepay: TdxBarButton;
+    spUpdate_Branch: TdsdStoredProc;
+    actBranchChoiceForm: TOpenChoiceForm;
+    actUpdate_Branch: TdsdExecStoredProc;
+    macUpdateBranch: TMultiAction;
+    bbUpdateBranch: TdxBarButton;
   private
     { Private declarations }
   public

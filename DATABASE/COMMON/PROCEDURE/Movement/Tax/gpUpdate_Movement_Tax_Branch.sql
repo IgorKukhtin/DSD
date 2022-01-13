@@ -5,9 +5,10 @@ DROP FUNCTION IF EXISTS gpUpdate_Movement_Tax_Branch (Integer, Integer, TVarChar
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_Tax_Branch (
     IN inMovementId          Integer   , -- Ключ объекта <>
     IN inBranchId            Integer   , -- Филиал
+   OUT outBranchName         TVarChar   , 
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS VOID AS
+RETURNS TVarChar AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyId Integer;
@@ -32,7 +33,9 @@ BEGIN
         vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_TaxCorrective_Branch());
      END IF;
 
-     -- сохранили связь с <филиал>
+     outBranchName := (SELECT Object.ValueData FROM Object WHERE Object.Id = inBranchId);
+     
+-- сохранили связь с <филиал>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), inMovementId, inBranchId);
 
      -- определяется 
@@ -65,6 +68,8 @@ BEGIN
                      END;
      -- !!!замена!!!
      UPDATE Movement SET AccessKeyId = vbAccessKeyId WHERE Movement.Id = inMovementId AND vbAccessKeyId > 0;
+     --PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), inMovementId, inBranchId);
+     
 
 END;
 $BODY$
