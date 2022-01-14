@@ -1,23 +1,23 @@
 ﻿inherited ServiceMovementForm: TServiceMovementForm
   BorderStyle = bsSizeable
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1072#1088#1077#1085#1076#1099'>'
-  ClientHeight = 275
+  ClientHeight = 339
   ClientWidth = 341
   ExplicitWidth = 357
-  ExplicitHeight = 313
+  ExplicitHeight = 377
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 58
-    Top = 236
+    Top = 279
     ExplicitLeft = 58
-    ExplicitTop = 236
+    ExplicitTop = 279
   end
   inherited bbCancel: TcxButton
     Left = 202
-    Top = 236
+    Top = 279
     ExplicitLeft = 202
-    ExplicitTop = 236
+    ExplicitTop = 279
   end
   object Код: TcxLabel [2]
     Left = 8
@@ -53,18 +53,18 @@
   end
   object cxLabel5: TcxLabel [7]
     Left = 8
-    Top = 112
+    Top = 155
     Caption = #1057#1090#1072#1090#1100#1103' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
   end
   object ceInfoMoney: TcxButtonEdit [8]
     Left = 8
-    Top = 132
+    Top = 175
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 5
     Width = 313
   end
@@ -110,12 +110,12 @@
   end
   object cxLabel2: TcxLabel [14]
     Left = 8
-    Top = 167
+    Top = 210
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
   end
   object edCommentInfoMoney: TcxButtonEdit [15]
     Left = 8
-    Top = 187
+    Top = 230
     Properties.Buttons = <
       item
         Default = True
@@ -125,13 +125,30 @@
     TabOrder = 15
     Width = 313
   end
+  object cxLabel3: TcxLabel [16]
+    Left = 8
+    Top = 107
+    Caption = #1043#1088#1091#1087#1087#1072' '#1057#1090#1072#1090#1100#1080' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
+  end
+  object ceParent_infomoney: TcxButtonEdit [17]
+    Left = 8
+    Top = 127
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 17
+    Width = 313
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 139
-    Top = 228
+    Top = 271
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 8
-    Top = 212
+    Top = 255
   end
   inherited ActionList: TActionList
     Left = 327
@@ -206,10 +223,18 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ininfomoneyid'
-        Value = ''
-        Component = GuidesInfoMoney
+        Name = 'inParent_infomoney'
+        Value = Null
+        Component = GuidesParent_infomoney
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ininfomoney'
+        Value = ''
+        Component = ceInfoMoney
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -222,7 +247,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 320
-    Top = 104
+    Top = 176
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Service'
@@ -324,6 +349,21 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParentId_InfoMoney'
+        Value = Null
+        Component = GuidesParent_infomoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParentName_InfoMoney'
+        Value = Null
+        Component = GuidesParent_infomoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 320
     Top = 48
@@ -337,6 +377,12 @@
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
+      item
+        Name = 'iniService'
+        Value = True
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'Key'
         Value = ''
@@ -353,13 +399,22 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'iniService'
-        Value = True
-        DataType = ftBoolean
+        Name = 'ParentId'
+        Value = Null
+        Component = GuidesParent_infomoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParentName'
+        Value = Null
+        Component = GuidesParent_infomoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 192
-    Top = 106
+    Top = 149
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -413,6 +468,39 @@
         MultiSelectSeparator = ','
       end>
     Left = 152
-    Top = 177
+    Top = 220
+  end
+  object GuidesParent_infomoney: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceParent_infomoney
+    FormNameParam.Value = 'TInfoMoneyTreeForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoneyTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesParent_infomoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesParent_infomoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'iniService'
+        Value = True
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    Left = 168
+    Top = 109
   end
 end

@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , ServiceDate TDateTime
              , Amount TFloat
              , UnitId Integer, UnitName TVarChar
+             , ParentId_InfoMoney Integer, ParentName_InfoMoney TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyName TVarChar
              )
@@ -37,6 +38,8 @@ BEGIN
            , 0::TFloat                                         AS Amount
            , 0                                                 AS UnitId
            , CAST ('' as TVarChar)                             AS UnitName
+           , 0                                                 AS ParentId_InfoMoney
+           , CAST ('' as TVarChar)                             AS ParentName_InfoMoney
            , 0                                                 AS InfoMoneyId
            , CAST ('' as TVarChar)                             AS InfoMoneyName
            , 0                                                 AS CommentInfoMoneyId
@@ -53,6 +56,8 @@ BEGIN
            , MovementItem.Amount  ::TFloat      AS Amount
            , Object_Unit.Id                     AS UnitId
            , Object_Unit.ValueData              AS UnitName
+           , Object_Parent.Id                   AS ParentId_InfoMoney
+           , Object_Parent.ValueData            AS ParentName_InfoMoney
            , Object_InfoMoney.Id                AS InfoMoneyId
            , Object_InfoMoney.ValueData         AS InfoMoneyName
            , Object_CommentInfoMoney.Id         AS CommentInfoMoneyId
@@ -65,6 +70,11 @@ BEGIN
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = MILinkObject_InfoMoney.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Parent
+                                 ON ObjectLink_Parent.ObjectId = Object_InfoMoney.Id
+                                AND ObjectLink_Parent.DescId = zc_ObjectLink_InfoMoney_Parent()
+            LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Parent.ChildObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentInfoMoney
                                              ON MILinkObject_CommentInfoMoney.MovementItemId = MovementItem.Id

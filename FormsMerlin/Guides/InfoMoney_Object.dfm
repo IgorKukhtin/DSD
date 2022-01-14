@@ -73,7 +73,6 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
       object ParentName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'ParentName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -329,6 +328,21 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ParentId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ParentId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ParentName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ParentName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

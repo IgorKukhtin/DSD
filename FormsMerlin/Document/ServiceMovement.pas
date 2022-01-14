@@ -30,6 +30,9 @@ type
     cxLabel2: TcxLabel;
     edCommentInfoMoney: TcxButtonEdit;
     GuidesCommentInfoMoney: TdsdGuides;
+    cxLabel3: TcxLabel;
+    ceParent_infomoney: TcxButtonEdit;
+    GuidesParent_infomoney: TdsdGuides;
   private
     { Private declarations }
   public
