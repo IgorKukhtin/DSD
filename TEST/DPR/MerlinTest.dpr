@@ -154,7 +154,10 @@ uses
   MemberEdit in '..\..\FormsMerlin\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
   Member in '..\..\FormsMerlin\Guides\Member.pas' {MemberForm: TParentForm},
   ServiceItem in '..\..\FormsMerlin\Guides\ServiceItem.pas' {ServiceItemForm: TParentForm},
-  ServiceItemEdit in '..\..\FormsMerlin\Guides\ServiceItemEdit.pas' {ServiceItemEditForm: TParentForm};
+  ServiceItemEdit in '..\..\FormsMerlin\Guides\ServiceItemEdit.pas' {ServiceItemEditForm: TParentForm},
+  ServiceJournal in '..\..\FormsMerlin\Document\ServiceJournal.pas' {ServiceJournalForm: TParentForm},
+  Movement_PeriodDialog in '..\..\FormsMerlin\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm},
+  ServiceMovement in '..\..\FormsMerlin\Document\ServiceMovement.pas' {ServiceMovementForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -30,6 +30,7 @@ type
     procedure LoadPositionFormTest;
     procedure LoadReportFormTest;
     procedure LoadServiceFormTest;
+    procedure LoadServiceMovementFormTest;
     procedure LoadUnitFormTest;
     procedure FormTest;
   end;
@@ -122,6 +123,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialogForm');
 end;
 
 
@@ -251,6 +254,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitTreeForm');
+end;
+
+procedure TLoadFormTest.LoadServiceMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceJournalForm');
 end;
 
 

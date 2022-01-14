@@ -66,6 +66,8 @@ type
     miInfoMoneyTree: TMenuItem;
     actServiceItem: TdsdOpenForm;
     miServiceItem: TMenuItem;
+    actServiceJournal: TdsdOpenForm;
+    miServiceJournal: TMenuItem;
   private
     { Private declarations }
   public
