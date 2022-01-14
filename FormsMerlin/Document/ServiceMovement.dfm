@@ -216,8 +216,7 @@
       item
         Name = 'inCommentInfoMoney'
         Value = 0
-        Component = GuidesCommentInfoMoney
-        ComponentItem = 'TextValue'
+        Component = edCommentInfoMoney
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
