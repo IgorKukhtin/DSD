@@ -49,7 +49,7 @@ BEGIN
              inMovementId AS Id
            , CASE WHEN inMovementId = 0 THEN CAST (NEXTVAL ('movement_service_seq') AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
            , CASE WHEN inMovementId = 0 THEN CAST (CURRENT_DATE AS TDateTime) ELSE Movement.OperDate END ::TDateTime AS OperDate
-           , CASE WHEN inMovementId = 0 THEN DATE_TRUNC ('MONTH', inOperDate - INTERVAL '1 MONTH') ELSE MIDate_ServiceDate.ValueData END AS ServiceDate
+           , CASE WHEN inMovementId = 0 THEN DATE_TRUNC ('MONTH', inOperDate - INTERVAL '1 MONTH') ELSE MIDate_ServiceDate.ValueData END ::TDateTime AS ServiceDate
            , MovementItem.Amount  ::TFloat      AS Amount
            , Object_Unit.Id                     AS UnitId
            , Object_Unit.ValueData              AS UnitName

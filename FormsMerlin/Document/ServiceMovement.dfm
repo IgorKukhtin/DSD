@@ -214,10 +214,11 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCommentInfoMoneyId'
+        Name = 'inCommentInfoMoney'
         Value = 0
         Component = GuidesCommentInfoMoney
-        ComponentItem = 'Key'
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

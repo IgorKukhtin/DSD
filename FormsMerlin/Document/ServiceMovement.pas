@@ -12,7 +12,7 @@ uses
   cxCurrencyEdit, cxLabel, dxSkinsCore, dxSkinsDefaultPainters;
 
 type
-  TServiceMovementForm = class(TServiceMovementForm)
+  TServiceMovementForm = class(TAncestorEditDialogForm)
     Код: TcxLabel;
     cxLabel1: TcxLabel;
     ceOperDate: TcxDateEdit;
