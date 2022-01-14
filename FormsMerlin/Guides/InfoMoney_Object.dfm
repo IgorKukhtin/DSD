@@ -3,7 +3,7 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1090#1072#1090#1100#1080' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientHeight = 375
-  ClientWidth = 532
+  ClientWidth = 631
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,12 +14,13 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 532
+    Width = 631
     Height = 349
     Align = alClient
     TabOrder = 0
@@ -51,14 +52,14 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 44
+        Width = 42
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 226
+        Width = 215
       end
       object GroupNameFull: TcxGridDBColumn
         Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
@@ -67,7 +68,7 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 126
+        Width = 121
       end
       object ParentName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
@@ -86,7 +87,7 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084' ('#1076#1072'/'#1085#1077#1090')'
         Options.Editing = False
-        Width = 60
+        Width = 57
       end
       object isService: TcxGridDBColumn
         Caption = #1055#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1102
@@ -95,7 +96,7 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1055#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1102' ('#1076#1072'/'#1085#1077#1090')'
         Options.Editing = False
-        Width = 83
+        Width = 95
       end
       object InfoMoneyKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1055#1088#1080#1093#1086#1076'/ '#1088#1072#1089#1093#1086#1076
@@ -103,7 +104,7 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 96
+        Width = 87
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -391,13 +392,22 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_InfoMoney'
+    StoredProcName = 'gpSelect_Object_InfoMoney_choice'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
     Params = <
+      item
+        Name = 'inisService'
+        Value = False
+        Component = FormParams
+        ComponentItem = 'iniService'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inIsShowAll'
         Value = Null
@@ -408,7 +418,7 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
       end>
     PackSize = 1
     Left = 160
-    Top = 192
+    Top = 208
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -459,5 +469,17 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
     PackSize = 1
     Left = 432
     Top = 184
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'inisService'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 488
+    Top = 84
   end
 end

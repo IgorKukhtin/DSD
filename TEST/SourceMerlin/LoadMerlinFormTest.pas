@@ -26,9 +26,11 @@ type
     procedure LoadImportTypeFormTest;
     procedure LoadMemberFormTest;
     procedure LoadInfoMoneyDetailFormTest;
+    procedure LoadObjectHistoryFormTest;
     procedure LoadPositionFormTest;
     procedure LoadReportFormTest;
     procedure LoadServiceFormTest;
+    procedure LoadServiceMovementFormTest;
     procedure LoadUnitFormTest;
     procedure FormTest;
   end;
@@ -121,6 +123,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialogForm');
 end;
 
 
@@ -176,6 +180,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDetailEditForm');
 end;
 
+procedure TLoadFormTest.LoadObjectHistoryFormTest;
+begin
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceItemForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceItemEditForm');
+
+end;
 
 procedure TLoadFormTest.LoadCurrencyFormTest;
 begin
@@ -241,6 +254,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitTreeForm');
+end;
+
+procedure TLoadFormTest.LoadServiceMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceJournalForm');
 end;
 
 

@@ -1,15 +1,16 @@
 -- Function: gpSelect_ObjectHistory_ServiceItem ()
 
-DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_ServiceItem (Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_ServiceItem (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_ServiceItem(
     IN inUnitId             Integer   , -- отдел
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, StartDate TDateTime
+RETURNS TABLE (Id Integer, StartDate TDateTime, EndDate TDateTime
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyName TVarChar
              , Value TFloat, Price TFloat, Area TFloat
+             , isErased Boolean
              )
 AS
 $BODY$
@@ -17,14 +18,16 @@ BEGIN
 
      -- Выбираем данные
      RETURN QUERY
-       WITH ObjectHistory_ServiceItem AS
-                        (SELECT * FROM ObjectHistory
-                          WHERE ObjectHistory.ObjectId = inUnitId
-                            AND ObjectHistory.DescId = zc_ObjectHistory_ServiceItem())
+       WITH 
+       ObjectHistory_ServiceItem AS (SELECT * FROM ObjectHistory
+                                     WHERE ObjectHistory.ObjectId = inUnitId
+                                       AND ObjectHistory.DescId = zc_ObjectHistory_ServiceItem()
+                                     )
 
        SELECT
              ObjectHistory_ServiceItem.Id                                   AS Id
            , COALESCE(ObjectHistory_ServiceItem.StartDate, Empty.StartDate) AS StartDate
+           , COALESCE(ObjectHistory_ServiceItem.EndDate,  zc_DateEnd())     AS EndDate
            , Object_InfoMoney.Id                                            AS InfoMoneyId
            , Object_InfoMoney.ObjectCode                                    AS InfoMoneyCode
            , Object_InfoMoney.ValueData                                     AS InfoMoneyName
@@ -34,6 +37,7 @@ BEGIN
            , ObjectHistoryFloat_ServiceItem_Value.ValueData                 AS Value
            , ObjectHistoryFloat_ServiceItem_Price.ValueData                 AS Price
            , ObjectHistoryFloat_ServiceItem_Area.ValueData                  AS Area
+           , FALSE AS isErased
 
        FROM ObjectHistory_ServiceItem
             FULL JOIN (SELECT zc_DateStart() AS StartDate, inUnitId AS ObjectId ) AS Empty

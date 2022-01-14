@@ -52,6 +52,7 @@ type
     spErasedUnErased: TdsdStoredProc;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
