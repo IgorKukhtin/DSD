@@ -64,6 +64,8 @@ type
     N4: TMenuItem;
     miInfoMoney: TMenuItem;
     miInfoMoneyTree: TMenuItem;
+    actServiceItem: TdsdOpenForm;
+    miServiceItem: TMenuItem;
   private
     { Private declarations }
   public

@@ -18,14 +18,18 @@ BEGIN
 
      -- Выбираем данные
      RETURN QUERY
-       WITH ObjectHistory_ServiceItem AS
-                        (SELECT * FROM ObjectHistory
-                          WHERE ObjectHistory.ObjectId = inUnitId
-                            AND ObjectHistory.DescId = zc_ObjectHistory_ServiceItem()
-                            AND inOperDate <= ObjectHistory.StartDate AND inOperDate < ObjectHistory.EndDate)
+       WITH
+       ObjectHistory_ServiceItem AS (SELECT * FROM ObjectHistory
+                                     WHERE ObjectHistory.ObjectId = inUnitId
+                                       AND ObjectHistory.DescId = zc_ObjectHistory_ServiceItem()
+                                       AND inOperDate >= ObjectHistory.StartDate AND inOperDate < ObjectHistory.EndDate
+                                    )
+
+
        SELECT
              ObjectHistory_ServiceItem.Id                                   AS Id
            , COALESCE(ObjectHistory_ServiceItem.StartDate, Empty.StartDate) AS StartDate
+           --, COALESCE(ObjectHistory_ServiceItem.EndDate, zc_DateEnd()) AS EndDate
            , Object_InfoMoney.Id                                            AS InfoMoneyId
            , Object_InfoMoney.ObjectCode                                    AS InfoMoneyCode
            , Object_InfoMoney.ValueData                                     AS InfoMoneyName
@@ -38,7 +42,7 @@ BEGIN
 
        FROM ObjectHistory_ServiceItem
             FULL JOIN (SELECT zc_DateStart() AS StartDate, inUnitId AS ObjectId ) AS Empty
-                   ON Empty.ObjectId = ObjectHistory_ServiceItem.ObjectID
+                   ON Empty.ObjectId = ObjectHistory_ServiceItem.ObjectId
 
             LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_ServiceItem_InfoMoney
                                         ON ObjectHistoryLink_ServiceItem_InfoMoney.ObjectHistoryId = ObjectHistory_ServiceItem.Id
