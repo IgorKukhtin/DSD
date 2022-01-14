@@ -35,16 +35,13 @@ BEGIN
                                             );
                                                 
 
-     -- создаются временные таблицы - для формирование данных для проводок
-     PERFORM lpComplete_Movement_Finance_CreateTemp();
-
      -- 5.3. проводим Документ
-     IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Service())
+     /*IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Service())
      THEN
           PERFORM lpComplete_Movement_Service (inMovementId := ioId
                                              , inUserId     := vbUserId);
      END IF;
-
+*/
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

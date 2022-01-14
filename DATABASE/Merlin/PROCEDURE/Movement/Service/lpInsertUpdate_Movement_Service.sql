@@ -30,7 +30,7 @@ BEGIN
      inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
 
      -- сохранили <ƒокумент>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Service(), inInvNumber, inOperDate, NULL);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Service(), inInvNumber, inOperDate, Null, inUserId);
 
      -- определ€ем <Ёлемент документа>
      SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
