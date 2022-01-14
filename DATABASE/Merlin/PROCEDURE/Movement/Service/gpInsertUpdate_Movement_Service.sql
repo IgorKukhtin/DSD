@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service(Integer, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service(Integer, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service(Integer, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -11,17 +12,34 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
     IN inAmount               TFloat    , -- Сумма
     IN inUnitId               Integer   , -- отдел 
     IN inInfoMoneyId          Integer   , -- Статьи 
-    IN inCommentInfoMoneyId   Integer   , -- Примечание
+    IN inCommentInfoMoney     TVarChar   , -- Примечание
     IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbCommentInfoMoneyId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Service());
      vbUserId:= lpGetUserBySession (inSession);
 
+     IF COALESCE (inCommentInfoMoney,'') <> ''
+     THEN
+         -- пробуем найти CommentInfoMoneyId
+         vbCommentInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inCommentInfoMoney) AND Object.DescId = zc_Object_CommentInfoMoney());
+         IF COALESCE (vbCommentInfoMoneyId,0) = 0
+         THEN
+             vbCommentInfoMoneyId := gpInsertUpdate_Object_CommentInfoMoney (ioId   := 0
+                                                                           , inCode := 0
+                                                                           , inName := TRIM (inCommentInfoMoney)::TVarChar
+                                                                           , inInfoMoneyKindId :=  0
+                                                                           , inSession := inSession
+                                                                           );
+         END IF;
+     END IF;
+                                                          
+     
      -- сохранили <Документ>
      ioId:= lpInsertUpdate_Movement_Service (ioId                   := ioId
                                            , inInvNumber            := inInvNumber
@@ -30,7 +48,7 @@ BEGIN
                                            , inAmount               := inAmount
                                            , inUnitId               := inUnitId
                                            , inInfoMoneyId          := inInfoMoneyId
-                                           , inCommentInfoMoneyId   := inCommentInfoMoneyId
+                                           , inCommentInfoMoneyId   := vbCommentInfoMoneyId
                                            , inUserId               := vbUserId
                                             );
                                                 
