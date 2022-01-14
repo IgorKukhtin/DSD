@@ -239,6 +239,8 @@
 			<DCCReference Include="..\SOURCE\DialogPswSms.pas">
 				<Form>DialogPswSmsForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas"/>
 			<None Include="ModelSupport_ProjectComponent\default.txaPackage"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
