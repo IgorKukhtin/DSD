@@ -20,6 +20,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbInfoMoneyId Integer;
    DECLARE vbCommentInfoMoneyId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -32,7 +33,7 @@ BEGIN
          vbInfoMoneyId := (SELECT Object.Id 
                            FROM Object
                                 LEFT JOIN ObjectLink AS ObjectLink_Parent
-                                                     ON ObjectLink_Parent.ObjectId = Object_InfoMoney.Id
+                                                     ON ObjectLink_Parent.ObjectId = Object.Id
                                                     AND ObjectLink_Parent.DescId = zc_ObjectLink_InfoMoney_Parent()
                            WHERE Object.ValueData = TRIM (inInfoMoney) AND Object.DescId = zc_Object_InfoMoney()
                              AND (ObjectLink_Parent.ChildObjectId = inParent_InfoMoneyId OR inParent_InfoMoneyId = 0)
