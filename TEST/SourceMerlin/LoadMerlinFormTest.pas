@@ -18,6 +18,7 @@ type
     procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
     procedure LoadCashFormTest;
+    procedure LoadCashMovementFormTest;
     procedure LoadCommentFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadInfoMoneyFormTest;
@@ -156,6 +157,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashTreeForm');
 
+end;
+
+procedure TLoadFormTest.LoadCashMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashJournalForm');
 end;
 
 procedure TLoadFormTest.LoadCommentFormTest;

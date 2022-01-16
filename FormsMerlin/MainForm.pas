@@ -68,6 +68,11 @@ type
     miServiceItem: TMenuItem;
     actServiceJournal: TdsdOpenForm;
     miServiceJournal: TMenuItem;
+    actCashJournal_in: TdsdOpenForm;
+    actCashJournal_out: TdsdOpenForm;
+    miCashJournal_out: TMenuItem;
+    miCashJournal_in: TMenuItem;
+    N5: TMenuItem;
   private
     { Private declarations }
   public

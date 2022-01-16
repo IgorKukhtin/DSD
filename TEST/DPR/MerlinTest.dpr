@@ -157,7 +157,9 @@ uses
   ServiceItemEdit in '..\..\FormsMerlin\Guides\ServiceItemEdit.pas' {ServiceItemEditForm: TParentForm},
   ServiceJournal in '..\..\FormsMerlin\Document\ServiceJournal.pas' {ServiceJournalForm: TParentForm},
   Movement_PeriodDialog in '..\..\FormsMerlin\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm},
-  ServiceMovement in '..\..\FormsMerlin\Document\ServiceMovement.pas' {ServiceMovementForm: TParentForm};
+  ServiceMovement in '..\..\FormsMerlin\Document\ServiceMovement.pas' {ServiceMovementForm: TParentForm},
+  CashJournal in '..\..\FormsMerlin\Document\CashJournal.pas' {CashJournalForm: TParentForm},
+  CashMovement in '..\..\FormsMerlin\Document\CashMovement.pas' {CashMovementForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
