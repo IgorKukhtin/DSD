@@ -817,7 +817,7 @@ inherited SendForm: TSendForm
     end
     object cbSun: TcxCheckBox
       Left = 477
-      Top = 73
+      Top = 56
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
       AutoSize = False
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' (v.1)'
@@ -884,7 +884,7 @@ inherited SendForm: TSendForm
     end
     object cbSun_v2: TcxCheckBox
       Left = 477
-      Top = 90
+      Top = 73
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' ('#1074#1077#1088#1089#1080#1103'2)'
       AutoSize = False
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' (v.2)'
@@ -915,7 +915,7 @@ inherited SendForm: TSendForm
     end
     object cbSUN_v4: TcxCheckBox
       Left = 477
-      Top = 107
+      Top = 90
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'2-'#1055#1048
       AutoSize = False
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'2-'#1055#1048
@@ -928,8 +928,8 @@ inherited SendForm: TSendForm
       Width = 176
     end
     object cbNotDisplaySUN: TcxCheckBox
-      Left = 477
-      Top = 56
+      Left = 784
+      Top = 107
       Hint = #1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053
       AutoSize = False
       Caption = #1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053
@@ -1088,6 +1088,20 @@ inherited SendForm: TSendForm
       TabOrder = 37
       Height = 21
       Width = 208
+    end
+    object cbSUN_v3: TcxCheckBox
+      Left = 477
+      Top = 107
+      Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'2-'#1055#1048
+      AutoSize = False
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1069'-'#1057#1059#1053
+      ParentFont = False
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 38
+      Height = 21
+      Width = 176
     end
   end
   object ceChecked: TcxCheckBox [2]
@@ -2754,6 +2768,13 @@ inherited SendForm: TSendForm
         Name = 'isSendLossFrom'
         Value = Null
         Component = cbSendLossFrom
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSUN_v3'
+        Value = Null
+        Component = cbSUN_v3
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

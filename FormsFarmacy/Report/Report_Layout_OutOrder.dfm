@@ -1,28 +1,28 @@
 inherited Report_Layout_OutOrderForm: TReport_Layout_OutOrderForm
   Caption = #1042#1099#1082#1083#1072#1076#1082#1072' '#1074#1085#1077' '#1079#1072#1082#1072#1079#1072
   ClientHeight = 339
-  ClientWidth = 675
+  ClientWidth = 882
   AddOnFormData.isAlwaysRefresh = False
-  ExplicitWidth = 691
+  ExplicitWidth = 898
   ExplicitHeight = 378
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 675
+    Width = 882
     Height = 313
-    ExplicitWidth = 827
+    ExplicitWidth = 882
     ExplicitHeight = 313
     ClientRectBottom = 313
-    ClientRectRight = 675
+    ClientRectRight = 882
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 827
+      ExplicitWidth = 882
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Left = 3
-        Width = 672
+        Width = 879
         Height = 313
         ExplicitLeft = 3
-        ExplicitWidth = 824
+        ExplicitWidth = 879
         ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -83,6 +83,38 @@ inherited Report_Layout_OutOrderForm: TReport_Layout_OutOrderForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 203
+          end
+          object OperDatePriceLink: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1072#1081#1089#1072
+            DataBinding.FieldName = 'OperDatePriceLink'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object JuridicalNameLink: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
+            DataBinding.FieldName = 'JuridicalNameLink'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 121
+          end
+          object OperDatePrice: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1072#1081#1089#1072' '#1073#1077#1079' '#1089#1074#1103#1079#1080
+            DataBinding.FieldName = 'OperDatePrice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1073#1077#1079' '#1089#1074#1103#1079#1080
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 130
           end
         end
       end

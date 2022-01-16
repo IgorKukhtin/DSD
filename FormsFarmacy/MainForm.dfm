@@ -86,6 +86,7 @@
     object actReport_Movement_Send_RemainsSunOut_expressV2: TdsdOpenForm [2]
       Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
       MoveParams = <>
+      Enabled = False
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053'-'#1069#1082#1089#1087#1088#1077#1089#1089' ('#1088#1072#1089#1093#1086#1076#1099') V2'
       FormName = 'TReport_Movement_Send_RemainsSunOut_express_v2Form'
       FormNameParam.Value = 'TReport_Movement_Send_RemainsSunOut_express_v2Form'
@@ -5785,6 +5786,7 @@
       end
       object miReport_Send_RemainsSunOut_expressV2: TMenuItem
         Action = actReport_Movement_Send_RemainsSunOut_expressV2
+        Visible = False
       end
       object N228: TMenuItem
         Caption = '-'

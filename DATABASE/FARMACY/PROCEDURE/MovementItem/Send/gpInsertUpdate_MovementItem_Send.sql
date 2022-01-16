@@ -138,10 +138,49 @@ BEGIN
                                  AND ObjectBoolean_BlockCommentSendTP.DescId = zc_ObjectBoolean_Unit_BlockCommentSendTP()
                                
     WHERE Movement.Id = inMovementId;
+
     
+    IF COALESCE (vbIsSUN, FALSE) = TRUE
+    THEN
+       
+             WITH tmpProtocolAll AS (SELECT  MovementItem.Id
+                                           , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                                           , MovementItem.Amount
+                                           , MovementItem.ObjectId
+                                           , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
+                                      FROM MovementItem
+
+                                           INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
+                                                                          AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
+                                                                          AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
+                                      WHERE  MovementItem.Id = ioId
+                                      )
+                 , tmpProtocol AS (SELECT tmpProtocolAll.Id
+                                        , tmpProtocolAll.ObjectId
+                                        , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
+                                        , tmpProtocolAll.Amount
+                                   FROM tmpProtocolAll
+                                   WHERE tmpProtocolAll.Ord = 1)
+
+             SELECT tmpProtocol.AmountAuto
+             INTO vbAmountAuto
+             FROM tmpProtocol;
+       
+    ELSE
+    
+      vbAmountAuto := 0;
+       
+    END IF;
+    
+        
     IF COALESCE (inCommentSendID, 0) <> 0
     THEN
     
+       IF COALESCE (vbIsSUN, FALSE) = FALSE
+       THEN
+          RAISE EXCEPTION 'Ошибка. Использование причин уменьшения количества разрешено только в перемещениях СУН.';       
+       END IF;
+
        IF EXISTS (SELECT 1 FROM Object
                   WHERE Object.Id = inCommentSendID
                     AND Object.isErased = True)
@@ -157,50 +196,17 @@ BEGIN
           RAISE EXCEPTION 'Ошибка. Использование причин уменьшения количества которые участвуют в техническом переучете запрещено.';       
        END IF;
        
-       WITH tmpProtocolUnion AS (SELECT  MovementItemProtocol.Id
-                                       , MovementItemProtocol.MovementItemId
-                                       , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
-                                  FROM MovementItemProtocol
-                                  WHERE MovementItemProtocol.MovementItemId = ioId
-                                        AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
-                                        AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
-                                  UNION ALL
-                                  SELECT MovementItemProtocol.Id
-                                       , MovementItemProtocol.MovementItemId
-                                       , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
-                                  FROM movementitemprotocol_arc AS MovementItemProtocol
-                                  WHERE MovementItemProtocol.MovementItemId = ioId
-                                        AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
-                                        AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
-                                  )
-           , tmpProtocolAll AS (SELECT  MovementItem.Id
-                                     , MovementItemProtocol.ProtocolData
-                                     , MovementItem.Amount
-                                     , MovementItem.ObjectId
-                                     , Object_Goods_Main.Name
-                                     , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
-                                FROM MovementItem
-
-                                     INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.objectid
-                                     INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
-
-                                     INNER JOIN tmpProtocolUnion AS MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
-                                WHERE  MovementItem.Id = ioId
-                                ) 
-           , tmpProtocol AS (SELECT tmpProtocolAll.Id
-                                  , tmpProtocolAll.ObjectId
-                                  , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
-                             FROM tmpProtocolAll
-                             WHERE tmpProtocolAll.Ord = 1)
-
-       SELECT tmpProtocol.AmountAuto
-       INTO vbAmountAuto
-       FROM tmpProtocol;
-
        IF  COALESCE(vbAmountAuto, 0) = COALESCE(inAmount, 0) AND COALESCE(vbAmountAuto, 0) <> 0
        THEN
           RAISE EXCEPTION 'Ошибка. Количество % равно сформировано % уберите причину уменьшения количества!', inAmount, vbAmountAuto;
        END IF;
+
+       IF COALESCE(vbAmountAuto, 0) > COALESCE(inAmount, 0) AND COALESCE(vbAmountAuto, 0) <> 0 AND COALESCE (vbIsSUN_v3, FALSE) = TRUE AND
+          NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())       
+       THEN
+          RAISE EXCEPTION 'Ошибка. Уменьшение количества в перемещениях  СУН-Экспресс разрешено только системному администратору!';
+       END IF;
+       
     END IF;
     
     IF COALESCE (ioId, 0) = 0 AND (vbIsSUN = TRUE OR vbIsSUN_v2 = TRUE OR vbIsSUN_v3 = TRUE) AND
@@ -391,28 +397,6 @@ BEGIN
 
           IF vbIsSUN = TRUE
           THEN
-             WITH tmpProtocolAll AS (SELECT  MovementItem.Id
-                                           , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
-                                           , MovementItem.Amount
-                                           , MovementItem.ObjectId
-                                           , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
-                                      FROM MovementItem
-
-                                           INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
-                                                                          AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
-                                                                          AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
-                                      WHERE  MovementItem.Id = ioId
-                                      )
-                 , tmpProtocol AS (SELECT tmpProtocolAll.Id
-                                        , tmpProtocolAll.ObjectId
-                                        , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
-                                        , tmpProtocolAll.Amount
-                                   FROM tmpProtocolAll
-                                   WHERE tmpProtocolAll.Ord = 1)
-
-             SELECT tmpProtocol.AmountAuto
-             INTO vbAmountAuto
-             FROM tmpProtocol;
 
             IF COALESCE (ioId, 0) <> 0 AND ceil(vbAmountAuto) < inAmount
             THEN
@@ -456,38 +440,6 @@ BEGIN
 
         IF vbIsSUN = TRUE AND vbInsertDate >= '25.08.2020' AND COALESCE (inCommentSendID, 0) = 0 AND COALESCE(vbAmount, 0) <> COALESCE(inAmount, 0)
         THEN
-           WITH tmpProtocolAll AS (SELECT  MovementItem.Id
-                                         , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
-                                         , MovementItem.Amount
-                                         , MovementItem.ObjectId
-                                         , Object_Goods_Main.Name
-                                         , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
-                                    FROM MovementItem
-
-                                         INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.objectid
-                                         INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
-                                                                     AND Object_Goods_Main.isInvisibleSUN = False
-
-                                         INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
-                                                                        AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
-                                                                        AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
-                                    WHERE  MovementItem.Id = ioId
-                                    )
-               , tmpProtocol AS (SELECT tmpProtocolAll.Id
-                                      , tmpProtocolAll.ObjectId
-                                      , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
-                                      , tmpProtocolAll.Name
-                                      , tmpProtocolAll.Amount
-                                 FROM tmpProtocolAll
-                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
-                                                                       ON MILinkObject_CommentSend.MovementItemId = tmpProtocolAll.Id
-                                                                      AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
-                                 WHERE tmpProtocolAll.Ord = 1
-                                   AND COALESCE (MILinkObject_CommentSend.ObjectId, 0) = 0)
-
-           SELECT tmpProtocol.AmountAuto
-           INTO vbAmountAuto
-           FROM tmpProtocol;
 
            IF COALESCE(vbAmountAuto, 0) > COALESCE(inAmount, 0)
            THEN
@@ -565,39 +517,6 @@ BEGIN
                               AND Container.ObjectId = inGoodsId
                               AND Container.WhereObjectId = vbFromId
                               AND Container.Amount <> 0);
-
-           WITH tmpProtocolAll AS (SELECT  MovementItem.Id
-                                         , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
-                                         , MovementItem.Amount
-                                         , MovementItem.ObjectId
-                                         , Object_Goods_Main.Name
-                                         , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
-                                    FROM MovementItem
-
-                                         INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.objectid
-                                         INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
-                                                                     AND Object_Goods_Main.isInvisibleSUN = False
-
-                                         INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
-                                                                        AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
-                                                                        AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
-                                    WHERE  MovementItem.Id = ioId
-                                    )
-               , tmpProtocol AS (SELECT tmpProtocolAll.Id
-                                      , tmpProtocolAll.ObjectId
-                                      , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
-                                      , tmpProtocolAll.Name
-                                      , tmpProtocolAll.Amount
-                                 FROM tmpProtocolAll
-                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
-                                                                       ON MILinkObject_CommentSend.MovementItemId = tmpProtocolAll.Id
-                                                                      AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()
-                                 WHERE tmpProtocolAll.Ord = 1
-                                   AND COALESCE (MILinkObject_CommentSend.ObjectId, 0) = 0)
-
-           SELECT tmpProtocol.AmountAuto
-           INTO vbAmountAuto
-           FROM tmpProtocol;
 
         IF COALESCE (COALESCE (vbAmountPromo, 0) * vbUserUnit, 0) < (COALESCE (vbRemains, 0) - COALESCE (vbAmountAuto, 0))
         THEN
