@@ -1,7 +1,7 @@
-object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
+object InfoMoneyDetail_ObjectForm: TInfoMoneyDetail_ObjectForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1090#1072#1090#1100#1080' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientHeight = 375
   ClientWidth = 631
   Color = clBtnFace
@@ -52,50 +52,14 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 42
+        Width = 75
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 215
-      end
-      object GroupNameFull: TcxGridDBColumn
-        Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
-        DataBinding.FieldName = 'GroupNameFull'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 121
-      end
-      object ParentName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072
-        DataBinding.FieldName = 'ParentName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 116
-      end
-      object isUserAll: TcxGridDBColumn
-        Caption = #1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084
-        DataBinding.FieldName = 'isUserAll'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084' ('#1076#1072'/'#1085#1077#1090')'
-        Options.Editing = False
-        Width = 57
-      end
-      object isService: TcxGridDBColumn
-        Caption = #1055#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1102
-        DataBinding.FieldName = 'isService'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1102' ('#1076#1072'/'#1085#1077#1090')'
-        Options.Editing = False
-        Width = 95
+        Width = 296
       end
       object InfoMoneyKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1055#1088#1080#1093#1086#1076'/ '#1088#1072#1089#1093#1086#1076
@@ -103,7 +67,7 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 87
+        Width = 246
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -406,7 +370,7 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_InfoMoney_choice'
+    StoredProcName = 'gpSelect_Object_InfoMoneyDetail_choice'
     DataSet = ClientDataSet
     DataSets = <
       item

@@ -98,7 +98,6 @@ type
     bbInsertMask: TdxBarButton;
     ceKindName: TcxTextEdit;
     isSign: TcxGridDBColumn;
-    isChild: TcxGridDBColumn;
   private
   public
   end;

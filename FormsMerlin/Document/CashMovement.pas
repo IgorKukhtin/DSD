@@ -9,7 +9,18 @@ uses
   Vcl.ActnList, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons,
   cxControls, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxTextEdit, dsdGuides, cxButtonEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
-  cxCurrencyEdit, cxLabel, dxSkinsCore, dxSkinsDefaultPainters, cxCheckBox;
+  cxCurrencyEdit, cxLabel, dxSkinsCore, dxSkinsDefaultPainters, cxCheckBox,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TCashMovementForm = class(TAncestorEditDialogForm)
@@ -34,10 +45,13 @@ type
     ceParent_infomoney: TcxButtonEdit;
     GuidesParent_infomoney: TdsdGuides;
     cbSign: TcxCheckBox;
-    cbChild: TcxCheckBox;
     cxLabel4: TcxLabel;
     edInfoMoneyDetail: TcxButtonEdit;
     GuidesInfoMoneyDetail: TdsdGuides;
+    edKindName_text: TcxTextEdit;
+    cxLabel6: TcxLabel;
+    edCash: TcxButtonEdit;
+    GuidesCash: TdsdGuides;
   private
     { Private declarations }
   public

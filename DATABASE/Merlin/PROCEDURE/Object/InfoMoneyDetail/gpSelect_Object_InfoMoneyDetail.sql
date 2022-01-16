@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_InfoMoneyDetail()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_InfoMoneyDetail (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_InfoMoneyDetail (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_InfoMoneyDetail(
+    IN inIsShowAll   Boolean,       -- признак показать удаленные да / нет
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -54,6 +56,7 @@ $BODY$BEGIN
                              ON ObjectDate_Update.ObjectId = Object_InfoMoneyDetail.Id
                             AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()
        WHERE Object_InfoMoneyDetail.DescId = zc_Object_InfoMoneyDetail()
+         AND (Object_InfoMoneyDetail.isErased = FALSE OR inIsShowAll = TRUE)
    ;
   
 END;$BODY$

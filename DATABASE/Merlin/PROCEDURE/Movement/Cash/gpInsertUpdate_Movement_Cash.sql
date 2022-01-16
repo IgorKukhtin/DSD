@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_Cash()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash(Integer, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash(Integer, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -8,14 +8,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
     IN inOperDate             TDateTime , -- Дата документа
     IN inServiceDate          TDateTime , -- Дата начисления
     IN inAmount               TFloat    , -- Сумма
+    IN inCashId               Integer   , -- касса 
     IN inUnitId               Integer   , -- отдел 
     IN inParent_InfoMoneyId   Integer   , -- Статьи  группа
     IN inInfoMoney            TVarChar   , -- Статьи 
     IN inInfoMoneyDetail      TVarChar   , -- Детали 
     IN inCommentInfoMoney     TVarChar   , -- Примечание
     IN inKindName             TVarChar   , --призрак приход / расход
-    IN inisSign               Boolean   ,  
-    IN inisChild              Boolean   , 
     IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -46,7 +45,7 @@ BEGIN
              vbInfoMoneyId := gpInsertUpdate_Object_InfoMoney (ioId   := 0
                                                              , inCode := 0
                                                              , inName := TRIM (inInfoMoney)::TVarChar
-                                                             , inisCash := TRUE
+                                                             , inisService := TRUE
                                                              , inisUserAll := COALESCE ( (SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = inParent_InfoMoneyId AND OB.DescId = zc_ObjectBoolean_InfoMoney_UserAll()), FALSE)
                                                              , inInfoMoneyKindId := CASE WHEN inKindName = 'zc_Enum_InfoMoney_In' THEN zc_Enum_InfoMoney_In() ELSE zc_Enum_InfoMoney_Out() END
                                                              , inParentId := inParent_InfoMoneyId
@@ -91,7 +90,8 @@ BEGIN
                                            , inInvNumber            := inInvNumber
                                            , inOperDate             := inOperDate
                                            , inServiceDate          := inServiceDate
-                                           , inAmount               := inAmount
+                                           , inAmount               := CASE WHEN inKindName = 'zc_Enum_InfoMoney_In' THEN inAmount ELSE inAmount * (-1) END ::TFloat
+                                           , inCashId               := inCashId
                                            , inUnitId               := inUnitId
                                            , inInfoMoneyId          := vbInfoMoneyId
                                            , inInfoMoneyDetailId    := vbInfoMoneyDetailId

@@ -22,11 +22,11 @@ type
     procedure LoadCommentFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadInfoMoneyFormTest;
-    procedure LoadKindFormTest;
+    procedure LoadInfoMoneyDetailFormTest;
     procedure LoadImportSettingsFormTest;
     procedure LoadImportTypeFormTest;
+    procedure LoadKindFormTest;
     procedure LoadMemberFormTest;
-    procedure LoadInfoMoneyDetailFormTest;
     procedure LoadObjectHistoryFormTest;
     procedure LoadPositionFormTest;
     procedure LoadReportFormTest;
@@ -187,6 +187,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDetailForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDetailEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDetailEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDetail_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDetail_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadObjectHistoryFormTest;
