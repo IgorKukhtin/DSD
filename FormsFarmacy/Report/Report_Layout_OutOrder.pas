@@ -36,6 +36,10 @@ type
     UnitName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     dxBarButton2: TdxBarButton;
+    OperDatePrice: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    OperDatePriceLink: TcxGridDBColumn;
+    JuridicalNameLink: TcxGridDBColumn;
   private
     { Private declarations }
   public

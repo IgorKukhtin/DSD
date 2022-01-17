@@ -67,9 +67,10 @@ BEGIN
           
           LEFT JOIN LoadPriceListItem ON (LoadPriceListItem.CommonCode = Object_Goods_Main.MorionCode or LoadPriceListItem.barcode = Object_Goods_BarCode.barcode)
                                      AND LoadPriceListItem.goodsid is Null
-          LEFT JOIN Object_Goods_Juridical ON Object_Goods_Juridical.ID = LoadPriceListItem.goodsid
-          
           INNER JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
+
+          LEFT JOIN Object_Goods_Juridical ON Object_Goods_Juridical.GoodsMainId = LoadPriceListItem.goodsid
+                                          AND Object_Goods_Juridical.JuridicalId = LoadPriceList.JuridicalId
 
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = LoadPriceList.JuridicalId
           LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = LoadPriceList.ContractId

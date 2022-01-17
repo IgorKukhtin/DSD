@@ -1040,6 +1040,9 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       StoredProcList = <
         item
           StoredProc = spUpdate_Unit_isSUN_No
+        end
+        item
+          StoredProc = spUpdate_Unit_isSUN_v3_no
         end>
       Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
       Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
@@ -1158,8 +1161,8 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         item
           StoredProc = spUpdate_Unit_isSUN_v3_in_no
         end>
-      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080#1077#1084' ('#1044#1072'/'#1053#1077#1090')'
-      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080#1077#1084' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080#1077#1084' - '#1053#1077#1090
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080#1077#1084' - '#1053#1077#1090
       ImageIndex = 71
     end
     object ExecuteDialog_SUN_Lock: TExecuteDialog [10]
@@ -1236,6 +1239,9 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       StoredProcList = <
         item
           StoredProc = spUpdate_Unit_isSUN_v3_no
+        end
+        item
+          StoredProc = spUpdate_Unit_isSUN_No
         end>
       Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
       Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
@@ -5556,8 +5562,8 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 304
-    Top = 387
+    Left = 264
+    Top = 419
   end
   object spUpdate_Unit_isSUN_v3_out_yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isSUN_v2'
@@ -5595,8 +5601,8 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 272
-    Top = 355
+    Left = 264
+    Top = 363
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -6603,7 +6609,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = False
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -6624,7 +6630,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 312
+    Left = 408
     Top = 355
   end
   object spUpdate_Unit_isSUN_v3_in_no: TdsdStoredProc
@@ -6642,7 +6648,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = False
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -6663,7 +6669,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 376
+    Left = 408
     Top = 411
   end
   object spUpdate_Unit_isSUN_v4_no: TdsdStoredProc

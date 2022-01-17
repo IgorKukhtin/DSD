@@ -159,7 +159,8 @@ uses
   Movement_PeriodDialog in '..\..\FormsMerlin\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm},
   ServiceMovement in '..\..\FormsMerlin\Document\ServiceMovement.pas' {ServiceMovementForm: TParentForm},
   CashJournal in '..\..\FormsMerlin\Document\CashJournal.pas' {CashJournalForm: TParentForm},
-  CashMovement in '..\..\FormsMerlin\Document\CashMovement.pas' {CashMovementForm: TParentForm};
+  CashMovement in '..\..\FormsMerlin\Document\CashMovement.pas' {CashMovementForm: TParentForm},
+  InfoMoneyDetail_Object in '..\..\FormsMerlin\Guides\InfoMoneyDetail_Object.pas' {InfoMoneyDetail_ObjectForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

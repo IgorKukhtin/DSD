@@ -249,8 +249,10 @@ BEGIN
              END                                                 AS PartionGoodsDateColor
            , CASE
                   WHEN COALESCE(MIString_GoodsName.ValueData, Object_PartnerGoods.ValueData) ILIKE '%А+%' AND vbJuridicalId = 410822 
-                    OR (COALESCE(MIString_GoodsName.ValueData, Object_PartnerGoods.ValueData) ILIKE '%СТМ%' 
-                     OR COALESCE(MIString_GoodsName.ValueData, Object_PartnerGoods.ValueData) ILIKE '%PL/%') AND vbJuridicalId = 59612  THEN zc_Color_Red()    --красный заказывать нельзя
+                    OR (COALESCE(MIString_GoodsName.ValueData, Object_PartnerGoods.ValueData) ILIKE '%ANC%' 
+                    OR COALESCE(MIString_GoodsName.ValueData, Object_PartnerGoods.ValueData) ILIKE '%PL/%') AND vbJuridicalId = 59612
+                    OR COALESCE(MIString_GoodsName.ValueData, Object_PartnerGoods.ValueData) ILIKE '%АйВи%'
+                    OR COALESCE(MIString_GoodsName.ValueData, Object_PartnerGoods.ValueData) ILIKE '%АЙВІ%' THEN zc_Color_Red()    --красный заказывать нельзя
                   ELSE zc_Color_White()
               END  AS OrderShedule_Color
            , tmpMI.MinimumLot  ::TFloat                           AS MinimumLot

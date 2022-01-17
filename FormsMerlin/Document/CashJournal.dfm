@@ -1,7 +1,7 @@
 object CashJournalForm: TCashJournalForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072'>'
   ClientHeight = 381
   ClientWidth = 809
   Color = clBtnFace
@@ -72,7 +72,6 @@ object CashJournalForm: TCashJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 49
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -156,14 +155,6 @@ object CashJournalForm: TCashJournalForm
         HeaderHint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1072
         Width = 70
       end
-      object isChild: TcxGridDBColumn
-        Caption = #1050#1086#1088#1088'. '#1087#1088#1086#1096#1083#1072
-        DataBinding.FieldName = 'isChild'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1087#1088#1086#1096#1083#1072', '#1076#1072#1085#1085#1099#1077' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099' '#1080#1079' Child'
-        Width = 70
-      end
       object ServiceDate: TcxGridDBColumn
         Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
         DataBinding.FieldName = 'ServiceDate'
@@ -174,6 +165,23 @@ object CashJournalForm: TCashJournalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 89
+      end
+      object CashCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1082#1072#1089#1089#1099
+        DataBinding.FieldName = 'CashCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object CashName: TcxGridDBColumn
+        Caption = #1050#1072#1089#1089#1072
+        DataBinding.FieldName = 'CashName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 121
       end
       object UnitCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
@@ -579,6 +587,22 @@ object CashJournalForm: TCashJournalForm
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKindName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKindName_text'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKindName_text'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -614,6 +638,22 @@ object CashJournalForm: TCashJournalForm
           Value = 42370d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKindName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKindName_text'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKindName_text'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -678,6 +718,29 @@ object CashJournalForm: TCashJournalForm
           Value = Null
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_Value'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKindName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKindName_text'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKindName_text'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False

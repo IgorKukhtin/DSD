@@ -93,6 +93,15 @@ BEGIN
         PERFORM lpLog_Run_Schedule_Function('gpRun_MovementItem_WagesSUN1', True, text_var1::TVarChar, vbUserId);
     END;
 
+     -- Расчет СУН-Экспресс
+    BEGIN
+        PERFORM gpInsert_Movement_Send_RemainsSun_express (inOperDate:= CURRENT_DATE, inSession:= zfCalc_UserAdmin()); 
+    EXCEPTION
+        WHEN others THEN
+          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+        PERFORM lpLog_Run_Schedule_Function('gpInsert_Movement_Send_RemainsSun_express', True, text_var1::TVarChar, vbUserId);
+    END;
+
      -- Расчет дополнения СУН1
     BEGIN
         PERFORM gpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE, inSession:= zfCalc_UserAdmin()); 

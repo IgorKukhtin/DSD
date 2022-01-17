@@ -207,6 +207,7 @@ type
     spUpdateSendLossFrom: TdsdStoredProc;
     actUpdateSendLossFrom: TdsdExecStoredProc;
     dxBarButton11: TdxBarButton;
+    cbSUN_v3: TcxCheckBox;
   private
     { Private declarations }
   public

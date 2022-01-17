@@ -1,4 +1,4 @@
-unit InfoMoneyDetail;
+unit InfoMoneyDetail_Object;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   dsdAddOn, dxBarExtItems;
 
 type
-  TInfoMoneyDetailForm = class(TParentForm)
+  TInfoMoneyDetail_ObjectForm = class(TParentForm)
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
@@ -37,17 +37,9 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
-    bbInsert: TdxBarButton;
     spSelect: TdsdStoredProc;
-    actUpdate: TdsdInsertUpdateAction;
-    bbEdit: TdxBarButton;
     isErased: TcxGridDBColumn;
     Code: TcxGridDBColumn;
-    bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
     dxBarStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
@@ -58,9 +50,9 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     spErasedUnErased: TdsdStoredProc;
-    InfoMoneyKindName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
@@ -72,6 +64,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TInfoMoneyDetailForm);
+  RegisterClass(TInfoMoneyDetail_ObjectForm);
 
 end.

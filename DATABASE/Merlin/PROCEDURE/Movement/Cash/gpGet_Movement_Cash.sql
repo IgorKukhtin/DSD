@@ -11,8 +11,9 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Cash(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar
              , OperDate TDateTime, ServiceDate TDateTime
-             , isSign Boolean, isChild Boolean
+             , isSign Boolean
              , Amount TFloat
+             , CashId Integer, CashName TVarChar
              , UnitId Integer, UnitName TVarChar
              , ParentId_InfoMoney Integer, ParentName_InfoMoney TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
@@ -37,8 +38,9 @@ BEGIN
            , CAST (CURRENT_DATE AS TDateTime)                  AS OperDate
            , DATE_TRUNC ('MONTH', inOperDate) :: TDateTime     AS ServiceDate
            , FALSE :: Boolean                                  AS isSign
-           , FALSE :: Boolean                                  AS isChild
            , 0::TFloat                                         AS Amount
+           , 0                                                 AS CashId
+           , CAST ('' as TVarChar)                             AS CashName
            , 0                                                 AS UnitId
            , CAST ('' as TVarChar)                             AS UnitName
            , 0                                                 AS ParentId_InfoMoney
@@ -57,10 +59,11 @@ BEGIN
              inMovementId AS Id
            , CASE WHEN inMovementId = 0 THEN CAST (NEXTVAL ('movement_service_seq') AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
            , CASE WHEN inMovementId = 0 THEN CAST (CURRENT_DATE AS TDateTime) ELSE Movement.OperDate END ::TDateTime AS OperDate
-           , CASE WHEN inMovementId = 0 THEN DATE_TRUNC ('MONTH', inOperDate - INTERVAL '1 MONTH') ELSE MIDate_ServiceDate.ValueData END ::TDateTime AS ServiceDate
+           , CASE WHEN inMovementId = 0 THEN DATE_TRUNC ('MONTH', inOperDate) ELSE MIDate_ServiceDate.ValueData END ::TDateTime AS ServiceDate
            , COALESCE (MovementBoolean_Sign.ValueData, FALSE) :: Boolean AS isSign
-           , COALESCE (MIBoolean_Child.ValueData, FALSE)      :: Boolean AS isChild
-           , MovementItem.Amount  ::TFloat      AS Amount
+           , CASE WHEN MovementItem.Amount < 0 THEN MovementItem.Amount * (-1) ELSE MovementItem.Amount END  ::TFloat AS Amount
+           , Object_Cash.Id                     AS CashId
+           , Object_Cash.ValueData              AS CashName
            , Object_Unit.Id                     AS UnitId
            , Object_Unit.ValueData              AS UnitName
            , Object_Parent.Id                   AS ParentId_InfoMoney
@@ -73,7 +76,12 @@ BEGIN
            , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
        FROM Movement
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.ObjectId
+            LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
@@ -99,6 +107,10 @@ BEGIN
                                        ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
                                       AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_Sign
+                                      ON MovementBoolean_Sign.MovementId = Movement.Id
+                                     AND MovementBoolean_Sign.DescId = zc_MovementBoolean_Sign()
+
        WHERE Movement.Id = inMovementId_Value;
 
    END IF; 
@@ -115,4 +127,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Cash (inMovementId:= 40874, inOperDate:= CURRENT_DATE, inSession := zfCalc_UserAdmin());
+--select * from gpGet_Movement_Cash(inMovementId := 608 , inMovementId_Value := 608 , inOperDate := ('31.01.2022')::TDateTime , inKindName := 'zc_Enum_InfoMoney_In' ,  inSession := '5');

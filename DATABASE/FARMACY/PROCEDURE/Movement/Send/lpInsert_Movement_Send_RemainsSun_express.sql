@@ -126,7 +126,7 @@ BEGIN
      DELETE FROM _tmpRemains;
      -- 2.1. вся статистика продаж - express: 1) у отправителя  2) у получателя
      DELETE FROM _tmpSale_express;
-     -- 2.3. все товары для статистики продаж - express
+     -- 2.3. товары для Кратность
      DELETE FROM _tmpGoods_express;
      -- 3.2. остатки, EXPRESS - для распределения
      DELETE FROM _tmpRemains_Partion;
@@ -143,35 +143,30 @@ BEGIN
 
 
      -- все Подразделения для схемы SUN-v3
-     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN)
+     INSERT INTO _tmpUnit_SUN (UnitId, isSUN_out, isSUN_in)
         SELECT OB.ObjectId AS UnitId
                -- коэф суточного запаса получателя - определяется приход
-             , CASE WHEN COALESCE (OF_KoeffInSUN.ValueData, 0) = 0  THEN 1 ELSE OF_KoeffInSUN.ValueData  END AS KoeffInSUN
+             , COALESCE (OB_Unit_SUN_out.ValueData, False)
                -- коэф суточного запаса отправителя - определяется расход
-             , CASE WHEN COALESCE (OF_KoeffOutSUN.ValueData, 0) = 0 THEN 1 ELSE OF_KoeffOutSUN.ValueData END AS KoeffOutSUN
+             , COALESCE (OB_Unit_SUN_in.ValueData, False)
         FROM ObjectBoolean AS OB
-             LEFT JOIN ObjectFloat  AS OF_KoeffInSUN  ON OF_KoeffInSUN.ObjectId  = OB.ObjectId AND OF_KoeffInSUN.DescId  = zc_ObjectFloat_Unit_KoeffInSUN_v3()
-             LEFT JOIN ObjectFloat  AS OF_KoeffOutSUN ON OF_KoeffOutSUN.ObjectId = OB.ObjectId AND OF_KoeffOutSUN.DescId = zc_ObjectFloat_Unit_KoeffOutSUN_v3()
-        WHERE (OB.ValueData = TRUE
-          --OR OB.ObjectId in (183292, 9771036) -- select * from object where Id in (183292, 9771036)
-              )
-          AND OB.DescId = zc_ObjectBoolean_Unit_SUN()  --_v3()
+             LEFT JOIN ObjectString  AS OS_ListDaySUN    ON OS_ListDaySUN.ObjectId    = OB.ObjectId AND OS_ListDaySUN.DescId    = zc_ObjectString_Unit_ListDaySUN()
+
+             -- Работают по СУН - только отправка
+             LEFT JOIN ObjectBoolean AS OB_Unit_SUN_out
+                                     ON OB_Unit_SUN_out.ObjectId  = OB.ObjectId 
+                                    AND OB_Unit_SUN_out.DescId    = zc_ObjectBoolean_Unit_SUN_v3_out()
+
+             -- Работают по СУН - только прием
+             LEFT JOIN ObjectBoolean AS OB_Unit_SUN_in
+                                     ON OB_Unit_SUN_in.ObjectId  =  OB.ObjectId 
+                                    AND OB_Unit_SUN_in.DescId    = zc_ObjectBoolean_Unit_SUN_v3_in()
+                                    
+        WHERE (OB.ValueData = TRUE) AND (OB_Unit_SUN_out.ValueData = TRUE OR OB_Unit_SUN_in.ValueData = TRUE)
+          AND OB.DescId = zc_ObjectBoolean_Unit_SUN_v3()          
           -- если указан день недели - проверим его
-        --AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
-      /*UNION 
-        SELECT Object.Id AS UnitId
-               -- коэф суточного запаса получателя - определяется приход
-             , CASE WHEN COALESCE (OF_KoeffInSUN.ValueData, 0) = 0  THEN 1 ELSE OF_KoeffInSUN.ValueData  END AS KoeffInSUN
-               -- коэф суточного запаса отправителя - определяется расход
-             , CASE WHEN COALESCE (OF_KoeffOutSUN.ValueData, 0) = 0 THEN 1 ELSE OF_KoeffOutSUN.ValueData END AS KoeffOutSUN
-        FROM Object
-             LEFT JOIN ObjectFloat  AS OF_KoeffInSUN  ON OF_KoeffInSUN.ObjectId  = Object.Id AND OF_KoeffInSUN.DescId  = zc_ObjectFloat_Unit_KoeffInSUN_v3()
-             LEFT JOIN ObjectFloat  AS OF_KoeffOutSUN ON OF_KoeffOutSUN.ObjectId = Object.Id AND OF_KoeffOutSUN.DescId = zc_ObjectFloat_Unit_KoeffOutSUN_v3()
-        WHERE Object.DescId = zc_Object_Unit()
-          -- если указан день недели - проверим его
-        --AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
-        */
-       ;
+          AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
+                 ;
 
      -- Товары дисконтных проектов
      
@@ -211,27 +206,14 @@ BEGIN
       GROUP BY ObjectLink_BarCode_Goods.ChildObjectId
              , tmpUnitDiscount.UnitId;
 
-     -- все Товары для схемы SUN-v3
-     INSERT INTO _tmpGoods_express (GoodsId, KoeffSUN)
-        SELECT OB.ObjectId AS GoodsId
-               -- Кратность по Э-СУН  
-             , CASE WHEN COALESCE (OF_KoeffSUN.ValueData, 0) = 0  THEN 1 ELSE OF_KoeffSUN.ValueData  END AS KoeffSUN
-        FROM ObjectBoolean AS OB
-             LEFT JOIN ObjectFloat AS OF_KoeffSUN ON OF_KoeffSUN.ObjectId = OB.ObjectId AND OF_KoeffSUN.DescId = zc_ObjectFloat_Goods_KoeffSUN_v3()
-        WHERE (OB.ValueData = TRUE
-          --OR OB.ObjectId in (183292, 9771036) -- select * from object where Id in (183292, 9771036)
-              )
-          AND OB.DescId = zc_ObjectBoolean_Goods_SUN_v3()
-      /*UNION
-        SELECT Object.Id AS GoodsId
-               -- Кратность по Э-СУН  
-             , CASE WHEN COALESCE (OF_KoeffSUN.ValueData, 0) = 0  THEN 1 ELSE OF_KoeffSUN.ValueData  END AS KoeffSUN
-        FROM Object
-             LEFT JOIN ObjectFloat AS OF_KoeffSUN ON OF_KoeffSUN.ObjectId = Object.Id AND OF_KoeffSUN.DescId = zc_ObjectFloat_Goods_KoeffSUN_v3()
-        WHERE Object.DescId = zc_Object_Goods()
-        --AND Object.ValueData ILIKE 'маска защит%'
-       */
-       ;
+      -- товары для Кратность
+      INSERT INTO _tmpGoods_express (GoodsId, KoeffSUN)
+         SELECT OF_KoeffSUN.ObjectId  AS GoodsId
+              , OF_KoeffSUN.ValueData AS KoeffSUN
+         FROM ObjectFloat AS OF_KoeffSUN
+         WHERE OF_KoeffSUN.DescId    = zc_ObjectFloat_Goods_KoeffSUN_v1()
+           AND OF_KoeffSUN.ValueData > 0
+        ;
 
      -- Выкладки
      WITH tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
@@ -357,46 +339,21 @@ BEGIN
         AND COALESCE(NULLIF(MIFloat_AmountPlanMax.ValueData, 0), MI_Goods.Amount) > 0;
 
      -- 1.1. вся статистика продаж
-     -- CREATE TEMP TABLE _tmpSale_express (DayOrd Integer, DayOrd_real Integer, UnitId Integer, GoodsId Integer, Amount TFloat, Amount_sum TFloat, Summ TFloat) ON COMMIT DROP;
-     INSERT INTO _tmpSale_express (DayOrd, DayOrd_real, UnitId, GoodsId, Amount, Amount_sum, Summ, Summ_sum)
-        SELECT ROW_NUMBER() OVER (PARTITION BY tmp.UnitId, tmp.GoodsId ORDER BY tmp.DayOrd ASC) AS DayOrd
-             , tmp.DayOrd
-             , tmp.UnitId
-             , tmp.GoodsId
-               -- за 32 дня
-             , tmp.Amount
-               -- накопительно с 1 по 32 дня
-             , SUM (tmp.Amount) OVER (PARTITION BY tmp.UnitId, tmp.GoodsId ORDER BY tmp.DayOrd ASC) AS Amount_sum
-               -- за 32 дня
-             , tmp.Summ
-               -- накопительно с 1 по 32 дня
-             , SUM (tmp.Summ)   OVER (PARTITION BY tmp.UnitId, tmp.GoodsId ORDER BY tmp.DayOrd ASC) AS Summ_sum
-        FROM 
-       (SELECT tmp.DayOrd
-             , tmp.UnitId
-             , tmp.GoodsId
-               -- за 32 дня
-             , tmp.Amount
-             , tmp.Summ
-        FROM (SELECT MIContainer.WhereObjectId_analyzer                                                      AS UnitId
-                   , MIContainer.ObjectId_analyzer                                                           AS GoodsId
-                   , SUM (COALESCE (-1 * MIContainer.Amount, 0))                                             AS Amount
-                   , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0))            AS Summ
-                   , DATE_PART ('DAY', AGE (inOperDate :: TIMESTAMP, MIContainer.OperDate :: TIMESTAMP)) + 1 AS DayOrd
-              FROM MovementItemContainer AS MIContainer
-                   -- !!!только для таких Аптек!!!
-                   INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MIContainer.WhereObjectId_analyzer
-                   -- !!!только для таких товаров!!!
-                   INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = MIContainer.ObjectId_analyzer
-              WHERE MIContainer.DescId         = zc_MIContainer_Count()
-                AND MIContainer.MovementDescId = zc_Movement_Check()
-                AND MIContainer.OperDate BETWEEN inOperDate - INTERVAL '32 DAY' AND inOperDate
-              GROUP BY MIContainer.ObjectId_analyzer
-                     , MIContainer.WhereObjectId_analyzer
-                     , DATE_PART ('DAY', AGE (inOperDate :: TIMESTAMP, MIContainer.OperDate :: TIMESTAMP))
-              HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
-             ) AS tmp
-       ) AS tmp
+     INSERT INTO _tmpSale_express (UnitId, GoodsId, Amount, Summ)
+        SELECT MIContainer.WhereObjectId_analyzer                                                      AS UnitId
+             , MIContainer.ObjectId_analyzer                                                           AS GoodsId
+             , SUM (COALESCE (-1 * MIContainer.Amount, 0))                                             AS Amount
+             , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0))            AS Summ
+        FROM MovementItemContainer AS MIContainer
+             -- !!!только для таких Аптек!!!
+             INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MIContainer.WhereObjectId_analyzer
+                                    AND _tmpUnit_SUN.isSUN_in = TRUE
+        WHERE MIContainer.DescId         = zc_MIContainer_Count()
+          AND MIContainer.MovementDescId = zc_Movement_Check()
+          AND MIContainer.OperDate BETWEEN inOperDate - INTERVAL '61 DAY' AND inOperDate
+        GROUP BY MIContainer.ObjectId_analyzer
+               , MIContainer.WhereObjectId_analyzer
+        HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
        ;
 
 
@@ -419,8 +376,6 @@ BEGIN
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId     = zc_MI_Master()
                                                        AND MovementItem.isErased   = FALSE
-                                -- !!!только для таких товаров!!!
-                                INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = MovementItem.ObjectId
                            WHERE Movement.DescId   = zc_Movement_Income()
                              AND Movement.StatusId = zc_Enum_Status_UnComplete()
                            GROUP BY MovementLinkObject_To.ObjectId, MovementItem.ObjectId
@@ -453,8 +408,6 @@ BEGIN
                                                           AND MB_SUN_v3.DescId     = zc_MovementBoolean_SUN_v3()
                                                           AND MB_SUN_v3.ValueData  = TRUE
                                                           AND Movement.OperDate    >= inOperDate
-                                 -- !!!только для таких товаров!!!
-                                 INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = MovementItem.ObjectId
                             WHERE Movement.OperDate >= inOperDate - INTERVAL '30 DAY' AND Movement.OperDate < inOperDate + INTERVAL '30 DAY'
                            -- AND Movement.OperDate >= CURRENT_DATE - INTERVAL '14 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '14 DAY'
                               AND Movement.DescId   = zc_Movement_Send()
@@ -492,8 +445,6 @@ BEGIN
                                                           AND MB_SUN_v3.DescId     = zc_MovementBoolean_SUN_v3()
                                                           AND MB_SUN_v3.ValueData  = TRUE
                                                           AND Movement.OperDate    >= inOperDate
-                                 -- !!!только для таких товаров!!!
-                                 INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = MovementItem.ObjectId
                          -- WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '30 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '30 DAY'
                             WHERE Movement.OperDate >= inOperDate - INTERVAL '14 DAY' AND Movement.OperDate < inOperDate + INTERVAL '14 DAY'
                               AND Movement.DescId   = zc_Movement_Send()
@@ -521,8 +472,6 @@ BEGIN
                                                               AND MovementItem.DescId     = zc_MI_Master()
                                                               AND MovementItem.isErased   = FALSE
 
-                                       -- !!!только для таких товаров!!!
-                                       INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = MovementItem.ObjectId
                                   WHERE Movement.DescId   = zc_Movement_OrderExternal()
                                     AND Movement.StatusId = zc_Enum_Status_Complete()
                                   GROUP BY MovementLinkObject_Unit.ObjectId, MovementItem.ObjectId
@@ -566,9 +515,6 @@ BEGIN
                                  INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementCheck.MovementId
                                                         AND MovementItem.DescId     = zc_MI_Master()
                                                         AND MovementItem.isErased   = FALSE
-                                 -- !!!только для таких товаров!!!
-                                 INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = MovementItem.ObjectId
-
                             GROUP BY tmpMovementCheck.UnitId, MovementItem.ObjectId
                            )
           -- остатки
@@ -578,11 +524,9 @@ BEGIN
                          FROM Container
                               -- !!!только для таких Аптек!!!
                               INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = Container.WhereObjectId
-                              -- !!!только для таких товаров!!!
-                              INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = Container.ObjectId
 
                          WHERE Container.DescId = zc_Container_Count()
-                           AND Container.Amount <> 0
+                           AND (Container.Amount <> 0 OR _tmpUnit_SUN.isSUN_in = TRUE)
                          GROUP BY Container.WhereObjectId
                                 , Container.ObjectId
                         )
@@ -603,8 +547,6 @@ BEGIN
                              INNER JOIN Object AS Object_Goods
                                                ON Object_Goods.Id       = OL_Price_Goods.ChildObjectId
                                               AND Object_Goods.isErased = FALSE
-                             -- !!!только для таких товаров!!!
-                             INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = OL_Price_Goods.ChildObjectId
                              LEFT JOIN ObjectFloat AS Price_Value
                                                    ON Price_Value.ObjectId = OL_Price_Unit.ObjectId
                                                   AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
@@ -625,12 +567,12 @@ BEGIN
              , tmpObject_Price.MCSValue
 
                -- продажа у Отправителя/Получателя (статистика за Х*24 часов - накопительно) 
-             , COALESCE (_tmpSale_express.Amount_sum, 0) AS Amount_sale
-             , COALESCE (_tmpSale_express.Summ_sum, 0)   AS Summ_sale
+             , COALESCE (_tmpSale_express.Amount, 0) AS Amount_sale
+             , COALESCE (_tmpSale_express.Summ, 0)   AS Summ_sale
 
                -- потребность у Получателя, EXPRESS
              , CASE WHEN 0 < FLOOR (-- продажи - статистика за Х*24 часов
-                                    (COALESCE (_tmpSale_express.Amount_sum, 0)
+                                    (COALESCE (_tmpSale_express.Amount * CASE WHEN COALESCE (tmpRemains.Amount, 0) = 0 THEN 2 ELSE 0 END, 0)
                                      -- МИНУС остаток
                                    - CASE WHEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) /*- COALESCE (tmpMI_Send_out.Amount, 0)*/
                                               + COALESCE (tmpMI_Send_in.Amount, 0)
@@ -645,10 +587,11 @@ BEGIN
                                           ELSE 0
                                      END)
                                     -- делим на кратность
-                                    / _tmpGoods_express.KoeffSUN
-                                   ) * _tmpGoods_express.KoeffSUN
+                                    / COALESCE(_tmpGoods_express.KoeffSUN, 1)
+                                   ) * COALESCE(_tmpGoods_express.KoeffSUN, 1)
+                         AND _tmpUnit_SUN.isSUN_in = TRUE
                         THEN FLOOR (-- продажи - статистика за Х*24 часов
-                                    (COALESCE (_tmpSale_express.Amount_sum, 0)
+                                    (COALESCE (_tmpSale_express.Amount * CASE WHEN COALESCE (tmpRemains.Amount, 0) = 0 THEN 2 ELSE 0 END, 0)
                                      -- МИНУС остаток
                                    - CASE WHEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) /*- COALESCE (tmpMI_Send_out.Amount, 0)*/
                                               + COALESCE (tmpMI_Send_in.Amount, 0)
@@ -663,28 +606,25 @@ BEGIN
                                           ELSE 0
                                      END)
                                     -- делим на кратность
-                                    / _tmpGoods_express.KoeffSUN
-                                   ) * _tmpGoods_express.KoeffSUN
+                                    / COALESCE(_tmpGoods_express.KoeffSUN, 1)
+                                   ) * COALESCE(_tmpGoods_express.KoeffSUN, 1)
                         ELSE 0
                END AS AmountResult_in
 
                -- Остаток у Отправителя, EXPRESS - можно отдать с учетом кратности
              , CASE WHEN 0 < FLOOR (-- остаток
                                     (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) - COALESCE (tmpMI_Send_out.Amount, 0)
-                                     -- МИНУС продажи - статистика за Х*24 часов
-                                   - COALESCE (_tmpSale_express.Amount_sum, 0)
                                     )
                                     -- делим на кратность
-                                    / _tmpGoods_express.KoeffSUN
-                                   ) * _tmpGoods_express.KoeffSUN
+                                    / COALESCE(_tmpGoods_express.KoeffSUN, 1)
+                                   ) * COALESCE(_tmpGoods_express.KoeffSUN, 1)
+                         AND _tmpUnit_SUN.isSUN_out = TRUE AND _tmpUnit_SUN.isSUN_in = FALSE
                         THEN FLOOR (-- остаток
                                     (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) - COALESCE (tmpMI_Send_out.Amount, 0)
-                                     -- МИНУС продажи - статистика за Х*24 часов
-                                   - COALESCE (_tmpSale_express.Amount_sum, 0)
                                     )
                                     -- делим на кратность
-                                    / _tmpGoods_express.KoeffSUN
-                                   ) * _tmpGoods_express.KoeffSUN
+                                    / COALESCE(_tmpGoods_express.KoeffSUN, 1)
+                                   ) * COALESCE(_tmpGoods_express.KoeffSUN, 1)
                         ELSE 0
                END AS AmountResult_out
 
@@ -699,7 +639,7 @@ BEGIN
                AS AmountRemains_calc_in
 
                -- остаток - расчет - для отправителя
-             , COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) - COALESCE (tmpMI_Send_out.Amount, 0)
+             , COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)
                AS AmountRemains_calc_out
 
                -- приход - UnComplete - за последние +/-7 дней для Date_Branch
@@ -713,12 +653,11 @@ BEGIN
                -- отложенные Чеки + не проведенные с CommentError
              , COALESCE (tmpMI_Reserve.Amount, 0)       AS AmountReserve
 
-        FROM tmpObject_Price
-             -- Работают по СУН - только отправка
-             LEFT JOIN ObjectBoolean AS OB_Unit_SUN_out
-                                     ON OB_Unit_SUN_out.ObjectId  = tmpObject_Price.UnitId
-                                    AND OB_Unit_SUN_out.DescId    = zc_ObjectBoolean_Unit_SUN_v3_out()
-                                    AND OB_Unit_SUN_out.ValueData = TRUE
+        FROM tmpRemains 
+
+             LEFT JOIN tmpObject_Price AS tmpObject_Price
+                                       ON tmpObject_Price.UnitId = tmpRemains.UnitId
+                                      AND tmpObject_Price.GoodsId = tmpRemains.GoodsId
 
              LEFT JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId  = tmpObject_Price.GoodsId
              LEFT JOIN _tmpUnit_SUN      ON _tmpUnit_SUN.UnitId        = tmpObject_Price.UnitId
@@ -726,11 +665,7 @@ BEGIN
              LEFT JOIN _tmpSale_express AS _tmpSale_express
                                         ON _tmpSale_express.UnitId  = tmpObject_Price.UnitId
                                        AND _tmpSale_express.GoodsId = tmpObject_Price.GoodsId
-                                       AND _tmpSale_express.DayOrd  = _tmpUnit_SUN.KoeffInSUN
 
-             LEFT JOIN tmpRemains AS tmpRemains
-                                  ON tmpRemains.UnitId  = tmpObject_Price.UnitId
-                                 AND tmpRemains.GoodsId = tmpObject_Price.GoodsId
              LEFT JOIN tmpMI_Income ON tmpMI_Income.UnitId  = tmpObject_Price.UnitId
                                    AND tmpMI_Income.GoodsId = tmpObject_Price.GoodsId
              LEFT JOIN tmpMI_Send_in ON tmpMI_Send_in.UnitId_to = tmpObject_Price.UnitId
@@ -748,9 +683,8 @@ BEGIN
            --INNER JOIN Object AS Object_Goods ON Object_Goods.Id        = tmpObject_Price.GoodsId
            --                                 AND Object_Goods.ValueData NOT ILIKE 'ААА%'
 
-        WHERE OB_Unit_SUN_out.ObjectId IS NULL
-          AND _tmpGoods_express.KoeffSUN > 0
        ;
+       
      -- 2.2. Результат: все остатки, продажи => получаем кол-ва ПОТРЕБНОСТЬ у получателя
      INSERT INTO  _tmpRemains (UnitId, GoodsId, Price, AmountResult)
         SELECT _tmpRemains_all.UnitId, _tmpRemains_all.GoodsId, _tmpRemains_all.Price, _tmpRemains_all.AmountResult_in
@@ -758,9 +692,6 @@ BEGIN
         -- !!!только с таким AmountResult!!!
         WHERE _tmpRemains_all.AmountResult_in > 0.0
        ;
-
-
-
 
 
      -- 3.1. остатки, EXPRESS (можно отдать с учетом кратности) - для распределения
@@ -773,6 +704,7 @@ BEGIN
      -- для EXPRESS - находим ВСЕ сроковые
    , tmpExpress_PartionDate AS (SELECT tmpExpress_all.UnitID
                                      , tmpExpress_all.GoodsID
+                                     , SUM (Container.Amount) AS Amount
                                 FROM tmpExpress_all
                                      INNER JOIN Container AS Container_main ON Container_main.WhereObjectId = tmpExpress_all.UnitId
                                                                            AND Container_main.ObjectId      = tmpExpress_all.GoodsID
@@ -785,19 +717,15 @@ BEGIN
                                      LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
                                                           ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                          AND ObjectDate_PartionGoods_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
-                                WHERE 1=0 -- !!!т.е. пока отключил
-                              /*WHERE -- !!!т.е. все сроковые категории
-                                      ObjectDate_PartionGoods_Value.ValueData <= vbDate_6
-                                      -- !!!т.е. все сроковые категории
-                              */
+                                WHERE ObjectDate_PartionGoods_Value.ValueData <= CURRENT_DATE + INTERVAL '200 DAY'
                                 GROUP BY tmpExpress_all.UnitID
                                        , tmpExpress_all.GoodsID
                                 HAVING SUM (Container.Amount) > 0
                                )
        -- Перемещение EXPRESS - расход - Erased - за СЕГОДНЯ, что б не отправлять эти товары повторно в СУН-3
-     , tmpMI_SUN_out AS (SELECT DISTINCT
-                                MovementLinkObject_From.ObjectId AS UnitId_from
+     , tmpMI_SUN_out AS (SELECT MovementLinkObject_From.ObjectId AS UnitId_from
                               , MovementItem.ObjectId            AS GoodsId
+                              , SUM(MovementItem.Amount)         AS Amount
                          FROM Movement
                               INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                             ON MovementLinkObject_From.MovementId = Movement.Id
@@ -821,29 +749,21 @@ BEGIN
                            AND Movement.DescId   = zc_Movement_Send()
                            AND Movement.StatusId = zc_Enum_Status_Erased()
                            AND MB_SUN_v3.MovementId IS NULL
+                         GROUP BY MovementLinkObject_From.ObjectId
+                                , MovementItem.ObjectId  
                         )
                  -- все что остается для NotSold
                , tmpExpress AS (SELECT tmpExpress_all.UnitID
                                      , tmpExpress_all.GoodsID
-                                     , tmpExpress_all.AmountRemains
+                                     , tmpExpress_all.AmountRemains - COALESCE (tmpExpress_PartionDate.Amount, 0) - COALESCE (tmpMI_SUN_out.Amount, 0) AS AmountRemains
                                      , tmpExpress_all.AmountResult_out
                                 FROM tmpExpress_all
                                      -- ВСЕ сроковые
                                      LEFT JOIN tmpExpress_PartionDate ON tmpExpress_PartionDate.UnitId  = tmpExpress_all.UnitID
                                                                      AND tmpExpress_PartionDate.GoodsID = tmpExpress_all.GoodsID
-                                     LEFT JOIN ObjectBoolean AS OB_Unit_SUN_in
-                                                             ON OB_Unit_SUN_in.ObjectId  = tmpExpress_all.UnitID
-                                                            AND OB_Unit_SUN_in.DescId    = zc_ObjectBoolean_Unit_SUN_v3_in()
-                                                            AND OB_Unit_SUN_in.ValueData = TRUE
                                      -- !!!Перемещение SUN - расход - Erased - за СЕГОДНЯ, что б не отправлять эти товары повторно в СУН-3
                                      LEFT JOIN tmpMI_SUN_out ON tmpMI_SUN_out.UnitId_from = tmpExpress_all.UnitID
                                                             AND tmpMI_SUN_out.GoodsId     = tmpExpress_all.GoodsId
-                                WHERE -- !!!
-                                      OB_Unit_SUN_in.ObjectId IS NULL
-                                      -- !!!
-                                  AND tmpMI_SUN_out.GoodsId IS NULL
-                                      -- !!!
-                                  AND tmpExpress_PartionDate.GoodsID  IS NULL
                                )
        -- Результат: все остатки, EXPRESS - для распределения
        INSERT INTO _tmpRemains_Partion (UnitId, GoodsId, AmountRemains, AmountResult)
@@ -868,7 +788,7 @@ BEGIN
                               -- тогда EXPRESS = ПОТРЕБНОСТЬ
                               THEN _tmpRemains.AmountResult
                               -- иначе закрываем "частично" - т.е. сколько есть EXPRESS - с учетом Кратности
-                              ELSE FLOOR (_tmpRemains_Partion.AmountResult / _tmpGoods_express.KoeffSUN) * _tmpGoods_express.KoeffSUN
+                              ELSE FLOOR (_tmpRemains_Partion.AmountResult / COALESCE(_tmpGoods_express.KoeffSUN, 1)) * COALESCE(_tmpGoods_express.KoeffSUN, 1)
                     END
                   * _tmpRemains.Price
                    )
@@ -877,7 +797,7 @@ BEGIN
              -- все остатки, EXPRESS
              INNER JOIN _tmpRemains_Partion ON _tmpRemains_Partion.GoodsId = _tmpRemains.GoodsId
              -- все товары для статистики продаж - express
-             INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = _tmpRemains.GoodsId
+             LEFT JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = _tmpRemains.GoodsId
         GROUP BY _tmpRemains_Partion.UnitId
                , _tmpRemains.UnitId
        ;
@@ -887,9 +807,9 @@ BEGIN
      OPEN curPartion FOR
         SELECT _tmpRemains_Partion.UnitId AS UnitId_from
              , _tmpRemains_Partion.GoodsId
-             , _tmpRemains_Partion.AmountResult - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0)
+             , _tmpRemains_Partion.AmountResult - COALESCE(_tmpRemains_all.MCS, 0) - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0)
              , _tmpRemains_Partion.AmountRemains
-             , _tmpGoods_express.KoeffSUN
+             , COALESCE(_tmpGoods_express.KoeffSUN, 1)
         FROM _tmpRemains_Partion
              -- начинаем с аптек, где расход может быть максимальным
              INNER JOIN (SELECT _tmpSumm_limit.UnitId_from, MAX (_tmpSumm_limit.Summ) AS Summ FROM _tmpSumm_limit
@@ -898,7 +818,10 @@ BEGIN
                          GROUP BY _tmpSumm_limit.UnitId_from
                         ) AS tmpSumm_limit ON tmpSumm_limit.UnitId_from = _tmpRemains_Partion.UnitId
              -- все товары для статистики продаж - express
-             INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = _tmpRemains_Partion.GoodsId
+             LEFT JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = _tmpRemains_Partion.GoodsId
+             
+             LEFT JOIN _tmpRemains_all ON _tmpRemains_all.UnitId = _tmpRemains_Partion.UnitId
+                                      AND _tmpRemains_all.GoodsId = _tmpRemains_Partion.GoodsId
 
              LEFT JOIN _tmpGoods_PromoUnit ON _tmpGoods_PromoUnit.UnitId = _tmpRemains_Partion.UnitId
                                           AND _tmpGoods_PromoUnit.GoodsId = _tmpRemains_Partion.GoodsId
@@ -911,7 +834,7 @@ BEGIN
                                                   ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_Partion.UnitId
                                                  AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_Partion.GoodsId
                                                  
-        WHERE _tmpRemains_Partion.AmountResult - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0) > 0
+        WHERE _tmpRemains_Partion.AmountResult - COALESCE(_tmpRemains_all.MCS, 0) - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0) >= 1
           AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
         ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
        ;
@@ -960,18 +883,6 @@ BEGIN
              IF vbAmountResult > vbAmount
              THEN
                  -- если в остатках "дробное" - отдаем "всю дробную часть", т.к. нельзя что б дробная была более чем в 1-ой аптеке
-                 /*IF FLOOR(vbAmount) <> vbAmount
-                 THEN
-                     -- отбрас.дробную.Остаток + дробная часть "весь" остаток
-                     vbAmount_calc:= FLOOR (vbAmount) + vbAmount_save - FLOOR (vbAmount_save);
-                     -- если получилось больше чем "свободный" остаток
-                     IF vbAmount_calc > vbAmount
-                     THEN -- останется только целая часть
-                          vbAmount:= FLOOR (vbAmount_calc);
-                     ELSE -- заменили
-                          vbAmount:= vbAmount_calc;
-                     END IF;
-                 END IF;*/
                  -- получилось в Потребность больше чем в остатках, т.е. отдаем весь "Остаток"
                  INSERT INTO _tmpResult_Partion (DriverId, UnitId_from, UnitId_to, GoodsId, Amount, Summ, MovementId, MovementItemId)
                     SELECT inDriverId
@@ -991,20 +902,6 @@ BEGIN
                  vbAmount_save:= 0;
              ELSE
                  -- если в Автозаказ "дробное" - отдаем "всю дробную часть", т.к. нельзя что б дробная была более чем в 1-ой аптеке
-                 /*IF FLOOR (vbAmountResult) <> vbAmountResult
-                 THEN
-                     -- отбрас.дробную.Автозаказ + дробная часть "весь" остаток
-                     vbAmount_calc:= FLOOR (vbAmountResult) + vbAmount_save - FLOOR (vbAmount_save);
-                     -- если получилось больше чем Автозаказ
-                     IF vbAmount_calc > vbAmountResult
-                     THEN -- останется только целая часть
-                          vbAmountResult:= FLOOR (vbAmount_calc);
-                     ELSE -- заменили
-                          vbAmountResult:= vbAmount_calc;
-                     END IF;
-
-                 END IF;*/
-                 --
                  -- получилось в остатках больше чем надо, т.е. отдаем сколько надо и крутим дальше
                  INSERT INTO _tmpResult_Partion (DriverId, UnitId_from, UnitId_to, GoodsId, Amount, Summ, MovementId, MovementItemId)
                     SELECT inDriverId

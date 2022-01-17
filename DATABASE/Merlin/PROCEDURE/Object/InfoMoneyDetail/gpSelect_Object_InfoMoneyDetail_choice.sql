@@ -1,8 +1,8 @@
--- Function: gpSelect_Object_InfoMoney_choice()
+-- Function: gpSelect_Object_InfoMoneyDetail_choice()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_InfoMoney_choice (Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_InfoMoneyDetail_choice (Boolean, Boolean, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_InfoMoney_choice(
+CREATE OR REPLACE FUNCTION gpSelect_Object_InfoMoneyDetail_choice(
     IN inisService   Boolean,       -- показывать только По начислению да / нет
     IN inIsShowAll   Boolean,       -- признак показать удаленные да / нет
     IN inKindName    TVarChar,      -- какие статьи показывать только приход или только расход 
@@ -10,11 +10,6 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_InfoMoney_choice(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
              , InfoMoneyKindId Integer, InfoMoneyKindName TVarChar
-             , ParentId Integer, ParentName TVarChar
-             , GroupNameFull TVarChar
-             , isUserAll Boolean, isService Boolean
-             , InsertName TVarChar, InsertDate TDateTime
-             , UpdateName TVarChar, UpdateDate TDateTime
 )
 AS
 $BODY$
@@ -33,20 +28,9 @@ BEGIN
         
         , tmp.InfoMoneyKindId
         , tmp.InfoMoneyKindName
-        , tmp.ParentId
-        , tmp.ParentName
-        
-        , tmp.GroupNameFull
-        , tmp.isUserAll
-        , tmp.isService
 
-        , tmp.InsertName
-        , tmp.InsertDate
-        , tmp.UpdateName
-        , tmp.UpdateDate
-   FROM gpSelect_Object_InfoMoney (inIsShowAll, inSession) AS tmp
-   WHERE (COALESCE (tmp.isService, FALSE) = inisService OR inisService = FALSE)
-    AND ((inKindName = 'zc_Enum_InfoMoney_In' AND (tmp.InfoMoneyKindId = zc_Enum_InfoMoney_In() OR COALESCE (tmp.InfoMoneyKindId,0)=0) ) 
+   FROM gpSelect_Object_InfoMoneyDetail (inIsShowAll, inSession) AS tmp
+   WHERE ((inKindName = 'zc_Enum_InfoMoney_In' AND (tmp.InfoMoneyKindId = zc_Enum_InfoMoney_In() OR COALESCE (tmp.InfoMoneyKindId,0)=0) ) 
       OR (inKindName = 'zc_Enum_InfoMoney_Out' AND (tmp.InfoMoneyKindId = zc_Enum_InfoMoney_Out() OR COALESCE (tmp.InfoMoneyKindId,0)=0) )
       OR COALESCE (inKindName,'') = ''  
         )
@@ -64,4 +48,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_InfoMoney (TRUE, FALSE, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_InfoMoneyDetail (TRUE, FALSE, zfCalc_UserAdmin())

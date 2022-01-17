@@ -11,10 +11,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Cash(
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar
-             , OperDate TDateTime
+             , OperDate TDateTime, ServiceDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , isSign Boolean, isChild Boolean
+             , isSign Boolean
              , Amount TFloat
+             , CashId Integer, CashCode Integer, CashName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , InfoMoneyDetailId Integer, InfoMoneyDetailCode Integer, InfoMoneyDetailName TVarChar
@@ -48,20 +49,22 @@ BEGIN
                                                   AND Movement.DescId = zc_Movement_Cash()
                                                   AND Movement.StatusId = tmpStatus.StatusId
                           )
+
         , tmpData AS (SELECT tmpMovement.Id AS MovementId
                            , tmpMovement.InvNumber
                            , tmpMovement.OperDate
                            , tmpMovement.StatusId
-                           , MovementItem.Id                        AS MI_Id
-                           , MovementItem.ObjectId                  AS ObjectId
-                           , MILinkObject_InfoMoney.ObjectId        AS InfoMoneyId
-                           , ObjectLink_InfoMoneyKind.ChildObjectId AS InfoMoneyKindId
-                           , MovementItem.Amount                    AS Amount
+                           , MovementItem.Id       AS MI_Id
+                           , MovementItem.ObjectId AS ObjectId
+                           , MovementItem.Amount   AS Amount
                       FROM tmpMovement
                            INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
                                                   AND MovementItem.DescId = zc_MI_Master()
                                                   AND MovementItem.isErased = FALSE
-                           INNER JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                  AND ((MovementItem.Amount < 0 AND inKindName = 'zc_Enum_InfoMoney_Out')
+                                                    OR (MovementItem.Amount > 0 AND inKindName = 'zc_Enum_InfoMoney_In'))
+
+                           /*INNER JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
                            -- ограничиваем вх.параметром, для разделения документов на приход и расход
@@ -69,18 +72,23 @@ BEGIN
                                                  ON ObjectLink_InfoMoneyKind.ObjectId = MILinkObject_InfoMoney.ObjectId
                                                 AND ObjectLink_InfoMoneyKind.DescId = zc_ObjectLink_InfoMoney_InfoMoneyKind()
                                                 AND ObjectLink_InfoMoneyKind.ChildObjectId = CASE WHEN inKindName = 'zc_Enum_InfoMoney_In' THEN zc_Enum_InfoMoney_In() ELSE zc_Enum_InfoMoney_Out() END
+                           */
                            )
 
        SELECT
              tmpData.MovementId                   AS Id
            , tmpData.InvNumber                    AS InvNumber
            , tmpData.OperDate                     AS OperDate
+           , MIDate_ServiceDate.ValueData ::TDateTime AS ServiceDate
            , Object_Status.ObjectCode             AS StatusCode
            , Object_Status.ValueData              AS StatusName
            , COALESCE (MovementBoolean_Sign.ValueData, FALSE) :: Boolean AS isSign
-           , COALESCE (MIBoolean_Child.ValueData, FALSE)      :: Boolean AS isChild
+           --, COALESCE (MIBoolean_Child.ValueData, FALSE)      :: Boolean AS isChild
 
-           , tmpData.Amount  ::TFloat           AS Amount
+           , CASE WHEN tmpData.Amount < 0 THEN tmpData.Amount * (-1) ELSE tmpData.Amount END  ::TFloat AS Amount
+           , Object_Cash.Id                     AS CashId
+           , Object_Cash.ObjectCode             AS CashCode
+           , Object_Cash.ValueData              AS CashName
            , Object_Unit.Id                     AS UnitId
            , Object_Unit.ObjectCode             AS UnitCode
            , Object_Unit.ValueData              AS UnitName
@@ -121,8 +129,14 @@ BEGIN
                                         AND MLO_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
             --
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.ObjectId
             
+            LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = tmpData.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                             ON MILinkObject_Unit.MovementItemId = tmpData.MI_Id
+                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = tmpData.MI_Id
                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
@@ -141,9 +155,10 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_ServiceDate
                                        ON MIDate_ServiceDate.MovementItemId = tmpData.MI_Id
                                       AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
-            LEFT JOIN MovementItemBoolean AS MIBoolean_Child
+            /*LEFT JOIN MovementItemBoolean AS MIBoolean_Child
                                           ON MIBoolean_Child.MovementItemId = tmpData.MI_Id
                                          AND MIBoolean_Child.DescId = zc_MIBoolean_Child()
+            */
 
 
        --
