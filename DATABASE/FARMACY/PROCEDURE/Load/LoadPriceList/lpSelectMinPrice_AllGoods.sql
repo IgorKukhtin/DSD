@@ -92,7 +92,22 @@ BEGIN
     -- Остатки - оптимизация
     CREATE TEMP TABLE _tmpMinPrice_Remains ON COMMIT DROP AS
        (WITH 
-       tmp AS
+       tmpContainerPD AS (SELECT Container.ParentId          AS ContainerId
+                               , MIN(COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))::TDateTime  AS ExpirationDate  
+                          FROM Container
+
+                              LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                           AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                              LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                   ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId
+                                                  AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+
+                          WHERE Container.DescId = zc_Container_CountPartionDate()
+                            AND Container.WhereObjectId = inUnitId
+                            AND  Container.Amount <> 0
+                          GROUP BY Container.ParentId)
+     , tmp AS
            (SELECT Container.ObjectId
              , Container.Id
              , Container.Amount
@@ -106,12 +121,14 @@ BEGIN
        (SELECT Container.ObjectId AS ObjectId_retail -- здесь товар "сети"
              , Container.Amount
              , Object_PartionMovementItem.ObjectCode ::Integer AS MI_Partion
+             , tmpContainerPD.ExpirationDate
         FROM tmp AS Container
             LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionMovementItem
                                                 ON CLO_PartionMovementItem.ContainerId = Container.Id
                                                AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
             LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem
                                    ON Object_PartionMovementItem.Id = CLO_PartionMovementItem.ObjectId
+            LEFT OUTER JOIN tmpContainerPD ON tmpContainerPD.ContainerId = Container.Id
         )
      , tmpMI_Float AS (SELECT *
                        FROM MovementItemFloat
@@ -122,7 +139,7 @@ BEGIN
        (SELECT
             Container.ObjectId_retail -- здесь товар "сети"
           , SUM (Container.Amount)       AS Amount
-          , MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()))  AS MinExpirationDate -- Срок годности
+          , MIN (COALESCE (Container.ExpirationDate, MIDate_ExpirationDate.ValueData, zc_DateEnd()))  AS MinExpirationDate -- Срок годности
           , SUM (Container.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0)) / SUM (Container.Amount) AS MidPriceSale -- !!! средняя Цена реал. с НДС!!!
           , MAX (COALESCE (MIFloat_Income_Price.ValueData, 0)) AS MaxPriceIncome
         FROM tmpContainer AS Container
@@ -137,6 +154,7 @@ BEGIN
              LEFT OUTER JOIN tmpMI_Float AS MIFloat_Income_Price
                                                ON MIFloat_Income_Price.MovementItemId = Container.MI_Partion
                                               AND MIFloat_Income_Price.DescId = zc_MIFloat_Price()
+                                              
         GROUP BY Container.ObjectId_retail
         HAVING SUM (Container.Amount) > 0
        )
@@ -631,4 +649,5 @@ ALTER FUNCTION lpSelectMinPrice_AllGoods (Integer, Integer, Integer) OWNER TO po
 -- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) WHERE GoodsCode = 8969 -- "Аптека_1 пр_Правды_6"
 -- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) 
 
--- SELECT * FROM lpSelectMinPrice_AllGoods (183292 , 4, 3); 
+-- 
+SELECT * FROM lpSelectMinPrice_AllGoods (183289 , 4, 3); 

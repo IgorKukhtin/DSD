@@ -22,7 +22,6 @@ inherited WagesVIPForm: TWagesVIPForm
       inherited cxGrid: TcxGrid
         Width = 799
         Height = 338
-        ExplicitTop = 5
         ExplicitWidth = 799
         ExplicitHeight = 338
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -197,7 +196,7 @@ inherited WagesVIPForm: TWagesVIPForm
     end
     object ceHoursWork: TcxCurrencyEdit
       Left = 703
-      Top = 58
+      Top = 32
       TabStop = False
       Properties.DisplayFormat = ',0.00;-,0.00; ;'
       Properties.ReadOnly = True
@@ -206,12 +205,12 @@ inherited WagesVIPForm: TWagesVIPForm
     end
     object cxLabel5: TcxLabel
       Left = 526
-      Top = 58
+      Top = 33
       Caption = #9#1054#1090#1088#1072#1073#1086#1090#1072#1085#1086' '#1095#1072#1089#1086#1074' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084#1080
     end
     object deDateCalculation: TcxDateEdit
       Left = 635
-      Top = 20
+      Top = 7
       EditValue = 42767d
       Properties.AssignedValues.DisplayFormat = True
       Properties.ReadOnly = True
@@ -219,8 +218,8 @@ inherited WagesVIPForm: TWagesVIPForm
       Width = 157
     end
     object cxLabel6: TcxLabel
-      Left = 635
-      Top = 2
+      Left = 526
+      Top = 9
       Caption = #1044#1072#1090#1072' '#1088#1072#1089#1095#1077#1090#1072
     end
     object ceTotalSummSaleNP: TcxCurrencyEdit
@@ -236,6 +235,20 @@ inherited WagesVIPForm: TWagesVIPForm
       Left = 222
       Top = 59
       Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078' "'#1053#1086#1074#1072#1103' '#1087#1086#1095#1090#1072'"'
+    end
+    object ceTotalSumm: TcxCurrencyEdit
+      Left = 703
+      Top = 58
+      TabStop = False
+      Properties.DisplayFormat = ',0.00;-,0.00; ;'
+      Properties.ReadOnly = True
+      TabOrder = 16
+      Width = 89
+    end
+    object cxLabel8: TcxLabel
+      Left = 526
+      Top = 59
+      Caption = #1041#1072#1079#1072' '#1088#1072#1089#1095#1077#1090#1072
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -303,6 +316,26 @@ inherited WagesVIPForm: TWagesVIPForm
         end>
       ReportName = #1055#1088#1086#1076#1072#1078#1072
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072
+    end
+    inherited MovementItemProtocolOpenForm: TdsdOpenForm
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
     end
     object actCalculationAll: TMultiAction
       Category = 'DSDLib'
@@ -410,10 +443,6 @@ inherited WagesVIPForm: TWagesVIPForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
@@ -594,6 +623,13 @@ inherited WagesVIPForm: TWagesVIPForm
         Name = 'TotalSummSaleNP'
         Value = Null
         Component = ceTotalSummSaleNP
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSumm'
+        Value = Null
+        Component = ceTotalSumm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

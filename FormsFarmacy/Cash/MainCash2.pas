@@ -9638,8 +9638,8 @@ begin
       CheckCDS.First;
       while not CheckCDS.Eof do
       begin
-        if (checkCDS.FieldByName('GoodsPairSunMainId').AsInteger = nGoodsPairSunMainId) and
-          (Frac(checkCDS.FieldByName('Amount').AsCurrency) = 0)  then
+        if (checkCDS.FieldByName('GoodsPairSunMainId').AsInteger = nGoodsPairSunMainId)
+          {and (Frac(checkCDS.FieldByName('Amount').AsCurrency) = 0)} then
         begin
           nAmountPS := nAmountPS + checkCDS.FieldByName('Amount').AsCurrency * checkCDS.FieldByName('GoodsPairSunAmount').AsCurrency;
           if checkCDS.FieldByName('GoodsPairSunAmount').AsCurrency > 1 then

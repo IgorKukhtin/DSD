@@ -42,6 +42,8 @@ type
     actCalculationAllDay: TMultiAction;
     actExecCalculationAllDay: TdsdExecStoredProc;
     dxBarButton2: TdxBarButton;
+    ceTotalSumm: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
   private
     { Private declarations }
   public

@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer
              , TotalSummPhone TFloat
              , TotalSummSale TFloat
              , TotalSummSaleNP TFloat
+             , TotalSumm TFloat
              , HoursWork TFloat
              , DateCalculation TDateTime
              )
@@ -58,6 +59,7 @@ BEGIN
           , Null::TFloat                                                      AS TotalSummPhone
           , Null::TFloat                                                      AS TotalSummSale
           , Null::TFloat                                                      AS TotalSummSaleNP
+          , Null::TFloat                                                      AS TotalSumm
           , Null::TFloat                                                      AS HoursWork
           , Null::TDateTime                                                   AS DateCalculation
 
@@ -74,6 +76,9 @@ BEGIN
           , MovementFloat_TotalSummPhone.ValueData                                   AS TotalSummPhone
           , MovementFloat_TotalSummSale.ValueData                                    AS TotalSummSale
           , MovementFloat_TotalSummSaleNP.ValueData                                  AS TotalSummSaleNP
+          , (COALESCE(MovementFloat_TotalSummPhone.ValueData, 0) +
+            COALESCE(MovementFloat_TotalSummSale.ValueData, 0) +
+            COALESCE(MovementFloat_TotalSummSaleNP.ValueData, 0))::TFloat            AS TotalSumm
           , MovementFloat_HoursWork.ValueData                                        AS HoursWork
           , MovementDate_Calculation.ValueData       AS DateCalculation
         FROM Movement

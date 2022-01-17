@@ -56,6 +56,7 @@ BEGIN
      (WITH tmpMovement AS (SELECT Movement.*
                                 , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
                                 , COALESCE(MovementBoolean_CallOrder.ValueData,FALSE) :: Boolean AS isCallOrder
+                                , False                                                          AS isOffsetVIP
                            FROM Movement
 
                                 INNER JOIN MovementBoolean AS MovementBoolean_Deferred
@@ -76,7 +77,7 @@ BEGIN
                                                         ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                                        AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
-                           WHERE Movement.OperDate >= DATE_TRUNC ('MONTH', vbOperDate) - INTERVAL '1 DAY'
+                           WHERE Movement.OperDate >= DATE_TRUNC ('MONTH', vbOperDate) - INTERVAL '1 MONTH' + INTERVAL '4 DAY'
                              AND Movement.OperDate < DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH' + INTERVAL '4 DAY'
                              AND Movement.DescId = zc_Movement_Check()
                              AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -84,6 +85,7 @@ BEGIN
                          SELECT Movement.*
                               , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
                               , False                                                          AS isCallOrder
+                              , MovementBoolean_OffsetVIP.ValueData                            AS isOffsetVIP 
                          FROM Movement
 
                               INNER JOIN MovementBoolean AS MovementBoolean_OffsetVIP
@@ -100,11 +102,16 @@ BEGIN
                            AND Movement.DescId = zc_Movement_Check()
                            AND Movement.StatusId = zc_Enum_Status_Complete())
          , tmpMovementProtocol AS (SELECT MovementProtocol.MovementId
-                                        , MIN(date_trunc('day', MovementProtocol.OperDate + INTERVAL '3 HOUR'))    AS OperDate
+                                        , CASE WHEN MIN(date_trunc('day', MovementProtocol.OperDate + INTERVAL '3 HOUR')) < DATE_TRUNC ('MONTH', vbOperDate)
+                                                    AND date_trunc('day', Movement.OperDate) > DATE_TRUNC ('MONTH', vbOperDate)
+                                                    AND date_trunc('day', Movement.OperDate) >= '01.01.2022'
+                                                    OR Movement.isOffsetVIP = TRUE
+                                               THEN date_trunc('day', Movement.OperDate)
+                                               ELSE MIN(date_trunc('day', MovementProtocol.OperDate + INTERVAL '3 HOUR')) END   AS OperDate
                                    FROM tmpMovement AS Movement
 
                                         INNER JOIN MovementProtocol ON MovementProtocol.MovementId = Movement.ID
-                                   GROUP BY MovementProtocol.MovementId)
+                                   GROUP BY MovementProtocol.MovementId, date_trunc('day', Movement.OperDate), Movement.isOffsetVIP)
 
       SELECT tmpMovementProtocol.OperDate::TDateTime                                         AS OperDate
            , SUM(CASE WHEN Movement.isCallOrder = TRUE THEN Movement.TotalSumm END)::TFloat  AS SummPhone
@@ -118,8 +125,8 @@ BEGIN
 
     -- Проведенные продажы "Новая почта"
     UPDATE tmpMovement SET SummSaleNP = COALESCE(MovementSale.TotalSumm, 0)
-    FROM (WITH tmpMovement AS (SELECT date_trunc('day', MovementDate_Insert.ValueData + INTERVAL '3 HOUR')  AS OperDate
-                                    , MovementFloat_TotalSumm.ValueData                                     AS TotalSumm
+    FROM (WITH tmpMovement AS (SELECT date_trunc('day', Movement.OperDate)          AS OperDate
+                                    , MovementFloat_TotalSumm.ValueData             AS TotalSumm
                                FROM Movement
 
                                     INNER JOIN MovementBoolean AS MovementBoolean_NP
@@ -131,12 +138,12 @@ BEGIN
                                                             ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                                            AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
-                                    LEFT JOIN MovementDate AS MovementDate_Insert
+                                   /* LEFT JOIN MovementDate AS MovementDate_Insert
                                                            ON MovementDate_Insert.MovementId = Movement.Id
-                                                          AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+                                                          AND MovementDate_Insert.DescId = zc_MovementDate_Insert()*/
 
                                WHERE Movement.OperDate >= DATE_TRUNC ('MONTH', vbOperDate)
-                                 AND Movement.OperDate < DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH' + INTERVAL '4 DAY'
+                                 AND Movement.OperDate < DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH'
                                  AND Movement.DescId = zc_Movement_Sale()
                                  AND Movement.StatusId = zc_Enum_Status_Complete()
                             )
@@ -298,4 +305,4 @@ $BODY$
 */
 
 -- 
-select * from gpInsertUpdate_Movement_WagesVIP_CalculationAllDay(inMovementId := 24892711 ,  inSession := '3');
+select * from gpInsertUpdate_Movement_WagesVIP_CalculationAllDay(inMovementId := 26289531 ,  inSession := '3');
