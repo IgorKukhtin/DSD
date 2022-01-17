@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalGroup(
     IN inPositionId            Integer   , --
     IN inPositionLevelId       Integer   , --
     IN inWorkTimeKindId        Integer   , --
- INOUT ioAmount                TFloat    , -- 
+ INOUT ioAmount                TFloat    , --
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
@@ -22,16 +22,16 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalGroup());
-    
-    --проверка 
+
+    --проверка
     IF COALESCE (inPersonalId,0) = 0
     THEN
         RAISE EXCEPTION 'Ошибка.Не выбран сотрудник';
     END IF;
 
-    --Подразделение из шапки документа
+    -- Подразделение из шапки документа
     SELECT MovementLinkObject_Unit.ObjectId AS UnitId
-   INTO vbUnitId
+           INTO vbUnitId
     FROM MovementLinkObject AS MovementLinkObject_Unit
     WHERE MovementLinkObject_Unit.MovementId = inMovementId
       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit();
@@ -50,12 +50,12 @@ BEGIN
                                                      LEFT JOIN ObjectLink AS ObjectLink_StaffList_PositionLevel
                                                                           ON ObjectLink_StaffList_PositionLevel.ObjectId = Object_StaffList.Id
                                                                          AND ObjectLink_StaffList_PositionLevel.DescId = zc_ObjectLink_StaffList_PositionLevel()
-                          
+
                                                      LEFT JOIN ObjectLink AS ObjectLink_StaffList_Unit
                                                                           ON ObjectLink_StaffList_Unit.ObjectId = Object_StaffList.Id
-                                                                         AND ObjectLink_StaffList_Unit.DescId = zc_ObjectLink_StaffList_Unit() 
+                                                                         AND ObjectLink_StaffList_Unit.DescId = zc_ObjectLink_StaffList_Unit()
                                                      LEFT JOIN ObjectFloat AS ObjectFloat_HoursDay
-                                                                           ON ObjectFloat_HoursDay.ObjectId = Object_StaffList.Id 
+                                                                           ON ObjectFloat_HoursDay.ObjectId = Object_StaffList.Id
                                                                           AND ObjectFloat_HoursDay.DescId = zc_ObjectFloat_StaffList_HoursDay()
                                                WHERE Object_StaffList.DescId = zc_Object_StaffList()
                                                  AND Object_StaffList.isErased = False
@@ -71,13 +71,13 @@ BEGIN
                        ) AS tmp
                        );
 
-     --переопределяем кол-во часов если больничный или 
+     --переопределяем кол-во часов если больничный или
      IF inWorkTimeKindId IN (zc_Enum_WorkTimeKind_HospitalDoc(), zc_Enum_WorkTimeKind_HolidayNoZp(), zc_Enum_WorkTimeKind_WorkDayOff()
                             ,zc_Enum_WorkTimeKind_DayOff(), zc_Enum_WorkTimeKind_Skip())
      THEN
          ioAmount := 0;
      END IF;
-     
+
      --проверка   можно менять ioAmount но не больше чем Дневной план на человека из штатного расписания
      IF COALESCE (ioId,0) <> 0
      THEN
