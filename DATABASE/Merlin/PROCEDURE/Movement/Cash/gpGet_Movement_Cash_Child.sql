@@ -40,7 +40,7 @@ BEGIN
            , Movement.OperDate  ::TDateTime     AS OperDate
            , MIDate_ServiceDate.ValueData  ::TDateTime AS ServiceDate
            , COALESCE (MovementBoolean_Sign.ValueData, FALSE) :: Boolean AS isSign
-           , ((MovementItem.Amount - tmpChild.Amount ) * CASE WHEN MovementItem.Amount < 0 THEN  (-1) ELSE 1 END)::TFloat AS Amount
+           , ((MovementItem.Amount - COALESCE (tmpChild.Amount,0) ) * CASE WHEN MovementItem.Amount < 0 THEN  (-1) ELSE 1 END)::TFloat AS Amount
            , MovementItem.Id                    AS MI_Id
            , Object_Cash.Id                     AS CashId
            , Object_Cash.ValueData              AS CashName
