@@ -1,9 +1,11 @@
 -- Function: gpInsertUpdate_Movement_Cash()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash(Integer, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash(Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
+    IN inMI_Id                Integer   , -- идентификатор строки
     IN inInvNumber            TVarChar  , -- Номер документа
     IN inOperDate             TDateTime , -- Дата документа
     IN inServiceDate          TDateTime , -- Дата начисления
@@ -87,17 +89,18 @@ BEGIN
      
      -- сохранили <Документ>
      ioId:= lpInsertUpdate_Movement_Cash (ioId                   := ioId
-                                           , inInvNumber            := inInvNumber
-                                           , inOperDate             := inOperDate
-                                           , inServiceDate          := inServiceDate
-                                           , inAmount               := CASE WHEN inKindName = 'zc_Enum_InfoMoney_In' THEN inAmount ELSE inAmount * (-1) END ::TFloat
-                                           , inCashId               := inCashId
-                                           , inUnitId               := inUnitId
-                                           , inInfoMoneyId          := vbInfoMoneyId
-                                           , inInfoMoneyDetailId    := vbInfoMoneyDetailId
-                                           , inCommentInfoMoneyId   := vbCommentInfoMoneyId
-                                           , inUserId               := vbUserId
-                                            );
+                                        , inMI_Id                := inMI_Id
+                                        , inInvNumber            := inInvNumber
+                                        , inOperDate             := inOperDate
+                                        , inServiceDate          := inServiceDate
+                                        , inAmount               := CASE WHEN inKindName = 'zc_Enum_InfoMoney_In' THEN inAmount ELSE inAmount * (-1) END ::TFloat
+                                        , inCashId               := inCashId
+                                        , inUnitId               := inUnitId
+                                        , inInfoMoneyId          := vbInfoMoneyId
+                                        , inInfoMoneyDetailId    := vbInfoMoneyDetailId
+                                        , inCommentInfoMoneyId   := vbCommentInfoMoneyId
+                                        , inUserId               := vbUserId
+                                         );
                                                 
 
      -- 5.3. проводим Документ

@@ -223,12 +223,14 @@
       end
       item
         Name = 'inKindName'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inKindName_text'
+        Value = Null
         Component = edKindName_text
         DataType = ftString
         MultiSelectSeparator = ','
@@ -245,6 +247,14 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMI_Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMI_Id'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -355,6 +365,14 @@
         Value = Null
         Component = FormParams
         ComponentItem = 'inMovementId_Value'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMI_Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMI_Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -499,6 +517,13 @@
         Component = GuidesCash
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MI_Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMI_Id'
         MultiSelectSeparator = ','
       end>
     Left = 312
@@ -702,6 +727,7 @@
       end
       item
         Name = 'inKindName'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inKindName'
         DataType = ftString

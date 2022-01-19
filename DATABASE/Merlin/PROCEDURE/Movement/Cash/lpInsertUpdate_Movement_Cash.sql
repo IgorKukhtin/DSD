@@ -1,9 +1,11 @@
 -- Function: gpInsertUpdate_Movement_Cash()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Cash (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
+    IN inMI_Id                Integer   , -- идентификатор строки
     IN inInvNumber            TVarChar  , -- Номер документа
     IN inOperDate             TDateTime , -- Дата документа
     IN inServiceDate          TDateTime , -- Дата начисления
@@ -34,25 +36,25 @@ BEGIN
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Cash(), inInvNumber, inOperDate, Null, inUserId);
 
      -- определяем <Элемент документа>
-     SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
+     --SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
 
      -- определяется признак Создание/Корректировка
-     vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
+     vbIsInsert:= COALESCE (inMI_Id, 0) = 0;
 
      -- сохранили <Элемент документа>
-     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inCashId, ioId, inAmount, NULL);
+     inMI_Id := lpInsertUpdate_MovementItem (inMI_Id, zc_MI_Master(), inCashId, ioId, inAmount, NULL);
 
      -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), inMI_Id, inUnitId);
      -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), vbMovementItemId, inInfoMoneyId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), inMI_Id, inInfoMoneyId);
      -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoneyDetail(), vbMovementItemId, inInfoMoneyDetailId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoneyDetail(), inMI_Id, inInfoMoneyDetailId);
      -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_CommentInfoMoney(), vbMovementItemId, inCommentInfoMoneyId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_CommentInfoMoney(), inMI_Id, inCommentInfoMoneyId);
 
      -- сохранили свойство <Дата начисления>
-     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ServiceDate(), vbMovementItemId, inServiceDate);
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ServiceDate(), inMI_Id, inServiceDate);
 
  
       -- !!!протокол через свойства конкретного объекта!!!
@@ -73,7 +75,7 @@ BEGIN
      END IF;
      
      -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, inUserId, vbIsInsert);
+     PERFORM lpInsert_MovementItemProtocol (inMI_Id, inUserId, vbIsInsert);
 
 END;
 $BODY$
@@ -82,6 +84,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.01.22         *
  14.01.22         *
  */
 

@@ -1,7 +1,7 @@
-object CashJournalForm: TCashJournalForm
+object CashSendJournalForm: TCashSendJournalForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072', '#1076#1074#1080#1078#1077#1085#1080#1077' '#1076#1077#1085#1077#1075'>'
   ClientHeight = 381
   ClientWidth = 809
   Color = clBtnFace
@@ -55,12 +55,6 @@ object CashJournalForm: TCashJournalForm
       Left = 200
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
-    end
-    object ceKindName: TcxTextEdit
-      Left = 641
-      Top = 5
-      TabOrder = 4
-      Width = 161
     end
   end
   object cxGrid: TcxGrid
@@ -147,54 +141,35 @@ object CashJournalForm: TCashJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 89
       end
-      object isSign: TcxGridDBColumn
-        Caption = #1050#1086#1088#1088#1077#1082#1090'. '#1087#1086#1076#1090#1074'.'
-        DataBinding.FieldName = 'isSign'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1072
-        Width = 70
-      end
-      object ServiceDate: TcxGridDBColumn
-        Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
-        DataBinding.FieldName = 'ServiceDate'
-        PropertiesClassName = 'TcxDateEditProperties'
-        Properties.DisplayFormat = 'mmmm yyyy'
-        FooterAlignmentHorz = taCenter
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 89
-      end
-      object CashCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1082#1072#1089#1089#1099
-        DataBinding.FieldName = 'CashCode'
+      object CashCode_from: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1082#1072#1089#1089#1072' '#1088#1072#1089#1093#1086#1076
+        DataBinding.FieldName = 'CashCode_from'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 55
       end
-      object CashName: TcxGridDBColumn
-        Caption = #1050#1072#1089#1089#1072
-        DataBinding.FieldName = 'CashName'
+      object CashName_from: TcxGridDBColumn
+        Caption = #1050#1072#1089#1089#1072' '#1056#1072#1089#1093#1086#1076
+        DataBinding.FieldName = 'CashName_from'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 121
       end
-      object UnitCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
-        DataBinding.FieldName = 'UnitCode'
+      object CashCode_to: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1082#1072#1089#1089#1072' '#1087#1088#1080#1093#1086#1076
+        DataBinding.FieldName = 'CashCode_to'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 55
       end
-      object UnitName: TcxGridDBColumn
-        Caption = #1054#1090#1076#1077#1083
-        DataBinding.FieldName = 'UnitName'
+      object CashName_to: TcxGridDBColumn
+        Caption = #1050#1072#1089#1089#1072' '#1055#1088#1080#1093#1086#1076
+        DataBinding.FieldName = 'CashName_to'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -211,34 +186,33 @@ object CashJournalForm: TCashJournalForm
         Options.Editing = False
         Width = 94
       end
-      object InfoMoneyCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1089#1090#1072#1090#1100#1080
-        DataBinding.FieldName = 'InfoMoneyCode'
-        Visible = False
+      object CurrencyValue: TcxGridDBColumn
+        Caption = #1050#1091#1088#1089
+        DataBinding.FieldName = 'CurrencyValue'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1091#1088#1089' '#1076#1083#1103' '#1087#1077#1088#1077#1074#1086#1076#1072
         Options.Editing = False
-        Width = 33
+        Width = 94
       end
-      object InfoMoneyName: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1103' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
-        DataBinding.FieldName = 'InfoMoneyName'
+      object ParValue: TcxGridDBColumn
+        Caption = #1053#1086#1084#1080#1085#1072#1083
+        DataBinding.FieldName = 'ParValue'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1086#1084#1080#1085#1072#1083' '#1076#1083#1103' '#1087#1077#1088#1077#1074#1086#1076#1072
         Options.Editing = False
-        Width = 197
+        Width = 94
       end
-      object InfoMoneyDetailName: TcxGridDBColumn
-        Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076' '
-        DataBinding.FieldName = 'InfoMoneyDetailName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 197
-      end
-      object CommentInfoMoneyName: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
-        DataBinding.FieldName = 'CommentInfoMoneyName'
+      object CommentMoveMoneyName: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1044#1074#1080#1078#1077#1085#1080#1077' '#1076#1077#1085#1077#1075
+        DataBinding.FieldName = 'CommentMoveMoneyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -492,10 +466,10 @@ object CashJournalForm: TCashJournalForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -566,8 +540,8 @@ object CashJournalForm: TCashJournalForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TCashMovementForm'
-      FormNameParam.Value = 'TCashMovementForm'
+      FormName = 'TCashSendMovementForm'
+      FormNameParam.Value = 'TCashSendMovementForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -582,31 +556,10 @@ object CashJournalForm: TCashJournalForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inMI_Id'
-          Value = '0'
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'inOperDate'
           Value = Null
           Component = deEnd
           DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inKindName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inKindName_text'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inKindName_text'
-          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -621,8 +574,8 @@ object CashJournalForm: TCashJournalForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       ShortCut = 16429
       ImageIndex = 54
-      FormName = 'TCashMovementForm'
-      FormNameParam.Value = 'TCashMovementForm'
+      FormName = 'TCashSendMovementForm'
+      FormNameParam.Value = 'TCashSendMovementForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -639,33 +592,10 @@ object CashJournalForm: TCashJournalForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inMI_Id'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'MI_Id'
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'inOperDate'
           Value = 42370d
           Component = deStart
           DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inKindName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inKindName_text'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inKindName_text'
-          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -707,8 +637,8 @@ object CashJournalForm: TCashJournalForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TCashMovementForm'
-      FormNameParam.Value = 'TCashMovementForm'
+      FormName = 'TCashSendMovementForm'
+      FormNameParam.Value = 'TCashSendMovementForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -717,13 +647,6 @@ object CashJournalForm: TCashJournalForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inMI_Id'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'MI_Id'
           MultiSelectSeparator = ','
         end
         item
@@ -744,22 +667,6 @@ object CashJournalForm: TCashJournalForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inKindName'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inKindName_text'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inKindName_text'
-          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -880,10 +787,10 @@ object CashJournalForm: TCashJournalForm
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -1095,7 +1002,7 @@ object CashJournalForm: TCashJournalForm
         item
         end
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1103,8 +1010,8 @@ object CashJournalForm: TCashJournalForm
       RefreshOnTabSetChanges = False
     end
   end
-  object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Cash'
+  object spSelect: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_CashSend'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1136,12 +1043,9 @@ object CashJournalForm: TCashJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inKindName'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'inKindName'
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -1149,7 +1053,7 @@ object CashJournalForm: TCashJournalForm
     Top = 176
   end
   object spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Cash'
+    StoredProcName = 'gpComplete_Movement_CashSend'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1204,7 +1108,7 @@ object CashJournalForm: TCashJournalForm
     end
   end
   object spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_Cash'
+    StoredProcName = 'gpUnComplete_Movement_CashSend'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1221,7 +1125,7 @@ object CashJournalForm: TCashJournalForm
     Top = 272
   end
   object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_Cash'
+    StoredProcName = 'gpSetErased_Movement_CashSend'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1289,7 +1193,7 @@ object CashJournalForm: TCashJournalForm
     Top = 24
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Cash_Print'
+    StoredProcName = 'gpSelect_Movement_CashSend_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1349,7 +1253,6 @@ object CashJournalForm: TCashJournalForm
       item
         Name = 'inKindName_text'
         Value = Null
-        Component = ceKindName
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1357,7 +1260,7 @@ object CashJournalForm: TCashJournalForm
     Top = 200
   end
   object spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_Cash'
+    StoredProcName = 'gpReComplete_Movement_CashSend'
     DataSets = <>
     OutputType = otResult
     Params = <

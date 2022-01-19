@@ -78,6 +78,9 @@ type
     miCashChildJournal_in: TMenuItem;
     miCashChildJournal_out: TMenuItem;
     N6: TMenuItem;
+    actCashSendJournal: TdsdOpenForm;
+    miCashSendJournal: TMenuItem;
+    N7: TMenuItem;
   private
     { Private declarations }
   public
