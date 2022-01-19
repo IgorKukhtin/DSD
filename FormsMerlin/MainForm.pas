@@ -73,6 +73,11 @@ type
     miCashJournal_out: TMenuItem;
     miCashJournal_in: TMenuItem;
     N5: TMenuItem;
+    actCashChildJournal_in: TdsdOpenForm;
+    actCashChildJournal_out: TdsdOpenForm;
+    miCashChildJournal_in: TMenuItem;
+    miCashChildJournal_out: TMenuItem;
+    N6: TMenuItem;
   private
     { Private declarations }
   public

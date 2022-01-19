@@ -1,9 +1,8 @@
 -- Function: gpSelect_Movement_Cash()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Cash (TDateTime, TDateTime, Boolean, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_Cash (TDateTime, TDateTime, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_CashChild (TDateTime, TDateTime, Boolean, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Cash(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_CashChild(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
     IN inIsErased          Boolean   , --
@@ -60,7 +59,7 @@ BEGIN
                            , MovementItem.Amount   AS Amount
                       FROM tmpMovement
                            INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
-                                                  AND MovementItem.DescId = zc_MI_Master()
+                                                  AND MovementItem.DescId = zc_MI_Child()
                                                   AND MovementItem.isErased = FALSE
                                                   AND ((MovementItem.Amount < 0 AND inKindName = 'zc_Enum_InfoMoney_Out')
                                                     OR (MovementItem.Amount > 0 AND inKindName = 'zc_Enum_InfoMoney_In'))
@@ -160,7 +159,8 @@ BEGIN
             /*LEFT JOIN MovementItemBoolean AS MIBoolean_Child
                                           ON MIBoolean_Child.MovementItemId = tmpData.MI_Id
                                          AND MIBoolean_Child.DescId = zc_MIBoolean_Child()
-            */
+                                         */
+            
 
 
        --
@@ -174,8 +174,8 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 15.01.22         *
+ 17.01.22         *
 */
 
 -- ÚÂÒÚ
--- select * from gpSelect_Movement_Cash(inStartDate := ('01.01.2022')::TDateTime , inEndDate := ('01.01.2022')::TDateTime , inIsErased := 'False' , inKindName := 'zc_Enum_InfoMoney_In' ,  inSession := '5');
+-- select * from gpSelect_Movement_CashChild(inStartDate := ('01.01.2022')::TDateTime , inEndDate := ('01.01.2022')::TDateTime , inIsErased := 'False' , inKindName := 'zc_Enum_InfoMoney_In' ,  inSession := '5');

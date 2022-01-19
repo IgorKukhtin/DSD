@@ -160,7 +160,9 @@ uses
   ServiceMovement in '..\..\FormsMerlin\Document\ServiceMovement.pas' {ServiceMovementForm: TParentForm},
   CashJournal in '..\..\FormsMerlin\Document\CashJournal.pas' {CashJournalForm: TParentForm},
   CashMovement in '..\..\FormsMerlin\Document\CashMovement.pas' {CashMovementForm: TParentForm},
-  InfoMoneyDetail_Object in '..\..\FormsMerlin\Guides\InfoMoneyDetail_Object.pas' {InfoMoneyDetail_ObjectForm: TParentForm};
+  InfoMoneyDetail_Object in '..\..\FormsMerlin\Guides\InfoMoneyDetail_Object.pas' {InfoMoneyDetail_ObjectForm: TParentForm},
+  CashChildJournal in '..\..\FormsMerlin\Document\CashChildJournal.pas' {CashChildJournalForm: TParentForm},
+  CashChildMovement in '..\..\FormsMerlin\Document\CashChildMovement.pas' {CashChildMovementForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

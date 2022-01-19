@@ -161,6 +161,11 @@ end;
 
 procedure TLoadFormTest.LoadCashMovementFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashChildJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashChildJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashChildMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashChildMovementForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashMovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalForm'));
