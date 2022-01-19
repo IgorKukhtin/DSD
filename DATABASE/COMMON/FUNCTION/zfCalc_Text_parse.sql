@@ -243,8 +243,9 @@ BEGIN
 
        vbI:= 1;
        vbI_save:= vbLen;
+       
 
-       WHILE vbI <= vbLen
+       WHILE vbI <= vbLen AND SUBSTRING (inValue FROM vbIndex + vbI + 1 FOR 1) NOT IN ('~')
        LOOP
 
            IF SUBSTRING (inValue FROM vbIndex + 1 + vbI FOR 1) IN (' ', '.', ',', '-', '/', ':') -- , '(', ')'
@@ -266,6 +267,9 @@ BEGIN
                || CASE WHEN inIsLength = TRUE THEN ' ' || LENGTH ( TRIM (SUBSTRING (inValue FROM vbIndex + 1 FOR vbLen))) :: TVarChar || '-' || (vbLine + inAddLine) :: TVarChar ELSE '' END
                -- || CASE WHEN inIsLength = TRUE THEN '*' || (vbIndex + vbLen) :: TVarChar || '*' || LENGTH (inValue) :: TVarChar ELSE '' END
                  ;
+
+       -- сдвинули на один
+       IF SUBSTRING (inValue FROM vbIndex + vbLen + 2 FOR 1) IN ('~') THEN vbIndex:= vbIndex + 1; END IF;
 
        -- теперь следуюющий
        vbLine:= vbLine + 1;

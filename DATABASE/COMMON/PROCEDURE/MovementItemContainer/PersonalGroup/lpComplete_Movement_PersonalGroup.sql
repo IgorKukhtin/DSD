@@ -110,7 +110,7 @@ BEGIN
                                  );
 
 
-IF vbUserId = 5
+IF inUserId = 5
 THEN
     RAISE EXCEPTION 'Ошибка.test' ;
 END IF;
