@@ -4109,6 +4109,10 @@
 				<Form>Report_Layout_OutOrderForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Movement_WagesVIP_CalcMonth.pas">
+				<Form>Report_Movement_WagesVIP_CalcMonthForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

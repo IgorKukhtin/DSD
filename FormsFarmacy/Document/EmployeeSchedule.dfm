@@ -143,6 +143,15 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
             Position.ColIndex = 4
             Position.RowIndex = 0
           end
+          object Color_DismissedUser: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_DismissedUser'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 7
+            Position.RowIndex = 0
+          end
           object ValuePrev: TcxGridDBBandedColumn
             DataBinding.FieldName = 'ValuePrev'
             Visible = False
@@ -552,6 +561,21 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
       ImageIndex = 52
       QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' '#1080#1079' '#1075#1088#1072#1092#1080#1082#1072'?'
     end
+    object actUpdate_User_DismissedUser: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_User_DismissedUser
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_User_DismissedUser
+        end>
+      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' "'#1059#1074#1086#1083#1077#1085#1085#1099#1081' '#1089#1086#1090#1088#1091#1076#1085#1080#1082'"'
+      Hint = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' "'#1059#1074#1086#1083#1077#1085#1085#1099#1081' '#1089#1086#1090#1088#1091#1076#1085#1080#1082'"'
+      ImageIndex = 76
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1059#1074#1086#1083#1077#1085#1085#1099#1081' '#1089#1086#1090#1088#1091#1076#1085#1080#1082'"?'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -584,7 +608,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
       end
       item
         Name = 'inDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -671,10 +695,6 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -705,6 +725,14 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
         item
           Visible = True
           ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton8'
         end
         item
           Visible = True
@@ -767,6 +795,10 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     end
     object dxBarButton7: TdxBarButton
       Action = actDeleteUser
+      Category = 0
+    end
+    object dxBarButton8: TdxBarButton
+      Action = actUpdate_User_DismissedUser
       Category = 0
     end
   end
@@ -846,7 +878,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1086,11 +1118,28 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableView1
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ChartList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = PersonalCode
+        ValueColumn = Color_DismissedUser
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = PersonalName
+        ValueColumn = Color_DismissedUser
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = PositionName
+        ValueColumn = Color_DismissedUser
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <
@@ -1102,7 +1151,9 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = -1
       end>
+    ShowFieldImageList = <>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 214
     Top = 353
   end
@@ -1113,10 +1164,13 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     HeaderDataSet = HeaderPrewCDS
     HeaderColumnName = 'ValueField'
     TemplateColumn = ValuePrev
@@ -1130,6 +1184,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = Value
@@ -1139,6 +1194,8 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'
     TemplateColumn = Value
@@ -1152,6 +1209,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = ValueUser
@@ -1161,6 +1219,8 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueFieldUser'
     TemplateColumn = ValueUser
@@ -1303,5 +1363,31 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     PackSize = 1
     Left = 672
     Top = 353
+  end
+  object spUpdate_User_DismissedUser: TdsdStoredProc
+    StoredProcName = 'gpUpdate_User_DismissedUser'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUserId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UserId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDismissedUser'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isDismissedUser'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 488
+    Top = 393
   end
 end

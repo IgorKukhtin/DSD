@@ -93,6 +93,10 @@ type
     dxBarButton9: TdxBarButton;
     MovementItemChildProtocolOpenForm: TdsdOpenForm;
     dxBarButton10: TdxBarButton;
+    Color_DismissedUser: TcxGridDBBandedColumn;
+    spUpdate_User_DismissedUser: TdsdStoredProc;
+    actUpdate_User_DismissedUser: TdsdExecStoredProc;
+    dxBarButton11: TdxBarButton;
   private
     { Private declarations }
   public

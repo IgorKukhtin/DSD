@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_User (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Integer, TVarChar, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User(
  INOUT ioId                 Integer   ,    -- ключ объекта <Пользователь> 
@@ -19,6 +20,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User(
     IN inMemberId           Integer   ,    -- физ. лицо
     IN inPasswordWages      TVarChar  ,    -- пароль пользователя 
     IN inisWorkingMultiple  Boolean   ,    -- Работа на нескольких аптеках
+    IN inisNewUser          Boolean   ,    -- Новый сотрудник
+    IN inisDismissedUser    Boolean   ,    -- Уволенный сотрудник
     IN inSession            TVarChar       -- сессия пользователя
 )
   RETURNS Integer 
@@ -66,6 +69,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_User_Member(), ioId, inMemberId);
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_PasswordWages(), ioId, inPasswordWages);
 
+   -- свойство <Новый сотрудник>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_User_NewUser(), ioId, inisNewUser);
+   -- свойство <Уволенный сотрудник>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_User_DismissedUser(), ioId, inisDismissedUser);
 
    -- Ведение протокола
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

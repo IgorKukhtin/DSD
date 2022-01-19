@@ -50,7 +50,7 @@ BEGIN
         AND MovementItem.DescId = zc_MI_Master();
 
        -- сохранили свойство <Штраф по сдаче экзамена>
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PenaltyExam(), vbId, 500);
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PenaltyExam(), vbId, - 500);
 
       -- сохранили протокол
       PERFORM lpInsert_MovementItemProtocol (vbId, inUserID, False);

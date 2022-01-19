@@ -68,6 +68,10 @@ type
     actDeleteUser: TdsdExecStoredProc;
     spDelUser: TdsdStoredProc;
     dxBarButton7: TdxBarButton;
+    spUpdate_User_DismissedUser: TdsdStoredProc;
+    actUpdate_User_DismissedUser: TdsdExecStoredProc;
+    dxBarButton8: TdxBarButton;
+    Color_DismissedUser: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

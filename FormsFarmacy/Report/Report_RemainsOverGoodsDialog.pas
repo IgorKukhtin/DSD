@@ -63,6 +63,7 @@ type
     cbDayListDiff: TcxCheckBox;
     edDayListDiff: TcxCurrencyEdit;
     cbReserveTo: TcxCheckBox;
+    cbMCS_0: TcxCheckBox;
   private
     { Private declarations }
   public

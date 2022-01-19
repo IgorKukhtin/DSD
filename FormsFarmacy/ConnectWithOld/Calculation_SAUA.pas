@@ -13,7 +13,8 @@ uses
   dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, Data.DB,
   cxDBData, cxCurrencyEdit, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridBandedTableView, cxGridDBBandedTableView, cxGridCustomView,
-  cxGridDBTableView, cxGrid, dsdDB, Datasnap.DBClient, cxCheckBox;
+  cxGridDBTableView, cxGrid, dsdDB, Datasnap.DBClient, cxCheckBox, dsdGuides,
+  cxButtonEdit;
 
 type
   TCalculation_SAUAForm = class(TForm)
@@ -124,6 +125,18 @@ type
     bbChangeAutoUnit: TdxBarButton;
     actUnitAutoSUAForm: TdsdOpenForm;
     dxBarButton7: TdxBarButton;
+    ceUnit: TcxButtonEdit;
+    cxLabel12: TcxLabel;
+    UnitGuides: TdsdGuides;
+    dxBarContainerItem1: TdxBarContainerItem;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    dxBarButton8: TdxBarButton;
+    AmountFrom: TcxGridDBBandedColumn;
+    spInsertUpdate_Send_AutoSUA: TdsdStoredProc;
+    actInsertUpdate_Send_AutoSUA: TdsdExecStoredProc;
+    mactInsertUpdate_Send_AutoSUA: TMultiAction;
+    bbInsertUpdate_Send_AutoSUA: TdxBarButton;
     procedure ParentFormCreate(Sender: TObject);
     procedure ParentFormClose(Sender: TObject; var Action: TCloseAction);
     procedure actCalculationExecute(Sender: TObject);

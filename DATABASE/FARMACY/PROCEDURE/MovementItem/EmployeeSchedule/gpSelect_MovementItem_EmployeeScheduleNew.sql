@@ -248,6 +248,10 @@ BEGIN
          Object_Member.ObjectCode                                AS PersonalCode,
          COALESCE (Object_Member.ValueData, Object_User.ValueData) AS PersonalName,
          Object_Position.ValueData                               AS PositionName,
+         CASE WHEN COALESCE (ObjectBoolean_DismissedUser.ValueData, FALSE) = TRUE
+              THEN zfCalc_Color( 192, 192, 192)
+              ELSE zc_Color_Black() END::Integer                 AS Color_DismissedUser,
+         COALESCE (ObjectBoolean_DismissedUser.ValueData, FALSE)     AS isDismissedUser,
          Object_Unit.ID                                          AS UnitID,
          Object_Unit.ObjectCode                                  AS UnitCode,
          Object_Unit.ValueData                                   AS UnitName,
@@ -513,6 +517,10 @@ BEGIN
          zc_Color_White()                     AS Color_Calc31
        FROM Object AS Object_User
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_DismissedUser
+                                    ON ObjectBoolean_DismissedUser.ObjectId = Object_User.Id
+                                   AND ObjectBoolean_DismissedUser.DescId = zc_ObjectBoolean_User_DismissedUser()
+
             INNER JOIN ObjectLink AS ObjectLink_User_Member
                                  ON ObjectLink_User_Member.ObjectId = Object_User.Id
                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
@@ -700,6 +708,10 @@ BEGIN
          Object_Member.ObjectCode                                AS PersonalCode,
          COALESCE (Object_Member.ValueData, Object_User.ValueData) AS PersonalName,
          Object_Position.ValueData                               AS PositionName,
+         CASE WHEN COALESCE (ObjectBoolean_DismissedUser.ValueData, FALSE) = TRUE
+              THEN zfCalc_Color( 192, 192, 192)
+              ELSE zc_Color_Black() END::Integer                 AS Color_DismissedUser,
+         COALESCE (ObjectBoolean_DismissedUser.ValueData, FALSE)     AS isDismissedUser,
          Object_Unit.ID                                          AS UnitID,
          Object_Unit.ObjectCode                                  AS UnitCode,
          Object_Unit.ValueData                                   AS UnitName,
@@ -1031,6 +1043,10 @@ BEGIN
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
                                    AND MovementItem.DescId = zc_MI_Master()
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementItem.ObjectId
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_DismissedUser
+                                    ON ObjectBoolean_DismissedUser.ObjectId = MovementItem.ObjectId
+                                   AND ObjectBoolean_DismissedUser.DescId = zc_ObjectBoolean_User_DismissedUser()
 
             LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                  ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
@@ -1380,6 +1396,10 @@ BEGIN
          Object_Member.ObjectCode                                AS PersonalCode,
          COALESCE (Object_Member.ValueData, Object_User.ValueData) AS PersonalName,
          Object_Position.ValueData                               AS PositionName,
+         CASE WHEN COALESCE (ObjectBoolean_DismissedUser.ValueData, FALSE) = TRUE
+              THEN zfCalc_Color( 192, 192, 192)
+              ELSE zc_Color_Black() END::Integer                 AS Color_DismissedUser,
+         COALESCE (ObjectBoolean_DismissedUser.ValueData, FALSE)     AS isDismissedUser,
          Object_Unit.ID                                          AS UnitID,
          Object_Unit.ObjectCode                                  AS UnitCode,
          Object_Unit.ValueData                                   AS UnitName,
@@ -1711,6 +1731,10 @@ BEGIN
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
                                    AND MovementItem.DescId = zc_MI_Master()
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementItem.ObjectId
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_DismissedUser
+                                    ON ObjectBoolean_DismissedUser.ObjectId = MovementItem.ObjectId
+                                   AND ObjectBoolean_DismissedUser.DescId = zc_ObjectBoolean_User_DismissedUser()
 
             LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                  ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId

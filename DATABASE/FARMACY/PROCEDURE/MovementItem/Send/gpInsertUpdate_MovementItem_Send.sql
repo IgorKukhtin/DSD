@@ -202,7 +202,8 @@ BEGIN
        END IF;
 
        IF COALESCE(vbAmountAuto, 0) > COALESCE(inAmount, 0) AND COALESCE(vbAmountAuto, 0) <> 0 AND COALESCE (vbIsSUN_v3, FALSE) = TRUE AND
-          NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())       
+          NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) AND
+          COALESCE(inCommentSendID, 0) = 14883299 
        THEN
           RAISE EXCEPTION 'Ошибка. Уменьшение количества в перемещениях  СУН-Экспресс разрешено только системному администратору!';
        END IF;

@@ -894,7 +894,7 @@ object MakerReportForm: TMakerReportForm
     Top = 123
   end
   object spUpdate_SendPlan: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_MakerReport_SendPlan'
+    StoredProcName = 'gpUpdate_Object_Maker_SendPlan'
     DataSets = <>
     OutputType = otResult
     Params = <

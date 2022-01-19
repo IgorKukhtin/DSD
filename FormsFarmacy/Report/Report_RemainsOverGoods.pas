@@ -122,6 +122,7 @@ type
     cbSummSend: TcxCheckBox;
     edSummSend: TcxCurrencyEdit;
     isChoice: TcxGridDBColumn;
+    cbMCS_0: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -44,6 +44,8 @@ type
     dxBarButton2: TdxBarButton;
     ceTotalSumm: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
+    actReport_CalcMonthForm: TdsdOpenForm;
+    bbReport_CalcMonthForm: TdxBarButton;
   private
     { Private declarations }
   public

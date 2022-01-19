@@ -88,10 +88,11 @@ BEGIN
                                     , Container.Id                   AS PaymentContainerId
                                     , Container.Amount               AS PaySumm
                                     , CASE WHEN Container.Amount <= 0.01 THEN zc_Color_Goods_Additional() END::Integer AS PayColor
-                                    , CASE WHEN Container.Amount > 0.01
+                                    /*, CASE WHEN Container.Amount > 0.01
                                              OR Movement_Income.StatusId <> zc_Enum_Status_Complete()
                                            THEN MovementDate_Payment.ValueData
-                                      END::TDateTime AS PaymentDate
+                                      END::TDateTime AS PaymentDate*/
+                                    , MovementDate_Payment.ValueData AS PaymentDate
                                FROM tmpStatus
                                     LEFT JOIN Movement AS Movement_Income ON Movement_Income.StatusId = tmpStatus.StatusId
                                                                          AND Movement_Income.OperDate >= inStartDate AND Movement_Income.OperDate <inEndDate + interval '1 day'

@@ -58,6 +58,7 @@ BEGIN
                                            , inThresholdRemainsLarge := 0 
                                            , inisAssortmentRound := Get.isAssortmentRound
                                            , inisNeedRound       := Get.isNeedRound 
+                                           , inUnitFromId        := 0
                                            , inSession           := inSession) AS Calculation ON 1 = 1;    
 
     IF NOT EXISTS(SELECT * FROM tmpCalculation)        

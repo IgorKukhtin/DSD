@@ -216,6 +216,22 @@ object UserForm: TUserForm
         Options.Editing = False
         Width = 84
       end
+      object isNewUser: TcxGridDBColumn
+        Caption = #1053#1086#1074#1099#1081' '#1089#1086#1090#1088#1091#1076#1085#1080#1082
+        DataBinding.FieldName = 'isNewUser'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 76
+      end
+      object isDismissedUser: TcxGridDBColumn
+        Caption = #1059#1074#1086#1083#1077#1085#1085#1099#1081' '#1089#1086#1090#1088#1091#1076#1085#1080#1082
+        DataBinding.FieldName = 'isDismissedUser'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 89
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -961,8 +977,8 @@ object UserForm: TUserForm
       end>
     Params = <>
     PackSize = 1
-    Left = 64
-    Top = 128
+    Left = 88
+    Top = 120
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1010,7 +1026,7 @@ object UserForm: TUserForm
       end>
     PackSize = 1
     Left = 72
-    Top = 136
+    Top = 184
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 272
