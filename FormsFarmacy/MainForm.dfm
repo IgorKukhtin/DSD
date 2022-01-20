@@ -4889,6 +4889,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actPickUpLogsAndDBF: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1047#1072#1073#1088#1072#1090#1100' '#1083#1086#1075#1080' '#1080' '#1044#1041#1060' '#1080#1079' '#1082#1072#1089#1089#1099
+      FormName = 'TPickUpLogsAndDBFForm'
+      FormNameParam.Value = 'TPickUpLogsAndDBFForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6258,6 +6269,9 @@
         end
         object N322: TMenuItem
           Action = actBanCommentSend
+        end
+        object N335: TMenuItem
+          Action = actPickUpLogsAndDBF
         end
         object GUID2: TMenuItem
           Action = actCheckoutTesting

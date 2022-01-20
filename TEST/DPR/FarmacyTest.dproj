@@ -4113,6 +4113,10 @@
 				<Form>Report_Movement_WagesVIP_CalcMonthForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PickUpLogsAndDBF.pas">
+				<Form>PickUpLogsAndDBFForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

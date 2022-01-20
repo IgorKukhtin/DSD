@@ -906,6 +906,8 @@ type
     N333: TMenuItem;
     actReport_Layout_OutOrder: TdsdOpenForm;
     N334: TMenuItem;
+    actPickUpLogsAndDBF: TdsdOpenForm;
+    N335: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

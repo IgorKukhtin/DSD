@@ -1,17 +1,17 @@
 inherited Report_Layout_OutOrderForm: TReport_Layout_OutOrderForm
   Caption = #1042#1099#1082#1083#1072#1076#1082#1072' '#1074#1085#1077' '#1079#1072#1082#1072#1079#1072
-  ClientHeight = 339
+  ClientHeight = 411
   ClientWidth = 882
   ExplicitWidth = 898
-  ExplicitHeight = 378
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 882
-    Height = 313
+    Height = 385
     ExplicitWidth = 882
     ExplicitHeight = 313
-    ClientRectBottom = 313
+    ClientRectBottom = 385
     ClientRectRight = 882
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 882
@@ -19,7 +19,7 @@ inherited Report_Layout_OutOrderForm: TReport_Layout_OutOrderForm
       inherited cxGrid: TcxGrid
         Left = 3
         Width = 879
-        Height = 313
+        Height = 385
         ExplicitLeft = 3
         ExplicitWidth = 879
         ExplicitHeight = 313
@@ -184,8 +184,9 @@ inherited Report_Layout_OutOrderForm: TReport_Layout_OutOrderForm
         Left = 0
         Top = 0
         Width = 3
-        Height = 313
+        Height = 385
         Control = cxGrid
+        ExplicitHeight = 313
       end
     end
   end
