@@ -49,6 +49,14 @@ BEGIN
 
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_ProjectMobile(), ioId, inProjectMobile);
 
+   IF COALESCE (inisSite, FALSE) = TRUE AND COALESCE (inisNewUser, FALSE) = TRUE AND
+      NOT EXISTS (SELECT 1 FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = ioId 
+                                                AND ObjectBoolean.DescId = zc_ObjectBoolean_User_Site() 
+                                                AND ObjectBoolean.ValueData = TRUE)
+   THEN
+     inisNewUser := FALSE;
+   END IF;
+
    -- свойство <Для сайта>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_User_Site(), ioId, inisSite);
        

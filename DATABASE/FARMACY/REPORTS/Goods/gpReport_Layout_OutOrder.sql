@@ -12,6 +12,7 @@ RETURNS TABLE (ID Integer
              , UnitId Integer
              , UnitCode Integer
              , UnitName TVarChar
+             , JuridicalMainName TVarChar
              , GoodsId Integer
              , GoodsCode Integer
              , GoodsName TVarChar
@@ -19,6 +20,11 @@ RETURNS TABLE (ID Integer
              , JuridicalNameLink TVarChar
              , OperDatePrice TDateTime
              , JuridicalName TVarChar
+             , AmountLayout TFloat
+             , Remains TFloat
+             , MCSValue TFloat
+             , InvnNumberIncome TVarChar
+             , OperDateIncome TDateTime
               )
 AS
 $BODY$
@@ -63,6 +69,7 @@ BEGIN
        , tmpLayoutAll AS (SELECT DISTINCT
                                  tmpLayoutUnit.UnitId
                                , tmpLayout.GoodsId
+                               , tmpLayout.Amount
                           FROM tmpLayout
                                        
                                LEFT JOIN tmpLayoutUnit ON tmpLayoutUnit.Id     = tmpLayout.Id
@@ -160,39 +167,122 @@ BEGIN
                                    LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = LoadPriceList.JuridicalId
  
                               GROUP BY Object_Goods_Main.Id)
+       , tmpLayoutOutOrder AS (SELECT MIOrderInternal.ID
+                                    , MIOrderInternal.InvNumber
+                                    , MIOrderInternal.OperDate
+                                    , MIOrderInternal.UnitId
+                                    , ObjectUnit.ObjectCode         AS UnitCode
+                                    , ObjectUnit.ValueData          AS UnitName
+                                    , Object_Juridical.ValueData    AS JuridicalMainName
+                                    , MIOrderInternal.GoodsId
+                                    , Object_Goods_Main.ObjectCode  AS GoodsCode
+                                    , Object_Goods_Main.Name        AS GoodsName
+                                    , tmpLinkPriceList.OperDate     AS OperDatePriceLink
+                                    , tmpLinkPriceList.JuridicalName  AS JuridicalNameLink
+                                    , tmpNotLinkPriceList.OperDate  AS OperDatePrice
+                                    , tmpNotLinkPriceList.JuridicalName
+                                    , tmpLayoutAll.Amount           AS AmountLayout 
+                               FROM tmpMIOrderInternal AS MIOrderInternal 
+                               
+                                    INNER JOIN tmpLayoutAll ON tmpLayoutAll.UnitId = MIOrderInternal.UnitId
+                                                           AND tmpLayoutAll.GoodsId = MIOrderInternal.GoodsId
+
+                                    LEFT JOIN tmpMIIncome ON tmpMIIncome.GoodsId = MIOrderInternal.GoodsId
+                                                         AND tmpMIIncome.UnitId = MIOrderInternal.UnitId
+                                                         AND tmpMIIncome.OperDate >= MIOrderInternal.OperDate
+                                                         AND tmpMIIncome.ORD = 1
+                                                         
+                                    LEFT JOIN Object AS ObjectUnit ON ObjectUnit.ID = MIOrderInternal.UnitId
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                                         ON ObjectLink_Unit_Juridical.ObjectId = MIOrderInternal.UnitId
+                                                        AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                                    LEFT JOIN Object AS Object_Juridical ON Object_Juridical.ID = ObjectLink_Unit_Juridical.ChildObjectId
+
+                                    LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MIOrderInternal.GoodsId
+                                    LEFT JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
+                                                          
+                                    LEFT JOIN tmpNotLinkPriceList ON tmpNotLinkPriceList.ID = Object_Goods_Retail.GoodsMainId
+
+                                    LEFT JOIN tmpLinkPriceList ON tmpLinkPriceList.ID = Object_Goods_Retail.GoodsMainId
+
+                               WHERE MIOrderInternal.ORD = 1
+                                 AND COALESCE (tmpMIIncome.Id, 0) = 0
+                                 AND (COALESCE (tmpLinkPriceList.ID, 0) <> 0 OR COALESCE (tmpNotLinkPriceList.ID, 0) <> 0))
+       , tmpRemains AS (SELECT LayoutOutOrder.GoodsId
+                             , LayoutOutOrder.UnitId
+                             , SUM(Container.Amount)::TFloat   AS Amount
+                             , MAX(COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)) AS MovementId
+                        FROM tmpLayoutOutOrder AS LayoutOutOrder
+                        
+                             INNER JOIN Container ON Container.DescId = zc_Container_Count()
+                                                 AND Container.ObjectId = LayoutOutOrder.GoodsId
+                                                 AND Container.WhereObjectId = LayoutOutOrder.UnitId
+                                                
+                             LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                           ON ContainerLinkObject_MovementItem.Containerid = Container.Id
+                                                          AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                             LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                             -- элемент прихода
+                             LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                             -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                             LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                         ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                        AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                             -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                             LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+
+                        GROUP BY LayoutOutOrder.GoodsId
+                               , LayoutOutOrder.UnitId  
+                        )
+       , tmpPrice AS (SELECT LayoutOutOrder.GoodsId
+                           , LayoutOutOrder.UnitId
+                           , MCS_Value.ValueData                     AS MCSValue
+                      FROM tmpLayoutOutOrder AS LayoutOutOrder
+                        
+                         INNER JOIN ObjectLink AS ObjectLink_Price_Unit 
+                                               ON ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                                              AND ObjectLink_Price_Unit.ChildObjectId = LayoutOutOrder.UnitId
+                         INNER JOIN ObjectLink AS Price_Goods
+                                               ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                              AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                              AND Price_Goods.ChildObjectId = LayoutOutOrder.GoodsId
+                         LEFT JOIN ObjectFloat AS MCS_Value
+                                               ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                              AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                      )
                          
-   SELECT MIOrderInternal.ID
-        , MIOrderInternal.InvNumber
-        , MIOrderInternal.OperDate
-        , MIOrderInternal.UnitId
-        , ObjectUnit.ObjectCode         AS UnitCode
-        , ObjectUnit.ValueData          AS UnitName
-        , MIOrderInternal.GoodsId
-        , Object_Goods_Main.ObjectCode  AS GoodsCode
-        , Object_Goods_Main.Name        AS GoodsName
-        , tmpLinkPriceList.OperDate
-        , tmpLinkPriceList.JuridicalName
-        , tmpNotLinkPriceList.OperDate
-        , tmpNotLinkPriceList.JuridicalName
-   FROM tmpMIOrderInternal AS MIOrderInternal 
+   SELECT LayoutOutOrder.ID
+        , LayoutOutOrder.InvNumber
+        , LayoutOutOrder.OperDate
+        , LayoutOutOrder.UnitId
+        , LayoutOutOrder.UnitCode
+        , LayoutOutOrder.UnitName
+        , LayoutOutOrder.JuridicalMainName
+        , LayoutOutOrder.GoodsId
+        , LayoutOutOrder.GoodsCode
+        , LayoutOutOrder.GoodsName
+        , LayoutOutOrder.OperDatePriceLink
+        , LayoutOutOrder.JuridicalNameLink
+        , LayoutOutOrder.OperDatePrice
+        , LayoutOutOrder.JuridicalName
+        , LayoutOutOrder.AmountLayout
+        , tmpRemains.Amount                   AS Remains
+        , tmpPrice.MCSValue  
+        , MovementIncome.InvNumber
+        , MovementIncome.OperDate
+   FROM tmpLayoutOutOrder AS LayoutOutOrder 
    
-        LEFT JOIN tmpMIIncome ON tmpMIIncome.GoodsId = MIOrderInternal.GoodsId
-                             AND tmpMIIncome.UnitId = MIOrderInternal.UnitId
-                             AND tmpMIIncome.OperDate >= MIOrderInternal.OperDate
-                             AND tmpMIIncome.ORD = 1
-                             
-        LEFT JOIN Object AS ObjectUnit ON ObjectUnit.ID = MIOrderInternal.UnitId
+        LEFT JOIN tmpRemains ON tmpRemains.GoodsId = LayoutOutOrder.GoodsId
+                            AND tmpRemains.UnitId = LayoutOutOrder.UnitId
+                            
+        LEFT JOIN tmpPrice ON tmpPrice.GoodsId = LayoutOutOrder.GoodsId
+                          AND tmpPrice.UnitId = LayoutOutOrder.UnitId
 
-        LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MIOrderInternal.GoodsId
-        LEFT JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
-                              
-        LEFT JOIN tmpNotLinkPriceList ON tmpNotLinkPriceList.ID = Object_Goods_Retail.GoodsMainId
-
-        LEFT JOIN tmpLinkPriceList ON tmpLinkPriceList.ID = Object_Goods_Retail.GoodsMainId
-
-   WHERE MIOrderInternal.ORD = 1
-     AND COALESCE (tmpMIIncome.Id, 0) = 0
-     AND (COALESCE (tmpLinkPriceList.ID, 0) <> 0 OR COALESCE (tmpNotLinkPriceList.ID, 0) <> 0)
+        LEFT JOIN Movement AS MovementIncome ON MovementIncome.Id = tmpRemains.MovementId
+                                                                                                                 
+                            
+   WHERE LayoutOutOrder.AmountLayout > COALESCE (tmpRemains.Amount, 0)
 ;
 
 END;

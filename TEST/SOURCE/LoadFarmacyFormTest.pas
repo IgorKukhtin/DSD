@@ -1055,10 +1055,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_WagesVIP_CalcMonthForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_WagesVIP_CalcMonthForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Layout_OutOrderForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Layout_OutOrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Layout_OutOrderForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Layout_NotLinkPriceListForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Layout_NotLinkPriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Layout_NotLinkPriceListForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_PartialReturnInAllForm'));
