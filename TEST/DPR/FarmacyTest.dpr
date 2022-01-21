@@ -1144,7 +1144,10 @@ uses
   Report_Layout_NotLinkPriceList in '..\..\FormsFarmacy\Report\Report_Layout_NotLinkPriceList.pas' {Report_Layout_NotLinkPriceListForm: TParentForm},
   Report_Layout_OutOrder in '..\..\FormsFarmacy\Report\Report_Layout_OutOrder.pas' {Report_Layout_OutOrderForm: TParentForm},
   Report_Movement_WagesVIP_CalcMonth in '..\..\FormsFarmacy\Report\Report_Movement_WagesVIP_CalcMonth.pas' {Report_Movement_WagesVIP_CalcMonthForm: TParentForm},
-  PickUpLogsAndDBF in '..\..\FormsFarmacy\Guides\PickUpLogsAndDBF.pas' {PickUpLogsAndDBFForm: TParentForm};
+  PickUpLogsAndDBF in '..\..\FormsFarmacy\Guides\PickUpLogsAndDBF.pas' {PickUpLogsAndDBFForm: TParentForm},
+  ContractPriceList in '..\..\FormsFarmacy\Guides\ContractPriceList.pas' {ContractPriceListForm: TParentForm},
+  Report_PriceComparisonBIG3 in '..\..\FormsFarmacy\Report\Report_PriceComparisonBIG3.pas' {Report_PriceComparisonBIG3Form: TParentForm},
+  ContractPriceListDialog in '..\..\FormsFarmacy\Guides\ContractPriceListDialog.pas' {ContractPriceListDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

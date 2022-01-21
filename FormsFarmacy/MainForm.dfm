@@ -4900,6 +4900,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_PriceComparisonBIG3: TdsdOpenForm
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
+      MoveParams = <>
+      Caption = 'C'#1088#1072#1074#1085#1077#1085#1080#1077' '#1094#1077#1085' '#1089' '#1041#1048#1043'-3 ('#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084')'
+      FormName = 'TReport_PriceComparisonBIG3Form'
+      FormNameParam.Value = 'TReport_PriceComparisonBIG3Form'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6060,6 +6071,9 @@
       end
       object N313: TMenuItem
         Action = actReport_PriceCorrectionSystem
+      end
+      object C31: TMenuItem
+        Action = actReport_PriceComparisonBIG3
       end
       object N133: TMenuItem
         Caption = '-'
