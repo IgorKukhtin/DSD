@@ -103,6 +103,7 @@ BEGIN
                                          );
                                                 
 
+
      -- 5.3. проводим Документ
      /*IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash())
      THEN

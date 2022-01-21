@@ -23,6 +23,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyCode Integer, CommentInfoMoneyName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
+             , UserId_1 Integer, UserName_1 TVarChar
+             , UserId_2 Integer, UserName_2 TVarChar
+             , UserId_3 Integer, UserName_3 TVarChar
                )
 
 AS
@@ -75,6 +78,27 @@ BEGIN
                                                 AND ObjectLink_InfoMoneyKind.ChildObjectId = CASE WHEN inKindName = 'zc_Enum_InfoMoney_In' THEN zc_Enum_InfoMoney_In() ELSE zc_Enum_InfoMoney_Out() END
                            */
                            )
+        -- 
+        , tmpMI_Sign AS (SELECT tmp.MovementId
+                              , MAX (CASE WHEN tmp.UserId = zfCalc_UserMain_1() THEN tmp.UserId   ELSE 0  END) AS UserId_1
+                              , MAX (CASE WHEN tmp.UserId = zfCalc_UserMain_1() THEN tmp.UserName ELSE '' END) AS UserName_1
+                              , MAX (CASE WHEN tmp.UserId = zfCalc_UserMain_2() THEN tmp.UserId   ELSE 0  END) AS UserId_2
+                              , MAX (CASE WHEN tmp.UserId = zfCalc_UserMain_2() THEN tmp.UserName ELSE '' END) AS UserName_2
+                              , MAX (CASE WHEN tmp.UserId = zfCalc_UserMain_3() THEN tmp.UserId   ELSE 0  END) AS UserId_3
+                              , MAX (CASE WHEN tmp.UserId = zfCalc_UserMain_3() THEN tmp.UserName ELSE '' END) AS UserName_3
+                         FROM (SELECT MovementItem.MovementId
+                                    , MovementItem.Id
+                                    , MovementItem.ObjectId AS UserId
+                                    , Object.ValueData      AS UserName
+                               FROM (SELECT DISTINCT tmpData.MovementId FROM tmpData) AS tmp
+                                    INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId
+                                                           AND MovementItem.DescId = zc_MI_Sign()
+                                                           AND MovementItem.isErased = FALSE
+                                                           AND COALESCE (MovementItem.Amount,0) <> 0
+                                    LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
+                               ) AS tmp
+                         GROUP BY tmp.MovementId
+                         )
 
        SELECT
              tmpData.MovementId                   AS Id
@@ -108,6 +132,13 @@ BEGIN
            , MovementDate_Insert.ValueData        AS InsertDate
            , Object_Update.ValueData              AS UpdateName
            , MovementDate_Update.ValueData        AS UpdateDate
+           
+           , tmpMI_Sign.UserId_1   ::Integer
+           , tmpMI_Sign.UserName_1 ::TVarChar
+           , tmpMI_Sign.UserId_2   ::Integer
+           , tmpMI_Sign.UserName_2 ::TVarChar
+           , tmpMI_Sign.UserId_3   ::Integer
+           , tmpMI_Sign.UserName_3 ::TVarChar
        FROM tmpData
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpData.StatusId
 
@@ -157,6 +188,10 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_ServiceDate
                                        ON MIDate_ServiceDate.MovementItemId = tmpData.MI_Id
                                       AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
+
+            LEFT JOIN tmpMI_Sign ON tmpMI_Sign.MovementId = tmpData.MovementId
+
+
             /*LEFT JOIN MovementItemBoolean AS MIBoolean_Child
                                           ON MIBoolean_Child.MovementItemId = tmpData.MI_Id
                                          AND MIBoolean_Child.DescId = zc_MIBoolean_Child()
