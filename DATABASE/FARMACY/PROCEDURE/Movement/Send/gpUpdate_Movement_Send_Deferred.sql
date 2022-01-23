@@ -393,7 +393,7 @@ BEGIN
            ;
 
            IF vbGoodsName <> '' AND 
-              vbUserId NOT IN (375661, 2301972, 183242) -- Зерин Юрий Геннадиевич              
+              vbUserId NOT IN (375661, 2301972, 183242, 4183126) -- Зерин Юрий Геннадиевич              
            THEN
                RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам Кол-во получателя <%> отличается от Факт кол-ва точки-отправителя <%>.', vbGoodsName, vbAmount, vbAmountStorage;
            END IF;

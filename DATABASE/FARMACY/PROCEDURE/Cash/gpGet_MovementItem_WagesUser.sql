@@ -41,7 +41,7 @@ BEGIN
     
     IF vbUserId = 3
     THEN
-      vbUserId  := 4085760;
+      vbUserId  := 12113514;
     END IF;
 
     IF EXISTS(SELECT 1 FROM Movement WHERE Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_Wages())
@@ -80,6 +80,7 @@ BEGIN
               ,  tmpResult AS (SELECT MovementItem.Amount                                            AS Result
                                     , MovementItemFloat.ValueData::Integer                           AS Attempts
                                     , MovementItemDate.ValueData                                     AS DateTimeTest
+                                    , COALESCE(MIBoolean_Passed.ValueData, False)                    AS isPassed 
                                FROM Movement
 
                                     LEFT JOIN MovementFloat ON MovementFloat.MovementId = Movement.Id
@@ -93,6 +94,10 @@ BEGIN
                                     LEFT JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
                                                                 AND MovementItemFloat.DescId = zc_MIFloat_TestingUser_Attempts()
 
+                                    LEFT JOIN MovementItemBoolean AS MIBoolean_Passed
+                                                                  ON MIBoolean_Passed.DescId = zc_MIBoolean_Passed()
+                                                                 AND MIBoolean_Passed.MovementItemId = MovementItem.Id
+                                                                 
                                WHERE Movement.DescId = zc_Movement_TestingUser()
                                  AND Movement.OperDate = inOperDate
                                  AND MovementItem.ObjectId = vbUserId) 
@@ -278,7 +283,7 @@ BEGIN
                  , tmpResult.Attempts                           AS Attempts
                  , CASE WHEN COALESCE (tmpResult.Attempts, 0) = 0
                    THEN NULL ELSE
-                   CASE WHEN tmpResult.Result >= 85
+                   CASE WHEN tmpResult.isPassed = TRUE
                    THEN 'Сдан' ELSE 'Не сдан' END END::TVarChar AS Status
                  , tmpResult.DateTimeTest                       AS DateTimeTest
                  , tmpAdditionalExpenses.SummaCleaning          AS SummaCleaning

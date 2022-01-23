@@ -14,9 +14,15 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_InfoMoneyDetail() RETURNS Integer AS 
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_InfoMoneyDetail', 'Детально Приход/расход ' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_InfoMoneyDetail');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_CommentMoveMoney() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_CommentMoveMoney'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_CommentMoveMoney', 'Примечание Движение денег' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_CommentMoveMoney');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.01.22         * zc_MILinkObject_CommentMoveMoney
  14.01.22         * zc_MILinkObject_InfoMoney
                     zc_MILinkObject_CommentInfoMoney
                     zc_MILinkObject_InfoMoneyDetail

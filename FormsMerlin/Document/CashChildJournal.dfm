@@ -280,6 +280,30 @@ object CashChildJournalForm: TCashChildJournalForm
         Options.Editing = False
         Width = 78
       end
+      object UserName_1: TcxGridDBColumn
+        Caption = #1055#1086#1076#1087#1080#1089#1100' 1'
+        DataBinding.FieldName = 'UserName_1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object UserName_2: TcxGridDBColumn
+        Caption = #1055#1086#1076#1087#1080#1089#1100' 2'
+        DataBinding.FieldName = 'UserName_2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object UserName_3: TcxGridDBColumn
+        Caption = #1055#1086#1076#1087#1080#1089#1100' 3'
+        DataBinding.FieldName = 'UserName_3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -532,8 +556,8 @@ object CashChildJournalForm: TCashChildJournalForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 144
-    Top = 112
+    Left = 232
+    Top = 160
     DockControlHeights = (
       0
       0
@@ -596,6 +620,18 @@ object CashChildJournalForm: TCashChildJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertUpdate_Sign'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Sign_isErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -627,7 +663,6 @@ object CashChildJournalForm: TCashChildJournalForm
     object bbEdit: TdxBarButton
       Action = actUpdate
       Category = 0
-      ImageIndex = 1
     end
     object bbComplete: TdxBarButton
       Action = actComplete
@@ -672,6 +707,14 @@ object CashChildJournalForm: TCashChildJournalForm
     end
     object bbInsertMask: TdxBarButton
       Action = actInsertMask
+      Category = 0
+    end
+    object bbInsertUpdate_Sign: TdxBarButton
+      Action = actInsertUpdate_Sign
+      Category = 0
+    end
+    object bbUpdate_Sign_isErased: TdxBarButton
+      Action = actUpdate_Sign_isErased
       Category = 0
     end
   end
@@ -899,6 +942,7 @@ object CashChildJournalForm: TCashChildJournalForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
+      ImageIndex = 1
       FormName = 'TCashChildMovementForm'
       FormNameParam.Value = 'TCashChildMovementForm'
       FormNameParam.DataType = ftString
@@ -1296,6 +1340,42 @@ object CashChildJournalForm: TCashChildJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actUpdate_Sign_isErased: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Sign_isErased
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Sign_isErased
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectChild
+        end>
+      Caption = 'actUpdate_Sign_isErased'
+      ImageIndex = 52
+    end
+    object actInsertUpdate_Sign: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_Sign
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_Sign
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectChild
+        end>
+      Caption = 'actInsertUpdate_Sign'
+      ImageIndex = 76
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Cash'
@@ -1650,5 +1730,48 @@ object CashChildJournalForm: TCashChildJournalForm
     PackSize = 1
     Left = 112
     Top = 384
+  end
+  object spInsertUpdate_Sign: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_Cash_Sign'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = 44562d
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = 44562d
+        Component = ClientDataSet
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 552
+    Top = 128
+  end
+  object spUpdate_Sign_isErased: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Cash_Sign_isErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 632
+    Top = 144
   end
 end

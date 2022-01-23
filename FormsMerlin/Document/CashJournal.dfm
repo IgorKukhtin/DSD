@@ -582,6 +582,11 @@ object CashJournalForm: TCashJournalForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'inMI_Id'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'inOperDate'
           Value = Null
           Component = deEnd
@@ -631,6 +636,13 @@ object CashJournalForm: TCashJournalForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMI_Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MI_Id'
           MultiSelectSeparator = ','
         end
         item
@@ -705,6 +717,13 @@ object CashJournalForm: TCashJournalForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMI_Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MI_Id'
           MultiSelectSeparator = ','
         end
         item

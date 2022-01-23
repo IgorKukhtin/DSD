@@ -202,7 +202,8 @@ BEGIN
        END IF;
 
        IF COALESCE(vbAmountAuto, 0) > COALESCE(inAmount, 0) AND COALESCE(vbAmountAuto, 0) <> 0 AND COALESCE (vbIsSUN_v3, FALSE) = TRUE AND
-          NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())       
+          NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) AND
+          COALESCE(inCommentSendID, 0) = 14883299 
        THEN
           RAISE EXCEPTION 'Ошибка. Уменьшение количества в перемещениях  СУН-Экспресс разрешено только системному администратору!';
        END IF;
@@ -291,8 +292,8 @@ BEGIN
     END IF;
     
     IF vbIsSUN = FALSE AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
-      AND vbFromId NOT IN (1529734, 8156016) 
-      AND vbUnitId NOT IN (17146811, 18712420, 18712512) 
+      AND vbFromId NOT IN (7117700) 
+     -- AND vbUnitId NOT IN (17146811, 18712512) 
       AND COALESCE (vbAmountStorage, 0) = COALESCE (inAmountStorage, 0)
       AND COALESCE (inAmountStorage, 0) > 0
       AND EXISTS(SELECT ObjectLink_Unit_Parent.ChildObjectId 
@@ -378,9 +379,9 @@ BEGIN
                  THEN 6 - date_part('isodow', DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '1 MONTH')
                  ELSE date_part('isodow', DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '1 MONTH') - 2 END|| 'DAY ')::INTERVAL) <= CURRENT_DATE*/
         THEN
-          IF COALESCE (vbFromId, 0) = COALESCE (vbUserUnitId, 0)
+          IF COALESCE (vbFromId, 0) = COALESCE (vbUserUnitId, 0) AND vbUserUnitId NOT IN (7117700) 
           THEN
-            IF COALESCE (vbAmountManual, 0) <> COALESCE (inAmountManual, 0)
+            IF COALESCE (vbAmountManual, 0) <> COALESCE (inAmountManual, 0) 
             THEN
               RAISE EXCEPTION 'Ошибка. Изменять <Факт кол-во точки-получателя> вам запрещено.';
             END IF;

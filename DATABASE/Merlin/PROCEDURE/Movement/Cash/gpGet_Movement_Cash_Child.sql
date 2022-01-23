@@ -50,8 +50,8 @@ BEGIN
            , Object_Parent.ValueData            AS ParentName_InfoMoney
            , Object_InfoMoney.Id                AS InfoMoneyId
            , Object_InfoMoney.ValueData         AS InfoMoneyName
-           , Object_InfoMoney.Id                AS InfoMoneyDetailId
-           , Object_InfoMoney.ValueData         AS InfoMoneyDetailName
+           , Object_InfoMoneyDetail.Id          AS InfoMoneyDetailId
+           , Object_InfoMoneyDetail.ValueData   AS InfoMoneyDetailName
            , Object_CommentInfoMoney.Id         AS CommentInfoMoneyId
            , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
        FROM Movement
@@ -63,7 +63,6 @@ BEGIN
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.DescId = zc_MI_Child()
                        ) AS tmpChild On 1= 1
-
 
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
 

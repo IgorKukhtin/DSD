@@ -24,6 +24,9 @@ $BODY$
    DECLARE vbInfoMoneyId Integer;
    DECLARE vbInfoMoneyDetailId Integer;
    DECLARE vbCommentInfoMoneyId Integer;
+   
+   DECLARE vbAmount TFloat;
+   DECLARE vbAmount_master TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
@@ -101,6 +104,22 @@ BEGIN
                                               , inUserId               := vbUserId
                                                );
                                                 
+     -- проверка распределен ли весь документ
+     vbAmount_master := (SELECT SUM (CASE WHEN MovementItem.Amount < 0 THEN -1 ELSE 1 END * MovementItem.Amount) FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE);
+     vbAmount        := (SELECT SUM (CASE WHEN MovementItem.Amount < 0 THEN -1 ELSE 1 END * MovementItem.Amount) FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE);
+     
+     --RAISE EXCEPTION 'Ошибка. <%>  -  <%> .', vbAmount_master, vbAmount;
+     
+     IF vbAmount_master <> 0 AND vbAmount = vbAmount_master
+     THEN
+     
+         PERFORM gpInsertUpdate_MI_Cash_Sign (inMovementId := ioId
+                                            , inAmount     := vbAmount_master
+                                            , inSession    := inSession
+                                             );
+     END IF;
+     
+
 
      -- 5.3. проводим Документ
      /*IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash())

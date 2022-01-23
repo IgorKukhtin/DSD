@@ -125,8 +125,10 @@ BEGIN
 
     -- Проведенные продажы "Новая почта"
     UPDATE tmpMovement SET SummSaleNP = COALESCE(MovementSale.TotalSumm, 0)
-    FROM (WITH tmpMovement AS (SELECT date_trunc('day', Movement.OperDate)          AS OperDate
-                                    , MovementFloat_TotalSumm.ValueData             AS TotalSumm
+    FROM (WITH tmpMovement AS (SELECT CASE WHEN DATE_TRUNC ('MONTH', vbOperDate) >= '01.01.2022'
+                                           THEN Movement.OperDate
+                                           ELSE date_trunc('day', MovementDate_Insert.ValueData + INTERVAL '3 HOUR') END  AS OperDate
+                                    , MovementFloat_TotalSumm.ValueData                                                   AS TotalSumm
                                FROM Movement
 
                                     INNER JOIN MovementBoolean AS MovementBoolean_NP
@@ -138,9 +140,9 @@ BEGIN
                                                             ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                                            AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
-                                   /* LEFT JOIN MovementDate AS MovementDate_Insert
+                                    LEFT JOIN MovementDate AS MovementDate_Insert
                                                            ON MovementDate_Insert.MovementId = Movement.Id
-                                                          AND MovementDate_Insert.DescId = zc_MovementDate_Insert()*/
+                                                          AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
 
                                WHERE Movement.OperDate >= DATE_TRUNC ('MONTH', vbOperDate)
                                  AND Movement.OperDate < DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH'
@@ -206,7 +208,9 @@ BEGIN
     UPDATE tmpCalculation SET Summa = Calc.Summa
     FROM (SELECT tmpCalculation.UserId
                , tmpCalculation.OperDate
-               , ROUND((COALESCE(tmpMovement.SummPhone, 0) + COALESCE(tmpMovement.SummSaleNP, 0)) *
+               , ROUND((COALESCE(tmpMovement.SummPhone, 0) + CASE WHEN DATE_TRUNC ('MONTH', vbOperDate) < '01.01.2022' 
+                                                                  THEN COALESCE(tmpMovement.SummSaleNP, 0)
+                                                                  ELSE 0 END) *
                         tmpCalculation.HoursWork * ObjectFloat_PercentPhone.ValueData / 100 / tmpCalculation.HoursWorkDay +
                        COALESCE(tmpMovement.SummSale, 0) *
                         tmpCalculation.HoursWork * ObjectFloat_PercentOther.ValueData / 100 / tmpCalculation.HoursWorkDay, 2) AS Summa
@@ -246,6 +250,53 @@ BEGIN
     SELECT SUM(tmpCalculation.HoursWork)::TFloat AS HoursWork
     INTO vbHoursWork
     FROM tmpCalculation;
+    
+    
+    -- таблица по новой почте с 01.01.2022
+    CREATE TEMP TABLE tmpCalculationNP (UserID Integer, Summa TFloat)  ON COMMIT DROP;
+
+    IF DATE_TRUNC ('MONTH', vbOperDate) >= '01.01.2022'
+    THEN
+      WITH tmpPayrollTypeVIP AS (SELECT Object_PayrollTypeVIP.Id             AS Id
+                                      , Object_PayrollTypeVIP.ObjectCode     AS Code
+                                      , Object_PayrollTypeVIP.ValueData      AS Name
+                                      
+                                      , ObjectFloat_PercentPhone.ValueData             AS PercentPhone
+                                      , ObjectFloat_PercentOther.ValueData             AS PercentOther 
+
+                                 FROM Object AS Object_PayrollTypeVIP
+
+                                      LEFT JOIN ObjectFloat AS ObjectFloat_PercentPhone
+                                                            ON ObjectFloat_PercentPhone.ObjectId = Object_PayrollTypeVIP.Id
+                                                           AND ObjectFloat_PercentPhone.DescId = zc_ObjectFloat_PayrollTypeVIP_PercentPhone()
+
+                                      LEFT JOIN ObjectFloat AS ObjectFloat_PercentOther
+                                                            ON ObjectFloat_PercentOther.ObjectId = Object_PayrollTypeVIP.Id
+                                                           AND ObjectFloat_PercentOther.DescId = zc_ObjectFloat_PayrollTypeVIP_PercentOther()
+
+                                 WHERE Object_PayrollTypeVIP.DescId = zc_Object_PayrollTypeVIP()
+                                   AND Object_PayrollTypeVIP.isErased = FALSE
+                                 ORDER BY Object_PayrollTypeVIP.ObjectCode
+                                 LIMIT 1)
+                                 
+      INSERT INTO tmpCalculationNP (UserID, Summa)
+      SELECT Calculation.UserId
+           , ROUND(Movement.SummSaleNP * Calculation.HoursWork * PayrollTypeVIP.PercentPhone / 100 / vbHoursWork, 2) AS Summa
+
+      FROM (SELECT tmpCalculation.UserId 
+                 , SUM(tmpCalculation.HoursWork) AS HoursWork
+           FROM tmpCalculation
+           GROUP BY tmpCalculation.UserId) AS Calculation
+
+           LEFT JOIN tmpPayrollTypeVIP AS PayrollTypeVIP ON 1 = 1
+               
+           LEFT JOIN (SELECT SUM(tmpMovement.SummSaleNP) AS SummSaleNP
+                      FROM tmpMovement) AS Movement ON 1 = 1;
+                      
+      raise notice 'Value 05: %', (SELECT SUM(tmpCalculationNP.Summa) FROM tmpCalculationNP);
+
+    END IF;
+    
             
     -- сохранили отметку <Сумма реализации заказов принятых по телефону>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPhone(), inMovementId, vbTotalSummPhone);
@@ -264,9 +315,12 @@ BEGIN
                                                      , inHoursWork       := COALESCE(tmpCalc.HoursWork, 0)
                                                      , inUserId          := vbUserId)
     FROM (SELECT tmpCalculation.UserId
-               , SUM(tmpCalculation.Summa) AS Summa
+               , SUM(tmpCalculation.Summa) + COALESCE(MAX(tmpCalculationNP.Summa), 0) AS Summa
                , SUM(tmpCalculation.HoursWork)::TFloat AS HoursWork
           FROM tmpCalculation
+          
+               LEFT JOIN tmpCalculationNP ON tmpCalculationNP.UserID = tmpCalculation.UserID
+          
           GROUP BY tmpCalculation.UserId) AS tmpCalc
     
          FULL JOIN (SELECT MovementItem.Id                    AS Id

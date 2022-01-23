@@ -146,7 +146,7 @@
   end
   object ceisSite: TcxCheckBox
     Left = 204
-    Top = 26
+    Top = 8
     Caption = #1044#1083#1103' '#1089#1072#1081#1090#1072
     TabOrder = 19
     Width = 82
@@ -178,6 +178,20 @@
     Caption = #1056#1072#1073#1086#1090#1072' '#1085#1072' '#1085#1077#1089#1082#1086#1083#1100#1082#1080#1093' '#1072#1087#1090#1077#1082#1072#1093
     TabOrder = 23
     Width = 189
+  end
+  object ceNewUser: TcxCheckBox
+    Left = 204
+    Top = 26
+    Caption = #9#1053#1086#1074#1099#1081' '#1089#1086#1090#1088#1091#1076#1085#1080#1082
+    TabOrder = 24
+    Width = 114
+  end
+  object ceDismissedUser: TcxCheckBox
+    Left = 204
+    Top = 44
+    Caption = #1059#1074#1086#1083#1077#1085#1085#1099#1081' '#1089#1086#1090#1088#1091#1076#1085#1080#1082
+    TabOrder = 25
+    Width = 149
   end
   object ActionList: TActionList
     Left = 269
@@ -233,7 +247,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inName'
+        Name = 'inUserName'
         Value = ''
         Component = edName
         DataType = ftString
@@ -319,10 +333,26 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNewUser'
+        Value = Null
+        Component = ceNewUser
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDismissedUser'
+        Value = Null
+        Component = ceDismissedUser
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 213
-    Top = 48
+    Left = 205
+    Top = 80
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -442,6 +472,20 @@
         Name = 'isWorkingMultiple'
         Value = Null
         Component = cbWorkingMultiple
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNewUser'
+        Value = Null
+        Component = ceNewUser
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDismissedUser'
+        Value = Null
+        Component = ceDismissedUser
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

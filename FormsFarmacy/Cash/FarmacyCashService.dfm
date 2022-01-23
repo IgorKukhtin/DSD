@@ -26153,4 +26153,71 @@ object MainCashForm2: TMainCashForm2
     Left = 432
     Top = 272
   end
+  object spLoadPickUpLogsAndDBF: TdsdStoredProc
+    StoredProcName = 'gpSelect_LoadPickUpLogsAndDBF'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inCashSessionId'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSend'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outHost'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPort'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUsername'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPassword'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileList'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 264
+    Top = 280
+  end
+  object spUpdate_PickUpLogsAndDBF: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_PickUpLogsAndDBF_Cash'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inCashSessionId'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 272
+  end
 end

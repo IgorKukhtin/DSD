@@ -1,10 +1,12 @@
 -- Function: gpGet_Movement_Cash()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, Integer, TDateTime, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, Integer, Integer, TDateTime, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Cash(
     IN inMovementId        Integer  , -- ключ Документа
     IN inMovementId_Value  Integer  ,
+    IN inMI_Id             Integer  , --Мастер
     IN inOperDate          TDateTime, -- дата Документа
     IN inKindName          TVarChar  , --
     IN inSession           TVarChar   -- сессия пользователя
@@ -13,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , OperDate TDateTime, ServiceDate TDateTime
              , isSign Boolean
              , Amount TFloat
+             , MI_Id Integer
              , CashId Integer, CashName TVarChar
              , UnitId Integer, UnitName TVarChar
              , ParentId_InfoMoney Integer, ParentName_InfoMoney TVarChar
@@ -34,11 +37,12 @@ BEGIN
      RETURN QUERY 
        SELECT
              0 AS Id
-           , CAST (NEXTVAL ('movement_Service_seq') AS TVarChar)  AS InvNumber
+           , CAST (NEXTVAL ('movement_Cash_seq') AS TVarChar)  AS InvNumber
            , CAST (CURRENT_DATE AS TDateTime)                  AS OperDate
            , DATE_TRUNC ('MONTH', inOperDate) :: TDateTime     AS ServiceDate
            , FALSE :: Boolean                                  AS isSign
            , 0::TFloat                                         AS Amount
+           , 0                                                 AS MI_Id
            , 0                                                 AS CashId
            , CAST ('' as TVarChar)                             AS CashName
            , 0                                                 AS UnitId
@@ -62,6 +66,7 @@ BEGIN
            , CASE WHEN inMovementId = 0 THEN DATE_TRUNC ('MONTH', inOperDate) ELSE MIDate_ServiceDate.ValueData END ::TDateTime AS ServiceDate
            , COALESCE (MovementBoolean_Sign.ValueData, FALSE) :: Boolean AS isSign
            , CASE WHEN MovementItem.Amount < 0 THEN MovementItem.Amount * (-1) ELSE MovementItem.Amount END  ::TFloat AS Amount
+           , CASE WHEN inMovementId = 0 THEN 0 ELSE MovementItem.Id END AS MI_Id
            , Object_Cash.Id                     AS CashId
            , Object_Cash.ValueData              AS CashName
            , Object_Unit.Id                     AS UnitId
@@ -70,12 +75,14 @@ BEGIN
            , Object_Parent.ValueData            AS ParentName_InfoMoney
            , Object_InfoMoney.Id                AS InfoMoneyId
            , Object_InfoMoney.ValueData         AS InfoMoneyName
-           , Object_InfoMoney.Id                AS InfoMoneyDetailId
-           , Object_InfoMoney.ValueData         AS InfoMoneyDetailName
+           , Object_InfoMoneyDetail.Id          AS InfoMoneyDetailId
+           , Object_InfoMoneyDetail.ValueData   AS InfoMoneyDetailName
            , Object_CommentInfoMoney.Id         AS CommentInfoMoneyId
            , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
        FROM Movement
-            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                   AND MovementItem.DescId = zc_MI_Master()
+                                   AND MovementItem.Id = inMI_Id
             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
@@ -123,6 +130,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.01.22         * add inMI_Id
  15.01.22         * 
 */
 

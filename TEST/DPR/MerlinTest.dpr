@@ -162,7 +162,9 @@ uses
   CashMovement in '..\..\FormsMerlin\Document\CashMovement.pas' {CashMovementForm: TParentForm},
   InfoMoneyDetail_Object in '..\..\FormsMerlin\Guides\InfoMoneyDetail_Object.pas' {InfoMoneyDetail_ObjectForm: TParentForm},
   CashChildJournal in '..\..\FormsMerlin\Document\CashChildJournal.pas' {CashChildJournalForm: TParentForm},
-  CashChildMovement in '..\..\FormsMerlin\Document\CashChildMovement.pas' {CashChildMovementForm: TParentForm};
+  CashChildMovement in '..\..\FormsMerlin\Document\CashChildMovement.pas' {CashChildMovementForm: TParentForm},
+  CashSendMovement in '..\..\FormsMerlin\Document\CashSendMovement.pas' {CashSendMovementForm: TParentForm},
+  CashSendJournal in '..\..\FormsMerlin\Document\CashSendJournal.pas' {CashSendJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

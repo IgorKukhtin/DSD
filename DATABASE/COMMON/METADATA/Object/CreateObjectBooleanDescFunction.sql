@@ -1153,9 +1153,24 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_EliminateColdSUN() RETU
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_EliminateColdSUN', 'Исключать Холод из СУН' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_EliminateColdSUN');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_User_NewUser() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_User_NewUser'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_User(), 'zc_ObjectBoolean_User_NewUser', 'Новый сотрудник' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_User_NewUser');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_User_DismissedUser() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_User_DismissedUser'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_User(), 'zc_ObjectBoolean_User_DismissedUser', 'Уволенный сотрудник' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_User_DismissedUser');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_PickUpLogsAndDBF_Loaded() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_PickUpLogsAndDBF_Loaded'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PickUpLogsAndDBF(), 'zc_ObjectBoolean_PickUpLogsAndDBF_Loaded', 'Загружено' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_PickUpLogsAndDBF_Loaded');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 20.01.22                                                                                   * zc_ObjectBoolean_PickUpLogsAndDBF_Loaded
+ 19.01.22                                                                                   * zc_ObjectBoolean_User_NewUser, zc_ObjectBoolean_User_DismissedUser
  24.12.21                                                                                   * zc_ObjectBoolean_CashSettings_EliminateColdSUN
  17.12.21                                                                                   * zc_ObjectBoolean_ReasonDifferences_Deficit, zc_ObjectBoolean_ReasonDifferences_Surplus
  14.12.21                                                                                                          * zc_ObjectBoolean_Unit_ErrorRROToVIP

@@ -23,8 +23,10 @@ BEGIN
 
      -- Результат
      RETURN QUERY      
-      WITH tmpMovementNPAll AS (SELECT Movement.OperDate
-                                     , MovementFloat_TotalSumm.ValueData                                     AS TotalSumm
+      WITH tmpMovementNPAll AS (SELECT CASE WHEN DATE_TRUNC ('MONTH', inOperDate) >= '01.01.2022'
+                                            THEN Movement.OperDate
+                                            ELSE date_trunc('day', MovementDate_Insert.ValueData + INTERVAL '3 HOUR') END  AS OperDate
+                                     , MovementFloat_TotalSumm.ValueData                                                   AS TotalSumm
                                 FROM Movement
 
                                      INNER JOIN MovementBoolean AS MovementBoolean_NP
@@ -172,4 +174,4 @@ ALTER FUNCTION gpReport_Movement_WagesVIP_CalcMonth (TDateTime, TVarChar) OWNER 
 
 -- тест
 -- 
-SELECT * FROM gpReport_Movement_WagesVIP_CalcMonth (inOperDate:= '01.01.2022', inSession:= zfCalc_UserAdmin()); 
+SELECT * FROM gpReport_Movement_WagesVIP_CalcMonth (inOperDate:= '01.01.2022', inSession:= zfCalc_UserAdmin());

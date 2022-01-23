@@ -46,6 +46,8 @@ type
     edPasswordWages: TcxTextEdit;
     cxLabel8: TcxLabel;
     cbWorkingMultiple: TcxCheckBox;
+    ceNewUser: TcxCheckBox;
+    ceDismissedUser: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -1052,13 +1052,23 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractPriceListDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractPriceListDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractPriceListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractPriceListForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceComparisonBIG3Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceComparisonBIG3Form');
+
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_WagesVIP_CalcMonthForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_WagesVIP_CalcMonthForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Layout_OutOrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Layout_OutOrderForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Layout_NotLinkPriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Layout_NotLinkPriceListForm');
 
-  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_PartialReturnInAllForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_PartialReturnInAllForm');
 
@@ -1672,12 +1682,12 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReportOrderGoodsForm');
 
     // отчет распределение остатков
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsForm'));
+}    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsDialogForm');
-
+ {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoods_ToForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoods_ToForm');
     exit;
@@ -3327,6 +3337,9 @@ end;
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TPickUpLogsAndDBFForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TPickUpLogsAndDBFForm');
+
 {    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGUIDUnitForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGUIDUnitForm');
 
@@ -3372,7 +3385,7 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserNickForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserNickForm');
-
+ }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserHelsiEditForm'));
@@ -3380,7 +3393,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
     exit;
-
+  {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserKeyForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserKeyForm');
 

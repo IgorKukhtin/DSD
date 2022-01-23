@@ -192,7 +192,7 @@ BEGIN
 
 
 
-   RAISE EXCEPTION '<ok>';
+  -- RAISE EXCEPTION '<ok>';
 
 
 END;

@@ -4109,6 +4109,26 @@
 				<Form>Report_Layout_OutOrderForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Movement_WagesVIP_CalcMonth.pas">
+				<Form>Report_Movement_WagesVIP_CalcMonthForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PickUpLogsAndDBF.pas">
+				<Form>PickUpLogsAndDBFForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ContractPriceList.pas">
+				<Form>ContractPriceListForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_PriceComparisonBIG3.pas">
+				<Form>Report_PriceComparisonBIG3Form</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ContractPriceListDialog.pas">
+				<Form>ContractPriceListDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

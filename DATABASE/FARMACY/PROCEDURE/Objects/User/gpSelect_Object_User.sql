@@ -20,6 +20,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , InDate TDateTime, FarmacyCashDate TDateTime
              , PasswordWages TVarChar
              , isWorkingMultiple Boolean
+             , isNewUser Boolean
+             , isDismissedUser Boolean
               )
 AS
 $BODY$
@@ -81,6 +83,9 @@ END IF;
        , ObjectString_PasswordWages.ValueData
  
        , COALESCE (ObjectBoolean_WorkingMultiple.ValueData, FALSE)::Boolean  AS isWorkingMultiple
+
+       , COALESCE (ObjectBoolean_NewUser.ValueData, FALSE)::Boolean          AS isNewUser
+       , COALESCE (ObjectBoolean_DismissedUser.ValueData, FALSE)::Boolean    AS isDismissedUser
        
    FROM Object AS Object_User
         LEFT JOIN ObjectString AS ObjectString_User_
@@ -116,6 +121,13 @@ END IF;
         LEFT JOIN ObjectBoolean AS ObjectBoolean_WorkingMultiple
                                 ON ObjectBoolean_WorkingMultiple.ObjectId = Object_User.Id
                                AND ObjectBoolean_WorkingMultiple.DescId = zc_ObjectBoolean_User_WorkingMultiple()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NewUser
+                                ON ObjectBoolean_NewUser.ObjectId = Object_User.Id
+                               AND ObjectBoolean_NewUser.DescId = zc_ObjectBoolean_User_NewUser()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_DismissedUser
+                                ON ObjectBoolean_DismissedUser.ObjectId = Object_User.Id
+                               AND ObjectBoolean_DismissedUser.DescId = zc_ObjectBoolean_User_DismissedUser()
 
         LEFT JOIN ObjectFloat AS ObjectFloat_BillNumberMobile
                               ON ObjectFloat_BillNumberMobile.ObjectId = Object_User.Id

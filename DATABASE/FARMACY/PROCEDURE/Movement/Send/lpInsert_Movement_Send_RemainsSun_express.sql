@@ -87,6 +87,7 @@ $BODY$
    DECLARE curResult_partion refcursor;
 
    DECLARE vbDOW_curr        TVarChar;
+   DECLARE vbisEliminateColdSUN Boolean;
 
 BEGIN
      --
@@ -99,6 +100,15 @@ BEGIN
                               THEN 0 -- (SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbObjectId AND ObjectFloat.DescId = zc_ObjectFloat_Retail_SummSUN())
                          ELSE 0 -- 1500
                     END;
+
+     SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN
+     FROM Object AS Object_CashSettings
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
+                                  ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN()
+     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+     LIMIT 1;
 
     -- дата + 6 мес€цев
     vbDate_6:= inOperDate
@@ -556,6 +566,17 @@ BEGIN
                         WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                         --AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
                        )
+        -- отбросили !!холод!!
+      , tmpConditionsKeep AS (SELECT DISTINCT OL_Goods_ConditionsKeep.ObjectId
+                              FROM ObjectLink AS OL_Goods_ConditionsKeep
+                                   LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
+                              WHERE OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
+                                AND (Object_ConditionsKeep.ValueData ILIKE '%холод%'
+                                  OR Object_ConditionsKeep.ValueData ILIKE '%прохладное%'
+                                    )
+                                AND vbisEliminateColdSUN = TRUE
+                             )
+
      -- 2.1. –езультат: EXPRESS - все остатки, продажи => расчет кол-во ѕќ“–≈ЅЌќ—“№ у получател€: от колонки ќстаток отн€ть ƒанные по отложенным чекам - получитс€ реальный остаток на точке
      INSERT INTO  _tmpRemains_all (UnitId, GoodsId, Price, MCS, Amount_sale, Summ_sale
                                  , AmountResult_in, AmountResult_out
@@ -676,13 +697,19 @@ BEGIN
                                                 AND tmpMI_OrderExternal.GoodsId = tmpObject_Price.GoodsId
              LEFT JOIN tmpMI_Reserve ON tmpMI_Reserve.UnitId  = tmpObject_Price.UnitId
                                     AND tmpMI_Reserve.GoodsId = tmpObject_Price.GoodsId
+
+             -- а здесь, отбросили !!холод!!
+             LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = tmpObject_Price.GoodsId
+
              -- отбросили !!закрытые!!
            --INNER JOIN Object_Goods_View ON Object_Goods_View.Id      = tmpObject_Price.GoodsId
            --                            AND Object_Goods_View.IsClose = FALSE
              -- отбросили !!акционные!!
            --INNER JOIN Object AS Object_Goods ON Object_Goods.Id        = tmpObject_Price.GoodsId
            --                                 AND Object_Goods.ValueData NOT ILIKE 'јјј%'
-
+     WHERE             -- отбросили !!холод!!
+           tmpConditionsKeep.ObjectId IS NULL
+ 
        ;
        
      -- 2.2. –езультат: все остатки, продажи => получаем кол-ва ѕќ“–≈ЅЌќ—“№ у получател€

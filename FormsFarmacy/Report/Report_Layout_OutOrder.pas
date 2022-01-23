@@ -40,6 +40,12 @@ type
     JuridicalName: TcxGridDBColumn;
     OperDatePriceLink: TcxGridDBColumn;
     JuridicalNameLink: TcxGridDBColumn;
+    JuridicalMainName: TcxGridDBColumn;
+    AmountLayout: TcxGridDBColumn;
+    Remains: TcxGridDBColumn;
+    MCSValue: TcxGridDBColumn;
+    InvnNumberIncome: TcxGridDBColumn;
+    OperDateIncome: TcxGridDBColumn;
   private
     { Private declarations }
   public

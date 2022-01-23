@@ -108,6 +108,8 @@ type
     spClearDefaultUnit: TdsdStoredProc;
     actClearDefaultUnit: TdsdExecStoredProc;
     dxBarButton2: TdxBarButton;
+    isNewUser: TcxGridDBColumn;
+    isDismissedUser: TcxGridDBColumn;
   private
     { Private declarations }
   public

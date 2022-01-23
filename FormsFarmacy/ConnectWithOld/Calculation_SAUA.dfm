@@ -393,7 +393,7 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     Width = 1070
     Height = 390
     Align = alClient
-    TabOrder = 5
+    TabOrder = 2
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.Filter.Options = [fcoCaseInsensitive]
@@ -479,6 +479,11 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
           Format = ',0.####;-,0.####; ;'
           Kind = skSum
           Column = Need
+        end
+        item
+          Format = ',0.####;-,0.####; ;'
+          Kind = skSum
+          Column = AmountFrom
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsView.Footer = True
@@ -491,6 +496,10 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         item
           Caption = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072
           Width = 242
+        end
+        item
+          Caption = #1040#1087#1090#1077#1082#1072' '#1086#1090#1076#1072#1095#1080
+          Width = 91
         end>
       object UnitName: TcxGridDBBandedColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
@@ -595,10 +604,42 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Position.ColIndex = 1
         Position.RowIndex = 0
       end
+      object AmountFrom: TcxGridDBBandedColumn
+        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+        DataBinding.FieldName = 'AmountFrom'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Position.BandIndex = 2
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBBandedTableView1
     end
+  end
+  object ceUnit: TcxButtonEdit
+    Left = 723
+    Top = 397
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+    Properties.ReadOnly = True
+    Properties.UseNullString = True
+    TabOrder = 6
+    Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+    Width = 250
+  end
+  object cxLabel12: TcxLabel
+    Left = 632
+    Top = 398
+    Caption = #1040#1087#1090#1077#1082#1072' '#1086#1090#1076#1072#1095#1080':'
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -777,6 +818,31 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
       GuiParams = <>
       isShowModal = False
     end
+    object actInsertUpdate_Send_AutoSUA: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_Send_AutoSUA
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_Send_AutoSUA
+        end>
+      Caption = 'actInsertUpdate_Send_AutoSUA'
+    end
+    object mactInsertUpdate_Send_AutoSUA: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdate_Send_AutoSUA
+        end>
+      View = cxGridDBBandedTableView1
+      QuestionBeforeExecute = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1080#1079' '#1072#1087#1090#1077#1082#1080' '#1086#1090#1076#1072#1095#1080'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086'.'
+      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1080#1079' '#1072#1087#1090#1077#1082#1080' '#1086#1090#1076#1072#1095#1080
+      Hint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1080#1079' '#1072#1087#1090#1077#1082#1080' '#1086#1090#1076#1072#1095#1080
+      ImageIndex = 44
+    end
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -878,6 +944,22 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         item
           Visible = True
           ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdate_Send_AutoSUA'
         end>
       OneOnRow = True
       Row = 0
@@ -991,6 +1073,36 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     end
     object dxBarButton7: TdxBarButton
       Action = actUnitAutoSUAForm
+      Category = 0
+    end
+    object dxBarContainerItem1: TdxBarContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel12
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = ceUnit
+    end
+    object dxBarButton8: TdxBarButton
+      Caption = 'New Button'
+      Category = 0
+      Hint = 'New Button'
+      Visible = ivAlways
+    end
+    object bbInsertUpdate_Send_AutoSUA: TdxBarButton
+      Action = mactInsertUpdate_Send_AutoSUA
       Category = 0
     end
   end
@@ -1187,6 +1299,14 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
         Value = Null
         Component = cbNeedRound
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitFromId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1594,5 +1714,74 @@ object Calculation_SAUAForm: TCalculation_SAUAForm
     PackSize = 1
     Left = 360
     Top = 416
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceUnit
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 800
+    Top = 392
+  end
+  object spInsertUpdate_Send_AutoSUA: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_Send_AutoSUA'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inFromId'
+        Value = 'False'
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        Component = cdsResult
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = cdsResult
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = cdsResult
+        ComponentItem = 'AmountFrom'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 480
+    Top = 360
   end
 end

@@ -601,8 +601,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_SurchargeWages_DateEnd() RETURNS Intege
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_SurchargeWages(), 'zc_ObjectDate_SurchargeWages_DateEnd', 'Дата окончания действия' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_SurchargeWages_DateEnd');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_PickUpLogsAndDBF_DateLoaded() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PickUpLogsAndDBF_DateLoaded'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PickUpLogsAndDBF(), 'zc_ObjectDate_PickUpLogsAndDBF_DateLoaded', 'Дата и время загрузки' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PickUpLogsAndDBF_DateLoaded');
+
+
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 20.01.22                                                                                     * zc_ObjectDate_PickUpLogsAndDBF_DateLoaded
  25.11.21                                                                                     * zc_ObjectDate_SurchargeWages_...
  07.10.21                                                                                     * zc_ObjectDate_Unit_Exam
  24.09.21                                                                                     * zc_ObjectDate_CorrectWagesPercentage_Date... 

@@ -120,6 +120,13 @@ type
     ClientDataSetChild: TClientDataSet;
     dsdDBViewAddOnChild: TdsdDBViewAddOn;
     spSelectChild: TdsdStoredProc;
+    spInsertUpdate_Sign: TdsdStoredProc;
+    spUpdate_Sign_isErased: TdsdStoredProc;
+    actUpdate_Sign_isErased: TdsdExecStoredProc;
+    actInsertUpdate_Sign: TdsdExecStoredProc;
+    bbInsertUpdate_Sign: TdxBarButton;
+    bbUpdate_Sign_isErased: TdxBarButton;
+    UserName_1: TcxGridDBColumn;
   private
   public
   end;

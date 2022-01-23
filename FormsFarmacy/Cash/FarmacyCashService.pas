@@ -14,7 +14,7 @@ uses
   cxGrid,  cxSplitter, cxContainer,  cxTextEdit, cxCurrencyEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxLookupEdit,
   cxDBLookupEdit, cxDBLookupComboBox,  cxCheckBox, cxNavigator, CashInterface,  cxImageComboBox , dsdAddOn,
   Vcl.ImgList, LocalStorage, IdFTPCommon, IdGlobal, IdFTP, IdSSLOpenSSL, IdExplicitTLSClientServerBase,
-  UnilWin, System.ImageList, System.Actions;
+  UnilWin, System.ImageList, System.Actions, System.Zip, System.RegularExpressions;
 
 type
  THeadRecord = record
@@ -181,6 +181,8 @@ type
     spPauseUpdateCheck: TdsdStoredProc;
     ZReportLogCDS: TClientDataSet;
     spSendZReportLog: TdsdStoredProc;
+    spLoadPickUpLogsAndDBF: TdsdStoredProc;
+    spUpdate_PickUpLogsAndDBF: TdsdStoredProc;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -239,6 +241,7 @@ type
     procedure SendZReport;
     procedure SendEmployeeWorkLog;
     procedure SendEmployeeSchedule;
+    procedure SendPickUpLogsAndDBF;
     procedure SecureUpdateVersion;
     procedure ChangeStatus(AStatus: String);
     function InitLocalStorage: Boolean;
@@ -469,6 +472,8 @@ begin
       SaveImplementationPlanEmployee;
       //Получение справочника аналогов
 //      if not gc_User.Local then SaveGoodsAnalog;
+      // Отправляем логи
+      SendPickUpLogsAndDBF;
       // Отправка сообщения приложению про надобность обновить остатки из файла
       PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
       // Меняем хинт
@@ -635,6 +640,7 @@ begin
     SaveZReportLog;  // Отправляем данных по Z отчетам
     SendEmployeeWorkLog;  // Отправляем лога работы сотрудников
     SendEmployeeSchedule;  // Отправляем времени работы сотрудников
+    SendPickUpLogsAndDBF;  // Отправляем логи
   end;
   if not FHasError then
     ChangeStatus('Получение остатков')
@@ -1056,6 +1062,7 @@ begin
       SaveZReportLog;
       SendEmployeeWorkLog;
       SendEmployeeSchedule;
+      SendPickUpLogsAndDBF;
     end;
   finally
     tiServise.Hint := 'Ожидание задания.';
@@ -2976,6 +2983,102 @@ begin
 //  end;
 end;
 
+procedure TMainCashForm2.SendPickUpLogsAndDBF;
+  var IdFTP : Tidftp; ZipFile: TZipFile;
+      s, p: string; i : integer;  Res : TArray<string>;
+begin
+
+  try
+
+    try
+      spLoadPickUpLogsAndDBF.ParamByName('inCashSessionId').Value := iniLocalGUIDSave(GenerateGUID);
+      spLoadPickUpLogsAndDBF.ParamByName('outSend').Value := False;
+      spLoadPickUpLogsAndDBF.Execute;
+      if not spLoadPickUpLogsAndDBF.ParamByName('outSend').Value then Exit;
+
+    except
+      on E: Exception do
+      begin
+        Add_Log('spLoadPickUpLogsAndDBF Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+
+    p := ExtractFilePath(Application.ExeName) + '\';
+    s := iniLocalGUIDSave(GenerateGUID) + '_Log.zip';
+
+      // Архивирование данных
+    try
+      Res := TRegEx.Split(spLoadPickUpLogsAndDBF.ParamByName('outFileList').Value, ';');
+      ZipFile := TZipFile.Create;
+
+      try
+        ZipFile.Open(p + s, zmWrite);
+
+        Add_Log('Start MutexDBF LOG');
+        WaitForSingleObject(MutexDBF, INFINITE);
+        WaitForSingleObject(MutexDBFDiff, INFINITE);
+        try
+          for I := 0 to High(Res) do if FileExists(p + Res[I]) then ZipFile.Add(p + Res[I]);
+        finally
+          Add_Log('End MutexDBF LOG');
+          ReleaseMutex(MutexDBFDiff);
+          ReleaseMutex(MutexDBF);
+        end;
+
+        ZipFile.Close;
+      finally
+        ZipFile.Free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log('PickUpLogsAndDBF Exception: ' + E.Message);
+        exit;
+      end;
+    end;
+
+      // Отправка файла
+    IdFTP := Tidftp.Create(nil);
+    try
+      try
+        IdFTP.Passive := True;
+        IdFTP.TransferType := ftBinary;
+        IdFTP.UseExtensionDataPort := True;
+
+        IdFTP.Host := spLoadPickUpLogsAndDBF.ParamByName('outHost').Value;
+        IdFTP.Port := spLoadPickUpLogsAndDBF.ParamByName('outPort').Value;
+        IdFTP.Username := spLoadPickUpLogsAndDBF.ParamByName('outUsername').Value;
+        IdFTP.Password := spLoadPickUpLogsAndDBF.ParamByName('outPassword').Value;
+        IdFTP.Connect;
+        if IdFTP.Connected then
+        try
+          IdFTP.Put(p + s, s, False);
+          TFile.Delete(p + s);
+        finally
+          IdFTP.Disconnect;
+        end;
+      except
+        on E: Exception do Add_Log('Send from FTP file Exception: ' + E.Message);
+      end;
+
+      try
+        spUpdate_PickUpLogsAndDBF.ParamByName('inCashSessionId').Value := iniLocalGUIDSave(GenerateGUID);
+        spUpdate_PickUpLogsAndDBF.Execute;
+
+      except
+        on E: Exception do
+        begin
+          Add_Log('spUpdate_PickUpLogsAndDBF Exception: ' + E.Message);
+          Exit;
+        end;
+      end;
+    finally
+      IdFTP.Free;
+    end;
+  finally
+  end;
+end;
 
 initialization
   RegisterClass(TMainCashForm2);

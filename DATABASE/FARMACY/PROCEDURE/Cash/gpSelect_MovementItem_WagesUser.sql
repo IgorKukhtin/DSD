@@ -26,7 +26,7 @@ BEGIN
     
     IF vbUserId = 3
     THEN
-      vbUserId  := 8905248;
+      vbUserId  := 12113514;
     END IF;
 
     IF EXISTS(SELECT 1 FROM Movement WHERE Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_Wages())
