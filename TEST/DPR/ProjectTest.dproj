@@ -4666,6 +4666,14 @@
 				<Form>Report_OrderReturnTare_ReturnInForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_DefermentDebtOLAPTable.pas">
+				<Form>Report_DefermentDebtOLAPTableForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_DefermentDebtOLAPTableDialog.pas">
+				<Form>Report_DefermentDebtOLAPTableDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
