@@ -176,6 +176,7 @@ BEGIN
              WHERE inIsRegisterDate = FALSE
                AND (tmpRoleAccessKey.AccessKeyId > 0
                     OR (MovementLinkObject_Branch.ObjectId IS NULL AND MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Prepay())
+                    OR Movement.AccessKeyId = 0
                    )
             UNION ALL
              SELECT MovementDate_DateRegistered.MovementId       AS Id
@@ -195,6 +196,7 @@ BEGIN
                AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
                AND (tmpRoleAccessKey.AccessKeyId > 0
                     OR (MovementLinkObject_Branch.ObjectId IS NULL AND MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Prepay())
+                    OR Movement.AccessKeyId = 0
                    )
             ) AS tmpMovement
 

@@ -530,7 +530,15 @@ BEGIN
              END :: TVarChar AS Price_info
 
              -- 14781 - № 7183Р
-           , CASE WHEN vbContractId = 4440485 OR vbUserId = 5 THEN TRUE ELSE FALSE END :: Boolean AS isSchema_fozz  -- для договора Id = 4440485 + доп страничка
+           , CASE WHEN vbContractId = 4440485 -- для договора Id = 4440485 + доп страничка\
+                    OR vbUserId = 5
+                    OR (ObjectLink_Partner_Juridical.ChildObjectId = 862910 -- СІЛЬПО-ФУД ТОВ
+                    AND vbUserId <> 1329039  -- Авто-Загрузка EDI
+                       )
+                  THEN TRUE
+                  ELSE FALSE
+             END :: Boolean AS isSchema_fozz
+
            , tmpTransportGoods.CarName
            , tmpTransportGoods.CarModelName
 
@@ -607,6 +615,7 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
             LEFT JOIN ObjectString AS ObjectString_ToAddress
                                    ON ObjectString_ToAddress.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
                                   AND ObjectString_ToAddress.DescId = zc_ObjectString_Partner_Address()

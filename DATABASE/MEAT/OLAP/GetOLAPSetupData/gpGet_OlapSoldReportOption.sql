@@ -162,7 +162,13 @@ BEGIN
                  'Object' :: TVarChar, 'ObjectContractTagGroup' :: TVarChar, 'ContractTagGroupId' :: TVarChar, 'ValueData' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
    UNION SELECT 20, 'dimension' :: TVarChar AS FieldType, 'Признак договора' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'ContractTagName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
                  'Object' :: TVarChar, 'ObjectContractTag' :: TVarChar, 'ContractTagId' :: TVarChar, 'ValueData' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
-   UNION SELECT 21, 'dimension' :: TVarChar AS FieldType, 'УП статья' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'InfoMoneyName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
+
+   UNION SELECT 21 AS SortField, 'dimension' :: TVarChar AS FieldType, 'Код дог.' :: TVarChar AS Caption, 'Код дог.' :: TVarChar AS CaptionCode, 'ContractCode' :: TVarChar AS FieldName, 'ContractCode' :: TVarChar AS FieldCodeName, '' :: TVarChar AS DisplayFormat,
+                 'Object' :: TVarChar AS TableName, 'ObjectContract' :: TVarChar AS TableSyn, 'ContractId' :: TVarChar AS ConnectFieldName, 'ObjectCode' :: TVarChar AS VisibleFieldName, 'ObjectCode' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
+   UNION SELECT 22, 'dimension' :: TVarChar AS FieldType, '№ дог.' :: TVarChar AS Caption, 'Код дог.' :: TVarChar AS CaptionCode, 'ContractNumber' :: TVarChar AS FieldName, 'ContractCode' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
+                 'Object' :: TVarChar AS TableName, 'ObjectContract' :: TVarChar AS TableSyn, 'ContractId' :: TVarChar AS ConnectFieldName, 'ValueData' :: TVarChar AS VisibleFieldName, 'ObjectCode' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
+
+   UNION SELECT 23, 'dimension' :: TVarChar AS FieldType, 'УП статья' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'InfoMoneyName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
                  'Object' :: TVarChar, 'ObjectInfoMoney' :: TVarChar, 'InfoMoneyId' :: TVarChar, 'ValueData' :: TVarChar AS VisibleFieldName, '' :: TVarChar AS VisibleFieldCode, '' :: TVarChar AS SummaryType
 
    UNION SELECT 31, 'dimension' :: TVarChar AS FieldType, 'ФИО (супервайзер)' :: TVarChar AS Caption, '' :: TVarChar AS CaptionCode, 'PersonalName' :: TVarChar AS FieldName, '' :: TVarChar AS FieldCodeName, '' :: TVarChar, 
