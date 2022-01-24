@@ -30,6 +30,9 @@ RETURNS TABLE (OperDate TDateTime
              , DebtRemains TFloat
              , SaleSumm TFloat
              , DefermentPaymentRemains TFloat
+             , DebtRemains_month TFloat
+             , SaleSumm_month TFloat
+             , DefermentPaymentRemains_month TFloat
              )   
 AS
 $BODY$
@@ -85,7 +88,8 @@ BEGIN
            , Object_Branch.ValueData :: TVarChar AS BranchName
            , Object_Account.Id           AS AccountId
            , Object_Account.ObjectCode   AS AccountCode
-           , Object_Account.ValueData    AS AccountName
+           --, Object_Account.ValueData    AS AccountName
+           , CAST ((CASE WHEN Object_Account.ObjectCode < 100000 THEN '' ELSE '' END || Object_Account.ObjectCode || ' ' || Object_Account.ValueData) AS TVarChar) AS AccountName
            
            , Object_Retail.Id            AS RetailId
            , Object_Retail.ValueData     AS RetailName
@@ -110,6 +114,13 @@ BEGIN
            , tmpReport.DebtRemains  :: TFloat
            , tmpReport.SaleSumm     :: TFloat
            , CASE WHEN COALESCE (tmpReport.DefermentPaymentRemains,0) < 0 THEN 0 ELSE COALESCE (tmpReport.DefermentPaymentRemains,0) END ::TFloat AS DefermentPaymentRemains
+           
+           , CASE WHEN tmpReport.OperDate = DATE_TRUNC ('Month', tmpReport.OperDate) THEN tmpReport.DebtRemains ELSE 0 END ::TFloat AS DebtRemains_month
+           , CASE WHEN tmpReport.OperDate = DATE_TRUNC ('Month', tmpReport.OperDate) THEN tmpReport.SaleSumm ELSE 0 END ::TFloat AS SaleSumm_month
+           , CASE WHEN tmpReport.OperDate = DATE_TRUNC ('Month', tmpReport.OperDate)
+                      THEN CASE WHEN COALESCE (tmpReport.DefermentPaymentRemains,0) < 0 THEN 0 ELSE COALESCE (tmpReport.DefermentPaymentRemains,0) END 
+                  ELSE 0
+             END ::TFloat AS DefermentPaymentRemains_month
 
         FROM tmpReport
              LEFT JOIN Object AS Object_Account ON Object_Account.Id = tmpReport.AccountId

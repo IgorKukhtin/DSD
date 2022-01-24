@@ -139,6 +139,8 @@ object Report_DefermentPaymentOLAPTableForm: TReport_DefermentPaymentOLAPTableFo
       IsCaptionAssigned = True
       Caption = #1052#1077#1089#1103#1094
       DataBinding.FieldName = 'MonthDate'
+      PropertiesClassName = 'TcxDateEditProperties'
+      Properties.DisplayFormat = 'MMMM YYYY'
       Visible = True
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
@@ -198,6 +200,14 @@ object Report_DefermentPaymentOLAPTableForm: TReport_DefermentPaymentOLAPTableFo
       Visible = True
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
+    object pvStartContractDate: TcxDBPivotGridField
+      AreaIndex = 13
+      IsCaptionAssigned = True
+      Caption = #1044#1077#1081#1089#1090#1074'. '#1089' ('#1076#1086#1075'.)'
+      DataBinding.FieldName = 'StartContractDate'
+      Visible = True
+      UniqueName = #1057#1086#1089#1090#1072#1074
+    end
     object pvContractCode: TcxDBPivotGridField
       AreaIndex = 3
       IsCaptionAssigned = True
@@ -213,11 +223,11 @@ object Report_DefermentPaymentOLAPTableForm: TReport_DefermentPaymentOLAPTableFo
       Visible = True
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
-    object pvGoodsTagName: TcxDBPivotGridField
+    object pvContractTagName: TcxDBPivotGridField
       AreaIndex = 10
       IsCaptionAssigned = True
-      Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
-      DataBinding.FieldName = 'GoodsTagName'
+      Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
+      DataBinding.FieldName = 'ContractTagName'
       Visible = True
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
@@ -260,7 +270,7 @@ object Report_DefermentPaymentOLAPTableForm: TReport_DefermentPaymentOLAPTableFo
     end
     object pvDebtRemains: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 1
+      AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1057#1091#1084#1084#1072' '#1076#1086#1083#1075#1072
       DataBinding.FieldName = 'DebtRemains'
@@ -273,10 +283,49 @@ object Report_DefermentPaymentOLAPTableForm: TReport_DefermentPaymentOLAPTableFo
     end
     object pvDefermentPaymentRemains: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 2
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = #1044#1086#1083#1075' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081
       DataBinding.FieldName = 'DefermentPaymentRemains'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvSaleSumm_month: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 1
+      IsCaptionAssigned = True
+      Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1085#1072#1095'.'#1084#1077#1089#1103#1094#1072')'
+      DataBinding.FieldName = 'SaleSumm_month'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvDebtRemains_month: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 3
+      IsCaptionAssigned = True
+      Caption = #1057#1091#1084#1084#1072' '#1076#1086#1083#1075#1072' ('#1085#1072#1095'.'#1084#1077#1089#1103#1094#1072')'
+      DataBinding.FieldName = 'DebtRemains_month'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
+      Width = 70
+      UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
+    end
+    object pvDefermentPaymentRemains_month: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 5
+      IsCaptionAssigned = True
+      Caption = #1044#1086#1083#1075' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081' ('#1085#1072#1095'.'#1084#1077#1089#1103#1094#1072')'
+      DataBinding.FieldName = 'DefermentPaymentRemains_month'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.##;-,0.##; ;'
@@ -330,8 +379,8 @@ object Report_DefermentPaymentOLAPTableForm: TReport_DefermentPaymentOLAPTableFo
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 256
-    Top = 200
+    Left = 232
+    Top = 240
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -658,8 +707,8 @@ object Report_DefermentPaymentOLAPTableForm: TReport_DefermentPaymentOLAPTableFo
   end
   object FormParams: TdsdFormParams
     Params = <>
-    Left = 360
-    Top = 184
+    Left = 344
+    Top = 256
   end
   object GuidesBranch: TdsdGuides
     KeyField = 'Id'
