@@ -1,11 +1,15 @@
--- Function: gpReport_DefermentDebtOLAPTable()
+-- Function: gpReport_DefermentPaymentOLAPTable()
 
 DROP FUNCTION IF EXISTS gpReport_DefermentDebtOLAPTable (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_DefermentDebtOLAPTable (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_DefermentPaymentOLAPTable (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_DefermentDebtOLAPTable (
+CREATE OR REPLACE FUNCTION gpReport_DefermentPaymentOLAPTable (
     IN inStartDate          TDateTime ,  
     IN inEndDate            TDateTime ,
+    IN inAccountId          Integer   ,
     IN inBranchId           Integer   ,
+    IN inRetailId           Integer   ,
     IN inJuridicalId        Integer   , -- юр.лицо
     IN inSession            TVarChar    -- сессия пользователя
 )
@@ -14,6 +18,7 @@ RETURNS TABLE (OperDate TDateTime
 
              , BranchName TVarChar
              , AccountId Integer, AccountCode Integer, AccountName TVarChar
+             , RetailId Integer, RetailName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
@@ -24,6 +29,7 @@ RETURNS TABLE (OperDate TDateTime
              
              , DebtRemains TFloat
              , SaleSumm TFloat
+             , DefermentPaymentRemains TFloat
              )   
 AS
 $BODY$
@@ -46,10 +52,18 @@ BEGIN
                          , tmpData.StartContractDate
                          , tmpData.DebtRemains
                          , tmpData.SaleSumm
-                    FROM DefermentDebtOLAPTable AS tmpData
+                         , (COALESCE (tmpData.DebtRemains,0) - COALESCE (tmpData.SaleSumm,0)) :: TFloat AS DefermentPaymentRemains
+                         , ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
+                    FROM DefermentPaymentOLAPTable AS tmpData
+                         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                              ON ObjectLink_Juridical_Retail.ObjectId = tmpData.JuridicalId
+                                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                     WHERE tmpData.OperDate BETWEEN inStartDate AND inEndDate
                       AND (tmpData.BranchId = inBranchId OR inBranchId = 0)
                       AND (tmpData.JuridicalId = inJuridicalId OR inJuridicalId = 0)
+                      AND (tmpData.AccountId = inAccountId OR inAccountId = 0)
+                      AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
+                      
                     )
 
     , tmpContractParam AS (SELECT tmpView.ContractId
@@ -69,17 +83,20 @@ BEGIN
       SELECT tmpReport.OperDate
            , DATE_TRUNC ('Month', tmpReport.OperDate) ::TDateTime AS MonthDate
            , Object_Branch.ValueData :: TVarChar AS BranchName
-           , Object_Account.Id AS AccountId
-           , Object_Account.ObjectCode AS AccountCode
-           , Object_Account.ValueData AS AccountName
+           , Object_Account.Id           AS AccountId
+           , Object_Account.ObjectCode   AS AccountCode
+           , Object_Account.ValueData    AS AccountName
            
-           , Object_Juridical.Id AS JuridicalId
+           , Object_Retail.Id            AS RetailId
+           , Object_Retail.ValueData     AS RetailName
+           
+           , Object_Juridical.Id         AS JuridicalId
            , Object_Juridical.ObjectCode AS JuridicalCode
-           , Object_Juridical.ValueData AS JuridicalName
+           , Object_Juridical.ValueData  AS JuridicalName
            
-           , Object_Partner.Id AS PartnerId
-           , Object_Partner.ObjectCode AS PartnerCode
-           , Object_Partner.ValueData AS PartnerName
+           , Object_Partner.Id           AS PartnerId
+           , Object_Partner.ObjectCode   AS PartnerCode
+           , Object_Partner.ValueData    AS PartnerName
            
            , tmpContractParam.ContractId
            , tmpContractParam.ContractCode
@@ -88,10 +105,11 @@ BEGIN
 
            , tmpContractParam.ContractTagGroupName
            , tmpContractParam.ContractTagName
-           , Object_PaidKind.ValueData AS PaidKindName
+           , Object_PaidKind.ValueData   AS PaidKindName
 
            , tmpReport.DebtRemains  :: TFloat
            , tmpReport.SaleSumm     :: TFloat
+           , CASE WHEN COALESCE (tmpReport.DefermentPaymentRemains,0) < 0 THEN 0 ELSE COALESCE (tmpReport.DefermentPaymentRemains,0) END ::TFloat AS DefermentPaymentRemains
 
         FROM tmpReport
              LEFT JOIN Object AS Object_Account ON Object_Account.Id = tmpReport.AccountId
@@ -99,8 +117,10 @@ BEGIN
              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpReport.JuridicalId
              LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpReport.PartnerId
              LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpReport.PaidKindId
+             LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = tmpReport.RetailId
 
              LEFT JOIN tmpContractParam ON tmpContractParam.ContractId = tmpReport.ContractId
+        
   ;
          
 END;
@@ -114,4 +134,4 @@ $BODY$
 */
 
 -- тест-
--- SELECT * FROM gpReport_DefermentDebtOLAPTable (inStartDate:= '01.06.2020', inEndDate:= '01.06.2020', inBranchId:= 0, inJuridicalId:= 0, inSession:= zfCalc_UserAdmin()) limit 1;
+-- SELECT * FROM gpReport_DefermentPaymentOLAPTable (inStartDate:= '01.06.2020', inEndDate:= '01.06.2020', inAccountId:=0, inBranchId:= 0, inRetailId:=0, inJuridicalId:= 0, inSession:= zfCalc_UserAdmin()) limit 1;

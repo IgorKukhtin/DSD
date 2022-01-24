@@ -394,12 +394,12 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
-    object actReport_DefermentDebtOLAPTable: TdsdOpenForm [19]
+    object actReport_DefermentPaymentOLAPTable: TdsdOpenForm [19]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1089#1088#1086#1095#1082#1077' ('#1054#1051#1040#1055')'
-      FormName = 'TReport_DefermentDebtOLAPTableForm'
-      FormNameParam.Value = 'TReport_DefermentDebtOLAPTableForm'
+      FormName = 'TReport_DefermentPaymentOLAPTableForm'
+      FormNameParam.Value = 'TReport_DefermentPaymentOLAPTableForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -10228,8 +10228,8 @@ inherited MainForm: TMainForm
       object N147: TMenuItem
         Action = actReportCollation_UpdateObject
       end
-      object miReport_DefermentDebtOLAPTable: TMenuItem
-        Action = actReport_DefermentDebtOLAPTable
+      object miReport_DefermentPaymentOLAPTable: TMenuItem
+        Action = actReport_DefermentPaymentOLAPTable
       end
       object N29: TMenuItem
         Caption = '-'
