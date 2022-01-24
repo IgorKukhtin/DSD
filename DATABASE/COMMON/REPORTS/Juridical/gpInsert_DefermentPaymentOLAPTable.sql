@@ -42,7 +42,7 @@ BEGIN
                      )
           -- Условия договора на Дату
         , tmpContractCondition AS (SELECT Object_ContractCondition_View.ContractId
-                                        , ObjectLink_Contract_Juridical.JuridicalId
+                                        , ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
                                         , tmpDate.OperDate
                                         , zfCalc_DetermentPaymentDate (COALESCE (ContractConditionKindId, 0), Value :: Integer, tmpDate.OperDate) :: Date AS StartContractDate
                                         , Object_ContractCondition_View.ContractConditionKindId
@@ -54,12 +54,12 @@ BEGIN
                                                AND tmpDate.OperDate BETWEEN Object_ContractCondition_View.StartDate AND Object_ContractCondition_View.EndDate
                                         INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                                               ON ObjectLink_Contract_Juridical.ObjectId = Object_ContractCondition_View.ContractId
-                                                             AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Personal_Unit()
+                                                             AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
                                                              AND (ObjectLink_Contract_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
 
                                 )
           -- список Container
-        , tmpContainer AS (SELECT Container.Id
+        , tmpContainer AS (SELECT Container.Id       AS ContainerId
                                 , Container.ObjectId AS AccountId
                                 , Container.Amount
                                 , tmpContractCondition_only.ContractId
@@ -77,13 +77,15 @@ BEGIN
                                                      AND (Container.ObjectId = inAccountId OR inAccountId = 0)
                           )
         , tmpMIContainer AS (SELECT MIContainer.ContainerId
-                                  , CASE WHEN MIContainer.OperDate <= inEndDate THEN MIContainer.OperDate ELSE NULL END AS OperDate
+                                  , CASE WHEN MIContainer.OperDate < inEndDate THEN MIContainer.OperDate ELSE NULL END AS OperDate
                                   , SUM (CASE WHEN MIContainer.OperDate >= inEndDate THEN MIContainer.Amount ELSE 0 END) AS Amount_Debt
                                   , SUM (CASE WHEN MIContainer.OperDate < inEndDate THEN MIContainer.Amount ELSE 0 END)  AS Amount_onDay
                                   , SUM (CASE WHEN MIContainer.OperDate < inEndDate AND MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END) AS Amount_sale
                              FROM MovementItemContainer AS MIContainer
-                             WHERE MIContainer.ContainerId IN (SELECT DISTINCT tmpContainer.Id FROM tmpContainer)
+                             WHERE MIContainer.ContainerId IN (SELECT DISTINCT tmpContainer.ContainerId FROM tmpContainer)
                                AND MIContainer.OperDate >= (SELECT MIN (tmpContractCondition.StartContractDate) FROM tmpContractCondition)
+                             GROUP BY MIContainer.ContainerId
+                                    , CASE WHEN MIContainer.OperDate < inEndDate THEN MIContainer.OperDate ELSE NULL END
                             )
         , tmpData AS (SELECT tmpContainer.ContainerId
                            , tmpContainer.AccountId
@@ -92,14 +94,16 @@ BEGIN
                              -- долг на дату
                            , tmpContainer.Amount - COALESCE (SUM (COALESCE(tmpMIContainer.Amount_Debt, 0)), 0) AS Amount
                       FROM tmpContainer
-                           LEFT JOIN tmpMIContainer ON tmpMIContainer.ContainerId = tmpContainer.Id
+                           LEFT JOIN tmpMIContainer ON tmpMIContainer.ContainerId = tmpContainer.ContainerId
                                                    AND tmpMIContainer.Amount_Debt <> 0
                       GROUP BY tmpContainer.ContainerId
+                             , tmpContainer.AccountId
                              , tmpContainer.ContractId
                              , tmpContainer.JuridicalId
                              , tmpContainer.Amount
                      )
         , tmpData_all AS (SELECT tmpData.ContainerId
+                               , tmpData.AccountId
                                , tmpContractCondition.ContractId
                                , tmpContractCondition.JuridicalId
                                , tmpContractCondition.OperDate
@@ -107,11 +111,11 @@ BEGIN
 
                                  -- долг на дату
                                , tmpData.Amount
-                               - COALESCE ((SELECT SUM (tmpMIContainer.Amount_Debt)
+                               - COALESCE ((SELECT SUM (tmpMIContainer.Amount_onDay)
                                             FROM tmpMIContainer
                                             WHERE tmpMIContainer.ContainerId = tmpData.ContainerId
                                               AND tmpMIContainer.OperDate >= tmpContractCondition.OperDate
-                                           ), 0) AS AS DebtRemains
+                                           ), 0) AS DebtRemains
 
                                  -- продано за период
                                , COALESCE ((SELECT SUM (tmpMIContainer.Amount_sale)
@@ -136,98 +140,43 @@ BEGIN
                , tmpData_all.JuridicalId
                , 0 AS PartnerId
                , 0 AS BranchId
-               , CLO_PaidKind.ObjectId AS PaidKindId
-               , tmpData_all.ContractId
-               , tmpData_all.DebtRemains
-               , tmpData_all.SaleSumm
+               , COALESCE (CLO_PaidKind.ObjectId, 0) AS PaidKindId
+               , View_Contract_ContractKey.ContractId_Key AS ContractId -- tmpData_all.ContractId
+               , COALESCE (tmpData_all.DebtRemains, 0)
+               , COALESCE (tmpData_all.SaleSumm, 0)
 
           FROM tmpData_all
-               INNER JOIN ContainerLinkObject AS CLO_PaidKind
-                                              ON CLO_PaidKind.ContainerId = tmpData_all.ContainerId
-                                             AND CLO_PaidKind.DescId      = zc_ContainerLinkObject_PaidKind()
+               LEFT JOIN ContainerLinkObject AS CLO_PaidKind
+                                             ON CLO_PaidKind.ContainerId = tmpData_all.ContainerId
+                                            AND CLO_PaidKind.DescId      = zc_ContainerLinkObject_PaidKind()
+               -- !!!Группируем Договора!!!
+               LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = tmpData_all.ContractId
           ;
 
 
-          -- Обновляем те записи которые уже есть в таблице
-          UPDATE DefermentPaymentOLAPTable
-           SET OperDate                  = tmp.OperDate
-             , UnitId                    = tmp.UnitId
-             , GoodsId                   = tmp.GoodsId
-             , GoodsKindId               = tmp.GoodsKindId
-             , AmountStart               = tmp.AmountStart
-             , AmountEnd                 = tmp.AmountEnd
-             , AmountIncome              = tmp.AmountIncome
-             , AmountReturnOut           = tmp.AmountReturnOut
-             , AmountSendIn              = tmp.AmountSendIn
-             , AmountSendOut             = tmp.AmountSendOut
-             , AmountSendOnPriceIn       = tmp.AmountSendOnPriceIn
-             , AmountSendOnPriceOut      = tmp.AmountSendOnPriceOut
-             , AmountSendOnPriceOut_10900= tmp.AmountSendOnPriceOut_10900
-             , AmountSendOnPrice_10500   = tmp.AmountSendOnPrice_10500
-             , AmountSendOnPrice_40200   = tmp.AmountSendOnPrice_40200
-             , AmountSale                = tmp.AmountSale
-             , AmountSale_10500          = tmp.AmountSale_10500
-             , AmountSale_40208          = tmp.AmountSale_40208
-             , AmountSaleReal            = tmp.AmountSaleReal
-             , AmountSaleReal_10500      = tmp.AmountSaleReal_10500
-             , AmountSaleReal_40208      = tmp.AmountSaleReal_40208
-             , AmountReturnIn            = tmp.AmountReturnIn
-             , AmountReturnIn_40208      = tmp.AmountReturnIn_40208
-             , AmountReturnInReal        = tmp.AmountReturnInReal
-             , AmountReturnInReal_40208  = tmp.AmountReturnInReal_40208
-             , AmountLoss                = tmp.AmountLoss
-             , AmountInventory           = tmp.AmountInventory
-             , AmountProductionIn        = tmp.AmountProductionIn
-             , AmountProductionOut       = tmp.AmountProductionOut
-          FROM _tmpReport AS tmp
-          WHERE tmp.GoodsId     = DefermentPaymentOLAPTable.GoodsId
-            AND tmp.GoodsKindId = DefermentPaymentOLAPTable.GoodsKindId
-            AND tmp.UnitId      = DefermentPaymentOLAPTable.UnitId
-            AND tmp.OperDate    = DefermentPaymentOLAPTable.OperDate;
 
-     -- добавляем новые строки
-     INSERT INTO DefermentPaymentOLAPTable (OperDate, UnitId, GoodsId, GoodsKindId, AmountStart, AmountEnd, AmountIncome, AmountReturnOut, AmountSendIn, AmountSendOut
-                                , AmountSendOnPriceIn, AmountSendOnPriceOut, AmountSendOnPriceOut_10900, AmountSendOnPrice_10500, AmountSendOnPrice_40200
-                                , AmountSale, AmountSale_10500, AmountSale_40208, AmountSaleReal, AmountSaleReal_10500, AmountSaleReal_40208
-                                , AmountReturnIn, AmountReturnIn_40208, AmountReturnInReal, AmountReturnInReal_40208
-                                , AmountLoss, AmountInventory, AmountProductionIn, AmountProductionOut)
-      SELECT tmp.OperDate
-           , tmp.UnitId
-           , tmp.GoodsId
-           , tmp.GoodsKindId
-           , tmp.AmountStart
-           , tmp.AmountEnd
-           , tmp.AmountIncome
-           , tmp.AmountReturnOut
-           , tmp.AmountSendIn
-           , tmp.AmountSendOut
-           , tmp.AmountSendOnPriceIn
-           , tmp.AmountSendOnPriceOut
-           , tmp.AmountSendOnPriceOut_10900
-           , tmp.AmountSendOnPrice_10500
-           , tmp.AmountSendOnPrice_40200
-           , tmp.AmountSale
-           , tmp.AmountSale_10500
-           , tmp.AmountSale_40208
-           , tmp.AmountSaleReal
-           , tmp.AmountSaleReal_10500
-           , tmp.AmountSaleReal_40208
-           , tmp.AmountReturnIn
-           , tmp.AmountReturnIn_40208
-           , tmp.AmountReturnInReal
-           , tmp.AmountReturnInReal_40208
-           , tmp.AmountLoss
-           , tmp.AmountInventory
-           , tmp.AmountProductionIn
-           , tmp.AmountProductionOut
-      FROM _tmpReport AS tmp
-           LEFT JOIN DefermentPaymentOLAPTable ON tmp.GoodsId     = DefermentPaymentOLAPTable.GoodsId
-                                     AND tmp.GoodsKindId = DefermentPaymentOLAPTable.GoodsKindId
-                                     AND tmp.UnitId      = DefermentPaymentOLAPTable.UnitId
-                                     AND tmp.OperDate    = DefermentPaymentOLAPTable.OperDate
-      WHERE DefermentPaymentOLAPTable.GoodsId IS NULL
-      ;
+     -- Обновляем те записи которые уже есть в таблице
+     DELETE FROM DefermentPaymentOLAPTable
+     WHERE OperDate BETWEEN inStartDate AND inEndDate
+       AND (DefermentPaymentOLAPTable.AccountId   = inAccountId   OR inAccountId   = 0)
+       AND (DefermentPaymentOLAPTable.JuridicalId = inJuridicalId OR inJuridicalId = 0)
+     ;
 
+
+     -- добавляем строки
+     INSERT INTO DefermentPaymentOLAPTable (ContainerId, OperDate, StartContractDate
+                                          , AccountId, JuridicalId, PartnerId, BranchId, PaidKindId, ContractId
+                                          , DebtRemains, SaleSumm
+                                           )
+      SELECT _tmpReport.ContainerId, _tmpReport.OperDate, _tmpReport.StartContractDate
+           , _tmpReport.AccountId, _tmpReport.JuridicalId, _tmpReport.PartnerId, _tmpReport.BranchId, _tmpReport.PaidKindId, _tmpReport.ContractId
+           , _tmpReport.DebtRemains, _tmpReport.SaleSumm
+      FROM _tmpReport
+      WHERE _tmpReport.DebtRemains <> 0
+         OR _tmpReport.SaleSumm    <> 0
+     ;
+
+    -- RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmpReport);
 
 END;
 $BODY$
@@ -237,10 +186,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 13.08.19         *
+ 22.01.22                                        *
 */
 
--- тест
--- select * from DefermentPaymentOLAPTable where DefermentPaymentOLAPTable.OperDate = '02.08.2019'
-
---select * from gpInsert_DefermentPaymentOLAPTable('01.08.2019',  '03.08.2019', 8459, '3')
+-- тест - 030101 Дебиторы Покупатели  Продукция
+-- SELECT * FROM DefermentPaymentOLAPTable JOIN Object ON Object.Id = ContractId where OperDate = '22.01.2022' and PaidKindId = zc_Enum_PaidKind_FirstForm() AND AccountId = 9128
+-- SELECT * FROM gpInsert_DefermentPaymentOLAPTable('22.01.2022',  '24.01.2022', 9128, 862910, zfCalc_UserAdmin())
