@@ -1,4 +1,4 @@
-unit Report_DefermentDebtOLAPTable;
+unit Report_DefermentPaymentOLAPTable;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   cxButtonEdit, dsdPivotGrid;
 
 type
-  TReport_DefermentDebtOLAPTableForm = class(TParentForm)
+  TReport_DefermentPaymentOLAPTableForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -67,6 +67,12 @@ type
     cfPriceSale: TdsdPivotGridCalcFields;
     cfPriceSaleReal: TdsdPivotGridCalcFields;
     cfPriceSumSale: TdsdPivotGridCalcFields;
+    cxLabel5: TcxLabel;
+    ceAccount: TcxButtonEdit;
+    GuidesAccount: TdsdGuides;
+    cxLabel6: TcxLabel;
+    edRetail: TcxButtonEdit;
+    GuidesRetail: TdsdGuides;
   private
   public
   end;
@@ -76,6 +82,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_DefermentDebtOLAPTableForm);
+  RegisterClass(TReport_DefermentPaymentOLAPTableForm);
 
 end.

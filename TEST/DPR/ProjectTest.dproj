@@ -4666,12 +4666,12 @@
 				<Form>Report_OrderReturnTare_ReturnInForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_DefermentDebtOLAPTable.pas">
-				<Form>Report_DefermentDebtOLAPTableForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_DefermentPaymentOLAPTable.pas">
+				<Form>Report_DefermentPaymentOLAPTableForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_DefermentDebtOLAPTableDialog.pas">
-				<Form>Report_DefermentDebtOLAPTableDialogForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_DefermentPaymentOLAPTableDialog.pas">
+				<Form>Report_DefermentPaymentOLAPTableDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
