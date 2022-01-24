@@ -513,43 +513,6 @@ BEGIN
      END IF;
 
 
-     -- Проверка - т.к.для этих УП-статей могли искать партии - надо что б товар был уникальным
-     IF EXISTS (SELECT _tmpItem.GoodsId
-                FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.InfoMoneyDestinationId FROM _tmpItem
-                     ) AS _tmpItem
-                WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
-                                                        , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
-                                                        , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
-                                                        , zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
-                                                        , zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
-                                                        , zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
-                                                        , zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
-                                                        , zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
-                                                         )
-                GROUP BY _tmpItem.GoodsId
-                HAVING COUNT(*) > 1)
-     THEN
-          RAISE EXCEPTION 'Ошибка.В документе нельзя дублировать товар <%>.'
-              , lfGet_Object_ValueData ((SELECT _tmpItem.GoodsId
-                                         FROM (SELECT _tmpItem.GoodsId
-                                               FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.InfoMoneyDestinationId FROM _tmpItem
-                                                    ) AS _tmpItem
-                                               WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
-                                                                                       , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
-                                                                                       , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
-                                                                                       , zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
-                                                                                       , zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
-                                                                                       , zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
-                                                                                       , zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
-                                                                                       , zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
-                                                                                        )
-                                               GROUP BY _tmpItem.GoodsId
-                                               HAVING COUNT(*) > 1
-                                              ) AS _tmpItem
-                                              LIMIT 1
-                                        ));
-     END IF;
-
 
      -- кроме Админа - для сырья
      IF vbMovementDescId = zc_Movement_Send() AND 1=1 -- inUserId <> zfCalc_UserAdmin() :: Integer
@@ -925,6 +888,44 @@ BEGIN
     , (select count(*) from _tmpItem where _tmpItem.GoodsId = 655829);
 
  end if;*/
+
+     -- Проверка - т.к.для этих УП-статей могли искать партии - надо что б товар был уникальным
+     IF EXISTS (SELECT _tmpItem.GoodsId
+                FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.PartionGoodsId_From, _tmpItem.InfoMoneyDestinationId FROM _tmpItem
+                     ) AS _tmpItem
+                WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                        , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                        , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                        , zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
+                                                        , zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
+                                                        , zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
+                                                        , zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
+                                                        , zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
+                                                         )
+                GROUP BY _tmpItem.GoodsId, _tmpItem.PartionGoodsId_From
+                HAVING COUNT(*) > 1)
+     THEN
+          RAISE EXCEPTION 'Ошибка.В документе нельзя дублировать товар <%>.'
+              , lfGet_Object_ValueData ((SELECT _tmpItem.GoodsId
+                                         FROM (SELECT _tmpItem.GoodsId
+                                               FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.PartionGoodsId_From, _tmpItem.InfoMoneyDestinationId FROM _tmpItem
+                                                    ) AS _tmpItem
+                                               WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                                                       , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                                                       , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                                       , zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
+                                                                                       , zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
+                                                                                       , zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
+                                                                                       , zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
+                                                                                       , zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
+                                                                                        )
+                                               GROUP BY _tmpItem.GoodsId, _tmpItem.PartionGoodsId_From
+                                               HAVING COUNT(*) > 1
+                                              ) AS _tmpItem
+                                              LIMIT 1
+                                        ));
+     END IF;
+
 
      -- определили
      vbWhereObjectId_Analyzer_From:= CASE WHEN (SELECT DISTINCT UnitId_From   FROM _tmpItem) <> 0 THEN (SELECT DISTINCT UnitId_From   FROM _tmpItem)
