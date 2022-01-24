@@ -463,7 +463,8 @@ BEGIN
    END IF;
 
    IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), zc_Enum_Role_PharmacyManager()))
-      AND (DATE_PART('HOUR', CURRENT_TIME)::Integer IN (17) AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer >= 0 AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer <= 20)
+      AND DATE_PART('DOW', CURRENT_DATE)::Integer in (5)
+      AND (DATE_PART('HOUR', CURRENT_TIME)::Integer IN (15) AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer >= 0 AND DATE_PART('MINUTE',  CURRENT_TIME)::Integer <= 20)
    THEN
 
      vbCount := gpSelect_PriceCheck_PUSH (inPercent := 20, inSession := inSession);
@@ -666,15 +667,29 @@ BEGIN
                            AND Movement.OperDate >= '20.04.2021'
                            AND COALESCE (Object_CancelReason.ObjectCode, 0) <> 2
                            )
-         , tmpMI AS (SELECT tmpMovement.*
+         , tmpMIAll AS (SELECT tmpMovement.*
                           , MovementItem.Id                 AS MovementItemId 
                           , MovementItem.ObjectId           AS GoodsId
+                          , MovementItem.Amount
                      FROM tmpMovement
                      
                           INNER JOIN MovementItem ON MovementItem.MovementId =  tmpMovement.Id
                                                  AND MovementItem.DescId = zc_MI_Master()
-                                                 AND MovementItem.Amount = 0
                                                  
+                    )
+         , tmpMIFloat AS (SELECT MovementItemFloat.*
+                          FROM MovementItemFloat 
+                          WHERE MovementItemFloat.MovementItemId in (SELECT tmpMIAll.MovementItemId FROM tmpMIAll)
+                         )
+         , tmpMI AS (SELECT tmpMovement.*
+                          , MIFloat_AmountOrder.ValueData   AS AmountOrder
+                     FROM tmpMIAll AS tmpMovement
+                     
+                          LEFT JOIN tmpMIFloat AS MIFloat_AmountOrder
+                                               ON MIFloat_AmountOrder.MovementItemId = tmpMovement.MovementItemId
+                                              AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
+                                              
+                     WHERE tmpMovement.Amount < MIFloat_AmountOrder.ValueData
                     )
          , tmpMovementProtocol AS (SELECT MovementProtocol.MovementId
                                         , MovementProtocol.OperDate 
@@ -683,17 +698,19 @@ BEGIN
                                    FROM MovementProtocol 
                                    WHERE MovementProtocol.MovementId in (SELECT DISTINCT tmpMI.Id AS ID FROM tmpMI)
                                      AND MovementProtocol.ProtocolData ILIKE '%"Статус заказа (Состояние VIP-чека)" FieldValue = "Подтвержден"%')
+         , tmpMIProtocolAll AS (SELECT MovementItemProtocol.*
+                                FROM MovementItemProtocol 
+                                WHERE MovementItemProtocol.MovementItemId in (SELECT tmpMI.MovementItemId FROM tmpMI) 
+                                 )
          , tmpMIProtocol AS (SELECT MovementItemProtocol.MovementItemId
                                   , MovementItemProtocol.OperDate
                                   , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
-                             FROM MovementItemProtocol 
-                             WHERE MovementItemProtocol.MovementItemId in (SELECT tmpMI.MovementItemId FROM tmpMI)
-                                                               AND MovementItemProtocol.ProtocolData ILIKE '%"Значение" FieldValue = "0.0000"%'
-                            )
-         , tmpMIFloat AS (SELECT MovementItemFloat.*
-                          FROM MovementItemFloat 
-                          WHERE MovementItemFloat.MovementItemId in (SELECT tmpMI.MovementItemId FROM tmpMI)
-                         )
+                             FROM tmpMI
+                             
+                                  INNER JOIN tmpMIProtocolAll AS MovementItemProtocol 
+                                                              ON  MovementItemProtocol.MovementItemId = tmpMI.MovementItemId
+                                                             AND MovementItemProtocol.ProtocolData NOT ILIKE '%"Значение" FieldValue = "' ||tmpMI.AmountOrder || '"%' 
+                              )
 
      SELECT STRING_AGG('  № '||Movement.InvNumber||
                        ', покупатель '||COALESCE(Movement.Bayer, '')||
@@ -701,7 +718,8 @@ BEGIN
                        ', номер заказа '||COALESCE(Movement.InvNumberOrder, '')||
                        ', обнулено '||TO_CHAR(tmpMIProtocol.OperDate, 'DD.MM.YYYY HH24:MI:SS')||
                        ', товар '||Object_Goods.ValueData||
-                       ', заказано '||zfConvert_FloatToString(MIFloat_AmountOrder.ValueData)
+                       ', заказано '||zfConvert_FloatToString(Movement.AmountOrder)||
+                       ', в чеке '||zfConvert_FloatToString(Movement.Amount)
                        , Chr(13))
            
      INTO vbText
@@ -713,10 +731,6 @@ BEGIN
                                        AND tmpMovementProtocol.ord = 1 
  
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Movement.GoodsId
-
-          LEFT JOIN tmpMIFloat AS MIFloat_AmountOrder
-                               ON MIFloat_AmountOrder.MovementItemId = Movement.MovementItemId
-                              AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
                               
      WHERE (tmpMIProtocol.OperDate < tmpMovementProtocol.OperDate OR tmpMovementProtocol.OperDate IS NULL)
        AND tmpMIProtocol.OperDate >= vbDatePUSH
@@ -725,7 +739,7 @@ BEGIN
      IF COALESCE (vbText, '') <> ''
      THEN
        INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams, Beep)
-       VALUES (16, 'Было обнулено в ВИП чеках:'||Chr(13)||vbText, '', '', '', '', '', 1);
+       VALUES (16, 'Было уменьшение товара в ВИП чеках:'||Chr(13)||vbText, '', '', '', '', '', 1);
      END IF;
      
      

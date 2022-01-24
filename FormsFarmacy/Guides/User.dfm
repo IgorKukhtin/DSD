@@ -1317,6 +1317,24 @@ object UserForm: TUserForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNewUser'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isNewUser'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDismissedUser'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isDismissedUser'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 120

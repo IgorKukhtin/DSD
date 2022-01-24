@@ -38,6 +38,12 @@ BEGIN
    -- проверка уникальности <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_User(), inCode);
 
+   IF COALESCE (ioId, 0) = 0
+   THEN
+     inisNewUser := TRUE;
+     inisDismissedUser := FALSE;
+   END IF;
+
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_User(), inCode, inUserName);
 

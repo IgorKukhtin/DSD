@@ -4568,7 +4568,7 @@
     object actReport_ZeroingInOrders: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
-      Caption = #1054#1073#1085#1091#1083#1077#1085#1085#1099#1077' '#1090#1086#1074#1072#1088#1099' '#1087#1086' '#1089#1072#1081#1090#1091
+      Caption = #1059#1084#1077#1085#1100#1096#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1089#1072#1081#1090#1091
       FormName = 'TReport_ZeroingInOrdersForm'
       FormNameParam.Value = 'TReport_ZeroingInOrdersForm'
       FormNameParam.DataType = ftString

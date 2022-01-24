@@ -1,5 +1,5 @@
 inherited Report_ZeroingInOrdersForm: TReport_ZeroingInOrdersForm
-  Caption = #1054#1073#1085#1091#1083#1077#1085#1085#1099#1077' '#1090#1086#1074#1072#1088#1099' '#1087#1086' '#1089#1072#1081#1090#1091
+  Caption = #1059#1084#1077#1085#1100#1096#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1089#1072#1081#1090#1091
   ClientHeight = 632
   ClientWidth = 1166
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -12,17 +12,17 @@ inherited Report_ZeroingInOrdersForm: TReport_ZeroingInOrdersForm
     Width = 1166
     Height = 555
     ExplicitTop = 77
-    ExplicitWidth = 1007
+    ExplicitWidth = 1166
     ExplicitHeight = 555
     ClientRectBottom = 555
     ClientRectRight = 1166
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1007
+      ExplicitWidth = 1166
       ExplicitHeight = 555
       inherited cxGrid: TcxGrid
         Width = 1166
         Height = 547
-        ExplicitWidth = 1007
+        ExplicitWidth = 1166
         ExplicitHeight = 547
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -67,6 +67,11 @@ inherited Report_ZeroingInOrdersForm: TReport_ZeroingInOrdersForm
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Column = AmountOrder
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = Amount
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -154,7 +159,7 @@ inherited Report_ZeroingInOrdersForm: TReport_ZeroingInOrdersForm
             Width = 205
           end
           object AmountOrder: TcxGridDBColumn
-            Caption = #1054#1073#1085#1091#1083#1077#1085#1086
+            Caption = #1042#1099#1087#1080#1089#1072#1085#1086
             DataBinding.FieldName = 'AmountOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -164,8 +169,19 @@ inherited Report_ZeroingInOrdersForm: TReport_ZeroingInOrdersForm
             Options.Editing = False
             Width = 67
           end
+          object Amount: TcxGridDBColumn
+            Caption = #1042' '#1095#1077#1082#1077
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 65
+          end
           object ZeroingDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1086#1073#1085#1091#1083#1077#1085#1080#1103
+            Caption = #1044#1072#1090#1072' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1103
             DataBinding.FieldName = 'ZeroingDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -188,14 +204,13 @@ inherited Report_ZeroingInOrdersForm: TReport_ZeroingInOrdersForm
         Width = 1166
         Height = 8
         AlignSplitter = salBottom
-        ExplicitWidth = 1007
       end
     end
   end
   inherited Panel: TPanel
     Width = 1166
     Height = 51
-    ExplicitWidth = 1007
+    ExplicitWidth = 1166
     ExplicitHeight = 51
     inherited deStart: TcxDateEdit
       EditValue = 42491d
@@ -348,6 +363,8 @@ inherited Report_ZeroingInOrdersForm: TReport_ZeroingInOrdersForm
         item
           Name = 'Id'
           Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -507,6 +524,10 @@ inherited Report_ZeroingInOrdersForm: TReport_ZeroingInOrdersForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = actUpdate
+      end>
     ColorRuleList = <
       item
         ColorValueList = <>
