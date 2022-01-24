@@ -33,6 +33,7 @@ RETURNS TABLE (OperDate TDateTime
              , DebtRemains_month TFloat
              , SaleSumm_month TFloat
              , DefermentPaymentRemains_month TFloat
+             , Condition TVarChar
              )   
 AS
 $BODY$
@@ -69,6 +70,11 @@ BEGIN
                       
                     )
 
+    , tmpContractCondition_View AS (SELECT Object_ContractCondition_View.*
+                                    FROM Object_ContractCondition_View
+                                    WHERE Object_ContractCondition_View.ContractId IN (SELECT DISTINCT tmpReport.ContractId FROM tmpReport)
+                                    )
+                                    
     , tmpContractParam AS (SELECT tmpView.ContractId
                                 , tmpView.ContractCode
                                 , tmpView.InvNumber AS ContractName
@@ -78,8 +84,33 @@ BEGIN
                                 , tmpView.ContractTagId
                                 , tmpView.ContractTagCode
                                 , tmpView.ContractTagName
+                                , ContractCondition_DefermentPayment.ContractConditionKindId
+                                , COALESCE (ContractCondition_DefermentPayment.DayCount, 0) AS DayCount
+                                , COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) AS ContractStateKindId
+                                , tmpView.isErased
                            FROM (SELECT DISTINCT tmpReport.ContractId FROM tmpReport) AS tmpContract
                                 LEFT JOIN Object_Contract_InvNumber_View AS tmpView ON tmpView.ContractId = tmpContract.ContractId
+
+                       -- !!!Группируем Договора!!!
+                       LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = tmpContract.ContractId
+         
+                       LEFT JOIN (SELECT Object_ContractCondition_View.ContractId
+                                       , zfCalc_DetermentPaymentDate (COALESCE (ContractConditionKindId, 0), Value :: Integer, inStartDate) :: Date AS ContractDate
+                                       , ContractConditionKindId
+                                       , Value :: Integer AS DayCount
+                                    FROM tmpContractCondition_View AS Object_ContractCondition_View
+                                         INNER JOIN Object_ContractCondition_DefermentPaymentView 
+                                                 ON Object_ContractCondition_DefermentPaymentView.ConditionKindId = Object_ContractCondition_View.ContractConditionKindId
+                                    WHERE Object_ContractCondition_View.ContractConditionKindId IN (zc_Enum_ContractConditionKind_DelayDayCalendar(), zc_Enum_ContractConditionKind_DelayDayBank())
+                                      AND Value <> 0
+                                      AND inStartDate BETWEEN Object_ContractCondition_View.StartDate AND Object_ContractCondition_View.EndDate
+                                 ) AS ContractCondition_DefermentPayment
+                                   ON ContractCondition_DefermentPayment.ContractId = View_Contract_ContractKey.ContractId_Key -- CLO_Contract.ObjectId
+
+                       LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
+                                            ON ObjectLink_Contract_ContractStateKind.ObjectId = tmpContract.ContractId
+                                           AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind()
+                                        
                            )
 
       -- Результат
@@ -122,6 +153,19 @@ BEGIN
                   ELSE 0
              END ::TFloat AS DefermentPaymentRemains_month
 
+            , (tmpContractParam.DayCount
+              ||' '|| CASE WHEN tmpContractParam.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayCalendar()
+                                THEN 'К.дн.'
+                           WHEN tmpContractParam.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayBank()
+                                THEN 'Б.дн.'
+                           ELSE ''
+                      END
+              ||' '|| CASE WHEN CASE WHEN tmpContractParam.IsErased = FALSE AND tmpContractParam.ContractStateKindId <> zc_Enum_ContractStateKind_Close() THEN COALESCE (ContractCondition_CreditLimit.DelayCreditLimit, 0) ELSE 0 END <> 0
+                                THEN '+ ' || TRIM (to_char (CASE WHEN tmpContractParam.IsErased = FALSE AND tmpContractParam.ContractStateKindId <> zc_Enum_ContractStateKind_Close() THEN COALESCE (ContractCondition_CreditLimit.DelayCreditLimit, 0) ELSE 0 END, '999 999 999 999 999D99')) || 'грн.'
+                           ELSE ''
+                      END
+               )::TVarChar AS Condition
+
         FROM tmpReport
              LEFT JOIN Object AS Object_Account ON Object_Account.Id = tmpReport.AccountId
              LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpReport.BranchId
@@ -131,7 +175,16 @@ BEGIN
              LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = tmpReport.RetailId
 
              LEFT JOIN tmpContractParam ON tmpContractParam.ContractId = tmpReport.ContractId
-        
+
+
+             LEFT JOIN (SELECT Object_ContractCondition_View.ContractId
+                             , Object_ContractCondition_View.PaidKindId
+                             , Value AS DelayCreditLimit
+                        FROM tmpContractCondition_View AS Object_ContractCondition_View
+                        WHERE Object_ContractCondition_View.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayCreditLimit()
+                       ) AS ContractCondition_CreditLimit
+                         ON ContractCondition_CreditLimit.ContractId = tmpReport.ContractId
+                        AND ContractCondition_CreditLimit.PaidKindId = tmpReport.PaidKindId
   ;
          
 END;
