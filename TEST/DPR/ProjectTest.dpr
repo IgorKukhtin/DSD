@@ -1347,7 +1347,9 @@ uses
   Report_OrderReturnTare_SaleByTransport in '..\..\Forms\Report\Report_OrderReturnTare_SaleByTransport.pas' {Report_OrderReturnTare_SaleByTransportForm: TParentForm},
   Report_OrderReturnTare in '..\..\Forms\Report\Report_OrderReturnTare.pas' {Report_OrderReturnTareForm: TParentForm},
   Report_OrderReturnTareDialog in '..\..\Forms\Report\Report_OrderReturnTareDialog.pas' {Report_OrderReturnTareDialogForm: TParentForm},
-  Report_OrderReturnTare_ReturnIn in '..\..\Forms\Report\Report_OrderReturnTare_ReturnIn.pas' {Report_OrderReturnTare_ReturnInForm: TParentForm};
+  Report_OrderReturnTare_ReturnIn in '..\..\Forms\Report\Report_OrderReturnTare_ReturnIn.pas' {Report_OrderReturnTare_ReturnInForm: TParentForm},
+  Report_DefermentDebtOLAPTable in '..\..\Forms\Report\Report_DefermentDebtOLAPTable.pas' {Report_DefermentDebtOLAPTableForm: TParentForm},
+  Report_DefermentDebtOLAPTableDialog in '..\..\Forms\Report\Report_DefermentDebtOLAPTableDialog.pas' {Report_DefermentDebtOLAPTableDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

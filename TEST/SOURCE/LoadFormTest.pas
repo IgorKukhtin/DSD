@@ -2226,6 +2226,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DefermentDebtOLAPTableForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_DefermentDebtOLAPTableForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DefermentDebtOLAPTableDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_DefermentDebtOLAPTableDialogForm');
+  exit;
    {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InventoryDetailForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InventoryDetailForm');
