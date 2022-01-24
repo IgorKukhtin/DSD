@@ -1,11 +1,13 @@
--- DROP TABLE DefermentDebtOLAPTable;
+-- DROP TABLE DefermentPaymentOLAPTable;
 
 /*-------------------------------------------------------------------------------*/
-CREATE TABLE DefermentDebtOLAPTable
+CREATE TABLE DefermentPaymentOLAPTable
 
 (
                Id BIGSERIAL NOT NULL PRIMARY KEY
-             , AccountId Integer, JuridicalId Integer
+             , ContainerId Integer
+             , AccountId Integer
+             , JuridicalId Integer
              , PartnerId Integer
              , BranchId Integer
              , PaidKindId Integer
@@ -20,7 +22,7 @@ WITH (
   OIDS=FALSE
 );
 
-ALTER TABLE DefermentDebtOLAPTable
+ALTER TABLE DefermentPaymentOLAPTable
   OWNER TO postgres;
 GRANT ALL ON ALL TABLES IN SCHEMA public TO project;
 
