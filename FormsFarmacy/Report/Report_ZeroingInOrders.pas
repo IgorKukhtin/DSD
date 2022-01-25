@@ -43,6 +43,7 @@ type
     dxBarButton4: TdxBarButton;
     AmountOrder: TcxGridDBColumn;
     StatusName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
   private
     { Private declarations }
   public

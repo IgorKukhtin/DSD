@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpReport_ZeroingInOrders(
     IN inUnitId              Integer  ,  -- Подразделение
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (InvNumber      TVarChar
+RETURNS TABLE (Id             Integer
+             , InvNumber      TVarChar
              , OperDate       TDateTime
              , InvNumberOrder TVarChar
              , StatusName     TVarChar
@@ -21,6 +22,7 @@ RETURNS TABLE (InvNumber      TVarChar
              , ZeroingDate    TDateTime
              , GoodsCode      Integer
              , GoodsName      TVarChar
+             , Amount         TFloat
              , AmountOrder    TFloat
              )
 AS
@@ -96,12 +98,18 @@ BEGIN
        , tmpMI AS (SELECT tmpMovement.*
                         , MovementItem.Id                 AS MovementItemId 
                         , MovementItem.ObjectId           AS GoodsId
+                        , MovementItem.Amount
+                        , MIFloat_AmountOrder.ValueData   AS AmountOrder
                    FROM tmpMovement
                            
                         INNER JOIN MovementItem ON MovementItem.MovementId =  tmpMovement.Id
                                                AND MovementItem.DescId = zc_MI_Master()
-                                               AND MovementItem.Amount = 0
                                                        
+                        LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
+                                                    ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
+                                                   AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
+                                            
+                   WHERE MovementItem.Amount < MIFloat_AmountOrder.ValueData
                   )
        , tmpMovementProtocol AS (SELECT MovementProtocol.MovementId
                                       , MovementProtocol.OperDate 
@@ -113,16 +121,14 @@ BEGIN
        , tmpMIProtocol AS (SELECT MovementItemProtocol.MovementItemId
                                 , MovementItemProtocol.OperDate
                                 , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
-                           FROM MovementItemProtocol 
-                           WHERE MovementItemProtocol.MovementItemId in (SELECT tmpMI.MovementItemId FROM tmpMI)
-                                                             AND MovementItemProtocol.ProtocolData ILIKE '%"Значение" FieldValue = "0.0000"%'
+                           FROM tmpMI
+                           
+                                INNER JOIN MovementItemProtocol ON  MovementItemProtocol.MovementItemId = tmpMI.MovementItemId
+                                                               AND MovementItemProtocol.ProtocolData NOT ILIKE '%"Значение" FieldValue = "' || tmpMI.AmountOrder || '"%'
                           )
-       , tmpMIFloat AS (SELECT MovementItemFloat.*
-                        FROM MovementItemFloat 
-                        WHERE MovementItemFloat.MovementItemId in (SELECT tmpMI.MovementItemId FROM tmpMI)
-                       )
 
-    SELECT Movement.InvNumber
+    SELECT Movement.Id
+         , Movement.InvNumber
          , Movement.OperDate
          , Movement.InvNumberOrder
          , Object_Status.ValueData
@@ -135,11 +141,13 @@ BEGIN
          , tmpMIProtocol.OperDate
          , Object_Goods.ObjectCode
          , Object_Goods.ValueData
-         , MIFloat_AmountOrder.ValueData
+         , Movement.Amount
+         , Movement.AmountOrder
+
              
     FROM tmpMI AS Movement
-         INNER JOIN tmpMIProtocol ON tmpMIProtocol.MovementItemId = Movement.MovementItemId
-                                 AND tmpMIProtocol.ord = 1
+         LEFT JOIN tmpMIProtocol ON tmpMIProtocol.MovementItemId = Movement.MovementItemId
+                                AND tmpMIProtocol.ord = 1
                                  
          LEFT JOIN tmpMovementProtocol ON tmpMovementProtocol.MovementId = Movement.Id
                                       AND tmpMovementProtocol.ord = 1 
@@ -148,11 +156,6 @@ BEGIN
          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement.UnitId
          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Movement.GoodsId
 
-         LEFT JOIN tmpMIFloat AS MIFloat_AmountOrder
-                              ON MIFloat_AmountOrder.MovementItemId = Movement.MovementItemId
-                             AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
-                                    
-    WHERE tmpMIProtocol.OperDate < tmpMovementProtocol.OperDate OR tmpMovementProtocol.OperDate IS NULL
     ;  
 
 END;
@@ -167,4 +170,5 @@ $BODY$
 
 -- тест
 
-SELECT * FROM gpReport_ZeroingInOrders (inStartDate := ('01.09.2021')::TDateTime , inEndDate := ('30.09.2021')::TDateTime, inUnitId := 0, inSession := '3' :: TVarChar);
+
+select * from gpReport_ZeroingInOrders(inStartDate := ('22.01.2022')::TDateTime , inEndDate := ('23.01.2022')::TDateTime , inUnitId := 0 ,  inSession := '3');

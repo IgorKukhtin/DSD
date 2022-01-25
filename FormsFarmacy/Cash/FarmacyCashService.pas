@@ -3058,21 +3058,14 @@ begin
         finally
           IdFTP.Disconnect;
         end;
-      except
-        on E: Exception do Add_Log('Send from FTP file Exception: ' + E.Message);
-      end;
 
-      try
         spUpdate_PickUpLogsAndDBF.ParamByName('inCashSessionId').Value := iniLocalGUIDSave(GenerateGUID);
         spUpdate_PickUpLogsAndDBF.Execute;
 
       except
-        on E: Exception do
-        begin
-          Add_Log('spUpdate_PickUpLogsAndDBF Exception: ' + E.Message);
-          Exit;
-        end;
+        on E: Exception do Add_Log('Send from FTP file Exception: ' + E.Message);
       end;
+
     finally
       IdFTP.Free;
     end;

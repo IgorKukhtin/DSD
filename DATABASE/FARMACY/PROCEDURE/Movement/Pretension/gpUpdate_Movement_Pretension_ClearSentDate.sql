@@ -21,10 +21,10 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. Документ не сохранен!';
     END IF;
     
-    IF NOT EXISTS(SELECT 1 FROM MovementDate AS MovementDate_Branch
-                  WHERE MovementDate_Branch.MovementId = inMovementId
-                    AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
-                    AND MovementDate_Branch.ValueData IS NOT NULL)
+    IF NOT EXISTS(SELECT 1 FROM MovementDate AS MovementDate_Sent
+                  WHERE MovementDate_Sent.MovementId = inMovementId
+                    AND MovementDate_Sent.DescId = zc_MovementDate_Sent()
+                    AND MovementDate_Sent.ValueData IS NOT NULL)
     THEN
       RETURN;
     END IF;
