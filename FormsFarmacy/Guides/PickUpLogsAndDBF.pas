@@ -72,6 +72,10 @@ type
     actLoadedClear: TdsdExecStoredProc;
     dxBarButton2: TdxBarButton;
     CashRegister: TcxGridDBColumn;
+    isGetArchive: TcxGridDBColumn;
+    spUpdate_GetArch: TdsdStoredProc;
+    actUpdate_GetArch: TdsdExecStoredProc;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public

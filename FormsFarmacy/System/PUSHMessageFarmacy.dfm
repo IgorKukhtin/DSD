@@ -26,10 +26,10 @@ object PUSHMessageFarmacyForm: TPUSHMessageFarmacyForm
       Align = alClient
       Lines.Strings = (
         '')
-      ParentColor = True
       ParentFont = False
       Properties.ReadOnly = True
       Properties.ScrollBars = ssVertical
+      Style.Color = clCream
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clWindowText
       Style.Font.Height = -11

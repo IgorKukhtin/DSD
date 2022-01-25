@@ -4,13 +4,14 @@ DROP FUNCTION IF EXISTS gpSelect_LoadPickUpLogsAndDBF(TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_LoadPickUpLogsAndDBF(
      IN inCashSessionId TVarChar,   -- Сессия кассового места
-    OUT outSend Boolean,
-    OUT outHost TVarChar,
-    OUT outPort Integer,
-    OUT outUsername TVarChar,
-    OUT outPassword TVarChar,
-    OUT outFileList TVarChar,
-    IN inSession     TVarChar       -- сессия пользователя
+    OUT outSend         Boolean,
+    OUT outHost         TVarChar,
+    OUT outPort         Integer,
+    OUT outUsername     TVarChar,
+    OUT outPassword     TVarChar,
+    OUT outFileList     TVarChar,
+    OUT vbisGetArchive  Boolean,
+    IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS RECORD 
 AS
@@ -36,6 +37,10 @@ BEGIN
                                            ON ObjectBoolean_Loaded.ObjectId = Object_PickUpLogsAndDBF.Id
                                           AND ObjectBoolean_Loaded.DescId = zc_ObjectBoolean_PickUpLogsAndDBF_Loaded()
                                        
+                   LEFT JOIN ObjectBoolean AS ObjectBoolean_GetArchive
+                                           ON ObjectBoolean_GetArchive.ObjectId = Object_PickUpLogsAndDBF.Id
+                                          AND ObjectBoolean_GetArchive.DescId = zc_ObjectBoolean_PickUpLogsAndDBF_GetArchive()
+                                       
               WHERE Object_PickUpLogsAndDBF.DescId = zc_Object_PickUpLogsAndDBF()
                 AND Object_PickUpLogsAndDBF.isErased = False
                 AND COALESCE (ObjectBoolean_Loaded.ValueData, False) = FALSE
@@ -50,6 +55,23 @@ BEGIN
       outFileList := 'FarmacyCash.log;FarmacyCash_RRO.log;FarmacyCashServise.log;default.log;'||
                      'FarmacyCash_DiscontLog.xml;FarmacyCash_log.xml;'||
                      'FarmacyCashBody.dbf;FarmacyCashDiff.dbf;FarmacyCashHead.dbf';
+                     
+      SELECT COALESCE(ObjectBoolean_GetArchive.ValueData, False)
+      INTO vbisGetArchive
+      FROM Object AS Object_PickUpLogsAndDBF
+                                                         
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Loaded
+                                   ON ObjectBoolean_Loaded.ObjectId = Object_PickUpLogsAndDBF.Id
+                                  AND ObjectBoolean_Loaded.DescId = zc_ObjectBoolean_PickUpLogsAndDBF_Loaded()
+                                         
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_GetArchive
+                                   ON ObjectBoolean_GetArchive.ObjectId = Object_PickUpLogsAndDBF.Id
+                                  AND ObjectBoolean_GetArchive.DescId = zc_ObjectBoolean_PickUpLogsAndDBF_GetArchive()
+                                         
+      WHERE Object_PickUpLogsAndDBF.DescId = zc_Object_PickUpLogsAndDBF()
+        AND Object_PickUpLogsAndDBF.isErased = False
+        AND COALESCE (ObjectBoolean_Loaded.ValueData, False) = FALSE
+        AND Object_PickUpLogsAndDBF.ValueData = inCashSessionId;                     
 
     ELSE
       outSend := False;

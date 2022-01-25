@@ -2984,8 +2984,8 @@ begin
 end;
 
 procedure TMainCashForm2.SendPickUpLogsAndDBF;
-  var IdFTP : Tidftp; ZipFile: TZipFile;
-      s, p: string; i : integer;  Res : TArray<string>;
+  var IdFTP : Tidftp; ZipFile: TZipFile; sl : TStringList;
+      s, p, f: string; i : integer;  Res : TArray<string>;
 begin
 
   try
@@ -2993,6 +2993,7 @@ begin
     try
       spLoadPickUpLogsAndDBF.ParamByName('inCashSessionId').Value := iniLocalGUIDSave(GenerateGUID);
       spLoadPickUpLogsAndDBF.ParamByName('outSend').Value := False;
+      spLoadPickUpLogsAndDBF.ParamByName('vbisGetArchive').Value := False;
       spLoadPickUpLogsAndDBF.Execute;
       if not spLoadPickUpLogsAndDBF.ParamByName('outSend').Value then Exit;
 
@@ -3018,12 +3019,27 @@ begin
         Add_Log('Start MutexDBF LOG');
         WaitForSingleObject(MutexDBF, INFINITE);
         WaitForSingleObject(MutexDBFDiff, INFINITE);
+        WaitForSingleObject(MutexLog, INFINITE);
         try
           for I := 0 to High(Res) do if FileExists(p + Res[I]) then ZipFile.Add(p + Res[I]);
         finally
           Add_Log('End MutexDBF LOG');
+          ReleaseMutex(MutexLog);
           ReleaseMutex(MutexDBFDiff);
           ReleaseMutex(MutexDBF);
+        end;
+
+        if spLoadPickUpLogsAndDBF.ParamByName('vbisGetArchive').Value and DirectoryExists(p + 'LogArchive\') then
+        begin
+          sl := TStringList.Create;
+          try
+            for f in TDirectory.GetFiles(p + 'LogArchive\', '*.*') do sl.Add(TPath.GetFileName(f));
+
+            for i := 0 to sl.Count - 1 do ZipFile.Add(p + 'LogArchive\' + sl.Strings[i], 'LogArchive\' + sl.Strings[i]);
+
+          finally
+            sl.Free;
+          end;
         end;
 
         ZipFile.Close;
@@ -3059,11 +3075,20 @@ begin
           IdFTP.Disconnect;
         end;
 
+      except
+        on E: Exception do Add_Log('Send from FTP file Exception: ' + E.Message);
+      end;
+
+      try
         spUpdate_PickUpLogsAndDBF.ParamByName('inCashSessionId').Value := iniLocalGUIDSave(GenerateGUID);
         spUpdate_PickUpLogsAndDBF.Execute;
 
       except
-        on E: Exception do Add_Log('Send from FTP file Exception: ' + E.Message);
+        on E: Exception do
+        begin
+          Add_Log('spUpdate_PickUpLogsAndDBF Exception: ' + E.Message);
+          Exit;
+        end;
       end;
 
     finally
@@ -3072,6 +3097,7 @@ begin
   finally
   end;
 end;
+
 
 initialization
   RegisterClass(TMainCashForm2);

@@ -3385,7 +3385,7 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserNickForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserNickForm');
- }
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserHelsiEditForm'));
@@ -3393,7 +3393,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
     exit;
-  {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserKeyForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserKeyForm');
 

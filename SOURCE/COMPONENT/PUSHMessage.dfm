@@ -26,10 +26,10 @@ object PUSHMessageForm: TPUSHMessageForm
       Align = alClient
       Lines.Strings = (
         '')
-      ParentColor = True
       ParentFont = False
       Properties.ReadOnly = True
       Properties.ScrollBars = ssVertical
+      Style.Color = clCream
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clWindowText
       Style.Font.Height = -11
@@ -38,8 +38,6 @@ object PUSHMessageForm: TPUSHMessageForm
       Style.IsFontAssigned = True
       TabOrder = 0
       OnKeyDown = MemoKeyDown
-      ExplicitLeft = 2
-      ExplicitTop = 3
       Height = 294
       Width = 575
     end

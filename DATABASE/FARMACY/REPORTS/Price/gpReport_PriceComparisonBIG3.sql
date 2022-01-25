@@ -10,6 +10,7 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Price TFl
              , ContractName1 TVarChar, AreaName1 TVarChar, Price1 TFloat, D1 TFloat
              , ContractName2 TVarChar, AreaName2 TVarChar, Price2 TFloat, D2 TFloat
              , ContractName3 TVarChar, AreaName3 TVarChar, Price3 TFloat, D3 TFloat
+             , ContractNameBest TVarChar, AreaNameBest TVarChar, PriceBest TFloat, DBest TFloat
               )
 AS
 $BODY$
@@ -53,6 +54,7 @@ BEGIN
 
                                   FROM LoadPriceListItem
                                   WHERE LoadPriceListItem.LoadPriceListId = inLoadPriceListId
+                                    --AND LoadPriceListItem.ExpirationDate > CURRENT_DATE + INTERVAL '1 YEAR'
                                   GROUP BY LoadPriceListItem.GoodsId)
        , tmpLoadPriceList1 AS (SELECT tmpLoadPriceListBIG3.Id
                                     , tmpLoadPriceListBIG3.ContractName
@@ -65,6 +67,7 @@ BEGIN
                                    FROM tmpLoadPriceList1 
                                    
                                         JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = tmpLoadPriceList1.Id
+                                                              --AND LoadPriceListItem.ExpirationDate > CURRENT_DATE + INTERVAL '1 YEAR'
                                    
                                    GROUP BY LoadPriceListItem.GoodsId 
                                    )
@@ -79,6 +82,7 @@ BEGIN
                                    FROM tmpLoadPriceList2 
                                    
                                         JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = tmpLoadPriceList2.Id
+                                                              --AND LoadPriceListItem.ExpirationDate > CURRENT_DATE + INTERVAL '1 YEAR'
                                     
                                    GROUP BY LoadPriceListItem.GoodsId 
                                    )
@@ -93,9 +97,31 @@ BEGIN
                                    FROM tmpLoadPriceList3 
                                    
                                         JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = tmpLoadPriceList3.Id
+                                                              --AND LoadPriceListItem.ExpirationDate > CURRENT_DATE + INTERVAL '1 YEAR'
                                     
                                    GROUP BY LoadPriceListItem.GoodsId 
                                    )
+       , tmpLoadPriceListItemGroup AS (SELECT tmpLoadPriceListBIG3.ContractName
+                                            , tmpLoadPriceListBIG3.AreaName
+                                            , LoadPriceListItem.GoodsId
+                                            , Max(LoadPriceListItem.Price)::TFloat  AS Price
+                                       FROM tmpLoadPriceListBIG3
+                                      
+                                            JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = tmpLoadPriceListBIG3.Id
+                                                                 -- AND LoadPriceListItem.ExpirationDate > CURRENT_DATE + INTERVAL '1 YEAR'
+                                            
+                                       WHERE tmpLoadPriceListBIG3.ORD = 1
+                                       GROUP BY tmpLoadPriceListBIG3.ContractName
+                                              , tmpLoadPriceListBIG3.AreaName
+                                              , LoadPriceListItem.GoodsId
+                                      )
+       , tmpLoadPriceListItemBest AS (SELECT tmpLoadPriceListItemGroup.ContractName
+                                           , tmpLoadPriceListItemGroup.AreaName
+                                           , tmpLoadPriceListItemGroup.GoodsId
+                                           , tmpLoadPriceListItemGroup.Price
+                                           , ROW_NUMBER() OVER (PARTITION BY tmpLoadPriceListItemGroup.GoodsId ORDER BY tmpLoadPriceListItemGroup.Price) AS Ord
+                                      FROM tmpLoadPriceListItemGroup
+                                     )
     
 
     SELECT LoadPriceListItem.GoodsId
@@ -117,6 +143,12 @@ BEGIN
          , tmpLoadPriceList3.AreaName
          , tmpLoadPriceListItem3.Price
          , (LoadPriceListItem.Price - tmpLoadPriceListItem3.Price)::TFloat AS D
+
+         , tmpLoadPriceListItemBest.ContractName
+         , tmpLoadPriceListItemBest.AreaName
+         , tmpLoadPriceListItemBest.Price
+         , (LoadPriceListItem.Price - tmpLoadPriceListItemBest.Price)::TFloat AS D
+         
     FROM tmpLoadPriceListItem AS LoadPriceListItem
     
          JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = LoadPriceListItem.GoodsId 
@@ -127,6 +159,9 @@ BEGIN
          LEFT JOIN tmpLoadPriceListItem2 ON tmpLoadPriceListItem2.GoodsId = LoadPriceListItem.GoodsId
          LEFT JOIN tmpLoadPriceList3 ON 1 = 1
          LEFT JOIN tmpLoadPriceListItem3 ON tmpLoadPriceListItem3.GoodsId = LoadPriceListItem.GoodsId
+         
+         LEFT JOIN tmpLoadPriceListItemBest ON tmpLoadPriceListItemBest.GoodsId = LoadPriceListItem.GoodsId
+                                           AND tmpLoadPriceListItemBest.Ord = 1
          
     ORDER BY Object_Goods.Name      
     ;
@@ -142,4 +177,4 @@ $BODY$
 */
 
 
-select * from gpReport_PriceComparisonBIG3(inLoadPriceListId := 37317 ,  inSession := '3');
+select * from gpReport_PriceComparisonBIG3(inLoadPriceListId := 37154 ,  inSession := '3');
