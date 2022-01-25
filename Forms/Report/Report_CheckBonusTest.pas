@@ -114,6 +114,8 @@ type
     spGet_Check: TdsdStoredProc;
     actGet_Check: TdsdExecStoredProc;
     CurrencyName_child: TcxGridDBColumn;
+    actOpenReportJuridicalCollationForm: TdsdOpenForm;
+    bbOpenReportJuridicalCollation: TdxBarButton;
   private
     { Private declarations }
   public

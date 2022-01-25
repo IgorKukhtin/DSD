@@ -21,7 +21,9 @@ CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
     IN inSessiON             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber_Movement TVarChar, DescName_Movement TVarChar
-             , ContractId_master Integer, ContractId_child Integer, ContractId_find Integer, InvNumber_master TVarChar, InvNumber_child TVarChar, InvNumber_find TVarChar
+             , ContractId_master Integer, ContractId_child Integer, ContractId_find Integer
+             , InvNumber_master TVarChar, InvNumber_child TVarChar, InvNumber_find TVarChar
+             , ContractCode_master Integer, ContractCode_child Integer, ContractCode_find Integer
              , ContractTagName_child TVarChar, ContractStateKindCode_child Integer
              , InfoMoneyId_master Integer, InfoMoneyId_child Integer, InfoMoneyId_find Integer
              , InfoMoneyName_master TVarChar, InfoMoneyName_child TVarChar, InfoMoneyName_find TVarChar
@@ -211,7 +213,12 @@ BEGIN
       */ 
       -- Результат
       SELECT tmp.OperDate_Movement, tmp.OperDatePartner, tmp.InvNumber_Movement, tmp.DescName_Movement
-           , tmp.ContractId_master, tmp.ContractId_child, tmp.ContractId_find, tmp.InvNumber_master, tmp.InvNumber_child, tmp.InvNumber_find
+           , tmp.ContractId_master, tmp.ContractId_child, tmp.ContractId_find
+           , tmp.InvNumber_master, tmp.InvNumber_child, tmp.InvNumber_find
+           , Contract_Master.ObjectCode AS ContractCode_master
+           , Contract_Child.ObjectCode  AS ContractCode_child
+           , Contract_Find.ObjectCode   AS ContractCode_find
+
            , tmp.ContractTagName_child, tmp.ContractStateKindCode_child
            , tmp.InfoMoneyId_master, tmp.InfoMoneyId_child, tmp.InfoMoneyId_find
            , tmp.InfoMoneyName_master, tmp.InfoMoneyName_child, tmp.InfoMoneyName_find
@@ -294,12 +301,21 @@ BEGIN
           /* LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmp.JuridicalId
                                    AND tmpObjectBonus.PartnerId   = COALESCE (tmp.PartnerId, 0)
                                    */
+           LEFT JOIN Object AS Contract_Master ON Contract_Master.Id = tmp.ContractId_master
+           LEFT JOIN Object AS Contract_Child ON Contract_Child.Id = tmp.ContractId_child
+           LEFT JOIN Object AS Contract_Find ON Contract_Find.Id = tmp.ContractId_find
+
       WHERE (inPaidKindId = zc_Enum_PaidKind_FirstForm() OR COALESCE (inPaidKindId, 0) = 0)
         AND (tmp.BranchId = inBranchId OR inBranchId = 0)
 
   UNION ALL
       SELECT tmp.OperDate_Movement, tmp.OperDatePartner, tmp.InvNumber_Movement, tmp.DescName_Movement
-           , tmp.ContractId_master, tmp.ContractId_child, tmp.ContractId_find, tmp.InvNumber_master, tmp.InvNumber_child, tmp.InvNumber_find
+           , tmp.ContractId_master, tmp.ContractId_child, tmp.ContractId_find
+           , tmp.InvNumber_master, tmp.InvNumber_child, tmp.InvNumber_find
+           , Contract_Master.ObjectCode AS ContractCode_master
+           , Contract_Child.ObjectCode  AS ContractCode_child
+           , Contract_Find.ObjectCode   AS ContractCode_find
+           
            , tmp.ContractTagName_child, tmp.ContractStateKindCode_child
            , tmp.InfoMoneyId_master, tmp.InfoMoneyId_child, tmp.InfoMoneyId_find
            , tmp.InfoMoneyName_master, tmp.InfoMoneyName_child, tmp.InfoMoneyName_find
@@ -387,6 +403,11 @@ BEGIN
          /*  LEFT JOIN tmpObjectBonus ON tmpObjectBonus.JuridicalId = tmp.JuridicalId
                                    AND tmpObjectBonus.PartnerId   = COALESCE (tmp.PartnerId, 0)
                                    */
+
+           LEFT JOIN Object AS Contract_Master ON Contract_Master.Id = tmp.ContractId_master
+           LEFT JOIN Object AS Contract_Child ON Contract_Child.Id = tmp.ContractId_child
+           LEFT JOIN Object AS Contract_Find ON Contract_Find.Id = tmp.ContractId_find
+      
       WHERE (inPaidKindId = zc_Enum_PaidKind_SecondForm() OR COALESCE (inPaidKindId, 0) = 0)
         AND (tmp.BranchId = inBranchId OR inBranchId = 0)
       ;
