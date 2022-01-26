@@ -1,32 +1,32 @@
 inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
-  ClientHeight = 553
-  ClientWidth = 1020
+  ClientHeight = 466
+  ClientWidth = 1185
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1036
-  ExplicitHeight = 591
+  ExplicitWidth = 1201
+  ExplicitHeight = 504
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 83
-    Width = 1020
-    Height = 470
+    Top = 86
+    Width = 1185
+    Height = 380
     TabOrder = 3
-    ExplicitTop = 83
-    ExplicitWidth = 1020
-    ExplicitHeight = 470
-    ClientRectBottom = 470
-    ClientRectRight = 1020
+    ExplicitTop = 86
+    ExplicitWidth = 1185
+    ExplicitHeight = 380
+    ClientRectBottom = 380
+    ClientRectRight = 1185
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
-      ExplicitHeight = 470
+      ExplicitWidth = 1185
+      ExplicitHeight = 380
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 470
-        ExplicitWidth = 1020
-        ExplicitHeight = 470
+        Width = 1185
+        Height = 380
+        ExplicitWidth = 1185
+        ExplicitHeight = 380
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -406,15 +406,39 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
             VisibleForCustomization = False
             Width = 45
           end
+          object InvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+          end
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object OperDatePartner: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'OperDatePartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1020
-    Height = 57
-    ExplicitWidth = 1020
-    ExplicitHeight = 57
+    Width = 1185
+    Height = 60
+    ExplicitWidth = 1185
+    ExplicitHeight = 60
     inherited deStart: TcxDateEdit
       Left = 55
       EditValue = 42005d
@@ -461,7 +485,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       Width = 205
     end
     object edInDescName: TcxTextEdit
-      Left = 849
+      Left = 1019
       Top = 5
       Enabled = False
       ParentFont = False
@@ -475,7 +499,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       TabOrder = 6
-      Width = 296
+      Width = 222
     end
     object cxLabel3: TcxLabel
       Left = 466
@@ -483,7 +507,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       Caption = #1070#1088'.'#1051#1080#1094#1086':'
     end
     object edJuridical: TcxButtonEdit
-      Left = 520
+      Left = 521
       Top = 32
       Properties.Buttons = <
         item
@@ -510,6 +534,22 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       Properties.ReadOnly = True
       TabOrder = 10
       Width = 201
+    end
+    object cbDate: TcxCheckBox
+      Left = 847
+      Top = 5
+      Caption = #1087#1086' '#1044#1072#1090#1072#1084
+      Properties.ReadOnly = False
+      TabOrder = 11
+      Width = 71
+    end
+    object cbMovement: TcxCheckBox
+      Left = 920
+      Top = 5
+      Caption = #1087#1086#1082#1072#1079'.'#8470' '#1076#1086#1082'.'
+      Properties.ReadOnly = False
+      TabOrder = 12
+      Width = 95
     end
   end
   object cxLabel6: TcxLabel [2]
@@ -544,7 +584,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 53
+    Width = 50
   end
   object cxLabel8: TcxLabel [6]
     Left = 732
@@ -561,7 +601,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       end>
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 352
+    Width = 448
   end
   object cbGoodsKind: TcxCheckBox [8]
     Left = 188
@@ -677,7 +717,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -688,7 +728,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -799,7 +839,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -810,7 +850,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1028,6 +1068,22 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
           DataType = ftString
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDate'
+          Value = Null
+          Component = cbDate
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMovement'
+          Value = Null
+          Component = cbMovement
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -1129,7 +1185,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         end
         item
           Name = 'IsPartner'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1217,6 +1273,22 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         Value = ''
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDate'
+        Value = Null
+        Component = cbDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMovement'
+        Value = Null
+        Component = cbMovement
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1542,8 +1614,8 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 800
-    Top = 65528
+    Left = 760
+    Top = 40
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'

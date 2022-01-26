@@ -167,6 +167,8 @@ BEGIN
                                                                        , inUnitGroupId       := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
                                                                        , inUnitId            := 0
                                                                        , inGoodsGroupId      := inGoodsGroupId
+                                                                       , inisDate            := FALSE
+                                                                       , inisMovement        := FALSE
                                                                        , inSession           := ''
                                                                         ) AS gpReport)
       , tmpReturnOut AS (SELECT * FROM gpReport_GoodsMI_IncomeByPartner (inStartDate         := inStartDate
@@ -178,6 +180,8 @@ BEGIN
                                                                        , inUnitGroupId       := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
                                                                        , inUnitId            := 0
                                                                        , inGoodsGroupId      := inGoodsGroupId
+                                                                       , inisDate            := FALSE
+                                                                       , inisMovement        := FALSE
                                                                        , inSession           := ''
                                                                         ) AS gpReport)
   , tmpProductionUnion_in AS (SELECT * FROM gpReport_GoodsMI_Production (inStartDate         := inStartDate

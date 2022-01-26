@@ -41,6 +41,8 @@ type
     cxLabel8: TcxLabel;
     edInfoMoney: TcxButtonEdit;
     InfoMoneyGuide: TdsdGuides;
+    cbDate: TcxCheckBox;
+    cbMovement: TcxCheckBox;
   private
     { Private declarations }
   public
