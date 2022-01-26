@@ -109,6 +109,11 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
               Format = ',0.####'
               Kind = skSum
               Column = Summ_ProfitLoss
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True

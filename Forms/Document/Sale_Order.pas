@@ -47,7 +47,7 @@ type
     GuidesRouteSorting: TdsdGuides;
     GuidesFrom: TdsdGuides;
     GuidesTo: TdsdGuides;
-    PaidKindGuides: TdsdGuides;
+    GuidesPaidKind: TdsdGuides;
     ContractGuides: TdsdGuides;
     edOperDatePartner: TcxDateEdit;
     cxLabel10: TcxLabel;
@@ -68,7 +68,7 @@ type
     actGoodsKindChoice: TOpenChoiceForm;
     cxLabel11: TcxLabel;
     edPriceList: TcxButtonEdit;
-    PriceListGuides: TdsdGuides;
+    GuidesPriceList: TdsdGuides;
     cxLabel12: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
     spSelectPrint: TdsdStoredProc;
@@ -88,7 +88,7 @@ type
     PrintItemsCDS: TClientDataSet;
     edDocumentTaxKind: TcxButtonEdit;
     cxLabel14: TcxLabel;
-    DocumentTaxKindGuides: TdsdGuides;
+    GuidesDocumentTaxKind: TdsdGuides;
     cxLabel16: TcxLabel;
     edTax: TcxTextEdit;
     actTax: TdsdExecStoredProc;
@@ -107,8 +107,8 @@ type
     MeasureName: TcxGridDBColumn;
     PrintItemsSverkaCDS: TClientDataSet;
     cbCOMDOC: TcxCheckBox;
-    CurrencyPartnerGuides: TdsdGuides;
-    CurrencyDocumentGuides: TdsdGuides;
+    GuidesCurrencyPartner: TdsdGuides;
+    GuidesCurrencyDocument: TdsdGuides;
     edCurrencyDocument: TcxButtonEdit;
     cxLabel17: TcxLabel;
     edCurrencyPartnerValue: TcxCurrencyEdit;
@@ -124,7 +124,7 @@ type
     actGoodsBoxChoice: TOpenChoiceForm;
     cxLabel20: TcxLabel;
     edContractTag: TcxButtonEdit;
-    ContractTagGuides: TdsdGuides;
+    GuidesContractTag: TdsdGuides;
     edInvNumberOrder: TcxButtonEdit;
     GuidesInvNumberOrder: TdsdGuides;
     AmountOrder: TcxGridDBColumn;
@@ -176,7 +176,7 @@ type
     edParValue: TcxCurrencyEdit;
     cxLabel25: TcxLabel;
     edInvNumberTransport: TcxButtonEdit;
-    TransportChoiceGuides: TdsdGuides;
+    GuidesTransportChoice: TdsdGuides;
     spInsertUpdateMovement_Params: TdsdStoredProc;
     HeaderSaver2: THeaderSaver;
     spSelectPrintReturnInDay: TdsdStoredProc;
@@ -237,6 +237,9 @@ type
     cbReCalcPrice: TcxCheckBox;
     spGetReporNameTTN: TdsdStoredProc;
     actSPPrintTTNProcName: TdsdExecStoredProc;
+    cxLabel29: TcxLabel;
+    edPriceListIn: TcxButtonEdit;
+    GuidesPriceListIn: TdsdGuides;
   private
     { Private declarations }
   public

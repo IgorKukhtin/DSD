@@ -214,6 +214,9 @@ type
     bbUpdate_Invnumber: TdxBarButton;
     spGetReporNameTTN: TdsdStoredProc;
     actSPPrintTTNProcName: TdsdExecStoredProc;
+    cxLabel29: TcxLabel;
+    edPriceListIn: TcxButtonEdit;
+    GuidesPriceListIn: TdsdGuides;
   private
     { Private declarations }
   public

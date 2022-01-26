@@ -315,7 +315,19 @@ inherited Sale_OrderForm: TSale_OrderForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object PricePromo: TcxGridDBColumn [18]
+          object PriceIn: TcxGridDBColumn [18]
+            Caption = #1062#1077#1085#1072' '#1074#1093'.'
+            DataBinding.FieldName = 'PriceIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'.'
+            Options.Editing = False
+            Width = 70
+          end
+          object PricePromo: TcxGridDBColumn [19]
             Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'PricePromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -326,7 +338,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 50
           end
-          object Price_Pricelist: TcxGridDBColumn [19]
+          object Price_Pricelist: TcxGridDBColumn [20]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price_Pricelist'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -338,7 +350,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 70
           end
-          object Price_Pricelist_vat: TcxGridDBColumn [20]
+          object Price_Pricelist_vat: TcxGridDBColumn [21]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price_Pricelist_vat'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -349,7 +361,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 70
           end
-          object isCheck_Pricelist: TcxGridDBColumn [21]
+          object isCheck_Pricelist: TcxGridDBColumn [22]
             Caption = #1054#1096#1080#1073#1082#1072' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'isCheck_Pricelist'
             HeaderAlignmentHorz = taCenter
@@ -357,7 +369,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 61
           end
-          object AmountSumm: TcxGridDBColumn [22]
+          object AmountSumm: TcxGridDBColumn [23]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -367,7 +379,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 80
           end
-          object HeadCount: TcxGridDBColumn [23]
+          object HeadCount: TcxGridDBColumn [24]
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             Visible = False
@@ -375,7 +387,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object AssetName: TcxGridDBColumn [24]
+          object AssetName: TcxGridDBColumn [25]
             Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072' '
             DataBinding.FieldName = 'AssetName'
             Visible = False
@@ -384,7 +396,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 65
           end
-          object BoxCount: TcxGridDBColumn [25]
+          object BoxCount: TcxGridDBColumn [26]
             Caption = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -395,7 +407,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object BoxName: TcxGridDBColumn [26]
+          object BoxName: TcxGridDBColumn [27]
             Caption = #1042#1080#1076' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -411,7 +423,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object InfoMoneyCode: TcxGridDBColumn [27]
+          object InfoMoneyCode: TcxGridDBColumn [28]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -420,7 +432,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 45
           end
-          object InfoMoneyGroupName: TcxGridDBColumn [28]
+          object InfoMoneyGroupName: TcxGridDBColumn [29]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -429,7 +441,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyDestinationName: TcxGridDBColumn [29]
+          object InfoMoneyDestinationName: TcxGridDBColumn [30]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -438,7 +450,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyName: TcxGridDBColumn [30]
+          object InfoMoneyName: TcxGridDBColumn [31]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -447,7 +459,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 100
           end
-          object InfoMoneyName_all: TcxGridDBColumn [31]
+          object InfoMoneyName_all: TcxGridDBColumn [32]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             Visible = False
@@ -456,7 +468,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 90
           end
-          object isPeresort: TcxGridDBColumn [32]
+          object isPeresort: TcxGridDBColumn [33]
             Caption = #1055#1077#1088#1077#1089#1086#1088#1090' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isPeresort'
             HeaderAlignmentHorz = taCenter
@@ -691,7 +703,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       Width = 84
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 1072
+      Left = 1156
       Top = 103
       Properties.Buttons = <
         item
@@ -700,24 +712,24 @@ inherited Sale_OrderForm: TSale_OrderForm
         end>
       Properties.ReadOnly = True
       TabOrder = 29
-      Width = 195
+      Width = 111
     end
     object cxLabel14: TcxLabel
-      Left = 1072
+      Left = 1156
       Top = 85
       Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
     end
     object cxLabel16: TcxLabel
-      Left = 948
+      Left = 1072
       Top = 85
       Caption = #8470' '#1085#1072#1083#1086#1075#1086#1074#1086#1081
     end
     object edTax: TcxTextEdit
-      Left = 948
+      Left = 1072
       Top = 103
       Properties.ReadOnly = True
       TabOrder = 32
-      Width = 120
+      Width = 78
     end
     object cbCOMDOC: TcxCheckBox
       Left = 171
@@ -901,12 +913,12 @@ inherited Sale_OrderForm: TSale_OrderForm
       Width = 144
     end
     object cxLabel27: TcxLabel
-      Left = 804
+      Left = 948
       Top = 85
       Caption = #8470' '#1076#1086#1082'. '#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1099
     end
     object edInvNumberProduction: TcxButtonEdit
-      Left = 804
+      Left = 948
       Top = 103
       Properties.Buttons = <
         item
@@ -917,7 +929,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       Properties.ReadOnly = True
       TabOrder = 56
       Text = '-1'
-      Width = 140
+      Width = 120
     end
     object cxLabel28: TcxLabel
       Left = 255
@@ -946,6 +958,23 @@ inherited Sale_OrderForm: TSale_OrderForm
       State = cbsChecked
       TabOrder = 59
       Width = 135
+    end
+    object cxLabel29: TcxLabel
+      Left = 804
+      Top = 85
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1074#1093'.'
+    end
+    object edPriceListIn: TcxButtonEdit
+      Left = 804
+      Top = 103
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 61
+      Width = 140
     end
   end
   object edChangePercentAmount: TcxCurrencyEdit [2]
@@ -1335,7 +1364,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         item
           Name = 'inPaidKindId'
           Value = ''
-          Component = PaidKindGuides
+          Component = GuidesPaidKind
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1343,7 +1372,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         item
           Name = 'inPaidKindName'
           Value = ''
-          Component = PaidKindGuides
+          Component = GuidesPaidKind
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -2458,7 +2487,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'inPriceListId'
         Value = ''
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3158,14 +3187,14 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'PaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3188,7 +3217,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'ContractTagName'
         Value = Null
-        Component = ContractTagGuides
+        Component = GuidesContractTag
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3211,14 +3240,14 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'CurrencyDocumentId'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyDocumentName'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3226,14 +3255,14 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'CurrencyPartnerId'
         Value = ''
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyPartnerName'
         Value = ''
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3270,14 +3299,14 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'PriceListId'
         Value = ''
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PriceListName'
         Value = ''
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3285,14 +3314,14 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'DocumentTaxKindId'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'DocumentTaxKindName'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3350,14 +3379,14 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'MovementId_Transport'
         Value = Null
-        Component = TransportChoiceGuides
+        Component = GuidesTransportChoice
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_Transport'
         Value = Null
-        Component = TransportChoiceGuides
+        Component = GuidesTransportChoice
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3408,6 +3437,21 @@ inherited Sale_OrderForm: TSale_OrderForm
         Value = Null
         Component = edPartionGoodsDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListInId'
+        Value = Null
+        Component = GuidesPriceListIn
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListInName'
+        Value = Null
+        Component = GuidesPriceListIn
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -3514,7 +3558,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'inPaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3538,7 +3582,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'inCurrencyDocumentId'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3546,7 +3590,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'inCurrencyPartnerId'
         Value = ''
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3554,7 +3598,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'inDocumentTaxKindId_inf'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3570,7 +3614,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'ioPriceListId'
         Value = ''
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -3578,7 +3622,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'outPriceListName'
         Value = ''
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -4135,7 +4179,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     Left = 476
     Top = 246
   end
-  object DocumentTaxKindGuides: TdsdGuides
+  object GuidesDocumentTaxKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edDocumentTaxKind
     FormNameParam.Value = 'TDocumentTaxKindForm'
@@ -4147,7 +4191,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'Key'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -4156,14 +4200,14 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1120
-    Top = 48
+    Left = 1192
+    Top = 40
   end
   object spTax: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'
@@ -4181,7 +4225,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'inDocumentTaxKindId'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4189,7 +4233,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'inDocumentTaxKindId_inf'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4211,14 +4255,14 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'outDocumentTaxKindId'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindName'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -4303,7 +4347,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
-        Component = PriceListGuides
+        Component = GuidesPriceList
       end>
     Left = 528
     Top = 320
@@ -4339,7 +4383,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     Left = 440
     Top = 384
   end
-  object PaidKindGuides: TdsdGuides
+  object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
@@ -4351,7 +4395,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'Key'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -4360,7 +4404,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -4412,7 +4456,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     Left = 992
     Top = 168
   end
-  object PriceListGuides: TdsdGuides
+  object GuidesPriceList: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
     FormNameParam.Value = 'TPriceList_ObjectForm'
@@ -4424,7 +4468,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'Key'
         Value = ''
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -4433,7 +4477,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -4458,7 +4502,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'CurrencyId'
         Value = Null
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4466,14 +4510,14 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'CurrencyName'
         Value = Null
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 748
-    Top = 64
+    Left = 788
+    Top = 48
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Print'
@@ -4590,7 +4634,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'ContractTagId'
         Value = Null
-        Component = ContractTagGuides
+        Component = GuidesContractTag
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4598,7 +4642,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'ContractTagName'
         Value = Null
-        Component = ContractTagGuides
+        Component = GuidesContractTag
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -4641,7 +4685,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'PaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4649,7 +4693,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'PaidKindName'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -4658,7 +4702,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'PriceListId'
         Value = Null
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4666,7 +4710,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'PriceListName'
         Value = Null
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -4682,7 +4726,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       end>
     Left = 616
   end
-  object CurrencyPartnerGuides: TdsdGuides
+  object GuidesCurrencyPartner: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCurrencyPartner
     FormNameParam.Value = 'TCurrencyValue_ObjectForm'
@@ -4694,7 +4738,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'Key'
         Value = ''
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -4703,7 +4747,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -4735,14 +4779,14 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'inCurrencyFromId'
         Value = Null
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end>
     Left = 1096
-    Top = 8
+    Top = 56
   end
-  object CurrencyDocumentGuides: TdsdGuides
+  object GuidesCurrencyDocument: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCurrencyDocument
     FormNameParam.Value = 'TCurrency_ObjectForm'
@@ -4754,7 +4798,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'Key'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4762,16 +4806,16 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 984
-    Top = 72
+    Top = 40
   end
-  object ContractTagGuides: TdsdGuides
+  object GuidesContractTag: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContractTag
     FormNameParam.Value = 'TContractTagForm'
@@ -4783,7 +4827,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'Key'
         Value = ''
-        Component = ContractTagGuides
+        Component = GuidesContractTag
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -4792,14 +4836,14 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractTagGuides
+        Component = GuidesContractTag
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 1035
-    Top = 60
+    Top = 12
   end
   object GuidesInvNumberOrder: TdsdGuides
     KeyField = 'Id'
@@ -4897,7 +4941,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'PaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4905,7 +4949,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'PaidKindName'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -4931,7 +4975,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'ContractTagId'
         Value = ''
-        Component = ContractTagGuides
+        Component = GuidesContractTag
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4939,7 +4983,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'ContractTagName'
         Value = ''
-        Component = ContractTagGuides
+        Component = GuidesContractTag
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -4948,7 +4992,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'PriceListId'
         Value = ''
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4956,7 +5000,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'PriceListName'
         Value = ''
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -5226,7 +5270,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     Left = 584
     Top = 552
   end
-  object TransportChoiceGuides: TdsdGuides
+  object GuidesTransportChoice: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInvNumberTransport
     Key = '0'
@@ -5239,7 +5283,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'Key'
         Value = '0'
-        Component = TransportChoiceGuides
+        Component = GuidesTransportChoice
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -5248,7 +5292,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'InvNumber_Full'
         Value = ''
-        Component = TransportChoiceGuides
+        Component = GuidesTransportChoice
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -5288,7 +5332,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'inMovementId_Transport'
         Value = '0'
-        Component = TransportChoiceGuides
+        Component = GuidesTransportChoice
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5575,5 +5619,67 @@ inherited Sale_OrderForm: TSale_OrderForm
     PackSize = 1
     Left = 1024
     Top = 312
+  end
+  object GuidesPriceListIn: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceListIn
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPriceList_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceList_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPriceListIn
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPriceListIn
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = False
+        Component = edPriceWithVAT
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = 0.000000000000000000
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 876
+    Top = 72
   end
 end

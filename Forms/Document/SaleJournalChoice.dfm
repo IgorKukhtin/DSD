@@ -469,6 +469,14 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object PriceListInName: TcxGridDBColumn
+            Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1074#1093'.'
+            DataBinding.FieldName = 'PriceListInName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'

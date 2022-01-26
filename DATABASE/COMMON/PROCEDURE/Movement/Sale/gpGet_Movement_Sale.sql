@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , CurrencyPartnerId Integer, CurrencyPartnerName TVarChar
              , InvNumberOrder TVarChar
              , PriceListId Integer, PriceListName TVarChar
+             , PriceListInId Integer, PriceListInName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , MovementId_Master Integer, InvNumberPartner_Master TVarChar
              , MovementId_Order Integer
@@ -90,6 +91,8 @@ BEGIN
              , CAST ('' AS TVarChar) 			    AS InvNumberOrder
              , CAST (0  AS INTEGER)                         AS PriceListId
              , CAST ('' AS TVarChar) 			    AS PriceListName
+             , CAST (0  AS INTEGER)                         AS PriceListInId
+             , CAST ('' AS TVarChar) 			    AS PriceListInName
              , 0                     			    AS DocumentTaxKindId
              , CAST ('' AS TVarChar) 			    AS DocumentTaxKindName
              , 0                     			    AS MovementId_Master
@@ -232,6 +235,10 @@ BEGIN
                                                                                                   , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
                                                                                                   , inOperDatePartner_order:= NULL
                                                                                                    ) AS tmp)) AS PriceListName
+
+               , Object_PriceListIn.Id                    AS PriceListInId
+               , Object_PriceListIn.ValueData :: TVarChar AS PriceListInName
+               
                , Object_TaxKind.Id                		AS DocumentTaxKindId
                , Object_TaxKind.ValueData         		AS DocumentTaxKindName
                , MovementLinkMovement_Master.MovementChildId    AS MovementId_Master
@@ -364,6 +371,11 @@ BEGIN
                                             AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
                 LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
+               LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceListIn
+                                            ON MovementLinkObject_PriceListIn.MovementId = Movement.Id
+                                           AND MovementLinkObject_PriceListIn.DescId = zc_MovementLinkObject_PriceListIn()
+               LEFT JOIN Object AS Object_PriceListIn ON Object_PriceListIn.Id = MovementLinkObject_PriceListIn.ObjectId
+
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
                                                ON MovementLinkMovement_TransportGoods.MovementId = Movement.Id
                                               AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
@@ -426,6 +438,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.01.22         *
  04.07.18         *
  03.10.16         * add Movement_Production
  28.06.16         * add ReestrKind
