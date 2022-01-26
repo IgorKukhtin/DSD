@@ -1,8 +1,8 @@
--- Function: actReport_FinancialMonitoring()
+-- Function: spReport_FinancialMonitoring()
 
-DROP FUNCTION IF EXISTS actReport_FinancialMonitoring (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_FinancialMonitoring (TDateTime, TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION actReport_FinancialMonitoring(
+CREATE OR REPLACE FUNCTION gpReport_FinancialMonitoring(
     IN inStartDate     TDateTime , -- Начало периода
     IN inEndDate       TDateTime , -- Конец периода
     IN inSession       TVarChar    -- сессия пользователя
@@ -35,12 +35,12 @@ BEGIN
                     WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                       AND ObjectLink_Unit_Juridical.ChildObjectId <> 393053
                     ),
-
         tmpItemContainer AS (SELECT MovementItem.UnitID
                                   , MovementItem.OperDate
                                   , SUM(MovementItem.AmountCheckSum)                                                AS AmountCheckSum
                                   , SUM(MovementItem.AmountSaleSum)                                                 AS AmountSaleSum
                                   , SUM(MovementItem.AmountReturnInSum)                                             AS AmountReturnInSum
+                                  , SUM(MovementItem.SaldoSum)                                                      AS SaldoSum
                              FROM AnalysisContainerItem AS MovementItem
                              WHERE MovementItem.UnitID in (SELECT DISTINCT tmpUnit.UnitId FROM tmpUnit)
                                AND MovementItem.OperDate BETWEEN inStartDate AND inEndDate
@@ -114,6 +114,7 @@ BEGIN
               , SUM(MovementItem.AmountCheckSum)::TFloat          AS AmountCheckSum
               , SUM(MovementItem.AmountSaleSum)::TFloat           AS AmountSaleSum
               , SUM(MovementItem.AmountReturnInSum)::TFloat       AS AmountReturnInSum
+              , SUM(MovementItem.SaldoSum)::TFloat                AS SaldoSum
          FROM tmpItemContainer AS MovementItem   
                            
               INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementItem.UnitID
@@ -123,6 +124,64 @@ BEGIN
 
          ORDER BY tmpUnit.JuridicalId
                 , MovementItem.OperDate);   
+                
+    -- Пропишим остаток
+    UPDATE tmpSale SET SaldoSum = T1.SaldoSum
+    FROM (WITH
+              tmpUnit AS (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+                               , Object_Juridical.Id                AS JuridicalId
+                          FROM ObjectLink AS ObjectLink_Unit_Juridical
+
+                             INNER JOIN Object AS Object_Juridical
+                                               ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+                                              AND Object_Juridical.isErased = False
+
+                             INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                   ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                  AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                  AND ObjectLink_Juridical_Retail.ChildObjectId = 4
+                          WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                            AND ObjectLink_Unit_Juridical.ChildObjectId <> 393053
+                          ),
+
+              tmpContainer AS (SELECT Movement.UnitID
+                                    , SUM(Movement.Price * Movement.Saldo)                                                      AS SaldoSum
+                               FROM AnalysisContainer AS Movement
+                               WHERE Movement.UnitID in (SELECT DISTINCT tmpUnit.UnitId FROM tmpUnit)
+                               GROUP BY Movement.UnitID),
+              tmpItemContainerIn AS (SELECT MovementItem.UnitID
+                                          , SUM(MovementItem.SaldoSum)                                                         AS SaldoSum
+                                     FROM AnalysisContainerItem AS MovementItem
+                                     WHERE MovementItem.UnitID in (SELECT DISTINCT tmpUnit.UnitId FROM tmpUnit)
+                                       AND MovementItem.OperDate > inEndDate
+                                     GROUP BY MovementItem.UnitID),
+              tmpSaldoIn AS (SELECT tmpUnit.JuridicalId
+                                  , SUM(Movement.SaldoSum + COALESCE(tmpItemContainerIn.SaldoSum , 0))::TFloat                 AS SaldoSum
+                             FROM tmpContainer AS Movement
+                                               
+                                  INNER JOIN tmpUnit ON tmpUnit.UnitId = Movement.UnitID
+
+                                  LEFT JOIN tmpItemContainerIn ON tmpItemContainerIn.UnitId = Movement.UnitID
+                                                
+                             GROUP BY tmpUnit.JuridicalId)
+              SELECT tmpSale.JuridicalId
+                   , tmpSale.OperDate
+                   , (tmpSaldoIn.SaldoSum - COALESCE(SUM(Sale.SaldoSum) , 0))::TFloat                 AS SaldoSum
+              FROM tmpSale
+              
+                   LEFT JOIN tmpSaldoIn ON tmpSaldoIn.JuridicalId = tmpSale.JuridicalId
+
+                   LEFT JOIN tmpSale AS Sale 
+                                     ON Sale.JuridicalId = tmpSale.JuridicalId
+                                    AND Sale.OperDate >= tmpSale.OperDate 
+                   
+              GROUP BY tmpSale.JuridicalId
+                     , tmpSale.OperDate   
+                     , tmpSaldoIn.SaldoSum   
+              ) AS T1
+    WHERE tmpSale.JuridicalId = T1.JuridicalId
+      AND tmpSale.OperDate = T1.OperDate;
+    
 
     -- СП + Дисконт
     CREATE TEMP TABLE tmpChange ON COMMIT DROP AS
@@ -307,6 +366,7 @@ BEGIN
     tmpSaleSum AS (SELECT SUM(COALESCE(Sale.AmountCheckSum , 0) +
                               COALESCE(Sale.AmountSaleSum , 0) -
                               COALESCE(Sale.AmountReturnInSum , 0))            AS SummaSale 
+                        , SUM(Sale.SaldoSum)                                   AS SaldoSum      
                 FROM tmpSale AS Sale
                 ),
     tmpChangeSum AS (SELECT SUM(COALESCE(Change.SummChange , 0))               AS SummChange 
@@ -320,6 +380,7 @@ BEGIN
          , BankAccount.SummaBankAccount::TFloat                                              AS SummaBankAccount
          , (COALESCE(Sale.SummaSale, 0) + COALESCE(ChangeSum.SummChange, 0) - 
            COALESCE(BankAccount.SummaBankAccount, 0))::TFloat                                AS SummaDelta
+         , Sale.SaldoSum                                                                     AS SaldoSum
 
     FROM tmpSaleSum AS Sale
     
@@ -337,6 +398,7 @@ BEGIN
                         , SUM(COALESCE(Sale.AmountCheckSum , 0) +
                               COALESCE(Sale.AmountSaleSum , 0) -
                               COALESCE(Sale.AmountReturnInSum , 0))            AS SummaSale 
+                        , SUM(Sale.SaldoSum)                                   AS SaldoSum
                 FROM tmpSale AS Sale
                 GROUP BY Sale.OperDate
                 ),
@@ -356,6 +418,7 @@ BEGIN
          , BankAccount.SummaBankAccount::TFloat  AS SummaBankAccount
          , (COALESCE(SaleSum.SummaSale, 0) + COALESCE(ChangeSum.SummChange, 0) - 
            COALESCE(BankAccount.SummaBankAccount, 0))::TFloat                            AS SummaDelta
+         , SaleSum.SaldoSum
     FROM tmpSaleSum AS SaleSum
         
          FULL JOIN tmpBankAccountSum AS BankAccount ON BankAccount.OperDate = SaleSum.OperDate
@@ -380,5 +443,5 @@ $BODY$
 -- тест
 -- BEGIN TRANSACTION;
 -- 
-select * from actReport_FinancialMonitoring (inStartDate := ('01.08.2021')::TDateTime , inEndDate := ('30.08.2021')::TDateTime , inSession := '3');
+select * from gpReport_FinancialMonitoring(inStartDate := ('01.12.2021')::TDateTime , inEndDate := ('31.12.2021')::TDateTime ,  inSession := '3');
 -- COMMIT TRANSACTION;

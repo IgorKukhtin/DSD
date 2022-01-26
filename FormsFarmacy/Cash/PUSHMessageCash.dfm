@@ -28,11 +28,11 @@ object PUSHMessageCashForm: TPUSHMessageCashForm
         'jhjghjkghkfgkf'
         'gdfgdfshdsghsg'
         'kfgkfjlkfh')
-      ParentColor = True
       ParentFont = False
       Properties.Alignment = taLeftJustify
       Properties.ReadOnly = True
       Properties.ScrollBars = ssVertical
+      Style.Color = clCream
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clWindowText
       Style.Font.Height = -11

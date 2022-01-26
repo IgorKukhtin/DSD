@@ -1074,10 +1074,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_PartialReturnInAllDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_PartialReturnInAllDialogForm');
-
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FinancialMonitoringForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FinancialMonitoringForm');
-
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TestingAttemptsUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TestingAttemptsUserForm');
 
@@ -2980,6 +2980,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSPDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMedicSPDialogForm');
 end;
 
 procedure TLoadFormTest.LoadReturnInFormTest;

@@ -1147,7 +1147,8 @@ uses
   PickUpLogsAndDBF in '..\..\FormsFarmacy\Guides\PickUpLogsAndDBF.pas' {PickUpLogsAndDBFForm: TParentForm},
   ContractPriceList in '..\..\FormsFarmacy\Guides\ContractPriceList.pas' {ContractPriceListForm: TParentForm},
   Report_PriceComparisonBIG3 in '..\..\FormsFarmacy\Report\Report_PriceComparisonBIG3.pas' {Report_PriceComparisonBIG3Form: TParentForm},
-  ContractPriceListDialog in '..\..\FormsFarmacy\Guides\ContractPriceListDialog.pas' {ContractPriceListDialogForm: TParentForm};
+  ContractPriceListDialog in '..\..\FormsFarmacy\Guides\ContractPriceListDialog.pas' {ContractPriceListDialogForm: TParentForm},
+  MedicSPDialog in '..\..\FormsFarmacy\Document\MedicSPDialog.pas' {MedicSPDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxLookAndFeels,
   cxLookAndFeelPainters, Vcl.Menus, dxSkinsCore, dxSkinsDefaultPainters,
   Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls, cxControls, cxContainer, cxEdit,
-  cxTextEdit, cxMemo;
+  cxTextEdit, cxMemo, dsdAddOn, cxPropertiesStore;
 
 type
   TPUSHMessageFarmacyForm = class(TForm)
@@ -17,9 +17,22 @@ type
     pn2: TPanel;
     pn1: TPanel;
     btOpenForm: TcxButton;
+    PopupMenu: TPopupMenu;
+    pmSelectAll: TMenuItem;
+    N1: TMenuItem;
+    pmColorDialog: TMenuItem;
+    ColorDialog: TColorDialog;
+    FontDialog: TFontDialog;
+    cxPropertiesStore: TcxPropertiesStore;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    pmFontDialog: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure MemoKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btOpenFormClick(Sender: TObject);
+    procedure pmSelectAllClick(Sender: TObject);
+    procedure pmColorDialogClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure pmFontDialogClick(Sender: TObject);
   private
     { Private declarations }
     FFormName : string;
@@ -88,13 +101,42 @@ end;
 
 procedure TPUSHMessageFarmacyForm.FormCreate(Sender: TObject);
 begin
+  UserSettingsStorageAddOn.LoadUserSettings;
   Memo.Style.Font.Size := Memo.Style.Font.Size + 4;
+end;
+
+procedure TPUSHMessageFarmacyForm.FormDestroy(Sender: TObject);
+begin
+  Memo.Style.Font.Size := Memo.Style.Font.Size - 4;
+  UserSettingsStorageAddOn.SaveUserSettings;
 end;
 
 procedure TPUSHMessageFarmacyForm.MemoKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if Key = VK_Return then ModalResult := mrOk;
+end;
+
+procedure TPUSHMessageFarmacyForm.pmColorDialogClick(Sender: TObject);
+begin
+  ColorDialog.Color := Memo.Style.Color;
+  if ColorDialog.Execute then Memo.Style.Color := ColorDialog.Color;
+end;
+
+procedure TPUSHMessageFarmacyForm.pmFontDialogClick(Sender: TObject);
+begin
+  FontDialog.Font := Memo.Style.Font;
+  FontDialog.Font.Color := Memo.Style.TextColor;
+  if FontDialog.Execute then
+  begin
+    Memo.Style.Font := FontDialog.Font;
+    Memo.Style.TextColor := FontDialog.Font.Color;
+  end;
+end;
+
+procedure TPUSHMessageFarmacyForm.pmSelectAllClick(Sender: TObject);
+begin
+  Memo.SelectAll;
 end;
 
 function ShowPUSHMessageFarmacy(AMessage : string;

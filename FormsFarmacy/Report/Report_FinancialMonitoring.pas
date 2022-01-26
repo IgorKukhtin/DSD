@@ -39,6 +39,12 @@ type
     SummaSale: TcxGridDBColumn;
     SummaBankAccount: TcxGridDBColumn;
     SummaDelta: TcxGridDBColumn;
+    cxTabSheet1: TcxTabSheet;
+    cxGrid1: TcxGrid;
+    cxGridDBChartView1: TcxGridDBChartView;
+    cxGridDBChartDataGroup1: TcxGridDBChartDataGroup;
+    cxGridDBChartSeries5: TcxGridDBChartSeries;
+    cxGridLevel1: TcxGridLevel;
   private
     { Private declarations }
   public
