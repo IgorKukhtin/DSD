@@ -220,6 +220,11 @@ type
     PersonalName_4_TTN: TcxGridDBColumn;
     spGetReporNameTTN: TdsdStoredProc;
     actSPPrintTTNProcName: TdsdExecStoredProc;
+    spUpdateMI_Sale_PriceIn: TdsdStoredProc;
+    actUpdateMI_Sale_PriceIn: TdsdExecStoredProc;
+    macUpdateMI_Sale_PriceIn_list: TMultiAction;
+    macUpdateMI_Sale_PriceIn: TMultiAction;
+    bbUpdateMI_Sale_PriceIn: TdxBarButton;
   private
     { Private declarations }
   public

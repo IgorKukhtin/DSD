@@ -2464,6 +2464,34 @@ inherited Sale_OrderForm: TSale_OrderForm
         end>
       Caption = 'actPrint_Transport_ReportName'
     end
+    object actUpdateMI_Sale_PriceIn: TdsdExecStoredProc
+      Category = 'UpdatePriceIn'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMI_Sale_PriceIn
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMI_Sale_PriceIn
+        end>
+      Caption = 'actUpdateMI_Sale_PriceIn'
+      ImageIndex = 80
+    end
+    object macUpdateMI_Sale_PriceIn: TMultiAction
+      Category = 'UpdatePriceIn'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMI_Sale_PriceIn
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099'?'
+      InfoAfterExecute = #1042#1093'. '#1094#1077#1085#1099' '#1079#1072#1087#1086#1083#1085#1077#1085#1099
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099
+      ImageIndex = 80
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -2585,6 +2613,14 @@ inherited Sale_OrderForm: TSale_OrderForm
         item
           Visible = True
           ItemName = 'bbUpdatePrice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMI_Sale_PriceIn'
         end
         item
           Visible = True
@@ -2887,6 +2923,10 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
     object bbUpdate_Invnumber: TdxBarButton
       Action = macUpdate_Invnumber
+      Category = 0
+    end
+    object bbUpdateMI_Sale_PriceIn: TdxBarButton
+      Action = macUpdateMI_Sale_PriceIn
       Category = 0
     end
   end
@@ -5681,5 +5721,22 @@ inherited Sale_OrderForm: TSale_OrderForm
       end>
     Left = 876
     Top = 72
+  end
+  object spUpdateMI_Sale_PriceIn: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Sale_PriceIn'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId '
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1120
+    Top = 235
   end
 end

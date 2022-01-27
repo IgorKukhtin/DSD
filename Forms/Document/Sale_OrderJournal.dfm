@@ -3662,6 +3662,45 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actUpdateMI_Sale_PriceIn: TdsdExecStoredProc
+      Category = 'UpdatePriceIn'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMI_Sale_PriceIn
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMI_Sale_PriceIn
+        end>
+      Caption = 'actUpdateMI_Sale_PriceIn'
+      ImageIndex = 80
+    end
+    object macUpdateMI_Sale_PriceIn_list: TMultiAction
+      Category = 'UpdatePriceIn'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMI_Sale_PriceIn
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdateMI_Sale_PriceIn_list'
+      ImageIndex = 80
+    end
+    object macUpdateMI_Sale_PriceIn: TMultiAction
+      Category = 'UpdatePriceIn'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateMI_Sale_PriceIn_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099' '#1076#1083#1103' '#1042#1057#1045#1061' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
+      InfoAfterExecute = #1042#1093'. '#1094#1077#1085#1099' '#1079#1072#1087#1086#1083#1085#1077#1085#1099
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099
+      ImageIndex = 80
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -3803,6 +3842,14 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         item
           Visible = True
           ItemName = 'bbElectron'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMI_Sale_PriceIn'
         end
         item
           Visible = True
@@ -3970,7 +4017,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbExport_xls_2244900110'
         end
         item
           Visible = True
@@ -4141,8 +4188,12 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Action = mactExport_xls
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbExport_xls_2244900110: TdxBarButton
       Action = mactExport_xls_2244900110
+      Category = 0
+    end
+    object bbUpdateMI_Sale_PriceIn: TdxBarButton
+      Action = macUpdateMI_Sale_PriceIn
       Category = 0
     end
   end
@@ -5818,5 +5869,22 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     PackSize = 1
     Left = 448
     Top = 498
+  end
+  object spUpdateMI_Sale_PriceIn: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Sale_PriceIn'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1120
+    Top = 323
   end
 end

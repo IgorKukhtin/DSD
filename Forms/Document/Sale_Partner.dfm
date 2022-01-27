@@ -11,17 +11,17 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Width = 1289
     Height = 324
     ExplicitTop = 166
-    ExplicitWidth = 1275
+    ExplicitWidth = 1289
     ExplicitHeight = 324
     ClientRectBottom = 324
     ClientRectRight = 1289
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1275
+      ExplicitWidth = 1289
       ExplicitHeight = 300
       inherited cxGrid: TcxGrid
         Width = 1289
         Height = 300
-        ExplicitWidth = 1275
+        ExplicitWidth = 1289
         ExplicitHeight = 300
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -518,7 +518,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Width = 1289
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1275
+    ExplicitWidth = 1289
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -2314,6 +2314,34 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       Caption = 'actPrint_Transport_ReportName'
     end
+    object actUpdateMI_Sale_PriceIn: TdsdExecStoredProc
+      Category = 'UpdatePriceIn'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMI_Sale_PriceIn
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMI_Sale_PriceIn
+        end>
+      Caption = 'actUpdateMI_Sale_PriceIn'
+      ImageIndex = 80
+    end
+    object macUpdateMI_Sale_PriceIn: TMultiAction
+      Category = 'UpdatePriceIn'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMI_Sale_PriceIn
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099'?'
+      InfoAfterExecute = #1042#1093'. '#1094#1077#1085#1099' '#1079#1072#1087#1086#1083#1085#1077#1085#1099
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099
+      ImageIndex = 80
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -2427,6 +2455,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         item
           Visible = True
           ItemName = 'bbUpdatePriceCurrency'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMI_Sale_PriceIn'
         end
         item
           Visible = True
@@ -2671,6 +2707,10 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
     object bbUpdate_Invnumber: TdxBarButton
       Action = macUpdate_Invnumber
+      Category = 0
+    end
+    object bbUpdateMI_Sale_PriceIn: TdxBarButton
+      Action = macUpdateMI_Sale_PriceIn
       Category = 0
     end
   end
@@ -5138,5 +5178,22 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end>
     Left = 876
     Top = 72
+  end
+  object spUpdateMI_Sale_PriceIn: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Sale_PriceIn'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId '
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1120
+    Top = 235
   end
 end
