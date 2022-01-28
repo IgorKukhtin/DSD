@@ -387,6 +387,8 @@ BEGIN
          FULL JOIN tmpBankAccountSum AS BankAccount ON 1=1
          
          LEFT JOIN tmpChangeSum AS ChangeSum ON 1=1
+         
+    
     ;
 
   RETURN NEXT cur1;
@@ -424,6 +426,8 @@ BEGIN
          FULL JOIN tmpBankAccountSum AS BankAccount ON BankAccount.OperDate = SaleSum.OperDate
         
          LEFT JOIN tmpChangeSum AS ChangeSum ON ChangeSum.OperDate = COALESCE (BankAccount.OperDate, SaleSum.OperDate)
+         
+    WHERE COALESCE (BankAccount.OperDate, SaleSum.OperDate) < CURRENT_DATE
          
     ORDER BY COALESCE (BankAccount.OperDate, SaleSum.OperDate);
      

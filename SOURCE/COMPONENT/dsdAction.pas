@@ -4318,6 +4318,7 @@ end;
 function TdsdShowPUSHMessage.LocalExecute: Boolean;
 var
   i: Integer; MessageType : TPUSHMessageType;
+  ASpecialLighting, ABold : Boolean; ATextColor, AColor : Integer;
 begin
   result := true;
   for i := 0 to StoredProcList.Count - 1 do
@@ -4330,12 +4331,27 @@ begin
           (StoredProcList[i].TabSheet.PageControl.ActivePage = StoredProcList[i].TabSheet)) then
         begin
           StoredProcList[i].StoredProc.Execute;
+          ASpecialLighting := False; ATextColor := clWindowText; AColor := clCream; ABold := False;
           if not Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outShowMessage')) then
           begin
             raise Exception.Create('Не найден возвращаемый параметр <outShowMessage> в функции ' + StoredProcList[i].StoredProc.StoredProcName);
             Exit;
           end;
           if not StoredProcList[i].StoredProc.Params.ParamByName('outShowMessage').Value then Continue;
+
+          if Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outSpecialLighting')) then
+          begin
+            ASpecialLighting := StoredProcList[i].StoredProc.Params.ParamByName('outSpecialLighting').Value;
+
+            if ASpecialLighting and Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outTextColor')) then
+              ATextColor := StoredProcList[i].StoredProc.Params.ParamByName('outTextColor').Value;
+
+            if ASpecialLighting and Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outColor')) then
+              AColor := StoredProcList[i].StoredProc.Params.ParamByName('outColor').Value;
+
+            if ASpecialLighting and Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outBold')) then
+              ABold := StoredProcList[i].StoredProc.Params.ParamByName('outBold').Value;
+          end;
 
           if FPUSHMessageType = pmtResult then
           begin
@@ -4360,16 +4376,16 @@ begin
           end else MessageType := FPUSHMessageType;
 
           case MessageType of
-            pmtWarning : ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtWarning);
+            pmtWarning : ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtWarning, ASpecialLighting, ATextColor, AColor, ABold);
             pmtError : begin
-                         ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtError);
+                         ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtError, ASpecialLighting, ATextColor, AColor, ABold);
                          raise Exception.Create('Выполнение операции прервано...');
                          Result := False;
                          Exit;
                        end;
-            pmtInformation : ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtInformation);
+            pmtInformation : ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtInformation, ASpecialLighting, ATextColor, AColor, ABold);
             pmtConfirmation : if not ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value +
-                                #13#10#13#10'Продолжить изменение ?...', mtConfirmation) then
+                                #13#10#13#10'Продолжить изменение ?...', mtConfirmation, ASpecialLighting, ATextColor, AColor, ABold) then
                               begin
                                 raise Exception.Create('Выполнение операции прервано...');
                                 Result := False;

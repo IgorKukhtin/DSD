@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpGet_PUSH_Farmacy(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Text TBlob,
-               FormName TVarChar, Button TVarChar, Params TVarChar, TypeParams TVarChar, ValueParams TVarChar, Beep Integer)
+               FormName TVarChar, Button TVarChar, Params TVarChar, TypeParams TVarChar, ValueParams TVarChar, Beep Integer,
+               SpecialLighting Boolean, TextColor Integer, Color Integer, Bold Boolean)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -45,7 +46,11 @@ BEGIN
                            , Params TVarChar
                            , TypeParams TVarChar
                            , ValueParams TVarChar
-                           , Beep Integer) ON COMMIT DROP;
+                           , Beep Integer Not Null Default 0
+                           , SpecialLighting Boolean Not Null Default False
+                           , TextColor Integer
+                           , Color Integer
+                           , Bold Boolean Not Null Default False) ON COMMIT DROP;
 
     SELECT ObjectLink_Member_Position.ChildObjectId
     INTO vbPositionID
@@ -857,22 +862,21 @@ BEGIN
    
    -- Для роли "Кассир аптеки"
    IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
-            WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy()) OR
-      inSession = '3'
+            WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy())
    THEN
 
      vbText := gpGet_Movement_ReturnOut_PUSH_NewDoc (inStartDate := vbDatePUSH, inSession:= inSession);
         
      IF COALESCE (vbText, '') <> ''
      THEN         
-       INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
+       INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams, SpecialLighting, TextColor, Color, Bold)
        VALUES (21, 'Внимание!!!'||CHR(13)|| 
                    'По вашей аптеке создан НОВЫЙ ВОЗВРАТ:'||CHR(13)||vbText||CHR(13)||CHR(13)||
                    'Распечатайте накладные.'||CHR(13)||
                    'Подготовьте товар и документы.'||CHR(13)||
                    'Поставьте галочку "ОТЛОЖЕН" в возвратной накладной.', 
                    'TReturnOutPharmacyJournalForm', 'Возврат поставщику', 
-                   '', '', '');
+                   '', '', '', TRUE, zc_Color_Red(), zc_Color_White(), TRUE);
      END IF;
 
      IF vbDatePUSH::Time < '10:00:00'::Time AND CURRENT_TIMESTAMP::Time >= '10:00:00'::Time
@@ -881,26 +885,26 @@ BEGIN
         
        IF COALESCE (vbText, '') <> ''
        THEN         
-         INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
+         INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams, SpecialLighting, TextColor, Color, Bold)
          VALUES (21, 'Внимание!!!'||CHR(13)|| 
                      'У Вас есть ВОЗВРАТЫ ПОСТАВЩИКУ , которые ЕМУ НЕ ОТДАНЫ:'||CHR(13)||vbText||CHR(13)||CHR(13)||
                      'ПРОВЕРЬТЕ ИХ НАЛИЧИЕ В АПТЕКЕ !!!'||CHR(13)||CHR(13)||
                      'Если товар отдан поставщику - заполните колонку "Дата передачи товара" в   журнале "Возврат поставщику"', 
                      'TReturnOutPharmacyJournalForm', 'Возврат поставщику', 
-                     '', '', '');
+                     '', '', '', TRUE, zc_Color_Red(), zc_Color_White(), TRUE);
        END IF;
 
        vbText := gpGet_Movement_Pretension_PUSH_Actual (inSession:= inSession);
         
        IF COALESCE (vbText, '') <> ''
        THEN         
-         INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
+         INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams, SpecialLighting, TextColor, Color, Bold)
          VALUES (22, 'По вашей аптеке созданы ПРЕТЕНЗИИ ПОСТАВЩИКУ, находящиеся в статусе АКТУАЛЬНА !!!'||CHR(13)|| 
                      'Перейдите в Журнал претензий по кнопке.'||CHR(13)|| 
                      'Если позиции ВНУТРИ НАКЛАДНОЙ ПО ПРЕТЕНЗИИ уже НЕ АКТУЛЬНЫ (вопрос решен) -  ПРОСЬБА ИЗМЕНИТЬ в соответствующей колонке  статус.'||CHR(13)|| 
                      'Окончательное закрытие накладной по претензии в фармаси - обязанность менеджера по претензиям.', 
                      'TPretensionJournalForm', 'Претензии поставщику', 
-                     '', '', '');
+                     '', '', '', TRUE, zc_Color_Red(), zc_Color_White(), TRUE);
        END IF;
      END IF;
 
@@ -915,6 +919,10 @@ BEGIN
           , _PUSH.TypeParams             AS TypeParams
           , _PUSH.ValueParams            AS ValueParams
           , _PUSH.Beep                   AS Beep
+          , _PUSH.SpecialLighting        AS SpecialLighting
+          , _PUSH.TextColor              AS Color
+          , _PUSH.Color                  AS Color
+          , _PUSH.Bold                   AS Bold
      FROM _PUSH;
 
 END;

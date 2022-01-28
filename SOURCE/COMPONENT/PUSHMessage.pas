@@ -33,11 +33,13 @@ type
     procedure pmFontDialogClick(Sender: TObject);
   private
     { Private declarations }
+    FSpecialLighting : Boolean;
   public
     { Public declarations }
   end;
 
-  function ShowPUSHMessage(AMessage : string; DlgType: TMsgDlgType = mtInformation) : boolean;
+  function ShowPUSHMessage(AMessage : string; DlgType: TMsgDlgType = mtInformation;
+                           ASpecialLighting : Boolean = False; ATextColor : Integer = clWindowText; AColor : Integer = clCream; ABold : Boolean = False) : boolean;
 
 implementation
 
@@ -51,8 +53,11 @@ end;
 
 procedure TPUSHMessageForm.FormDestroy(Sender: TObject);
 begin
-  Memo.Style.Font.Size := Memo.Style.Font.Size - 4;
-  UserSettingsStorageAddOn.SaveUserSettings;
+  if not FSpecialLighting then
+  begin
+    Memo.Style.Font.Size := Memo.Style.Font.Size - 4;
+    UserSettingsStorageAddOn.SaveUserSettings;
+  end;
 end;
 
 procedure TPUSHMessageForm.MemoKeyDown(Sender: TObject; var Key: Word;
@@ -83,11 +88,13 @@ begin
   Memo.SelectAll;
 end;
 
-function ShowPUSHMessage(AMessage : string; DlgType: TMsgDlgType = mtInformation) : boolean;
+function ShowPUSHMessage(AMessage : string; DlgType: TMsgDlgType = mtInformation;
+                         ASpecialLighting : Boolean = False; ATextColor : Integer = clWindowText; AColor : Integer = clCream; ABold : Boolean = False) : boolean;
   var PUSHMessageForm : TPUSHMessageForm;
 begin
   PUSHMessageForm := TPUSHMessageForm.Create(Screen.ActiveControl);
   try
+    PUSHMessageForm.FSpecialLighting := ASpecialLighting;
     PUSHMessageForm.Memo.Lines.Text := AMessage;
     case DlgType of
       mtWarning : PUSHMessageForm.Caption := 'Предупреждение';
@@ -97,6 +104,12 @@ begin
                 end;
       mtInformation : PUSHMessageForm.Caption := 'Сообщение';
       mtConfirmation : PUSHMessageForm.Caption := 'Подтверждение';
+    end;
+    if ASpecialLighting then
+    begin
+      PUSHMessageForm.Memo.Style.Color := AColor;
+      PUSHMessageForm.Memo.Style.TextColor := ATextColor;
+      if ABold then PUSHMessageForm.Memo.Style.TextStyle := PUSHMessageForm.Memo.Style.TextStyle + [fsBold];
     end;
     Result := PUSHMessageForm.ShowModal = mrOk;
   finally

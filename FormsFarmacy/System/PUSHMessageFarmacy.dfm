@@ -151,6 +151,7 @@ object PUSHMessageFarmacyForm: TPUSHMessageFarmacyForm
     Top = 88
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Active = False
     Left = 72
     Top = 16
   end

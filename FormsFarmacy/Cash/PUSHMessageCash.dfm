@@ -9,6 +9,7 @@ object PUSHMessageCashForm: TPUSHMessageCashForm
   OldCreateOrder = False
   Position = poScreenCenter
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object pn1: TPanel
@@ -29,6 +30,7 @@ object PUSHMessageCashForm: TPUSHMessageCashForm
         'gdfgdfshdsghsg'
         'kfgkfjlkfh')
       ParentFont = False
+      PopupMenu = PopupMenu
       Properties.Alignment = taLeftJustify
       Properties.ReadOnly = True
       Properties.ScrollBars = ssVertical
@@ -118,5 +120,63 @@ object PUSHMessageCashForm: TPUSHMessageCashForm
       TabOrder = 2
       Visible = False
     end
+  end
+  object PopupMenu: TPopupMenu
+    Left = 224
+    Top = 160
+    object pmSelectAll: TMenuItem
+      Caption = #1042#1099#1076#1077#1083#1080#1090#1100' '#1074#1089#1077
+      OnClick = pmSelectAllClick
+    end
+    object N1: TMenuItem
+      Caption = '-'
+    end
+    object pmColorDialog: TMenuItem
+      Caption = #1062#1074#1077#1090' '#1092#1086#1085#1072
+      OnClick = pmColorDialogClick
+    end
+    object pmFontDialog: TMenuItem
+      Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1096#1088#1080#1092#1090#1072
+      OnClick = pmFontDialogClick
+    end
+  end
+  object ColorDialog: TColorDialog
+    Left = 72
+    Top = 208
+  end
+  object FontDialog: TFontDialog
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    Left = 72
+    Top = 152
+  end
+  object cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end
+      item
+        Component = Memo
+        Properties.Strings = (
+          'Style.Color'
+          'Style.TextColor'
+          'Style.Font')
+      end>
+    StorageName = 'cxPropertiesStore'
+    StorageType = stStream
+    Left = 72
+    Top = 88
+  end
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 72
+    Top = 16
   end
 end

@@ -387,11 +387,11 @@ BEGIN
         ResultSet.NewPrice         AS NewPriceCalc,
         ResultSet.NewPriceMidUnit  AS NewPriceMidUnit,
                 
-        CASE WHEN COALESCE (ResultSet.Juridical_Price, 0) > 0 AND (ResultSet.NewPrice < ResultSet.MidPriceUnit AND 
-                  COALESCE (ResultSet.NewPrice, 0) > 0 AND ResultSet.NewPrice < ResultSet.MidPriceUnit AND 
+        CASE WHEN COALESCE (ResultSet.Juridical_Price, 0) > 0 AND (ResultSet.NewPrice <= ResultSet.MidPriceUnit AND 
+                  COALESCE (ResultSet.NewPrice, 0) > 0 AND ResultSet.NewPrice <= ResultSet.MidPriceUnit AND 
                   COALESCE ( Abs((ResultSet.MidPriceUnit / ResultSet.NewPrice) * 100 - 100), 0) <= 10 or ResultSet.IsTop_Goods = True)
                OR COALESCE (ResultSet.Juridical_Price, 0) = 0 AND COALESCE (ResultSet.NewPrice, 0) > 0 AND 
-                  ResultSet.NewPrice < ResultSet.MidPriceUnit AND
+                  ResultSet.NewPrice <= ResultSet.MidPriceUnit AND
                   COALESCE ( Abs((ResultSet.MidPriceUnit / ResultSet.NewPrice) * 100 - 100), 0) <= 10
              THEN ResultSet.NewPrice
              ELSE ResultSet.NewPriceMidUnit END :: TFloat AS NewPrice,
@@ -399,11 +399,11 @@ BEGIN
         ResultSet.PriceFix_Goods,
         ResultSet.MinMarginPercent,
         CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
-                   ELSE (CASE WHEN COALESCE (ResultSet.Juridical_Price, 0) > 0 AND (ResultSet.NewPrice < ResultSet.MidPriceUnit AND 
-                                   COALESCE (ResultSet.NewPrice, 0) > 0 AND ResultSet.NewPrice < ResultSet.MidPriceUnit AND 
+                   ELSE (CASE WHEN COALESCE (ResultSet.Juridical_Price, 0) > 0 AND (ResultSet.NewPrice <= ResultSet.MidPriceUnit AND 
+                                   COALESCE (ResultSet.NewPrice, 0) > 0 AND ResultSet.NewPrice <= ResultSet.MidPriceUnit AND 
                                    COALESCE ( Abs((ResultSet.MidPriceUnit / ResultSet.NewPrice) * 100 - 100), 0) <= 10 or ResultSet.IsTop_Goods = True)
                                 OR COALESCE (ResultSet.Juridical_Price, 0) = 0 AND COALESCE (ResultSet.NewPrice, 0) > 0 AND 
-                                   ResultSet.NewPrice < ResultSet.MidPriceUnit AND 
+                                   ResultSet.NewPrice <= ResultSet.MidPriceUnit AND 
                                    COALESCE ( Abs((ResultSet.MidPriceUnit / ResultSet.NewPrice) * 100 - 100), 0) <= 10              
                               THEN ResultSet.NewPrice
                               ELSE ResultSet.NewPriceMidUnit END / ResultSet.LastPrice) * 100 - 100
@@ -423,11 +423,11 @@ BEGIN
         ObjectFloat_Juridical_Percent.ValueData  ::TFloat AS Juridical_Percent,
         ObjectFloat_Contract_Percent.ValueData   ::TFloat AS Contract_Percent,
 
-        ROUND ((CASE WHEN COALESCE (ResultSet.Juridical_Price, 0) > 0 AND (ResultSet.NewPrice < ResultSet.MidPriceUnit AND 
-                          COALESCE (ResultSet.NewPrice, 0) > 0 AND ResultSet.NewPrice < ResultSet.MidPriceUnit AND 
+        ROUND ((CASE WHEN COALESCE (ResultSet.Juridical_Price, 0) > 0 AND (ResultSet.NewPrice <= ResultSet.MidPriceUnit AND 
+                          COALESCE (ResultSet.NewPrice, 0) > 0 AND ResultSet.NewPrice <= ResultSet.MidPriceUnit AND 
                           COALESCE ( Abs((ResultSet.MidPriceUnit / ResultSet.NewPrice) * 100 - 100), 0) <= 10 or ResultSet.IsTop_Goods = True)
                        OR COALESCE (ResultSet.Juridical_Price, 0) = 0 AND COALESCE (ResultSet.NewPrice, 0) > 0 AND  
-                          ResultSet.NewPrice < ResultSet.MidPriceUnit AND
+                          ResultSet.NewPrice <= ResultSet.MidPriceUnit AND
                           COALESCE ( Abs((ResultSet.MidPriceUnit / ResultSet.NewPrice) * 100 - 100), 0) <= 10              
                      THEN ResultSet.NewPrice
                      ELSE ResultSet.NewPriceMidUnit END - ResultSet.LastPrice) * ResultSet.RemainsCount, 2) :: TFloat AS SumReprice,
@@ -439,22 +439,22 @@ BEGIN
         ResultSet.PriceUnitBase,
         CAST (CASE WHEN COALESCE(ResultSet.MidPriceSale,0) = 0 
                    THEN 100 
-                   ELSE ((CASE WHEN COALESCE (ResultSet.Juridical_Price, 0) > 0 AND (ResultSet.NewPrice < ResultSet.MidPriceUnit AND 
-                                    COALESCE (ResultSet.NewPrice, 0) > 0 AND ResultSet.NewPrice < ResultSet.MidPriceUnit AND 
+                   ELSE ((CASE WHEN COALESCE (ResultSet.Juridical_Price, 0) > 0 AND (ResultSet.NewPrice <= ResultSet.MidPriceUnit AND 
+                                    COALESCE (ResultSet.NewPrice, 0) > 0 AND ResultSet.NewPrice <= ResultSet.MidPriceUnit AND 
                                     COALESCE ( Abs((ResultSet.MidPriceUnit / ResultSet.NewPrice) * 100 - 100), 0) <= 10 or ResultSet.IsTop_Goods = True)
                                  OR COALESCE (ResultSet.Juridical_Price, 0) = 0 AND COALESCE (ResultSet.NewPrice, 0) > 0 AND 
-                                    ResultSet.NewPrice < ResultSet.MidPriceUnit AND
+                                    ResultSet.NewPrice <= ResultSet.MidPriceUnit AND
                                     COALESCE ( Abs((ResultSet.MidPriceUnit / ResultSet.NewPrice) * 100 - 100), 0) <= 10              
                                THEN ResultSet.NewPrice
                                ELSE ResultSet.NewPriceMidUnit END
                                   / ResultSet.MidPriceSale) * 100 - 100) END AS NUMERIC (16, 1)) :: TFloat AS MidPriceDiff,
         CAST (CASE WHEN COALESCE(ResultSet.MidPriceUnit,0) = 0 
                    THEN 100 
-                   ELSE ((CASE WHEN COALESCE (ResultSet.Juridical_Price, 0) > 0 AND (ResultSet.NewPrice < ResultSet.MidPriceUnit AND 
-                                    COALESCE (ResultSet.NewPrice, 0) > 0 AND ResultSet.NewPrice < ResultSet.MidPriceUnit AND 
+                   ELSE ((CASE WHEN COALESCE (ResultSet.Juridical_Price, 0) > 0 AND (ResultSet.NewPrice <= ResultSet.MidPriceUnit AND 
+                                    COALESCE (ResultSet.NewPrice, 0) > 0 AND ResultSet.NewPrice <= ResultSet.MidPriceUnit AND 
                                     COALESCE ( Abs((ResultSet.MidPriceUnit / ResultSet.NewPrice) * 100 - 100), 0) <= 10 or ResultSet.IsTop_Goods = True)
                                  OR COALESCE (ResultSet.Juridical_Price, 0) = 0 AND COALESCE (ResultSet.NewPrice, 0) > 0 AND 
-                                    ResultSet.NewPrice < ResultSet.MidPriceUnit AND 
+                                    ResultSet.NewPrice <= ResultSet.MidPriceUnit AND 
                                     COALESCE ( Abs((ResultSet.MidPriceUnit / ResultSet.NewPrice) * 100 - 100), 0) <= 10              
                                THEN ResultSet.NewPrice
                                ELSE ResultSet.NewPriceMidUnit END
@@ -471,29 +471,29 @@ BEGIN
           ResultSet.isPromoBonus AND ResultSet.isJuridicalPromo  AS isUseReprice,
                   
           -- Признак переоценки
-        COALESCE(CASE WHEN COALESCE (ResultSet.Juridical_Price, 0) > 0 AND (ResultSet.NewPrice < ResultSet.MidPriceUnit  AND 
-                           COALESCE (ResultSet.NewPrice, 0) > 0 AND ResultSet.NewPrice < ResultSet.MidPriceUnit AND 
+        COALESCE(CASE WHEN COALESCE (ResultSet.Juridical_Price, 0) > 0 AND (ResultSet.NewPrice <= ResultSet.MidPriceUnit  AND 
+                           COALESCE (ResultSet.NewPrice, 0) > 0 AND ResultSet.NewPrice <= ResultSet.MidPriceUnit AND 
                            COALESCE ( Abs((ResultSet.MidPriceUnit / ResultSet.NewPrice) * 100 - 100), 0) <= 10 or ResultSet.IsTop_Goods = True)
                         OR COALESCE (ResultSet.Juridical_Price, 0) = 0 AND COALESCE (ResultSet.NewPrice, 0) > 0 AND 
-                           ResultSet.NewPrice < ResultSet.MidPriceUnit AND
+                           ResultSet.NewPrice <= ResultSet.MidPriceUnit AND
                            COALESCE ( Abs((ResultSet.MidPriceUnit / ResultSet.NewPrice) * 100 - 100), 0) <= 10              
                       THEN ResultSet.NewPrice
                       ELSE ResultSet.NewPriceMidUnit END, 0) > 0 AS Reprice,
 
           -- Признак переоценки
-        COALESCE(CASE WHEN COALESCE (ResultSet.Juridical_Price, 0) > 0 AND (ResultSet.NewPrice < ResultSet.MidPriceUnit  AND 
-                           COALESCE (ResultSet.NewPrice, 0) > 0 AND ResultSet.NewPrice < ResultSet.MidPriceUnit AND 
+        COALESCE(CASE WHEN COALESCE (ResultSet.Juridical_Price, 0) > 0 AND (ResultSet.NewPrice <= ResultSet.MidPriceUnit  AND 
+                           COALESCE (ResultSet.NewPrice, 0) > 0 AND ResultSet.NewPrice <= ResultSet.MidPriceUnit AND 
                            COALESCE ( Abs((ResultSet.MidPriceUnit / ResultSet.NewPrice) * 100 - 100), 0) <= 10 or ResultSet.IsTop_Goods = True)
                         OR COALESCE (ResultSet.Juridical_Price, 0) = 0 AND COALESCE (ResultSet.NewPrice, 0) > 0 AND 
-                           ResultSet.NewPrice < ResultSet.MidPriceUnit AND
+                           ResultSet.NewPrice <= ResultSet.MidPriceUnit AND
                            COALESCE ( Abs((ResultSet.MidPriceUnit / ResultSet.NewPrice) * 100 - 100), 0) <= 10              
                       THEN ResultSet.NewPrice
                       ELSE ResultSet.NewPriceMidUnit END, 0) > 0 AND 
-        COALESCE(CASE WHEN COALESCE (ResultSet.Juridical_Price, 0) > 0 AND (ResultSet.NewPrice < ResultSet.MidPriceUnit AND 
-                           COALESCE (ResultSet.NewPrice, 0) > 0 AND ResultSet.NewPrice < ResultSet.MidPriceUnit AND 
+        COALESCE(CASE WHEN COALESCE (ResultSet.Juridical_Price, 0) > 0 AND (ResultSet.NewPrice <= ResultSet.MidPriceUnit AND 
+                           COALESCE (ResultSet.NewPrice, 0) > 0 AND ResultSet.NewPrice <= ResultSet.MidPriceUnit AND 
                            COALESCE ( Abs((ResultSet.MidPriceUnit / ResultSet.NewPrice) * 100 - 100), 0) <= 10 or ResultSet.IsTop_Goods = True)
                         OR COALESCE (ResultSet.Juridical_Price, 0) = 0 AND COALESCE (ResultSet.NewPrice, 0) > 0 AND 
-                           ResultSet.NewPrice < ResultSet.MidPriceUnit AND
+                           ResultSet.NewPrice <= ResultSet.MidPriceUnit AND
                            COALESCE ( Abs((ResultSet.MidPriceUnit / ResultSet.NewPrice) * 100 - 100), 0) <= 10
                       THEN ResultSet.NewPrice
                       ELSE ResultSet.NewPriceMidUnit END, 0) <> COALESCE(ResultSet.LastPrice, 0) AS isNewPrice,

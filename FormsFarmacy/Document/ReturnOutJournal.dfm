@@ -5,7 +5,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 823
-  ExplicitHeight = 507
+  ExplicitHeight = 508
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -352,39 +352,6 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   end
   inherited ActionList: TActionList
     Left = 471
-    inherited actInsert: TdsdInsertUpdateAction
-      Category = 'Edit'
-      ImageIndex = -1
-      FormName = 'TReturnOutForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-    end
-    inherited actInsertMask: TdsdInsertUpdateAction
-      Category = 'Edit'
-    end
-    inherited actUpdate: TdsdInsertUpdateAction
-      Category = 'Edit'
-      FormName = 'TReturnOutForm'
-    end
     object actPrintOptima: TdsdPrintAction [5]
       Category = 'DSDLib'
       MoveParams = <
@@ -436,10 +403,43 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    inherited actUnComplete: TdsdChangeMovementStatus
-      Category = 'Complete'
+    inherited actInsert: TdsdInsertUpdateAction
+      Category = 'Edit'
+      ImageIndex = -1
+      FormName = 'TReturnOutForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+    end
+    inherited actInsertMask: TdsdInsertUpdateAction
+      Category = 'Edit'
+    end
+    inherited actUpdate: TdsdInsertUpdateAction
+      Category = 'Edit'
+      FormName = 'TReturnOutForm'
     end
     inherited actComplete: TdsdChangeMovementStatus
+      Category = 'Complete'
+    end
+    inherited actUnComplete: TdsdChangeMovementStatus
       Category = 'Complete'
     end
     inherited actSetErased: TdsdChangeMovementStatus
@@ -457,6 +457,18 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     inherited mactSetErasedList: TMultiAction
       Category = 'Complete'
     end
+    inherited mactSimpleReCompleteList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited mactSimpleCompleteList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited mactSimpleUncompleteList: TMultiAction
+      Category = 'Complete'
+    end
+    inherited mactSimpleErasedList: TMultiAction
+      Category = 'Complete'
+    end
     inherited spReCompete: TdsdExecStoredProc
       Category = 'Complete'
     end
@@ -467,18 +479,6 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       Category = 'Complete'
     end
     inherited spErased: TdsdExecStoredProc
-      Category = 'Complete'
-    end
-    inherited mactSimpleCompleteList: TMultiAction
-      Category = 'Complete'
-    end
-    inherited mactSimpleUncompleteList: TMultiAction
-      Category = 'Complete'
-    end
-    inherited mactSimpleReCompleteList: TMultiAction
-      Category = 'Complete'
-    end
-    inherited mactSimpleErasedList: TMultiAction
       Category = 'Complete'
     end
     object actPrint: TdsdPrintAction
@@ -617,14 +617,14 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         end
         item
           Name = 'StartData'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndData'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -668,7 +668,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         end
         item
           Name = 'OperDatePartner'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'OperDatePartner'
           DataType = ftDateTime
@@ -677,7 +677,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         end
         item
           Name = 'AdjustingOurDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'AdjustingOurDate'
           DataType = ftDateTime
@@ -832,7 +832,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','
@@ -1120,7 +1120,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       end
       item
         Name = 'OperDatePartner'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDatePartner'
         DataType = ftDateTime
@@ -1128,7 +1128,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       end
       item
         Name = 'AdjustingOurDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'AdjustingOurDate'
         DataType = ftDateTime
@@ -1268,7 +1268,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       end
       item
         Name = 'inAdjustingOurDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'AdjustingOurDate'
         DataType = ftDateTime
@@ -1315,6 +1315,28 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Name = 'outText'
         Value = Null
         DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSpecialLighting'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTextColor'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outColor'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBold'
+        Value = Null
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

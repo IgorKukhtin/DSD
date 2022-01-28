@@ -1073,7 +1073,11 @@ begin
                                  PUSHDS.FieldByName('Params').AsString,
                                  PUSHDS.FieldByName('TypeParams').AsString,
                                  PUSHDS.FieldByName('ValueParams').AsString,
-                                 PUSHDS.FieldByName('Beep').AsInteger);
+                                 PUSHDS.FieldByName('Beep').AsInteger,
+                                 PUSHDS.FieldByName('SpecialLighting').AsBoolean,
+                                 PUSHDS.FieldByName('TextColor').AsInteger,
+                                 PUSHDS.FieldByName('Color').AsInteger,
+                                 PUSHDS.FieldByName('Bold').AsBoolean);
         end;
       finally
          PUSHDS.Delete;

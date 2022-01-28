@@ -21,7 +21,6 @@ object PUSHMessageForm: TPUSHMessageForm
     Caption = 'pn1'
     ShowCaption = False
     TabOrder = 0
-    ExplicitWidth = 577
     object Memo: TcxMemo
       Left = 1
       Top = 1
@@ -41,8 +40,6 @@ object PUSHMessageForm: TPUSHMessageForm
       Style.IsFontAssigned = True
       TabOrder = 0
       OnKeyDown = MemoKeyDown
-      ExplicitLeft = 2
-      ExplicitTop = 3
       Height = 294
       Width = 599
     end
@@ -62,7 +59,6 @@ object PUSHMessageForm: TPUSHMessageForm
     ParentFont = False
     ShowCaption = False
     TabOrder = 1
-    ExplicitWidth = 577
     DesignSize = (
       601
       41)
@@ -76,7 +72,6 @@ object PUSHMessageForm: TPUSHMessageForm
       Caption = #1054#1090#1084#1077#1085#1072
       ModalResult = 8
       TabOrder = 0
-      ExplicitLeft = 485
     end
     object bbOk: TcxButton
       Left = 416
@@ -88,10 +83,10 @@ object PUSHMessageForm: TPUSHMessageForm
       Default = True
       ModalResult = 1
       TabOrder = 1
-      ExplicitLeft = 392
     end
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Active = False
     Left = 72
     Top = 16
   end

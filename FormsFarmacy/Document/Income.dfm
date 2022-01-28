@@ -4309,6 +4309,28 @@
         Value = Null
         DataType = ftWideString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSpecialLighting'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTextColor'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outColor'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBold'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 906

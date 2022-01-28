@@ -39,17 +39,23 @@ type
     FParams : string;
     FTypeParams : string;
     FValueParams : string;
+
+    FSpecialLighting : Boolean;
   public
     { Public declarations }
   end;
 
   function ShowPUSHMessageFarmacy(AMessage : string;
-                               AFormName : string = '';
-                               AButton : string = '';
-                               AParams : string = '';
-                               ATypeParams : string = '';
-                               AValueParams : string = '';
-                               ABeep : Integer = 0) : boolean;
+                                  AFormName : string = '';
+                                  AButton : string = '';
+                                  AParams : string = '';
+                                  ATypeParams : string = '';
+                                  AValueParams : string = '';
+                                  ABeep : Integer = 0;
+                                  ASpecialLighting : Boolean = False;
+                                  ATextColor : Integer = clWindowText;
+                                  AColor : Integer = clCream;
+                                  ABold : Boolean = False) : boolean;
 
 implementation
 
@@ -107,8 +113,11 @@ end;
 
 procedure TPUSHMessageFarmacyForm.FormDestroy(Sender: TObject);
 begin
-  Memo.Style.Font.Size := Memo.Style.Font.Size - 4;
-  UserSettingsStorageAddOn.SaveUserSettings;
+  if not FSpecialLighting then
+  begin
+    Memo.Style.Font.Size := Memo.Style.Font.Size - 4;
+    UserSettingsStorageAddOn.SaveUserSettings;
+  end;
 end;
 
 procedure TPUSHMessageFarmacyForm.MemoKeyDown(Sender: TObject; var Key: Word;
@@ -145,7 +154,11 @@ function ShowPUSHMessageFarmacy(AMessage : string;
                              AParams : string = '';
                              ATypeParams : string = '';
                              AValueParams : string = '';
-                             ABeep : Integer = 0) : boolean;
+                             ABeep : Integer = 0;
+                             ASpecialLighting : Boolean = False;
+                             ATextColor : Integer = clWindowText;
+                             AColor : Integer = clCream;
+                             ABold : Boolean = False) : boolean;
   var PUSHMessageFarmacyForm : TPUSHMessageFarmacyForm;
 begin
 
@@ -165,6 +178,7 @@ begin
     PUSHMessageFarmacyForm.FParams := AParams;
     PUSHMessageFarmacyForm.FTypeParams := ATypeParams;
     PUSHMessageFarmacyForm.FValueParams := AValueParams;
+    PUSHMessageFarmacyForm.FSpecialLighting := ASpecialLighting;
 
     if AButton <> '' then
     begin
@@ -174,6 +188,13 @@ begin
       PUSHMessageFarmacyForm.btOpenForm.Caption := AButton;
       PUSHMessageFarmacyForm.btOpenForm.Visible := True;
     end else PUSHMessageFarmacyForm.btOpenForm.Visible := False;
+
+    if ASpecialLighting then
+    begin
+      PUSHMessageFarmacyForm.Memo.Style.Color := AColor;
+      PUSHMessageFarmacyForm.Memo.Style.TextColor := ATextColor;
+      if ABold then PUSHMessageFarmacyForm.Memo.Style.TextStyle := PUSHMessageFarmacyForm.Memo.Style.TextStyle + [fsBold];
+    end;
 
     Result := PUSHMessageFarmacyForm.ShowModal = mrOk;
   finally
