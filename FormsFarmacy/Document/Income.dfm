@@ -1353,7 +1353,7 @@
           Action = actCalculateSalePrice
         end
         item
-          Action = actLinkCheck
+          Action = actPUSHLinkCheck
         end
         item
           Action = actUpdate_BranchDate
@@ -2016,6 +2016,21 @@
         item
         end>
       Caption = 'actPUSHNewPretension'
+    end
+    object actPUSHLinkCheck: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHLinkCheck
+      StoredProcList = <
+        item
+          StoredProc = spPUSHLinkCheck
+        end
+        item
+        end
+        item
+        end>
+      Caption = 'actPUSHLinkCheck'
+      PUSHMessageType = pmtWarning
     end
   end
   inherited MasterDS: TDataSource
@@ -4334,6 +4349,62 @@
       end>
     PackSize = 1
     Left = 906
+    Top = 352
+  end
+  object spPUSHLinkCheck: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_Income_LinkCheck'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSpecialLighting'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTextColor'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outColor'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBold'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 418
     Top = 352
   end
 end

@@ -2769,9 +2769,14 @@ begin
           end else if ShowPUSHMessageCash(PUSHDS.FieldByName('Text').AsString, cResult,
             PUSHDS.FieldByName('isPoll').AsBoolean,
             PUSHDS.FieldByName('FormName').AsString,
-            PUSHDS.FieldByName('Button').AsString, PUSHDS.FieldByName('Params')
-            .AsString, PUSHDS.FieldByName('TypeParams').AsString,
-            PUSHDS.FieldByName('ValueParams').AsString) then
+            PUSHDS.FieldByName('Button').AsString,
+            PUSHDS.FieldByName('Params').AsString,
+            PUSHDS.FieldByName('TypeParams').AsString,
+            PUSHDS.FieldByName('ValueParams').AsString,
+            PUSHDS.FieldByName('isSpecialLighting').AsBoolean,
+            PUSHDS.FieldByName('TextColor').AsInteger,
+            PUSHDS.FieldByName('Color').AsInteger,
+            PUSHDS.FieldByName('isBold').AsBoolean) then
           begin
             try
               spInsert_MovementItem_PUSH.ParamByName('inMovement').Value :=
@@ -2793,9 +2798,14 @@ begin
           ShowPUSHMessageCash(PUSHDS.FieldByName('Text').AsString, cResult,
             PUSHDS.FieldByName('isPoll').AsBoolean,
             PUSHDS.FieldByName('FormName').AsString,
-            PUSHDS.FieldByName('Button').AsString, PUSHDS.FieldByName('Params')
-            .AsString, PUSHDS.FieldByName('TypeParams').AsString,
-            PUSHDS.FieldByName('ValueParams').AsString);
+            PUSHDS.FieldByName('Button').AsString,
+            PUSHDS.FieldByName('Params').AsString,
+            PUSHDS.FieldByName('TypeParams').AsString,
+            PUSHDS.FieldByName('ValueParams').AsString,
+            PUSHDS.FieldByName('isSpecialLighting').AsBoolean,
+            PUSHDS.FieldByName('TextColor').AsInteger,
+            PUSHDS.FieldByName('Color').AsInteger,
+            PUSHDS.FieldByName('isBold').AsBoolean);
       finally
         PUSHDS.Delete;
       end;

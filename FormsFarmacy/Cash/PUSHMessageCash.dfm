@@ -25,10 +25,6 @@ object PUSHMessageCashForm: TPUSHMessageCashForm
       Left = 1
       Top = 1
       Align = alClient
-      Lines.Strings = (
-        'jhjghjkghkfgkf'
-        'gdfgdfshdsghsg'
-        'kfgkfjlkfh')
       ParentFont = False
       PopupMenu = PopupMenu
       Properties.Alignment = taLeftJustify
@@ -176,6 +172,7 @@ object PUSHMessageCashForm: TPUSHMessageCashForm
     Top = 88
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Active = False
     Left = 72
     Top = 16
   end

@@ -42,6 +42,7 @@ type
     FParams : string;
     FTypeParams : string;
     FValueParams : string;
+    FSpecialLighting : Boolean;
   public
     { Public declarations }
   end;
@@ -53,7 +54,11 @@ type
                                AButton : string = '';
                                AParams : string = '';
                                ATypeParams : string = '';
-                               AValueParams : string = '') : boolean;
+                               AValueParams : string = '';
+                               ASpecialLighting : Boolean = False;
+                               ATextColor : Integer = clWindowText;
+                               AColor : Integer = clCream;
+                               ABold : Boolean = False) : boolean;
 
 implementation
 
@@ -107,8 +112,11 @@ end;
 
 procedure TPUSHMessageCashForm.FormDestroy(Sender: TObject);
 begin
-  Memo.Style.Font.Size := Memo.Style.Font.Size - 4;
-  UserSettingsStorageAddOn.SaveUserSettings;
+  if not FSpecialLighting then
+  begin
+    Memo.Style.Font.Size := Memo.Style.Font.Size - 4;
+    UserSettingsStorageAddOn.SaveUserSettings;
+  end;
 end;
 
 procedure TPUSHMessageCashForm.MemoKeyDown(Sender: TObject; var Key: Word;
@@ -146,7 +154,11 @@ function ShowPUSHMessageCash(AMessage : string;
                              AButton : string = '';
                              AParams : string = '';
                              ATypeParams : string = '';
-                             AValueParams : string = '') : boolean;
+                             AValueParams : string = '';
+                             ASpecialLighting : Boolean = False;
+                             ATextColor : Integer = clWindowText;
+                             AColor : Integer = clCream;
+                             ABold : Boolean = False) : boolean;
   var PUSHMessageCashForm : TPUSHMessageCashForm;
 begin
 
@@ -166,6 +178,7 @@ begin
     PUSHMessageCashForm.FParams := AParams;
     PUSHMessageCashForm.FTypeParams := ATypeParams;
     PUSHMessageCashForm.FValueParams := AValueParams;
+    PUSHMessageCashForm.FSpecialLighting := ASpecialLighting;
 
     if APoll then
     begin
@@ -189,6 +202,13 @@ begin
       PUSHMessageCashForm.btOpenForm.Caption := AButton;
       PUSHMessageCashForm.btOpenForm.Visible := True;
     end else PUSHMessageCashForm.btOpenForm.Visible := False;
+
+    if ASpecialLighting then
+    begin
+      PUSHMessageCashForm.Memo.Style.Color := AColor;
+      PUSHMessageCashForm.Memo.Style.TextColor := ATextColor;
+      if ABold then PUSHMessageCashForm.Memo.Style.TextStyle := PUSHMessageCashForm.Memo.Style.TextStyle + [fsBold];
+    end;
 
     case PUSHMessageCashForm.ShowModal of
       mrOk : Result := True;
