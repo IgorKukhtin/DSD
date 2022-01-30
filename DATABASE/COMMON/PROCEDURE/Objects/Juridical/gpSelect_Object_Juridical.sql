@@ -31,6 +31,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                StartPromo TDateTime, EndPromo TDateTime,
                GUID TVarChar, isGUID Boolean,
                isBranchAll Boolean,
+               isNotTare Boolean,
                isVatPrice Boolean,
                VatPriceDate TDateTime,
                isErased Boolean
@@ -117,6 +118,7 @@ BEGIN
                                                     , zc_ObjectBoolean_Juridical_isOrderMin()
                                                     , zc_ObjectBoolean_Juridical_isBranchAll()
                                                     , zc_ObjectBoolean_Juridical_isVatPrice()
+                                                    , zc_ObjectBoolean_Juridical_isNotTare()
                                                     )*/
                        )
 
@@ -202,6 +204,7 @@ BEGIN
        , ObjectString_GUID.ValueData AS GUID
        , CASE WHEN ObjectString_GUID.ValueData <> '' THEN TRUE ELSE FALSE END :: Boolean AS isGUID
        , COALESCE (ObjectBoolean_isBranchAll.ValueData, FALSE)                :: Boolean AS isBranchAll
+       , COALESCE (ObjectBoolean_isNotTare.ValueData, FALSE)                  :: Boolean AS isNotTare
 
        , COALESCE (ObjectBoolean_isVatPrice.ValueData, FALSE) :: Boolean   AS isVatPrice
        , COALESCE (ObjectDate_VatPrice.ValueData, NULL)       :: TDateTime AS VatPriceDate
@@ -218,32 +221,36 @@ BEGIN
                                   ON ObjectString_GLNCode.ObjectId = Object_Juridical.Id
                                  AND ObjectString_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
         LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isCorporate
-                                ON ObjectBoolean_isCorporate.ObjectId = Object_Juridical.Id
-                               AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
+                                   ON ObjectBoolean_isCorporate.ObjectId = Object_Juridical.Id
+                                  AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
         LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isTaxSummary
-                                ON ObjectBoolean_isTaxSummary.ObjectId = Object_Juridical.Id
-                               AND ObjectBoolean_isTaxSummary.DescId = zc_ObjectBoolean_Juridical_isTaxSummary()
+                                   ON ObjectBoolean_isTaxSummary.ObjectId = Object_Juridical.Id
+                                  AND ObjectBoolean_isTaxSummary.DescId = zc_ObjectBoolean_Juridical_isTaxSummary()
         LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isDiscountPrice
-                                ON ObjectBoolean_isDiscountPrice.ObjectId = Object_Juridical.Id
-                               AND ObjectBoolean_isDiscountPrice.DescId = zc_ObjectBoolean_Juridical_isDiscountPrice()
+                                   ON ObjectBoolean_isDiscountPrice.ObjectId = Object_Juridical.Id
+                                  AND ObjectBoolean_isDiscountPrice.DescId = zc_ObjectBoolean_Juridical_isDiscountPrice()
         LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isPriceWithVAT
-                                ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id
-                               AND ObjectBoolean_isPriceWithVAT.DescId = zc_ObjectBoolean_Juridical_isPriceWithVAT()
+                                   ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id
+                                  AND ObjectBoolean_isPriceWithVAT.DescId = zc_ObjectBoolean_Juridical_isPriceWithVAT()
         LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isLongUKTZED
-                                ON ObjectBoolean_isLongUKTZED.ObjectId = Object_Juridical.Id
-                               AND ObjectBoolean_isLongUKTZED.DescId = zc_ObjectBoolean_Juridical_isLongUKTZED()
+                                   ON ObjectBoolean_isLongUKTZED.ObjectId = Object_Juridical.Id
+                                  AND ObjectBoolean_isLongUKTZED.DescId = zc_ObjectBoolean_Juridical_isLongUKTZED()
 
         LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isOrderMin
-                                ON ObjectBoolean_isOrderMin.ObjectId = Object_Juridical.Id
-                               AND ObjectBoolean_isOrderMin.DescId = zc_ObjectBoolean_Juridical_isOrderMin()
+                                   ON ObjectBoolean_isOrderMin.ObjectId = Object_Juridical.Id
+                                  AND ObjectBoolean_isOrderMin.DescId = zc_ObjectBoolean_Juridical_isOrderMin()
+
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isNotTare
+                                   ON ObjectBoolean_isNotTare.ObjectId = Object_Juridical.Id
+                                  AND ObjectBoolean_isNotTare.DescId   = zc_ObjectBoolean_Juridical_isNotTare()
 
         LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isBranchAll
                                 ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
                                AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
 
         LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isVatPrice
-                                ON ObjectBoolean_isVatPrice.ObjectId = Object_Juridical.Id 
-                               AND ObjectBoolean_isVatPrice.DescId = zc_ObjectBoolean_Juridical_isVatPrice()
+                                   ON ObjectBoolean_isVatPrice.ObjectId = Object_Juridical.Id 
+                                  AND ObjectBoolean_isVatPrice.DescId = zc_ObjectBoolean_Juridical_isVatPrice()
         LEFT JOIN tmpObjectDate AS ObjectDate_VatPrice
                              ON ObjectDate_VatPrice.ObjectId = Object_Juridical.Id
                             --AND ObjectDate_VatPrice.DescId = zc_ObjectDate_Juridical_VatPrice()
@@ -349,6 +356,7 @@ ALTER FUNCTION gpSelect_Object_Juridical (Boolean, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 30.01.22
  20.10.21         * SummOrderMin
  24.10.19         * isBranchAll
  24.10.19         * isOrderMin

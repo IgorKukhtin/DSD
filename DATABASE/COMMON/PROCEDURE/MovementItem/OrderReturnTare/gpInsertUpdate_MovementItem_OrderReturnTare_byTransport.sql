@@ -32,7 +32,10 @@ BEGIN
 
      --Если док. не сохранен док. - сохраняем или пересохраняем с новім путевім
      ioMovementId := lpInsertUpdate_Movement_OrderReturnTare (ioId        := COALESCE (ioMovementId,0)
-                                                            , inInvNumber := inInvNumber
+                                                            , inInvNumber := CASE WHEN COALESCE (inInvNumber, '') = '' 
+                                                                                  THEN CAST (NEXTVAL ('movement_OrderReturnTare_seq') AS TVarChar)
+                                                                                  ELSE inInvNumber
+                                                                             END ::TVarChar
                                                             , inOperDate  := inOperDate
                                                             , inMovementId_Transport := inMovementId_Transport
                                                             , inComment   := ''::TVarChar

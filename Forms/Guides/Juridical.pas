@@ -113,6 +113,14 @@ type
     bbInsert_VatPrice: TdxBarButton;
     FormParams: TdsdFormParams;
     SummOrderMin: TcxGridDBColumn;
+    spUpdate_IsNotTare: TdsdStoredProc;
+    actUpdate_IsNotTare: TdsdExecStoredProc;
+    macUpdate_IsNotTare_list: TMultiAction;
+    macUpdate_IsNotTare_Yes: TMultiAction;
+    spUpdate_IsNotTare_Yes: TdsdStoredProc;
+    actUpdate_IsNotTare_Yes: TdsdExecStoredProc;
+    bbUpdate_IsNotTare: TdxBarButton;
+    bbUpdate_IsNotTare_Yes: TdxBarButton;
   private
     { Private declarations }
   public
