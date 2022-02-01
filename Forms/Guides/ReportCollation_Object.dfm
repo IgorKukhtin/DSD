@@ -28,7 +28,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 99
+    ExplicitLeft = 192
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1262,8 +1262,8 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102' - '#1053#1077#1090
-      Hint = #1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102' - '#1053#1077#1090
+      Caption = #1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102' - '#1044#1072
+      Hint = #1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102' - '#1044#1072
       ImageIndex = 76
     end
     object macUpdate_Buh_No: TMultiAction
@@ -1346,7 +1346,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         end
         item
           Name = 'inEndDate'
-          Value = 'NULL'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'EndDate'
           DataType = ftDateTime
@@ -1529,10 +1529,13 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 328
     Top = 264
   end
@@ -1583,7 +1586,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       end
       item
         Name = 'inStartRemains'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = ClientDataSet
         ComponentItem = 'StartRemains'
         DataType = ftFloat
@@ -1610,7 +1613,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -1618,7 +1621,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -2006,7 +2009,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       end
       item
         Name = 'inIsBuh'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2030,7 +2033,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       end
       item
         Name = 'inIsBuh'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

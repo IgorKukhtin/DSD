@@ -34,7 +34,7 @@ BEGIN
                                   FROM Movement
                                   WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                                     AND Movement.DescId = zc_Movement_OrderReturnTare()
-                                   -- AND Movement.StatusId = zc_Enum_Status_Complete()
+                                    AND Movement.StatusId = zc_Enum_Status_Complete()
                                   )
            --
          , tmpMovementLinkMovement AS (SELECT MovementLinkMovement.*

@@ -1392,10 +1392,6 @@
 				<Form>Report_GoodsMI_ProductionForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionSeparate.pas">
-				<Form>Report_GoodsMI_ProductionSeparateForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Member.pas">
 				<Form>MemberForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -4672,6 +4668,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_DefermentPaymentOLAPTableDialog.pas">
 				<Form>Report_DefermentPaymentOLAPTableDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionSeparate.pas">
+				<Form>Report_GoodsMI_ProductionSeparateForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
