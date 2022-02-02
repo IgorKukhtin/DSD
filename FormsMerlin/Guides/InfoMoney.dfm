@@ -570,7 +570,7 @@ object InfoMoneyForm: TInfoMoneyForm
           StoredProc = spGetImportSettingId
         end>
       Caption = 'actGetImportSetting'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1057#1090#1072#1090#1100#1080' '#1059#1055' '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1057#1090#1072#1090#1100#1080'  '#1080#1079' '#1092#1072#1081#1083#1072
     end
     object macStartLoad: TMultiAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
