@@ -28,9 +28,9 @@ $BODY$
    -- Если код не установлен, определяем его каи последний+1
    inCode := lfGet_ObjectCode (inCode, zc_Object_InfoMoney());
     
-   -- проверка прав уникальности для свойства <Наименование Касса>  
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_InfoMoney(), inName);
-   -- проверка прав уникальности для свойства <Код Кассы>
+   -- проверка прав уникальности для свойства <Наименование >  
+  -- PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_InfoMoney(), inName);
+   -- проверка прав уникальности для свойства <Код >
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_InfoMoney(), inCode);
 
    -- сохранили <Объект>
