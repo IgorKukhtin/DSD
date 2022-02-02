@@ -77,7 +77,7 @@ BEGIN
                                     WHERE ObjectLink_Goods_Object.ChildObjectId = vbRetailId
                                     )
                         -- Результат
-                        SELECT string_agg (lfGet_Object_ValueData (tmpMI.PartnerGoodsId ), Chr(13))
+                        SELECT string_agg (lfGet_Object_ValueData (tmpMI.PartnerGoodsId ), Chr(13)||Chr(13))
                         FROM (SELECT tmpMI.PartnerGoodsId
                               FROM tmpMI
                                   LEFT JOIN tmpLink ON tmpLink.PartnerGoodsId = tmpMI.PartnerGoodsId
@@ -88,26 +88,27 @@ BEGIN
     
      IF COALESCE (vbMessageText, '') <> ''
      THEN 
-         outText := 'Проверьте привязку товаров поставщика '||vbMessageText||Chr(13)||Chr(10)||Chr(13)||Chr(10);
+         outText := 'Проверьте привязку товаров поставщика '||Chr(13)||Chr(10)||vbMessageText||Chr(13)||Chr(10)||Chr(13)||Chr(10);
      END IF;    
      
      vbMessageText := '';
                  
      -- информация по товарам Цена которых более 25% отл. отличается от средней 
-     vbMessageText := (SELECT STRING_AGG ('(' || tmp.GoodsCode ||') '||tmp.GoodsName, Chr(13) ORDER BY tmp.GoodsName)
+     vbMessageText := (SELECT STRING_AGG (tmp.GoodsCode ||' '||tmp.GoodsName, Chr(13)||Chr(13) ORDER BY tmp.GoodsName)
                        FROM gpSelect_MovementItem_Income (inMovementId := inMovementId  , inShowAll := FALSE , inIsErased := FALSE ,  inSession := inSession) as tmp
                        WHERE tmp.AVGIncomePriceWarning = TRUE
                        ) :: Text;
 
      IF COALESCE (vbMessageText, '') <> ''
      THEN 
-         outText :=  outText ||' Товары, цена которых отл. >25%: '||vbMessageText||Chr(13)||Chr(10)||Chr(13)||Chr(10);
+         outText :=  outText || ' Проверить правильность привязки кода!!!'||Chr(13)||Chr(10)||
+                                ' Есть позиции с ценой более/менее 25%: '||Chr(13)||Chr(10)||Chr(13)||Chr(10)||vbMessageText||Chr(13)||Chr(10)||Chr(13)||Chr(10);
      END IF;   
      
      ---
      vbMessageText := '';
      -- информация по товарам Цена которых менее 1,5 грн
-     vbMessageText := (SELECT STRING_AGG ('(' || Object_Goods.ObjectCode ||') '||Object_Goods.ValueData, Chr(13) ORDER BY Object_Goods.ValueData)
+     vbMessageText := (SELECT STRING_AGG (Object_Goods.ObjectCode ||' '||Object_Goods.ValueData, Chr(13)||Chr(13) ORDER BY Object_Goods.ValueData)
                        FROM MovementItem 
                             INNER JOIN MovementItemFloat AS MIFloat_Price
                                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -121,7 +122,8 @@ BEGIN
 
      IF COALESCE (vbMessageText, '') <> ''
      THEN 
-         outText :=  outText || 'Внимание!!! В приходной накладной есть товары с Ценой без НДС меньше чем 2,5 грн.'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||'ПРОВЕРЬТЕ - является ли этот товар СЭМПЛОВЫМ!!!'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||vbMessageText;
+         outText :=  outText || ' Проверить является ли этот товар СЭМПЛОВЫМ!!!'||Chr(13)||Chr(10)||
+                                ' Есть товары с Ценой без НДС меньше чем 2,5 грн. :'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||vbMessageText;
      END IF;
      
      outShowMessage := COALESCE (outText, '') <> '';
@@ -136,4 +138,4 @@ $BODY$
  28.01.22                                                       *
 */
 --
-select * from gpSelect_ShowPUSH_Income_LinkCheck (inMovementId := 18094225  ,  inSession := '3'); 
+select * from gpSelect_ShowPUSH_Income_LinkCheck (inMovementId := 26610992   ,  inSession := '3'); 

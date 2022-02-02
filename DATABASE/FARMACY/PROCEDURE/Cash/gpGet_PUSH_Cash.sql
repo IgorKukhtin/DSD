@@ -518,9 +518,9 @@ BEGIN
          LEFT JOIN MovementString AS MovementString_FiscalCheckNumber
                                   ON MovementString_FiscalCheckNumber.MovementId = Movement.Id
                                  AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
-    WHERE COALESCE(MovementLinkObject_JackdawsChecks.ObjectId, 0) = 0
-      AND (COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) = 0
-       OR COALESCE(MovementString_FiscalCheckNumber.ValueData, '') = '-5');
+    WHERE COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) = 0
+       OR COALESCE(MovementLinkObject_JackdawsChecks.ObjectId, 0) <> 0
+       OR COALESCE(MovementString_FiscalCheckNumber.ValueData, '') = '-5';
     
    IF COALESCE (vbText, '') <> ''
    THEN

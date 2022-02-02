@@ -317,7 +317,7 @@ end if;*/
                                         INNER JOIN Container ON Container.ObjectId = tmpMI_Send.ObjectId_to
                                                             AND Container.DescId = zc_Container_Count()
                                                             AND Container.Amount > 0
-                                                            AND Container.WhereObjectId = vbUnitFromId
+                                                            AND Container.WhereObjectId = vbUnitToId
                                    GROUP BY tmpMI_Send.ObjectId_to
                                    HAVING SUM(Container.Amount) > 0)
                   -- Товар без остатка на получателе
@@ -343,7 +343,7 @@ end if;*/
                                       )
 
 
-        SELECT Price_To.UnitId
+        SELECT vbUnitToId           AS UnitId
              , tmpGoods.ObjectId_to AS GoodsId
              , Price_From.Price     AS PriceNew
         FROM tmpGoods

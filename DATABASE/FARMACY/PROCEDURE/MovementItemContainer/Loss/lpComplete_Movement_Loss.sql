@@ -307,13 +307,18 @@ WITH LOSS AS ( SELECT
                        , _tmpMIContainer_insert.OperDate    AS OperDate
                        , Container.Id     AS ContainerId
                          -- итого "накопительный" остаток
-                       , SUM (Container.Amount) OVER (PARTITION BY Container.ParentId ORDER BY Container.Id) AS AmountRemains_sum
+                       , SUM (Container.Amount) OVER (PARTITION BY Container.ParentId ORDER BY COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()), Container.Id) AS AmountRemains_sum
                          -- для последнего элемента - не смотрим на остаток
-                       , ROW_NUMBER() OVER (PARTITION BY _tmpMIContainer_insert.MovementItemId ORDER BY Container.Id DESC) AS DOrd
+                       , ROW_NUMBER() OVER (PARTITION BY _tmpMIContainer_insert.MovementItemId ORDER BY COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()) DESC, Container.Id DESC) AS DOrd
                    FROM _tmpMIContainer_insert
                         JOIN Container ON Container.ParentId = _tmpMIContainer_insert.ContainerId
                                       AND Container.DescId   = zc_Container_CountPartionDate()
                                       AND Container.Amount   > 0.0
+                        LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                     AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+                        LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                      ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId  
+                                                     AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()                             
                    WHERE _tmpMIContainer_insert.DescId      = zc_MIContainer_Count()
                   )
 

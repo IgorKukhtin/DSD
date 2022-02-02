@@ -396,6 +396,22 @@ BEGIN
 
     END IF;    
 
+    -- Простановка признака Нет хладагента
+    BEGIN
+      IF date_part('isodow', CURRENT_DATE)::Integer in (6) AND date_part('HOUR',  CURRENT_TIME)::Integer = 11 AND 
+         date_part('MINUTE',  CURRENT_TIME)::Integer >= 15 AND date_part('MINUTE',  CURRENT_TIME)::Integer < 35
+      THEN
+         PERFORM gpUpdate_Goods_isColdSUN(inGoodsMainId := T1.GoodsMainId, inisColdSUN := False,  inSession := inSession) 
+         FROM gpSelect_Goods_CommentNoRefrigerant(inStartDate := CURRENT_DATE - INTERVAL '7 DAY', inEndDate := CURRENT_DATE,  inSession := inSession) AS T1
+         WHERE T1.isColdSUNCK = FALSE AND T1.isColdSUN = FALSE; 
+      END IF;
+    EXCEPTION
+       WHEN others THEN
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpUpdate_Goods_isColdSUN', True, text_var1::TVarChar, vbUserId);
+    END;
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

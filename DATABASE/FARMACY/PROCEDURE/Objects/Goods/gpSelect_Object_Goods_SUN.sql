@@ -38,7 +38,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, Name TVarChar
              , UnitSupplementSUN1OutId Integer, UnitSupplementSUN1OutName TVarChar
              , UnitSupplementSUN2OutId Integer, UnitSupplementSUN2OutName TVarChar
              , SupplementMin Integer, SupplementMinPP Integer
-             , isUkrainianTranslation boolean
+             , isUkrainianTranslation boolean, isColdSUNCK boolean, isColdSUN boolean
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -161,6 +161,8 @@ BEGIN
            , Object_Goods_Main.SupplementMin 
            , Object_Goods_Main.SupplementMinPP 
            , Trim(COALESCE(Object_Goods_Main.NameUkr, '')) <> ''                 AS isUkrainianTranslation
+           , COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE)                   AS isColdSUNCK
+           , Object_Goods_Main.isColdSUN                                         AS isColdSUN
 
       FROM Object_Goods_Retail
 
@@ -168,6 +170,10 @@ BEGIN
 
            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = Object_Goods_Main.GoodsGroupId
            LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = Object_Goods_Main.ConditionsKeepId
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
+                                   ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
+                                  AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
+           
            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = Object_Goods_Main.MeasureId
            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = Object_Goods_Retail.UserInsertId
            LEFT JOIN Object AS Object_Update ON Object_Update.Id = Object_Goods_Retail.UserUpdateId

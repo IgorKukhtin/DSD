@@ -177,7 +177,6 @@ BEGIN
                    FROM (SELECT EXTRACT(DOW FROM inOperDate) AS RetV) AS tmp
                   ) :: TVarChar;
 
-
      -- все Подразделения для схемы SUN-v2
      INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, Value_T1, Value_T2, DayIncome, DaySendSUN, DaySendSUNAll, Limit_N, isLockSale, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL)
         SELECT OB.ObjectId AS UnitId
@@ -1760,10 +1759,15 @@ BEGIN
                                                       ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_calc.UnitId
                                                      AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_calc.GoodsId
 
+/*                 -- отбросили !!исключения!!
+                 LEFT JOIN _tmpUnit_SunExclusion ON _tmpUnit_SunExclusion.UnitId_from = vbUnitId_from
+                                                AND _tmpUnit_SunExclusion.UnitId_to   = _tmpRemains_calc.UnitId
+*/
             WHERE _tmpRemains_calc.GoodsId = vbGoodsId
               AND _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) > 0
               AND _tmpUnit_SunExclusion_MCS.UnitId_to IS NULL
               AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
+            --  AND _tmpUnit_SunExclusion.UnitId_to IS NULL
 
             ORDER BY --начинаем с аптек, где ПОТРЕБНОСТЬ - максимальным
                      _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) DESC

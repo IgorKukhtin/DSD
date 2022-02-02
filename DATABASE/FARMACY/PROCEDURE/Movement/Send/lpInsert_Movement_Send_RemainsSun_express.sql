@@ -783,7 +783,7 @@ BEGIN
                , tmpExpress AS (SELECT tmpExpress_all.UnitID
                                      , tmpExpress_all.GoodsID
                                      , tmpExpress_all.AmountRemains - COALESCE (tmpExpress_PartionDate.Amount, 0) - COALESCE (tmpMI_SUN_out.Amount, 0) AS AmountRemains
-                                     , tmpExpress_all.AmountResult_out
+                                     , tmpExpress_all.AmountResult_out - COALESCE (tmpExpress_PartionDate.Amount, 0) - COALESCE (tmpMI_SUN_out.Amount, 0) AS AmountResult_out
                                 FROM tmpExpress_all
                                      -- ВСЕ сроковые
                                      LEFT JOIN tmpExpress_PartionDate ON tmpExpress_PartionDate.UnitId  = tmpExpress_all.UnitID

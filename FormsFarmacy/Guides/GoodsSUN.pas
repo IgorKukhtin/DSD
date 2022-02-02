@@ -222,6 +222,12 @@ type
     mactUpdate_inAllowedPlatesSUN_Revert: TMultiAction;
     actUpdate_inAllowedPlatesSUN_Revert: TdsdExecStoredProc;
     dxBarButton19: TdxBarButton;
+    isColdSUNCK: TcxGridDBColumn;
+    isColdSUN: TcxGridDBColumn;
+    spUpdate_isColdSUN: TdsdStoredProc;
+    mactUpdate_isColdSUN: TMultiAction;
+    actUpdate_isColdSUN: TdsdExecStoredProc;
+    dxBarButton20: TdxBarButton;
   private
     { Private declarations }
   public

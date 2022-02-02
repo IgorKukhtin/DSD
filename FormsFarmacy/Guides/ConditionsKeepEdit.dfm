@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1053#1086#1074#1099#1081' '#1101#1083#1077#1084#1077#1085#1090' <'#1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
-  ClientHeight = 190
+  ClientHeight = 224
   ClientWidth = 386
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 79
-    Top = 149
+    Top = 181
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 229
-    Top = 149
+    Top = 181
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -76,6 +76,13 @@
     Left = 40
     Top = 99
     Caption = #1057#1086#1087#1091#1090#1089#1090#1074#1091#1102#1097#1080#1077' '#1090#1086#1074#1072#1088#1099
+  end
+  object isColdSUN: TcxCheckBox
+    Left = 48
+    Top = 155
+    Caption = #1061#1086#1083#1086#1076' '#1076#1083#1103' '#1057#1059#1053
+    TabOrder = 8
+    Width = 121
   end
   object ActionList: TActionList
     Left = 272
@@ -145,6 +152,14 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisColdSUN'
+        Value = Null
+        Component = isColdSUN
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -200,6 +215,13 @@
         Component = RelatedProductGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isColdSUN'
+        Value = Null
+        Component = isColdSUN
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

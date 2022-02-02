@@ -66,6 +66,11 @@ type
     actUpdate_ClearRelatedProduct: TdsdExecStoredProc;
     bbSetRelatedProduct: TdxBarButton;
     bbClearRelatedProduct: TdxBarButton;
+    isColdSUN: TcxGridDBColumn;
+    spUpdate_isColdSUN: TdsdStoredProc;
+    mactUpdate_isColdSUN: TMultiAction;
+    actUpdate_isColdSUN: TdsdExecStoredProc;
+    bbUpdate_isColdSUN: TdxBarButton;
   private
     { Private declarations }
   public
