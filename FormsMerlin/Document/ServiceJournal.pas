@@ -36,6 +36,7 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     bb: TdxBarButton;
     bbUpdateMoneyPlace: TdxBarButton;
+    isAuto: TcxGridDBColumn;
   private
     { Private declarations }
   public

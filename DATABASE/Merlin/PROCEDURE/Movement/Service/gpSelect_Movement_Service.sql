@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyCode Integer, CommentInfoMoneyName TVarChar       
+             , isAuto Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
               )
@@ -67,6 +68,7 @@ BEGIN
            , Object_CommentInfoMoney.ObjectCode AS CommentInfoMoneyCode
            , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
 
+           , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) ::Boolean AS isAuto
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
            , Object_Update.ValueData              AS UpdateName
@@ -74,6 +76,10 @@ BEGIN
 
        FROM tmpMovement AS Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                      ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                     AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
             --
             LEFT JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.ObjectId

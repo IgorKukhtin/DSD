@@ -56,6 +56,15 @@ inherited ServiceJournalForm: TServiceJournalForm
             Options.Editing = False
             Width = 69
           end
+          object isAuto: TcxGridDBColumn [1]
+            Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+            DataBinding.FieldName = 'isAuto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+            Options.Editing = False
+            Width = 70
+          end
           inherited colInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
