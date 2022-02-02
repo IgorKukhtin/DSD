@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_CommentMoveMoney(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , isUserAll Boolean
              , isErased Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -19,6 +20,7 @@ $BODY$BEGIN
    SELECT Object_CommentMoveMoney.Id          AS Id
         , Object_CommentMoveMoney.ObjectCode  AS Code
         , Object_CommentMoveMoney.ValueData   AS Name
+        , COALESCE (ObjectBoolean_UserAll.ValueData, FALSE) ::Boolean AS isUserAll
         , Object_CommentMoveMoney.isErased    AS isErased
 
         , Object_Insert.ValueData         AS InsertName
@@ -27,6 +29,11 @@ $BODY$BEGIN
         , ObjectDate_Update.ValueData     AS UpdateDate
 
        FROM Object AS Object_CommentMoveMoney
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_UserAll
+                                ON ObjectBoolean_UserAll.ObjectId = Object_CommentMoveMoney.Id
+                               AND ObjectBoolean_UserAll.DescId = zc_ObjectBoolean_CommentMoveMoney_UserAll()
+
         LEFT JOIN ObjectLink AS ObjectLink_Insert
                              ON ObjectLink_Insert.ObjectId = Object_CommentMoveMoney.Id
                             AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()

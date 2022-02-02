@@ -61,6 +61,14 @@ type
     InfoMoneyKindName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    spUpdate_isUserAll: TdsdStoredProc;
+    spUpdate_IsUserAll_Yes: TdsdStoredProc;
+    actUpdate_IsUserAll: TdsdExecStoredProc;
+    actUpdate_IsUserAll_Yes: TdsdExecStoredProc;
+    macUpdate_IsUserAll_list: TMultiAction;
+    macUpdate_IsUserAll_Yes: TMultiAction;
+    bbUpdate_IsUserAll: TdxBarButton;
+    bbUpdate_IsUserAll_Yes: TdxBarButton;
   private
     { Private declarations }
   public

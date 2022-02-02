@@ -3,7 +3,7 @@ object CommentMoveMoneyForm: TCommentMoveMoneyForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1044#1074#1080#1078#1077#1085#1080#1077' '#1076#1077#1085#1077#1075'>'
   ClientHeight = 375
-  ClientWidth = 532
+  ClientWidth = 658
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object CommentMoveMoneyForm: TCommentMoveMoneyForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 532
+    Width = 658
     Height = 349
     Align = alClient
     TabOrder = 0
@@ -60,6 +60,15 @@ object CommentMoveMoneyForm: TCommentMoveMoneyForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 226
+      end
+      object isUserAll: TcxGridDBColumn
+        Caption = #1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084
+        DataBinding.FieldName = 'isUserAll'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084' ('#1076#1072'/'#1085#1077#1090')'
+        Options.Editing = False
+        Width = 60
       end
       object colInsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
@@ -214,7 +223,19 @@ object CommentMoveMoneyForm: TCommentMoveMoneyForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbUpdate_IsUserAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbmacUpdate_IsUserAll_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -223,6 +244,14 @@ object CommentMoveMoneyForm: TCommentMoveMoneyForm
         item
           Visible = True
           ItemName = 'bbProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
@@ -270,6 +299,14 @@ object CommentMoveMoneyForm: TCommentMoveMoneyForm
     end
     object bbProtocolOpenForm: TdxBarButton
       Action = ProtocolOpenForm
+      Category = 0
+    end
+    object bbmacUpdate_IsUserAll_Yes: TdxBarButton
+      Action = macUpdate_IsUserAll_Yes
+      Category = 0
+    end
+    object bbUpdate_IsUserAll: TdxBarButton
+      Action = actUpdate_IsUserAll
       Category = 0
     end
   end
@@ -431,6 +468,56 @@ object CommentMoveMoneyForm: TCommentMoveMoneyForm
         end>
       isShowModal = False
     end
+    object actUpdate_IsUserAll: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isUserAll
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isUserAll
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100'  <'#1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084'> '#1044#1072'/'#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100'  <'#1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084'> '#1044#1072'/'#1053#1077#1090
+      ImageIndex = 80
+    end
+    object actUpdate_IsUserAll_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_IsUserAll_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_IsUserAll_Yes
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084'>  - '#1044'A'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084'>  - '#1044'A'
+      ImageIndex = 79
+    end
+    object macUpdate_IsUserAll_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_IsUserAll_Yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084'>  - '#1044'A'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084'>  - '#1044'A'
+      ImageIndex = 79
+    end
+    object macUpdate_IsUserAll_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_IsUserAll_list
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' '#1087#1072#1088#1072#1084#1077#1090#1088' <'#1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084'>  - '#1044'A?'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084'>  - '#1044'A'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084'>  - '#1044'A'
+      ImageIndex = 79
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_CommentMoveMoney'
@@ -495,5 +582,71 @@ object CommentMoveMoneyForm: TCommentMoveMoneyForm
     PackSize = 1
     Left = 432
     Top = 184
+  end
+  object spUpdate_IsUserAll_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_CommentMoveMoney_UserAll'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUserAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisUserAll'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isUserAll'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 568
+    Top = 152
+  end
+  object spUpdate_isUserAll: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_CommentMoveMoney_UserAll'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUserAll'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isUserAll'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisUserAll'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isUserAll'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 568
+    Top = 232
   end
 end

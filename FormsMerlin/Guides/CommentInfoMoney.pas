@@ -59,6 +59,14 @@ type
     bbProtocolOpenForm: TdxBarButton;
     spErasedUnErased: TdsdStoredProc;
     InfoMoneyKindName: TcxGridDBColumn;
+    spUpdate_IsUserAll_Yes: TdsdStoredProc;
+    spUpdate_isUserAll: TdsdStoredProc;
+    actUpdate_IsUserAll: TdsdExecStoredProc;
+    actUpdate_IsUserAll_Yes: TdsdExecStoredProc;
+    macUpdate_IsUserAll_list: TMultiAction;
+    macUpdate_IsUserAll_Yes: TMultiAction;
+    bbmacUpdate_IsUserAll_Yes: TdxBarButton;
+    bbUpdate_IsUserAll: TdxBarButton;
   private
     { Private declarations }
   public

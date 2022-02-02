@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_InfoMoneyDetail(
     IN inSession     TVarChar       -- сессия пользователя 
     )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , isUserAll Boolean
              , isErased Boolean
              , InfoMoneyKindId Integer, InfoMoneyKindName TVarChar
 ) AS
@@ -23,25 +24,31 @@ BEGIN
              CAST (0 as Integer)     AS Id
            , CAST (0 as Integer)     AS Code
            , CAST ('' as TVarChar)   AS Name
+           , CAST (FALSE AS Boolean) AS isUserAll
            , CAST (FALSE AS Boolean) AS isErased
            , CAST (0 as Integer)     AS InfoMoneyKindId
            , CAST ('' as TVarChar)   AS InfoMoneyKindName
            ;
    ELSE
        RETURN QUERY 
-       SELECT Object.Id          AS Id
-            , Object.ObjectCode  AS Code
-            , Object.ValueData   AS Name
-            , Object.isErased    AS isErased
+       SELECT Object_InfoMoneyDetail.Id          AS Id
+            , Object_InfoMoneyDetail.ObjectCode  AS Code
+            , Object_InfoMoneyDetail.ValueData   AS Name
+            , COALESCE (ObjectBoolean_UserAll.ValueData, FALSE) ::Boolean AS isUserAll
+            , Object_InfoMoneyDetail.isErased    AS isErased
             , Object_InfoMoneyKind.Id         AS InfoMoneyKindId
             , Object_InfoMoneyKind.ValueData  AS InfoMoneyKindName
-       FROM Object
+       FROM Object AS Object_InfoMoneyDetail
             LEFT JOIN ObjectLink AS ObjectLink_InfoMoneyKind
-                                 ON ObjectLink_InfoMoneyKind.ObjectId = Object.Id
+                                 ON ObjectLink_InfoMoneyKind.ObjectId = Object_InfoMoneyDetail.Id
                                 AND ObjectLink_InfoMoneyKind.DescId = zc_ObjectLink_InfoMoneyDetail_InfoMoneyKind()
             LEFT JOIN Object AS Object_InfoMoneyKind ON Object_InfoMoneyKind.Id = ObjectLink_InfoMoneyKind.ChildObjectId
-       WHERE Object.DescId = zc_Object_InfoMoneyDetail()
-         AND Object.Id = inId;
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_UserAll
+                                    ON ObjectBoolean_UserAll.ObjectId = Object_InfoMoneyDetail.Id
+                                   AND ObjectBoolean_UserAll.DescId = zc_ObjectBoolean_InfoMoneyDetail_UserAll()
+       WHERE Object_InfoMoneyDetail.DescId = zc_Object_InfoMoneyDetail()
+         AND Object_InfoMoneyDetail.Id = inId;
    END IF;
     
 END;
@@ -55,4 +62,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_InfoMoneyDetail(2,'2')
+-- SELECT * FROM gpGet_Object_InfoMoneyDetail(0,'2')

@@ -26,7 +26,6 @@ object InfoMoneyForm: TInfoMoneyForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 608
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -261,6 +260,26 @@ object InfoMoneyForm: TInfoMoneyForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_IsUserAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbmacUpdate_IsUserAll_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbStartLoad'
         end
         item
@@ -334,6 +353,14 @@ object InfoMoneyForm: TInfoMoneyForm
     end
     object bbStartLoad: TdxBarButton
       Action = macStartLoad
+      Category = 0
+    end
+    object bbmacUpdate_IsUserAll_Yes: TdxBarButton
+      Action = macUpdate_IsUserAll_Yes
+      Category = 0
+    end
+    object bbUpdate_IsUserAll: TdxBarButton
+      Action = actUpdate_IsUserAll
       Category = 0
     end
   end
@@ -565,6 +592,56 @@ object InfoMoneyForm: TInfoMoneyForm
       ImageIndex = 41
       WithoutNext = True
     end
+    object actUpdate_IsUserAll: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isUserAll
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isUserAll
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100'  <'#1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084'> '#1044#1072'/'#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100'  <'#1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084'> '#1044#1072'/'#1053#1077#1090
+      ImageIndex = 80
+    end
+    object actUpdate_IsUserAll_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_IsUserAll_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_IsUserAll_Yes
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084'>  - '#1044'A'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084'>  - '#1044'A'
+      ImageIndex = 79
+    end
+    object macUpdate_IsUserAll_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_IsUserAll_Yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084'>  - '#1044'A'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084'>  - '#1044'A'
+      ImageIndex = 79
+    end
+    object macUpdate_IsUserAll_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_IsUserAll_list
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' '#1087#1072#1088#1072#1084#1077#1090#1088' <'#1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084'>  - '#1044'A?'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084'>  - '#1044'A'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084'>  - '#1044'A'
+      ImageIndex = 79
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_InfoMoney'
@@ -679,5 +756,71 @@ object InfoMoneyForm: TInfoMoneyForm
     PackSize = 1
     Left = 664
     Top = 200
+  end
+  object spUpdate_IsUserAll_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_InfoMoney_UserAll'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUserAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisUserAll'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isUserAll'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 560
+    Top = 128
+  end
+  object spUpdate_isUserAll: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_InfoMoney_UserAll'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUserAll'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isUserAll'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisUserAll'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isUserAll'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 568
+    Top = 232
   end
 end
