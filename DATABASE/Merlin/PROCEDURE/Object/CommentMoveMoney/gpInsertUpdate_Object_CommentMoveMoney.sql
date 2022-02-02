@@ -25,7 +25,7 @@ BEGIN
    inCode:=lfGet_ObjectCode (inCode, zc_Object_CommentMoveMoney());
 
    -- проверка прав уникальности для свойства <Наименование Валюты>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_CommentMoveMoney(), inName);
+   --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_CommentMoveMoney(), inName);
    -- проверка прав уникальности для свойства <Код Валюты>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_CommentMoveMoney(), inCode);
 
