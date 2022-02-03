@@ -1259,13 +1259,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 80
           end
-          object Number: TcxGridDBColumn
-            Caption = #8470' '#1087#1083#1072#1090'. '#1087#1086#1088#1091#1095
-            DataBinding.FieldName = 'Number'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
         end
       end
       object cxGrid1: TcxGrid
@@ -4601,15 +4594,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'SummHouseAdd'
         DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inNumber'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Number'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

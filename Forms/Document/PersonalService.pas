@@ -257,7 +257,6 @@ type
     actInsertUpdate_MemberMinus: TdsdExecStoredProc;
     macInsertUpdate_MemberMinus: TMultiAction;
     bbInsertUpdate_MemberMinus: TdxBarButton;
-    Number: TcxGridDBColumn;
   private
     { Private declarations }
   public
