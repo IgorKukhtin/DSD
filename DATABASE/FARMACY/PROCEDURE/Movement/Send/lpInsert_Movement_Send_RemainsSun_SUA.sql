@@ -1440,13 +1440,15 @@ BEGIN
                             AND (MCS_isClose.ObjectId IS NULL OR _tmpUnit_SUN_SUA.isLock_ClosePL = FALSE)
                          )
         -- отбросили !!холод!!
-      , tmpConditionsKeep AS (SELECT OL_Goods_ConditionsKeep.ObjectId
-                              FROM ObjectLink AS OL_Goods_ConditionsKeep
-                                   LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
-                              WHERE OL_Goods_ConditionsKeep.ObjectId IN (SELECT DISTINCT _tmpRemains_Partion_all_SUA.GoodsId FROM _tmpRemains_Partion_all_SUA)
-                                AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
-                                AND (Object_ConditionsKeep.ValueData ILIKE '%холод%'
-                                  OR Object_ConditionsKeep.ValueData ILIKE '%прохладное%'
+      , tmpConditionsKeep AS (SELECT tmpGoods.GoodsID AS ObjectId
+                              FROM (SELECT DISTINCT _tmpRemains_Partion_all_SUA.GoodsId FROM _tmpRemains_Partion_all_SUA) AS tmpGoods
+                                   LEFT JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsID
+                                   LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
+                                   LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
+                                                           ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
+                                                          AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
+                              WHERE (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
+                                 OR Object_Goods_Main.isColdSUN = TRUE 
                                     )
                                 AND vbisEliminateColdSUN = TRUE
                              )

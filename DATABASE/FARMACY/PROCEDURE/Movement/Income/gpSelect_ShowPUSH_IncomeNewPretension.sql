@@ -53,7 +53,7 @@ BEGIN
       FROM tmpMovement
       ;  
 
-      IF COALESCE (vbText, '')
+      IF COALESCE (vbText, '') <> ''
       THEN
         outShowMessage := True;
         outPUSHType := zc_TypePUSH_Confirmation();
@@ -76,4 +76,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- 
-SELECT * FROM gpSelect_ShowPUSH_IncomeNewPretension(26110310, '3')
+
+select * from gpSelect_ShowPUSH_IncomeNewPretension(inMovementID := 26650600 ,  inSession := '3');

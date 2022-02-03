@@ -1182,9 +1182,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_ColdSUN() RETURNS Integer AS $
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_ColdSUN', 'Холод для СУН' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_ColdSUN');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_SUN_v2_Supplement_in() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_SUN_v2_Supplement_in'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_SUN_v2_Supplement_in', 'Работают по СУН - версия 2 дополнение - только прием' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_SUN_v2_Supplement_in');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_SUN_v2_Supplement_out() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_SUN_v2_Supplement_out'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_SUN_v2_Supplement_out', 'Работают по СУН - версия 2 дополнение - только отправка' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_SUN_v2_Supplement_out');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 03.02.22                                                                                                          * zc_ObjectBoolean_Unit_SUN_v2_Supplement
  02.02.22                                                                                                          * zc_ObjectBoolean_ConditionsKeep_ColdSUN
  26.01.22         * zc_ObjectBoolean_Juridical_isNotTare
  25.01.22                                                                                   * zc_ObjectBoolean_PickUpLogsAndDBF_GetArchive
