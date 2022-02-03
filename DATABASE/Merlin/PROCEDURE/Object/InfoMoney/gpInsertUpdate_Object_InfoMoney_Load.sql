@@ -18,6 +18,7 @@ $BODY$
   DECLARE vbUserProtocolId   Integer;
   DECLARE vbParentId         Integer;
   DECLARE vbInfoMoneyId      Integer;
+  DECLARE vbGroupNameFull TVarChar;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -61,22 +62,26 @@ BEGIN
        -- поиск в спр. статьей
        vbInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_InfoMoney() AND Object.ObjectCode = inCode);
        
-       -- Eсли не нашли записываем
-       --IF COALESCE (vbInfoMoneyId,0) = 0
-       --THEN
            -- записываем Статью
-           vbInfoMoneyId := gpInsertUpdate_Object_InfoMoney (ioId               := COALESCE (vbInfoMoneyId,0)
-                                                           , inCode             := inCode ::Integer
-                                                           , inName             := TRIM (inInfoMoneyName) ::TVarChar
-                                                           , inisService        := FALSE:: Boolean    
-                                                           , inisUserAll        := FALSE:: Boolean    
-                                                           , inInfoMoneyKindId  := CASE WHEN TRIM (inInfoMoneyKindName) = 'Приход' THEN zc_Enum_InfoMoney_In()
-                                                                                        WHEN TRIM (inInfoMoneyKindName) = 'расход' THEN zc_Enum_InfoMoney_Out()
-                                                                                        ELSE NULL
-                                                                                   END :: Integer       --
-                                                           , inParentId         := vbParentId    :: Integer       -- ключ объекта <Група>
-                                                           , inSession          := vbUserProtocolId :: TVarChar
-                                                           );
+           vbInfoMoneyId := lpInsertUpdate_Object (COALESCE (vbInfoMoneyId,0), zc_Object_InfoMoney(), inCode::Integer, TRIM (inInfoMoneyName) ::TVarChar);
+        
+           -- расчетно свойство <Полное название группы>
+           vbGroupNameFull:= lfGet_Object_TreeNameFull (vbParentId :: Integer, zc_ObjectLink_InfoMoney_Parent());
+        
+           -- сохранили группа
+           PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_InfoMoney_GroupNameFull(), vbInfoMoneyId, vbGroupNameFull);
+           -- сохранили
+           --PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_Service(), vbInfoMoneyId, inisService);
+           -- сохранили
+           --PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_UserAll(), vbInfoMoneyId, inisUserAll);
+           -- сохранили
+           PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_InfoMoney_InfoMoneyKind(), vbInfoMoneyId, CASE WHEN TRIM (inInfoMoneyKindName) = 'Приход' THEN zc_Enum_InfoMoney_In()
+                                                                                                           WHEN TRIM (inInfoMoneyKindName) = 'расход' THEN zc_Enum_InfoMoney_Out()
+                                                                                                           ELSE NULL
+                                                                                                      END :: Integer);
+           -- сохранили
+           PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_InfoMoney_Parent(), vbInfoMoneyId, vbParentId    :: Integer);
+
 
            -- сохранили свойство <Дата создания>
            PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), vbInfoMoneyId, inProtocolDate ::TDateTime);
@@ -86,10 +91,9 @@ BEGIN
            --если удален да
            IF inisErased = 1
            THEN
-                PERFORM lpUpdate_Object_isErased (vbInfoMoneyId, TRUE, vbUserProtocolId);
+               UPDATE Object SET isErased = TRUE WHERE Id = vbInfoMoneyId;
            END IF;
 
-       --END IF;
    END IF;
 
 END;

@@ -163,17 +163,31 @@ object PartnerAddressForm: TPartnerAddressForm
       object RetailName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
         DataBinding.FieldName = 'RetailName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = RetailOpenChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 100
       end
       object RouteName: TcxGridDBColumn
         Caption = #1052#1072#1088#1096#1088#1091#1090
         DataBinding.FieldName = 'RouteName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = RouteOpenChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 100
       end
       object PartnerTagName: TcxGridDBColumn
@@ -1592,6 +1606,60 @@ object PartnerAddressForm: TPartnerAddressForm
         end>
       isShowModal = True
     end
+    object RetailOpenChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Retail_ObjectForm'
+      FormName = 'TRetailForm'
+      FormNameParam.Value = 'TRetailForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object RouteOpenChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Route_ObjectForm'
+      FormName = 'TRouteForm'
+      FormNameParam.Value = 'TRouteForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RouteName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object PersonalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1733,6 +1801,9 @@ object PartnerAddressForm: TPartnerAddressForm
       ReportNameParam.Value = #1064#1072#1073#1083#1086#1085' '#1087#1086' '#1090#1086#1095#1082#1072#1084' '#1076#1086#1089#1090#1072#1074#1082#1080
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actRefreshPeriod: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -1866,7 +1937,7 @@ object PartnerAddressForm: TPartnerAddressForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -1874,7 +1945,7 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -1890,7 +1961,7 @@ object PartnerAddressForm: TPartnerAddressForm
       end
       item
         Name = 'inShowAll'
-        Value = 'False'
+        Value = False
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
@@ -1978,10 +2049,13 @@ object PartnerAddressForm: TPartnerAddressForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 464
     Top = 288
   end
@@ -2250,6 +2324,22 @@ object PartnerAddressForm: TPartnerAddressForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartnerTagId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRouteId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RouteId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RetailId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

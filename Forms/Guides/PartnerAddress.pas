@@ -161,6 +161,8 @@ type
     bbShowCurPartnerOnMap: TdxBarButton;
     bbShowAllPartnerOnMap: TdxBarButton;
     PersonalMerchChoiceForm: TOpenChoiceForm;
+    RouteOpenChoiceForm: TOpenChoiceForm;
+    RetailOpenChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

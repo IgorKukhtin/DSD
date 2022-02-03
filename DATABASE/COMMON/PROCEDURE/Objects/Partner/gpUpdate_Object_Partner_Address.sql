@@ -14,6 +14,13 @@ DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Address (Integer, TVarChar, TVar
                                                        , TVarChar, TVarChar, TVarChar, TVarChar
                                                        , Integer, Integer, Integer, Integer, Integer, Integer
                                                        , TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Address (Integer, TVarChar, TVarChar, TVarChar
+                                                       , Integer, TVarChar, TVarChar, TVarChar
+                                                       , Integer, TVarChar, TVarChar,  TVarChar, TVarChar
+                                                       , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                       , TVarChar, TVarChar, TVarChar, TVarChar
+                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                       , TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_Address(
     IN inId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -51,16 +58,82 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_Address(
     IN inAreaId              Integer   ,    -- Регион
     IN inPartnerTagId        Integer   ,    -- Признак торговой точки 
 
+    IN inRouteId             Integer   ,    --
+    IN inRetailId            Integer   ,    -- торговая сеть меняем у юр.лица
 
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
+   
+   DECLARE vbRouteId Integer;
+   DECLARE vbRetailId Integer;
+   DECLARE vbJuridicalId Integer;
+   DECLARE vbOrderName TVarChar;
+   DECLARE vbDocName TVarChar;
+   DECLARE vbActName TVarChar;
 BEGIN
-   -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Partner_Address());
 
+
+   CREATE TEMP TABLE tmpContactPerson (Id Integer, Name TVarChar/*, Phone TVarChar, Mail TVarChar*/, ContactPersonKindId Integer) ON COMMIT DROP;
+   INSERT INTO tmpContactPerson (Id, Name, ContactPersonKindId)
+           SELECT Object_ContactPerson.Id          AS Id
+                , Object_ContactPerson.ValueData   AS Name
+                --, ObjectString_Phone.ValueData     AS Phone
+                --, ObjectString_Mail.ValueData      AS Mail
+                , ObjectLink_ContactPerson_ContactPersonKind.ChildObjectId AS ContactPersonKindId
+           FROM ObjectLink
+                LEFT JOIN Object AS Object_ContactPerson
+                                 ON Object_ContactPerson.Id = ObjectLink.ObjectId
+                                AND Object_ContactPerson.DescId = zc_Object_ContactPerson()
+
+                JOIN ObjectLink AS ObjectLink_ContactPerson_ContactPersonKind
+                                ON ObjectLink_ContactPerson_ContactPersonKind.ObjectId = Object_ContactPerson.Id
+                               AND ObjectLink_ContactPerson_ContactPersonKind.DescId = zc_ObjectLink_ContactPerson_ContactPersonKind()
+                /*LEFT JOIN ObjectString AS ObjectString_Phone
+                                       ON ObjectString_Phone.ObjectId = Object_ContactPerson.Id
+                                      AND ObjectString_Phone.DescId = zc_ObjectString_ContactPerson_Phone()
+                LEFT JOIN ObjectString AS ObjectString_Mail
+                                       ON ObjectString_Mail.ObjectId = Object_ContactPerson.Id
+                                      AND ObjectString_Mail.DescId = zc_ObjectString_ContactPerson_Mail()*/
+           WHERE ObjectLink.ChildObjectId = inId
+             AND ObjectLink.DescId = zc_ObjectLink_ContactPerson_Object()
+           ;
+  
+   vbOrderName := (SELECT tmpContactPerson.Name FROM tmpContactPerson WHERE tmpContactPerson.ContactPersonKindId = 153272);    --"Формирование заказов"
+   vbDocName   := (SELECT tmpContactPerson.Name FROM tmpContactPerson WHERE tmpContactPerson.ContactPersonKindId = 153273);      --"Проверка документов"
+   vbActName   := (SELECT tmpContactPerson.Name FROM tmpContactPerson WHERE tmpContactPerson.ContactPersonKindId = 153274);      --"Акты сверки и выполенных работ"
+   vbRouteId        := (SELECT ObjectLink.ChildObjectId FROM ObjectLink WHERE ObjectLink.ObjectId = inId AND ObjectLink.DescId = zc_ObjectLink_Partner_Route());
+
+   SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+        , ObjectLink_Juridical_Retail.ChildObjectId  AS RetailId
+  INTO vbJuridicalId, vbRetailId
+   FROM ObjectLink AS ObjectLink_Partner_Juridical
+        INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                              ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+   WHERE ObjectLink_Partner_Juridical.ObjectId = inId
+     AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical();
+
+   
+   IF vbRouteId <> inRouteId OR vbRetailId <> inRetailId OR vbActName <> inActName OR vbDocName <> inDocName OR vbOrderName <> inOrderName
+   THEN
+       -- проверка прав пользователя на вызов процедуры
+       vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Partner_Trade());
+       
+       -- сохранили связь  <юр.лица> с торговую сеть
+       PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_Retail(), vbJuridicalId, inRetailId);
+
+       -- сохранили связь с <> 
+       PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Route(), inId, inRouteId);
+
+   ELSE
+       -- проверка прав пользователя на вызов процедуры
+       vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Partner_Address());
+   END IF;
+ 
+   --
  
    -- Контактные лица 
    PERFORM lpUpdate_Object_Partner_ContactPerson (inId        := inId

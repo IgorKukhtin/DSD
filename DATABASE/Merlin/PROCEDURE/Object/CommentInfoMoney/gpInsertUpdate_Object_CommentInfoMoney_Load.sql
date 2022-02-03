@@ -37,33 +37,27 @@ BEGIN
        -- поиск в спр. статьей
        vbCommentInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_CommentInfoMoney() AND Object.ObjectCode = inCode);
 
-       -- Eсли не нашли записываем
-       --IF COALESCE (vbCommentInfoMoneyId,0) = 0
-       --THEN
-           -- записываем Статью
-           vbCommentInfoMoneyId := gpInsertUpdate_Object_CommentInfoMoney (ioId               := COALESCE (vbCommentInfoMoneyId,0)
-                                                                         , inCode             := inCode ::Integer
-                                                                         , inName             := TRIM (inName) ::TVarChar
-                                                                         , inInfoMoneyKindId  := CASE WHEN TRIM (inInfoMoneyKindName) = 'Приход' THEN zc_Enum_InfoMoney_In()
-                                                                                                      WHEN TRIM (inInfoMoneyKindName) = 'Расход' THEN zc_Enum_InfoMoney_Out()
-                                                                                                      ELSE NULL
-                                                                                                 END :: Integer       --
-                                                                         , inSession          := vbUserProtocolId :: TVarChar
-                                                                         );
+       -- сохранили <Объект>
+       vbCommentInfoMoneyId := lpInsertUpdate_Object(COALESCE (vbCommentInfoMoneyId,0), zc_Object_CommentInfoMoney(), inCode, inName);
 
-           -- сохранили свойство <>
-           PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_CommentInfoMoney_UserAll(), vbCommentInfoMoneyId, CASE WHEN TRIM (inisUserAll) = 'Да' THEN TRUE ELSE FALSE END);
+       -- сохранили
+       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_CommentInfoMoney_InfoMoneyKind(), vbCommentInfoMoneyId, CASE WHEN TRIM (inInfoMoneyKindName) = 'Приход' THEN zc_Enum_InfoMoney_In()
+                                                                                                                     WHEN TRIM (inInfoMoneyKindName) = 'Расход' THEN zc_Enum_InfoMoney_Out()
+                                                                                                                     ELSE NULL
+                                                                                                                END :: Integer );
 
-           -- сохранили свойство <Дата создания>
-           PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), vbCommentInfoMoneyId, inProtocolDate ::TDateTime);
-           -- сохранили свойство <Пользователь (создание)>
-           PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), vbCommentInfoMoneyId, vbUserProtocolId);
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_CommentInfoMoney_UserAll(), vbCommentInfoMoneyId, CASE WHEN TRIM (inisUserAll) = 'Да' THEN TRUE ELSE FALSE END);
+       -- сохранили свойство <Дата создания>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), vbCommentInfoMoneyId, inProtocolDate ::TDateTime);
+       -- сохранили свойство <Пользователь (создание)>
+       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), vbCommentInfoMoneyId, vbUserProtocolId);
 
-           --если удален да
-           IF inisErased = 1
-           THEN
-                PERFORM lpUpdate_Object_isErased (vbCommentInfoMoneyId, TRUE, vbUserProtocolId);
-           END IF;
+       --если удален да
+       IF inisErased = 1
+       THEN
+           UPDATE Object SET isErased = TRUE WHERE Id = vbCommentInfoMoneyId;
+       END IF;
 
        --END IF;
    END IF;

@@ -24,7 +24,6 @@ object CommentMoveMoneyForm: TCommentMoveMoneyForm
     Height = 349
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 658
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

@@ -3457,6 +3457,7 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerAddressForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerAddressForm');
+  exit;
   // область
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRegionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRegionForm');

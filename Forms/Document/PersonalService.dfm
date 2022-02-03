@@ -21,8 +21,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
       inherited cxGrid: TcxGrid
         Width = 1483
         Height = 258
-        ExplicitLeft = -3
-        ExplicitTop = 224
         ExplicitWidth = 1483
         ExplicitHeight = 258
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1260,6 +1258,13 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object Number: TcxGridDBColumn
+            Caption = #8470' '#1087#1083#1072#1090'. '#1087#1086#1088#1091#1095
+            DataBinding.FieldName = 'Number'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
       end
@@ -4596,6 +4601,15 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Component = MasterCDS
         ComponentItem = 'SummHouseAdd'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumber'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Number'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
