@@ -910,6 +910,8 @@ type
     N335: TMenuItem;
     actReport_PriceComparisonBIG3: TdsdOpenForm;
     C31: TMenuItem;
+    actReport_Sun_Supplement_v2: TdsdOpenForm;
+    v21: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

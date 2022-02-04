@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderInternalPromo (Integer, TVa
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderInternalPromo (Integer, TVarChar, TDateTime, TDateTime, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderInternalPromo (Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderInternalPromo (Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderInternalPromo (Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderInternalPromo(
@@ -16,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderInternalPromo(
     IN inTotalAmount           TFloat     , -- Крличество для распр.
     IN inRetailId              Integer    , -- Торговая сеть
     IN inComment               TVarChar   , -- Примечание
+    IN inDaysGrace             Integer    , -- Дней отсрочки
     IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -60,6 +62,7 @@ BEGIN
                                                       , inTotalSummSIP  := inTotalSummSIP
                                                       , inTotalAmount   := inTotalAmount
                                                       , inComment       := inComment
+                                                      , inDaysGrace     := inDaysGrace
                                                       , inUserId        := vbUserId
                                                       );
 

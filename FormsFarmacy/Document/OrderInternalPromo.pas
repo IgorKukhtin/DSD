@@ -195,6 +195,8 @@ type
     actSMTPSend: TMultiAction;
     ExportJuridicalDS: TDataSource;
     actLoadListUnit: TdsdLoadListValuesFileAction;
+    ceDaysGrace: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
   private
     { Private declarations }
   public

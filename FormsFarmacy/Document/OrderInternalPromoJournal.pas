@@ -32,6 +32,9 @@ type
     TotalAmount: TcxGridDBColumn;
     Distributed: TcxGridDBColumn;
     DistributedSumma: TcxGridDBColumn;
+    DaysGrace: TcxGridDBColumn;
+    DatePayment: TcxGridDBColumn;
+    DateInsert: TcxGridDBColumn;
   private
     { Private declarations }
   public

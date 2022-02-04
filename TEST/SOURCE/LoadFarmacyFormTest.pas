@@ -1052,7 +1052,10 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractPriceListDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_Supplement_v2Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_Supplement_v2Form');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractPriceListDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractPriceListDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractPriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractPriceListForm');
@@ -1060,7 +1063,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceComparisonBIG3Form');
 
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_WagesVIP_CalcMonthForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_WagesVIP_CalcMonthForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_WagesVIP_CalcMonthForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Layout_OutOrderForm'));

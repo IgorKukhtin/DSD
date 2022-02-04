@@ -196,6 +196,32 @@ inherited OrderInternalPromoJournalForm: TOrderInternalPromoJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 115
           end
+          object DateInsert: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
+            DataBinding.FieldName = 'DateInsert'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 87
+          end
+          object DaysGrace: TcxGridDBColumn
+            Caption = #1044#1085#1077#1081' '#1086#1090#1089#1088#1086#1095#1082#1080
+            DataBinding.FieldName = 'DaysGrace'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0;-,0; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 63
+          end
+          object DatePayment: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'DatePayment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
         end
       end
     end

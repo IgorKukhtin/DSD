@@ -627,9 +627,14 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummNotActual() RETURNS Integer
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummNotActual', 'Итого сумма не актуально' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummNotActual');  
   
+CREATE OR REPLACE FUNCTION zc_MovementFloat_DaysGrace() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DaysGrace'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_DaysGrace', 'Количество дней отсрочки' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DaysGrace');  
+  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 04.02.22                                                                                     * zc_MovementFloat_DaysGrace
  21.12.21                                                                                     * zc_MovementFloat_TotalSummActual, zc_MovementFloat_TotalSummNotActual
  18.12.21                                                                                     * zc_MovementFloat_TotalSubstandard
  09.12.21                                                                                     * zc_MovementFloat_TotalDeficit, zc_MovementFloat_TotalProficit

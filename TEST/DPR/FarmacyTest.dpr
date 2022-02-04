@@ -1148,7 +1148,8 @@ uses
   ContractPriceList in '..\..\FormsFarmacy\Guides\ContractPriceList.pas' {ContractPriceListForm: TParentForm},
   Report_PriceComparisonBIG3 in '..\..\FormsFarmacy\Report\Report_PriceComparisonBIG3.pas' {Report_PriceComparisonBIG3Form: TParentForm},
   ContractPriceListDialog in '..\..\FormsFarmacy\Guides\ContractPriceListDialog.pas' {ContractPriceListDialogForm: TParentForm},
-  MedicSPDialog in '..\..\FormsFarmacy\Document\MedicSPDialog.pas' {MedicSPDialogForm: TParentForm};
+  MedicSPDialog in '..\..\FormsFarmacy\Document\MedicSPDialog.pas' {MedicSPDialogForm: TParentForm},
+  Report_Movement_Send_RemainsSun_Supplement_v2 in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_Supplement_v2.pas' {Report_Movement_Send_RemainsSun_Supplement_v2Form: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
