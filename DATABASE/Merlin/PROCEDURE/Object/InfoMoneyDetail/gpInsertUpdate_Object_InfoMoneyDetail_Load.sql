@@ -40,16 +40,14 @@ BEGIN
        -- Eсли не нашли записываем
        --IF COALESCE (vbInfoMoneyDetailId,0) = 0
        --THEN
-           -- записываем Статью
-           vbInfoMoneyDetailId := gpInsertUpdate_Object_InfoMoneyDetail (ioId               := COALESCE (vbInfoMoneyDetailId,0)
-                                                                         , inCode             := inCode ::Integer
-                                                                         , inName             := TRIM (inName) ::TVarChar
-                                                                         , inInfoMoneyKindId  := CASE WHEN TRIM (inInfoMoneyKindName) = 'Приход' THEN zc_Enum_InfoMoney_In()
-                                                                                                      WHEN TRIM (inInfoMoneyKindName) = 'Расход' THEN zc_Enum_InfoMoney_Out()
-                                                                                                      ELSE NULL
-                                                                                                 END :: Integer       --
-                                                                         , inSession          := vbUserProtocolId :: TVarChar
-                                                                         );
+          -- сохранили <Объект>
+           vbInfoMoneyDetailId := lpInsertUpdate_Object(COALESCE (vbInfoMoneyDetailId,0), zc_Object_InfoMoneyDetail(), inCode ::Integer, TRIM (inName) ::TVarChar);
+        
+           -- сохранили
+           PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_InfoMoneyDetail_InfoMoneyKind(), vbInfoMoneyDetailId, CASE WHEN TRIM (inInfoMoneyKindName) = 'Приход' THEN zc_Enum_InfoMoney_In()
+                                                                                                                       WHEN TRIM (inInfoMoneyKindName) = 'Расход' THEN zc_Enum_InfoMoney_Out()
+                                                                                                                       ELSE NULL
+                                                                                                                  END :: Integer );
 
            -- сохранили свойство <>
            PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_InfoMoneyDetail_UserAll(), vbInfoMoneyDetailId, CASE WHEN TRIM (inisUserAll) = 'Да' THEN TRUE ELSE FALSE END);
@@ -62,7 +60,7 @@ BEGIN
            --если удален да
            IF inisErased = 1
            THEN
-                PERFORM lpUpdate_Object_isErased (vbInfoMoneyDetailId, TRUE, vbUserProtocolId);
+                UPDATE Object SET isErased = TRUE WHERE Id = vbInfoMoneyDetailId;
            END IF;
 
        --END IF;

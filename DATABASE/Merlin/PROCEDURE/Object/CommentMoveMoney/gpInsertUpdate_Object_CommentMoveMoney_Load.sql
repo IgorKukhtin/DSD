@@ -33,19 +33,15 @@ BEGIN
 
    IF COALESCE (inCode,0) <> 0
    THEN
-       -- поиск в спр. статьей
+       -- поиск в спр. 
        vbCommentMoveMoneyId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_CommentMoveMoney() AND Object.ObjectCode = inCode);
 
        -- Eсли не нашли записываем
        --IF COALESCE (vbCommentMoveMoneyId,0) = 0
        --THEN
-           -- записываем —татью
-           vbCommentMoveMoneyId := gpInsertUpdate_Object_CommentMoveMoney (ioId               := COALESCE (vbCommentMoveMoneyId,0)
-                                                                         , inCode             := inCode ::Integer
-                                                                         , inName             := TRIM (inName) ::TVarChar
-                                                                         , inSession          := vbUserProtocolId :: TVarChar
-                                                                         );
-
+           -- записываем 
+           vbCommentMoveMoneyId := lpInsertUpdate_Object(COALESCE (vbCommentMoveMoneyId,0), zc_Object_CommentMoveMoney(), inCode::Integer, TRIM (inName) ::TVarChar);
+           
            -- сохранили свойство <>
            PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_CommentMoveMoney_UserAll(), vbCommentMoveMoneyId, CASE WHEN TRIM (inisUserAll) = 'ƒа' THEN TRUE ELSE FALSE END);
 
@@ -57,7 +53,7 @@ BEGIN
            --если удален да
            IF inisErased = 1
            THEN
-                PERFORM lpUpdate_Object_isErased (vbCommentMoveMoneyId, TRUE, vbUserProtocolId);
+                UPDATE Object SET isErased = TRUE WHERE Id = vbCommentMoveMoneyId;
            END IF;
 
        --END IF;
