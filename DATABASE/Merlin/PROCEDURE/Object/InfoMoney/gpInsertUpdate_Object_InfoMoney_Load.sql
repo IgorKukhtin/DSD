@@ -42,17 +42,7 @@ BEGIN
        IF COALESCE (vbParentId,0) = 0
        THEN
            -- если не нашли группу  - создаем 
-           vbParentId := gpInsertUpdate_Object_InfoMoney(ioId	            := vbParentId            :: Integer       -- ключ объекта <> 
-                                                       , inCode             := inParentCode :: Integer       -- код объекта <> 
-                                                       , inName             := (inParentCode||' Группа'):: TVarChar      -- Название объекта <>
-                                                       , inisService        := FALSE:: Boolean    
-                                                       , inisUserAll        := FALSE:: Boolean    
-                                                       , inInfoMoneyKindId  := NULL :: Integer       --
-                                                       , inParentId         := NULL    :: Integer       -- ключ объекта <Група>
-                                                       , inSession          := vbUserProtocolId :: TVarChar
-                                                       );
-                                                        
-
+           vbParentId :=  lpInsertUpdate_Object (COALESCE (vbParentId,0), zc_Object_InfoMoney(), inParentCode::Integer, (inParentCode||' Группа'):: TVarChar);
        END IF;
    END IF;
 

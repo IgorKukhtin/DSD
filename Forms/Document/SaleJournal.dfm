@@ -3802,6 +3802,7 @@ inherited SaleJournalForm: TSaleJournalForm
           ItemName = 'dxBarStatic'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbPrint_Bill'
         end

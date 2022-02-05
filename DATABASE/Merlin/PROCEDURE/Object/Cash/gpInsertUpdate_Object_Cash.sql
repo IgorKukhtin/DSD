@@ -30,7 +30,7 @@ $BODY$
    inCode := lfGet_ObjectCode (inCode, zc_Object_Cash());
     
    -- проверка прав уникальности для свойства <Наименование Касса>  
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Cash(), inCashName);
+   --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Cash(), inCashName);
    -- проверка прав уникальности для свойства <Код Кассы>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Cash(), inCode);
 

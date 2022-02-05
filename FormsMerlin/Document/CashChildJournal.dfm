@@ -712,10 +712,12 @@ object CashChildJournalForm: TCashChildJournalForm
     object bbInsertUpdate_Sign: TdxBarButton
       Action = actInsertUpdate_Sign
       Category = 0
+      Hint = #1055#1086#1076#1087#1080#1089#1072#1090#1100' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1091
     end
     object bbUpdate_Sign_isErased: TdxBarButton
       Action = actUpdate_Sign_isErased
       Category = 0
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1087#1086#1076#1087#1080#1089#1100
     end
   end
   object ActionList: TActionList
