@@ -16,7 +16,17 @@ uses
  ,UtilScale,DataModul, cxStyles, dxSkinscxPCPainter, cxCustomData, cxFilter,
   cxData, cxDataStorage, cxDBData, dsdAddOn, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxClasses, cxGridCustomView, cxGrid,
-  cxCurrencyEdit, Vcl.ActnList, cxButtonEdit, dsdAction;
+  cxCurrencyEdit, Vcl.ActnList, cxButtonEdit, dsdAction, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TMainForm = class(TForm)
@@ -387,7 +397,18 @@ begin
      end;
      //Проверка
      if ParamsMovement.ParamByName('MovementId').AsInteger=0
-     then begin
+     then if ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Inventory
+          then
+              if MessageDlg('Документ <Инвентаризация> пустой.Будут обнулены все остатки.'+#10+#13+'Продолжить?',mtConfirmation,mbYesNoCancel,0) = 6
+              then if DMMainScaleForm.gpInsertUpdate_Scale_Movement(ParamsMovement)
+                   then
+                   else exit
+              else exit
+          else begin
+              ShowMessage('Ошибка.Продукция не взвешена.');
+              exit;
+          end
+     else begin
          ShowMessage('Ошибка.Продукция не взвешена.');
          exit;
      end;

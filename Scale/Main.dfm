@@ -1641,7 +1641,6 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 1
-      ExplicitTop = 163
       object ScaleLabel: TLabel
         Left = 1
         Top = 1
@@ -1688,7 +1687,6 @@ object MainForm: TMainForm
       Height = 39
       Align = alTop
       TabOrder = 3
-      ExplicitTop = 192
       object LabelCountPack: TLabel
         Left = 1
         Top = 1
@@ -1718,7 +1716,6 @@ object MainForm: TMainForm
       Height = 39
       Align = alTop
       TabOrder = 4
-      ExplicitTop = 285
       object HeadCountLabel: TLabel
         Left = 1
         Top = 1
@@ -1788,7 +1785,6 @@ object MainForm: TMainForm
       Height = 54
       Align = alTop
       TabOrder = 6
-      ExplicitTop = 231
       object Label1: TLabel
         Left = 1
         Top = 1
@@ -1923,7 +1919,6 @@ object MainForm: TMainForm
       Alignment = taLeftJustify
       BevelOuter = bvSpace
       TabOrder = 8
-      ExplicitTop = 410
       object BarCodeTransportPanel: TPanel
         Left = 1
         Top = 1
@@ -2160,7 +2155,6 @@ object MainForm: TMainForm
       Alignment = taLeftJustify
       BevelOuter = bvSpace
       TabOrder = 10
-      ExplicitTop = 367
       object SubjectDocPanel: TPanel
         Left = 1
         Top = 1
@@ -2218,7 +2212,6 @@ object MainForm: TMainForm
       Alignment = taLeftJustify
       BevelOuter = bvSpace
       TabOrder = 11
-      ExplicitTop = 324
       object ReasonPanel: TPanel
         Left = 1
         Top = 1
