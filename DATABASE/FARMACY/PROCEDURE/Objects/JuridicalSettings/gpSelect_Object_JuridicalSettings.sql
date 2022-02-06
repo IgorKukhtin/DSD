@@ -50,18 +50,30 @@ BEGIN
                              WHERE ObjectLink_MainJuridical.DescId = zc_ObjectLink_ContractSettings_MainJuridical()
                              ) 
 
-   , tmpMainJuridicalArea AS (SELECT DISTINCT ObjectLink_JuridicalRetail.ObjectId      AS MainJuridicalId
-                                   , ObjectLink_Unit_Area.ChildObjectId                AS AreaId
-                              FROM ObjectLink AS ObjectLink_JuridicalRetail 
-                                   LEFT JOIN ObjectLink AS OL_Unit_Juridical 
-                                                        ON OL_Unit_Juridical.ChildObjectId = ObjectLink_JuridicalRetail.ObjectId
-                                                       AND OL_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                                   LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
-                                                        ON ObjectLink_Unit_Area.ObjectId = OL_Unit_Juridical.ObjectId
-                                                       AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
-                                                      AND  ObjectLink_Unit_Area.ChildObjectId  <> 0 
-                              WHERE ObjectLink_JuridicalRetail.DescId = zc_ObjectLink_Juridical_Retail()    
-                                AND ObjectLink_JuridicalRetail.ChildObjectId = vbObjectId
+   , tmpMainJuridicalAreaAll AS (SELECT ObjectLink_JuridicalRetail.ObjectId      AS MainJuridicalId
+                                      , ObjectLink_Unit_Area.ChildObjectId       AS AreaId
+                                      , ROW_NUMBER() OVER (PARTITION BY ObjectLink_JuridicalRetail.ObjectId ORDER BY ObjectLink_Unit_Area.ChildObjectId) AS Ord
+                                 FROM ObjectLink AS ObjectLink_JuridicalRetail 
+                                      LEFT JOIN ObjectLink AS OL_Unit_Juridical 
+                                                           ON OL_Unit_Juridical.ChildObjectId = ObjectLink_JuridicalRetail.ObjectId
+                                                          AND OL_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                                      LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
+                                                           ON ObjectLink_Unit_Area.ObjectId = OL_Unit_Juridical.ObjectId
+                                                          AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
+                                                          AND  ObjectLink_Unit_Area.ChildObjectId  <> 0 
+                                 WHERE ObjectLink_JuridicalRetail.DescId = zc_ObjectLink_Juridical_Retail()  
+                                   AND ObjectLink_JuridicalRetail.ChildObjectId = vbObjectId
+                                 )
+   , tmpMainJuridicalArea AS (SELECT DISTINCT tmpMainJuridicalAreaAll.MainJuridicalId      AS MainJuridicalId
+                                   , tmpMainJuridicalAreaAll.AreaId                        AS AreaId
+                              FROM tmpMainJuridicalAreaAll
+                              WHERE COALESCE (tmpMainJuridicalAreaAll.AreaId, 0) <> 0
+                                 OR COALESCE (tmpMainJuridicalAreaAll.AreaId, 0) = 0 AND tmpMainJuridicalAreaAll.Ord = 1
+                              UNION ALL
+                              SELECT DISTINCT tmpMainJuridicalAreaAll.MainJuridicalId      AS MainJuridicalId
+                                   , 0                                                     AS AreaId
+                              FROM tmpMainJuridicalAreaAll
+                              WHERE COALESCE (tmpMainJuridicalAreaAll.AreaId, 0) <> 0 AND tmpMainJuridicalAreaAll.Ord = 1
                               )
 
    , tmpJuridicalSettingsItem AS (SELECT tmp.JuridicalSettingsId
@@ -126,9 +138,8 @@ BEGIN
            , LoadPriceList.Date_Update                          AS UpdateDate
 
        FROM LastPriceList_View 
-            JOIN tmpMainJuridicalArea ON (LastPriceList_View.AreaId = COALESCE (tmpMainJuridicalArea.AreaId, 0)
-                                       OR COALESCE (LastPriceList_View.AreaId, 0)  = 0
-                                          )
+            JOIN tmpMainJuridicalArea ON (COALESCE (LastPriceList_View.AreaId, 0) = COALESCE (tmpMainJuridicalArea.AreaId, 0)
+                                         )
             LEFT JOIN Object AS Object_MainJuridical ON Object_MainJuridical.Id = tmpMainJuridicalArea.MainJuridicalId
                                
             JOIN Object AS Object_Juridical ON Object_Juridical.Id = LastPriceList_View.JuridicalId

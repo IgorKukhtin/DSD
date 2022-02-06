@@ -434,6 +434,24 @@ type
     actUpdate_isErrorRROToVIP: TdsdExecStoredProc;
     spUpdate_isErrorRROToVIP: TdsdStoredProc;
     dxBarButton26: TdxBarButton;
+    isSUN_v2_Supplement_in: TcxGridDBColumn;
+    isSUN_v2_Supplement_out: TcxGridDBColumn;
+    spUpdate_isSUN_v2_Supplement_out_yes: TdsdStoredProc;
+    spUpdate_isSUN_v2_Supplement_in_yes: TdsdStoredProc;
+    spUpdate_isSUN_v2_Supplement_in_no: TdsdStoredProc;
+    spUpdate_isSUN_v2_Supplement_out_no: TdsdStoredProc;
+    actUpdate_Unit_isSUN_v2_Supplement_in_yes: TdsdExecStoredProc;
+    actUpdate_Unit_isSUN_v2_Supplement_in_no: TdsdExecStoredProc;
+    actUpdate_Unit_isSUN_v2_Supplement_out_yes: TdsdExecStoredProc;
+    actUpdate_Unit_isSUN_v2_Supplement_out_no: TdsdExecStoredProc;
+    macUpdate_Unit_isSUN_v2_Supplement_out_yes: TMultiAction;
+    macUpdate_Unit_isSUN_v2_Supplement_out_no: TMultiAction;
+    macUpdate_Unit_isSUN_v2_Supplement_in_yes: TMultiAction;
+    macUpdate_Unit_isSUN_v2_Supplement_in_no: TMultiAction;
+    dxBarButton27: TdxBarButton;
+    dxBarButton28: TdxBarButton;
+    dxBarButton29: TdxBarButton;
+    dxBarButton30: TdxBarButton;
   private
     { Private declarations }
   public

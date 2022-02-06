@@ -22,7 +22,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit;
+  cxCurrencyEdit, ExternalLoad;
 
 type
   TCashForm = class(TParentForm)
@@ -63,6 +63,12 @@ type
     bbShowAll: TdxBarButton;
     spUnErased: TdsdStoredProc;
     ParentName: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
+    spGetImportSettingId: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    macStartLoad: TMultiAction;
+    bbmacStartLoad: TdxBarButton;
   private
     { Private declarations }
   public

@@ -9,7 +9,7 @@ uses
   Vcl.ActnList, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons,
   cxControls, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxTextEdit, dsdGuides, cxButtonEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
-  cxCurrencyEdit, cxLabel, dxSkinsCore, dxSkinsDefaultPainters;
+  cxCurrencyEdit, cxLabel, dxSkinsCore, dxSkinsDefaultPainters, cxCheckBox;
 
 type
   TServiceMovementForm = class(TAncestorEditDialogForm)
@@ -33,6 +33,7 @@ type
     cxLabel3: TcxLabel;
     ceParent_infomoney: TcxButtonEdit;
     GuidesParent_infomoney: TdsdGuides;
+    cbisAuto: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -241,6 +241,7 @@ inherited ReasonDifferencesForm: TReasonDifferencesForm
     Top = 200
   end
   inherited spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdate_ReasonDifferences_IsErased'
     DataSet = MasterCDS
     DataSets = <
       item

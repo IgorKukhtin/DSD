@@ -65,7 +65,7 @@ var
   MutexAllowedConduct, MutexGoods, MutexDiffCDS, MutexDiffKind, MutexEmployeeWorkLog,
   MutexBankPOSTerminal, MutexUnitConfig, MutexTaxUnitNight, MutexGoodsExpirationDate,
   MutexGoodsAnalog, MutexUserHelsi, MutexUserLikiDnipro, MutexEmployeeSchedule, MutexBuyer, MutexDistributionPromo,
-  MutexImplementationPlanEmployee, MutexZReportLog : THandle;
+  MutexImplementationPlanEmployee, MutexZReportLog, MutexLog : THandle;
 
 implementation
 
@@ -503,6 +503,8 @@ begin
   LastErr := GetLastError;
   MutexZReportLog := CreateMutex(nil, false, 'farmacycashMutexZReportLog');
   LastErr := GetLastError;
+  MutexLog := CreateMutex(nil, false, 'farmacycashMutexLog');
+  LastErr := GetLastError;
 end;
 
 procedure CloseMutex;
@@ -529,6 +531,7 @@ begin
  CloseHandle(MutexBuyer);
  CloseHandle(MutexDistributionPromo);
  CloseHandle(MutexZReportLog);
+ CloseHandle(MutexLog);
 end;
 
 

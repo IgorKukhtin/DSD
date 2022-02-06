@@ -3,12 +3,16 @@
 DROP FUNCTION IF EXISTS gpSelect_ShowPUSH_ReturnOut(integer,integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ShowPUSH_ReturnOut(
-    IN inMovementID   integer,          -- Возврат
-    IN inParentID     integer,          -- Приход
-   OUT outShowMessage Boolean,          -- Показыват сообщение
-   OUT outPUSHType    Integer,          -- Тип сообщения
-   OUT outText        Text,             -- Текст сообщения
-    IN inSession      TVarChar          -- сессия пользователя
+    IN inMovementID        integer,          -- Возврат
+    IN inParentID          integer,          -- Приход
+   OUT outShowMessage      Boolean,          -- Показыват сообщение
+   OUT outPUSHType         Integer,          -- Тип сообщения
+   OUT outText             Text,             -- Текст сообщения
+   OUT outSpecialLighting  Boolean ,      -- 
+   OUT outTextColor        Integer ,      -- 
+   OUT outColor            Integer ,      -- 
+   OUT outBold             Boolean ,      -- 
+    IN inSession           TVarChar          -- сессия пользователя
 )
 RETURNS RECORD
 AS
@@ -17,6 +21,10 @@ $BODY$
 BEGIN
 
     outShowMessage := False;
+    outSpecialLighting  := True;
+    outTextColor        := zc_Color_Red();
+    outColor            := zc_Color_White();
+    outBold             := True;
 
     IF EXISTS(SELECT 1
               FROM Movement AS Movement_ReturnOut

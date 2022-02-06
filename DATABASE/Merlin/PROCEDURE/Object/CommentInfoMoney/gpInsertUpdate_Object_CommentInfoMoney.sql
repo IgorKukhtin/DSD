@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CommentInfoMoney (Integer, Integer
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CommentInfoMoney(
  INOUT ioId                  Integer   ,   	-- ключ объекта <>
-    IN inCode                Integer   ,    -- Международный код объекта <> 
+    IN inCode                Integer   ,    -- код объекта <> 
     IN inName                TVarChar  ,    -- Название объекта <> 
     IN inInfoMoneyKindId     Integer   , 
     IN inSession             TVarChar       -- сессия пользователя
@@ -26,7 +26,7 @@ BEGIN
    inCode:=lfGet_ObjectCode (inCode, zc_Object_CommentInfoMoney());
 
    -- проверка прав уникальности для свойства <Наименование Валюты>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_CommentInfoMoney(), inName);
+   --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_CommentInfoMoney(), inName);
    -- проверка прав уникальности для свойства <Код Валюты>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_CommentInfoMoney(), inCode);
 

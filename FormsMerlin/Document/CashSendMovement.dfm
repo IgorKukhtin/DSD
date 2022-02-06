@@ -113,8 +113,8 @@
   object edCurrencyValue: TcxCurrencyEdit [14]
     Left = 8
     Top = 176
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.00##'
     TabOrder = 14
     Width = 97
   end
@@ -349,14 +349,14 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CommentMoveMoneyNameId'
+        Name = 'CommentMoveMoneyId'
         Value = ''
         Component = GuidesCommentMoveMoney
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CommentMoveMoneyNameeyName'
+        Name = 'CommentMoveMoneyName'
         Value = ''
         Component = GuidesCommentMoveMoney
         ComponentItem = 'TextValue'

@@ -1,13 +1,14 @@
 -- Function: gpInsertUpdate_Object_InfoMoney()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InfoMoney (Integer, Integer, TVarChar, Boolean, Boolean, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InfoMoney (Integer, Integer, TVarChar, Boolean, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InfoMoney(
  INOUT ioId	          Integer   ,    -- ключ объекта <> 
     IN inCode             Integer   ,    -- код объекта <> 
     IN inName             TVarChar  ,    -- Название объекта <>
     IN inisService        Boolean   , 
-    IN inisUserAll        Boolean   , 
+    --IN inisUserAll        Boolean   , 
     IN inInfoMoneyKindId  Integer   ,    --
     IN inParentId         Integer   ,    -- ключ объекта <Група>
     IN inSession          TVarChar       -- сессия пользователя
@@ -28,9 +29,9 @@ $BODY$
    -- Если код не установлен, определяем его каи последний+1
    inCode := lfGet_ObjectCode (inCode, zc_Object_InfoMoney());
     
-   -- проверка прав уникальности для свойства <Наименование Касса>  
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_InfoMoney(), inName);
-   -- проверка прав уникальности для свойства <Код Кассы>
+   -- проверка прав уникальности для свойства <Наименование >  
+  -- PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_InfoMoney(), inName);
+   -- проверка прав уникальности для свойства <Код >
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_InfoMoney(), inCode);
 
    -- сохранили <Объект>
@@ -44,7 +45,7 @@ $BODY$
    -- сохранили
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_Service(), ioId, inisService);
    -- сохранили
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_UserAll(), ioId, inisUserAll);
+   --PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_UserAll(), ioId, inisUserAll);
    -- сохранили
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_InfoMoney_InfoMoneyKind(), ioId, inInfoMoneyKindId);
    -- сохранили
@@ -72,6 +73,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.02.22         *
  11.01.22         *
 */
 

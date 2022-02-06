@@ -214,6 +214,13 @@ type
     bbUpdate_Invnumber: TdxBarButton;
     spGetReporNameTTN: TdsdStoredProc;
     actSPPrintTTNProcName: TdsdExecStoredProc;
+    cxLabel29: TcxLabel;
+    edPriceListIn: TcxButtonEdit;
+    GuidesPriceListIn: TdsdGuides;
+    spUpdateMI_Sale_PriceIn: TdsdStoredProc;
+    actUpdateMI_Sale_PriceIn: TdsdExecStoredProc;
+    macUpdateMI_Sale_PriceIn: TMultiAction;
+    bbUpdateMI_Sale_PriceIn: TdxBarButton;
   private
     { Private declarations }
   public

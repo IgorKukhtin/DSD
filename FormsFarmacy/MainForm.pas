@@ -910,6 +910,8 @@ type
     N335: TMenuItem;
     actReport_PriceComparisonBIG3: TdsdOpenForm;
     C31: TMenuItem;
+    actReport_Sun_Supplement_v2: TdsdOpenForm;
+    v21: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
@@ -1073,7 +1075,11 @@ begin
                                  PUSHDS.FieldByName('Params').AsString,
                                  PUSHDS.FieldByName('TypeParams').AsString,
                                  PUSHDS.FieldByName('ValueParams').AsString,
-                                 PUSHDS.FieldByName('Beep').AsInteger);
+                                 PUSHDS.FieldByName('Beep').AsInteger,
+                                 PUSHDS.FieldByName('SpecialLighting').AsBoolean,
+                                 PUSHDS.FieldByName('TextColor').AsInteger,
+                                 PUSHDS.FieldByName('Color').AsInteger,
+                                 PUSHDS.FieldByName('Bold').AsBoolean);
         end;
       finally
          PUSHDS.Delete;

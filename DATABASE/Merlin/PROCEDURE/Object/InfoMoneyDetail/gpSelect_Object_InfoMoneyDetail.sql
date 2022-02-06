@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_InfoMoneyDetail(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , isUserAll Boolean
              , isErased Boolean
              , InfoMoneyKindId Integer, InfoMoneyKindName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
@@ -22,6 +23,7 @@ $BODY$BEGIN
    SELECT Object_InfoMoneyDetail.Id          AS Id
         , Object_InfoMoneyDetail.ObjectCode  AS Code
         , Object_InfoMoneyDetail.ValueData   AS Name
+        , COALESCE (ObjectBoolean_UserAll.ValueData, FALSE) ::Boolean AS isUserAll
         , Object_InfoMoneyDetail.isErased    AS isErased
         
         , Object_InfoMoneyKind.Id         AS InfoMoneyKindId
@@ -37,6 +39,11 @@ $BODY$BEGIN
                              ON ObjectLink_InfoMoneyKind.ObjectId = Object_InfoMoneyDetail.Id
                             AND ObjectLink_InfoMoneyKind.DescId = zc_ObjectLink_InfoMoneyDetail_InfoMoneyKind()
         LEFT JOIN Object AS Object_InfoMoneyKind ON Object_InfoMoneyKind.Id = ObjectLink_InfoMoneyKind.ChildObjectId
+
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_UserAll
+                                ON ObjectBoolean_UserAll.ObjectId = Object_InfoMoneyDetail.Id
+                               AND ObjectBoolean_UserAll.DescId = zc_ObjectBoolean_InfoMoneyDetail_UserAll()
 
         LEFT JOIN ObjectLink AS ObjectLink_Insert
                              ON ObjectLink_Insert.ObjectId = Object_InfoMoneyDetail.Id
@@ -70,4 +77,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_InfoMoneyDetail('2')
+--  SELECT * FROM gpSelect_Object_InfoMoneyDetail(false, '2')

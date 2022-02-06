@@ -931,6 +931,7 @@ inherited SaleForm: TSaleForm
         item
         end>
       Caption = #1040#1042#1058#1054#1047#1040#1055#1054#1051#1053#1048#1058#1068' '#1057#1055
+      Hint = #1040#1042#1058#1054#1047#1040#1055#1054#1051#1053#1048#1058#1068' '#1057#1055
       ImageIndex = 74
     end
     object spUpdateisDeferredYes: TdsdExecStoredProc
@@ -1139,6 +1140,93 @@ inherited SaleForm: TSaleForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actUpdate_MedicSP: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actMedicSPDialog
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MedicSP
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MedicSP
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1060#1048#1054' '#1074#1088#1072#1095#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1060#1048#1054' '#1074#1088#1072#1095#1072
+      ImageIndex = 55
+    end
+    object actMedicSPDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actMedicSPDialog'
+      FormName = 'TMedicSPDialogForm'
+      FormNameParam.Value = 'TMedicSPDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MedicSPId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MedicSPId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MedicSPName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MedicSPName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MedicSPForm'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MedicSPForm'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterPartnerMedicalId'
+          Value = Null
+          Component = GuidesPartnerMedical
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterPartnerMedicalName'
+          Value = Null
+          Component = GuidesPartnerMedical
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterOperDate'
+          Value = Null
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterUnitId'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterUnitName'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -1188,6 +1276,10 @@ inherited SaleForm: TSaleForm
         item
           Visible = True
           ItemName = 'bbGet_SP_Prior'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton7'
         end
         item
           Visible = True
@@ -1347,6 +1439,17 @@ inherited SaleForm: TSaleForm
       Action = actPrintInvoiceIC_20
       Category = 0
     end
+    object dxBarButton6: TdxBarButton
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1060#1048#1054' '#1074#1088#1072#1095#1072
+      Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1060#1048#1054' '#1074#1088#1072#1095#1072
+      Visible = ivAlways
+      ImageIndex = 55
+    end
+    object dxBarButton7: TdxBarButton
+      Action = actUpdate_MedicSP
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SearchAsFilter = False
@@ -1421,16 +1524,21 @@ inherited SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 'TMedicSP_ObjectForm'
-        DataType = ftString
+        Name = 'MedicSPId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicSPName'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 312
   end
   inherited StatusGuides: TdsdGuides
-    Top = 232
+    Top = 240
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Sale'
@@ -1460,7 +1568,7 @@ inherited SaleForm: TSaleForm
       end>
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Top = 232
+    Top = 240
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale'
@@ -2788,7 +2896,7 @@ inherited SaleForm: TSaleForm
       end>
     PackSize = 1
     Left = 320
-    Top = 339
+    Top = 323
   end
   object GuidesMemberIC: TdsdGuides
     KeyField = 'Id'
@@ -2905,5 +3013,30 @@ inherited SaleForm: TSaleForm
     PackSize = 1
     Left = 407
     Top = 376
+  end
+  object spUpdate_MedicSP: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Sale_MedicSP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMedicSPId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MedicSPId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 320
+    Top = 371
   end
 end

@@ -8,7 +8,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_InfoMoneyDetail_choice(
     IN inKindName    TVarChar,      -- какие статьи показывать только приход или только расход 
     IN inSession     TVarChar        -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , isUserAll Boolean
+             , isErased Boolean
              , InfoMoneyKindId Integer, InfoMoneyKindName TVarChar
 )
 AS
@@ -24,6 +26,7 @@ BEGIN
    SELECT tmp.Id          AS Id 
         , tmp.Code
         , tmp.Name
+        , tmp.isUserAll
         , tmp.isErased
         
         , tmp.InfoMoneyKindId

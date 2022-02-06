@@ -22,6 +22,9 @@ RETURNS TABLE (Id Integer
              , Comment TVarChar
              , Distributed TFloat
              , DistributedSumma TFloat
+             , DateInsert TDateTime
+             , DaysGrace Integer
+             , DatePayment TDateTime
               )
 
 AS
@@ -66,7 +69,13 @@ BEGIN
                                INNER JOIN tmpMIChild AS MIChild
                                                      ON MIChild.ParentId = MIMaster.Id
                           GROUP BY MIMaster.MovementID
-                           )
+                           ),
+             tmpMovementProtocol AS (SELECT MovementProtocol.MovementId
+                                          , MIN(DATE_TRUNC ('DAY', MovementProtocol.OperDate))::TDateTime  AS OperDate 
+                                     FROM MovementProtocol 
+                                     WHERE MovementProtocol.MovementId in (SELECT DISTINCT tmpMovement.Id AS ID FROM tmpMovement)
+                                     GROUP BY MovementProtocol.MovementId)
+
 
      SELECT Movement.Id
           , Movement.InvNumber
@@ -84,6 +93,10 @@ BEGIN
           , MovementString_Comment.ValueData                               AS Comment
           , MISum.Distributed                                              AS Distributed
           , MISum.DistributedSumma                                         AS DistributedSumma
+          , tmpMovementProtocol.OperDate                                   AS DateInsert
+          , COALESCE (MovementFloat_DaysGrace.ValueData,0)      :: Integer AS DaysGrace
+          , (tmpMovementProtocol.OperDate + (COALESCE (NULLIF(MovementFloat_DaysGrace.ValueData, 0),30)::TVarChar||' DAY')::Interval)::TDateTime  AS DatePayment
+
      FROM tmpMovement AS Movement 
         INNER JOIN tmpStatus ON Movement.StatusId = tmpStatus.StatusId
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -104,6 +117,10 @@ BEGIN
                                 ON MovementFloat_TotalAmount.MovementId =  Movement.Id
                                AND MovementFloat_TotalAmount.DescId = zc_MovementFloat_TotalAmount()
 
+        LEFT JOIN MovementFloat AS MovementFloat_DaysGrace
+                                ON MovementFloat_DaysGrace.MovementId =  Movement.Id
+                               AND MovementFloat_DaysGrace.DescId = zc_MovementFloat_DaysGrace()
+
         LEFT JOIN MovementDate AS MovementDate_StartSale
                                ON MovementDate_StartSale.MovementId = Movement.Id
                               AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
@@ -118,6 +135,8 @@ BEGIN
                                 AND MovementString_Comment.DescId = zc_MovementString_Comment()
                                 
         LEFT JOIN tmpMISum AS MISum ON MISum.MovementID = Movement.Id
+
+        LEFT JOIN tmpMovementProtocol ON tmpMovementProtocol.MovementId = Movement.Id
 
      ORDER BY InvNumber;
 

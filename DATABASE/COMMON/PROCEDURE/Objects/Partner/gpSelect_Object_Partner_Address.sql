@@ -27,7 +27,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                CityName TVarChar, CityKindName TVarChar, CityKindId Integer,
                RegionName TVarChar, ProvinceName TVarChar,
                StreetKindName TVarChar, StreetKindId Integer,
-               JuridicalId Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, RetailName TVarChar, RouteName TVarChar,
+               JuridicalId Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, 
+               RetailId Integer, RetailName TVarChar, 
+               RouteId Integer, RouteName TVarChar,
                Order_ContactPersonKindId Integer, Order_ContactPersonKindName TVarChar, Order_Name TVarChar, Order_Mail TVarChar, Order_Phone TVarChar,
                Doc_ContactPersonKindId Integer, Doc_ContactPersonKindName TVarChar, Doc_Name TVarChar, Doc_Mail TVarChar, Doc_Phone TVarChar,
                Act_ContactPersonKindId Integer, Act_ContactPersonKindName TVarChar, Act_Name TVarChar, Act_Mail TVarChar, Act_Phone TVarChar,
@@ -238,7 +240,9 @@ end if;
          , Object_Juridical.Id              AS JuridicalId
          , Object_Juridical.ValueData       AS JuridicalName
          , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
+         , Object_Retail.Id                 AS RetailId
          , Object_Retail.ValueData          AS RetailName
+         , Object_Route.Id                  AS RouteId
          , Object_Route.ValueData           AS RouteName
 
          , zc_Enum_ContactPersonKind_CreateOrder()  AS Order_ContactPersonKindId

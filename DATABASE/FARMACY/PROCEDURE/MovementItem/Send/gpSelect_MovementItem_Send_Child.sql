@@ -830,4 +830,5 @@ $BODY$
 --select * from gpSelect_MovementItem_Send_Child (inMovementId := 20000655       ,  inSession := '3');
 -- select * from gpSelect_MovementItem_Send_Child(inMovementId := 19872428  ,  inSession := '3') left join Object ON Object.Id = GoodsId;
 
-select * from gpSelect_MovementItem_Send_Child(inMovementId := 24878111   ,  inSession := '3');
+
+select * from gpSelect_MovementItem_Send_Child(inMovementId := 26535651 ,  inSession := '3');

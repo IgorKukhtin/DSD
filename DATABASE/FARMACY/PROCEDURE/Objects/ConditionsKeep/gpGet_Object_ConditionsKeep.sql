@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_ConditionsKeep(
     IN inId          Integer,        -- Должности
     IN inSession     TVarChar        -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isColdSUN boolean
              , isErased Boolean
              , RelatedProductId Integer, RelatedProductName TVarChar) AS
 $BODY$
@@ -22,7 +22,8 @@ BEGIN
              CAST (0 as Integer)    AS Id
            , lfGet_ObjectCode(0, zc_Object_ConditionsKeep()) AS Code
            , CAST ('' as TVarChar)  AS NAME
-           , CAST (NULL AS Boolean) AS isErased
+           , CAST (False AS Boolean) AS isColdSUN
+           , CAST (False AS Boolean) AS isErased
            , CAST (0 as Integer)    AS RelatedProductId
            , CAST ('' as TVarChar)  AS RelatedProductName;
    ELSE
@@ -30,6 +31,7 @@ BEGIN
        SELECT Object_ConditionsKeep.Id          AS Id
             , Object_ConditionsKeep.ObjectCode  AS Code
             , Object_ConditionsKeep.ValueData   AS Name
+            , COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) AS isColdSUN
             , Object_ConditionsKeep.isErased    AS isErased
             , ObjectFloat_RelatedProduct.ValueData::Integer  AS RelatedProductId
             , MS_RelatedProduct_Comment.ValueData            AS RelatedProductName 
@@ -41,6 +43,9 @@ BEGIN
             LEFT JOIN MovementString AS MS_RelatedProduct_Comment
                                      ON MS_RelatedProduct_Comment.MovementId = ObjectFloat_RelatedProduct.ValueData
                                     AND MS_RelatedProduct_Comment.DescId = zc_MovementString_Comment()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
+                                    ON ObjectBoolean_ColdSUN.ObjectId = Object_ConditionsKeep.Id
+                                   AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
 
        WHERE Object_ConditionsKeep.Id = inId;
    END IF;

@@ -30,6 +30,10 @@ BEGIN
    -- !!!меняем значение!!!
    IF inIsLast = TRUE THEN ioId:= 0; END IF;
 
+   IF COALESCE (inUnitId,0) = 0
+   THEN 
+       RAISE EXCEPTION 'Ошибка.Не выбран элемент справочника Отделы.';
+   END IF;
 
    -- Сохранили историю
    ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_ServiceItem(), inUnitId, inOperDate, vbUserId);

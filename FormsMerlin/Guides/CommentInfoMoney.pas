@@ -21,7 +21,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dsdAddOn, dxBarExtItems;
+  dsdAddOn, dxBarExtItems, ExternalLoad;
 
 type
   TCommentInfoMoneyForm = class(TParentForm)
@@ -59,6 +59,20 @@ type
     bbProtocolOpenForm: TdxBarButton;
     spErasedUnErased: TdsdStoredProc;
     InfoMoneyKindName: TcxGridDBColumn;
+    spUpdate_IsUserAll_Yes: TdsdStoredProc;
+    spUpdate_isUserAll: TdsdStoredProc;
+    actUpdate_IsUserAll: TdsdExecStoredProc;
+    actUpdate_IsUserAll_Yes: TdsdExecStoredProc;
+    macUpdate_IsUserAll_list: TMultiAction;
+    macUpdate_IsUserAll_Yes: TMultiAction;
+    bbmacUpdate_IsUserAll_Yes: TdxBarButton;
+    bbUpdate_IsUserAll: TdxBarButton;
+    FormParams: TdsdFormParams;
+    spGetImportSettingId: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    macStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
   private
     { Private declarations }
   public

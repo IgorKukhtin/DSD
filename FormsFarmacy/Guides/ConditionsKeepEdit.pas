@@ -11,7 +11,7 @@ uses
   cxDBLookupComboBox, cxPropertiesStore, dsdAddOn, dsdDB, dsdAction,
   Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
   cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar,
-  dxSkinsDefaultPainters;
+  dxSkinsDefaultPainters, cxCheckBox;
 
 type
   TConditionsKeepEditForm = class(TParentForm)
@@ -33,6 +33,7 @@ type
     ceRelatedProduct: TcxButtonEdit;
     cxLabel5: TcxLabel;
     RelatedProductGuides: TdsdGuides;
+    isColdSUN: TcxCheckBox;
   private
     { Private declarations }
   public

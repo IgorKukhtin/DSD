@@ -401,8 +401,8 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Send'
-      ReportNameParam.Value = 'PrintMovement_Send'
+      ReportName = 'PrintMovement_OrderReturnTare'
+      ReportNameParam.Value = 'PrintMovement_OrderReturnTare'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -440,6 +440,41 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object OpenChoiceTransportForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TransportJournalChoice'
+      ImageIndex = 50
+      FormName = 'TTransportJournalChoiceForm'
+      FormNameParam.Value = 'TTransportJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MovementId_Transport'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actInsertUpdate_MI_byTransport: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_MI_byTransport
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_MI_byTransport
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = 'actInsertUpdate_MI_byTransport'
+      ImageIndex = 50
     end
     object actPrintSaleOrder: TdsdPrintAction
       Category = 'Print'
@@ -536,6 +571,23 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object macInsertUpdate_MI_byTransport: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = OpenChoiceTransportForm
+        end
+        item
+          Action = actInsertUpdate_MI_byTransport
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = 'macInsertUpdate_MI_byTransport'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1047#1072#1103#1074#1082#1091' '#1087#1086' '#1055#1091#1090#1077#1074#1086#1084#1091' '#1083#1080#1089#1090#1091
+      ImageIndex = 50
     end
   end
   inherited MasterDS: TDataSource
@@ -641,11 +693,23 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertUpdate_MI_byTransport'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -672,47 +736,9 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
       Action = actPrint
       Category = 0
     end
-    object bbStartLoad: TdxBarButton
-      Caption = #1040#1064#1040#1053' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
+    object bbInsertUpdate_MI_byTransport: TdxBarButton
+      Action = macInsertUpdate_MI_byTransport
       Category = 0
-      Hint = #1040#1064#1040#1053' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Visible = ivAlways
-      ImageIndex = 41
-    end
-    object bbStartLoadNovus: TdxBarButton
-      Caption = #1053#1054#1042#1059#1057' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Category = 0
-      Hint = #1053#1054#1042#1059#1057' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Visible = ivAlways
-      ImageIndex = 41
-    end
-    object bbStartLoadMetro: TdxBarButton
-      Caption = #1052#1045#1058#1056#1054' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Category = 0
-      Hint = #1052#1045#1058#1056#1054' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Visible = ivAlways
-      ImageIndex = 41
-    end
-    object bbStartLoadFora: TdxBarButton
-      Caption = #1060#1054#1056#1040' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Category = 0
-      Hint = #1060#1054#1056#1040' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Visible = ivAlways
-      ImageIndex = 41
-    end
-    object bbStartLoadSilpo: TdxBarButton
-      Caption = #1057#1048#1051#1068#1055#1054' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Category = 0
-      Hint = #1057#1048#1051#1068#1055#1054' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Visible = ivAlways
-      ImageIndex = 41
-    end
-    object bb: TdxBarButton
-      Caption = #1042#1040#1056#1059#1057' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Category = 0
-      Hint = #1042#1040#1056#1059#1057' '#1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Visible = ivAlways
-      ImageIndex = 41
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -832,19 +858,6 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId_Weighing'
-        Value = '0'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisItem'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 599
@@ -958,5 +971,43 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
     PackSize = 1
     Left = 392
     Top = 432
+  end
+  object spInsertUpdate_MI_byTransport: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_OrderReturnTare_byTransport'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioMovementId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Transport'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'MovementId_Transport'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber'
+        Value = ''
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42132d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 602
+    Top = 320
   end
 end

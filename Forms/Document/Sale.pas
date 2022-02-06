@@ -46,8 +46,8 @@ type
     GuidesRouteSorting: TdsdGuides;
     GuidesFrom: TdsdGuides;
     GuidesTo: TdsdGuides;
-    PaidKindGuides: TdsdGuides;
-    ContractGuides: TdsdGuides;
+    GuidesPaidKind: TdsdGuides;
+    GuidesContract: TdsdGuides;
     edOperDatePartner: TcxDateEdit;
     cxLabel10: TcxLabel;
     edIsChecked: TcxCheckBox;
@@ -67,7 +67,7 @@ type
     actGoodsKindChoice: TOpenChoiceForm;
     cxLabel11: TcxLabel;
     edPriceList: TcxButtonEdit;
-    PriceListGuides: TdsdGuides;
+    GuidesPriceList: TdsdGuides;
     cxLabel12: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
     spSelectPrint: TdsdStoredProc;
@@ -121,12 +121,12 @@ type
     actSetDefaults: TdsdExecStoredProc;
     cxLabel17: TcxLabel;
     edCurrencyDocument: TcxButtonEdit;
-    CurrencyDocumentGuides: TdsdGuides;
+    GuidesCurrencyDocument: TdsdGuides;
     cxLabel18: TcxLabel;
     edCurrencyPartnerValue: TcxCurrencyEdit;
     cxLabel19: TcxLabel;
     edCurrencyPartner: TcxButtonEdit;
-    CurrencyPartnerGuides: TdsdGuides;
+    GuidesCurrencyPartner: TdsdGuides;
     actPrint_ExpInvoice: TdsdPrintAction;
     bbPrint_Invoice: TdxBarButton;
     actPrint_ExpPack: TdsdPrintAction;
@@ -136,7 +136,7 @@ type
     actGoodsBoxChoice: TOpenChoiceForm;
     edContractTag: TcxButtonEdit;
     cxLabel20: TcxLabel;
-    ContractTagGuides: TdsdGuides;
+    GuidesContractTag: TdsdGuides;
     edInvNumberOrder: TcxButtonEdit;
     GuidesInvNumberOrder: TdsdGuides;
     spSelectPrint_ExpPack: TdsdStoredProc;
@@ -187,7 +187,7 @@ type
     spInsertUpdateMovement_Params: TdsdStoredProc;
     cxLabel25: TcxLabel;
     edInvNumberTransport: TcxButtonEdit;
-    TransportChoiceGuides: TdsdGuides;
+    GuidesTransportChoice: TdsdGuides;
     HeaderSaver2: THeaderSaver;
     spSelectPrintReturnInDay: TdsdStoredProc;
     actPrintReturnInDay: TdsdPrintAction;
@@ -218,7 +218,7 @@ type
     isPeresort: TcxGridDBColumn;
     cxLabel27: TcxLabel;
     edInvNumberProduction: TcxButtonEdit;
-    ProductionDocGuides: TdsdGuides;
+    GuidesProductionDoc: TdsdGuides;
     actOpenProductionForm: TdsdOpenForm;
     bbOpenProduction: TdxBarButton;
     bbPrintPackGross: TdxBarButton;
@@ -255,6 +255,13 @@ type
     cbReCalcPrice: TcxCheckBox;
     spGetReporNameTTN: TdsdStoredProc;
     actSPPrintTTNProcName: TdsdExecStoredProc;
+    cxLabel29: TcxLabel;
+    edPriceListIn: TcxButtonEdit;
+    GuidesPriceListIn: TdsdGuides;
+    spUpdateMI_Sale_PriceIn: TdsdStoredProc;
+    actUpdateMI_Sale_PriceIn: TdsdExecStoredProc;
+    macUpdateMI_Sale_PriceIn: TMultiAction;
+    bbUpdateMI_Sale_PriceIn: TdxBarButton;
   private
     { Private declarations }
   public

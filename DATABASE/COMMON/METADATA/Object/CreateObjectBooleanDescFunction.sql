@@ -114,6 +114,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Juridical_isVatPrice() RETURNS Integ
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Juridical(), 'zc_ObjectBoolean_Juridical_isVatPrice', 'Схема расчета цены с НДС (построчно)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_isVatPrice');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Juridical_isNotTare() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_isNotTare'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Juridical(), 'zc_ObjectBoolean_Juridical_isNotTare', 'нет формирования возврат тары от покупателя' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_isNotTare');
+
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectBoolean_JuridicalSettings_isPriceClose() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_JuridicalSettings_isPriceClose'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
@@ -1165,10 +1170,33 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_PickUpLogsAndDBF_Loaded() RETURNS In
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_PickUpLogsAndDBF(), 'zc_ObjectBoolean_PickUpLogsAndDBF_Loaded', 'Загружено' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_PickUpLogsAndDBF_Loaded');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_PickUpLogsAndDBF_GetArchive() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_PickUpLogsAndDBF_GetArchive'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PickUpLogsAndDBF(), 'zc_ObjectBoolean_PickUpLogsAndDBF_GetArchive', 'Получить и архив логов' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_PickUpLogsAndDBF_GetArchive');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_ConditionsKeep_ColdSUN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_ConditionsKeep_ColdSUN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ConditionsKeep(), 'zc_ObjectBoolean_ConditionsKeep_ColdSUN', 'Холод для СУН' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_ConditionsKeep_ColdSUN');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_ColdSUN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_ColdSUN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_ColdSUN', 'Холод для СУН' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_ColdSUN');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_SUN_v2_Supplement_in() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_SUN_v2_Supplement_in'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_SUN_v2_Supplement_in', 'Работают по СУН - версия 2 дополнение - только прием' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_SUN_v2_Supplement_in');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_SUN_v2_Supplement_out() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_SUN_v2_Supplement_out'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_SUN_v2_Supplement_out', 'Работают по СУН - версия 2 дополнение - только отправка' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_SUN_v2_Supplement_out');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 03.02.22                                                                                                          * zc_ObjectBoolean_Unit_SUN_v2_Supplement
+ 02.02.22                                                                                                          * zc_ObjectBoolean_ConditionsKeep_ColdSUN
+ 26.01.22         * zc_ObjectBoolean_Juridical_isNotTare
+ 25.01.22                                                                                   * zc_ObjectBoolean_PickUpLogsAndDBF_GetArchive
  20.01.22                                                                                   * zc_ObjectBoolean_PickUpLogsAndDBF_Loaded
  19.01.22                                                                                   * zc_ObjectBoolean_User_NewUser, zc_ObjectBoolean_User_DismissedUser
  24.12.21                                                                                   * zc_ObjectBoolean_CashSettings_EliminateColdSUN

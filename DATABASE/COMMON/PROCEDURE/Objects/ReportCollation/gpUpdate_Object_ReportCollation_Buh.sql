@@ -12,6 +12,7 @@ RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbMemberId_user Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ReportCollation());
@@ -26,9 +27,25 @@ BEGIN
      -- сохранили свойство <Сдали в бухгалтерию>
      PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReportCollation_Buh(), inId, inIsBuh);
      
-     -- если признак сдали в бух = True , тогда записіваем дату
+     -- если признак сдали в бух = True , тогда записіваем дату и пользователя
      IF inIsBuh = TRUE     
-     THEN                     
+     THEN
+         -- Определяется <Физическое лицо> - кто сформировал визу inReestrKindId
+         vbMemberId_user:= CASE WHEN vbUserId = 5 THEN 9457 ELSE
+                           (SELECT ObjectLink_User_Member.ChildObjectId
+                            FROM ObjectLink AS ObjectLink_User_Member
+                            WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                              AND ObjectLink_User_Member.ObjectId = vbUserId)
+                           END ;
+         -- Проверка
+         IF COALESCE (vbMemberId_user, 0) = 0
+         THEN 
+              RAISE EXCEPTION 'Ошибка.У пользователя <%> не определно значение <Физ.лицо>.', lfGet_Object_ValueData (vbUserId);
+         END IF;
+
+         -- сохранили свойство <Пользователь (Сдали в бухгалтерию)>
+         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReportCollation_Buh(), inId, vbMemberId_user);
+
          -- сохранили свойство <Дата Сдали в бухгалтерию>
          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReportCollation_Buh(), inId, CURRENT_TIMESTAMP);
      END IF;

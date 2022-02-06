@@ -483,7 +483,6 @@ uses
   BranchLink in '..\..\FormsMeat\Guides\BranchLink.pas' {BranchLinkForm: TParentForm},
   Partner_PriceList in '..\..\Forms\Guides\Partner_PriceList.pas' {Partner_PriceListForm: TParentForm},
   Report_GoodsMI_Production in '..\..\Forms\Report\Report_GoodsMI_Production.pas' {Report_GoodsMI_ProductionForm: TParentForm},
-  Report_GoodsMI_ProductionSeparate in '..\..\Forms\Report\Report_GoodsMI_ProductionSeparate.pas' {Report_GoodsMI_ProductionSeparateForm: TParentForm},
   Member in '..\..\Forms\Guides\Member.pas' {MemberForm: TParentForm},
   MoneyPlace_Object in '..\..\Forms\Guides\MoneyPlace_Object.pas' {MoneyPlace_ObjectForm: TParentForm},
   UnitsTest in '..\SOURCE\Objects\All\UnitsTest.pas',
@@ -1349,7 +1348,8 @@ uses
   Report_OrderReturnTareDialog in '..\..\Forms\Report\Report_OrderReturnTareDialog.pas' {Report_OrderReturnTareDialogForm: TParentForm},
   Report_OrderReturnTare_ReturnIn in '..\..\Forms\Report\Report_OrderReturnTare_ReturnIn.pas' {Report_OrderReturnTare_ReturnInForm: TParentForm},
   Report_DefermentPaymentOLAPTable in '..\..\Forms\Report\Report_DefermentPaymentOLAPTable.pas' {Report_DefermentPaymentOLAPTableForm: TParentForm},
-  Report_DefermentPaymentOLAPTableDialog in '..\..\Forms\Report\Report_DefermentPaymentOLAPTableDialog.pas' {Report_DefermentPaymentOLAPTableDialogForm: TParentForm};
+  Report_DefermentPaymentOLAPTableDialog in '..\..\Forms\Report\Report_DefermentPaymentOLAPTableDialog.pas' {Report_DefermentPaymentOLAPTableDialogForm: TParentForm},
+  Report_GoodsMI_ProductionSeparate in '..\..\Forms\Report\Report_GoodsMI_ProductionSeparate.pas' {Report_GoodsMI_ProductionSeparateForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

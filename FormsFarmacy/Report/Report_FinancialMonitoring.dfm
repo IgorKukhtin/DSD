@@ -14,9 +14,13 @@ inherited Report_FinancialMonitoringForm: TReport_FinancialMonitoringForm
     ExplicitHeight = 435
     ClientRectBottom = 435
     ClientRectRight = 776
+    ClientRectTop = 24
     inherited tsMain: TcxTabSheet
+      Caption = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1084#1086#1085#1080#1090#1086#1088#1080#1085#1075
+      TabVisible = True
+      ExplicitTop = 24
       ExplicitWidth = 776
-      ExplicitHeight = 435
+      ExplicitHeight = 411
       inherited cxGrid: TcxGrid
         Width = 776
         Height = 73
@@ -81,7 +85,7 @@ inherited Report_FinancialMonitoringForm: TReport_FinancialMonitoringForm
         Left = 0
         Top = 73
         Width = 776
-        Height = 362
+        Height = 338
         Align = alClient
         TabOrder = 1
         object cxGridDBChartView4: TcxGridDBChartView
@@ -112,6 +116,36 @@ inherited Report_FinancialMonitoringForm: TReport_FinancialMonitoringForm
         end
         object cxGridLevel4: TcxGridLevel
           GridView = cxGridDBChartView4
+        end
+      end
+    end
+    object cxTabSheet1: TcxTabSheet
+      Caption = #1054#1089#1090#1072#1090#1082#1080
+      ImageIndex = 1
+      object cxGrid1: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 776
+        Height = 411
+        Align = alClient
+        TabOrder = 0
+        object cxGridDBChartView1: TcxGridDBChartView
+          DataController.DataSource = ChartDS
+          DiagramLine.Active = True
+          DiagramLine.Values.LineWidth = 3
+          ToolBox.CustomizeButton = True
+          ToolBox.DiagramSelector = True
+          object cxGridDBChartDataGroup1: TcxGridDBChartDataGroup
+            DataBinding.FieldName = 'OperDate'
+            DisplayText = #1055#1077#1088#1080#1086#1076
+          end
+          object cxGridDBChartSeries5: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SaldoSum'
+            DisplayText = #1054#1089#1090#1072#1090#1086#1082
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBChartView1
         end
       end
     end
@@ -233,7 +267,7 @@ inherited Report_FinancialMonitoringForm: TReport_FinancialMonitoringForm
     Top = 88
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'actReport_FinancialMonitoring'
+    StoredProcName = 'gpReport_FinancialMonitoring'
     DataSets = <
       item
         DataSet = MasterCDS

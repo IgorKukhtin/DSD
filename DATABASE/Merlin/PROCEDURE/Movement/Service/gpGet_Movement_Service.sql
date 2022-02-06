@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , ParentId_InfoMoney Integer, ParentName_InfoMoney TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyName TVarChar
+             , isAuto Boolean
              )
 AS
 $BODY$
@@ -44,6 +45,7 @@ BEGIN
            , CAST ('' as TVarChar)                             AS InfoMoneyName
            , 0                                                 AS CommentInfoMoneyId
            , ''::TVarChar                                      AS CommentInfoMoneyName
+           , FALSE ::Boolean                                   AS isAuto
       ;
      ELSE
      
@@ -62,7 +64,12 @@ BEGIN
            , Object_InfoMoney.ValueData         AS InfoMoneyName
            , Object_CommentInfoMoney.Id         AS CommentInfoMoneyId
            , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
+           , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) ::Boolean AS isAuto
        FROM Movement
+            LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                      ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                     AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.ObjectId
 

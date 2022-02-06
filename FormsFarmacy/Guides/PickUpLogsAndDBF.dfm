@@ -3,7 +3,7 @@ object PickUpLogsAndDBFForm: TPickUpLogsAndDBFForm
   Top = 0
   Caption = #1047#1072#1073#1088#1072#1090#1100' '#1083#1086#1075#1080' '#1080' '#1044#1041#1060' '#1080#1079' '#1082#1072#1089#1089#1099
   ClientHeight = 434
-  ClientWidth = 759
+  ClientWidth = 923
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,11 +18,12 @@ object PickUpLogsAndDBFForm: TPickUpLogsAndDBFForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 759
+    Width = 923
     Height = 408
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 759
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -85,12 +86,18 @@ object PickUpLogsAndDBFForm: TPickUpLogsAndDBFForm
         Options.Editing = False
         Width = 98
       end
+      object isGetArchive: TcxGridDBColumn
+        Caption = #1055#1086#1083#1091#1095#1080#1090#1100' '#1080' '#1072#1088#1093#1080#1074' '#1083#1086#1075#1086#1074
+        DataBinding.FieldName = 'isGetArchive'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 85
+      end
       object isLoaded: TcxGridDBColumn
         Caption = #1047#1072#1075#1088#1091#1078#1077#1085#1086
         DataBinding.FieldName = 'isLoaded'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 86
       end
       object DateLoaded: TcxGridDBColumn
@@ -206,6 +213,14 @@ object PickUpLogsAndDBFForm: TPickUpLogsAndDBFForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateClear'
         end
         item
@@ -232,10 +247,6 @@ object PickUpLogsAndDBFForm: TPickUpLogsAndDBFForm
         item
           Visible = True
           ItemName = 'bbProtocolOpenForm'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
@@ -327,6 +338,10 @@ object PickUpLogsAndDBFForm: TPickUpLogsAndDBFForm
       Hint = #1047#1072#1084#1077#1085#1080#1090' '#1090#1077#1089#1090#1086#1074#1091#1102' '#1087#1088#1086#1075#1088#1072#1084#1084#1091' '#1085#1072' '#1086#1089#1085#1086#1074#1085#1091#1102
       Visible = ivAlways
       ImageIndex = 52
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actUpdate_GetArch
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -515,6 +530,21 @@ object PickUpLogsAndDBFForm: TPickUpLogsAndDBFForm
       ImageIndex = 76
       QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' '#1079#1072#1075#1088#1091#1078#1077#1085#1086'?'
     end
+    object actUpdate_GetArch: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_GetArch
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_GetArch
+        end>
+      Caption = #1055#1086#1083#1091#1095#1080#1090#1100' '#1080' '#1072#1088#1093#1080#1074' '#1083#1086#1075#1086#1074
+      Hint = #1055#1086#1083#1091#1095#1080#1090#1100' '#1080' '#1072#1088#1093#1080#1074' '#1083#1086#1075#1086#1074
+      ImageIndex = 51
+      QuestionBeforeExecute = #1055#1086#1083#1091#1095#1080#1090#1100' '#1080' '#1072#1088#1093#1080#1074' '#1083#1086#1075#1086#1074'?'
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PickUpLogsAndDBF'
@@ -646,6 +676,32 @@ object PickUpLogsAndDBFForm: TPickUpLogsAndDBFForm
       end>
     PackSize = 1
     Left = 236
+    Top = 328
+  end
+  object spUpdate_GetArch: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_PickUpLogsAndDBF_GetArchive'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisGetArchive'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isGetArchive'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 372
     Top = 328
   end
 end

@@ -59,11 +59,12 @@ $BODY$
 
    DECLARE vbUnitId_from Integer;
    DECLARE vbUnitId_To Integer;
-   DECLARE vbGoodsId Integer;
+   DECLARE vbGoodsId TFloat;
    DECLARE vbSurplus TFloat;
    DECLARE vbNeed TFloat;
    DECLARE vbKoeffSUN TFloat;
 BEGIN
+     --
      --
      vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', inUserId);
 
@@ -114,6 +115,12 @@ BEGIN
        CREATE TEMP TABLE _tmpGoods_Sun_exception_Supplement   (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
      END IF;
 
+     -- исключаем такие перемещения
+     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpUnit_SunExclusion_Supplement'))
+     THEN
+       CREATE TEMP TABLE _tmpUnit_SunExclusion_Supplement (UnitId_from Integer, UnitId_to Integer) ON COMMIT DROP;
+     END IF;
+
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpRemains_all_Supplement'))
      THEN
@@ -154,6 +161,7 @@ BEGIN
      DELETE FROM _tmpStockRatio_all_Supplement;
      -- 3. распределяем-1 остатки - по всем аптекам
      DELETE FROM _tmpResult_Supplement;
+     DELETE FROM _tmpUnit_SunExclusion_Supplement;
 
      -- все Подразделения для схемы SUN
      INSERT INTO _tmpUnit_SUN_Supplement (UnitId, DeySupplSun1, MonthSupplSun1, isSUN_Supplement_in, isSUN_Supplement_out, isSUN_Supplement_Priority, SalesRatio)
@@ -302,6 +310,31 @@ BEGIN
         SELECT tmpSUN.UnitId, tmpSUN.GoodsId, tmpSUN.Amount
         FROM tmpSUN;
      
+     -- исключаем такие перемещения
+     INSERT INTO _tmpUnit_SunExclusion_Supplement (UnitId_from, UnitId_to)
+        SELECT COALESCE (ObjectLink_From.ChildObjectId, 0) AS UnitId_from
+             , COALESCE (ObjectLink_To.ChildObjectId,   0) AS UnitId_to
+        FROM Object
+             INNER JOIN ObjectBoolean AS OB
+                                      ON OB.ObjectId  = Object.Id
+                                     AND OB.DescId    = zc_ObjectBoolean_SunExclusion_v1()
+                                     AND OB.ValueData = TRUE
+             LEFT JOIN ObjectLink AS ObjectLink_From
+                                  ON ObjectLink_From.ObjectId = Object.Id
+                                 AND ObjectLink_From.DescId   = zc_ObjectLink_SunExclusion_From()
+             -- в этом случае возьмем всех
+             LEFT JOIN _tmpUnit_SUN_Supplement AS _tmpUnit_SUN_From ON ObjectLink_From.ChildObjectId IS NULL
+
+             LEFT JOIN ObjectLink AS ObjectLink_To
+                                  ON ObjectLink_To.ObjectId = Object.Id
+                                 AND ObjectLink_To.DescId   = zc_ObjectLink_SunExclusion_To()
+             -- в этом случае возьмем всех
+             LEFT JOIN _tmpUnit_SUN_Supplement AS _tmpUnit_SUN_To ON ObjectLink_To.ChildObjectId IS NULL
+
+        WHERE Object.DescId   = zc_Object_SunExclusion()
+          AND Object.isErased = FALSE
+           ;
+           
      -- Товар из перемещения
 /*     IF inOperDate = '01.02.2021'
      THEN
@@ -874,10 +907,46 @@ BEGIN
        AND _tmpRemains_all_Supplement.UnitId = T1.UnitId;
        
      -- 2.2. Подправили места по размазке не менее
-     UPDATE _tmpRemains_all_Supplement SET Need = ceil(COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0))
-     WHERE COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0
-       AND _tmpRemains_all_Supplement.Need < (COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) - _tmpRemains_all_Supplement.AmountRemains);
-       
+     IF EXISTS(SELECT 1 FROM _tmpRemains_all_Supplement WHERE COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0)
+     THEN
+       UPDATE _tmpRemains_all_Supplement SET Need = ceil(COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) + _tmpRemains_all_Supplement.AmountRemains)
+       WHERE COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0
+         AND _tmpRemains_all_Supplement.AmountRemains < COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0)
+         AND _tmpRemains_all_Supplement.Need < ceil(COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) + _tmpRemains_all_Supplement.AmountRemains)
+         AND _tmpRemains_all_Supplement.UnitId IN (SELECT _tmpUnit_SUN_Supplement.UnitId FROM _tmpUnit_SUN_Supplement WHERE _tmpUnit_SUN_Supplement.isSUN_Supplement_in = TRUE);
+
+        UPDATE _tmpRemains_all_Supplement SET Need = Need - T1.Amount
+        FROM (WITH tmpNeedSum AS (SELECT _tmpRemains_all_Supplement.GoodsId
+                                       , SUM(_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)  AS NeedSum
+                                  FROM _tmpRemains_all_Supplement
+                                  WHERE _tmpRemains_all_Supplement.GoodsId in (SELECT DISTINCT _tmpRemains_all_Supplement.GoodsId 
+                                                                               FROM _tmpRemains_all_Supplement 
+                                                                               WHERE COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0)
+                                  GROUP BY _tmpRemains_all_Supplement.GoodsId
+                                  HAVING SUM(_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains) > 0)
+                 , tmpNeedCount AS (SELECT _tmpRemains_all_Supplement.GoodsId
+                                         , COUNT (*)                             AS CountNeed 
+                                    FROM _tmpRemains_all_Supplement
+                                    WHERE COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0
+                                      AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) * 1.2 < (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)
+                                    GROUP BY _tmpRemains_all_Supplement.GoodsId
+                                    HAVING COUNT (*) > 0
+                                    )
+   
+              SELECT _tmpRemains_all_Supplement.GoodsId
+                   , _tmpRemains_all_Supplement.UnitId
+                   , ceil(tmpNeedSum.NeedSum / tmpNeedCount.CountNeed) AS Amount
+              FROM _tmpRemains_all_Supplement
+                   INNER JOIN tmpNeedSum ON tmpNeedSum.GoodsId = _tmpRemains_all_Supplement.GoodsId
+                   INNER JOIN tmpNeedCount ON tmpNeedCount.GoodsId = _tmpRemains_all_Supplement.GoodsId
+              WHERE COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0
+                AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains) - ceil(tmpNeedSum.NeedSum / tmpNeedCount.CountNeed)
+              ) AS T1
+        WHERE _tmpRemains_all_Supplement.GoodsId = T1.GoodsId
+          AND _tmpRemains_all_Supplement.UnitId = T1.UnitId;
+
+     END IF;
+              
 
 /* raise notice 'Value 05: % %', 
     (SELECT Count(*) FROM _tmpRemains_all_Supplement WHERE COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) < 0), 
@@ -1028,6 +1097,10 @@ BEGIN
                                                                  ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_all_Supplement.UnitId
                                                                 AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_all_Supplement.GoodsId
 
+                  -- отбросили !!исключения!!
+                  LEFT JOIN _tmpUnit_SunExclusion_Supplement ON _tmpUnit_SunExclusion_Supplement.UnitId_from = vbUnitId_from
+                                                            AND _tmpUnit_SunExclusion_Supplement.UnitId_to   = _tmpRemains_all_Supplement.UnitId
+
              WHERE FLOOR(CASE WHEN COALESCE (GiveAway, 0) < 0 THEN - COALESCE (GiveAway, 0) ELSE 
                               CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
                               CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= 0
@@ -1050,7 +1123,13 @@ BEGIN
                  AND COALESCE(_tmpGoods_SUN_Supplement.UnitOut2Id, 0) <> _tmpRemains_all_Supplement.UnitId)
                AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
                AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) >= 0
-             ORDER BY (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
+               AND _tmpUnit_SunExclusion_Supplement.UnitId_to IS NULL
+             ORDER BY CASE WHEN COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0 THEN 1000000 
+                           ELSE (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
+                                 THEN - _tmpRemains_all_Supplement.AmountRemains
+                                 ELSE (_tmpRemains_all_Supplement.Need  -_tmpRemains_all_Supplement.AmountRemains)::Integer
+                                 END - _tmpRemains_all_Supplement.AmountUse) END
+                    , (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
                             THEN - _tmpRemains_all_Supplement.AmountRemains
                             ELSE (_tmpRemains_all_Supplement.Need  -_tmpRemains_all_Supplement.AmountRemains)::Integer
                             END - _tmpRemains_all_Supplement.AmountUse) DESC
@@ -1065,6 +1144,7 @@ BEGIN
 
              -- если данные закончились, или все кол-во найдено тогда выход
              IF NOT FOUND OR FLOOR (vbSurplus) <= 0 THEN EXIT; END IF;
+             
 
 /*             IF vbGoodsId = 17140
              THEN

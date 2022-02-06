@@ -89,6 +89,8 @@ type
     Amount: TcxGridDBColumn;
     actReport_Goods: TdsdOpenForm;
     ddReport_Goods: TdxBarButton;
+    cbDate: TcxCheckBox;
+    cbMovement: TcxCheckBox;
   private
     { Private declarations }
   public

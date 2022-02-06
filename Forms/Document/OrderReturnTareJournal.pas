@@ -45,15 +45,14 @@ type
     actPrintSaleOrder: TdsdPrintAction;
     actPrintSaleOrderTax: TdsdPrintAction;
     spGetImportSettingId: TdsdStoredProc;
-    bbStartLoad: TdxBarButton;
-    bbStartLoadNovus: TdxBarButton;
-    bbStartLoadMetro: TdxBarButton;
-    bbStartLoadFora: TdxBarButton;
-    bbStartLoadSilpo: TdxBarButton;
     spDelete_Movement: TdsdStoredProc;
-    bb: TdxBarButton;
     InvNumber_Transport_Full: TcxGridDBColumn;
     OperDate_Transport: TcxGridDBColumn;
+    spInsertUpdate_MI_byTransport: TdsdStoredProc;
+    actInsertUpdate_MI_byTransport: TdsdExecStoredProc;
+    macInsertUpdate_MI_byTransport: TMultiAction;
+    OpenChoiceTransportForm: TOpenChoiceForm;
+    bbInsertUpdate_MI_byTransport: TdxBarButton;
   private
     { Private declarations }
   public

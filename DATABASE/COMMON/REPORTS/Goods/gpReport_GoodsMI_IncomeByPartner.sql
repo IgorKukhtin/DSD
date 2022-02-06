@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS gpReport_GoodsMI_Income (TDateTime, TDateTime, Integer, 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_Income (TDateTime, TDateTime, Integer, Integer, Integer, Integer,Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_IncomeByPartner (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_IncomeByPartner (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_IncomeByPartner (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_GoodsMI_IncomeByPartner (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_IncomeByPartner (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_IncomeByPartner (
     IN inStartDate    TDateTime ,
@@ -17,6 +18,8 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_IncomeByPartner (
     IN inUnitGroupId  Integer   ,
     IN inUnitId       Integer   ,
     IN inGoodsGroupId Integer   ,
+    IN inisDate       Boolean   , -- по датам (показ дату док + дату поставщика
+    IN inisMovement   Boolean   , -- показато № док
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -33,6 +36,9 @@ RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull
              , AmountPartner TFloat, AmountPartner_Weight TFloat , AmountPartner_Sh TFloat, PricePartner TFloat
              , AmountDiff_Weight TFloat, AmountDiff_Sh TFloat
              , Summ TFloat, Summ_ProfitLoss TFloat
+             , OperDate        TDateTime
+             , OperDatePartner TDateTime
+             , Invnumber       TVarChar
              )
 AS
 $BODY$
@@ -181,6 +187,10 @@ BEGIN
          , tmpOperationGroup.Summ            :: TFloat AS Summ
          , tmpOperationGroup.Summ_ProfitLoss :: TFloat AS Summ_ProfitLoss
 
+         , tmpOperationGroup.OperDate        ::TDateTime AS OperDate
+         , tmpOperationGroup.OperDatePartner ::TDateTime AS OperDatePartner
+         , tmpOperationGroup.Invnumber       ::TVarChar  AS Invnumber
+
      FROM (SELECT CASE WHEN vbIsGroup = TRUE THEN 0 ELSE tmpContainer.GoodsId END AS GoodsId
                 , tmpContainer.LocationId
                 , COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 )) AS JuridicalId
@@ -191,6 +201,10 @@ BEGIN
                 , 0/*( COALESCE (ContainerLO_FuelKind.ObjectId,0) )*/ AS FuelKindId
                 , tmpContainer.GoodsKindId                            AS GoodsKindId
                 , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE COALESCE (CLO_PartionGoods.ObjectId, 0) END AS PartionGoodsId
+                
+                , CASE WHEN inisDate = TRUE THEN Movement.OperDate ELSE NULL END      AS OperDate
+                , MovementDate_OperDatePartner.ValueData                              AS OperDatePartner
+                , CASE WHEN inisMovement = TRUE THEN Movement.Invnumber ELSE NULL END AS Invnumber
 
                 , SUM (tmpContainer.Amount)                           AS Amount
                 , SUM (tmpContainer.AmountPartner)                    AS AmountPartner
@@ -207,6 +221,7 @@ BEGIN
                       , MIContainer.ContainerId_analyzer               AS ContainerId_analyzer
                       , MIContainer.ObjectExtId_Analyzer               AS PartnerId
                       , MIContainer.WhereObjectId_analyzer             AS LocationId
+                      , CASE WHEN inisDate = TRUE OR inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END AS MovementId
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.MovementDescId = zc_Movement_Income() AND MIContainer.isActive = TRUE
                                        THEN MIContainer.Amount
                                   WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.MovementDescId = zc_Movement_ReturnOut() AND MIContainer.isActive = FALSE
@@ -258,6 +273,7 @@ BEGIN
                         , MIContainer.ContainerId_analyzer
                         , MIContainer.WhereObjectId_analyzer
                         , MIContainer.ObjectExtId_Analyzer
+                        , CASE WHEN inisDate = TRUE OR inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END
                 ) AS tmpContainer
                       INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpContainer.GoodsId
 
@@ -286,6 +302,12 @@ BEGIN
                                                     ON ContainerLO_Member.ContainerId =  tmpContainer.ContainerId_analyzer
                                                    AND ContainerLO_Member.DescId = zc_ContainerLinkObject_Member()
 
+                      LEFT JOIN Movement ON Movement.Id = tmpContainer.MovementId
+                      LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                             ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                            AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                            AND inisDate = TRUE
+
                       WHERE (ContainerLO_Juridical.ObjectId = inJuridicalId OR inJuridicalId=0)
                         AND (ContainerLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId=0 OR (ContainerLO_Member.ObjectId > 0 AND inPaidKindId = zc_Enum_PaidKind_SecondForm()))
                         AND (ContainerLO_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
@@ -300,6 +322,10 @@ BEGIN
                              , tmpContainer.PartnerId
                              , COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 ))
                              , COALESCE (ContainerLO_InfoMoney.ObjectId, 0)
+
+                             , CASE WHEN inisDate = TRUE THEN Movement.OperDate ELSE NULL END
+                             , MovementDate_OperDatePartner.ValueData
+                             , CASE WHEN inisMovement = TRUE THEN Movement.Invnumber ELSE NULL END
           ) AS tmpOperationGroup
 
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
@@ -353,4 +379,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_IncomeByPartner (inStartDate:= '01.11.2017', inEndDate:= '01.11.2017', inDescId:= zc_Movement_Income(), inJuridicalId:=0, inPaidKindId:=0, inInfoMoneyId:=0, inUnitGroupId:=0, inUnitId:= 0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_IncomeByPartner (inStartDate:= '01.11.2017', inEndDate:= '01.11.2017', inDescId:= zc_Movement_Income(), inJuridicalId:=0, inPaidKindId:=0, inInfoMoneyId:=0, inUnitGroupId:=0, inUnitId:= 0, inGoodsGroupId:= 0, inisDate := FALSE, inisMovement := FALSE, inSession:= zfCalc_UserAdmin());

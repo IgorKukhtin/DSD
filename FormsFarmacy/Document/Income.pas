@@ -199,6 +199,8 @@ type
     actPUSHInfo: TdsdShowPUSHMessage;
     actPUSHNewPretension: TdsdShowPUSHMessage;
     spPUSHNewPretension: TdsdStoredProc;
+    spPUSHLinkCheck: TdsdStoredProc;
+    actPUSHLinkCheck: TdsdShowPUSHMessage;
   private
     { Private declarations }
   public

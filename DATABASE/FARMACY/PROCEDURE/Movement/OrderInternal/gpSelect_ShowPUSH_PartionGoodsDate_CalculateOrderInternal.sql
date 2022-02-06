@@ -48,8 +48,8 @@ BEGIN
                       
                       ORDER BY MovementItem.PartionGoodsDate
                       ),
-        tmpNTZ AS (SELECT string_agg('—–Œ  √ŒƒÕŒ—“» : '||zfConvert_DateShortToString (tmpMI_All.PartionGoodsDate)||' '|| COALESCE(tmpMI_All.Comment, '')||Chr(13)||
-                                     '  '||Object_Goods_Main.ObjectCode||' - '||Object_Goods_Main.Name, Chr(13)) AS Goods
+        tmpNTZ AS (SELECT string_agg(zfConvert_DateShortToString (tmpMI_All.PartionGoodsDate)||' '|| COALESCE(tmpMI_All.Comment, '')||
+                                     ' '||Object_Goods_Main.ObjectCode||' - '||Object_Goods_Main.Name, Chr(13)||Chr(13)) AS Goods
                    FROM tmpMI_All
 
                         INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = tmpMI_All.GoodsId
@@ -58,8 +58,8 @@ BEGIN
                          
                    WHERE tmpMI_All.PartionGoodsDate < vbDate180
                      AND COALESCE (tmpMI_All.ListDiffAmount, 0) = 0),
-        tmpListDiff AS (SELECT string_agg('—–Œ  √ŒƒÕŒ—“» : '||zfConvert_DateShortToString (tmpMI_All.PartionGoodsDate)||' '|| COALESCE(tmpMI_All.Comment, '')||Chr(13)||
-                                     '  '||Object_Goods_Main.ObjectCode||' - '||Object_Goods_Main.Name, Chr(13)) AS Goods
+        tmpListDiff AS (SELECT string_agg(zfConvert_DateShortToString (tmpMI_All.PartionGoodsDate)||' '|| COALESCE(tmpMI_All.Comment, '')||
+                                     ' '||Object_Goods_Main.ObjectCode||' - '||Object_Goods_Main.Name, Chr(13)||Chr(13)) AS Goods
                         FROM tmpMI_All
 
                              INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = tmpMI_All.GoodsId

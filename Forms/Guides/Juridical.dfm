@@ -2,7 +2,7 @@ object JuridicalForm: TJuridicalForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
-  ClientHeight = 405
+  ClientHeight = 537
   ClientWidth = 953
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,13 +22,13 @@ object JuridicalForm: TJuridicalForm
     Left = 0
     Top = 26
     Width = 8
-    Height = 379
+    Height = 511
   end
   object cxGrid: TcxGrid
     Left = 8
     Top = 26
     Width = 945
-    Height = 379
+    Height = 511
     Align = alClient
     TabOrder = 1
     object cxGridDBTableView: TcxGridDBTableView
@@ -238,6 +238,15 @@ object JuridicalForm: TJuridicalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 40
+      end
+      object isNotTare: TcxGridDBColumn
+        Caption = #1053#1077' '#1092#1086#1088#1084#1080#1088'. '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099' '#1086#1090' '#1087#1086#1082#1091#1087'.'
+        DataBinding.FieldName = 'isNotTare'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1077' '#1092#1086#1088#1084#1080#1088'. '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+        Options.Editing = False
+        Width = 133
       end
       object isVatPrice: TcxGridDBColumn
         Caption = #1057#1093'. '#1088#1072#1089#1095'. '#1094#1077#1085#1099' '#1089' '#1053#1044#1057' '#1089#1090#1088'.'
@@ -577,6 +586,22 @@ object JuridicalForm: TJuridicalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_IsNotTare'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_IsNotTare_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpen'
         end
         item
@@ -650,6 +675,14 @@ object JuridicalForm: TJuridicalForm
     end
     object bbInsert_VatPrice: TdxBarButton
       Action = macInsert_VatPrice
+      Category = 0
+    end
+    object bbUpdate_IsNotTare: TdxBarButton
+      Action = actUpdate_IsNotTare
+      Category = 0
+    end
+    object bbUpdate_IsNotTare_Yes: TdxBarButton
+      Action = macUpdate_IsNotTare_Yes
       Category = 0
     end
   end
@@ -1159,6 +1192,55 @@ object JuridicalForm: TJuridicalForm
       Hint = 'C'#1093#1077#1084#1072' '#1088#1072#1089#1095#1077#1090#1072' '#1094#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1087#1086#1089#1090#1088#1086#1095#1085#1086')'
       ImageIndex = 50
     end
+    object actUpdate_IsNotTare_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_IsNotTare_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_IsNotTare_Yes
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1053#1077' '#1092#1086#1088#1084#1080#1088'. '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'> '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1053#1077' '#1092#1086#1088#1084#1080#1088'. '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'> '#1044#1072
+      ImageIndex = 79
+    end
+    object actUpdate_IsNotTare: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_IsNotTare
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_IsNotTare
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100'  <'#1053#1077' '#1092#1086#1088#1084#1080#1088'. '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'> '#1044#1072'/'#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100'  <'#1053#1077' '#1092#1086#1088#1084#1080#1088'. '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'> '#1044#1072'/'#1053#1077#1090
+      ImageIndex = 80
+    end
+    object macUpdate_IsNotTare_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_IsNotTare_Yes
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdate_IsNotTare_list'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1053#1077' '#1092#1086#1088#1084#1080#1088'. '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'> '#1044#1072
+      ImageIndex = 79
+    end
+    object macUpdate_IsNotTare_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_IsNotTare_list
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1053#1077' '#1092#1086#1088#1084#1080#1088'. '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'> '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1053#1077' '#1092#1086#1088#1084#1080#1088'. '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'> '#1044#1072
+      ImageIndex = 79
+    end
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 272
@@ -1415,5 +1497,71 @@ object JuridicalForm: TJuridicalForm
       end>
     Left = 735
     Top = 127
+  end
+  object spUpdate_IsNotTare: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Juridical_isNotTare'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotTare'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isNotTare'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisNotTare'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isNotTare'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 224
+  end
+  object spUpdate_IsNotTare_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Juridical_isNotTare'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotTare'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisNotTare'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isNotTare'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 584
+    Top = 256
   end
 end

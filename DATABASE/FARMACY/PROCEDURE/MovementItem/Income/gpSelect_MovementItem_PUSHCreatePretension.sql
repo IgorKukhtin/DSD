@@ -3,12 +3,16 @@
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_PUSHCreatePretension (Integer, Text, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PUSHCreatePretension(
-    IN inMovementId   Integer  , -- ключ Документа
-    IN inJSON         Text     , -- json     
-   OUT outShowMessage Boolean  , -- Показыват сообщение
-   OUT outPUSHType    Integer  , -- Тип сообщения
-   OUT outText        Text     , -- Текст сообщения
-    IN inSession      TVarChar    -- сессия пользователя
+    IN inMovementId        Integer  , -- ключ Документа
+    IN inJSON              Text     , -- json     
+   OUT outShowMessage      Boolean  , -- Показыват сообщение
+   OUT outPUSHType         Integer  , -- Тип сообщения
+   OUT outText             Text     , -- Текст сообщения
+   OUT outSpecialLighting  Boolean ,      -- 
+   OUT outTextColor        Integer ,      -- 
+   OUT outColor            Integer ,      -- 
+   OUT outBold             Boolean ,      -- 
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
 AS
@@ -21,6 +25,10 @@ BEGIN
     vbUserId := lpGetUserBySession (inSession);
 
     outShowMessage := False;
+    outSpecialLighting  := True;
+    outTextColor        := zc_Color_Red();
+    outColor            := zc_Color_White();
+    outBold             := True;
 
     IF COALESCE (inJSON, '') = ''
     THEN

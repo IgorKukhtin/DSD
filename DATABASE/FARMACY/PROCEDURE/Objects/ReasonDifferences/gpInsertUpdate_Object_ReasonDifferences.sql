@@ -19,6 +19,13 @@ BEGIN
    --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ReasonDifferences());
    vbUserId:= inSession;
 
+   -- проверка - проведенные/удаленные документы Изменять нельзя
+   IF NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), zc_Enum_Role_PharmacyManager(), zc_Enum_Role_SeniorManager()))
+   THEN
+      RAISE EXCEPTION 'Ошибка.Изменять <Причины разногласия> вам запрещено.';
+   END IF;
+
+
    -- Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
    ioCode:= lfGet_ObjectCode (ioCode, zc_Object_ReasonDifferences());
    

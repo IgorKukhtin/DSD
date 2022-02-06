@@ -138,6 +138,11 @@ type
     dxBarButton5: TdxBarButton;
     actPrintInvoiceIC_7: TdsdPrintAction;
     actPrintInvoiceIC_20: TdsdPrintAction;
+    spUpdate_MedicSP: TdsdStoredProc;
+    dxBarButton6: TdxBarButton;
+    actUpdate_MedicSP: TdsdExecStoredProc;
+    actMedicSPDialog: TExecuteDialog;
+    dxBarButton7: TdxBarButton;
   private
     { Private declarations }
   public

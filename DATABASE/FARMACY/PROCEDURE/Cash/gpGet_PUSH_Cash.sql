@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_PUSH_Cash(
 )
 RETURNS TABLE (Id Integer, Text TBlob, isPoll boolean,
                FormName TVarChar, Button TVarChar, Params TVarChar, TypeParams TVarChar, ValueParams TVarChar,
-               isFormOpen boolean)
+               isFormOpen boolean, isSpecialLighting Boolean, TextColor Integer, Color Integer, isBold Boolean)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -57,7 +57,11 @@ BEGIN
                            , Params TVarChar
                            , TypeParams TVarChar
                            , ValueParams TVarChar
-                           , isFormOpen boolean) ON COMMIT DROP;
+                           , isFormOpen boolean
+                           , isSpecialLighting Boolean
+                           , TextColor Integer
+                           , Color Integer
+                           , isBold Boolean) ON COMMIT DROP;
 
      -- Отметка посещаемости
     IF vbRetailId = 4 AND
@@ -746,15 +750,19 @@ BEGIN
 
 
    RETURN QUERY
-     SELECT _PUSH.Id                          AS Id
-          , _PUSH.Text                        AS Text
-          , COALESCE(_PUSH.isPoll, False)     AS isPoll
-          , _PUSH.FormName                    AS FormName
-          , _PUSH.Button                      AS Button
-          , _PUSH.Params                      AS Params
-          , _PUSH.TypeParams                  AS TypeParams
-          , _PUSH.ValueParams                 AS ValueParams
-          , COALESCE(_PUSH.isFormOpen, False) AS  isFormOpen
+     SELECT _PUSH.Id                                  AS Id
+          , _PUSH.Text                                AS Text
+          , COALESCE(_PUSH.isPoll, False)             AS isPoll
+          , _PUSH.FormName                            AS FormName
+          , _PUSH.Button                              AS Button
+          , _PUSH.Params                              AS Params
+          , _PUSH.TypeParams                          AS TypeParams
+          , _PUSH.ValueParams                         AS ValueParams
+          , COALESCE(_PUSH.isFormOpen, False)         AS isFormOpen
+          , COALESCE(_PUSH.isSpecialLighting, False)  AS isSpecialLighting
+          , _PUSH.TextColor                           AS TextColor
+          , _PUSH.Color                               AS Color
+          , COALESCE(_PUSH.isBold, False)             AS isBold
      FROM _PUSH;
      
      

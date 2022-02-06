@@ -567,12 +567,15 @@ BEGIN
                         --AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
                        )
         -- отбросили !!холод!!
-      , tmpConditionsKeep AS (SELECT DISTINCT OL_Goods_ConditionsKeep.ObjectId
-                              FROM ObjectLink AS OL_Goods_ConditionsKeep
-                                   LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
-                              WHERE OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
-                                AND (Object_ConditionsKeep.ValueData ILIKE '%холод%'
-                                  OR Object_ConditionsKeep.ValueData ILIKE '%прохладное%'
+      , tmpConditionsKeep AS (SELECT Object_Goods.Id AS ObjectId
+                              FROM Object_Goods_Retail AS Object_Goods
+                                   LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
+                                   LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
+                                                           ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
+                                                          AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
+                              WHERE Object_Goods.RetailId = 4
+                                AND (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
+                                 OR Object_Goods_Main.isColdSUN = TRUE 
                                     )
                                 AND vbisEliminateColdSUN = TRUE
                              )
@@ -783,7 +786,7 @@ BEGIN
                , tmpExpress AS (SELECT tmpExpress_all.UnitID
                                      , tmpExpress_all.GoodsID
                                      , tmpExpress_all.AmountRemains - COALESCE (tmpExpress_PartionDate.Amount, 0) - COALESCE (tmpMI_SUN_out.Amount, 0) AS AmountRemains
-                                     , tmpExpress_all.AmountResult_out
+                                     , tmpExpress_all.AmountResult_out - COALESCE (tmpExpress_PartionDate.Amount, 0) - COALESCE (tmpMI_SUN_out.Amount, 0) AS AmountResult_out
                                 FROM tmpExpress_all
                                      -- ВСЕ сроковые
                                      LEFT JOIN tmpExpress_PartionDate ON tmpExpress_PartionDate.UnitId  = tmpExpress_all.UnitID

@@ -667,6 +667,20 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Top = 46
       Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088'.'
     end
+    object ceDaysGrace: TcxCurrencyEdit
+      Left = 804
+      Top = 62
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0; -0; ;'
+      Properties.ReadOnly = False
+      TabOrder = 12
+      Width = 80
+    end
+    object cxLabel8: TcxLabel
+      Left = 804
+      Top = 47
+      Caption = #1044#1085#1077#1081' '#1086#1090#1089#1088#1086#1095#1082#1080
+    end
   end
   object edStartSale: TcxDateEdit [2]
     Left = 264
@@ -2444,6 +2458,12 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Component = ceTotalAmount
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DaysGrace'
+        Value = Null
+        Component = ceDaysGrace
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 240
@@ -2522,6 +2542,13 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDaysGrace'
+        Value = Null
+        Component = ceDaysGrace
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -2566,6 +2593,9 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       end
       item
         Control = ceTotalAmount
+      end
+      item
+        Control = ceDaysGrace
       end>
     Left = 200
     Top = 177

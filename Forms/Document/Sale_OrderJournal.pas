@@ -272,10 +272,15 @@ type
     dxBarButton1: TdxBarButton;
     spSelectPrintItem2244900110: TdsdStoredProc;
     mactExport_xls_2244900110: TMultiAction;
-    bb: TdxBarButton;
+    bbExport_xls_2244900110: TdxBarButton;
     dsdPrintAction1: TdsdPrintAction;
     dsdPrintAction2: TdsdPrintAction;
     actExport_fr3: TdsdPrintAction;
+    spUpdateMI_Sale_PriceIn: TdsdStoredProc;
+    actUpdateMI_Sale_PriceIn: TdsdExecStoredProc;
+    macUpdateMI_Sale_PriceIn_list: TMultiAction;
+    macUpdateMI_Sale_PriceIn: TMultiAction;
+    bbUpdateMI_Sale_PriceIn: TdxBarButton;
   private
     { Private declarations }
   public

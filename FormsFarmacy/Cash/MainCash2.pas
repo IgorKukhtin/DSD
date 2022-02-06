@@ -946,6 +946,7 @@ type
     function SetMorionCodeFilter : boolean;
     procedure ClearAll;
     procedure LoadMedicalProgramSPGoods(AGoodsId : Integer);
+    procedure MoveLogFile;
 
     property SoldRegim: Boolean read FSoldRegim write SetSoldRegim;
   end;
@@ -1015,37 +1016,11 @@ procedure Add_Log(AMessage: String);
 var
   F: TextFile;
 begin
+  WaitForSingleObject(MutexLog, INFINITE);
   try
-    AssignFile(F, ChangeFileExt(Application.ExeName, '.log'));
-    if not fileExists(ChangeFileExt(Application.ExeName, '.log')) then
-    begin
-      Rewrite(F);
-    end
-    else
-      Append(F);
-    //
     try
-      Writeln(F, DateTimeToStr(Now) + ': ' + AMessage);
-    finally
-      CloseFile(F);
-    end;
-  except
-    on E: Exception do
-      ShowMessage
-        ('Ошибка сохранения в лог файл. Покажите это окно системному администратору: '
-        + #13#10 + E.Message);
-  end;
-end;
-
-procedure Add_Log_RRO(AMessage: String);
-var
-  F: TextFile;
-begin
-  try
-    if isLog_RRO then
-    try
-      AssignFile(F, ChangeFileExt(Application.ExeName, '_RRO.log'));
-      if not fileExists(ChangeFileExt(Application.ExeName, '_RRO.log')) then
+      AssignFile(F, ChangeFileExt(Application.ExeName, '.log'));
+      if not fileExists(ChangeFileExt(Application.ExeName, '.log')) then
       begin
         Rewrite(F);
       end
@@ -1060,11 +1035,47 @@ begin
     except
       on E: Exception do
         ShowMessage
-          ('Ошибка сохранения в лог файл по рро. Покажите это окно системному администратору: '
+          ('Ошибка сохранения в лог файл. Покажите это окно системному администратору: '
           + #13#10 + E.Message);
     end;
   finally
-    ShowMessage(AMessage);
+    ReleaseMutex(MutexLog);
+  end;
+end;
+
+procedure Add_Log_RRO(AMessage: String);
+var
+  F: TextFile;
+begin
+  WaitForSingleObject(MutexLog, INFINITE);
+  try
+    try
+      if isLog_RRO then
+      try
+        AssignFile(F, ChangeFileExt(Application.ExeName, '_RRO.log'));
+        if not fileExists(ChangeFileExt(Application.ExeName, '_RRO.log')) then
+        begin
+          Rewrite(F);
+        end
+        else
+          Append(F);
+        //
+        try
+          Writeln(F, DateTimeToStr(Now) + ': ' + AMessage);
+        finally
+          CloseFile(F);
+        end;
+      except
+        on E: Exception do
+          ShowMessage
+            ('Ошибка сохранения в лог файл по рро. Покажите это окно системному администратору: '
+            + #13#10 + E.Message);
+      end;
+    finally
+      ShowMessage(AMessage);
+    end;
+  finally
+    ReleaseMutex(MutexLog);
   end;
 end;
 
@@ -2758,9 +2769,14 @@ begin
           end else if ShowPUSHMessageCash(PUSHDS.FieldByName('Text').AsString, cResult,
             PUSHDS.FieldByName('isPoll').AsBoolean,
             PUSHDS.FieldByName('FormName').AsString,
-            PUSHDS.FieldByName('Button').AsString, PUSHDS.FieldByName('Params')
-            .AsString, PUSHDS.FieldByName('TypeParams').AsString,
-            PUSHDS.FieldByName('ValueParams').AsString) then
+            PUSHDS.FieldByName('Button').AsString,
+            PUSHDS.FieldByName('Params').AsString,
+            PUSHDS.FieldByName('TypeParams').AsString,
+            PUSHDS.FieldByName('ValueParams').AsString,
+            PUSHDS.FieldByName('isSpecialLighting').AsBoolean,
+            PUSHDS.FieldByName('TextColor').AsInteger,
+            PUSHDS.FieldByName('Color').AsInteger,
+            PUSHDS.FieldByName('isBold').AsBoolean) then
           begin
             try
               spInsert_MovementItem_PUSH.ParamByName('inMovement').Value :=
@@ -2782,9 +2798,14 @@ begin
           ShowPUSHMessageCash(PUSHDS.FieldByName('Text').AsString, cResult,
             PUSHDS.FieldByName('isPoll').AsBoolean,
             PUSHDS.FieldByName('FormName').AsString,
-            PUSHDS.FieldByName('Button').AsString, PUSHDS.FieldByName('Params')
-            .AsString, PUSHDS.FieldByName('TypeParams').AsString,
-            PUSHDS.FieldByName('ValueParams').AsString);
+            PUSHDS.FieldByName('Button').AsString,
+            PUSHDS.FieldByName('Params').AsString,
+            PUSHDS.FieldByName('TypeParams').AsString,
+            PUSHDS.FieldByName('ValueParams').AsString,
+            PUSHDS.FieldByName('isSpecialLighting').AsBoolean,
+            PUSHDS.FieldByName('TextColor').AsInteger,
+            PUSHDS.FieldByName('Color').AsInteger,
+            PUSHDS.FieldByName('isBold').AsBoolean);
       finally
         PUSHDS.Delete;
       end;
@@ -7826,6 +7847,8 @@ begin
   inherited;
   FStyle := TcxStyle.Create(nil);
   FormClassName := Self.ClassName;
+
+  MoveLogFile;
 
   Application.OnMessage := AppMsgHandler; // только 2 форма
   // мемдата для сохранения отгруженных чеков во время получение полных остатков
@@ -13874,6 +13897,55 @@ begin
   if not MedicalProgramSPGoodsCDS.Active or not MedicalProgramSPGoodsCDS.Locate('GoodsId', AGoodsId, []) or
     (MedicalProgramSPGoodsCDS.FieldByName('MedicalProgramSPID').AsInteger <> FormParams.ParamByName('MedicalProgramSPId').Value) then
     raise Exception.Create('Ошибка получения данных по программе для медикамента. Покажите это окно системному администратору');
+end;
+
+procedure TMainCashForm2.MoveLogFile;
+  var s, p: string; sl : TStringList;  i : integer;
+begin
+
+  if DayOf(Date) <> 1 then Exit;
+
+  sl := TStringList.Create;
+  try
+
+    p := ExtractFilePath(Application.ExeName);
+
+    if not ForceDirectories(p + 'LogArchive\') then
+    begin
+      Add_Log('Error crete path: ' + p + 'LogArchive\');
+      Exit;
+    end;
+
+    try
+
+      for s in TDirectory.GetFiles(p, '*.log') do sl.Add(TPath.GetFileName(s));
+
+      for i := 0 to sl.Count - 1 do if (GetFileSizeByName(p + sl.Strings[i]) > 5000000) and not
+        FileExists(p + 'LogArchive\' + TPath.GetFileNameWithoutExtension(sl.Strings[i]) + '_' + FormatDateTime('yyyy-mm-dd', Date) + TPath.GetExtension(sl.Strings[i])) then
+      begin
+        TFile.Copy(p + sl.Strings[i], p + 'LogArchive\' + TPath.GetFileNameWithoutExtension(sl.Strings[i]) + '_' + FormatDateTime('yyyy-mm-dd', Date) + TPath.GetExtension(sl.Strings[i]), true);
+        TFile.Delete(p + sl.Strings[i]);
+      end;
+
+      sl.Clear;
+
+      for s in TDirectory.GetFiles(p, '*log.xml') do sl.Add(TPath.GetFileName(s));
+
+      for i := 0 to sl.Count - 1 do if (GetFileSizeByName(p + sl.Strings[i]) > 5000000) and not
+        FileExists(p + 'LogArchive\' + TPath.GetFileNameWithoutExtension(sl.Strings[i]) + '_' + FormatDateTime('yyyy-mm-dd', Date) + TPath.GetExtension(sl.Strings[i])) then
+      begin
+        TFile.Copy(p + sl.Strings[i], p + 'LogArchive\' + TPath.GetFileNameWithoutExtension(sl.Strings[i]) + '_' + FormatDateTime('yyyy-mm-dd', Date) + TPath.GetExtension(sl.Strings[i]), true);
+        TFile.Delete(p + sl.Strings[i]);
+      end;
+
+    except
+      ON E: Exception do Add_Log('MoveLogFile err=' + E.Message);
+    end;
+
+
+  finally
+    sl.Free;
+  end;
 end;
 
 

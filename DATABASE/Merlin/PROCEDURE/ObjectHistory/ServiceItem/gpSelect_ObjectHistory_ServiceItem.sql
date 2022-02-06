@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_ServiceItem(
 RETURNS TABLE (Id Integer, StartDate TDateTime, EndDate TDateTime
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , Value TFloat, Price TFloat, Area TFloat
              , isErased Boolean
              )
@@ -20,7 +21,7 @@ BEGIN
      RETURN QUERY
        WITH 
        ObjectHistory_ServiceItem AS (SELECT * FROM ObjectHistory
-                                     WHERE ObjectHistory.ObjectId = inUnitId
+                                     WHERE (ObjectHistory.ObjectId = inUnitId OR inUnitId = 0)
                                        AND ObjectHistory.DescId = zc_ObjectHistory_ServiceItem()
                                      )
 
@@ -33,6 +34,10 @@ BEGIN
            , Object_InfoMoney.ValueData                                     AS InfoMoneyName
            , Object_CommentInfoMoney.Id                                     AS CommentInfoMoneyId
            , Object_CommentInfoMoney.ValueData                              AS CommentInfoMoneyName
+           
+           , Object_Unit.Id                                                 AS UnitId
+           , Object_Unit.ObjectCode                                         AS UnitCode
+           , Object_Unit.ValueData                                          AS UnitName
 
            , ObjectHistoryFloat_ServiceItem_Value.ValueData                 AS Value
            , ObjectHistoryFloat_ServiceItem_Price.ValueData                 AS Price
@@ -40,8 +45,11 @@ BEGIN
            , FALSE AS isErased
 
        FROM ObjectHistory_ServiceItem
-            FULL JOIN (SELECT zc_DateStart() AS StartDate, inUnitId AS ObjectId ) AS Empty
-                                                                                  ON Empty.ObjectId = ObjectHistory_ServiceItem.ObjectID
+            FULL JOIN (SELECT zc_DateStart() AS StartDate, inUnitId AS ObjectId 
+                       WHERE inUnitId <> 0) AS Empty
+                                            ON Empty.ObjectId = ObjectHistory_ServiceItem.ObjectId
+
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectHistory_ServiceItem.ObjectId
 
             LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_ServiceItem_InfoMoney
                                         ON ObjectHistoryLink_ServiceItem_InfoMoney.ObjectHistoryId = ObjectHistory_ServiceItem.Id

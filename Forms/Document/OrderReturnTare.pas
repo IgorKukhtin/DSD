@@ -46,14 +46,11 @@ type
     GoodsGroupNameFull: TcxGridDBColumn;
     cxLabel22: TcxLabel;
     ceComment: TcxTextEdit;
-    actPrintNoGroup: TdsdPrintAction;
     bbPrintNoGroup: TdxBarButton;
     cxLabel8: TcxLabel;
     edInsertDate: TcxDateEdit;
     cxLabel7: TcxLabel;
     edInsertName: TcxButtonEdit;
-    actPrintSaleOrder: TdsdPrintAction;
-    actPrintSaleOrderTax: TdsdPrintAction;
     bbPrintSaleOrder: TdxBarButton;
     bbPrintSaleOrderTax: TdxBarButton;
     bbPersonalGroupChoiceForm: TdxBarButton;

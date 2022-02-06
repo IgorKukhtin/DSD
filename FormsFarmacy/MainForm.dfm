@@ -98,7 +98,7 @@
     object actReport_Movement_Send_RemainsSun_pi: TdsdOpenForm [3]
       Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053' v2 ('#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1048#1079#1083#1080#1096#1082#1086#1074')'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053' PI ('#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1048#1079#1083#1080#1096#1082#1086#1074')'
       FormName = 'TReport_Movement_Send_RemainsSun_piForm'
       FormNameParam.Value = 'TReport_Movement_Send_RemainsSun_piForm'
       FormNameParam.DataType = ftString
@@ -4911,6 +4911,18 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Sun_Supplement_v2: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1074' '#1057#1059#1053' v.2'
+      Hint = #1054#1090#1095#1077#1090' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1074' '#1057#1059#1053' v.2'
+      FormName = 'TReport_Movement_Send_RemainsSun_Supplement_v2Form'
+      FormNameParam.Value = 'TReport_Movement_Send_RemainsSun_Supplement_v2Form'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5796,6 +5808,9 @@
       end
       object N276: TMenuItem
         Action = actReport_Movement_Send_RemainsSun_SUA
+      end
+      object v21: TMenuItem
+        Action = actReport_Sun_Supplement_v2
       end
       object N202: TMenuItem
         Caption = '-'

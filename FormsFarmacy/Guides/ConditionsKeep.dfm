@@ -54,18 +54,27 @@ object ConditionsKeepForm: TConditionsKeepForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 53
+        Width = 50
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 314
+        Width = 297
+      end
+      object isColdSUN: TcxGridDBColumn
+        Caption = #1061#1086#1083#1086#1076' '#1076#1083#1103' '#1057#1059#1053
+        DataBinding.FieldName = 'isColdSUN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 65
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
@@ -75,7 +84,7 @@ object ConditionsKeepForm: TConditionsKeepForm
         DataBinding.FieldName = 'RelatedProductName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 155
+        Width = 142
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -199,6 +208,14 @@ object ConditionsKeepForm: TConditionsKeepForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_isColdSUN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
       OneOnRow = True
@@ -247,6 +264,10 @@ object ConditionsKeepForm: TConditionsKeepForm
     end
     object bbClearRelatedProduct: TdxBarButton
       Action = actClearRelatedProduct
+      Category = 0
+    end
+    object bbUpdate_isColdSUN: TdxBarButton
+      Action = mactUpdate_isColdSUN
       Category = 0
     end
   end
@@ -447,6 +468,31 @@ object ConditionsKeepForm: TConditionsKeepForm
         end>
       Caption = 'actUpdate_ClearRelatedProduct'
     end
+    object mactUpdate_isColdSUN: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_isColdSUN
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1061#1086#1083#1086#1076' '#1076#1083#1103' '#1057#1059#1053'>?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1061#1086#1083#1086#1076' '#1076#1083#1103' '#1057#1059#1053'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1061#1086#1083#1086#1076' '#1076#1083#1103' '#1057#1059#1053'>'
+      ImageIndex = 80
+    end
+    object actUpdate_isColdSUN: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isColdSUN
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isColdSUN
+        end>
+      Caption = 'actUpdate_isColdSUN'
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ConditionsKeep'
@@ -502,10 +548,12 @@ object ConditionsKeepForm: TConditionsKeepForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 128
     Top = 216
@@ -569,5 +617,32 @@ object ConditionsKeepForm: TConditionsKeepForm
     NeedResetData = True
     Left = 408
     Top = 144
+  end
+  object spUpdate_isColdSUN: TdsdStoredProc
+    StoredProcName = 'gpUpdate_ConditionsKeep_isColdSUN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisColdSUN'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isColdSUN'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    Left = 408
+    Top = 200
   end
 end

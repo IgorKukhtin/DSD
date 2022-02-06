@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ConditionsKeep(
     IN inCode                Integer   ,    -- код объекта 
     IN inName                TVarChar  ,    -- Название объекта <>
     IN inRelatedProductId    Integer   ,    -- Сопутствующие товары
+    IN inisColdSUN           boolean   ,    -- Холод для СУН
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -36,6 +37,9 @@ BEGIN
 
    -- сохранили свойство <Сопутствующие товары>
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ConditionsKeep_RelatedProduct(), ioId, inRelatedProductId);
+
+   -- сохранили свойство <Холод для СУН>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_ConditionsKeep_ColdSUN(), ioId, inisColdSUN);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

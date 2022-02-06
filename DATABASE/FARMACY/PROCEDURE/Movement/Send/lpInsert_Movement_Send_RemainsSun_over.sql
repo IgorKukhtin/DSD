@@ -177,7 +177,6 @@ BEGIN
                    FROM (SELECT EXTRACT(DOW FROM inOperDate) AS RetV) AS tmp
                   ) :: TVarChar;
 
-
      -- все ѕодразделени€ дл€ схемы SUN-v2
      INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, Value_T1, Value_T2, DayIncome, DaySendSUN, DaySendSUNAll, Limit_N, isLockSale, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL)
         SELECT OB.ObjectId AS UnitId
@@ -1424,13 +1423,15 @@ BEGIN
                             AND (MCS_isClose.ObjectId IS NULL OR _tmpUnit_SUN.isLock_ClosePL = FALSE)
                          )
         -- отбросили !!холод!!
-      , tmpConditionsKeep AS (SELECT OL_Goods_ConditionsKeep.ObjectId
-                              FROM ObjectLink AS OL_Goods_ConditionsKeep
-                                   LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
-                              WHERE OL_Goods_ConditionsKeep.ObjectId IN (SELECT DISTINCT _tmpRemains_Partion_all.GoodsId FROM _tmpRemains_Partion_all)
-                                AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
-                                AND (Object_ConditionsKeep.ValueData ILIKE '%холод%'
-                                  OR Object_ConditionsKeep.ValueData ILIKE '%прохладное%'
+      , tmpConditionsKeep AS (SELECT tmpGoods.GoodsID AS ObjectId
+                              FROM (SELECT DISTINCT _tmpRemains_Partion_all.GoodsId FROM _tmpRemains_Partion_all) AS tmpGoods
+                                   LEFT JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsID
+                                   LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
+                                   LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
+                                                           ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
+                                                          AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
+                              WHERE (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
+                                 OR Object_Goods_Main.isColdSUN = TRUE 
                                     )
                                 AND vbisEliminateColdSUN = TRUE
                              )
@@ -1581,13 +1582,19 @@ BEGIN
      --
      INSERT INTO _tmpSumm_limit (UnitId_from, UnitId_to, Summ)
         WITH
-        tmpConditionsKeep AS (SELECT OL_Goods_ConditionsKeep.ObjectId
-                                   , Object_ConditionsKeep.ValueData
-                              FROM ObjectLink AS OL_Goods_ConditionsKeep
-                                   LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
-                              WHERE OL_Goods_ConditionsKeep.ObjectId IN (SELECT DISTINCT _tmpRemains_calc.GoodsId FROM _tmpRemains_calc)
-                                AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
-                              )
+        -- отбросили !!холод!!
+        tmpConditionsKeep AS (SELECT tmpGoods.GoodsID AS ObjectId
+                              FROM (SELECT DISTINCT _tmpRemains_Partion_all.GoodsId FROM _tmpRemains_Partion_all) AS tmpGoods
+                                   LEFT JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsID
+                                   LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
+                                   LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
+                                                           ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
+                                                          AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
+                              WHERE (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
+                                 OR Object_Goods_Main.isColdSUN = TRUE 
+                                    )
+                                AND vbisEliminateColdSUN = TRUE
+                             )
         SELECT _tmpRemains_Partion.UnitId AS UnitId_from
              , _tmpRemains_calc.UnitId    AS UnitId_to
                -- если OVER больше чем в ѕќ“–≈ЅЌќ—“№
@@ -1628,11 +1635,7 @@ BEGIN
                                   AND _tmpSUN_oth.UnitId_to   = _tmpRemains_calc.UnitId
                                   AND _tmpSUN_oth.GoodsId     = _tmpRemains_calc.GoodsId
 
-        WHERE ((tmpConditionsKeep.ValueData NOT ILIKE '%холод%'
-            AND tmpConditionsKeep.ValueData NOT ILIKE '%прохладное%'
-               )
-            OR tmpConditionsKeep.ValueData IS NULL
-              )
+        WHERE tmpConditionsKeep.ObjectId IS NULL
           AND _tmpUnit_SunExclusion.UnitId_to IS NULL
           AND _tmpUnit_SunExclusion_MCS.UnitId_to IS NULL
           AND _tmpSUN_oth.GoodsId IS NULL
@@ -1760,10 +1763,15 @@ BEGIN
                                                       ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_calc.UnitId
                                                      AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_calc.GoodsId
 
+/*                 -- отбросили !!исключени€!!
+                 LEFT JOIN _tmpUnit_SunExclusion ON _tmpUnit_SunExclusion.UnitId_from = vbUnitId_from
+                                                AND _tmpUnit_SunExclusion.UnitId_to   = _tmpRemains_calc.UnitId
+*/
             WHERE _tmpRemains_calc.GoodsId = vbGoodsId
               AND _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) > 0
               AND _tmpUnit_SunExclusion_MCS.UnitId_to IS NULL
               AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
+            --  AND _tmpUnit_SunExclusion.UnitId_to IS NULL
 
             ORDER BY --начинаем с аптек, где ѕќ“–≈ЅЌќ—“№ - максимальным
                      _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) DESC

@@ -103,6 +103,22 @@ inherited GoodsSUNForm: TGoodsSUNForm
             Options.Editing = False
             Width = 75
           end
+          object isColdSUNCK: TcxGridDBColumn
+            Caption = #1061#1086#1083#1086#1076' '#1076#1083#1103' '#1057#1059#1053' '#1080#1079' '#1091#1089#1083#1086#1074#1080#1081' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'isColdSUNCK'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object isColdSUN: TcxGridDBColumn
+            Caption = #1061#1086#1083#1086#1076' '#1076#1083#1103' '#1057#1059#1053
+            DataBinding.FieldName = 'isColdSUN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 57
+          end
           object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
@@ -1834,6 +1850,32 @@ inherited GoodsSUNForm: TGoodsSUNForm
         end>
       Caption = 'actUpdate_inAllowedPlatesSUN_Revert'
     end
+    object mactUpdate_isColdSUN: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_isColdSUN
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1061#1086#1083#1086#1076' '#1076#1083#1103' '#1057#1059#1053'>? '
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1061#1086#1083#1086#1076' '#1076#1083#1103' '#1057#1059#1053'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1061#1086#1083#1086#1076' '#1076#1083#1103' '#1057#1059#1053'>'
+      ImageIndex = 79
+    end
+    object actUpdate_isColdSUN: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isColdSUN
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isColdSUN
+        end>
+      Caption = 'actUpdate_isColdSUN'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -2151,6 +2193,10 @@ inherited GoodsSUNForm: TGoodsSUNForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton20'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton3'
         end
         item
@@ -2354,6 +2400,10 @@ inherited GoodsSUNForm: TGoodsSUNForm
     end
     object dxBarButton19: TdxBarButton
       Action = mactUpdate_inAllowedPlatesSUN_Revert
+      Category = 0
+    end
+    object dxBarButton20: TdxBarButton
+      Action = mactUpdate_isColdSUN
       Category = 0
     end
   end
@@ -3418,5 +3468,32 @@ inherited GoodsSUNForm: TGoodsSUNForm
     PackSize = 1
     Left = 1048
     Top = 240
+  end
+  object spUpdate_isColdSUN: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isColdSUN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisColdSUN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isColdSUN'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    Left = 1048
+    Top = 296
   end
 end

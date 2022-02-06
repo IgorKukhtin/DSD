@@ -123,6 +123,12 @@ type
     GuidesInfoMoney: TdsdGuides;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
+    actPrintPack: TdsdPrintAction;
+    spSelectPrintPack: TdsdStoredProc;
+    macPrintPack: TMultiAction;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    bbmacPrintPack: TdxBarButton;
   private
     { Private declarations }
   public

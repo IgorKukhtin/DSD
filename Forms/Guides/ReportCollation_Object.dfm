@@ -28,7 +28,6 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 99
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -693,6 +692,18 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbmacPrintPack'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -770,6 +781,10 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
     end
     object bbOpenReportForm: TdxBarButton
       Action = actOpenReportForm
+      Category = 0
+    end
+    object bbmacPrintPack: TdxBarButton
+      Action = macPrintPack
       Category = 0
     end
   end
@@ -1262,8 +1277,8 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102' - '#1053#1077#1090
-      Hint = #1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102' - '#1053#1077#1090
+      Caption = #1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102' - '#1044#1072
+      Hint = #1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102' - '#1044#1072
       ImageIndex = 76
     end
     object macUpdate_Buh_No: TMultiAction
@@ -1346,7 +1361,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         end
         item
           Name = 'inEndDate'
-          Value = 'NULL'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'EndDate'
           DataType = ftDateTime
@@ -1428,6 +1443,48 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object macPrintPack: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPrintPack
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1095#1072#1090#1080' '#1087#1072#1082#1077#1090#1072'?'
+      Caption = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
+      Hint = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
+      ImageIndex = 15
+    end
+    object actPrintPack: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintPack
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintPack
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDataset'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <>
+      ReportName = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081')'#1055#1072#1082#1077#1090
+      ReportNameParam.Value = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081')'#1055#1072#1082#1077#1090
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   object spSelect: TdsdStoredProc
@@ -1529,10 +1586,13 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 328
     Top = 264
   end
@@ -1583,7 +1643,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       end
       item
         Name = 'inStartRemains'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = ClientDataSet
         ComponentItem = 'StartRemains'
         DataType = ftFloat
@@ -1610,7 +1670,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -1618,7 +1678,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -1958,8 +2018,8 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 600
-    Top = 40
+    Left = 648
+    Top = 16
   end
   object ContractTagGuides: TdsdGuides
     KeyField = 'Id'
@@ -2006,7 +2066,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       end
       item
         Name = 'inIsBuh'
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2030,7 +2090,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       end
       item
         Name = 'inIsBuh'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2082,5 +2142,41 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       end>
     Left = 768
     Top = 13
+  end
+  object spSelectPrintPack: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_ReportCollation_PrintPack'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 288
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 772
+    Top = 217
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 772
+    Top = 270
   end
 end

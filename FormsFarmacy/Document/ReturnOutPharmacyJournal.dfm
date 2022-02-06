@@ -12,17 +12,17 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
     Width = 785
     Height = 412
     TabOrder = 3
-    ExplicitWidth = 807
+    ExplicitWidth = 785
     ExplicitHeight = 412
     ClientRectBottom = 412
     ClientRectRight = 785
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 807
+      ExplicitWidth = 785
       ExplicitHeight = 412
       inherited cxGrid: TcxGrid
         Width = 785
         Height = 412
-        ExplicitWidth = 807
+        ExplicitWidth = 785
         ExplicitHeight = 412
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -294,7 +294,7 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
   end
   inherited Panel: TPanel
     Width = 785
-    ExplicitWidth = 807
+    ExplicitWidth = 785
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -1383,6 +1383,28 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
         Name = 'outText'
         Value = Null
         DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSpecialLighting'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTextColor'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outColor'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBold'
+        Value = Null
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

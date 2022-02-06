@@ -1052,7 +1052,10 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractPriceListDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_Supplement_v2Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_Supplement_v2Form');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractPriceListDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractPriceListDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractPriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractPriceListForm');
@@ -1060,7 +1063,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceComparisonBIG3Form');
 
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_WagesVIP_CalcMonthForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_WagesVIP_CalcMonthForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_WagesVIP_CalcMonthForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Layout_OutOrderForm'));
@@ -1074,10 +1077,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_PartialReturnInAllDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_PartialReturnInAllDialogForm');
-
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FinancialMonitoringForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FinancialMonitoringForm');
-
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TestingAttemptsUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TestingAttemptsUserForm');
 
@@ -2639,18 +2642,18 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeOperDataDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeOperDataDialogForm');
 }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyJournalForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyJournalForm');
- { TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalChoiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncome_AmountTroubleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncome_AmountTroubleForm');
@@ -2980,6 +2983,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSPDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMedicSPDialogForm');
 end;
 
 procedure TLoadFormTest.LoadReturnInFormTest;
@@ -3385,7 +3391,7 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserNickForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserNickForm');
- }
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserHelsiEditForm'));
@@ -3393,7 +3399,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
     exit;
-  {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserKeyForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserKeyForm');
 

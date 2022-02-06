@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , RetailName_order TVarChar
              , PartnerName_order TVarChar
              , PriceListName TVarChar
+             , PriceListInName TVarChar
              , CurrencyDocumentName TVarChar, CurrencyPartnerName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , MovementId_Master Integer, InvNumberPartner_Master TVarChar
@@ -421,7 +422,7 @@ end if;
         , tmpMovementLinkObject_PriceList AS (SELECT MovementLinkObject.*
                                               FROM MovementLinkObject
                                               WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                                AND MovementLinkObject.DescId = zc_MovementLinkObject_PriceList()
+                                                AND MovementLinkObject.DescId IN (zc_MovementLinkObject_PriceList(), zc_MovementLinkObject_PriceListIn())
                                               )
         , tmpMovementLinkObject_CurrencyDocument AS (SELECT MovementLinkObject.*
                                                      FROM MovementLinkObject
@@ -712,6 +713,7 @@ end if;
            , Object_Partner_order.ValueData                 AS PartnerName_order
 
            , Object_PriceList.ValueData                     AS PriceListName
+           , Object_PriceListIn.ValueData                   AS PriceListInName
            , Object_CurrencyDocument.ValueData              AS CurrencyDocumentName
            , Object_CurrencyPartner.ValueData               AS CurrencyPartnerName
            , Object_TaxKind_Master.Id                	    AS DocumentTaxKindId
@@ -912,6 +914,11 @@ end if;
                                                      AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
+            LEFT JOIN tmpMovementLinkObject_PriceList AS MovementLinkObject_PriceListIn
+                                                      ON MovementLinkObject_PriceListIn.MovementId = Movement.Id
+                                                     AND MovementLinkObject_PriceListIn.DescId = zc_MovementLinkObject_PriceListIn()
+            LEFT JOIN Object AS Object_PriceListIn ON Object_PriceListIn.Id = MovementLinkObject_PriceListIn.ObjectId
+
             LEFT JOIN tmpMovementLinkObject_CurrencyDocument AS MovementLinkObject_CurrencyDocument
                                                              ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
                                                             AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
@@ -1040,6 +1047,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 26.01.22         * 
  09.04.18         *
  24.10.17         * add Movement_Transport_Reestr
  05.10.16         * add inJuridicalBasisId

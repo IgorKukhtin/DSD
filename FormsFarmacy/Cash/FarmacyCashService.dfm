@@ -26199,6 +26199,12 @@ object MainCashForm2: TMainCashForm2
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'vbisGetArchive'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 264

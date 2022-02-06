@@ -1,13 +1,17 @@
 -- Function: gpSelect_ShowPUSH_IncomeNewPretension(TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_ShowPUSH_IncomeNewPretension(integer,VarChar);
+DROP FUNCTION IF EXISTS gpSelect_ShowPUSH_IncomeNewPretension(integer, VarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ShowPUSH_IncomeNewPretension(
-    IN inMovementID   integer,          -- Приход
-   OUT outShowMessage Boolean,          -- Показыват сообщение
-   OUT outPUSHType    Integer,          -- Тип сообщения
-   OUT outText        Text,             -- Текст сообщения
-    IN inSession      TVarChar          -- сессия пользователя
+    IN inMovementID        integer,          -- Приход
+   OUT outShowMessage      Boolean,          -- Показыват сообщение
+   OUT outPUSHType         Integer,          -- Тип сообщения
+   OUT outText             Text,             -- Текст сообщения
+   OUT outSpecialLighting  Boolean ,      -- 
+   OUT outTextColor        Integer ,      -- 
+   OUT outColor            Integer ,      -- 
+   OUT outBold             Boolean ,      -- 
+    IN inSession           TVarChar          -- сессия пользователя
 )
 RETURNS RECORD
 AS
@@ -15,7 +19,11 @@ $BODY$
    DECLARE vbText  Text;
 BEGIN
 
-    outShowMessage := False;
+    outShowMessage      := False;
+    outSpecialLighting  := True;
+    outTextColor        := zc_Color_Red();
+    outColor            := zc_Color_White();
+    outBold             := True;
 
     IF EXISTS(SELECT  1
               FROM MovementLinkMovement AS MLMovement_Income
@@ -49,7 +57,7 @@ BEGIN
       THEN
         outShowMessage := True;
         outPUSHType := zc_TypePUSH_Confirmation();
-        outText := 'ВНИМАНИЕ !!!'||chr(13)||chr(13)||'По данной приходной накладной уже была ранее создана претензия'||chr(13)||vbText||chr(13)||chr(13)||
+        outText := 'ВНИМАНИЕ !!!'||chr(13)||chr(13)||'По данной приходной накладной уже была ранее создана претензия'||chr(13)||COALESCE (vbText, '')||chr(13)||chr(13)||
                    'Проверьте ее Актуальность!';
       END IF;
     END IF;
@@ -68,4 +76,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- 
-SELECT * FROM gpSelect_ShowPUSH_IncomeNewPretension(26110310, '3')
+
+select * from gpSelect_ShowPUSH_IncomeNewPretension(inMovementID := 26650600 ,  inSession := '3');

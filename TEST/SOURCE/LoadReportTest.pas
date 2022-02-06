@@ -140,8 +140,11 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-    {
-   LoadReportFromFile('Отчет Производство_потери КВК', ReportPath + '\Отчеты (производство)\Отчет Производство_потери КВК.fr3');
+      {
+  LoadReportFromFile('PrintMovement_OrderReturnTare', ReportPath + '\Товарный Учет\PrintMovement_OrderReturnTare.fr3');
+  exit;
+
+  LoadReportFromFile('Отчет Производство_потери КВК', ReportPath + '\Отчеты (производство)\Отчет Производство_потери КВК.fr3');
   exit;
 
   LoadReportFromFile('Путевой лист (затраты)', ReportPath + '\Транспорт\Путевой лист (затраты).fr3');
@@ -260,7 +263,11 @@ begin
   exit;
   LoadReportFromFile('Aкт сверки по контрагенту (тара)', ReportPath + '\Отчеты (товарные)\Aкт сверки по контрагенту (тара).fr3');
   exit;
+  }
+    LoadReportFromFile('Акт сверки (бухгалтерский)Пакет', ReportPath + '\Отчеты (финансы)\Акт сверки (бухгалтерский)Пакет.fr3');
+  exit;
 
+  {
   LoadReportFromFile('Акт сверки (бухгалтерский)', ReportPath + '\Отчеты (финансы)\Акт сверки (бухгалтерский).fr3');
   exit;
   LoadReportFromFile('Акт сверки (в валюте)', ReportPath + '\Отчеты (финансы)\Акт сверки (в валюте).fr3');

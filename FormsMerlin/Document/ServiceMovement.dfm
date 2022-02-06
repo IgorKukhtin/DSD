@@ -1,23 +1,23 @@
 ﻿inherited ServiceMovementForm: TServiceMovementForm
   BorderStyle = bsSizeable
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1072#1088#1077#1085#1076#1099'>'
-  ClientHeight = 339
+  ClientHeight = 350
   ClientWidth = 341
   ExplicitWidth = 357
-  ExplicitHeight = 377
+  ExplicitHeight = 388
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 58
-    Top = 279
-    ExplicitLeft = 58
-    ExplicitTop = 279
+    Left = 55
+    Top = 311
+    ExplicitLeft = 55
+    ExplicitTop = 311
   end
   inherited bbCancel: TcxButton
-    Left = 202
-    Top = 279
-    ExplicitLeft = 202
-    ExplicitTop = 279
+    Left = 199
+    Top = 311
+    ExplicitLeft = 199
+    ExplicitTop = 311
   end
   object Код: TcxLabel [2]
     Left = 8
@@ -142,9 +142,17 @@
     TabOrder = 17
     Width = 313
   end
+  object cbisAuto: TcxCheckBox [18]
+    Left = 8
+    Top = 273
+    Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+    Properties.ReadOnly = True
+    TabOrder = 18
+    Width = 114
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 139
-    Top = 271
+    Left = 136
+    Top = 303
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 8
@@ -363,6 +371,13 @@
         Component = GuidesParent_infomoney
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAuto'
+        Value = Null
+        Component = cbisAuto
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 320

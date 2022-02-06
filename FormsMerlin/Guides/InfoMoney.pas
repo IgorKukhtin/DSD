@@ -22,7 +22,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit;
+  cxCurrencyEdit, ExternalLoad;
 
 type
   TInfoMoneyForm = class(TParentForm)
@@ -62,6 +62,20 @@ type
     bbShowAll: TdxBarButton;
     ParentName: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    spGetImportSettingId: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    macStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
+    spUpdate_IsUserAll_Yes: TdsdStoredProc;
+    spUpdate_isUserAll: TdsdStoredProc;
+    actUpdate_IsUserAll: TdsdExecStoredProc;
+    actUpdate_IsUserAll_Yes: TdsdExecStoredProc;
+    macUpdate_IsUserAll_list: TMultiAction;
+    macUpdate_IsUserAll_Yes: TMultiAction;
+    bbmacUpdate_IsUserAll_Yes: TdxBarButton;
+    bbUpdate_IsUserAll: TdxBarButton;
   private
     { Private declarations }
   public

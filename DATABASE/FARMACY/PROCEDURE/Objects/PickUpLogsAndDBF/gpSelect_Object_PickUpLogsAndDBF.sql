@@ -10,7 +10,7 @@ RETURNS TABLE (Id integer, Code integer, Name TVarChar,
                UnitId Integer, UnitName TVarChar, 
                UserId Integer, UserName TVarChar, 
                CashRegister TVarChar,
-               isLoaded Boolean, DateLoaded TDateTime,
+               isLoaded Boolean, DateLoaded TDateTime, isGetArchive Boolean,
                isErased Boolean) 
 AS
 $BODY$
@@ -45,9 +45,11 @@ BEGIN
         
         , EmployeeWorkLog.CashRegister       AS CashRegister
                                                  
-        , ObjectBoolean_Loaded.ValueData             AS isLoaded
-        , ObjectDate_DateLoaded.ValueData             AS DateLoaded
+        , ObjectBoolean_Loaded.ValueData     AS isLoaded
+        , ObjectDate_DateLoaded.ValueData    AS DateLoaded
                                                  
+        , COALESCE(ObjectBoolean_GetArchive.ValueData, False)  AS isGetArchive
+
         , Object_PickUpLogsAndDBF.isErased
                                                  
     FROM Object AS Object_PickUpLogsAndDBF
@@ -55,6 +57,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Loaded
                                 ON ObjectBoolean_Loaded.ObjectId = Object_PickUpLogsAndDBF.Id
                                AND ObjectBoolean_Loaded.DescId = zc_ObjectBoolean_PickUpLogsAndDBF_Loaded()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_GetArchive
+                                ON ObjectBoolean_GetArchive.ObjectId = Object_PickUpLogsAndDBF.Id
+                               AND ObjectBoolean_GetArchive.DescId = zc_ObjectBoolean_PickUpLogsAndDBF_GetArchive()
 
         LEFT JOIN ObjectDate AS ObjectDate_DateLoaded
                              ON ObjectDate_DateLoaded.ObjectId = Object_PickUpLogsAndDBF.Id
