@@ -3,7 +3,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
   ClientHeight = 792
   ClientWidth = 1483
   ExplicitWidth = 1499
-  ExplicitHeight = 830
+  ExplicitHeight = 831
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -21,8 +21,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
       inherited cxGrid: TcxGrid
         Width = 1483
         Height = 258
-        ExplicitLeft = -3
-        ExplicitTop = 224
         ExplicitWidth = 1483
         ExplicitHeight = 258
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -4909,6 +4907,15 @@ inherited PersonalServiceForm: TPersonalServiceForm
       item
         Name = 'inSummAuditAdd'
         Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummHouseAdd'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummHouseAdd'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

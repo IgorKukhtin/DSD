@@ -74,8 +74,8 @@
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
 			<DCC_RangeChecking>true</DCC_RangeChecking>
 			<Icon_MainIcon>0201.ico</Icon_MainIcon>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.4.90;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<VerInfo_Build>90</VerInfo_Build>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.4.91;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Build>91</VerInfo_Build>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
 			<VerInfo_Release>4</VerInfo_Release>
 			<Debugger_RunParams>Scale_CEH.ini ves=21</Debugger_RunParams>
@@ -266,6 +266,8 @@
 			<DCCReference Include="..\SOURCE\DialogPswSms.pas">
 				<Form>DialogPswSmsForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
@@ -316,7 +318,6 @@
 					<Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
 					</Excluded_Packages>
 				</Delphi.Personality>
 				<Deployment/>

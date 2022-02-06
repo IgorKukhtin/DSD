@@ -108,7 +108,10 @@ uses
   Medoc_J1201012 in '..\SOURCE\MeDOC\Medoc_J1201012.pas',
   Medoc_J1201212 in '..\SOURCE\MeDOC\Medoc_J1201212.pas',
   GuideReason in '..\Scale\GuideReason.pas' {GuideReasonForm},
-  DialogPswSms in '..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm};
+  DialogPswSms in '..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
+  GuideGoodsRemains in '..\Scale\GuideGoodsRemains.pas' {GuideGoodsLineForm},
+  DOCUMENTINVOICE_PRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
+  DOCUMENTINVOICE_TN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas';
 
 {$R *.res}
 
@@ -130,8 +133,9 @@ begin
          if gpCheck_BranchCode = FALSE then exit;
          //
          Application.CreateForm(TdmMain, dmMain);
-         Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-         //
+  Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
+  Application.CreateForm(TGuideGoodsLineForm, GuideGoodsLineForm);
+  //
          // !!!важно первым!!!
          Application.CreateForm(TMainForm, MainForm);
          //

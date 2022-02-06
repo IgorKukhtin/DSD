@@ -9,7 +9,17 @@ uses
   Data.Win.ADODB, Vcl.StdCtrls, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.Controls, Vcl.Samples.Gauges, Vcl.ExtCtrls, System.Classes,
   Vcl.Grids, Vcl.DBGrids, DBTables, dxSkinsCore, dxSkinsDefaultPainters,
-  IdBaseComponent, IdComponent, IdIPWatch;
+  IdBaseComponent, IdComponent, IdIPWatch, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TCurrencyItem = record
@@ -2612,7 +2622,7 @@ var ExecStr1,ExecStr2,ExecStr3,ExecStr4,addStr:String;
 begin
      // "текущий" мес€ц
    //fOpenSqlFromZQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-2)+') as RetV');
-     fOpenSqlFromZQuery ('select DATE_TRUNC (' + FormatToVarCharServer_notNULL('MONTH') + ', CAST ('+FormatToDateServer_notNULL(Date-2)+' AS TDateTime)) as RetV');
+     fOpenSqlFromZQuery ('select DATE_TRUNC (' + FormatToVarCharServer_notNULL('MONTH') + ', CAST ('+FormatToDateServer_notNULL(Date-0)+' AS TDateTime)) as RetV');
      //
      if  (StrToDate (EndDateCompleteEdit.Text) < fromSqlZQuery.FieldByName('RetV').AsDateTime)
         and (ParamStr(2) <> '') and (ParamStr(4) <> '+')
