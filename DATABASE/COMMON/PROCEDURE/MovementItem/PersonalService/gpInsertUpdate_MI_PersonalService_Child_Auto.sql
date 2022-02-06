@@ -410,6 +410,7 @@ end if;
                                                           , inSummCompensationRecalc := COALESCE (MIFloat_SummCompensationRecalc.ValueData, 0)
                                                           , inSummAuditAdd           := COALESCE (MIFloat_SummAuditAdd.ValueData, 0)
                                                           , inSummHouseAdd           := COALESCE (MIFloat_SummHouseAdd.ValueData, 0)
+                                                          , inNumber                 := ''
                                                           , inComment                := MIString_Comment.ValueData
                                                           , inInfoMoneyId            := MILinkObject_InfoMoney.ObjectId
                                                           , inUnitId                 := inUnitId

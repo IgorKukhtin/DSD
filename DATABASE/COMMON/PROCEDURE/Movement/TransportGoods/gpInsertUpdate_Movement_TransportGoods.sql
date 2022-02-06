@@ -58,20 +58,24 @@ BEGIN
      -- ищем путевой по ш/к или номеру
      vbMovementId_Transport:= (WITH tmpInvNumber AS (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) > 0 AND CHAR_LENGTH (inBarCode) < 13)
                                   , tmpBarCode   AS (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId WHERE CHAR_LENGTH (inBarCode) >= 13)
+                                  , tmpMovement  AS (SELECT * FROM Movement WHERE Movement.OperDate BETWEEN inOperDate - INTERVAL '5 DAY' AND inOperDate + INTERVAL '5 DAY'
+                                                                              AND Movement.DescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
+                                                                              AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                                    )
                                SELECT Movement.Id
                                FROM tmpBarCode AS tmp
-                                    INNER JOIN Movement ON Movement.Id = tmp.MovementId
-                                                       AND Movement.DescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
-                                                       AND Movement.OperDate BETWEEN inOperDate - INTERVAL '5 DAY' AND inOperDate + INTERVAL '5 DAY'
-                                                       AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                    INNER JOIN tmpMovement AS Movement ON Movement.Id = tmp.MovementId
+                                                          AND Movement.DescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
+                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '5 DAY' AND inOperDate + INTERVAL '5 DAY'
+                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
                               UNION
                                -- по № документа
                                SELECT Movement.Id
                                FROM tmpInvNumber AS tmp
-                                    INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
-                                                       AND Movement.DescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
-                                                       AND Movement.OperDate BETWEEN inOperDate - INTERVAL '5 DAY' AND inOperDate + INTERVAL '5 DAY'
-                                                     --AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                    INNER JOIN tmpMovement AS Movement ON Movement.InvNumber = tmp.BarCode
+                                                          AND Movement.DescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
+                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '5 DAY' AND inOperDate + INTERVAL '5 DAY'
+                                                        --AND Movement.StatusId <> zc_Enum_Status_Erased()
                               );
      vbMovementDescId_Transport:= (SELECT Movement.DescId FROM Movement WHERE Movement.Id = vbMovementId_Transport);
                               
@@ -290,6 +294,11 @@ BEGIN
                                                    );
      -- сохранили связь с документом <Transport>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Transport(), ioId, vbMovementId_Transport);
+
+IF vbUserId = 5 
+THEN
+    RAISE EXCEPTION 'Ошибка.ok';
+END IF;
 
 END;
 $BODY$

@@ -163,8 +163,6 @@ BEGIN
                                                         , inPositionId         := _tmpMI.PositionId
                                                         , inMemberId           := NULL
                                                         , inPersonalServiceListId := _tmpMI.PersonalServiceListId
-                                                        , inFineSubjectId         := NULL
-                                                        , inUnitFineSubjectId     := NULL
                                                         , inUserId             := vbUserId
                                                          )
      WHERE _tmpMI.Day_diff > 0 OR _tmpMI.MovementItemId > 0

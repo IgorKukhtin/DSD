@@ -41,7 +41,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, In
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                                   , TVarChar, TVarChar
+                                                                   , TVarChar
                                                                    , Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
                                                                  
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
@@ -79,7 +79,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inSummCompensationRecalc TFloat   , -- компенсация (ввод)
     IN inSummAuditAdd           TFloat   , -- Сумма доплаты за аудит
     IN inSummHouseAdd           TFloat   , -- Сумма Компенсация жилья 
-    IN inNumber                TVarChar  , --  № исполнительного
     IN inComment               TVarChar  , -- 
     IN inInfoMoneyId           Integer   , -- Статьи назначения
     IN inUnitId                Integer   , -- Подразделение
@@ -97,6 +96,8 @@ $BODY$
    DECLARE vbisBankOut Boolean;
    DECLARE vbisDetail Boolean;
    DECLARE vbPersonalServiceListId Integer;
+   -- !!! ошибка
+   DECLARE inNumber TVarChar; --  № исполнительного
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService());

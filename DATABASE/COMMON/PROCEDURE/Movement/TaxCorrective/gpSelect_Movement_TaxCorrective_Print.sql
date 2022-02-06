@@ -1066,7 +1066,7 @@ BEGIN
                   ELSE ''
              END :: TVarChar AS GoodsCodeTaxAction
 
-           , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() AND tmpContract.InfoMoneyId <> zc_Enum_InfoMoney_30201()
+           , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() AND COALESCE (tmpContract.InfoMoneyId, 0) <> zc_Enum_InfoMoney_30201()
                        THEN CASE WHEN vbOperDate_begin >= '01.12.2018' AND COALESCE (tmpMovement_Data.Goods_DocumentTaxKind, '') <> '' THEN tmpMovement_Data.Goods_DocumentTaxKind
                                  ELSE 'опеднокюрю гю йнка.хгдекхъ'
                             END
@@ -1077,7 +1077,7 @@ BEGIN
                   ELSE CASE WHEN tmpMLM_Child.OperDate_rus < zc_DateEnd_GoodsRus() AND tmpGoods.GoodsName_RUS <> '' THEN tmpGoods.GoodsName_RUS ELSE tmpGoods.GoodsName END || CASE WHEN COALESCE (tmpMI.GoodsKindId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || tmpMI.GoodsKindName END
              END :: TVarChar AS GoodsName
 
-           , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() AND tmpContract.InfoMoneyId <> zc_Enum_InfoMoney_30201()
+           , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() AND COALESCE (tmpContract.InfoMoneyId, 0) <> zc_Enum_InfoMoney_30201()
                        THEN CASE WHEN vbOperDate_begin >= '01.12.2018' AND COALESCE (tmpMovement_Data.Goods_DocumentTaxKind, '') <> '' THEN tmpMovement_Data.Goods_DocumentTaxKind
                                  ELSE 'опеднокюрю гю йнка.хгдекхъ'
                             END
@@ -1089,11 +1089,11 @@ BEGIN
              END :: TVarChar  AS GoodsName_two
 
            , tmpMI.GoodsKindName                                            AS GoodsKindName
-           , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() AND tmpContract.InfoMoneyId <> zc_Enum_InfoMoney_30201() AND vbOperDate_begin >= '01.12.2018' AND COALESCE (tmpMovement_Data.Measure_DocumentTaxKind, '') <> ''
+           , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() AND COALESCE (tmpContract.InfoMoneyId, 0) <> zc_Enum_InfoMoney_30201() AND vbOperDate_begin >= '01.12.2018' AND COALESCE (tmpMovement_Data.Measure_DocumentTaxKind, '') <> ''
                   THEN tmpMovement_Data.Measure_DocumentTaxKind
                   ELSE tmpGoods.MeasureName
              END                                                            AS MeasureName
-           , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() AND tmpContract.InfoMoneyId <> zc_Enum_InfoMoney_30201() AND vbOperDate_begin >= '01.12.2018' AND COALESCE (tmpMovement_Data.MeasureCode_DocumentTaxKind, '') <> ''
+           , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() AND COALESCE (tmpContract.InfoMoneyId, 0) <> zc_Enum_InfoMoney_30201() AND vbOperDate_begin >= '01.12.2018' AND COALESCE (tmpMovement_Data.MeasureCode_DocumentTaxKind, '') <> ''
                   THEN tmpMovement_Data.MeasureCode_DocumentTaxKind
                   ELSE CASE WHEN tmpGoods.MeasureCode=1 THEN '0301'
                             WHEN tmpGoods.MeasureCode=2 THEN '2009'
