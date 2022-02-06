@@ -18,8 +18,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ReturnIn());
 
+if vbUserId = 6604558 
+THEN
+vbUserId:= zc_Enum_Process_Auto_PrimeCost();
+END IF;
 
      IF vbUserId = lpCheckRight(inSession, zc_Enum_Process_UnComplete_ReturnIn())
+        OR vbUserId = zc_Enum_Process_Auto_PrimeCost()
      THEN
          -- Распроводим Документ
          PERFORM lpUnComplete_Movement (inMovementId := inMovementId

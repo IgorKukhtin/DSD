@@ -1689,6 +1689,7 @@ end if;
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
                    LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container_Summ.ObjectId
               WHERE View_Account.AccountDirectionId <> zc_Enum_AccountDirection_60200() -- ѕрибыль будущих периодов + на филиалах
+                AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20500() -- ќборотна€ тара
              /*UNION ALL
               -- это расчетные остатки (их надо вычесть) - !!!дл€ филиала!!!
               SELECT _tmpRemainsCount.MovementItemId
@@ -1721,6 +1722,7 @@ end if;
                    LEFT JOIN tmpPriceList AS lfSelect_PriceListItem
                                           ON lfSelect_PriceListItem.GoodsId     = _tmpItem.GoodsId
                                          AND lfSelect_PriceListItem.GoodsKindId IS NULL
+              WHERE _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20500() -- ќборотна€ тара
              ) AS _tmp
         GROUP BY _tmp.MovementItemId;
 

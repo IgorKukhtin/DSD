@@ -925,6 +925,9 @@ AS  (SELECT
                -- AmountInDay
              , SUM (MI_SheetWorkTime.Amount)            OVER (PARTITION BY MI_SheetWorkTime.OperDate, MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId, MI_SheetWorkTime.StorageLineId) AS AmountInDay
              , SUM (MI_SheetWorkTime.Amount_andTrainee) OVER (PARTITION BY MI_SheetWorkTime.OperDate, MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId, MI_SheetWorkTime.StorageLineId) AS AmountInDay_andTrainee
+               -- AmountInDay - с учетом PersonalGroupId
+             , SUM (MI_SheetWorkTime.Amount)            OVER (PARTITION BY MI_SheetWorkTime.OperDate, MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId, MI_SheetWorkTime.StorageLineId, MI_SheetWorkTime.PersonalGroupId) AS AmountInDay_pGroup
+             , SUM (MI_SheetWorkTime.Amount_andTrainee) OVER (PARTITION BY MI_SheetWorkTime.OperDate, MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId, MI_SheetWorkTime.StorageLineId, MI_SheetWorkTime.PersonalGroupId) AS AmountInDay_andTrainee_pGroup
                -- Count_MemberInDay
              , COUNT(*)                                 OVER (PARTITION BY MI_SheetWorkTime.OperDate, MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId, MI_SheetWorkTime.StorageLineId) AS Count_MemberInDay
              , COUNT(*)                                 OVER (PARTITION BY MI_SheetWorkTime.OperDate, MI_SheetWorkTime.PositionId, MI_SheetWorkTime.PositionLevelId, MI_SheetWorkTime.StorageLineId) AS Count_MemberInDay_andTrainee
@@ -1272,6 +1275,7 @@ AS  (SELECT
              , Movement_Sheet.OperDate
                -- Итого часов за день
              , Movement_Sheet.AmountInDay
+             , Movement_Sheet.AmountInDay_pGroup
 
                -- № п/п
              , ROW_NUMBER() OVER (PARTITION BY Movement_Sheet.PersonalGroupId
@@ -1384,15 +1388,27 @@ AS  (SELECT
                 AND tmpList_ModelService_Trainee.ModelServiceId IS NULL -- AND Setting.ServiceModelId <> 12387 -- деликатесы
                     THEN 0
 
-               -- по дням табель - НЕ стажер
+               -- 1.1. по дням табель - НЕ стажер + PersonalGroupId
+               WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime()
+                AND tmpList_ModelService_Trainee.ModelServiceId > 0 -- AND Setting.ServiceModelId = 12387 -- деликатесы
+                AND Movement_Sheet.PersonalGroupId = ServiceModelMovement.PersonalGroupId AND ServiceModelMovement.PersonalGroupId > 0
+                    THEN Movement_Sheet.AmountInDay_andTrainee_pGroup / NULLIF (Movement_Sheet.Amount_andTrainee, 0)
+
+               -- 1.2. по дням табель + PersonalGroupId
+               WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime()
+                AND Movement_Sheet.PersonalGroupId = ServiceModelMovement.PersonalGroupId AND ServiceModelMovement.PersonalGroupId > 0
+                    THEN Movement_Sheet.AmountInDay_pGroup / NULLIF (Movement_Sheet.Amount, 0)
+
+               -- 2.1. по дням табель - НЕ стажер
                WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime()
                 AND tmpList_ModelService_Trainee.ModelServiceId > 0 -- AND Setting.ServiceModelId = 12387 -- деликатесы
                     THEN Movement_Sheet.AmountInDay_andTrainee / NULLIF (Movement_Sheet.Amount_andTrainee, 0)
 
-               -- по дням табель
+               -- 2.2. по дням табель
                WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime()
                     THEN Movement_Sheet.AmountInDay / NULLIF (Movement_Sheet.Amount, 0)
 
+               -- 3.
                ELSE COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_MemberInDay)
 
           END, 0) END) :: TFloat AS GrossOnOneMember
@@ -1409,19 +1425,36 @@ AS  (SELECT
                        AND Movement_Sheet.Tax_Trainee = 0
                           THEN 0
 
-                     -- по дням табель - НЕ стажер - !!!сначала!!!
+                     -- 1.1. по дням табель - НЕ стажер + PersonalGroupId
+                     WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime()
+                      AND tmpList_ModelService_Trainee.ModelServiceId > 0 -- AND Setting.ServiceModelId = 12387 -- деликатесы
+                      AND Movement_Sheet.PersonalGroupId = ServiceModelMovement.PersonalGroupId AND ServiceModelMovement.PersonalGroupId > 0
+                          THEN Movement_Sheet.AmountInDay_andTrainee_pGroup / NULLIF (Movement_Sheet.Amount_andTrainee, 0)
+      
+                     -- 1.2. по дням табель - стажер - !!!сначала!!!
+                     WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime() AND Movement_Sheet.Tax_Trainee > 0
+                      AND Movement_Sheet.PersonalGroupId = ServiceModelMovement.PersonalGroupId AND ServiceModelMovement.PersonalGroupId > 0
+                          THEN Movement_Sheet_Trainee.AmountInDay_pGroup / NULLIF (Movement_Sheet.Amount_Trainee, 0) * 100 / Movement_Sheet.Tax_Trainee
+      
+                     -- 1.3. по дням табель + PersonalGroupId
+                     WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime()
+                      AND Movement_Sheet.PersonalGroupId = ServiceModelMovement.PersonalGroupId AND ServiceModelMovement.PersonalGroupId > 0
+                          THEN Movement_Sheet.AmountInDay_pGroup / NULLIF (Movement_Sheet.Amount, 0)
+
+                     -- 2.1. по дням табель - НЕ стажер - !!!сначала!!!
                      WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime() -- AND Movement_Sheet.Tax_Trainee > 0
                       AND tmpList_ModelService_Trainee.ModelServiceId > 0 -- AND Setting.ServiceModelId = 12387 -- деликатесы
                           THEN Movement_Sheet.AmountInDay_andTrainee / NULLIF (Movement_Sheet.Amount_andTrainee, 0) -- * 100 / Movement_Sheet.Tax_Trainee
 
-                     -- по дням табель - стажер - !!!сначала!!!
+                     -- 2.2. по дням табель - стажер - !!!сначала!!!
                      WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime() AND Movement_Sheet.Tax_Trainee > 0
                           THEN Movement_Sheet_Trainee.AmountInDay / NULLIF (Movement_Sheet.Amount_Trainee, 0) * 100 / Movement_Sheet.Tax_Trainee
 
-                     -- по дням табель - остальные
+                     -- 2.3. по дням табель - остальные
                      WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime()
                           THEN Movement_Sheet.AmountInDay / NULLIF (Movement_Sheet.Amount, 0)
 
+                     -- 3.
                      ELSE COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_MemberInDay) * CASE WHEN Movement_Sheet.Tax_Trainee > 0 THEN 100 / Movement_Sheet.Tax_Trainee ELSE 1 END
 
                 END, 0)
@@ -1490,7 +1523,7 @@ AS  (SELECT
                                        AND (COALESCE (Movement_Sheet.PersonalGroupId, 0)  = COALESCE (ServiceModelMovement.PersonalGroupId, 0)
                                          OR COALESCE (Movement_Sheet.PersonalGroupId,  0) = 0
                                          OR COALESCE (ServiceModelMovement.PersonalGroupId, 0) = 0
-                                         OR 1=1
+                                       --OR 1=1
                                            )
                                        /*AND (COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_From, 0)
                                          OR COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_To, 0)

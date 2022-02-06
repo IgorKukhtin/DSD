@@ -56,6 +56,21 @@ AS
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
         AND OH_JuridicalDetails.OKPO NOT IN ('2902403938') 
       UNION
+-- признак isPriceWithVAT = True - печатать цену с НДС
+      SELECT
+             zc_Movement_Sale()
+           , CAST ('Sale' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Sale2PriceWithVAT' AS TVarChar)
+      FROM Object AS Object_Juridical
+        LEFT JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+        AND OH_JuridicalDetails.OKPO IN ('02541349') 
+
+      UNION
 -- Счет
       SELECT
              zc_Movement_Sale()                         AS DescId

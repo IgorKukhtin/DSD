@@ -1141,6 +1141,7 @@ BEGIN
      -- 4.10. ФИНИШ - пересчитали сумму к выплате (если есть "другие" расчеты) - ДА надо "минус" <Налоги - удержания с ЗП> И <Алименты - удержания> И <Удержания сторонними юр.л.> 
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummToPay(), tmpMovement.MovementItemId, -1 * OperSumm
                                                                                                  + tmpMovement.SummSocialAdd
+                                                                                                 + tmpMovement.SummHouseAdd
                                                                                                  - tmpMovement.SummTransport
                                                                                                  + tmpMovement.SummTransportAdd
                                                                                                  + tmpMovement.SummTransportAddLong
@@ -1174,6 +1175,7 @@ BEGIN
                                , _tmpItem.ObjectIntId_Analyzer
                                , COALESCE (_tmpItem.OperSumm, 0) AS OperSumm
                                , COALESCE (MIFloat_SummSocialAdd.ValueData, 0) AS SummSocialAdd
+                               , COALESCE (MIFloat_SummHouseAdd.ValueData, 0)  AS SummHouseAdd
                                , COALESCE (MIFloat_SummNalog.ValueData, 0)     AS SummNalog
                                , COALESCE (MIFloat_SummNalogRet.ValueData, 0)  AS SummNalogRet
                                , COALESCE (MIFloat_SummChild.ValueData, 0)     AS SummChild
@@ -1183,6 +1185,9 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_SummSocialAdd
                                                           ON MIFloat_SummSocialAdd.MovementItemId = MovementItem.Id
                                                          AND MIFloat_SummSocialAdd.DescId = zc_MIFloat_SummSocialAdd()
+                              LEFT JOIN MovementItemFloat AS MIFloat_SummHouseAdd
+                                                          ON MIFloat_SummHouseAdd.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_SummHouseAdd.DescId = zc_MIFloat_SummHouseAdd()
                               LEFT JOIN MovementItemFloat AS MIFloat_SummNalog
                                                           ON MIFloat_SummNalog.MovementItemId = MovementItem.Id
                                                          AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog()
@@ -1285,6 +1290,7 @@ BEGIN
            SELECT tmpMI.MovementItemId
                 , tmpMI.OperSumm
                 , tmpMI.SummSocialAdd
+                , tmpMI.SummHouseAdd
                 , tmpMI.SummNalog
                 , tmpMI.SummNalogRet
                 , tmpMI.SummChild
@@ -1305,6 +1311,7 @@ BEGIN
            GROUP BY tmpMI.MovementItemId
                   , tmpMI.OperSumm
                   , tmpMI.SummSocialAdd
+                  , tmpMI.SummHouseAdd
                   , tmpMI.SummNalog
                   , tmpMI.SummNalogRet
                   , tmpMI.SummChild
@@ -1336,6 +1343,7 @@ BEGIN
                                                                   , inSummCompensationRecalc := 0 :: TFloat
                                                                   , inSummAuditAdd           := 0 :: TFloat
                                                                   , inSummHouseAdd           := 0 :: TFloat
+                                                                  , inNumber                 := ''
                                                                   , inComment                := ''
                                                                   , inInfoMoneyId            := tmpMI.InfoMoneyId
                                                                   , inUnitId                 := tmpMI.UnitId
@@ -1346,6 +1354,7 @@ BEGIN
                                                                    ) AS MovementItemId
                 , 0 AS OperSumm
                 , 0 AS SummSocialAdd
+                , 0 AS SummHouseAdd
                 , 0 AS SummNalog
                 , 0 AS SummNalogRet
                 , 0 AS SummChild

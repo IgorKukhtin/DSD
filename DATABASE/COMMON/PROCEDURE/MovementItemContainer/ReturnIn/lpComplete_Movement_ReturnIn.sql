@@ -248,6 +248,8 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_UnitTo_HistoryCost
                                ON ObjectLink_UnitTo_HistoryCost.ObjectId = MovementLinkObject_To.ObjectId
                               AND ObjectLink_UnitTo_HistoryCost.DescId = zc_ObjectLink_Unit_HistoryCost()
+                            --AND Movement.OperDate >= '01.01.2022'
+                            --AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= '01.01.2022'
 
           LEFT JOIN ObjectLink AS ObjectLink_PersonalTo_Member
                                ON ObjectLink_PersonalTo_Member.ObjectId = MovementLinkObject_To.ObjectId
@@ -1333,6 +1335,7 @@ BEGIN
                                                                                  )
                                         ELSE 0 END
                        , ContainerId_Goods_Alternative = CASE WHEN vbUnitId_HistoryCost IN (0, vbUnitId_To) -- если 0 или сам в себя
+                                                                OR vbOperDate < '01.01.2022' OR vbOperDatePartner < '01.01.2022'
                                                                    THEN 0
                                         ELSE lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                 , inUnitId                 := vbUnitId_HistoryCost -- !!!на альтернативном подразделении!!!
@@ -1351,6 +1354,7 @@ BEGIN
                          -- определяется счет !!!если "виртуальная" прибыль текущего периода!!!, т.е. возврат на филиале по ценам прайса (если склад возвратов)
                        , AccountId_SummIn_60000 = CASE WHEN vbUnitId_HistoryCost <> vbUnitId_To -- если признак НЕ установлен сам в себя
                                                          OR vbBranchId_To = zc_Branch_Basis()   -- !!!ИЛИ!!! это "Главный" филиал
+                                                         OR vbOperDate < '01.01.2022' OR vbOperDatePartner < '01.01.2022'
                                                             THEN 0
                                                        ELSE -- если признак установлен сам в себя
                                                             lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы
@@ -1366,6 +1370,7 @@ BEGIN
                         -- определяется счет !!!если "виртуальная" прибыль текущего периода!!!, т.е. возврат на филиале по ценам прайса (если склад возвратов)
                       , AccountId_SummOut_60000 = CASE WHEN vbUnitId_HistoryCost <> vbUnitId_To -- если признак НЕ установлен сам в себя
                                                          OR vbBranchId_To = zc_Branch_Basis()   -- !!!ИЛИ!!! это "Главный" филиал
+                                                         OR vbOperDate < '01.01.2022' OR vbOperDatePartner < '01.01.2022'
                                                             THEN 0
                                                        ELSE -- если признак установлен сам в себя
                                                             lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_60000() -- Прибыль будущих периодов
@@ -1591,19 +1596,24 @@ BEGIN
      CLOSE curContainer; -- закрыли курсор
 
 
+
      -- 1.3.1.1. самое интересное: заполняем таблицу - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_ProfitLoss_40208, ContainerId_ProfitLoss_10800, ContainerId, AccountId, ContainerId_Transit, OperSumm, OperSumm_Partner)
         SELECT
               _tmpItem.MovementItemId
             , 0 AS ContainerId_ProfitLoss_40208 -- Счет - прибыль (ОПиУ - разница в весе : с/с1 - с/с2)
             , 0 AS ContainerId_ProfitLoss_10800 -- Счет - прибыль (ОПиУ - Себестоимость возвратов : с/с2)
-            , COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (_tmpList_Alternative.ContainerId_Summ, COALESCE (Container_Summ.Id, 0))) AS ContainerId
-            , COALESCE (lfContainerSumm_20901.AccountId, COALESCE (Container_Summ_Alternative.ObjectId, COALESCE (Container_Summ.ObjectId, 0))) AS AccountId
+            , COALESCE (lfContainerSumm_20901.ContainerId, _tmpList_Alternative.ContainerId_Summ, Container_Summ.Id, 0) AS ContainerId
+            , COALESCE (lfContainerSumm_20901.AccountId, Container_Summ_Alternative.ObjectId, Container_Summ.ObjectId, 0) AS AccountId
             , 0 AS ContainerId_Transit -- Счет Транзит, определим позже
               -- с/с1 - для количества: приход на остаток
-            , SUM (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))) AS OperSumm
+            , SUM (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0)
+                       * CASE WHEN vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To THEN 0.2 ELSE 1 END
+                        AS NUMERIC (16,4))) AS OperSumm
               -- с/с2 - для количества: контрагента
-            , SUM (CAST (_tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))) AS OperSumm_Partner
+            , SUM (CAST (_tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0)
+                       * CASE WHEN vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To THEN 0.2 ELSE 1 END
+                        AS NUMERIC (16,4))) AS OperSumm_Partner
         FROM _tmpItem
              -- так находим для тары
              LEFT JOIN lfSelect_ContainerSumm_byAccount (zc_Enum_Account_20901()) AS lfContainerSumm_20901
@@ -1621,7 +1631,13 @@ BEGIN
              /*JOIN ContainerObjectCost AS ContainerObjectCost_Basis
                                       ON ContainerObjectCost_Basis.ContainerId = COALESCE (lfContainerSumm_20901.ContainerId, Container_Summ.Id)
                                      AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()*/
-             LEFT JOIN HistoryCost ON HistoryCost.ContainerId = COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ_Alternative.Id, Container_Summ.Id)) -- HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
+             LEFT JOIN HistoryCost ON HistoryCost.ContainerId = CASE WHEN vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To
+                                                                      AND (vbOperDate < '01.01.2022' OR vbOperDatePartner < '01.01.2022')
+                                                                     THEN 0
+                                                                     WHEN (vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To)
+                                                                     THEN Container_Summ_Alternative.Id
+                                                                     ELSE COALESCE (lfContainerSumm_20901.ContainerId, Container_Summ_Alternative.Id, Container_Summ.Id) -- HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
+                                                                END
                                   AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
         WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
           AND vbIsHistoryCost= TRUE -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
@@ -1659,6 +1675,13 @@ BEGIN
              LEFT JOIN Container AS Container_Summ ON Container_Summ.Id = vbContainerId_51201
         WHERE _tmpItem.OperSumm_51201 <> 0
        ;
+
+IF inUserId = 5 AND 1=0
+THEN
+    RAISE EXCEPTION 'Ошибка.<%>  %', (select SUM(_tmpItemSumm.OperSumm) from _tmpItemSumm)
+    , (select SUM(_tmpItemSumm.OperSumm_Partner) from _tmpItemSumm)
+    ;
+END IF;
 
      -- 1.3.1.2. определяется ContainerId - Транзит
      UPDATE _tmpItemSumm SET ContainerId_Transit = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate

@@ -112,8 +112,8 @@ BEGIN
               RAISE EXCEPTION 'Ошибка.Нет прав для просмотра данных, необходимо выбрать форму оплаты = <%>.', lfGet_Object_ValueData_sh (zc_Enum_PaidKind_SecondForm());
          END IF;
          
-     -- Павлов Д.В. + Мурзаева Е.В.
-     ELSEIF vbUserId IN (5080994, 714692)
+     -- Павлов Д.В.
+     ELSEIF vbUserId IN (5080994)
             AND (inBranchId <> zc_Branch_Basis() OR inPaidKindId <> zc_Enum_PaidKind_SecondForm())
      THEN
          IF (inBranchId <> zc_Branch_Basis())
@@ -155,8 +155,8 @@ BEGIN
          END IF;
 
 
-     -- Няйко В.И. - zc_Branch_Basis + филиал Кр.Рог
-     ELSEIF vbUserId = 1058530
+     -- Няйко В.И. + Мурзаева Е.В. - zc_Branch_Basis + филиал Кр.Рог
+     ELSEIF vbUserId IN (1058530, 714692)
             AND (inBranchId NOT IN (zc_Branch_Basis(), 8377) OR inPaidKindId <> zc_Enum_PaidKind_SecondForm())
      THEN
          IF inBranchId NOT IN (zc_Branch_Basis(), 8377)
