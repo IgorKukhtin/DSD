@@ -269,7 +269,7 @@ inherited Report_Movement_Send_RemainsSun_Supplement_v2Form: TReport_Movement_Se
             Position.RowIndex = 0
           end
           object AmountSalesDey_From: TcxGridDBBandedColumn
-            Caption = #1055#1088#1086#1076#1072#1078#1072' 90 '#1076#1085#1077#1081
+            Caption = #1055#1088#1086#1076#1072#1078#1072' 120 '#1076#1085#1077#1081
             DataBinding.FieldName = 'AmountSalesDey_From'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4

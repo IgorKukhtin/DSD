@@ -4137,6 +4137,14 @@
 				<Form>Report_Movement_Send_RemainsSun_Supplement_v2Form</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\LayoutFileJournal.pas">
+				<Form>LayoutFileJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\LayoutFile.pas">
+				<Form>LayoutFileForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

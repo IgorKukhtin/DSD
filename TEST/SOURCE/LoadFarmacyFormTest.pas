@@ -85,6 +85,7 @@ type
     procedure LoadJuridicalFormTest;
     procedure LoadJuridicalAreaFormTest;
     procedure LoadLayoutFormTest;
+    procedure LoadLayoutFileFormTest;
     procedure LoadLoadFormTest;
     procedure LoadLoyaltyFormTest;
     procedure LoadLoyaltyPresentFormTest;
@@ -1978,6 +1979,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceLayoutForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceLayoutForm');
+end;
+
+procedure TLoadFormTest.LoadLayoutFileFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLayoutFileForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLayoutFileForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLayoutFileJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLayoutFileJournalForm');
 end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;

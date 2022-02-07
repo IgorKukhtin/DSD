@@ -4923,6 +4923,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actLayoutFileJournal: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1060#1072#1081#1083#1099' '#1074#1099#1082#1083#1072#1076#1082#1080' '#1076#1083#1103' '#1072#1087#1090#1077#1082
+      FormName = 'TLayoutFileJournalForm'
+      FormNameParam.Value = 'TLayoutFileJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6363,37 +6374,40 @@
       object N277: TMenuItem [16]
         Action = actInstructions
       end
-      object N7: TMenuItem [17]
+      object N336: TMenuItem [17]
+        Action = actLayoutFileJournal
+      end
+      object N7: TMenuItem [18]
         Caption = '-'
       end
-      object miSaveData: TMenuItem [18]
+      object miSaveData: TMenuItem [19]
         Action = actSaveData
       end
-      object miPriceGroupSettings: TMenuItem [19]
+      object miPriceGroupSettings: TMenuItem [20]
         Action = actPriceGroupSettings
       end
-      object N102: TMenuItem [20]
+      object N102: TMenuItem [21]
         Action = actPriceGroupSettingsTOP
       end
-      object miJuridicalSettings: TMenuItem [21]
+      object miJuridicalSettings: TMenuItem [22]
         Action = actJuridicalSettings
       end
-      object N9: TMenuItem [22]
+      object N9: TMenuItem [23]
         Caption = '-'
       end
-      object miImportType: TMenuItem [23]
+      object miImportType: TMenuItem [24]
         Action = actImportType
       end
-      object miImportSettings: TMenuItem [24]
+      object miImportSettings: TMenuItem [25]
         Action = actImportSettings
       end
-      object miImportExportLink: TMenuItem [25]
+      object miImportExportLink: TMenuItem [26]
         Action = actImportExportLink
       end
-      object miGlobalConst: TMenuItem [26]
+      object miGlobalConst: TMenuItem [27]
         Action = actGlobalConst
       end
-      object FarmacyCash1: TMenuItem [28]
+      object FarmacyCash1: TMenuItem [29]
         Action = actUnitForFarmacyCash
       end
       inherited miProtocolAll: TMenuItem
@@ -6401,34 +6415,34 @@
           Action = actTelegramProtocol
         end
       end
-      object N10: TMenuItem [30]
+      object N10: TMenuItem [31]
         Caption = '-'
       end
-      object miRepriceChange: TMenuItem [31]
+      object miRepriceChange: TMenuItem [32]
         Action = actRepriceСhangeRetail
       end
-      object miReprice_test: TMenuItem [32]
+      object miReprice_test: TMenuItem [33]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' ('#1090#1077#1089#1090')'
         OnClick = miReprice_testClick
       end
-      object miRepricePromo: TMenuItem [33]
+      object miRepricePromo: TMenuItem [34]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1087#1086' '#1089#1088#1077#1076#1085#1080#1084' '#1094#1077#1085#1072#1084' '#1080' '#1084#1072#1088#1082'. '#1082#1086#1085#1090#1088#1072#1082#1090#1072#1084
         OnClick = miRepricePromoClick
       end
-      object miExportSalesForSupp: TMenuItem [34]
+      object miExportSalesForSupp: TMenuItem [35]
         Action = actExportSalesForSuppClick
       end
-      object miRepriceChangeJournal: TMenuItem [35]
+      object miRepriceChangeJournal: TMenuItem [36]
         Action = actRepriceChangeJournal
       end
-      object N298: TMenuItem [36]
+      object N298: TMenuItem [37]
         Action = actReport_RepriceSite
       end
-      object N261: TMenuItem [39]
+      object N261: TMenuItem [40]
         Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1085#1072#1079#1074#1072#1085#1080#1103#1084' '#1074' '#1084#1077#1085#1102
         OnClick = N261Click
       end
-      object N270: TMenuItem [40]
+      object N270: TMenuItem [41]
         Action = actClearDefaultUnit
       end
     end

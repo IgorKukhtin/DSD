@@ -912,6 +912,8 @@ type
     C31: TMenuItem;
     actReport_Sun_Supplement_v2: TdsdOpenForm;
     v21: TMenuItem;
+    actLayoutFileJournal: TdsdOpenForm;
+    N336: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

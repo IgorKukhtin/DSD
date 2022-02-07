@@ -309,8 +309,8 @@ BEGIN
                      AND isResolution_224 = FALSE)
                      AND isUseReprice = TRUE  AND Reprice
                 ELSE COALESCE(RepricePromo, False) = True
-                     AND (PriceDiffPromo <= 0
-                     AND PriceDiffPromo >= (- vbPercentRepriceMin + COALESCE(AddPercentRepricePromoMin, 0)))  AND RepricePromo END                      
+                     AND (PriceDiffPromo <= 10
+                     AND PriceDiffPromo >= (- vbPercentRepriceMin /*+ COALESCE(AddPercentRepricePromoMin, 0)*/))  AND RepricePromo END                      
     FROM gpSelect_AllGoodsPrice(inUnitId := vbUnitID, inUnitId_to := 0, inMinPercent := vbPercentDifference,
       inVAT20 := vbVAT20, inTaxTo := 0, inPriceMaxTo := 0,  inSession := inSession)
          LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = gpSelect_AllGoodsPrice.ID;
@@ -464,4 +464,5 @@ ALTER FUNCTION gpRun_Object_RepriceUnitSheduler_UnitReprice(Integer, TVarChar) O
 -- тест
 -- SELECT * FROM Log_Run_Schedule_Function
 -- select * from gpSelect_Object_RepriceUnitSheduler( inSession := '3');
--- SELECT * FROM gpRun_Object_RepriceUnitSheduler_UnitReprice (9079633 , '3')
+-- select * from gpSelect_Object_RepriceUnitSheduler( inSession := '3');
+-- SELECT * FROM gpRun_Object_RepriceUnitSheduler_UnitReprice (9140000 , '3')

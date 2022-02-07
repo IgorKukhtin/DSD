@@ -89,7 +89,8 @@ RETURNS TABLE (
     NewPricePromo        TFloat,     -- Новая цена
     PriceDiffPromo       TFloat,     -- % отклонения
     RepricePromo         Boolean ,   --
-    AddPercentRepricePromoMin TFloat    -- Изменение в ночной переоценке низнего предела
+    AddPercentRepricePromoMin TFloat,    -- Изменение в ночной переоценке низнего предела
+    isPrioritiesGoods   Boolean      -- Приоритеты при выборе поставщика
     )
 
 AS
@@ -109,7 +110,9 @@ BEGIN
     vbObjectId := COALESCE (lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
 
     -- % наценки для срока годности < 6 мес.
-    vbMarginPercent_ExpirationDate:= (SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.DescId = zc_ObjectFloat_Retail_MarginPercent() AND ObjectFloat.ObjectId = vbObjectId);
+    --vbMarginPercent_ExpirationDate:= (SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.DescId = zc_ObjectFloat_Retail_MarginPercent() AND ObjectFloat.ObjectId = vbObjectId);
+    -- Отменил учет срокового товара
+   vbMarginPercent_ExpirationDate := 0;
     --
     -- vbInterval_ExpirationDate:= zc_Interval_ExpirationDate();
     vbInterval_ExpirationDate:= '6 MONTH' :: Interval;
@@ -641,11 +644,12 @@ BEGIN
              WHEN COALESCE (ResultSet.IsTop_Goods, FALSE) = FALSE
                         AND ResultSet.MinExpirationDate > zc_DateStart()
                         AND ResultSet.MinExpirationDate <= CURRENT_DATE
+                        AND COALESCE (vbMarginPercent_ExpirationDate, 0) <> 0
                   THEN FALSE
              WHEN COALESCE (ResultSet.IsTop_Goods, FALSE) = FALSE
                         AND ResultSet.MinExpirationDate <= (CURRENT_DATE + vbInterval_ExpirationDate)
                         AND ResultSet.MinExpirationDate > zc_DateStart()
-                        AND COALESCE (vbMarginPercent_ExpirationDate, 0) = 0
+                        AND COALESCE (vbMarginPercent_ExpirationDate, 0) <> 0
                   THEN FALSE
              WHEN COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isPriceFix = TRUE OR ResultSet.PriceFix_Goods <> 0)
                   THEN TRUE
@@ -719,11 +723,12 @@ BEGIN
              WHEN COALESCE (ResultSet.IsTop_Goods, FALSE) = FALSE
                         AND ResultSet.MinExpirationDate > zc_DateStart()
                         AND ResultSet.MinExpirationDate <= CURRENT_DATE
+                        AND COALESCE (vbMarginPercent_ExpirationDate, 0) <> 0
                   THEN FALSE
              WHEN COALESCE (ResultSet.IsTop_Goods, FALSE) = FALSE
                         AND ResultSet.MinExpirationDate <= (CURRENT_DATE + vbInterval_ExpirationDate)
                         AND ResultSet.MinExpirationDate > zc_DateStart()
-                        AND COALESCE (vbMarginPercent_ExpirationDate, 0) = 0
+                        AND COALESCE (vbMarginPercent_ExpirationDate, 0) <> 0
                   THEN FALSE
              WHEN COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isPriceFix = TRUE OR ResultSet.PriceFix_Goods <> 0)
                   THEN TRUE
@@ -746,7 +751,9 @@ BEGIN
                              ELSE (ResultSet.NewPricePromo / ResultSet.LastPrice) * 100 - 100
                         END AS NUMERIC (16, 1)) :: TFloat BETWEEN - 10 AND 0)
         AND COALESCE(tmpPriorities.GoodsId, 0) = 0                             AS RepricePromo,
-        (-5) ::TFloat                                                          AS AddPercentRepricePromoMin
+        (-5) ::TFloat                                                          AS AddPercentRepricePromoMin,
+        
+        COALESCE(tmpPriorities.GoodsId, 0) <> 0                                AS isPrioritiesGoods
 
 
     FROM
@@ -830,7 +837,5 @@ $BODY$
 -- тест
 --
 
-select * from gpSelect_AllGoodsPrice(inUnitId := 183292 , inUnitId_to := 0 , inMinPercent := 0 , inVAT20 := 'True' , inTaxTo := 0 , inPriceMaxTo := 0 ,  inSession := '3');
 
-
-select * from gpSelect_AllGoodsPrice(inUnitId := 4135547 , inUnitId_to := 0 , inMinPercent := 0 , inVAT20 := 'True' , inTaxTo := 0 , inPriceMaxTo := 0 ,  inSession := '3');
+select * from gpSelect_AllGoodsPrice(inUnitId := 377606 , inUnitId_to := 0 , inMinPercent := 0 , inVAT20 := 'True' , inTaxTo := 0 , inPriceMaxTo := 0 ,  inSession := '3');

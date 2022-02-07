@@ -991,8 +991,10 @@ type
     property Caption;
     property Hint;
     property ImageIndex;
+    property QuestionBeforeExecute;
     property ShortCut;
     property SecondaryShortCuts;
+    property InfoAfterExecute;
   end;
 
   TdsdDblClickAction = class(TdsdCustomAction)

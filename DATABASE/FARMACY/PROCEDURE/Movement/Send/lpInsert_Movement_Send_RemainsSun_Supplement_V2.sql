@@ -613,8 +613,8 @@ BEGIN
              , tmpObject_Price.MCSValue
 
                -- остаток
-             , CASE WHEN COALESCE (tmpRemains.Amount - COALESCE (_tmpGoods_Sun_exception_Supplement_V2.Amount, 0), 0) > 0
-                    THEN COALESCE (tmpRemains.Amount - COALESCE (_tmpGoods_Sun_exception_Supplement_V2.Amount, 0), 0) ELSE 0 END AS AmountRemains
+             , CASE WHEN COALESCE (tmpRemains.Amount, 0) - COALESCE (_tmpGoods_Sun_exception_Supplement_V2.Amount, 0) > 0
+                    THEN COALESCE (tmpRemains.Amount, 0) - COALESCE (_tmpGoods_Sun_exception_Supplement_V2.Amount, 0) ELSE 0 END AS AmountRemains
              , COALESCE (tmpRemains.AmountNotSend, 0)                                                                            AS AmountNotSend
                -- реализация
              , COALESCE (tmpSalesDay.AmountSalesDay, 0)      AS AmountSalesDay
@@ -623,16 +623,16 @@ BEGIN
              , 0
         FROM tmpRemains  AS tmpRemains
 
-             LEFT JOIN tmpPrice AS tmpObject_Price
-                                ON tmpObject_Price.UnitId  = tmpRemains.UnitId
-                               AND tmpObject_Price.GoodsId = tmpRemains.GoodsId
-                                 
-             LEFT JOIN tmpSalesDay AS tmpSalesDay
-                                   ON tmpSalesDay.UnitId  = tmpObject_Price.UnitId
-                                  AND tmpSalesDay.GoodsId = tmpObject_Price.GoodsId
+             FULL JOIN tmpSalesDay AS tmpSalesDay
+                                   ON tmpSalesDay.UnitId  = tmpRemains.UnitId
+                                  AND tmpSalesDay.GoodsId = tmpRemains.GoodsId
 
-             LEFT JOIN _tmpGoods_Sun_exception_Supplement_V2 ON _tmpGoods_Sun_exception_Supplement_V2.UnitId  = tmpObject_Price.UnitId
-                                              AND _tmpGoods_Sun_exception_Supplement_V2.GoodsId = tmpObject_Price.GoodsId
+             INNER JOIN tmpPrice AS tmpObject_Price
+                                 ON tmpObject_Price.UnitId  = COALESCE(tmpRemains.UnitId, tmpSalesDay.UnitId)
+                                AND tmpObject_Price.GoodsId = COALESCE(tmpRemains.GoodsId, tmpSalesDay.GoodsId)
+                                 
+             LEFT JOIN _tmpGoods_Sun_exception_Supplement_V2 ON _tmpGoods_Sun_exception_Supplement_V2.UnitId  = COALESCE(tmpRemains.UnitId, tmpSalesDay.UnitId)
+                                              AND _tmpGoods_Sun_exception_Supplement_V2.GoodsId = COALESCE(tmpRemains.GoodsId, tmpSalesDay.GoodsId)
                                               
 
        ;
