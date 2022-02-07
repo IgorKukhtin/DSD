@@ -53,10 +53,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_InfoMoney_Parent() RETURNS Integer AS $
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_InfoMoney_Parent', 'Статья Приход/расход', zc_Object_InfoMoney(), zc_Object_InfoMoney() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_InfoMoney_Parent');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ServiceItem_Unit() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ServiceItem_Unit'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ServiceItem_Unit', 'Ссылка на Отдел', zc_Object_ServiceItem(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ServiceItem_Unit');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ServiceItem_InfoMoney() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ServiceItem_InfoMoney'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ServiceItem_InfoMoney', 'Ссылка на Статью', zc_Object_ServiceItem(), zc_Object_InfoMoney() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ServiceItem_InfoMoney');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.02.22         * zc_ObjectLink_ServiceItem_Unit
+                    zc_ObjectLink_ServiceItem_InfoMoney
  12.01.22         * zc_ObjectLink_CommentInfoMoney_InfoMoneyKind
                     zc_ObjectLink_InfoMoneyDetail_InfoMoneyKind
                     zc_ObjectLink_InfoMoney_InfoMoneyKind

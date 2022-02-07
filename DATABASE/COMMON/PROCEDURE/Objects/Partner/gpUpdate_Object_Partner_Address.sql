@@ -70,9 +70,28 @@ $BODY$
    DECLARE vbRouteId Integer;
    DECLARE vbRetailId Integer;
    DECLARE vbJuridicalId Integer;
-   DECLARE vbOrderName TVarChar;
-   DECLARE vbDocName TVarChar;
-   DECLARE vbActName TVarChar;
+   DECLARE vbOrderName TVarChar; vbOrderPhone TVarChar; vbOrderMail TVarChar;
+   DECLARE vbDocName TVarChar; vbDocPhone TVarChar; vbDocMail TVarChar;
+   DECLARE vbActName TVarChar; vbActPhone TVarChar; vbActMail TVarChar;
+   
+   DECLARE vbRegionName          TVarChar  ;    -- наименование области
+           vbProvinceName        TVarChar  ;    -- наименование район
+           vbCityName            TVarChar  ;    -- наименование населенный пункт
+           vbCityKindId          Integer   ;    -- Вид населенного пункта
+           vbProvinceCityName    TVarChar  ;    -- наименование района населенного пункта
+           vbPostalCode          TVarChar  ;    -- индекс
+           vbStreetName          TVarChar  ;    -- наименование улица
+           vbStreetKindId        Integer   ;    -- Вид улицы
+           vbHouseNumber         TVarChar  ;    -- Номер дома
+           vbCaseNumber          TVarChar  ;    -- Номер корпуса
+           vbRoomNumber          TVarChar  ;    -- Номер квартиры
+           vbShortName           TVarChar  ;    -- Условное обозначение
+           vbMemberTakeId        Integer   ;    -- Физ лицо (сотрудник экспедитор)
+           vbPersonalId          Integer   ;    -- Сотрудник (супервайзер)
+           vbPersonalTradeId     Integer   ;    -- Сотрудник (торговый)
+           vbPersonalMerchId     Integer   ;    -- Сотрудник (мерчандайзер)
+           vbAreaId              Integer   ;    -- Регион
+           vbPartnerTagId        Integer   ;   -- Признак торговой точки 
 BEGIN
 
 
@@ -116,8 +135,53 @@ BEGIN
    WHERE ObjectLink_Partner_Juridical.ObjectId = inId
      AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical();
 
+   -- сохраненные данные
+   SELECT tmp.RegionName  
+      , tmp.ProvinceName    
+      , tmp.CityName
+      , tmp.CityKindId      
+      , tmp.ProvinceCityName
+      , tmp.PostalCode      
+      , tmp.StreetName      
+      , tmp.StreetKindId    
+      , tmp.HouseNumber     
+      , tmp.CaseNumber      
+      , tmp.RoomNumber      
+      , tmp.ShortName       
+      , tmp.MemberTakeId    
+      , tmp.PersonalId      
+      , tmp.PersonalTradeId 
+      , tmp.PersonalMerchId 
+      , tmp.AreaId          
+      , tmp.PartnerTagId
+  INTO vbRegionName  
+      , vbProvinceName    
+      , vbCityName        
+      , vbCityKindId      
+      , vbProvinceCityName
+      , vbPostalCode      
+      , vbStreetName      
+      , vbStreetKindId    
+      , vbHouseNumber     
+      , vbCaseNumber      
+      , vbRoomNumber      
+      , vbShortName       
+      , vbMemberTakeId    
+      , vbPersonalId      
+      , vbPersonalTradeId 
+      , vbPersonalMerchId 
+      , vbAreaId          
+      , vbPartnerTagId  
+   FROM gpGet_Object_Partner(inId          := inId ::Integer        -- Контрагенты 
+                           , inMaskId      := 0    ::Integer       -- 
+                           , inJuridicalId := 0    ::Integer        -- 
+                           , inSession     := inSession) AS tmp;
+
    
-   IF vbRouteId <> inRouteId OR vbRetailId <> inRetailId OR vbActName <> inActName OR vbDocName <> inDocName OR vbOrderName <> inOrderName
+   IF vbRouteId <> inRouteId OR vbRetailId <> inRetailId
+   OR vbActName <> inActName OR vbActPhone <> inActPhone OR vbActMail <> inActMail
+   OR vbDocName <> inDocName OR vbDocPhone <> inDocPhone OR vbDocMail <> inDocMail
+   OR vbOrderName <> inOrderName OR vbOrderPhone <> inOrderPhone OR vbOrderMail <> inOrderMail
    THEN
        -- проверка прав пользователя на вызов процедуры
        vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Partner_Trade());
@@ -128,63 +192,83 @@ BEGIN
        -- сохранили связь с <> 
        PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Route(), inId, inRouteId);
 
-   ELSE
+       -- Контактные лица 
+       PERFORM lpUpdate_Object_Partner_ContactPerson (inId        := inId
+                                                    , inOrderName := inOrderName
+                                                    , inOrderPhone:= inOrderPhone
+                                                    , inOrderMail := inOrderMail
+                                                    , inDocName   := inDocName
+                                                    , inDocPhone  := inDocPhone
+                                                    , inDocMail   := inDocMail
+                                                    , inActName   := inActName
+                                                    , inActPhone  := inActPhone
+                                                    , inActMail   := inActMail
+                                                    , inSession   := inSession
+                                                     );
+
+   END IF;
+
+   --если изменили не только контактную инфу проверка других прав
+   IF inRegionName          <> vbRegionName
+      OR inProvinceName     <> vbProvinceName
+      OR inCityName         <> vbCityName
+      OR inCityKindId       <> vbCityKindId
+      OR inProvinceCityName <> vbProvinceCityName
+      OR inPostalCode       <> vbPostalCode
+      OR inStreetName       <> vbStreetName
+      OR inStreetKindId     <> vbStreetKindId
+      OR inHouseNumber      <> vbHouseNumber
+      OR inCaseNumber       <> vbCaseNumber
+      OR inRoomNumber       <> vbRoomNumber
+      OR inShortName        <> vbShortName
+      OR inMemberTakeId     <> vbMemberTakeId
+      OR inPersonalId       <> vbPersonalId
+      OR inPersonalTradeId  <> vbPersonalTradeId
+      OR inPersonalMerchId  <> vbPersonalMerchId
+      OR inAreaId           <> vbAreaId
+      OR inPartnerTagId     <> vbPartnerTagId
+   THEN
        -- проверка прав пользователя на вызов процедуры
        vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Partner_Address());
+ 
+
+       -- сохранили связь с <Физ лицо (сотрудник экспедитор)>
+       PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_MemberTake(), inId, inMemberTakeId);
+       -- сохранили связь с <Сотрудник (супервайзер)>
+       PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), inId, inPersonalId);
+       -- сохранили связь с <Сотрудник (торговый)>
+       PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), inId, inPersonalTradeId);
+       -- сохранили связь с <Сотрудник (мерчандайзер)>
+       PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalMerch(), inId, inPersonalMerchId);
+       -- сохранили связь с <Регион>
+       PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Area(), inId, inAreaId);
+       -- сохранили связь с <Признак торговой точки>
+       PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PartnerTag(), inId, inPartnerTagId);
+
+
+       -- сохранили
+       SELECT tmp.outPartnerName, tmp.outAddress
+             INTO outPartnerName, outAddress
+          FROM lpUpdate_Object_Partner_Address( inId                := inId
+                                              , inJuridicalId       := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inId AND DescId = zc_ObjectLink_Partner_Juridical())
+                                              , inShortName         := inShortName
+                                              , inCode              := (SELECT ObjectCode FROM Object WHERE Id = inId)
+                                              , inRegionName        := inRegionName
+                                              , inProvinceName      := inProvinceName
+                                              , inCityName          := inCityName
+                                              , inCityKindId        := inCityKindId
+                                              , inProvinceCityName  := inProvinceCityName  
+                                              , inPostalCode        := inPostalCode
+                                              , inStreetName        := inStreetName
+                                              , inStreetKindId      := inStreetKindId
+                                              , inHouseNumber       := inHouseNumber
+                                              , inCaseNumber        := inCaseNumber  
+                                              , inRoomNumber        := inRoomNumber
+                                              , inIsCheckUnique     := FALSE
+                                              , inSession           := inSession
+                                              , inUserId            := vbUserId
+                                               ) AS tmp;
    END IF;
- 
-   --
- 
-   -- Контактные лица 
-   PERFORM lpUpdate_Object_Partner_ContactPerson (inId        := inId
-                                                , inOrderName := inOrderName
-                                                , inOrderPhone:= inOrderPhone
-                                                , inOrderMail := inOrderMail
-                                                , inDocName   := inDocName
-                                                , inDocPhone  := inDocPhone
-                                                , inDocMail   := inDocMail
-                                                , inActName   := inActName
-                                                , inActPhone  := inActPhone
-                                                , inActMail   := inActMail
-                                                , inSession   := inSession
-                                                 );
-
-   -- сохранили связь с <Физ лицо (сотрудник экспедитор)>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_MemberTake(), inId, inMemberTakeId);
-   -- сохранили связь с <Сотрудник (супервайзер)>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), inId, inPersonalId);
-   -- сохранили связь с <Сотрудник (торговый)>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), inId, inPersonalTradeId);
-   -- сохранили связь с <Сотрудник (мерчандайзер)>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalMerch(), inId, inPersonalMerchId);
-   -- сохранили связь с <Регион>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Area(), inId, inAreaId);
-   -- сохранили связь с <Признак торговой точки>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PartnerTag(), inId, inPartnerTagId);
-
-
-   -- сохранили
-   SELECT tmp.outPartnerName, tmp.outAddress
-         INTO outPartnerName, outAddress
-      FROM lpUpdate_Object_Partner_Address( inId                := inId
-                                          , inJuridicalId       := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inId AND DescId = zc_ObjectLink_Partner_Juridical())
-                                          , inShortName         := inShortName
-                                          , inCode              := (SELECT ObjectCode FROM Object WHERE Id = inId)
-                                          , inRegionName        := inRegionName
-                                          , inProvinceName      := inProvinceName
-                                          , inCityName          := inCityName
-                                          , inCityKindId        := inCityKindId
-                                          , inProvinceCityName  := inProvinceCityName  
-                                          , inPostalCode        := inPostalCode
-                                          , inStreetName        := inStreetName
-                                          , inStreetKindId      := inStreetKindId
-                                          , inHouseNumber       := inHouseNumber
-                                          , inCaseNumber        := inCaseNumber  
-                                          , inRoomNumber        := inRoomNumber
-                                          , inIsCheckUnique     := FALSE
-                                          , inSession           := inSession
-                                          , inUserId            := vbUserId
-                                           ) AS tmp;
 
 END;
 $BODY$
@@ -193,6 +277,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.02.22         * разделение по правам
  19.06.17         * add inPersonalMerchId
  12.11.14         *
  19.06.14         *

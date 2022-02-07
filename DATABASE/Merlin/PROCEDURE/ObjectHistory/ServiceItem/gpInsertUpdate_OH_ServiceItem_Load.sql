@@ -74,8 +74,8 @@ BEGIN
            END IF;
        END IF; 
        
-       IF NOT EXISTS (SELECT 1 FROM ObjectHistory WHERE ObjectHistory.Id = inId)
-       THEN
+       --IF NOT EXISTS (SELECT 1 FROM ObjectHistory WHERE ObjectHistory.Id = inId)
+       --THEN
           -- Сохранили историю
        --inId := lpInsertUpdate_ObjectHistory (inId, zc_ObjectHistory_ServiceItem(), vbUnitId, inStartDate, vbUserProtocolId);
        INSERT INTO ObjectHistory (Id, DescId, ObjectId, StartDate, EndDate)
@@ -105,7 +105,7 @@ BEGIN
        -- сохранили свойство <Пользователь (создание)>
        --PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), inId, vbUserProtocolId);
        
-       END IF;
+       --END IF;
 
 END;
 $BODY$

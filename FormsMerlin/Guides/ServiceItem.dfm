@@ -167,6 +167,23 @@ object ServiceItemForm: TServiceItemForm
       Width = 234
     end
   end
+  object cxLabel2: TcxLabel
+    Left = 326
+    Top = 35
+    Caption = #1057#1090#1072#1090#1100#1103':'
+  end
+  object edInfoMoney: TcxButtonEdit
+    Left = 375
+    Top = 35
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 234
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 40
@@ -390,6 +407,30 @@ object ServiceItemForm: TServiceItemForm
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inIsLast'
+          Value = True
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -449,6 +490,29 @@ object ServiceItemForm: TServiceItemForm
           ComponentItem = 'EndDate'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inIsLast'
+          Value = False
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -552,6 +616,14 @@ object ServiceItemForm: TServiceItemForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 24
@@ -604,13 +676,13 @@ object ServiceItemForm: TServiceItemForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 240
-    Top = 65528
+    Left = 224
+    Top = 8
   end
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'PriceListId'
+        Name = 'UnitId'
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'Key'
@@ -618,7 +690,7 @@ object ServiceItemForm: TServiceItemForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PriceListName'
+        Name = 'UnitName'
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'TextValue'
@@ -627,27 +699,18 @@ object ServiceItemForm: TServiceItemForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsId'
+        Name = 'InfoMoneyId'
         Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsName'
-        Value = ''
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsKindId'
+        Name = 'InfoMoneyName'
         Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsKindName'
-        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -714,5 +777,52 @@ object ServiceItemForm: TServiceItemForm
     PackSize = 1
     Left = 568
     Top = 176
+  end
+  object GuidesInfoMoney: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'InfoMoneyId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'InfoMoneyName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKindName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsShowAll'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisService'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    Left = 456
+    Top = 16
   end
 end

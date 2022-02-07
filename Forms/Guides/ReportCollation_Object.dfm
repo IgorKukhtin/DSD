@@ -1468,6 +1468,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 15
+      WithOutPreview = True
       DataSets = <
         item
           DataSet = PrintItemsCDS

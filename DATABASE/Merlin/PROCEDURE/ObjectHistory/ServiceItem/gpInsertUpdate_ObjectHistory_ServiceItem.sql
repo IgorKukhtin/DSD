@@ -16,7 +16,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_ServiceItem(
   RETURNS Integer AS
 $BODY$
  DECLARE vbUserId Integer;
- DECLARE vbUnitId_find Integer;
+ DECLARE vbServiceItemId Integer;
+ 
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_...());
@@ -28,12 +29,14 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Не установлен <Отдел>.';
    END IF;
  
+   -- Получаем ссылку на ServiceItem ключ inUnitId + inInfoMoneyId
+   vbServiceItemId := lpGetInsert_Object_ServiceItem (inUnitId, inInfoMoneyId, vbUserId);
 
    -- Вставляем или меняем объект историю
-   ioId := lpInsertUpdate_ObjectHistory(ioId, zc_ObjectHistory_ServiceItem(), inUnitId, inOperDate, vbUserId);
+   ioId := lpInsertUpdate_ObjectHistory(ioId, zc_ObjectHistory_ServiceItem(), vbServiceItemId, inOperDate, vbUserId);
 
    -- Статьи Приход/расход
-   PERFORM lpInsertUpdate_ObjectHistoryLink(zc_ObjectHistoryLink_ServiceItem_InfoMoney(), ioId, inInfoMoneyId);
+   --PERFORM lpInsertUpdate_ObjectHistoryLink(zc_ObjectHistoryLink_ServiceItem_InfoMoney(), ioId, inInfoMoneyId);
    -- Примечание Приход/расход 	
    PERFORM lpInsertUpdate_ObjectHistoryLink(zc_ObjectHistoryLink_ServiceItem_CommentInfoMoney(), ioId, inCommentInfoMoneyId);
    

@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_ObjectHistory (Integer, Integer, Integer,
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ObjectHistory(
  INOUT ioId         Integer, 
     IN inDescId     Integer, 
-    IN inObjectId   Integer, 
+    IN inObjectId   Integer,
     IN inOperDate   TDateTime,
     IN inUserId     Integer
 )
@@ -26,19 +26,16 @@ BEGIN
 
    IF COALESCE (inObjectId, 0) = 0 
    THEN
-       --RAISE EXCEPTION 'Error. inObjectId = %', inObjectId;
-       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Error. inObjectId = <%>.'     :: TVarChar
-                                             , inProcedureName := 'lpInsertUpdate_ObjectHistory' :: TVarChar
-                                             , inUserId        := vbUserId
-                                             , inParam1        := inObjectId                     :: TVarChar
-                                             );
+       RAISE EXCEPTION 'Error. inObjectId = %', inObjectId;
    END IF;
 
   -- если его нет - попробуем найти
   IF ioId = 0 THEN
 
      -- »щем ioId - за тот же день, т.е. StartDate = inOperDate
-     ioId:= (SELECT ObjectHistory.Id FROM ObjectHistory WHERE ObjectHistory.DescId = inDescId AND ObjectHistory.ObjectId = inObjectId AND ObjectHistory.StartDate = inOperDate);
+     ioId:= (SELECT ObjectHistory.Id 
+             FROM ObjectHistory 
+             WHERE ObjectHistory.DescId = inDescId AND ObjectHistory.ObjectId = inObjectId AND ObjectHistory.StartDate = inOperDate);
 
      -- !!!обнулили!!!
      ioId:= COALESCE (ioId, 0);
@@ -54,7 +51,9 @@ BEGIN
                FROM ObjectHistory
                WHERE ObjectHistory.DescId = inDescId 
                  AND ObjectHistory.ObjectId = inObjectId
-                 AND ObjectHistory.StartDate = inOperDate);
+                 AND ObjectHistory.StartDate = inOperDate
+                
+               );
      -- если это "другой" элемент
      IF findId > 0 AND findId <> ioId
      THEN
@@ -84,7 +83,7 @@ BEGIN
             ORDER BY ObjectHistory.StartDate DESC
             LIMIT 1);
    -- «десь надо изменить св-во EndDate у предыдущего элемента относительно inOperDate
-   UPDATE ObjectHistory SET EndDate = inOperDate WHERE Id = tmpId;
+   UPDATE ObjectHistory SET EndDate = inOperDate - interval '1 day' WHERE Id = tmpId;
 
    -- сохранили протокол - "изменение EndDate"
    PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, inUserId, StartDate, EndDate, ObjectHistoryFloat_Value.ValueData)
@@ -142,7 +141,7 @@ BEGIN
   IF COALESCE (PriorId, 0) <> 0
   THEN
      -- изменили EndDate у предыдущего элемента относительно ioId
-     UPDATE ObjectHistory SET EndDate = COALESCE((SELECT MIN (StartDate)     
+     UPDATE ObjectHistory SET EndDate = COALESCE((SELECT MIN (StartDate)- interval '1 day'  
                                                   FROM ObjectHistory
                                                   WHERE ObjectHistory.DescId = inDescId 
                                                     AND ObjectHistory.ObjectId = inObjectId

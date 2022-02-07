@@ -499,6 +499,12 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
         Name = 'inisService'
         Value = False
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'iniService'
+        Value = 'false'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

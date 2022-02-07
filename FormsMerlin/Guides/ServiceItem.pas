@@ -72,6 +72,9 @@ type
     bbmacStartLoad: TdxBarButton;
     UnitCode: TcxGridDBColumn;
     Id: TcxGridDBColumn;
+    cxLabel2: TcxLabel;
+    edInfoMoney: TcxButtonEdit;
+    GuidesInfoMoney: TdsdGuides;
   private
     { Private declarations }
   public

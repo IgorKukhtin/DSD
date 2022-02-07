@@ -2,7 +2,7 @@ object PartnerAddressForm: TPartnerAddressForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')>'
-  ClientHeight = 464
+  ClientHeight = 471
   ClientWidth = 1362
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,9 +22,10 @@ object PartnerAddressForm: TPartnerAddressForm
     Left = 0
     Top = 61
     Width = 1362
-    Height = 403
+    Height = 410
     Align = alClient
     TabOrder = 0
+    ExplicitHeight = 403
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
