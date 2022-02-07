@@ -188,7 +188,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = ''
+        Value = Null
         Component = edStartDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -196,14 +196,14 @@
       end
       item
         Name = 'outStartDate'
-        Value = ''
+        Value = Null
         Component = edStartDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'outEndDate'
-        Value = ''
+        Value = Null
         Component = edEndDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -256,7 +256,7 @@
       end
       item
         Name = 'StartDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -271,7 +271,7 @@
     Params = <
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'StartDate'
         DataType = ftDateTime
@@ -334,14 +334,14 @@
       end
       item
         Name = 'StartDate'
-        Value = ''
+        Value = Null
         Component = edStartDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
-        Value = ''
+        Value = Null
         Component = edEndDate
         DataType = ftDateTime
         MultiSelectSeparator = ','

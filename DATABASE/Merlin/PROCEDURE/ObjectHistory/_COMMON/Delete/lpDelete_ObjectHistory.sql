@@ -21,6 +21,14 @@ BEGIN
           INTO lEndDate, lStartDate, lDescId, lObjectId
    FROM ObjectHistory WHERE Id = inId;
 
+   -- удаление
+   DELETE FROM ObjectHistoryLink WHERE ObjectHistoryId = inId;
+   DELETE FROM ObjectHistoryString WHERE ObjectHistoryId = inId;
+   DELETE FROM ObjectHistoryFloat WHERE ObjectHistoryId = inId;
+   -- удаление
+   DELETE FROM ObjectHistory WHERE Id = inId;
+
+
    -- »зменили перед удалением диапазон, дл€ этого у раннего элемента поставили EndDate = EndDate удал€емого элемента
    UPDATE ObjectHistory SET EndDate = lEndDate 
    WHERE Id = (SELECT Id FROM ObjectHistory 
@@ -51,12 +59,6 @@ BEGIN
                                     AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
    WHERE ObjectHistory.Id = inId;
 
-   -- удаление
-   DELETE FROM ObjectHistoryLink WHERE ObjectHistoryId = inId;
-   DELETE FROM ObjectHistoryString WHERE ObjectHistoryId = inId;
-   DELETE FROM ObjectHistoryFloat WHERE ObjectHistoryId = inId;
-   -- удаление
-   DELETE FROM ObjectHistory WHERE Id = inId;
 
 
 END;$BODY$

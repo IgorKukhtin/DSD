@@ -20,7 +20,8 @@ $BODY$
           vbPartnerId    Integer; 
           vbContractId   Integer; 
           vbPaidKindId   Integer; 
-          vbInfoMoneyId  Integer; 
+          vbInfoMoneyId  Integer;
+          vbReportCollationCode Integer;
    
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -34,6 +35,7 @@ SELECT ObjectDate_Start.ValueData::TDateTime
         , ObjectLink_ReportCollation_Contract.ChildObjectId
         , ObjectLink_ReportCollation_PaidKind.ChildObjectId
         , ObjectLink_ReportCollation_InfoMoney.ChildObjectId
+        , Object_ReportCollation.ObjectCode
 
 INTO vbStartDate
    , vbEndDate     
@@ -42,6 +44,7 @@ INTO vbStartDate
    , vbContractId  
    , vbPaidKindId  
    , vbInfoMoneyId 
+   , vbReportCollationCode
                                           
    FROM Object AS Object_ReportCollation
       LEFT JOIN ObjectDate AS ObjectDate_Start
@@ -81,16 +84,18 @@ INTO vbStartDate
      OPEN Cursor1 FOR
     
  SELECT tmp.outjuridicalname_basis  AS juridicalname_basis
+        , tmp.outJuridicalShortName_Basis AS JuridicalShortName_Basis
         , tmp.outpartnername          AS partnername
         , tmp.outAccounterName_Basis  AS AccounterName_Basis
         , tmp.outAccounterName        AS AccounterName
         , tmp.outContracNumber        AS ContracNumber
         , tmp.outContractSigningDate  AS ContractSigningDate
         , tmp.outStartBalance         AS StartBalance
-        , tmp.outReportCollationCode  AS ReportCollationCode
+        , vbReportCollationCode ::Integer AS ReportCollationCode  --, COALESCE (tmp.outReportCollationCode,vbReportCollationCode) ::Integer AS ReportCollationCode
         , vbStartDate AS StartDate
         , vbEndDate   AS EndDate
-        , (zfFormat_BarCode (zc_BarCodePref_Object(), inId) || '0') ::TVarChar AS BarCodeId
+        --, (zfFormat_BarCode (zc_BarCodePref_Object(), inId) || '0') ::TVarChar AS BarCodeId
+        , '' ::TVarChar AS BarCodeId
    FROM gpReport_JuridicalBalance(inOperDate   := vbStartDate
                                 , inEndDate     := vbEndDate
                                 , inJuridicalId := vbJuridicalId 

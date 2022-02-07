@@ -111,7 +111,7 @@ BEGIN
   lEndDate := NULL;
 
   -- начальная дата следующего элемента относительно inOperDate
-  SELECT MIN (StartDate) INTO lEndDate
+  SELECT (MIN (StartDate) - interval '1 day')  INTO lEndDate
   FROM ObjectHistory
   WHERE ObjectHistory.DescId = inDescId
     AND ObjectHistory.ObjectId = inObjectId

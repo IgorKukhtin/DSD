@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_ObjectHistory_ServiceItem(
     IN inOperDate           TDateTime , -- Дата Истории
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, StartDate TDateTime
+RETURNS TABLE (Id Integer, StartDate TDateTime, EndDate TDateTime
              , UnitId Integer, UnitName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyName TVarChar
@@ -17,7 +17,11 @@ RETURNS TABLE (Id Integer, StartDate TDateTime
                )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
+
+ -- проверка прав пользователя на вызов процедуры
+    vbUserId := lpGetUserBySession (inSession);
 
      -- Выбираем данные
      RETURN QUERY
@@ -37,14 +41,14 @@ BEGIN
      , ObjectHistory_ServiceItem AS (SELECT * FROM ObjectHistory
                                      WHERE ObjectHistory.ObjectId IN (SELECT DISTINCT tmpServiceItem.ObjectId FROM tmpServiceItem)
                                        AND ObjectHistory.DescId = zc_ObjectHistory_ServiceItem()
-                                       AND inOperDate >= ObjectHistory.StartDate AND inOperDate < ObjectHistory.EndDate
+                                       AND inOperDate >= ObjectHistory.StartDate AND inOperDate <= ObjectHistory.EndDate
                                     )
 
 
        SELECT
              ObjectHistory_ServiceItem.Id                                   AS Id
-           , COALESCE(ObjectHistory_ServiceItem.StartDate, CURRENT_DATE) ::TDateTime AS StartDate
-           --, COALESCE(ObjectHistory_ServiceItem.EndDate, zc_DateEnd()) AS EndDate
+           , COALESCE(ObjectHistory_ServiceItem.StartDate, Empty.StartDate) ::TDateTime AS StartDate
+           , COALESCE(ObjectHistory_ServiceItem.EndDate, zc_DateEnd()) AS EndDate
 
            , Object_Unit.Id                                                 AS UnitId
            , Object_Unit.ValueData                                          AS UnitName
@@ -60,8 +64,8 @@ BEGIN
            , ObjectHistoryFloat_ServiceItem_Area.ValueData                  AS Area
 
        FROM ObjectHistory_ServiceItem
-            /*FULL JOIN (SELECT zc_DateStart() AS StartDate, inUnitId AS ObjectId ) AS Empty
-                   ON Empty.ObjectId = ObjectHistory_ServiceItem.ObjectId*/
+            FULL JOIN (SELECT CURRENT_DATE::TDateTime AS StartDate, lpGetInsert_Object_ServiceItem (inUnitId, inInfoMoneyId, vbUserId) AS ObjectId ) AS Empty
+                   ON Empty.ObjectId = ObjectHistory_ServiceItem.ObjectId
 
             LEFT JOIN tmpServiceItem ON tmpServiceItem.ObjectId = ObjectHistory_ServiceItem.ObjectId            
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpServiceItem.UnitId

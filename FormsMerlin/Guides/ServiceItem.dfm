@@ -210,6 +210,12 @@ object ServiceItemForm: TServiceItemForm
         Properties.Strings = (
           'key'
           'textvalue')
+      end
+      item
+        Component = GuidesInfoMoney
+        Properties.Strings = (
+          'key'
+          'textvalue')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -401,9 +407,7 @@ object ServiceItemForm: TServiceItemForm
         end
         item
           Name = 'StartDate'
-          Value = '01.09.2015'
-          Component = ClientDataSet
-          ComponentItem = 'StartDate'
+          Value = Null
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -742,6 +746,9 @@ object ServiceItemForm: TServiceItemForm
     ComponentList = <
       item
         Component = GuidesUnit
+      end
+      item
+        Component = GuidesInfoMoney
       end>
     Left = 416
     Top = 104

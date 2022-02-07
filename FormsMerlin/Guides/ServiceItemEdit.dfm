@@ -279,7 +279,7 @@
       end
       item
         Name = 'inIsLast'
-        Value = True
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -370,6 +370,7 @@
         Value = ''
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -378,6 +379,7 @@
         Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -435,6 +437,7 @@
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'Key'
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -443,6 +446,7 @@
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -540,6 +544,7 @@
       end
       item
         Name = 'inKindName'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

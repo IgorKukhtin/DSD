@@ -40,7 +40,7 @@ BEGIN
    END IF;
 
    -- Получаем ссылку на ServiceItem ключ inUnitId + inInfoMoneyId
-   vbServiceItemId := lpGetInsert_Object_ServiceItem (inUnitId, COALESCE (inInfoMoneyId,0), vbUserId);
+   vbServiceItemId := lpGetInsert_Object_ServiceItem (inUnitId, inInfoMoneyId, vbUserId);
 
    -- Сохранили историю
    ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_ServiceItem(), vbServiceItemId, inOperDate, vbUserId);

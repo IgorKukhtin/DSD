@@ -80,6 +80,9 @@ BEGIN
     , _tmpUnit AS
           (-- подразделение
            SELECT lfSelect.UnitId AS UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect
+           WHERE COALESCE (inUnitId,0) <> 0
+          UNION
+           SELECT Object.Id AS UnitId FROM Object WHERE Object.DescId = zc_Object_Unit() AND COALESCE (inUnitId,0) = 0
           )
    -- Результат
     SELECT Movement.Id                                AS MovementId
