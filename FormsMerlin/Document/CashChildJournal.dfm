@@ -556,8 +556,8 @@ object CashChildJournalForm: TCashChildJournalForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 232
-    Top = 160
+    Left = 216
+    Top = 144
     DockControlHeights = (
       0
       0
@@ -625,6 +625,18 @@ object CashChildJournalForm: TCashChildJournalForm
         item
           Visible = True
           ItemName = 'bbUpdate_Sign_isErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad'
         end
         item
           Visible = True
@@ -719,11 +731,15 @@ object CashChildJournalForm: TCashChildJournalForm
       Category = 0
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1087#1086#1076#1087#1080#1089#1100
     end
+    object bbStartLoad: TdxBarButton
+      Action = macStartLoad
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 176
-    Top = 136
+    Left = 168
+    Top = 152
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1378,6 +1394,54 @@ object CashChildJournalForm: TCashChildJournalForm
       Caption = 'actInsertUpdate_Sign'
       ImageIndex = 76
     end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inOperDate'
+          Value = 43101d
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090#1099'  '#1080#1079' '#1092#1072#1081#1083#1072
+    end
+    object macStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1080#1079' '#1092#1072#1081#1083#1072
+      ImageIndex = 41
+      WithoutNext = True
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Cash'
@@ -1518,7 +1582,7 @@ object CashChildJournalForm: TCashChildJournalForm
     Top = 320
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 240
+    Left = 264
     Top = 168
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
@@ -1627,6 +1691,11 @@ object CashChildJournalForm: TCashChildJournalForm
         Value = Null
         Component = ceKindName
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingId'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 400
@@ -1775,5 +1844,37 @@ object CashChildJournalForm: TCashChildJournalForm
     PackSize = 1
     Left = 632
     Top = 144
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TCashChildForm;zc_Object_ImportSetting_CashChild'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 752
+    Top = 128
   end
 end

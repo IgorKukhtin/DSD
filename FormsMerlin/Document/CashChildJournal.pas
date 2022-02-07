@@ -25,7 +25,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  dsdGuides, cxButtonEdit, cxSplitter;
+  dsdGuides, cxButtonEdit, cxSplitter, ExternalLoad;
 
 type
   TCashChildJournalForm = class(TParentForm)
@@ -127,6 +127,11 @@ type
     bbInsertUpdate_Sign: TdxBarButton;
     bbUpdate_Sign_isErased: TdxBarButton;
     UserName_1: TcxGridDBColumn;
+    spGetImportSettingId: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    macStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
   private
   public
   end;
