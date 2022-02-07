@@ -26,6 +26,7 @@ $BODY$
   DECLARE vbUnitId        Integer;
   DECLARE vbMovementId       Integer;
   DECLARE vbMovementItemId   Integer;
+  DECLARE vbServiceItemId Integer;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -74,12 +75,11 @@ BEGIN
            END IF;
        END IF; 
        
-       --IF NOT EXISTS (SELECT 1 FROM ObjectHistory WHERE ObjectHistory.Id = inId)
-       --THEN
-          -- Сохранили историю
-       --inId := lpInsertUpdate_ObjectHistory (inId, zc_ObjectHistory_ServiceItem(), vbUnitId, inStartDate, vbUserProtocolId);
-       INSERT INTO ObjectHistory (Id, DescId, ObjectId, StartDate, EndDate)
-                    VALUES (inId, zc_ObjectHistory_ServiceItem(), vbUnitId, inStartDate, inEndDate);
+       -- Получаем ссылку на ServiceItem ключ inUnitId + inInfoMoneyId
+       vbServiceItemId := lpGetInsert_Object_ServiceItem (vbUnitId, vbInfoMoneyId, vbUserId);
+   
+             -- Сохранили историю
+       inId := lpInsertUpdate_ObjectHistory (inId, zc_ObjectHistory_ServiceItem(), vbServiceItemId, inStartDate, vbUserProtocolId);
     
        -- Сохранили 
        PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_ServiceItem_Area(), inId, inValueArea);

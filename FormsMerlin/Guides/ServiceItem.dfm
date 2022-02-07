@@ -667,7 +667,7 @@ object ServiceItemForm: TServiceItemForm
         Name = 'Key'
         Value = ''
         Component = FormParams
-        ComponentItem = 'PriceListId'
+        ComponentItem = 'UnitId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -675,7 +675,7 @@ object ServiceItemForm: TServiceItemForm
         Name = 'TextValue'
         Value = ''
         Component = FormParams
-        ComponentItem = 'PriceListName'
+        ComponentItem = 'UnitName'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
