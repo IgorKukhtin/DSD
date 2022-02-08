@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_Partner()
+ -- Function: gpInsertUpdate_Object_Partner()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
                                                      , TFloat, TFloat, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
