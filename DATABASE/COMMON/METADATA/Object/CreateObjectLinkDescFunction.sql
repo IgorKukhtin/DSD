@@ -1956,6 +1956,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalDefermentPayment_Partner() RET
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_JuridicalDefermentPayment_Partner', 'Контрагент', zc_Object_JuridicalDefermentPayment(), zc_Object_Partner() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalDefermentPayment_Partner');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_AreaContract_Branch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_AreaContract_Branch'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_AreaContract_Branch', 'Филиал', zc_Object_AreaContract(), zc_Object_Branch() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_AreaContract_Branch');
+
 
 
 

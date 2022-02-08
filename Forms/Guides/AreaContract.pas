@@ -56,6 +56,7 @@ type
     actInsert: TdsdInsertUpdateAction;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
+    BranchName: TcxGridDBColumn;
   private
     { Private declarations }
   public

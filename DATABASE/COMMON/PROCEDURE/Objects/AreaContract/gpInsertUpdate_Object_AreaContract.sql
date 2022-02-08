@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_AreaContract()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_AreaContract(Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_AreaContract(Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_AreaContract(Integer, Integer, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_AreaContract(
  INOUT ioId             Integer   ,     -- ключ объекта <Регионы(договора)> 
     IN inCode           Integer   ,     -- Код объекта  
-    IN inName           TVarChar  ,     -- Название объекта 
+    IN inName           TVarChar  ,     -- Название объекта
+    IN inBranchId       Integer   ,     --
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -32,20 +34,24 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_AreaContract(), vbCode_calc, inName);
    
+   -- сохранили связь с <Филиал>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_AreaContract_Branc(), ioId, inBranchId);
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_AreaContract (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_AreaContract (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.02.22         * inBranchId
  06.11.14         *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_AreaContract(ioId:=null, inCode:=null, inName:='Регион 1', inSession:='2')
+-- SELECT * FROM gpInsertUpdate_Object_AreaContract(ioId:=null, inCode:=null, inName:='Регион 1',  inBranchId := 0, inSession:='2')

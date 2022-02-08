@@ -47,9 +47,11 @@ BEGIN
 
      -- Результат такой
      RETURN QUERY
-       WITH tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
-                                , SUM (Container.Amount)                      AS Amount
-                                , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
+       WITH tmpRemains AS (SELECT Container.ObjectId                    AS GoodsId
+                                , SUM (Container.Amount)                AS Amount
+                                , COALESCE (CLO_GoodsKind.ObjectId, 0)  AS GoodsKindId
+                                , Object_PartionGoods.Id                AS PartionGoodsId
+                                , Object_PartionGoods.ValueData         AS PartionGoodsName
                            FROM ContainerLinkObject AS CLO_Unit
                                 INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count() AND Container.Amount <> 0
                                 LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
@@ -58,11 +60,17 @@ BEGIN
                                 LEFT JOIN ContainerLinkObject AS CLO_Account
                                                               ON CLO_Account.ContainerId = CLO_Unit.ContainerId
                                                              AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                                LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                              ON CLO_PartionGoods.ContainerId = CLO_Unit.ContainerId
+                                                             AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                                LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
                            WHERE CLO_Unit.ObjectId = vbUnitId
                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                              AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                            GROUP BY Container.ObjectId
                                   , COALESCE (CLO_GoodsKind.ObjectId, 0)
+                                  , Object_PartionGoods.Id
+                                  , Object_PartionGoods.ValueData
                           )
       , tmpMIContainer AS (SELECT tmp.MovementItemId
                                 , tmp.PartionGoodsId
@@ -124,8 +132,8 @@ BEGIN
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS Count
            , CAST (NULL AS TFloat)      AS HeadCount
-           , CAST (NULL AS Integer)     AS PartionGoodsId
-           , CAST (NULL AS TVarChar)    AS PartionGoods
+           , COALESCE (tmpRemains.PartionGoodsId, NULL)   :: Integer  AS PartionGoodsId
+           , COALESCE (tmpRemains.PartionGoodsName, NULL) :: TVarChar AS PartionGoods
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
            , CAST (NULL AS Integer)     AS GoodsKindId_Complete
@@ -299,6 +307,7 @@ BEGIN
 
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem.ObjectId
                                 AND tmpRemains.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                AND COALESCE (tmpRemains.PartionGoodsName,'') = COALESCE (tmpMIContainer.PartionGoods, Object_PartionGoods.ValueData, MIString_PartionGoods.ValueData,'')
 
             LEFT JOIN ObjectDate AS ObjectDate_In
                                  ON ObjectDate_In.ObjectId = MovementItem.ObjectId
@@ -357,7 +366,9 @@ BEGIN
                                                              AND MIString_PartionGoods.DescId         = zc_MIString_PartionGoods()
                                    )
           , tmpRemains AS (SELECT tmpMI_Goods.MovementItemId
-                                , SUM (Container.Amount) AS Amount
+                                , SUM (Container.Amount)        AS Amount
+                                , Object_PartionGoods.Id        AS PartionGoodsId
+                                , Object_PartionGoods.ValueData AS PartionGoodsName
                            FROM tmpMI_Goods
                                 INNER JOIN Container ON Container.ObjectId = tmpMI_Goods.GoodsId
                                                     AND Container.DescId   = zc_Container_Count()
@@ -372,9 +383,15 @@ BEGIN
                                 LEFT JOIN ContainerLinkObject AS CLO_Account
                                                               ON CLO_Account.ContainerId = Container.Id
                                                              AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
+                                LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                              ON CLO_PartionGoods.ContainerId = CLO_Unit.ContainerId
+                                                             AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                                LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
                            WHERE COALESCE (CLO_GoodsKind.ObjectId, 0) = tmpMI_Goods.GoodsKindId
                              AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                            GROUP BY tmpMI_Goods.MovementItemId
+                                  , Object_PartionGoods.Id
+                                  , Object_PartionGoods.ValueData
                           )
       , tmpMIContainer AS (SELECT tmp.MovementItemId
                                 , tmp.PartionGoodsId
@@ -458,8 +475,6 @@ BEGIN
            , tmpMI_Goods.isErased               AS isErased
 
        FROM tmpMI_Goods
-            LEFT JOIN tmpRemains ON tmpRemains.MovementItemId = tmpMI_Goods.MovementItemId
-
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Goods.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_Goods.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = tmpMI_Goods.GoodsKindId_Complete
@@ -492,6 +507,11 @@ BEGIN
                                  ON ObjectLink_Goods_PartnerIn.ObjectId = tmpMI_Goods.GoodsId
                                 AND ObjectLink_Goods_PartnerIn.DescId = zc_ObjectLink_Goods_PartnerIn()
             LEFT JOIN Object AS Object_PartnerIn ON Object_PartnerIn.Id = ObjectLink_Goods_PartnerIn.ChildObjectId
+
+            LEFT JOIN tmpRemains ON tmpRemains.MovementItemId = tmpMI_Goods.MovementItemId
+                                AND COALESCE (tmpRemains.PartionGoodsId,0) = COALESCE (tmpMIContainer.PartionGoodsId, Object_PartionGoods.Id, 0)
+
+
             ;
 
      END IF;
@@ -505,6 +525,7 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.02.22         *
  28.01.21         * PartionGoodsId
  19.10.18         *
  02.08.17         * add GoodsKindId_Complete
