@@ -129,6 +129,8 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     bbmacPrintPack: TdxBarButton;
+    AreaContractName: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
   private
     { Private declarations }
   public

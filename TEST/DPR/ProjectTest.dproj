@@ -2896,10 +2896,6 @@
 				<Form>UserSettingsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\ReportCollation_Object.pas">
-				<Form>ReportCollation_ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ReportCollation_UpdateObject.pas">
 				<Form>ReportCollation_UpdateObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -4672,6 +4668,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_ProductionSeparate.pas">
 				<Form>Report_GoodsMI_ProductionSeparateForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ReportCollation_Object.pas">
+				<Form>ReportCollation_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
