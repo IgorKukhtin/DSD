@@ -2774,6 +2774,38 @@ BEGIN
     PERFORM gpInsertUpdate_DefaultValue(ioId := COALESCE(vbId,0), inDefaultKeyId := vbDefaultKeyId, inUserKey := 0, inDefaultValue := zc_Enum_ImportSetting_CashChild()::TBlob, inSession := ''::TVarChar);
 END $$;
 
+DO $$
+BEGIN
+
+
+-- !!!
+-- !!! Баланс: 1-уровень Управленческих Счетов
+-- !!!
+
+-- 40000; "Денежные средства"
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountGroup_30000(), inDescId:= zc_Object_AccountGroup(), inCode:= 30000, inName:= 'Денежные средства' , inEnumName:= 'zc_Enum_AccountGroup_30000');
+
+-- !!!
+-- !!! Баланс: 2-уровень Управленческих Счетов
+-- !!!
+
+-- 40000; "Денежные средства"; 40100; "касса"
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountDirection_30100(), inDescId:= zc_Object_AccountDirection(), inCode:= 30100, inName:= 'Касса' , inEnumName:= 'zc_Enum_AccountDirection_30100');
+
+-- !!!
+-- !!! Баланс: Управленческие Счета (1+2+3 уровень)
+-- !!!
+
+-- 40101; "Касса";
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Account_30101(), inDescId:= zc_Object_Account(), inCode:= 30101, inName:= 'Касса' , inEnumName:= 'zc_Enum_Account_30101');
+
+-- 40105; "Долги";
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Account_30105(), inDescId:= zc_Object_Account(), inCode:= 30105, inName:= 'Долги' , inEnumName:= 'zc_Enum_Account_30105');
+
+-- 40106; "Прибыль";
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Account_30106(), inDescId:= zc_Object_Account(), inCode:= 30106, inName:= 'Прибыль' , inEnumName:= 'zc_Enum_Account_30106');
+  
+END $$;
 
 /*
 
@@ -2786,7 +2818,8 @@ END $$;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 09.02.22                                                       * Баланс
  07.02.22         * Загрузчик Cash Касса Приход / расход
  03.02.22         * Загрузчик док. Аренды
  02.02.22         * Загрузчик CommentMoveMoney Примечание Движение денег

@@ -2756,9 +2756,26 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_SurchargeWages_User() RETURNS Integer A
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_SurchargeWages_User', 'Связь с пользователем', zc_Object_SurchargeWages(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SurchargeWages_User');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_SupplierFailures_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SupplierFailures_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_SupplierFailures_Goods', 'Связь с товаром поставщика', zc_Object_SupplierFailures(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SupplierFailures_Goods');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_SupplierFailures_Juridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SupplierFailures_Juridical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_SupplierFailures_Juridical', 'Связь с поставщиком', zc_Object_SupplierFailures(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SupplierFailures_Juridical');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_SupplierFailures_Contract() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SupplierFailures_Contract'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_SupplierFailures_Contract', 'Связь с договором', zc_Object_SupplierFailures(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SupplierFailures_Contract');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_SupplierFailures_Area() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SupplierFailures_Area'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_SupplierFailures_Area', 'Связь с регионом', zc_Object_SupplierFailures(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SupplierFailures_Area');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 09.02.22                                                                                      * zc_ObjectLink_SupplierFailures_...
  15.12.21         * zc_ObjectLink_Unit_PersonalHead
  25.11.21                                                                                      * zc_ObjectLink_SurchargeWages_...
  03.11.21         * zc_ObjectLink_Contract_Branch                                              * zc_ObjectLink_MedicalProgramSP_GroupMedicalProgramSP

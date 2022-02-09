@@ -597,6 +597,11 @@ type
     MemDataMORIONCODE: TIntegerField;
     spGetVIPOrder: TdsdStoredProc;
     actCheckSelectionOrder: TOpenChoiceForm;
+    actOpenLayoutFile: TAction;
+    mmOpenLayoutFile: TMenuItem;
+    spLayoutFileFTPParams: TdsdStoredProc;
+    actDownloadAndRunFile: TdsdFTP;
+    actChoiceLayoutFileCash: TOpenChoiceForm;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -753,6 +758,8 @@ type
     procedure actStartExamExecute(Sender: TObject);
     procedure actDoctorsExecute(Sender: TObject);
     procedure btnGoodsSPReceiptListClick(Sender: TObject);
+    procedure actOpenLayoutFileExecute(Sender: TObject);
+    procedure spLayoutFileFTPParamsAfterExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -3105,6 +3112,20 @@ begin
   finally
     freeAndNil(dsdSave);
   end;
+end;
+
+procedure TMainCashForm2.actOpenLayoutFileExecute(Sender: TObject);
+  var nId : Integer;
+begin
+  if UnitConfigCDS.FieldByName('LayoutFileCount').AsInteger <= 0 then Exit;
+  if  UnitConfigCDS.FieldByName('LayoutFileCount').AsInteger > 1 then
+  begin
+    if not actChoiceLayoutFileCash.Execute then Exit;
+    nId := actChoiceLayoutFileCash.GuiParams.ParamByName('Key').Value;
+  end else nId := UnitConfigCDS.FieldByName('LayoutFileID').AsInteger;
+
+  spLayoutFileFTPParams.ParamByName('inID').Value := nId;
+  if spLayoutFileFTPParams.Execute = '' then actDownloadAndRunFile.Execute;
 end;
 
 procedure TMainCashForm2.actOpenMCSExecute(Sender: TObject);
@@ -13179,6 +13200,8 @@ begin
       ('isTechnicalRediscount').AsBoolean;
     pmTechnicalRediscountCashier.Visible := UnitConfigCDS.FieldByName
       ('isTechnicalRediscount').AsBoolean;
+    actOpenLayoutFile.Enabled := UnitConfigCDS.FieldByName('LayoutFileCount').AsInteger > 0;
+    actOpenLayoutFile.Visible := actOpenLayoutFile.Enabled;
   finally
     ReleaseMutex(MutexUnitConfig);
   end;
@@ -13799,6 +13822,12 @@ begin
   finally
     DistributionPromoCDS.Free;
   end;
+end;
+
+procedure TMainCashForm2.spLayoutFileFTPParamsAfterExecute(Sender: TObject);
+begin
+  inherited;
+
 end;
 
 // ѕропись выполнени€ плана по сотруднику

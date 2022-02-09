@@ -692,14 +692,18 @@ BEGIN
          -- курсор2. - Потребность для vbGoodsId
          OPEN curResult_next FOR
              SELECT _tmpRemains_all_Supplement_v2.UnitId
-                  , FLOOR(_tmpRemains_all_Supplement_v2.Need - _tmpRemains_all_Supplement_v2.AmountUse)
+                  , CASE WHEN COALESCE (vbKoeffSUN, 0) = 0 
+                         THEN FLOOR(_tmpRemains_all_Supplement_v2.Need - _tmpRemains_all_Supplement_v2.AmountUse)
+                         ELSE FLOOR (FLOOR(_tmpRemains_all_Supplement_v2.Need - _tmpRemains_all_Supplement_v2.AmountUse) / vbKoeffSUN) * vbKoeffSUN END
              FROM _tmpRemains_all_Supplement_v2
 
                   -- отбросили !!исключения!!
                   LEFT JOIN _tmpUnit_SunExclusion_Supplement_v2 ON _tmpUnit_SunExclusion_Supplement_v2.UnitId_from = vbUnitId_from
                                                                AND _tmpUnit_SunExclusion_Supplement_v2.UnitId_to   = _tmpRemains_all_Supplement_v2.UnitId
 
-             WHERE FLOOR(_tmpRemains_all_Supplement_v2.Need - _tmpRemains_all_Supplement_v2.AmountUse) > 0
+             WHERE CASE WHEN COALESCE (vbKoeffSUN, 0) = 0 
+                        THEN FLOOR(_tmpRemains_all_Supplement_v2.Need - _tmpRemains_all_Supplement_v2.AmountUse)
+                        ELSE FLOOR (FLOOR(_tmpRemains_all_Supplement_v2.Need - _tmpRemains_all_Supplement_v2.AmountUse) / vbKoeffSUN) * vbKoeffSUN END > 0
                AND _tmpRemains_all_Supplement_v2.UnitId <> vbUnitId_from
                AND _tmpRemains_all_Supplement_v2.GoodsId = vbGoodsId
                AND _tmpUnit_SunExclusion_Supplement_v2.UnitId_to IS NULL

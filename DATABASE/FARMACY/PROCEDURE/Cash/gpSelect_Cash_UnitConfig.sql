@@ -31,7 +31,7 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                isPromoForSale Boolean, isCheckUKTZED Boolean, isGoodsUKTZEDRRO Boolean, isMessageByTime Boolean, isMessageByTimePD Boolean,
                LikiDneproURL TVarChar, LikiDneproToken TVarChar, LikiDneproId Integer,
                LikiDneproeHealthURL TVarChar, LikiDneproeLocation TVarChar, LikiDneproeHealthToken TVarChar,
-               isRemovingPrograms Boolean, isErrorRROToVIP Boolean
+               isRemovingPrograms Boolean, isErrorRROToVIP Boolean, LayoutFileCount Integer, LayoutFileID Integer
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -218,6 +218,36 @@ BEGIN
                            AND Contract.EndDate >= CURRENT_DATE
                          GROUP BY Contract.JuridicalBasisId
                                 , Contract.JuridicalId)
+       , tmpLayoutFile AS (SELECT
+                                  Movement.Id                        AS Id
+                                , Movement.InvNumber                 AS InvNumber
+                                , Movement.OperDate                  AS OperDate
+                                , MovementDate_StartPromo.ValueData  AS StartPromo
+                                , MovementDate_EndPromo.ValueData    AS EndPromo
+                                , ROW_NUMBER()OVER(ORDER BY Movement.OperDate DESC) as ORD
+
+                           FROM Movement
+
+                                INNER JOIN MovementDate AS MovementDate_StartPromo
+                                                       ON MovementDate_StartPromo.MovementId = Movement.Id
+                                                      AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+
+                                INNER JOIN MovementDate AS MovementDate_EndPromo
+                                                       ON MovementDate_EndPromo.MovementId = Movement.Id
+                                                      AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+                                                      
+                                INNER JOIN MovementItem AS MI_LayoutFile
+                                                        ON MI_LayoutFile.MovementId = Movement.Id
+                                                       AND MI_LayoutFile.DescId = zc_MI_Master()
+                                                       AND MI_LayoutFile.Amount = 1
+                                                       AND MI_LayoutFile.ObjectId = vbUnitId
+                                                          
+                           WHERE Movement.DescId = zc_Movement_LayoutFile()
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                             AND MovementDate_StartPromo.ValueData <= CURRENT_DATE
+                             AND MovementDate_EndPromo.ValueData >= CURRENT_DATE)
+        , tmpLayoutFileCount AS (SELECT COUNT(*)::Integer AS LayoutFileCount
+                                 FROM tmpLayoutFile)
 
    SELECT
          Object_Unit.Id                                      AS Id
@@ -324,6 +354,9 @@ BEGIN
          CASE WHEN EXISTS (SELECT 1 FROM ObjectLink_UserRole_View
          WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) THEN FALSE ELSE TRUE END AS isRemovingPrograms
        , COALESCE (ObjectBoolean_ErrorRROToVIP.ValueData, FALSE)                  AS isErrorRROToVIP
+       
+       , tmpLayoutFileCount.LayoutFileCount                                       AS LayoutFileCount
+       , tmpLayoutFile.ID                                                         AS LayoutFileID
 
    FROM Object AS Object_Unit
 
@@ -465,6 +498,9 @@ BEGIN
                               ON tmpContract.JuridicalBasisId  = ObjectLink_Unit_Juridical.ChildObjectId
                              AND tmpContract.JuridicalId  =  ObjectLink_PartnerMedical_Juridical.ChildObjectId
 
+        LEFT JOIN tmpLayoutFileCount ON 1 = 1
+        LEFT JOIN tmpLayoutFile ON tmpLayoutFile.ORD = 1
+        
    WHERE Object_Unit.Id = vbUnitId
    --LIMIT 1
    ;

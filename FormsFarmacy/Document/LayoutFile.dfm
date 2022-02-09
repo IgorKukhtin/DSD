@@ -485,7 +485,7 @@ inherited LayoutFileForm: TLayoutFileForm
       FileOpenDialog.FileTypes = <
         item
           DisplayName = #1060#1072#1083#1099' '#1074#1099#1082#1083#1072#1076#1086#1082
-          FileMask = '*.xls;*.xlsx'
+          FileMask = '*.xls;*.xlsx*.doc;*.docx;*.odt;*.jpg;*.png'
         end>
       FileOpenDialog.OkButtonLabel = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1092#1072#1081#1083
       FileOpenDialog.Options = []
