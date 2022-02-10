@@ -121,7 +121,7 @@ BEGIN
 
     , Round(tmpAnalysisContainerItem.Amount * tmpGoods.Price, 2) ::TFloat AS SummSIP
     , Round((tmpContainer.Saldo - COALESCE(tmpAnalysisContainerItem.Saldo, 0)) * tmpGoods.Price, 2) ::TFloat AS SummSaldoSIP
-
+    
    FROM tmpContainer
         LEFT OUTER JOIN tmpAnalysisContainerItem AS tmpAnalysisContainerItem
                                                  ON tmpAnalysisContainerItem.UnitId = tmpContainer.UnitId
@@ -145,6 +145,7 @@ BEGIN
    WHERE ((tmpContainer.Saldo - COALESCE(tmpAnalysisContainerItem.Saldo, 0)) <> 0 OR
            COALESCE(tmpAnalysisContainerItem.Amount, 0) <> 0)
      AND ObjectLink_Unit_Parent.ChildObjectId not in (2141104, 3031071, 5603546, 377601, 5778621, 5062813)
+     AND Object_Unit.ID not in (10129562, 11299914, 11460971, 12812109, 14890823)
      AND tmpContainer.UnitID not in (SELECT Object_Unit_View.Id FROM Object_Unit_View WHERE COALESCE (Object_Unit_View.ParentId, 0) = 0
 );
 
@@ -165,3 +166,6 @@ $BODY$
 
 -- тест
 -- select * from gpSelect_Export_AnalysisRemainsSelling ('2019-01-01'::TDateTime, '2019-01-31'::TDateTime, 2336605 , '3')
+
+
+select * from gpSelect_Export_AnalysisRemainsSelling ('01.01.2022', '01.02.2022', 2336604 , '3')

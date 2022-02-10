@@ -267,6 +267,8 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UnitRentForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_UnitRentForm');
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;

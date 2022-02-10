@@ -164,7 +164,8 @@ uses
   CashChildJournal in '..\..\FormsMerlin\Document\CashChildJournal.pas' {CashChildJournalForm: TParentForm},
   CashChildMovement in '..\..\FormsMerlin\Document\CashChildMovement.pas' {CashChildMovementForm: TParentForm},
   CashSendMovement in '..\..\FormsMerlin\Document\CashSendMovement.pas' {CashSendMovementForm: TParentForm},
-  CashSendJournal in '..\..\FormsMerlin\Document\CashSendJournal.pas' {CashSendJournalForm: TParentForm};
+  CashSendJournal in '..\..\FormsMerlin\Document\CashSendJournal.pas' {CashSendJournalForm: TParentForm},
+  Report_UnitRent in '..\..\FormsMerlin\Report\Report_UnitRent.pas' {Report_UnitRentForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

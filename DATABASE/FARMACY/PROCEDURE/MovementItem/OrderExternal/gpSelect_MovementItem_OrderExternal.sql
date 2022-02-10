@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer
              , Multiplicity TFloat                      -- убрать со временем
              , CalcAmount TFloat                         
              , MultiplicityColor Integer                -- убрать со временем
+             , SupplierFailuresColor Integer
               )
 AS
 $BODY$
@@ -39,6 +40,8 @@ $BODY$
   DECLARE vbOperDate  TDateTime;
   DECLARE vbStatusId Integer;
   DECLARE vbJuridicalId Integer;
+  DECLARE vbContractId Integer;
+  DECLARE vbAreaId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -55,12 +58,25 @@ BEGIN
     SELECT Date_TRUNC('DAY', Movement.OperDate)
          , Movement.StatusId
          , MovementLinkObject_From.ObjectId
-    INTO vbOperDate, vbStatusId, vbJuridicalId
+         , MovementLinkObject_Contract.ObjectId
+         , COALESCE(ObjectLinkUnitArea.ChildObjectId, 0)
+    INTO vbOperDate, vbStatusId, vbJuridicalId, vbContractId, vbAreaId
     FROM Movement
          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                       ON MovementLinkObject_From.MovementId = Movement.Id
                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                      ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                      ON MovementLinkObject_To.MovementId = Movement.Id
+                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+         LEFT JOIN ObjectLink AS ObjectLinkUnitArea 
+                              ON ObjectLinkUnitArea.ObjectId = MovementLinkObject_To.ObjectId
+                             AND ObjectLinkUnitArea.DescId = zc_ObjectLink_Unit_Area()
     WHERE Movement.Id =inMovementId;
+    
+    -- raise notice 'Value: % % %', vbJuridicalId, vbContractId, vbAreaId;
 
      -- + пол года к текущей для определения сроков годности
      vbDate180 := CURRENT_DATE + zc_Interval_ExpirationDate()+ zc_Interval_ExpirationDate(); --+ INTERVAL '180 DAY';  -- нужен 1 год (функция =6 мес.)
@@ -214,7 +230,36 @@ BEGIN
                                 ) AS tmp
                           WHERE tmp.ORD = 1
                           )
-
+   -- Отказы поставщиков
+   , tmpSupplierFailures AS (SELECT DISTINCT ObjectLink_BankAccount_Goods.ChildObjectId AS GoodsId
+                             FROM Object AS Object_SupplierFailures
+                                  
+                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Goods
+                                                       ON ObjectLink_BankAccount_Goods.ObjectId = Object_SupplierFailures.Id
+                                                      AND ObjectLink_BankAccount_Goods.DescId = zc_ObjectLink_SupplierFailures_Goods()
+                                  LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_BankAccount_Goods.ChildObjectId
+                                  
+                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Juridical
+                                                       ON ObjectLink_BankAccount_Juridical.ObjectId = Object_SupplierFailures.Id
+                                                      AND ObjectLink_BankAccount_Juridical.DescId = zc_ObjectLink_SupplierFailures_Juridical()
+                                  LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_BankAccount_Juridical.ChildObjectId
+                                  
+                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Contract
+                                                       ON ObjectLink_BankAccount_Contract.ObjectId = Object_SupplierFailures.Id
+                                                      AND ObjectLink_BankAccount_Contract.DescId = zc_ObjectLink_SupplierFailures_Contract()
+                                  LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = ObjectLink_BankAccount_Contract.ChildObjectId
+                                  
+                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Area
+                                                       ON ObjectLink_BankAccount_Area.ObjectId = Object_SupplierFailures.Id
+                                                      AND ObjectLink_BankAccount_Area.DescId = zc_ObjectLink_SupplierFailures_Area()
+                                  LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_BankAccount_Area.ChildObjectId
+                                  
+                             WHERE Object_SupplierFailures.DescId = zc_Object_SupplierFailures()
+                               AND Object_SupplierFailures.isErased = FALSE
+                               AND ObjectLink_BankAccount_Juridical.ChildObjectId = vbJuridicalId
+                               AND ObjectLink_BankAccount_Contract.ChildObjectId = vbContractId
+                               AND (COALESCE(ObjectLink_BankAccount_Area.ChildObjectId, 0) = 0 OR COALESCE(ObjectLink_BankAccount_Area.ChildObjectId, 0) = vbAreaId)
+                               )
 
        SELECT
              tmpMI.Id
@@ -262,6 +307,10 @@ BEGIN
                   WHEN COALESCE (tmpMI.MinimumLot <> 0) AND tmpMI.CalcAmount <> tmpMI.Amount THEN zc_Color_Red() --красный заказывать нельзя
                   ELSE zc_Color_White()
               END  AS MultiplicityColor
+           , CASE
+                  WHEN COALESCE (SupplierFailures.GoodsId, 0) <> 0 THEN zfCalc_Color (255, 165, 0) -- orange 
+                  ELSE zc_Color_White()
+              END  AS SupplierFailuresColor
       
        FROM tmpData AS tmpMI
             -- торговая сеть
@@ -301,6 +350,9 @@ BEGIN
                                          ON MIString_GoodsName.MovementItemId = tmpMI.Id
                                         AND MIString_GoodsName.DescId = zc_MIString_GoodsName()                                  
                                         AND vbStatusId = zc_Enum_Status_Complete() 
+                                        
+            LEFT JOIN tmpSupplierFailures AS SupplierFailures 
+                                          ON SupplierFailures.GoodsId = tmpMI.PartnerGoodsId
        ;
 
 END;
@@ -329,4 +381,4 @@ $BODY$
 -- SELECT * FROM gpSelect_MovementItem_OrderExternal (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 -- SELECT * FROM gpSelect_MovementItem_OrderExternal (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
 --
-select * from gpSelect_MovementItem_OrderExternal(inMovementId := 25568251  , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_OrderExternal(inMovementId := 26562277  , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

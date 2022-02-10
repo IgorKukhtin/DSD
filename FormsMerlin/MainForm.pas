@@ -81,6 +81,8 @@ type
     actCashSendJournal: TdsdOpenForm;
     miCashSendJournal: TMenuItem;
     N7: TMenuItem;
+    actReport_UnitRent: TdsdOpenForm;
+    N8: TMenuItem;
   private
     { Private declarations }
   public
