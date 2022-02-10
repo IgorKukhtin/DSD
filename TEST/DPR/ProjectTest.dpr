@@ -890,7 +890,6 @@ uses
   Report_Check_ReturnInToLinkDialog in '..\..\Forms\Report\Report_Check_ReturnInToLinkDialog.pas' {Report_Check_ReturnInToLinkDialogForm: TParentForm},
   JuridicalUKTZED in '..\..\Forms\Guides\JuridicalUKTZED.pas' {JuridicalUKTZEDForm: TParentForm},
   UserSettings in '..\..\Forms\Guides\UserSettings.pas' {UserSettingsForm: TParentForm},
-  ReportCollation_Object in '..\..\Forms\Guides\ReportCollation_Object.pas' {ReportCollation_ObjectForm: TParentForm},
   ReportCollation_UpdateObject in '..\..\Forms\Guides\ReportCollation_UpdateObject.pas' {ReportCollation_UpdateObjectForm: TParentForm},
   PersonalUnitFounder_Object in '..\..\Forms\Guides\PersonalUnitFounder_Object.pas' {PersonalUnitFounder_ObjectForm: TParentForm},
   Member_ObjectTo in '..\..\Forms\Guides\Member_ObjectTo.pas' {Member_ObjectToForm: TParentForm},
@@ -1349,7 +1348,8 @@ uses
   Report_OrderReturnTare_ReturnIn in '..\..\Forms\Report\Report_OrderReturnTare_ReturnIn.pas' {Report_OrderReturnTare_ReturnInForm: TParentForm},
   Report_DefermentPaymentOLAPTable in '..\..\Forms\Report\Report_DefermentPaymentOLAPTable.pas' {Report_DefermentPaymentOLAPTableForm: TParentForm},
   Report_DefermentPaymentOLAPTableDialog in '..\..\Forms\Report\Report_DefermentPaymentOLAPTableDialog.pas' {Report_DefermentPaymentOLAPTableDialogForm: TParentForm},
-  Report_GoodsMI_ProductionSeparate in '..\..\Forms\Report\Report_GoodsMI_ProductionSeparate.pas' {Report_GoodsMI_ProductionSeparateForm: TParentForm};
+  Report_GoodsMI_ProductionSeparate in '..\..\Forms\Report\Report_GoodsMI_ProductionSeparate.pas' {Report_GoodsMI_ProductionSeparateForm: TParentForm},
+  ReportCollation_Object in '..\..\Forms\Guides\ReportCollation_Object.pas' {ReportCollation_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

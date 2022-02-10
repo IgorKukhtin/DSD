@@ -1,6 +1,6 @@
 -- Function: lpInsertFind_Container
 
-DROP FUNCTION IF EXISTS lpInsertFind_Container (Integer, Integer, Integer, Integer, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertFind_Container (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Container(
     IN inContainerDescId         Integer  , -- DescId Остатка
@@ -145,11 +145,11 @@ BEGIN
                                     WHEN inDescId_10 = zc_ContainerLinkObject_Unit() THEN inObjectId_10
                                END);
      -- Проверка
-     IF COALESCE (vbWhereObjectId, 0) = 0
+/*     IF COALESCE (vbWhereObjectId, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Аналитика для оптимизации WhereObjectId не может быть пустой.';
      END IF;
-
+*/
      -- Если не нашли, добавляем
      IF COALESCE (vbContainerId, 0) = 0
      THEN
@@ -161,8 +161,8 @@ BEGIN
          END IF;
 
          -- добавили Остаток
-         INSERT INTO Container (DescId, ObjectId, ParentId, Amount, KeyValue, WhereObjectId, isReserve)
-                        VALUES (inContainerDescId, inObjectId, CASE WHEN inParentId = 0 THEN NULL ELSE inParentId END, 0, vbKeyValue, vbWhereObjectId, COALESCE (inIsReserve, FALSE))
+         INSERT INTO Container (DescId, ObjectId, ParentId, Amount, KeyValue, WhereObjectId)
+                        VALUES (inContainerDescId, inObjectId, CASE WHEN inParentId = 0 THEN NULL ELSE inParentId END, 0, vbKeyValue, vbWhereObjectId)
             RETURNING Id INTO vbContainerId;
 
          -- добавили Аналитики

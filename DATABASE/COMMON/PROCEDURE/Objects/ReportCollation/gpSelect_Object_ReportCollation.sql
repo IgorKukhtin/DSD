@@ -52,6 +52,13 @@ RETURNS TABLE (Id Integer, ObjectCode Integer, idBarCode TVarChar
 
              , ReCalcName TVarChar
              , ReCalcDate TDateTime
+             
+             , AreaContractName TVarChar
+             , BranchName       TVarChar       --филиал AreaContract
+             , PersonalBookkeeperId Integer    -- отв. из филиала
+             , PersonalBookkeeperName TVarChar -- отв. из филиала
+             , UnitName_PBk TVarChar           -- подразделение из ответственного
+             , BranchName_PBk TVarChar         -- филиал ответственного
               )
 AS
 $BODY$
@@ -232,6 +239,14 @@ BEGIN
            , Object_ReCalc.ValueData              AS ReCalcName
            , ObjectDate_Protocol_ReCalc.ValueData AS ReCalcDate
           
+           , Object_AreaContract.ValueData                AS AreaContractName
+           , Object_Branch.ValueData                      AS BranchName
+           , Object_PersonalBookkeeper_View.PersonalId    AS PersonalBookkeeperId
+           , Object_PersonalBookkeeper_View.PersonalName  AS PersonalBookkeeperName
+           , Object_PersonalBookkeeper_View.UnitName      AS UnitName_PBk
+           , Object_PersonalBookkeeper_View.BranchName    AS BranchName_PBk
+           
+           
       FROM tmpData
            LEFT JOIN tmpData AS	 tmpData_old ON tmpData_old.PaidKindId  = tmpData.PaidKindId
                                             AND tmpData_old.ContractId  = tmpData.ContractId
@@ -262,8 +277,24 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_ReCalc
                                 ON ObjectLink_ReCalc.ObjectId = tmpData.Id
                                AND ObjectLink_ReCalc.DescId = zc_ObjectLink_Protocol_ReCalc()
-           LEFT JOIN Object AS Object_ReCalc ON Object_ReCalc.Id = ObjectLink_ReCalc.ChildObjectId
+           LEFT JOIN Object AS Object_ReCalc ON Object_ReCalc.Id = ObjectLink_ReCalc.ChildObjectId           
 
+           LEFT JOIN ObjectLink AS ObjectLink_Contract_AreaContract
+                                ON ObjectLink_Contract_AreaContract.ObjectId = tmpData.ContractId
+                               AND ObjectLink_Contract_AreaContract.DescId = zc_ObjectLink_Contract_AreaContract()
+                               AND tmpData.PaidKindId = zc_Enum_PaidKind_FirstForm()
+           LEFT JOIN Object AS Object_AreaContract ON Object_AreaContract.Id = ObjectLink_Contract_AreaContract.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_AreaContract_Branch
+                                ON ObjectLink_AreaContract_Branch.ObjectId = ObjectLink_Contract_AreaContract.ChildObjectId
+                               AND ObjectLink_AreaContract_Branch.DescId = zc_ObjectLink_AreaContract_Branch()
+           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_AreaContract_Branch.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
+                                ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = Object_Branch.Id
+                               AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
+           LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId  
+                   
      ;
 
 END;

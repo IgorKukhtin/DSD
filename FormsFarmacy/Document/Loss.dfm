@@ -1,29 +1,31 @@
 inherited LossForm: TLossForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1087#1080#1089#1072#1085#1080#1077'>'
-  ClientHeight = 668
+  ClientHeight = 631
   ClientWidth = 783
   AddOnFormData.AddOnFormRefresh.ParentList = 'Loss'
   ExplicitWidth = 799
-  ExplicitHeight = 707
+  ExplicitHeight = 670
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 119
     Width = 783
-    Height = 549
+    Height = 512
     ExplicitTop = 119
     ExplicitWidth = 783
     ExplicitHeight = 549
-    ClientRectBottom = 549
+    ClientRectBottom = 512
     ClientRectRight = 783
     inherited tsMain: TcxTabSheet
+      ExplicitLeft = 64
+      ExplicitTop = 48
       ExplicitWidth = 783
-      ExplicitHeight = 525
+      ExplicitHeight = 543
       inherited cxGrid: TcxGrid
         Width = 783
-        Height = 525
+        Height = 336
         ExplicitWidth = 783
-        ExplicitHeight = 525
+        ExplicitHeight = 305
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -173,6 +175,135 @@ inherited LossForm: TLossForm
           end
         end
       end
+      object cxGrid1: TcxGrid
+        Left = 0
+        Top = 344
+        Width = 783
+        Height = 144
+        Align = alBottom
+        PopupMenu = PopupMenu
+        TabOrder = 1
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = DetailDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.IncSearch = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object chAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 84
+          end
+          object chExpirationDate: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'ExpirationDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 125
+          end
+          object chPartionDateKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087#1099' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082
+            DataBinding.FieldName = 'PartionDateKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 174
+          end
+          object chOperDate_Income: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1072#1087#1090#1077#1082#1080' ('#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'OperDate_Income'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object chInvnumber_Income: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'Invnumber_Income'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 125
+          end
+          object chContainerId: TcxGridDBColumn
+            Caption = #1048#1076#1077#1085#1090'. '#1087#1072#1088#1090#1080#1080
+            DataBinding.FieldName = 'ContainerId'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1087#1072#1088#1090#1080#1080
+            Options.Editing = False
+            Width = 101
+          end
+          object chFromName_Income: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'FromName_Income'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 160
+          end
+          object chContractName_Income: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractName_Income'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 80
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableView1
+        end
+      end
+      object cxSplitter1: TcxSplitter
+        Left = 0
+        Top = 336
+        Width = 783
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = cxGrid1
+        ExplicitLeft = -3
+        ExplicitTop = 362
+      end
     end
   end
   inherited DataPanel: TPanel
@@ -280,17 +411,30 @@ inherited LossForm: TLossForm
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 171
-    Top = 552
+    Left = 203
+    Top = 456
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 56
-    Top = 584
+    Left = 376
+    Top = 464
   end
   inherited ActionList: TActionList
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelect_MI_Child
+        end>
       RefreshOnTabSetChanges = True
     end
     inherited actPrint: TdsdPrintAction
@@ -555,12 +699,12 @@ inherited LossForm: TLossForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 32
-    Top = 512
+    Left = 48
+    Top = 456
   end
   inherited MasterCDS: TClientDataSet
-    Left = 88
-    Top = 512
+    Left = 128
+    Top = 456
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Loss'
@@ -835,8 +979,8 @@ inherited LossForm: TLossForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 552
+    Left = 288
+    Top = 456
   end
   inherited StatusGuides: TdsdGuides
     Left = 56
@@ -1538,7 +1682,7 @@ inherited LossForm: TLossForm
       end>
     PackSize = 1
     Left = 478
-    Top = 480
+    Top = 464
   end
   object spAddSend: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Loss_AddSend'
@@ -1562,8 +1706,8 @@ inherited LossForm: TLossForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 470
-    Top = 544
+    Left = 558
+    Top = 472
   end
   object spWriteRestFromPoint: TdsdStoredProc
     StoredProcName = 'gpInsert_MovementItem_Loss_WriteRestFromPoint'
@@ -1608,5 +1752,69 @@ inherited LossForm: TLossForm
     ParamKeyField = 'ioId'
     Left = 362
     Top = 336
+  end
+  object dsdDBViewAddOn1: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <
+      item
+        ColorInValueColumn = False
+        ColorValueList = <>
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = 0
+      end>
+    ShowFieldImageList = <>
+    SearchAsFilter = False
+    KeepSelectColor = True
+    PropertiesCellList = <>
+    Left = 318
+    Top = 529
+  end
+  object spSelect_MI_Child: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_Loss_Child'
+    DataSet = DetailDCS
+    DataSets = <
+      item
+        DataSet = DetailDCS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 464
+    Top = 536
+  end
+  object DetailDS: TDataSource
+    DataSet = DetailDCS
+    Left = 168
+    Top = 544
+  end
+  object DetailDCS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    IndexFieldNames = 'ParentId'
+    MasterFields = 'Id'
+    MasterSource = MasterDS
+    PacketRecords = 0
+    Params = <>
+    Left = 80
+    Top = 544
   end
 end

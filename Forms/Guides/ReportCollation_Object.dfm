@@ -350,6 +350,48 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         Options.Editing = False
         Width = 30
       end
+      object AreaContractName: TcxGridDBColumn
+        Caption = #1056#1077#1075#1080#1086#1085' '#1076#1086#1075#1086#1074#1086#1088#1072
+        DataBinding.FieldName = 'AreaContractName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object BranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083' ('#1056#1077#1075#1080#1086#1085' '#1076#1086#1075#1086#1074#1086#1088#1072')'
+        DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 83
+      end
+      object PersonalBookkeeperName: TcxGridDBColumn
+        Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1041#1091#1093#1075#1072#1083#1090#1077#1088') '#1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'PersonalBookkeeperName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 148
+      end
+      object UnitName_PBk: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076'. ('#1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1041#1091#1093#1075#1072#1083#1090#1077#1088')'
+        DataBinding.FieldName = 'UnitName_PBk'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1086#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1086#1075#1086' '#1079#1072' '#1076#1086#1075#1086#1074#1086#1088
+        Options.Editing = False
+        Width = 98
+      end
+      object BranchName_PBk: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083' ('#1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1041#1091#1093#1075#1072#1083#1090#1077#1088')'
+        DataBinding.FieldName = 'BranchName_PBk'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 82
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_LayoutFileFTPParams(
     OUT outPassword    TVarChar,
     OUT outDir         TVarChar,
     OUT outFileNameFTP TVarChar,
-    IN inSession       TVarChar       -- сессия пользователя
+    OUT outFileName    TVarChar,
+     IN inSession      TVarChar       -- сессия пользователя
 )
 RETURNS RECORD 
 AS
@@ -31,6 +32,11 @@ BEGIN
     outPassword := 'lhu1xHqoi21I2qsG';
     outDir := '';
     outFileNameFTP := 'LayoutFile_'||inID::Integer;
+    outFileName := COALESCE((SELECT MovementString_FileName.ValueData 
+                             FROM MovementString AS MovementString_FileName
+                             WHERE MovementString_FileName.MovementId = inID
+                               AND MovementString_FileName.DescId = zc_MovementString_FileName()
+), '');
   
 END;
 $BODY$

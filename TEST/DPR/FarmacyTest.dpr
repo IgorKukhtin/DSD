@@ -1151,7 +1151,8 @@ uses
   MedicSPDialog in '..\..\FormsFarmacy\Document\MedicSPDialog.pas' {MedicSPDialogForm: TParentForm},
   Report_Movement_Send_RemainsSun_Supplement_v2 in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_Supplement_v2.pas' {Report_Movement_Send_RemainsSun_Supplement_v2Form: TParentForm},
   LayoutFileJournal in '..\..\FormsFarmacy\Document\LayoutFileJournal.pas' {LayoutFileJournalForm: TParentForm},
-  LayoutFile in '..\..\FormsFarmacy\Document\LayoutFile.pas' {LayoutFileForm: TParentForm};
+  LayoutFile in '..\..\FormsFarmacy\Document\LayoutFile.pas' {LayoutFileForm: TParentForm},
+  LayoutFileCash in '..\..\FormsFarmacy\Cash\LayoutFileCash.pas' {LayoutFileCashForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

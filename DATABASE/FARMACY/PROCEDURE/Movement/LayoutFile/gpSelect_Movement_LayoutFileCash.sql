@@ -1,15 +1,11 @@
--- Function: gpSelect_Movement_LayoutFile()
+-- Function: gpSelect_Movement_LayoutFileCash()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_LayoutFile (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_LayoutFileCash (TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_LayoutFile(
-    IN inStartDate     TDateTime , --
-    IN inEndDate       TDateTime , --
-    IN inIsErased      Boolean ,
+CREATE OR REPLACE FUNCTION gpSelect_Movement_LayoutFileCash(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
-             , StatusCode Integer, StatusName TVarChar
              , StartPromo TDateTime, EndPromo TDateTime
              , Comment TVarChar
              , FileName TVarChar
@@ -18,47 +14,44 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbUnitId Integer;
+   DECLARE vbUnitKey TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_LayoutFile());
      vbUserId:= lpGetUserBySession (inSession);
-
+     vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+     IF vbUnitKey = '' THEN
+        vbUnitKey := '0';
+     END IF;
+     vbUnitId := vbUnitKey::Integer;
+   
      RETURN QUERY
-     WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
-                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
-                  UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
-                       )
-
-        , tmpMovement AS (SELECT Movement.*
-                          FROM tmpStatus
-                               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate   -- выбираем все документы
-                                            AND Movement.DescId = zc_Movement_LayoutFile()
-                                            AND Movement.StatusId = tmpStatus.StatusId
-                         )
-
        SELECT
              Movement.Id                        AS Id
            , Movement.InvNumber                 AS InvNumber
            , Movement.OperDate                  AS OperDate
-           , Object_Status.ObjectCode           AS StatusCode
-           , Object_Status.ValueData            AS StatusName
            , MovementDate_StartPromo.ValueData  AS StartPromo
            , MovementDate_EndPromo.ValueData    AS EndPromo
            , COALESCE (MovementString_Comment.ValueData,'') :: TVarChar AS Comment
            , COALESCE (MovementString_FileName.ValueData,'') :: TVarChar AS FileName
 
-       FROM tmpMovement AS Movement
+       FROM Movement
 
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-
-            LEFT JOIN MovementDate AS MovementDate_StartPromo
+            INNER JOIN MovementDate AS MovementDate_StartPromo
                                    ON MovementDate_StartPromo.MovementId = Movement.Id
                                   AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
 
-            LEFT JOIN MovementDate AS MovementDate_EndPromo
+            INNER JOIN MovementDate AS MovementDate_EndPromo
                                    ON MovementDate_EndPromo.MovementId = Movement.Id
                                   AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
 
+            INNER JOIN MovementItem AS MI_LayoutFile
+                                    ON MI_LayoutFile.MovementId = Movement.Id
+                                   AND MI_LayoutFile.DescId = zc_MI_Master()
+                                   AND MI_LayoutFile.Amount = 1
+                                   AND MI_LayoutFile.ObjectId = vbUnitId
+                                   
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
@@ -66,6 +59,11 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_FileName
                                      ON MovementString_FileName.MovementId = Movement.Id
                                     AND MovementString_FileName.DescId = zc_MovementString_FileName()
+                                    
+       WHERE Movement.DescId = zc_Movement_LayoutFile()
+         AND Movement.StatusId = zc_Enum_Status_Complete()
+         AND MovementDate_StartPromo.ValueData <= CURRENT_DATE
+         AND MovementDate_EndPromo.ValueData >= CURRENT_DATE
 
             ;
 END;
@@ -79,5 +77,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_LayoutFile (inStartDate:= '30.01.2020', inEndDate:= '01.02.2020', inIsErased := FALSE, inSession:= '3')
-
+-- 
+SELECT * FROM gpSelect_Movement_LayoutFileCash (inSession:= '3')

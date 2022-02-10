@@ -149,6 +149,7 @@ BEGIN
                                             THEN zc_DateEnd()
                                        ELSE COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd())
                                   END AS PartionDate
+                                , Object_PartionGoods.ValueData AS PartionGoodsName
                            FROM tmpDescWhereObject
                                 INNER JOIN ContainerLinkObject AS CLO_Unit
                                                                ON CLO_Unit.ObjectId = vbUnitId
@@ -166,6 +167,7 @@ BEGIN
                                 LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
                                                      ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                     AND ObjectDate_PartionGoods_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+                                LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
                                 LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                      ON ObjectLink_Goods_InfoMoney.ObjectId = Container.ObjectId
                                                     AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
@@ -187,6 +189,7 @@ BEGIN
                                               THEN zc_DateEnd()
                                          ELSE COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd())
                                     END
+                                  , Object_PartionGoods.ValueData
                           )
 
        -- –ÂÁÛÎ¸Ú‡Ú
@@ -205,7 +208,7 @@ BEGIN
            , CAST (NULL AS TFloat)      AS HeadCount
            , CAST (NULL AS TDateTime)   AS PartionGoodsDate
            , CAST (NULL AS Integer)     AS PartionGoodsId
-           , CAST (NULL AS TVarChar)    AS PartionGoods
+           , COALESCE (tmpRemains.PartionGoodsName,NULL) :: TVarChar AS PartionGoods
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
            , CAST (NULL AS Integer)     AS GoodsKindId_Complete
@@ -259,6 +262,7 @@ BEGIN
                                                                   ELSE 0
                                                               END
                                 AND (tmpRemains.PartionDate = zc_DateEnd()
+                                AND tmpRemains.Amount <> 0
                                     )
        WHERE tmpMI.GoodsId IS NULL
 
@@ -340,6 +344,7 @@ BEGIN
                                 --OR tmpRemains.PartionDate = zc_DateEnd()
                                   OR vbDescId_from <> zc_Object_Unit()
                                     )
+                                AND COALESCE (tmpRemains.PartionGoodsName,'') = COALESCE (tmpMI.PartionGoods,'')
             ;
      ELSE
 
@@ -364,6 +369,7 @@ BEGIN
                                             THEN zc_DateEnd()
                                        ELSE COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd())
                                   END AS PartionDate
+                                , Object_PartionGoods.ValueData AS PartionGoodsName
                            FROM tmpDescWhereObject
                                 INNER JOIN ContainerLinkObject AS CLO_Unit
                                                                ON CLO_Unit.ObjectId = vbUnitId
@@ -378,6 +384,7 @@ BEGIN
                                 LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                               ON CLO_PartionGoods.ContainerId = CLO_Unit.ContainerId
                                                              AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                                LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
                                 LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
                                                      ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                     AND ObjectDate_PartionGoods_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
@@ -402,6 +409,7 @@ BEGIN
                                               THEN zc_DateEnd()
                                          ELSE COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd())
                                     END
+                                  , Object_PartionGoods.ValueData
                           )
 
 
@@ -518,6 +526,7 @@ BEGIN
                                -- OR tmpRemains.PartionDate = zc_DateEnd()
                                   OR vbDescId_from <> zc_Object_Unit()
                                     )
+                                AND COALESCE (tmpRemains.PartionGoodsName,'') = COALESCE (Object_PartionGoods.ValueData, MIString_PartionGoods.ValueData,'')
             ;
 
      END IF;
@@ -529,6 +538,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 08.02.22         *
  01.02.21         *
  19.10.18         *
  28.07.16         *

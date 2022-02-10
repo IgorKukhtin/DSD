@@ -57,6 +57,9 @@ $BODY$
    DECLARE vbisReceived    Boolean;
    DECLARE vbisBlockCommentSendTP  Boolean;
    DECLARE vbParentId Integer;
+   DECLARE vbPercentUntilNextSUN   TFloat;
+   DECLARE vbAmountAutoSale   TFloat;
+   DECLARE vbAmountNulledSale   TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
@@ -79,9 +82,11 @@ BEGIN
          , COALESCE (MovementBoolean_Sent.ValueData, FALSE) ::Boolean
          , COALESCE (MovementBoolean_Received.ValueData, FALSE) ::Boolean
          , COALESCE (MILinkObject_CommentSend.ObjectId, 0)
-         , COALESCE (ObjectBoolean_BlockCommentSendTP.ValueData, FALSE):: Boolean    AS isBlockCommentSendTP
+         , COALESCE (ObjectBoolean_BlockCommentSendTP.ValueData, FALSE):: Boolean      AS isBlockCommentSendTP
+         , COALESCE(ObjectFloat_CashSettings_PercentUntilNextSUN.ValueData, 0)::TFloat AS PercentUntilNextSUN
     INTO vbStatusId, vbOperDate, vbUnitId, vbFromId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate, 
-         vbTotalCountOld, vbDaySaleForSUN, vbisDeferred, vbisSent, vbisReceived, vbCommentSendID, vbisBlockCommentSendTP       
+         vbTotalCountOld, vbDaySaleForSUN, vbisDeferred, vbisSent, vbisReceived, vbCommentSendID, vbisBlockCommentSendTP,
+         vbPercentUntilNextSUN
     FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
@@ -132,6 +137,12 @@ BEGIN
                                                                                       WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
                                                                                       LIMIT 1)
                                AND ObjectFloat_CashSettings_DaySaleForSUN.DescId = zc_ObjectFloat_CashSettings_DaySaleForSUN()
+          LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_PercentUntilNextSUN
+                                ON ObjectFloat_CashSettings_PercentUntilNextSUN.ObjectId = (SELECT Object_CashSettings.Id
+                                                                                            FROM Object AS Object_CashSettings
+                                                                                            WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+                                                                                            LIMIT 1)
+                               AND ObjectFloat_CashSettings_PercentUntilNextSUN.DescId = zc_ObjectFloat_CashSettings_PercentUntilNextSUN()
  
           LEFT JOIN ObjectBoolean AS ObjectBoolean_BlockCommentSendTP
                                   ON ObjectBoolean_BlockCommentSendTP.ObjectId = MovementLinkObject_From.ObjectId  
@@ -290,6 +301,74 @@ BEGIN
 
       RETURN;
     END IF;
+    
+
+    IF vbisSUN = TRUE AND COALESCE (ioId, 0) <> 0 
+       AND COALESCE (inCommentSendID, 0) = 14883299
+       AND COALESCE (vbAmount, 0) <> COALESCE (inAmount, 0)
+       AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+    THEN
+
+      WITH tmpMovementSun AS (SELECT Movement.ID
+                                   , Movement.InvNumber
+                                   , Movement.StatusId
+                                   , Movement.OperDate
+                              FROM Movement
+                                   INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                           ON MovementBoolean_SUN.MovementId = Movement.Id
+                                          AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+                                          AND MovementBoolean_SUN.ValueData = TRUE
+                                   INNER JOIN MovementDate AS MovementDate_Insert
+                                                           ON MovementDate_Insert.MovementId = Movement.Id
+                                                          AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+                                   INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                 ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                                AND MovementLinkObject_From.ObjectId = vbFromId
+                              WHERE MovementDate_Insert.ValueData BETWEEN vbInsertDate AND vbInsertDate + INTERVAL '1 DAY'
+                                AND Movement.DescId = zc_Movement_Send())
+      
+          , tmpProtocolAll AS (SELECT  MovementItem.Id
+                                    , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                                    , MovementItem.Amount
+                                    , MovementItem.ObjectId
+                                    , MILinkObject_CommentSend.ObjectId         AS CommentSendId
+                                    , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
+                               FROM tmpMovementSun AS Movement
+                               
+                                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                           AND MovementItem.Id <> ioId
+                                
+                                    INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
+                                                                   AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
+                                                                   AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
+                                                                   
+                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentSend
+                                                                       ON MILinkObject_CommentSend.MovementItemId = Movement.Id
+                                                                      AND MILinkObject_CommentSend.DescId = zc_MILinkObject_CommentSend()                                                                      
+                               )
+          , tmpProtocol AS (SELECT tmpProtocolAll.Id
+                                 , tmpProtocolAll.ObjectId
+                                 , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
+                                 , tmpProtocolAll.Amount
+                                 , tmpProtocolAll.CommentSendId
+                            FROM tmpProtocolAll
+                            WHERE tmpProtocolAll.Ord = 1)
+
+      SELECT SUM(tmpProtocol.AmountAuto) AS AmountAuto
+           , SUM(CASE WHEN COALESCE(tmpProtocol.CommentSendId, 0) = 14883299 THEN tmpProtocol.AmountAuto - tmpProtocol.Amount END) AS AmountNulled
+      INTO vbAmountAutoSale, vbAmountNulledSale
+      FROM tmpProtocol;
+      
+      vbAmountAutoSale := COALESCE (vbAmountAutoSale, 0) + COALESCE (vbAmountAuto, 0);
+      vbAmountNulledSale := COALESCE (vbAmountNulledSale, 0) - COALESCE (vbAmountAuto, 0) + COALESCE (inAmount, 0);
+      
+      IF vbAmountNulledSale > vbAmountAutoSale * vbPercentUntilNextSUN / 100
+      THEN
+        RAISE EXCEPTION 'Вы уже занулили с комментарием Продано до 20%% от общей суммы перемещений СУН от вас';
+      END IF;
+    END IF;
+    
     
     IF vbIsSUN = FALSE AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
       AND vbFromId NOT IN (7117700) 
@@ -780,4 +859,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Send (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')n
+-- select * from gpInsertUpdate_MovementItem_Send(ioId := 491825136 , inMovementId := 26749644 , inGoodsId := 3382 , inAmount := 0 , inPrice := 0 , inPriceUnitFrom := 8.3 , ioPriceUnitTo := 7.8 , inAmountManual := 0 , inAmountStorage := 0 , inReasonDifferencesId := 0 , inCommentSendId := 14883299 ,  inSession := '3');

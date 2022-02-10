@@ -1532,10 +1532,15 @@ CREATE OR REPLACE FUNCTION  zc_Object_GoodsByGoodsKind1CLink() RETURNS Integer A
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_GoodsByGoodsKind1CLink', 'Связь видов товара и кодов в 1С' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsByGoodsKind1CLink');
 
+CREATE OR REPLACE FUNCTION  zc_Object_SupplierFailures() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_SupplierFailures'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_SupplierFailures', 'Отказы поставщиков' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_SupplierFailures');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 09.02.22                                                                                        * zc_Object_SupplierFailures  
  20.01.22                                                                                        * zc_Object_PickUpLogsAndDBF  
  25.11.21                                                                                        * zc_Object_SurchargeWages  
  22.11.21         * zc_Object_PairDay

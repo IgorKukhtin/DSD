@@ -416,7 +416,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionPartnerValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionPartnerValueForm');
    exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
 
@@ -427,7 +427,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionValueForm');
    exit;
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
   exit;
@@ -453,11 +453,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAreaEditForm');
   // Регионы (договора)
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAreaContractForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAreaContractEditForm');
-  // Типы условий договоров
+  exit;
+  {// Типы условий договоров
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionKindForm');
   }

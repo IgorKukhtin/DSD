@@ -23,7 +23,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxSplitter;
 
 type
   TLossForm = class(TAncestorDocumentForm)
@@ -77,6 +78,22 @@ type
     spUpdate_ConfirmedMarketing: TdsdStoredProc;
     actUpdate_ConfirmedMarketing: TdsdExecStoredProc;
     dxBarButton5: TdxBarButton;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    chAmount: TcxGridDBColumn;
+    chExpirationDate: TcxGridDBColumn;
+    chPartionDateKindName: TcxGridDBColumn;
+    chOperDate_Income: TcxGridDBColumn;
+    chInvnumber_Income: TcxGridDBColumn;
+    chContainerId: TcxGridDBColumn;
+    chFromName_Income: TcxGridDBColumn;
+    chContractName_Income: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    spSelect_MI_Child: TdsdStoredProc;
+    DetailDS: TDataSource;
+    DetailDCS: TClientDataSet;
   private
     { Private declarations }
   public

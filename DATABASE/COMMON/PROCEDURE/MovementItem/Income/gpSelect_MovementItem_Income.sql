@@ -77,6 +77,7 @@ BEGIN
        WITH tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
                                 , Container.Amount                            AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
+                                , Object_PartionGoods.ValueData               AS PartionGoodsName
                            FROM ContainerLinkObject AS CLO_Unit
                                 INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count() AND Container.Amount <> 0
                                 LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
@@ -85,6 +86,10 @@ BEGIN
                                 LEFT JOIN ContainerLinkObject AS CLO_Account
                                                               ON CLO_Account.ContainerId = CLO_Unit.ContainerId
                                                              AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                                LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                              ON CLO_PartionGoods.ContainerId = CLO_Unit.ContainerId
+                                                             AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                                LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
                            WHERE CLO_Unit.ObjectId = vbUnitId
                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                              AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
@@ -236,7 +241,7 @@ BEGIN
            , CAST (NULL AS TFloat) AS LiveWeight
            , CAST (NULL AS TFloat) AS HeadCount
 
-           , CAST (NULL AS TVarChar) AS PartionGoods
+           , COALESCE (tmpRemains.PartionGoodsName,NULL) :: TVarChar AS PartionGoods
 
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
@@ -293,6 +298,7 @@ BEGIN
 
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpGoods.GoodsId
                                 AND tmpRemains.GoodsKindId = tmpGoods.GoodsKindId
+                                AND tmpRemains.Amount <> 0
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpGoods.InfoMoneyId
@@ -418,6 +424,7 @@ BEGIN
 
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI.GoodsId  --MovementItem.ObjectId
                                 AND tmpRemains.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                AND COALESCE (tmpRemains.PartionGoodsName,'') = COALESCE (MIString_PartionGoods.ValueData, MIString_PartionGoodsCalc.ValueData,'')
        ;
 
      ELSEIF inShowAll = TRUE
@@ -428,6 +435,7 @@ BEGIN
        WITH tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
                                 , Container.Amount                            AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
+                                , Object_PartionGoods.ValueData               AS PartionGoodsName
                            FROM ContainerLinkObject AS CLO_Unit
                                 INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count() AND Container.Amount <> 0
                                 LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
@@ -436,6 +444,10 @@ BEGIN
                                 LEFT JOIN ContainerLinkObject AS CLO_Account
                                                               ON CLO_Account.ContainerId = CLO_Unit.ContainerId
                                                              AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                                LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                              ON CLO_PartionGoods.ContainerId = CLO_Unit.ContainerId
+                                                             AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                                LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
                            WHERE CLO_Unit.ObjectId = vbUnitId
                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                              AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
@@ -576,7 +588,7 @@ BEGIN
            , CAST (NULL AS TFloat) AS LiveWeight
            , CAST (NULL AS TFloat) AS HeadCount
 
-           , CAST (NULL AS TVarChar) AS PartionGoods
+           , COALESCE (tmpRemains.PartionGoodsName,NULL) :: TVarChar AS PartionGoods
 
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
@@ -632,6 +644,7 @@ BEGIN
 
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpGoods.GoodsId
                                 AND tmpRemains.GoodsKindId = tmpGoods.GoodsKindId
+                                AND tmpRemains.Amount <> 0
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpGoods.InfoMoneyId
@@ -754,6 +767,8 @@ BEGIN
 
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI.GoodsId  --MovementItem.ObjectId
                                 AND tmpRemains.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                AND COALESCE (tmpRemains.PartionGoodsName,'') = COALESCE (MIString_PartionGoods.ValueData, MIString_PartionGoodsCalc.ValueData,'')
+                                
        ;
 
 
@@ -782,42 +797,43 @@ BEGIN
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-            LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
-                                        ON MIFloat_AmountPacker.MovementItemId = MovementItem.Id
-                                       AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
-
-            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
-            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-
-            LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
-                                        ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
-                                       AND MIFloat_LiveWeight.DescId = zc_MIFloat_LiveWeight()
-            LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
-                                        ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
-                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
-
-            LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                         ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
-                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-                                        AND MIString_PartionGoods.ValueData <> ''
-            LEFT JOIN MovementItemString AS MIString_PartionGoodsCalc
-                                         ON MIString_PartionGoodsCalc.MovementItemId =  MovementItem.Id
-                                        AND MIString_PartionGoodsCalc.DescId = zc_MIString_PartionGoodsCalc()
-
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
-                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                             ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
+                                                             ON MIFloat_AmountPacker.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
+                     
+                                 LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                             ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                             ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                     
+                                 LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
+                                                             ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_LiveWeight.DescId = zc_MIFloat_LiveWeight()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                                             ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                     
+                                 LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                              ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
+                                                             AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                                                             AND MIString_PartionGoods.ValueData <> ''
+                                 LEFT JOIN MovementItemString AS MIString_PartionGoodsCalc
+                                                              ON MIString_PartionGoodsCalc.MovementItemId =  MovementItem.Id
+                                                             AND MIString_PartionGoodsCalc.DescId = zc_MIString_PartionGoodsCalc()
+                     
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                                  ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
 
                           )
           , tmpRemains AS (SELECT tmpMI_Goods.MovementItemId
-                                , Container.Amount                            AS Amount
+                                , Container.Amount              AS Amount
+                                , Object_PartionGoods.ValueData AS PartionGoodsName
                            FROM tmpMI_Goods
                                 INNER JOIN Container ON Container.ObjectId = tmpMI_Goods.GoodsId
                                                     AND Container.DescId = zc_Container_Count()
@@ -832,9 +848,14 @@ BEGIN
                                 LEFT JOIN ContainerLinkObject AS CLO_Account
                                                               ON CLO_Account.ContainerId = Container.Id
                                                              AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                                LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                              ON CLO_PartionGoods.ContainerId = CLO_Unit.ContainerId
+                                                             AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                                LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
                            WHERE COALESCE (CLO_GoodsKind.ObjectId, 0) = tmpMI_Goods.GoodsKindId
                              AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                           )
+
        SELECT
              tmpMI_Goods.MovementItemId         AS Id
            , Object_Goods.Id          AS GoodsId
@@ -882,6 +903,7 @@ BEGIN
    
        FROM tmpMI_Goods
             LEFT JOIN tmpRemains ON tmpRemains.MovementItemId = tmpMI_Goods.MovementItemId
+                                AND COALESCE (tmpRemains.PartionGoodsName,'') = COALESCE (tmpMI_Goods.PartionGoods,'')
 
             -- это док. "Счет"
             LEFT JOIN MovementItemFloat AS MIFloat_Invoice
@@ -928,6 +950,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.02.22         *
  05.12.19         *
  18.04.17         *
  21.07.16         *
@@ -941,3 +964,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 25173, inShowAll:= TRUE, inInvoiceId:= 0, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 25173, inShowAll:= FALSE, inInvoiceId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+ SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 22151383, inShowAll:= FALSE, inInvoiceId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
