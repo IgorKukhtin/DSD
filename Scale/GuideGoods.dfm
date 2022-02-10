@@ -392,6 +392,14 @@ object GuideGoodsForm: TGuideGoodsForm
           VisibleForCustomization = False
           Width = 50
         end
+        object isPartionGoods_20103: TcxGridDBColumn
+          Caption = #1055#1072#1088#1090#1080#1103' '#1064#1080#1085
+          DataBinding.FieldName = 'isPartionGoods_20103'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
+        end
         object Color_calc: TcxGridDBColumn
           DataBinding.FieldName = 'Color_calc'
           Visible = False
@@ -1229,12 +1237,13 @@ object GuideGoodsForm: TGuideGoodsForm
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
-      object SpeedButton1: TSpeedButton
-        Left = 12
-        Top = 213
+      object bbGoodsRemains: TSpeedButton
+        Left = 14
+        Top = 216
         Width = 113
         Height = 31
         Caption = #1055#1086#1076#1073#1086#1088' '#1086#1089#1090#1072#1090#1082#1072
+        OnClick = bbGoodsRemainsClick
       end
       object gbGoodsName: TGroupBox
         Left = 0
@@ -1245,7 +1254,7 @@ object GuideGoodsForm: TGuideGoodsForm
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         TabOrder = 1
         object EditGoodsName: TEdit
-          Left = 5
+          Left = 4
           Top = 17
           Width = 125
           Height = 22
@@ -1266,8 +1275,10 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1050#1086#1076
         TabOrder = 0
+        ExplicitLeft = -1
+        ExplicitTop = -6
         object EditGoodsCode: TEdit
-          Left = 5
+          Left = 4
           Top = 17
           Width = 125
           Height = 22
@@ -1336,8 +1347,8 @@ object GuideGoodsForm: TGuideGoodsForm
         Caption = #1042#1074#1086#1076' '#1062#1045#1053#1040
         TabOrder = 4
         object EditPrice: TcxCurrencyEdit
-          Left = 5
-          Top = 18
+          Left = 4
+          Top = 16
           Properties.Alignment.Horz = taRightJustify
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
@@ -1346,6 +1357,28 @@ object GuideGoodsForm: TGuideGoodsForm
           OnEnter = EditTareCountEnter
           OnExit = EditWeightValueExit
           OnKeyDown = EditPriceKeyDown
+          Width = 125
+        end
+      end
+      object gbPartionGoods_20103: TGroupBox
+        Left = 0
+        Top = 205
+        Width = 135
+        Height = 41
+        Align = alTop
+        Caption = #1055#1072#1088#1090#1080#1103
+        TabOrder = 5
+        ExplicitLeft = -6
+        ExplicitTop = 209
+        object EditPartionGoods_20103: TcxCurrencyEdit
+          Left = 4
+          Top = 16
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.AssignedValues.DisplayFormat = True
+          Properties.DecimalPlaces = 4
+          Properties.ReadOnly = True
+          TabOrder = 0
           Width = 125
         end
       end
@@ -1385,6 +1418,7 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1050#1086#1076' '#1074#1080#1076#1072' '#1091#1087#1072#1082#1086#1074#1082#1080
         TabOrder = 0
+        ExplicitTop = -6
         object EditGoodsKindCode: TEdit
           Left = 5
           Top = 17

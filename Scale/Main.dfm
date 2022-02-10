@@ -1759,11 +1759,12 @@ object MainForm: TMainForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 119
+        ExplicitLeft = -2
+        ExplicitTop = -2
       end
       object EditPartionGoods: TEdit
-        Left = 6
-        Top = 18
+        Left = 5
+        Top = 17
         Width = 120
         Height = 23
         Font.Charset = RUSSIAN_CHARSET

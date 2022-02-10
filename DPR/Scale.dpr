@@ -109,7 +109,7 @@ uses
   Medoc_J1201212 in '..\SOURCE\MeDOC\Medoc_J1201212.pas',
   GuideReason in '..\Scale\GuideReason.pas' {GuideReasonForm},
   DialogPswSms in '..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
-  GuideGoodsRemains in '..\Scale\GuideGoodsRemains.pas' {GuideGoodsLineForm},
+  GuideGoodsRemains in '..\Scale\GuideGoodsRemains.pas' {GuideGoodsRemainsForm},
   DOCUMENTINVOICE_PRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
   DOCUMENTINVOICE_TN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas';
 
@@ -134,7 +134,7 @@ begin
          //
          Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-  Application.CreateForm(TGuideGoodsLineForm, GuideGoodsLineForm);
+  Application.CreateForm(TGuideGoodsRemainsForm, GuideGoodsRemainsForm);
   //
          // !!!важно первым!!!
          Application.CreateForm(TMainForm, MainForm);
@@ -163,6 +163,7 @@ begin
          Application.CreateForm(TGuideSubjectDocForm, GuideSubjectDocForm);
          Application.CreateForm(TGuideReasonForm, GuideReasonForm);
          Application.CreateForm(TGuideUnitForm, GuideUnitForm);
+         Application.CreateForm(TGuideGoodsRemainsForm, GuideGoodsRemainsForm);
   end
   else
 
@@ -207,6 +208,7 @@ begin
          Application.CreateForm(TGuideSubjectDocForm, GuideSubjectDocForm);
          Application.CreateForm(TGuideReasonForm, GuideReasonForm);
          Application.CreateForm(TGuideUnitForm, GuideUnitForm);
+         Application.CreateForm(TGuideGoodsRemainsForm, GuideGoodsRemainsForm);
   end;
   //
   Application.Run;

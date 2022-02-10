@@ -147,7 +147,10 @@ type
     LabelWeightTare6: TLabel;
     PanelWeightTare6: TPanel;
     Amount_Remains: TcxGridDBColumn;
-    SpeedButton1: TSpeedButton;
+    bbGoodsRemains: TSpeedButton;
+    isPartionGoods_20103: TcxGridDBColumn;
+    gbPartionGoods_20103: TGroupBox;
+    EditPartionGoods_20103: TcxCurrencyEdit;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -215,11 +218,13 @@ type
       Shift: TShiftState);
     procedure EditTare0KeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure bbGoodsRemainsClick(Sender: TObject);
   private
     oldParam1, oldParam2:Integer;
     fCloseOK : Boolean;
     fModeSave : Boolean;
     fStartWrite : Boolean;
+    fChoicePartionGoods_20103: Boolean;
     fEnterGoodsCode:Boolean;
     fEnterGoodsName:Boolean;
     fEnterGoodsKindCode:Boolean;
@@ -241,7 +246,7 @@ var
 
 implementation
 {$R *.dfm}
-uses dmMainScale, Main, DialogWeight, DialogStringValue;
+uses dmMainScale, Main, DialogWeight, DialogStringValue, GuideGoodsRemains;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.CancelCxFilter;
 begin
@@ -253,6 +258,11 @@ function TGuideGoodsForm.Execute (execParamsMovement : TParams; isModeSave, isDi
 begin
      fModeSave:= isModeSave;
      fCloseOK:=false;
+     fChoicePartionGoods_20103:= false;
+     //
+     bbGoodsRemains.Visible:= (SettingMain.isPartionGoods_20103 = TRUE) AND (execParamsMovement.ParamByName('MovementDescId').AsInteger <> zc_Movement_Income);
+     gbPartionGoods_20103.Visible:= (SettingMain.isPartionGoods_20103 = TRUE);
+     EditPartionGoods_20103.Text:= ParamsMI.ParamByName('PartionGoods').AsString;
      //
      bbSaveDialog.Visible:= isModeSave
                         and (ParamsMovement.ParamByName('OrderExternalId').asInteger > 0)
@@ -877,6 +887,8 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsCodeChange(Sender: TObject);
 begin
+     fChoicePartionGoods_20103:= false;
+     //
      if fEnterGoodsCode then
        with CDS do begin
            Filtered:=false;
@@ -886,7 +898,10 @@ begin
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsCodeEnter(Sender: TObject);
-begin TEdit(Sender).SelectAll;
+begin
+      fChoicePartionGoods_20103:= false;
+      //
+      TEdit(Sender).SelectAll;
       EditGoodsName.Text:='';
       CDS.Filtered:=false;
       if ParamsMovement.ParamByName('OrderExternalId').asInteger<>0 then CDS.Filtered:=true;
@@ -921,7 +936,6 @@ begin
      end;
 
 
-
      if (CDS.RecordCount=0)and(trim(EditGoodsCode.Text)<>'')
      then if ParamsMovement.ParamByName('OrderExternalId').asInteger<>0
           then begin fEnterGoodsCode:=false;
@@ -933,6 +947,12 @@ begin
                 GoodsCode_FilterValue:=EditGoodsCode.Text;
                 GoodsName_FilterValue:='';
           end;
+
+     if  (CDS.RecordCount>0)and(SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
+      and(Code_begin>0)and (CDS.FieldByName('isPartionGoods_20103').AsBoolean = TRUE)
+     then begin bbGoodsRemainsClick(self);
+                fChoicePartionGoods_20103:= true;
+     end;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsCodeKeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
@@ -954,6 +974,8 @@ begin if(Key=' ')or(Key='+')then Key:=#0;end;
 procedure TGuideGoodsForm.EditGoodsNameChange(Sender: TObject);
 var Code_begin:String;
 begin
+     fChoicePartionGoods_20103:= false;
+     //
      if fEnterGoodsName then
        with CDS do begin
            Code_begin:= FieldByName('GoodsCode').AsString;
@@ -967,6 +989,8 @@ end;
 procedure TGuideGoodsForm.EditGoodsNameEnter(Sender: TObject);
 var Code_begin:String;
 begin
+  fChoicePartionGoods_20103:= false;
+  //
   TEdit(Sender).SelectAll;
   EditGoodsCode.Text:='';
   CDS.Filtered:=false;
@@ -1000,6 +1024,12 @@ begin
                 GoodsCode_FilterValue:='';
                 GoodsName_FilterValue:=EditGoodsName.Text;
           end;
+     //
+     if  (CDS.RecordCount>0)and(SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
+      and (Length(trim(EditGoodsName.Text))>0)and(CDS.FieldByName('isPartionGoods_20103').AsBoolean = TRUE)
+     then begin bbGoodsRemainsClick(self);
+                fChoicePartionGoods_20103:= true;
+     end;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsNameKeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
@@ -1430,6 +1460,51 @@ begin
     then ActiveControl:=EditTareWeightCode;
 end;
 {------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.bbGoodsRemainsClick(Sender: TObject);
+var execParams:TParams;
+    GoodsCode_int:Integer;
+begin
+     if (fChoicePartionGoods_20103 = true) and (CDS.FieldByName('isPartionGoods_20103').AsBoolean = true)
+     then exit;
+     //
+     Create_ParamsGoodsLine(execParams);
+     execParams.ParamByName('GoodsId').AsInteger:=0;
+     try execParams.ParamByName('GoodsCode').AsInteger:=StrToInt(EditGoodsCode.Text); except execParams.ParamByName('GoodsCode').AsInteger:=0; end;
+     execParams.ParamByName('GoodsName').AsString:=EditGoodsName.Text;
+     if rgGoodsKind.Items.Count > 1
+     then begin
+             execParams.ParamByName('GoodsKindId').AsInteger:= GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id;
+             execParams.ParamByName('GoodsKindName').AsString:=GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Name;
+     end
+     else begin
+             execParams.ParamByName('GoodsKindId').AsInteger:= 0;
+             execParams.ParamByName('GoodsKindName').AsString:='';
+     end;
+     //
+     if GuideGoodsRemainsForm.Execute(execParams)
+     then begin
+               EditGoodsCode.Text:= execParams.ParamByName('GoodsCode').AsString;
+               //if (ActiveControl <> EditGoodsCode) and (ActiveControl <> EditGoodsName)
+               //then ActiveControl:= EditWeightValue;
+               //
+               if rgGoodsKind.Items.Count > 1
+               then begin
+                   rgGoodsKind.ItemIndex:= GetArrayList_lpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,execParams.ParamByName('GoodsKindCode').AsInteger);
+                   ActiveControl:= EditGoodsKindCode;
+               end;
+               //
+               if ParamsMovement.ParamByName('MovementDescId').AsInteger <> zc_Movement_Income
+               then begin
+                          EditPartionGoods_20103.Text:= execParams.ParamByName('PartionGoodsName').AsString;
+                          //
+                          ParamsMI.ParamByName('PartionGoods').AsString:=execParams.ParamByName('PartionGoodsName').AsString;
+               end;
+     end;
+     //
+     execParams.Free;
+
+end;
+{------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditTareWeightEnterExit(Sender: TObject);
 var TareWeight:Double;
 begin
@@ -1604,6 +1679,11 @@ begin
                 fEnterGoodsName:= false;
                 if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
                 then EditGoodsCodeChange(EditGoodsCode); // EditGoodsCodeExit(EditGoodsCode);
+
+                if CDS.FieldByName('isPartionGoods_20103').AsBoolean = TRUE
+                then
+                    bbGoodsRemainsClick(self);
+                    fChoicePartionGoods_20103:= true;
           end
      else if ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
           then begin
@@ -1614,7 +1694,12 @@ begin
                 EditGoodsName.Text:=CDS.FieldByName('GoodsName').AsString;
                 fEnterGoodsCode:= false;
                 fEnterGoodsName:= true;
-                EditGoodsNameChange(EditGoodsName) // EditGoodsNameExit(EditGoodsName);
+                EditGoodsNameChange(EditGoodsName); // EditGoodsNameExit(EditGoodsName);
+                //
+                if CDS.FieldByName('isPartionGoods_20103').AsBoolean = TRUE
+                then
+                    bbGoodsRemainsClick(self);
+                    fChoicePartionGoods_20103:= true;
           end;
 
      if (ParamsMovement.ParamByName('OrderExternalId').asInteger=0)

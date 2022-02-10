@@ -1540,6 +1540,8 @@ begin
        SettingMain.isPartionDate:=GetArrayList_Value_byName(Default_Array,'isPartionDate') = AnsiUpperCase('TRUE');
        //
        SettingMain.isReason:=GetArrayList_Value_byName(Default_Array,'isReason') = AnsiUpperCase('TRUE');
+       //
+       SettingMain.isPartionGoods_20103:=GetArrayList_Value_byName(Default_Array,'isPartionGoods_20103') = AnsiUpperCase('TRUE');
   end;
   //
   Result:=true;

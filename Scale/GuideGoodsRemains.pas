@@ -1,4 +1,4 @@
-unit GuideGoodsLine;
+unit GuideGoodsRemains;
 
 interface
 
@@ -25,7 +25,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TGuideGoodsLineForm = class(TForm)
+  TGuideGoodsRemainsForm = class(TForm)
     GridPanel: TPanel;
     ParamsPanel: TPanel;
     DS: TDataSource;
@@ -50,9 +50,11 @@ type
     actRefresh: TAction;
     actChoice: TAction;
     actExit: TAction;
-    Weight: TcxGridDBColumn;
-    WeightTare: TcxGridDBColumn;
-    CountForWeight: TcxGridDBColumn;
+    Amount_Remains: TcxGridDBColumn;
+    Amount_Remains_Weighing: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    PartionGoodsName: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -71,6 +73,7 @@ type
     procedure actRefreshExecute(Sender: TObject);
     procedure actChoiceExecute(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
+    procedure EditGoodsCodeExit(Sender: TObject);
   private
     fEnterGoodsCode:Boolean;
     fEnterGoodsName:Boolean;
@@ -84,7 +87,7 @@ type
   end;
 
 var
-  GuideGoodsLineForm: TGuideGoodsLineForm;
+  GuideGoodsRemainsForm: TGuideGoodsRemainsForm;
 
 implementation
 
@@ -92,25 +95,39 @@ implementation
 
 uses dmMainScale;
 {------------------------------------------------------------------------------}
-function TGuideGoodsLineForm.Execute(var execParamsGoods:TParams): boolean;
+function TGuideGoodsRemainsForm.Execute(var execParamsGoods:TParams): boolean;
 begin
      CopyValuesParamsFrom(execParamsGoods,ParamsGoods_local);
 
-     EditGoodsCode.Text:='';
-     EditGoodsName.Text:='';
+     with spSelect do
+     begin
+         Params.ParamByName('inOperDate').Value:= ParamsMovement.ParamByName('OperDate').AsDateTime;
+         Params.ParamByName('inMovementId').Value:= ParamsMovement.ParamByName('MovementId').AsInteger;
+         if ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income
+         then Params.ParamByName('inUnitId').Value:= ParamsMovement.ParamByName('ToId').AsInteger
+         else Params.ParamByName('inUnitId').Value:= ParamsMovement.ParamByName('FromId').AsInteger;
+         Params.ParamByName('inGoodsCode').Value:= ParamsGoods_local.ParamByName('GoodsCode').AsInteger;
+         Params.ParamByName('inGoodsName').Value:= ParamsGoods_local.ParamByName('GoodsName').AsString;
+         Execute;
+     end;
+
+     fEnterGoodsCode:=false;
+     fEnterGoodsName:=false;
+
+     EditGoodsCode.Text:=ParamsGoods_local.ParamByName('GoodsCode').AsString;
+     EditGoodsName.Text:=ParamsGoods_local.ParamByName('GoodsName').AsString;
 
      CancelCxFilter;
      CDS.Filtered:=false;
      CDS.Filtered:=true;
 
-     if ParamsGoods_local.ParamByName('GoodsId').AsInteger<>0
-     then CDS.Locate('GoodsId',ParamsGoods_local.ParamByName('GoodsId').AsString,[])
-     else if ParamsGoods_local.ParamByName('GoodsCode').AsInteger<>0
-          then CDS.Locate('GoodsCode',ParamsGoods_local.ParamByName('GoodsCode').AsString,[]);
+     if ParamsGoods_local.ParamByName('GoodsKindName').AsString<>''
+     then CDS.Locate('GoodsKindName',ParamsGoods_local.ParamByName('GoodsKindName').AsString,[]);
 
-     fEnterGoodsCode:=false;
-     fEnterGoodsName:=false;
-     ActiveControl:=EditGoodsName;
+     if ParamsGoods_local.ParamByName('GoodsCode').AsInteger > 0 
+     then ActiveControl:=EditGoodsCode
+     else ActiveControl:=EditGoodsName;
+
      //
      Application.ProcessMessages;
      Application.ProcessMessages;
@@ -120,13 +137,13 @@ begin
      if result then CopyValuesParamsFrom(ParamsGoods_local,execParamsGoods);
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsLineForm.CancelCxFilter;
+procedure TGuideGoodsRemainsForm.CancelCxFilter;
 begin
      if cxDBGridDBTableView.DataController.Filter.Active
      then begin cxDBGridDBTableView.DataController.Filter.Clear;cxDBGridDBTableView.DataController.Filter.Active:=false;end
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsLineForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
+procedure TGuideGoodsRemainsForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
     if Key=13
     then
@@ -147,7 +164,7 @@ begin
       else actExitExecute(Self);
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsLineForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);
+procedure TGuideGoodsRemainsForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);
 begin
      //
      if (fEnterGoodsCode)and(trim(EditGoodsCode.Text)<>'')
@@ -163,7 +180,7 @@ begin
 
 end;
 {------------------------------------------------------------------------------}
-function TGuideGoodsLineForm.Checked: boolean; //Проверка корректного ввода в Edit
+function TGuideGoodsRemainsForm.Checked: boolean; //Проверка корректного ввода в Edit
 begin
      Result:=(CDS.RecordCount>0);
      //
@@ -174,11 +191,21 @@ begin
                ParamByName('GoodsId').AsInteger:= CDS.FieldByName('GoodsId').AsInteger;
                ParamByName('GoodsCode').AsInteger:= CDS.FieldByName('GoodsCode').AsInteger;
                ParamByName('GoodsName').asString:= CDS.FieldByName('GoodsName').asString;
+               ParamByName('GoodsKindId').AsInteger:= CDS.FieldByName('GoodsKindId').AsInteger;
+               ParamByName('GoodsKindCode').AsInteger:= CDS.FieldByName('GoodsKindCode').AsInteger;
+               ParamByName('GoodsKindName').asString:= CDS.FieldByName('GoodsKindName').asString;
+               ParamByName('PartionGoodsId').AsInteger:= CDS.FieldByName('PartionGoodsId').AsInteger;
+               ParamByName('PartionGoodsName').asString:= CDS.FieldByName('PartionGoodsName').asString;
           end;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsLineForm.EditGoodsCodeChange(Sender: TObject);
+procedure TGuideGoodsRemainsForm.EditGoodsCodeChange(Sender: TObject);
 begin
+     if (Length(trim(EditGoodsCode.Text)) > 1) and fEnterGoodsCode
+     then EditGoodsName.Text:='';
+
+     exit;
+
      if fEnterGoodsCode then
        with CDS do begin
            //***Filtered:=false;
@@ -188,13 +215,29 @@ begin
        end;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsLineForm.EditGoodsCodeEnter(Sender: TObject);
+procedure TGuideGoodsRemainsForm.EditGoodsCodeEnter(Sender: TObject);
 begin TEdit(Sender).SelectAll;
-      EditGoodsName.Text:='';
+      //EditGoodsName.Text:='';
       //if CDS.Filtered then CDS.Filtered:=false;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsLineForm.EditGoodsCodeKeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
+procedure TGuideGoodsRemainsForm.EditGoodsCodeExit(Sender: TObject);
+begin
+           with spSelect do
+           begin
+               try
+                  if StrToInt(EditGoodsCode.Text) > 0 
+                  then Params.ParamByName('inGoodsCode').Value:= StrToInt(EditGoodsCode.Text)
+                  else Params.ParamByName('inGoodsCode').Value:= 0;
+               except
+                     Params.ParamByName('inGoodsCode').Value:= 0;
+               end;
+               Params.ParamByName('inGoodsName').Value:= EditGoodsName.Text;
+               Execute;
+           end;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsRemainsForm.EditGoodsCodeKeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
 begin
      if(Key<>32)and(Key<>27)and(Key<>13)then
      begin
@@ -204,11 +247,17 @@ begin
      end
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsLineForm.EditGoodsCodeKeyPress(Sender: TObject;var Key: Char);
+procedure TGuideGoodsRemainsForm.EditGoodsCodeKeyPress(Sender: TObject;var Key: Char);
 begin if(Key=' ')or(Key='+')then Key:=#0;end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsLineForm.EditGoodsNameChange(Sender: TObject);
+procedure TGuideGoodsRemainsForm.EditGoodsNameChange(Sender: TObject);
 begin
+
+     if (Length(trim(EditGoodsName.Text)) > 1) and fEnterGoodsName
+     then EditGoodsCode.Text:='';
+
+     exit;
+
      if fEnterGoodsName then
        with CDS do begin
            //***Filtered:=false;
@@ -218,14 +267,14 @@ begin
        end;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsLineForm.EditGoodsNameEnter(Sender: TObject);
+procedure TGuideGoodsRemainsForm.EditGoodsNameEnter(Sender: TObject);
 begin
   TEdit(Sender).SelectAll;
-  EditGoodsCode.Text:='';
+  //EditGoodsCode.Text:='';
   //if CDS.Filtered then CDS.Filtered:=false;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsLineForm.EditGoodsNameKeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
+procedure TGuideGoodsRemainsForm.EditGoodsNameKeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
 begin
      if(Key<>27)and(Key<>13)then
      begin
@@ -235,10 +284,10 @@ begin
      end
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsLineForm.EditGoodsNameKeyPress(Sender: TObject; var Key: Char);
+procedure TGuideGoodsRemainsForm.EditGoodsNameKeyPress(Sender: TObject; var Key: Char);
 begin if(Key='+')then Key:=#0;end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsLineForm.actRefreshExecute(Sender: TObject);
+procedure TGuideGoodsRemainsForm.actRefreshExecute(Sender: TObject);
 var GoodsId:String;
 begin
     with spSelect do begin
@@ -249,43 +298,45 @@ begin
     end;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsLineForm.actChoiceExecute(Sender: TObject);
+procedure TGuideGoodsRemainsForm.actChoiceExecute(Sender: TObject);
 begin
      if Checked then ModalResult:=mrOK;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsLineForm.actExitExecute(Sender: TObject);
+procedure TGuideGoodsRemainsForm.actExitExecute(Sender: TObject);
 begin
      Close;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsLineForm.FormCreate(Sender: TObject);
+procedure TGuideGoodsRemainsForm.FormCreate(Sender: TObject);
 begin
   Create_ParamsGoodsLine(ParamsGoods_local);
 
   with spSelect do
   begin
-       StoredProcName:='gpSelect_Scale_Goods';
+       StoredProcName:='gpSelect_Scale_GoodsRemains';
        OutputType:=otDataSet;
        Params.AddParam('inIsGoodsComplete', ftBoolean, ptInput, SettingMain.isGoodsComplete);
-       Params.AddParam('inOperDate', ftDateTime, ptInput, ParamsMovement.ParamByName('OperDate').AsDateTime);
+       Params.AddParam('inOperDate', ftDateTime, ptInput, Date);
        Params.AddParam('inMovementId', ftInteger, ptInput, 0);
-       Params.AddParam('inOrderExternalId', ftInteger, ptInput, 0);
-       Params.AddParam('inPriceListId', ftInteger, ptInput, 0);
+       Params.AddParam('inUnitId', ftInteger, ptInput, 0);
        Params.AddParam('inGoodsCode', ftInteger, ptInput, 0);
        Params.AddParam('inGoodsName', ftString, ptInput, '');
-       Params.AddParam('inDayPrior_PriceReturn', ftInteger, ptInput,0);
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
-       Execute;
+       //Execute;
   end;
   //
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Weight').Index].Visible                        := (SettingMain.BranchCode = 1);
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare').Index].VisibleForCustomization    := (SettingMain.BranchCode = 1);
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountForWeight').Index].VisibleForCustomization:= (SettingMain.BranchCode = 1);
+  if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310) then
+  begin
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Visible:= false;
+  end
+  else begin
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoodsName').Index].Visible:= false;
+  end;
 
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideGoodsLineForm.FormDestroy(Sender: TObject);
+procedure TGuideGoodsRemainsForm.FormDestroy(Sender: TObject);
 begin
   ParamsGoods_local.Free;
 end;

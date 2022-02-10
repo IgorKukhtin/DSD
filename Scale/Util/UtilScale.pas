@@ -63,6 +63,7 @@ type
     isCeh:Boolean;          // ScaleCeh or Scale
     isGoodsComplete:Boolean;// ScaleCeh or Scale - склад ГП/производство/упаковка or обвалка
     isCalc_sht:Boolean;     // ScaleCeh - вес - из него получаем м. или шт.
+    isPartionGoods_20103:Boolean;// Scale - автоматом открыть справочник партий - шины, и т.п.
     WeightSkewer1:Double;   // only ScaleCeh
     WeightSkewer2:Double;   // only ScaleCeh
     Exception_WeightDiff:Double; // only Scale
@@ -637,6 +638,11 @@ begin
      ParamAdd(Params,'GoodsId',ftInteger);           // Товары
      ParamAdd(Params,'GoodsCode',ftInteger);         // Товары
      ParamAdd(Params,'GoodsName',ftString);          // Товары
+     ParamAdd(Params,'GoodsKindId',ftInteger);       //
+     ParamAdd(Params,'GoodsKindCode',ftInteger);     //
+     ParamAdd(Params,'GoodsKindName',ftString);      //
+     ParamAdd(Params,'PartionGoodsId',ftInteger);    //
+     ParamAdd(Params,'PartionGoodsName',ftString);   //
      ParamAdd(Params,'MeasureId',ftInteger);         //
      ParamAdd(Params,'MeasureCode',ftInteger);       //
      ParamAdd(Params,'MeasureName',ftString);        //
@@ -1057,6 +1063,10 @@ end;
 function Recalc_PartionGoods(Edit:TEdit):Boolean;
 var PartionGoods:String;
 begin
+        if ((SettingMain.BranchCode >= 301) or (SettingMain.BranchCode <= 310))
+        and(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Income)
+        then Result:=true
+        else
         if  (trim(Edit.Text)<>'')
         and((ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Sale)
           or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_ReturnIn)
@@ -1068,6 +1078,7 @@ begin
           or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_ReturnOut)
            )
         and(SettingMain.isPartionDate = FALSE)
+        and((SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310))
         then begin
                   PartionGoods:=myCalcPartionGoods(Edit.Text);
                   Result:=PartionGoods<>'';

@@ -407,11 +407,7 @@ begin
           else begin
               ShowMessage('Ошибка.Продукция не взвешена.');
               exit;
-          end
-     else begin
-         ShowMessage('Ошибка.Продукция не взвешена.');
-         exit;
-     end;
+          end;
      //Проверка
      if (ParamsMovement.ParamByName('OrderExternalId').AsInteger > 0)
          and(ParamsMovement.ParamByName('isTransport_link').AsBoolean = TRUE)
@@ -1564,7 +1560,7 @@ begin
   Initialize_afterSave_MI;
   //local visible Columns
   //cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Visible       :=SettingMain.isGoodsComplete = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible        :=(SettingMain.isPartionDate = TRUE) or ((SettingMain.isGoodsComplete = FALSE) and (SettingMain.isSticker = FALSE) and not((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)));
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible        :=(SettingMain.isPartionDate = TRUE) or ((SettingMain.isGoodsComplete = FALSE) and (SettingMain.isSticker = FALSE)) or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310));
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('HeadCount').Index].Visible           :=(SettingMain.isGoodsComplete = FALSE) and (SettingMain.isSticker = FALSE) and not((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310));
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Visible               :=((SettingMain.isGoodsComplete = TRUE)  and (SettingMain.isSticker = FALSE)) or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310));
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('LevelNumber').Index].Visible         :=(SettingMain.isGoodsComplete = TRUE)  and (SettingMain.isSticker = FALSE);
@@ -1637,8 +1633,9 @@ begin
   end;
 
   //local visible
-  PanelPartionGoods.Visible:=((SettingMain.isGoodsComplete = FALSE) or (SettingMain.isPartionDate = TRUE))
-                         and ((SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310));
+  PanelPartionGoods.Visible:=(SettingMain.isGoodsComplete = FALSE) or (SettingMain.isPartionDate = TRUE)
+                          or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
+                             ;
   bbSetPartionGoods.Visible:= SettingMain.isPartionDate = TRUE;
   //
   infoReasonPanel.Visible:= SettingMain.isReason = TRUE;
@@ -1651,7 +1648,13 @@ begin
        bbChangePartionGoods.Hint:= 'Изменить <Партия Дата>';
        LabelPartionGoods.Caption:= 'ПАРТИЯ Дата';
        //EditPartionGoods.Text:= DateToStr(now-1);
-  end;
+  end
+  else if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
+       then begin
+             cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Caption:= 'ПАРТИЯ';
+             bbChangePartionGoods.Hint:= 'Изменить <Партия>';
+             LabelPartionGoods.Caption:= 'ПАРТИЯ';
+       end;
 
   HeadCountPanel.Visible:=((SettingMain.isGoodsComplete = FALSE))
                       and ((SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310));
