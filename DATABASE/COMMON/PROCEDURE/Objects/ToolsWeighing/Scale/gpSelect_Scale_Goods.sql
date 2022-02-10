@@ -41,6 +41,7 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , isPromo               Boolean
              , isTare                Boolean
              , isNotPriceIncome      Boolean
+             , isPartionGoods_20103  Boolean -- автоматом открыть справочник партий - шины, и т.п.
              , tmpDate               TDateTime
              , Weight TFloat, WeightTare TFloat, CountForWeight TFloat
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer
@@ -115,7 +116,7 @@ BEGIN
         -- параметры из документа - Order
         SELECT COALESCE (MovementLinkObject_Retail.ObjectId, 0)        AS RetailId
              , COALESCE (MovementLinkObject_From.ObjectId, 0)          AS FromId
-             , CASE WHEN COALESCE (vbFromId_group, 0) = 0 
+             , CASE WHEN COALESCE (vbFromId_group, 0) = 0
                          THEN CASE WHEN ObjectLink_Unit_Parent_0.ChildObjectId = 8439
                                      OR ObjectLink_Unit_Parent_1.ChildObjectId = 8439
                                      OR ObjectLink_Unit_Parent_2.ChildObjectId = 8439
@@ -226,7 +227,7 @@ BEGIN
                                                    THEN 8455 -- Склад специй
                                               ELSE 8439 -- Участок мясного сырья
                                          END AS UnitId_order
-                                       , View_InfoMoney.InfoMoneyDestinationId 
+                                       , View_InfoMoney.InfoMoneyDestinationId
                                        , View_InfoMoney.InfoMoneyId
                                        , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)   AS Amount
                                        , COALESCE (MIFloat_Price.ValueData, 0)                                AS Price
@@ -529,6 +530,9 @@ BEGIN
 
                  , CASE WHEN View_InfoMoney.InfoMoneyId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isNotPriceIncome
 
+                  -- автоматом открыть справочник партий - шины, и т.п.
+                , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20103()) THEN TRUE ELSE FALSE END :: Boolean AS isPartionGoods_20103
+
                  , CURRENT_DATE :: TDateTime AS tmpDate
 
                  , ObjectFloat_Weight.ValueData         AS Weight
@@ -577,7 +581,7 @@ BEGIN
                  LEFT JOIN ObjectFloat AS ObjectFloat_CountForWeight
                                        ON ObjectFloat_CountForWeight.ObjectId = tmpMI.GoodsId
                                       AND ObjectFloat_CountForWeight.DescId   = zc_ObjectFloat_Goods_CountForWeight()
-                                     
+
                  LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                       ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
                                      AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -781,14 +785,14 @@ BEGIN
             FROM tmpGoods_byName
             WHERE NOT EXISTS (SELECT 1 FROM tmpGoods_byName WHERE tmpGoods_byName.isEqual = TRUE)
            ;
-    
+
         --
         INSERT INTO _tmpWord_Split_from (WordList)
            SELECT DISTINCT _tmpWord_Goods.WordList FROM _tmpWord_Goods WHERE inOrderExternalId < 0 OR inBranchCode BETWEEN 301 AND 310;
-    
+
         -- RAISE EXCEPTION '<%>   <%> ', (select count(* ) from _tmpWord_Goods), (select count(* ) from _tmpWord_Split_from);
-    
-    
+
+
         --
         inMovementId:= COALESCE (inMovementId, 0);
         -- Результат - все товары
@@ -863,7 +867,7 @@ BEGIN
                                                                                , zc_Enum_InfoMoneyDestination_30500() -- Доходы  + Прочие доходы
                                                                                 )
                                    AND inBranchCode NOT BETWEEN 301 AND 310
-    
+
                                 UNION
                                  SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
                                       , View_InfoMoney.InfoMoneyCode
@@ -1119,11 +1123,15 @@ BEGIN
                 , 0                           AS MovementId_Promo
                 , FALSE                       AS isPromo
                 , FALSE                       AS isTare
-    
-                , CASE WHEN View_InfoMoney.InfoMoneyId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isNotPriceIncome
+
+                  -- Оборотная тара
+                , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500()) THEN TRUE ELSE FALSE END :: Boolean AS isNotPriceIncome
+
+                  -- автоматом открыть справочник партий - шины, и т.п.
+                , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20103()) THEN TRUE ELSE FALSE END :: Boolean AS isPartionGoods_20103
 
                 , CURRENT_DATE :: TDateTime   AS tmpDate
-    
+
                 , ObjectFloat_Weight.ValueData         AS Weight
                 , ObjectFloat_WeightTare.ValueData     AS WeightTare
                 , ObjectFloat_CountForWeight.ValueData AS CountForWeight
@@ -1134,7 +1142,7 @@ BEGIN
                 , tmpGoods.InfoMoneyName
                 , tmpGoods.InfoMoneyId
            FROM tmpGoods
-    
+
                 LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpGoods.GoodsId
 
                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
@@ -1150,24 +1158,23 @@ BEGIN
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
                                       AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-    
+
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                      ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
                                     AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                 LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
                 LEFT JOIN Object AS Object_GoodsKind_max ON Object_GoodsKind_max.Id = tmpGoods.GoodsKindId_max :: Integer
-    
+
                 LEFT JOIN tmpChangePercentAmount ON tmpChangePercentAmount.GoodsId     = tmpGoods.GoodsId
-    
+
                 LEFT JOIN tmpPrice1 AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
                 LEFT JOIN tmpPrice2 AS lfObjectHistory_PriceListItem_Return ON lfObjectHistory_PriceListItem_Return.GoodsId = tmpGoods.GoodsId
-    
+
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                      ON ObjectLink_Goods_InfoMoney.ObjectId = tmpGoods.GoodsId
                                     AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
                 LEFT JOIN Object_InfoMoney_View AS View_InfoMoney
-                                                ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
-                                               AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500()) -- Оборотная тара
+                                                ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
            ORDER BY tmpGoods.GoodsName
                   -- , ObjectString_Goods_GoodsGroupFull.ValueData

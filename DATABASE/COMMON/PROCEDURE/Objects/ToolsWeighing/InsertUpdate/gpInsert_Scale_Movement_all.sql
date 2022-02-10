@@ -1086,7 +1086,7 @@ BEGIN
                                                         , inCountForPrice       := tmp.CountForPrice
                                                         , inLiveWeight          := tmp.LiveWeight
                                                         , inHeadCount           := tmp.HeadCount
-                                                        , inPartionGoods        := ''
+                                                        , inPartionGoods        := tmp.PartionGoods
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inAssetId             := NULL
                                                         , inUserId              := vbUserId
