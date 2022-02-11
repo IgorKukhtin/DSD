@@ -114,6 +114,31 @@
   inherited ActionList: TActionList [9]
     Images = dmMain.ImageList
     Left = 631
+    object actUpdate: TdsdInsertUpdateAction [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TUnitEditForm'
+      FormNameParam.Value = 'TUnitEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spSelect
       StoredProcList = <
@@ -248,7 +273,7 @@
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'DblClickId'
+        Name = 'FocusedId'
         Value = Null
         MultiSelectSeparator = ','
       end>
@@ -256,7 +281,7 @@
     Top = 159
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_UnitParent'
+    StoredProcName = 'gpSelect_Object_Unit_Parent'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -325,6 +350,14 @@
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbExecuteDialog'
         end
         item
@@ -342,10 +375,6 @@
         item
           Visible = True
           ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -386,6 +415,10 @@
       Action = actGet_Object_UnitPrior
       Category = 0
     end
+    object dxBarButton2: TdxBarButton
+      Action = actUpdate
+      Category = 0
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -395,11 +428,11 @@
   object CheckerboardAddOn: TCheckerboardAddOn
     Panel = ScrollBox
     DataSet = MasterCDS
+    FocusedIdParam.Value = Null
+    FocusedIdParam.Component = FormParams
+    FocusedIdParam.ComponentItem = 'FocusedId'
+    FocusedIdParam.MultiSelectSeparator = ','
     DblClickAction = actGet_Object_UnitNext
-    DblClickIdParam.Value = Null
-    DblClickIdParam.Component = FormParams
-    DblClickIdParam.ComponentItem = 'DblClickId'
-    DblClickIdParam.MultiSelectSeparator = ','
     СhangeCellData.LeftParam.Value = Null
     СhangeCellData.LeftParam.MultiSelectSeparator = ','
     СhangeCellData.TopParam.Value = Null
@@ -408,6 +441,18 @@
     СhangeCellData.WidthParam.MultiSelectSeparator = ','
     СhangeCellData.HeightParam.Value = Null
     СhangeCellData.HeightParam.MultiSelectSeparator = ','
+    FieldParams.FieldIdParam.Value = 'Id'
+    FieldParams.FieldIdParam.DataType = ftString
+    FieldParams.FieldIdParam.MultiSelectSeparator = ','
+    FieldParams.FieldTextParam.Value = 'Name'
+    FieldParams.FieldTextParam.DataType = ftString
+    FieldParams.FieldTextParam.MultiSelectSeparator = ','
+    FieldParams.FieldColorParam.Value = ''
+    FieldParams.FieldColorParam.DataType = ftString
+    FieldParams.FieldColorParam.MultiSelectSeparator = ','
+    FieldParams.FieldTextColorParam.Value = ''
+    FieldParams.FieldTextColorParam.DataType = ftString
+    FieldParams.FieldTextColorParam.MultiSelectSeparator = ','
     Left = 520
     Top = 264
   end
@@ -420,7 +465,7 @@
         Name = 'inId'
         Value = ''
         Component = FormParams
-        ComponentItem = 'DblClickId'
+        ComponentItem = 'FocusedId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -444,7 +489,7 @@
     Top = 335
   end
   object spGet_Object_UnitPrior: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_UnitPrior'
+    StoredProcName = 'gpGet_Object_Unit_Prior'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -473,6 +518,6 @@
       end>
     PackSize = 1
     Left = 280
-    Top = 335
+    Top = 327
   end
 end

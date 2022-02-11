@@ -1330,6 +1330,24 @@ type
     property HeightParam: TdsdParam  read FHeightParam write FHeightParam;
   end;
 
+  TFieldParamsData = class(TPersistent)
+  private
+    FFieldIdParam: TdsdParam;
+    FFieldTextParam: TdsdParam;
+    FFieldColorParam: TdsdParam;
+    FFieldTextColorParam: TdsdParam;
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+
+  published
+
+    property FieldIdParam: TdsdParam  read FFieldIdParam write FFieldIdParam;
+    property FieldTextParam: TdsdParam  read FFieldTextParam write FFieldTextParam;
+    property FieldColorParam: TdsdParam  read FFieldColorParam write FFieldColorParam;
+    property FieldTextColorParam: TdsdParam  read FFieldTextColorParam write FFieldTextColorParam;
+  end;
+
   TCheckerboardAddOn = class(TComponent)
   private
     FControl: TWinControl;
@@ -1354,16 +1372,18 @@ type
     FSizing : Boolean;
     FControlDown: TWinControl;
 
+    FFocusedIdParam: TdsdParam;
+
     FDblClickAction: TCustomAction;
-    FDblClickIdParam: TdsdParam;
-    FTimerDblClick : Boolean;
 
     FÑhangeCellAction: TCustomAction;
     FÑhangeCellData: TÑhangeCellData;
+    FFieldParamsData: TFieldParamsData;
     FPosCellData: TRect;
-    FÑhangeCell : Boolean;
 
     FTimer: TTimer;
+    FTimerProcess : Integer;
+    FFocusSetID : Integer;
 
     procedure SetDataSet(const Value: TDataSet);
     procedure OnAfterOpen(ADataSet: TDataSet);
@@ -1375,6 +1395,7 @@ type
     procedure OnMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure OnDblClick(Sender: TObject);
+    procedure OnEnter(Sender: TObject);
     procedure OnTimer(Sender: TObject);
   public
     constructor Create(AOwner: TComponent); override;
@@ -1396,14 +1417,16 @@ type
     property Height: Integer read FHeight write FHeight default 137;
     // Øèðèíà ïàíåëè
     property Width: Integer read FWidth write FWidth default 105;
+    // Id àêòèâíîé çàïèñè
+    property FocusedIdParam: TdsdParam  read FFocusedIdParam write FFocusedIdParam;
     // Àêöèÿ ïî DblClick
     property DblClickAction: TCustomAction  read FDblClickAction write FDblClickAction;
-    // Id çàïèñè ïî DblClick
-    property DblClickIdParam: TdsdParam  read FDblClickIdParam write FDblClickIdParam;
     // Àêöèÿ ïî èùìåíåíèþ ïîçèöèè è ðàçìåðà
     property ÑhangeCellAction: TCustomAction  read FÑhangeCellAction write FÑhangeCellAction;
-    // Id çàïèñè ïî DblClick
+    // Íîâûå êîîðäèíàòû äëÿ ñîõðàíåíèÿ â áàçó
     property ÑhangeCellData: TÑhangeCellData  read FÑhangeCellData write FÑhangeCellData;
+    // Ñëóæåáíûå ïîëÿ
+    property FieldParams: TFieldParamsData  read FFieldParamsData write FFieldParamsData;
   end;
 
   procedure Register;
@@ -7169,7 +7192,7 @@ begin
   end;
 end;
 
-  { TÑhangeCellData }
+{ TÑhangeCellData }
 
 constructor TÑhangeCellData.Create;
 begin
@@ -7187,6 +7210,31 @@ begin
   FHeightParam.Free;
 end;
 
+{ TFieldParamsData }
+
+constructor TFieldParamsData.Create;
+begin
+  FFieldIdParam := TdsdParam.Create;
+  FFieldIdParam.DataType := ftString;
+  FFieldIdParam.Value := 'Id';
+  FFieldTextParam := TdsdParam.Create;
+  FFieldTextParam.DataType := ftString;
+  FFieldTextParam.Value := 'Name';
+  FFieldColorParam := TdsdParam.Create;
+  FFieldColorParam.DataType := ftString;
+  FFieldColorParam.Value := '';
+  FFieldTextColorParam := TdsdParam.Create;
+  FFieldTextColorParam.DataType := ftString;
+  FFieldTextColorParam.Value := '';
+end;
+
+destructor TFieldParamsData.Destroy;
+begin
+  FFieldIdParam.Free;
+  FFieldTextParam.Free;
+  FFieldColorParam.Free;
+  FFieldTextColorParam.Free;
+end;
 
 { TCheckerboardAddOn }
 
@@ -7194,14 +7242,15 @@ constructor TCheckerboardAddOn.Create(AOwner: TComponent);
 begin
   inherited;
   FCreatePanelList := TList.Create;
-  FDblClickIdParam := TdsdParam.Create;
+  FFocusedIdParam := TdsdParam.Create;
   FÑhangeCellData := TÑhangeCellData.Create;
+  FFieldParamsData := TFieldParamsData.Create;
   FTimer := TTimer.Create(Nil);
   FTimer.Enabled := False;
   FTimer.Interval := 100;
   FTimer.OnTimer := OnTimer;
-  FTimerDblClick := False;
-  FÑhangeCell := False;
+  FTimerProcess := 0;
+  FFocusSetID := 0;
 
   FGap := 5;
   FHeight := 137;
@@ -7209,11 +7258,13 @@ begin
 end;
 
 destructor TCheckerboardAddOn.Destroy;
+  var I : Integer;
 begin
   FTimer.Free;
   FÑhangeCellData.Free;
-  FDblClickIdParam.Free;
+  FFocusedIdParam.Free;
   FCreatePanelList.Free;
+  FFieldParamsData.Free;
   inherited;
 end;
 
@@ -7284,10 +7335,11 @@ begin
     cxMemo.OnMouseMove := OnMouseMove;
     cxMemo.OnMouseUp := OnMouseUp;
     cxMemo.OnDblClick := OnDblClick;
+    cxMemo.OnEnter := OnEnter;
 
 
-    cxMemo.Tag := ADataSet.FieldByName('Id').AsInteger;
-    cxMemo.Text := ADataSet.FieldByName('Name').AsString;
+    cxMemo.Tag := ADataSet.FieldByName(FFieldParamsData.FFieldIdParam.Value).AsInteger;
+    cxMemo.Text := ADataSet.FieldByName(FFieldParamsData.FFieldTextParam.Value).AsString;
 
     if (nLeft > FGap) and ((nLeft + FWidth * 2) > FControl.Width) then
     begin
@@ -7300,7 +7352,10 @@ begin
   end;
 
   for i := 0 to FCreatePanelList.Count - 1 do
-  TWinControl(FCreatePanelList.Items[I]).Visible := True;
+    TWinControl(FCreatePanelList.Items[I]).Visible := True;
+
+  FTimerProcess := FTimerProcess or 4;
+  FTimer.Enabled := True;
 
 end;
 
@@ -7309,6 +7364,8 @@ procedure TCheckerboardAddOn.OnAfterClose(ADataSet: TDataSet);
 begin
   if Assigned(FAfterClose) then
      FAfterClose(ADataSet);
+
+  FFocusSetID := FFocusedIdParam.Value;
 
   for i := 0 to FCreatePanelList.Count - 1 do
     TWinControl(FCreatePanelList.Items[I]).Free;
@@ -7389,7 +7446,7 @@ begin
 
       if Assigned(FÑhangeCellAction) then //FÑhangeCellAction.Execute;
       begin
-        FÑhangeCell := True;
+        FTimerProcess := FTimerProcess or 1;
         FÑhangeCellAction.Execute;
       end;
     end;
@@ -7398,30 +7455,47 @@ end;
 
 procedure TCheckerboardAddOn.OnDblClick(Sender: TObject);
 begin
-  FDblClickIdParam.Value := TWinControl(Sender).Tag;
-  if Assigned(FDblClickAction) then //FDblClickAction.Execute;
-  begin
-    FTimerDblClick := True;
-    FTimer.Enabled := True;
-  end;
+  FFocusedIdParam.Value := TWinControl(Sender).Tag;
+  if FDataSet.Locate(FFieldParamsData.FFieldIdParam.Value, TWinControl(Sender).Tag, []) then
+    if Assigned(FDblClickAction) then //FDblClickAction.Execute;
+    begin
+      FTimerProcess := FTimerProcess or 2;
+      FTimer.Enabled := True;
+    end;
+end;
+
+procedure TCheckerboardAddOn.OnEnter(Sender: TObject);
+begin
+  FFocusedIdParam.Value := TWinControl(Sender).Tag;
+  FDataSet.Locate(FFieldParamsData.FFieldIdParam.Value, TWinControl(Sender).Tag, []);
 end;
 
 procedure TCheckerboardAddOn.OnTimer(Sender: TObject);
+  var I : Integer;
 begin
   FTimer.Enabled := False;
+  try
 
-  if Assigned(FDblClickAction) and FTimerDblClick then
-  begin
-    FDblClickAction.Execute;
+    if (FTimerProcess and 1) > 0 then if Assigned(FÑhangeCellAction) then FÑhangeCellAction.Execute;
+
+    if (FTimerProcess and 2) > 0 then if Assigned(FDblClickAction) then FDblClickAction.Execute;
+
+    if (FTimerProcess and 4) > 0 then
+    begin
+      if FFocusSetID > 0 then
+        for i := 0 to FCreatePanelList.Count - 1 do
+           if TWinControl(FCreatePanelList.Items[I]).Tag = FFocusSetID then
+           begin
+             TWinControl(FCreatePanelList.Items[I]).SetFocus;
+             Exit;
+           end;
+      if FCreatePanelList.Count > 0 then TWinControl(FCreatePanelList.Items[0]).SetFocus;
+    end;
+
+  finally
+    FTimerProcess := 0;
   end;
 
-  if Assigned(FÑhangeCellAction) and FÑhangeCell then
-  begin
-    FÑhangeCellAction.Execute;
-  end;
-
-  FTimerDblClick := False;
-  FÑhangeCell := False;
 end;
 
 end.

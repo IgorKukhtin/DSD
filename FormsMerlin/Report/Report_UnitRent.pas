@@ -59,6 +59,8 @@ type
     actGet_Object_UnitPrior: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
     spGet_Object_UnitPrior: TdsdStoredProc;
+    actUpdate: TdsdInsertUpdateAction;
+    dxBarButton2: TdxBarButton;
   private
   public
   end;

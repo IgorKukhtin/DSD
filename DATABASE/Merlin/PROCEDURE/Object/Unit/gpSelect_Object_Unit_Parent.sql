@@ -1,8 +1,8 @@
--- Function: gpSelect_Object_UnitParent (Integer, Boolean, TVarChar)
+-- Function: gpSelect_Object_Unit_Parent (Integer, Boolean, TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_UnitParent (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Unit_Parent (Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_UnitParent(
+CREATE OR REPLACE FUNCTION gpSelect_Object_Unit_Parent(
     IN inParentId    Integer,       -- ѕодразделени€ владельца
     IN inIsShowAll   Boolean,       -- признак показать удаленные да / нет
     IN inSession     TVarChar       -- сесси€ пользовател€
@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ParentId Integer, ParentName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
+             , isPositionFixed Boolean, Left Integer, Top Integer, Width Integer, Height Integer
              , isErased boolean)
 AS
 $BODY$
@@ -49,6 +50,12 @@ BEGIN
            , ObjectDate_Insert.ValueData     AS InsertDate
            , Object_Update.ValueData         AS UpdateName
            , ObjectDate_Update.ValueData     AS UpdateDate
+           
+           , COALESCE(ObjectBoolean_PositionFixed.ValueData, FALSE) AS isPositionFixed
+           , ObjectFloat_Left.ValueData::Integer   AS Left
+           , ObjectFloat_Top.ValueData::Integer    AS Top
+           , ObjectFloat_Width.ValueData::Integer  AS Width
+           , ObjectFloat_Height.ValueData::Integer AS Height
            
            , Object_Unit.isErased            AS isErased
 
@@ -87,6 +94,23 @@ BEGIN
                                  ON ObjectDate_Update.ObjectId = Object_Unit.Id
                                 AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_PositionFixed
+                                    ON ObjectBoolean_PositionFixed.ObjectId = Object_Unit.Id
+                                   AND ObjectBoolean_PositionFixed.DescId = zc_ObjectBoolean_Unit_PositionFixed()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Left
+                                  ON ObjectFloat_Left.ObjectId = Object_Unit.Id
+                                 AND ObjectFloat_Left.DescId = zc_ObjectFloat_Unit_Left()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Top
+                                  ON ObjectFloat_Top.ObjectId = Object_Unit.Id
+                                 AND ObjectFloat_Top.DescId = zc_ObjectFloat_Unit_Top()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width
+                                  ON ObjectFloat_Width.ObjectId = Object_Unit.Id
+                                 AND ObjectFloat_Width.DescId = zc_ObjectFloat_Unit_Width()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Height
+                                  ON ObjectFloat_Height.ObjectId = Object_Unit.Id
+                                 AND ObjectFloat_Height.DescId = zc_ObjectFloat_Unit_Height()
+
      WHERE Object_Unit.DescId = zc_Object_Unit()
        AND (Object_Unit.isErased = FALSE OR inIsShowAll = TRUE)
        AND (COALESCE (Object_Parent.Id, 0) = COALESCE (inParentId, 0) OR Object_Unit.Id = vbId)
@@ -104,4 +128,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpSelect_Object_UnitParent (52707, FALSE, zfCalc_UserAdmin())
+SELECT * FROM gpSelect_Object_Unit_Parent (52707, FALSE, zfCalc_UserAdmin())
