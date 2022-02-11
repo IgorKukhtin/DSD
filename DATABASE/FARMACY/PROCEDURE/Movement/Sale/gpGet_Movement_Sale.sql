@@ -107,7 +107,7 @@ BEGIN
           , COALESCE (Object_SPKind.Id, NULL)        ::Integer   AS SPKindId
           , COALESCE (Object_SPKind.ValueData, NULL) ::TVarChar  AS SPKindName 
           , FALSE::Boolean                                       AS isDeferred
-          , CASE WHEN inSession IN ('8720522', '374175') THEN TRUE ELSE FALSE END::Boolean AS isNP
+          , CASE WHEN inSession IN ('8720522', '374175', '19085095') THEN TRUE ELSE FALSE END::Boolean AS isNP
           , 'TMedicSP_ObjectForm' ::TVarChar                     AS MedicSPForm
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
@@ -117,11 +117,11 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Unit_PartnerMedical
                                  ON ObjectLink_Unit_PartnerMedical.ObjectId = Object_Unit.Id 
                                 AND ObjectLink_Unit_PartnerMedical.DescId = zc_ObjectLink_Unit_PartnerMedical()
-                                AND inSession <> '374175'
+                                AND inSession NOT IN ('374175', '19085095')
             LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = ObjectLink_Unit_PartnerMedical.ChildObjectId
 
-            LEFT JOIN Object AS Object_SPKind   ON Object_SPKind.Id   = zc_Enum_SPKind_1303()        AND COALESCE (Object_PartnerMedical.Id, 0) <> 0 AND inSession <> '374175'
-            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() AND COALESCE (Object_PartnerMedical.Id, 0) <> 0 AND inSession <> '374175'
+            LEFT JOIN Object AS Object_SPKind   ON Object_SPKind.Id   = zc_Enum_SPKind_1303()        AND COALESCE (Object_PartnerMedical.Id, 0) <> 0 AND inSession  NOT IN ('374175', '19085095')
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() AND COALESCE (Object_PartnerMedical.Id, 0) <> 0 AND inSession  NOT IN ('374175', '19085095')
 
           /*LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = CASE WHEN vbUnitId IN (183289, 183294, 377605) THEN vbUnitId ELSE 0 END    --, 183292
             LEFT JOIN Object AS Object_SPKind   ON Object_SPKind.Id   = CASE WHEN vbUnitId IN (183289, 183294, 377605) THEN zc_Enum_SPKind_1303() ELSE 0 END

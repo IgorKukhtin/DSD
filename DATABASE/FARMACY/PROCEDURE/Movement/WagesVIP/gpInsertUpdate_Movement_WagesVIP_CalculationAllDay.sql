@@ -14,7 +14,8 @@ $BODY$
    DECLARE vbTotalSummPhone   TFloat;
    DECLARE vbTotalSummSale    TFloat;
    DECLARE vbTotalSummSaleNP  TFloat;
-   DECLARE vbHoursWork      TFloat;
+   DECLARE vbHoursWork        TFloat;
+   DECLARE vbSummaNPAdd       TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_WagesVIP());
@@ -257,6 +258,80 @@ BEGIN
 
     IF DATE_TRUNC ('MONTH', vbOperDate) >= '01.01.2022'
     THEN
+
+      IF DATE_TRUNC ('MONTH', vbOperDate) = '01.02.2022'
+      THEN
+
+        WITH tmpMovement AS (SELECT Movement.*
+                                  , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
+                                  , COALESCE(MovementBoolean_CallOrder.ValueData,FALSE) :: Boolean AS isCallOrder
+                                  , False                                                          AS isOffsetVIP
+                             FROM Movement
+
+                                  INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                             ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                                            AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                            AND MovementBoolean_Deferred.ValueData = True
+
+                                  INNER JOIN MovementString AS MovementString_InvNumberOrder
+                                                            ON MovementString_InvNumberOrder.MovementId = Movement.Id
+                                                           AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+                                                           AND MovementString_InvNumberOrder.ValueData <> ''
+
+                                  LEFT JOIN MovementBoolean AS MovementBoolean_CallOrder
+                                                            ON MovementBoolean_CallOrder.MovementId = Movement.Id
+                                                           AND MovementBoolean_CallOrder.DescId = zc_MovementBoolean_CallOrder()
+
+                                  LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                          ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                                         AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+                             WHERE Movement.OperDate >= '01.01.2022'::TDateTime - INTERVAL '1 MONTH' + INTERVAL '4 DAY'
+                               AND Movement.OperDate < '01.01.2022'::TDateTime + INTERVAL '1 MONTH' + INTERVAL '4 DAY'
+                               AND Movement.DescId = zc_Movement_Check()
+                               AND Movement.StatusId = zc_Enum_Status_Complete()
+                           UNION ALL
+                           SELECT Movement.*
+                                , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
+                                , False                                                          AS isCallOrder
+                                , MovementBoolean_OffsetVIP.ValueData                            AS isOffsetVIP 
+                           FROM Movement
+
+                                INNER JOIN MovementBoolean AS MovementBoolean_OffsetVIP
+                                                          ON MovementBoolean_OffsetVIP.MovementId = Movement.Id
+                                                         AND MovementBoolean_OffsetVIP.DescId = zc_MovementBoolean_OffsetVIP()
+                                                         AND MovementBoolean_OffsetVIP.ValueData = TRUE
+
+                                LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                        ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                                       AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                                                           
+                           WHERE Movement.OperDate >= '01.01.2022'::TDateTime
+                             AND Movement.OperDate < '01.01.2022'::TDateTime + INTERVAL '1 MONTH'
+                             AND Movement.DescId = zc_Movement_Check()
+                             AND Movement.StatusId = zc_Enum_Status_Complete())
+           , tmpMovementProtocol AS (SELECT MovementProtocol.MovementId
+                                          , CASE WHEN MIN(date_trunc('day', MovementProtocol.OperDate + INTERVAL '3 HOUR')) < '01.01.2022'::TDateTime
+                                                      AND date_trunc('day', Movement.OperDate) > '01.01.2022'::TDateTime
+                                                      AND date_trunc('day', Movement.OperDate) >= '01.01.2022'
+                                                      OR Movement.isOffsetVIP = TRUE
+                                                 THEN date_trunc('day', Movement.OperDate)
+                                                 ELSE MIN(date_trunc('day', MovementProtocol.OperDate + INTERVAL '3 HOUR')) END   AS OperDate
+                                     FROM tmpMovement AS Movement
+
+                                          INNER JOIN MovementProtocol ON MovementProtocol.MovementId = Movement.ID
+                                     GROUP BY MovementProtocol.MovementId, date_trunc('day', Movement.OperDate), Movement.isOffsetVIP)
+
+        SELECT SUM(Movement.TotalSumm)::TFloat 
+        INTO vbSummaNPAdd
+        FROM tmpMovement AS Movement
+             INNER JOIN tmpMovementProtocol ON tmpMovementProtocol.MovementId = Movement.ID
+        WHERE tmpMovementProtocol.OperDate = '01.01.2022'::TDateTime
+        GROUP BY tmpMovementProtocol.OperDate;
+      ELSE
+        vbSummaNPAdd := 0;
+      END IF;
+
       WITH tmpPayrollTypeVIP AS (SELECT Object_PayrollTypeVIP.Id             AS Id
                                       , Object_PayrollTypeVIP.ObjectCode     AS Code
                                       , Object_PayrollTypeVIP.ValueData      AS Name
@@ -281,7 +356,7 @@ BEGIN
                                  
       INSERT INTO tmpCalculationNP (UserID, Summa)
       SELECT Calculation.UserId
-           , ROUND(Movement.SummSaleNP * Calculation.HoursWork * PayrollTypeVIP.PercentPhone / 100 / vbHoursWork, 2) AS Summa
+           , ROUND((Movement.SummSaleNP + COALESCE(vbSummaNPAdd, 0)) * Calculation.HoursWork * PayrollTypeVIP.PercentPhone / 100 / vbHoursWork, 2) AS Summa
 
       FROM (SELECT tmpCalculation.UserId 
                  , SUM(tmpCalculation.HoursWork) AS HoursWork
@@ -293,7 +368,7 @@ BEGIN
            LEFT JOIN (SELECT SUM(tmpMovement.SummSaleNP) AS SummSaleNP
                       FROM tmpMovement) AS Movement ON 1 = 1;
                       
-      raise notice 'Value 05: %', (SELECT SUM(tmpCalculationNP.Summa) FROM tmpCalculationNP);
+      -- raise notice 'Value 05: % %', (SELECT SUM(tmpCalculationNP.Summa) FROM tmpCalculationNP), vbSummaNPAdd;
 
     END IF;
     
@@ -303,7 +378,7 @@ BEGIN
     -- сохранили отметку <Сумма реализации заказов>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummSale(), inMovementId, vbTotalSummSale);
     -- сохранили отметку <Сумма реализации заказов>
-    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummSaleNP(), inMovementId, vbTotalSummSaleNP);
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummSaleNP(), inMovementId, vbTotalSummSaleNP + COALESCE(vbSummaNPAdd, 0));
     -- сохранили отметку <Отработано часов всеми сотрудниками>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursWork(), inMovementId, vbHoursWork);
     
@@ -359,4 +434,4 @@ $BODY$
 */
 
 -- 
-select * from gpInsertUpdate_Movement_WagesVIP_CalculationAllDay(inMovementId := 26289531 ,  inSession := '3');
+select * from gpInsertUpdate_Movement_WagesVIP_CalculationAllDay(inMovementId := 26769516,  inSession := '3');

@@ -381,6 +381,7 @@ BEGIN
                    AND ObjectLink_Unit_Parent.ObjectId = vbUnitId
                    AND COALESCE(ObjectLink_Unit_Parent.ChildObjectId, 0) <> 0)
       AND CURRENT_DATE >= '09.07.2021'
+      AND inGoodsId NOT IN (21310, 10506088, 10506012, 26899, 26479, 10506035, 10505976)
     THEN
       vHT_SUN := COALESCE((SELECT Max(ObjectFloat_HT_SUN_v1.ValueData) FROM ObjectFloat AS ObjectFloat_HT_SUN_v1 
                            WHERE ObjectFloat_HT_SUN_v1.DescId = zc_ObjectFloat_Unit_HT_SUN_v1()), 0);
