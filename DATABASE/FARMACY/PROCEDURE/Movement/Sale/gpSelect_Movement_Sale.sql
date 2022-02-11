@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer
              , TotalSummPrimeCost TFloat
              , UnitId Integer
              , UnitName TVarChar
+             , JuridicalMainName TVarChar
              , JuridicalId Integer
              , JuridicalName TVarChar
              , PaidKindId Integer
@@ -162,6 +163,7 @@ BEGIN
           , Movement_Sale.TotalSummPrimeCost
           , Movement_Sale.UnitId
           , Movement_Sale.UnitName
+          , Object_Juridical.ValueData     AS JuridicalMainName
           , Movement_Sale.JuridicalId
           , Movement_Sale.JuridicalName
           , Movement_Sale.PaidKindId
@@ -262,6 +264,11 @@ BEGIN
                                   AND ObjectString_InsuranceCardNumber.DescId = zc_ObjectString_MemberIC_InsuranceCardNumber() 
                                   
             LEFT JOIN tmpMI ON tmpMI.MovementId = Movement_Sale.Id
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                 ON ObjectLink_Unit_Juridical.ObjectId = Movement_Sale.UnitId
+                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
        ;
 
 END;

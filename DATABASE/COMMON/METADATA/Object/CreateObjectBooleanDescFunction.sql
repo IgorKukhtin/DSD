@@ -1190,9 +1190,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_SUN_v2_Supplement_out() RETURNS
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_SUN_v2_Supplement_out', 'Работают по СУН - версия 2 дополнение - только отправка' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_SUN_v2_Supplement_out');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_PositionFixed() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_PositionFixed'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_PositionFixed', 'Положение зафиксирована' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_PositionFixed');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 11.02.22                                                                                                          * zc_ObjectBoolean_Unit_PositionFixed
  03.02.22                                                                                                          * zc_ObjectBoolean_Unit_SUN_v2_Supplement
  02.02.22                                                                                                          * zc_ObjectBoolean_ConditionsKeep_ColdSUN
  26.01.22         * zc_ObjectBoolean_Juridical_isNotTare

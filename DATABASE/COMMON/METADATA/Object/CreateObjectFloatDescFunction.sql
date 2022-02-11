@@ -2192,9 +2192,27 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_PercentUntilNextSUN() RET
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_PercentUntilNextSUN', 'Процент для подсветки комента "Продано/Продажа до след СУН"' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_PercentUntilNextSUN');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_Left() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Left'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_Left', 'Положение относительно левого края' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Left');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_Top() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Top'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_Top', 'Положение относительно верхнего края' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Top');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_Width() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Width'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_Width', 'Ширина' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Width');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_Height() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Height'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_Height', 'Высота' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Height');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 11.02.22                                                                                      * c_ObjectFloat_Unit_...
  22.12.21         * zc_ObjectFloat_MemberMinus_Tax
  02.12.21                                                                                      * zc_ObjectFloat_CashSettings_PercentUntilNextSUN
  25.11.21                                                                                      * zc_ObjectFloat_SurchargeWages_Summa

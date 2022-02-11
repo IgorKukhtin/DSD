@@ -50,6 +50,7 @@ type
     actExecInsert_InsuranceCompanies: TdsdExecStoredProc;
     spInsert_InsuranceCompanies: TdsdStoredProc;
     GoodsCode: TcxGridDBColumn;
+    JuridicalMainName: TcxGridDBColumn;
   private
     { Private declarations }
   public
