@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, ObjectCode Integer, idBarCode TVarChar
              , PersonalName  TVarChar
              , UnitName      TVarChar
              , PositionName  TVarChar
+             , BranchName_personal TVarChar         -- филиал ответственного
              , PartnerId     Integer
              , PartnerName   TVarChar
              , ContractId    Integer
@@ -55,10 +56,6 @@ RETURNS TABLE (Id Integer, ObjectCode Integer, idBarCode TVarChar
              
              , AreaContractName TVarChar
              , BranchName       TVarChar       --филиал AreaContract
-             , PersonalBookkeeperId Integer    -- отв. из филиала
-             , PersonalBookkeeperName TVarChar -- отв. из филиала
-             , UnitName_PBk TVarChar           -- подразделение из ответственного
-             , BranchName_PBk TVarChar         -- филиал ответственного
               )
 AS
 $BODY$
@@ -205,6 +202,7 @@ BEGIN
            , Object_Personal.ValueData   AS PersonalName  -- ответственный за договор
            , Object_Unit.ValueData       AS UnitName      -- подразделение ответственный за договор
            , Object_Position.ValueData   AS PositionName  -- должность ответственный за договор
+           , Object_Branch_personal.ValueData AS BranchName_personal
            , tmpData.PartnerId
            , tmpData.PartnerName
            , tmpData.ContractId
@@ -241,10 +239,6 @@ BEGIN
           
            , Object_AreaContract.ValueData                AS AreaContractName
            , Object_Branch.ValueData                      AS BranchName
-           , Object_PersonalBookkeeper_View.PersonalId    AS PersonalBookkeeperId
-           , Object_PersonalBookkeeper_View.PersonalName  AS PersonalBookkeeperName
-           , Object_PersonalBookkeeper_View.UnitName      AS UnitName_PBk
-           , Object_PersonalBookkeeper_View.BranchName    AS BranchName_PBk
            
            
       FROM tmpData
@@ -270,6 +264,11 @@ BEGIN
                                AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                ON ObjectLink_Unit_Branch.ObjectId = ObjectLink_Personal_Unit.ChildObjectId
+                               AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+           LEFT JOIN Object AS Object_Branch_personal ON Object_Branch_personal.Id = ObjectLink_Unit_Branch.ChildObjectId
+
            LEFT JOIN ObjectDate AS ObjectDate_Protocol_ReCalc
                                 ON ObjectDate_Protocol_ReCalc.ObjectId = tmpData.Id
                                AND ObjectDate_Protocol_ReCalc.DescId = zc_ObjectDate_Protocol_ReCalc()
@@ -290,12 +289,7 @@ BEGIN
                                AND ObjectLink_AreaContract_Branch.DescId = zc_ObjectLink_AreaContract_Branch()
            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_AreaContract_Branch.ChildObjectId
 
-           LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalBookkeeper
-                                ON ObjectLink_Branch_PersonalBookkeeper.ObjectId = Object_Branch.Id
-                               AND ObjectLink_Branch_PersonalBookkeeper.DescId = zc_ObjectLink_Branch_PersonalBookkeeper()
-           LEFT JOIN Object_Personal_View AS Object_PersonalBookkeeper_View ON Object_PersonalBookkeeper_View.PersonalId = ObjectLink_Branch_PersonalBookkeeper.ChildObjectId  
-                   
-     ;
+       ;
 
 END;
 $BODY$

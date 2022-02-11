@@ -128,32 +128,57 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         Options.Editing = False
         Width = 60
       end
+      object AreaContractName: TcxGridDBColumn
+        Caption = #1056#1077#1075#1080#1086#1085' ('#1076#1086#1075#1086#1074#1086#1088')'
+        DataBinding.FieldName = 'AreaContractName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object BranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083' ('#1044#1086#1075#1086#1074#1086#1088' - '#1056#1077#1075#1080#1086#1085')'
+        DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
+      end
+      object BranchName_personal: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083' ('#1086#1090#1074#1077#1090#1089#1090#1074'. '#1079#1072' '#1076#1086#1075'.)'
+        DataBinding.FieldName = 'BranchName_personal'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1060#1080#1083#1080#1072#1083' ('#1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1076#1086#1075#1086#1074#1086#1088')'
+        Options.Editing = False
+        Width = 82
+      end
       object PersonalName: TcxGridDBColumn
         Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1076#1086#1075'.'
         DataBinding.FieldName = 'PersonalName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1076#1086#1075#1086#1074#1086#1088
+        HeaderHint = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1076#1086#1075#1086#1074#1086#1088')'
         Options.Editing = False
         Width = 113
       end
       object UnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076'. '#1086#1090#1074'. '#1079#1072' '#1076#1086#1075'.'
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1090#1074#1077#1090#1089#1090#1074'. '#1079#1072' '#1076#1086#1075'.)'
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1086#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1086#1075#1086' '#1079#1072' '#1076#1086#1075#1086#1074#1086#1088
+        HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1076#1086#1075#1086#1074#1086#1088')'
         Options.Editing = False
         Width = 98
       end
       object PositionName: TcxGridDBColumn
-        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' '#1086#1090#1074'. '#1079#1072' '#1076#1086#1075'.'
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1086#1090#1074#1077#1090#1089#1090#1074'. '#1079#1072' '#1076#1086#1075'.)'
         DataBinding.FieldName = 'PositionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        HeaderHint = #1044#1086#1083#1078#1085#1086#1089#1090#1100' '#1086#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1086#1075#1086' '#1079#1072' '#1076#1086#1075#1086#1074#1086#1088
+        HeaderHint = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1076#1086#1075#1086#1074#1086#1088')'
         Options.Editing = False
         Width = 89
       end
@@ -349,48 +374,6 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 30
-      end
-      object AreaContractName: TcxGridDBColumn
-        Caption = #1056#1077#1075#1080#1086#1085' '#1076#1086#1075#1086#1074#1086#1088#1072
-        DataBinding.FieldName = 'AreaContractName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
-      end
-      object BranchName: TcxGridDBColumn
-        Caption = #1060#1080#1083#1080#1072#1083' ('#1056#1077#1075#1080#1086#1085' '#1076#1086#1075#1086#1074#1086#1088#1072')'
-        DataBinding.FieldName = 'BranchName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 83
-      end
-      object PersonalBookkeeperName: TcxGridDBColumn
-        Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1041#1091#1093#1075#1072#1083#1090#1077#1088') '#1060#1080#1083#1080#1072#1083
-        DataBinding.FieldName = 'PersonalBookkeeperName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 148
-      end
-      object UnitName_PBk: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076'. ('#1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1041#1091#1093#1075#1072#1083#1090#1077#1088')'
-        DataBinding.FieldName = 'UnitName_PBk'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1086#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1086#1075#1086' '#1079#1072' '#1076#1086#1075#1086#1074#1086#1088
-        Options.Editing = False
-        Width = 98
-      end
-      object BranchName_PBk: TcxGridDBColumn
-        Caption = #1060#1080#1083#1080#1072#1083' ('#1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1041#1091#1093#1075#1072#1083#1090#1077#1088')'
-        DataBinding.FieldName = 'BranchName_PBk'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 82
       end
     end
     object cxGridLevel: TcxGridLevel
