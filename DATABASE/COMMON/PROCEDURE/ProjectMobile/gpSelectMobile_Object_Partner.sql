@@ -49,6 +49,11 @@ BEGIN
       -- Определяем сотрудника для пользователя
       vbPersonalId:= (SELECT PersonalId FROM gpGetMobile_Object_Const (inSession));
 
+
+      -- таблица - список Container
+      -- CREATE TEMP TABLE _tmpContainer_OverDayCount (ContainerId Integer) ON COMMIT DROP;
+
+
       -- Результат
       IF vbPersonalId IS NOT NULL
       THEN
@@ -247,24 +252,24 @@ BEGIN
                                       , tmpContainer.PaidKindId
                                       , (tmpContainer.Amount - COALESCE (tmpMIContainerNow.Summ, 0.0)::TFloat) AS DebtSum
                                       , (tmpContainer.Amount - COALESCE (tmpMIContainerNow.Summ, 0.0)::TFloat - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat) AS OverSum
-                                      , (zfCalc_OverDayCount (tmpContainer.ContainerId, tmpContainer.Amount - COALESCE (tmpMIContainerNow.Summ, 0.0)::TFloat - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat, tmpContainer.ContractDate)) AS OverDays
-                                      -- , (zfCalc_OverDayCount2 (tmpContainer.ContainerId, tmpContainer.Amount, tmpContainer.ContractDate)) AS OverDays2
+                                   -- , (zfCalc_OverDayCount (tmpContainer.ContainerId, tmpContainer.Amount - COALESCE (tmpMIContainerNow.Summ, 0.0)::TFloat - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat, tmpContainer.ContractDate)) AS OverDays
+                                   -- , (zfCalc_OverDayCount2 (tmpContainer.ContainerId, tmpContainer.Amount, tmpContainer.ContractDate)) AS OverDays2
                                       , SUM (tmpContainer.Amount) OVER (PARTITION BY tmpContainer.PartnerId, ABS (tmpContainer.Amount)) AS ResortSum
+                                      , tmpContainer.ContractDate
                                  FROM tmpContainer
                                       LEFT JOIN tmpMIContainer ON tmpContainer.ContainerId = tmpMIContainer.ContainerId
                                       LEFT JOIN tmpMIContainerNow ON tmpContainer.ContainerId = tmpMIContainerNow.ContainerId
                                 )
-                , tmpDebt AS (SELECT CASE WHEN 1=0 /*inSession = '489010'*/ THEN tmpDebtAll.ContainerId ELSE 0 END AS ContainerId
+         , tmpDebtAll_all AS (SELECT CASE WHEN 1=0 /*inSession = '489010'*/ THEN tmpDebtAll.ContainerId ELSE 0 END AS ContainerId
                                    , tmpDebtAll.PartnerId
                                      -- объединили по "главному"
                                    , tmpDebtAll.ContractId_Key AS ContractId
                                      -- оставили "оригинал"
                                    -- , tmpDebtAll.ContractId
                                    , tmpDebtAll.PaidKindId
+                                   , MIN (tmpDebtAll.ContractDate)  AS ContractDate
                                    , SUM (tmpDebtAll.DebtSum)::TFloat AS DebtSum
                                    , SUM (tmpDebtAll.OverSum)::TFloat AS OverSum
-                                   , MAX (tmpDebtAll.OverDays)        AS OverDays
-                                   -- , MAX (tmpDebtAll.OverDays2)       AS OverDays2
                               FROM tmpDebtAll
                               WHERE tmpDebtAll.ResortSum <> 0.0
                               GROUP BY CASE WHEN 1=0 /*inSession = '489010'*/ THEN tmpDebtAll.ContainerId ELSE 0 END
@@ -272,6 +277,17 @@ BEGIN
                                      , tmpDebtAll.ContractId_Key
                                      -- , tmpDebtAll.ContractId
                                      , tmpDebtAll.PaidKindId
+                             )
+                , tmpDebt AS (SELECT tmpDebtAll_all.ContainerId
+                                   , tmpDebtAll_all.PartnerId
+                                     -- здесь "главный"
+                                   , tmpDebtAll_all.ContractId
+                                   , tmpDebtAll_all.PaidKindId
+                                   , tmpDebtAll_all.DebtSum
+                                   , tmpDebtAll_all.OverSum
+                                   , tmpDebtAll_all.ContractDate
+                                   , zfCalc_OverDayCount_all (tmpDebtAll_all.PartnerId, tmpDebtAll_all.ContractId, tmpDebtAll_all.PaidKindId, tmpDebtAll_all.OverSum, tmpDebtAll_all.ContractDate) AS OverDays
+                              FROM tmpDebtAll_all
                              )
                 , tmpStoreRealDoc AS (SELECT SR.PartnerId, SR.StoreRealId, SR.OperDate
                                       FROM (SELECT MovementLinkObject_Partner.ObjectId AS PartnerId

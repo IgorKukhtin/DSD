@@ -48,7 +48,7 @@ BEGIN
         AND EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = ioId AND MI.DescId = zc_MI_Master())
         AND zc_Enum_GlobalConst_isTerry() = FALSE
         -- !!!только у Админа!!!
-        AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId IN (zc_Enum_Role_Admin()))
+        AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId IN (zc_Enum_Role_Admin()))
      THEN
          RAISE EXCEPTION 'Ошибка.Документ не пустой.Корректировка не возможна.Необходимо удалить текущий документ и сформировать новый.';
      END IF;

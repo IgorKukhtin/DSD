@@ -44,6 +44,8 @@ BEGIN
           OR COALESCE (inToId, 0)   <> COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_To()), 0)
             )
         AND EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = ioId AND MI.DescId = zc_MI_Master())
+        -- !!!только у Админа!!!
+        AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId IN (zc_Enum_Role_Admin()))
      THEN
          RAISE EXCEPTION 'Ошибка.Документ не пустой.Корректировка не возможна.Необходимо удалить текущий документ и сформировать новый.';
      END IF;
