@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 805
   KeyPreview = True
   ExplicitWidth = 821
-  ExplicitHeight = 226
+  ExplicitHeight = 227
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -417,6 +417,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_UnitRent: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1072#1088#1077#1085#1076#1077
+      FormName = 'TReport_UnitRentForm'
+      FormNameParam.Value = 'TReport_UnitRentForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 152
@@ -488,6 +499,9 @@ inherited MainForm: TMainForm
     end
     object miReport: TMenuItem [2]
       Caption = #1054#1090#1095#1077#1090#1099
+      object N8: TMenuItem
+        Action = actReport_UnitRent
+      end
     end
     inherited miGuide: TMenuItem
       object miUnit: TMenuItem

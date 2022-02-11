@@ -113,6 +113,10 @@ type
     cxLabel19: TcxLabel;
     cbUseSubject: TcxCheckBox;
     MinimumLot: TcxGridDBColumn;
+    spInsertUpdate_SupplierFailures: TdsdStoredProc;
+    actInsertUpdate_SupplierFailures: TdsdExecStoredProc;
+    bbInsertUpdate_SupplierFailures: TdxBarButton;
+    SupplierFailuresColor: TcxGridDBColumn;
   private
     { Private declarations }
   public

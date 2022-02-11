@@ -18,13 +18,14 @@ BEGIN
      ELSE
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementDescId Integer, OperDate TDateTime, ServiceDate TDateTime
-                               , ObjectId Integer, ObjectDescId Integer, OperSumm TFloat, Price TFloat
-                               , MovementItemId Integer, ContainerId Integer
+                               , ObjectId Integer, ObjectDescId Integer, CashId Integer, OperSumm TFloat, Price TFloat
+                               , MovementItemId Integer, ContainerId Integer, ContainerId_Second Integer
                                , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
                                , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
                                , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId_Balance Integer, BusinessId_ProfitLoss Integer, JuridicalId_Basis Integer
-                               , UnitId Integer, PositionId Integer, PersonalServiceListId Integer, BranchId_Balance Integer, BranchId_ProfitLoss Integer, ServiceDateId Integer, ContractId Integer, PaidKindId Integer
+                               , UnitId Integer, PositionId Integer, PersonalServiceListId Integer, BranchId_Balance Integer, BranchId_ProfitLoss Integer
+                               , ServiceDateId Integer, ContractId Integer, PaidKindId Integer
                                , PartionMovementId Integer, PartionGoodsId Integer, AssetId Integer
                                , AnalyzerId Integer, ObjectIntId_Analyzer Integer, ObjectExtId_Analyzer Integer, ContainerId_Analyzer Integer, ContainerIntId_analyzer Integer
                                , CurrencyId Integer

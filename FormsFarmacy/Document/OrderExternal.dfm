@@ -297,6 +297,11 @@ inherited OrderExternalForm: TOrderExternalForm
             Visible = False
             VisibleForCustomization = False
           end
+          object SupplierFailuresColor: TcxGridDBColumn
+            DataBinding.FieldName = 'SupplierFailuresColor'
+            Visible = False
+            VisibleForCustomization = False
+          end
         end
       end
       object cxGridExport: TcxGrid
@@ -859,6 +864,22 @@ inherited OrderExternalForm: TOrderExternalForm
       Caption = 'actPUSHInfo'
       PUSHMessageType = pmtInformation
     end
+    object actInsertUpdate_SupplierFailures: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_SupplierFailures
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_SupplierFailures
+        end>
+      Caption = #1055#1086#1084#1077#1089#1090#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1074' "'#1054#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074'"'
+      Hint = #1055#1086#1084#1077#1089#1090#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1074' "'#1054#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074'"'
+      ImageIndex = 76
+      ShortCut = 16463
+      QuestionBeforeExecute = #1055#1086#1084#1077#1089#1090#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1074' "'#1054#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074'"?'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -993,6 +1014,14 @@ inherited OrderExternalForm: TOrderExternalForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertUpdate_SupplierFailures'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -1034,12 +1063,21 @@ inherited OrderExternalForm: TOrderExternalForm
       Action = mactSMTPSend
       Category = 0
     end
+    object bbInsertUpdate_SupplierFailures: TdxBarButton
+      Action = actInsertUpdate_SupplierFailures
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
       item
         ValueColumn = PartionGoodsDateColor
         BackGroundValueColumn = OrderShedule_Color
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = GoodsName
+        BackGroundValueColumn = SupplierFailuresColor
         ColorValueList = <>
       end>
     SummaryItemList = <
@@ -2075,5 +2113,65 @@ inherited OrderExternalForm: TOrderExternalForm
     PackSize = 1
     Left = 450
     Top = 488
+  end
+  object spInsertUpdate_SupplierFailures: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_SupplierFailures'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartnerGoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAreaId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 176
+    Top = 424
   end
 end

@@ -29,7 +29,7 @@ BEGIN
     -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
     DELETE FROM _tmpItem;
     
-    -- предварительно сохранили данные
+    -- 4.1. предварительно сохранили данные
     INSERT INTO _tmpItem (MovementDescId, OperDate, ServiceDate, OperSumm, MovementItemId,
                           ObjectId, UnitId, InfoMoneyId)
     SELECT
@@ -59,24 +59,63 @@ BEGIN
 
      WHERE Movement.Id = inMovementId;    
      
+    -- 4.2. Прописали данные
+    
+    UPDATe _tmpItem SET -- 
+                        ServiceDateId = CASE WHEN _tmpItem.UnitId > 0 THEN lpInsertFind_Object_ServiceDate (_tmpItem.ServiceDate) ELSE NULL END
+    ;
      
-     -- 4.3. формируются Проводки - Остатки по кассе
+    -- 4.3. Создаем контейнера
+    
+    UPDATE _tmpItem SET -- Контейнер кассы
+                         ContainerId = 
+                              lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()           -- DescId Суммовой учет
+                                                    , inParentId          := NULL                          -- Главный Container
+                                                    , inObjectId          := vbAccountId_Cash              -- Объект всегда Счет для Суммовой учет
+                                                    , inJuridicalId_basis := NULL                          -- Главное юридическое лицо
+                                                    , inBusinessId        := NULL                          -- Бизнесы
+                                                    , inDescId_1          := zc_ContainerLinkObject_Cash() -- DescId для 1-ой Аналитики
+                                                    , inObjectId_1        := _tmpItem.ObjectId
+                                                      )
+                         -- Контейнер Долг или Прибыль
+                       , ContainerId_Second  = 
+                              CASE WHEN _tmpItem.UnitId > 0
+                                   -- так для Долгов
+                                   THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()      -- DescId Суммовой учет
+                                                               , inParentId          := NULL                    -- Главный Container
+                                                               , inObjectId          := vbAccountId_Debts       -- Объект всегда Счет для Суммовой учет
+                                                               , inJuridicalId_basis := NULL                    -- Главное юридическое лицо
+                                                               , inBusinessId        := NULL                    -- Бизнесы
+                                                               , inDescId_1          := zc_ContainerLinkObject_Unit() -- DescId для 1-ой Аналитики
+                                                               , inObjectId_1        := _tmpItem.UnitId
+                                                               , inDescId_2          := zc_ContainerLinkObject_ServiceDate() -- DescId для 2-ой Аналитики
+                                                               , inObjectId_2        := _tmpItem.ServiceDateId
+                                                               , inDescId_3          := zc_ContainerLinkObject_InfoMoney() -- DescId для 3-ой Аналитики
+                                                               , inObjectId_3        := _tmpItem.InfoMoneyId
+                                                                )
+                                                                     
+                                   -- иначе это всегда "Прибыль"
+                                   ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()      -- DescId Суммовой учет
+                                                              , inParentId          := NULL                     -- Главный Container
+                                                              , inObjectId          := vbAccountId_Profit       -- Объект всегда Счет для Суммовой учет
+                                                              , inJuridicalId_basis := NULL                     -- Главное юридическое лицо
+                                                              , inBusinessId        := NULL                     -- Бизнесы
+                                                              , inDescId_1          := zc_ContainerLinkObject_ProfitLoss() -- DescId для 1-ой Аналитики
+                                                              , inObjectId_1        := vbProfitLossId           -- временно, надо будет потом использовать lpInsertFind_Object_ProfitLoss
+                                                               ) 
+                                   END
+    ;
+
+    -- 4.4. формируются Проводки - Остатки по кассе
     INSERT INTO _tmpMIContainer_insert (DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate
                                        , ObjectId_analyzer, WhereObjectId_analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer, IsActive)
      SELECT zc_MIContainer_Summ()
           , _tmpItem.MovementDescId
           , inMovementId
           , _tmpItem.MovementItemId
-          , lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()           -- DescId Суммовой учет
-                                  , inParentId          := NULL                          -- Главный Container
-                                  , inObjectId          := vbAccountId_Cash              -- Объект всегда Счет для Суммовой учет
-                                  , inJuridicalId_basis := NULL                          -- Главное юридическое лицо
-                                  , inBusinessId        := NULL                          -- Бизнесы
-                                  , inDescId_1          := zc_ContainerLinkObject_Cash() -- DescId для 1-ой Аналитики
-                                  , inObjectId_1        := _tmpItem.ObjectId
-                                    ) AS ContainerId 
+          , _tmpItem.ContainerId 
             -- Счет для этой проводки
-          , vbAccountId_Cash
+          , vbAccountId_Cash 
 
           , _tmpItem.OperSumm
           , _tmpItem.OperDate
@@ -88,7 +127,7 @@ BEGIN
             -- Аналитика из проводки-корреспондент
           , _tmpItem.UnitId                 AS ObjectIntId_Analyzer
             -- Аналитика из проводки-корреспондент
-          , CASE WHEN _tmpItem.UnitId > 0 THEN lpInsertFind_Object_ServiceDate (_tmpItem.ServiceDate) ELSE NULL END AS ObjectExtId_Analyzer
+          , CASE WHEN _tmpItem.UnitId > 0 THEN _tmpItem.ServiceDateId ELSE NULL END AS ObjectExtId_Analyzer
 
           , CASE WHEN _tmpItem.OperSumm > 0 THEN TRUE ELSE FALSE END AS IsActive
 
@@ -101,32 +140,7 @@ BEGIN
           , _tmpItem.MovementDescId
           , inMovementId
           , _tmpItem.MovementItemId
-          , CASE WHEN _tmpItem.UnitId > 0
-                      -- так для Долгов
-                      THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()     -- DescId Суммовой учет
-                                                 , inParentId          := NULL                    -- Главный Container
-                                                 , inObjectId          := vbAccountId_Debts       -- Объект всегда Счет для Суммовой учет
-                                                 , inJuridicalId_basis := NULL                    -- Главное юридическое лицо
-                                                 , inBusinessId        := NULL                    -- Бизнесы
-                                                 , inDescId_1          := zc_ContainerLinkObject_Unit() -- DescId для 1-ой Аналитики
-                                                 , inObjectId_1        := _tmpItem.UnitId
-                                                 , inDescId_2          := zc_ContainerLinkObject_ServiceDate() -- DescId для 2-ой Аналитики
-                                                 , inObjectId_2        := lpInsertFind_Object_ServiceDate (_tmpItem.ServiceDate)
-                                                 , inDescId_3          := zc_ContainerLinkObject_InfoMoney() -- DescId для 3-ой Аналитики
-                                                 , inObjectId_3        := _tmpItem.InfoMoneyId
-                                                  )
-                                                   
-                 -- иначе это всегда "Прибыль"
-                 ELSE
-                      lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()      -- DescId Суммовой учет
-                                            , inParentId          := NULL                     -- Главный Container
-                                            , inObjectId          := vbAccountId_Profit       -- Объект всегда Счет для Суммовой учет
-                                            , inJuridicalId_basis := NULL                     -- Главное юридическое лицо
-                                            , inBusinessId        := NULL                     -- Бизнесы
-                                            , inDescId_1          := zc_ContainerLinkObject_ProfitLoss() -- DescId для 1-ой Аналитики
-                                            , inObjectId_1        := vbProfitLossId           -- временно, надо будет потом использовать lpInsertFind_Object_ProfitLoss
-                                             ) 
-            END AS ContainerId
+          , _tmpItem.ContainerId_Second
 
             -- Счет для этой проводки
           , CASE WHEN _tmpItem.UnitId > 0 THEN vbAccountId_Debts ELSE vbAccountId_Profit END AS AccountId
@@ -137,7 +151,7 @@ BEGIN
             -- Аналитика, дублируем основное св-во
           , CASE WHEN COALESCE (_tmpItem.UnitId, 0) = 0 THEN vbProfitLossId ELSE _tmpItem.UnitId                END AS ObjectId_analyzer 
             -- Аналитика, дублируем основное св-во
-          , CASE WHEN _tmpItem.UnitId > 0 THEN lpInsertFind_Object_ServiceDate (_tmpItem.ServiceDate) ELSE NULL END AS WhereObjectId_analyzer
+          , CASE WHEN _tmpItem.UnitId > 0 THEN _tmpItem.ServiceDateId ELSE NULL END AS WhereObjectId_analyzer
 
             -- Аналитика из проводки-корреспондент
           , _tmpItem.ObjectId     AS ObjectIntId_Analyzer

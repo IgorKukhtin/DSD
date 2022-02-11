@@ -6309,7 +6309,7 @@ inherited MainCashForm2: TMainCashForm2
       isShowModal = True
     end
     object actOpenLayoutFile: TAction
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1092#1072#1081#1083' '#1074#1099#1082#1083#1072#1076#1082#1080
+      Caption = #1055#1072#1087#1082#1072' "'#1042#1099#1082#1083#1072#1076#1082#1072'"'
       Enabled = False
       OnExecute = actOpenLayoutFileExecute
     end

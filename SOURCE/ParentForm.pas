@@ -695,6 +695,7 @@ initialization
   RegisterClass (TStringField);
   RegisterClass (TWideStringField);
   RegisterClass (TWebBrowser);
+  RegisterClass (TScrollBox);
 
   // Библиотека DevExpress
   RegisterClass (TdxBarDockControl);
@@ -825,6 +826,7 @@ initialization
   RegisterClass (TdsdTranslator);
   RegisterClass (TEnterMoveNext);
   RegisterClass (TChartAddOn);
+  RegisterClass (TCheckerboardAddOn);
 
 
 // ДЛЯ ТЕСТА

@@ -1312,6 +1312,100 @@ type
     property SeriesFieldName: String read FSeriesFieldName write FSeriesFieldName;
   end;
 
+  TÑhangeCellData = class(TPersistent)
+  private
+    FLeftParam: TdsdParam;
+    FTopParam: TdsdParam;
+    FWidthParam: TdsdParam;
+    FHeightParam: TdsdParam;
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+
+  published
+
+    property LeftParam: TdsdParam  read FLeftParam write FLeftParam;
+    property TopParam: TdsdParam  read FTopParam write FTopParam;
+    property WidthParam: TdsdParam  read FWidthParam write FWidthParam;
+    property HeightParam: TdsdParam  read FHeightParam write FHeightParam;
+  end;
+
+  TCheckerboardAddOn = class(TComponent)
+  private
+    FControl: TWinControl;
+
+    FDataSet: TDataSet;
+
+    FSeriesFieldName: String;
+    FSeriesDisplayText: String;
+
+    FAfterOpen: TDataSetNotifyEvent;
+    FAfterClose: TDataSetNotifyEvent;
+    FOnDblClick: TNotifyEvent;
+
+    FCreatePanelList: TList;
+
+    FGap: Integer;
+    FHeight: Integer;
+    FWidth: Integer;
+
+    FMouseDownSpot : TPoint;
+    FCapturing : Boolean;
+    FSizing : Boolean;
+    FControlDown: TWinControl;
+
+    FDblClickAction: TCustomAction;
+    FDblClickIdParam: TdsdParam;
+    FTimerDblClick : Boolean;
+
+    FÑhangeCellAction: TCustomAction;
+    FÑhangeCellData: TÑhangeCellData;
+    FPosCellData: TRect;
+    FÑhangeCell : Boolean;
+
+    FTimer: TTimer;
+
+    procedure SetDataSet(const Value: TDataSet);
+    procedure OnAfterOpen(ADataSet: TDataSet);
+    procedure OnAfterClose(ADataSet: TDataSet);
+    procedure OnMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure OnMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure OnMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure OnDblClick(Sender: TObject);
+    procedure OnTimer(Sender: TObject);
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  published
+    // Ïàíåëü äëÿ ðàçìåùåíèÿ
+    property Panel: TWinControl read FControl write FControl;
+    // Äàòà ñåò ñ äàííûìè
+    property DataSet: TDataSet read FDataSet write SetDataSet;
+    // Ïîëå â FSeriesDataSet ñ íàçâàíèÿìè êîëîíîê Series
+    property SeriesDisplayText: String read FSeriesDisplayText write FSeriesDisplayText;
+    // Ïîëå â FSeriesDataSet ñ íàçâàíèÿìè êîëîíîê â äàííûõ äëÿ îòîáðàæåíèÿ
+    property SeriesFieldName: String read FSeriesFieldName write FSeriesFieldName;
+    // Ïðîìåæóòêè ìåæäó ïàíåëÿìè
+    property Gap: Integer read FGap write FGap default 5;
+    // Âûñîòà ïàíåëè
+    property Height: Integer read FHeight write FHeight default 137;
+    // Øèðèíà ïàíåëè
+    property Width: Integer read FWidth write FWidth default 105;
+    // Àêöèÿ ïî DblClick
+    property DblClickAction: TCustomAction  read FDblClickAction write FDblClickAction;
+    // Id çàïèñè ïî DblClick
+    property DblClickIdParam: TdsdParam  read FDblClickIdParam write FDblClickIdParam;
+    // Àêöèÿ ïî èùìåíåíèþ ïîçèöèè è ðàçìåðà
+    property ÑhangeCellAction: TCustomAction  read FÑhangeCellAction write FÑhangeCellAction;
+    // Id çàïèñè ïî DblClick
+    property ÑhangeCellData: TÑhangeCellData  read FÑhangeCellData write FÑhangeCellData;
+  end;
+
   procedure Register;
 
 implementation
@@ -1349,7 +1443,8 @@ begin
     TdsdPropertiesÑhange,
     THeaderExit,
     TEnterMoveNext,
-    TChartAddOn
+    TChartAddOn,
+    TCheckerboardAddOn
   ]);
 
   RegisterActions('DSDLib', [TExecuteDialog], TExecuteDialog);
@@ -7072,6 +7167,261 @@ begin
   finally
     ChartView.EndUpdate;
   end;
+end;
+
+  { TÑhangeCellData }
+
+constructor TÑhangeCellData.Create;
+begin
+  FLeftParam := TdsdParam.Create;
+  FTopParam := TdsdParam.Create;
+  FWidthParam := TdsdParam.Create;
+  FHeightParam := TdsdParam.Create;
+end;
+
+destructor TÑhangeCellData.Destroy;
+begin
+  FLeftParam.Free;
+  FTopParam.Free;
+  FWidthParam.Free;
+  FHeightParam.Free;
+end;
+
+
+{ TCheckerboardAddOn }
+
+constructor TCheckerboardAddOn.Create(AOwner: TComponent);
+begin
+  inherited;
+  FCreatePanelList := TList.Create;
+  FDblClickIdParam := TdsdParam.Create;
+  FÑhangeCellData := TÑhangeCellData.Create;
+  FTimer := TTimer.Create(Nil);
+  FTimer.Enabled := False;
+  FTimer.Interval := 100;
+  FTimer.OnTimer := OnTimer;
+  FTimerDblClick := False;
+  FÑhangeCell := False;
+
+  FGap := 5;
+  FHeight := 137;
+  FWidth := 105;
+end;
+
+destructor TCheckerboardAddOn.Destroy;
+begin
+  FTimer.Free;
+  FÑhangeCellData.Free;
+  FDblClickIdParam.Free;
+  FCreatePanelList.Free;
+  inherited;
+end;
+
+
+procedure TCheckerboardAddOn.Notification(AComponent: TComponent;
+  Operation: TOperation);
+  var I, J : Integer;
+begin
+  inherited;
+
+  if csDestroying in ComponentState then
+     exit;
+
+  if csDesigning in ComponentState then
+     if Operation = opRemove then begin
+        if AComponent = FControl then
+           FControl := nil
+        else if AComponent = FDataSet then
+           FDataSet := nil;
+     end;
+end;
+
+procedure TCheckerboardAddOn.SetDataSet(const Value: TDataSet);
+  var I : Integer;
+begin
+
+  if Assigned(FDataSet) and not (csDesigning  in ComponentState) then
+  begin
+    FDataSet.AfterOpen := FAfterOpen;
+    FDataSet.AfterClose := FAfterClose;
+  end;
+
+  FDataSet := Value;
+  if csDesigning  in ComponentState then Exit;
+  if Assigned(FDataSet) then
+  begin
+    FAfterOpen := FDataSet.AfterOpen;
+    FDataSet.AfterOpen := OnAfterOpen;
+    FAfterClose := FDataSet.AfterClose;
+    FDataSet.AfterClose := OnAfterClose;
+  end;
+end;
+
+procedure TCheckerboardAddOn.OnAfterOpen(ADataSet: TDataSet);
+  var nTop, nLeft, I : Integer;
+      cxMemo : TcxMemo;
+begin
+  if Assigned(FAfterOpen) then
+     FAfterOpen(ADataSet);
+
+  if not Assigned(FControl) then Exit;
+
+  nTop := FGap;
+  nLeft := FGap;
+  ADataSet.First;
+  while  not ADataSet.Eof do
+  begin
+    cxMemo := TcxMemo.Create(FControl.Owner);
+    cxMemo.Visible := False;
+    cxMemo.Parent := FControl;
+    cxMemo.Top := nTop;
+    cxMemo.Left := nLeft;
+    cxMemo.Height := FHeight;
+    cxMemo.Width := FWidth;
+    cxMemo.Properties.ReadOnly := True;
+
+    cxMemo.OnMouseDown := OnMouseDown;
+    cxMemo.OnMouseMove := OnMouseMove;
+    cxMemo.OnMouseUp := OnMouseUp;
+    cxMemo.OnDblClick := OnDblClick;
+
+
+    cxMemo.Tag := ADataSet.FieldByName('Id').AsInteger;
+    cxMemo.Text := ADataSet.FieldByName('Name').AsString;
+
+    if (nLeft > FGap) and ((nLeft + FWidth * 2) > FControl.Width) then
+    begin
+      nLeft := FGap;
+      nTop := nTop + cxMemo.Height + FGap;
+    end else nLeft := nLeft + cxMemo.Width + FGap;
+
+    FCreatePanelList.Add(cxMemo);
+    ADataSet.Next;
+  end;
+
+  for i := 0 to FCreatePanelList.Count - 1 do
+  TWinControl(FCreatePanelList.Items[I]).Visible := True;
+
+end;
+
+procedure TCheckerboardAddOn.OnAfterClose(ADataSet: TDataSet);
+  var I, J : Integer;
+begin
+  if Assigned(FAfterClose) then
+     FAfterClose(ADataSet);
+
+  for i := 0 to FCreatePanelList.Count - 1 do
+    TWinControl(FCreatePanelList.Items[I]).Free;
+
+  FCreatePanelList.Clear;
+end;
+
+procedure TCheckerboardAddOn.OnMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if (ssCtrl in Shift) and (Button = mbLeft) then
+  begin
+    if not (Sender is TWinControl) then Exit;
+
+    FControlDown := TWinControl(Sender);
+    FPosCellData.Left := FControlDown.Left;
+    FPosCellData.Top := FControlDown.Top;
+    FPosCellData.Width := FControlDown.Width;
+    FPosCellData.Height := FControlDown.Height;
+
+    if ((FControlDown.Width-X) < 20) and ((FControlDown.Height-Y) < 20) then
+    begin
+      Screen.Cursor := crSizeNWSE;
+      //FPanelDown.Cursor := crSizeNWSE;
+      SetCapture(FControlDown.Handle);
+      FSizing := true;
+      FMouseDownSpot.X := x;
+      FMouseDownSpot.Y := Y;
+    end else
+    begin
+      Screen.Cursor := crSizeAll;
+      //FPanelDown.Cursor := crSizeAll;
+      SetCapture(FControlDown.Handle);
+      FCapturing := true;
+      FMouseDownSpot.X := x;
+      FMouseDownSpot.Y := Y;
+    end;
+  end;
+end;
+
+procedure TCheckerboardAddOn.OnMouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Integer);
+begin
+  if FCapturing then
+  begin
+    FControlDown.Left := FControlDown.Left - (FMouseDownSpot.x - x);
+    FControlDown.Top := FControlDown.Top - (FMouseDownSpot.y - y);
+  end else if FSizing then
+  begin
+    FControlDown.Width := FControlDown.Width + X-FMouseDownSpot.X;
+    FControlDown.Height := FControlDown.Height + Y-FMouseDownSpot.Y;
+    FMouseDownSpot.X := X;
+    FMouseDownSpot.Y := Y;
+  end;
+end;
+
+procedure TCheckerboardAddOn.OnMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if FCapturing or FSizing then
+  begin
+    ReleaseCapture;
+    FCapturing := false;
+    FSizing := false;
+
+    //FPanelDown.Cursor:=crDefault;
+    Screen.Cursor:=crDefault;
+
+    if (FPosCellData.Left <> FControlDown.Left) or
+       (FPosCellData.Top <> FControlDown.Top) or
+       (FPosCellData.Width <> FControlDown.Width) or
+       (FPosCellData.Height <> FControlDown.Height) then
+    begin
+      FÑhangeCellData.LeftParam.Value := FControlDown.Left;
+      FÑhangeCellData.TopParam.Value := FControlDown.Top;
+      FÑhangeCellData.WidthParam.Value := FControlDown.Width;
+      FÑhangeCellData.HeightParam.Value := FControlDown.Height;
+
+      if Assigned(FÑhangeCellAction) then //FÑhangeCellAction.Execute;
+      begin
+        FÑhangeCell := True;
+        FÑhangeCellAction.Execute;
+      end;
+    end;
+  end;
+end;
+
+procedure TCheckerboardAddOn.OnDblClick(Sender: TObject);
+begin
+  FDblClickIdParam.Value := TWinControl(Sender).Tag;
+  if Assigned(FDblClickAction) then //FDblClickAction.Execute;
+  begin
+    FTimerDblClick := True;
+    FTimer.Enabled := True;
+  end;
+end;
+
+procedure TCheckerboardAddOn.OnTimer(Sender: TObject);
+begin
+  FTimer.Enabled := False;
+
+  if Assigned(FDblClickAction) and FTimerDblClick then
+  begin
+    FDblClickAction.Execute;
+  end;
+
+  if Assigned(FÑhangeCellAction) and FÑhangeCell then
+  begin
+    FÑhangeCellAction.Execute;
+  end;
+
+  FTimerDblClick := False;
+  FÑhangeCell := False;
 end;
 
 end.
