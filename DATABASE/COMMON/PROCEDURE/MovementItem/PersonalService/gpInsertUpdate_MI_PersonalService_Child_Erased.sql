@@ -39,6 +39,7 @@ then
                          INNER JOIN Movement ON Movement.Id       = MovementDate_ServiceDate.MovementId
                                             AND Movement.DescId   = zc_Movement_PersonalService()
                                             AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                            AND Movement.OperDate >= inEndDate
                          INNER JOIN MovementLinkObject AS MLO_PersonalServiceList
                                                        ON MLO_PersonalServiceList.MovementId = Movement.Id
                                                       AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
@@ -55,6 +56,7 @@ then
                     ORDER BY CASE WHEN MovementBoolean_isAuto.ValueData = TRUE THEN 0 ELSE 1 END, MovementDate_ServiceDate.MovementId
                     LIMIT 1
                    );
+    -- RAISE EXCEPTION 'Ошибка.%  %', (select InvNumber from Movement where Movement.Id = vbMovement),  (select OperDate from Movement where Movement.Id = vbMovement);
 else
     -- поиск документа (ключ - Месяц начислений + ведомость) - ТОЛЬКО ОДИН
     vbMovementId:= (SELECT MovementDate_ServiceDate.MovementId
@@ -62,6 +64,7 @@ else
                          INNER JOIN Movement ON Movement.Id       = MovementDate_ServiceDate.MovementId
                                             AND Movement.DescId   = zc_Movement_PersonalService()
                                             AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                            AND Movement.OperDate >= inEndDate
                          INNER JOIN MovementLinkObject AS MLO_PersonalServiceList
                                                        ON MLO_PersonalServiceList.MovementId = Movement.Id
                                                       AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()

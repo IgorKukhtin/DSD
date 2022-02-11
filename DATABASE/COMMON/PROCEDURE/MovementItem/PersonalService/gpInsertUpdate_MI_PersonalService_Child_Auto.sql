@@ -160,6 +160,7 @@ then
         INNER JOIN Movement ON Movement.Id       = MovementDate_ServiceDate.MovementId
                            AND Movement.DescId   = zc_Movement_PersonalService()
                            AND Movement.StatusId <> zc_Enum_Status_Erased()
+                           AND Movement.OperDate >= inEndDate
         INNER JOIN MovementLinkObject AS MLO_PersonalServiceList
                                       ON MLO_PersonalServiceList.MovementId = Movement.Id
                                      AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
@@ -185,6 +186,7 @@ else
         INNER JOIN Movement ON Movement.Id       = MovementDate_ServiceDate.MovementId
                            AND Movement.DescId   = zc_Movement_PersonalService()
                            AND Movement.StatusId <> zc_Enum_Status_Erased()
+                           AND Movement.OperDate >= inEndDate
         INNER JOIN MovementLinkObject AS MLO_PersonalServiceList
                                       ON MLO_PersonalServiceList.MovementId = Movement.Id
                                      AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
