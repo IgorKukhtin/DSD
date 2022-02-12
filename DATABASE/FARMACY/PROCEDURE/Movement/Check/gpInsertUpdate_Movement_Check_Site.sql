@@ -98,7 +98,7 @@ BEGIN
     -- сохранили связь с <Статус заказа (Состояние VIP-чека)>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ConfirmedKind(), ioId, zc_Enum_ConfirmedKind_UnComplete());
 
-    inBayer := translate(inBayer, chr('8296')||chr('8297'), '');
+    inBayer := translate(inBayer, chr('8296')||chr('8297')||chr('8203'), '');
 
     IF COALESCE (inBayerId, 0) <> 0
     THEN
@@ -132,7 +132,7 @@ BEGIN
 	END IF;
 
       -- сохранили Комментарий клиента
-    inComment := translate(inComment, chr('8296')||chr('8297'), '');
+    inComment := translate(inComment, chr('8296')||chr('8297')||chr('8203'), '');
     IF COALESCE (TRIM(inComment), '') <> '' THEN
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_CommentCustomer(), ioId, TRIM(inComment));
 	END IF;

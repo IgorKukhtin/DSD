@@ -1312,7 +1312,7 @@ type
     property SeriesFieldName: String read FSeriesFieldName write FSeriesFieldName;
   end;
 
-  TÑhangeCellData = class(TPersistent)
+  TPositionCellData = class(TPersistent)
   private
     FLeftParam: TdsdParam;
     FTopParam: TdsdParam;
@@ -1333,6 +1333,14 @@ type
   TFieldParamsData = class(TPersistent)
   private
     FFieldIdParam: TdsdParam;
+    FFieldParentIdParam: TdsdParam;
+
+    FFieldPositionFixedParam: TdsdParam;
+    FFieldLeftParam: TdsdParam;
+    FFieldTopParam: TdsdParam;
+    FFieldWidthParam: TdsdParam;
+    FFieldHeightParam: TdsdParam;
+
     FFieldTextParam: TdsdParam;
     FFieldColorParam: TdsdParam;
     FFieldTextColorParam: TdsdParam;
@@ -1343,6 +1351,12 @@ type
   published
 
     property FieldIdParam: TdsdParam  read FFieldIdParam write FFieldIdParam;
+    property FieldParentIdParam: TdsdParam  read FFieldParentIdParam write FFieldParentIdParam;
+    property FieldPositionFixedParam: TdsdParam  read FFieldPositionFixedParam write FFieldPositionFixedParam;
+    property FieldLeftParam: TdsdParam  read FFieldLeftParam write FFieldLeftParam;
+    property FieldTopParam: TdsdParam  read FFieldTopParam write FFieldTopParam;
+    property FieldWidthParam: TdsdParam  read FFieldWidthParam write FFieldWidthParam;
+    property FieldHeightParam: TdsdParam  read FFieldHeightParam write FFieldHeightParam;
     property FieldTextParam: TdsdParam  read FFieldTextParam write FFieldTextParam;
     property FieldColorParam: TdsdParam  read FFieldColorParam write FFieldColorParam;
     property FieldTextColorParam: TdsdParam  read FFieldTextColorParam write FFieldTextColorParam;
@@ -1358,6 +1372,7 @@ type
     FSeriesDisplayText: String;
 
     FAfterOpen: TDataSetNotifyEvent;
+    FBeforeClose: TDataSetNotifyEvent;
     FAfterClose: TDataSetNotifyEvent;
     FOnDblClick: TNotifyEvent;
 
@@ -1376,17 +1391,29 @@ type
 
     FDblClickAction: TCustomAction;
 
-    FÑhangeCellAction: TCustomAction;
-    FÑhangeCellData: TÑhangeCellData;
+    FUpdatePositionAction: TCustomAction;
+    FRunUpdateAllPositionAction : TCustomAction;
+
+    FPositionCellData: TPositionCellData;
     FFieldParamsData: TFieldParamsData;
     FPosCellData: TRect;
 
     FTimer: TTimer;
     FTimerProcess : Integer;
+    FFocusID : Integer;
     FFocusSetID : Integer;
 
+    FStyle : TcxEditStyle;
+    FStyleFocused : TcxEditStyle;
+
+    FMinWidth: Integer;
+    FMinHeight: Integer;
+
     procedure SetDataSet(const Value: TDataSet);
+    procedure SetRunUpdateAllPositionAction(const Value: TCustomAction);
+
     procedure OnAfterOpen(ADataSet: TDataSet);
+    procedure OnBeforeClose(ADataSet: TDataSet);
     procedure OnAfterClose(ADataSet: TDataSet);
     procedure OnMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -1397,6 +1424,8 @@ type
     procedure OnDblClick(Sender: TObject);
     procedure OnEnter(Sender: TObject);
     procedure OnTimer(Sender: TObject);
+
+    procedure OnRunTask(Sender: TObject);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -1422,11 +1451,21 @@ type
     // Àêöèÿ ïî DblClick
     property DblClickAction: TCustomAction  read FDblClickAction write FDblClickAction;
     // Àêöèÿ ïî èùìåíåíèþ ïîçèöèè è ðàçìåðà
-    property ÑhangeCellAction: TCustomAction  read FÑhangeCellAction write FÑhangeCellAction;
+    property UpdatePositionAction: TCustomAction  read FUpdatePositionAction write FUpdatePositionAction;
+    // Îáíîâèòü âñå ïî êíîïêå
+    property RunUpdateAllPositionAction : TCustomAction read FRunUpdateAllPositionAction write SetRunUpdateAllPositionAction;
     // Íîâûå êîîðäèíàòû äëÿ ñîõðàíåíèÿ â áàçó
-    property ÑhangeCellData: TÑhangeCellData  read FÑhangeCellData write FÑhangeCellData;
+    property PositionCellData: TPositionCellData  read FPositionCellData write FPositionCellData;
     // Ñëóæåáíûå ïîëÿ
     property FieldParams: TFieldParamsData  read FFieldParamsData write FFieldParamsData;
+    // Ñòèëü ïðîñòîãî òåêñòà
+    property Style: TcxEditStyle read FStyle write FStyle;
+    // Ñòèëü âûáðàííîãî òåêñòà
+    property StyleFocused: TcxEditStyle read FStyleFocused write FStyleFocused;
+    // ìèíèìàëüíàÿ øèðèíà
+    property MinWidth: Integer read FMinWidth write FMinWidth default 20;
+    // ìèíèìàëüíàÿ âûñîòà
+    property MinHeight: Integer read FMinHeight write FMinHeight default 30;
   end;
 
   procedure Register;
@@ -1439,7 +1478,7 @@ uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf,
      cxGeometry, dxBar, cxButtonEdit, cxDBEdit, cxCurrencyEdit,
      VCL.Menus, ParentForm, ChoicePeriod, cxGrid, cxDBData, Variants,
      cxGridDBBandedTableView, cxGridDBDataDefinitions,cxGridBandedTableView,
-     cxMemo, cxMaskEdit, dsdException, Soap.EncdDecd;
+     cxMemo, cxMaskEdit, dsdException, Soap.EncdDecd, SimpleGauge;
 
 type
 
@@ -7192,9 +7231,9 @@ begin
   end;
 end;
 
-{ TÑhangeCellData }
+{ TPositionCellData }
 
-constructor TÑhangeCellData.Create;
+constructor TPositionCellData.Create;
 begin
   FLeftParam := TdsdParam.Create;
   FTopParam := TdsdParam.Create;
@@ -7202,7 +7241,7 @@ begin
   FHeightParam := TdsdParam.Create;
 end;
 
-destructor TÑhangeCellData.Destroy;
+destructor TPositionCellData.Destroy;
 begin
   FLeftParam.Free;
   FTopParam.Free;
@@ -7217,6 +7256,24 @@ begin
   FFieldIdParam := TdsdParam.Create;
   FFieldIdParam.DataType := ftString;
   FFieldIdParam.Value := 'Id';
+  FFieldParentIdParam := TdsdParam.Create;;
+  FFieldParentIdParam.DataType := ftString;
+  FFieldParentIdParam.Value := 'ParentId';
+  FFieldPositionFixedParam := TdsdParam.Create;
+  FFieldPositionFixedParam.DataType := ftString;
+  FFieldPositionFixedParam.Value := 'isPositionFixed';
+  FFieldLeftParam := TdsdParam.Create;
+  FFieldLeftParam.DataType := ftString;
+  FFieldLeftParam.Value := 'Left';
+  FFieldTopParam := TdsdParam.Create;
+  FFieldTopParam.DataType := ftString;
+  FFieldTopParam.Value := 'Top';
+  FFieldWidthParam := TdsdParam.Create;
+  FFieldWidthParam.DataType := ftString;
+  FFieldWidthParam.Value := 'Width';
+  FFieldHeightParam := TdsdParam.Create;
+  FFieldHeightParam.DataType := ftString;
+  FFieldHeightParam.Value := 'Height';
   FFieldTextParam := TdsdParam.Create;
   FFieldTextParam.DataType := ftString;
   FFieldTextParam.Value := 'Name';
@@ -7231,6 +7288,11 @@ end;
 destructor TFieldParamsData.Destroy;
 begin
   FFieldIdParam.Free;
+  FFieldPositionFixedParam.Free;
+  FFieldLeftParam.Free;
+  FFieldTopParam.Free;
+  FFieldWidthParam.Free;
+  FFieldHeightParam.Free;
   FFieldTextParam.Free;
   FFieldColorParam.Free;
   FFieldTextColorParam.Free;
@@ -7243,28 +7305,42 @@ begin
   inherited;
   FCreatePanelList := TList.Create;
   FFocusedIdParam := TdsdParam.Create;
-  FÑhangeCellData := TÑhangeCellData.Create;
+  FPositionCellData := TPositionCellData.Create;
   FFieldParamsData := TFieldParamsData.Create;
+
+  FStyle := TcxEditStyle.Create(Nil, False);
+  FStyleFocused := TcxEditStyle.Create(Nil, False);
+  FStyleFocused.Color := clMenuHighlight;
+  FStyleFocused.TextColor := clYellow;
+  FStyleFocused.TextStyle := [fsBold];
+  FStyleFocused.BorderStyle := ebsThick;
+
   FTimer := TTimer.Create(Nil);
   FTimer.Enabled := False;
   FTimer.Interval := 100;
   FTimer.OnTimer := OnTimer;
   FTimerProcess := 0;
+  FFocusID := 0;
   FFocusSetID := 0;
 
   FGap := 5;
   FHeight := 137;
   FWidth := 105;
+  FMinWidth := 20;
+  FMinHeight := 30;
+
 end;
 
 destructor TCheckerboardAddOn.Destroy;
   var I : Integer;
 begin
   FTimer.Free;
-  FÑhangeCellData.Free;
+  FPositionCellData.Free;
   FFocusedIdParam.Free;
   FCreatePanelList.Free;
   FFieldParamsData.Free;
+  FStyleFocused.Free;
+  FStyle.Free;
   inherited;
 end;
 
@@ -7295,6 +7371,7 @@ begin
   begin
     FDataSet.AfterOpen := FAfterOpen;
     FDataSet.AfterClose := FAfterClose;
+    FDataSet.BeforeClose := FBeforeClose;
   end;
 
   FDataSet := Value;
@@ -7305,11 +7382,23 @@ begin
     FDataSet.AfterOpen := OnAfterOpen;
     FAfterClose := FDataSet.AfterClose;
     FDataSet.AfterClose := OnAfterClose;
+    FBeforeClose := FDataSet.BeforeClose;
+    FDataSet.BeforeClose := OnBeforeClose;
   end;
 end;
 
+procedure TCheckerboardAddOn.SetRunUpdateAllPositionAction(const Value: TCustomAction);
+begin
+  if Assigned(Value) and (not (Value is TdsdRunAction)) then raise Exception.Create('Äîëæåí áûòü TdsdRunAction.');
+
+  if Assigned(FRunUpdateAllPositionAction) then TdsdRunAction(FRunUpdateAllPositionAction).OnRunTask := Nil;
+  FRunUpdateAllPositionAction := Value;
+  if Assigned(FRunUpdateAllPositionAction) then TdsdRunAction(FRunUpdateAllPositionAction).OnRunTask := OnRunTask;
+end;
+
+
 procedure TCheckerboardAddOn.OnAfterOpen(ADataSet: TDataSet);
-  var nTop, nLeft, I : Integer;
+  var nTop, nLeft, I : Integer; isPositionFixed : Boolean;
       cxMemo : TcxMemo;
 begin
   if Assigned(FAfterOpen) then
@@ -7319,16 +7408,62 @@ begin
 
   nTop := FGap;
   nLeft := FGap;
+  isPositionFixed := False;
+
+  if FFieldParamsData.FFieldPositionFixedParam.Value <> '' then
+  begin
+    ADataSet.First;
+    while not ADataSet.Eof do
+    begin
+      if ADataSet.FieldByName(FFieldParamsData.FFieldPositionFixedParam.Value).AsBoolean then
+      begin
+        isPositionFixed := True;
+        if nTop < ADataSet.FieldByName(FFieldParamsData.FFieldTopParam.Value).AsInteger then
+          nTop := ADataSet.FieldByName(FFieldParamsData.FFieldTopParam.Value).AsInteger;
+        if nLeft < (ADataSet.FieldByName(FFieldParamsData.FFieldLeftParam.Value).AsInteger + ADataSet.FieldByName(FFieldParamsData.FFieldWidthParam.Value).AsInteger + FGap) then
+          nLeft := ADataSet.FieldByName(FFieldParamsData.FFieldLeftParam.Value).AsInteger + ADataSet.FieldByName(FFieldParamsData.FFieldWidthParam.Value).AsInteger + FGap;
+      end;
+
+      ADataSet.Next;
+    end;
+
+    if isPositionFixed and ((nLeft + FWidth) > FControl.Width) then
+    begin
+      nLeft := FGap;
+      nTop := nTop + cxMemo.Height + FGap;
+    end;
+  end;
+
+
   ADataSet.First;
   while  not ADataSet.Eof do
   begin
     cxMemo := TcxMemo.Create(FControl.Owner);
     cxMemo.Visible := False;
+    cxMemo.Style := FStyle;
+    cxMemo.StyleFocused := FStyleFocused;
     cxMemo.Parent := FControl;
-    cxMemo.Top := nTop;
-    cxMemo.Left := nLeft;
-    cxMemo.Height := FHeight;
-    cxMemo.Width := FWidth;
+
+    if isPositionFixed and ADataSet.FieldByName(FFieldParamsData.FFieldPositionFixedParam.Value).AsBoolean then
+    begin
+      cxMemo.Top := ADataSet.FieldByName(FFieldParamsData.FFieldTopParam.Value).AsInteger;
+      cxMemo.Left := ADataSet.FieldByName(FFieldParamsData.FFieldLeftParam.Value).AsInteger;
+      cxMemo.Height := ADataSet.FieldByName(FFieldParamsData.FFieldHeightParam.Value).AsInteger;
+      cxMemo.Width := ADataSet.FieldByName(FFieldParamsData.FFieldWidthParam  .Value).AsInteger;
+    end else
+    begin
+      cxMemo.Top := nTop;
+      cxMemo.Left := nLeft;
+      cxMemo.Height := FHeight;
+      cxMemo.Width := FWidth;
+
+      if (nLeft > FGap) and ((nLeft + FWidth * 2) > FControl.Width) then
+      begin
+        nLeft := FGap;
+        nTop := nTop + cxMemo.Height + FGap;
+      end else nLeft := nLeft + cxMemo.Width + FGap;
+    end;
+
     cxMemo.Properties.ReadOnly := True;
 
     cxMemo.OnMouseDown := OnMouseDown;
@@ -7340,12 +7475,6 @@ begin
 
     cxMemo.Tag := ADataSet.FieldByName(FFieldParamsData.FFieldIdParam.Value).AsInteger;
     cxMemo.Text := ADataSet.FieldByName(FFieldParamsData.FFieldTextParam.Value).AsString;
-
-    if (nLeft > FGap) and ((nLeft + FWidth * 2) > FControl.Width) then
-    begin
-      nLeft := FGap;
-      nTop := nTop + cxMemo.Height + FGap;
-    end else nLeft := nLeft + cxMemo.Width + FGap;
 
     FCreatePanelList.Add(cxMemo);
     ADataSet.Next;
@@ -7359,13 +7488,27 @@ begin
 
 end;
 
+procedure TCheckerboardAddOn.OnBeforeClose(ADataSet: TDataSet);
+  var I, J : Integer;
+begin
+  if Assigned(FBeforeClose) then
+     FBeforeClose(ADataSet);
+
+  if not ADataSet.Active then Exit;
+
+  FFocusID := ADataSet.FieldByName(FFieldParamsData.FFieldIdParam.Value).AsInteger;
+
+  if (FFieldParamsData.FFieldParentIdParam.Value <> '') and
+     Assigned(ADataSet.FindField(FFieldParamsData.FFieldParentIdParam.Value)) then
+    FFocusSetID := ADataSet.FieldByName(FFieldParamsData.FFieldParentIdParam.Value).AsInteger;
+
+end;
+
 procedure TCheckerboardAddOn.OnAfterClose(ADataSet: TDataSet);
   var I, J : Integer;
 begin
   if Assigned(FAfterClose) then
      FAfterClose(ADataSet);
-
-  FFocusSetID := FFocusedIdParam.Value;
 
   for i := 0 to FCreatePanelList.Count - 1 do
     TWinControl(FCreatePanelList.Items[I]).Free;
@@ -7411,14 +7554,22 @@ procedure TCheckerboardAddOn.OnMouseMove(Sender: TObject; Shift: TShiftState; X,
 begin
   if FCapturing then
   begin
-    FControlDown.Left := FControlDown.Left - (FMouseDownSpot.x - x);
-    FControlDown.Top := FControlDown.Top - (FMouseDownSpot.y - y);
+    if (FControlDown.Left - (FMouseDownSpot.x - x)) >= 0 then
+      FControlDown.Left := FControlDown.Left - (FMouseDownSpot.x - x);
+    if (FControlDown.Top - (FMouseDownSpot.y - y)) >= 0 then
+      FControlDown.Top := FControlDown.Top - (FMouseDownSpot.y - y);
   end else if FSizing then
   begin
-    FControlDown.Width := FControlDown.Width + X-FMouseDownSpot.X;
-    FControlDown.Height := FControlDown.Height + Y-FMouseDownSpot.Y;
-    FMouseDownSpot.X := X;
-    FMouseDownSpot.Y := Y;
+    if FMinWidth <= (FControlDown.Width + X-FMouseDownSpot.X) then
+    begin
+      FControlDown.Width := FControlDown.Width + X-FMouseDownSpot.X;
+      FMouseDownSpot.X := X;
+    end;
+    if  FMinHeight <= (FControlDown.Height + Y-FMouseDownSpot.Y) then
+    begin
+      FControlDown.Height := FControlDown.Height + Y-FMouseDownSpot.Y;
+      FMouseDownSpot.Y := Y;
+    end;
   end;
 end;
 
@@ -7439,15 +7590,15 @@ begin
        (FPosCellData.Width <> FControlDown.Width) or
        (FPosCellData.Height <> FControlDown.Height) then
     begin
-      FÑhangeCellData.LeftParam.Value := FControlDown.Left;
-      FÑhangeCellData.TopParam.Value := FControlDown.Top;
-      FÑhangeCellData.WidthParam.Value := FControlDown.Width;
-      FÑhangeCellData.HeightParam.Value := FControlDown.Height;
+      FPositionCellData.LeftParam.Value := FControlDown.Left;
+      FPositionCellData.TopParam.Value := FControlDown.Top;
+      FPositionCellData.WidthParam.Value := FControlDown.Width;
+      FPositionCellData.HeightParam.Value := FControlDown.Height;
 
-      if Assigned(FÑhangeCellAction) then //FÑhangeCellAction.Execute;
+      if Assigned(FUpdatePositionAction) and not Assigned(FRunUpdateAllPositionAction) then
       begin
         FTimerProcess := FTimerProcess or 1;
-        FÑhangeCellAction.Execute;
+        FTimer.Enabled := True
       end;
     end;
   end;
@@ -7476,12 +7627,19 @@ begin
   FTimer.Enabled := False;
   try
 
-    if (FTimerProcess and 1) > 0 then if Assigned(FÑhangeCellAction) then FÑhangeCellAction.Execute;
+    if (FTimerProcess and 1) > 0 then if Assigned(FUpdatePositionAction) and not Assigned(FRunUpdateAllPositionAction) then FUpdatePositionAction.Execute;
 
     if (FTimerProcess and 2) > 0 then if Assigned(FDblClickAction) then FDblClickAction.Execute;
 
     if (FTimerProcess and 4) > 0 then
     begin
+      if FFocusID > 0 then
+        for i := 0 to FCreatePanelList.Count - 1 do
+           if TWinControl(FCreatePanelList.Items[I]).Tag = FFocusID then
+           begin
+             TWinControl(FCreatePanelList.Items[I]).SetFocus;
+             Exit;
+           end;
       if FFocusSetID > 0 then
         for i := 0 to FCreatePanelList.Count - 1 do
            if TWinControl(FCreatePanelList.Items[I]).Tag = FFocusSetID then
@@ -7496,6 +7654,46 @@ begin
     FTimerProcess := 0;
   end;
 
+end;
+
+procedure TCheckerboardAddOn.OnRunTask(Sender: TObject);
+  var I, nFocus : Integer;
+begin
+
+  if not Assigned(FUpdatePositionAction) and not Assigned(FRunUpdateAllPositionAction) then FUpdatePositionAction.Execute;
+
+  nFocus := FFocusedIdParam.Value;
+  try
+
+    with TGaugeFactory.GetGauge('Ñîõðàíåíåè ïîçèöèé è ðàçìåðîâ ÿ÷ååê', 0, FCreatePanelList.Count) do
+    try
+      Start;
+
+      for i := 0 to FCreatePanelList.Count - 1 do
+        if FDataSet.Locate(FFieldParamsData.FFieldIdParam.Value, TWinControl(TWinControl(FCreatePanelList.Items[I])).Tag, []) then
+      begin
+        if (TWinControl(FCreatePanelList.Items[I]).Left <> FDataSet.FieldByName(FFieldParamsData.FFieldLeftParam.Value).AsInteger) or
+           (TWinControl(FCreatePanelList.Items[I]).Top <> FDataSet.FieldByName(FFieldParamsData.FFieldTopParam.Value).AsInteger) or
+           (TWinControl(FCreatePanelList.Items[I]).Width <> FDataSet.FieldByName(FFieldParamsData.FFieldWidthParam.Value).AsInteger) or
+           (TWinControl(FCreatePanelList.Items[I]).Height <> FDataSet.FieldByName(FFieldParamsData.FFieldHeightParam.Value).AsInteger) then
+        begin
+          FFocusSetID := TWinControl(FCreatePanelList.Items[I]).Tag;
+          FPositionCellData.LeftParam.Value := TWinControl(FCreatePanelList.Items[I]).Left;
+          FPositionCellData.TopParam.Value := TWinControl(FCreatePanelList.Items[I]).Top;
+          FPositionCellData.WidthParam.Value := TWinControl(FCreatePanelList.Items[I]).Width;
+          FPositionCellData.HeightParam.Value := TWinControl(FCreatePanelList.Items[I]).Height;
+          FUpdatePositionAction.Execute;
+        end;
+      end;
+      IncProgress(1);
+    finally
+      Finish;
+    end;
+  finally
+    FFocusID := nFocus;
+    FTimerProcess := FTimerProcess or 4;
+    FTimer.Enabled := True;
+  end;
 end;
 
 end.

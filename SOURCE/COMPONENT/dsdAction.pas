@@ -1393,6 +1393,24 @@ type
     property SetEnabledParams: TOwnedCollection read FSetEnabledParams write FSetEnabledParams;
   end;
 
+  TdsdRunAction = class(TdsdCustomAction)
+  private
+    FRunTask : TNotifyEvent;
+  protected
+    function LocalExecute: Boolean; override;
+  public
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+    property QuestionBeforeExecute;
+    property InfoAfterExecute;
+    property OnRunTask: TNotifyEvent read FRunTask write FRunTask;
+  end;
+
+
 procedure Register;
 
 implementation
@@ -1459,6 +1477,7 @@ begin
   RegisterActions('DSDLib', [TdsdSendTelegramBotAction], TdsdSendTelegramBotAction);
   RegisterActions('DSDLib', [TdsdSendClipboardAction], TdsdSendClipboardAction);
   RegisterActions('DSDLib', [TdsdSetEnabledAction], TdsdSetEnabledAction);
+  RegisterActions('DSDLib', [TdsdRunAction], TdsdRunAction);
 
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
@@ -6510,6 +6529,23 @@ begin
           SetPropValue(TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).Component, 'Enabled', TdsdSetEnabledParamsItem(FSetEnabledParams.Items[i]).FParam.Value)
      end;
   end;
+
+end;
+
+{ TdsdRunAction }
+
+
+function TdsdRunAction.LocalExecute: Boolean;
+var i: integer;
+begin
+  inherited;
+  Result := False;
+
+  if Assigned(FRunTask) then
+  begin
+    FRunTask(Self);
+    Result := True;
+  end else raise Exception.Create('Не определена функция для выполнения.');
 
 end;
 

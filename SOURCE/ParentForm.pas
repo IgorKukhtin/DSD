@@ -732,6 +732,7 @@ initialization
   RegisterClass (TcxMaskEdit);
   RegisterClass (TcxEditRepository);
   RegisterClass (TcxStyleRepository);
+  RegisterClass (TcxEditStyle);
 
   RegisterClass (TdxBarManager);
   RegisterClass (TdxBarStatic);
@@ -796,6 +797,7 @@ initialization
   RegisterClass (TdsdSendTelegramBotAction);
   RegisterClass (TdsdSendClipboardAction);
   RegisterClass (TdsdSetEnabledAction);
+  RegisterClass (TdsdRunAction);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);
