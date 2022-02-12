@@ -7430,7 +7430,7 @@ begin
     if isPositionFixed and ((nLeft + FWidth) > FControl.Width) then
     begin
       nLeft := FGap;
-      nTop := nTop + cxMemo.Height + FGap;
+      nTop := nTop + FHeight + FGap;
     end;
   end;
 
