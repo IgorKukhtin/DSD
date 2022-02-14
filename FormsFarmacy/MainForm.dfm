@@ -4934,6 +4934,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_CommodityStock: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1058#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
+      FormName = 'TReport_CommodityStockForm'
+      FormNameParam.Value = 'TReport_CommodityStockForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5724,6 +5735,9 @@
       end
       object N334: TMenuItem
         Action = actReport_Layout_OutOrder
+      end
+      object N337: TMenuItem
+        Action = actReport_CommodityStock
       end
     end
     object N36: TMenuItem [5]
