@@ -18,14 +18,16 @@ object MakerReportForm: TMakerReportForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 67
     Width = 1062
-    Height = 397
+    Height = 356
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 26
+    ExplicitHeight = 397
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -253,6 +255,30 @@ object MakerReportForm: TMakerReportForm
     Width = 1062
     Height = 8
     AlignSplitter = salBottom
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 1062
+    Height = 41
+    Align = alTop
+    Caption = 'Panel1'
+    ShowCaption = False
+    TabOrder = 6
+    ExplicitLeft = 8
+    ExplicitTop = -14
+    object cxLabel1: TcxLabel
+      Left = 12
+      Top = 2
+      Caption = #1043#1088#1072#1092#1080#1082' '#1088#1072#1073#1086#1090#1099' '#1087#1083#1072#1085#1080#1088#1086#1074#1097#1080#1082#1072': 4:00, 8:00, 12:00, 16:00, 20:00'
+    end
+    object cxLabel2: TcxLabel
+      Left = 12
+      Top = 19
+      Caption = 
+        #1055#1088#1080' "'#1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091', '#1082#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100'" '#1085#1072#1076#1086' '#1089#1086#1093#1088#1072#1085#1103#1090#1100' ' +
+        #1076#1077#1085#1100' '#1086#1090#1087#1088#1072#1074#1082#1080', '#1084#1077#1085#1103#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1084#1077#1089#1103#1094' '#1089' '#1082#1086#1090#1086#1088#1086#1075#1086' '#1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' '
+    end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet

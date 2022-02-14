@@ -65,6 +65,7 @@ type
     actInsertUpdate_Object_Position: TdsdExecStoredProc;
     actInsertUpdate_Object_Position_All: TdsdRunAction;
     bbInsertUpdate_Object_Position_All: TdxBarButton;
+    actGet_Object_Unit_Start: TdsdStoredProc;
   private
   public
   end;

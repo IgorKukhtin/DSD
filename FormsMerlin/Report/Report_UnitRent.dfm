@@ -140,8 +140,11 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
       IdFieldName = 'Id'
     end
     inherited actRefresh: TdsdDataSetRefresh
-      StoredProc = spSelect
+      StoredProc = actGet_Object_Unit_Start
       StoredProcList = <
+        item
+          StoredProc = actGet_Object_Unit_Start
+        end
         item
           StoredProc = spSelect
         end>
@@ -282,8 +285,8 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
   object PeriodChoice: TPeriodChoice [11]
     DateStart = edDateStart
     DateEnd = deEnd
-    Left = 271
-    Top = 255
+    Left = 303
+    Top = 271
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [12]
     Left = 179
@@ -507,6 +510,9 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
     FieldParams.FieldParentIdParam.Value = 'ParentId'
     FieldParams.FieldParentIdParam.DataType = ftString
     FieldParams.FieldParentIdParam.MultiSelectSeparator = ','
+    FieldParams.FieldPositionFixedParam.Value = 'isPositionFixed'
+    FieldParams.FieldPositionFixedParam.DataType = ftString
+    FieldParams.FieldPositionFixedParam.MultiSelectSeparator = ','
     FieldParams.FieldLeftParam.Value = 'Left'
     FieldParams.FieldLeftParam.DataType = ftString
     FieldParams.FieldLeftParam.MultiSelectSeparator = ','
@@ -519,19 +525,26 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
     FieldParams.FieldHeightParam.Value = 'Height'
     FieldParams.FieldHeightParam.DataType = ftString
     FieldParams.FieldHeightParam.MultiSelectSeparator = ','
+    FieldParams.FieldRootTreeParam.Value = 'isRootTree'
+    FieldParams.FieldRootTreeParam.DataType = ftString
+    FieldParams.FieldRootTreeParam.MultiSelectSeparator = ','
+    FieldParams.FieldLetterTreeParam.Value = 'isLetterTree'
+    FieldParams.FieldLetterTreeParam.DataType = ftString
+    FieldParams.FieldLetterTreeParam.MultiSelectSeparator = ','
     FieldParams.FieldTextParam.Value = 'Name'
     FieldParams.FieldTextParam.DataType = ftString
     FieldParams.FieldTextParam.MultiSelectSeparator = ','
-    FieldParams.FieldColorParam.Value = ''
+    FieldParams.FieldColorParam.Value = 'Color'
     FieldParams.FieldColorParam.DataType = ftString
     FieldParams.FieldColorParam.MultiSelectSeparator = ','
-    FieldParams.FieldTextColorParam.Value = ''
+    FieldParams.FieldTextColorParam.Value = 'Color_Text'
     FieldParams.FieldTextColorParam.DataType = ftString
     FieldParams.FieldTextColorParam.MultiSelectSeparator = ','
     StyleFocused.BorderStyle = ebsThick
     StyleFocused.Color = clMenuHighlight
     StyleFocused.TextColor = clYellow
     StyleFocused.TextStyle = [fsBold]
+    PriorAction = actGet_Object_UnitPrior
     Left = 520
     Top = 264
   end
@@ -564,7 +577,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 80
+    Left = 192
     Top = 335
   end
   object spGet_Object_UnitPrior: TdsdStoredProc
@@ -596,7 +609,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 248
+    Left = 328
     Top = 335
   end
   object spInsertUpdate_Object_Position: TdsdStoredProc
@@ -645,7 +658,39 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 400
+    Left = 512
+    Top = 335
+  end
+  object actGet_Object_Unit_Start: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_Unit_Start'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Id'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Name'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 56
     Top = 335
   end
 end

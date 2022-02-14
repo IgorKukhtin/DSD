@@ -1341,6 +1341,9 @@ type
     FFieldWidthParam: TdsdParam;
     FFieldHeightParam: TdsdParam;
 
+    FFieldRootTreeParam: TdsdParam;
+    FFieldLetterTreeParam: TdsdParam;
+
     FFieldTextParam: TdsdParam;
     FFieldColorParam: TdsdParam;
     FFieldTextColorParam: TdsdParam;
@@ -1357,6 +1360,8 @@ type
     property FieldTopParam: TdsdParam  read FFieldTopParam write FFieldTopParam;
     property FieldWidthParam: TdsdParam  read FFieldWidthParam write FFieldWidthParam;
     property FieldHeightParam: TdsdParam  read FFieldHeightParam write FFieldHeightParam;
+    property FieldRootTreeParam: TdsdParam  read FFieldRootTreeParam write FFieldRootTreeParam;
+    property FieldLetterTreeParam: TdsdParam  read FFieldLetterTreeParam write FFieldLetterTreeParam;
     property FieldTextParam: TdsdParam  read FFieldTextParam write FFieldTextParam;
     property FieldColorParam: TdsdParam  read FFieldColorParam write FFieldColorParam;
     property FieldTextColorParam: TdsdParam  read FFieldTextColorParam write FFieldTextColorParam;
@@ -1390,9 +1395,9 @@ type
     FFocusedIdParam: TdsdParam;
 
     FDblClickAction: TCustomAction;
-
     FUpdatePositionAction: TCustomAction;
     FRunUpdateAllPositionAction : TCustomAction;
+    FPriorAction: TCustomAction;
 
     FPositionCellData: TPositionCellData;
     FFieldParamsData: TFieldParamsData;
@@ -1466,6 +1471,8 @@ type
     property MinWidth: Integer read FMinWidth write FMinWidth default 20;
     // минимальная высота
     property MinHeight: Integer read FMinHeight write FMinHeight default 30;
+    // Акция отобразить предыдущее значение только для запрета
+    property PriorAction: TCustomAction read FPriorAction write FPriorAction;
   end;
 
   procedure Register;
@@ -7283,6 +7290,12 @@ begin
   FFieldTextColorParam := TdsdParam.Create;
   FFieldTextColorParam.DataType := ftString;
   FFieldTextColorParam.Value := '';
+  FFieldRootTreeParam := TdsdParam.Create;
+  FFieldRootTreeParam.DataType := ftString;
+  FFieldRootTreeParam.Value := '';
+  FFieldLetterTreeParam := TdsdParam.Create;
+  FFieldLetterTreeParam.DataType := ftString;
+  FFieldLetterTreeParam.Value := '';
 end;
 
 destructor TFieldParamsData.Destroy;
@@ -7296,6 +7309,8 @@ begin
   FFieldTextParam.Free;
   FFieldColorParam.Free;
   FFieldTextColorParam.Free;
+  FFieldRootTreeParam.Free;
+  FFieldLetterTreeParam.Free;
 end;
 
 { TCheckerboardAddOn }
@@ -7404,6 +7419,12 @@ begin
   if Assigned(FAfterOpen) then
      FAfterOpen(ADataSet);
 
+  // Отключим кнопку сохранения если есть
+  if Assigned(FRunUpdateAllPositionAction) then
+  begin
+    FRunUpdateAllPositionAction.Enabled := False
+  end;
+
   if not Assigned(FControl) then Exit;
 
   nTop := FGap;
@@ -7436,7 +7457,15 @@ begin
 
 
   ADataSet.First;
-  while  not ADataSet.Eof do
+
+  // Проверим корень
+  if (FFieldParamsData.FFieldRootTreeParam.Value <> '') and Assigned(FPriorAction) then
+  begin
+    if ADataSet.IsEmpty then FPriorAction.Enabled := False
+    else FPriorAction.Enabled := not FDataSet.FieldByName(FFieldParamsData.FFieldRootTreeParam.Value).AsBoolean;
+  end;
+
+  while not ADataSet.Eof do
   begin
     cxMemo := TcxMemo.Create(FControl.Owner);
     cxMemo.Visible := False;
@@ -7476,6 +7505,13 @@ begin
     cxMemo.Tag := ADataSet.FieldByName(FFieldParamsData.FFieldIdParam.Value).AsInteger;
     cxMemo.Text := ADataSet.FieldByName(FFieldParamsData.FFieldTextParam.Value).AsString;
 
+    // Заменим цвет фон
+    if FFieldParamsData.FFieldColorParam.Value <> '' then
+      cxMemo.Style.Color := FDataSet.FieldByName(FFieldParamsData.FFieldColorParam.Value).AsInteger;
+    // Звменим цвет шрифта
+    if FFieldParamsData.FFieldTextColorParam.Value <> '' then
+      cxMemo.Style.TextColor := FDataSet.FieldByName(FFieldParamsData.FFieldTextColorParam.Value).AsInteger;
+
     FCreatePanelList.Add(cxMemo);
     ADataSet.Next;
   end;
@@ -7501,6 +7537,12 @@ begin
   if (FFieldParamsData.FFieldParentIdParam.Value <> '') and
      Assigned(ADataSet.FindField(FFieldParamsData.FFieldParentIdParam.Value)) then
     FFocusSetID := ADataSet.FieldByName(FFieldParamsData.FFieldParentIdParam.Value).AsInteger;
+
+  // Отключим кнопку сохранения если есть
+  if Assigned(FRunUpdateAllPositionAction) then
+  begin
+    FRunUpdateAllPositionAction.Enabled := False
+  end;
 
 end;
 
@@ -7599,7 +7641,12 @@ begin
       begin
         FTimerProcess := FTimerProcess or 1;
         FTimer.Enabled := True
+      end else
+      if Assigned(FRunUpdateAllPositionAction) then
+      begin
+        FRunUpdateAllPositionAction.Enabled := True;
       end;
+
     end;
   end;
 end;
@@ -7610,6 +7657,9 @@ begin
   if FDataSet.Locate(FFieldParamsData.FFieldIdParam.Value, TWinControl(Sender).Tag, []) then
     if Assigned(FDblClickAction) then //FDblClickAction.Execute;
     begin
+      // Если лист не проваливаемся
+      if FFieldParamsData.FFieldLetterTreeParam.Value <> '' then
+        if FDataSet.FieldByName(FFieldParamsData.FFieldLetterTreeParam.Value).AsBoolean then Exit;
       FTimerProcess := FTimerProcess or 2;
       FTimer.Enabled := True;
     end;

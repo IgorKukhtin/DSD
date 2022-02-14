@@ -4945,6 +4945,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actSupplierFailures: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
+      FormName = 'TSupplierFailuresForm'
+      FormNameParam.Value = 'TSupplierFailuresForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5432,6 +5443,9 @@
       end
       object N12: TMenuItem
         Action = actOrderExternal
+      end
+      object N338: TMenuItem
+        Action = actSupplierFailures
       end
       object N294: TMenuItem
         Caption = '-'

@@ -21,7 +21,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxSplitter, cxButtonEdit, cxCurrencyEdit;
+  cxSplitter, cxButtonEdit, cxCurrencyEdit, Vcl.StdCtrls, Vcl.ExtCtrls,
+  cxContainer, cxLabel;
 
 type
   TMakerReportForm = class(TParentForm)
@@ -97,6 +98,9 @@ type
     actUpdate_ClearUnPlanned: TdsdDataSetRefresh;
     macUpdate_ClearUnPlanned: TMultiAction;
     dxBarButton2: TdxBarButton;
+    Panel1: TPanel;
+    cxLabel1: TcxLabel;
+    cxLabel2: TcxLabel;
   private
     { Private declarations }
   public

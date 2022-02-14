@@ -1,4 +1,4 @@
-unit Report_CommodityStock;
+unit SupplierFailures;
 
 interface
 
@@ -12,13 +12,13 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxButtonEdit, Vcl.ExtCtrls, cxSplitter, cxDropDownEdit,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dxBarBuiltInMenu, cxNavigator, cxCalendar, cxCurrencyEdit;
+  dxBarBuiltInMenu, cxNavigator, cxCurrencyEdit;
 
 type
-  TReport_CommodityStockForm = class(TAncestorDBGridForm)
-    GoodsCode: TcxGridDBColumn;
-    SaleDay: TcxGridDBColumn;
-    dsdUpdateMaster: TdsdUpdateDataSet;
+  TSupplierFailuresForm = class(TAncestorDBGridForm)
+    isErased: TcxGridDBColumn;
+    spInsertUpdateSupplierFailures: TdsdStoredProc;
+    spErasedUnErased: TdsdStoredProc;
     dsdSetErased: TdsdUpdateErased;
     dsdUnErased: TdsdUpdateErased;
     bbSetErased: TdxBarButton;
@@ -27,22 +27,20 @@ type
     bbUnErasedChild: TdxBarButton;
     bbdsdChoiceGuides: TdxBarButton;
     cxSplitter1: TcxSplitter;
-    actOpenUnit: TOpenChoiceForm;
-    actOpenUser: TOpenChoiceForm;
-    dxBarButton1: TdxBarButton;
+    Code: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
-    Sale: TcxGridDBColumn;
-    Saldo: TcxGridDBColumn;
-    AmountUnit: TcxGridDBColumn;
+    dxBarSubItem1: TdxBarSubItem;
+    dxBarButton1: TdxBarButton;
+    GoodsCode: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
+    GoodsJuridicalCode: TcxGridDBColumn;
+    GoodsJuridicalName: TcxGridDBColumn;
+    AreaName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     dxBarButton2: TdxBarButton;
-    CommodityStock: TcxGridDBColumn;
-    AmountUnitSaldo: TcxGridDBColumn;
-    Summa: TcxGridDBColumn;
-    isPromo: TcxGridDBColumn;
-    MakerName: TcxGridDBColumn;
-    CommodityStockDelta: TcxGridDBColumn;
-    SummaNot90: TcxGridDBColumn;
+    actProtocolOpenForm: TdsdOpenForm;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public
@@ -54,6 +52,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_CommodityStockForm);
+  RegisterClass(TSupplierFailuresForm);
 
 end.

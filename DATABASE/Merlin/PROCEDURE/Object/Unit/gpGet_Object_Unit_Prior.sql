@@ -13,21 +13,28 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
  ) 
 AS
 $BODY$
+  DECLARE vbStartId Integer;
 BEGIN
 
   -- проверка прав пользователя на вызов процедуры
   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Unit());
+  
+  vbStartId := (SELECT tmp.ID FROM gpGet_Object_Unit_Start (0, inSession) AS tmp);  
 
   IF EXISTS(SELECT * FROM ObjectLink AS ObjectLink_Unit_Parent
             WHERE ObjectLink_Unit_Parent.ObjectId = inId
               AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
               AND COALESCE(ObjectLink_Unit_Parent.ChildObjectId, 0) <> 0)
+    OR inId = vbStartId
   THEN
-    SELECT COALESCE(ObjectLink_Unit_Parent.ChildObjectId, 0) 
-    INTO inId
-    FROM ObjectLink AS ObjectLink_Unit_Parent
-    WHERE ObjectLink_Unit_Parent.ObjectId = inId
-      AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent();
+    IF inId <> vbStartId
+    THEN
+      SELECT COALESCE(ObjectLink_Unit_Parent.ChildObjectId, 0) 
+      INTO inId
+      FROM ObjectLink AS ObjectLink_Unit_Parent
+      WHERE ObjectLink_Unit_Parent.ObjectId = inId
+        AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent();
+    END IF;
 
      RETURN QUERY
      SELECT 

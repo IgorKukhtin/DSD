@@ -2512,6 +2512,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalChoiceForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSupplierFailuresForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSupplierFailuresForm');
 end;
 
 procedure TLoadFormTest.LoadInfoMoneyGroupFormTest;

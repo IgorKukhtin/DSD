@@ -1153,7 +1153,8 @@ uses
   LayoutFileJournal in '..\..\FormsFarmacy\Document\LayoutFileJournal.pas' {LayoutFileJournalForm: TParentForm},
   LayoutFile in '..\..\FormsFarmacy\Document\LayoutFile.pas' {LayoutFileForm: TParentForm},
   LayoutFileCash in '..\..\FormsFarmacy\Cash\LayoutFileCash.pas' {LayoutFileCashForm: TParentForm},
-  Report_CommodityStock in '..\..\FormsFarmacy\Report\Report_CommodityStock.pas' {Report_CommodityStockForm: TParentForm};
+  Report_CommodityStock in '..\..\FormsFarmacy\Report\Report_CommodityStock.pas' {Report_CommodityStockForm: TParentForm},
+  SupplierFailures in '..\..\FormsFarmacy\Guides\SupplierFailures.pas' {SupplierFailuresForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
