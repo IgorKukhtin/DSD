@@ -63,6 +63,7 @@ $BODY$
    DECLARE vbSurplus TFloat;
    DECLARE vbNeed TFloat;
    DECLARE vbKoeffSUN TFloat;
+   DECLARE vbisEliminateColdSUN Boolean;
 BEGIN
      --
      --
@@ -72,6 +73,15 @@ BEGIN
      vbDOW_curr:= (SELECT CASE WHEN tmp.RetV = 0 THEN 7 ELSE tmp.RetV END
                    FROM (SELECT EXTRACT(DOW FROM inOperDate) AS RetV) AS tmp
                   ) :: TVarChar;
+
+     SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN
+     FROM Object AS Object_CashSettings
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
+                                  ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN()
+     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+     LIMIT 1;
 
      -- все Товары для схемы SUN Supplement
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_SUN_Supplement'))
@@ -374,8 +384,13 @@ BEGIN
              INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
                                          AND Object_Goods_Main.isSupplementSUN1 = TRUE
              LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = Object_Goods_Retail.ID
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
+                                     ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
+                                    AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
         WHERE Object_Goods_Retail.RetailID = vbObjectId
-          AND COALESCE(_tmpGoods_SUN_Supplement.GoodsId, 0) = 0;
+          AND COALESCE(_tmpGoods_SUN_Supplement.GoodsId, 0) = 0
+          AND (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = FALSE AND
+               Object_Goods_Main.isColdSUN = FALSE OR vbisEliminateColdSUN = FALSE);
 
 /*     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, UnitOutId, UnitOut2Id)
         SELECT Object_Goods_Retail.ID

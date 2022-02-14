@@ -1152,7 +1152,8 @@ uses
   Report_Movement_Send_RemainsSun_Supplement_v2 in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_Supplement_v2.pas' {Report_Movement_Send_RemainsSun_Supplement_v2Form: TParentForm},
   LayoutFileJournal in '..\..\FormsFarmacy\Document\LayoutFileJournal.pas' {LayoutFileJournalForm: TParentForm},
   LayoutFile in '..\..\FormsFarmacy\Document\LayoutFile.pas' {LayoutFileForm: TParentForm},
-  LayoutFileCash in '..\..\FormsFarmacy\Cash\LayoutFileCash.pas' {LayoutFileCashForm: TParentForm};
+  LayoutFileCash in '..\..\FormsFarmacy\Cash\LayoutFileCash.pas' {LayoutFileCashForm: TParentForm},
+  Report_CommodityStock in '..\..\FormsFarmacy\Report\Report_CommodityStock.pas' {Report_CommodityStockForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

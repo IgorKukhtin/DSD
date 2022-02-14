@@ -914,6 +914,8 @@ type
     v21: TMenuItem;
     actLayoutFileJournal: TdsdOpenForm;
     N336: TMenuItem;
+    actReport_CommodityStock: TdsdOpenForm;
+    N337: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
