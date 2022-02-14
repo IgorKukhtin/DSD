@@ -721,7 +721,19 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         end
         item
           Visible = True
-          ItemName = 'bbmacPrintPack'
+          ItemName = 'bbPrintPack_two'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintPack_one'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -762,6 +774,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
@@ -808,8 +821,12 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       Action = actOpenReportForm
       Category = 0
     end
-    object bbmacPrintPack: TdxBarButton
-      Action = macPrintPack
+    object bbPrintPack_two: TdxBarButton
+      Action = mactPrintPack_two
+      Category = 0
+    end
+    object bbPrintPack_one: TdxBarButton
+      Action = mactPrintPack_one
       Category = 0
     end
   end
@@ -1469,20 +1486,64 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         end>
       isShowModal = False
     end
-    object macPrintPack: TMultiAction
+    object mactPrintPack_two: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actPrintPack
+          Action = actPrintPack_two
         end>
       View = cxGridDBTableView
-      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1095#1072#1090#1080' '#1087#1072#1082#1077#1090#1072'?'
-      Caption = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
-      Hint = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1095#1072#1090#1080' '#1087#1072#1082#1077#1090#1072' '#1074' '#1076#1074#1091#1093' '#1101#1082#1079#1077#1084#1087#1083#1103#1088#1072#1093'?'
+      Caption = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100' (2 '#1101#1082#1079#1077#1084#1087#1083#1103#1088#1072')'
+      Hint = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100' (2 '#1101#1082#1079#1077#1084#1087#1083#1103#1088#1072')'
       ImageIndex = 15
     end
-    object actPrintPack: TdsdPrintAction
+    object actPrintPack_two: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintPack
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintPack
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 15
+      WithOutPreview = True
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDataset'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      CopiesCount = 2
+      Params = <>
+      ReportName = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081')'#1055#1072#1082#1077#1090
+      ReportNameParam.Value = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081')'#1055#1072#1082#1077#1090
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object mactPrintPack_one: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPrintPack_one
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1095#1072#1090#1080' '#1087#1072#1082#1077#1090#1072' '#1074' '#1086#1076#1085#1086#1084' '#1101#1082#1079#1077#1084#1087#1083#1103#1088#1077'?'
+      Caption = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100' (1 '#1101#1082#1079#1077#1084#1087#1083#1103#1088')'
+      Hint = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100' (1 '#1101#1082#1079#1077#1084#1087#1083#1103#1088')'
+      ImageIndex = 17
+    end
+    object actPrintPack_one: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintPack

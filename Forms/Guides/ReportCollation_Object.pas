@@ -123,14 +123,17 @@ type
     GuidesInfoMoney: TdsdGuides;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
-    actPrintPack: TdsdPrintAction;
+    actPrintPack_two: TdsdPrintAction;
     spSelectPrintPack: TdsdStoredProc;
-    macPrintPack: TMultiAction;
+    mactPrintPack_two: TMultiAction;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    bbmacPrintPack: TdxBarButton;
+    bbPrintPack_two: TdxBarButton;
     AreaContractName: TcxGridDBColumn;
     BranchName: TcxGridDBColumn;
+    actPrintPack_one: TdsdPrintAction;
+    mactPrintPack_one: TMultiAction;
+    bbPrintPack_one: TdxBarButton;
   private
     { Private declarations }
   public
