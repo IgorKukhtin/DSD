@@ -28,7 +28,7 @@ RETURNS TABLE (Id Integer, Price TFloat, StartDate TDateTime
              , isPromo boolean
              , PercentMarkup TFloat, PercentMarkupDateChange TDateTime
              , Color_ExpirationDate Integer
-             
+             , DiscontStart TDateTime, DiscontEnd TDateTime, DiscontAmount TFloat, DiscontPercent TFloat
              ) AS
 $BODY$
 DECLARE
@@ -150,6 +150,10 @@ BEGIN
                                 , Fix_DateChange.valuedata                         AS FixDateChange 
                                 , COALESCE(PriceSite_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup 
                                 , PriceSite_PercentMarkupDateChange.ValueData             AS PercentMarkupDateChange 
+                                , PriceSite_DiscontStart.ValueData                 AS DiscontStart
+                                , PriceSite_DiscontEnd.ValueData                   AS DiscontEnd
+                                , PriceSite_DiscontAmount.ValueData                AS DiscontAmount
+                                , PriceSite_DiscontPercent.ValueData               AS DiscontPercent
                            FROM Object AS Object_PriceSite
                            
                                 INNER JOIN ObjectLink AS PriceSite_Goods
@@ -170,6 +174,19 @@ BEGIN
                                                      ON PriceSite_DateChange.ObjectId = Object_PriceSite.Id
                                                     AND PriceSite_DateChange.DescId = zc_ObjectDate_PriceSite_DateChange()
                                                     
+                                LEFT JOIN ObjectDate AS PriceSite_DiscontStart
+                                                     ON PriceSite_DiscontStart.ObjectId = Object_PriceSite.Id
+                                                    AND PriceSite_DiscontStart.DescId = zc_ObjectDate_PriceSite_DiscontStart()
+                                LEFT JOIN ObjectDate AS PriceSite_DiscontEnd
+                                                     ON PriceSite_DiscontEnd.ObjectId = Object_PriceSite.Id
+                                                    AND PriceSite_DiscontEnd.DescId = zc_ObjectDate_PriceSite_DiscontEnd()
+                                LEFT JOIN ObjectFloat AS PriceSite_DiscontAmount
+                                                      ON PriceSite_DiscontAmount.ObjectId = Object_PriceSite.Id
+                                                     AND PriceSite_DiscontAmount.DescId = zc_ObjectFloat_PriceSite_DiscontAmount()
+                                LEFT JOIN ObjectFloat AS PriceSite_DiscontPercent
+                                                      ON PriceSite_DiscontPercent.ObjectId = Object_PriceSite.Id
+                                                     AND PriceSite_DiscontPercent.DescId = zc_ObjectFloat_PriceSite_DiscontPercent()
+
                                 LEFT JOIN ObjectBoolean AS PriceSite_Fix
                                                         ON PriceSite_Fix.ObjectId = Object_PriceSite.Id
                                                        AND PriceSite_Fix.DescId = zc_ObjectBoolean_PriceSite_Fix()
@@ -468,6 +485,11 @@ BEGIN
                       ELSE zc_Color_Black() 
                  END     AS Color_ExpirationDate                --vbAVGDateEnd
                  
+               , tmpPriceSite_View.DiscontStart
+               , tmpPriceSite_View.DiscontEnd
+               , tmpPriceSite_View.DiscontAmount
+               , tmpPriceSite_View.DiscontPercent
+
             FROM tmpGoodsAll AS Object_Goods_View
 
                 LEFT OUTER JOIN tmpPriceSite_View ON tmpPriceSite_View.GoodsId = Object_Goods_View.Id
@@ -654,6 +676,10 @@ BEGIN
                                 , Fix_DateChange.valuedata                         AS FixDateChange 
                                 , COALESCE(PriceSite_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup 
                                 , PriceSite_PercentMarkupDateChange.ValueData             AS PercentMarkupDateChange 
+                                , PriceSite_DiscontStart.ValueData                 AS DiscontStart
+                                , PriceSite_DiscontEnd.ValueData                   AS DiscontEnd
+                                , PriceSite_DiscontAmount.ValueData                AS DiscontAmount
+                                , PriceSite_DiscontPercent.ValueData               AS DiscontPercent
                            FROM Object AS Object_PriceSite
                            
                                 INNER JOIN ObjectLink AS PriceSite_Goods
@@ -674,6 +700,19 @@ BEGIN
                                                      ON PriceSite_DateChange.ObjectId = Object_PriceSite.Id
                                                     AND PriceSite_DateChange.DescId = zc_ObjectDate_PriceSite_DateChange()
                                                     
+                                LEFT JOIN ObjectDate AS PriceSite_DiscontStart
+                                                     ON PriceSite_DiscontStart.ObjectId = Object_PriceSite.Id
+                                                    AND PriceSite_DiscontStart.DescId = zc_ObjectDate_PriceSite_DiscontStart()
+                                LEFT JOIN ObjectDate AS PriceSite_DiscontEnd
+                                                     ON PriceSite_DiscontEnd.ObjectId = Object_PriceSite.Id
+                                                    AND PriceSite_DiscontEnd.DescId = zc_ObjectDate_PriceSite_DiscontEnd()
+                                LEFT JOIN ObjectFloat AS PriceSite_DiscontAmount
+                                                      ON PriceSite_DiscontAmount.ObjectId = Object_PriceSite.Id
+                                                     AND PriceSite_DiscontAmount.DescId = zc_ObjectFloat_PriceSite_DiscontAmount()
+                                LEFT JOIN ObjectFloat AS PriceSite_DiscontPercent
+                                                      ON PriceSite_DiscontPercent.ObjectId = Object_PriceSite.Id
+                                                     AND PriceSite_DiscontPercent.DescId = zc_ObjectFloat_PriceSite_DiscontPercent()
+
                                 LEFT JOIN ObjectBoolean AS PriceSite_Fix
                                                         ON PriceSite_Fix.ObjectId = Object_PriceSite.Id
                                                        AND PriceSite_Fix.DescId = zc_ObjectBoolean_PriceSite_Fix()
@@ -702,6 +741,10 @@ BEGIN
                               , tmpPriceSite.PercentMarkupDateChange 
                               , tmpRemeins.Remains
                               , tmpRemeins.MinExpirationDate 
+                              , tmpPriceSite.DiscontStart
+                              , tmpPriceSite.DiscontEnd
+                              , tmpPriceSite.DiscontAmount
+                              , tmpPriceSite.DiscontPercent
                         FROM tmpPriceSite_View AS tmpPriceSite
                              FULL JOIN tmpRemeins ON tmpRemeins.ObjectId = tmpPriceSite.GoodsId
                         )
@@ -1075,6 +1118,11 @@ BEGIN
                       ELSE zc_Color_Black() 
                  END      AS Color_ExpirationDate                --vbAVGDateEnd
                
+               , tmpPriceSite_All.DiscontStart
+               , tmpPriceSite_All.DiscontEnd
+               , tmpPriceSite_All.DiscontAmount
+               , tmpPriceSite_All.DiscontPercent
+               
             FROM tmpPriceSite_All
                LEFT JOIN tmpGoods_All AS Object_Goods_View ON Object_Goods_View.id = tmpPriceSite_All.GoodsId
 
@@ -1110,4 +1158,4 @@ $BODY$
 */
 -- тест
 -- 
-SELECT * FROM gpSelect_Object_PriceSite(inGoodsId := 0 , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');
+SELECT * FROM gpSelect_Object_PriceSite(inGoodsId := 0 , inisShowAll := 'True' , inisShowDel := 'False' ,  inSession := '3');

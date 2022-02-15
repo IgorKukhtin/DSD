@@ -1154,7 +1154,8 @@ uses
   LayoutFile in '..\..\FormsFarmacy\Document\LayoutFile.pas' {LayoutFileForm: TParentForm},
   LayoutFileCash in '..\..\FormsFarmacy\Cash\LayoutFileCash.pas' {LayoutFileCashForm: TParentForm},
   Report_CommodityStock in '..\..\FormsFarmacy\Report\Report_CommodityStock.pas' {Report_CommodityStockForm: TParentForm},
-  SupplierFailures in '..\..\FormsFarmacy\Guides\SupplierFailures.pas' {SupplierFailuresForm: TParentForm};
+  SupplierFailures in '..\..\FormsFarmacy\Guides\SupplierFailures.pas' {SupplierFailuresForm: TParentForm},
+  SiteDiscontDialog in '..\..\FormsFarmacy\Guides\SiteDiscontDialog.pas' {SiteDiscontDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

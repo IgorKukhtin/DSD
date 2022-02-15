@@ -151,7 +151,7 @@ inherited Report_CommodityStockForm: TReport_CommodityStockForm
             Width = 86
           end
           object CommodityStock: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089' 180 '#1076#1085#1077#1081
+            Caption = #1058#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089', '#1074' '#1076#1085#1103#1093
             DataBinding.FieldName = 'CommodityStock'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -162,7 +162,7 @@ inherited Report_CommodityStockForm: TReport_CommodityStockForm
             Width = 80
           end
           object CommodityStockDelta: TcxGridDBColumn
-            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072' 180-60 '#1076#1085#1077#1081
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072' -60 '#1076#1085#1077#1081
             DataBinding.FieldName = 'CommodityStockDelta'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -173,25 +173,35 @@ inherited Report_CommodityStockForm: TReport_CommodityStockForm
             Width = 78
           end
           object SummaNot90: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1082#1080' '#1079#1072' '#1074#1099#1095#1077#1090#1086#1084' '#1087#1088#1086#1076#1072#1078' '#1079#1072' 60 '#1076#1085#1077#1081
-            DataBinding.FieldName = 'SummaNot90'
+            Caption = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1082#1080' -60 '#1076#1085#1077#1081
+            DataBinding.FieldName = 'SummaNot60'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 109
+            Width = 76
+          end
+          object MCSValue: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1053#1058#1047
+            DataBinding.FieldName = 'MCSValue'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
           object SummaNotMCS90: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1082#1080' '#1079#1072' '#1074#1099#1095#1077#1090#1086#1084' '#1087#1088#1086#1076#1072#1078' '#1079#1072' 60 '#1076#1085#1077#1081' '#1080' '#1089#1088#1077#1076#1085#1077#1075#1086' '#1053#1058#1047
-            DataBinding.FieldName = 'SummaNotMCS90'
+            Caption = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1082#1080' -60 '#1076#1085#1077#1081' '#1080' '#1089#1091#1084#1084#1072#1088#1085#1086#1077' '#1053#1058#1047'.'
+            DataBinding.FieldName = 'SummaNotMCS60'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 129
+            Width = 109
           end
           object isPromo: TcxGridDBColumn
             Caption = #1052#1072#1088#1082'. '#1082#1086#1085#1090#1088#1072#1082#1090

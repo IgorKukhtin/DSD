@@ -41,6 +41,8 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isUkrainianTranslation boolean
              , MakerName TVarChar, FormDispensingId Integer, FormDispensingName TVarChar, NumberPlates Integer, QtyPackage Integer, isRecipe boolean
              , isExpDateExcSite boolean, isHideOnTheSite boolean
+             , DiscontSiteStart TDateTime, DiscontSiteEnd TDateTime, DiscontAmountSite TFloat, DiscontPercentSite TFloat
+
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -333,6 +335,10 @@ BEGIN
            , Object_Goods_Main.isRecipe
            , Object_Goods_Main.isExpDateExcSite
            , Object_Goods_Main.isHideOnTheSite
+           , Object_Goods_Retail.DiscontSiteStart
+           , Object_Goods_Retail.DiscontSiteEnd
+           , Object_Goods_Retail.DiscontAmountSite
+           , Object_Goods_Retail.DiscontPercentSite
 
       FROM Object_Goods_Retail
 

@@ -2216,10 +2216,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_DiscontPercentSite() RETURNS Int
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_DiscontPercentSite', 'Процент скидки на сайте' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_DiscontPercentSite');
   
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PriceSite_DiscontAmount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceSite_DiscontAmount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PriceSite(), 'zc_ObjectFloat_PriceSite_DiscontAmount', 'Сумма скидки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceSite_DiscontAmount');
+  
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PriceSite_DiscontPercent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceSite_DiscontPercent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PriceSite(), 'zc_ObjectFloat_PriceSite_DiscontPercent', 'Процент скидки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceSite_DiscontPercent');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 15.02.22                                                                                      * zc_ObjectFloat_PriceSite_DiscontAmount, zc_ObjectFloat_PriceSite_DiscontPercent
  15.02.22                                                                                      * zc_ObjectFloat_Goods_DiscontAmountSite, zc_ObjectFloat_Goods_DiscontPercentSite
  11.02.22                                                                                      * c_ObjectFloat_Unit_...
  22.12.21         * zc_ObjectFloat_MemberMinus_Tax

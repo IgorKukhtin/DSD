@@ -617,6 +617,43 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 78
           end
+          object DiscontSiteStart: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1086' '#1089#1082#1080#1076#1082#1080' '#1085#1072' '#1089#1072#1081#1090#1077
+            DataBinding.FieldName = 'DiscontSiteStart'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object DiscontSiteEnd: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1089#1082#1080#1076#1082#1080' '#1085#1072' '#1089#1072#1081#1090#1077
+            DataBinding.FieldName = 'DiscontSiteEnd'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object DiscontAmountSite: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1085#1072' '#1089#1072#1081#1090#1077
+            DataBinding.FieldName = 'DiscontAmountSite'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object DiscontPercentSite: TcxGridDBColumn
+            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080' '#1085#1072' '#1089#1072#1081#1090#1077
+            DataBinding.FieldName = 'DiscontPercentSite'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 76
+          end
         end
       end
     end
@@ -2606,6 +2643,75 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'actExecUpdate_isExpDateExcSite'
     end
+    object actSiteDiscontDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSiteDiscontDialog'
+      FormName = 'TSiteDiscontDialogForm'
+      FormNameParam.Value = 'TSiteDiscontDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'DiscontSiteStart'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DiscontSiteStart'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscontSiteEnd'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DiscontSiteEnd'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscontPercentSite'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DiscontPercentSite'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscontAmountSite'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DiscontAmountSite'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_SiteDiscont: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SiteDiscont
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SiteDiscont
+        end>
+      Caption = 'actUpdate_SiteDiscont'
+    end
+    object mactSiteDiscont: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actSiteDiscontDialog
+      ActionList = <
+        item
+          Action = actUpdate_SiteDiscont
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091' '#1076#1083#1103' '#1089#1072#1081#1090#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091' '#1076#1083#1103' '#1089#1072#1081#1090#1072
+      ImageIndex = 43
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -2928,6 +3034,10 @@ inherited GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'dxBarButton15'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton17'
         end>
     end
     object bbUpdateInvisibleSUN: TdxBarButton
@@ -3055,6 +3165,10 @@ inherited GoodsForm: TGoodsForm
     end
     object dxBarButton16: TdxBarButton
       Action = mactUpdate_isExpDateExcSite
+      Category = 0
+    end
+    object dxBarButton17: TdxBarButton
+      Action = mactSiteDiscont
       Category = 0
     end
   end
@@ -3561,6 +3675,30 @@ inherited GoodsForm: TGoodsForm
         Name = 'inis_IsRecipe'
         Value = False
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscontSiteStart'
+        Value = '01.01.2016'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscontSiteEnd'
+        Value = '01.01.2016'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscontPercentSite'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscontAmountSite'
+        Value = Null
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 240
@@ -4650,7 +4788,7 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 80
+    Left = 64
     Top = 360
   end
   object spUpdate_isInvisibleSUN_Revert: TdsdStoredProc
@@ -5209,5 +5347,58 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 448
     Top = 368
+  end
+  object spUpdate_SiteDiscont: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_SiteDiscont'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscontSiteStart'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DiscontSiteStart'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscontSiteEnd'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DiscontSiteEnd'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscontPercentSite'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DiscontPercentSite'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscontAmountSite'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DiscontAmountSite'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 112
+    Top = 376
   end
 end

@@ -617,9 +617,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Goods_DiscontSiteEnd() RETURNS Integer 
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectDate_Goods_DiscontSiteEnd', 'Дата окончания скидки на сайте' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_DiscontSiteEnd');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_PriceSite_DiscontStart() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PriceSite_DiscontStart'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PriceSite(), 'zc_ObjectDate_PriceSite_DiscontStart', 'Дата начало скидки' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PriceSite_DiscontStart');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_PriceSite_DiscontEnd() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PriceSite_DiscontEnd'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PriceSite(), 'zc_ObjectDate_PriceSite_DiscontEnd', 'Дата окончания скидки' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PriceSite_DiscontEnd');
+
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 15.02.22                                                                                     * zc_ObjectDate_PriceSite_DiscontStart, zc_ObjectDate_PriceSite_DiscontEnd
  15.02.22                                                                                     * zc_ObjectDate_Goods_DiscontSiteStart, zc_ObjectDate_Goods_DiscontSiteEnd
  20.01.22                                                                                     * zc_ObjectDate_PickUpLogsAndDBF_DateLoaded
  25.11.21                                                                                     * zc_ObjectDate_SurchargeWages_...

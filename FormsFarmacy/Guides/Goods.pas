@@ -297,6 +297,15 @@ type
     spUpdate_inExpDateExcSite_Revert: TdsdStoredProc;
     dxBarButton16: TdxBarButton;
     isHideOnTheSite: TcxGridDBColumn;
+    DiscontSiteStart: TcxGridDBColumn;
+    DiscontSiteEnd: TcxGridDBColumn;
+    DiscontAmountSite: TcxGridDBColumn;
+    DiscontPercentSite: TcxGridDBColumn;
+    actSiteDiscontDialog: TExecuteDialog;
+    mactSiteDiscont: TMultiAction;
+    spUpdate_SiteDiscont: TdsdStoredProc;
+    actUpdate_SiteDiscont: TdsdExecStoredProc;
+    dxBarButton17: TdxBarButton;
   private
     { Private declarations }
   public

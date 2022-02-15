@@ -701,8 +701,24 @@ BEGIN
                  WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                 )
           , tmpPrice_Site AS (SELECT Object_PriceSite.Id                        AS Id
-                                   , ROUND(Price_Value.ValueData,2)::TFloat     AS Price
+                                   , CASE WHEN PriceSite_DiscontStart.ValueData IS NOT NULL
+                                           AND PriceSite_DiscontEnd.ValueData IS NOT NULL  
+                                           AND PriceSite_DiscontStart.ValueData <= CURRENT_DATE
+                                           AND PriceSite_DiscontEnd.ValueData >= CURRENT_DATE
+                                           AND COALESCE (PriceSite_DiscontAmount.ValueData, 0) > 0
+                                          THEN ROUND(Price_Value.ValueData - COALESCE (PriceSite_DiscontAmount.ValueData, 0), 2)
+                                          WHEN PriceSite_DiscontStart.ValueData IS NOT NULL
+                                           AND PriceSite_DiscontEnd.ValueData IS NOT NULL  
+                                           AND PriceSite_DiscontStart.ValueData <= CURRENT_DATE
+                                           AND PriceSite_DiscontEnd.ValueData >= CURRENT_DATE
+                                           AND COALESCE (PriceSite_DiscontPercent.ValueData, 0) > 0 
+                                          THEN ROUND(Price_Value.ValueData * (100 - COALESCE (PriceSite_DiscontPercent.ValueData, 0)) / 100, 1)
+                                          ELSE ROUND(Price_Value.ValueData, 2) END::TFloat     AS Price
                                    , Price_Goods.ChildObjectId                  AS GoodsId
+                                   , PriceSite_DiscontStart.ValueData           AS DiscontStart
+                                   , PriceSite_DiscontEnd.ValueData             AS DiscontEnd
+                                   , PriceSite_DiscontAmount.ValueData          AS DiscontAmount
+                                   , PriceSite_DiscontPercent.ValueData         AS DiscontPercent
                               FROM Object AS Object_PriceSite
                                    INNER JOIN ObjectLink AS Price_Goods
                                            ON Price_Goods.ObjectId = Object_PriceSite.Id
@@ -711,6 +727,18 @@ BEGIN
                                    LEFT JOIN ObjectFloat AS Price_Value
                                           ON Price_Value.ObjectId = Object_PriceSite.Id
                                          AND Price_Value.DescId = zc_ObjectFloat_PriceSite_Value()
+                                   LEFT JOIN ObjectDate AS PriceSite_DiscontStart
+                                                        ON PriceSite_DiscontStart.ObjectId = Object_PriceSite.Id
+                                                       AND PriceSite_DiscontStart.DescId = zc_ObjectDate_PriceSite_DiscontStart()
+                                   LEFT JOIN ObjectDate AS PriceSite_DiscontEnd
+                                                        ON PriceSite_DiscontEnd.ObjectId = Object_PriceSite.Id
+                                                       AND PriceSite_DiscontEnd.DescId = zc_ObjectDate_PriceSite_DiscontEnd()
+                                   LEFT JOIN ObjectFloat AS PriceSite_DiscontAmount
+                                                         ON PriceSite_DiscontAmount.ObjectId = Object_PriceSite.Id
+                                                        AND PriceSite_DiscontAmount.DescId = zc_ObjectFloat_PriceSite_DiscontAmount()
+                                   LEFT JOIN ObjectFloat AS PriceSite_DiscontPercent
+                                                         ON PriceSite_DiscontPercent.ObjectId = Object_PriceSite.Id
+                                                        AND PriceSite_DiscontPercent.DescId = zc_ObjectFloat_PriceSite_DiscontPercent()
                               WHERE Object_PriceSite.DescId = zc_Object_PriceSite()
                                 AND Price_Goods.ChildObjectId NOT IN (SELECT DISTINCT ObjectLink_BarCode_Goods.ChildObjectId  AS GoodsId
                                                                       FROM Object AS Object_BarCode
@@ -1040,7 +1068,7 @@ $BODY$
 
 
 SELECT OBJECT_Unit.valuedata, OBJECT_Goods.valuedata, p.* FROM gpselect_goodsonunit_forsite ('16240371,8156016,377610,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377594,377574,15212291,12812109,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089', 
-                                                                                             '16202529' /* 6649, 33004, 5925154, 5925280, 16290423'*/, TRUE, zfCalc_UserSite()) AS p
+                                                                                             '15889,19456'  /*16202529'  6649, 33004, 5925154, 5925280, 16290423'*/, TRUE, zfCalc_UserSite()) AS p
  LEFT JOIN OBJECT AS OBJECT_Unit ON OBJECT_Unit.ID = p.UnitId
  LEFT JOIN OBJECT AS OBJECT_Goods ON OBJECT_Goods.ID = p.Id;
  

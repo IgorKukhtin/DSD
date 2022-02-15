@@ -64,6 +64,15 @@ type
     DiffSP2: TcxGridDBColumn;
     CheckPriceSiteDate: TcxGridDBColumn;
     bb: TdxBarButton;
+    spUpdate_Discont: TdsdStoredProc;
+    actSiteDiscontDialog: TExecuteDialog;
+    actUpdate_SiteDiscont: TdsdExecStoredProc;
+    mactSiteDiscont: TMultiAction;
+    dxBarButton8: TdxBarButton;
+    DiscontStart: TcxGridDBColumn;
+    DiscontEnd: TcxGridDBColumn;
+    DiscontAmount: TcxGridDBColumn;
+    DiscontPercent: TcxGridDBColumn;
   private
     { Private declarations }
   public

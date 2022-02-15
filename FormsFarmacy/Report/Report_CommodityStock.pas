@@ -44,6 +44,7 @@ type
     CommodityStockDelta: TcxGridDBColumn;
     SummaNot90: TcxGridDBColumn;
     SummaNotMCS90: TcxGridDBColumn;
+    MCSValue: TcxGridDBColumn;
   private
     { Private declarations }
   public

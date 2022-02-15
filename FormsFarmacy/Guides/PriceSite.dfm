@@ -14,6 +14,7 @@ inherited PriceSiteForm: TPriceSiteForm
     Height = 41
     Align = alTop
     TabOrder = 5
+    ExplicitTop = -3
     object cxLabel2: TcxLabel
       Left = 14
       Top = 9
@@ -465,6 +466,44 @@ inherited PriceSiteForm: TPriceSiteForm
             VisibleForCustomization = False
             Width = 30
           end
+          object DiscontStart: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1086' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'DiscontStart'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 69
+          end
+          object DiscontEnd: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'DiscontEnd'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
+          object DiscontAmount: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'DiscontAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 65
+          end
+          object DiscontPercent: TcxGridDBColumn
+            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'DiscontPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
         end
       end
     end
@@ -636,6 +675,75 @@ inherited PriceSiteForm: TPriceSiteForm
         end>
       isShowModal = False
     end
+    object actSiteDiscontDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSiteDiscontDialog'
+      FormName = 'TSiteDiscontDialogForm'
+      FormNameParam.Value = 'TSiteDiscontDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'DiscontSiteStart'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DiscontStart'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscontSiteEnd'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DiscontEnd'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscontPercentSite'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DiscontPercent'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscontAmountSite'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DiscontAmount'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_SiteDiscont: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Discont
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Discont
+        end>
+      Caption = 'actUpdate_SiteDiscont'
+    end
+    object mactSiteDiscont: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actSiteDiscontDialog
+      ActionList = <
+        item
+          Action = actUpdate_SiteDiscont
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091' '#1076#1083#1103' '#1089#1072#1081#1090#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091' '#1076#1083#1103' '#1089#1072#1081#1090#1072
+      ImageIndex = 43
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -731,6 +839,10 @@ inherited PriceSiteForm: TPriceSiteForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton8'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -820,6 +932,10 @@ inherited PriceSiteForm: TPriceSiteForm
       Visible = ivAlways
       ImageIndex = 27
     end
+    object dxBarButton8: TdxBarButton
+      Action = mactSiteDiscont
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
@@ -829,7 +945,31 @@ inherited PriceSiteForm: TPriceSiteForm
       end>
   end
   object FormParams: TdsdFormParams
-    Params = <>
+    Params = <
+      item
+        Name = 'DiscontStart'
+        Value = Null
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscontEnd'
+        Value = Null
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscontPercent'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscontAmount'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
     Left = 200
     Top = 104
   end
@@ -957,5 +1097,58 @@ inherited PriceSiteForm: TPriceSiteForm
       end>
     Left = 344
     Top = 192
+  end
+  object spUpdate_Discont: TdsdStoredProc
+    StoredProcName = 'gpUpdate_PriceSite_Discont'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscontStart'
+        Value = '01.01.2016'
+        Component = FormParams
+        ComponentItem = 'DiscontStart'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscontEnd'
+        Value = '01.01.2016'
+        Component = FormParams
+        ComponentItem = 'DiscontEnd'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscontPercent'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DiscontPercent'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscontAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DiscontAmount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 184
+    Top = 304
   end
 end
