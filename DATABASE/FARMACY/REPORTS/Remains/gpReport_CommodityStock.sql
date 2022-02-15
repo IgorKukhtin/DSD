@@ -11,6 +11,7 @@ RETURNS TABLE (GoodsId integer, GoodsCode integer, GoodsName TVarChar
              , Sale90 TFloat, AmountUnit90 integer, SaleDay90 TFloat, CommodityStock90 TFloat
              , CommodityStockDelta TFloat, SummaNot90 TFloat
              , isPromo Boolean, MakerName TVarChar
+             , MCSValue TFloat, SummaNotMCS90 TFloat
 ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -36,6 +37,36 @@ BEGIN
                     WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                       AND ObjectLink_Unit_Juridical.ChildObjectId <> 393053
                     )
+      , tmpObject_Price AS (SELECT 
+                                   MCS_Value.ValueData                     AS MCSValue
+                                 , Price_Goods.ChildObjectId               AS GoodsId
+                                 , ObjectLink_Price_Unit.ChildObjectId     AS UnitId
+                            FROM ObjectLink AS ObjectLink_Price_Unit
+                               LEFT JOIN ObjectLink AS Price_Goods
+                                                    ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                   AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                               LEFT JOIN ObjectFloat AS MCS_Value
+                                                     ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                    AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                            WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                              AND ObjectLink_Price_Unit.ChildObjectId in (SELECT DISTINCT tmpUnit.UnitId FROM tmpUnit)
+                            )   
+      , tmpSaleUnit AS (SELECT AnalysisContainerItem.GoodsId                         AS GoodsId
+                             , AnalysisContainerItem.UnitID                          AS UnitID
+                        FROM AnalysisContainerItem AS AnalysisContainerItem
+                        WHERE AnalysisContainerItem.OperDate >= CURRENT_DATE - INTERVAL '180 DAY'
+                          AND AnalysisContainerItem.UnitID in (SELECT DISTINCT tmpUnit.UnitId FROM tmpUnit)
+                          AND AnalysisContainerItem.AmountCheck > 0
+                        GROUP BY AnalysisContainerItem.GoodsId
+                               , AnalysisContainerItem.UnitID )
+      , tmpMCS AS (SELECT AnalysisContainerItem.GoodsId                         AS GoodsId
+                        , (SUM(tmpObject_Price.MCSValue)/COUNT(*))::TFloat      AS MCSValue
+                   FROM tmpSaleUnit AS AnalysisContainerItem
+                         
+                        LEFT JOIN tmpObject_Price ON tmpObject_Price.GoodsId   = AnalysisContainerItem.GoodsId 
+                                                 AND tmpObject_Price.UnitId    = AnalysisContainerItem.UnitId
+
+                    GROUP BY AnalysisContainerItem.GoodsId)
       , tmpContainer AS (SELECT AnalysisContainer.GoodsId
                               , 0::TFloat                    AS Sale   
                               , Sum(AnalysisContainer.Saldo) AS Saldo
@@ -73,7 +104,11 @@ BEGIN
                             , Sum(tmpContainer.Saldo)::TFloat             AS Saldo
                             , Max(COALESCE(tmpContainer.AmountUnit, 0))::Integer       AS AmountUnit
                             , Max(COALESCE(tmpContainer.AmountUnitSaldo, 0))::Integer  AS AmountUnitSaldo
+                            , Max(COALESCE(tmpMCS.MCSValue, 0))::TFloat   AS MCSValue
                        FROM tmpContainer
+                       
+                            LEFT JOIN tmpMCS ON tmpMCS.GoodsId = tmpContainer.GoodsId
+                            
                        GROUP BY tmpContainer.GoodsId
                        HAVING Sum(tmpContainer.Sale) <> 0 OR Sum(tmpContainer.Saldo) <> 0)
       , GoodsPromo AS (SELECT tmp.GoodsId   -- здесь товар "сети"
@@ -92,28 +127,20 @@ BEGIN
         , tmpRemains.AmountUnit
         , tmpRemains.AmountUnitSaldo
         , CASE WHEN tmpRemains.AmountUnit <> 0 
-               THEN tmpRemains.Sale / tmpRemains.AmountUnit / 180
+               THEN tmpRemains.Sale / tmpRemains.AmountUnit / 180.0
                ELSE 0 END::TFloat                                     AS SaleDay
-        , ROUND(CASE WHEN CASE WHEN tmpRemains.AmountUnit <> 0 
-                               THEN tmpRemains.Sale / tmpRemains.AmountUnit / 180
-                               ELSE 0 END <> 0 AND tmpRemains.AmountUnitSaldo <> 0
-                     THEN tmpRemains.Saldo / CASE WHEN tmpRemains.AmountUnit <> 0 
-                                                  THEN tmpRemains.Sale / tmpRemains.AmountUnit / 180
-                                                  ELSE 0 END / tmpRemains.AmountUnitSaldo
-                     ELSE 0 END)::TFloat
+        , ROUND(CASE WHEN tmpRemains.Sale <> 0
+                     THEN tmpRemains.Saldo / tmpRemains.Sale * 180.0
+                     ELSE 0 END)::TFloat                              AS CommodityStock    
 
         , tmpSale90.Sale
         , tmpSale90.AmountUnit
         , CASE WHEN tmpSale90.AmountUnit <> 0 
-               THEN tmpSale90.Sale / tmpSale90.AmountUnit / 180
+               THEN tmpSale90.Sale / tmpSale90.AmountUnit / 90.0
                ELSE 0 END::TFloat                                     AS SaleDay90
-        , ROUND(CASE WHEN CASE WHEN tmpSale90.AmountUnit <> 0 
-                               THEN tmpSale90.Sale / tmpSale90.AmountUnit / 180
-                               ELSE 0 END <> 0 AND tmpRemains.AmountUnitSaldo <> 0
-                     THEN tmpRemains.Saldo / CASE WHEN tmpSale90.AmountUnit <> 0 
-                                                  THEN tmpSale90.Sale / tmpSale90.AmountUnit / 180
-                                                  ELSE 0 END / tmpRemains.AmountUnitSaldo
-                     ELSE 0 END)::TFloat
+        , ROUND(CASE WHEN tmpSale90.Sale <> 0
+                     THEN tmpRemains.Saldo / tmpSale90.Sale * 90.0
+                     ELSE 0 END)::TFloat                              AS CommodityStock90
 
         , /*CASE WHEN ROUND(CASE WHEN CASE WHEN tmpRemains.AmountUnit <> 0 
                                THEN tmpRemains.Sale / tmpRemains.AmountUnit / 180
@@ -129,19 +156,12 @@ BEGIN
                                                   THEN tmpSale90.Sale / tmpSale90.AmountUnit / 180
                                                   ELSE 0 END / tmpRemains.AmountUnitSaldo
                      ELSE 0 END)> 0
-                THEN*/ ROUND(CASE WHEN CASE WHEN tmpRemains.AmountUnit <> 0 
-                               THEN tmpRemains.Sale / tmpRemains.AmountUnit / 180
-                               ELSE 0 END <> 0 AND tmpRemains.AmountUnitSaldo <> 0
-                     THEN tmpRemains.Saldo / CASE WHEN tmpRemains.AmountUnit <> 0 
-                                                  THEN tmpRemains.Sale / tmpRemains.AmountUnit / 180
-                                                  ELSE 0 END / tmpRemains.AmountUnitSaldo
+                THEN*/ 
+          ROUND(CASE WHEN tmpRemains.Sale <> 0
+                     THEN tmpRemains.Saldo / tmpRemains.Sale * 180.0
                      ELSE 0 END - 
-                 CASE WHEN CASE WHEN tmpSale90.AmountUnit <> 0 
-                               THEN tmpSale90.Sale / tmpSale90.AmountUnit / 180
-                               ELSE 0 END <> 0 AND tmpRemains.AmountUnitSaldo <> 0
-                     THEN tmpRemains.Saldo / CASE WHEN tmpSale90.AmountUnit <> 0 
-                                                  THEN tmpSale90.Sale / tmpSale90.AmountUnit / 180
-                                                  ELSE 0 END / tmpRemains.AmountUnitSaldo
+                CASE WHEN tmpSale90.Sale <> 0
+                     THEN tmpRemains.Saldo / tmpSale90.Sale * 90.0
                      ELSE 0 END)/* END*/ ::TFloat
         , CASE WHEN tmpRemains.Saldo > 0 
                THEN ROUND(/*CASE WHEN tmpRemains.Saldo - tmpSale90.Sale > 0 THEN*/ (tmpRemains.Saldo - tmpSale90.Sale) /*ELSE 0 END*/ *
@@ -149,6 +169,11 @@ BEGIN
                ELSE 0 END::TFloat
         , COALESCE (GoodsPromo.GoodsId, 0) <> 0
         , Object_Maker.ValueData
+        , tmpRemains.MCSValue
+        , CASE WHEN tmpRemains.Saldo > 0 
+               THEN ROUND((tmpRemains.Saldo - tmpSale90.Sale - tmpRemains.MCSValue) *
+                          tmpRemains.Summa / tmpRemains.Saldo, 2)
+               ELSE 0 END::TFloat AS SummaNotMCS90
    FROM tmpRemains
    
         LEFT JOIN tmpSale90 ON tmpSale90.GoodsId = tmpRemains.GoodsId
@@ -175,4 +200,4 @@ $BODY$
 
 -- тест
 -- 
-select * from gpReport_CommodityStock ('3'); -- where GoodsId = 2408
+select * from gpReport_CommodityStock ('3') -- where GoodsId = 58465

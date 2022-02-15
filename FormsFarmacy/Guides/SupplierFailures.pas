@@ -41,6 +41,10 @@ type
     dxBarButton2: TdxBarButton;
     actProtocolOpenForm: TdsdOpenForm;
     dxBarButton3: TdxBarButton;
+    DateUpdate: TcxGridDBColumn;
+    UserUpdate: TcxGridDBColumn;
+    mactSetErasedAll: TMultiAction;
+    dxBarButton4: TdxBarButton;
   private
     { Private declarations }
   public

@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar
              , ContractCode Integer, ContractName TVarChar
              , AreaId Integer, AreaCode Integer, AreaName TVarChar
+             , DateUpdate TDateTime, UserUpdate TVarChar
              ) AS
 $BODY$BEGIN
    
@@ -19,6 +20,18 @@ $BODY$BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Area()());
 
    RETURN QUERY 
+   WITH tmpProtocol AS (SELECT Object_SupplierFailures.Id                        AS Id 
+                             , ObjectProtocol.OperDate
+                             , ObjectProtocol.UserId
+                             , ROW_NUMBER() OVER (PARTITION BY ObjectProtocol.ObjectId ORDER BY ObjectProtocol.Id DESC) AS Ord
+                        FROM Object AS Object_SupplierFailures
+                        
+                             INNER JOIN ObjectProtocol ON ObjectProtocol.ObjectId = Object_SupplierFailures.Id    
+                              
+                        WHERE Object_SupplierFailures.DescId = zc_Object_SupplierFailures()
+                          AND (Object_SupplierFailures.isErased = FALSE OR inIsErased = TRUE)
+                       )
+   
    SELECT Object_SupplierFailures.Id                        AS Id 
         , Object_SupplierFailures.ObjectCode                AS Code
         , Object_SupplierFailures.ValueData                 AS Name
@@ -39,6 +52,9 @@ $BODY$BEGIN
         , Object_Area.Id                                    AS AreaId
         , Object_Area.ObjectCode                            AS AreaCode
         , Object_Area.ValueData                             AS AreaName
+        
+        , tmpProtocol.OperDate                              AS DateUpdate
+        , Object_User.ValueData                             AS UserUpdate
    FROM Object AS Object_SupplierFailures
         
         LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Goods
@@ -61,6 +77,11 @@ $BODY$BEGIN
                              ON ObjectLink_BankAccount_Area.ObjectId = Object_SupplierFailures.Id
                             AND ObjectLink_BankAccount_Area.DescId = zc_ObjectLink_SupplierFailures_Area()
         LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_BankAccount_Area.ChildObjectId
+        
+        LEFT JOIN tmpProtocol ON tmpProtocol.ID = Object_SupplierFailures.Id
+                             AND tmpProtocol.Ord = 1
+
+        LEFT JOIN Object AS Object_User ON Object_User.Id = tmpProtocol.UserId
         
    WHERE Object_SupplierFailures.DescId = zc_Object_SupplierFailures()
      AND (Object_SupplierFailures.isErased = FALSE OR inIsErased = TRUE);

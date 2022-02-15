@@ -43,6 +43,7 @@ type
     MakerName: TcxGridDBColumn;
     CommodityStockDelta: TcxGridDBColumn;
     SummaNot90: TcxGridDBColumn;
+    SummaNotMCS90: TcxGridDBColumn;
   private
     { Private declarations }
   public

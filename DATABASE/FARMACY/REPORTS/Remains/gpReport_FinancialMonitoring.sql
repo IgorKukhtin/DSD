@@ -173,7 +173,7 @@ BEGIN
 
                    LEFT JOIN tmpSale AS Sale 
                                      ON Sale.JuridicalId = tmpSale.JuridicalId
-                                    AND Sale.OperDate >= tmpSale.OperDate 
+                                    AND Sale.OperDate > tmpSale.OperDate
                    
               GROUP BY tmpSale.JuridicalId
                      , tmpSale.OperDate   
@@ -446,6 +446,5 @@ $BODY$
 
 -- тест
 -- BEGIN TRANSACTION;
--- 
-select * from gpReport_FinancialMonitoring(inStartDate := ('01.12.2021')::TDateTime , inEndDate := ('31.12.2021')::TDateTime ,  inSession := '3');
+-- select * from gpReport_FinancialMonitoring(inStartDate := ('01.12.2021')::TDateTime , inEndDate := ('31.12.2021')::TDateTime ,  inSession := '3');
 -- COMMIT TRANSACTION;

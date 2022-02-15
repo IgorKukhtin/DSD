@@ -609,14 +609,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_ConditionsKeep_ColdSUN() RETURNS Intege
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_ConditionsKeep(), 'zc_ObjectDate_ConditionsKeep_ColdSUN', 'Холод для СУН' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ConditionsKeep_ColdSUN');
 
-CREATE OR REPLACE FUNCTION zc_ObjectDate_Goods_ColdSUN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_ColdSUN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Goods_DiscontSiteStart() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_DiscontSiteStart'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
-  SELECT zc_Object_Goods(), 'zc_ObjectDate_Goods_ColdSUN', 'Холод для СУН' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_ColdSUN');
+  SELECT zc_Object_Goods(), 'zc_ObjectDate_Goods_DiscontSiteStart', 'Дата начало скидки на сайте' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_DiscontSiteStart');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Goods_DiscontSiteEnd() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_DiscontSiteEnd'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectDate_Goods_DiscontSiteEnd', 'Дата окончания скидки на сайте' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_DiscontSiteEnd');
 
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
- 02.02.22                                                                                     * zc_ObjectDate_ConditionsKeep_ColdSUN
+ 15.02.22                                                                                     * zc_ObjectDate_Goods_DiscontSiteStart, zc_ObjectDate_Goods_DiscontSiteEnd
  20.01.22                                                                                     * zc_ObjectDate_PickUpLogsAndDBF_DateLoaded
  25.11.21                                                                                     * zc_ObjectDate_SurchargeWages_...
  07.10.21                                                                                     * zc_ObjectDate_Unit_Exam

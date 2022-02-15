@@ -2,7 +2,6 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
   Caption = #1054#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
   ClientHeight = 339
   ClientWidth = 942
-  AddOnFormData.isAlwaysRefresh = False
   ExplicitWidth = 958
   ExplicitHeight = 378
   PixelsPerInch = 96
@@ -123,6 +122,22 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
             Options.Editing = False
             Width = 52
           end
+          object DateUpdate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'DateUpdate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 117
+          end
+          object UserUpdate: TcxGridDBColumn
+            Caption = #1050#1090#1086' '#1080#1079#1084#1077#1085#1080#1083
+            DataBinding.FieldName = 'UserUpdate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 118
+          end
         end
       end
       object cxSplitter1: TcxSplitter
@@ -236,6 +251,20 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
         end>
       isShowModal = False
     end
+    object mactSetErasedAll: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = dsdSetErased
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1089#1090#1088#1086#1082#1080'?'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1089#1090#1088#1086#1082#1080
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1089#1090#1088#1086#1082#1080
+      ImageIndex = 52
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -307,11 +336,15 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarButton4'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
     end
     inherited dxBarStatic: TdxBarStatic
@@ -367,6 +400,10 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
     end
     object dxBarButton3: TdxBarButton
       Action = actProtocolOpenForm
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = mactSetErasedAll
       Category = 0
     end
   end

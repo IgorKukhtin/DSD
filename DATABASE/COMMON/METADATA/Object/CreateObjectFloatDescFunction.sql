@@ -2208,10 +2208,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_Height() RETURNS Integer AS $BODY
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_Height', 'Высота' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Height');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_DiscontAmountSite() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_DiscontAmountSite'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_DiscontAmountSite', 'Сумма скидки на сайте' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_DiscontAmountSite');
+  
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_DiscontPercentSite() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_DiscontPercentSite'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_DiscontPercentSite', 'Процент скидки на сайте' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_DiscontPercentSite');
+  
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 15.02.22                                                                                      * zc_ObjectFloat_Goods_DiscontAmountSite, zc_ObjectFloat_Goods_DiscontPercentSite
  11.02.22                                                                                      * c_ObjectFloat_Unit_...
  22.12.21         * zc_ObjectFloat_MemberMinus_Tax
  02.12.21                                                                                      * zc_ObjectFloat_CashSettings_PercentUntilNextSUN

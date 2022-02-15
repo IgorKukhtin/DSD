@@ -28,6 +28,14 @@ BEGIN
        vbUnitKey := '0';
     END IF;
     vbUnitId := vbUnitKey::Integer;
+    
+    
+/*    IF inOperDate = ('01.01.2014')::TDateTime 
+    THEN
+      inOperDate := inOperDate + INTERVAL '2966 DAY';
+      inDateStart := inDateStart + INTERVAL '2966 DAY';
+      inDateEnd := inDateEnd + INTERVAL '2966 DAY';
+    END IF;*/
 
     -- проверка наличия графика
     IF NOT EXISTS(SELECT 1 FROM Movement
