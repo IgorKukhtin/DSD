@@ -263,11 +263,11 @@ begin
   exit;
   LoadReportFromFile('Aкт сверки по контрагенту (тара)', ReportPath + '\Отчеты (товарные)\Aкт сверки по контрагенту (тара).fr3');
   exit;
-  }
+
     LoadReportFromFile('Акт сверки (бухгалтерский)Пакет', ReportPath + '\Отчеты (финансы)\Акт сверки (бухгалтерский)Пакет.fr3');
   exit;
 
-  {
+
   LoadReportFromFile('Акт сверки (бухгалтерский)', ReportPath + '\Отчеты (финансы)\Акт сверки (бухгалтерский).fr3');
   exit;
   LoadReportFromFile('Акт сверки (в валюте)', ReportPath + '\Отчеты (финансы)\Акт сверки (в валюте).fr3');
@@ -410,10 +410,10 @@ begin
 
   LoadReportFromFile('Дефростер по партиям', ReportPath + '\Отчеты (производство)\Дефростер по партиям.fr3');
 
-  }
+
   LoadReportFromFile('Дефростер(итог)', ReportPath + '\Отчеты (производство)\Дефростер(итог).fr3');
   exit;
-  {
+
   LoadReportFromFile('Отчет по упаковке', ReportPath + '\Отчеты (производство)\Отчет по упаковке.fr3');
   exit;
 
@@ -550,8 +550,12 @@ begin
   LoadReportFromFile('PrintMovement_Tax160321', ReportPath + '\Товарный Учет\PrintMovement_Tax160321.fr3');
   LoadReportFromFile('PrintMovement_TaxCorrective160321', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective160321.fr3');
   exit;
+  }
+  LoadReportFromFile('PrintMovement_Tax170222', ReportPath + '\Товарный Учет\PrintMovement_Tax170222.fr3');
+  LoadReportFromFile('PrintMovement_TaxCorrective170222', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective170222.fr3');
+  exit;
 
-  LoadReportFromFile('PrintMovement_Tax0321', ReportPath + '\Товарный Учет\PrintMovement_Tax0321.fr3');
+  {LoadReportFromFile('PrintMovement_Tax0321', ReportPath + '\Товарный Учет\PrintMovement_Tax0321.fr3');
   exit;
 
   LoadReportFromFile('PrintMovement_TaxCorrective', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective.fr3');
