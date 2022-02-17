@@ -328,10 +328,19 @@ CREATE OR REPLACE FUNCTION zc_Object_DocTag() RETURNS Integer AS $BODY$BEGIN RET
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_DocTag', 'Категория Документации' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DocTag');
 
+CREATE OR REPLACE FUNCTION zc_Object_MeasureCode() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_MeasureCode'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_MeasureCode', 'Сокращенный код ед. изм.' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MeasureCode');
+
+CREATE OR REPLACE FUNCTION zc_Object_TranslateObject() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_TranslateObject'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_TranslateObject', 'Перевод Справочников' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_TranslateObject');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.02.22         * zc_Object_MeasureCode
+                    zc_Object_TranslateObject
  21.04.21         * zc_Object_ProductDocument
                     zc_Object_ProductPhoto
  20.04.21         * zc_Object_DocTag

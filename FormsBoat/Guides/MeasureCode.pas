@@ -1,4 +1,4 @@
-unit Measure;
+unit MeasureCode;
 
 interface
 
@@ -11,11 +11,22 @@ uses
   cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
   Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
   cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxContainer,
-  dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel, Vcl.ExtCtrls;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxContainer, dsdGuides, cxLabel, cxTextEdit, cxMaskEdit, cxButtonEdit,
+  Vcl.ExtCtrls;
 
 type
-  TMeasureForm = class(TParentForm)
+  TMeasureCodeForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -26,13 +37,10 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
     dsdGridToExcel: TdsdGridToExcel;
@@ -41,24 +49,22 @@ type
     spErasedUnErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clErased: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    InternalCode: TcxGridDBColumn;
-    InternalName: TcxGridDBColumn;
+    actInsert: TdsdInsertUpdateAction;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    actSetErased: TdsdUpdateErased;
+    actSetUnErased: TdsdUpdateErased;
     actShowAll: TBooleanStoredProcAction;
-    bbactShowAll: TdxBarButton;
+    bbShowAll: TdxBarButton;
     GuidesLanguage: TdsdGuides;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
-    dxBarControlContainerItem2: TdxBarControlContainerItem;
-    Name_translate: TcxGridDBColumn;
-    MeasureCodeName_translate: TcxGridDBColumn;
-    MeasureCodeName: TcxGridDBColumn;
+    bbLanguage: TdxBarControlContainerItem;
     RefreshDispatcher: TRefreshDispatcher;
     Panel: TPanel;
     cxLabel1: TcxLabel;
@@ -74,6 +80,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TMeasureForm);
+  RegisterClass(TMeasureCodeForm);
 
 end.

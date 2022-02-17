@@ -1,9 +1,9 @@
-object MeasureForm: TMeasureForm
+object MeasureCodeForm: TMeasureCodeForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1082#1088#1072#1097#1077#1085#1085#1099#1081' '#1082#1086#1076' '#1077#1076'. '#1080#1079#1084'.>'
   ClientHeight = 376
-  ClientWidth = 735
+  ClientWidth = 627
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,26 +12,26 @@ object MeasureForm: TMeasureForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 59
-    Width = 735
+    Width = 627
     Height = 317
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
     ExplicitTop = 26
-    ExplicitWidth = 390
     ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -42,70 +42,61 @@ object MeasureForm: TMeasureForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 69
+        Options.Editing = False
+        Width = 73
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 143
+        Options.Editing = False
+        Width = 172
       end
       object Name_translate: TcxGridDBColumn
         Caption = #1055#1077#1088#1077#1074#1086#1076
         DataBinding.FieldName = 'Name_translate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 140
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 279
       end
-      object clErased: TcxGridDBColumn
+      object InsertDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
+        DataBinding.FieldName = 'InsertDate'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object InsertName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+        DataBinding.FieldName = 'InsertName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 78
-      end
-      object InternalCode: TcxGridDBColumn
-        Caption = #1052#1077#1078#1076#1091#1085#1072#1088#1086#1076#1085#1099#1081' '#1082#1086#1076
-        DataBinding.FieldName = 'InternalCode'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 70
-      end
-      object InternalName: TcxGridDBColumn
-        Caption = #1052#1077#1078#1076#1091#1085#1072#1088#1086#1076#1085#1086#1077' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'InternalName'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 70
-      end
-      object MeasureCodeName: TcxGridDBColumn
-        Caption = #1057#1086#1082#1088'. '#1082#1086#1076' '#1077#1076'. '#1080#1079#1084'.'
-        DataBinding.FieldName = 'MeasureCodeName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1086#1082#1088#1072#1097#1077#1085#1085#1099#1081' '#1082#1086#1076' '#1077#1076'. '#1080#1079#1084'.'
-        Width = 116
-      end
-      object MeasureCodeName_translate: TcxGridDBColumn
-        Caption = #1055#1077#1088#1077#1074#1086#1076' ('#1057#1086#1082#1088'. '#1082#1086#1076' '#1077#1076'. '#1080#1079#1084'.)'
-        DataBinding.FieldName = 'MeasureCodeName_translate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 122
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -115,18 +106,19 @@ object MeasureForm: TMeasureForm
   object Panel: TPanel
     Left = 0
     Top = 0
-    Width = 735
+    Width = 627
     Height = 33
     Align = alTop
     TabOrder = 5
-    ExplicitTop = -14
+    ExplicitLeft = -8
+    ExplicitTop = -6
     object cxLabel1: TcxLabel
       Left = 9
       Top = 7
       Caption = #1071#1079#1099#1082' '#1087#1077#1088#1077#1074#1086#1076#1072':'
     end
     object edLanguage: TcxButtonEdit
-      Left = 101
+      Left = 100
       Top = 6
       Properties.Buttons = <
         item
@@ -161,8 +153,8 @@ object MeasureForm: TMeasureForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 344
-    Top = 128
+    Left = 240
+    Top = 88
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -181,8 +173,8 @@ object MeasureForm: TMeasureForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 264
-    Top = 80
+    Left = 152
+    Top = 88
     DockControlHeights = (
       0
       0
@@ -217,13 +209,17 @@ object MeasureForm: TMeasureForm
           ItemName = 'bbSetUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
-          ItemName = 'bbactShowAll'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
         end
         item
           Visible = True
@@ -232,6 +228,19 @@ object MeasureForm: TMeasureForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoice'
         end
         item
           Visible = True
@@ -252,11 +261,6 @@ object MeasureForm: TMeasureForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbChoice'
         end>
       OneOnRow = True
       Row = 0
@@ -277,11 +281,11 @@ object MeasureForm: TMeasureForm
       Category = 0
     end
     object bbSetErased: TdxBarButton
-      Action = dsdSetErased
+      Action = actSetErased
       Category = 0
     end
     object bbSetUnErased: TdxBarButton
-      Action = dsdSetUnErased
+      Action = actSetUnErased
       Category = 0
     end
     object bbToExcel: TdxBarButton
@@ -302,7 +306,7 @@ object MeasureForm: TMeasureForm
       Action = ProtocolOpenForm
       Category = 0
     end
-    object bbactShowAll: TdxBarButton
+    object bbShowAll: TdxBarButton
       Action = actShowAll
       Category = 0
     end
@@ -312,40 +316,23 @@ object MeasureForm: TMeasureForm
       Hint = 'New Item'
       Visible = ivAlways
     end
-    object dxBarControlContainerItem2: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object bbLanguage: TdxBarControlContainerItem
+      Action = actRefresh
       Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
     end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 304
-    Top = 112
-    object actRefresh: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = dsdStoredProc
-      StoredProcList = <
-        item
-          StoredProc = dsdStoredProc
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
+    Left = 264
+    Top = 136
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TMeasureEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TMeasureCodeEditForm'
+      FormNameParam.Value = 'TMeasureCodeEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -354,10 +341,24 @@ object MeasureForm: TMeasureForm
           Value = Null
           MultiSelectSeparator = ','
         end>
-      isShowModal = False
+      isShowModal = True
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
+    end
+    object actRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -366,8 +367,8 @@ object MeasureForm: TMeasureForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TMeasureEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TMeasureCodeEditForm'
+      FormNameParam.Value = 'TMeasureCodeEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -385,37 +386,6 @@ object MeasureForm: TMeasureForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object dsdSetErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 2
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      DataSource = DataSource
-    end
-    object dsdSetUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 32776
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = DataSource
-    end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
@@ -425,7 +395,6 @@ object MeasureForm: TMeasureForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftString
           MultiSelectSeparator = ','
         end
         item
@@ -480,13 +449,44 @@ object MeasureForm: TMeasureForm
         end>
       isShowModal = False
     end
+    object actSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 8238
+      ErasedFieldName = 'isErased'
+      DataSource = DataSource
+    end
+    object actSetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 8238
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DataSource
+    end
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
@@ -500,8 +500,8 @@ object MeasureForm: TMeasureForm
       ImageIndexFalse = 63
     end
   end
-  object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Measure'
+  object spSelect: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_MeasureCode'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -526,7 +526,7 @@ object MeasureForm: TMeasureForm
       end>
     PackSize = 1
     Left = 144
-    Top = 104
+    Top = 152
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -542,12 +542,12 @@ object MeasureForm: TMeasureForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 96
-    Top = 176
+    Left = 352
+    Top = 208
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 288
-    Top = 200
+    Left = 176
+    Top = 216
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -577,8 +577,8 @@ object MeasureForm: TMeasureForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 136
-    Top = 224
+    Left = 48
+    Top = 216
   end
   object GuidesLanguage: TdsdGuides
     KeyField = 'Id'
@@ -618,7 +618,7 @@ object MeasureForm: TMeasureForm
       item
         Component = GuidesLanguage
       end>
-    Left = 433
-    Top = 152
+    Left = 505
+    Top = 184
   end
 end

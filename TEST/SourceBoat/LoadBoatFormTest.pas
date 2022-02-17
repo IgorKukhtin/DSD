@@ -42,6 +42,7 @@ type
     procedure LoadLossFormTest;
     procedure LoadMemberFormTest;
     procedure LoadMeasureFormTest;
+    procedure LoadMeasureCodeFormTest;
     procedure LoadModelEtiketenFormTest;
     procedure LoadOrderClientFormTest;
     procedure LoadOrderPartnerFormTest;
@@ -73,6 +74,7 @@ type
     procedure LoadServiceFormTest;
     procedure LoadSendFormTest;
     procedure LoadTranslateMessageFormTest;
+    procedure LoadTranslateObjectFormTest;
     procedure LoadTranslateWordFormTest;
     procedure LoadUnionFormTest;
     procedure LoadUnitFormTest;
@@ -222,6 +224,16 @@ procedure TLoadFormTest.LoadTranslateMessageFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTranslateMessageForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTranslateMessageForm');
+end;
+
+procedure TLoadFormTest.LoadTranslateObjectFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTranslateObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTranslateObjectForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTranslateObjectEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTranslateObjectEditForm');
+
+
 end;
 
 procedure TLoadFormTest.LoadTranslateWordFormTest;
@@ -438,6 +450,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMeasureEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMeasureEditForm');
 end;
+
+procedure TLoadFormTest.LoadMeasureCodeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMeasureCodeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMeasureCodeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMeasureCodeEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMeasureCodeEditForm');
+end;
+
 procedure TLoadFormTest.LoadMemberFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberForm'));
@@ -751,6 +772,9 @@ end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_TranslateObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnion_TranslateObjectForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_OrderJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnion_OrderJournalChoiceForm');
 

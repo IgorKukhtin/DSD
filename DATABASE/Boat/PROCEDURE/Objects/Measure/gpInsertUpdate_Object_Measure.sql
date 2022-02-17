@@ -1,14 +1,16 @@
 -- Function: gpInsertUpdate_Object_Measure (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Measure (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Measure (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Measure (Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Measure(
- INOUT ioId           Integer,       -- Ключ объекта <Единицы измерения>    
- INOUT ioCode         Integer,       -- Код объекта <Единицы измерения>     
-    IN inName         TVarChar,      -- Название объекта <Единицы измерения>
-    IN inInternalCode TVarChar,      -- Международный код
-    IN inInternalName TVarChar,      -- Международное наименование
-    IN inSession      TVarChar       -- сессия пользователя
+ INOUT ioId               Integer,       -- Ключ объекта <Единицы измерения>    
+ INOUT ioCode             Integer,       -- Код объекта <Единицы измерения>     
+    IN inName             TVarChar,      -- Название объекта <Единицы измерения>
+    IN inInternalCode     TVarChar,      -- Международный код
+    IN inInternalName     TVarChar,      -- Международное наименование
+    IN inMeasureCodeId    Integer ,      -- 
+    IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
 AS
@@ -40,6 +42,9 @@ BEGIN
    -- сохранили Международное наименование
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Measure_InternalName(), ioId, inInternalName);
 
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Measure_MeasureCode(), ioId, inMeasureCodeId);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -52,6 +57,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+17.02.22          *
 13.05.17                                                          *
 08.05.17                                                          *
 02.03.17                                                          *

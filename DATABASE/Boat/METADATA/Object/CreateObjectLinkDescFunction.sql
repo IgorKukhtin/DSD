@@ -410,10 +410,24 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_AccountDirection() RETURNS Integer
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Unit_AccountDirection', 'Связь Подразделения с Аналитики счетов - направления', zc_Object_Unit(), zc_Object_AccountDirection() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_AccountDirection');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Measure_MeasureCode() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Measure_MeasureCode'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Measure_MeasureCode', 'Сокращенный код ед. изм.', zc_Object_Measure(), zc_Object_MeasureCode() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Measure_MeasureCode');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_TranslateObject_Language() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_TranslateObject_Language'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_TranslateObject_Language', 'Язык перевода', zc_Object_TranslateObject(), zc_Object_Language() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_TranslateObject_Language');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_TranslateObject_Object() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_TranslateObject_Object'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_TranslateObject_Object', 'Сокращенный код ед. изм.', zc_Object_TranslateObject(), zc_Object_MeasureCode() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_TranslateObject_Object');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.02.22        * zc_ObjectLink_Measure_MeasureCode
+                   zc_ObjectLink_TranslateObject_Object
+                   zc_ObjectLink_TranslateObject_Language
  22.09.21         * zc_ObjectLink_Unit_AccountDirection
  17.06.21         * zc_ObjectLink_Client_PaidKind
                     zc_ObjectLink_Partner_PaidKind
