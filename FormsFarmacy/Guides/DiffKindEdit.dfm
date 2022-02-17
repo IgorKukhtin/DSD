@@ -28,7 +28,7 @@
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 63
+    Left = 67
     Top = 252
     Width = 75
     Height = 25
@@ -38,7 +38,7 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 213
+    Left = 205
     Top = 252
     Width = 75
     Height = 25
@@ -136,6 +136,19 @@
     ShowHint = True
     TabOrder = 15
     Width = 175
+  end
+  object cePackages: TcxCurrencyEdit
+    Left = 200
+    Top = 216
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    TabOrder = 16
+    Width = 90
+  end
+  object cxLabel5: TcxLabel
+    Left = 200
+    Top = 193
+    Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091#1087#1072#1082#1086#1074#1086#1082
   end
   object ActionList: TActionList
     Left = 120
@@ -252,6 +265,14 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPackages'
+        Value = Null
+        Component = cePackages
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -341,14 +362,21 @@
         Component = cbFindLeftovers
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Packages'
+        Value = Null
+        Component = cePackages
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 272
     Top = 99
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 184
-    Top = 170
+    Left = 176
+    Top = 194
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <

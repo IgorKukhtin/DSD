@@ -6,6 +6,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceChange (Integer, Integer, Int
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceChange (Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceChange (Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceChange (Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceChange (Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PriceChange(
  INOUT ioId                       Integer   ,    -- ключ объекта < Цена >
@@ -22,6 +23,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PriceChange(
     IN inPercentMarkup            TFloat    ,    -- % наценки
     IN inMultiplicity             TFloat    ,    -- кратность
     IN inFixEndDate               TDateTime ,    -- Дата окончания действия скидки
+    IN inPartionDateKindID        Integer   ,    -- Типы срок/не срок
     IN inSession                  TVarChar       -- сессия пользователя
 )
 AS
@@ -209,6 +211,9 @@ BEGIN
     PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_PriceChange_Multiplicity(), ioId, inMultiplicity);
     -- сохранили св-во <Дата окончания действия скидки>
     PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_PriceChange_FixEndDate(), ioId, inFixEndDate);
+    
+    -- сохранили св-во <Типы срок/не срок>
+    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PriceChange_PartionDateKind(), ioId, inPartionDateKindID);
     
 
     -- сохранили историю

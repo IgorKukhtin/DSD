@@ -29,6 +29,21 @@ inherited ListGoodsForm: TListGoodsForm
           Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = colGoodsName
+        end
+        item
+          Format = ',0.###;-,0.###; ;'
+          Kind = skSum
+          Column = colAmoutDayUser
+        end
+        item
+          Format = ',0.###;-,0.###; ;'
+          Kind = skSum
+          Column = colAmountDiff
+        end
+        item
+          Format = ',0.###;-,0.###; ;'
+          Kind = skSum
+          Column = colAmountDiffPrev
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsData.CancelOnExit = False
@@ -67,26 +82,29 @@ inherited ListGoodsForm: TListGoodsForm
       end
       object colAmoutDayUser: TcxGridDBColumn
         Caption = #1053#1072#1073#1080#1090#1086' '#1074#1072#1084#1080' '#1089#1077#1075#1086#1076#1085#1103
-        PropertiesClassName = 'TcxTextEditProperties'
-        Properties.Alignment.Horz = taRightJustify
-        OnGetDisplayText = colAmoutDayUserGetDisplayText
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.###;-,0.###; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 70
       end
       object colAmountDiff: TcxGridDBColumn
         Caption = #1054#1090#1082#1072#1079#1099' '#1079#1072' '#1089#1077#1075#1086#1076#1085#1103'.'
-        PropertiesClassName = 'TcxTextEditProperties'
-        Properties.Alignment.Horz = taRightJustify
-        OnGetDisplayText = colAmountDiffGetDisplayText
+        DataBinding.FieldName = 'AmoutDiff'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.###;-,0.###; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 62
       end
       object colAmountDiffPrev: TcxGridDBColumn
         Caption = #1054#1090#1082#1072#1079#1099' '#1079#1072' '#1074#1095#1077#1088#1072
-        PropertiesClassName = 'TcxTextEditProperties'
-        OnGetDisplayText = colAmountDiffPrevGetDisplayText
+        DataBinding.FieldName = 'AmountDiffPrev'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.###;-,0.###; ;'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 62

@@ -15,7 +15,6 @@ inherited PriceChangeForm: TPriceChangeForm
     Height = 56
     Align = alTop
     TabOrder = 6
-    ExplicitWidth = 767
     object deOperDate: TcxDateEdit
       Left = 750
       Top = 6
@@ -57,17 +56,17 @@ inherited PriceChangeForm: TPriceChangeForm
     Width = 866
     Height = 331
     ExplicitTop = 82
-    ExplicitWidth = 767
+    ExplicitWidth = 866
     ExplicitHeight = 331
     ClientRectBottom = 331
     ClientRectRight = 866
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 767
+      ExplicitWidth = 866
       ExplicitHeight = 331
       inherited cxGrid: TcxGrid
         Width = 866
         Height = 331
-        ExplicitWidth = 767
+        ExplicitWidth = 866
         ExplicitHeight = 331
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -250,6 +249,26 @@ inherited PriceChangeForm: TPriceChangeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 83
+          end
+          object PartionDateKindName: TcxGridDBColumn
+            Caption = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1090#1086#1074#1072#1088#1086#1074' '#1089' '#1090#1080#1087#1086#1084' '#1089#1088#1086#1082#1072
+            DataBinding.FieldName = 'PartionDateKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoicePartionDateGoodsList
+                Default = True
+                Kind = bkEllipsis
+              end
+              item
+                Action = actClearPartionDateGoods
+                Kind = bkGlyph
+              end>
+            Properties.Images = dmMain.ImageList
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
           end
           object Goods_PercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1087#1086' '#1089#1077#1090#1080')'
@@ -862,6 +881,55 @@ inherited PriceChangeForm: TPriceChangeForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actChoicePartionDateGoodsList: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoicePartionDateGoodsList'
+      FormName = 'TPartionDateKindForm'
+      FormNameParam.Value = 'TPartionDateKindForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'PartionDateKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionDateKindName'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actClearPartionDateGoods: TdsdSetDefaultParams
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1059#1073#1088#1072#1090#1100' '#1058#1080#1087#1099' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082
+      Hint = #1059#1073#1088#1072#1090#1100' '#1058#1080#1087#1099' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082
+      ImageIndex = 52
+      DefaultParams = <
+        item
+          Param.Value = Null
+          Param.Component = MasterCDS
+          Param.ComponentItem = 'PartionDateKindId'
+          Param.MultiSelectSeparator = ','
+          Value = Null
+        end
+        item
+          Param.Value = Null
+          Param.Component = MasterCDS
+          Param.ComponentItem = 'PartionDateKindName'
+          Param.DataType = ftString
+          Param.MultiSelectSeparator = ','
+          Value = Null
+        end>
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1384,6 +1452,14 @@ inherited PriceChangeForm: TPriceChangeForm
         Component = MasterCDS
         ComponentItem = 'FixEndDate'
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionDateKindID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionDateKindID'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

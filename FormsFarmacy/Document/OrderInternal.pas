@@ -163,6 +163,8 @@ type
     spPUSHZeroingSUA: TdsdStoredProc;
     actListDiffFormVIPSend: TdsdOpenForm;
     bbListDiffFormVIPSend: TdxBarButton;
+    SupplierFailuresColor: TcxGridDBColumn;
+    colSupplierFailuresColor: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -13,17 +13,60 @@ RETURNS TABLE (Id Integer, UnitCode Integer, UnitName TVarChar, TypeSUN TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , Price TFloat, Amount TFloat, Summa TFloat, Formed TFloat, PercentZeroing TFloat
              , PercentZeroingRange TFloat
-             , Sale TFloat
+             , Sale TFloat, Efficiency TFloat
              , Color_UntilNextSUN Integer
               )
 
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbAmountSale TFloat;
+  DECLARE vbAmountIn TFloat;
 BEGIN
   -- проверка прав пользователя на вызов процедуры
   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Send());
   vbUserId:= lpGetUserBySession (inSession);
+  
+    WITH 
+        tmpSUN_Container_All AS (SELECT MIContainer.ContainerId
+                                      , SUM (MIContainer.Amount)                                             AS AmountIn
+                                 FROM MovementItemContainer AS MIContainer
+                                      INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                                ON MovementBoolean_SUN.MovementId = MIContainer.MovementId
+                                                               AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+                                                               AND MovementBoolean_SUN.ValueData = TRUE
+                                WHERE MIContainer.DescId = zc_MIContainer_Count()
+                                  AND MIContainer.MovementDescId = zc_Movement_Send()
+                                  AND MIContainer.isActive = TRUE
+                                  AND MIContainer.Amount > 0
+                                  AND MIContainer.OperDate > '01.08.2018'
+                                  AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY' 
+                                GROUP BY MIContainer.ContainerId
+                                )
+        -- все продажи за период
+      , tmpContainer_Check AS (SELECT MIContainer.ContainerId                     AS ContainerId
+                                    , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
+                               FROM tmpSUN_Container_All
+                                    INNER JOIN MovementItemContainer AS MIContainer
+                                                                     ON MIContainer.ContainerId = tmpSUN_Container_All.ContainerId
+                                                                    AND MIContainer.DescId = zc_MIContainer_Count()
+                                                                    AND MIContainer.MovementDescId = zc_Movement_Check()
+                                                                    AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY' 
+                               GROUP BY MIContainer.ContainerId
+                               HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) > 0
+                               )
+
+   
+ 
+        -- результат
+        SELECT Sum(tmpContainer_Check.Amount)::TFloat       AS Amount
+             , Sum(tmpSUN_Container_All.AmountIn)::TFloat   AS AmountIn
+        INTO vbAmountSale, vbAmountIn
+        FROM tmpSUN_Container_All AS tmpSUN_Container_All 
+        
+            LEFT JOIN tmpContainer_Check ON tmpContainer_Check.ContainerId = tmpSUN_Container_All.ContainerId
+
+        ;  
 
   -- Результат
   RETURN QUERY
@@ -187,6 +230,7 @@ BEGIN
        , CASE WHEN tmpResulAll.AmountAuto > 0 
               THEN ROUND(tmpResulAll.AmountZeroing / tmpResulAll.AmountAuto * 100, 2) ELSE 0 END::TFloat                   AS PercentZeroingRange
        , tmpSale.Sale
+       , CASE WHEN vbAmountIn > 0 THEN (vbAmountSale / vbAmountIn * 100) END::TFloat                                       AS Efficiency
        , CASE WHEN COALESCE(tmpUntilNextSUN.PercentUntilNextSUN, 0) > 0 AND COALESCE(tmpCashSettings.PercentUntilNextSUN, 0) > 0 AND 
                    tmpUntilNextSUN.PercentUntilNextSUN >= tmpCashSettings.PercentUntilNextSUN 
               THEN zc_Color_Yelow()
@@ -219,5 +263,4 @@ ALTER FUNCTION gpReport_PercentageOverdueSUN (TDateTime, TDateTime, TVarChar) OW
 -- тест
 -- SELECT * FROM gpReport_CommentSendSUN (inStartDate:= '25.08.2020', inEndDate:= '25.08.2020', inSession:= '3')
 
-
-select * from gpReport_CommentSendSUN(inStartDate := ('29.11.2021')::TDateTime , inEndDate := ('02.12.2021')::TDateTime ,  inSession := '3');
+select * from gpReport_CommentSendSUN(inStartDate := ('14.02.2022')::TDateTime , inEndDate := ('16.02.2022')::TDateTime ,  inSession := '3');

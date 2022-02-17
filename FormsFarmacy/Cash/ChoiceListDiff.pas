@@ -31,6 +31,7 @@ type
     Panel2: TPanel;
     Label6: TLabel;
     Label1: TLabel;
+    colPackages: TcxGridDBColumn;
     procedure ListDiffGridDBTableViewDblClick(Sender: TObject);
   private
     { Private declarations }

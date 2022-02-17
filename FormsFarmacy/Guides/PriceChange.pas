@@ -98,6 +98,9 @@ type
     spUpdate_FixDateEnd: TdsdStoredProc;
     spClear_FixDateEnd: TdsdStoredProc;
     actExecuteDialogFixDateEnd: TExecuteDialog;
+    actChoicePartionDateGoodsList: TOpenChoiceForm;
+    PartionDateKindName: TcxGridDBColumn;
+    actClearPartionDateGoods: TdsdSetDefaultParams;
   private
     { Private declarations }
   public

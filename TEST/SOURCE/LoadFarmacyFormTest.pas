@@ -1087,10 +1087,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_PartialReturnInAllDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_PartialReturnInAllDialogForm');
-}
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FinancialMonitoringForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FinancialMonitoringForm');
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TestingAttemptsUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TestingAttemptsUserForm');
 

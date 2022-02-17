@@ -5,7 +5,7 @@ inherited Report_JuridicalSalesForm: TReport_JuridicalSalesForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1008
-  ExplicitHeight = 402
+  ExplicitHeight = 403
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -14,17 +14,17 @@ inherited Report_JuridicalSalesForm: TReport_JuridicalSalesForm
     Height = 305
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 722
+    ExplicitWidth = 992
     ExplicitHeight = 305
     ClientRectBottom = 305
     ClientRectRight = 992
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 722
+      ExplicitWidth = 992
       ExplicitHeight = 305
       inherited cxGrid: TcxGrid
         Width = 992
         Height = 305
-        ExplicitWidth = 722
+        ExplicitWidth = 992
         ExplicitHeight = 305
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -106,6 +106,31 @@ inherited Report_JuridicalSalesForm: TReport_JuridicalSalesForm
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaSale
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = Summa
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaWithVAT
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaProfitWithVAT
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaProfit
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -206,7 +231,7 @@ inherited Report_JuridicalSalesForm: TReport_JuridicalSalesForm
   inherited Panel: TPanel
     Width = 992
     Height = 33
-    ExplicitWidth = 722
+    ExplicitWidth = 992
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 114
@@ -395,7 +420,7 @@ inherited Report_JuridicalSalesForm: TReport_JuridicalSalesForm
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -490,7 +515,7 @@ inherited Report_JuridicalSalesForm: TReport_JuridicalSalesForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

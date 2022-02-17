@@ -46,6 +46,8 @@ RETURNS TABLE (Id                       Integer
 
              , ConditionsKeepName        TVarChar
              , AreaName_Goods            TVarChar
+
+             , SupplierFailuresColor Integer
               )
 AS
 $BODY$
@@ -110,7 +112,8 @@ BEGIN
     WHERE Movement.Id =inMovementId;
 
 --
-    SELECT MovementLinkObject.ObjectId INTO vbUnitId
+    SELECT MovementLinkObject.ObjectId 
+    INTO vbUnitId
     FROM MovementLinkObject
     WHERE MovementLinkObject.MovementId = inMovementId
       AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
@@ -356,6 +359,33 @@ BEGIN
                                        ) AS tmp
                                  WHERE tmp.ORD = 1
                                  )
+   -- Отказы поставщиков
+   , tmpSupplierFailures AS (SELECT DISTINCT 
+                                    ObjectLink_BankAccount_Goods.ChildObjectId          AS GoodsId
+                                  , ObjectLink_BankAccount_Juridical.ChildObjectId      AS JuridicalId
+                                  , ObjectLink_BankAccount_Contract.ChildObjectId       AS ContractId
+                                  , ObjectLink_BankAccount_Area.ChildObjectId           AS AreaId
+                             FROM Object AS Object_SupplierFailures
+                                  
+                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Goods
+                                                       ON ObjectLink_BankAccount_Goods.ObjectId = Object_SupplierFailures.Id
+                                                      AND ObjectLink_BankAccount_Goods.DescId = zc_ObjectLink_SupplierFailures_Goods()
+                                  
+                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Juridical
+                                                       ON ObjectLink_BankAccount_Juridical.ObjectId = Object_SupplierFailures.Id
+                                                      AND ObjectLink_BankAccount_Juridical.DescId = zc_ObjectLink_SupplierFailures_Juridical()
+                                  
+                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Contract
+                                                       ON ObjectLink_BankAccount_Contract.ObjectId = Object_SupplierFailures.Id
+                                                      AND ObjectLink_BankAccount_Contract.DescId = zc_ObjectLink_SupplierFailures_Contract()
+                                  
+                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Area
+                                                       ON ObjectLink_BankAccount_Area.ObjectId = Object_SupplierFailures.Id
+                                                      AND ObjectLink_BankAccount_Area.DescId = zc_ObjectLink_SupplierFailures_Area()
+                                  
+                             WHERE Object_SupplierFailures.DescId = zc_Object_SupplierFailures()
+                               AND Object_SupplierFailures.isErased = FALSE
+                               )
 
         SELECT tmpMI.Id
              , tmpMI.MovementItemId
@@ -404,6 +434,11 @@ BEGIN
 
              , Object_Area.ValueData                         :: TVarChar AS AreaName_Goods
 
+             , CASE
+                    WHEN COALESCE (SupplierFailures.GoodsId, 0) <> 0 THEN zfCalc_Color (255, 165, 0) -- orange 
+                    ELSE zc_Color_White()
+                END  AS SupplierFailuresColor
+
         FROM _tmpOrderInternal_MI AS tmpMI
              INNER JOIN tmpMI_Child AS MI_Child ON MI_Child.ParentId = tmpMI.MovementItemId
              LEFT JOIN tmpGoods                 ON tmpGoods.GoodsId  = MI_Child.ObjectId
@@ -444,6 +479,13 @@ BEGIN
                                          ON MIString_GoodsName.MovementItemId = MI_Child.Id
                                         AND MIString_GoodsName.DescId = zc_MIString_GoodsName()                                  
                                         AND vbStatusId = zc_Enum_Status_Complete()                             
+
+            LEFT JOIN tmpSupplierFailures AS SupplierFailures 
+                                          ON SupplierFailures.GoodsId = MI_Child.ObjectId
+                                         AND SupplierFailures.JuridicalId = MI_Child.JuridicalId
+                                         AND SupplierFailures.ContractId = MI_Child.ContractId
+                                         AND (SupplierFailures.AreaId = MI_Child.AreaId OR
+                                              COALESCE(SupplierFailures.AreaId, 0) = 0)
           ;
 
 
@@ -924,6 +966,33 @@ BEGIN
                                     ) AS tmp
                               WHERE tmp.ORD = 1
                               )
+   -- Отказы поставщиков
+   , tmpSupplierFailures AS (SELECT DISTINCT 
+                                    ObjectLink_BankAccount_Goods.ChildObjectId          AS GoodsId
+                                  , ObjectLink_BankAccount_Juridical.ChildObjectId      AS JuridicalId
+                                  , ObjectLink_BankAccount_Contract.ChildObjectId       AS ContractId
+                                  , ObjectLink_BankAccount_Area.ChildObjectId           AS AreaId
+                             FROM Object AS Object_SupplierFailures
+                                  
+                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Goods
+                                                       ON ObjectLink_BankAccount_Goods.ObjectId = Object_SupplierFailures.Id
+                                                      AND ObjectLink_BankAccount_Goods.DescId = zc_ObjectLink_SupplierFailures_Goods()
+                                  
+                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Juridical
+                                                       ON ObjectLink_BankAccount_Juridical.ObjectId = Object_SupplierFailures.Id
+                                                      AND ObjectLink_BankAccount_Juridical.DescId = zc_ObjectLink_SupplierFailures_Juridical()
+                                  
+                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Contract
+                                                       ON ObjectLink_BankAccount_Contract.ObjectId = Object_SupplierFailures.Id
+                                                      AND ObjectLink_BankAccount_Contract.DescId = zc_ObjectLink_SupplierFailures_Contract()
+                                  
+                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Area
+                                                       ON ObjectLink_BankAccount_Area.ObjectId = Object_SupplierFailures.Id
+                                                      AND ObjectLink_BankAccount_Area.DescId = zc_ObjectLink_SupplierFailures_Area()
+                                  
+                             WHERE Object_SupplierFailures.DescId = zc_Object_SupplierFailures()
+                               AND Object_SupplierFailures.isErased = FALSE
+                               )
 
 
         ---
@@ -967,6 +1036,11 @@ BEGIN
              , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar     AS ConditionsKeepName
              , Object_Area.ValueData                         :: TVarChar    AS AreaName_Goods
 
+             , CASE
+                    WHEN COALESCE (SupplierFailures.GoodsId, 0) <> 0 THEN zfCalc_Color (255, 165, 0) -- orange 
+                    ELSE zc_Color_White()
+                END  AS SupplierFailuresColor
+
         FROM _tmpMI
              LEFT JOIN tmpObjectFloat AS ObjectFloat_Goods_MinimumLot
                                       ON ObjectFloat_Goods_MinimumLot.ObjectId = _tmpMI.GoodsId
@@ -996,6 +1070,12 @@ BEGIN
              LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.PartnerGoodsId = _tmpMI.GoodsId
                                            AND tmpLoadPriceList_NDS.JuridicalId = _tmpMI.JuridicalId
 
+             LEFT JOIN tmpSupplierFailures AS SupplierFailures 
+                                           ON SupplierFailures.GoodsId = _tmpMI.GoodsId
+                                          AND SupplierFailures.JuridicalId = _tmpMI.JuridicalId
+                                          AND SupplierFailures.ContractId = _tmpMI.ContractId
+                                          AND (SupplierFailures.AreaId = _tmpMI.AreaId OR
+                                               COALESCE(SupplierFailures.AreaId, 0) = 0)
 ;
 
 
@@ -1476,6 +1556,33 @@ BEGIN
                                     ) AS tmp
                               WHERE tmp.ORD = 1
                               )
+   -- Отказы поставщиков
+   , tmpSupplierFailures AS (SELECT DISTINCT 
+                                    ObjectLink_BankAccount_Goods.ChildObjectId          AS GoodsId
+                                  , ObjectLink_BankAccount_Juridical.ChildObjectId      AS JuridicalId
+                                  , ObjectLink_BankAccount_Contract.ChildObjectId       AS ContractId
+                                  , ObjectLink_BankAccount_Area.ChildObjectId           AS AreaId
+                             FROM Object AS Object_SupplierFailures
+                                  
+                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Goods
+                                                       ON ObjectLink_BankAccount_Goods.ObjectId = Object_SupplierFailures.Id
+                                                      AND ObjectLink_BankAccount_Goods.DescId = zc_ObjectLink_SupplierFailures_Goods()
+                                  
+                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Juridical
+                                                       ON ObjectLink_BankAccount_Juridical.ObjectId = Object_SupplierFailures.Id
+                                                      AND ObjectLink_BankAccount_Juridical.DescId = zc_ObjectLink_SupplierFailures_Juridical()
+                                  
+                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Contract
+                                                       ON ObjectLink_BankAccount_Contract.ObjectId = Object_SupplierFailures.Id
+                                                      AND ObjectLink_BankAccount_Contract.DescId = zc_ObjectLink_SupplierFailures_Contract()
+                                  
+                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Area
+                                                       ON ObjectLink_BankAccount_Area.ObjectId = Object_SupplierFailures.Id
+                                                      AND ObjectLink_BankAccount_Area.DescId = zc_ObjectLink_SupplierFailures_Area()
+                                  
+                             WHERE Object_SupplierFailures.DescId = zc_Object_SupplierFailures()
+                               AND Object_SupplierFailures.isErased = FALSE
+                               )
 
         ---
         SELECT _tmpMI.Id
@@ -1518,6 +1625,11 @@ BEGIN
              , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar     AS ConditionsKeepName
              , Object_Area.ValueData                         :: TVarChar    AS AreaName_Goods
 
+             , CASE
+                    WHEN COALESCE (SupplierFailures.GoodsId, 0) <> 0 THEN zfCalc_Color (255, 165, 0) -- orange 
+                    ELSE zc_Color_White()
+                END  AS SupplierFailuresColor
+
         FROM _tmpMI
              LEFT JOIN tmpObjectFloat AS ObjectFloat_Goods_MinimumLot
                                       ON ObjectFloat_Goods_MinimumLot.ObjectId = _tmpMI.GoodsId
@@ -1546,6 +1658,13 @@ BEGIN
 
              LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.PartnerGoodsId = _tmpMI.GoodsId
                                            AND tmpLoadPriceList_NDS.JuridicalId = _tmpMI.JuridicalId
+
+             LEFT JOIN tmpSupplierFailures AS SupplierFailures 
+                                           ON SupplierFailures.GoodsId = _tmpMI.GoodsId
+                                          AND SupplierFailures.JuridicalId = _tmpMI.JuridicalId
+                                          AND SupplierFailures.ContractId = _tmpMI.ContractId
+                                          AND (SupplierFailures.AreaId = _tmpMI.AreaId OR
+                                               COALESCE(SupplierFailures.AreaId, 0) = 0)
 ;
 
 
@@ -1624,4 +1743,4 @@ where Movement.DescId = zc_Movement_OrderInternal()
 
 --select * from gpSelect_MovementItem_OrderInternal_Child(inMovementId := 22066168  , inShowAll := 'True' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
 
-select * from gpSelect_MovementItem_OrderInternal_Child(inMovementId := 26400445    , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_OrderInternal_Child(inMovementId := 26860340     , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
