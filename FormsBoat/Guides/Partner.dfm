@@ -193,6 +193,14 @@ object PartnerForm: TPartnerForm
         Options.Editing = False
         Width = 80
       end
+      object DatePriceList: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1088#1072#1081#1089#1072
+        DataBinding.FieldName = 'DatePriceList'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 87
+      end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertDate'
