@@ -464,6 +464,7 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1074#1103#1079#1100' '#1090#1086#1074#1072#1088#1072
       ImageIndex = 27
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1089#1090#1072#1085#1086#1074#1082#1077' '#1089#1074#1103#1079#1077#1081'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
     end
     object spSetGoodsLink: TdsdExecStoredProc
       Category = 'DSDLib'

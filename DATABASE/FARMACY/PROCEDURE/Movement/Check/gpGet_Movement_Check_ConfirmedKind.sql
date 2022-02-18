@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Check_ConfirmedKind(
    OUT outIsSite           Boolean,  -- 
    OUT outIsTabletki       Boolean,  -- 
    OUT outIsLiki24         Boolean,  -- 
+   OUT outIsOrderTabletki  Boolean,  -- 
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS RECORD
@@ -122,6 +123,21 @@ BEGIN
                          )
              , tmpMovementLinkObject AS (SELECT * FROM MovementLinkObject
                                           WHERE MovementLinkObject.MovementId in (select tmpMov.ID from tmpMov))
+             , tmpMovTabletki AS (SELECT Movement.Id
+                                       , Movement.InvNumber
+                                       , Movement.OperDate
+                                  FROM tmpMov_all AS Movement
+                                       INNER JOIN tmpMovementLinkObject AS MovementLinkObject_CheckSourceKind
+                                                                        ON MovementLinkObject_CheckSourceKind.MovementId =  Movement.Id
+                                                                       AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
+                                                                       AND MovementLinkObject_CheckSourceKind.ObjectId = zc_Enum_CheckSourceKind_Tabletki()
+                                       INNER JOIN MovementProtocol ON MovementProtocol.MovementId = Movement.ID
+                                                                  AND MovementProtocol.OperDate < (CURRENT_TIMESTAMP - INTERVAL '20 MIN')::TDateTime
+                                       LEFT JOIN tmpMLO_ConfirmedKind AS MovementLinkObject_ConfirmedKind
+                                                                      ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id                                                                      
+                                  WHERE COALESCE( MovementLinkObject_ConfirmedKind.ObjectId,  zc_Enum_ConfirmedKind_UnComplete()) = zc_Enum_ConfirmedKind_UnComplete()
+                                  LIMIT 1
+                                 )
                                             
     SELECT STRING_AGG (COALESCE (Movement.Id :: TVarChar, ''), ';') AS RetV
          , SUM(CASE WHEN COALESCE (ObjectBoolean_CheckSourceKind_Site.ValueData, FALSE) = FALSE
@@ -130,7 +146,8 @@ BEGIN
          , SUM(CASE WHEN COALESCE (ObjectBoolean_CheckSourceKind_Site.ValueData, FALSE) = TRUE THEN 1 ELSE 0 END) > 0 
          , SUM(CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() THEN 1 ELSE 0 END) > 0 
          , SUM(CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Liki24() THEN 1 ELSE 0 END) > 0 
-    INTO outMovementId_list, outIsVIP, outIsSite, outIsTabletki, outIsLiki24
+         , COALESCE (max(tmpMovTabletki.Id), 0) > 0
+    INTO outMovementId_list, outIsVIP, outIsSite, outIsTabletki, outIsLiki24, outIsOrderTabletki
     FROM tmpMov AS Movement
          LEFT JOIN tmpErr ON tmpErr.MovementId = Movement.Id
 
@@ -141,6 +158,9 @@ BEGIN
          LEFT JOIN ObjectBoolean AS ObjectBoolean_CheckSourceKind_Site
                                  ON ObjectBoolean_CheckSourceKind_Site.ObjectId = MovementLinkObject_CheckSourceKind.ObjectId
                                 AND ObjectBoolean_CheckSourceKind_Site.DescId = zc_ObjectBoolean_CheckSourceKind_Site()
+                                
+         LEFT JOIN tmpMovTabletki ON 1 = 1
+                                
     WHERE tmpErr.MovementId IS NULL;
     
     outMovementId_list := COALESCE (outMovementId_list, '');
@@ -148,6 +168,11 @@ BEGIN
     outIsSite := COALESCE (outIsSite, False);
     outIsTabletki := COALESCE (outIsTabletki, False);
     outIsLiki24 := COALESCE (outIsLiki24, False);
+    outIsOrderTabletki := COALESCE(outIsOrderTabletki, False) 
+                      AND EXISTS(SELECT * FROM ObjectBoolean AS ObjectBoolean_ShowMessageSite
+                                 WHERE ObjectBoolean_ShowMessageSite.ObjectId = vbUnitId
+                                   AND ObjectBoolean_ShowMessageSite.DescId = zc_ObjectBoolean_Unit_ShowMessageSite()
+                                   AND ObjectBoolean_ShowMessageSite.ValueData = True);
 
 END;
 $BODY$
