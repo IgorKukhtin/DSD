@@ -293,7 +293,9 @@ uses
   MeasureCodeEdit in '..\..\FormsBoat\Guides\MeasureCodeEdit.pas' {MeasureCodeEditForm: TParentForm},
   Union_TranslateObject in '..\..\FormsBoat\Guides\Union_TranslateObject.pas' {Union_TranslateObjectForm: TParentForm},
   TranslateObject in '..\..\FormsBoat\Guides\TranslateObject.pas' {TranslateObjectForm: TParentForm},
-  TranslateObjectEdit in '..\..\FormsBoat\Guides\TranslateObjectEdit.pas' {TranslateObjectEditForm: TParentForm};
+  TranslateObjectEdit in '..\..\FormsBoat\Guides\TranslateObjectEdit.pas' {TranslateObjectEditForm: TParentForm},
+  Inventory in '..\..\FormsBoat\Document\Inventory.pas' {InventoryForm: TParentForm},
+  InventoryJournal in '..\..\FormsBoat\Document\InventoryJournal.pas' {InventoryJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

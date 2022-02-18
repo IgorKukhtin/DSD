@@ -1060,8 +1060,6 @@ inherited MainForm: TMainForm
       end
       object miInventory: TMenuItem
         Action = actInventory
-        Enabled = False
-        Hint = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
       end
     end
     object miProduction: TMenuItem [1]
