@@ -342,6 +342,7 @@ object InventoryForm: TInventoryForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = GoodsOpenChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -767,7 +768,7 @@ object InventoryForm: TInventoryForm
           StoredProc = spInsertUpdateMIMaster
         end
         item
-          StoredProc = spGetTotalSumm
+          StoredProc = spSelectMI
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
@@ -779,8 +780,6 @@ object InventoryForm: TInventoryForm
       StoredProcList = <
         item
           StoredProc = spGet
-        end
-        item
         end
         item
           StoredProc = spSelectMI
@@ -803,9 +802,6 @@ object InventoryForm: TInventoryForm
           StoredProc = spSelectMI
         end
         item
-          StoredProc = spGetTotalSumm
-        end
-        item
           StoredProc = spSelectBarCode
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
@@ -822,7 +818,6 @@ object InventoryForm: TInventoryForm
           StoredProc = spSelectBarCode
         end
         item
-          StoredProc = spGetTotalSumm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -900,7 +895,6 @@ object InventoryForm: TInventoryForm
           StoredProc = spErasedMIMaster
         end
         item
-          StoredProc = spGetTotalSumm
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
@@ -919,7 +913,6 @@ object InventoryForm: TInventoryForm
           StoredProc = spUnErasedMIMaster
         end
         item
-          StoredProc = spGetTotalSumm
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1046,6 +1039,26 @@ object InventoryForm: TInventoryForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ShortCut = 45
       ImageIndex = 0
+    end
+    object GoodsOpenChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = 'TPartionGoodsChoiceForm'
+      FormName = 'TGoodsForm'
+      FormNameParam.Value = 'TGoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BarCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object actPartionGoodsChoice: TOpenChoiceForm
       Category = 'DSDLib'
@@ -1303,6 +1316,9 @@ object InventoryForm: TInventoryForm
       ActionList = <
         item
           Action = actGoodsItem
+        end
+        item
+          Action = actRefreshMI
         end>
       Caption = 'macGoodsItem'
       ShortCut = 13
@@ -1796,31 +1812,6 @@ object InventoryForm: TInventoryForm
     Left = 204
     Top = 16
   end
-  object spGetTotalSumm: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_TotalSumm'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TotalSumm'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'TotalSumm'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 492
-    Top = 260
-  end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
@@ -2016,8 +2007,8 @@ object InventoryForm: TInventoryForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 672
-    Top = 248
+    Left = 680
+    Top = 200
   end
   object spSelectBarCode: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_BarCode'

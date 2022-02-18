@@ -343,6 +343,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInventoryForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryItemEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInventoryItemEditForm');
 end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;

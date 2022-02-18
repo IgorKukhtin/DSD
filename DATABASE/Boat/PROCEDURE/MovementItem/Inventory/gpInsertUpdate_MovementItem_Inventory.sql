@@ -21,7 +21,8 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
+     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
+     vbUserId:= lpGetUserBySession (inSession);
 
 
      -- определ€ютс€ параметры из документа

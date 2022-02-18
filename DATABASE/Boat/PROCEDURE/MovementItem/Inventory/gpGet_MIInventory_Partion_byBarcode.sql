@@ -21,6 +21,8 @@ RETURNS TABLE (Id                 Integer
              , PartnerName        TVarChar
              , Price              TFloat
              , AmountRemains      TFloat
+             , TotalCount         TFloat
+             , OperCount          TFloat
               )
 AS
 $BODY$
@@ -48,6 +50,8 @@ BEGIN
             , '' :: TVarChar AS PartnerName
             , 0  :: TFloat   AS Price
             , 0  :: TFloat   AS AmountRemains
+            , 0  :: TFloat   AS TotalCount
+            , 0  :: TFloat   AS OperCount
              ;
      END IF;
      
@@ -63,14 +67,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Ошибка в Штрихкоде <%>.', inBarCode;
      END IF;
-
-     /*-- проверка
-     IF zfCalc_SummBarCode (inBarCode) <> SUBSTRING (inBarCode FROM 13 FOR 1)
-     THEN
-         RAISE EXCEPTION 'Ошибка.Ошибка в Контрольной цифре <%> для Штрихкода = <%>.', zfCalc_SummBarCode (inBarCode), inBarCode;
-     END IF;
-     */
-     
+  
      -- из шапки берем подразделение для остатков
      vbUnitId := (SELECT MovementLinkObject.ObjectId 
                   FROM MovementLinkObject 
@@ -109,6 +106,9 @@ BEGIN
             , Object_Partner.ValueData                    AS PartnerName
             , Object_PartionGoods.ekPrice                 AS Price
             , tmpRemains.Remains           :: TFloat      AS AmountRemains
+            , (1 + COALESCE ((SELECT SUM (MI.Amount) FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.PartionId = vbPartionId AND MI.isErased = FALSE), 0)
+              )                                 :: TFloat AS TotalCount
+            , 1                                 :: TFloat AS OperCount
 
        FROM Object_PartionGoods
  
@@ -142,3 +142,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpGet_MIInventory_Partion_byBarcode (inMovementId := 0, inBarCode:= '2210002798265'::TVarChar, inSession:= zfCalc_UserAdmin());
+
+--  221000038868

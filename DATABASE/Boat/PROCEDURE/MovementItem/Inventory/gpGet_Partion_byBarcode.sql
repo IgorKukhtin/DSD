@@ -21,9 +21,8 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpGetUserBySession (inSession);
      
-     
      -- Если Пустой
-     IF TRIM (inBarCode) = '' OR CHAR_LENGTH (inBarCode) < 10 THEN
+     IF TRIM (inBarCode) = '' THEN
 
        -- Результат
        RETURN QUERY
@@ -38,26 +37,57 @@ BEGIN
      END IF;
 
 
+    --RAISE EXCEPTION 'Ошибка.Ошибка в Штрихкоде <%>.', inBarCode;
+     
      -- Если это Штрихкод
      IF COALESCE (inBarCode, '') <> '' AND CHAR_LENGTH (inBarCode) = 12
      THEN
-             -- последние 10 - это Код
-             vbGoodsId:= zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) :: Integer;
-             -- пробуем найти
-             SELECT Object_PartionGoods.MovementItemId
-                  , Object_PartionGoods.OperPriceList
-            INTO vbPartionId, vbOperPriceList
-             FROM Object_PartionGoods
-             WHERE Object_PartionGoods.ObjectId = vbGoodsId
-               AND vbGoodsId > 0;
+          -- последние 10 - это ИД
+          vbGoodsId:= (SELECT Object.Id
+                       FROM Object
+                       WHERE Object.DescId = zc_Object_Goods()
+                         AND Object.Id = zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) :: Integer
+                       );
+          
+          
+          -- пробуем найти
+          SELECT Object_PartionGoods.MovementItemId
+               , Object_PartionGoods.OperPriceList
+         INTO vbPartionId, vbOperPriceList
+          FROM Object_PartionGoods
+          WHERE Object_PartionGoods.ObjectId = vbGoodsId
+            AND vbGoodsId > 0;
 
-             -- если НЕ нашли
-             IF COALESCE (vbPartionId, 0) = 0
-             THEN
-                 RAISE EXCEPTION 'Ошибка.Товар со Штрихкодом = <%> не найден.', inBarCode;
-             END IF;
-     ELSE 
-         RAISE EXCEPTION 'Ошибка.Ошибка в Штрихкоде <%>.', inBarCode;
+          -- если НЕ нашли
+          IF COALESCE (vbGoodsId, 0) = 0
+          THEN
+              RAISE EXCEPTION 'Ошибка.Товар со Штрихкодом = <%> не найден.', inBarCode;
+          END IF;
+     END IF;
+
+     --ИД товара, товар вібран из справочника
+     IF COALESCE (inBarCode, '') <> '' AND CHAR_LENGTH (inBarCode) < 12
+     THEN
+          -- последние 10 - это Код
+          vbGoodsId:= (SELECT Object.Id
+                       FROM Object
+                       WHERE Object.DescId = zc_Object_Goods()
+                         AND Object.ObjectCode = zfConvert_StringToNumber (inBarCode) :: Integer
+                       );
+          -- пробуем найти
+          SELECT Object_PartionGoods.MovementItemId
+               , Object_PartionGoods.OperPriceList
+         INTO vbPartionId, vbOperPriceList
+          FROM Object_PartionGoods
+          WHERE Object_PartionGoods.ObjectId = vbGoodsId
+            AND vbGoodsId > 0;
+
+          -- если НЕ нашли
+          IF COALESCE (vbGoodsId, 0) = 0
+          THEN
+              RAISE EXCEPTION 'Ошибка.Товар с Идентификатором = <%> не найден.', inBarCode;
+          END IF;
+
      END IF;
      
      -- Результат

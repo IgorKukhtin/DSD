@@ -295,7 +295,8 @@ uses
   TranslateObject in '..\..\FormsBoat\Guides\TranslateObject.pas' {TranslateObjectForm: TParentForm},
   TranslateObjectEdit in '..\..\FormsBoat\Guides\TranslateObjectEdit.pas' {TranslateObjectEditForm: TParentForm},
   Inventory in '..\..\FormsBoat\Document\Inventory.pas' {InventoryForm: TParentForm},
-  InventoryJournal in '..\..\FormsBoat\Document\InventoryJournal.pas' {InventoryJournalForm: TParentForm};
+  InventoryJournal in '..\..\FormsBoat\Document\InventoryJournal.pas' {InventoryJournalForm: TParentForm},
+  InventoryItemEdit in '..\..\FormsBoat\Document\InventoryItemEdit.pas' {InventoryItemEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

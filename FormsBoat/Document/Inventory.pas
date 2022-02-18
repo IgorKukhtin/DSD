@@ -82,7 +82,6 @@ type
     actCompleteMovement: TChangeGuidesStatus;
     actDeleteMovement: TChangeGuidesStatus;
     MeasureName: TcxGridDBColumn;
-    spGetTotalSumm: TdsdStoredProc;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     actMIProtocol: TdsdOpenForm;
@@ -127,6 +126,7 @@ type
     macGoodsItem: TMultiAction;
     actGoodsItem: TdsdInsertUpdateAction;
     actRefreshItemEdit: TdsdDataSetRefresh;
+    GoodsOpenChoiceForm: TOpenChoiceForm;
   private
   public
   end;

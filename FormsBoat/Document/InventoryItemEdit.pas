@@ -23,7 +23,6 @@ uses
 
 type
   TInventoryItemEditForm = class(TParentForm)
-    cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     ActionList: TActionList;
@@ -37,9 +36,6 @@ type
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel3: TcxLabel;
     cxLabel5: TcxLabel;
-    cxLabel9: TcxLabel;
-    edGoodsSize: TcxButtonEdit;
-    GuidesGoodsSize: TdsdGuides;
     edGoods: TcxButtonEdit;
     GuidesGoods: TdsdGuides;
     edGoodsGroup: TcxButtonEdit;
@@ -48,9 +44,6 @@ type
     GuidesPartner: TdsdGuides;
     cxLabel8: TcxLabel;
     ceOperPriceList: TcxCurrencyEdit;
-    cxLabel11: TcxLabel;
-    edLabel: TcxButtonEdit;
-    GuidesLabel: TdsdGuides;
     actRefreshOperPriceList: TdsdDataSetRefresh;
     cxLabel13: TcxLabel;
     edGoodsCode: TcxCurrencyEdit;
@@ -58,14 +51,9 @@ type
     cxLabel2: TcxLabel;
     cxLabel4: TcxLabel;
     ceTotalCount: TcxCurrencyEdit;
-    GuidesGoodsInfo: TdsdGuides;
     cxLabel6: TcxLabel;
-    edGoodsInfo: TcxButtonEdit;
-    edComposition: TcxButtonEdit;
-    cxLabel7: TcxLabel;
-    GuidesComposition: TdsdGuides;
-    edText_info: TcxTextEdit;
-    cxLabel10: TcxLabel;
+    cxLabel18: TcxLabel;
+    edArticle: TcxTextEdit;
   private
     { Private declarations }
   public
