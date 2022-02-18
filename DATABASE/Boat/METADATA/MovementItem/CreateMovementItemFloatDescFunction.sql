@@ -55,9 +55,39 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_Price() RETURNS Integer AS $BODY$BEGIN RET
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_Price', 'Цена вх. без НДС' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Price');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_EmpfPriceParent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_EmpfPriceParent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_EmpfPriceParent', 'Рекомендованная цена без ндс (упакови)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_EmpfPriceParent');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_MeasureMult() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_MeasureMult'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_MeasureMult', 'Вложенность' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_MeasureMult');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_PriceParent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PriceParent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_PriceParent', 'Цена без ндс (упакови)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PriceParent');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_MinCount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_MinCount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_MinCount', 'мин кол-во закупки' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_MinCount');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_MinCountMult() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_MinCountMult'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_MinCountMult', 'рекомендуемое кол-во закупки' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_MinCountMult');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_WeightParent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_WeightParent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_WeightParent', 'WeightParent' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_WeightParent');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.02.22         * zc_MIFloat_EmpfPriceParent
+                    zc_MIFloat_MeasureMult
+                    zc_MIFloat_PriceParent
+                    zc_MIFloat_MinCount
+                    zc_MIFloat_MinCountMult
+                    zc_MIFloat_WeightParent
  12.10.21         * zc_MIFloat_OperPrice_orig
  12.04.21         * zc_MIFloat_MovementId
  06.04.21         * zc_MIFloat_BasisPrice
