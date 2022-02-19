@@ -26,7 +26,6 @@ type
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     ActionList: TActionList;
-    spUpdate_summ_after: TdsdStoredProc;
     FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     actRefresh: TdsdDataSetRefresh;
@@ -69,6 +68,7 @@ type
     ceTotalSumm: TcxCurrencyEdit;
     HeaderExit: THeaderExit;
     EnterMoveNext: TEnterMoveNext;
+    spUpdate_summ_after: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -1275,8 +1275,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1050#1086#1076
         TabOrder = 0
-        ExplicitLeft = -1
-        ExplicitTop = -6
         object EditGoodsCode: TEdit
           Left = 4
           Top = 17
@@ -1418,7 +1416,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1050#1086#1076' '#1074#1080#1076#1072' '#1091#1087#1072#1082#1086#1074#1082#1080
         TabOrder = 0
-        ExplicitTop = -6
         object EditGoodsKindCode: TEdit
           Left = 5
           Top = 17

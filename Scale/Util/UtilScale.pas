@@ -221,6 +221,9 @@ begin
      ParamAdd(Params,'ColorGridValue',ftInteger);
      ParamAdd(Params,'OperDate',ftDateTime);
 
+     ParamAdd(Params,'MessageText',ftString);
+
+
      ParamAdd(Params,'MovementId_begin',ftInteger);//документ который создается после закрытия "документа взвешивания", т.е. после Save_Movement_all
 
      ParamAdd(Params,'MovementId_get',ftInteger);//документ взвешивания определяется при gpGet_Scale_OrderExternal !!!только для заявки!!!, потом переносится в MovementId
@@ -506,6 +509,7 @@ begin
      ParamAdd(Params,'CountTare4',ftFloat);          // Количество тары вида4
      ParamAdd(Params,'CountTare5',ftFloat);          // Количество тары вида5
      ParamAdd(Params,'CountTare6',ftFloat);          // Количество тары вида6
+     ParamAdd(Params,'Amount_Goods',ftFloat);        //
      end
      else
      begin

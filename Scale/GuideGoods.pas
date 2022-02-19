@@ -401,7 +401,7 @@ begin
             EditGoodsName.Text:='';
             EditTareWeightEnter.Text:='';
 
-            EditWeightValue.Text:='0';
+            EditWeightValue.Text:=FloatToStr(ParamsMI.ParamByName('Amount_Goods').asFloat);
             EditPrice.Text:='0';
 
             if (CDS.RecordCount=1)
@@ -881,7 +881,17 @@ begin
           //сохранение MovementItem
           Result:=DMMainScaleForm.gpInsert_Scale_MI(ParamsMovement,ParamsMI);
           if not Result then ShowMessage('Error.not Result');
-          Result:=true;
+          if ParamsMovement.ParamByName('MessageText').AsString <> ''
+          then begin
+                   Result:= false;
+                   if MessageDlg(ParamsMovement.ParamByName('MessageText').AsString
+                               + #10 + #13
+                               + 'Выполнить подбор остатка?'
+                                ,mtConfirmation,mbYesNoCancel,0) <> 6
+                   then exit
+                   else bbGoodsRemainsClick(Self);
+               end
+          else Result:= true;
      end;
 end;
 {------------------------------------------------------------------------------}

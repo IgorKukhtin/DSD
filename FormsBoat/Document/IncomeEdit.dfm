@@ -285,6 +285,7 @@ object IncomeEditForm: TIncomeEditForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actUpdate_summ_before: TdsdDataSetRefresh
@@ -303,88 +304,13 @@ object IncomeEditForm: TIncomeEditForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_summ_before
+      StoredProc = spUpdate_summ_after
       StoredProcList = <
         item
-          StoredProc = spUpdate_summ_before
+          StoredProc = spUpdate_summ_after
         end>
       Caption = 'Ok'
     end
-  end
-  object spUpdate_summ_after: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MIEdit_Income'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'MovementId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCountForPrice'
-        Value = 1.000000000000000000
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmount'
-        Value = 2.000000000000000000
-        Component = ceTotalSummMVAT
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperPrice_orig'
-        Value = 45.000000000000000000
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperPrice'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDiscountTax'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSummIn'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperPriceList'
-        Value = 55.000000000000000000
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 436
-    Top = 328
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -595,7 +521,7 @@ object IncomeEditForm: TIncomeEditForm
       end
       item
         Name = 'inIsBefore'
-        Value = False
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -772,5 +698,130 @@ object IncomeEditForm: TIncomeEditForm
       end>
     Left = 352
     Top = 264
+  end
+  object spUpdate_summ_after: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Income_summ'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsBefore'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTotalSummMVAT'
+        Value = 0.000000000000000000
+        Component = ceTotalSummMVAT
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioDiscountTax'
+        Value = 0.000000000000000000
+        Component = ceDiscountTax
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummTaxPVAT'
+        Value = 0.000000000000000000
+        Component = ceSummTaxPVAT
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummTaxMVAT'
+        Value = 0.000000000000000000
+        Component = ceSummTaxMVAT
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummPost'
+        Value = 0.000000000000000000
+        Component = ceSummPost
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummPack'
+        Value = 0.000000000000000000
+        Component = ceSummPack
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummInsur'
+        Value = 0.000000000000000000
+        Component = ceSummInsur
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioTotalDiscountTax'
+        Value = 0.000000000000000000
+        Component = ceTotalDiscountTax
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioTotalSummTaxPVAT'
+        Value = 0.000000000000000000
+        Component = ceTotalSummTaxPVAT
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioTotalSummTaxMVAT'
+        Value = 0.000000000000000000
+        Component = ceTotalSummTaxMVAT
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSumm2'
+        Value = 0.000000000000000000
+        Component = ceSumm2
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSumm3'
+        Value = 0.000000000000000000
+        Component = ceSumm3
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSumm4'
+        Value = 0.000000000000000000
+        Component = ceTotalSumm
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 440
+    Top = 320
   end
 end

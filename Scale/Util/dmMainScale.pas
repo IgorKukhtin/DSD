@@ -583,6 +583,7 @@ begin
        //try
          Execute;
          execParamsMovement.ParamByName('TotalSumm').AsFloat:=DataSet.FieldByName('TotalSumm').AsFloat;
+         execParamsMovement.ParamByName('MessageText').AsString:=DataSet.FieldByName('MessageText').AsString;
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpInsert_Scale_MI');
@@ -863,6 +864,8 @@ begin
               ParamByName('GoodsKindId').AsInteger  := DataSet.FieldByName('GoodsKindId').asInteger;
               ParamByName('GoodsKindCode').AsInteger:= DataSet.FieldByName('GoodsKindCode').AsInteger;
               ParamByName('GoodsKindName').asString := DataSet.FieldByName('GoodsKindName').asString;
+              //
+              ParamByName('Amount_Goods').asFloat   := DataSet.FieldByName('Amount').asFloat;
          end
          else
          begin
