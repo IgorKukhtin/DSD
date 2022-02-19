@@ -3,7 +3,7 @@ object MeasureForm: TMeasureForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103'>'
   ClientHeight = 376
-  ClientWidth = 390
+  ClientWidth = 735
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,13 +19,16 @@ object MeasureForm: TMeasureForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 390
-    Height = 350
+    Top = 59
+    Width = 735
+    Height = 317
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 26
+    ExplicitWidth = 390
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -39,7 +42,6 @@ object MeasureForm: TMeasureForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -49,14 +51,21 @@ object MeasureForm: TMeasureForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 69
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 243
+        Width = 143
+      end
+      object Name_translate: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076
+        DataBinding.FieldName = 'Name_translate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 140
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -83,9 +92,50 @@ object MeasureForm: TMeasureForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 70
       end
+      object MeasureCodeName: TcxGridDBColumn
+        Caption = #1057#1086#1082#1088'. '#1082#1086#1076' '#1077#1076'. '#1080#1079#1084'.'
+        DataBinding.FieldName = 'MeasureCodeName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1086#1082#1088#1072#1097#1077#1085#1085#1099#1081' '#1082#1086#1076' '#1077#1076'. '#1080#1079#1084'.'
+        Width = 116
+      end
+      object MeasureCodeName_translate: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' ('#1057#1086#1082#1088'. '#1082#1086#1076' '#1077#1076'. '#1080#1079#1084'.)'
+        DataBinding.FieldName = 'MeasureCodeName_translate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 122
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel: TPanel
+    Left = 0
+    Top = 0
+    Width = 735
+    Height = 33
+    Align = alTop
+    TabOrder = 5
+    ExplicitTop = -14
+    object cxLabel1: TcxLabel
+      Left = 9
+      Top = 7
+      Caption = #1071#1079#1099#1082' '#1087#1077#1088#1077#1074#1086#1076#1072':'
+    end
+    object edLanguage: TcxButtonEdit
+      Left = 101
+      Top = 6
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 1
+      Width = 144
     end
   end
   object DataSource: TDataSource
@@ -255,6 +305,18 @@ object MeasureForm: TMeasureForm
     object bbactShowAll: TdxBarButton
       Action = actShowAll
       Category = 0
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
     end
   end
   object ActionList: TActionList
@@ -447,6 +509,14 @@ object MeasureForm: TMeasureForm
       end>
     Params = <
       item
+        Name = 'inLanguageId'
+        Value = Null
+        Component = GuidesLanguage
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisShowAll'
         Value = Null
         Component = actShowAll
@@ -500,12 +570,55 @@ object MeasureForm: TMeasureForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 136
     Top = 224
+  end
+  object GuidesLanguage: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLanguage
+    FormNameParam.Value = 'TLanguageForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TLanguageForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesLanguage
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLanguage
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 552
+    Top = 80
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = ''
+    IdParam.ComponentItem = 'MasterUnitId'
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesLanguage
+      end>
+    Left = 433
+    Top = 152
   end
 end

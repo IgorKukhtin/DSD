@@ -81,6 +81,7 @@ BEGIN
                                       THEN SUM(Container.Amount)
                                       ELSE FLOOR (SUM(Container.Amount)) END                     AS Amount
                                , MovementLinkObject_From.ObjectId                                AS JuridicalID
+                               , MovementLinkObject_To.ObjectId                                  AS UnitID
                                , COALESCE(tmpSupplier.SupplierID, 0)::Integer                    AS CodeRazom
                                , MIN(Container.Id)                                               AS Id
                                , MIN(COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId)) AS MIncomeId
@@ -103,6 +104,9 @@ BEGIN
                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                              ON MovementLinkObject_From.MovementId = COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId)
                                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                             ON MovementLinkObject_To.MovementId = COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId)
+                                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
 
                                 LEFT JOIN tmpSupplier ON tmpSupplier.JuridicalId = MovementLinkObject_From.ObjectId
 
@@ -111,6 +115,7 @@ BEGIN
                           WHERE COALESCE(tmpSupplier.SupplierID, 0) > 0
                             AND (inDiscountExternal <> 15645454 OR Movement_Income.OperDate < '01.05.2021')
                           GROUP BY MovementLinkObject_From.ObjectId
+                                 , MovementLinkObject_To.ObjectId
                                  , COALESCE(tmpSupplier.SupplierID, 0)
                                  , tmpDiscountExternal.isOneSupplier
                           )
@@ -124,7 +129,7 @@ BEGIN
          LEFT JOIN tmpRemains ON 1 = 1
          LEFT JOIN tmpDiscountExternal ON 1 = 1
     WHERE tmpRemains.Remains >= inAmount
-    ORDER BY Movement.OperDate
+    ORDER BY Container.UnitId <> vbUnitId, Movement.OperDate
     LIMIT 1;
     
     SELECT COALESCE(ObjectFloat_DiscountProcent.ValueData, 0)
@@ -183,4 +188,5 @@ ALTER FUNCTION gpGet_Goods_Juridical_value (Integer, Integer, TFloat, TVarChar) 
 
 --select * from gpGet_Goods_Juridical_value_Ol(inDiscountExternal := 15466976 , inGoodsId := 2431326 , inAmount := 2 ,  inSession := '3');
 
-select * from gpGet_Goods_Juridical_value(inDiscountExternal := 15682957 , inGoodsId := 14131833 , inAmount := 1 ,  inSession := '3');
+
+select * from gpGet_Goods_Juridical_value(inDiscountExternal := 2807930 , inGoodsId := 644105 , inAmount := 1 ,  inSession := '3');

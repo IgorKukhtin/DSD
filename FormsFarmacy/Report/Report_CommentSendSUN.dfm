@@ -67,6 +67,21 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
       Top = 6
       Caption = #1055#1088#1086#1094#1077#1085#1090' '#1079#1072#1085#1091#1083#1077#1085#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076':'
     end
+    object cxLabel4: TcxLabel
+      Left = 705
+      Top = 6
+      Caption = #1069#1092#1092#1077#1082#1090#1080#1074#1085#1086#1089#1090#1100' '#1057#1059#1053':'
+    end
+    object cxDBCurrencyEdit1: TcxDBCurrencyEdit
+      Left = 821
+      Top = 5
+      DataBinding.DataField = 'Efficiency'
+      DataBinding.DataSource = DataSource
+      Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 84
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
@@ -686,8 +701,8 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
     Top = 296
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 800
-    Top = 8
+    Left = 784
+    Top = 16
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart

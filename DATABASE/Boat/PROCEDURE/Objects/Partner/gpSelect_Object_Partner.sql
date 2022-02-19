@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , DiscountTax TFloat
              , DayCalendar TFloat
              , DayBank     TFloat
+             , DatePriceList TDateTime
              , InsertName TVarChar
              , InsertDate TDateTime
              , isErased Boolean)
@@ -82,6 +83,8 @@ BEGIN
            , ObjectFloat_DiscountTax.ValueData ::TFloat AS DiscountTax
            , ObjectFloat_DayCalendar.ValueData ::TFloat AS DayCalendar
            , ObjectFloat_Bank.ValueData        ::TFloat AS DayBank
+
+           , ObjectDate_PriceList.ValueData ::TDateTime AS DatePriceList
 
            , Object_Insert.ValueData         AS InsertName
            , ObjectDate_Insert.ValueData     AS InsertDate
@@ -160,6 +163,10 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                 ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id 
                                AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value() 
+
+          LEFT JOIN ObjectDate AS ObjectDate_PriceList
+                               ON ObjectDate_PriceList.ObjectId = Object_Partner.Id
+                              AND ObjectDate_PriceList.DescId = zc_ObjectDate_Partner_PriceList()
 
           LEFT JOIN ObjectLink AS ObjectLink_Insert
                                ON ObjectLink_Insert.ObjectId = Object_Partner.Id

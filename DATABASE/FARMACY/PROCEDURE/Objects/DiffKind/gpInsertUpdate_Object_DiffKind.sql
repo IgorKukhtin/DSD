@@ -7,6 +7,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiffKind (Integer, Integer, TVarCh
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiffKind (Integer, Integer, TVarChar, Boolean, TFloat, TFloat, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiffKind (Integer, Integer, TVarChar, Boolean, TFloat, TFloat, Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiffKind (Integer, Integer, TVarChar, Boolean, TFloat, TFloat, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiffKind (Integer, Integer, TVarChar, Boolean, TFloat, TFloat, Integer, Boolean, Boolean, Boolean, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_DiffKind(
  INOUT ioId	                  Integer   ,    -- ключ объекта <> 
@@ -19,6 +20,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_DiffKind(
     IN inIsLessYear           Boolean   ,    -- Разрешен заказ товара с сроком менее года
     IN inIsFormOrder          Boolean   ,    -- Сразу формировать заказ
     IN inisFindLeftovers      Boolean   ,    -- Поиск остатков по аптекам
+    IN inPackages             TFloat    ,    -- Количествову упаковок
     IN inSession              TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -59,6 +61,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MaxOrderAmountSecond(), ioId, inMaxOrderAmountSecond);
    -- сохранили
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_DiffKind_DaysForSale(), ioId, inDaysForSale);
+   -- сохранили
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_DiffKind_Packages(), ioId, inPackages);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

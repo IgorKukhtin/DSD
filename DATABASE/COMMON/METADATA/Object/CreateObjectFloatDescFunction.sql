@@ -2224,10 +2224,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_PriceSite_DiscontPercent() RETURNS Int
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_PriceSite(), 'zc_ObjectFloat_PriceSite_DiscontPercent', 'Процент скидки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceSite_DiscontPercent');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_DiffKind_Packages() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_DiffKind_Packages'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_DiffKind(), 'zc_ObjectFloat_DiffKind_Packages', 'Количествову упаковок' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_DiffKind_Packages');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 16.02.22                                                                                      * zc_ObjectFloat_DiffKind_Packages 
  15.02.22                                                                                      * zc_ObjectFloat_PriceSite_DiscontAmount, zc_ObjectFloat_PriceSite_DiscontPercent
  15.02.22                                                                                      * zc_ObjectFloat_Goods_DiscontAmountSite, zc_ObjectFloat_Goods_DiscontPercentSite
  11.02.22                                                                                      * c_ObjectFloat_Unit_...

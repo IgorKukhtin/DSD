@@ -130,7 +130,7 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummTaxMVAT_calc() RETURNS Inte
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummTaxMVAT_calc', 'Сумма скидки без НДС, итого (расч.)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummTaxMVAT_calc');
 
-/*-------------------------------------------------------------------------------
+*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  13.10.21         *

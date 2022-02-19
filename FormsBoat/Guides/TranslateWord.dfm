@@ -574,7 +574,7 @@ object TranslateWordForm: TTranslateWordForm
         end
         item
           Name = 'HappyDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'HappyDate'
           DataType = ftDateTime
@@ -597,7 +597,7 @@ object TranslateWordForm: TTranslateWordForm
         end
         item
           Name = 'LastDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'LastDate'
           DataType = ftDateTime
@@ -917,10 +917,12 @@ object TranslateWordForm: TTranslateWordForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 160
     Top = 272

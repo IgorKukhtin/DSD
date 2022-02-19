@@ -80,6 +80,8 @@ type
     cxLabel3: TcxLabel;
     Sale: TcxGridDBColumn;
     Color_UntilNextSUN: TcxGridDBColumn;
+    cxLabel4: TcxLabel;
+    cxDBCurrencyEdit1: TcxDBCurrencyEdit;
   private
   public
   end;

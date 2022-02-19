@@ -40,6 +40,8 @@ type
     cbisLessYear: TcxCheckBox;
     cbisFormOrder: TcxCheckBox;
     cbFindLeftovers: TcxCheckBox;
+    cePackages: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public

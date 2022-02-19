@@ -91,12 +91,6 @@ type
       Sender: TcxCustomGridTableView; APrevFocusedRecord,
       AFocusedRecord: TcxCustomGridRecord;
       ANewItemRecordFocusingChanged: Boolean);
-    procedure colAmoutDayUserGetDisplayText(Sender: TcxCustomGridTableItem;
-      ARecord: TcxCustomGridRecord; var AText: string);
-    procedure colAmountDiffGetDisplayText(Sender: TcxCustomGridTableItem;
-      ARecord: TcxCustomGridRecord; var AText: string);
-    procedure colAmountDiffPrevGetDisplayText(Sender: TcxCustomGridTableItem;
-      ARecord: TcxCustomGridRecord; var AText: string);
     procedure colDiffKindIdGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
     procedure mmSearchGoodsClick(Sender: TObject);
@@ -220,33 +214,6 @@ begin
     ListDiffCDS.Filter := 'Id = ' + ListGoodsCDS.FieldByName('Id').AsString;
     ListDiffCDS.Filtered := True;
   end;
-end;
-
-procedure TListGoodsForm.colAmountDiffGetDisplayText(
-  Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-  var AText: string);
-begin
-  if ListlDiffNoSendCDS.Locate('Id', ARecord.Values[colId.Index], []) and
-    (ListlDiffNoSendCDS.FieldByName('AmoutDiff').AsCurrency <> 0) then
-    AText := FormatCurr('0.000', ListlDiffNoSendCDS.FieldByName('AmoutDiff').AsCurrency);
-end;
-
-procedure TListGoodsForm.colAmountDiffPrevGetDisplayText(
-  Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-  var AText: string);
-begin
-  if ListlDiffNoSendCDS.Locate('Id', ARecord.Values[colId.Index], []) and
-    (ListlDiffNoSendCDS.FieldByName('AmountDiffPrev').AsCurrency <> 0) then
-    AText := FormatCurr('0.000', ListlDiffNoSendCDS.FieldByName('AmountDiffPrev').AsCurrency);
-end;
-
-procedure TListGoodsForm.colAmoutDayUserGetDisplayText(
-  Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
-  var AText: string);
-begin
-  if ListlDiffNoSendCDS.Locate('Id', ARecord.Values[colId.Index], []) and
-    (ListlDiffNoSendCDS.FieldByName('AmoutDiffUser').AsCurrency <> 0) then
-    AText := FormatCurr('0.000', ListlDiffNoSendCDS.FieldByName('AmoutDiffUser').AsCurrency);
 end;
 
 procedure TListGoodsForm.colDiffKindIdGetDisplayText(
@@ -513,6 +480,23 @@ begin
     ListlDiffNoSendCDS.Post;
     CashListDiffCDS.Next;
   end;
+
+  ListlDiffNoSendCDS.First;
+  while not ListlDiffNoSendCDS.Eof do
+  begin
+
+    if ListGoodsCDS.Locate('Id', ListlDiffNoSendCDS.FieldByName('Id').AsInteger, []) then
+    begin
+      ListGoodsCDS.Edit;
+      ListGoodsCDS.FieldByName('AmoutDiffUser').AsCurrency := ListlDiffNoSendCDS.FieldByName('AmoutDiffUser').AsCurrency;
+      ListGoodsCDS.FieldByName('AmoutDiff').AsCurrency := ListlDiffNoSendCDS.FieldByName('AmoutDiff').AsCurrency;
+      ListGoodsCDS.FieldByName('AmountDiffPrev').AsCurrency := ListlDiffNoSendCDS.FieldByName('AmountDiffPrev').AsCurrency;
+      ListGoodsCDS.Post;
+    end;
+
+    ListlDiffNoSendCDS.Next;
+  end;
+
 end;
 
 procedure TListGoodsForm.FillingListlDiffNoSendCDS;

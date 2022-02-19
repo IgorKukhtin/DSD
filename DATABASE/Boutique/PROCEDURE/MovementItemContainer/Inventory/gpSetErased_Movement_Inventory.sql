@@ -12,7 +12,8 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_Inventory());
+    --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_Inventory());
+    vbUserId:= lpGetUserBySession (inSession);
 
     -- Удаляем Документ
     PERFORM lpSetErased_Movement (inMovementId := inMovementId

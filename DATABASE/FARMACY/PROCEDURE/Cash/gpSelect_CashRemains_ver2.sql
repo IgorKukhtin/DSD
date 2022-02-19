@@ -399,6 +399,7 @@ BEGIN
                                         , COALESCE (PriceChange_FixDiscount_Unit.ValueData, PriceChange_FixDiscount_Retail.ValueData)::TFloat    AS FixDiscount
                                         , COALESCE (PriceChange_Multiplicity_Unit.ValueData, PriceChange_Multiplicity_Retail.ValueData) ::TFloat AS Multiplicity
                                         , COALESCE (PriceChange_FixEndDate_Unit.ValueData, PriceChange_FixEndDate_Retail.ValueData)              AS FixEndDate
+                                        , COALESCE (ObjectLink_PriceChange_PartionDateKind_Unit.ChildObjectId, ObjectLink_PriceChange_PartionDateKind_Retail.ChildObjectId) AS PartionDateKindId
                                    FROM Object AS Object_PriceChange
                                         -- скидка по подразд
                                         LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Unit
@@ -429,6 +430,11 @@ BEGIN
                                         LEFT JOIN ObjectDate AS PriceChange_FixEndDate_Unit
                                                              ON PriceChange_FixEndDate_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
                                                             AND PriceChange_FixEndDate_Unit.DescId = zc_ObjectDate_PriceChange_FixEndDate()
+                                                            
+                                        LEFT JOIN ObjectLink AS ObjectLink_PriceChange_PartionDateKind_Unit
+                                                              ON ObjectLink_PriceChange_PartionDateKind_Unit.ObjectId  = ObjectLink_PriceChange_Unit.ObjectId
+                                                             AND ObjectLink_PriceChange_PartionDateKind_Unit.DescId    = zc_ObjectLink_PriceChange_PartionDateKind()
+                                                            
 
                                         -- скидка по сети
                                         LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Retail
@@ -459,6 +465,10 @@ BEGIN
                                         LEFT JOIN ObjectDate AS PriceChange_FixEndDate_Retail
                                                              ON PriceChange_FixEndDate_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
                                                             AND PriceChange_FixEndDate_Retail.DescId = zc_ObjectDate_PriceChange_FixEndDate()
+
+                                        LEFT JOIN ObjectLink AS ObjectLink_PriceChange_PartionDateKind_Retail
+                                                              ON ObjectLink_PriceChange_PartionDateKind_Retail.ObjectId  = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                                             AND ObjectLink_PriceChange_PartionDateKind_Retail.DescId    = zc_ObjectLink_PriceChange_PartionDateKind()
 
                                         LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Goods
                                                              ON ObjectLink_PriceChange_Goods.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
@@ -1066,6 +1076,7 @@ BEGIN
             ELSE Object_PartionDateKind.AmountMonth END::TFloat AS AmountMonth
           , CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
                   AND ObjectFloat_Goods_Price.ValueData > 0
+                   OR COALESCE(tmpPriceChange.PartionDateKindId, 0) <> 0
                  THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
                              CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
@@ -1189,6 +1200,8 @@ BEGIN
             LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Object_Goods_Main.Id
             -- Цена со скидкой
             LEFT JOIN tmpPriceChange ON tmpPriceChange.GoodsId = CashSessionSnapShot.ObjectId
+                                    AND (COALESCE(tmpPriceChange.PartionDateKindId, 0) = 0 
+                                      OR COALESCE(tmpPriceChange.PartionDateKindId, 0) = CashSessionSnapShot.PartionDateKindId)
 
            -- Тип срок/не срок
            LEFT JOIN tmpPartionDateKind AS Object_PartionDateKind ON Object_PartionDateKind.Id = NULLIF (CashSessionSnapShot.PartionDateKindId, 0)
@@ -1293,4 +1306,5 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 -- тест
 -- тест SELECT * FROM  gpDelete_CashSession ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3');
 --
-SELECT DeferredTR, PriceWithVAT_check, PricePartionDate, PartionDateKindName,  * FROM gpSelect_CashRemains_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3')  -- where COALESCE(CountSP, 0) <> 0
+SELECT DeferredTR, PriceWithVAT_check, PricePartionDate, PartionDateKindName,  * FROM gpSelect_CashRemains_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3')  
+where GoodsCode = 4059 

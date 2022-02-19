@@ -234,6 +234,10 @@ type
     actReport_ProductionPersonal: TdsdOpenForm;
     miReport_ProductionPersonal: TMenuItem;
     N19: TMenuItem;
+    actMeasureCode: TdsdOpenForm;
+    miMeasureCode: TMenuItem;
+    actTranslateObject: TdsdOpenForm;
+    miTranslateObject: TMenuItem;
   private
     { Private declarations }
   public

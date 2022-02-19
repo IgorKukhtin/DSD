@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer
              , FixDiscount TFloat
              , Multiplicity TFloat
              , DateChange TDateTime, StartDate TDateTime, FixEndDate TDateTime
+             , PartionDateKindId integer, PartionDateKindName TVarChar
              , GoodsId Integer, GoodsCode Integer
              , BarCode TVarChar
              , GoodsName TVarChar
@@ -95,6 +96,8 @@ BEGIN
                ,NULL::TDateTime                  AS DateChange
                ,NULL::TDateTime                  AS StartDate
                ,NULL::TDateTime                  AS FixEndDate
+               ,NULL::Integer                    AS PartionDateKindId
+               ,NULL::TVarChar                   AS PartionDateKindName
                ,NULL::Integer                    AS GoodsId
                ,NULL::Integer                    AS GoodsCode
                ,NULL::TVarChar                   AS BarCode
@@ -235,7 +238,9 @@ BEGIN
                                 , COALESCE (PriceChange_FixDiscount.ValueData, 0)   :: TFloat AS FixDiscount
                                 , COALESCE (PriceChange_Multiplicity.ValueData, 0)  :: TFloat AS Multiplicity
                                 , PriceChange_DateChange.ValueData                   AS DateChange
-                                , PriceChange_FixEndDate.ValueData                AS FixEndDate
+                                , PriceChange_FixEndDate.ValueData                   AS FixEndDate
+                                , Object_PartionDateKind.Id                          AS PartionDateKindId
+                                , Object_PartionDateKind.ValueData                   AS PartionDateKindName
                            FROM ObjectLink AS ObjectLink_PriceChange_Retail
                                 INNER JOIN ObjectLink AS ObjectLink_PriceChange_Goods
                                                       ON ObjectLink_PriceChange_Goods.ObjectId       = ObjectLink_PriceChange_Retail.ObjectId
@@ -267,6 +272,10 @@ BEGIN
                                 LEFT JOIN ObjectFloat AS PriceChange_Multiplicity
                                                       ON PriceChange_Multiplicity.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
                                                      AND PriceChange_Multiplicity.DescId = zc_ObjectFloat_PriceChange_Multiplicity()
+                                LEFT JOIN ObjectLink AS ObjectLink_PriceChange_PartionDateKind
+                                                      ON ObjectLink_PriceChange_PartionDateKind.ObjectId  = ObjectLink_PriceChange_Retail.ObjectId
+                                                     AND ObjectLink_PriceChange_PartionDateKind.DescId    = zc_ObjectLink_PriceChange_PartionDateKind()
+                                LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id   = ObjectLink_PriceChange_PartionDateKind.ChildObjectId
                            WHERE ObjectLink_PriceChange_Retail.DescId        = zc_ObjectLink_PriceChange_Retail()
                              AND ObjectLink_PriceChange_Retail.ChildObjectId = inRetailId
                              AND inUnitId = 0
@@ -281,6 +290,8 @@ BEGIN
                                 , COALESCE (PriceChange_Multiplicity.ValueData, 0)  :: TFloat AS Multiplicity
                                 , PriceChange_DateChange.ValueData                   AS DateChange
                                 , PriceChange_FixEndDate.ValueData                   AS FixEndDate
+                                , Object_PartionDateKind.Id                          AS PartionDateKindId
+                                , Object_PartionDateKind.ValueData                   AS PartionDateKindName
                            FROM ObjectLink AS ObjectLink_PriceChange_Unit
                                 INNER JOIN ObjectLink AS ObjectLink_PriceChange_Goods
                                                       ON ObjectLink_PriceChange_Goods.ObjectId       = ObjectLink_PriceChange_Unit.ObjectId
@@ -312,6 +323,10 @@ BEGIN
                                 LEFT JOIN ObjectFloat AS PriceChange_Multiplicity
                                                       ON PriceChange_Multiplicity.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
                                                      AND PriceChange_Multiplicity.DescId = zc_ObjectFloat_PriceChange_Multiplicity()
+                                LEFT JOIN ObjectLink AS ObjectLink_PriceChange_PartionDateKind
+                                                      ON ObjectLink_PriceChange_PartionDateKind.ObjectId  = ObjectLink_PriceChange_Unit.ObjectId
+                                                     AND ObjectLink_PriceChange_PartionDateKind.DescId    = zc_ObjectLink_PriceChange_PartionDateKind()
+                                LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id   = ObjectLink_PriceChange_PartionDateKind.ChildObjectId
                            WHERE ObjectLink_PriceChange_Unit.DescId        = zc_ObjectLink_PriceChange_Unit()
                              AND ObjectLink_PriceChange_Unit.ChildObjectId = inUnitId
                              AND inUnitId <> 0
@@ -396,6 +411,8 @@ BEGIN
                , tmpPriceChange.DateChange                                          AS DateChange
                , COALESCE (ObjectHistory_PriceChange.StartDate, NULL)  :: TDateTime AS StartDate
                , tmpPriceChange.FixEndDate                                          AS FixEndDate
+               , tmpPriceChange.PartionDateKindId                                   AS PartionDateKindId
+               , tmpPriceChange.PartionDateKindName                                 AS PartionDateKindName
 
                , Object_Goods_View.id                            AS GoodsId
                , Object_Goods_View.GoodsCodeInt                  AS GoodsCode
@@ -483,6 +500,8 @@ BEGIN
                                 , COALESCE (PriceChange_Multiplicity.ValueData, 0) :: TFloat AS Multiplicity
                                 , PriceChange_datechange.valuedata              AS DateChange
                                 , PriceChange_FixEndDate.valuedata              AS FixEndDate
+                                , Object_PartionDateKind.Id                     AS PartionDateKindId
+                                , Object_PartionDateKind.ValueData              AS PartionDateKindName
                            FROM tmpPriceChange1 AS tmpPriceChange
                                 LEFT JOIN ObjectFloat AS PriceChange_Value
                                                       ON PriceChange_Value.ObjectId = tmpPriceChange.Id
@@ -509,6 +528,10 @@ BEGIN
                                 LEFT JOIN ObjectFloat AS PriceChange_Multiplicity
                                                       ON PriceChange_Multiplicity.ObjectId = tmpPriceChange.Id
                                                      AND PriceChange_Multiplicity.DescId = zc_ObjectFloat_PriceChange_Multiplicity()
+                                LEFT JOIN ObjectLink AS ObjectLink_PriceChange_PartionDateKind
+                                                     ON ObjectLink_PriceChange_PartionDateKind.ObjectId  = tmpPriceChange.Id
+                                                    AND ObjectLink_PriceChange_PartionDateKind.DescId    = zc_ObjectLink_PriceChange_PartionDateKind()
+                                LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id   = ObjectLink_PriceChange_PartionDateKind.ChildObjectId
                           )
 
       , tmpContainerRemains AS (SELECT Container.ObjectId
@@ -588,6 +611,8 @@ BEGIN
                                     , COALESCE (tmpPriceChange.GoodsId, tmpRemains.ObjectId) AS GoodsId
                                     , tmpPriceChange.DateChange
                                     , tmpPriceChange.FixEndDate
+                                    , tmpPriceChange.PartionDateKindId 
+                                    , tmpPriceChange.PartionDateKindName 
                                     , tmpPriceChange.PercentMarkup
                                     , tmpPriceChange.FixPercent
                                     , tmpPriceChange.FixDiscount
@@ -700,6 +725,8 @@ BEGIN
                  , tmpPriceChange_All.DateChange                                AS DateChange
                  , COALESCE (ObjectHistory_PriceChange.StartDate, NULL) :: TDateTime AS StartDate
                  , tmpPriceChange_All.FixEndDate                                AS FixEndDate
+                 , tmpPriceChange_All.PartionDateKindId                                   AS PartionDateKindId
+                 , tmpPriceChange_All.PartionDateKindName                                 AS PartionDateKindName
 
                  , Object_Goods_View.id                      AS GoodsId
                  , Object_Goods_View.GoodsCodeInt            AS GoodsCode

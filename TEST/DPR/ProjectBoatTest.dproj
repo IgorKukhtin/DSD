@@ -964,6 +964,38 @@
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas"/>
+			<DCCReference Include="..\..\FormsBoat\Guides\MeasureCode.pas">
+				<Form>MeasureCodeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\MeasureCodeEdit.pas">
+				<Form>MeasureCodeEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\Union_TranslateObject.pas">
+				<Form>Union_TranslateObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\TranslateObject.pas">
+				<Form>TranslateObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\TranslateObjectEdit.pas">
+				<Form>TranslateObjectEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Document\Inventory.pas">
+				<Form>InventoryForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Document\InventoryJournal.pas">
+				<Form>InventoryJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Document\InventoryItemEdit.pas">
+				<Form>InventoryItemEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

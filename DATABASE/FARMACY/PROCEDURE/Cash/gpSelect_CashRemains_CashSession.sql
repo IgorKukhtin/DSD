@@ -769,7 +769,7 @@ ALTER FUNCTION gpSelect_CashRemains_CashSession (TVarChar) OWNER TO postgres;
  06.03.19                                                                                                    * 
  11.02.19                                                                                                    *
  30.10.18                                                                                                    *
- 01.10.18         * tmpPriceChange - учет скидки подразделения
+ 01.10.18         * 
  21.06.17         *
  09.06.17         *
  24.05.17                                                                                      * MorionCode

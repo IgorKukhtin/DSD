@@ -452,6 +452,11 @@ type
     dxBarButton28: TdxBarButton;
     dxBarButton29: TdxBarButton;
     dxBarButton30: TdxBarButton;
+    spUpdate_ShowMessageSite: TdsdStoredProc;
+    isShowMessageSite: TcxGridDBColumn;
+    mactUpdate_ShowMessageSite: TMultiAction;
+    actUpdate_ShowMessageSite: TdsdExecStoredProc;
+    dxBarButton31: TdxBarButton;
   private
     { Private declarations }
   public

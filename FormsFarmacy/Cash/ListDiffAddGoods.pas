@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   System.DateUtils, Dialogs, StdCtrls, Mask, CashInterface, DB, Buttons,
-  Gauges, cxGraphics, cxControls, cxLookAndFeels, Math,
+  Gauges, cxGraphics, cxControls, cxLookAndFeels, Math, System.StrUtils,
   cxLookAndFeelPainters, cxContainer, cxEdit, cxTextEdit, cxCurrencyEdit,
   cxClasses, cxPropertiesStore, dsdAddOn, dxSkinsCore, dxSkinsDefaultPainters,
   Datasnap.DBClient, Vcl.Menus, cxButtons, cxDropDownEdit, cxLookupEdit,
@@ -52,7 +52,7 @@ type
     FDiffKindId : Integer;
     FGoodsCDS : TClientDataSet;
     FAmountDay : Currency;
-    FAmountDiffKind, FMaxOrderAmount : Currency;
+    FAmountDiffKind, FMaxOrderAmount, FPackages : Currency;
 
     // Сохранение чека в локальной базе.
     function SaveLocal(AManagerId: Integer; AManagerName, ABayerName: String; AAmount : Currency): Boolean;
@@ -90,15 +90,16 @@ procedure TListDiffAddGoodsForm.ceAmountPropertiesChange(Sender: TObject);
 begin
 
   Label8.Visible := False;
-  if FMaxOrderAmount = 0 then Exit;
+  if (FMaxOrderAmount = 0) and (FPackages = 0) then Exit;
 
   nAmount := ceAmount.Value;
   if nAmount < 0 then nAmount := 0;
 
   Label8.Caption := 'Кол-во ' + CurrToStr(nAmount + FAmountDiffKind) + '  ' +
                     'Poзн. цена,грн ' + GoodsCDS.FieldByName('Price').AsString + '  ' +
-                    'Сумма,грн ' + CurrToStr(RoundTo((nAmount + FAmountDiffKind) * GoodsCDS.FieldByName('Price').AsCurrency, - 2)) + '  ' +
-                    'Макс. Сумма,грн ' + CurrToStr(FMaxOrderAmount);
+                    'Сумма,грн ' + CurrToStr(RoundTo((nAmount + FAmountDiffKind) * GoodsCDS.FieldByName('Price').AsCurrency, - 2)) +
+                    IfThen (FMaxOrderAmount = 0, '', '  Макс. Сумма,грн ' + CurrToStr(FMaxOrderAmount)) +
+                    IfThen (FPackages = 0, '', '  Макс. кол-во уп. ' + CurrToStr(FMaxOrderAmount));
 
   Label8.Visible := True;
 
@@ -106,7 +107,7 @@ end;
 
 procedure TListDiffAddGoodsForm.FormClose(Sender: TObject;
   var Action: TCloseAction);
-  var nAmount, nAmountDiffKind, nMaxOrderAmount : Currency; bSend : boolean;
+  var nAmount, nAmountDiffKind, nMaxOrderAmount, nPackages : Currency; bSend : boolean;
       ManagerID: Integer; ManagerName, BayerName: String;
 begin
   if ModalResult <> mrOk then Exit;
@@ -155,6 +156,7 @@ begin
   end;
 
   nMaxOrderAmount := DiffKindCDS.FieldByName('MaxOrderUnitAmount').AsCurrency;
+  nPackages := DiffKindCDS.FieldByName('Packages').AsCurrency;
 
   if (nAmount > 0) and (nMaxOrderAmount > 0) then
   begin
@@ -212,6 +214,67 @@ begin
       ShowMessage('Сумма заказа по позиции :'#13#10 + GoodsCDS.FieldByName('GoodsName').AsString +
         #13#10'С видом отказа "' + DiffKindCDS.FieldByName('Name').AsString +
         '" превышает ' + CurrToStr(nMaxOrderAmount) + ' грн. ...');
+      ceAmount.SetFocus;
+      Exit;
+    end;
+  end;
+
+  if (nAmount > 0) and (nPackages > 0) then
+  begin
+
+    nAmountDiffKind := 0;
+    if not gc_User.Local then
+    try
+      MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inGoodsId').Value := GoodsCDS.FieldByName('ID').AsInteger;
+      MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inDiffKindID').Value := FDiffKindId;
+      MainCashForm.spSelect_CashListDiffGoods.Execute;
+      if MainCashForm.CashListDiffCDS.Active and (MainCashForm.CashListDiffCDS.RecordCount = 1) then
+      begin
+        nAmountDiffKind := MainCashForm.CashListDiffCDS.FieldByName('AmountDiffKind').AsCurrency;
+      end;
+    Except
+    end;
+
+    if FileExists(ListDiff_lcl) then
+    begin
+      WaitForSingleObject(MutexDiffCDS, INFINITE);
+      try
+        LoadLocalData(ListDiffCDS, ListDiff_lcl);
+        if not ListDiffCDS.Active then
+        begin
+          DeleteLocalData(ListDiff_lcl);
+          CheckListDiffCDS;
+          LoadLocalData(ListDiffCDS, ListDiff_lcl);
+        end;
+      finally
+        ReleaseMutex(MutexDiffCDS);
+      end;
+
+      ListDiffCDS.First;
+      while not ListDiffCDS.Eof do
+      begin
+        if (ListDiffCDS.FieldByName('ID').AsInteger = GoodsCDS.FieldByName('ID').AsInteger) then
+        begin
+          if (StartOfTheDay(ListDiffCDS.FieldByName('DateInput').AsDateTime) = Date) then
+          begin
+            if not MainCashForm.CashListDiffCDS.Active or not ListDiffCDS.FieldByName('IsSend').AsBoolean then
+            begin
+              if (ListDiffCDS.FieldByName('DiffKindId').AsInteger = FDiffKindId)  then
+                nAmountDiffKind := nAmountDiffKind + ListDiffCDS.FieldByName('Amount').AsCurrency;
+            end;
+          end;
+        end;
+        ListDiffCDS.Next;
+      end;
+    end;
+
+    if ((nAmountDiffKind + nAmount) > 1) and
+      ((nAmountDiffKind + nAmount) > nPackages) then
+    begin
+      Action := TCloseAction.caNone;
+      ShowMessage('Количество заказа по позиции :'#13#10 + GoodsCDS.FieldByName('GoodsName').AsString +
+        #13#10'С видом отказа "' + DiffKindCDS.FieldByName('Name').AsString +
+        '" превышает ' + CurrToStr(nPackages) + ' уп. ...');
       ceAmount.SetFocus;
       Exit;
     end;
@@ -494,14 +557,16 @@ begin
   Label8.Visible := False;
 
   FMaxOrderAmount := 0;
+  FPackages := 0;
   FAmountDiffKind := 0;
   if FDiffKindId = 0 then Exit;
 
   if not DiffKindCDS.Locate('Id', FDiffKindId, []) then Exit;
 
   FMaxOrderAmount := DiffKindCDS.FieldByName('MaxOrderUnitAmount').AsCurrency;
+  FPackages := DiffKindCDS.FieldByName('Packages').AsCurrency;
 
-  if FMaxOrderAmount = 0 then Exit;
+  if (FMaxOrderAmount = 0) and (FPackages = 0) then Exit;
 
   if not gc_User.Local then
   try

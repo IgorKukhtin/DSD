@@ -2,22 +2,20 @@ inherited ChoiceListDiffForm: TChoiceListDiffForm
   BorderIcons = [biSystemMenu]
   Caption = #1042#1099#1073#1086#1088' '#1042#1080#1076#1072' '#1086#1090#1082#1072#1079#1072
   ClientHeight = 276
-  ClientWidth = 398
+  ClientWidth = 491
   Position = poScreenCenter
-  ExplicitWidth = 414
+  ExplicitWidth = 507
   ExplicitHeight = 315
   PixelsPerInch = 96
   TextHeight = 13
   object ListDiffGrid: TcxGrid [0]
     Left = 0
     Top = 41
-    Width = 398
+    Width = 491
     Height = 194
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 0
-    ExplicitWidth = 361
-    ExplicitHeight = 208
+    ExplicitWidth = 398
     object ListDiffGridDBTableView: TcxGridDBTableView
       OnDblClick = ListDiffGridDBTableViewDblClick
       Navigator.Buttons.CustomButtons = <>
@@ -48,6 +46,15 @@ inherited ChoiceListDiffForm: TChoiceListDiffForm
         Options.Editing = False
         Width = 89
       end
+      object colPackages: TcxGridDBColumn
+        Caption = #1052#1072#1082#1089'. '#1082#1086#1083'-'#1074#1086' '#1091#1087'.'
+        DataBinding.FieldName = 'Packages'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.###;-,0.###; ;'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 86
+      end
     end
     object ListDiffGridLevel: TcxGridLevel
       Caption = #1040#1083#1100#1090' (24 '#1087#1086#1079') "*"'
@@ -57,12 +64,11 @@ inherited ChoiceListDiffForm: TChoiceListDiffForm
   object Panel1: TPanel [1]
     Left = 0
     Top = 235
-    Width = 398
+    Width = 491
     Height = 41
     Align = alBottom
     TabOrder = 1
-    ExplicitTop = 208
-    ExplicitWidth = 361
+    ExplicitWidth = 398
     object bbCancel: TcxButton
       Left = 221
       Top = 6
@@ -87,19 +93,17 @@ inherited ChoiceListDiffForm: TChoiceListDiffForm
   object Panel2: TPanel [2]
     Left = 0
     Top = 0
-    Width = 398
+    Width = 491
     Height = 41
     Align = alTop
     Caption = 'Panel2'
     ShowCaption = False
     TabOrder = 2
-    ExplicitLeft = 160
-    ExplicitTop = 64
-    ExplicitWidth = 185
+    ExplicitWidth = 398
     object Label6: TLabel
       Left = 1
       Top = 17
-      Width = 396
+      Width = 489
       Height = 16
       Align = alTop
       Alignment = taCenter
@@ -115,7 +119,7 @@ inherited ChoiceListDiffForm: TChoiceListDiffForm
     object Label1: TLabel
       Left = 1
       Top = 1
-      Width = 396
+      Width = 489
       Height = 16
       Align = alTop
       Alignment = taCenter

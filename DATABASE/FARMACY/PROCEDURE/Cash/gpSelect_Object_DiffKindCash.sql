@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isLessYear Boolean
              , isFormOrder Boolean
              , isFindLeftovers Boolean
+             , Packages TFloat
              ) 
 AS
 $BODY$
@@ -56,6 +57,7 @@ BEGIN
           , COALESCE(ObjectBoolean_DiffKind_FormOrder.ValueData, False)          AS isFormOrder            
           , COALESCE(ObjectBoolean_DiffKind_FindLeftovers.ValueData, False) AND 
             COALESCE(vbParticipDistribListDiff, False)                           AS isFindLeftovers           
+          , ObjectFloat_DiffKind_Packages.ValueData                              AS Packages
      FROM Object AS Object_DiffKind
           LEFT JOIN ObjectFloat AS ObjectFloat_DiffKind_MaxOrderAmount
                                 ON ObjectFloat_DiffKind_MaxOrderAmount.ObjectId = Object_DiffKind.Id 
@@ -75,6 +77,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_DiffKind_FindLeftovers
                                   ON ObjectBoolean_DiffKind_FindLeftovers.ObjectId = Object_DiffKind.Id
                                  AND ObjectBoolean_DiffKind_FindLeftovers.DescId = zc_ObjectBoolean_DiffKind_FindLeftovers()   
+          LEFT JOIN ObjectFloat AS ObjectFloat_DiffKind_Packages
+                                ON ObjectFloat_DiffKind_Packages.ObjectId = Object_DiffKind.Id 
+                               AND ObjectFloat_DiffKind_Packages.DescId = zc_ObjectFloat_DiffKind_Packages() 
      WHERE Object_DiffKind.DescId = zc_Object_DiffKind()
        AND Object_DiffKind.isErased = FALSE
      ORDER BY Object_DiffKind.ValueData;

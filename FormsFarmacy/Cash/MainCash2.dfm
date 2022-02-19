@@ -7820,6 +7820,12 @@ inherited MainCashForm2: TMainCashForm2
         Value = Null
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsOrderTabletki'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 360

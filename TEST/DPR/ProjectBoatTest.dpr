@@ -288,7 +288,15 @@ uses
   IncomeItemEdit in '..\..\FormsBoat\Document\IncomeItemEdit.pas' {IncomeItemEditForm: TParentForm},
   IncomeEdit in '..\..\FormsBoat\Document\IncomeEdit.pas' {IncomeEditForm: TParentForm},
   DOCUMENTINVOICE_PRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
-  DOCUMENTINVOICE_TN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas';
+  DOCUMENTINVOICE_TN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
+  MeasureCode in '..\..\FormsBoat\Guides\MeasureCode.pas' {MeasureCodeForm: TParentForm},
+  MeasureCodeEdit in '..\..\FormsBoat\Guides\MeasureCodeEdit.pas' {MeasureCodeEditForm: TParentForm},
+  Union_TranslateObject in '..\..\FormsBoat\Guides\Union_TranslateObject.pas' {Union_TranslateObjectForm: TParentForm},
+  TranslateObject in '..\..\FormsBoat\Guides\TranslateObject.pas' {TranslateObjectForm: TParentForm},
+  TranslateObjectEdit in '..\..\FormsBoat\Guides\TranslateObjectEdit.pas' {TranslateObjectEditForm: TParentForm},
+  Inventory in '..\..\FormsBoat\Document\Inventory.pas' {InventoryForm: TParentForm},
+  InventoryJournal in '..\..\FormsBoat\Document\InventoryJournal.pas' {InventoryJournalForm: TParentForm},
+  InventoryItemEdit in '..\..\FormsBoat\Document\InventoryItemEdit.pas' {InventoryItemEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

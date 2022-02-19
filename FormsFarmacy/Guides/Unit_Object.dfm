@@ -11,17 +11,17 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     Width = 1442
     Height = 588
     ExplicitWidth = 1442
-    ExplicitHeight = 458
+    ExplicitHeight = 588
     ClientRectBottom = 588
     ClientRectRight = 1442
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1442
-      ExplicitHeight = 458
+      ExplicitHeight = 588
       inherited cxGrid: TcxGrid
         Width = 1442
         Height = 588
         ExplicitWidth = 1442
-        ExplicitHeight = 458
+        ExplicitHeight = 588
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -1039,6 +1039,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderHint = #1055#1088#1080' '#1086#1096#1080#1073#1082#1077' '#1056#1056#1054' '#1080' '#1085#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1086#1084' '#1095#1077#1082#1077' '#1089#1086#1093#1088#1072#1085#1103#1090#1100' '#1077#1075#1086' '#1082#1072#1082' '#1042#1048#1055
             Options.Editing = False
             Width = 73
+          end
+          object isShowMessageSite: TcxGridDBColumn
+            AlternateCaption = #1057#1086#1086#1073#1097#1077#1085#1080#1077' '#1086#1073' '#1086#1073#1088#1072#1073#1086#1090#1082#1077' '#1079#1072#1082#1072#1079#1086#1074' '#1089#1072#1081#1090#1072
+            Caption = #1055#1088#1077#1076#1091#1087#1088#1077#1078#1076#1077#1085#1080#1077' '#1079#1072' 5 '#1084#1080#1085' '#1076#1086' '#1073#1083#1086#1082#1072' '#1079#1072#1082#1072#1079#1072
+            DataBinding.FieldName = 'isShowMessageSite'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 89
           end
         end
       end
@@ -3853,14 +3861,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       View = cxGridDBTableView
       QuestionBeforeExecute = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#9#1055#1088#1080' '#1086#1096#1080#1073#1082#1077' '#1056#1056#1054' '#1080' '#1085#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1086#1084' '#1095#1077#1082#1077' '#1089#1086#1093#1088#1072#1085#1103#1090 +
-        #1100' '#1077#1075#1086' '#1082#1072#1082' '#1042#1048#1055'"?'
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1088#1080' '#1086#1096#1080#1073#1082#1077' '#1056#1056#1054' '#1080' '#1085#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1086#1084' '#1095#1077#1082#1077' '#1089#1086#1093#1088#1072#1085#1103#1090#1100 +
+        ' '#1077#1075#1086' '#1082#1072#1082' '#1042#1048#1055'"?'
       Caption = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#9#1055#1088#1080' '#1086#1096#1080#1073#1082#1077' '#1056#1056#1054' '#1080' '#1085#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1086#1084' '#1095#1077#1082#1077' '#1089#1086#1093#1088#1072#1085#1103#1090 +
-        #1100' '#1077#1075#1086' '#1082#1072#1082' '#1042#1048#1055'"'
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1088#1080' '#1086#1096#1080#1073#1082#1077' '#1056#1056#1054' '#1080' '#1085#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1086#1084' '#1095#1077#1082#1077' '#1089#1086#1093#1088#1072#1085#1103#1090#1100 +
+        ' '#1077#1075#1086' '#1082#1072#1082' '#1042#1048#1055'"'
       Hint = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#9#1055#1088#1080' '#1086#1096#1080#1073#1082#1077' '#1056#1056#1054' '#1080' '#1085#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1086#1084' '#1095#1077#1082#1077' '#1089#1086#1093#1088#1072#1085#1103#1090 +
-        #1100' '#1077#1075#1086' '#1082#1072#1082' '#1042#1048#1055'"'
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1088#1080' '#1086#1096#1080#1073#1082#1077' '#1056#1056#1054' '#1080' '#1085#1077' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1086#1084' '#1095#1077#1082#1077' '#1089#1086#1093#1088#1072#1085#1103#1090#1100 +
+        ' '#1077#1075#1086' '#1082#1072#1082' '#1042#1048#1055'"'
       ImageIndex = 79
     end
     object actUpdate_isErrorRROToVIP: TdsdExecStoredProc
@@ -3973,6 +3981,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' v2 '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' ('#1055#1088#1080#1077#1084') - '#1053#1077#1090
       Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' v2 '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' ('#1055#1088#1080#1077#1084') - '#1053#1077#1090
       ImageIndex = 48
+    end
+    object mactUpdate_ShowMessageSite: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_ShowMessageSite
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1088#1077#1076#1091#1087#1088#1077#1078#1076#1077#1085#1080#1077' '#1079#1072' 5 '#1084#1080#1085' '#1076#1086' '#1073#1083#1086#1082#1072' '#1079#1072#1082#1072#1079#1072'"?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1088#1077#1076#1091#1087#1088#1077#1078#1076#1077#1085#1080#1077' '#1079#1072' 5 '#1084#1080#1085' '#1076#1086' '#1073#1083#1086#1082#1072' '#1079#1072#1082#1072#1079#1072'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1088#1077#1076#1091#1087#1088#1077#1078#1076#1077#1085#1080#1077' '#1079#1072' 5 '#1084#1080#1085' '#1076#1086' '#1073#1083#1086#1082#1072' '#1079#1072#1082#1072#1079#1072'"'
+      ImageIndex = 79
+    end
+    object actUpdate_ShowMessageSite: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_ShowMessageSite
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ShowMessageSite
+        end>
+      Caption = 'actUpdate_ShowMessageSite'
     end
   end
   inherited MasterDS: TDataSource
@@ -4729,6 +4762,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton31'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton11'
         end>
     end
@@ -4864,6 +4901,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton30: TdxBarButton
       Action = macUpdate_Unit_isSUN_v2_Supplement_in_no
+      Category = 0
+    end
+    object dxBarButton31: TdxBarButton
+      Action = mactUpdate_ShowMessageSite
       Category = 0
     end
   end
@@ -7926,5 +7967,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 744
     Top = 523
+  end
+  object spUpdate_ShowMessageSite: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_ShowMessageSite'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowMessageSite'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isShowMessageSite'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 522
+    Top = 472
   end
 end

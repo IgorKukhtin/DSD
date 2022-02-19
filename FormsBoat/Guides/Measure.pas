@@ -11,7 +11,8 @@ uses
   cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
   Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
   cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxContainer,
+  dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel, Vcl.ExtCtrls;
 
 type
   TMeasureForm = class(TParentForm)
@@ -52,6 +53,16 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbactShowAll: TdxBarButton;
+    GuidesLanguage: TdsdGuides;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    Name_translate: TcxGridDBColumn;
+    MeasureCodeName_translate: TcxGridDBColumn;
+    MeasureCodeName: TcxGridDBColumn;
+    RefreshDispatcher: TRefreshDispatcher;
+    Panel: TPanel;
+    cxLabel1: TcxLabel;
+    edLanguage: TcxButtonEdit;
   private
     { Private declarations }
   public

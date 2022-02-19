@@ -12741,7 +12741,7 @@ end;
 
 procedure TMainCashForm2.SetBlinkVIP(isRefresh: Boolean);
 var
-  lMovementId_BlinkVIP: String;
+  lMovementId_BlinkVIP, AResult: String;
 begin
   if gc_User.Local then
     exit; // только 2 форма
@@ -12758,6 +12758,10 @@ begin
       FIsVIP := spGet_BlinkVIP.ParamByName('outIsVIP').Value;
       FIsTabletki := spGet_BlinkVIP.ParamByName('outIsTabletki').Value;
       FIsLiki24 := spGet_BlinkVIP.ParamByName('outIsLiki24').Value;
+
+      if spGet_BlinkVIP.ParamByName('outIsOrderTabletki').Value and Self.Showing then
+        ShowPUSHMessageCash('Обработайте заказ! Аптека будет в блоке через 5 минут!', AResult, False,
+                            'TCheckSiteForm', 'Просмотр чеков с сайта "Таблетки"');
 
       // в этом случае кнопка будет мигать
       fBlinkVIP := lMovementId_BlinkVIP <> '';

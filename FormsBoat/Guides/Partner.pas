@@ -75,6 +75,7 @@ type
     TaxKindName: TcxGridDBColumn;
     TaxKind_Value: TcxGridDBColumn;
     PaidKindName: TcxGridDBColumn;
+    DatePriceList: TcxGridDBColumn;
   private
     { Private declarations }
   public

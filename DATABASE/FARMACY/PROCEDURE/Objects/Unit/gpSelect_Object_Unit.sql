@@ -69,7 +69,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isParticipDistribListDiff Boolean, isPauseDistribListDiff  Boolean, isRequestDistribListDiff Boolean
              , isBlockCommentSendTP Boolean, isOnlyTimingSUN Boolean
              , PharmacyManager TVarChar, PharmacyManagerPhone TVarChar
-             , TelegramId TVarChar, isErrorRROToVIP Boolean
+             , TelegramId TVarChar, isErrorRROToVIP Boolean, isShowMessageSite Boolean
 ) AS
 $BODY$
 BEGIN
@@ -280,6 +280,8 @@ BEGIN
       , ObjectString_Unit_TelegramId.ValueData                                           AS TelegramId
       
       , COALESCE (ObjectBoolean_ErrorRROToVIP.ValueData, FALSE)           :: Boolean     AS isErrorRROToVIP
+      
+      , COALESCE (ObjectBoolean_ShowMessageSite.ValueData, FALSE)         :: Boolean     AS isShowMessageSite
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -651,6 +653,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_OnlyTimingSUN
                                 ON ObjectBoolean_OnlyTimingSUN.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_OnlyTimingSUN.DescId = zc_ObjectBoolean_Unit_SUN_OnlyTiming()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_ShowMessageSite
+                                ON ObjectBoolean_ShowMessageSite.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_ShowMessageSite.DescId = zc_ObjectBoolean_Unit_ShowMessageSite()
 
         LEFT JOIN ObjectDate AS ObjectDate_StartServiceNigth
                              ON ObjectDate_StartServiceNigth.ObjectId = Object_Unit.Id

@@ -21,7 +21,10 @@ RETURNS TABLE (Id Integer,
                IsClose Boolean,
                isFirst  Boolean,
                isSecond Boolean,
-               isResolution_224 Boolean)
+               isResolution_224 Boolean,
+               AmoutDiffUser TFloat,
+               AmoutDiff TFloat,
+               AmountDiffPrev TFloat)
 
 AS
 $BODY$
@@ -399,7 +402,11 @@ BEGIN
               GoodsPriceAll.isClose             AS isClose,
               GoodsPriceAll.isFirst             AS isFirst,
               GoodsPriceAll.isSecond            AS isSecond,
-              GoodsPriceAll.isResolution_224    AS isResolution_224
+              GoodsPriceAll.isResolution_224    AS isResolution_224,
+              NULL::TFloat                      AS AmoutDiffUser,
+              NULL::TFloat                      AS AmoutDiff,
+              NULL::TFloat                      AS AmountDiffPrev
+
 
      FROM GoodsPriceAll
 
@@ -432,4 +439,4 @@ $BODY$
 */
 
 -- тест 
-SELECT * FROM gpSelect_CashGoods('3997718');
+SELECT * FROM gpSelect_CashGoods('3');

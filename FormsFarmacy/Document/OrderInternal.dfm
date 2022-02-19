@@ -922,6 +922,11 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 78
           end
+          object SupplierFailuresColor: TcxGridDBColumn
+            DataBinding.FieldName = 'SupplierFailuresColor'
+            Visible = False
+            VisibleForCustomization = False
+          end
         end
       end
       object cxGrid1: TcxGrid
@@ -1156,6 +1161,9 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 75
+          end
+          object colSupplierFailuresColor: TcxGridDBColumn
+            DataBinding.FieldName = 'SupplierFailuresColor'
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -2301,6 +2309,13 @@ inherited OrderInternalForm: TOrderInternalForm
       item
         ColorColumn = PartionGoodsDate
         ValueColumn = PartionGoodsDateColor
+        BackGroundValueColumn = OrderShedule_Color
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = GoodsName
+        ValueColumn = PartionGoodsDateColor
+        BackGroundValueColumn = SupplierFailuresColor
         ColorValueList = <>
       end>
     SummaryItemList = <
@@ -2859,6 +2874,12 @@ inherited OrderInternalForm: TOrderInternalForm
     ColorRuleList = <
       item
         ValueColumn = colPartionGoodsDateColor
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colGoodsName
+        ValueColumn = colPartionGoodsDateColor
+        BackGroundValueColumn = colSupplierFailuresColor
         ColorValueList = <>
       end>
     ColumnAddOnList = <>
