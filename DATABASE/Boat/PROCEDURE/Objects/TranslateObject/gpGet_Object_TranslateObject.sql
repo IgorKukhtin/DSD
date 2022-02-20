@@ -42,12 +42,12 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Language
                                ON ObjectLink_Language.ObjectId = Object_TranslateObject.Id
                               AND ObjectLink_Language.DescId = zc_ObjectLink_TranslateObject_Language()
-          LEFT JOIN Object AS Object_Language ON Object_Language.Id = ObjectLink_Language.ChilObjectId
+          LEFT JOIN Object AS Object_Language ON Object_Language.Id = ObjectLink_Language.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Object
                                ON ObjectLink_Object.ObjectId = Object_TranslateObject.Id
                               AND ObjectLink_Object.DescId = zc_ObjectLink_TranslateObject_Object()
-          LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChilObjectId
+          LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
        WHERE Object_TranslateObject.Id = inId;
    END IF;
 

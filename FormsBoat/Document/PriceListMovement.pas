@@ -69,6 +69,7 @@ type
     cxLabel3: TcxLabel;
     edLanguage: TcxButtonEdit;
     GuidesLanguage: TdsdGuides;
+    GoodsName_translate: TcxGridDBColumn;
   private
     { Private declarations }
   public

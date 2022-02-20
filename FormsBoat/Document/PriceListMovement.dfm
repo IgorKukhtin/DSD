@@ -11,18 +11,16 @@ inherited PriceListMovementForm: TPriceListMovementForm
     Width = 1069
     Height = 585
     ExplicitTop = 83
-    ExplicitWidth = 868
+    ExplicitWidth = 1069
     ExplicitHeight = 585
     ClientRectBottom = 585
     ClientRectRight = 1069
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 868
+      ExplicitWidth = 1069
       ExplicitHeight = 561
       inherited cxGrid: TcxGrid
         Width = 1069
         Height = 561
-        ExplicitLeft = -3
-        ExplicitTop = 3
         ExplicitWidth = 1069
         ExplicitHeight = 561
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -97,12 +95,20 @@ inherited PriceListMovementForm: TPriceListMovementForm
             Width = 63
           end
           object GoodsName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
+            Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 206
+          end
+          object GoodsName_translate: TcxGridDBColumn
+            Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1087#1077#1088#1077#1074#1086#1076')'
+            DataBinding.FieldName = 'GoodsName_translate'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 131
           end
           object DiscountPartnerName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1089#1082'. '#1091' '#1087#1086#1089#1090'.'
@@ -235,7 +241,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
     Width = 1069
     Height = 57
     TabOrder = 3
-    ExplicitWidth = 868
+    ExplicitWidth = 1069
     ExplicitHeight = 57
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -439,6 +445,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actOpenPriceListLoad: TdsdInsertUpdateAction
@@ -944,14 +951,14 @@ inherited PriceListMovementForm: TPriceListMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalId'
+        Name = 'PartnerId'
         Value = ''
         Component = GuidesPartner
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalName'
+        Name = 'PartnerName'
         Value = ''
         Component = GuidesPartner
         ComponentItem = 'TextValue'
@@ -959,30 +966,32 @@ inherited PriceListMovementForm: TPriceListMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ContractId'
+        Name = 'Comment'
         Value = ''
+        Component = ceComment
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ContractName'
+        Name = 'fff'
         Value = ''
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PriceListId'
+        Name = 'fff'
         Value = Null
         Component = FormParams
         ComponentItem = 'PriceListId'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AreaId'
+        Name = 'fff'
         Value = Null
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AreaName'
+        Name = 'fff'
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1418,9 +1427,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
     Params = <
       item
         Name = 'inDefaultKey'
-        Value = 
-          'TPriceListOsculatiJournalForm;zc_Object_ImportSetting_PriceListO' +
-          'sculatiJournal'
+        Value = 'TPriceListOsculatiForm;zc_Object_ImportSetting_PriceListOsculati'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1435,7 +1442,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         Name = 'gpGet_DefaultValue'
         Value = Null
         Component = FormParams
-        ComponentItem = 'ImportSettingId_SN'
+        ComponentItem = 'ImportSettingId_Osculati'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
