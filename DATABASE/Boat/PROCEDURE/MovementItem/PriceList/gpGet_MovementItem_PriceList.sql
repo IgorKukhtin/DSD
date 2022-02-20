@@ -44,7 +44,7 @@ BEGIN
                                 --
                               , MovementItem.isErased
 
-                              , MILO_DiscountParner.ObjectId   AS DiscountParnerId
+                              , MILO_DiscountPartner.ObjectId   AS DiscountPartnerId
                               , MILO_Measure.ObjectId          AS MeasureId
                               , MILO_MeasureParent.ObjectId    AS MeasureParentId
                               , MIString_CatalogPage.ValueData AS CatalogPage
@@ -82,9 +82,9 @@ BEGIN
                                                            ON MIString_CatalogPage.MovementItemId = MovementItem.Id
                                                           AND MIString_CatalogPage.DescId = zc_MIString_CatalogPage()
 
-                              LEFT JOIN MovementItemLinkObject AS MILO_DiscountParner
-                                                               ON MILO_DiscountParner.MovementItemId = MovementItem.Id
-                                                              AND MILO_DiscountParner.DescId = zc_MILinkObject_DiscountParner()
+                              LEFT JOIN MovementItemLinkObject AS MILO_DiscountPartner
+                                                               ON MILO_DiscountPartner.MovementItemId = MovementItem.Id
+                                                              AND MILO_DiscountPartner.DescId = zc_MILinkObject_DiscountPartner()
                               LEFT JOIN MovementItemLinkObject AS MILO_Measure
                                                                ON MILO_Measure.MovementItemId = MovementItem.Id
                                                               AND MILO_Measure.DescId = zc_MILinkObject_Measure()

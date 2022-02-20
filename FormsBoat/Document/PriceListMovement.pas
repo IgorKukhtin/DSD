@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, ExternalLoad;
 
 type
   TPriceListMovementForm = class(TAncestorDocumentForm)
@@ -52,10 +52,23 @@ type
     spUpdate_Price: TdsdStoredProc;
     macUpdatePrice: TMultiAction;
     actUpdatePrice: TdsdExecStoredProc;
-    bb: TdxBarButton;
+    bbUpdatePrice: TdxBarButton;
     isOutlet: TcxGridDBColumn;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
+    spGetImportSettingId_SkiDoo: TdsdStoredProc;
+    spGetImportSettingId_Osculati: TdsdStoredProc;
+    actDoLoad_SkiDoo: TExecuteImportSettingsAction;
+    actDoLoad_Osculati: TExecuteImportSettingsAction;
+    actGetImportSetting_Osculati: TdsdExecStoredProc;
+    actGetImportSetting_SkiDoo: TdsdExecStoredProc;
+    mactStartLoad_Osculati: TMultiAction;
+    mactStartLoad_SkiDoo: TMultiAction;
+    bbStartLoad_SkiDoo: TdxBarButton;
+    bbStartLoad_Osculati: TdxBarButton;
+    cxLabel3: TcxLabel;
+    edLanguage: TcxButtonEdit;
+    GuidesLanguage: TdsdGuides;
   private
     { Private declarations }
   public

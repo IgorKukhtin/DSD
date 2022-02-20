@@ -1,27 +1,29 @@
 inherited PriceListMovementForm: TPriceListMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
   ClientHeight = 668
-  ClientWidth = 868
-  ExplicitWidth = 884
+  ClientWidth = 1069
+  ExplicitWidth = 1085
   ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 868
+    Width = 1069
     Height = 585
     ExplicitTop = 83
     ExplicitWidth = 868
     ExplicitHeight = 585
     ClientRectBottom = 585
-    ClientRectRight = 868
+    ClientRectRight = 1069
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 868
       ExplicitHeight = 561
       inherited cxGrid: TcxGrid
-        Width = 868
+        Width = 1069
         Height = 561
-        ExplicitWidth = 868
+        ExplicitLeft = -3
+        ExplicitTop = 3
+        ExplicitWidth = 1069
         ExplicitHeight = 561
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -102,9 +104,9 @@ inherited PriceListMovementForm: TPriceListMovementForm
             Options.Editing = False
             Width = 206
           end
-          object DiscountParnerName: TcxGridDBColumn
+          object DiscountPartnerName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1089#1082'. '#1091' '#1087#1086#1089#1090'.'
-            DataBinding.FieldName = 'DiscountParnerName'
+            DataBinding.FieldName = 'DiscountPartnerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1043#1088#1091#1087#1087#1072' '#1089#1082#1080#1076#1082#1080' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -230,7 +232,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 868
+    Width = 1069
     Height = 57
     TabOrder = 3
     ExplicitWidth = 868
@@ -297,6 +299,23 @@ inherited PriceListMovementForm: TPriceListMovementForm
       Top = 23
       TabOrder = 9
       Width = 285
+    end
+    object cxLabel3: TcxLabel
+      Left = 870
+      Top = 6
+      Caption = #1071#1079#1099#1082' '#1087#1077#1088#1077#1074#1086#1076#1072':'
+    end
+    object edLanguage: TcxButtonEdit
+      Left = 870
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Width = 179
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -420,7 +439,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actOpenPriceListLoad: TdsdInsertUpdateAction
@@ -472,6 +490,120 @@ inherited PriceListMovementForm: TPriceListMovementForm
       Hint = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1094#1077#1085#1091' '#1087#1088#1072#1081#1089#1072
       ImageIndex = 41
     end
+    object actDoLoad_SkiDoo: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inOperDate'
+          Value = 42370d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerId'
+          Value = Null
+          Component = GuidesPartner
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actDoLoad_Osculati: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId_Osculati'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inOperDate'
+          Value = 42370d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerId'
+          Value = Null
+          Component = GuidesPartner
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actGetImportSetting_Osculati: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_Osculati
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_Osculati
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1080#1093#1086#1076#1072' '#1080#1079' '#1092#1072#1081#1083#1072' '#1089' S/N'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1080#1093#1086#1076#1072' '#1080#1079' '#1092#1072#1081#1083#1072' '#1089' S/N'
+    end
+    object actGetImportSetting_SkiDoo: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_SkiDoo
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_SkiDoo
+        end>
+      Caption = 'actGetImportSetting_SkiDoo'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1080#1093#1086#1076#1072' '#1080#1079' '#1092#1072#1081#1083#1072
+    end
+    object mactStartLoad_Osculati: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_Osculati
+        end
+        item
+          Action = actDoLoad_Osculati
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Osculati '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Osculati '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Osculati '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Osculati '#1080#1079' '#1092#1072#1081#1083#1072
+      ImageIndex = 74
+      WithoutNext = True
+    end
+    object mactStartLoad_SkiDoo: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_SkiDoo
+        end
+        item
+          Action = actDoLoad_SkiDoo
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' SkiDoo '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' SkiDoo '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' SkiDoo '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' SkiDoo '#1080#1079' '#1092#1072#1081#1083#1072
+      ImageIndex = 41
+      WithoutNext = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -493,6 +625,14 @@ inherited PriceListMovementForm: TPriceListMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inLanguageId'
+        Value = ''
+        Component = GuidesLanguage
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inShowAll'
         Value = False
         Component = actShowAll
@@ -506,11 +646,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -592,6 +727,14 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad_SkiDoo'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_Osculati'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -649,8 +792,16 @@ inherited PriceListMovementForm: TPriceListMovementForm
       Action = actOpenPriceListLoad
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbUpdatePrice: TdxBarButton
       Action = macUpdatePrice
+      Category = 0
+    end
+    object bbStartLoad_SkiDoo: TdxBarButton
+      Action = mactStartLoad_SkiDoo
+      Category = 0
+    end
+    object bbStartLoad_Osculati: TdxBarButton
+      Action = mactStartLoad_Osculati
       Category = 0
     end
   end
@@ -719,6 +870,16 @@ inherited PriceListMovementForm: TPriceListMovementForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingId_Osculati'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 280
@@ -1095,6 +1256,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
+        Component = GuidesLanguage
       end>
     Left = 512
     Top = 328
@@ -1212,5 +1374,102 @@ inherited PriceListMovementForm: TPriceListMovementForm
     PackSize = 1
     Left = 664
     Top = 155
+  end
+  object spGetImportSettingId_SkiDoo: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 
+          'TPriceListSkiDooJournalForm;zc_Object_ImportSetting_PriceListSki' +
+          'DooJournal'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 560
+    Top = 384
+  end
+  object spGetImportSettingId_Osculati: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 
+          'TPriceListOsculatiJournalForm;zc_Object_ImportSetting_PriceListO' +
+          'sculatiJournal'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId_SN'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 720
+    Top = 384
+  end
+  object GuidesLanguage: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLanguage
+    FormNameParam.Value = 'TLanguageForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TLanguageForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesLanguage
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLanguage
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 912
+    Top = 24
   end
 end

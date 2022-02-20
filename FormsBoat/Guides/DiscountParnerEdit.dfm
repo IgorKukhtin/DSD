@@ -105,7 +105,7 @@ object DiscountParnerEditForm: TDiscountParnerEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_DiscountParner'
+    StoredProcName = 'gpInsertUpdate_Object_DiscountPartner'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -156,7 +156,7 @@ object DiscountParnerEditForm: TDiscountParnerEditForm
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_DiscountParner'
+    StoredProcName = 'gpGet_Object_DiscountPartner'
     DataSets = <>
     OutputType = otResult
     Params = <

@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PriceList(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
-    IN inDiscountParnerId    Integer   , -- 
+    IN inDiscountPartnerId    Integer   , -- 
     IN inMeasureId           Integer   , -- 
     IN inMeasureParentId     Integer   , -- 
     IN inAmount              TFloat    , -- 
@@ -26,7 +26,7 @@ $BODY$
 BEGIN
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, NULL, inMovementId, inAmount, NULL,inUserId);
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MeasureMult(), ioId, inMeasureMult);
@@ -48,7 +48,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Outlet(), ioId, inisOutlet);
 
      -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_DiscountParner(), ioId, inDiscountParnerId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_DiscountPartner(), ioId, inDiscountPartnerId);
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Measure(), ioId, inMeasureId);
      -- сохранили связь с <>

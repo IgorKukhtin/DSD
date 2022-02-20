@@ -23,7 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ProdColorId Integer, ProdColorName TVarChar
              , PartnerId Integer, PartnerName   TVarChar
              , UnitId Integer, UnitName TVarChar
-             , DiscountParnerId Integer, DiscountParnerName TVarChar
+             , DiscountPartnerId Integer, DiscountPartnerName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
              , EngineId Integer, EngineName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer
@@ -132,8 +132,8 @@ BEGIN
             , Object_Partner.ValueData           AS PartnerName
             , Object_Unit.Id                     AS UnitId
             , Object_Unit.ValueData              AS UnitName
-            , Object_DiscountParner.Id           AS DiscountParnerId
-            , Object_DiscountParner.ValueData    AS DiscountParnerName
+            , Object_DiscountPartner.Id           AS DiscountPartnerId
+            , Object_DiscountPartner.ValueData    AS DiscountPartnerName
             , Object_TaxKind.Id                  AS TaxKindId
             , Object_TaxKind.ValueData           AS TaxKindName
             , ObjectFloat_TaxKind_Value.ValueData AS TaxKind_Value
@@ -223,10 +223,10 @@ BEGIN
                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
              LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_DiscountParner
-                                  ON ObjectLink_Goods_DiscountParner.ObjectId = Object_Goods.Id
-                                 AND ObjectLink_Goods_DiscountParner.DescId = zc_ObjectLink_Goods_DiscountParner()
-             LEFT JOIN Object AS Object_DiscountParner ON Object_DiscountParner.Id = ObjectLink_Goods_DiscountParner.ChildObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_DiscountPartner
+                                  ON ObjectLink_Goods_DiscountPartner.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_DiscountPartner.DescId = zc_ObjectLink_Goods_DiscountPartner()
+             LEFT JOIN Object AS Object_DiscountPartner ON Object_DiscountPartner.Id = ObjectLink_Goods_DiscountPartner.ChildObjectId
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
                                   ON ObjectLink_Goods_TaxKind.ObjectId = Object_Goods.Id

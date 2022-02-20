@@ -471,7 +471,7 @@ object DiscountParnerForm: TDiscountParnerForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_DiscountParner'
+    StoredProcName = 'gpSelect_Object_DiscountPartner'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -539,10 +539,12 @@ object DiscountParnerForm: TDiscountParnerForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 104
     Top = 248

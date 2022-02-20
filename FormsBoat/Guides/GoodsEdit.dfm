@@ -935,9 +935,9 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDiscountParnerId'
+        Name = 'inDiscountPartnerId'
         Value = ''
-        Component = GuidesDiscountParner
+        Component = GuidesDiscountPartner
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1132,16 +1132,16 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DiscountParnerId'
+        Name = 'DiscountPartnerId'
         Value = ''
-        Component = GuidesDiscountParner
+        Component = GuidesDiscountPartner
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DiscountParnerName'
+        Name = 'DiscountPartnerName'
         Value = ''
-        Component = GuidesDiscountParner
+        Component = GuidesDiscountPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1474,7 +1474,7 @@
     Left = 24
     Top = 192
   end
-  object GuidesDiscountParner: TdsdGuides
+  object GuidesDiscountPartner: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceDiscountParner
     FormNameParam.Value = 'TDiscountParnerForm'
@@ -1486,14 +1486,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesDiscountParner
+        Component = GuidesDiscountPartner
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesDiscountParner
+        Component = GuidesDiscountPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','

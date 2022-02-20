@@ -70,7 +70,7 @@ type
     GuidesGoodsTag: TdsdGuides;
     cxLabel10: TcxLabel;
     ceDiscountParner: TcxButtonEdit;
-    GuidesDiscountParner: TdsdGuides;
+    GuidesDiscountPartner: TdsdGuides;
     edGoodsType: TcxButtonEdit;
     cxLabel11: TcxLabel;
     GuidesGoodsType: TdsdGuides;

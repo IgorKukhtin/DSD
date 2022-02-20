@@ -38,7 +38,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inProdColorId            Integer, 
     IN inPartnerId              Integer, 
     IN inUnitId                 Integer, 
-    IN inDiscountParnerId       Integer, 
+    IN inDiscountPartnerId       Integer, 
     IN inTaxKindId              Integer, 
     IN inEngineId               Integer, 
     IN inSession                TVarChar    -- сессия пользователя
@@ -151,7 +151,7 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Unit(), ioId, inUnitId);
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_DiscountParner(), ioId, inDiscountParnerId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_DiscountPartner(), ioId, inDiscountPartnerId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TaxKind(), ioId, inTaxKindId);
    -- сохранили связь с <>

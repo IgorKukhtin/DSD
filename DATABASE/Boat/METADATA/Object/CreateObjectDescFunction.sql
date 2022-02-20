@@ -263,9 +263,9 @@ CREATE OR REPLACE FUNCTION zc_Object_GoodsType() RETURNS Integer AS $BODY$BEGIN 
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_GoodsType', 'Тип детали' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsType');
 
-CREATE OR REPLACE FUNCTION zc_Object_DiscountParner() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_DiscountParner'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Object_DiscountPartner() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_DiscountPartner'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
-  SELECT 'zc_Object_DiscountParner', 'Группа скидки у поставщика' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DiscountParner');
+  SELECT 'zc_Object_DiscountPartner', 'Группа скидки у поставщика' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DiscountPartner');
 
 CREATE OR REPLACE FUNCTION zc_Object_TaxKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_TaxKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
@@ -356,7 +356,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
  19.11.20         * zc_Object_GoodsDocument
                     zc_Object_GoodsPhoto
  11.11.20         * zc_Object_TaxKind
-                    zc_Object_DiscountParner
+                    zc_Object_DiscountPartner
                     zc_Object_GoodsType
  09.11.20         * zc_Object_Country
                     zc_Object_PLZ
