@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderInternal_child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TDateTime, TVarChar, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderInternal_child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, TDateTime, TVarChar, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderInternal_child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, TDateTime, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderInternal_child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, TDateTime, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderInternal_child(
  INOUT ioId                        Integer   , --  люч объекта <Ёлемент документа>
@@ -20,6 +21,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderInternal_child(
     IN inGoodsName                 TVarChar  , -- 
     IN inJuridicalId               Integer   , --
     IN inContractId                Integer   , --
+    IN inisSupplierFailures        Boolean   , --
     IN inUserId                    Integer     -- сесси€ пользовател€
 )
 RETURNS Integer
@@ -65,6 +67,8 @@ BEGIN
      -- сохранили св€зь
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), ioId, inContractId);
 
+    -- сохранили свойство
+    PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_SupplierFailures(), ioId, inisSupplierFailures);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);

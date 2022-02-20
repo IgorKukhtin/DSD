@@ -602,6 +602,9 @@ type
     spLayoutFileFTPParams: TdsdStoredProc;
     actDownloadAndRunFile: TdsdFTP;
     actChoiceLayoutFileCash: TOpenChoiceForm;
+    actAddGoodsSupplement: TAction;
+    mmAddGoodsSupplement: TMenuItem;
+    spGoods_AddSupplement: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -760,6 +763,7 @@ type
     procedure btnGoodsSPReceiptListClick(Sender: TObject);
     procedure actOpenLayoutFileExecute(Sender: TObject);
     procedure spLayoutFileFTPParamsAfterExecute(Sender: TObject);
+    procedure actAddGoodsSupplementExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -1415,6 +1419,18 @@ begin
   end;
   // ShowMessage('memdat-end');
   // ShowMessage(inttostr(MemData.RecordCount));
+end;
+
+procedure TMainCashForm2.actAddGoodsSupplementExecute(Sender: TObject);
+begin
+  if RemainsCDS.IsEmpty then Exit;
+
+  if (MessageDlg('Добавить товар:'#13#13 + RemainsCDS.FieldByName('GoodsCode').AsString + ' - ' + RemainsCDS.FieldByName('GoodsName').AsString +
+        #13#13'для распределения по дополнению СУН 1', mtInformation, mbOKCancel, 0) = mrOk) then
+  begin
+     spGoods_AddSupplement.Execute;
+     ShowMessage('Товар добавлен для распределения по дополнению СУН 1');
+  end;
 end;
 
 procedure TMainCashForm2.actCalcTotalSummExecute(Sender: TObject);
@@ -13206,6 +13222,8 @@ begin
       ('isTechnicalRediscount').AsBoolean;
     actOpenLayoutFile.Enabled := UnitConfigCDS.FieldByName('LayoutFileCount').AsInteger > 0;
     actOpenLayoutFile.Visible := actOpenLayoutFile.Enabled;
+    actAddGoodsSupplement.Enabled := UnitConfigCDS.FieldByName('isSupplementAddCash').AsBoolean;
+    actAddGoodsSupplement.Visible := actAddGoodsSupplement.Enabled;
   finally
     ReleaseMutex(MutexUnitConfig);
   end;

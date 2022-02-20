@@ -3,6 +3,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 614
   ClientWidth = 1442
   PopupMenu = PopupMenu
+  ExplicitLeft = -106
   ExplicitWidth = 1458
   ExplicitHeight = 653
   PixelsPerInch = 96
@@ -1047,6 +1048,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 89
+          end
+          object isSupplementAddCash: TcxGridDBColumn
+            Caption = #1044#1086#1073#1072#1074#1083#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1074' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053' 1 '#1080#1079' '#1082#1072#1089#1089#1099
+            DataBinding.FieldName = 'isSupplementAddCash'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 105
           end
         end
       end
@@ -4007,6 +4016,33 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       Caption = 'actUpdate_ShowMessageSite'
     end
+    object mactUpdate_SupplementAddCash: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_SupplementAddCash
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1073#1072#1074#1083#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1074' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053' 1 '#1080#1079' '#1082#1072#1089#1089#1099'"' +
+        '?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1073#1072#1074#1083#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1074' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053' 1 '#1080#1079' '#1082#1072#1089#1089#1099'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1073#1072#1074#1083#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1074' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053' 1 '#1080#1079' '#1082#1072#1089#1089#1099'"'
+      ImageIndex = 79
+    end
+    object actUpdate_SupplementAddCash: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SupplementAddCash
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SupplementAddCash
+        end>
+      Caption = 'actUpdate_SupplementAddCash'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -4766,6 +4802,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton32'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton11'
         end>
     end
@@ -4905,6 +4945,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton31: TdxBarButton
       Action = mactUpdate_ShowMessageSite
+      Category = 0
+    end
+    object dxBarButton32: TdxBarButton
+      Action = mactUpdate_SupplementAddCash
       Category = 0
     end
   end
@@ -7991,7 +8035,33 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 522
-    Top = 472
+    Left = 274
+    Top = 488
+  end
+  object spUpdate_SupplementAddCash: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_SupplementAddCash'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSupplementAddCash'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSupplementAddCash'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 442
+    Top = 480
   end
 end

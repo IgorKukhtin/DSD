@@ -31,7 +31,8 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                isPromoForSale Boolean, isCheckUKTZED Boolean, isGoodsUKTZEDRRO Boolean, isMessageByTime Boolean, isMessageByTimePD Boolean,
                LikiDneproURL TVarChar, LikiDneproToken TVarChar, LikiDneproId Integer,
                LikiDneproeHealthURL TVarChar, LikiDneproeLocation TVarChar, LikiDneproeHealthToken TVarChar,
-               isRemovingPrograms Boolean, isErrorRROToVIP Boolean, LayoutFileCount Integer, LayoutFileID Integer
+               isRemovingPrograms Boolean, isErrorRROToVIP Boolean, LayoutFileCount Integer, LayoutFileID Integer, 
+               isSupplementAddCash Boolean
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -357,6 +358,8 @@ BEGIN
        
        , tmpLayoutFileCount.LayoutFileCount                                       AS LayoutFileCount
        , tmpLayoutFile.ID                                                         AS LayoutFileID
+       
+       , COALESCE (ObjectBoolean_SUN_v2_SupplementAddCash.ValueData, FALSE):: Boolean     AS isSupplementAddCash
 
    FROM Object AS Object_Unit
 
@@ -455,6 +458,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_DividePartionDate
                                 ON ObjectBoolean_DividePartionDate.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_DividePartionDate.DescId = zc_ObjectBoolean_Unit_DividePartionDate()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_SupplementAddCash
+                                ON ObjectBoolean_SUN_v2_SupplementAddCash.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_v2_SupplementAddCash.DescId = zc_ObjectBoolean_Unit_SUN_SupplementAddCash()
 
         LEFT JOIN Object AS Object_Helsi_IdSP ON Object_Helsi_IdSP.DescId = zc_Object_SPKind()
                                              AND Object_Helsi_IdSP.ObjectCode  = 1

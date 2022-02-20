@@ -457,6 +457,11 @@ type
     mactUpdate_ShowMessageSite: TMultiAction;
     actUpdate_ShowMessageSite: TdsdExecStoredProc;
     dxBarButton31: TdxBarButton;
+    spUpdate_SupplementAddCash: TdsdStoredProc;
+    mactUpdate_SupplementAddCash: TMultiAction;
+    actUpdate_SupplementAddCash: TdsdExecStoredProc;
+    dxBarButton32: TdxBarButton;
+    isSupplementAddCash: TcxGridDBColumn;
   private
     { Private declarations }
   public

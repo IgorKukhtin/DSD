@@ -69,7 +69,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isParticipDistribListDiff Boolean, isPauseDistribListDiff  Boolean, isRequestDistribListDiff Boolean
              , isBlockCommentSendTP Boolean, isOnlyTimingSUN Boolean
              , PharmacyManager TVarChar, PharmacyManagerPhone TVarChar
-             , TelegramId TVarChar, isErrorRROToVIP Boolean, isShowMessageSite Boolean
+             , TelegramId TVarChar, isErrorRROToVIP Boolean, isShowMessageSite Boolean, isSupplementAddCash Boolean
 ) AS
 $BODY$
 BEGIN
@@ -282,6 +282,7 @@ BEGIN
       , COALESCE (ObjectBoolean_ErrorRROToVIP.ValueData, FALSE)           :: Boolean     AS isErrorRROToVIP
       
       , COALESCE (ObjectBoolean_ShowMessageSite.ValueData, FALSE)         :: Boolean     AS isShowMessageSite
+      , COALESCE (ObjectBoolean_SUN_v2_SupplementAddCash.ValueData, FALSE):: Boolean     AS isSupplementAddCash
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -465,6 +466,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_Supplement_out
                                 ON ObjectBoolean_SUN_v2_Supplement_out.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_v2_Supplement_out.DescId = zc_ObjectBoolean_Unit_SUN_v2_Supplement_out()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_SupplementAddCash
+                                ON ObjectBoolean_SUN_v2_SupplementAddCash.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_v2_SupplementAddCash.DescId = zc_ObjectBoolean_Unit_SUN_SupplementAddCash()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v3_in
                                 ON ObjectBoolean_SUN_v3_in.ObjectId = Object_Unit.Id 

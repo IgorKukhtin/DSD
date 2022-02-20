@@ -62,7 +62,7 @@ BEGIN
                  GoodsId_partner Integer, JuridicalId Integer, ContractId Integer) ON COMMIT DROP;
        CREATE TEMP TABLE _tmpMI_OrderInternal_Child  (MovementItemId Integer, GoodsId Integer, PartionGoods TDateTime, Price TFloat, JuridicalPrice TFloat, 
                  DefermentPrice TFloat, PriceListMovementItemId Integer, Maker TVarChar, GoodsCode TVarChar, GoodsName TVarChar, 
-                 JuridicalId Integer, ContractId Integer) ON COMMIT DROP;
+                 JuridicalId Integer, ContractId Integer, isSupplierFailures boolean) ON COMMIT DROP;
 
        -- Поменял на разитые процедуры
 /*       SELECT zfCalc_Word_Split (tmp.CurName_all, ';', 1) AS CurName1
@@ -101,10 +101,10 @@ BEGIN
 
        INSERT INTO _tmpMI_OrderInternal_Child (MovementItemId, GoodsId, PartionGoods, Price, JuridicalPrice, 
                  DefermentPrice, PriceListMovementItemId, Maker, GoodsCode, GoodsName,
-                 JuridicalId, ContractId)
+                 JuridicalId, ContractId, isSupplierFailures)
          SELECT vbRec.MovementItemId, COALESCE (vbRec.GoodsId, 0), vbRec.PartionGoodsDate, vbRec.Price, vbRec.SuperFinalPrice, 
                 vbRec.SuperFinalPrice_Deferment, vbRec.PriceListMovementItemId, vbRec.MakerName,  vbRec.GoodsCode, vbRec.GoodsName,
-                COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0)
+                COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0), isSupplierFailures
          FROM gpSelect_MovementItem_OrderInternal_Child (inInternalOrder, FALSE, FALSE, FALSE, inSession) AS vbRec;
 
        -- Сохранили
@@ -162,6 +162,7 @@ BEGIN
                                                               , inGoodsName                 := _tmpMI_OrderInternal_Child.GoodsName     :: TVarChar
                                                               , inJuridicalId               := COALESCE (MovementItem.JuridicalId, _tmpMI_OrderInternal_Child.JuridicalId)
                                                               , inContractId                := COALESCE (MovementItem.ContractId, _tmpMI_OrderInternal_Child.ContractId)
+                                                              , inisSupplierFailures        := _tmpMI_OrderInternal_Child.isSupplierFailures
                                                               , inUserId                    := vbUserId
                                                                )
        FROM (SELECT MovementItem.Id AS MovementItemId, MovementItem.ParentId
