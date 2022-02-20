@@ -100,17 +100,53 @@ inherited PriceListMovementForm: TPriceListMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 240
+            Width = 206
           end
-          object GoodsJuridicalName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088' '#1074' '#1087#1088#1072#1081#1089#1077
-            DataBinding.FieldName = 'GoodsJuridicalName'
+          object DiscountParnerName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1089#1082'. '#1091' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'DiscountParnerName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 110
+            HeaderHint = #1043#1088#1091#1087#1087#1072' '#1089#1082#1080#1076#1082#1080' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Width = 97
+          end
+          object MeasureName: TcxGridDBColumn
+            Caption = #1045#1076'.'#1080#1079#1084
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object MeasureParentName: TcxGridDBColumn
+            Caption = #1045#1076'.'#1080#1079#1084' ('#1091#1087#1072#1082#1086#1074#1082#1080')'
+            DataBinding.FieldName = 'MeasureParentName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 78
+          end
+          object MeasureName_translate: TcxGridDBColumn
+            Caption = #1045#1076'.'#1080#1079#1084' ('#1087#1077#1088#1077#1074#1086#1076')'
+            DataBinding.FieldName = 'MeasureName_translate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 69
+          end
+          object MeasureParentName_translate: TcxGridDBColumn
+            Caption = #1045#1076'.'#1080#1079#1084' ('#1091#1087#1072#1082#1086#1074#1082#1080') ('#1087#1077#1088#1077#1074#1086#1076')'
+            DataBinding.FieldName = 'MeasureParentName_translate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 79
+          end
+          object isOutlet: TcxGridDBColumn
+            Caption = 'Outlet'
+            DataBinding.FieldName = 'isOutlet'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 62
           end
           object Amount: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
+            Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1085#1076#1089
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
@@ -119,40 +155,75 @@ inherited PriceListMovementForm: TPriceListMovementForm
             Options.Editing = False
             Width = 77
           end
-          object Price: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1086#1088#1080#1075#1080#1085#1072#1083'.'
-            DataBinding.FieldName = 'Price'
+          object PriceParent: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1085#1076#1089' ('#1091#1087#1072#1082#1086#1074#1082#1080')'
+            DataBinding.FieldName = 'PriceParent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1086#1088#1080#1075#1080#1085#1072#1083#1100#1085#1072#1103
+            HeaderHint = #1062#1077#1085#1072' '#1073#1077#1079' '#1085#1076#1089' ('#1091#1087#1072#1082#1086#1074#1082#1080')'
             Options.Editing = False
             Width = 77
           end
-          object PartionGoodsDate: TcxGridDBColumn
-            Caption = #1057#1088#1086#1082' '#1087#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'PartionGoodsDate'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DateButtons = [btnClear, btnNow, btnToday]
+          object MeasureMult: TcxGridDBColumn
+            Caption = #1042#1083#1086#1078#1077#1085#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'MeasureMult'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 171
-          end
-          object Remains: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082
-            DataBinding.FieldName = 'Remains'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 57
           end
-          object AreaName: TcxGridDBColumn
-            Caption = #1056#1077#1075#1080#1086#1085' ('#1090#1086#1074#1072#1088')'
-            DataBinding.FieldName = 'AreaName'
+          object EmpfPriceParent: TcxGridDBColumn
+            Caption = #1056#1077#1082#1086#1084#1077#1085'. '#1094#1077#1085#1072' '#1073#1077#1079' '#1085#1076#1089' ('#1091#1087'.)'
+            DataBinding.FieldName = 'EmpfPriceParent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            HeaderHint = #1056#1077#1082#1086#1084#1077#1085#1076#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072' '#1073#1077#1079' '#1085#1076#1089' ('#1091#1087#1072#1082#1086#1074#1082#1080')'
+            Options.Editing = False
+            Width = 57
+          end
+          object MinCount: TcxGridDBColumn
+            Caption = #1052#1080#1085' '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1091#1087#1082#1080
+            DataBinding.FieldName = 'MinCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1084#1080#1085' '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1091#1087#1082#1080
+            Options.Editing = False
+            Width = 57
+          end
+          object MinCountMult: TcxGridDBColumn
+            Caption = #1056#1077#1082#1086#1084'. '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1091#1087#1082#1080
+            DataBinding.FieldName = 'MinCountMult'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1077#1082#1086#1084#1077#1085#1076#1091#1077#1084#1086#1077' '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1091#1087#1082#1080
+            Options.Editing = False
+            Width = 57
+          end
+          object WeightParent: TcxGridDBColumn
+            DataBinding.FieldName = 'WeightParent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 57
+          end
+          object CatalogPage: TcxGridDBColumn
+            DataBinding.FieldName = 'CatalogPage'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 171
           end
         end
       end
@@ -187,22 +258,20 @@ inherited PriceListMovementForm: TPriceListMovementForm
       ExplicitLeft = 89
     end
     inherited cxLabel15: TcxLabel
-      Left = 433
-      Top = 27
-      Visible = False
-      ExplicitLeft = 433
-      ExplicitTop = 27
+      Left = 175
+      ExplicitLeft = 175
     end
     inherited ceStatus: TcxButtonEdit
-      Left = 472
-      Visible = False
-      ExplicitLeft = 472
+      Left = 175
+      Top = 22
+      ExplicitLeft = 175
+      ExplicitTop = 22
       ExplicitWidth = 153
       ExplicitHeight = 22
       Width = 153
     end
-    object edJuridical: TcxButtonEdit
-      Left = 174
+    object edPartner: TcxButtonEdit
+      Left = 337
       Top = 23
       Properties.Buttons = <
         item
@@ -214,59 +283,21 @@ inherited PriceListMovementForm: TPriceListMovementForm
       Width = 228
     end
     object cxLabel4: TcxLabel
-      Left = 174
+      Left = 337
       Top = 5
-      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
     end
-    object cxLabel6: TcxLabel
-      Left = 639
+    object cxLabel16: TcxLabel
+      Left = 575
       Top = 5
-      Caption = '% '#1089#1082#1080#1076#1082#1080
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
-    object edPercent1: TcxCurrencyEdit
-      Left = 639
+    object ceComment: TcxTextEdit
+      Left = 575
       Top = 23
-      Properties.DecimalPlaces = 4
-      Properties.DisplayFormat = ',0.####'
-      Properties.ReadOnly = False
       TabOrder = 9
-      Width = 54
+      Width = 285
     end
-  end
-  object cxLabel3: TcxLabel [2]
-    Left = 407
-    Top = 5
-    Caption = #1050#1086#1085#1090#1088#1072#1082#1090
-  end
-  object edContract: TcxButtonEdit [3]
-    Left = 407
-    Top = 23
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 7
-    Width = 222
-  end
-  object cxLabel5: TcxLabel [4]
-    Left = 702
-    Top = 5
-    Caption = #1056#1077#1075#1080#1086#1085
-  end
-  object edArea: TcxButtonEdit [5]
-    Left = 702
-    Top = 23
-    Properties.Buttons = <
-      item
-        Default = True
-        Enabled = False
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 9
-    Width = 164
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -561,18 +592,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenPriceListLoad'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bb'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -766,14 +785,14 @@ inherited PriceListMovementForm: TPriceListMovementForm
       item
         Name = 'JuridicalId'
         Value = ''
-        Component = GuidesJuridical
+        Component = GuidesPartner
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
         Value = ''
-        Component = GuidesJuridical
+        Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -781,15 +800,11 @@ inherited PriceListMovementForm: TPriceListMovementForm
       item
         Name = 'ContractId'
         Value = ''
-        Component = GuidesContract
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
         Value = ''
-        Component = GuidesContract
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -803,15 +818,11 @@ inherited PriceListMovementForm: TPriceListMovementForm
       item
         Name = 'AreaId'
         Value = Null
-        Component = GuidesArea
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'AreaName'
         Value = Null
-        Component = GuidesArea
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -846,27 +857,24 @@ inherited PriceListMovementForm: TPriceListMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inJuridicalId'
+        Name = 'inPartnerId'
         Value = ''
-        Component = GuidesJuridical
+        Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inContractId'
+        Name = 'inComment'
         Value = ''
-        Component = GuidesContract
-        ComponentItem = 'Key'
+        Component = ceComment
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAreaId'
         Value = Null
-        Component = GuidesArea
-        ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 162
@@ -877,7 +885,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
       item
       end
       item
-        Guides = GuidesJuridical
+        Guides = GuidesPartner
       end>
     Left = 160
     Top = 192
@@ -888,7 +896,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
         Control = edInvNumber
       end
       item
-        Control = edArea
       end
       item
       end
@@ -900,7 +907,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
       item
       end
       item
-        Control = edJuridical
+        Control = edPartner
       end
       item
       end
@@ -966,6 +973,30 @@ inherited PriceListMovementForm: TPriceListMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inDiscountParnerId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DiscountParnerId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMeasureId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MeasureId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMeasureParentId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MeasureParentId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmount'
         Value = Null
         Component = MasterCDS
@@ -975,63 +1006,75 @@ inherited PriceListMovementForm: TPriceListMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPartionGoodsDate'
+        Name = 'inMeasureMult'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PartionGoodsDate'
-        DataType = ftDateTime
+        ComponentItem = 'MeasureMult'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPriceParent'
         Value = Null
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'PriceParent'
+        DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inEmpfPriceParent'
         Value = Null
+        Component = MasterCDS
+        ComponentItem = 'EmpfPriceParent'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMinCount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MinCount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMinCountMult'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MinCountMult'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeightParent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightParent'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCatalogPage'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CatalogPage'
         DataType = ftString
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisOutlet'
         Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
+        Component = MasterCDS
+        ComponentItem = 'isOutlet'
+        DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 160
@@ -1092,19 +1135,19 @@ inherited PriceListMovementForm: TPriceListMovementForm
     Left = 319
     Top = 208
   end
-  object GuidesJuridical: TdsdGuides
+  object GuidesPartner: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edJuridical
-    FormNameParam.Value = 'TJuridicalForm'
+    LookupControl = edPartner
+    FormNameParam.Value = 'TPartnerForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TJuridicalForm'
+    FormName = 'TPartnerForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesJuridical
+        Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1112,42 +1155,13 @@ inherited PriceListMovementForm: TPriceListMovementForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesJuridical
+        Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 312
-    Top = 24
-  end
-  object GuidesContract: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edContract
-    FormNameParam.Value = 'TContractForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TContractForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesContract
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesContract
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 520
+    Left = 376
     Top = 16
   end
   object spUpdate_Price: TdsdStoredProc
@@ -1191,7 +1205,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
       item
         Name = 'inPercent'
         Value = 0.000000000000000000
-        Component = edPercent1
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1199,34 +1212,5 @@ inherited PriceListMovementForm: TPriceListMovementForm
     PackSize = 1
     Left = 664
     Top = 155
-  end
-  object GuidesArea: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edArea
-    FormNameParam.Value = 'TAreaForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TAreaForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesArea
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesArea
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 776
-    Top = 16
   end
 end

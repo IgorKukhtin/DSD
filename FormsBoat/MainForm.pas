@@ -238,6 +238,9 @@ type
     miMeasureCode: TMenuItem;
     actTranslateObject: TdsdOpenForm;
     miTranslateObject: TMenuItem;
+    actPriceListJournal: TdsdOpenForm;
+    miPriceListJournal: TMenuItem;
+    N21: TMenuItem;
   private
     { Private declarations }
   public

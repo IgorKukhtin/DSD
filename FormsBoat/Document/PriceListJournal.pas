@@ -27,7 +27,7 @@ uses
 
 type
   TPriceListJournalForm = class(TAncestorJournalForm)
-    JuridicalName: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
     bbTax: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
@@ -38,7 +38,7 @@ type
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
-    ContractName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     actOpenPriceListLoad: TdsdInsertUpdateAction;
     bbOpenPriceListLoad: TdxBarButton;

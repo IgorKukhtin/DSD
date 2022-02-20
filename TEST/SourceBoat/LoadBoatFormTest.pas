@@ -66,6 +66,7 @@ type
     procedure LoadProductionPersonalFormTest;
     procedure LoadProductionUnionFormTest;
     procedure LoadPriceListFormTest;
+    procedure LoadPriceListMovementFormTest;
     procedure LoadReceiptProdModelFormTest;
     procedure LoadReceiptLevelFormTest;
     procedure LoadReceiptGoodsFormTest;
@@ -702,6 +703,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceList_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceList_ObjectForm');
+end;
+
+procedure TLoadFormTest.LoadPriceListMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListMovementForm');
 end;
 
 procedure TLoadFormTest.LoadReceiptProdModelFormTest;

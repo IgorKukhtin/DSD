@@ -27,9 +27,9 @@ uses
 
 type
   TPriceListMovementForm = class(TAncestorDocumentForm)
-    edJuridical: TcxButtonEdit;
+    edPartner: TcxButtonEdit;
     cxLabel4: TcxLabel;
-    GuidesJuridical: TdsdGuides;
+    GuidesPartner: TdsdGuides;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
@@ -45,23 +45,17 @@ type
     bbTax: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
-    PartionGoodsDate: TcxGridDBColumn;
-    GoodsJuridicalName: TcxGridDBColumn;
-    cxLabel3: TcxLabel;
-    edContract: TcxButtonEdit;
-    GuidesContract: TdsdGuides;
-    Remains: TcxGridDBColumn;
+    CatalogPage: TcxGridDBColumn;
+    MeasureMult: TcxGridDBColumn;
     actOpenPriceListLoad: TdsdInsertUpdateAction;
     bbOpenPriceListLoad: TdxBarButton;
-    cxLabel6: TcxLabel;
     spUpdate_Price: TdsdStoredProc;
     macUpdatePrice: TMultiAction;
     actUpdatePrice: TdsdExecStoredProc;
     bb: TdxBarButton;
-    edPercent1: TcxCurrencyEdit;
-    cxLabel5: TcxLabel;
-    edArea: TcxButtonEdit;
-    GuidesArea: TdsdGuides;
+    isOutlet: TcxGridDBColumn;
+    cxLabel16: TcxLabel;
+    ceComment: TcxTextEdit;
   private
     { Private declarations }
   public

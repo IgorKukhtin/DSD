@@ -133,25 +133,25 @@ inherited PriceListJournalForm: TPriceListJournalForm
             Options.Editing = False
             Width = 109
           end
-          object AreaName: TcxGridDBColumn
-            Caption = #1056#1077#1075#1080#1086#1085
-            DataBinding.FieldName = 'AreaName'
+          object PartnerCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'PartnerCode'
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1077#1075#1080#1086#1085' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            HeaderHint = #1050#1086#1076' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Options.Editing = False
             Width = 71
           end
-          object JuridicalName: TcxGridDBColumn
-            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-            DataBinding.FieldName = 'JuridicalName'
+          object PartnerName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 316
           end
-          object ContractName: TcxGridDBColumn
-            Caption = #1044#1086#1075#1086#1074#1086#1088
-            DataBinding.FieldName = 'ContractName'
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 178
@@ -167,6 +167,22 @@ inherited PriceListJournalForm: TPriceListJournalForm
           object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
+          object UpdateName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
+          object UpdateDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -215,10 +231,12 @@ inherited PriceListJournalForm: TPriceListJournalForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TPriceListForm'
+      FormName = 'TPriceListMovementForm'
+      FormNameParam.Value = 'TPriceListMovementForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TPriceListForm'
+      FormName = 'TPriceListMovementForm'
+      FormNameParam.Value = 'TPriceListMovementForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -428,10 +446,6 @@ inherited PriceListJournalForm: TPriceListJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenPriceListLoad'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -449,6 +463,10 @@ inherited PriceListJournalForm: TPriceListJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenPriceListLoad'
         end>
     end
     object bbTax: TdxBarButton
@@ -487,6 +505,7 @@ inherited PriceListJournalForm: TPriceListJournalForm
     object bbOpenPriceListLoad: TdxBarButton
       Action = actOpenPriceListLoad
       Category = 0
+      Visible = ivNever
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
