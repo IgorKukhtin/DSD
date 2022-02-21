@@ -59,20 +59,20 @@ BEGIN
              , MovementFloat_TotalSummTaxMVAT.ValueData  :: TFloat AS TotalSummTaxMVAT
                -- сумма без НДС, после п.1.
              , (COALESCE (MovementFloat_TotalSummMVAT.ValueData,0)
-                - COALESCE (MovementFloat_SummTaxPVAT.ValueData,0))      :: TFloat AS Summ2
+                - COALESCE (MovementFloat_SummTaxMVAT.ValueData,0))      :: TFloat AS Summ2
                -- сумма без НДС, после п.2.
              , (COALESCE (MovementFloat_TotalSummMVAT.ValueData,0) 
-                - COALESCE (MovementFloat_SummTaxPVAT.ValueData,0) 
+                - COALESCE (MovementFloat_SummTaxMVAT.ValueData,0) 
                 + COALESCE (MovementFloat_SummPost.ValueData,0)
                 + COALESCE (MovementFloat_SummPack.ValueData,0)
                 + COALESCE (MovementFloat_SummInsur.ValueData,0))        :: TFloat AS Summ3
                -- сумма без НДС, после п.3.
              , (COALESCE (MovementFloat_TotalSummMVAT.ValueData,0) 
-                - COALESCE (MovementFloat_SummTaxPVAT.ValueData,0) 
+                - COALESCE (MovementFloat_SummTaxMVAT.ValueData,0) 
                 + COALESCE (MovementFloat_SummPost.ValueData,0)
                 + COALESCE (MovementFloat_SummPack.ValueData,0)
                 + COALESCE (MovementFloat_SummInsur.ValueData,0)
-                - COALESCE (MovementFloat_TotalSummTaxPVAT.ValueData,0)) :: TFloat AS Summ4
+                - COALESCE (MovementFloat_TotalSummTaxMVAT.ValueData,0)) :: TFloat AS Summ4
         FROM Movement AS Movement_Income
              LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                      ON MovementFloat_TotalSummMVAT.MovementId = Movement_Income.Id

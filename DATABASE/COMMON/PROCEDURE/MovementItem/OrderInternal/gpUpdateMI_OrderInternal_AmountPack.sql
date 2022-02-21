@@ -130,6 +130,14 @@ BEGIN
      -- сохранили протокол !!!после изменений!!!
      PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, FALSE);
 
+IF vbUserId = 5 AND 1=0
+THEN
+    RAISE EXCEPTION 'Ошибка.test ok <%>  <%>', (SELECT MIB.ValueData FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = inId AND MIB.DescId = zc_MIBoolean_Calculated())
+             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_AmountPackNextSecond())
+              ;
+END IF;
+
+
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

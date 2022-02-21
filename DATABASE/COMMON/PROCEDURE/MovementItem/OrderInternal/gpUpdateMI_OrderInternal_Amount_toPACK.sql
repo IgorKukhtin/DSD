@@ -54,6 +54,7 @@ perform gpUpdateMI_OrderInternal_Amount_toPACK_NEW(
 
 else*/
 
+
     -- Ì‡ ÒÍÓÎ¸ÍÓ ‰ÌÂÈ ‰ÂÎ‡ÂÏ ‚Ë‰ Õ¿–≈« ¿
     vbdaycount_GoodsKind_8333:= 5;
 
@@ -274,8 +275,8 @@ else*/
                   -- ¬ÓÚ ÓÌ, ¡”ƒ≈“ –≈«”À‹“¿“
                 , CASE WHEN inIsPack       = TRUE THEN 0 ELSE tmpMI.AmountResult                  END AS AmountResult
                 , CASE WHEN inIsPackSecond = TRUE THEN 0 ELSE tmpMI.AmountSecondResult            END AS AmountSecondResult
-                , CASE WHEN inIsPack       = TRUE THEN 0 ELSE 0 /*tmpMI.AmountNextResult*/        END AS AmountNextResult
-                , CASE WHEN inIsPackSecond = TRUE THEN 0 ELSE 0 /*tmpMI.AmountNextSecondResult*/  END AS AmountNextSecondResult
+                , CASE WHEN inIsPack       = TRUE THEN 0 WHEN tmpMI.isCalculated = FALSE THEN tmpMI.AmountNextResult_two       ELSE 0 /*tmpMI.AmountNextResult*/        END AS AmountNextResult
+                , CASE WHEN inIsPackSecond = TRUE THEN 0 WHEN tmpMI.isCalculated = FALSE THEN tmpMI.AmountNextSecondResult_two ELSE 0 /*tmpMI.AmountNextSecondResult*/  END AS AmountNextSecondResult
                 
                 , tmpMI.isCalculated
 
@@ -402,6 +403,18 @@ else*/
                                   ORDER BY CASE WHEN tmpGoodsByGoodsKind.GoodsId_pack > 0 THEN 0 ELSE MovementItem.Id END ASC
                                          , MovementItem.Id ASC
                                  ) AS AmountNextSecondResult
+                                 
+                      , SUM (COALESCE (MIFloat_AmountPackNext.ValueData, 0))
+                            OVER (PARTITION BY COALESCE (tmpGoodsByGoodsKind.GoodsId_pack, MovementItem.ObjectId) :: TVarChar  || '_' || COALESCE (tmpGoodsByGoodsKind.GoodsKindId_pack, COALESCE (MILinkObject_GoodsKind.ObjectId, 0)) :: TVarChar
+                                  ORDER BY CASE WHEN tmpGoodsByGoodsKind.GoodsId_pack > 0 THEN 0 ELSE MovementItem.Id END ASC
+                                         , MovementItem.Id ASC
+                                 ) AS AmountNextResult_two
+                      , SUM (COALESCE (MIFloat_AmountPackNextSecond.ValueData, 0))
+                            OVER (PARTITION BY COALESCE (tmpGoodsByGoodsKind.GoodsId_pack, MovementItem.ObjectId) :: TVarChar  || '_' || COALESCE (tmpGoodsByGoodsKind.GoodsKindId_pack, COALESCE (MILinkObject_GoodsKind.ObjectId, 0)) :: TVarChar
+                                  ORDER BY CASE WHEN tmpGoodsByGoodsKind.GoodsId_pack > 0 THEN 0 ELSE MovementItem.Id END ASC
+                                         , MovementItem.Id ASC
+                                 ) AS AmountNextSecondResult_two
+
 
                         --  π Ô/Ô
                       , ROW_NUMBER() OVER (PARTITION BY COALESCE (tmpGoodsByGoodsKind.GoodsId_pack, MovementItem.ObjectId) :: TVarChar  || '_' || COALESCE (tmpGoodsByGoodsKind.GoodsKindId_pack, COALESCE (MILinkObject_GoodsKind.ObjectId, 0)) :: TVarChar
@@ -447,6 +460,13 @@ else*/
                                                  -- AND MIFloat_AmountPackSecond.DescId         = CASE WHEN inIsByDay = TRUE THEN zc_MIFloat_AmountPackSecond_calc() ELSE zc_MIFloat_AmountPackSecond() END
                                                  -- AND MIFloat_AmountPackSecond.DescId         = zc_MIFloat_AmountPackSecond()
                                                  -- AND MIFloat_AmountPackSecond.DescId         = zc_MIFloat_AmountPackSecond_calc()
+
+                      LEFT JOIN MovementItemFloat AS MIFloat_AmountPackNext
+                                                  ON MIFloat_AmountPackNext.MovementItemId = MovementItem.Id
+                                                 AND MIFloat_AmountPackNext.DescId         = CASE WHEN inIsByDay = TRUE THEN zc_MIFloat_AmountPackNext() ELSE zc_MIFloat_AmountPackNext_calc() END
+                      LEFT JOIN MovementItemFloat AS MIFloat_AmountPackNextSecond
+                                                  ON MIFloat_AmountPackNextSecond.MovementItemId = MovementItem.Id
+                                                 AND MIFloat_AmountPackNextSecond.DescId         = CASE WHEN inIsByDay = TRUE THEN zc_MIFloat_AmountPackNextSecond() ELSE zc_MIFloat_AmountPackNextSecond_calc() END
 
                       LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                   ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
@@ -1157,6 +1177,18 @@ else*/
 
 
     END IF;
+
+IF vbUserId = 5 --AND inIsByDay = TRUE
+THEN
+    RAISE EXCEPTION 'Œ¯Ë·Í‡.test ok <%>  <%>  <%> <%>    <%>   <%>', (SELECT MIB.ValueData FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = 225490279  AND MIB.DescId = zc_MIBoolean_Calculated())
+             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 225490279  AND MIF.DescId = zc_MIFloat_AmountPackNextSecond())
+             , (SELECT MIB.ValueData FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = 225490363 AND MIB.DescId = zc_MIBoolean_Calculated())
+             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 225490363 AND MIF.DescId = zc_MIFloat_AmountPackNextSecond())
+             , (SELECT _tmpMI_Child.AmountNextSecondResult FROM _tmpMI_Child WHERE _tmpMI_Child.MovementItemId = 225490279)
+             , (SELECT _tmpMI_Child.AmountNextSecondResult FROM _tmpMI_Child WHERE _tmpMI_Child.MovementItemId = 225490363)
+              ;
+END IF;
+
 
 END;
 $BODY$

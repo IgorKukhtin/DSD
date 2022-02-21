@@ -25,7 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar
              , TotalDiscountTax TFloat
              , TotalSummTaxMVAT TFloat
              , TotalSummTaxPVAT TFloat
-             
+
              , FromId Integer, FromCode Integer, FromName TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -104,10 +104,15 @@ BEGIN
              , MovementFloat_VATPercent.ValueData         AS VATPercent
              , MovementFloat_DiscountTax.ValueData        AS DiscountTax
              , MovementFloat_TotalCount.ValueData         AS TotalCount
+               -- Итого сумма по документу (без НДС) - с учетом ТОЛЬКО скидок по элементам
              , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
+               -- Итого сумма по документу (с НДС)  - с учетом ВСЕХ скидок и расходов
              , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
+               -- Итого сумма по документу (без НДС и с учетом всех расходов и скидок)
              , MovementFloat_TotalSumm.ValueData          AS TotalSumm
-             , (COALESCE (MovementFloat_TotalSummPVAT.ValueData,0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData,0)) :: TFloat AS TotalSummVAT
+               -- Итого сумма НДС
+             , zfCalc_Summ_VAT (MovementFloat_TotalSummPVAT.ValueData, MovementFloat_VATPercent.ValueData) AS TotalSummVAT
+               --  Итого сумма затрат (без НДС)
              , MovementFloat_TotalSummCost.ValueData      AS TotalSummCost
 
              , MovementFloat_SummTaxMVAT.ValueData       :: TFloat AS SummTaxMVAT
@@ -192,7 +197,7 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_TotalSummTaxPVAT
                                      ON MovementFloat_TotalSummTaxPVAT.MovementId = Movement_Income.Id
                                     AND MovementFloat_TotalSummTaxPVAT.DescId = zc_MovementFloat_TotalSummTaxPVAT()
-                                    
+
              LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                        ON MovementBoolean_PriceWithVAT.MovementId = Movement_Income.Id
                                       AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()

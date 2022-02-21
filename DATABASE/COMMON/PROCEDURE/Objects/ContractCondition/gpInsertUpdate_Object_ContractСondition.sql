@@ -29,7 +29,12 @@ $BODY$
    DECLARE vbIsUpdate Boolean;   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ContractCondition());
+   IF ioId > 0
+   THEN
+       vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ContractCondition());
+   ELSE
+       vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Contract());
+   END IF;
   
     -- проверка
    IF COALESCE (inContractId, 0) = 0

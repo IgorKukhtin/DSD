@@ -35,7 +35,7 @@ BEGIN
 
      outBranchName := (SELECT Object.ValueData FROM Object WHERE Object.Id = inBranchId);
      
--- сохранили связь с <филиал>
+     -- сохранили связь с <филиал>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), inMovementId, inBranchId);
 
      -- определяется 
@@ -70,6 +70,8 @@ BEGIN
      UPDATE Movement SET AccessKeyId = vbAccessKeyId WHERE Movement.Id = inMovementId AND vbAccessKeyId > 0;
      --PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), inMovementId, inBranchId);
      
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
 
 END;
 $BODY$

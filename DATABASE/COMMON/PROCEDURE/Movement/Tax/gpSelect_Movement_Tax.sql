@@ -176,7 +176,7 @@ BEGIN
              WHERE inIsRegisterDate = FALSE
                AND (tmpRoleAccessKey.AccessKeyId > 0
                     OR (MovementLinkObject_Branch.ObjectId IS NULL AND MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Prepay())
-                    OR Movement.AccessKeyId = 0
+                    OR COALESCE (Movement.AccessKeyId, 0) = 0
                    )
             UNION ALL
              SELECT MovementDate_DateRegistered.MovementId       AS Id
@@ -196,8 +196,9 @@ BEGIN
                AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
                AND (tmpRoleAccessKey.AccessKeyId > 0
                     OR (MovementLinkObject_Branch.ObjectId IS NULL AND MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Prepay())
-                    OR Movement.AccessKeyId = 0
+                    OR COALESCE (Movement.AccessKeyId, 0) = 0
                    )
+               AND (vbUserId <> 5 OR COALESCE (Movement.AccessKeyId, 0) = 0)
             ) AS tmpMovement
 
             JOIN Movement ON Movement.id = tmpMovement.id
@@ -387,4 +388,4 @@ ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Integer, Boolean, Bo
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Tax (inStartDate:= '01.02.2018', inEndDate:= '01.02.2018', inJuridicalBasisId:= 0, inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Tax (inStartDate:= '01.01.2022', inEndDate:= '31.01.2022', inJuridicalBasisId:= 0, inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())

@@ -75,7 +75,7 @@ BEGIN
      -- Проверка что ЗП не начислена
      IF vbMovementId_check > 0
      THEN
-         RAISE EXCEPTION 'Табель заблокирован.%Обратитесь к экономисту.%Найдена вендомость начисления <%>%№ <%> от <%>.'
+         RAISE EXCEPTION 'Табель заблокирован.%Обратитесь к экономисту.%Найдена ведомость начисления <%>%№ <%> от <%>.'
                         , CHR (13)
                         , CHR (13)
                         , lfGet_Object_ValueData_sh ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = vbMovementId_check AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList()))

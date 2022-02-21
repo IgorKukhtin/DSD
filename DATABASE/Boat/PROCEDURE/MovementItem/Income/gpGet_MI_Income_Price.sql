@@ -27,37 +27,37 @@ BEGIN
      END IF;
 
 
-     -- если Кол-во
+     -- если Кол-во или Вх. цена без скидки
      IF COALESCE (inAmount_old,0) <> COALESCE (ioAmount,0) OR COALESCE (inOperPrice_orig_old,0) <> COALESCE (ioOperPrice_orig,0)
      THEN
-         -- Вх. цена с учетом скидки в элементе
-         ioOperPrice := (ioOperPrice_orig * (1 - ioDiscountTax / 100)) ::TFloat;
+         -- расчет Вх. цена с учетом скидки
+         ioOperPrice := zfCalc_SummDiscountTax(ioOperPrice_orig, ioDiscountTax);
          -- Сумма вх. с учетом скидки
-         ioSummIn    := (ioAmount * ioOperPrice) ::TFloat;
+         ioSummIn    := zfCalc_SummIn (ioAmount, ioOperPrice, inCountForPrice);
 
      -- если % скидки
      ELSEIF COALESCE (inDiscountTax_old,0) <> COALESCE (ioDiscountTax,0)
      THEN
-         -- Вх. цена с учетом скидки в элементе
-         ioOperPrice := (ioOperPrice_orig * (1 - ioDiscountTax / 100)) ::TFloat;
+         -- расчет Вх. цена с учетом скидки
+         ioOperPrice := zfCalc_SummDiscountTax(ioOperPrice_orig, ioDiscountTax);
          -- Сумма вх. с учетом скидки
-         ioSummIn    := (ioAmount * ioOperPrice) ::TFloat;
+         ioSummIn    := zfCalc_SummIn (ioAmount, ioOperPrice, inCountForPrice);
 
      -- если Вх. цена с учетом скидки в элементе
      ELSEIF COALESCE (inOperPrice_old,0) <> COALESCE (ioOperPrice,0)
      THEN
-         -- % скидки
-         ioDiscountTax := CASE WHEN COALESCE (ioOperPrice_orig,0) <> 0 THEN ((ioOperPrice_orig - ioOperPrice) * 100 / ioOperPrice_orig) ELSE 0 END ::TFloat;
          -- Сумма вх. с учетом скидки
-         ioSummIn      := (ioAmount * ioOperPrice) ::TFloat;
+         ioSummIn    := zfCalc_SummIn (ioAmount, ioOperPrice, inCountForPrice);
+         -- расчет % скидки
+         ioDiscountTax := zfCalc_DiscountTax (ioOperPrice_orig - ioOperPrice, ioOperPrice_orig);
 
      -- если Сумма вх. с учетом скидки
      ELSEIF COALESCE (inSummIn_old,0) <> COALESCE (ioSummIn,0)
      THEN
+         -- расчет Вх. цена с учетом скидки
+         ioOperPrice   := CASE WHEN COALESCE (ioAmount,0) <> 0 THEN ioSummIn / ioAmount ELSE 0.0 END;
          -- % скидки - обнулили
          ioDiscountTax := 0 ::TFloat;
-         -- Вх. цена с учетом скидки в элементе
-         ioOperPrice   := CASE WHEN COALESCE (ioAmount,0) <> 0 THEN ioSummIn /ioAmount ELSE 0 END ::TFloat;
 
      END IF;
 

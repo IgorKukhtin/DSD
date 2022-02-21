@@ -51,6 +51,11 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummIn(), inId, ioSummIn);
 
+     RAISE EXCEPTION 'Ошибка.<%>', ioSummIn;
+
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm ((SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.Id = inId));
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

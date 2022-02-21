@@ -58,7 +58,6 @@ type
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     OperPrice: TcxGridDBColumn;
-    Summ: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;

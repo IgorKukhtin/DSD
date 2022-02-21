@@ -8,7 +8,7 @@ DROP FUNCTION IF EXISTS gpGet_Scale_Goods (Boolean, TVarChar, Integer, TVarChar)
 CREATE OR REPLACE FUNCTION gpGet_Scale_Goods(
     IN inIsGoodsComplete Boolean      , -- склад ГП/производство/упаковка or обвалка
     IN inBarCode         TVarChar     ,
-    IN inBranchCode      Integer      , -- 
+    IN inBranchCode      Integer      , --
     IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (GoodsId    Integer
@@ -21,7 +21,7 @@ RETURNS TABLE (GoodsId    Integer
              , MeasureId    Integer
              , MeasureCode  Integer
              , MeasureName  TVarChar
-             , Weight_gd TFloat, WeightTare_gd TFloat, CountForWeight_gd TFloat
+             , Amount TFloat, Weight_gd TFloat, WeightTare_gd TFloat, CountForWeight_gd TFloat
              , isEnterCount Boolean
               )
 AS
@@ -151,10 +151,20 @@ BEGIN
             , Object_Measure.ObjectCode   AS MeasureCode
             , Object_Measure.ValueData    AS MeasureName
 
-            , ObjectFloat_Weight.ValueData         AS Weight_gd
+            , CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                       THEN 1
+                       ELSE 0
+              END :: TFloat AS Amount
+
+            , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                                                , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                 )
+                       THEN 0
+                       ELSE ObjectFloat_Weight.ValueData
+              END                        :: TFloat AS Weight_gd
             , ObjectFloat_WeightTare.ValueData     AS WeightTare_gd
             , ObjectFloat_CountForWeight.ValueData AS CountForWeight_gd
-            
+
             , CASE WHEN Object_Goods.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() THEN TRUE ELSE FALSE END :: Boolean AS isEnterCount
 
        FROM Object_Goods
@@ -163,6 +173,11 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.GoodsId
+                                AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
             LEFT JOIN tmpGoods_ScaleCeh ON tmpGoods_ScaleCeh.GoodsId = Object_Goods.GoodsId
             LEFT JOIN Object AS Object_GoodsKind_max ON Object_GoodsKind_max.Id = tmpGoods_ScaleCeh.GoodsKindId_max
             LEFT JOIN tmpGoods_wms ON tmpGoods_wms.GoodsId     = Object_Goods.GoodsId

@@ -66,6 +66,17 @@ BEGIN
 
      -- !!!замена, приходит вес - из него получаем м. или шт.
      IF 1=1 AND EXISTS (SELECT FROM ObjectLink AS OL_Measure WHERE OL_Measure.ChildObjectId NOT IN (zc_Measure_Kg(), zc_Measure_Sh()) AND OL_Measure.ObjectId = inGoodsId AND OL_Measure.DescId = zc_ObjectLink_Goods_Measure())
+        AND NOT EXISTS (SELECT 1
+                        FROM ObjectLink AS ObjectLink_Goods_InfoMoney
+                             INNER JOIN Object_InfoMoney_View AS View_InfoMoney
+                                                              ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                             AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500() -- ќборотна€ тара
+                                                                                                         , zc_Enum_InfoMoneyDestination_20600() -- ѕрочие материалы
+                                                                                                          )
+                        WHERE ObjectLink_Goods_InfoMoney.ObjectId = inGoodsId
+                          AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                       )
+
      THEN
          -- вес дл€ перевода из веса в метры или что-то еще
          vbWeight_goods:= (SELECT O_F.ValueData FROM ObjectFloat AS O_F WHERE O_F.ObjectId = inGoodsId AND O_F.DescId = zc_ObjectFloat_Goods_Weight());

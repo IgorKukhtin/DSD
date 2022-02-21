@@ -150,7 +150,7 @@ BEGIN
 
        , Object_Branch.ValueData AS BranchName
 
-       , ObjectDesc.ItemName
+       , (ObjectDesc.ItemName || ' ' || Container_Partner_View.PartionMovementName) :: TVarChar
        , Object_Partner.isErased
 
    FROM Object AS Object_Partner
@@ -531,7 +531,7 @@ BEGIN
 
        , Object_Branch.ValueData AS BranchName
 
-       , ObjectDesc.ItemName
+       , (ObjectDesc.ItemName || ' ' || Container_Partner_View.PartionMovementName) :: TVarChar
        , Object_Partner.isErased
 
    FROM Object AS Object_Partner

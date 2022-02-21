@@ -2,7 +2,7 @@
 
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
@@ -44,21 +44,23 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inIsBarCode             Boolean   , --
     IN inSession               TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id        Integer
-             , TotalSumm TFloat
+RETURNS TABLE (Id          Integer
+             , TotalSumm   TFloat
+             , MessageText Text
               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
 
-   DECLARE vbId Integer;
-   DECLARE vbOperDate TDateTime;
-   DECLARE vbMovementDescId Integer;
+   DECLARE vbId        Integer;
+   DECLARE vbOperDate  TDateTime;
+   DECLARE vbMovementDescId   Integer;
    DECLARE vbMovementId_order Integer;
-   DECLARE vbBoxId Integer;
+   DECLARE vbBoxId     Integer;
    DECLARE vbTotalSumm TFloat;
-   DECLARE vbRetailId Integer;
-   DECLARE vbToId Integer;
+   DECLARE vbRetailId  Integer;
+   DECLARE vbToId      Integer;
+   DECLARE vbUnitId    Integer;
 
    DECLARE vbWeightTotal   TFloat;
    DECLARE vbWeightPack    TFloat;
@@ -71,6 +73,8 @@ $BODY$
    DECLARE vbIsChangePercent_Promo Boolean;
    DECLARE vbChangePercent         TFloat;
 
+   DECLARE vbRemainsCount_check TFloat;
+
    DECLARE vbPrice_301 TFloat; -- !!!цена для Специй!!!
 
    DECLARE vbWeight_goods              TFloat;
@@ -79,6 +83,7 @@ $BODY$
    DECLARE vbAmount_byWeightTare_goods TFloat;
 
    DECLARE vbOperDate_StartBegin TDateTime;
+   DECLARE vbMessageText         Text;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Insert_Scale_MI());
@@ -113,16 +118,20 @@ BEGIN
      SELECT Movement.OperDate, MovementFloat.ValueData :: Integer, COALESCE (MLM_Order.MovementChildId, 0)
           , ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
           , MovementLinkObject_To.ObjectId            AS ToId
-            INTO vbOperDate, vbMovementDescId, vbMovementId_order, vbRetailId, vbToId
+          , MovementLinkObject_From.ObjectId          AS UnitId
+            INTO vbOperDate, vbMovementDescId, vbMovementId_order, vbRetailId, vbToId, vbUnitId
      FROM Movement
           LEFT JOIN MovementFloat ON MovementFloat.MovementId = Movement.Id
                                  AND MovementFloat.DescId = zc_MovementFloat_MovementDesc()
           LEFT JOIN MovementLinkMovement AS MLM_Order
                                          ON MLM_Order.MovementId = Movement.Id
                                         AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
-                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                      AND MovementLinkObject_To.DescId      = zc_MovementLinkObject_To()
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
@@ -434,183 +443,256 @@ BEGIN
                           END
                          ;
      END IF;
+     
 
+     -- старт
+     vbMessageText:= '';
 
-     -- сохранили
-     vbId:= gpInsertUpdate_MovementItem_WeighingPartner (ioId                  := 0
-                                                       , inMovementId          := inMovementId
-                                                       , inGoodsId             := inGoodsId
-                                                       , inAmount              := CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
-                                                                                            THEN vbAmount_byWeightTare_goods
-                                                                                       WHEN inIsBarCode = TRUE AND zc_Measure_Kg() = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure())
-                                                                                        AND vbAmount_byPack <> 0
-                                                                                            THEN vbAmount_byPack
-                                                                                       ELSE inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6
-                                                                                  END
-                                                       , inAmountPartner       := CASE -- !!!только Для Сканирования Метро!!!
-                                                                                       /*WHEN vbRetailId IN (310828) -- Метро
-                                                                                            THEN CEIL ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6) * 100) / 100
-                                                                                       */
-                                                                                       WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
-                                                                                            THEN vbAmount_byWeightTare_goods
-                                                                                       -- на филиалах при сканировании, на приход ставим расчетное значение
-                                                                                       WHEN inIsBarCode = TRUE AND vbMovementDescId = zc_Movement_SendOnPrice()
-                                                                                        AND vbAmount_byPack <> 0
-                                                                                            THEN vbAmount_byPack
-                                                                                       WHEN inIsBarCode = TRUE
-                                                                                            THEN (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
-                                                                                       WHEN inChangePercentAmount = 0
-                                                                                            THEN (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
-                                                                                       WHEN vbRetailId IN (341640, 310854, 310855) -- Фоззі + Фозі + Варус
-                                                                                            THEN CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
-                                                                                                     * (1 - inChangePercentAmount/100) AS NUMERIC (16, 3))
-                                                                                       ELSE CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
-                                                                                                * (1 - inChangePercentAmount/100) AS NUMERIC (16, 2))
-                                                                                  END
-                                                       , inRealWeight          := inRealWeight
-                                                       , inChangePercentAmount := CASE WHEN inIsBarCode = TRUE
-                                                                                            THEN 0
-                                                                                       ELSE inChangePercentAmount
-                                                                                  END
-                                                       , inCountTare           := inCountTare
-                                                       , inWeightTare          := inWeightTare
-                                                       , inCountTare1          := inCountTare1
-                                                       , inWeightTare1         := inWeightTare1
-                                                       , inCountTare2          := inCountTare2
-                                                       , inWeightTare2         := inWeightTare2
-                                                       , inCountTare3          := inCountTare3
-                                                       , inWeightTare3         := inWeightTare3
-                                                       , inCountTare4          := inCountTare4
-                                                       , inWeightTare4         := inWeightTare4
-                                                       , inCountTare5          := inCountTare5
-                                                       , inWeightTare5         := inWeightTare5
-                                                       , inCountTare6          := inCountTare6
-                                                       , inWeightTare6         := inWeightTare6
-                                                       , inCountPack           := CASE WHEN inIsBarCode = TRUE AND vbWeightTotal <> 0
-                                                                                            THEN vbAmount_byPack / vbWeightTotal
-                                                                                       ELSE inCount
-                                                                                  END
-                                                       , inHeadCount           := inHeadCount
-                                                       , inBoxCount            := inBoxCount
-                                                       , inBoxNumber           := CASE WHEN vbMovementDescId <> zc_Movement_Sale() THEN 0 ELSE  1 + COALESCE ((SELECT MAX (MovementItemFloat.ValueData) FROM MovementItem INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id AND MovementItemFloat.DescId = zc_MIFloat_BoxNumber() WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = FALSE), 0) END
-                                                       , inLevelNumber         := 0
-                                                       , inPrice               := CASE -- для isSticker = TRUE
-                                                                                       WHEN inBranchCode > 1000
-                                                                                            -- !!!здесь № печати!!!
-                                                                                            THEN inPrice
-
-                                                                                       -- цена для Специй
-                                                                                       WHEN (inBranchCode BETWEEN 301 AND 310
-                                                                                          OR inBranchCode BETWEEN 201 AND 210
-                                                                                            )
-                                                                                        AND vbPrice_301 > 0 AND vbMovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
-                                                                                            THEN vbPrice_301
-                                                                                       -- в первую очередь - если Возврат + Акция
-                                                                                       WHEN vbMovementDescId = zc_Movement_ReturnIn() AND inMovementId_Promo > 0
-                                                                                            THEN vbPricePromo
-                                                                                       -- ?когда схема для Днепра будет как у филиала? - т.е. при продаже - цена из заявки
-                                                                                       WHEN vbMovementDescId IN (/**/zc_Movement_Sale(), /**/zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
-                                                                                            AND vbPriceListId_Dnepr <> 0
-                                                                                            AND COALESCE (inMovementId_Promo, 0) = 0
-                                                                                            THEN COALESCE ((SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate_Dnepr
-                                                                                                                                                                        , inPriceListId:= vbPriceListId_Dnepr
-                                                                                                                                                                        , inGoodsId    := inGoodsId
-                                                                                                                                                                        , inGoodsKindId:= inGoodsKindId
-                                                                                                                                                                        , inSession    := inSession
-                                                                                                                                                                         ) AS tmp
-                                                                                                            WHERE tmp.ValuePrice <> 0
-                                                                                                           )
-                                                                                                          ,(SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate_Dnepr
-                                                                                                                                                                        , inPriceListId:= vbPriceListId_Dnepr
-                                                                                                                                                                        , inGoodsId    := inGoodsId
-                                                                                                                                                                        , inGoodsKindId:= NULL
-                                                                                                                                                                        , inSession    := inSession
-                                                                                                                                                                         ) AS tmp
-                                                                                                            WHERE tmp.ValuePrice <> 0
-                                                                                                           )
-                                                                                                          , 0)
-                                                                                       -- если Возврат
-                                                                                       WHEN vbMovementDescId = zc_Movement_ReturnIn()
-                                                                                            THEN inPrice_Return
-                                                                                       WHEN vbMovementDescId = zc_Movement_Sale()
-                                                                                            AND vbMovementId_order = 0 -- !!!если НЕ по заявке!!!
-                                                                                            THEN COALESCE ((SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := CASE WHEN vbPriceListId_Dnepr <> 0 THEN vbOperDate_Dnepr    ELSE vbOperDate    END
-                                                                                                                                                                        , inPriceListId:= CASE WHEN vbPriceListId_Dnepr <> 0 THEN vbPriceListId_Dnepr ELSE inPriceListId END
-                                                                                                                                                                        , inGoodsId    := inGoodsId
-                                                                                                                                                                        , inGoodsKindId:= inGoodsKindId
-                                                                                                                                                                        , inSession    := inSession
-                                                                                                                                                                         ) AS tmp), 0)
-                                                                                       -- иначе из грида
-                                                                                       ELSE inPrice
-                                                                                  END
-                                                       , inCountForPrice       := CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN inCountForPrice_Return ELSE inCountForPrice END
-                                                                                  -- (-)% Скидки (+)% Наценки
-                                                       , inChangePercent       := vbChangePercent
-                                                       , inPartionGoods        := inPartionGoods
-                                                       , inPartionGoodsDate    := NULL
-                                                       , inGoodsKindId         := CASE WHEN inBranchCode > 1000
-                                                                                            -- !!!здесь StickerPack!!!
-                                                                                            THEN inGoodsKindId
-
-                                                                                       WHEN (SELECT View_InfoMoney.InfoMoneyDestinationId
-                                                                                             FROM ObjectLink AS ObjectLink_Goods_InfoMoney
-                                                                                                  LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-                                                                                             WHERE ObjectLink_Goods_InfoMoney.ObjectId = inGoodsId
-                                                                                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                                                                                            ) IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
-                                                                                                , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
-                                                                                                 )
-                                                                                            THEN 0
-                                                                                       ELSE inGoodsKindId
-                                                                                  END
-                                                       , inPriceListId         := CASE WHEN inBranchCode > 1000
-                                                                                            -- !!!здесь GoodsKindId - из StickerProperty!!!
-                                                                                            THEN inPriceListId
-
-                                                                                       WHEN vbPriceListId_Dnepr <> 0
-                                                                                            THEN vbPriceListId_Dnepr
-                                                                                       ELSE inPriceListId
-                                                                                  END
-
-                                                       , inBoxId               := vbBoxId
-                                                       , inMovementId_Promo    := COALESCE (inMovementId_Promo, 0)
-                                                       , inIsBarCode           := CASE WHEN vbUserId = 5 THEN TRUE ELSE inIsBarCode END
-                                                       , inSession             := inSession
-                                                        );
-
-     --
-     vbTotalSumm:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_TotalSumm());
-
-
-     -- дописали св-во <Причина возврата >
-     IF inIsReason = TRUE AND (vbMovementDescId = zc_Movement_ReturnIn()
-                               -- Склады База + Реализации + Возвраты общие
-                            OR (vbMovementDescId = zc_Movement_SendOnPrice() AND inBranchCode = 1 AND EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId IN (8457, 8460) AND OL.DescId = zc_ObjectLink_Unit_Parent() AND OL.ChildObjectId = vbToId))
-                              )
+     -- проверка
+     IF (vbMovementDescId = zc_Movement_Sale() 
+         OR (vbMovementDescId = zc_Movement_SendOnPrice()
+             AND EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId IN (8457, 8460) AND OL.DescId = zc_ObjectLink_Unit_Parent() AND OL.ChildObjectId = vbUnitId)
+            )
+        )
+        AND inBranchCode IN (1)
+        AND (zfCheck_Time_ExceptionOn_Remains() = TRUE
+         OR vbUserId = 5
+            )
      THEN
-         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Reason(), vbId, inReasonId);
+         -- Нашли остаток
+         vbRemainsCount_check:= (SELECT SUM (Container.Amount)
+                                 FROM Container
+                                      LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                                    ON CLO_GoodsKind.ContainerId = Container.Id
+                                                                   AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                                 WHERE Container.DescId                     = zc_Container_Count()
+                                   AND Container.ObjectId                   = inGoodsId
+                                   AND Container.WhereObjectId              = vbUnitId
+                                   AND COALESCE (CLO_GoodsKind.ObjectId, 0) = inGoodsKindId
+                                );
+     
+         IF vbRemainsCount_check < (CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
+                                              THEN vbAmount_byWeightTare_goods
+                                         WHEN inIsBarCode = TRUE AND zc_Measure_Kg() = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure())
+                                          AND vbAmount_byPack <> 0
+                                              THEN vbAmount_byPack
+                                         ELSE inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6
+                                    END)
+        
+         THEN 
+             -- Результат
+             vbMessageText:=       'Ошибка.Нельзя провести кол-во = '
+                           ||'<' || zfConvert_FloatToString (CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
+                                                                       THEN vbAmount_byWeightTare_goods
+                                                                  WHEN inIsBarCode = TRUE AND zc_Measure_Kg() = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure())
+                                                                   AND vbAmount_byPack <> 0
+                                                                       THEN vbAmount_byPack
+                                                                  ELSE inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6
+                                                             END)
+                                                             || '>'
+                                 || CHR (13)
+                                 || 'Остаток'
+                                 || ' = ' || zfConvert_FloatToString (CASE WHEN vbRemainsCount_check < 0 THEN 0 ELSE vbRemainsCount_check END)
+                                          || lfGet_Object_ValueData_sh ((SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure()))
+                                 || CHR (13)
+                                 || 'на подразделении <'  || lfGet_Object_ValueData_sh (vbUnitId) || '>'
+                                  ;
+
+             /*RAISE EXCEPTION 'Ошибка.Нельзя провести кол-во = <%>.%Остаток на подразделении <%> = <%>%.'
+                                 , zfConvert_FloatToString (CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
+                                                                       THEN vbAmount_byWeightTare_goods
+                                                                  WHEN inIsBarCode = TRUE AND zc_Measure_Kg() = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure())
+                                                                   AND vbAmount_byPack <> 0
+                                                                       THEN vbAmount_byPack
+                                                                  ELSE inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6
+                                                             END)
+                                 , CHR (13)
+                                 , lfGet_Object_ValueData_sh (vbUnitId)
+                                 , zfConvert_FloatToString (CASE WHEN vbRemainsCount_check < 0 THEN 0 ELSE vbRemainsCount_check END)
+                                 , lfGet_Object_ValueData_sh ((SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure()))
+                                  ;*/
+
+         END IF;
      END IF;
 
-     -- дописали св-во <Протокол Дата/время начало>
-     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_StartBegin(), vbId, vbOperDate_StartBegin);
-     -- дописали св-во <Протокол Дата/время завершение>
-     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_EndBegin(), vbId, CLOCK_TIMESTAMP());
+     IF vbMessageText = ''
+     THEN
+         -- сохранили
+         vbId:= gpInsertUpdate_MovementItem_WeighingPartner (ioId                  := 0
+                                                           , inMovementId          := inMovementId
+                                                           , inGoodsId             := inGoodsId
+                                                           , inAmount              := CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
+                                                                                                THEN vbAmount_byWeightTare_goods
+                                                                                           WHEN inIsBarCode = TRUE AND zc_Measure_Kg() = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure())
+                                                                                            AND vbAmount_byPack <> 0
+                                                                                                THEN vbAmount_byPack
+                                                                                           ELSE inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6
+                                                                                      END
+                                                           , inAmountPartner       := CASE -- !!!только Для Сканирования Метро!!!
+                                                                                           /*WHEN vbRetailId IN (310828) -- Метро
+                                                                                                THEN CEIL ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6) * 100) / 100
+                                                                                           */
+                                                                                           WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
+                                                                                                THEN vbAmount_byWeightTare_goods
+                                                                                           -- на филиалах при сканировании, на приход ставим расчетное значение
+                                                                                           WHEN inIsBarCode = TRUE AND vbMovementDescId = zc_Movement_SendOnPrice()
+                                                                                            AND vbAmount_byPack <> 0
+                                                                                                THEN vbAmount_byPack
+                                                                                           WHEN inIsBarCode = TRUE
+                                                                                                THEN (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
+                                                                                           WHEN inChangePercentAmount = 0
+                                                                                                THEN (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
+                                                                                           WHEN vbRetailId IN (341640, 310854, 310855) -- Фоззі + Фозі + Варус
+                                                                                                THEN CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
+                                                                                                         * (1 - inChangePercentAmount/100) AS NUMERIC (16, 3))
+                                                                                           ELSE CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
+                                                                                                    * (1 - inChangePercentAmount/100) AS NUMERIC (16, 2))
+                                                                                      END
+                                                           , inRealWeight          := inRealWeight
+                                                           , inChangePercentAmount := CASE WHEN inIsBarCode = TRUE
+                                                                                                THEN 0
+                                                                                           ELSE inChangePercentAmount
+                                                                                      END
+                                                           , inCountTare           := inCountTare
+                                                           , inWeightTare          := inWeightTare
+                                                           , inCountTare1          := inCountTare1
+                                                           , inWeightTare1         := inWeightTare1
+                                                           , inCountTare2          := inCountTare2
+                                                           , inWeightTare2         := inWeightTare2
+                                                           , inCountTare3          := inCountTare3
+                                                           , inWeightTare3         := inWeightTare3
+                                                           , inCountTare4          := inCountTare4
+                                                           , inWeightTare4         := inWeightTare4
+                                                           , inCountTare5          := inCountTare5
+                                                           , inWeightTare5         := inWeightTare5
+                                                           , inCountTare6          := inCountTare6
+                                                           , inWeightTare6         := inWeightTare6
+                                                           , inCountPack           := CASE WHEN inIsBarCode = TRUE AND vbWeightTotal <> 0
+                                                                                                THEN vbAmount_byPack / vbWeightTotal
+                                                                                           ELSE inCount
+                                                                                      END
+                                                           , inHeadCount           := inHeadCount
+                                                           , inBoxCount            := inBoxCount
+                                                           , inBoxNumber           := CASE WHEN vbMovementDescId <> zc_Movement_Sale() THEN 0 ELSE  1 + COALESCE ((SELECT MAX (MovementItemFloat.ValueData) FROM MovementItem INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id AND MovementItemFloat.DescId = zc_MIFloat_BoxNumber() WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = FALSE), 0) END
+                                                           , inLevelNumber         := 0
+                                                           , inPrice               := CASE -- для isSticker = TRUE
+                                                                                           WHEN inBranchCode > 1000
+                                                                                                -- !!!здесь № печати!!!
+                                                                                                THEN inPrice
+    
+                                                                                           -- цена для Специй
+                                                                                           WHEN (inBranchCode BETWEEN 301 AND 310
+                                                                                              OR inBranchCode BETWEEN 201 AND 210
+                                                                                                )
+                                                                                            AND vbPrice_301 > 0 AND vbMovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
+                                                                                                THEN vbPrice_301
+                                                                                           -- в первую очередь - если Возврат + Акция
+                                                                                           WHEN vbMovementDescId = zc_Movement_ReturnIn() AND inMovementId_Promo > 0
+                                                                                                THEN vbPricePromo
+                                                                                           -- ?когда схема для Днепра будет как у филиала? - т.е. при продаже - цена из заявки
+                                                                                           WHEN vbMovementDescId IN (/**/zc_Movement_Sale(), /**/zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
+                                                                                                AND vbPriceListId_Dnepr <> 0
+                                                                                                AND COALESCE (inMovementId_Promo, 0) = 0
+                                                                                                THEN COALESCE ((SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate_Dnepr
+                                                                                                                                                                            , inPriceListId:= vbPriceListId_Dnepr
+                                                                                                                                                                            , inGoodsId    := inGoodsId
+                                                                                                                                                                            , inGoodsKindId:= inGoodsKindId
+                                                                                                                                                                            , inSession    := inSession
+                                                                                                                                                                             ) AS tmp
+                                                                                                                WHERE tmp.ValuePrice <> 0
+                                                                                                               )
+                                                                                                              ,(SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate_Dnepr
+                                                                                                                                                                            , inPriceListId:= vbPriceListId_Dnepr
+                                                                                                                                                                            , inGoodsId    := inGoodsId
+                                                                                                                                                                            , inGoodsKindId:= NULL
+                                                                                                                                                                            , inSession    := inSession
+                                                                                                                                                                             ) AS tmp
+                                                                                                                WHERE tmp.ValuePrice <> 0
+                                                                                                               )
+                                                                                                              , 0)
+                                                                                           -- если Возврат
+                                                                                           WHEN vbMovementDescId = zc_Movement_ReturnIn()
+                                                                                                THEN inPrice_Return
+                                                                                           WHEN vbMovementDescId = zc_Movement_Sale()
+                                                                                                AND vbMovementId_order = 0 -- !!!если НЕ по заявке!!!
+                                                                                                THEN COALESCE ((SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := CASE WHEN vbPriceListId_Dnepr <> 0 THEN vbOperDate_Dnepr    ELSE vbOperDate    END
+                                                                                                                                                                            , inPriceListId:= CASE WHEN vbPriceListId_Dnepr <> 0 THEN vbPriceListId_Dnepr ELSE inPriceListId END
+                                                                                                                                                                            , inGoodsId    := inGoodsId
+                                                                                                                                                                            , inGoodsKindId:= inGoodsKindId
+                                                                                                                                                                            , inSession    := inSession
+                                                                                                                                                                             ) AS tmp), 0)
+                                                                                           -- иначе из грида
+                                                                                           ELSE inPrice
+                                                                                      END
+                                                           , inCountForPrice       := CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN inCountForPrice_Return ELSE inCountForPrice END
+                                                                                      -- (-)% Скидки (+)% Наценки
+                                                           , inChangePercent       := vbChangePercent
+                                                           , inPartionGoods        := inPartionGoods
+                                                           , inPartionGoodsDate    := NULL
+                                                           , inGoodsKindId         := CASE WHEN inBranchCode > 1000
+                                                                                                -- !!!здесь StickerPack!!!
+                                                                                                THEN inGoodsKindId
+    
+                                                                                           WHEN (SELECT View_InfoMoney.InfoMoneyDestinationId
+                                                                                                 FROM ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                                                                      LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                                                                 WHERE ObjectLink_Goods_InfoMoney.ObjectId = inGoodsId
+                                                                                                   AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                                                                                ) IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
+                                                                                                    , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
+                                                                                                     )
+                                                                                                THEN 0
+                                                                                           ELSE inGoodsKindId
+                                                                                      END
+                                                           , inPriceListId         := CASE WHEN inBranchCode > 1000
+                                                                                                -- !!!здесь GoodsKindId - из StickerProperty!!!
+                                                                                                THEN inPriceListId
+    
+                                                                                           WHEN vbPriceListId_Dnepr <> 0
+                                                                                                THEN vbPriceListId_Dnepr
+                                                                                           ELSE inPriceListId
+                                                                                      END
+    
+                                                           , inBoxId               := vbBoxId
+                                                           , inMovementId_Promo    := COALESCE (inMovementId_Promo, 0)
+                                                           , inIsBarCode           := CASE WHEN vbUserId = 5 THEN TRUE ELSE inIsBarCode END
+                                                           , inSession             := inSession
+                                                            );
+    
+         --
+         vbTotalSumm:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_TotalSumm());
+    
+    
+         -- дописали св-во <Причина возврата >
+         IF inIsReason = TRUE AND (vbMovementDescId = zc_Movement_ReturnIn()
+                                   -- Склады База + Реализации + Возвраты общие
+                                OR (vbMovementDescId = zc_Movement_SendOnPrice() AND inBranchCode = 1 AND EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId IN (8457, 8460) AND OL.DescId = zc_ObjectLink_Unit_Parent() AND OL.ChildObjectId = vbToId))
+                                  )
+         THEN
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Reason(), vbId, inReasonId);
+         END IF;
+    
+         -- дописали св-во <Протокол Дата/время начало>
+         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_StartBegin(), vbId, vbOperDate_StartBegin);
+         -- дописали св-во <Протокол Дата/время завершение>
+         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_EndBegin(), vbId, CLOCK_TIMESTAMP());
 
 
--- !!! ВРЕМЕННО !!!
-IF vbUserId = 5 AND 1=0 AND inBranchCode < 1000 THEN
-    RAISE EXCEPTION 'Admin - Test = OK  Amount = <%> Price = <%> HeadCount = <%>'
-                  , (SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = vbId)
-                  , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = vbId AND MIF.DescId = zc_MIFloat_Price())
-                  , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = vbId AND MIF.DescId = zc_MIFloat_HeadCount())
-                   ;
-    -- RAISE EXCEPTION 'Повторите действие через 3 мин.';
-END IF;
+         -- !!! ВРЕМЕННО !!!
+         IF vbUserId = 5 AND 1=1 AND inBranchCode < 1000 THEN
+             RAISE EXCEPTION 'Admin - Test = OK  Amount = <%> Price = <%> HeadCount = <%>'
+                           , (SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = vbId)
+                           , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = vbId AND MIF.DescId = zc_MIFloat_Price())
+                           , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = vbId AND MIF.DescId = zc_MIFloat_HeadCount())
+                            ;
+             -- RAISE EXCEPTION 'Повторите действие через 3 мин.';
+         END IF;
+
+     END IF;
 
      -- Результат
      RETURN QUERY
-       SELECT vbId, vbTotalSumm;
-
+       SELECT vbId, vbTotalSumm, vbMessageText :: Text MessageText;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

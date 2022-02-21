@@ -41,7 +41,9 @@ BEGIN
      -- определяем ключ доступа
      IF COALESCE (ioId, 0) = 0
         OR (inContractId > 0
-        AND inContractId <> COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_Contract()), 0)
+        AND (inContractId <> COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_Contract()), 0)
+          OR EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = ioId AND COALESCE (Movement.AccessKeyId, 0) = 0)
+            )
         AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
            )
      THEN IF inContractId > 0  AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
