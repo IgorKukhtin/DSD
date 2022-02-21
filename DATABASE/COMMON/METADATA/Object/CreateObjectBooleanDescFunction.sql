@@ -1198,9 +1198,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_ShowMessageSite() RETURNS Integ
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_ShowMessageSite', 'Показывать сообщение об обработке заказов сайта' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_ShowMessageSite');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_SUN_SupplementAddCash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_SUN_SupplementAddCash'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_SUN_SupplementAddCash', 'Добавление товара в дополнение СУН 1 из кассы' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_SUN_SupplementAddCash');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 18.02.22                                                                                                          * zc_ObjectBoolean_Unit_SUN_SupplementAddCash
  11.02.22                                                                                                          * zc_ObjectBoolean_Unit_PositionFixed
  03.02.22                                                                                                          * zc_ObjectBoolean_Unit_SUN_v2_Supplement
  02.02.22                                                                                                          * zc_ObjectBoolean_ConditionsKeep_ColdSUN

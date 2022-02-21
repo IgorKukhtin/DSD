@@ -47,6 +47,8 @@ RETURNS TABLE (Id                       Integer
              , ConditionsKeepName        TVarChar
              , AreaName_Goods            TVarChar
 
+             , isSupplierFailures        Boolean
+
              , SupplierFailuresColor Integer
               )
 AS
@@ -112,7 +114,7 @@ BEGIN
     WHERE Movement.Id =inMovementId;
 
 --
-    SELECT MovementLinkObject.ObjectId 
+    SELECT MovementLinkObject.ObjectId
     INTO vbUnitId
     FROM MovementLinkObject
     WHERE MovementLinkObject.MovementId = inMovementId
@@ -136,8 +138,8 @@ BEGIN
     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpJuridicalArea'))
     THEN
       DROP TABLE IF EXISTS tmpJuridicalArea;
-    END IF;  
-    
+    END IF;
+
     CREATE TEMP TABLE tmpJuridicalArea (UnitId Integer, JuridicalId Integer, AreaId Integer, AreaName TVarChar, isDefault Boolean) ON COMMIT DROP;
       INSERT INTO tmpJuridicalArea (UnitId, JuridicalId, AreaId, AreaName, isDefault)
                   SELECT DISTINCT
@@ -149,7 +151,7 @@ BEGIN
                   FROM lpSelect_Object_JuridicalArea_byUnit (vbUnitId, 0) AS tmp;
 
     -- !!!Только для таких документов - 1-ая ВЕТКА (ВСЕГО = 3)!!!
-    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() 
+    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete()
     AND (inShowAll = FALSE OR inSession <> '3')
     THEN
 
@@ -220,7 +222,7 @@ BEGIN
                              , Object_Area.Id                       AS AreaId
                              , Object_Area.ValueData                AS AreaName
                              , COALESCE(MIDate_PartionGoods.ValueData, NULL) ::TDateTime AS PartionGoodsDate
-                             , MIFloat_Price.ValueData                       AS Price  
+                             , MIFloat_Price.ValueData                       AS Price
                              , MIFloat_JuridicalPrice.ValueData    ::TFLoat  AS SuperFinalPrice
                              , MIFloat_DefermentPrice.ValueData    ::TFloat  AS SuperFinalPrice_Deferment
                         FROM MovementItem AS MI_Child
@@ -240,7 +242,7 @@ BEGIN
                                                           ON MovementLinkObject_Contract.MovementId = PriceListMovementItem.MovementId
                                                          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                              LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
-                              
+
                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Area
                                                           ON MovementLinkObject_Area.MovementId = PriceListMovementItem.MovementId
                                                          AND MovementLinkObject_Area.DescId = zc_MovementLinkObject_Area()
@@ -346,46 +348,19 @@ BEGIN
                                             , ROW_NUMBER() OVER (PARTITION BY LoadPriceList.JuridicalId, LoadPriceListItem.GoodsId ORDER BY LoadPriceList.OperDate DESC, LoadPriceListItem.Id DESC) AS ORD
                                        FROM _tmpOrderInternal_MI AS tmpMI
 
-                                            INNER JOIN LoadPriceList ON LoadPriceList.JuridicalId = tmpMI.JuridicalId 
-                                                                    AND LoadPriceList.ContractId = tmpMI.ContractId 
+                                            INNER JOIN LoadPriceList ON LoadPriceList.JuridicalId = tmpMI.JuridicalId
+                                                                    AND LoadPriceList.ContractId = tmpMI.ContractId
 
                                             INNER JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
                                                                         AND COALESCE (LoadPriceListItem.GoodsNDS,'') <> ''
-                                
+
                                             INNER JOIN Object_Goods_Juridical AS PartnerGoods ON PartnerGoods.JuridicalId  = LoadPriceList.JuridicalId
                                                                                              AND PartnerGoods.Code = LoadPriceListItem.GoodsCode
                                                                                              AND PartnerGoods.Id = tmpMI.PartnerGoodsId
-       
+
                                        ) AS tmp
                                  WHERE tmp.ORD = 1
                                  )
-   -- Отказы поставщиков
-   , tmpSupplierFailures AS (SELECT DISTINCT 
-                                    ObjectLink_BankAccount_Goods.ChildObjectId          AS GoodsId
-                                  , ObjectLink_BankAccount_Juridical.ChildObjectId      AS JuridicalId
-                                  , ObjectLink_BankAccount_Contract.ChildObjectId       AS ContractId
-                                  , ObjectLink_BankAccount_Area.ChildObjectId           AS AreaId
-                             FROM Object AS Object_SupplierFailures
-                                  
-                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Goods
-                                                       ON ObjectLink_BankAccount_Goods.ObjectId = Object_SupplierFailures.Id
-                                                      AND ObjectLink_BankAccount_Goods.DescId = zc_ObjectLink_SupplierFailures_Goods()
-                                  
-                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Juridical
-                                                       ON ObjectLink_BankAccount_Juridical.ObjectId = Object_SupplierFailures.Id
-                                                      AND ObjectLink_BankAccount_Juridical.DescId = zc_ObjectLink_SupplierFailures_Juridical()
-                                  
-                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Contract
-                                                       ON ObjectLink_BankAccount_Contract.ObjectId = Object_SupplierFailures.Id
-                                                      AND ObjectLink_BankAccount_Contract.DescId = zc_ObjectLink_SupplierFailures_Contract()
-                                  
-                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Area
-                                                       ON ObjectLink_BankAccount_Area.ObjectId = Object_SupplierFailures.Id
-                                                      AND ObjectLink_BankAccount_Area.DescId = zc_ObjectLink_SupplierFailures_Area()
-                                  
-                             WHERE Object_SupplierFailures.DescId = zc_Object_SupplierFailures()
-                               AND Object_SupplierFailures.isErased = FALSE
-                               )
 
         SELECT tmpMI.Id
              , tmpMI.MovementItemId
@@ -433,9 +408,11 @@ BEGIN
              , COALESCE(tmpGoods.ConditionsKeepName, '')  :: TVarChar   AS ConditionsKeepName
 
              , Object_Area.ValueData                         :: TVarChar AS AreaName_Goods
+             
+             , COALESCE (MIBoolean_SupplierFailures.ValueData, False)    AS isSupplierFailures
 
              , CASE
-                    WHEN COALESCE (SupplierFailures.GoodsId, 0) <> 0 THEN zfCalc_Color (255, 165, 0) -- orange 
+                    WHEN COALESCE (MIBoolean_SupplierFailures.ValueData, False) THEN zfCalc_Color (255, 165, 0) -- orange
                     ELSE zc_Color_White()
                 END  AS SupplierFailuresColor
 
@@ -471,21 +448,19 @@ BEGIN
             LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.PartnerGoodsId = tmpMI.PartnerGoodsId
                                           AND tmpLoadPriceList_NDS.JuridicalId = tmpMI.JuridicalId
 
-            LEFT JOIN tmpMIString AS MIString_GoodsCode 
+            LEFT JOIN tmpMIString AS MIString_GoodsCode
                                          ON MIString_GoodsCode.MovementItemId = MI_Child.Id
-                                        AND MIString_GoodsCode.DescId = zc_MIString_GoodsCode()     
-                                        AND vbStatusId = zc_Enum_Status_Complete() 
-            LEFT JOIN tmpMIString AS MIString_GoodsName 
+                                        AND MIString_GoodsCode.DescId = zc_MIString_GoodsCode()
+                                        AND vbStatusId = zc_Enum_Status_Complete()
+            LEFT JOIN tmpMIString AS MIString_GoodsName
                                          ON MIString_GoodsName.MovementItemId = MI_Child.Id
-                                        AND MIString_GoodsName.DescId = zc_MIString_GoodsName()                                  
-                                        AND vbStatusId = zc_Enum_Status_Complete()                             
+                                        AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
+                                        AND vbStatusId = zc_Enum_Status_Complete()
 
-            LEFT JOIN tmpSupplierFailures AS SupplierFailures 
-                                          ON SupplierFailures.GoodsId = MI_Child.ObjectId
-                                         AND SupplierFailures.JuridicalId = MI_Child.JuridicalId
-                                         AND SupplierFailures.ContractId = MI_Child.ContractId
-                                         AND (SupplierFailures.AreaId = MI_Child.AreaId OR
-                                              COALESCE(SupplierFailures.AreaId, 0) = 0)
+            LEFT JOIN MovementItemBoolean AS MIBoolean_SupplierFailures
+                                          ON MIBoolean_SupplierFailures.MovementItemId = MI_Child.Id
+                                         AND MIBoolean_SupplierFailures.DescId = zc_MIBoolean_SupplierFailures()
+
           ;
 
 
@@ -532,7 +507,7 @@ BEGIN
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMI'))
      THEN
        DROP TABLE IF EXISTS _tmpMI;
-     END IF;  
+     END IF;
 
      CREATE TEMP TABLE _tmpMI (Id integer
                              , MovementItemId Integer
@@ -676,25 +651,25 @@ BEGIN
                                                    , LastMovement.AreaId                AS AreaId
                                               FROM
                                                   (
-                                                      SELECT 
+                                                      SELECT
                                                           PriceList.JuridicalId
                                                         , PriceList.ContractId
                                                         , PriceList.AreaId
-                                                        , PriceList.MovementId 
-                                                      FROM 
+                                                        , PriceList.MovementId
+                                                      FROM
                                                           (
-                                                              SELECT 
-                                                                  MAX (Movement.OperDate) 
-                                                                  OVER (PARTITION BY MovementLinkObject_Juridical.ObjectId 
+                                                              SELECT
+                                                                  MAX (Movement.OperDate)
+                                                                  OVER (PARTITION BY MovementLinkObject_Juridical.ObjectId
                                                                                    , COALESCE (MovementLinkObject_Contract.ObjectId, 0)
                                                                                    , COALESCE (MovementLinkObject_Area.ObjectId, 0)
                                                                        ) AS Max_Date
                                                                 , Movement.OperDate                                  AS OperDate
                                                                 , Movement.Id                                        AS MovementId
-                                                                , MovementLinkObject_Juridical.ObjectId              AS JuridicalId 
+                                                                , MovementLinkObject_Juridical.ObjectId              AS JuridicalId
                                                                 , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
                                                                 , COALESCE (MovementLinkObject_Area.ObjectId, 0)     AS AreaId
-                                                              FROM 
+                                                              FROM
                                                                   Movement
                                                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                                                                                ON MovementLinkObject_Juridical.MovementId = Movement.Id
@@ -704,14 +679,14 @@ BEGIN
                                                                                               AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Area
                                                                                                ON MovementLinkObject_Area.MovementId = Movement.Id
-                                                                                              AND MovementLinkObject_Area.DescId = zc_MovementLinkObject_Area() 
-                                                                  INNER JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = MovementLinkObject_Juridical.ObjectId 
+                                                                                              AND MovementLinkObject_Area.DescId = zc_MovementLinkObject_Area()
+                                                                  INNER JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = MovementLinkObject_Juridical.ObjectId
                                                                                              AND tmpJuridicalArea.AreaId      = COALESCE (MovementLinkObject_Area.ObjectId, 0)
-                                                              WHERE 
+                                                              WHERE
                                                                   Movement.DescId = zc_Movement_PriceList()
                                                               AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                                           ) AS PriceList
-                                                      WHERE PriceList.Max_Date = PriceList.OperDate 
+                                                      WHERE PriceList.Max_Date = PriceList.OperDate
                                                   ) AS LastMovement
                                                   INNER JOIN MovementItem ON MovementItem.MovementId = LastMovement.MovementId
                                                                          AND MovementItem.DescId = zc_MI_Master()
@@ -719,7 +694,7 @@ BEGIN
                                                   INNER JOIN MovementItemLinkObject AS MILinkObject_Goods -- товары в прайс-листе
                                                                                     ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                                                                                    AND MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                                  INNER JOIN MovementItemOrder ON MovementItemOrder.GoodsId =  MILinkObject_Goods.ObjectId 
+                                                  INNER JOIN MovementItemOrder ON MovementItemOrder.GoodsId =  MILinkObject_Goods.ObjectId
 
                                                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                                               ON MIFloat_Price.MovementItemId =  MovementItem.Id
@@ -727,12 +702,12 @@ BEGIN
 
                                                   LEFT OUTER JOIN Object AS Object_Goods
                                                                          ON Object_Goods.Id = MILinkObject_Goods.ObjectId
-                                                  LEFT JOIN ObjectString AS ObjectString_GoodsCode 
+                                                  LEFT JOIN ObjectString AS ObjectString_GoodsCode
                                                                          ON ObjectString_GoodsCode.ObjectId = MILinkObject_Goods.ObjectId
                                                                         AND ObjectString_GoodsCode.DescId = zc_ObjectString_Goods_Code()
                                                   LEFT JOIN ObjectString AS ObjectString_Goods_Maker
                                                                          ON ObjectString_Goods_Maker.ObjectId = MILinkObject_Goods.ObjectId
-                                                                        AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()  
+                                                                        AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()
                                                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                                              ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                                                                             AND MIDate_PartionGoods.MovementItemId =  MovementItem.Id
@@ -745,8 +720,8 @@ BEGIN
                                                      , Object_Goods.ValueData
                                                      , ObjectString_Goods_Maker.ValueData
                                                      , MIDate_PartionGoods.ValueData
-                                                     , LastMovement.AreaId                                                           
-                                                             
+                                                     , LastMovement.AreaId
+
                                               )
 
        -- Результат
@@ -839,7 +814,7 @@ BEGIN
                   , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean AS isDefault
 
                FROM MovementItemOrder
-                    LEFT OUTER JOIN tmpMovementItemLastPriceList_View AS MovementItemLastPriceList_View 
+                    LEFT OUTER JOIN tmpMovementItemLastPriceList_View AS MovementItemLastPriceList_View
                                                                       ON MovementItemLastPriceList_View.GoodsId = MovementItemOrder.GoodsId
 
                     JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = MovementItemLastPriceList_View.JuridicalId
@@ -958,38 +933,38 @@ BEGIN
                                          , ROW_NUMBER() OVER (PARTITION BY LoadPriceList.JuridicalId, LoadPriceListItem.GoodsId ORDER BY LoadPriceList.OperDate DESC, LoadPriceListItem.Id DESC) AS ORD
                                     FROM LoadPriceList
                                          LEFT JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
-                             
+
                                          LEFT JOIN Object_Goods_Juridical AS PartnerGoods ON PartnerGoods.JuridicalId  = LoadPriceList.JuridicalId
                                                                                          AND PartnerGoods.Code = LoadPriceListItem.GoodsCode
-    
+
                                     WHERE COALESCE (LoadPriceListItem.GoodsNDS,'') <> ''
                                     ) AS tmp
                               WHERE tmp.ORD = 1
                               )
    -- Отказы поставщиков
-   , tmpSupplierFailures AS (SELECT DISTINCT 
+   , tmpSupplierFailures AS (SELECT DISTINCT
                                     ObjectLink_BankAccount_Goods.ChildObjectId          AS GoodsId
                                   , ObjectLink_BankAccount_Juridical.ChildObjectId      AS JuridicalId
                                   , ObjectLink_BankAccount_Contract.ChildObjectId       AS ContractId
                                   , ObjectLink_BankAccount_Area.ChildObjectId           AS AreaId
                              FROM Object AS Object_SupplierFailures
-                                  
+
                                   LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Goods
                                                        ON ObjectLink_BankAccount_Goods.ObjectId = Object_SupplierFailures.Id
                                                       AND ObjectLink_BankAccount_Goods.DescId = zc_ObjectLink_SupplierFailures_Goods()
-                                  
+
                                   LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Juridical
                                                        ON ObjectLink_BankAccount_Juridical.ObjectId = Object_SupplierFailures.Id
                                                       AND ObjectLink_BankAccount_Juridical.DescId = zc_ObjectLink_SupplierFailures_Juridical()
-                                  
+
                                   LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Contract
                                                        ON ObjectLink_BankAccount_Contract.ObjectId = Object_SupplierFailures.Id
                                                       AND ObjectLink_BankAccount_Contract.DescId = zc_ObjectLink_SupplierFailures_Contract()
-                                  
+
                                   LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Area
                                                        ON ObjectLink_BankAccount_Area.ObjectId = Object_SupplierFailures.Id
                                                       AND ObjectLink_BankAccount_Area.DescId = zc_ObjectLink_SupplierFailures_Area()
-                                  
+
                              WHERE Object_SupplierFailures.DescId = zc_Object_SupplierFailures()
                                AND Object_SupplierFailures.isErased = FALSE
                                )
@@ -1036,8 +1011,10 @@ BEGIN
              , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar     AS ConditionsKeepName
              , Object_Area.ValueData                         :: TVarChar    AS AreaName_Goods
 
+             , COALESCE (SupplierFailures.GoodsId, 0) <> 0               AS isSupplierFailures
+
              , CASE
-                    WHEN COALESCE (SupplierFailures.GoodsId, 0) <> 0 THEN zfCalc_Color (255, 165, 0) -- orange 
+                    WHEN COALESCE (SupplierFailures.GoodsId, 0) <> 0 THEN zfCalc_Color (255, 165, 0) -- orange
                     ELSE zc_Color_White()
                 END  AS SupplierFailuresColor
 
@@ -1070,7 +1047,7 @@ BEGIN
              LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.PartnerGoodsId = _tmpMI.GoodsId
                                            AND tmpLoadPriceList_NDS.JuridicalId = _tmpMI.JuridicalId
 
-             LEFT JOIN tmpSupplierFailures AS SupplierFailures 
+             LEFT JOIN tmpSupplierFailures AS SupplierFailures
                                            ON SupplierFailures.GoodsId = _tmpMI.GoodsId
                                           AND SupplierFailures.JuridicalId = _tmpMI.JuridicalId
                                           AND SupplierFailures.ContractId = _tmpMI.ContractId
@@ -1123,7 +1100,7 @@ BEGIN
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMI'))
      THEN
        DROP TABLE IF EXISTS _tmpMI;
-     END IF;  
+     END IF;
 
      CREATE TEMP TABLE _tmpMI (Id integer
                              , MovementItemId Integer
@@ -1267,25 +1244,25 @@ BEGIN
                                                    , LastMovement.AreaId                AS AreaId
                                               FROM
                                                   (
-                                                      SELECT 
+                                                      SELECT
                                                           PriceList.JuridicalId
                                                         , PriceList.ContractId
                                                         , PriceList.AreaId
-                                                        , PriceList.MovementId 
-                                                      FROM 
+                                                        , PriceList.MovementId
+                                                      FROM
                                                           (
-                                                              SELECT 
-                                                                  MAX (Movement.OperDate) 
-                                                                  OVER (PARTITION BY MovementLinkObject_Juridical.ObjectId 
+                                                              SELECT
+                                                                  MAX (Movement.OperDate)
+                                                                  OVER (PARTITION BY MovementLinkObject_Juridical.ObjectId
                                                                                    , COALESCE (MovementLinkObject_Contract.ObjectId, 0)
                                                                                    , COALESCE (MovementLinkObject_Area.ObjectId, 0)
                                                                        ) AS Max_Date
                                                                 , Movement.OperDate                                  AS OperDate
                                                                 , Movement.Id                                        AS MovementId
-                                                                , MovementLinkObject_Juridical.ObjectId              AS JuridicalId 
+                                                                , MovementLinkObject_Juridical.ObjectId              AS JuridicalId
                                                                 , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
                                                                 , COALESCE (MovementLinkObject_Area.ObjectId, 0)     AS AreaId
-                                                              FROM 
+                                                              FROM
                                                                   Movement
                                                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                                                                                ON MovementLinkObject_Juridical.MovementId = Movement.Id
@@ -1295,14 +1272,14 @@ BEGIN
                                                                                               AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Area
                                                                                                ON MovementLinkObject_Area.MovementId = Movement.Id
-                                                                                              AND MovementLinkObject_Area.DescId = zc_MovementLinkObject_Area() 
-                                                                  INNER JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = MovementLinkObject_Juridical.ObjectId 
+                                                                                              AND MovementLinkObject_Area.DescId = zc_MovementLinkObject_Area()
+                                                                  INNER JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = MovementLinkObject_Juridical.ObjectId
                                                                                              AND tmpJuridicalArea.AreaId      = COALESCE (MovementLinkObject_Area.ObjectId, 0)
-                                                              WHERE 
+                                                              WHERE
                                                                   Movement.DescId = zc_Movement_PriceList()
                                                               AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                                           ) AS PriceList
-                                                      WHERE PriceList.Max_Date = PriceList.OperDate 
+                                                      WHERE PriceList.Max_Date = PriceList.OperDate
                                                   ) AS LastMovement
                                                   INNER JOIN MovementItem ON MovementItem.MovementId = LastMovement.MovementId
                                                                          AND MovementItem.DescId = zc_MI_Master()
@@ -1310,7 +1287,7 @@ BEGIN
                                                   INNER JOIN MovementItemLinkObject AS MILinkObject_Goods -- товары в прайс-листе
                                                                                     ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                                                                                    AND MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                                  INNER JOIN MovementItemOrder ON MovementItemOrder.GoodsId =  MILinkObject_Goods.ObjectId 
+                                                  INNER JOIN MovementItemOrder ON MovementItemOrder.GoodsId =  MILinkObject_Goods.ObjectId
 
                                                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                                               ON MIFloat_Price.MovementItemId =  MovementItem.Id
@@ -1318,12 +1295,12 @@ BEGIN
 
                                                   LEFT OUTER JOIN Object AS Object_Goods
                                                                          ON Object_Goods.Id = MILinkObject_Goods.ObjectId
-                                                  LEFT JOIN ObjectString AS ObjectString_GoodsCode 
+                                                  LEFT JOIN ObjectString AS ObjectString_GoodsCode
                                                                          ON ObjectString_GoodsCode.ObjectId = MILinkObject_Goods.ObjectId
                                                                         AND ObjectString_GoodsCode.DescId = zc_ObjectString_Goods_Code()
                                                   LEFT JOIN ObjectString AS ObjectString_Goods_Maker
                                                                          ON ObjectString_Goods_Maker.ObjectId = MILinkObject_Goods.ObjectId
-                                                                        AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()  
+                                                                        AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()
                                                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                                              ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                                                                             AND MIDate_PartionGoods.MovementItemId =  MovementItem.Id
@@ -1336,8 +1313,8 @@ BEGIN
                                                      , Object_Goods.ValueData
                                                      , ObjectString_Goods_Maker.ValueData
                                                      , MIDate_PartionGoods.ValueData
-                                                     , LastMovement.AreaId                                                           
-                                                             
+                                                     , LastMovement.AreaId
+
                                               )
 
 
@@ -1431,7 +1408,7 @@ BEGIN
                   , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean AS isDefault
 
                FROM MovementItemOrder
-                    LEFT OUTER JOIN tmpMovementItemLastPriceList_View AS MovementItemLastPriceList_View 
+                    LEFT OUTER JOIN tmpMovementItemLastPriceList_View AS MovementItemLastPriceList_View
                                                                       ON MovementItemLastPriceList_View.GoodsId = MovementItemOrder.GoodsId
 
                     JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = MovementItemLastPriceList_View.JuridicalId
@@ -1548,38 +1525,38 @@ BEGIN
                                          , ROW_NUMBER() OVER (PARTITION BY LoadPriceList.JuridicalId, LoadPriceListItem.GoodsId ORDER BY LoadPriceList.OperDate DESC, LoadPriceListItem.Id DESC) AS ORD
                                     FROM LoadPriceList
                                          LEFT JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
-                             
+
                                          LEFT JOIN Object_Goods_Juridical AS PartnerGoods ON PartnerGoods.JuridicalId  = LoadPriceList.JuridicalId
                                                                                          AND PartnerGoods.Code = LoadPriceListItem.GoodsCode
-    
+
                                     WHERE COALESCE (LoadPriceListItem.GoodsNDS,'') <> ''
                                     ) AS tmp
                               WHERE tmp.ORD = 1
                               )
    -- Отказы поставщиков
-   , tmpSupplierFailures AS (SELECT DISTINCT 
+   , tmpSupplierFailures AS (SELECT DISTINCT
                                     ObjectLink_BankAccount_Goods.ChildObjectId          AS GoodsId
                                   , ObjectLink_BankAccount_Juridical.ChildObjectId      AS JuridicalId
                                   , ObjectLink_BankAccount_Contract.ChildObjectId       AS ContractId
                                   , ObjectLink_BankAccount_Area.ChildObjectId           AS AreaId
                              FROM Object AS Object_SupplierFailures
-                                  
+
                                   LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Goods
                                                        ON ObjectLink_BankAccount_Goods.ObjectId = Object_SupplierFailures.Id
                                                       AND ObjectLink_BankAccount_Goods.DescId = zc_ObjectLink_SupplierFailures_Goods()
-                                  
+
                                   LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Juridical
                                                        ON ObjectLink_BankAccount_Juridical.ObjectId = Object_SupplierFailures.Id
                                                       AND ObjectLink_BankAccount_Juridical.DescId = zc_ObjectLink_SupplierFailures_Juridical()
-                                  
+
                                   LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Contract
                                                        ON ObjectLink_BankAccount_Contract.ObjectId = Object_SupplierFailures.Id
                                                       AND ObjectLink_BankAccount_Contract.DescId = zc_ObjectLink_SupplierFailures_Contract()
-                                  
+
                                   LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Area
                                                        ON ObjectLink_BankAccount_Area.ObjectId = Object_SupplierFailures.Id
                                                       AND ObjectLink_BankAccount_Area.DescId = zc_ObjectLink_SupplierFailures_Area()
-                                  
+
                              WHERE Object_SupplierFailures.DescId = zc_Object_SupplierFailures()
                                AND Object_SupplierFailures.isErased = FALSE
                                )
@@ -1625,8 +1602,10 @@ BEGIN
              , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar     AS ConditionsKeepName
              , Object_Area.ValueData                         :: TVarChar    AS AreaName_Goods
 
+             , COALESCE (SupplierFailures.GoodsId, 0) <> 0               AS isSupplierFailures
+
              , CASE
-                    WHEN COALESCE (SupplierFailures.GoodsId, 0) <> 0 THEN zfCalc_Color (255, 165, 0) -- orange 
+                    WHEN COALESCE (SupplierFailures.GoodsId, 0) <> 0 THEN zfCalc_Color (255, 165, 0) -- orange
                     ELSE zc_Color_White()
                 END  AS SupplierFailuresColor
 
@@ -1659,7 +1638,7 @@ BEGIN
              LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.PartnerGoodsId = _tmpMI.GoodsId
                                            AND tmpLoadPriceList_NDS.JuridicalId = _tmpMI.JuridicalId
 
-             LEFT JOIN tmpSupplierFailures AS SupplierFailures 
+             LEFT JOIN tmpSupplierFailures AS SupplierFailures
                                            ON SupplierFailures.GoodsId = _tmpMI.GoodsId
                                           AND SupplierFailures.JuridicalId = _tmpMI.JuridicalId
                                           AND SupplierFailures.ContractId = _tmpMI.ContractId
@@ -1743,4 +1722,4 @@ where Movement.DescId = zc_Movement_OrderInternal()
 
 --select * from gpSelect_MovementItem_OrderInternal_Child(inMovementId := 22066168  , inShowAll := 'True' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
 
-select * from gpSelect_MovementItem_OrderInternal_Child(inMovementId := 26860340     , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_OrderInternal_Child(inMovementId := 26912498     , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');

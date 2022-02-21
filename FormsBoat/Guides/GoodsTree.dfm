@@ -125,9 +125,9 @@ object GoodsTreeForm: TGoodsTreeForm
         Options.Editing = False
         Width = 100
       end
-      object DiscountParnerName: TcxGridDBColumn
+      object DiscountPartnerName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1089#1082#1080#1076#1082#1080' '#1091' '#1087#1072#1088#1090#1085#1077#1088#1072
-        DataBinding.FieldName = 'DiscountParnerName'
+        DataBinding.FieldName = 'DiscountPartnerName'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -774,10 +774,12 @@ object GoodsTreeForm: TGoodsTreeForm
     OnDblClickActionList = <>
     ActionItemList = <>
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 336
     Top = 184

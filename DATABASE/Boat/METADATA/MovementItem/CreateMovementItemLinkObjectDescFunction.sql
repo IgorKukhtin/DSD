@@ -69,9 +69,9 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_Product() RETURNS Integer AS $BODY$BE
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_Product', 'Product' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Product');
 
-CREATE OR REPLACE FUNCTION zc_MILinkObject_DiscountParner() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_DiscountParner'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_MILinkObject_DiscountPartner() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_DiscountPartner'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
-  SELECT 'zc_MILinkObject_DiscountParner', 'группа скидки у поставщика' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_DiscountParner');
+  SELECT 'zc_MILinkObject_DiscountPartner', 'группа скидки у поставщика' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_DiscountPartner');
 
 CREATE OR REPLACE FUNCTION zc_MILinkObject_Measure() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Measure'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
@@ -86,7 +86,7 @@ INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
  18.02.22         * zc_MILinkObject_MeasureParent
                     zc_MILinkObject_Measure
-                    zc_MILinkObject_DiscountParner
+                    zc_MILinkObject_DiscountPartner
  13.07.21         * zc_MILinkObject_Product
  12.07.21         * zc_MILinkObject_ReceiptProdModel
  10.07.18         * add zc_MILinkObject_MoneyPlace

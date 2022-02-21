@@ -30,7 +30,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods_From_Excel(
     IN inObjectCode      Integer ,
     IN inGoodsType       TVarChar,
     IN inTaxKind         TVarChar,
-    IN inDiscountParner  TVarChar,
+    IN inDiscountPartner  TVarChar,
     IN inComment1        TVarChar,
     IN inComment2        TVarChar,
     IN inModelEtiketen   TVarChar,
@@ -55,7 +55,7 @@ $BODY$
    DECLARE vbGoodsTypeId Integer;
    DECLARE vbProdColorId Integer;
    DECLARE vbGoodsSizeId Integer;
-   DECLARE vbDiscountParnerId Integer;
+   DECLARE vbDiscountPartnerId Integer;
    DECLARE vbPriceList1Id Integer;
    DECLARE vbPriceList2Id Integer;
    DECLARE vbMeasureId Integer;
@@ -279,17 +279,17 @@ else RETURN;
        END IF;
    END IF;
 
-   IF COALESCE (inDiscountParner, '') <> ''
+   IF COALESCE (inDiscountPartner, '') <> ''
    THEN
        -- пробуем найти 
-       vbDiscountParnerId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_DiscountParner() AND TRIM (Object.ValueData) Like TRIM (inDiscountParner));
+       vbDiscountPartnerId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_DiscountPartner() AND TRIM (Object.ValueData) Like TRIM (inDiscountPartner));
        --если не находим создаем
-       IF COALESCE (vbDiscountParnerId,0) = 0
+       IF COALESCE (vbDiscountPartnerId,0) = 0
        THEN
-            vbDiscountParnerId := (SELECT tmp.ioId
-                                   FROM gpInsertUpdate_Object_DiscountParner (ioId        := 0         :: Integer
+            vbDiscountPartnerId := (SELECT tmp.ioId
+                                   FROM gpInsertUpdate_Object_DiscountPartner (ioId        := 0         :: Integer
                                                                             , ioCode      := 0         :: Integer
-                                                                            , inName      := TRIM (inDiscountParner) ::TVarChar
+                                                                            , inName      := TRIM (inDiscountPartner) ::TVarChar
                                                                             , inComment   := ''        :: TVarChar
                                                                             , inSession   := inSession :: TVarChar
                                                                              ) AS tmp);
@@ -339,7 +339,7 @@ else RETURN;
                                               , inProdColorId      := vbProdColorId    :: Integer
                                               , inPartnerId        := vbPartnerId      :: Integer
                                               , inUnitId           := 0                :: Integer
-                                              , inDiscountParnerId := vbDiscountParnerId    :: Integer
+                                              , inDiscountPartnerId := vbDiscountPartnerId    :: Integer
                                               , inTaxKindId        := vbTaxKindId      :: Integer
                                               , inEngineId         := NULL
                                               , inSession          := inSession        :: TVarChar
@@ -369,7 +369,7 @@ else RETURN;
                                          , inProdColorId      := CASE WHEN COALESCE (vbProdColorId, 0) <> 0 THEN vbProdColorId ELSE tmp.ProdColorId END    :: Integer
                                          , inPartnerId        := CASE WHEN COALESCE (vbPartnerId, 0) <> 0 THEN vbPartnerId ELSE tmp.PartnerId END      :: Integer
                                          , inUnitId           := tmp.UnitId                :: Integer
-                                         , inDiscountParnerId := CASE WHEN COALESCE (vbDiscountParnerId, 0) <> 0 THEN vbDiscountParnerId ELSE tmp.DiscountParnerId END :: Integer
+                                         , inDiscountPartnerId := CASE WHEN COALESCE (vbDiscountPartnerId, 0) <> 0 THEN vbDiscountPartnerId ELSE tmp.DiscountPartnerId END :: Integer
                                          , inTaxKindId        := CASE WHEN COALESCE (vbTaxKindId, 0) <> 0 THEN vbTaxKindId ELSE tmp.TaxKindId END :: Integer
                                          , inEngineId         := tmp.EngineId
                                          , inSession          := inSession        :: TVarChar

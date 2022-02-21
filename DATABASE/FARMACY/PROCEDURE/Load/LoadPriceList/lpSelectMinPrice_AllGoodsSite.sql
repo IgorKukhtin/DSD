@@ -487,6 +487,33 @@ BEGIN
                          FROM lpSelect_Object_JuridicalArea_byUnit (0, 0) AS tmp
                          WHERE tmp.UnitId IN (select _tmpUnit.UnitId from _tmpUnit WHERE _tmpUnit.JuridicalId = vbMainJuridicalId)
                          )
+   -- Отказы поставщиков
+  , tmpSupplierFailures AS (SELECT DISTINCT 
+                                   ObjectLink_BankAccount_Goods.ChildObjectId          AS GoodsId
+                                 , ObjectLink_BankAccount_Juridical.ChildObjectId      AS JuridicalId
+                                 , ObjectLink_BankAccount_Contract.ChildObjectId       AS ContractId
+                                 , ObjectLink_BankAccount_Area.ChildObjectId           AS AreaId
+                            FROM Object AS Object_SupplierFailures
+                                 
+                                 LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Goods
+                                                      ON ObjectLink_BankAccount_Goods.ObjectId = Object_SupplierFailures.Id
+                                                     AND ObjectLink_BankAccount_Goods.DescId = zc_ObjectLink_SupplierFailures_Goods()
+                                  
+                                 LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Juridical
+                                                      ON ObjectLink_BankAccount_Juridical.ObjectId = Object_SupplierFailures.Id
+                                                     AND ObjectLink_BankAccount_Juridical.DescId = zc_ObjectLink_SupplierFailures_Juridical()
+                                  
+                                 LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Contract
+                                                      ON ObjectLink_BankAccount_Contract.ObjectId = Object_SupplierFailures.Id
+                                                     AND ObjectLink_BankAccount_Contract.DescId = zc_ObjectLink_SupplierFailures_Contract()
+                                  
+                                 LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Area
+                                                      ON ObjectLink_BankAccount_Area.ObjectId = Object_SupplierFailures.Id
+                                                     AND ObjectLink_BankAccount_Area.DescId = zc_ObjectLink_SupplierFailures_Area()
+                                  
+                            WHERE Object_SupplierFailures.DescId = zc_Object_SupplierFailures()
+                              AND Object_SupplierFailures.isErased = FALSE
+                            )
   , tmpMinPrice_RemainsPrice as (SELECT
             _tmpMinPrice_RemainsList.ObjectId                 AS GoodsId
           , _tmpMinPrice_RemainsList.ObjectId_retail          AS GoodsId_retail
@@ -546,6 +573,12 @@ BEGIN
             JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = LastPriceList_find_View.JuridicalId
                                  AND tmpJuridicalArea.AreaId      = LastPriceList_find_View.AreaId
 
+            LEFT JOIN tmpSupplierFailures AS SupplierFailures 
+                                          ON SupplierFailures.GoodsId = _tmpMinPrice_RemainsList.GoodsId
+                                         AND SupplierFailures.JuridicalId = LastPriceList_find_View.JuridicalId
+                                         AND SupplierFailures.ContractId = LastPriceList_find_View.ContractId
+                                         AND COALESCE(SupplierFailures.AreaId, 0) = COALESCE(LastPriceList_find_View.AreaId, 0)
+
              -- Срок партии товара (или Срок годности?) в Прайс-лист (поставщика)
             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                        ON MIDate_PartionGoods.MovementItemId =  PriceList.Id
@@ -588,6 +621,7 @@ BEGIN
                 OR Object_JuridicalGoods.IsPromo                  = FALSE
             
               )
+          AND COALESCE (SupplierFailures.GoodsId, 0) = 0
        )
   , tmpMinPrice_PriorityReprice as (SELECT DISTINCT tmpMinPrice_RemainsPrice.GoodsId
                                     FROM tmpMinPrice_RemainsPrice

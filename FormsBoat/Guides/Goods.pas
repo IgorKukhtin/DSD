@@ -64,7 +64,7 @@ type
     InfoMoneyGroupName: TcxGridDBColumn;
     InfoMoneyDestinationName: TcxGridDBColumn;
     InfoMoneyCode: TcxGridDBColumn;
-    DiscountParnerName: TcxGridDBColumn;
+    DiscountPartnerName: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
     IsArc: TcxGridDBColumn;
     GoodsTypeName: TcxGridDBColumn;

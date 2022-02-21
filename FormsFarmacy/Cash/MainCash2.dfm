@@ -6311,6 +6311,7 @@ inherited MainCashForm2: TMainCashForm2
     object actOpenLayoutFile: TAction
       Caption = #1055#1072#1087#1082#1072' "'#1042#1099#1082#1083#1072#1076#1082#1072'"'
       Enabled = False
+      Visible = False
       OnExecute = actOpenLayoutFileExecute
     end
     object actDownloadAndRunFile: TdsdFTP
@@ -6377,6 +6378,12 @@ inherited MainCashForm2: TMainCashForm2
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actAddGoodsSupplement: TAction
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1057#1059#1053' 1'
+      Enabled = False
+      Visible = False
+      OnExecute = actAddGoodsSupplementExecute
     end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
@@ -6634,6 +6641,9 @@ inherited MainCashForm2: TMainCashForm2
     end
     object mmOpenLayoutFile: TMenuItem
       Action = actOpenLayoutFile
+    end
+    object mmAddGoodsSupplement: TMenuItem
+      Action = actAddGoodsSupplement
     end
     object N12: TMenuItem
       Caption = '-'
@@ -10130,5 +10140,26 @@ inherited MainCashForm2: TMainCashForm2
     AfterExecute = spLayoutFileFTPParamsAfterExecute
     Left = 64
     Top = 560
+  end
+  object spGoods_AddSupplement: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Goods_AddSupplement'
+    DataSet = CashListDiffCDS
+    DataSets = <
+      item
+        DataSet = CashListDiffCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = RemainsCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 328
   end
 end

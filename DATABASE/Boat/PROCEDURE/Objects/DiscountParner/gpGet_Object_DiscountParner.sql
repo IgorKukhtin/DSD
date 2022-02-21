@@ -1,8 +1,8 @@
 ﻿-- Торговая марка
 
-DROP FUNCTION IF EXISTS gpGet_Object_DiscountParner (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_DiscountPartner (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Object_DiscountParner(
+CREATE OR REPLACE FUNCTION gpGet_Object_DiscountPartner(
     IN inId          Integer,       -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -14,29 +14,29 @@ $BODY$
 BEGIN
 
   -- проверка прав пользователя на вызов процедуры
-  -- PERFORM lpCheckRight(inSession, zc_Enum_Process_DiscountParner());
+  -- PERFORM lpCheckRight(inSession, zc_Enum_Process_DiscountPartner());
 
   IF COALESCE (inId, 0) = 0
    THEN
        RETURN QUERY
        SELECT
               0 :: Integer            AS Id
-           , lfGet_ObjectCode(0, zc_Object_DiscountParner())   AS Code
+           , lfGet_ObjectCode(0, zc_Object_DiscountPartner())   AS Code
            , '' :: TVarChar           AS Name
            , '' :: TVarChar           AS Comment
        ;
    ELSE
        RETURN QUERY
        SELECT
-             Object_DiscountParner.Id              AS Id
-           , Object_DiscountParner.ObjectCode      AS Code
-           , Object_DiscountParner.ValueData       AS Name
+             Object_DiscountPartner.Id              AS Id
+           , Object_DiscountPartner.ObjectCode      AS Code
+           , Object_DiscountPartner.ValueData       AS Name
            , ObjectString_Comment.ValueData   AS Comment
-       FROM Object AS Object_DiscountParner
+       FROM Object AS Object_DiscountPartner
           LEFT JOIN ObjectString AS ObjectString_Comment
-                                 ON ObjectString_Comment.ObjectId = Object_DiscountParner.Id
-                                AND ObjectString_Comment.DescId = zc_ObjectString_DiscountParner_Comment() 
-       WHERE Object_DiscountParner.Id = inId;
+                                 ON ObjectString_Comment.ObjectId = Object_DiscountPartner.Id
+                                AND ObjectString_Comment.DescId = zc_ObjectString_DiscountPartner_Comment() 
+       WHERE Object_DiscountPartner.Id = inId;
    END IF;
 
 END;
@@ -51,4 +51,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_DiscountParner (1 ::integer,'2'::TVarChar)
+-- SELECT * FROM gpGet_Object_DiscountPartner (1 ::integer,'2'::TVarChar)

@@ -1,8 +1,8 @@
 -- Торговая марка
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiscountParner (Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiscountPartner (Integer, Integer, TVarChar, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_DiscountParner(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_DiscountPartner(
  INOUT ioId              Integer,       -- ключ объекта <Бренд>
  INOUT ioCode            Integer,       -- свойство <Код Бренда>
     IN inName            TVarChar,      -- главное Название Бренда
@@ -16,23 +16,23 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_DiscountParner());
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_DiscountPartner());
    vbUserId:= lpGetUserBySession (inSession);
 
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
    
     -- Если код не установлен, определяем его как последний+1
-   ioCode:= lfGet_ObjectCode (ioCode, zc_Object_DiscountParner());
+   ioCode:= lfGet_ObjectCode (ioCode, zc_Object_DiscountPartner());
 
    -- проверка прав уникальности для свойства <Наименование >
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_DiscountParner(), inName, vbUserId);
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_DiscountPartner(), inName, vbUserId);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_DiscountParner(), ioCode, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_DiscountPartner(), ioCode, inName);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_DiscountParner_Comment(), ioId, inComment);
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_DiscountPartner_Comment(), ioId, inComment);
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
@@ -55,4 +55,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_DiscountParner()
+-- SELECT * FROM gpInsertUpdate_Object_DiscountPartner()
