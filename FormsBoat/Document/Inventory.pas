@@ -116,8 +116,7 @@ type
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     BarCode: TcxGridDBColumn;
-    cxGridLevel1: TcxGridLevel;
-    cxSplitter1: TcxSplitter;
+   cxSplitter1: TcxSplitter;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     dsdDBViewAddOn1: TdsdDBViewAddOn;

@@ -118,6 +118,14 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 81
           end
+          object PartNumber: TcxGridDBColumn
+            Caption = 'S/N'
+            DataBinding.FieldName = 'PartNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
+            Width = 70
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = 'Interne Nr'
             DataBinding.FieldName = 'GoodsCode'

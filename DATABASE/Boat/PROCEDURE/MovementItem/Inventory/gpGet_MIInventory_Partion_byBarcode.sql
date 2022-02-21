@@ -13,6 +13,7 @@ RETURNS TABLE (Id                 Integer
              , GoodsCode          Integer
              , GoodsName          TVarChar
              , Article            TVarChar
+             , PartNumber         TVarChar
              , GoodsGroupNameFull TVarChar
              , GoodsGroupId       Integer
              , GoodsGroupName     TVarChar
@@ -42,6 +43,7 @@ BEGIN
             , 0  :: Integer  AS GoodsCode
             , '' :: TVarChar AS GoodsName
             , '' :: TVarChar AS Article
+            , '' :: TVarChar AS PartNumber
             , '' :: TVarChar AS GoodsGroupNameFull
             , 0  :: Integer  AS GoodsGroupId
             , '' :: TVarChar AS GoodsGroupName
@@ -98,6 +100,7 @@ BEGIN
             , Object_Goods.ObjectCode                     AS GoodsCode
             , Object_Goods.ValueData                      AS GoodsName
             , ObjectString_Article.ValueData              AS Article
+            , MIString_PartNumber.ValueData               AS PartNumber
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , Object_GoodsGroup.Id                        AS GoodsGroupId
             , Object_GoodsGroup.ValueData                 AS GoodsGroupName
@@ -124,7 +127,11 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Article
                                    ON ObjectString_Article.ObjectId = Object_PartionGoods.ObjectId
                                   AND ObjectString_Article.DescId = zc_ObjectString_Article()
-                                                    
+
+            LEFT JOIN MovementItemString AS MIString_PartNumber
+                                         ON MIString_PartNumber.MovementItemId = Object_PartionGoods.MovementItemId
+                                        AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+      
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = Object_PartionGoods.ObjectId
 
        WHERE Object_PartionGoods.MovementItemId = vbPartionId
