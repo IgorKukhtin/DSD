@@ -324,6 +324,24 @@ object InventoryItemEditForm: TInventoryItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPartNumber'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inPartNumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inAmount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'GoodsId'
         Value = Null
         Component = GuidesGoods

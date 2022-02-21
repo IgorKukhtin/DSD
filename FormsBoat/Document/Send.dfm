@@ -178,11 +178,10 @@ object SendForm: TSendForm
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
       object cxGrid: TcxGrid
-        Left = 0
-        Top = 65
+        Left = 40
+        Top = 129
         Width = 1060
         Height = 223
-        Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
@@ -3309,8 +3308,8 @@ object SendForm: TSendForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 232
-    Top = 155
+    Left = 224
+    Top = 195
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3337,8 +3336,8 @@ object SendForm: TSendForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 270
-    Top = 153
+    Left = 278
+    Top = 209
   end
   object spSelectBarCode_PartNumber: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_Send_BarCode'
@@ -3357,8 +3356,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 128
-    Top = 152
+    Left = 64
+    Top = 144
   end
   object spInsertUpdate_BarCode_PartNumber: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_Send_BarCode_PartNumber'
@@ -3462,8 +3461,8 @@ object SendForm: TSendForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 424
-    Top = 163
+    Left = 472
+    Top = 171
   end
   object dsdDBViewAddOn2: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3487,8 +3486,8 @@ object SendForm: TSendForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 462
-    Top = 161
+    Left = 510
+    Top = 169
   end
   object dsdDBViewAddOn3: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

@@ -1,10 +1,13 @@
 -- Function: gpGet_MIInventory_Partion_byBarcode()
 
 DROP FUNCTION IF EXISTS gpGet_MIInventory_Partion_byBarcode (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MIInventory_Partion_byBarcode (Integer, TVarChar, TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MIInventory_Partion_byBarcode(
     IN inMovementId        Integer    , -- Ключ объекта <Документ>
     IN inBarCode           TVarChar   , --
+    IN inPartNumber        TVarChar   , --
+    IN inAmount            TFloat     , --
     IN inSession           TVarChar     -- сессия пользователя
 )
 RETURNS TABLE (Id                 Integer
@@ -31,11 +34,12 @@ $BODY$
    DECLARE vbPartionId Integer;
    DECLARE vbUnitId    Integer;
    DECLARE vbGoodsId   Integer;
+   DECLARE vbPartNumber TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     IF inBarCode = '' THEN
+     IF inBarCode = '' AND inPartNumber = '' THEN
        RETURN QUERY
        SELECT 0  :: Integer  AS Id
             , 0  :: Integer  AS PartionId
@@ -61,13 +65,14 @@ BEGIN
      -- Нашли
      SELECT tmp.PartionId
           , tmp.GoodsId
-       INTO vbPartionId, vbGoodsId
-     FROM gpGet_Partion_byBarcode (inBarCode, inSession) AS tmp;
+          , tmp.PartNumber
+       INTO vbPartionId, vbGoodsId, vbPartNumber
+     FROM gpGet_Partion_byBarcode (inBarCode, inPartNumber, inSession) AS tmp;
 
      -- проверка
-     IF COALESCE (vbPartionId, 0) = 0
+     IF COALESCE (vbGoodsId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Ошибка в Штрихкоде <%>.', inBarCode;
+         RAISE EXCEPTION 'Ошибка.Ошибка в Штрихкоде <%>  или  S/N <%>.', inBarCode, inPartNumber;
      END IF;
   
      -- из шапки берем подразделение для остатков
@@ -76,7 +81,6 @@ BEGIN
                   WHERE MovementLinkObject.DescId = zc_MovementLinkObject_Unit()
                     AND MovementLinkObject.MovementId = inMovementId
                   );
-
 
      -- Результат
      RETURN QUERY
@@ -100,7 +104,7 @@ BEGIN
             , Object_Goods.ObjectCode                     AS GoodsCode
             , Object_Goods.ValueData                      AS GoodsName
             , ObjectString_Article.ValueData              AS Article
-            , MIString_PartNumber.ValueData               AS PartNumber
+            , vbPartNumber    ::TVarChar                  AS PartNumber
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , Object_GoodsGroup.Id                        AS GoodsGroupId
             , Object_GoodsGroup.ValueData                 AS GoodsGroupName
@@ -109,9 +113,9 @@ BEGIN
             , Object_Partner.ValueData                    AS PartnerName
             , Object_PartionGoods.ekPrice                 AS Price
             , tmpRemains.Remains           :: TFloat      AS AmountRemains
-            , (1 + COALESCE ((SELECT SUM (MI.Amount) FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.PartionId = vbPartionId AND MI.isErased = FALSE), 0)
+            , (COALESCE (inAmount,1) + COALESCE ((SELECT SUM (MI.Amount) FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.PartionId = vbPartionId AND MI.isErased = FALSE), 0)
               )                                 :: TFloat AS TotalCount
-            , 1                                 :: TFloat AS OperCount
+            , COALESCE (inAmount,1)             :: TFloat AS OperCount
 
        FROM Object_PartionGoods
  
@@ -127,11 +131,7 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Article
                                    ON ObjectString_Article.ObjectId = Object_PartionGoods.ObjectId
                                   AND ObjectString_Article.DescId = zc_ObjectString_Article()
-
-            LEFT JOIN MovementItemString AS MIString_PartNumber
-                                         ON MIString_PartNumber.MovementItemId = Object_PartionGoods.MovementItemId
-                                        AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
-      
+    
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = Object_PartionGoods.ObjectId
 
        WHERE Object_PartionGoods.MovementItemId = vbPartionId
