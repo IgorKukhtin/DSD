@@ -1,7 +1,7 @@
 -- Function: gpGet_CheckFarmacyName_byUser()
 
 --DROP FUNCTION IF EXISTS gpGet_CheckFarmacyName_byUser (TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_CheckFarmacyName_byUser (TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_CheckFarmacyName_byUser (Integer, TVarChar, TVarChar);
 
 
 
@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_CheckFarmacyName_byUser(
     OUT    outUnitId          Integer , --
     OUT    outUnitCode        Integer , --
     OUT    outUnitName        TVarChar, -- Имя Аптеки под которой входит пользователь
+    OUT    outUserCode        Integer , --
     IN     inUnitCode         Integer,  -- Имя Аптеки под которой входит пользователь
     IN     inUnitName         TVarChar, -- Имя Аптеки под которой входит пользователь
     IN     inSession          TVarChar  -- Сессия пользователя
@@ -122,6 +123,10 @@ BEGIN
 
    -- Вернули что нет ошибки
    outIsEnter := TRUE;
+   
+   
+   -- Вернули Код сотрудника
+   outUserCode := (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbUserId);
     
 
    -- Вернули
@@ -143,4 +148,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_CheckFarmacyName_byUser (inUnitCode := 102,inUnitName:= 'Аптека_1 пр_Правды_6',  inSession:= zfCalc_UserAdmin());
+--
+ SELECT * FROM gpGet_CheckFarmacyName_byUser (inUnitCode := 18, inUnitName:= 'Аптека_1 пр_Правды_6',  inSession:= zfCalc_UserAdmin());

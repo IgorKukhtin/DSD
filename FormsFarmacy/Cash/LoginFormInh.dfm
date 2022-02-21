@@ -66,6 +66,11 @@ inherited LoginForm1: TLoginForm1
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outUserCode'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inUnitCode'
         Value = Null
         ParamType = ptInput

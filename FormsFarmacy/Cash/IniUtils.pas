@@ -65,7 +65,7 @@ procedure AutomaticUpdateProgram;
 procedure AutomaticUpdateProgramTest;
 
 var gUnitName, gUserName, gPassValue: string;
-var gUnitId, gUnitCode : Integer;
+var gUnitId, gUnitCode, gUserCode : Integer;
 var isMainForm_OLD : Boolean;
 
 implementation
