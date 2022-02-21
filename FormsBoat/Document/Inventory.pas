@@ -127,6 +127,7 @@ type
     actGoodsItem: TdsdInsertUpdateAction;
     actRefreshItemEdit: TdsdDataSetRefresh;
     GoodsOpenChoiceForm: TOpenChoiceForm;
+    EAN: TcxGridDBColumn;
   private
   public
   end;

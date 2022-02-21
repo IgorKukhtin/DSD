@@ -102,6 +102,14 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 120
           end
+          object EAN: TcxGridDBColumn
+            DataBinding.FieldName = 'EAN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 'EAN'
+            Options.Editing = False
+            Width = 106
+          end
           object Article: TcxGridDBColumn
             Caption = 'Artikel Nr'
             DataBinding.FieldName = 'Article'
@@ -1045,14 +1053,14 @@ object InventoryForm: TInventoryForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
-      Caption = 'TPartionGoodsChoiceForm'
+      Caption = 'TGoodsForm'
       FormName = 'TGoodsForm'
       FormNameParam.Value = 'TGoodsForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Code'
+          Name = 'EAN'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'BarCode'

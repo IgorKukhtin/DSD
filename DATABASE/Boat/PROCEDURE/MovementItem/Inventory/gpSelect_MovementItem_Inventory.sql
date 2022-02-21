@@ -8,8 +8,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Inventory(
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , PartionId Integer
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Article TVarChar
+             , PartionId Integer--, IdBarCode TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , Article TVarChar, EAN TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupId Integer, GoodsGroupName TVarChar
              , MeasureName TVarChar
              , Amount TFloat, AmountRemains TFloat
@@ -81,10 +82,12 @@ BEGIN
        SELECT
              tmpMI.Id
            , tmpMI.PartionId
+           --, zfFormat_BarCode (zc_BarCodePref_Object(), ObjectString_EAN.ValueData) AS IdBarCode
            , Object_Goods.Id                AS GoodsId
            , Object_Goods.ObjectCode        AS GoodsCode
            , Object_Goods.ValueData         AS GoodsName
-           , ObjectString_Article.ValueData              AS Article
+           , ObjectString_Article.ValueData      AS Article
+           , ObjectString_EAN.ValueData          AS EAN
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsGroup.Id                        AS GoodsGroupId
            , Object_GoodsGroup.ValueData                 AS GoodsGroupName
@@ -115,7 +118,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Article
                                    ON ObjectString_Article.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Article.DescId = zc_ObjectString_Article()
-
+            LEFT JOIN ObjectString AS ObjectString_EAN
+                                   ON ObjectString_EAN.ObjectId = tmpMI.GoodsId
+                                  AND ObjectString_EAN.DescId = zc_ObjectString_EAN()
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI.GoodsId
        ;
 

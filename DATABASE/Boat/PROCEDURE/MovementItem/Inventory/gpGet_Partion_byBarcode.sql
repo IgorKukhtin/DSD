@@ -40,15 +40,18 @@ BEGIN
     --RAISE EXCEPTION 'Ошибка.Ошибка в Штрихкоде <%>.', inBarCode;
      
      -- Если это Штрихкод
-     IF COALESCE (inBarCode, '') <> '' AND CHAR_LENGTH (inBarCode) = 12
+     IF COALESCE (inBarCode, '') <> '' --AND CHAR_LENGTH (inBarCode) >= 12
      THEN
           -- последние 10 - это ИД
           vbGoodsId:= (SELECT Object.Id
                        FROM Object
+                           INNER JOIN ObjectString AS ObjectString_EAN
+                                                   ON ObjectString_EAN.ObjectId = Object.Id
+                                                  AND ObjectString_EAN.DescId = zc_ObjectString_EAN()
+                                                  AND ObjectString_EAN.ValueData = TRIM (inBarCode)
                        WHERE Object.DescId = zc_Object_Goods()
-                         AND Object.Id = zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) :: Integer
+                        -- AND Object.Id = zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) :: Integer
                        );
-          
           
           -- пробуем найти
           SELECT Object_PartionGoods.MovementItemId
@@ -65,6 +68,7 @@ BEGIN
           END IF;
      END IF;
 
+/*
      --ИД товара, товар вібран из справочника
      IF COALESCE (inBarCode, '') <> '' AND CHAR_LENGTH (inBarCode) < 12
      THEN
@@ -89,6 +93,7 @@ BEGIN
           END IF;
 
      END IF;
+     */
      
      -- Результат
      RETURN QUERY
