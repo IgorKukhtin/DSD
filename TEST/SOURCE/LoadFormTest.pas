@@ -2228,6 +2228,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_inventoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_inventoryForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_inventoryDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_inventoryDialogForm');
+  exit;
+
     {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DefermentPaymentOLAPTableForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_DefermentPaymentOLAPTableForm');
@@ -2800,6 +2806,11 @@ end;
 
 procedure TLoadFormTest.LoadReportAssetFormTest;
 begin
+TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AssetRepairForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_AssetRepairForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AssetRepairDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_AssetRepairDialogForm');
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSold_AssetNoBalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSold_AssetNoBalanceForm');

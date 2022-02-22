@@ -1349,7 +1349,11 @@ uses
   Report_DefermentPaymentOLAPTable in '..\..\Forms\Report\Report_DefermentPaymentOLAPTable.pas' {Report_DefermentPaymentOLAPTableForm: TParentForm},
   Report_DefermentPaymentOLAPTableDialog in '..\..\Forms\Report\Report_DefermentPaymentOLAPTableDialog.pas' {Report_DefermentPaymentOLAPTableDialogForm: TParentForm},
   Report_GoodsMI_ProductionSeparate in '..\..\Forms\Report\Report_GoodsMI_ProductionSeparate.pas' {Report_GoodsMI_ProductionSeparateForm: TParentForm},
-  ReportCollation_Object in '..\..\Forms\Guides\ReportCollation_Object.pas' {ReportCollation_ObjectForm: TParentForm};
+  ReportCollation_Object in '..\..\Forms\Guides\ReportCollation_Object.pas' {ReportCollation_ObjectForm: TParentForm},
+  Report_Goods_inventory in '..\..\Forms\Report\Report_Goods_inventory.pas' {Report_Goods_inventoryForm: TParentForm},
+  Report_Goods_inventoryDialog in '..\..\Forms\Report\Report_Goods_inventoryDialog.pas' {Report_Goods_inventoryDialogForm: TParentForm},
+  Report_AssetRepair in '..\..\Forms\Report\Report_AssetRepair.pas' {Report_AssetRepairForm: TParentForm},
+  Report_AssetRepairDialog in '..\..\Forms\Report\Report_AssetRepairDialog.pas' {Report_AssetRepairDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
