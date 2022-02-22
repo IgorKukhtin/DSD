@@ -82,7 +82,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 391
+    Width = 269
   end
   object cxLabel8: TcxLabel
     Left = 184
@@ -155,6 +155,18 @@ object InventoryItemEditForm: TInventoryItemEditForm
     Top = 64
     Properties.ReadOnly = True
     TabOrder = 17
+    Width = 111
+  end
+  object cxLabel1: TcxLabel
+    Left = 288
+    Top = 3
+    Caption = 'S/N'
+  end
+  object edPartNumber: TcxTextEdit
+    Left = 288
+    Top = 21
+    Properties.ReadOnly = True
+    TabOrder = 19
     Width = 111
   end
   object ActionList: TActionList
@@ -254,7 +266,16 @@ object InventoryItemEditForm: TInventoryItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPartNumber'
+        Value = Null
+        Component = edPartNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -299,6 +320,24 @@ object InventoryItemEditForm: TInventoryItemEditForm
         Component = FormParams
         ComponentItem = 'inBarCode'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartNumber'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inPartNumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inAmount'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -387,9 +426,16 @@ object InventoryItemEditForm: TInventoryItemEditForm
         Component = edArticle
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartNumber'
+        Value = Null
+        Component = edPartNumber
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 280
+    Left = 208
     Top = 4
   end
   object cxPropertiesStore: TcxPropertiesStore

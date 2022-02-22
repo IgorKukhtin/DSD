@@ -1,14 +1,16 @@
 -- Function: gpGet_Partion_byBarcode()
 
 DROP FUNCTION IF EXISTS gpGet_Partion_byBarcode (TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Partion_byBarcode (TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Partion_byBarcode(
     IN inBarCode           TVarChar   , --
+    IN inPartNumber        TVarChar   , 
     IN inSession           TVarChar     -- сессия пользователя
 )
 RETURNS TABLE (PartionId     Integer
              , GoodsId       Integer
-             , OperPriceList TFloat
+             , PartNumber    TVarChar
               )
 AS
 $BODY$
@@ -16,19 +18,20 @@ $BODY$
 
    DECLARE vbPartionId Integer;
    DECLARE vbGoodsId Integer;
-   DECLARE vbOperPriceList TFLoat;
+   DECLARE vbPartNumber TVarChar;
+
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpGetUserBySession (inSession);
      
      -- Если Пустой
-     IF TRIM (inBarCode) = '' THEN
+     IF TRIM (inBarCode) = '' AND TRIM (inPartNumber) = '' THEN
 
        -- Результат
        RETURN QUERY
-         SELECT 0 :: Integer AS PartionId
-              , 0 :: Integer AS GoodsId
-              , 0 :: TFloat  AS OperPriceList
+         SELECT 0  :: Integer   AS PartionId
+              , 0  :: Integer   AS GoodsId
+              , '' :: TVarChar  AS PartNumber
                ;
 
        -- !!!Выход!!!
@@ -39,8 +42,29 @@ BEGIN
 
     --RAISE EXCEPTION 'Ошибка.Ошибка в Штрихкоде <%>.', inBarCode;
      
+     -- Если это PartNumber
+     IF COALESCE (inPartNumber, '') <> '' --AND CHAR_LENGTH (inBarCode) >= 12
+     THEN
+          -- 
+          SELECT Object_PartionGoods.ObjectId
+               , Object_PartionGoods.MovementItemId
+               , MIString_PartNumber.ValueData
+         INTO vbGoodsId, vbPartionId, vbPartNumber
+          FROM MovementItemString AS MIString_PartNumber
+               INNER JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MIString_PartNumber.MovementItemId
+          WHERE MIString_PartNumber.ValueData = TRIM (inPartNumber)
+             AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+          ;
+          
+          -- если НЕ нашли
+          IF COALESCE (vbGoodsId, 0) = 0
+          THEN
+              RAISE EXCEPTION 'Ошибка.Товар с S/N = <%> не найден.', inPartNumber;
+          END IF;
+     END IF;
+
      -- Если это Штрихкод
-     IF COALESCE (inBarCode, '') <> '' --AND CHAR_LENGTH (inBarCode) >= 12
+     IF COALESCE (inBarCode, '') <> '' AND COALESCE (vbGoodsId, 0) = 0
      THEN
           -- последние 10 - это ИД
           vbGoodsId:= (SELECT Object.Id
@@ -55,9 +79,12 @@ BEGIN
           
           -- пробуем найти
           SELECT Object_PartionGoods.MovementItemId
-               , Object_PartionGoods.OperPriceList
-         INTO vbPartionId, vbOperPriceList
+               , MIString_PartNumber.ValueData
+         INTO vbPartionId, vbPartNumber
           FROM Object_PartionGoods
+              LEFT JOIN MovementItemString AS MIString_PartNumber
+                                           ON MIString_PartNumber.MovementItemId = Object_PartionGoods.MovementItemId
+                                          AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
           WHERE Object_PartionGoods.ObjectId = vbGoodsId
             AND vbGoodsId > 0;
 
@@ -99,7 +126,7 @@ BEGIN
      RETURN QUERY
        SELECT vbPartionId
             , vbGoodsId
-            , vbOperPriceList ::TFLoat
+            , vbPartNumber ::TVarChar
        ;
 
 END;
