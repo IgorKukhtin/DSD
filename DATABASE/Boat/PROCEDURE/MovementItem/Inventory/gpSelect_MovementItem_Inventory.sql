@@ -8,13 +8,15 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Inventory(
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , PartionId Integer
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Article TVarChar
+             , PartionId Integer--, IdBarCode TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , Article TVarChar, EAN TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupId Integer, GoodsGroupName TVarChar
              , MeasureName TVarChar
              , Amount TFloat, AmountRemains TFloat
              , Price TFloat
              , Summa TFloat
+             , PartNumber TVarChar
              , Comment TVarChar
              , isErased Boolean
               )
@@ -44,8 +46,9 @@ BEGIN
                            , MovementItem.ObjectId AS GoodsId
                            , MovementItem.PartionId
                            , MovementItem.Amount
-                           , COALESCE (MIFloat_Price.ValueData, 0)     AS Price
-                           , COALESCE (MIString_Comment.ValueData,'')  AS Comment
+                           , COALESCE (MIFloat_Price.ValueData, 0)        AS Price
+                           , COALESCE (MIString_Comment.ValueData,'')     AS Comment
+                           , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
                            , MovementItem.isErased
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -54,19 +57,15 @@ BEGIN
                             LEFT JOIN MovementItemString AS MIString_Comment
                                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                                         AND MIString_Comment.DescId = zc_MIString_Comment()
+                            LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                         ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                        AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+
                             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
                        )
 
-   /*  , tmpProtocol AS (SELECT MovementItemProtocol.*
-                              -- № п/п
-                            , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id DESC) AS Ord
-                       FROM MovementItemProtocol
-                       WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
-                         AND MovementItemProtocol.OperDate >= vbOperDate_pr
-                      )
-*/
      , tmpRemains AS (SELECT Container.ObjectId AS GoodsId
                            , CAST (SUM (COALESCE (Container.Amount,0)) AS NUMERIC (16,0)) AS Remains
                       FROM Container
@@ -81,10 +80,12 @@ BEGIN
        SELECT
              tmpMI.Id
            , tmpMI.PartionId
+           --, zfFormat_BarCode (zc_BarCodePref_Object(), ObjectString_EAN.ValueData) AS IdBarCode
            , Object_Goods.Id                AS GoodsId
            , Object_Goods.ObjectCode        AS GoodsCode
            , Object_Goods.ValueData         AS GoodsName
-           , ObjectString_Article.ValueData              AS Article
+           , ObjectString_Article.ValueData      AS Article
+           , ObjectString_EAN.ValueData          AS EAN
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsGroup.Id                        AS GoodsGroupId
            , Object_GoodsGroup.ValueData                 AS GoodsGroupName
@@ -96,6 +97,7 @@ BEGIN
 
            , (tmpMI.Amount * tmpMI.Price) ::TFloat AS Summa
  
+           , tmpMI.PartNumber             ::TVarChar
            , tmpMI.Comment                ::TVarChar
            --, tmpProtocol.OperDate                  AS OperDate_pr
            , tmpMI.isErased
@@ -115,7 +117,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Article
                                    ON ObjectString_Article.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Article.DescId = zc_ObjectString_Article()
-
+            LEFT JOIN ObjectString AS ObjectString_EAN
+                                   ON ObjectString_EAN.ObjectId = tmpMI.GoodsId
+                                  AND ObjectString_EAN.DescId = zc_ObjectString_EAN()
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI.GoodsId
        ;
 

@@ -388,9 +388,14 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_SendLossFrom() RETURNS integer AS 
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_SendLossFrom', 'В полное списание на отправителя'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_SendLossFrom');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_MobileApplication() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_MobileApplication'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_MobileApplication', 'Заказ с мобильного приложения'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_MobileApplication');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 21.02.22                                                                                   * zc_MovementBoolean_MobileApplication
  29.12.21                                                                                   * zc_MovementBoolean_SendLossFrom
  14.12.21                                                                                   * zc_MovementBoolean_ErrorRRO
  16.11.21                                                                                   * zc_MovementBoolean_Conduct

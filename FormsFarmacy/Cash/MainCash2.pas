@@ -958,6 +958,7 @@ type
     procedure ClearAll;
     procedure LoadMedicalProgramSPGoods(AGoodsId : Integer);
     procedure MoveLogFile;
+    procedure SaveUnitConfig;
 
     property SoldRegim: Boolean read FSoldRegim write SetSoldRegim;
   end;
@@ -8014,6 +8015,9 @@ begin
   LoadUnitConfig;
   LoadTaxUnitNight;
   SetTaxUnitNight;
+
+  Self.Caption := 'Продажа (' + GetFileVersionString(ParamStr(0)) + ')' +
+          ' <' + IniUtils.gUnitName + '>' + ' <' + IntToStr(IniUtils.gUserCode) + '>'  + ' - <' + IniUtils.gUserName + '>';
 end;
 
 function TMainCashForm2.InitLocalStorage: Boolean;
@@ -10599,10 +10603,9 @@ begin
     pm_CheckHelsiAllUnit.Visible := spGet_User_IsAdmin.ParamByName
       ('gpGet_User_IsAdmin').Value = True;
   End;
-  actOverdueJournal.Enabled := UnitConfigCDS.FieldByName('DividePartionDate')
-    .AsBoolean;
-  actOverdueJournal.Visible := UnitConfigCDS.FieldByName('DividePartionDate')
-    .AsBoolean;
+  actOverdueJournal.Enabled := UnitConfigCDS.FieldByName('DividePartionDate').AsBoolean;
+  actOverdueJournal.Visible := UnitConfigCDS.FieldByName('DividePartionDate').AsBoolean;
+  SaveUnitConfig;
 end;
 
 // что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА
@@ -12784,7 +12787,7 @@ begin
 
       // если сюда дошли, значит ON-line режим режим для VIP-чеков
       Self.Caption := 'Продажа (' + GetFileVersionString(ParamStr(0)) + ')' +
-        ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>';
+        ' - <' + IniUtils.gUnitName + '>' + ' <' + IntToStr(IniUtils.gUserCode) + '>' + ' - <' + IniUtils.gUserName + '>';
 
       // если список изменился ИЛИ надо "по любому обновить" - запустим "не самое долгое" обновление грида
       if (lMovementId_BlinkVIP <> MovementId_BlinkVIP) or (isRefresh = True)
@@ -12802,7 +12805,7 @@ begin
       if FError_Blink > 3 then
         Self.Caption := 'Продажа (' + GetFileVersionString(ParamStr(0)) +
           ') - OFF-line режим для VIP-чеков' + ' - <' + IniUtils.gUnitName + '>' +
-          ' - <' + IniUtils.gUserName + '>'
+          ' <' + IntToStr(IniUtils.gUserCode) + '>' + ' - <' + IniUtils.gUserName + '>'
     end;
 end;
 
@@ -12832,10 +12835,10 @@ begin
       if fBlinkCheck = True then
         Self.Caption := 'Продажа (' + GetFileVersionString(ParamStr(0)) +
           ') : есть ошибки - расч/факт остаток' + ' - <' + IniUtils.gUnitName +
-          '>' + ' - <' + IniUtils.gUserName + '>'
+          '>' + ' <' + IntToStr(IniUtils.gUserCode) + '>' + ' - <' + IniUtils.gUserName + '>'
       else
         Self.Caption := 'Продажа (' + GetFileVersionString(ParamStr(0)) + ')' +
-          ' <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>';
+          ' <' + IniUtils.gUnitName + '>' + ' <' + IntToStr(IniUtils.gUserCode) + '>'  + ' - <' + IniUtils.gUserName + '>';
 
       FError_Blink := 0;
     except
@@ -12843,7 +12846,7 @@ begin
       if FError_Blink > 3 then
         Self.Caption := 'Продажа (' + GetFileVersionString(ParamStr(0)) +
           ') - OFF-line режим для чеков с ошибкой' + ' - <' + IniUtils.gUnitName +
-          '>' + ' - <' + IniUtils.gUserName + '>'
+          '>' + ' <' + IntToStr(IniUtils.gUserCode) + '>' + ' - <' + IniUtils.gUserName + '>'
     end;
 end;
 
@@ -13999,6 +14002,47 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.SaveUnitConfig;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_Cash_UnitConfig';
+        sp.Params.Clear;
+        sp.Params.AddParam('inCashRegister', ftString, ptInput, iniLocalCashRegisterGet);
+        sp.Execute;
+        Add_Log('Start MutexUnitConfig');
+        WaitForSingleObject(MutexUnitConfig, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          SaveLocalData(ds,UnitConfig_lcl);
+        finally
+          Add_Log('End MutexUnitConfig');
+          ReleaseMutex(MutexUnitConfig);
+        end;
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log('SaveUnitConfig Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+  finally
+    freeAndNil(sp);
+    LoadUnitConfig;
+  end;
+end;
 
 { TSaveRealThread }
 { TRefreshDiffThread }

@@ -140,6 +140,7 @@ begin
   IniUtils.gUnitId    := 0;
   IniUtils.gUnitName  := edFarmacyName.Text;
   IniUtils.gUserName  := edUserName.Text;
+  IniUtils.gUserCode  := 0;
   IniUtils.gUnitCode  := FUnitCode;
   IniUtils.gPassValue := edPassword.Text;
 
@@ -154,6 +155,7 @@ begin
           IniUtils.gUnitId    := spChekFarmacyName.ParamByName('outUnitId').Value;
           IniUtils.gUnitName  := spChekFarmacyName.ParamByName('outUnitName').Value;
           IniUtils.gUnitCode  := spChekFarmacyName.ParamByName('outUnitCode').Value;
+          IniUtils.gUserCode  := spChekFarmacyName.ParamByName('outUserCode').Value;
           //
           if spChekFarmacyName.ParamByName('outIsEnter').Value = FALSE
           then ModalResult := mrCancel

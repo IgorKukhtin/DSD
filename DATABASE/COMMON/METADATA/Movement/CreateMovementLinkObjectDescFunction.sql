@@ -543,6 +543,10 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_PairDay() RETURNS Integer AS $B
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_PairDay', 'Вид смены' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PairDay');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_UserReferals() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_UserReferals'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_UserReferals', 'По рекомендации сотрудника' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_UserReferals');
+
 
 
 
@@ -552,6 +556,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 21.02.22                                                                                     * zc_MovementLinkObject_UserReferals 
  26.01.22         * zc_MovementLinkObject_PriceListIn
  27.10.21                                                                                     * zc_MovementLink_Category1303 
  01.10.21                                                                                     * zc_MovementLink_MedicalProgramSP

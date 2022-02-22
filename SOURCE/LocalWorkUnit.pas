@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, Vcl.Forms, Vcl.Dialogs, Authentication,
-  VKDBFDataSet, DB, DataSnap.DBClient, Soap.EncdDecd, Windows;
+  VKDBFDataSet, DB, DataSnap.DBClient, Soap.EncdDecd, Windows, IniUtils;
 
 type
   TSaveLocalMode = (slmRewrite, slmUpdate, slmAppend);
@@ -318,6 +318,7 @@ Begin
         if (DecodeString(User.FieldByName('Pass').AsString) = APassword) then
         Begin
           pUser := TUser.Create(User.FieldByName('Id').AsString, True);
+          IniUtils.gUserCode  := User.FieldByName('Code').AsInteger;
           result := True;
           exit;
         End

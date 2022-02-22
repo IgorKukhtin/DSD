@@ -153,6 +153,7 @@ BEGIN
                                                                                   , inChangePercentLess    := tmpTranslation.ChangePercentLessPD
                                                                                   , inChangePercentMin     := tmpTranslation.ChangePercentMinPD
                                                                                   , inContainerId          := tmpTranslation.ContainerPDId
+                                                                                  , inExpirationDate       := Nill::TDateTime
                                                                                   , inSession              := inSession
                                                                                     )
     WHERE tmpTranslation.MovementId <> 0;
@@ -183,6 +184,5 @@ $BODY$
  27.03.21                                                      *
 */
 
--- 
- select * from gpInsert_Translation_5_Category(inSession := '3');
+--  select * from gpInsert_Translation_5_Category(inSession := '3');
                              

@@ -2,8 +2,8 @@ object InventoryForm: TInventoryForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
-  ClientHeight = 466
-  ClientWidth = 847
+  ClientHeight = 579
+  ClientWidth = 990
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,23 +21,23 @@ object InventoryForm: TInventoryForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 75
-    Width = 847
-    Height = 391
+    Width = 990
+    Height = 504
     Align = alClient
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 391
-    ClientRectRight = 847
+    ClientRectBottom = 504
+    ClientRectRight = 990
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
       object cxGrid: TcxGrid
         Left = 0
-        Top = 83
-        Width = 847
-        Height = 284
+        Top = 73
+        Width = 990
+        Height = 407
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -102,6 +102,14 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 120
           end
+          object EAN: TcxGridDBColumn
+            DataBinding.FieldName = 'EAN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 'EAN'
+            Options.Editing = False
+            Width = 106
+          end
           object Article: TcxGridDBColumn
             Caption = 'Artikel Nr'
             DataBinding.FieldName = 'Article'
@@ -109,6 +117,14 @@ object InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 81
+          end
+          object PartNumber: TcxGridDBColumn
+            Caption = 'S/N'
+            DataBinding.FieldName = 'PartNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
+            Width = 70
           end
           object GoodsCode: TcxGridDBColumn
             Caption = 'Interne Nr'
@@ -217,161 +233,357 @@ object InventoryForm: TInventoryForm
           GridView = cxGridDBTableView
         end
       end
-      object cxGrid1: TcxGrid
-        Left = 0
-        Top = 0
-        Width = 847
-        Height = 75
-        Align = alTop
-        PopupMenu = PopupMenu
-        TabOrder = 1
-        object cxGridDBTableView1: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DataSource
-          DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
-              Kind = skCount
-            end>
-          DataController.Summary.SummaryGroups = <>
-          Images = dmMain.SortImageList
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Inserting = False
-          OptionsView.GroupByBox = False
-          OptionsView.GroupSummaryLayout = gslAlignWithColumns
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.HeaderHeight = 40
-          OptionsView.Indicator = True
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object BarCode: TcxGridDBColumn
-            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1058#1086#1074#1072#1088'>'
-            DataBinding.FieldName = 'BarCode'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = GoodsOpenChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.MaxLength = 13
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 180
-          end
-        end
-        object cxGridLevel1: TcxGridLevel
-          GridView = cxGridDBTableView1
-        end
-      end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 75
-        Width = 847
+        Top = 65
+        Width = 990
         Height = 8
         HotZoneClassName = 'TcxXPTaskBarStyle'
         HotZone.Visible = False
         AlignSplitter = salTop
-        Control = cxGrid1
+        Control = cxGrid
+      end
+      object Panel1: TPanel
+        Left = 0
+        Top = 0
+        Width = 990
+        Height = 65
+        Align = alTop
+        Caption = 'Panel1'
+        TabOrder = 2
+        object cxGrid2: TcxGrid
+          Left = 298
+          Top = 1
+          Width = 297
+          Height = 63
+          Align = alClient
+          PopupMenu = PopupMenu
+          TabOrder = 0
+          object cxGridDBTableView2: TcxGridDBTableView
+            Navigator.Buttons.CustomButtons = <>
+            Navigator.Buttons.Append.Visible = False
+            DataController.DataSource = DataSource2
+            DataController.Filter.Options = [fcoCaseInsensitive]
+            DataController.Summary.DefaultGroupSummaryItems = <
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end>
+            DataController.Summary.FooterSummaryItems = <
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end>
+            DataController.Summary.SummaryGroups = <>
+            FilterRow.ApplyChanges = fracDelayed
+            Images = dmMain.SortImageList
+            OptionsCustomize.ColumnHiding = True
+            OptionsCustomize.ColumnsQuickCustomization = True
+            OptionsData.Deleting = False
+            OptionsData.DeletingConfirmation = False
+            OptionsData.Inserting = False
+            OptionsView.GroupByBox = False
+            OptionsView.HeaderAutoHeight = True
+            OptionsView.Indicator = True
+            Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+            object BarCode_Goods_ch4: TcxGridDBColumn
+              Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
+              DataBinding.FieldName = 'BarCode_Goods'
+              Width = 134
+            end
+          end
+          object cxGridLevel3: TcxGridLevel
+            GridView = cxGridDBTableView2
+          end
+        end
+        object cxGrid1: TcxGrid
+          Left = 1
+          Top = 1
+          Width = 297
+          Height = 63
+          Align = alLeft
+          PopupMenu = PopupMenu
+          TabOrder = 2
+          object cxGridDBTableView1: TcxGridDBTableView
+            Navigator.Buttons.CustomButtons = <>
+            Navigator.Buttons.Append.Visible = False
+            DataController.DataSource = DataSource
+            DataController.Filter.Options = [fcoCaseInsensitive]
+            DataController.Summary.DefaultGroupSummaryItems = <
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end>
+            DataController.Summary.FooterSummaryItems = <
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end>
+            DataController.Summary.SummaryGroups = <>
+            FilterRow.ApplyChanges = fracDelayed
+            Images = dmMain.SortImageList
+            OptionsCustomize.ColumnHiding = True
+            OptionsCustomize.ColumnsQuickCustomization = True
+            OptionsData.Deleting = False
+            OptionsData.DeletingConfirmation = False
+            OptionsData.Inserting = False
+            OptionsView.GroupByBox = False
+            OptionsView.HeaderAutoHeight = True
+            OptionsView.Indicator = True
+            Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+            object BarCode_PartNumber_ch1: TcxGridDBColumn
+              Caption = ' <S/N>  '#1074#1074#1086#1076
+              DataBinding.FieldName = 'BarCode_PartNumber'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 100
+            end
+            object BarCode_Goods_ch1: TcxGridDBColumn
+              Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
+              DataBinding.FieldName = 'BarCode_Goods'
+              Width = 134
+            end
+          end
+          object cxGridLevel1: TcxGridLevel
+            GridView = cxGridDBTableView1
+          end
+        end
+        object cxGrid3: TcxGrid
+          Left = 595
+          Top = 1
+          Width = 394
+          Height = 63
+          Align = alRight
+          PopupMenu = PopupMenu
+          TabOrder = 1
+          object cxGridDBTableView3: TcxGridDBTableView
+            Navigator.Buttons.CustomButtons = <>
+            Navigator.Buttons.Append.Visible = False
+            DataController.DataSource = DataSource3
+            DataController.Filter.Options = [fcoCaseInsensitive]
+            DataController.Summary.DefaultGroupSummaryItems = <
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end>
+            DataController.Summary.FooterSummaryItems = <
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+              end>
+            DataController.Summary.SummaryGroups = <>
+            FilterRow.ApplyChanges = fracDelayed
+            Images = dmMain.SortImageList
+            OptionsCustomize.ColumnHiding = True
+            OptionsCustomize.ColumnsQuickCustomization = True
+            OptionsData.Deleting = False
+            OptionsData.DeletingConfirmation = False
+            OptionsData.Inserting = False
+            OptionsView.GroupByBox = False
+            OptionsView.HeaderAutoHeight = True
+            OptionsView.Indicator = True
+            Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+            object Amount_ch5: TcxGridDBColumn
+              Caption = #1050#1086#1083'-'#1074#1086
+              DataBinding.FieldName = 'Amount'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 100
+            end
+            object BarCode_Goods_ch5: TcxGridDBColumn
+              Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
+              DataBinding.FieldName = 'BarCode_Goods'
+              Width = 134
+            end
+          end
+          object cxGridLevel4: TcxGridLevel
+            GridView = cxGridDBTableView3
+          end
+        end
       end
     end
   end
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 847
+    Width = 990
     Height = 49
     Align = alTop
     BevelOuter = bvNone
@@ -472,6 +684,13 @@ object InventoryForm: TInventoryForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 246
@@ -786,6 +1005,12 @@ object InventoryForm: TInventoryForm
         end
         item
           StoredProc = spSelectBarCode
+        end
+        item
+          StoredProc = spSelectBarCode_PartNumber
+        end
+        item
+          StoredProc = spSelectBarCode_Amount
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -802,7 +1027,6 @@ object InventoryForm: TInventoryForm
           StoredProc = spSelectMI
         end
         item
-          StoredProc = spSelectBarCode
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -812,10 +1036,8 @@ object InventoryForm: TInventoryForm
     object actRefreshItemEdit: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectBarCode
       StoredProcList = <
         item
-          StoredProc = spSelectBarCode
         end
         item
         end>
@@ -1045,17 +1267,15 @@ object InventoryForm: TInventoryForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
-      Caption = 'TPartionGoodsChoiceForm'
+      Caption = 'TGoodsForm'
       FormName = 'TGoodsForm'
       FormNameParam.Value = 'TGoodsForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Code'
+          Name = 'EAN'
           Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'BarCode'
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1344,14 +1564,31 @@ object InventoryForm: TInventoryForm
         item
           Name = 'inBarCode'
           Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'BarCode'
+          Component = FormParams
+          ComponentItem = 'inBarCode'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartNumber'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inPartNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inAmount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inAmount'
+          DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-      DataSource = DataSource
       DataSetRefresh = actRefreshItemEdit
       IdFieldName = 'Id'
     end
@@ -1368,8 +1605,6 @@ object InventoryForm: TInventoryForm
         item
           Name = 'inBarCode'
           Value = ''
-          Component = ClientDataSet
-          ComponentItem = 'BarCode'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1383,6 +1618,42 @@ object InventoryForm: TInventoryForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actUpdateBarCodeDS3: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_dop3
+      StoredProcList = <
+        item
+          StoredProc = spGet_dop3
+        end>
+      Caption = 'actUpdateMasterDS'
+      DataSource = DataSource3
+    end
+    object actUpdateBarCodeDS2: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_dop2
+      StoredProcList = <
+        item
+          StoredProc = spGet_dop2
+        end>
+      Caption = 'actUpdateMasterDS'
+      DataSource = DataSource2
+    end
+    object actUpdateBarCodeDS1: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_dop1
+      StoredProcList = <
+        item
+          StoredProc = spGet_dop1
+        end>
+      Caption = 'actUpdateMasterDS'
+      DataSource = DataSource
     end
   end
   object MasterDS: TDataSource
@@ -1967,21 +2238,9 @@ object InventoryForm: TInventoryForm
     Left = 744
     Top = 248
   end
-  object DataSource: TDataSource
-    DataSet = ClientDataSet
-    Left = 528
-    Top = 115
-  end
-  object ClientDataSet: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 456
-    Top = 115
-  end
-  object dsdDBViewAddOn1: TdsdDBViewAddOn
+  object dsdDBViewAddOn0: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView1
+    View = cxGridDBTableView
     OnDblClickActionList = <
       item
       end>
@@ -2002,24 +2261,360 @@ object InventoryForm: TInventoryForm
       end>
     ColumnEnterList = <
       item
-        Column = BarCode
       end>
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 680
-    Top = 200
+    Left = 888
+    Top = 336
   end
-  object spSelectBarCode: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_BarCode'
+  object ClientDataSet: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 160
+    Top = 115
+  end
+  object DataSource: TDataSource
+    DataSet = ClientDataSet
+    Left = 144
+    Top = 107
+  end
+  object spSelectBarCode_PartNumber: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_Send_BarCode'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
-    Left = 304
+    Left = 72
     Top = 120
+  end
+  object DataSource2: TDataSource
+    DataSet = ClientDataSet2
+    Left = 312
+    Top = 123
+  end
+  object ClientDataSet2: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 368
+    Top = 115
+  end
+  object spSelectBarCode: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_Send_BarCode'
+    DataSet = ClientDataSet2
+    DataSets = <
+      item
+        DataSet = ClientDataSet2
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 408
+    Top = 112
+  end
+  object DataSource3: TDataSource
+    DataSet = ClientDataSet3
+    Left = 520
+    Top = 107
+  end
+  object ClientDataSet3: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 568
+    Top = 99
+  end
+  object spSelectBarCode_Amount: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_Send_BarCode'
+    DataSet = ClientDataSet3
+    DataSets = <
+      item
+        DataSet = ClientDataSet3
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 624
+    Top = 112
+  end
+  object dsdDBViewAddOn1: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <
+      item
+      end>
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = True
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <
+      item
+        Column = BarCode_PartNumber_ch1
+      end
+      item
+        Column = BarCode_Goods_ch1
+      end>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 206
+    Top = 113
+  end
+  object dsdDBViewAddOn2: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView2
+    OnDblClickActionList = <
+      item
+      end>
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = True
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <
+      item
+        Column = BarCode_Goods_ch4
+      end>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 446
+    Top = 121
+  end
+  object dsdDBViewAddOn3: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView3
+    OnDblClickActionList = <
+      item
+      end>
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = True
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <
+      item
+        Column = Amount_ch5
+      end
+      item
+        Column = BarCode_Goods_ch5
+      end>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 662
+    Top = 121
+  end
+  object spGet_dop1: TdsdStoredProc
+    StoredProcName = 'gpGet_byBarcode'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inBarCode'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BarCode_Goods'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartNumber'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BarCode_PartNumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCode'
+        Value = 42160d
+        Component = FormParams
+        ComponentItem = 'inBarCode'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartNumber'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'inPartNumber'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inAmount'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 552
+    Top = 448
+  end
+  object spGet_dop3: TdsdStoredProc
+    StoredProcName = 'gpGet_byBarcode'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inBarCode'
+        Value = Null
+        Component = ClientDataSet3
+        ComponentItem = 'BarCode_Goods'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = ''
+        Component = ClientDataSet3
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCode'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inBarCode'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartNumber'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inPartNumber'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inAmount'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 648
+    Top = 448
+  end
+  object spGet_dop2: TdsdStoredProc
+    StoredProcName = 'gpGet_byBarcode'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inBarCode'
+        Value = Null
+        Component = ClientDataSet2
+        ComponentItem = 'BarCode_Goods'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCode'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inBarCode'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartNumber'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inPartNumber'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inAmount'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 600
+    Top = 448
   end
 end

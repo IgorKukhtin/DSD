@@ -235,6 +235,7 @@ BEGIN
                                                     inChangePercentLess:= ObjectFloat_PartionGoods_ValueLess.ValueData, -- % (срок от 3 мес до 6 мес)
                                                     inChangePercentMin := ObjectFloat_PartionGoods_ValueMin.ValueData,  -- % (срок меньше месяца)
                                                     inContainerId      := inContainerPGID,  -- Контейнер для изменения срока
+                                                    inExpirationDate   := inExpirationDate,
                                                     inSession          := inSession     -- сессия пользователя
                                                     )
     INTO vbMIMasterId
@@ -267,6 +268,7 @@ BEGIN
                                                     inChangePercentLess:= 0,             -- % (срок от 3 мес до 6 мес)
                                                     inChangePercentMin := 0,             -- % (срок меньше месяца)
                                                     inContainerId      := inContainerID, -- Контейнер для изменения срока
+                                                    inExpirationDate   := inExpirationDate,
                                                     inSession          := inSession      -- сессия пользователя
                                                     )
     INTO vbMIMasterId
@@ -278,12 +280,12 @@ BEGIN
   END IF;
 
   -- сохранили <Новый срок>
-  PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ExpirationDate(), MovementItem.Id, inExpirationDate)
+/*  PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ExpirationDate(), MovementItem.Id, inExpirationDate)
   FROM MovementItem
   WHERE MovementItem.MovementId = vbMovementId
     AND MovementItem.ParentId = vbMIMasterId
     AND MovementItem.DescId = zc_MI_Child()
-    AND MovementItem.isErased = FALSE;
+    AND MovementItem.isErased = FALSE;*/
 
   PERFORM gpUpdate_Status_SendPartionDate(inMovementId := vbMovementId , inStatusCode := 2 ,  inSession := inSession);
 
