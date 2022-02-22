@@ -88,8 +88,15 @@ BEGIN
          -- Сумма с учетом скидки, без НДС
          outSumm4 := COALESCE (outSumm3,0) - COALESCE (ioTotalSummTaxPVAT,0);
 
+
+         -- проверка что нужный статус + закрытие периода
+         PERFORM lpInsertUpdate_Movement (Movement.Id, Movement.DescId, Movement.InvNumber, Movement.OperDate, Movement.ParentId, vbUserId) FROM Movement WHERE Movement.Id = inId;
+
          -- пересчитали Итоговые суммы по накладной
          PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inId);
+
+         -- сохранили протокол
+         PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
 
      ELSE
 
@@ -121,6 +128,7 @@ BEGIN
 
              -- !!!выход!!!
              RETURN;
+
          END IF;
 
          -- изменился % скидки
@@ -130,24 +138,23 @@ BEGIN
              ioSummTaxMVAT := zfCalc_SummDiscount(inTotalSummMVAT, ioDiscountTax);
              -- расчет Сумма скидки с НДС
              ioSummTaxPVAT := zfCalc_SummWVAT (ioSummTaxMVAT, vbVATPercent);
-         END IF;
 
          -- изменилась Сумма скидки без НДС
-         IF COALESCE (vbSummTaxMVAT,0) <> COALESCE (ioSummTaxMVAT,0)
+         ELSEIF COALESCE (vbSummTaxMVAT,0) <> COALESCE (ioSummTaxMVAT,0)
          THEN
              -- расчет Сумма скидки с НДС
              ioSummTaxPVAT := zfCalc_SummWVAT (ioSummTaxMVAT, vbVATPercent);
              -- расчет % скидки
              ioDiscountTax := zfCalc_DiscountTax (ioSummTaxMVAT, inTotalSummMVAT);
-         END IF;
 
          -- изменилась Сумма скидки с НДС
-         IF COALESCE (vbSummTaxPVAT,0) <> COALESCE (ioSummTaxPVAT,0)
+         ELSEIF COALESCE (vbSummTaxPVAT,0) <> COALESCE (ioSummTaxPVAT,0)
          THEN
              -- расчет Сумма скидки без НДС
              ioSummTaxMVAT := zfCalc_Summ_NoVAT (ioSummTaxPVAT, vbVATPercent);
              -- расчет % скидки
              ioDiscountTax := zfCalc_DiscountTax (ioSummTaxMVAT, inTotalSummMVAT);
+
          END IF;
 
          -- Сумма с учетом скидки, без НДС
@@ -163,19 +170,17 @@ BEGIN
              ioTotalSummTaxMVAT := zfCalc_SummDiscount(outSumm3, ioTotalDiscountTax);
              -- расчет Сумма скидки с НДС
              ioTotalSummTaxPVAT := zfCalc_SummWVAT (ioTotalSummTaxMVAT, vbVATPercent);
-         END IF;
 
          -- изменилась Сумма скидки без НДС
-         IF COALESCE (vbTotalSummTaxMVAT,0) <> COALESCE (ioTotalSummTaxMVAT,0)
+         ELSEIF COALESCE (vbTotalSummTaxMVAT,0) <> COALESCE (ioTotalSummTaxMVAT,0)
          THEN
              -- расчет Сумма скидки с НДС
-             ioTotalSummTaxPVAT := zfCalc_Summ_NoVAT (ioTotalSummTaxMVAT, vbVATPercent);
+             ioTotalSummTaxPVAT := zfCalc_SummWVAT (ioTotalSummTaxMVAT, vbVATPercent);
              -- расчет % скидки
              ioTotalDiscountTax := zfCalc_DiscountTax (ioTotalSummTaxMVAT, outSumm3);
-         END IF;
 
          -- изменилась Сумма скидки с НДС
-         IF COALESCE (vbTotalSummTaxPVAT,0) <> COALESCE (ioTotalSummTaxPVAT,0)
+         ELSEIF COALESCE (vbTotalSummTaxPVAT,0) <> COALESCE (ioTotalSummTaxPVAT,0)
          THEN
              -- расчет Сумма скидки без НДС
              ioTotalSummTaxMVAT := zfCalc_Summ_NoVAT (ioTotalSummTaxPVAT, vbVATPercent);
@@ -185,7 +190,7 @@ BEGIN
 
 
          -- Сумма с учетом скидки, без НДС
-         outSumm4 := COALESCE (outSumm3,0) - COALESCE (ioTotalSummTaxPVAT,0);
+         outSumm4 := COALESCE (outSumm3,0) - COALESCE (ioTotalSummTaxMVAT,0);
 
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountTax_calc(), inId, ioDiscountTax);

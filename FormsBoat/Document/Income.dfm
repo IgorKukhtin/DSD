@@ -250,8 +250,8 @@ object IncomeForm: TIncomeForm
       Top = 119
       Caption = '- Rabbat Brutto'
     end
-    object ceSummTaxMVAT: TcxCurrencyEdit
-      Left = 104
+    object ceSummTaxPVAT: TcxCurrencyEdit
+      Left = 103
       Top = 118
       Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057
       ParentShowHint = False
@@ -267,8 +267,8 @@ object IncomeForm: TIncomeForm
       Top = 143
       Caption = '- Rabbat Netto'
     end
-    object ceSummTaxPVAT: TcxCurrencyEdit
-      Left = 104
+    object ceSummTaxMVAT: TcxCurrencyEdit
+      Left = 103
       Top = 142
       Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057
       ParentShowHint = False
@@ -352,7 +352,7 @@ object IncomeForm: TIncomeForm
       Top = 119
       Caption = '- Scontobetr Brutto'
     end
-    object ceTotalSummTaxMVAT: TcxCurrencyEdit
+    object ceTotalSummTaxPVAT: TcxCurrencyEdit
       Left = 533
       Top = 118
       Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057' '#1080#1090#1086#1075#1086
@@ -369,7 +369,7 @@ object IncomeForm: TIncomeForm
       Top = 143
       Caption = '- Scontobetr Netto'
     end
-    object ceTotalSummTaxPVAT: TcxCurrencyEdit
+    object ceTotalSummTaxMVAT: TcxCurrencyEdit
       Left = 533
       Top = 142
       Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057' '#1080#1090#1086#1075#1086
@@ -1027,9 +1027,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GridCost: TcxGrid
         Left = 0
         Top = 0
@@ -3190,16 +3187,16 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'SummTaxMVAT'
+        Name = 'SummTaxPVAT'
         Value = Null
-        Component = ceSummTaxMVAT
+        Component = ceSummTaxPVAT
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'SummTaxPVAT'
+        Name = 'SummTaxMVAT'
         Value = Null
-        Component = ceSummTaxPVAT
+        Component = ceSummTaxMVAT
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -3232,16 +3229,16 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TotalSummTaxMVAT'
+        Name = 'TotalSummTaxPVAT'
         Value = Null
-        Component = ceTotalSummTaxMVAT
+        Component = ceTotalSummTaxPVAT
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TotalSummTaxPVAT'
+        Name = 'TotalSummTaxMVAT'
         Value = Null
-        Component = ceTotalSummTaxPVAT
+        Component = ceTotalSummTaxMVAT
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -3988,10 +3985,10 @@ object IncomeForm: TIncomeForm
         Control = ceDiscountTax
       end
       item
-        Control = ceSummTaxMVAT
+        Control = ceSummTaxPVAT
       end
       item
-        Control = ceSummTaxPVAT
+        Control = ceSummTaxMVAT
       end
       item
         Control = ceSummPost
@@ -4006,10 +4003,10 @@ object IncomeForm: TIncomeForm
         Control = ceTotalDiscountTax
       end
       item
-        Control = ceTotalSummTaxMVAT
+        Control = ceTotalSummTaxPVAT
       end
       item
-        Control = ceTotalSummTaxPVAT
+        Control = ceTotalSummTaxMVAT
       end>
     Left = 608
     Top = 120

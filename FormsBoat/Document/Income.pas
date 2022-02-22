@@ -210,9 +210,9 @@ type
     cxLabel9: TcxLabel;
     ceDiscountTax: TcxCurrencyEdit;
     cxLabel14: TcxLabel;
-    ceSummTaxMVAT: TcxCurrencyEdit;
-    cxLabel15: TcxLabel;
     ceSummTaxPVAT: TcxCurrencyEdit;
+    cxLabel15: TcxLabel;
+    ceSummTaxMVAT: TcxCurrencyEdit;
     cxLabel17: TcxLabel;
     cxLabel18: TcxLabel;
     cxLabel19: TcxLabel;
@@ -222,9 +222,9 @@ type
     cxLabel20: TcxLabel;
     ceTotalDiscountTax: TcxCurrencyEdit;
     cxLabel21: TcxLabel;
-    ceTotalSummTaxMVAT: TcxCurrencyEdit;
-    cxLabel22: TcxLabel;
     ceTotalSummTaxPVAT: TcxCurrencyEdit;
+    cxLabel22: TcxLabel;
+    ceTotalSummTaxMVAT: TcxCurrencyEdit;
     EnterMoveNext: TEnterMoveNext;
     mactUpdateActionMovement: TMultiAction;
     actInsertAction: TdsdInsertUpdateAction;

@@ -531,7 +531,7 @@ BEGIN
                  , CASE WHEN View_InfoMoney.InfoMoneyId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isNotPriceIncome
 
                   -- автоматом открыть справочник партий - шины, и т.п.
-                , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20103()) THEN TRUE ELSE FALSE END :: Boolean AS isPartionGoods_20103
+                , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20103()/*, zc_Enum_InfoMoney_20202()*/) THEN TRUE ELSE FALSE END :: Boolean AS isPartionGoods_20103
 
                  , CURRENT_DATE :: TDateTime AS tmpDate
 
@@ -1128,7 +1128,7 @@ BEGIN
                 , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500()) THEN TRUE ELSE FALSE END :: Boolean AS isNotPriceIncome
 
                   -- автоматом открыть справочник партий - шины, и т.п.
-                , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20103()) THEN TRUE ELSE FALSE END :: Boolean AS isPartionGoods_20103
+                , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20103()/*, zc_Enum_InfoMoney_20202()*/) THEN TRUE ELSE FALSE END :: Boolean AS isPartionGoods_20103
 
                 , CURRENT_DATE :: TDateTime   AS tmpDate
 

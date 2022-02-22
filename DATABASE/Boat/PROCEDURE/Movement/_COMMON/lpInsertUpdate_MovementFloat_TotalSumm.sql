@@ -114,15 +114,15 @@ BEGIN
          vbTotalSumm:= CASE WHEN vbMovementDescId = zc_Movement_Income()
                                  THEN vbOperSumm_MVAT
                                       -- Сумма скидки без НДС
-                                    - COALESCE((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_SummTaxMVAT()))
+                                    - COALESCE((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_SummTaxMVAT()), 0)
                                       -- Почтовые расходы, без НДС
-                                    + COALESCE((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_SummPost()))
+                                    + COALESCE((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_SummPost()), 0)
                                       -- Упаковка расходы, без НДС
-                                    + COALESCE((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_SummPack()))
+                                    + COALESCE((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_SummPack()), 0)
                                       -- Страховка расходы , без НДС
-                                    + COALESCE((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_SummInsur()))
+                                    + COALESCE((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_SummInsur()), 0)
                                       -- Сумма скидки без НДС итого
-                                    - COALESCE((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_TotalSummTaxMVAT()))
+                                    - COALESCE((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_TotalSummTaxMVAT()), 0)
 
                             ELSE zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (vbOperSumm_MVAT, vbDiscountTax), vbDiscountNextTax)
                        END;

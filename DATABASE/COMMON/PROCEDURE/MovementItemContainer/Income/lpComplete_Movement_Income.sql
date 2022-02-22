@@ -1293,7 +1293,7 @@ BEGIN
               , 0 AS PartionGoodsId
               , 0 AS ContainerId_Goods
               , 0 AS ContainerId_Summ
-              , _tmpItem.PartionGoods || '-' || (MIFloat_PartionNumStart.ValueData :: Integer  + tmpList.Num - 1) :: TVarChar || '-' || zfConvert_DateToString (vbOperDate)
+              , _tmpItem.PartionGoods || '-' || (COALESCE (MIFloat_PartionNumStart.ValueData, 0) :: Integer  + tmpList.Num - 1) :: TVarChar || '-' || zfConvert_DateToString (vbOperDate)
               , 1 AS OperCount
                 -- разбили сумму по партиям
               , CASE WHEN _tmpItem.OperCount > 0 THEN _tmpItem.OperSumm / _tmpItem.OperCount ELSE 0 END AS OperSumm

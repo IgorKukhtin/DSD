@@ -22,7 +22,12 @@ $BODY$
 
   DECLARE vbPriceWithVAT            Boolean;
   DECLARE vbVATPercent              TFloat;
-  DECLARE vbDiscountTax             TFloat;
+  
+  DECLARE vbSummMVAT                TFloat;
+  DECLARE vbSummTaxMVAT_1           TFloat;
+  DECLARE vbSummTaxMVAT_2           TFloat;
+  DECLARE vbTotalSummTaxMVAT        TFloat;
+  DECLARE vbTotalSumm_cost          TFloat;
 
   DECLARE vbWhereObjectId_Analyzer Integer; -- Аналитика для проводок
 
@@ -50,7 +55,9 @@ BEGIN
      SELECT tmp.MovementDescId, tmp.StatusId, tmp.OperDate, tmp.PartnerId, tmp.PartnerId_VAT, tmp.UnitId, tmp.PaidKindId
           , tmp.InfoMoneyId_Partner, tmp.InfoMoneyId_Partner_VAT
           , tmp.AccountDirectionId_To
-          , tmp.PriceWithVAT, tmp.VATPercent, tmp.DiscountTax
+          , tmp.PriceWithVAT, tmp.VATPercent
+          , tmp.SummTaxMVAT, tmp.TotalSummTaxMVAT, tmp.TotalSumm_cost
+
             INTO vbMovementDescId, vbStatusId
                , vbOperDate
                , vbPartnerId, vbPartnerId_VAT
@@ -58,7 +65,9 @@ BEGIN
                , vbPaidKindId
                , vbInfoMoneyId_Partner, vbInfoMoneyId_Partner_VAT
                , vbAccountDirectionId_To
-               , vbPriceWithVAT, vbVATPercent, vbDiscountTax
+               , vbPriceWithVAT, vbVATPercent
+               , vbSummTaxMVAT_1, vbTotalSummTaxMVAT, vbTotalSumm_cost
+
      FROM (SELECT Movement.DescId AS MovementDescId
                 , Movement.StatusId
                 , Movement.OperDate
@@ -80,7 +89,13 @@ BEGIN
 
                 , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
                 , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
-                , COALESCE (MovementFloat_DiscountTax.ValueData, 0)       AS DiscountTax
+
+                  -- Сумма скидки без НДС
+                , COALESCE (MovementFloat_SummTaxMVAT.ValueData, 0) AS SummTaxMVAT
+                  -- Сумма итоговой скидки без НДС
+                , COALESCE (MovementFloat_TotalSummTaxMVAT.ValueData, 0) AS TotalSummTaxMVAT
+                  -- ИТОГО - Сумма расходы без НДС
+                , COALESCE (MovementFloat_SummPost.ValueData, 0) + COALESCE (MovementFloat_SummPack.ValueData, 0) + COALESCE (MovementFloat_SummInsur.ValueData, 0) AS TotalSumm_cost
 
            FROM Movement
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -103,9 +118,26 @@ BEGIN
                 LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                         ON MovementFloat_VATPercent.MovementId = Movement.Id
                                        AND MovementFloat_VATPercent.DescId     = zc_MovementFloat_VATPercent()
-                LEFT JOIN MovementFloat AS MovementFloat_DiscountTax
-                                        ON MovementFloat_DiscountTax.MovementId = Movement.Id
-                                       AND MovementFloat_DiscountTax.DescId     = zc_MovementFloat_DiscountTax()
+                -- Сумма скидки без НДС
+                LEFT JOIN MovementFloat AS MovementFloat_SummTaxMVAT
+                                        ON MovementFloat_SummTaxMVAT.MovementId = Movement.Id
+                                       AND MovementFloat_SummTaxMVAT.DescId     = zc_MovementFloat_SummTaxMVAT()
+                -- Почтовые расходы, без НДС
+                LEFT JOIN MovementFloat AS MovementFloat_SummPost
+                                        ON MovementFloat_SummPost.MovementId = Movement.Id
+                                       AND MovementFloat_SummPost.DescId     = zc_MovementFloat_SummPost()
+                -- Упаковка расходы, без НДС
+                LEFT JOIN MovementFloat AS MovementFloat_SummPack
+                                        ON MovementFloat_SummPack.MovementId = Movement.Id
+                                       AND MovementFloat_SummPack.DescId     = zc_MovementFloat_SummPack()
+                -- Страховка расходы, без НДС
+                LEFT JOIN MovementFloat AS MovementFloat_SummInsur
+                                        ON MovementFloat_SummInsur.MovementId = Movement.Id
+                                       AND MovementFloat_SummInsur.DescId     = zc_MovementFloat_SummInsur()
+                -- Сумма скидки итого, без НДС
+                LEFT JOIN MovementFloat AS MovementFloat_TotalSummTaxMVAT
+                                        ON MovementFloat_TotalSummTaxMVAT.MovementId = Movement.Id
+                                       AND MovementFloat_TotalSummTaxMVAT.DescId     = zc_MovementFloat_TotalSummTaxMVAT()
 
                 LEFT JOIN ObjectLink AS ObjectLink_Partner_InfoMoney
                                      ON ObjectLink_Partner_InfoMoney.ObjectId = MovementLinkObject_From.ObjectId
@@ -134,7 +166,7 @@ BEGIN
      INSERT INTO _tmpItem (MovementItemId
                          , ContainerId_Summ, ContainerId_Goods
                          , GoodsId, PartionId
-                         , OperCount, OperPrice_orig, OperPrice, CountForPrice, OperSumm, OperSumm_VAT
+                         , OperCount, OperPrice_orig, OperPrice, CountForPrice, OperSumm, OperSumm_cost, OperSumm_VAT
                          , AccountId, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                           )
         -- результат
@@ -146,20 +178,20 @@ BEGIN
              , tmp.PartionId
              , tmp.OperCount
 
-               -- Цена вх. без НДС, БЕЗ учета скидки
+               -- Вх. цена без НДС, с учетом скидки в элементе
              , tmp.OperPrice AS OperPrice_orig
-               -- Цена вх. без НДС, с учетом скидки
-             , CASE WHEN vbDiscountTax <> 0 THEN zfCalc_SummDiscountTax (tmp.OperPrice, vbDiscountTax) ELSE tmp.OperPrice END AS OperPrice
+               -- Вх. цена без НДС, с учетом ВСЕХ скидок + затраты + расходы: Почтовые + Упаковка + Страховка - потом это все расчитаем
+             , tmp.OperPrice AS OperPrice
                --
              , tmp.CountForPrice
 
-              -- конечная сумма по Поставщику - без НДС
+              -- конечная сумма без НДС по Поставщику, с учетом ВСЕХ скидок + затраты + расходы: Почтовые + Упаковка + Страховка - потом это все расчитаем 
             , tmp.OperSumm
-              -- Сумма НДС
-            , CASE WHEN vbVATPercent > 0
-                        THEN zfCalc_SummWVAT (tmp.OperSumm, vbVATPercent) - tmp.OperSumm
-                   ELSE 0
-              END AS OperSumm_VAT
+              -- затраты + расходы: Почтовые + Упаковка + Страховка - потом это все расчитаем
+            , 0 AS OperSumm_cost
+
+              -- Сумма НДС - потом это все расчитаем
+            , 0 AS OperSumm_VAT
 
                -- Счет(справочника), сформируем позже
              , 0 AS AccountId
@@ -173,18 +205,13 @@ BEGIN
                    , MovementItem.ObjectId              AS GoodsId
                    , MovementItem.Id                    AS PartionId -- !!!здесь можно было б и MovementItem.PartionId!!!
                    , MovementItem.Amount                AS OperCount
-                     -- Цена без НДС, без учета скидки
-                   , CASE WHEN vbPriceWithVAT = TRUE THEN zfCalc_Summ_NoVAT (MIFloat_OperPrice.ValueData, vbVATPercent) ELSE MIFloat_OperPrice.ValueData END AS OperPrice
-                   , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
 
-                    -- учитываем % Скидки для суммы без НДС
-                   , CASE WHEN vbPriceWithVAT = TRUE
-                               THEN zfCalc_SummDiscountTax
-                                   (zfCalc_Summ_NoVAT
-                                   (zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData), vbVATPercent), vbDiscountTax)
-                               ELSE zfCalc_SummDiscountTax
-                                   (zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData), vbDiscountTax)
-                     END AS OperSumm
+                     --
+                   , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
+                     -- Цена вх. без НДС, с учетом скидки по элементу
+                   , CASE WHEN vbPriceWithVAT = TRUE THEN zfCalc_Summ_NoVAT (MIFloat_OperPrice.ValueData, vbVATPercent) ELSE COALESCE (MIFloat_OperPrice.ValueData, 0)      END AS OperPrice
+                     -- Сумма вх. без НДС, с учетом скидки по элементу
+                   , CASE WHEN vbPriceWithVAT = TRUE THEN zfCalc_Summ_NoVAT (MIFloat_SummIn.ValueData, vbVATPercent)    ELSE COALESCE (MIFloat_SummIn.ValueData, 0)         END AS OperSumm
 
                      -- Управленческая группа
                    , View_InfoMoney.InfoMoneyGroupId
@@ -200,10 +227,13 @@ BEGIN
 
                    LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                                ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
-                                              AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
+                                              AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
                    LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                              AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                                              AND MIFloat_CountForPrice.DescId         = zc_MIFloat_CountForPrice()
+                   LEFT JOIN MovementItemFloat AS MIFloat_SummIn
+                                               ON MIFloat_SummIn.MovementItemId = MovementItem.Id
+                                              AND MIFloat_SummIn.DescId         = zc_MIFloat_SummIn()
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                         ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                                        AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
@@ -217,6 +247,55 @@ BEGIN
             ;
 
 
+     -- 1.1. нашли - Сумма вх. без НДС, с учетом скидки по элементу
+     vbSummMVAT:= (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem);
+     
+     -- 1.2. распределяем скидки: vbSummTaxMVAT_1
+     UPDATE _tmpItem SET OperSumm = _tmpItem.OperSumm - vbSummTaxMVAT_1 * _tmpItem.OperSumm / vbSummMVAT;
+     -- 1.3. корректируем на "погрешность округления"
+     UPDATE _tmpItem SET OperSumm = _tmpItem.OperSumm                              -- корректируем эту сумму на...
+                                  - (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem) -- итоговая новая сумма
+                                  + (vbSummMVAT - vbSummTaxMVAT_1)                 -- а должна быть такая сумма
+     WHERE _tmpItem.MovementItemId = (SELECT _tmpItem.MovementItemId FROM _tmpItem ORDER BY _tmpItem.OperSumm DESC LIMIT 1);
+
+
+     -- 2.1. нашли Сумма скидки vbSummTaxMVAT_2
+     vbSummTaxMVAT_2:= vbTotalSummTaxMVAT * (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem) 
+                     / (vbTotalSumm_cost + (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem))
+                      ;
+     -- 2.2. опять нашли - Сумма вх. без НДС, с учетом скидки ....
+     vbSummMVAT:= (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem);
+
+     -- 2.3. распределяем скидки: vbSummTaxMVAT_2
+     UPDATE _tmpItem SET OperSumm = _tmpItem.OperSumm - vbSummTaxMVAT_2 * _tmpItem.OperSumm / vbSummMVAT;
+     -- 2.4. корректируем на "погрешность округления"
+     UPDATE _tmpItem SET OperSumm = _tmpItem.OperSumm                              -- корректируем эту сумму на...
+                                  - (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem) -- итоговая новая сумма
+                                  + (vbSummMVAT - vbSummTaxMVAT_2)                 -- а должна быть такая сумма
+     WHERE _tmpItem.MovementItemId = (SELECT _tmpItem.MovementItemId FROM _tmpItem ORDER BY _tmpItem.OperSumm DESC LIMIT 1);
+
+
+     -- 3.1. опять нашли - Сумма вх. без НДС, с учетом скидки ...
+     vbSummMVAT:= (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem);
+
+     -- 3.2. распределяем Сумма расходы минус .....
+     UPDATE _tmpItem SET OperSumm_cost = (vbTotalSumm_cost - (vbTotalSummTaxMVAT - vbSummTaxMVAT_2)) * _tmpItem.OperSumm / vbSummMVAT;
+     -- 3.3. корректируем на "погрешность округления"
+     UPDATE _tmpItem SET OperSumm_cost = _tmpItem.OperSumm_cost                              -- корректируем эту сумму на...
+                                       - (SELECT SUM (_tmpItem.OperSumm_cost) FROM _tmpItem) -- итоговая новая сумма
+                                       + (vbTotalSumm_cost - (vbTotalSummTaxMVAT - vbSummTaxMVAT_2))              -- а должна быть такая сумма
+     WHERE _tmpItem.MovementItemId = (SELECT _tmpItem.MovementItemId FROM _tmpItem ORDER BY _tmpItem.OperSumm DESC LIMIT 1);
+
+
+     -- 4.2. распределяем Сумма НДС .....
+
+RAISE EXCEPTION 'Ошибка.<%>  <%>   <%>  <%>', (select sum(_tmpItem.OperSumm) from _tmpItem)
+    , (select sum(_tmpItem.OperSumm_cost) from _tmpItem)
+    , (select sum(_tmpItem.OperSumm + _tmpItem.OperSumm_cost) from _tmpItem)
+, vbSummTaxMVAT_2
+    ;
+
+
      -- заполняем таблицу - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem_SummPartner (MovementItemId, ContainerId, AccountId, ContainerId_VAT, AccountId_VAT, GoodsId, PartionId, OperSumm, OperSumm_VAT)
         SELECT _tmpItem.MovementItemId
@@ -224,10 +303,10 @@ BEGIN
              , 0 AS ContainerId_VAT, 0 AS AccountId_VAT
              , _tmpItem.GoodsId
              , _tmpItem.PartionId
-               -- Поставщику - Сумма с НДС
-             , (_tmpItem.OperSumm + _tmpItem.OperSumm_VAT) AS OperSumm
+               -- Поставщику - Сумма с НДС, с учетом ВСЕХ скидок + затраты + расходы: Почтовые + Упаковка + Страховка
+             , (_tmpItem.OperSumm + _tmpItem.OperSumm_cost + _tmpItem.OperSumm_VAT) AS OperSumm
                -- в налоговую - Сумма НДС
-             , _tmpItem.OperSumm_VAT                       AS OperSumm_VAT
+             , _tmpItem.OperSumm_VAT AS OperSumm_VAT
         FROM _tmpItem
        ;
 
@@ -605,10 +684,18 @@ BEGIN
 
 
      -- дописали - КОЛ-ВО + Цену
-     UPDATE Object_PartionGoods SET Amount        = _tmpItem.OperCount
-                                  , EKPrice_orig  = _tmpItem.OperPrice_orig
-                                  , EKPrice       = _tmpItem.OperPrice
-                                  , CountForPrice = _tmpItem.CountForPrice
+     UPDATE Object_PartionGoods SET Amount             = _tmpItem.OperCount
+                                  , CountForPrice      = _tmpItem.CountForPrice
+                                   -- Цена вх. без НДС, с учетом скидки по элементу
+                                  , EKPrice_orig       = _tmpItem.OperPrice_orig
+                                    -- Цена вх. без НДС, с учетом ВСЕХ скидок + затраты + расходы: Почтовые + Упаковка + Страховка
+                                  , EKPrice            = _tmpItem.OperPrice
+                                                       + CASE WHEN _tmpItem.OperCount > 0 THEN _tmpItem.OperSumm_cost / _tmpItem.OperCount ELSE 0 END
+                                    -- Цена вх. без НДС, с учетом ВСЕХ скидок (затрат здесь нет)
+                                  , EKPrice_discount   = _tmpItem.OperPrice
+                                    -- Цена затрат без НДС (затраты + расходы: Почтовые + Упаковка + Страховка)
+                                  , CostPrice          = CASE WHEN _tmpItem.OperCount > 0 THEN _tmpItem.OperSumm_cost / _tmpItem.OperCount ELSE 0 END
+                                    --
                                   , OperDate      = vbOperDate
                                   , isErased      = FALSE
                                   , isArc         = FALSE

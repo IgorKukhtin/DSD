@@ -80,7 +80,8 @@ object IncomeEditForm: TIncomeEditForm
   end
   object cxLabel1: TcxLabel
     Left = 48
-    Top = 91
+    Top = 94
+    Hint = '% '#1089#1082#1080#1076#1082#1080
     Caption = '- Rabbat %'
   end
   object ceDiscountTax: TcxCurrencyEdit
@@ -97,10 +98,11 @@ object IncomeEditForm: TIncomeEditForm
   object cxLabel3: TcxLabel
     Left = 48
     Top = 115
+    Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057
     Caption = '- Rabbat Brutto'
   end
   object ceSummTaxPVAT: TcxCurrencyEdit
-    Left = 156
+    Left = 155
     Top = 114
     Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057
     ParentShowHint = False
@@ -113,6 +115,7 @@ object IncomeEditForm: TIncomeEditForm
   object cxLabel7: TcxLabel
     Left = 48
     Top = 142
+    Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057
     Caption = '- Rabbat Netto'
   end
   object ceSummTaxMVAT: TcxCurrencyEdit
@@ -129,21 +132,25 @@ object IncomeEditForm: TIncomeEditForm
   object cxLabel9: TcxLabel
     Left = 15
     Top = 175
+    Hint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057', '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080
     Caption = '2. Zwischensumme :'
   end
   object cxLabel11: TcxLabel
     Left = 300
     Top = 91
+    Hint = #1055#1086#1095#1090#1086#1074#1099#1077' '#1088#1072#1089#1093#1086#1076#1099', '#1073#1077#1079' '#1053#1044#1057
     Caption = '+ Porto Netto'
   end
   object cxLabel13: TcxLabel
     Left = 300
     Top = 115
+    Hint = #1059#1087#1072#1082#1086#1074#1082#1072' '#1088#1072#1089#1093#1086#1076#1099', '#1073#1077#1079' '#1053#1044#1057
     Caption = '+ Verpackung Netto'
   end
   object cxLabel15: TcxLabel
     Left = 300
     Top = 142
+    Hint = #1057#1090#1088#1072#1093#1086#1074#1082#1072' '#1088#1072#1089#1093#1086#1076#1099', '#1073#1077#1079' '#1053#1044#1057
     Caption = '+ Versicherung Netto'
   end
   object ceSummInsur: TcxCurrencyEdit
@@ -182,6 +189,7 @@ object IncomeEditForm: TIncomeEditForm
   object ceSumm2: TcxCurrencyEdit
     Left = 155
     Top = 171
+    Hint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057', '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
@@ -192,27 +200,31 @@ object IncomeEditForm: TIncomeEditForm
   object cxLabel16: TcxLabel
     Left = 267
     Top = 175
+    Hint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057', '#1089' '#1091#1095#1077#1090#1086#1084' '#1088#1072#1089#1093#1086#1076#1086#1074
     Caption = '3. Zwischensumme :'
   end
   object cxLabel17: TcxLabel
     Left = 48
     Top = 216
+    Hint = '% '#1089#1082#1080#1076#1082#1080' '#1080#1090#1086#1074#1099#1081
     Caption = '- Scontobetr %'
   end
   object cxLabel19: TcxLabel
     Left = 48
     Top = 241
+    Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057' '#1080#1090#1086#1075#1086#1074#1072#1103
     Caption = '- Scontobetr Brutto'
   end
   object cxLabel20: TcxLabel
     Left = 48
     Top = 264
+    Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057' '#1080#1090#1086#1075#1086#1074#1072#1103
     Caption = '- Scontobetr Netto'
   end
   object ceTotalSummTaxMVAT: TcxCurrencyEdit
     Left = 155
     Top = 263
-    Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057' '#1080#1090#1086#1075#1086
+    Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057' '#1080#1090#1086#1075#1086#1074#1072#1103
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -222,8 +234,8 @@ object IncomeEditForm: TIncomeEditForm
   end
   object ceTotalSummTaxPVAT: TcxCurrencyEdit
     Left = 155
-    Top = 239
-    Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057' '#1080#1090#1086#1075#1086
+    Top = 240
+    Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057' '#1080#1090#1086#1075#1086#1074#1072#1103
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -234,7 +246,7 @@ object IncomeEditForm: TIncomeEditForm
   object ceTotalDiscountTax: TcxCurrencyEdit
     Left = 155
     Top = 215
-    Hint = '% '#1089#1082#1080#1076#1082#1080' '#1080#1090#1086#1075#1086
+    Hint = '% '#1089#1082#1080#1076#1082#1080' '#1080#1090#1086#1074#1099#1081
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -244,7 +256,8 @@ object IncomeEditForm: TIncomeEditForm
   end
   object ceSumm3: TcxCurrencyEdit
     Left = 410
-    Top = 174
+    Top = 171
+    Hint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057', '#1089' '#1091#1095#1077#1090#1086#1084' '#1088#1072#1089#1093#1086#1076#1086#1074
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
@@ -255,11 +268,13 @@ object IncomeEditForm: TIncomeEditForm
   object cxLabel10: TcxLabel
     Left = 15
     Top = 291
+    Hint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057', '#1089' '#1091#1095#1077#1090#1086#1084' '#1042#1057#1045#1061' '#1089#1082#1080#1076#1086#1082' '#1080' '#1088#1072#1089#1093#1086#1076#1086#1074
     Caption = '4. Gesamt :'
   end
   object ceTotalSumm: TcxCurrencyEdit
     Left = 155
     Top = 290
+    Hint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057', '#1089' '#1091#1095#1077#1090#1086#1084' '#1042#1057#1045#1061' '#1089#1082#1080#1076#1086#1082' '#1080' '#1088#1072#1089#1093#1086#1076#1086#1074
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
@@ -298,6 +313,7 @@ object IncomeEditForm: TIncomeEditForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actUpdate_summ_after: TdsdInsertUpdateGuides

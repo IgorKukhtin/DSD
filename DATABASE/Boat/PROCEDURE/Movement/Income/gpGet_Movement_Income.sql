@@ -13,14 +13,14 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean
              , VATPercent TFloat, DiscountTax TFloat
-             , SummTaxMVAT TFloat
              , SummTaxPVAT TFloat
+             , SummTaxMVAT TFloat
              , SummPost TFloat
              , SummPack TFloat
              , SummInsur TFloat
              , TotalDiscountTax TFloat
-             , TotalSummTaxMVAT TFloat
              , TotalSummTaxPVAT TFloat
+             , TotalSummTaxMVAT TFloat
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -91,14 +91,14 @@ BEGIN
           , MovementBoolean_PriceWithVAT.ValueData    AS PriceWithVAT
           , MovementFloat_VATPercent.ValueData        AS VATPercent
           , MovementFloat_DiscountTax.ValueData       AS DiscountTax
-          , MovementFloat_SummTaxMVAT.ValueData       :: TFloat AS SummTaxMVAT
           , MovementFloat_SummTaxPVAT.ValueData       :: TFloat AS SummTaxPVAT
+          , MovementFloat_SummTaxMVAT.ValueData       :: TFloat AS SummTaxMVAT
           , MovementFloat_SummPost.ValueData          :: TFloat AS SummPost
           , MovementFloat_SummPack.ValueData          :: TFloat AS SummPack
           , MovementFloat_SummInsur.ValueData         :: TFloat AS SummInsur
           , MovementFloat_TotalDiscountTax.ValueData  :: TFloat AS TotalDiscountTax
-          , MovementFloat_TotalSummTaxMVAT.ValueData  :: TFloat AS TotalSummTaxMVAT
           , MovementFloat_TotalSummTaxPVAT.ValueData  :: TFloat AS TotalSummTaxPVAT
+          , MovementFloat_TotalSummTaxMVAT.ValueData  :: TFloat AS TotalSummTaxMVAT
           , Object_From.Id                            AS FromId
           , Object_From.ValueData                     AS FromName
           , Object_To.Id                              AS ToId      

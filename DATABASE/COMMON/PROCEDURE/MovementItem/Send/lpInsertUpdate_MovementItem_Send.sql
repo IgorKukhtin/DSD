@@ -37,6 +37,7 @@ BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
+
      -- расчет Инвентарный номер: если Инвентарный номер не установлен и это перемещение на МО
      IF (vbIsInsert = TRUE OR COALESCE (ioPartionGoods, '') = '' OR COALESCE (ioPartionGoods, '0') = '0')
         AND EXISTS (SELECT MovementLinkObject_From.ObjectId
@@ -50,6 +51,10 @@ BEGIN
                                                        AND Object_To.DescId = zc_Object_Member()
                     WHERE MovementLinkObject_From.MovementId = inMovementId
                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From())
+        -- Шины + Спецодежда
+        AND (NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inGoodsId AND OL.DescId = zc_ObjectLink_Goods_InfoMoney() AND OL.ChildObjectId IN (zc_Enum_InfoMoney_20103(), zc_Enum_InfoMoney_20202()))
+          OR COALESCE(ioPartionGoods, '') = ''
+            )
      THEN
          ioPartionGoods:= lfGet_Object_PartionGoods_InvNumber (inGoodsId);
      ELSE 
@@ -65,6 +70,8 @@ BEGIN
                                                            AND Object_To.DescId = zc_Object_Member()
                     WHERE MovementLinkObject_From.MovementId = inMovementId
                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From())
+        -- Шины + Спецодежда
+        AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inGoodsId AND OL.DescId = zc_ObjectLink_Goods_InfoMoney() AND OL.ChildObjectId IN (zc_Enum_InfoMoney_20103(), zc_Enum_InfoMoney_20202()))
          THEN
              ioPartionGoods:= (SELECT ValueData FROM Object WHERE Id = inPartionGoodsId);
          END IF;

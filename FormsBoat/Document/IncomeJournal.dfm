@@ -440,7 +440,7 @@ object IncomeJournalForm: TIncomeJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = '% '#1089#1082#1080#1076#1082#1080' '#1080#1090#1086#1075#1086
+        HeaderHint = '% '#1089#1082#1080#1076#1082#1080', '#1080#1090#1086#1075#1086#1074#1099#1081
         Options.Editing = False
         Width = 70
       end
@@ -452,7 +452,7 @@ object IncomeJournalForm: TIncomeJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057' '#1080#1090#1086#1075#1086
+        HeaderHint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057', '#1080#1090#1086#1075#1086#1074#1072#1103
         Options.Editing = False
         Width = 75
       end
@@ -465,24 +465,12 @@ object IncomeJournalForm: TIncomeJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057' '#1080#1090#1086#1075#1086
+        HeaderHint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057', '#1080#1090#1086#1075#1086#1074#1072#1103
         Options.Editing = False
         Width = 80
       end
-      object TotalSummCost: TcxGridDBColumn
-        Caption = 'C'#1091#1084#1084#1072' '#1079#1072#1090#1088#1072#1090' ('#1073#1077#1079' '#1053#1044#1057')'
-        DataBinding.FieldName = 'TotalSummCost'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 100
-      end
       object TotalSumm: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057' ('#1080#1090#1086#1075')'
+        Caption = 'Gesamt'
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -521,7 +509,7 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' '#1089' '#1053#1044#1057' ('#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1088#1072#1089#1093#1086#1076#1086#1074' '#1080' '#1089#1082#1080#1076#1086#1082')'
-        Width = 60
+        Width = 80
       end
       object TotalSummVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
@@ -533,6 +521,18 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
+      end
+      object TotalSummCost: TcxGridDBColumn
+        Caption = 'C'#1091#1084#1084#1072' '#1079#1072#1090#1088#1072#1090' ('#1073#1077#1079' '#1053#1044#1057')'
+        DataBinding.FieldName = 'TotalSummCost'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
