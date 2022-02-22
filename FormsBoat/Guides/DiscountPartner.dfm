@@ -1,4 +1,4 @@
-object DiscountParnerForm: TDiscountParnerForm
+object DiscountPartnerForm: TDiscountPartnerForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1072' '#1089#1082#1080#1076#1082#1080' '#1091' '#1087#1072#1088#1090#1085#1077#1088#1072'>'
@@ -491,7 +491,7 @@ object DiscountParnerForm: TDiscountParnerForm
     Top = 128
   end
   object spErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_DiscountParner'
+    StoredProcName = 'gpUpdate_Object_isErased_DiscountPartner'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -550,7 +550,7 @@ object DiscountParnerForm: TDiscountParnerForm
     Top = 248
   end
   object spUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_DiscountParner'
+    StoredProcName = 'gpUpdate_Object_isErased_DiscountPartner'
     DataSets = <>
     OutputType = otResult
     Params = <

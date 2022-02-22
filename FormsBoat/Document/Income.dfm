@@ -2775,15 +2775,6 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inEmpfPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'EmpfPrice'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inOperPrice_orig'
         Value = Null
         Component = MasterCDS
@@ -2806,6 +2797,15 @@ object IncomeForm: TIncomeForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperPriceList'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEmpfPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'EmpfPrice'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

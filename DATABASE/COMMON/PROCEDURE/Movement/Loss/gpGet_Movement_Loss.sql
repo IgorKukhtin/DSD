@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Comment TVarChar
              , Checked Boolean
              , MovementId_Income Integer, InvNumber_IncomeFull TVarChar
+             , AssetId_top Integer, AssetName_top TVarChar
               )
 AS
 $BODY$
@@ -45,6 +46,8 @@ BEGIN
              , CAST (FALSE AS Boolean)         		        AS Checked
              , 0                                                AS MovementId_Income
              , CAST ('' AS TVarChar) 		                AS InvNumber_IncomeFull
+             , 0                     	 	                AS AssetId_top
+             , CAST ('' AS TVarChar) 	 	                AS AssetName_top
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -67,6 +70,8 @@ BEGIN
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked
            , COALESCE(Movement_Income.Id, -1)                         AS MovementId_Income
            , zfCalc_PartionMovementName (Movement_Income.DescId, MovementDesc_Income.ItemName, Movement_Income.InvNumber, Movement_Income.OperDate) :: TVarChar      AS InvNumber_IncomeFull
+           , 0                     	 	                AS AssetId_top
+           , CAST ('' AS TVarChar) 	 	                AS AssetName_top
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 

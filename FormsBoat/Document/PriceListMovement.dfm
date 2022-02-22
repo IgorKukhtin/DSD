@@ -79,7 +79,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupSummaryLayout = gslStandard
           Styles.Content = nil
           Styles.Inactive = nil
@@ -97,9 +96,16 @@ inherited PriceListMovementForm: TPriceListMovementForm
           object GoodsName: TcxGridDBColumn
             Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
             DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 206
           end
           object GoodsName_translate: TcxGridDBColumn
@@ -108,11 +114,20 @@ inherited PriceListMovementForm: TPriceListMovementForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 131
           end
           object DiscountPartnerName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1089#1082'. '#1091' '#1087#1086#1089#1090'.'
             DataBinding.FieldName = 'DiscountPartnerName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actDiscountPartnerChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1043#1088#1091#1087#1087#1072' '#1089#1082#1080#1076#1082#1080' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -137,6 +152,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
             DataBinding.FieldName = 'MeasureName_translate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 69
           end
           object MeasureParentName_translate: TcxGridDBColumn
@@ -144,6 +160,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
             DataBinding.FieldName = 'MeasureParentName_translate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 79
           end
           object isOutlet: TcxGridDBColumn
@@ -160,7 +177,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 77
           end
           object PriceParent: TcxGridDBColumn
@@ -171,7 +187,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1073#1077#1079' '#1085#1076#1089' ('#1091#1087#1072#1082#1086#1074#1082#1080')'
-            Options.Editing = False
             Width = 77
           end
           object MeasureMult: TcxGridDBColumn
@@ -181,7 +196,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
             Properties.DisplayFormat = ',0.##;-,0.##'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 57
           end
           object EmpfPriceParent: TcxGridDBColumn
@@ -192,7 +206,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1077#1082#1086#1084#1077#1085#1076#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072' '#1073#1077#1079' '#1085#1076#1089' ('#1091#1087#1072#1082#1086#1074#1082#1080')'
-            Options.Editing = False
             Width = 57
           end
           object MinCount: TcxGridDBColumn
@@ -203,7 +216,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1084#1080#1085' '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1091#1087#1082#1080
-            Options.Editing = False
             Width = 57
           end
           object MinCountMult: TcxGridDBColumn
@@ -214,7 +226,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1077#1082#1086#1084#1077#1085#1076#1091#1077#1084#1086#1077' '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1091#1087#1082#1080
-            Options.Editing = False
             Width = 57
           end
           object WeightParent: TcxGridDBColumn
@@ -223,14 +234,12 @@ inherited PriceListMovementForm: TPriceListMovementForm
             Properties.DisplayFormat = ',0.##;-,0.##'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 57
           end
           object CatalogPage: TcxGridDBColumn
             DataBinding.FieldName = 'CatalogPage'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 171
           end
         end
@@ -355,12 +364,10 @@ inherited PriceListMovementForm: TPriceListMovementForm
       RefreshOnTabSetChanges = True
     end
     inherited actUpdateMainDS: TdsdUpdateDataSet
-      StoredProc = spGet
       StoredProcList = <
         item
-          StoredProc = spGet
+          StoredProc = spInsertUpdateMIMaster
         end>
-      DataSource = nil
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -408,13 +415,13 @@ inherited PriceListMovementForm: TPriceListMovementForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [13]
+    object actMeasureParentChoice: TOpenChoiceForm [13]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'GoodsKindForm'
-      FormName = 'TGoodsKindForm'
-      FormNameParam.Value = ''
+      Caption = 'MeasureForm'
+      FormName = 'TMeasureForm'
+      FormNameParam.Value = 'TMeasureForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -422,14 +429,110 @@ inherited PriceListMovementForm: TPriceListMovementForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsKindId'
+          ComponentItem = 'MeasureParentId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsKindName'
+          ComponentItem = 'MeasureParentName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actMeasureChoice: TOpenChoiceForm [14]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'MeasureForm'
+      FormName = 'TMeasureForm'
+      FormNameParam.Value = 'TMeasureForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actDiscountPartnerChoice: TOpenChoiceForm [15]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'DiscountPartnerForm'
+      FormName = 'TDiscountPartnerForm'
+      FormNameParam.Value = 'TDiscountPartnerForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DiscountPartnerId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DiscountPartnerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actGoodsChoice: TOpenChoiceForm [16]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsForm'
+      FormName = 'TGoodsForm'
+      FormNameParam.Value = 'TGoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -1143,10 +1246,10 @@ inherited PriceListMovementForm: TPriceListMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDiscountParnerId'
+        Name = 'inDiscountPartnerId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'DiscountParnerId'
+        ComponentItem = 'DiscountPartnerId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

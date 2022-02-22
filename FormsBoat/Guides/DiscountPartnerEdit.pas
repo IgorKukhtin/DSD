@@ -1,4 +1,4 @@
-unit DiscountParnerEdit;
+unit DiscountPartnerEdit;
 
 interface
 
@@ -22,7 +22,7 @@ uses
   dsdGuides, cxMaskEdit, cxButtonEdit;
 
 type
-  TDiscountParnerEditForm = class(TParentForm)
+  TDiscountPartnerEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -51,6 +51,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TDiscountParnerEditForm);
+  RegisterClass(TDiscountPartnerEditForm);
 
 end.

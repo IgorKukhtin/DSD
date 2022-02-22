@@ -570,14 +570,6 @@
 				<Form>GoodsSizeEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\DiscountParner.pas">
-				<Form>DiscountParnerForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\DiscountParnerEdit.pas">
-				<Form>DiscountParnerEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\Goods.pas">
 				<Form>GoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1002,6 +994,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Document\PriceListMovement.pas">
 				<Form>PriceListMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\DiscountPartner.pas">
+				<Form>DiscountPartnerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\DiscountPartnerEdit.pas">
+				<Form>DiscountPartnerEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
