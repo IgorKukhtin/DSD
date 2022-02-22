@@ -60,9 +60,10 @@ BEGIN
                WHERE MI_Master.MovementId = inMovementId
                  AND MI_Master.DescId     = zc_MI_Master()
                  AND MI_Master.Amount > 0
-                 AND MI_Master.Amount <> Container.Amount
                  AND MI_Master.IsErased   = FALSE
                  AND Container.DescId = zc_Container_Count()
+               GROUP BY Container.ID
+               HAVING SUM(MI_Master.Amount) <> MAX(COALESCE(Container.Amount, 0))
               )
     THEN
        SELECT Object_Goods.ValueData, MI_Master.Amount, MIFloat_ContainerId.ValueData::Integer
@@ -81,9 +82,10 @@ BEGIN
        WHERE MI_Master.MovementId = inMovementId
          AND MI_Master.DescId     = zc_MI_Master()
          AND MI_Master.Amount > 0
-         AND MI_Master.Amount <> Container.Amount
          AND MI_Master.IsErased   = FALSE
-         AND Container.DescId = zc_Container_Count();
+         AND Container.DescId = zc_Container_Count()
+       GROUP BY Object_Goods.ValueData, MI_Master.Amount, MIFloat_ContainerId.ValueData
+       HAVING SUM(MI_Master.Amount) <> MAX(COALESCE(Container.Amount, 0));
 
        RAISE EXCEPTION 'Ошибка.Как минимум у одного товара <%> количество <%> контейнер <%>. Количество не равно остатку.', vbGoodsName, vbAmount, vbContainerId;
     END IF;
@@ -103,6 +105,8 @@ BEGIN
                  AND MI_Master.Amount > 0
                  AND MI_Master.Amount > COALESCE(Container.Amount, 0)
                  AND MI_Master.IsErased   = FALSE
+               GROUP BY Container.ID
+               HAVING SUM(MI_Master.Amount) > MAX(COALESCE(Container.Amount, 0))
               )
     THEN
        SELECT Object_Goods.ValueData, MI_Master.Amount, MIFloat_ContainerId.ValueData::Integer
@@ -121,8 +125,9 @@ BEGIN
        WHERE MI_Master.MovementId = inMovementId
          AND MI_Master.DescId     = zc_MI_Master()
          AND MI_Master.Amount > 0
-         AND MI_Master.Amount > COALESCE(Container.Amount, 0)
-         AND MI_Master.IsErased   = FALSE;
+         AND MI_Master.IsErased   = FALSE
+       GROUP BY Object_Goods.ValueData, MI_Master.Amount, MIFloat_ContainerId.ValueData
+       HAVING SUM(MI_Master.Amount) > MAX(COALESCE(Container.Amount, 0));
 
        RAISE EXCEPTION 'Ошибка.Как минимум у одного товара <%> количество <%> контейнер <%>. Больше остатка.', vbGoodsName, vbAmount, vbContainerId;
     END IF;
@@ -267,20 +272,21 @@ BEGIN
       -- Востановили и обнулили записи если есть старые
     UPDATE MovementItem SET amount = 0, isErased = False
     WHERE MovementItem.MovementId = vbMovementID
-      AND MovementItem.DescId = zc_MI_Master();
+      AND MovementItem.DescId = zc_MI_Master();   
 
     -- Залили товары
     PERFORM gpInsertUpdate_MI_SendPartionDate_Master(ioId               := MI_SendPartionDate.ID, -- Ключ объекта <Элемент документа>
-                                                     inMovementId       := vbMovementId,          -- Ключ объекта <Документ>
-                                                     inGoodsId          := MovementItem.ObjectId, -- Товары
-                                                     inAmount           := CASE WHEN Container.DescId = zc_Container_Count() THEN Container.Amount ELSE MovementItem.Amount END,   -- Количество
-                                                     inAmountRemains    := Container.Amount,      --
-                                                     inChangePercent    := COALESCE(ObjectFloat_PartionGoods_Value.ValueData, 0),     -- % (срок от 1 мес до 3 мес)
-                                                     inChangePercentLess:= COALESCE(ObjectFloat_PartionGoods_ValueLess.ValueData, 0), -- % (срок от 3 мес до 6 мес)
-                                                     inChangePercentMin := COALESCE(ObjectFloat_PartionGoods_ValueMin.ValueData, 0),  -- % (срок меньше месяца)
-                                                     inContainerId      := MIFloat_ContainerId.ValueData::Integer,                    -- Контейнер для изменения срока
-                                                     inSession          := inUserId::TVarChar     -- сессия пользователя
-                                                     )
+                                                           inMovementId       := vbMovementId,          -- Ключ объекта <Документ>
+                                                           inGoodsId          := MovementItem.ObjectId, -- Товары
+                                                           inAmount           := MovementItem.Amount,   -- Количество
+                                                           inAmountRemains    := Container.Amount,      --
+                                                           inChangePercent    := COALESCE(ObjectFloat_PartionGoods_Value.ValueData, 0),     -- % (срок от 1 мес до 3 мес)
+                                                           inChangePercentLess:= COALESCE(ObjectFloat_PartionGoods_ValueLess.ValueData, 0), -- % (срок от 3 мес до 6 мес)
+                                                           inChangePercentMin := COALESCE(ObjectFloat_PartionGoods_ValueMin.ValueData, 0),  -- % (срок меньше месяца)
+                                                           inContainerId      := MIFloat_ContainerId.ValueData::Integer,                    -- Контейнер для изменения срока
+                                                           inExpirationDate   := MIDate_ExpirationDate.ValueData,
+                                                           inSession          := inUserId::TVarChar     -- сессия пользователя
+                                                           )
     FROM MovementItem
 
          LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
@@ -322,7 +328,7 @@ BEGIN
       AND MovementItem.iserased = False
       AND MovementItem.Amount > 0;
 
-    -- Прописали сроки
+/*    -- Прописали сроки
     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ExpirationDate(), MI_Child.Id, MIDate_ExpirationDate.ValueData)
     FROM MovementItem
 
@@ -353,7 +359,7 @@ BEGIN
       AND MovementItem.DescId = zc_MI_Master()
       AND MovementItem.iserased = False
       AND MovementItem.Amount > 0
-      AND COALESCE (MI_Child.Id, 0) > 0;
+      AND COALESCE (MI_Child.Id, 0) > 0;*/
 
       -- Удалили записи которые уже ненужны
     PERFORM gpMovementItem_Send_SetErased (inMovementItemId        := MovementItem.ID,
@@ -377,6 +383,29 @@ BEGIN
     -- пересчитываем сумму документа по приходным ценам
     PERFORM lpInsertUpdate_SendPartionDateChange_TotalSumm(inMovementId);
 
+    -- !!!ВРЕМЕННО для ТЕСТА!!!
+/*    IF inUserId = zfCalc_UserAdmin()::Integer
+    THEN
+        RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%> <%>', 
+          (select Count(*) from container where container.parentid = 32126406
+                                                         AND Container.DescId = zc_Container_CountPartionDate()), 
+          (select Sum(container.Amount) from container where container.parentid = 32126406
+                                                         AND Container.DescId = zc_Container_CountPartionDate()), 
+          (SELECT MI_Child.Id 
+             FROM MovementItem AS MI_Child 
+             WHERE MI_Child.MovementId = vbMovementId
+               AND MI_Child.DescId = zc_MI_Child()
+               AND MI_Child.ParentId = (select Max(MovementItem.ID) from MovementItem where MovementItem.MovementId = vbMovementId
+                                                          AND MovementItem.DescId = zc_MI_Master())), 
+          (SELECT MI_Child.Id 
+             FROM MovementItem AS MI_Child 
+             WHERE MI_Child.MovementId = vbMovementId
+               AND MI_Child.DescId = zc_MI_Child()
+               AND MI_Child.ParentId = (select Min(MovementItem.ID) from MovementItem where MovementItem.MovementId = vbMovementId
+                                                          AND MovementItem.DescId = zc_MI_Master()))
+                                                         ;
+    END IF;*/
+    
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -389,3 +418,5 @@ $BODY$
 
 -- тест
 -- select * from gpUpdate_Status_SendPartionDateChange(inMovementId := 19386934 , inStatusCode := 2 ,  inSession := '3');
+
+-- select * from gpUpdate_Status_SendPartionDateChange(inMovementId := 26936023 , inStatusCode := 2 ,  inSession := '3');

@@ -107,19 +107,8 @@ BEGIN
        RAISE EXCEPTION 'Ошибка. Контерный не найден.';
      END IF;
 
-     IF vbDescId = zc_Container_Count()
+     IF vbDescId <> zc_Container_Count()
      THEN
-       IF COALESCE (inAmount, 0) <> COALESCE (vbAmount, 0) AND COALESCE (inAmount, 0) <> 0
-       THEN
-         RAISE EXCEPTION 'Ошибка. При первом переводе контейнера в срокм количество должно быть равно остатку.';
-       END IF;
-
-/*       IF COALESCE(inNewExpirationDate, vbDate_6 + INTERVAL '1 DAY') > vbDate_6
-       THEN
-         RAISE EXCEPTION 'Ошибка. Срок годности остатка <%> больше максимально допустимого <%> для перевода в сроки.', inNewExpirationDate, vbDate_6;
-       END IF;*/
-
-     ELSE
        IF COALESCE (inAmount, 0) > COALESCE (vbAmount, 0)
        THEN
          RAISE EXCEPTION 'Ошибка. Количество превышает остаток по партии.';
@@ -145,6 +134,23 @@ BEGIN
       IF COALESCE (vbUnitId, 0) <> COALESCE (vbUserUnitId, 0)
       THEN
         RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);
+      END IF;
+    END IF;
+
+
+    IF vbDescId = zc_Container_Count()
+    THEN
+      IF COALESCE (inAmount, 0) <> COALESCE (vbAmount, 0) AND COALESCE (inAmount, 0) <> 0 AND COALESCE (ioId, 0) = 0
+      THEN
+         -- сохранили 
+        PERFORM lpInsertUpdate_MI_SendPartionDateChange (ioId                 := 0
+                                                       , inMovementId         := inMovementId
+                                                       , inGoodsId            := inGoodsId
+                                                       , inAmount             := COALESCE (vbAmount, 0) - COALESCE (inAmount, 0)
+                                                       , inNewExpirationDate  := vbExpirationDate
+                                                       , inContainerId        := inContainerId
+                                                       , inUserId             := vbUserId
+                                                        );
       END IF;
     END IF;
 

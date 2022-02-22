@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_MI_SendPartionDate_Master()
+-- Function: lpInsertUpdate_MI_SendPartionDate_Master()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_SendPartionDate_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
 
