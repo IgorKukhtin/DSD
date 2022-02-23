@@ -1093,7 +1093,7 @@ BEGIN
 
            , tmpLayoutAll.Amount::TFloat                                     AS Layout
 
-           , COALESCE (SupplierFailures.GoodsId, 0) <> 0                 AS isSupplierFailures
+           , COALESCE (SupplierFailures.GoodsId, 0) <> 0                     AS isSupplierFailures
            , CASE
                   WHEN COALESCE (SupplierFailures.GoodsId, 0) <> 0 THEN zfCalc_Color (255, 165, 0) -- orange 
                   ELSE CASE
@@ -1359,11 +1359,11 @@ BEGIN
                                      AND COALESCE (tmp.Priorities,0) <> 0
                                    )
        -- Отказы поставщиков
-      , tmpSupplierFailures AS (SELECT SupplierFailures.GoodsId
+      , tmpSupplierFailures AS (SELECT DISTINCT
+                                       SupplierFailures.GoodsId
                                      , SupplierFailures.JuridicalId
                                      , SupplierFailures.ContractId
-                                     , SupplierFailures.AreaId
-                                 FROM lpSelect_PriceList_SupplierFailures(vbUserId) AS SupplierFailures
+                                 FROM lpSelect_PriceList_SupplierFailures(vbUnitId, vbUserId) AS SupplierFailures
                                 )
       , tmpMovementItemLastPriceList_View AS (SELECT LastMovement.MovementId
                                                    , LastMovement.JuridicalId
@@ -1442,7 +1442,6 @@ BEGIN
                                                                                 ON SupplierFailures.GoodsId = MILinkObject_Goods.ObjectId
                                                                                AND SupplierFailures.JuridicalId = LastMovement.JuridicalId
                                                                                AND SupplierFailures.ContractId = LastMovement.ContractId
-                                                                               AND COALESCE(SupplierFailures.AreaId, 0) = COALESCE(LastMovement.AreaId, 0)
                                               WHERE COALESCE (SupplierFailures.GoodsId, 0) = 0
                                               )
                                    
@@ -2816,11 +2815,10 @@ BEGIN
                      )
    -- Отказы поставщиков
    , tmpSupplierFailures AS (SELECT DISTINCT Object_Goods_Retail.Id  AS GoodsId
-                             FROM lpSelect_PriceList_SupplierFailures(vbUserId) AS SupplierFailures
+                             FROM lpSelect_PriceList_SupplierFailures(vbUnitId, vbUserId) AS SupplierFailures
                                   LEFT JOIN Object_Goods_Juridical AS Object_Goods ON Object_Goods.Id = SupplierFailures.GoodsId
                                   LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods.GoodsMainId
                                                                AND Object_Goods_Retail.RetailId = vbObjectId
-                             WHERE (COALESCE(SupplierFailures.AreaId, 0) = 0 OR COALESCE(SupplierFailures.AreaId, 0) = vbAreaId)
                              )
 
        -- Результат 1
@@ -3209,11 +3207,11 @@ BEGIN
                                      AND COALESCE (tmp.Priorities,0) <> 0
                                    )
      -- Отказы поставщиков
-    , tmpSupplierFailures AS (SELECT SupplierFailures.GoodsId
+    , tmpSupplierFailures AS (SELECT DISTINCT 
+                                     SupplierFailures.GoodsId
                                    , SupplierFailures.JuridicalId
                                    , SupplierFailures.ContractId
-                                   , SupplierFailures.AreaId
-                               FROM lpSelect_PriceList_SupplierFailures(vbUserId) AS SupplierFailures
+                               FROM lpSelect_PriceList_SupplierFailures(vbUnitId, vbUserId) AS SupplierFailures
                               )
       , tmpMovementItemLastPriceList_View AS (SELECT LastMovement.MovementId
                                                    , LastMovement.JuridicalId
@@ -3293,7 +3291,6 @@ BEGIN
                                                                                 ON SupplierFailures.GoodsId = MILinkObject_Goods.ObjectId
                                                                                AND SupplierFailures.JuridicalId = LastMovement.JuridicalId
                                                                                AND SupplierFailures.ContractId = LastMovement.ContractId
-                                                                               AND COALESCE(SupplierFailures.AreaId, 0) = COALESCE(LastMovement.AreaId, 0)
                                               WHERE COALESCE (SupplierFailures.GoodsId, 0) = 0
                                               )
 
@@ -4625,11 +4622,10 @@ BEGIN
                      )
    -- Отказы поставщиков
    , tmpSupplierFailures AS (SELECT DISTINCT Object_Goods_Retail.Id  AS GoodsId
-                             FROM lpSelect_PriceList_SupplierFailures(vbUserId) AS SupplierFailures
+                             FROM lpSelect_PriceList_SupplierFailures(vbUnitId, vbUserId) AS SupplierFailures
                                   LEFT JOIN Object_Goods_Juridical AS Object_Goods ON Object_Goods.Id = SupplierFailures.GoodsId
                                   LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods.GoodsMainId
                                                                AND Object_Goods_Retail.RetailId = vbObjectId
-                             WHERE (COALESCE(SupplierFailures.AreaId, 0) = 0 OR COALESCE(SupplierFailures.AreaId, 0) = vbAreaId)
                             )
 
        -- Результат 1
@@ -4916,4 +4912,4 @@ where Movement.DescId = zc_Movement_OrderInternal()
 
 --select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 26893369    , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3') order by GoodsId;
 
-select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 26958571 , inShowAll := 'True' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 26958571 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');

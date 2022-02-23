@@ -194,6 +194,13 @@ BEGIN
 
               -- данные по % кредитных средств из справочника
               , tmpCostCredit AS (SELECT * FROM gpSelect_Object_RetailCostCredit(inRetailId := inObjectId, inShowAll := FALSE, inisErased := FALSE, inSession := inUserId :: TVarChar) AS tmp)
+               -- Отказы поставщиков
+              , tmpSupplierFailures AS (SELECT DISTINCT 
+                                               SupplierFailures.GoodsId
+                                             , SupplierFailures.JuridicalId
+                                             , SupplierFailures.ContractId
+                                         FROM lpSelect_PriceList_SupplierFailures(vbUnitId, inUserId) AS SupplierFailures
+                                        )
               , tmpMovementItemLastPriceList_View AS (SELECT LastMovement.MovementId
                                                            , LastMovement.JuridicalId
                                                            , LastMovement.ContractId
@@ -266,8 +273,11 @@ BEGIN
                                                                                 AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()  
                                                           LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                                                      ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
-                                                                                    AND MIDate_PartionGoods.MovementItemId =  MovementItem.Id
-                                                                     
+                                                                                    AND MIDate_PartionGoods.MovementItemId =  MovementItem.Id                                                                     
+                                                          LEFT JOIN tmpSupplierFailures AS SupplierFailures 
+                                                                                        ON SupplierFailures.GoodsId = MILinkObject_Goods.ObjectId
+                                                                                       AND SupplierFailures.JuridicalId = LastMovement.JuridicalId
+                                                                                       AND SupplierFailures.ContractId = LastMovement.ContractId
                                                       )
 
 
@@ -291,20 +301,6 @@ BEGIN
             , ddd.isDefault
             , ddd.Deferment
             , ddd.Bonus 
-/*   * /
-            , CASE WHEN ddd.Deferment = 0
-                        THEN 0
-                   WHEN ddd.isTOP = TRUE
-                        THEN COALESCE (PriceSettingsTOP.Percent, 0)
-                   ELSE PriceSettings.Percent
-              END :: TFloat AS Percent
-            , CASE WHEN ddd.Deferment = 0
-                        THEN FinalPrice
-                   WHEN ddd.Deferment = 0 OR ddd.isTOP = TRUE
-                        THEN FinalPrice * (100 - COALESCE (PriceSettingsTOP.Percent, 0)) / 100
-                   ELSE FinalPrice * (100 - PriceSettings.Percent) / 100
-              END :: TFloat AS SuperFinalPrice   
-/   */
             , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
                         THEN COALESCE (PriceSettingsTOP.Percent, 0)
                    WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
@@ -377,14 +373,6 @@ BEGIN
                     LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
                                                       AND MovementItemLastPriceList_View.Price >= tmpJuridicalSettingsItem.PriceLimit_min
                                                       AND MovementItemLastPriceList_View.Price <= tmpJuridicalSettingsItem.PriceLimit
-
-                    -- товар "поставщика", если он есть в прайсах !!!а он есть!!!
-                             --LEFT JOIN Object AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
-                    --LEFT JOIN ObjectString AS ObjectString_GoodsCode ON ObjectString_GoodsCode.ObjectId = MILinkObject_Goods.ObjectId
-                    --                      AND ObjectString_GoodsCode.DescId = zc_ObjectString_Goods_Code()
-                    --LEFT JOIN ObjectString AS ObjectString_Goods_Maker
-                    --                           ON ObjectString_Goods_Maker.ObjectId = MILinkObject_Goods.ObjectId
-                    --                          AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()                     
                     
                     JOIN OBJECT AS Juridical ON Juridical.Id = MovementItemLastPriceList_View.JuridicalId
                  

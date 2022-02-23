@@ -236,7 +236,11 @@ BEGIN
                              FROM gpSelect_PriceList_SupplierFailures(vbOperDate, inSession) AS SupplierFailures
                              WHERE SupplierFailures.JuridicalId = vbJuridicalId
                                AND SupplierFailures.ContractId = vbContractId
-                               AND (COALESCE(SupplierFailures.AreaId, 0) = 0 OR COALESCE(SupplierFailures.AreaId, 0) = vbAreaId)
+                               AND (COALESCE(SupplierFailures.AreaId, 0) = 0 OR COALESCE(SupplierFailures.AreaId, 0) IN 
+                                     (SELECT DISTINCT tmp.AreaId_Juridical         AS AreaId
+                                      FROM lpSelect_Object_JuridicalArea_byUnit (vbUnitId , 0) AS tmp
+                                      WHERE tmp.JuridicalId = vbJuridicalId
+                                      ))
                              )
 
        SELECT

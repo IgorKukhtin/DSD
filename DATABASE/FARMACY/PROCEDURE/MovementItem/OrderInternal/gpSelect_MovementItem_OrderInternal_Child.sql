@@ -942,11 +942,11 @@ BEGIN
                               WHERE tmp.ORD = 1
                               )
    -- Отказы поставщиков
-   , tmpSupplierFailures AS (SELECT SupplierFailures.GoodsId
+   , tmpSupplierFailures AS (SELECT DISTINCT
+                                    SupplierFailures.GoodsId
                                   , SupplierFailures.JuridicalId
                                   , SupplierFailures.ContractId
-                                  , SupplierFailures.AreaId
-                             FROM lpSelect_PriceList_SupplierFailures(vbUserId) AS SupplierFailures
+                             FROM lpSelect_PriceList_SupplierFailures(vbUnitId, vbUserId) AS SupplierFailures
                              )
 
 
@@ -1031,8 +1031,6 @@ BEGIN
                                            ON SupplierFailures.GoodsId = _tmpMI.GoodsId
                                           AND SupplierFailures.JuridicalId = _tmpMI.JuridicalId
                                           AND SupplierFailures.ContractId = _tmpMI.ContractId
-                                          AND (SupplierFailures.AreaId = _tmpMI.AreaId OR
-                                               COALESCE(SupplierFailures.AreaId, 0) = 0)
 ;
 
 
@@ -1514,11 +1512,11 @@ BEGIN
                               WHERE tmp.ORD = 1
                               )
    -- Отказы поставщиков
-   , tmpSupplierFailures AS (SELECT SupplierFailures.GoodsId
+   , tmpSupplierFailures AS (SELECT DISTINCT
+                                    SupplierFailures.GoodsId
                                   , SupplierFailures.JuridicalId
                                   , SupplierFailures.ContractId
-                                  , SupplierFailures.AreaId
-                             FROM lpSelect_PriceList_SupplierFailures(vbUserId) AS SupplierFailures
+                             FROM lpSelect_PriceList_SupplierFailures(vbUnitId, vbUserId) AS SupplierFailures
                                )
 
         ---
@@ -1602,8 +1600,6 @@ BEGIN
                                            ON SupplierFailures.GoodsId = _tmpMI.GoodsId
                                           AND SupplierFailures.JuridicalId = _tmpMI.JuridicalId
                                           AND SupplierFailures.ContractId = _tmpMI.ContractId
-                                          AND (SupplierFailures.AreaId = _tmpMI.AreaId OR
-                                               COALESCE(SupplierFailures.AreaId, 0) = 0)
 ;
 
 
