@@ -305,31 +305,11 @@ BEGIN
                          FROM lpSelect_Object_JuridicalArea_byUnit (inUnitId, 0) AS tmp
                          )
    -- Отказы поставщиков
-  , tmpSupplierFailures AS (SELECT DISTINCT 
-                                   ObjectLink_BankAccount_Goods.ChildObjectId          AS GoodsId
-                                 , ObjectLink_BankAccount_Juridical.ChildObjectId      AS JuridicalId
-                                 , ObjectLink_BankAccount_Contract.ChildObjectId       AS ContractId
-                                 , ObjectLink_BankAccount_Area.ChildObjectId           AS AreaId
-                            FROM Object AS Object_SupplierFailures
-                                 
-                                 LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Goods
-                                                      ON ObjectLink_BankAccount_Goods.ObjectId = Object_SupplierFailures.Id
-                                                     AND ObjectLink_BankAccount_Goods.DescId = zc_ObjectLink_SupplierFailures_Goods()
-                                  
-                                 LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Juridical
-                                                      ON ObjectLink_BankAccount_Juridical.ObjectId = Object_SupplierFailures.Id
-                                                     AND ObjectLink_BankAccount_Juridical.DescId = zc_ObjectLink_SupplierFailures_Juridical()
-                                  
-                                 LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Contract
-                                                      ON ObjectLink_BankAccount_Contract.ObjectId = Object_SupplierFailures.Id
-                                                     AND ObjectLink_BankAccount_Contract.DescId = zc_ObjectLink_SupplierFailures_Contract()
-                                  
-                                 LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Area
-                                                      ON ObjectLink_BankAccount_Area.ObjectId = Object_SupplierFailures.Id
-                                                     AND ObjectLink_BankAccount_Area.DescId = zc_ObjectLink_SupplierFailures_Area()
-                                  
-                            WHERE Object_SupplierFailures.DescId = zc_Object_SupplierFailures()
-                              AND Object_SupplierFailures.isErased = FALSE
+  , tmpSupplierFailures AS (SELECT SupplierFailures.GoodsId
+                                 , SupplierFailures.JuridicalId
+                                 , SupplierFailures.ContractId
+                                 , SupplierFailures.AreaId
+                            FROM lpSelect_PriceList_SupplierFailures(inUserId) AS SupplierFailures
                             )
   , tmpMinPrice_RemainsPrice as (SELECT
             _tmpMinPrice_RemainsList.ObjectId                 AS GoodsId

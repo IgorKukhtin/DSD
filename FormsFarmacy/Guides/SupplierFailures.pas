@@ -12,22 +12,19 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxButtonEdit, Vcl.ExtCtrls, cxSplitter, cxDropDownEdit,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dxBarBuiltInMenu, cxNavigator, cxCurrencyEdit;
+  dxBarBuiltInMenu, cxNavigator, cxCurrencyEdit, cxContainer, Vcl.ComCtrls,
+  dxCore, cxDateUtils, cxLabel, cxTextEdit, cxMaskEdit, cxCalendar;
 
 type
   TSupplierFailuresForm = class(TAncestorDBGridForm)
     isErased: TcxGridDBColumn;
-    spInsertUpdateSupplierFailures: TdsdStoredProc;
-    spErasedUnErased: TdsdStoredProc;
-    dsdSetErased: TdsdUpdateErased;
-    dsdUnErased: TdsdUpdateErased;
+    spUpdate_SupplierFailures: TdsdStoredProc;
     bbSetErased: TdxBarButton;
     bbUnErased: TdxBarButton;
     bbSetErasedChild: TdxBarButton;
     bbUnErasedChild: TdxBarButton;
     bbdsdChoiceGuides: TdxBarButton;
     cxSplitter1: TcxSplitter;
-    Code: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     dxBarSubItem1: TdxBarSubItem;
@@ -43,8 +40,18 @@ type
     dxBarButton3: TdxBarButton;
     DateUpdate: TcxGridDBColumn;
     UserUpdate: TcxGridDBColumn;
-    mactSetErasedAll: TMultiAction;
-    dxBarButton4: TdxBarButton;
+    mactUpdate_SupplierFailures: TMultiAction;
+    bbUpdate_SupplierFailures: TdxBarButton;
+    isSupplierFailures: TcxGridDBColumn;
+    edSupplierFailures: TcxDateEdit;
+    cxLabel2: TcxLabel;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    RefreshDispatcher: TRefreshDispatcher;
+    ExecuteDialog: TExecuteDialog;
+    dxBarButton5: TdxBarButton;
+    actUpdate_SupplierFailures: TdsdExecStoredProc;
+    OperDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -3,7 +3,7 @@ inherited PriceListForm: TPriceListForm
   ClientHeight = 668
   ClientWidth = 868
   ExplicitWidth = 884
-  ExplicitHeight = 706
+  ExplicitHeight = 707
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -153,6 +153,36 @@ inherited PriceListForm: TPriceListForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
+          end
+          object isSupplierFailures: TcxGridDBColumn
+            Caption = #1054#1090#1082#1072#1079' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            DataBinding.FieldName = 'isSupplierFailures'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object DateUpdate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1086#1090#1082#1072#1079#1072
+            DataBinding.FieldName = 'DateUpdate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 111
+          end
+          object UserUpdate: TcxGridDBColumn
+            Caption = #1050#1090#1086' '#1080#1079#1084#1077#1085#1080#1083' '#1086#1090#1082#1072#1079
+            DataBinding.FieldName = 'UserUpdate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 136
+          end
+          object SupplierFailuresColor: TcxGridDBColumn
+            DataBinding.FieldName = 'SupplierFailuresColor'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
           end
         end
       end
@@ -636,6 +666,11 @@ inherited PriceListForm: TPriceListForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = SupplierFailuresColor
+        ColorValueList = <>
+      end>
     SummaryItemList = <
       item
         Param.Value = Null
@@ -733,7 +768,7 @@ inherited PriceListForm: TPriceListForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -976,7 +1011,7 @@ inherited PriceListForm: TPriceListForm
       end
       item
         Name = 'inPartionGoodsDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
@@ -1190,7 +1225,7 @@ inherited PriceListForm: TPriceListForm
       end
       item
         Name = 'inPercent'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = edPercent1
         DataType = ftFloat
         ParamType = ptInput

@@ -165,6 +165,7 @@ type
     bbListDiffFormVIPSend: TdxBarButton;
     SupplierFailuresColor: TcxGridDBColumn;
     colSupplierFailuresColor: TcxGridDBColumn;
+    isSupplierFailures: TcxGridDBColumn;
   private
     { Private declarations }
   public

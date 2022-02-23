@@ -44,6 +44,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , SummaDelivery TFloat
              , CommentCustomer TVarChar
              , isErrorRRO Boolean 
+             , isMobileApplication Boolean 
+             , UserReferalsName TVarChar
               )
 AS
 $BODY$
@@ -128,6 +130,10 @@ BEGIN
 
            , MovementString_CommentCustomer.ValueData                     AS CommentCustomer
            , COALESCE(MovementBoolean_ErrorRRO.ValueData, False)          AS isErrorRRO
+           
+           , COALESCE (MovementBoolean_MobileApplication.ValueData, False)::Boolean   AS isMobileApplication
+           , Object_UserReferals.ValueData                                            AS UserReferalsName
+
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
                    , MovementLinkObject_CheckMember.ObjectId             AS MemberId
@@ -360,6 +366,14 @@ BEGIN
                                       ON MovementBoolean_ErrorRRO.MovementId = Movement_Check.Id
                                      AND MovementBoolean_ErrorRRO.DescId = zc_MovementBoolean_ErrorRRO()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_MobileApplication
+                                      ON MovementBoolean_MobileApplication.MovementId = Movement_Check.Id
+                                     AND MovementBoolean_MobileApplication.DescId = zc_MovementBoolean_MobileApplication()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_UserReferals
+                                         ON MovementLinkObject_UserReferals.MovementId = Movement_Check.Id
+                                        AND MovementLinkObject_UserReferals.DescId = zc_MovementLinkObject_UserReferals()
+            LEFT JOIN Object AS Object_UserReferals ON Object_UserReferals.Id = MovementLinkObject_UserReferals.ObjectId
       ;
 
 END;

@@ -231,35 +231,12 @@ BEGIN
                           WHERE tmp.ORD = 1
                           )
    -- Отказы поставщиков
-   , tmpSupplierFailures AS (SELECT DISTINCT ObjectLink_BankAccount_Goods.ChildObjectId AS GoodsId
-                             FROM Object AS Object_SupplierFailures
-                                  
-                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Goods
-                                                       ON ObjectLink_BankAccount_Goods.ObjectId = Object_SupplierFailures.Id
-                                                      AND ObjectLink_BankAccount_Goods.DescId = zc_ObjectLink_SupplierFailures_Goods()
-                                  LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_BankAccount_Goods.ChildObjectId
-                                  
-                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Juridical
-                                                       ON ObjectLink_BankAccount_Juridical.ObjectId = Object_SupplierFailures.Id
-                                                      AND ObjectLink_BankAccount_Juridical.DescId = zc_ObjectLink_SupplierFailures_Juridical()
-                                  LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_BankAccount_Juridical.ChildObjectId
-                                  
-                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Contract
-                                                       ON ObjectLink_BankAccount_Contract.ObjectId = Object_SupplierFailures.Id
-                                                      AND ObjectLink_BankAccount_Contract.DescId = zc_ObjectLink_SupplierFailures_Contract()
-                                  LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = ObjectLink_BankAccount_Contract.ChildObjectId
-                                  
-                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Area
-                                                       ON ObjectLink_BankAccount_Area.ObjectId = Object_SupplierFailures.Id
-                                                      AND ObjectLink_BankAccount_Area.DescId = zc_ObjectLink_SupplierFailures_Area()
-                                  LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_BankAccount_Area.ChildObjectId
-                                  
-                             WHERE Object_SupplierFailures.DescId = zc_Object_SupplierFailures()
-                               AND Object_SupplierFailures.isErased = FALSE
-                               AND ObjectLink_BankAccount_Juridical.ChildObjectId = vbJuridicalId
-                               AND ObjectLink_BankAccount_Contract.ChildObjectId = vbContractId
-                               AND (COALESCE(ObjectLink_BankAccount_Area.ChildObjectId, 0) = 0 OR COALESCE(ObjectLink_BankAccount_Area.ChildObjectId, 0) = vbAreaId)
-                               )
+   , tmpSupplierFailures AS (SELECT DISTINCT SupplierFailures.GoodsJuridicalId AS GoodsId
+                             FROM gpSelect_PriceList_SupplierFailures(vbOperDate + INTERVAL '1 DAY', inSession) AS SupplierFailures
+                             WHERE SupplierFailures.JuridicalId = vbJuridicalId
+                               AND SupplierFailures.ContractId = vbContractId
+                               AND (COALESCE(SupplierFailures.AreaId, 0) = 0 OR COALESCE(SupplierFailures.AreaId, 0) = vbAreaId)
+                             )
 
        SELECT
              tmpMI.Id

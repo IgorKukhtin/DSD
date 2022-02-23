@@ -55,6 +55,8 @@ type
     SummaDelivery: TcxGridDBColumn;
     isCallOrder: TcxGridDBColumn;
     CommentCustomer: TcxGridDBColumn;
+    isMobileApplication: TcxGridDBColumn;
+    UserReferalsName: TcxGridDBColumn;
   private
     { Private declarations }
   public
