@@ -1,6 +1,6 @@
 -- Function: gpReport_Goods_inventory()
 
-DROP FUNCTION IF EXISTS gpReport_Goods_inventory (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Goods_inventory (TDateTime, TDateTime, Integer, Integer, Integer, Integer ,Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Goods_inventory (
     IN inStartDate          TDateTime , --
@@ -22,9 +22,9 @@ RETURNS TABLE (LocationId Integer, LocationCode Integer, LocationName TVarChar
              , Count_Inventory    TFloat
              , CountIn_Income    TFloat
              , CountIn_Loss    TFloat
-             , CountIn_Send
+             , CountIn_Send    TFloat
              , CountIn_ReturnIn    TFloat
-             , CountIn_ProductionSeparate    TFloat
+             , CountIn_ProductionSeparate TFloat
              , CountIn_ProductionUnion    TFloat
              , CountOut_Sale    TFloat
              , CountOut_Loss    TFloat
@@ -127,7 +127,7 @@ BEGIN
                                 --LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
                                 INNER JOIN _tmpLocation ON _tmpLocation.LocationId = MovementLinkObject_From.ObjectId
                            WHERE Movement.DescId = zc_Movement_Inventory()
-                           AND Movement.OperDate >= StartDate
+                           AND Movement.OperDate >= inStartDate
                            AND Movement.StatusId <> zc_Enum_Status_Erased()
                            )
 
@@ -202,7 +202,7 @@ BEGIN
     -- Движение по проведенным документамвсе ContainerId
     , tmpMIContainer AS (SELECT MIContainer.*
                          FROM MovementItemContainer AS MIContainer
-                         WHERE MIContainer.OperDate >= (SELECT MIN (tmpInv.OperDate) AS OperDate FROM tmpInv)
+                         WHERE MIContainer.OperDate > (SELECT MIN (tmpInv.OperDate) AS OperDate FROM tmpInv)
                            AND MIContainer.DescId = zc_Container_Count()
                            AND MIContainer.WhereObjectId_Analyzer IN (SELECT DISTINCT tmpInv.FromId FROM tmpInv)
                            AND MIContainer.ObjectId_Analyzer IN (SELECT DISTINCT tmpGoods.GoodsId FROM tmpGoods)
@@ -224,26 +224,26 @@ BEGIN
                                  , MIContainer.ObjectId_Analyzer AS GoodsId
                                  , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
 
-                                 , SUM (CASE WHEN MIContainer.OperDate >= tmpInv_MI.OperDate
+                                 , SUM (CASE WHEN MIContainer.OperDate > tmpInv_MI.OperDate
                                               AND MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut())
                                                   THEN COALESCE (MIContainer.Amount, 0)
                                              ELSE 0
-                                        END) AS CountIncome
+                                        END) AS CountIn_Income
 
-                                 , SUM (CASE WHEN MIContainer.OperDate >= tmpInv_MI.OperDate
+                                 , SUM (CASE WHEN MIContainer.OperDate > tmpInv_MI.OperDate
                                               AND MIContainer.MovementDescId IN (zc_Movement_Sale())
                                               AND MIContainer.isActive = TRUE
                                              THEN COALESCE (MIContainer.Amount, 0)
                                              ELSE 0
                                         END ) AS CountOut_Sale
 
-                                 , SUM (CASE WHEN MIContainer.OperDate >= tmpInv_MI.OperDate
+                                 , SUM (CASE WHEN MIContainer.OperDate > tmpInv_MI.OperDate
                                               AND MIContainer.MovementDescId IN (zc_Movement_Send())
                                               AND MIContainer.isActive = TRUE
                                              THEN COALESCE (MIContainer.Amount, 0)
                                              ELSE 0
                                         END) AS CountOut_Send
-                                 , SUM (CASE WHEN MIContainer.OperDate >= tmpInv_MI.OperDate
+                                 , SUM (CASE WHEN MIContainer.OperDate > tmpInv_MI.OperDate
                                               AND MIContainer.MovementDescId IN (zc_Movement_Send())
                                               AND MIContainer.isActive = FALSE
                                              THEN -1 * COALESCE (MIContainer.Amount, 0)
@@ -257,14 +257,14 @@ BEGIN
                                              ELSE 0
                                         END
                                        ) AS CountIn_ProductionUnion
-                                 , SUM (CASE WHEN MIContainer.OperDate >= tmpInv_MI.OperDate
+                                 , SUM (CASE WHEN MIContainer.OperDate > tmpInv_MI.OperDate
                                               AND MIContainer.MovementDescId IN (zc_Movement_ProductionUnion())
                                               AND MIContainer.isActive = FALSE
                                              THEN -1 * COALESCE (MIContainer.Amount, 0)
                                              ELSE 0
                                         END
                                        ) AS CountOut_ProductionUnion
-                                 , SUM (CASE WHEN MIContainer.OperDate >= tmpInv_MI.OperDate
+                                 , SUM (CASE WHEN MIContainer.OperDate > tmpInv_MI.OperDate
                                               AND MIContainer.MovementDescId IN (zc_Movement_ProductionSeparate())
                                               AND MIContainer.isActive = FALSE
                                              THEN -1 * COALESCE (MIContainer.Amount, 0)
@@ -272,7 +272,7 @@ BEGIN
                                         END
                                        ) AS CountOut_ProductionSeparate
 
-                                 , SUM (CASE WHEN MIContainer.OperDate >= tmpInv_MI.OperDate
+                                 , SUM (CASE WHEN MIContainer.OperDate > tmpInv_MI.OperDate
                                               AND MIContainer.MovementDescId IN (zc_Movement_Loss())
                                               AND MIContainer.isActive = FALSE
                                              THEN -1 * COALESCE (MIContainer.Amount, 0)
@@ -280,20 +280,20 @@ BEGIN
                                         END
                                        ) AS CountOut_Loss
 
-                                 , SUM (CASE WHEN MIContainer.OperDate >= tmpInv_MI.OperDate
+                                 , SUM (CASE WHEN MIContainer.OperDate > tmpInv_MI.OperDate
                                               AND MIContainer.MovementDescId IN (zc_Movement_ReturnIn())
                                              THEN 1 * COALESCE (MIContainer.Amount, 0)
                                              ELSE 0
                                         END) AS CountIn_ReturnIn
 
-                                 , SUM (CASE WHEN MIContainer.OperDate >= tmpInv_MI.OperDate
+                                 , SUM (CASE WHEN MIContainer.OperDate > tmpInv_MI.OperDate
                                               AND MIContainer.MovementDescId IN (zc_Movement_ProductionSeparate())
                                               AND MIContainer.isActive = TRUE
                                              THEN COALESCE (MIContainer.Amount, 0)
                                              ELSE 0
                                         END) AS CountIn_ProductionSeparate
 
-                                 , SUM (CASE WHEN MIContainer.OperDate >= tmpInv_MI.OperDate
+                                 , SUM (CASE WHEN MIContainer.OperDate > tmpInv_MI.OperDate
                                               AND MIContainer.MovementDescId IN (zc_Movement_Loss())
                                               AND MIContainer.isActive = TRUE
                                              THEN 1 * COALESCE (MIContainer.Amount, 0)
@@ -324,7 +324,7 @@ BEGIN
                                                                ON MovementLinkObject_To.MovementId = Movement.Id
                                                               AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                  WHERE Movement.StatusId = zc_Enum_Status_UnComplete()
-                                     AND Movement.OperDate >= (SELECT MIN (tmpInv.OperDate) AS OperDate FROM tmpInv) 
+                                     AND Movement.OperDate > (SELECT MIN (tmpInv.OperDate) AS OperDate FROM tmpInv) 
                                      AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()
                                                            , zc_Movement_Income(), zc_Movement_ReturnOut()
                                                            , zc_Movement_Send(), zc_Movement_Loss()
@@ -350,17 +350,17 @@ BEGIN
     , tmpMI_UnComplete AS (SELECT tmpMI_all.FromId AS LocationId
                                 , MovementItem.ObjectId                        AS GoodsId
                                 , COALESCE (MILinkObject_GoodsKind.ObjectId,0) AS GoodsKindId
-                                , SUM (CASE WHEN Movement.OperDate >= tmpMI_all.OperDate AND Movement.DescId IN (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MovementItem.Amount ELSE 0 END) AS CountIncome
-                                , SUM (CASE WHEN Movement.OperDate >= tmpMI_all.OperDate AND Movement.DescId = zc_Movement_Sale() THEN MovementItem.Amount ELSE 0 END) AS CountOut_Sale
-                                , SUM (CASE WHEN Movement.OperDate >= tmpMI_all.OperDate AND Movement.DescId = zc_Movement_ReturnIn() THEN MovementItem.Amount ELSE 0 END) AS CountIn_ReturnIn
-                                , SUM (CASE WHEN Movement.OperDate >= tmpMI_all.OperDate AND Movement.DescId = zc_Movement_Send() AND Movement.ToId = tmpMI_all.FromId THEN MovementItem.Amount ELSE 0 END) AS CountIn_Send
-                                , SUM (CASE WHEN Movement.OperDate >= tmpMI_all.OperDate AND Movement.DescId = zc_Movement_Send() AND Movement.FromId = tmpMI_all.FromId THEN MovementItem.Amount ELSE 0 END) AS CountOut_Send
-                                , SUM (CASE WHEN Movement.OperDate >= tmpMI_all.OperDate AND Movement.DescId = zc_Movement_Loss() AND Movement.ToId = tmpMI_all.FromId THEN MovementItem.Amount ELSE 0 END) AS CountIn_Loss
-                                , SUM (CASE WHEN Movement.OperDate >= tmpMI_all.OperDate AND Movement.DescId = zc_Movement_Loss() AND Movement.FromId = tmpMI_all.FromId THEN MovementItem.Amount ELSE 0 END) AS CountOut_Loss
-                                , SUM (CASE WHEN Movement.OperDate >= tmpMI_all.OperDate AND Movement.DescId = zc_Movement_ProductionSeparate() AND MovementItem.DescId = zc_MI_Master() THEN MovementItem.Amount ELSE 0 END) AS CountOut_ProductionSeparate
-                                , SUM (CASE WHEN Movement.OperDate >= tmpMI_all.OperDate AND Movement.DescId = zc_Movement_ProductionSeparate() AND MovementItem.DescId = zc_MI_Child() THEN MovementItem.Amount ELSE 0 END) AS CountIn_ProductionSeparate
-                                , SUM (CASE WHEN Movement.OperDate >= tmpMI_all.OperDate AND Movement.DescId = zc_Movement_ProductionUnion() AND MovementItem.DescId = zc_MI_Master() THEN MovementItem.Amount ELSE 0 END) AS CountIn_ProductionUnion
-                                , SUM (CASE WHEN Movement.OperDate >= tmpMI_all.OperDate AND Movement.DescId = zc_Movement_ProductionUnion() AND MovementItem.DescId = zc_MI_Child() THEN MovementItem.Amount ELSE 0 END) AS CountOut_ProductionUnion
+                                , SUM (CASE WHEN Movement.OperDate > tmpMI_all.OperDate AND Movement.DescId IN (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MovementItem.Amount ELSE 0 END) AS CountIncome
+                                , SUM (CASE WHEN Movement.OperDate > tmpMI_all.OperDate AND Movement.DescId = zc_Movement_Sale() THEN MovementItem.Amount ELSE 0 END) AS CountOut_Sale
+                                , SUM (CASE WHEN Movement.OperDate > tmpMI_all.OperDate AND Movement.DescId = zc_Movement_ReturnIn() THEN MovementItem.Amount ELSE 0 END) AS CountIn_ReturnIn
+                                , SUM (CASE WHEN Movement.OperDate > tmpMI_all.OperDate AND Movement.DescId = zc_Movement_Send() AND Movement.ToId = tmpMI_all.FromId THEN MovementItem.Amount ELSE 0 END) AS CountIn_Send
+                                , SUM (CASE WHEN Movement.OperDate > tmpMI_all.OperDate AND Movement.DescId = zc_Movement_Send() AND Movement.FromId = tmpMI_all.FromId THEN MovementItem.Amount ELSE 0 END) AS CountOut_Send
+                                , SUM (CASE WHEN Movement.OperDate > tmpMI_all.OperDate AND Movement.DescId = zc_Movement_Loss() AND Movement.ToId = tmpMI_all.FromId THEN MovementItem.Amount ELSE 0 END) AS CountIn_Loss
+                                , SUM (CASE WHEN Movement.OperDate > tmpMI_all.OperDate AND Movement.DescId = zc_Movement_Loss() AND Movement.FromId = tmpMI_all.FromId THEN MovementItem.Amount ELSE 0 END) AS CountOut_Loss
+                                , SUM (CASE WHEN Movement.OperDate > tmpMI_all.OperDate AND Movement.DescId = zc_Movement_ProductionSeparate() AND MovementItem.DescId = zc_MI_Master() THEN MovementItem.Amount ELSE 0 END) AS CountOut_ProductionSeparate
+                                , SUM (CASE WHEN Movement.OperDate > tmpMI_all.OperDate AND Movement.DescId = zc_Movement_ProductionSeparate() AND MovementItem.DescId = zc_MI_Child() THEN MovementItem.Amount ELSE 0 END) AS CountIn_ProductionSeparate
+                                , SUM (CASE WHEN Movement.OperDate > tmpMI_all.OperDate AND Movement.DescId = zc_Movement_ProductionUnion() AND MovementItem.DescId = zc_MI_Master() THEN MovementItem.Amount ELSE 0 END) AS CountIn_ProductionUnion
+                                , SUM (CASE WHEN Movement.OperDate > tmpMI_all.OperDate AND Movement.DescId = zc_Movement_ProductionUnion() AND MovementItem.DescId = zc_MI_Child() THEN MovementItem.Amount ELSE 0 END) AS CountOut_ProductionUnion
 
                            FROM tmpMovement_UNComplete AS Movement
                                 INNER JOIN tmpMI_AllUnComplete AS MovementItem
@@ -554,7 +554,7 @@ BEGIN
            , tmpResult.Count_Inventory   :: TFloat
            , tmpResult.CountIn_Income   :: TFloat
            , tmpResult.CountIn_Loss   :: TFloat
-           , tmpResult.CountIn_Send
+           , tmpResult.CountIn_Send   :: TFloat
            , tmpResult.CountIn_ReturnIn   :: TFloat
            , tmpResult.CountIn_ProductionSeparate   :: TFloat
            , tmpResult.CountIn_ProductionUnion   :: TFloat
