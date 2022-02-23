@@ -93,7 +93,8 @@ uses
   AncestorJournal in '..\FormsMerlin\Ancestor\AncestorJournal.pas' {AncestorJournalForm: TParentForm},
   AncestorDBGrid in '..\FormsMerlin\Ancestor\AncestorDBGrid.pas' {AncestorDBGridForm: TParentForm},
   AncestorData in '..\FormsMerlin\Ancestor\AncestorData.pas' {AncestorDataForm: TParentForm},
-  AncestorBase in '..\FormsMerlin\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm};
+  AncestorBase in '..\FormsMerlin\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
+  IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas';
 
 {$R *.res}
 
@@ -117,7 +118,7 @@ begin
       TUpdater.AutomaticUpdateProgram;
       TUpdater.AutomaticCheckConnect;
       Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TMainForm, MainFormInstance);
+      Application.CreateForm(TMainForm, MainFormInstance);
   end;
   Application.Run;
 
