@@ -117,6 +117,7 @@ type
     actInsertUpdate_SupplierFailures: TdsdExecStoredProc;
     bbInsertUpdate_SupplierFailures: TdxBarButton;
     SupplierFailuresColor: TcxGridDBColumn;
+    isSupplierFailures: TcxGridDBColumn;
   private
     { Private declarations }
   public

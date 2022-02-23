@@ -227,7 +227,7 @@ BEGIN
       AND (inShowAll = FALSE OR inSession <> '3')
     THEN
 
-     raise notice 'Value: %', 1;
+--     raise notice 'Value: %', 1;
 
      PERFORM lpCreateTempTable_OrderInternal_MI(inMovementId, vbObjectId, 0, vbUserId);
 
@@ -3029,7 +3029,7 @@ BEGIN
     THEN
 
 
---    raise notice 'Value: %', 3;
+    -- raise notice 'Value: %', 3;
 
 --    PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 
@@ -3703,6 +3703,7 @@ BEGIN
                                                                 ON ObjectFloat_Goods_MinimumLot.ObjectId = tmpMI.ObjectId
                                                               -- AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
                          )
+      , tmpGoods_PriceList AS (SELECT * FROM gpSelect_PriceList_AllGoods (vbObjectId, inSession))
 
   , tmpGoods_all AS (SELECT ObjectLink_Goods_Object.ObjectId                       AS GoodsId
                           , Object_Goods.ObjectCode                                AS GoodsCode
@@ -3724,6 +3725,7 @@ BEGIN
                           INNER JOIN Object AS Object_Goods
                                             ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId
                                            AND Object_Goods.isErased = FALSE
+                          INNER JOIN tmpGoods_PriceList ON tmpGoods_PriceList.GoodsId = ObjectLink_Goods_Object.ObjectId
 
                           LEFT JOIN tmpMI_Master ON tmpMI_Master.ObjectId = ObjectLink_Goods_Object.ObjectId
 
@@ -4912,4 +4914,6 @@ where Movement.DescId = zc_Movement_OrderInternal()
 
 -- select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 22630094  , inShowAll := 'True' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
 
-select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 26893369    , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3') order by GoodsId;
+--select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 26893369    , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3') order by GoodsId;
+
+select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 26958571 , inShowAll := 'True' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');

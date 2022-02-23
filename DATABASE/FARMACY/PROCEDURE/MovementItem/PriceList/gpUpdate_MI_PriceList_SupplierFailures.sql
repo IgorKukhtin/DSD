@@ -28,7 +28,7 @@ BEGIN
    PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), inId, CURRENT_TIMESTAMP);
 
    -- сохранили связь с <Дата/время корректировки>
-   PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Update(), inId, inUserId);
+   PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Update(), inId, vbUserId);
    
    -- сохранили протокол
    -- PERFORM lpInsert_MovementItemProtocol (inId, vbUserId);
@@ -45,3 +45,5 @@ $BODY$
 */
 
 -- select * from gpUpdate_MI_PriceList_SupplierFailures(inId := 495365270 , inisSupplierFailures := 'True' ,  inSession := '3');
+
+-- select * from gpUpdate_MI_PriceList_SupplierFailures(inId := 495608342 , inisSupplierFailures := 'True' ,  inSession := '3');

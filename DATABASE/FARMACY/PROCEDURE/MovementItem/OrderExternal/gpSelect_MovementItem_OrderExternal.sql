@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer
              , Multiplicity TFloat                      -- убрать со временем
              , CalcAmount TFloat                         
              , MultiplicityColor Integer                -- убрать со временем
+             , isSupplierFailures Boolean
              , SupplierFailuresColor Integer
               )
 AS
@@ -232,7 +233,7 @@ BEGIN
                           )
    -- Отказы поставщиков
    , tmpSupplierFailures AS (SELECT DISTINCT SupplierFailures.GoodsJuridicalId AS GoodsId
-                             FROM gpSelect_PriceList_SupplierFailures(vbOperDate + INTERVAL '1 DAY', inSession) AS SupplierFailures
+                             FROM gpSelect_PriceList_SupplierFailures(vbOperDate, inSession) AS SupplierFailures
                              WHERE SupplierFailures.JuridicalId = vbJuridicalId
                                AND SupplierFailures.ContractId = vbContractId
                                AND (COALESCE(SupplierFailures.AreaId, 0) = 0 OR COALESCE(SupplierFailures.AreaId, 0) = vbAreaId)
@@ -284,6 +285,7 @@ BEGIN
                   WHEN COALESCE (tmpMI.MinimumLot <> 0) AND tmpMI.CalcAmount <> tmpMI.Amount THEN zc_Color_Red() --красный заказывать нельзя
                   ELSE zc_Color_White()
               END  AS MultiplicityColor
+           , COALESCE (SupplierFailures.GoodsId, 0) <> 0          AS isSupplierFailures
            , CASE
                   WHEN COALESCE (SupplierFailures.GoodsId, 0) <> 0 THEN zfCalc_Color (255, 165, 0) -- orange 
                   ELSE zc_Color_White()

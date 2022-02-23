@@ -104,8 +104,9 @@ BEGIN
                  JuridicalId, ContractId, isSupplierFailures)
          SELECT vbRec.MovementItemId, COALESCE (vbRec.GoodsId, 0), vbRec.PartionGoodsDate, vbRec.Price, vbRec.SuperFinalPrice, 
                 vbRec.SuperFinalPrice_Deferment, vbRec.PriceListMovementItemId, vbRec.MakerName,  vbRec.GoodsCode, vbRec.GoodsName,
-                COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0), isSupplierFailures
-         FROM gpSelect_MovementItem_OrderInternal_Child (inInternalOrder, FALSE, FALSE, FALSE, inSession) AS vbRec;
+                COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0), vbRec.isSupplierFailures
+         FROM gpSelect_MovementItem_OrderInternal_Child (inInternalOrder, FALSE, FALSE, FALSE, inSession) AS vbRec
+         WHERE vbRec.isSupplierFailures = FALSE;
 
        -- Сохранили
        PERFORM lpInsertUpdate_MovementItemDate    (zc_MIDate_PartionGoods()   , MovementItem.Id, _tmpMI_OrderInternal_Master.PartionGoods)

@@ -25,10 +25,15 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
         ExplicitWidth = 939
         ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1090#1088#1086#1082' 0'
+              Kind = skCount
+              Column = GoodsName
+            end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
-          OptionsView.Footer = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -315,6 +320,14 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 152
     Top = 88
@@ -356,6 +369,14 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
         end
         item
           Visible = True
@@ -459,6 +480,10 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
     end
     object dxBarButton5: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
       Category = 0
     end
   end

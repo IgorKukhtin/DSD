@@ -28,7 +28,7 @@ BEGIN
 
                        -- Прайс-лист (поставщика) - MovementItem
                        INNER JOIN MovementItem AS PriceList ON PriceList.Id = MILinkObject_Goods.MovementItemId
-                                                            AND PriceList.isErased = False 
+                       
                        -- Прайс-лист (поставщика) - Movement
                        INNER JOIN LastPriceList_find_View ON LastPriceList_find_View.MovementId = PriceList.MovementId
 
@@ -45,7 +45,7 @@ BEGIN
 
                    -- Прайс-лист (поставщика) - MovementItem
                    INNER JOIN MovementItem AS PriceList ON PriceList.Id = MILinkObject_Goods.MovementItemId
-                                                        AND PriceList.isErased = False 
+                   
                    -- Прайс-лист (поставщика) - Movement
                    INNER JOIN LastPriceList_find_View ON LastPriceList_find_View.MovementId = PriceList.MovementId
 
@@ -66,7 +66,7 @@ BEGIN
  
                       -- Прайс-лист (поставщика) - MovementItem
                       INNER JOIN MovementItem AS PriceList ON PriceList.Id = MILinkObject_Goods.MovementItemId
-                                                          AND PriceList.isErased = False 
+                      
                       -- Прайс-лист (поставщика) - Movement
                       INNER JOIN LastPriceList_find_View ON LastPriceList_find_View.MovementId = PriceList.MovementId
                        
@@ -86,7 +86,7 @@ BEGIN
 
                -- Прайс-лист (поставщика) - MovementItem
                INNER JOIN MovementItem AS PriceList ON PriceList.Id = MILinkObject_Goods.MovementItemId
-                                                    AND PriceList.isErased = False 
+               
                -- Прайс-лист (поставщика) - Movement
                INNER JOIN LastPriceList_find_View ON LastPriceList_find_View.MovementId = PriceList.MovementId
                          
@@ -111,7 +111,7 @@ BEGIN
 
            -- Прайс-лист (поставщика) - MovementItem
            INNER JOIN MovementItem AS PriceList ON PriceList.Id = MILinkObject_Goods.MovementItemId
-                                                AND PriceList.isErased = False 
+           
            -- Прайс-лист (поставщика) - Movement
            INNER JOIN LastPriceList_find_View ON LastPriceList_find_View.MovementId = PriceList.MovementId
 
@@ -162,5 +162,4 @@ $BODY$
  22.02.22                                                       *
 */
 
--- 
-select * from gpInsertUpdate_MI_PriceList_SupplierFailures(inGoodsId := 15402020 , inJuridicalId := 59610 , inContractId := 183257 , inUnitId := 5120968 ,  inSession := '3');
+-- select * from gpInsertUpdate_MI_PriceList_SupplierFailures(inGoodsId := 15402020 , inJuridicalId := 59610 , inContractId := 183257 , inUnitId := 5120968 ,  inSession := '3');
