@@ -185,8 +185,6 @@ uses
   GoodsTagEdit in '..\..\FormsBoat\Guides\GoodsTagEdit.pas' {GoodsTagEditForm: TParentForm},
   GoodsSize in '..\..\FormsBoat\Guides\GoodsSize.pas' {GoodsSizeForm: TParentForm},
   GoodsSizeEdit in '..\..\FormsBoat\Guides\GoodsSizeEdit.pas' {GoodsSizeEditForm: TParentForm},
-  DiscountParner in '..\..\FormsBoat\Guides\DiscountParner.pas' {DiscountParnerForm: TParentForm},
-  DiscountParnerEdit in '..\..\FormsBoat\Guides\DiscountParnerEdit.pas' {DiscountParnerEditForm: TParentForm},
   Goods in '..\..\FormsBoat\Guides\Goods.pas' {GoodsForm: TParentForm},
   GoodsEdit in '..\..\FormsBoat\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
   GoodsTree in '..\..\FormsBoat\Guides\GoodsTree.pas' {GoodsTreeForm: TParentForm},
@@ -298,7 +296,9 @@ uses
   InventoryJournal in '..\..\FormsBoat\Document\InventoryJournal.pas' {InventoryJournalForm: TParentForm},
   InventoryItemEdit in '..\..\FormsBoat\Document\InventoryItemEdit.pas' {InventoryItemEditForm: TParentForm},
   PriceListJournal in '..\..\FormsBoat\Document\PriceListJournal.pas' {PriceListJournalForm: TParentForm},
-  PriceListMovement in '..\..\FormsBoat\Document\PriceListMovement.pas' {PriceListMovementForm: TParentForm};
+  PriceListMovement in '..\..\FormsBoat\Document\PriceListMovement.pas' {PriceListMovementForm: TParentForm},
+  DiscountPartner in '..\..\FormsBoat\Guides\DiscountPartner.pas' {DiscountPartnerForm: TParentForm},
+  DiscountPartnerEdit in '..\..\FormsBoat\Guides\DiscountPartnerEdit.pas' {DiscountPartnerEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

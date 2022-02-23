@@ -62,6 +62,10 @@ type
     cxLabel5: TcxLabel;
     edArea: TcxButtonEdit;
     GuidesArea: TdsdGuides;
+    isSupplierFailures: TcxGridDBColumn;
+    DateUpdate: TcxGridDBColumn;
+    UserUpdate: TcxGridDBColumn;
+    SupplierFailuresColor: TcxGridDBColumn;
   private
     { Private declarations }
   public

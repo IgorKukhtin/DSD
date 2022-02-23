@@ -1,4 +1,4 @@
-unit DiscountParner;
+unit DiscountPartner;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TDiscountParnerForm = class(TParentForm)
+  TDiscountPartnerForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -74,6 +74,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TDiscountParnerForm);
+  RegisterClass(TDiscountPartnerForm);
 
 end.

@@ -33,7 +33,7 @@ type
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
-    actGoodsKindChoice: TOpenChoiceForm;
+    actGoodsChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
@@ -70,6 +70,9 @@ type
     edLanguage: TcxButtonEdit;
     GuidesLanguage: TdsdGuides;
     GoodsName_translate: TcxGridDBColumn;
+    actDiscountPartnerChoice: TOpenChoiceForm;
+    actMeasureChoice: TOpenChoiceForm;
+    actMeasureParentChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

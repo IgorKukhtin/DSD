@@ -24,7 +24,7 @@ type
     procedure LoadCountryFormTest;
     procedure LoadColorPatternFormTest;
     procedure LoadCurrencyFormTest;
-    procedure LoadDiscountParnerFormTest;
+    procedure LoadDiscountPartnerFormTest;
     procedure LoadDocTagFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsFormTest;
@@ -307,12 +307,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCountryEditForm');
 end;
 
-procedure TLoadFormTest.LoadDiscountParnerFormTest;
+procedure TLoadFormTest.LoadDiscountPartnerFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountParnerForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TDiscountParnerForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountParnerEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TDiscountParnerEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountPartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiscountPartnerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountPartnerEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiscountPartnerEditForm');
 end;
 
 procedure TLoadFormTest.LoadDocTagFormTest;

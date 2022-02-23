@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_Loss()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Loss(
@@ -15,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Loss(
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inGoodsKindCompleteId Integer   , -- Виды товаров  ГП
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
+    IN inAssetId_top         Integer   , -- Основные средства из Шапки документа
     IN inPartionGoodsId      Integer   , -- Партии товаров (для партии расхода если с МО)
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -36,7 +38,7 @@ BEGIN
                                             , inPartionGoods        := inPartionGoods
                                             , inGoodsKindId         := inGoodsKindId
                                             , inGoodsKindCompleteId := inGoodsKindCompleteId
-                                            , inAssetId             := inAssetId
+                                            , inAssetId             := CASE WHEN COALESCE (inAssetId,0) = 0 THEN inAssetId_top ELSE inAssetId END :: Integer
                                             , inPartionGoodsId      := inPartionGoodsId
                                             , inUserId              := vbUserId
                                              );

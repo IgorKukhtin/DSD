@@ -71,6 +71,9 @@ type
     InsertRecord20202: TInsertRecord;
     macInsertRecord20202: TMultiAction;
     bbInsertRecord20202: TdxBarButton;
+    cxLabel6: TcxLabel;
+    edAsset: TcxButtonEdit;
+    GuidesAsset: TdsdGuides;
   private
     { Private declarations }
   public

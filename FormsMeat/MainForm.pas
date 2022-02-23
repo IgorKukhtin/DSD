@@ -1357,6 +1357,10 @@ type
     miReport_OrderReturnTare: TMenuItem;
     actReport_DefermentPaymentOLAPTable: TdsdOpenForm;
     miReport_DefermentPaymentOLAPTable: TMenuItem;
+    actReport_Goods_inventory: TdsdOpenForm;
+    miReport_Goods_inventory: TMenuItem;
+    actReport_AssetRepair: TdsdOpenForm;
+    miReport_AssetRepair: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

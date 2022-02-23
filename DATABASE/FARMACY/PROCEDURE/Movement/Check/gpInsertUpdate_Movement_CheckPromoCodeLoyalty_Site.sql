@@ -4,7 +4,8 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Boolean, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Boolean, TFloat, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Boolean, TFloat, Boolean, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Boolean, TFloat, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site (Integer, Integer, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Boolean, TFloat, Boolean, TVarChar, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site(
  INOUT ioId                Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -20,6 +21,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_CheckPromoCodeLoyalty_Site(
     IN inDeliveryPrice     TFloat    , -- Цена доставки
     IN inisCallOrder       Boolean   , -- Заказ по звонку покупателя
     IN inComment           TVarChar  , -- Комментарий клиента
+    IN inisMobileApp       Boolean   , -- Заказ с мобильного приложения
+    IN inUserReferals      Integer   , -- По рекомендации сотрудника
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -238,6 +241,27 @@ BEGIN
     IF COALESCE (TRIM(inComment), '') <> '' THEN
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_CommentCustomer(), ioId, TRIM(inComment));
 	END IF;
+
+    -- Заказ с мобильного приложения
+    
+    IF COALESCE(inisMobileApp, FALSE) = True
+    THEN
+
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_MobileApplication(), ioId, True);
+    
+      -- По рекомендации сотрудника   
+      IF COALESCE(inUserReferals, 0) <> 0 AND
+         EXISTS(SELECT Object_User.Id
+                FROM Object AS Object_User
+                WHERE Object_User.DescId = zc_Object_User()
+                  AND Object_User.ObjectCode = inUserReferals) 
+      THEN
+        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UserReferals(), ioId, (SELECT Object_User.Id
+                                                                                                FROM Object AS Object_User
+                                                                                                WHERE Object_User.DescId = zc_Object_User()
+                                                                                                  AND Object_User.ObjectCode = inUserReferals));
+      END IF;
+    END IF;
 
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);

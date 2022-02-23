@@ -1,28 +1,28 @@
 inherited CheckSummCardForm: TCheckSummCardForm
   Caption = #1047#1072#1087#1086#1083#1077#1085#1080#1077' '#1087#1088#1077#1076#1086#1087#1083#1072#1090#1099' '#1085#1072' '#1082#1072#1088#1090#1091
   ClientHeight = 554
-  ClientWidth = 911
+  ClientWidth = 925
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 927
+  ExplicitWidth = 941
   ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 911
+    Width = 925
     Height = 495
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 911
     ExplicitHeight = 495
     ClientRectBottom = 495
-    ClientRectRight = 911
+    ClientRectRight = 925
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 911
       ExplicitHeight = 495
       inherited cxGrid: TcxGrid
-        Width = 911
+        Width = 925
         Height = 495
         ExplicitWidth = 911
         ExplicitHeight = 495
@@ -232,12 +232,28 @@ inherited CheckSummCardForm: TCheckSummCardForm
             Options.Editing = False
             Width = 103
           end
+          object isMobileApplication: TcxGridDBColumn
+            Caption = #1052#1086#1073'. '#1087#1088#1080#1083'.'
+            DataBinding.FieldName = 'isMobileApplication'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 51
+          end
+          object UserReferalsName: TcxGridDBColumn
+            Caption = #1056#1077#1082#1086#1084'. '#1089#1086#1090#1088
+            DataBinding.FieldName = 'UserReferalsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 911
+    Width = 925
     Height = 33
     ExplicitWidth = 911
     ExplicitHeight = 33

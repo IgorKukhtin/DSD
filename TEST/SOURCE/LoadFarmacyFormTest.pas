@@ -2515,9 +2515,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalChoiceForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSupplierFailuresForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSupplierFailuresForm');
 end;
 
 procedure TLoadFormTest.LoadInfoMoneyGroupFormTest;
@@ -2996,6 +2993,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPriceListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSupplierFailuresForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSupplierFailuresForm');
 end;
 
 procedure TLoadFormTest.LoadSaleFormTest;

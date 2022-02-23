@@ -2115,23 +2115,10 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 488
   end
   object spInsertUpdate_SupplierFailures: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_SupplierFailures'
+    StoredProcName = 'gpInsertUpdate_MI_PriceList_SupplierFailures'
     DataSets = <>
     OutputType = otResult
     Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inName'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
       item
         Name = 'inGoodsId'
         Value = Null
@@ -2153,12 +2140,6 @@ inherited OrderExternalForm: TOrderExternalForm
         Value = Null
         Component = ContractGuides
         ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAreaId'
-        Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

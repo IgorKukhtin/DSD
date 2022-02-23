@@ -775,6 +775,13 @@ object GoodsForm: TGoodsForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'MeasureId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MeasureId'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'MeasureName'
           Value = Null
           Component = ClientDataSet
@@ -796,6 +803,13 @@ object GoodsForm: TGoodsForm
           Component = ClientDataSet
           ComponentItem = 'Article'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupId'
           MultiSelectSeparator = ','
         end
         item

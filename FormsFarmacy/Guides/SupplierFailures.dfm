@@ -2,6 +2,7 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
   Caption = #1054#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
   ClientHeight = 339
   ClientWidth = 942
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 958
   ExplicitHeight = 378
   PixelsPerInch = 96
@@ -33,13 +34,19 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object Code: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'Code'
+          object isSupplierFailures: TcxGridDBColumn
+            Caption = #1054#1090#1082#1072#1079' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'isSupplierFailures'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 36
+          end
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1072#1081#1089#1072
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 74
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
@@ -147,6 +154,20 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
         Height = 313
         Control = cxGrid
       end
+      object edSupplierFailures: TcxDateEdit
+        Left = 653
+        Top = 71
+        EditValue = 42132d
+        Properties.SaveTime = False
+        Properties.ShowTime = False
+        TabOrder = 2
+        Width = 100
+      end
+      object cxLabel2: TcxLabel
+        Left = 653
+        Top = 53
+        Caption = #1054#1090#1082#1072#1079#1099' '#1085#1072' '#1076#1072#1090#1091
+      end
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -159,9 +180,16 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
         Component = cxGrid
         Properties.Strings = (
           'Width')
+      end
+      item
+        Component = edSupplierFailures
+        Properties.Strings = (
+          'Date')
       end>
+    Left = 32
   end
   inherited ActionList: TActionList
+    Left = 103
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -169,38 +197,6 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
         end
         item
         end>
-    end
-    object dsdSetErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 2
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      DataSource = MasterDS
-    end
-    object dsdUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 32776
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = MasterDS
     end
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -251,46 +247,81 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
         end>
       isShowModal = False
     end
-    object mactSetErasedAll: TMultiAction
+    object mactUpdate_SupplierFailures: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       AfterAction = actRefresh
       ActionList = <
         item
-          Action = dsdSetErased
+          Action = actUpdate_SupplierFailures
         end>
       View = cxGridDBTableView
-      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1089#1090#1088#1086#1082#1080'?'
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1089#1090#1088#1086#1082#1080
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1089#1090#1088#1086#1082#1080
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1082#1072#1079' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'"?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1082#1072#1079' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1082#1072#1079' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'"'
       ImageIndex = 52
+    end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TDataDialogForm'
+      FormNameParam.Value = 'TDataDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = 42370d
+          Component = edSupplierFailures
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
+    object actUpdate_SupplierFailures: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SupplierFailures
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SupplierFailures
+        end>
+      Caption = 'actUpdate_SupplierFailures'
     end
   end
   inherited MasterDS: TDataSource
-    Left = 56
-    Top = 72
+    Left = 80
+    Top = 88
   end
   inherited MasterCDS: TClientDataSet
     FilterOptions = []
-    Top = 96
+    Left = 24
+    Top = 88
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_SupplierFailures'
+    StoredProcName = 'gpSelect_PriceList_SupplierFailures'
     Params = <
       item
-        Name = 'inIsErased'
+        Name = 'inOperdate'
         Value = Null
-        Component = actShowAll
-        DataType = ftBoolean
+        Component = edSupplierFailures
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 64
+    Left = 152
+    Top = 88
   end
   inherited BarManager: TdxBarManager
-    Left = 176
-    Top = 80
+    Left = 232
+    Top = 88
     DockControlHeights = (
       0
       0
@@ -300,11 +331,11 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbSetErased'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'dxBarButton5'
         end
         item
           Visible = True
@@ -312,7 +343,11 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton2'
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
         end
         item
           Visible = True
@@ -328,15 +363,7 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton3'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton4'
+          ItemName = 'bbUpdate_SupplierFailures'
         end
         item
           Visible = True
@@ -352,14 +379,20 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
       Top = 112
     end
     object bbSetErased: TdxBarButton
-      Action = dsdSetErased
+      Caption = #1059#1076#1072#1083#1080#1090#1100
       Category = 0
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1058#1080#1087' '#1080#1084#1087#1086#1088#1090#1072
+      Visible = ivAlways
+      ImageIndex = 2
+      ShortCut = 46
     end
     object bbUnErased: TdxBarButton
-      Action = dsdUnErased
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Category = 0
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1058#1080#1087' '#1080#1084#1087#1086#1088#1090#1072
+      Visible = ivAlways
+      ImageIndex = 8
+      ShortCut = 32776
     end
     object bbSetErasedChild: TdxBarButton
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088
@@ -391,8 +424,12 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
       ItemLinks = <>
     end
     object dxBarButton1: TdxBarButton
-      Action = dsdUnErased
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Category = 0
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Visible = ivAlways
+      ImageIndex = 8
+      ShortCut = 32776
     end
     object dxBarButton2: TdxBarButton
       Action = actShowAll
@@ -402,80 +439,73 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
       Action = actProtocolOpenForm
       Category = 0
     end
-    object dxBarButton4: TdxBarButton
-      Action = mactSetErasedAll
+    object bbUpdate_SupplierFailures: TdxBarButton
+      Action = mactUpdate_SupplierFailures
+      Category = 0
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel2
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edSupplierFailures
+    end
+    object dxBarButton5: TdxBarButton
+      Action = ExecuteDialog
       Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 280
-    Top = 192
+    Left = 336
+    Top = 168
   end
-  object spInsertUpdateSupplierFailures: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_SupplierFailures'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCode'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Code'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'JuridicalId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPriorities  '
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Priorities'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 232
-    Top = 123
-  end
-  object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inObjectId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
+  inherited PopupMenu: TPopupMenu
     Left = 192
-    Top = 192
+  end
+  object spUpdate_SupplierFailures: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_PriceList_SupplierFailures'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSupplierFailures'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSupplierFailures'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 488
+    Top = 232
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = edSupplierFailures
+      end
+      item
+      end>
+    Left = 336
+    Top = 240
   end
 end
