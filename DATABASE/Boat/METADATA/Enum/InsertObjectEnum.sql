@@ -35,6 +35,9 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_SecondForm(), inDescId:= zc_Object_PaidKind(), inCode:= 2, inName:= 'Нал', inEnumName:= 'zc_Enum_PaidKind_SecondForm');
 
     
+     -- !!! Типы аналитик для проводок
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SummIn(),   inDescId:= zc_Object_AnalyzerId(), inCode:= 1, inName:= 'Сумма с/с',    inEnumName:= 'zc_Enum_AnalyzerId_SummIn');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SummCost(), inDescId:= zc_Object_AnalyzerId(), inCode:= 2, inName:= 'Сумма затрат', inEnumName:= 'zc_Enum_AnalyzerId_SummCost');
 
 
 END $$;

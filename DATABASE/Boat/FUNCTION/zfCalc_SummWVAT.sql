@@ -10,8 +10,13 @@ RETURNS TFloat
 AS
 $BODY$
 BEGIN
-     -- округлили до 2-х знаков
-     RETURN CAST (inSumm * (1 + COALESCE (inTaxKindValue, 0)/100) AS NUMERIC (16, 2));
+     IF inTaxKindValue > 0
+     THEN
+         -- округлили до 2-х знаков
+         RETURN CAST (inSumm * (1 + COALESCE (inTaxKindValue, 0)/100) AS NUMERIC (16, 2));
+     ELSE
+         RETURN inSumm;
+     END IF;
                 
 END;
 $BODY$

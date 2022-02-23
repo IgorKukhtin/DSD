@@ -11,8 +11,8 @@ RETURNS TFloat
 AS
 $BODY$
 BEGIN
-     -- округлили до 2-х знаков
-     RETURN CAST (zfCalc_SummWVAT (zfCalc_SummDiscountTax (inSumm, inDiscountTax), inTaxKindValue) AS NUMERIC (16, 2));
+     -- округлили до 4-х знаков
+     RETURN CAST (zfCalc_SummWVAT (zfCalc_SummDiscountTax (inSumm, inDiscountTax), inTaxKindValue) AS NUMERIC (16, 4));
                 
 END;
 $BODY$

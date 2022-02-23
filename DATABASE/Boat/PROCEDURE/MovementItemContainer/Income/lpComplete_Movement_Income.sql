@@ -281,19 +281,30 @@ BEGIN
      -- 3.2. распределяем Сумма расходы минус .....
      UPDATE _tmpItem SET OperSumm_cost = (vbTotalSumm_cost - (vbTotalSummTaxMVAT - vbSummTaxMVAT_2)) * _tmpItem.OperSumm / vbSummMVAT;
      -- 3.3. корректируем на "погрешность округления"
-     UPDATE _tmpItem SET OperSumm_cost = _tmpItem.OperSumm_cost                              -- корректируем эту сумму на...
-                                       - (SELECT SUM (_tmpItem.OperSumm_cost) FROM _tmpItem) -- итоговая новая сумма
-                                       + (vbTotalSumm_cost - (vbTotalSummTaxMVAT - vbSummTaxMVAT_2))              -- а должна быть такая сумма
+     UPDATE _tmpItem SET OperSumm_cost = _tmpItem.OperSumm_cost                                      -- корректируем эту сумму на...
+                                       - (SELECT SUM (_tmpItem.OperSumm_cost) FROM _tmpItem)         -- итоговая новая сумма
+                                       + (vbTotalSumm_cost - (vbTotalSummTaxMVAT - vbSummTaxMVAT_2)) -- а должна быть такая сумма
      WHERE _tmpItem.MovementItemId = (SELECT _tmpItem.MovementItemId FROM _tmpItem ORDER BY _tmpItem.OperSumm DESC LIMIT 1);
 
 
+     -- 4.1. опять нашли - Сумма вх. без НДС, с учетом скидки ...
+     vbSummMVAT:= (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem);
      -- 4.2. распределяем Сумма НДС .....
+     UPDATE _tmpItem SET OperSumm_VAT = zfCalc_SummVATDiscountTax ((SELECT SUM (_tmpItem.OperSumm + _tmpItem.OperSumm_cost) FROM _tmpItem), 0, vbVATPercent) * _tmpItem.OperSumm / vbSummMVAT;
+     -- 4.3. корректируем на "погрешность округления"
+     UPDATE _tmpItem SET OperSumm_VAT = _tmpItem.OperSumm_VAT                                                                              -- корректируем эту сумму на...
+                                      - (SELECT SUM (_tmpItem.OperSumm_VAT) FROM _tmpItem)                                                 -- итоговая новая сумма
+                                      + zfCalc_SummVATDiscountTax ((SELECT SUM (_tmpItem.OperSumm + _tmpItem.OperSumm_cost) FROM _tmpItem)
+                                                                 , 0, vbVATPercent)                                                        -- а должна быть такая сумма
+     WHERE _tmpItem.MovementItemId = (SELECT _tmpItem.MovementItemId FROM _tmpItem ORDER BY _tmpItem.OperSumm DESC LIMIT 1);
+
 
 RAISE EXCEPTION 'Ошибка.<%>  <%>   <%>  <%>', (select sum(_tmpItem.OperSumm) from _tmpItem)
     , (select sum(_tmpItem.OperSumm_cost) from _tmpItem)
     , (select sum(_tmpItem.OperSumm + _tmpItem.OperSumm_cost) from _tmpItem)
-, vbSummTaxMVAT_2
+    , (select sum(_tmpItem.OperSumm_VAT) from _tmpItem)
     ;
+
 
 
      -- заполняем таблицу - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках
@@ -625,7 +636,7 @@ RAISE EXCEPTION 'Ошибка.<%>  <%>   <%>  <%>', (select sum(_tmpItem.OperSumm) fro
             , _tmpItem.ContainerId_Summ
             , 0                                       AS ParentId
             , _tmpItem.AccountId                      AS AccountId              -- Счет есть всегда
-            , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
+            , zc_Enum_AnalyzerId_SummIn()             AS AnalyzerId             -- нет - Типы аналитик (проводки)
             , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
             , _tmpItem.PartionId                      AS PartionId              -- Партия
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Место учета
@@ -638,7 +649,30 @@ RAISE EXCEPTION 'Ошибка.<%>  <%>   <%>  <%>', (select sum(_tmpItem.OperSumm) fro
             , vbOperDate                              AS OperDate
             , TRUE                                    AS isActive
        FROM _tmpItem
-            LEFT JOIN _tmpItem_SummPartner ON _tmpItem_SummPartner.MovementItemId = _tmpItem.MovementItemId;
+            LEFT JOIN _tmpItem_SummPartner ON _tmpItem_SummPartner.MovementItemId = _tmpItem.MovementItemId
+
+      UNION ALL
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
+            , _tmpItem.MovementItemId
+            , _tmpItem.ContainerId_Summ
+            , 0                                       AS ParentId
+            , _tmpItem.AccountId                      AS AccountId              -- Счет есть всегда
+            , zc_Enum_AnalyzerId_SummCost()           AS AnalyzerId             -- нет - Типы аналитик (проводки)
+            , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
+            , _tmpItem.PartionId                      AS PartionId              -- Партия
+            , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Место учета
+            , _tmpItem_SummPartner.AccountId          AS AccountId_Analyzer     -- Счет - корреспондент - по долгам поставщика
+            , _tmpItem_SummPartner.ContainerId_VAT    AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
+            , _tmpItem_SummPartner.ContainerId        AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - по долгам поставщика
+            , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник
+            , vbPartnerId                             AS ObjectExtId_Analyzer   -- Аналитический справочник - Контрагент
+            , _tmpItem.OperSumm_cost                  AS Amount
+            , vbOperDate                              AS OperDate
+            , TRUE                                    AS isActive
+       FROM _tmpItem
+            LEFT JOIN _tmpItem_SummPartner ON _tmpItem_SummPartner.MovementItemId = _tmpItem.MovementItemId
+       WHERE _tmpItem.OperSumm_cost <> 0
+      ;
 
 
      -- 4.3. формируются Проводки - долг Поставщику + НДС

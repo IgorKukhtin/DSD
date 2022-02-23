@@ -64,7 +64,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_PriceListOsculati() RETURNS Int
 
 
 
- -- !!!
+-- !!!
 -- !!! Типы импорта
 -- !!!
 
@@ -80,6 +80,16 @@ CREATE OR REPLACE FUNCTION zc_Enum_TaxKind_Other() RETURNS integer AS $BODY$BEGI
 -- !!! Виды Boat Structure
 CREATE OR REPLACE FUNCTION zc_Enum_ProdColorKind_Hypalon()  RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ProdColorKind_Hypalon' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ProdColorKind_Seat() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ProdColorKind_Seat' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+
+-- !!!
+-- !!! Типы аналитик для проводок
+-- !!!
+
+-- Сумма с/с
+CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_SummIn()  RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_SummIn' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- Сумма затрат
+CREATE OR REPLACE FUNCTION zc_Enum_AnalyzerId_SummCost() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AnalyzerId_SummCost' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 
 -- !!!
