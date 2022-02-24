@@ -3,7 +3,7 @@ object Report_UnitBalanceDialogForm: TReport_UnitBalanceDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1041#1072#1083#1072#1085#1089' '#1087#1086' '#1054#1090#1076#1077#1083#1072#1084'>'
-  ClientHeight = 181
+  ClientHeight = 242
   ClientWidth = 353
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_UnitBalanceDialogForm: TReport_UnitBalanceDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 26
-    Top = 149
+    Top = 197
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_UnitBalanceDialogForm: TReport_UnitBalanceDialogForm
   end
   object cxButton2: TcxButton
     Left = 200
-    Top = 149
+    Top = 197
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -37,42 +37,40 @@ object Report_UnitBalanceDialogForm: TReport_UnitBalanceDialogForm
     TabOrder = 1
   end
   object deEnd: TcxDateEdit
-    Left = 171
-    Top = -8
+    Left = 139
+    Top = 31
     EditValue = 42736d
     Properties.ShowTime = False
     TabOrder = 2
-    Visible = False
     Width = 90
   end
   object deStart: TcxDateEdit
-    Left = 128
-    Top = 19
+    Left = 26
+    Top = 31
     EditValue = 42736d
-    Properties.DisplayFormat = 'mmmm yyyy'
+    Properties.AssignedValues.DisplayFormat = True
     Properties.ShowTime = False
     TabOrder = 3
     Width = 90
   end
   object cxLabel6: TcxLabel
     Left = 26
-    Top = 20
+    Top = 65
     Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103':'
   end
   object cxLabel7: TcxLabel
-    Left = 55
-    Top = -7
+    Left = 139
+    Top = 8
     Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
-    Visible = False
   end
   object cxLabel14: TcxLabel
     Left = 26
-    Top = 42
+    Top = 90
     Caption = #1054#1090#1076#1077#1083
   end
   object ceUnit: TcxButtonEdit
     Left = 26
-    Top = 62
+    Top = 110
     Properties.Buttons = <
       item
         Default = True
@@ -84,12 +82,12 @@ object Report_UnitBalanceDialogForm: TReport_UnitBalanceDialogForm
   end
   object cxLabel5: TcxLabel
     Left = 26
-    Top = 90
+    Top = 138
     Caption = #1057#1090#1072#1090#1100#1103' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
   end
   object ceInfoMoney: TcxButtonEdit
     Left = 26
-    Top = 109
+    Top = 157
     Properties.Buttons = <
       item
         Default = True
@@ -100,18 +98,36 @@ object Report_UnitBalanceDialogForm: TReport_UnitBalanceDialogForm
     Width = 287
   end
   object cbAllMonth: TcxCheckBox
-    Left = 232
-    Top = 19
-    Caption = #1042#1089#1077' '#1084#1077#1089#1103#1094#1072
+    Left = 248
+    Top = 31
+    Caption = #1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
     TabOrder = 10
-    Width = 81
+    Width = 91
+  end
+  object edinServiceDate: TcxDateEdit
+    Left = 139
+    Top = 64
+    EditValue = 44197d
+    Properties.DisplayFormat = 'mmmm yyyy'
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 11
+    Width = 89
+  end
+  object cxLabel3: TcxLabel
+    Left = 26
+    Top = 8
+    Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    Visible = False
   end
   object PeriodChoice: TPeriodChoice
+    DateStart = deStart
+    DateEnd = deEnd
     Left = 331
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 319
-    Top = 30
+    Top = 78
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -124,7 +140,7 @@ object Report_UnitBalanceDialogForm: TReport_UnitBalanceDialogForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 104
-    Top = 124
+    Top = 172
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -132,6 +148,14 @@ object Report_UnitBalanceDialogForm: TReport_UnitBalanceDialogForm
         Name = 'StartDate'
         Value = 41579d
         Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = Null
+        Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -177,9 +201,17 @@ object Report_UnitBalanceDialogForm: TReport_UnitBalanceDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ServiceDate'
+        Value = Null
+        Component = edinServiceDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 311
-    Top = 78
+    Top = 126
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -206,7 +238,7 @@ object Report_UnitBalanceDialogForm: TReport_UnitBalanceDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 97
-    Top = 52
+    Top = 100
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
@@ -252,6 +284,6 @@ object Report_UnitBalanceDialogForm: TReport_UnitBalanceDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 216
-    Top = 94
+    Top = 142
   end
 end

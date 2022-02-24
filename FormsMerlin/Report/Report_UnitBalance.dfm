@@ -3,7 +3,7 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
   Top = 0
   Caption = #1041#1072#1083#1072#1085#1089' '#1087#1086' '#1054#1090#1076#1077#1083#1072#1084
   ClientHeight = 440
-  ClientWidth = 994
+  ClientWidth = 1154
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,50 +21,47 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 994
-    Height = 31
+    Width = 1154
+    Height = 65
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 1329
     object deStart: TcxDateEdit
-      Left = 108
+      Left = 118
       Top = 5
       EditValue = 44197d
-      Properties.DisplayFormat = 'mmmm yyyy'
+      Properties.AssignedValues.DisplayFormat = True
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
-      Width = 89
+      Width = 85
     end
     object deEnd: TcxDateEdit
-      Left = 1070
-      Top = 5
+      Left = 118
+      Top = 39
       EditValue = 44197d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      Visible = False
       Width = 85
     end
     object cxLabel1: TcxLabel
-      Left = 4
+      Left = 214
       Top = 6
       Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103':'
     end
     object cxLabel2: TcxLabel
-      Left = 960
-      Top = 6
+      Left = 8
+      Top = 40
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
-      Visible = False
     end
     object cxLabel14: TcxLabel
-      Left = 288
-      Top = 6
+      Left = 433
+      Top = 3
       Caption = #1054#1090#1076#1077#1083':'
     end
     object ceUnit: TcxButtonEdit
-      Left = 331
-      Top = 5
+      Left = 474
+      Top = 2
       Properties.Buttons = <
         item
           Default = True
@@ -72,16 +69,16 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 201
+      Width = 314
     end
     object cxLabel5: TcxLabel
-      Left = 539
-      Top = 6
+      Left = 348
+      Top = 40
       Caption = #1057#1090#1072#1090#1100#1103' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076':'
     end
     object ceInfoMoney: TcxButtonEdit
-      Left = 668
-      Top = 5
+      Left = 474
+      Top = 39
       Properties.Buttons = <
         item
           Default = True
@@ -92,23 +89,37 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
       Width = 314
     end
     object cbAllMonth: TcxCheckBox
-      Left = 201
-      Top = 4
-      Caption = #1042#1089#1077' '#1084#1077#1089#1103#1094#1072
+      Left = 214
+      Top = 39
+      Caption = #1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
       TabOrder = 8
-      Width = 82
+      Width = 87
+    end
+    object cxLabel3: TcxLabel
+      Left = 27
+      Top = 6
+      Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object edServiceDate: TcxDateEdit
+      Left = 316
+      Top = 5
+      EditValue = 44197d
+      Properties.DisplayFormat = 'mmmm yyyy'
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 10
+      Width = 89
     end
   end
   object cxDBPivotGrid: TcxDBPivotGrid
     Left = 0
-    Top = 57
-    Width = 994
-    Height = 383
+    Top = 91
+    Width = 1154
+    Height = 349
     Align = alClient
     DataSource = DataSource
     Groups = <>
     TabOrder = 1
-    ExplicitWidth = 1329
     object pvServiceDate: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0
@@ -119,8 +130,7 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
       UniqueName = #1040'-'#1055
     end
     object pvUnitCode: TcxDBPivotGridField
-      Area = faRow
-      AreaIndex = 1
+      AreaIndex = 0
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' '#1086#1090#1076#1077#1083#1072
       DataBinding.FieldName = 'UnitCode'
@@ -129,7 +139,7 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
     end
     object pvUnitName: TcxDBPivotGridField
       Area = faRow
-      AreaIndex = 2
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1054#1090#1076#1077#1083
       DataBinding.FieldName = 'UnitName'
@@ -137,7 +147,7 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
       UniqueName = #1057#1095#1077#1090' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvAccountName: TcxDBPivotGridField
-      AreaIndex = 5
+      AreaIndex = 6
       IsCaptionAssigned = True
       Caption = #1057#1095#1077#1090
       DataBinding.FieldName = 'AccountName'
@@ -145,15 +155,33 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
       UniqueName = #1057#1095#1077#1090' - '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
     end
     object pvInfoMoneyName: TcxDBPivotGridField
-      AreaIndex = 0
+      AreaIndex = 1
       IsCaptionAssigned = True
       Caption = #1057#1090#1072#1090#1100#1103
       DataBinding.FieldName = 'InfoMoneyName'
       Visible = True
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
-    object pvAmountDebetStart: TcxDBPivotGridField
+    object pvGroupNameFull_Unit: TcxDBPivotGridField
+      Area = faRow
       AreaIndex = 1
+      IsCaptionAssigned = True
+      Caption = #1043#1088#1091#1087#1087#1072' '#1086#1090#1076#1077#1083#1072' ('#1074#1089#1077')'
+      DataBinding.FieldName = 'GroupNameFull_Unit'
+      Visible = True
+      UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object pvParentName_Unit: TcxDBPivotGridField
+      Area = faRow
+      AreaIndex = 2
+      IsCaptionAssigned = True
+      Caption = #1043#1088#1091#1087#1087#1072' '#1086#1090#1076#1077#1083#1072
+      DataBinding.FieldName = 'ParentName_Unit'
+      Visible = True
+      UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object pvAmountDebetStart: TcxDBPivotGridField
+      AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1044#1077#1073#1077#1090' '#1085#1072' '#1085#1072#1095#1072#1083#1086
       DataBinding.FieldName = 'AmountDebetStart'
@@ -164,7 +192,7 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
       UniqueName = 'AmountDebetStart'
     end
     object pvAmountKreditStart: TcxDBPivotGridField
-      AreaIndex = 2
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1050#1088#1077#1076#1080#1090' '#1085#1072' '#1085#1072#1095#1072#1083#1086
       DataBinding.FieldName = 'AmountKreditStart'
@@ -199,7 +227,7 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
       UniqueName = #1050#1088#1077#1076#1080#1090' '#1086#1073#1086#1088#1086#1090
     end
     object pvAmountDebetEnd: TcxDBPivotGridField
-      AreaIndex = 3
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = #1044#1077#1073#1077#1090' '#1085#1072' '#1082#1086#1085#1077#1094
       DataBinding.FieldName = 'AmountDebetEnd'
@@ -210,7 +238,7 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
       UniqueName = 'AmountDebetEnd'
     end
     object pvAmountKreditEnd: TcxDBPivotGridField
-      AreaIndex = 4
+      AreaIndex = 5
       IsCaptionAssigned = True
       Caption = #1050#1088#1077#1076#1080#1090' '#1085#1072' '#1082#1086#1085#1077#1094
       DataBinding.FieldName = 'AmountKreditEnd'
@@ -535,6 +563,14 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'EndDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'UnitId'
           Value = 41640d
           Component = GuidesUnit
@@ -573,6 +609,14 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
           Value = Null
           Component = cbAllMonth
           DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ServiceDate'
+          Value = Null
+          Component = edServiceDate
+          DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -744,7 +788,7 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
       end>
     Params = <
       item
-        Name = 'inOperDate'
+        Name = 'inStartDate'
         Value = 41640d
         Component = deStart
         DataType = ftDateTime
@@ -756,7 +800,15 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
-        ParamType = ptUnknown
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inServiceDate'
+        Value = Null
+        Component = edServiceDate
+        DataType = ftDateTime
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -792,8 +844,10 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
     Top = 200
   end
   object PeriodChoice: TPeriodChoice
-    Left = 400
-    Top = 48
+    DateStart = deStart
+    DateEnd = deEnd
+    Left = 40
+    Top = 16
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -803,8 +857,8 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
       item
         Component = PeriodChoice
       end>
-    Left = 488
-    Top = 48
+    Left = 856
+    Top = 24
   end
   object PivotAddOn: TPivotAddOn
     ErasedFieldName = 'isErased'
@@ -818,7 +872,7 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
         Action = MultiAction1
         ShortCut = 13
       end>
-    ExpandRow = 3
+    ExpandRow = 4
     ColorRuleList = <>
     SummaryList = <>
     Left = 392
@@ -1028,7 +1082,7 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 401
+    Left = 521
     Top = 5
   end
   object GuidesInfoMoney: TdsdGuides

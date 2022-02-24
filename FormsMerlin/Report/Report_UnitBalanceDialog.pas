@@ -30,6 +30,8 @@ type
     ceInfoMoney: TcxButtonEdit;
     GuidesInfoMoney: TdsdGuides;
     cbAllMonth: TcxCheckBox;
+    edinServiceDate: TcxDateEdit;
+    cxLabel3: TcxLabel;
   private
     { Private declarations }
   public

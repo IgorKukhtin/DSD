@@ -80,6 +80,8 @@ type
     ceInfoMoney: TcxButtonEdit;
     GuidesInfoMoney: TdsdGuides;
     cbAllMonth: TcxCheckBox;
+    cxLabel3: TcxLabel;
+    edServiceDate: TcxDateEdit;
   private
   public
   end;
