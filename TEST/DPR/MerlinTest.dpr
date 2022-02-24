@@ -165,7 +165,9 @@ uses
   CashChildMovement in '..\..\FormsMerlin\Document\CashChildMovement.pas' {CashChildMovementForm: TParentForm},
   CashSendMovement in '..\..\FormsMerlin\Document\CashSendMovement.pas' {CashSendMovementForm: TParentForm},
   CashSendJournal in '..\..\FormsMerlin\Document\CashSendJournal.pas' {CashSendJournalForm: TParentForm},
-  Report_UnitRent in '..\..\FormsMerlin\Report\Report_UnitRent.pas' {Report_UnitRentForm: TParentForm};
+  Report_UnitRent in '..\..\FormsMerlin\Report\Report_UnitRent.pas' {Report_UnitRentForm: TParentForm},
+  Report_UnitBalance in '..\..\FormsMerlin\Report\Report_UnitBalance.pas' {Report_UnitBalanceForm: TParentForm},
+  Report_UnitBalanceDialog in '..\..\FormsMerlin\Report\Report_UnitBalanceDialog.pas' {Report_UnitBalanceDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

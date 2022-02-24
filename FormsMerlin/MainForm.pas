@@ -83,6 +83,8 @@ type
     N7: TMenuItem;
     actReport_UnitRent: TdsdOpenForm;
     N8: TMenuItem;
+    actReport_UnitBalance: TdsdOpenForm;
+    miReport_UnitBalance: TMenuItem;
   private
     { Private declarations }
   public
