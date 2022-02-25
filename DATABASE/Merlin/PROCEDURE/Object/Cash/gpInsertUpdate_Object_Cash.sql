@@ -32,13 +32,13 @@ $BODY$
    -- проверка прав уникальности для свойства <Наименование Касса>  
    --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Cash(), inCashName);
    -- проверка прав уникальности для свойства <Код Кассы>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Cash(), inCode);
+   --PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Cash(), inCode);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Cash(), inCode, inCashName);
 
    -- расчетно свойство <Полное название группы>
-   vbGroupNameFull:= lfGet_Object_TreeNameFull (inParentId, zc_ObjectLink_Unit_Parent());
+   vbGroupNameFull:= lfGet_Object_TreeNameFull (inParentId, zc_ObjectLink_Cash_Parent());
 
    -- сохранили группа
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Cash_GroupNameFull(), ioId, vbGroupNameFull);

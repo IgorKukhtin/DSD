@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_CashBalance(
 )
 RETURNS TABLE (CashCode Integer, CashName TVarChar
              , GroupNameFull_Cash TVarChar, ParentName_Cash TVarChar
+             , NPP TFloat
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
              , AccountCode Integer, AccountName TVarChar
              , AmountDebetStart TFloat, AmountKreditStart TFloat
@@ -76,6 +77,7 @@ BEGIN
             , Object_Cash.ValueData  AS CashName
             , ObjectString_Cash_GroupNameFull.ValueData AS GroupNameFull_Cash
             , Object_ParentCash.ValueData               AS ParentName_Cash
+            , ObjectFloat_NPP.ValueData   ::TFloat AS NPP
              
             , Object_InfoMoney.ObjectCode AS InfoMoneyCode
             , Object_InfoMoney.ValueData  AS InfoMoneyName
@@ -102,6 +104,10 @@ BEGIN
                                 ON ObjectLink_Cash_Parent.ObjectId = Object_Cash.Id
                                AND ObjectLink_Cash_Parent.DescId = zc_ObjectLink_Cash_Parent()
            LEFT JOIN Object AS Object_ParentCash ON Object_ParentCash.Id = ObjectLink_Cash_Parent.ChildObjectId
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_NPP
+                                 ON ObjectFloat_NPP.ObjectId = Object_Cash.Id
+                                AND ObjectFloat_NPP.DescId = zc_ObjectFloat_Cash_NPP()
       ;
 
 END;
