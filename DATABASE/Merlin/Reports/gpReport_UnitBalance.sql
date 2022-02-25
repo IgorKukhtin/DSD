@@ -98,7 +98,7 @@ BEGIN
             , Object_Unit.ValueData  AS UnitName
             , ObjectString_Unit_GroupNameFull.ValueData AS GroupNameFull_Unit
             , Object_ParentUnit.ValueData               AS ParentName_Unit
-            , 
+             
             , Object_InfoMoney.ObjectCode AS InfoMoneyCode
             , Object_InfoMoney.ValueData  AS InfoMoneyName
             , Object_Account.ObjectCode   AS AccountCode

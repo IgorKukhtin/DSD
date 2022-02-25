@@ -101,10 +101,9 @@ BEGIN
 
       WHERE MovementItem.MovementId = inMovementMaskId
         AND MovementItem.DescId     = zc_MI_Master()
-        AND MovementItem.isErased   = False
-;
-        
+        AND MovementItem.isErased   = False;
 
+     --
      PERFORM lpInsertUpdate_MovementItem_SendOnPrice (ioId                 := MovementItemId
                                                     , inMovementId         := inMovementId
                                                     , inGoodsId            := GoodsId
@@ -117,6 +116,10 @@ BEGIN
                                                     , inPartionGoods       := ''
                                                     , inGoodsKindId        := GoodsKindId
                                                     , inUnitId             := NULL
+                                                    , inCountPack          := 0 ::TFloat      -- Количество упаковок (расчет)
+                                                    , inWeightTotal        := 0 :: TFloat     -- Вес 1 ед. продукции + упаковка
+                                                    , inWeightPack         := 0 :: TFloat     -- Вес упаковки для 1-ой ед. продукции
+                                                    , inIsBarCode          := FALSE ::Boolean   --
                                                     , inUserId             := vbUserId
                                                      )
 
