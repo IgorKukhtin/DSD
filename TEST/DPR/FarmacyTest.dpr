@@ -1156,7 +1156,9 @@ uses
   Report_CommodityStock in '..\..\FormsFarmacy\Report\Report_CommodityStock.pas' {Report_CommodityStockForm: TParentForm},
   SupplierFailures in '..\..\FormsFarmacy\Guides\SupplierFailures.pas' {SupplierFailuresForm: TParentForm},
   SiteDiscontDialog in '..\..\FormsFarmacy\Guides\SiteDiscontDialog.pas' {SiteDiscontDialogForm: TParentForm},
-  IniUtils in '..\..\FormsFarmacy\Cash\IniUtils.pas';
+  IniUtils in '..\..\FormsFarmacy\Cash\IniUtils.pas',
+  ExchangeRatesEdit in '..\..\FormsFarmacy\Guides\ExchangeRatesEdit.pas' {ExchangeRatesEditForm: TParentForm},
+  ExchangeRates in '..\..\FormsFarmacy\Guides\ExchangeRates.pas' {ExchangeRatesForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -122,8 +122,8 @@ BEGIN
     -- генерируем новый GUID код
     vbGUID := (SELECT zfCalc_GUID());
 
-  --  raise notice 'Unit: % - %', vbUnitID, (select ValueData from object where id = vbUnitID);
-  --  raise notice 'Unit: % - %', inUnitId_to, (select ValueData from object where id = inUnitId_to);
+    raise notice 'Unit: % - %', vbUnitID, (select ValueData from object where id = vbUnitID);
+    raise notice 'Unit: % - %', inUnitId_to, (select ValueData from object where id = inUnitId_to);
 
     DELETE FROM tmpAllGoodsPrice;
     INSERT INTO tmpAllGoodsPrice (id,
@@ -210,7 +210,7 @@ BEGIN
            isResolution_224,
            reprice 
    FROM gpSelect_AllGoodsPrice(inUnitId := vbUnitID, inUnitId_to := inUnitId_to, inMinPercent := vbPercentDifference,
-      inVAT20 := vbVAT20, inTaxTo := 0, inPriceMaxTo := 0,  inSession := inSession);
+      inVAT20 := vbVAT20, inTaxTo := 0::TFloat, inPriceMaxTo := 0::TFloat,  inSession := inSession);
 
     PERFORM gpInsertUpdate_MovementItem_Reprice(
       ioID := 0 ,

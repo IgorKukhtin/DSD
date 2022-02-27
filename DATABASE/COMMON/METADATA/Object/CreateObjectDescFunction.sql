@@ -1520,6 +1520,10 @@ CREATE OR REPLACE FUNCTION zc_Object_PickUpLogsAndDBF() RETURNS Integer AS $BODY
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_PickUpLogsAndDBF', 'Забрать логи и ДБФ' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PickUpLogsAndDBF');
 
+CREATE OR REPLACE FUNCTION zc_Object_ExchangeRates() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ExchangeRates'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ExchangeRates', 'Курсы валют' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ExchangeRates');
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1540,6 +1544,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 24.02.22                                                                                        * zc_Object_ExchangeRates  
  09.02.22                                                                                        * zc_Object_SupplierFailures  
  20.01.22                                                                                        * zc_Object_PickUpLogsAndDBF  
  25.11.21                                                                                        * zc_Object_SurchargeWages  

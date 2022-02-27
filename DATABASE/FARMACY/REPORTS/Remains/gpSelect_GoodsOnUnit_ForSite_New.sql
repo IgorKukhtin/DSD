@@ -756,6 +756,7 @@ BEGIN
                                 AND Price_Goods.ChildObjectId NOT IN (SELECT Promo.GoodsId
                                                                       FROM gpSelect_MovementItem_Promo(inMovementId := 20813880 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3') as Promo
                                                                       )
+                                AND FALSE
                               )
                               
           , MovementPromoBonus AS (SELECT Movement.id FROM Movement

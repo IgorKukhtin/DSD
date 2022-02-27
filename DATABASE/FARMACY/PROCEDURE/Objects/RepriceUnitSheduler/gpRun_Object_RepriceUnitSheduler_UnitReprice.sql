@@ -145,7 +145,7 @@ BEGIN
     -- генерируем новый GUID код
     vbGUID := (SELECT zfCalc_GUID());
 
-  --  raise notice 'Unit: %', vbUnitID;
+    raise notice 'Unit: % - %', vbUnitID, (select ValueData from object where id = vbUnitID);
 
     DELETE FROM tmpAllGoodsPrice;
 
@@ -277,7 +277,7 @@ BEGIN
            isResolution_224,
            isUseReprice,
            reprice,
-           isPromoBonus,
+           COALESCE(isPromoBonus, False),
            AddPercentRepriceMin,
            JuridicalPromoOneId,
            ContractPromoOneId,
@@ -296,9 +296,9 @@ BEGIN
            RepricePromo,
            AddPercentRepricePromoMin,
 
-           (isPromoBonus = FALSE OR COALESCE(NewPricePromo, 0) = 0),
+           (COALESCE(isPromoBonus, False) = FALSE OR COALESCE(NewPricePromo, 0) = 0),
            
-           CASE WHEN (isPromoBonus = FALSE OR COALESCE(NewPricePromo, 0) = 0)
+           CASE WHEN (COALESCE(isPromoBonus, False) = FALSE OR COALESCE(NewPricePromo, 0) = 0)
                 THEN Reprice = True
                      AND (PriceDiff <= vbPercentRepriceMax
                      AND PriceDiff >= (- vbPercentRepriceMin + COALESCE(AddPercentRepriceMin, 0))
@@ -312,7 +312,7 @@ BEGIN
                      AND (PriceDiffPromo <= 10
                      AND PriceDiffPromo >= (- vbPercentRepriceMin /*+ COALESCE(AddPercentRepricePromoMin, 0)*/))  AND RepricePromo END                      
     FROM gpSelect_AllGoodsPrice(inUnitId := vbUnitID, inUnitId_to := 0, inMinPercent := vbPercentDifference,
-      inVAT20 := vbVAT20, inTaxTo := 0, inPriceMaxTo := 0,  inSession := inSession)
+      inVAT20 := vbVAT20, inTaxTo := 0::TFloat, inPriceMaxTo := 0::TFloat,  inSession := inSession)
          LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = gpSelect_AllGoodsPrice.ID;
 
     -- сохранили свойство <Дата начала переоценки>
@@ -465,4 +465,4 @@ ALTER FUNCTION gpRun_Object_RepriceUnitSheduler_UnitReprice(Integer, TVarChar) O
 -- SELECT * FROM Log_Run_Schedule_Function
 -- select * from gpSelect_Object_RepriceUnitSheduler( inSession := '3');
 -- select * from gpSelect_Object_RepriceUnitSheduler( inSession := '3');
--- SELECT * FROM gpRun_Object_RepriceUnitSheduler_UnitReprice (9140000 , '3')
+-- SELECT * FROM gpRun_Object_RepriceUnitSheduler_UnitReprice (9079633 , '3')

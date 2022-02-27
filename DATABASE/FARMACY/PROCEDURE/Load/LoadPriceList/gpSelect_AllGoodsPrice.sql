@@ -105,6 +105,7 @@ $BODY$
   DECLARE vbUpperLimitPromoBonus TFloat;
   DECLARE vbLowerLimitPromoBonus TFloat;
   DECLARE vbMinPercentPromoBonus TFloat;
+  DECLARE vbPercentСhange TFloat;
 BEGIN
     vbUserId := inSession;
     vbObjectId := COALESCE (lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
@@ -147,6 +148,10 @@ BEGIN
                               AND ObjectFloat_CashSettings_MinPercentPromoBonus.DescId = zc_ObjectFloat_CashSettings_MinPercentPromoBonus()
     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
     LIMIT 1;
+    
+    
+    vbPercentСhange := COALESCE((SELECT tmp.PercentСhange FROM gpSelect_Object_ExchangeRates(False, inSession) AS tmp 
+                                 WHERE tmp.OperDate = CURRENT_DATE AND COALESCE (inUnitId_to, 0) = 0), 0);
 
   RETURN QUERY
     WITH DD
@@ -338,9 +343,11 @@ BEGIN
             END::TFloat AS MarginPercent
           , (SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)::TFloat AS Juridical_Price
           , zfCalc_SalePrice(
-                              (SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)               -- Цена С НДС
+                              COALESCE(SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100, Object_Price.Price)   -- Цена С НДС
                              --  * CASE WHEN vbObjectId = 4 THEN 1.015 ELSE 1 END                          -- 23.03. убрали  -- для сети НЕ БОЛЕЙ!!! к цене поставщика дополнительные +1.5 19.03.2020      ----  +3% - 17,03,2020 Люба
-                            , CASE -- % наценки для срока годности < 6 мес.
+                            , CASE WHEN COALESCE(SelectMinPrice_AllGoods.Price, 0) = 0 
+                                        THEN vbPercentСhange
+                                   -- % наценки для срока годности < 6 мес.
                                    WHEN vbMarginPercent_ExpirationDate > 0
                                     AND SelectMinPrice_AllGoods.MinExpirationDate <= (CURRENT_DATE + vbInterval_ExpirationDate)
                                     AND SelectMinPrice_AllGoods.MinExpirationDate > zc_DateStart()
@@ -363,7 +370,8 @@ BEGIN
                                                                          PromoBonus.Amount, vbUpperLimitPromoBonus, vbLowerLimitPromoBonus, vbMinPercentPromoBonus)    -- % наценки в КАТЕГОРИИ
                               END
                             , CASE WHEN vbisTopNo_Unit = TRUE THEN SelectMinPrice_AllGoods.isTOP_Price   ELSE SelectMinPrice_AllGoods.isTop END                  -- ТОП позиция
-                            , CASE WHEN vbisTopNo_Unit = TRUE THEN SelectMinPrice_AllGoods.PercentMarkup
+                            , CASE WHEN COALESCE(SelectMinPrice_AllGoods.Price, 0) = 0  THEN 0
+                                   WHEN vbisTopNo_Unit = TRUE THEN SelectMinPrice_AllGoods.PercentMarkup
                                    WHEN vbisMinPercentMarkup = TRUE THEN CASE WHEN COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), Object_Goods.PercentMarkup) >
                                                                                    COALESCE (NULLIF (Object_Goods.PercentMarkup, 0), SelectMinPrice_AllGoods.PercentMarkup)
                                                                               THEN COALESCE (NULLIF (Object_Goods.PercentMarkup, 0), SelectMinPrice_AllGoods.PercentMarkup)
@@ -557,6 +565,7 @@ BEGIN
             LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsId = SelectMinPrice_AllGoods.GoodsId
 
         WHERE Object_Goods.isSp = FALSE
+          AND (COALESCE(SelectMinPrice_AllGoods.Price, 0) <> 0 OR COALESCE (inUnitId_to, 0) = 0)
          -- AND COALESCE (ObjectBoolean_Juridical_UseReprice.ValueData, FALSE) = True
     )
 
@@ -635,8 +644,9 @@ BEGIN
         vbisTopNo_Unit AS isTopNo_Unit,
         ResultSet.IsPromo,
         ResultSet.isResolution_224,
-        COALESCE (ObjectBoolean_Juridical_UseReprice.ValueData, FALSE) OR
-          ResultSet.isPromoBonus AND ResultSet.isJuridicalPromo  AS isUseReprice,
+        CASE WHEN COALESCE(ResultSet.Juridical_Price, 0) = 0 THEN TRUE
+             ELSE COALESCE (ObjectBoolean_Juridical_UseReprice.ValueData, FALSE) OR
+                  ResultSet.isPromoBonus AND ResultSet.isJuridicalPromo END           AS isUseReprice,
         CASE WHEN (COALESCE (inUnitId_to, 0) = 0)
                         AND (ResultSet.ExpirationDate + INTERVAL '6 month' < ResultSet.MinExpirationDate)
                         AND (ResultSet.ExpirationDate < CURRENT_DATE + INTERVAL '6 month')
@@ -677,9 +687,12 @@ BEGIN
         -- Временно прикрыл товар постановление для переоценки
         AND (ResultSet.isResolution_224 = FALSE
           OR ResultSet.isResolution_224 = TRUE AND (COALESCE(ResultSet.NDSKindId,0) <> zc_Enum_NDSKind_Common() OR ResultSet.IsTop = FALSE) AND
-             ABS(CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
+             (CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
                              ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
-                        END AS NUMERIC (16, 1)) :: TFloat) <= 10
+                        END AS NUMERIC (16, 1)) :: TFloat) >= -10 AND
+             (CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
+                             ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
+                        END AS NUMERIC (16, 1)) :: TFloat) <= 15
           OR ResultSet.isResolution_224 = TRUE AND COALESCE(ResultSet.NDSKindId,0) = zc_Enum_NDSKind_Common() AND ResultSet.IsTop = TRUE AND
              CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
                              ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
@@ -743,9 +756,12 @@ BEGIN
         -- Временно прикрыл товар постановление для переоценки
         AND (ResultSet.isResolution_224 = FALSE
           OR ResultSet.isResolution_224 = TRUE AND (COALESCE(ResultSet.NDSKindId,0) <> zc_Enum_NDSKind_Common() OR ResultSet.IsTop = FALSE) AND
-             ABS(CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
+             (CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
                              ELSE (ResultSet.NewPricePromo / ResultSet.LastPrice) * 100 - 100
-                        END AS NUMERIC (16, 1)) :: TFloat) <= 10
+                        END AS NUMERIC (16, 1)) :: TFloat) >= - 10 AND
+             (CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
+                             ELSE (ResultSet.NewPricePromo / ResultSet.LastPrice) * 100 - 100
+                        END AS NUMERIC (16, 1)) :: TFloat) <= 15
           OR ResultSet.isResolution_224 = TRUE AND COALESCE(ResultSet.NDSKindId,0) = zc_Enum_NDSKind_Common() AND ResultSet.IsTop = TRUE AND
              CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
                              ELSE (ResultSet.NewPricePromo / ResultSet.LastPrice) * 100 - 100
@@ -838,4 +854,4 @@ $BODY$
 --
 
 
-select * from gpSelect_AllGoodsPrice(inUnitId := 377606 , inUnitId_to := 0 , inMinPercent := 0 , inVAT20 := 'True' , inTaxTo := 0 , inPriceMaxTo := 0 ,  inSession := '3');
+select * from gpSelect_AllGoodsPrice(inUnitId := 183292  , inUnitId_to := 0 , inMinPercent := 0 , inVAT20 := 'True' , inTaxTo := 0 , inPriceMaxTo := 0 ,  inSession := '3');

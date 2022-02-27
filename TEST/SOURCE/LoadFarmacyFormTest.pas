@@ -58,6 +58,7 @@ type
     procedure LoadEmailSettingsFormTest;
     procedure LoadEmployeeScheduleFormTest;
     procedure LoadEmployeeScheduleVIPFormTest;
+    procedure LoadExchangeRatesFormTest;
     procedure LoadFinalSUAFormTest;
     procedure LoadFiscalFormTest;
     procedure LoadGoodsGroupFormTest;
@@ -3209,6 +3210,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleUserVIPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleUserVIPForm');
 end;
+
+procedure TLoadFormTest.LoadExchangeRatesFormTest;
+begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TExchangeRatesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TExchangeRatesForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TExchangeRatesEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TExchangeRatesEditForm');
+
+end;
+
 
 procedure TLoadFormTest.LoadSPKindFormTest;
 begin
