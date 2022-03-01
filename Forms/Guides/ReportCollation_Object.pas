@@ -23,7 +23,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   DataModul, cxButtonEdit, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls,
-  ChoicePeriod, cxCurrencyEdit, dsdGuides;
+  ChoicePeriod, cxCurrencyEdit, dsdGuides, cxImageComboBox;
 
 type
   TReportCollation_ObjectForm = class(TParentForm)
@@ -134,6 +134,61 @@ type
     actPrintPack_one: TdsdPrintAction;
     mactPrintPack_one: TMultiAction;
     bbPrintPack_one: TdxBarButton;
+    actPrintPack_one_ff: TdsdPrintAction;
+    spSelectReport: TdsdStoredProc;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    ItemName: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    InvNumberPartner: TcxGridDBColumn;
+    MovementComment: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    PartionMovementName: TcxGridDBColumn;
+    PaymentDate: TcxGridDBColumn;
+    cxGridDBColumn1: TcxGridDBColumn;
+    InvNumber_Transport: TcxGridDBColumn;
+    OperDate_Transport: TcxGridDBColumn;
+    CarName: TcxGridDBColumn;
+    PersonalDriverName: TcxGridDBColumn;
+    cxGridDBColumn2: TcxGridDBColumn;
+    Debet: TcxGridDBColumn;
+    Kredit: TcxGridDBColumn;
+    cxGridDBColumn3: TcxGridDBColumn;
+    StartRemains_Currency: TcxGridDBColumn;
+    Debet_Currency: TcxGridDBColumn;
+    Kredit_Currency: TcxGridDBColumn;
+    EndRemains_Currency: TcxGridDBColumn;
+    CurrencyName: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    ContractStateKindCode: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
+    cxGridDBColumn4: TcxGridDBColumn;
+    ContractTagName: TcxGridDBColumn;
+    ContractComment: TcxGridDBColumn;
+    InfoMoneyGroupCode: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationCode: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    cxGridDBColumn5: TcxGridDBColumn;
+    AccountName: TcxGridDBColumn;
+    MovementSumm: TcxGridDBColumn;
+    MovementSumm_Currency: TcxGridDBColumn;
+    OperationSort: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    MasterDS: TDataSource;
+    MasterCDS: TClientDataSet;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    actPrintPack_ff_one: TdsdPrintAction;
+    spJuridicalBalance: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    mactPrintPackList_ff_one: TMultiAction;
+    actspSelectReport: TdsdExecStoredProc;
+    bbPrintPackList_ff: TdxBarButton;
+    actPrintPack_ff_two: TdsdPrintAction;
+    mactPrintPackList_ff_two: TMultiAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

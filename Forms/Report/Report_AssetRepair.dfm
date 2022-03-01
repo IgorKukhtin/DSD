@@ -77,7 +77,6 @@ object Report_AssetRepairForm: TReport_AssetRepairForm
           Column = SummaService
         end>
       DataController.Summary.SummaryGroups = <>
-      Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
@@ -88,7 +87,6 @@ object Report_AssetRepairForm: TReport_AssetRepairForm
       OptionsView.Footer = True
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
-      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
@@ -178,7 +176,7 @@ object Report_AssetRepairForm: TReport_AssetRepairForm
         Width = 98
       end
       object GoodsName: TcxGridDBColumn
-        Caption = #1058#1086#1074#1072#1088
+        Caption = #1058#1086#1074#1072#1088' / '#1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'ObjectName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -186,11 +184,11 @@ object Report_AssetRepairForm: TReport_AssetRepairForm
         Width = 98
       end
       object DescName: TcxGridDBColumn
-        Caption = #1069#1083#1077#1084#1077#1085#1090' '#1090#1086#1074#1072#1088#1072
+        Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1090#1086#1074#1072#1088' / '#1091#1087' '#1089#1090#1072#1090#1100#1103')'
         DataBinding.FieldName = 'DescName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 123
       end
       object Amount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
@@ -379,7 +377,6 @@ object Report_AssetRepairForm: TReport_AssetRepairForm
       2)
     Categories.Visibles = (
       True)
-    ImageOptions.Images = dmMain.ImageList
     NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
@@ -462,7 +459,6 @@ object Report_AssetRepairForm: TReport_AssetRepairForm
     end
   end
   object ActionList: TActionList
-    Images = dmMain.ImageList
     Left = 240
     Top = 224
     object actRefresh: TdsdDataSetRefresh
@@ -656,7 +652,6 @@ object Report_AssetRepairForm: TReport_AssetRepairForm
     View = cxGridDBTableView
     OnDblClickActionList = <>
     ActionItemList = <>
-    SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
     ColorRuleList = <>

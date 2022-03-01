@@ -918,6 +918,8 @@ type
     N337: TMenuItem;
     actSupplierFailures: TdsdOpenForm;
     N338: TMenuItem;
+    actExchangeRates: TdsdOpenForm;
+    N339: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

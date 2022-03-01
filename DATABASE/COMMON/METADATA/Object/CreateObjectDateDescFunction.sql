@@ -625,9 +625,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_PriceSite_DiscontEnd() RETURNS Integer 
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_PriceSite(), 'zc_ObjectDate_PriceSite_DiscontEnd', 'Дата окончания скидки' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PriceSite_DiscontEnd');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_ExchangeRates_OperDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ExchangeRates_OperDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ExchangeRates(), 'zc_ObjectDate_ExchangeRates_OperDate', 'Дата начала действия' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ExchangeRates_OperDate');
+
+
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 24.02.22                                                                                     * zc_ObjectDate_ExchangeRates_OperDate
  15.02.22                                                                                     * zc_ObjectDate_PriceSite_DiscontStart, zc_ObjectDate_PriceSite_DiscontEnd
  15.02.22                                                                                     * zc_ObjectDate_Goods_DiscontSiteStart, zc_ObjectDate_Goods_DiscontSiteEnd
  20.01.22                                                                                     * zc_ObjectDate_PickUpLogsAndDBF_DateLoaded

@@ -28,7 +28,7 @@ BEGIN
 
                        -- Прайс-лист (поставщика) - MovementItem
                        INNER JOIN MovementItem AS PriceList ON PriceList.Id = MILinkObject_Goods.MovementItemId
-                                                            AND PriceList.isErased = False 
+                       
                        -- Прайс-лист (поставщика) - Movement
                        INNER JOIN LastPriceList_find_View ON LastPriceList_find_View.MovementId = PriceList.MovementId
 
@@ -45,7 +45,7 @@ BEGIN
 
                    -- Прайс-лист (поставщика) - MovementItem
                    INNER JOIN MovementItem AS PriceList ON PriceList.Id = MILinkObject_Goods.MovementItemId
-                                                        AND PriceList.isErased = False 
+                   
                    -- Прайс-лист (поставщика) - Movement
                    INNER JOIN LastPriceList_find_View ON LastPriceList_find_View.MovementId = PriceList.MovementId
 
@@ -66,19 +66,19 @@ BEGIN
  
                       -- Прайс-лист (поставщика) - MovementItem
                       INNER JOIN MovementItem AS PriceList ON PriceList.Id = MILinkObject_Goods.MovementItemId
-                                                          AND PriceList.isErased = False 
+                      
                       -- Прайс-лист (поставщика) - Movement
                       INNER JOIN LastPriceList_find_View ON LastPriceList_find_View.MovementId = PriceList.MovementId
                        
-                      -- Регион аптеки
-                      INNER JOIN ObjectLink AS ObjectLinkUnitArea ON ObjectLinkUnitArea.ObjectId = COALESCE (inUnitId, 0)
-                                           AND ObjectLinkUnitArea.DescId = zc_ObjectLink_Unit_Area()
-
                 WHERE MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                   AND MILinkObject_Goods.ObjectId = inGoodsId
                   AND LastPriceList_find_View.JuridicalId = inJuridicalId
                   AND LastPriceList_find_View.ContractId = inContractId
-                  AND COALESCE(LastPriceList_find_View.AreaId, 0) = COALESCE(ObjectLinkUnitArea.ChildObjectId, 0))
+                  AND COALESCE(LastPriceList_find_View.AreaId, 0) IN 
+                                     (SELECT DISTINCT tmp.AreaId_Juridical         AS AreaId
+                                      FROM lpSelect_Object_JuridicalArea_byUnit (inUnitId , 0) AS tmp
+                                      WHERE tmp.JuridicalId = inJuridicalId
+                                      ))
       THEN
          SELECT PriceList.MovementId
          INTO vbPriceListId 
@@ -86,19 +86,19 @@ BEGIN
 
                -- Прайс-лист (поставщика) - MovementItem
                INNER JOIN MovementItem AS PriceList ON PriceList.Id = MILinkObject_Goods.MovementItemId
-                                                    AND PriceList.isErased = False 
+               
                -- Прайс-лист (поставщика) - Movement
                INNER JOIN LastPriceList_find_View ON LastPriceList_find_View.MovementId = PriceList.MovementId
                          
-               -- Регион аптеки
-               INNER JOIN ObjectLink AS ObjectLinkUnitArea ON ObjectLinkUnitArea.ObjectId = COALESCE (inUnitId, 0)
-                                    AND ObjectLinkUnitArea.DescId = zc_ObjectLink_Unit_Area()
-
          WHERE MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
            AND MILinkObject_Goods.ObjectId = inGoodsId
            AND LastPriceList_find_View.JuridicalId = inJuridicalId
            AND LastPriceList_find_View.ContractId = inContractId
-           AND COALESCE(LastPriceList_find_View.AreaId, 0) = COALESCE(ObjectLinkUnitArea.ChildObjectId, 0)    
+           AND COALESCE(LastPriceList_find_View.AreaId, 0) IN 
+                                     (SELECT DISTINCT tmp.AreaId_Juridical         AS AreaId
+                                      FROM lpSelect_Object_JuridicalArea_byUnit (inUnitId , 0) AS tmp
+                                      WHERE tmp.JuridicalId = inJuridicalId
+                                      )    
          LIMIT 1;   
       ELSE
          RAISE EXCEPTION 'Ошибка. Не найден товар в прайсе по региону аптеки.';   
@@ -111,7 +111,7 @@ BEGIN
 
            -- Прайс-лист (поставщика) - MovementItem
            INNER JOIN MovementItem AS PriceList ON PriceList.Id = MILinkObject_Goods.MovementItemId
-                                                AND PriceList.isErased = False 
+           
            -- Прайс-лист (поставщика) - Movement
            INNER JOIN LastPriceList_find_View ON LastPriceList_find_View.MovementId = PriceList.MovementId
 
@@ -162,5 +162,4 @@ $BODY$
  22.02.22                                                       *
 */
 
--- 
-select * from gpInsertUpdate_MI_PriceList_SupplierFailures(inGoodsId := 15402020 , inJuridicalId := 59610 , inContractId := 183257 , inUnitId := 5120968 ,  inSession := '3');
+-- select * from gpInsertUpdate_MI_PriceList_SupplierFailures(inGoodsId := 15402020 , inJuridicalId := 59610 , inContractId := 183257 , inUnitId := 5120968 ,  inSession := '3');

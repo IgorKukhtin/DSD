@@ -148,6 +148,9 @@ type
     actReasonOpenForm: TOpenChoiceForm;
     spGetReporNameTTN: TdsdStoredProc;
     actSPPrintTTNProcName: TdsdExecStoredProc;
+    mactUpdateMaskSale: TMultiAction;
+    actSaleJournalChoice: TOpenChoiceForm;
+    bbUpdateMaskSale: TdxBarButton;
   private
     { Private declarations }
   public

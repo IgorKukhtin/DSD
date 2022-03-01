@@ -1,9 +1,11 @@
 -- Function: gpSelect_PriceList_SupplierFailures()
 
-DROP FUNCTION IF EXISTS gpSelect_PriceList_SupplierFailures (TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_PriceList_SupplierFailures (TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_PriceList_SupplierFailures (TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_PriceList_SupplierFailures(
     IN inOperdate    TDateTime    , -- на дату
+    IN inShowAll     Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
@@ -109,7 +111,7 @@ BEGIN
 
         LEFT JOIN Object_Goods_Juridical AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId 
         LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
-
+   WHERE COALESCE(MIBoolean_SupplierFailures.ValueData, False) = True OR inShowAll = TRUE
         ;
 
 
@@ -125,4 +127,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpSelect_PriceList_SupplierFailures (inOperDate := ('22.02.2022')::TDateTime, inSession   := '3')
+SELECT * FROM gpSelect_PriceList_SupplierFailures (inOperDate := ('23.02.2022')::TDateTime,  inShowAll := FALSE, inSession   := '3')

@@ -492,7 +492,7 @@ BEGIN
                                  , SupplierFailures.JuridicalId
                                  , SupplierFailures.ContractId
                                  , SupplierFailures.AreaId
-                            FROM lpSelect_PriceList_SupplierFailures(inUserId) AS SupplierFailures
+                            FROM lpSelect_PriceList_SupplierFailures(0, inUserId) AS SupplierFailures
                             )
   , tmpMinPrice_RemainsPrice as (SELECT
             _tmpMinPrice_RemainsList.ObjectId                 AS GoodsId

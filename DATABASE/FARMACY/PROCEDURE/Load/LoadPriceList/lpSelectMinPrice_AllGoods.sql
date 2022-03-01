@@ -56,11 +56,14 @@ $BODY$
   DECLARE vbMainJuridicalId Integer;
   DECLARE vbIsGoodsPromo Boolean;
   DECLARE vbCostCredit TFloat;
+  DECLARE vbPercentСhange TFloat;
 BEGIN
     -- !!!так "криво" определятся НАДО ЛИ учитывать маркет. контракт!!!
     vbIsGoodsPromo:= inObjectId >=0;
     -- !!!меняется параметр в нормальное значение!!!
     inObjectId:= ABS (inObjectId);
+
+    vbPercentСhange := COALESCE((SELECT tmp.PercentСhange FROM gpSelect_Object_ExchangeRates(False, inUserId::TVarChar) AS tmp WHERE tmp.OperDate = CURRENT_DATE), 0);
 
     -- Нашли у Аптеки "Главное юр лицо"
     SELECT Object_Unit_View.JuridicalId INTO vbMainJuridicalId FROM Object_Unit_View WHERE Object_Unit_View.Id = inUnitId;
@@ -191,7 +194,7 @@ BEGIN
       DROP TABLE _tmpMinPrice_RemainsList;
     END IF;
 
--- RAISE EXCEPTION '<%>', (select count(*) from Remains);
+-- RAISE EXCEPTION '<%>', (select count(*) from _tmpMinPrice_Remains);
 
     -- Остатки + коды ...
     CREATE TEMP TABLE _tmpMinPrice_RemainsList ON COMMIT DROP AS
@@ -309,7 +312,7 @@ BEGIN
                                  , SupplierFailures.JuridicalId
                                  , SupplierFailures.ContractId
                                  , SupplierFailures.AreaId
-                            FROM lpSelect_PriceList_SupplierFailures(inUserId) AS SupplierFailures
+                            FROM lpSelect_PriceList_SupplierFailures(0, inUserId) AS SupplierFailures
                             )
   , tmpMinPrice_RemainsPrice as (SELECT
             _tmpMinPrice_RemainsList.ObjectId                 AS GoodsId
@@ -588,14 +591,14 @@ BEGIN
                     )
     -- Результат
     SELECT
-        MinPriceList.GoodsId,
-        MinPriceList.GoodsId_retail,
-        MinPriceList.GoodsCode,
-        MinPriceList.GoodsName,
-        MinPriceList.Remains,
-        MinPriceList.MaxPriceIncome ::TFloat,
-        MinPriceList.MidPriceSale ::TFloat,
-        MinPriceList.MinExpirationDate,
+        COALESCE(MinPriceList.GoodsId, _tmpMinPrice_Remains.ObjectId),
+        COALESCE(MinPriceList.GoodsId_retail, _tmpMinPrice_Remains.ObjectId_retail),
+        COALESCE(MinPriceList.GoodsCode, Goods.GoodsCodeInt),
+        COALESCE(MinPriceList.GoodsName, Goods.GoodsName),
+        COALESCE(MinPriceList.Remains,  _tmpMinPrice_Remains.Amount),
+        COALESCE(MinPriceList.MaxPriceIncome,  _tmpMinPrice_Remains.MaxPriceIncome) ::TFloat,
+        COALESCE(MinPriceList.MidPriceSale,  _tmpMinPrice_Remains.MidPriceSale) ::TFloat,
+        COALESCE(MinPriceList.MinExpirationDate,  _tmpMinPrice_Remains.MinExpirationDate),
         MinPriceList.PartionGoodsDate,
         MinPriceList.Partner_GoodsId,
         MinPriceList.Partner_GoodsCode,
@@ -608,11 +611,12 @@ BEGIN
         MinPriceList.AreaName,
         MinPriceList.Price,
         MinPriceList.SuperFinalPrice,
-        MinPriceList.isTop :: Boolean AS isTop,
-        MinPriceList.isTOP_Price :: Boolean AS isTOP_Price,
-        CASE WHEN tmpCountJuridical.CountJuridical > 1 THEN FALSE ELSE TRUE END :: Boolean AS isOneJuridical,
-        MinPriceList.PercentMarkup :: TFloat AS PercentMarkup,
+        COALESCE (MinPriceList.isTop, NULLIF (GoodsPrice.isTOP, FALSE), COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE) :: Boolean) AS isTOP,
+        COALESCE (MinPriceList.isTOP_Price, GoodsPrice.isTOP, FALSE) :: Boolean AS isTOP_Price,
         
+        CASE WHEN tmpCountJuridical.CountJuridical > 1 THEN FALSE ELSE TRUE END :: Boolean AS isOneJuridical,
+        
+        COALESCE (MinPriceList.PercentMarkup, GoodsPrice.PercentMarkup, 0) :: TFloat  AS PercentMarkup,
         MinPriceList.isJuridicalPromo,
 
         FinalListOne.JuridicalId, 
@@ -631,13 +635,27 @@ BEGIN
              THEN FinalListOne.Price 
              ELSE ROUND((FinalListOne.Price + FinalListTwo.Price) / 2, 2) END :: TFloat
     FROM MinPriceList
+    
+         FULL JOIN _tmpMinPrice_Remains ON _tmpMinPrice_Remains.ObjectId_retail = MinPriceList.GoodsId_retail
+                                       AND vbPercentСhange <> 0
+
+         -- товар "сети"
+         LEFT JOIN Object_Goods_View AS Goods ON Goods.Id = _tmpMinPrice_Remains.ObjectId
+         LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = _tmpMinPrice_Remains.ObjectId
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                 ON ObjectBoolean_Goods_TOP.ObjectId = _tmpMinPrice_Remains.ObjectId_retail
+                                AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()
+         
          LEFT JOIN tmpCountJuridical ON tmpCountJuridical.GoodsId = MinPriceList.GoodsId
 
          LEFT JOIN FinalListPromo AS FinalListOne ON FinalListOne.GoodsId = MinPriceList.GoodsId
                                  AND FinalListOne.Ord = 1
          LEFT JOIN FinalListPromo AS FinalListTwo ON FinalListTwo.GoodsId = MinPriceList.GoodsId
                                  AND FinalListTwo.Ord = 2
-    WHERE MinPriceList.Ord = 1
+    WHERE COALESCE(MinPriceList.Ord, 1) = 1 
+      AND (COALESCE(MinPriceList.Ord, 0) = 1 OR
+           COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE)) = FALSE AND
+           COALESCE (GoodsPrice.isTOP, FALSE) = FALSE)
     ;
 
 END;
@@ -666,3 +684,5 @@ ALTER FUNCTION lpSelectMinPrice_AllGoods (Integer, Integer, Integer) OWNER TO po
 
 -- 
 SELECT * FROM lpSelectMinPrice_AllGoods (183289 , 4, 3); 
+
+

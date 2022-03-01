@@ -2228,11 +2228,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_DiffKind_Packages() RETURNS Integer AS
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_DiffKind(), 'zc_ObjectFloat_DiffKind_Packages', 'Количествову упаковок' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_DiffKind_Packages');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ExchangeRates_Exchange() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ExchangeRates_Exchange'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ExchangeRates(), 'zc_ObjectFloat_ExchangeRates_Exchange', 'Курс' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ExchangeRates_Exchange');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 24.02.22                                                                                      * zc_ObjectFloat_ExchangeRates_Exchange 
  16.02.22                                                                                      * zc_ObjectFloat_DiffKind_Packages 
  15.02.22                                                                                      * zc_ObjectFloat_PriceSite_DiscontAmount, zc_ObjectFloat_PriceSite_DiscontPercent
  15.02.22                                                                                      * zc_ObjectFloat_Goods_DiscontAmountSite, zc_ObjectFloat_Goods_DiscontPercentSite

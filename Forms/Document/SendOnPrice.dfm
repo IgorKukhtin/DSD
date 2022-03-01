@@ -1321,6 +1321,43 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end>
       isShowModal = True
     end
+    object mactUpdateMaskSale: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSaleJournalChoice
+        end
+        item
+          Action = actUpdateMask
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      ImageIndex = 30
+    end
+    object actSaleJournalChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'SaleJournalChoice'
+      FormName = 'TSaleJournalChoiceForm'
+      FormNameParam.Value = 'TSaleJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MaskId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actRefreshPrice: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1728,6 +1765,14 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateMaskSale'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChecked'
         end
         item
@@ -1853,6 +1898,10 @@ inherited SendOnPriceForm: TSendOnPriceForm
     end
     object bbChecked: TdxBarButton
       Action = actChecked
+      Category = 0
+    end
+    object bbUpdateMaskSale: TdxBarButton
+      Action = mactUpdateMaskSale
       Category = 0
     end
   end

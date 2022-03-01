@@ -35,6 +35,8 @@ type
     Fupdate_id : Int64;
     FError : String;
 
+    FMessagesTelegramCDS : TClientDataSet;
+
   protected
     procedure InitCDS;
     procedure InitBot;
@@ -54,6 +56,7 @@ type
     property Id : Integer read FId;
     property FileNameChatId : String read FFileNameChatId write FFileNameChatId;
     property ErrorText: String read GetErrorText;
+    property MessagesTelegramCDS: TClientDataSet read FMessagesTelegramCDS write FMessagesTelegramCDS;
   end;
 
 implementation
@@ -180,6 +183,18 @@ begin
   except
   end;
 
+  if Assigned(FMessagesTelegramCDS) then
+  begin
+    if not FMessagesTelegramCDS.Active then
+    begin
+      if FMessagesTelegramCDS.Active then FMessagesTelegramCDS.Close;
+      FMessagesTelegramCDS.Close;
+      FMessagesTelegramCDS.FieldDefs.Clear;
+      FMessagesTelegramCDS.FieldDefs.Add('ChatId', TFieldType.ftLargeint);
+      FMessagesTelegramCDS.FieldDefs.Add('Text', TFieldType.ftMemo, 0);
+      FMessagesTelegramCDS.CreateDataSet;
+    end;
+  end
 end;
 
 function TTelegramBot.GetUpdates : integer;
@@ -187,7 +202,7 @@ function TTelegramBot.GetUpdates : integer;
       JSONA: TJSONArray;
       I : integer;
 
-  procedure AddChatId (AValue : TJSONValue);
+  procedure AddChatId (AValue : TJSONValue; AText : TJSONValue);
   begin
     if AValue = nil then Exit;
 
@@ -228,6 +243,16 @@ function TTelegramBot.GetUpdates : integer;
       FChatIdCDS.FieldByName('UserName').AsString := DelDoubleQuote(AValue.FindValue('username'));
       FChatIdCDS.Post;
     end;
+
+    if Assigned(FMessagesTelegramCDS) and (AText <> Nil) then
+    begin
+      FMessagesTelegramCDS.Last;
+      FMessagesTelegramCDS.Append;
+      FMessagesTelegramCDS.FieldByName('ChatId').AsLargeInt := StrToInt64(AValue.FindValue('id').ToString);
+      FMessagesTelegramCDS.FieldByName('Text').AsString := DelDoubleQuote(AText);
+      FMessagesTelegramCDS.Post;
+    end;
+
   end;
 
 
@@ -272,8 +297,8 @@ begin
       Fupdate_id := StrToInt64(jValue.FindValue('update_id').ToString);
       jValue := jValue.FindValue('message');
       if jValue = nil then Continue;
-      if jValue.FindValue('from') <> nil then AddChatId(jValue.FindValue('from'));
-      if jValue.FindValue('chat') <> nil then AddChatId(jValue.FindValue('chat'));
+      if jValue.FindValue('from') <> nil then AddChatId(jValue.FindValue('from'), jValue.FindValue('text'));
+      if jValue.FindValue('chat') <> nil then AddChatId(jValue.FindValue('chat'), nil);
     end;
 
   end else FError := FRESTResponse.StatusText;;

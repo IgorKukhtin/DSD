@@ -87,6 +87,14 @@ BEGIN
        END LOOP;
        */
 
+       INSERT INTO _tmpMI_OrderInternal_Child (MovementItemId, GoodsId, PartionGoods, Price, JuridicalPrice, 
+                 DefermentPrice, PriceListMovementItemId, Maker, GoodsCode, GoodsName,
+                 JuridicalId, ContractId, isSupplierFailures)
+         SELECT vbRec.MovementItemId, COALESCE (vbRec.GoodsId, 0), vbRec.PartionGoodsDate, vbRec.Price, vbRec.SuperFinalPrice, 
+                vbRec.SuperFinalPrice_Deferment, vbRec.PriceListMovementItemId, vbRec.MakerName,  vbRec.GoodsCode, vbRec.GoodsName,
+                COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0), vbRec.isSupplierFailures
+         FROM gpSelect_MovementItem_OrderInternal_Child (inInternalOrder, FALSE, FALSE, FALSE, inSession) AS vbRec;
+
        INSERT INTO _tmpMI_OrderInternal_Master (MovementItemId, PartionGoods, MinimumLot, MCS, PriceFrom, 
                  JuridicalPrice, DefermentPrice, Remains, Reserved, Income, CheckAmount, 
                  SendAmount, AmountDeferred, Maker, PartnerGoodsCode, PartnerGoodsName,
@@ -98,14 +106,6 @@ BEGIN
                 vbRec.isClose, vbRec.isFirst, vbRec.isSecond, vbRec.isTOP, vbRec.isTOP_Price, vbRec.MCSNotRecalc, vbRec.MCSIsClose, 
                 COALESCE (vbRec.PartnerGoodsId, 0), COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0)
          FROM gpSelect_MovementItem_OrderInternal_Master (inInternalOrder, FALSE, FALSE, FALSE, inSession) AS vbRec;
-
-       INSERT INTO _tmpMI_OrderInternal_Child (MovementItemId, GoodsId, PartionGoods, Price, JuridicalPrice, 
-                 DefermentPrice, PriceListMovementItemId, Maker, GoodsCode, GoodsName,
-                 JuridicalId, ContractId, isSupplierFailures)
-         SELECT vbRec.MovementItemId, COALESCE (vbRec.GoodsId, 0), vbRec.PartionGoodsDate, vbRec.Price, vbRec.SuperFinalPrice, 
-                vbRec.SuperFinalPrice_Deferment, vbRec.PriceListMovementItemId, vbRec.MakerName,  vbRec.GoodsCode, vbRec.GoodsName,
-                COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0), isSupplierFailures
-         FROM gpSelect_MovementItem_OrderInternal_Child (inInternalOrder, FALSE, FALSE, FALSE, inSession) AS vbRec;
 
        -- Сохранили
        PERFORM lpInsertUpdate_MovementItemDate    (zc_MIDate_PartionGoods()   , MovementItem.Id, _tmpMI_OrderInternal_Master.PartionGoods)

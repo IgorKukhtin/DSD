@@ -1,8 +1,9 @@
 -- Function: lpSelect_PriceList_SupplierFailures()
 
-DROP FUNCTION IF EXISTS lpSelect_PriceList_SupplierFailures (Integer);
+DROP FUNCTION IF EXISTS lpSelect_PriceList_SupplierFailures (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpSelect_PriceList_SupplierFailures(
+    IN inUnitId              Integer ,    -- ѕодразделение
     IN inUserId              Integer      -- сесси€ пользовател€
 )
 RETURNS TABLE (GoodsId Integer
@@ -38,13 +39,22 @@ BEGIN
                             WHERE Movement.DescId = zc_Movement_PriceList()
                               AND Movement.StatusId = zc_Enum_Status_UnComplete()
                             ),
+        tmpJuridicalArea AS (SELECT DISTINCT
+                                    tmp.JuridicalId              AS JuridicalId
+                                  , tmp.AreaId_Juridical         AS AreaId
+                             FROM lpSelect_Object_JuridicalArea_byUnit (inUnitId , 0) AS tmp
+                             ),
         tmpLastMovement AS (SELECT PriceList.JuridicalId
                                  , PriceList.ContractId
                                  , PriceList.AreaId
                                  , PriceList.MovementId
                             FROM tmpMovementAll AS PriceList
                             
-                            WHERE PriceList.Max_Date = PriceList.OperDate)
+                                 LEFT JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = PriceList.JuridicalId
+                                                           AND tmpJuridicalArea.AreaId = PriceList.AreaId 
+                            
+                            WHERE PriceList.Max_Date = PriceList.OperDate
+                              AND (COALESCE (inUnitId, 0) = 0 OR COALESCE(tmpJuridicalArea.AreaId, 0) <> 0))
 
     SELECT DISTINCT
            MovementItem.ObjectId               AS GoodsId 
@@ -61,11 +71,6 @@ BEGIN
                                       ON MIBoolean_SupplierFailures.MovementItemId = MovementItem.Id
                                      AND MIBoolean_SupplierFailures.DescId = zc_MIBoolean_SupplierFailures()
                                      AND MIBoolean_SupplierFailures.ValueData = TRUE
-
-    GROUP BY MovementItem.ObjectId
-           , LastMovement.JuridicalId
-           , LastMovement.ContractId
-           , LastMovement.AreaId
     ;
 
 
@@ -81,4 +86,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM lpSelect_PriceList_SupplierFailures (inUserId := 3)
+SELECT * FROM lpSelect_PriceList_SupplierFailures (inUnitId := 6309262 , inUserId := 3)

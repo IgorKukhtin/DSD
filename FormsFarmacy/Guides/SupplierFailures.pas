@@ -52,6 +52,7 @@ type
     dxBarButton5: TdxBarButton;
     actUpdate_SupplierFailures: TdsdExecStoredProc;
     OperDate: TcxGridDBColumn;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public
