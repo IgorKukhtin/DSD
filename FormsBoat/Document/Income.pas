@@ -228,6 +228,9 @@ type
     EnterMoveNext: TEnterMoveNext;
     mactUpdateActionMovement: TMultiAction;
     actInsertAction: TdsdInsertUpdateAction;
+    EKPrice_orig: TcxGridDBColumn;
+    EKPrice_discount: TcxGridDBColumn;
+    TotalSummIn: TcxGridDBColumn;
   private
   public
   end;

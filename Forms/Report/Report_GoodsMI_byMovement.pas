@@ -72,6 +72,9 @@ type
     SummPartner_10300: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    SummPartner_10250: TcxGridDBColumn;
+    ChangePercent: TcxGridDBColumn;
+    PriceListName: TcxGridDBColumn;
   private
     { Private declarations }
   public

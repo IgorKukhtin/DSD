@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_byMovement (
     IN inGoodsId      Integer   ,
     IN inSession      TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
+RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime, ChangePercent TFloat, PriceListName TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , UnitCode Integer, UnitName TVarChar
@@ -28,7 +28,7 @@ RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, OperDate TDateTime, OperDa
              , Amount_10500_Weight TFloat, Amount_10500_Sh TFloat
              , Amount_40200_Weight TFloat, Amount_40200_Sh TFloat
              , SummPartner_calc TFloat
-             , SummPartner TFloat, SummPartner_10200 TFloat, SummPartner_10300 TFloat
+             , SummPartner TFloat, SummPartner_10200 TFloat, SummPartner_10250 TFloat, SummPartner_10300 TFloat
              , SummDiff TFloat
              , WeightTotal TFloat -- Вес в упаковке - GoodsByGoodsKind
              , ChangePercentAmount TFloat
@@ -123,10 +123,14 @@ BEGIN
                                     ELSE 0
                                END) AS SummPartner
                              -- 5.3.2. Сумма у покупателя Разница с оптовыми ценами + Скидка Акция
-                           , (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleSumm_10200(), zc_Enum_AnalyzerId_SaleSumm_10250()) THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
+                           , (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleSumm_10200()) THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
                                    WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10200() THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
                                    ELSE 0
                               END) AS SummPartner_10200
+                             -- 5.3.2. Сумма у покупателя Разница с оптовыми ценами + Скидка Акция
+                           , (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleSumm_10250()) THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
+                                   ELSE 0
+                              END) AS SummPartner_10250
                               -- 5.3.4. Сумма у покупателя Скидка / Наценка дополнительная
                             , (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300()     THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
                                     WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10300() THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
@@ -278,6 +282,7 @@ BEGIN
                       , SUM (tmpListContainerSumm.SummPartner)         AS SummPartner
                       , SUM (tmpListContainerSumm.SummPartner_calc)    AS SummPartner_calc
                       , SUM (tmpListContainerSumm.SummPartner_10200)   AS SummPartner_10200
+                      , SUM (tmpListContainerSumm.SummPartner_10250)   AS SummPartner_10250
                       , SUM (tmpListContainerSumm.SummPartner_10300)   AS SummPartner_10300
 
                  FROM (SELECT tmpListContainerSumm.MovementId
@@ -292,6 +297,7 @@ BEGIN
                             , COALESCE (MIBoolean_BarCode.ValueData,FALSE) AS isBarCode
                             , (tmpListContainerSumm.SummPartner)       AS SummPartner
                             , (tmpListContainerSumm.SummPartner_10200) AS SummPartner_10200
+                            , (tmpListContainerSumm.SummPartner_10250) AS SummPartner_10250
                             , (tmpListContainerSumm.SummPartner_10300) AS SummPartner_10300
 
                             , (tmpListContainerSumm.Amount * CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() THEN tmpListContainerSumm.Weight ELSE 1 END) AS Amount
@@ -334,9 +340,12 @@ BEGIN
                 )
        , tmpOperationGroup AS
                 (SELECT MovementDesc.ItemName
+                      , Movement.Id                            AS MovementId
                       , Movement.InvNumber
                       , Movement.OperDate
+                      , MovementFloat_ChangePercent.ValueData  AS ChangePercent
                       , MovementDate_OperDatePartner.ValueData AS OperDatePartner
+                      , MovementLinkObject_PriceList.ObjectId  AS PriceListId
                       , tmpListContainerSumm.JuridicalId
                       , tmpListContainerSumm.PartnerId
                       , tmpListContainerSumm.InfoMoneyId
@@ -359,6 +368,7 @@ BEGIN
                       , SUM (tmpListContainerSumm.Amount_40200_Sh)     AS Amount_40200_Sh
                       , SUM (tmpListContainerSumm.SummPartner)         AS SummPartner
                       , SUM (tmpListContainerSumm.SummPartner_10200)   AS SummPartner_10200
+                      , SUM (tmpListContainerSumm.SummPartner_10250)   AS SummPartner_10250
                       , SUM (tmpListContainerSumm.SummPartner_10300)   AS SummPartner_10300
                       , SUM (tmpListContainerSumm.SummPartner_calc) AS SummPartner_calc
                  FROM tmpOperationGroup_all AS tmpListContainerSumm
@@ -366,11 +376,19 @@ BEGIN
                       LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
                       LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                              ON MovementDate_OperDatePartner.MovementId =  tmpListContainerSumm.MovementId
-                                            AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                            AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+                      LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                              ON MovementFloat_ChangePercent.MovementId =  tmpListContainerSumm.MovementId
+                                             AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                      LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+                                                   ON MovementLinkObject_PriceList.MovementId = tmpListContainerSumm.MovementId
+                                                  AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
                  GROUP BY MovementDesc.ItemName
                         , Movement.InvNumber
                         , Movement.OperDate
+                        , MovementFloat_ChangePercent.ValueData
                         , MovementDate_OperDatePartner.ValueData
+                        , MovementLinkObject_PriceList.ObjectId
                         , tmpListContainerSumm.JuridicalId
                         , tmpListContainerSumm.PartnerId
                         , tmpListContainerSumm.InfoMoneyId
@@ -387,6 +405,8 @@ BEGIN
          , tmpOperationGroup.InvNumber
          , tmpOperationGroup.OperDate
          , tmpOperationGroup.OperDatePartner
+         , tmpOperationGroup.ChangePercent
+         , Object_PriceList.ValueData  AS PriceListName
          , Object_Juridical.ObjectCode AS JuridicalCode
          , Object_Juridical.ValueData  AS JuridicalName
          , Object_Partner.ObjectCode   AS PartnerCode
@@ -419,6 +439,7 @@ BEGIN
          , tmpOperationGroup.SummPartner_calc :: TFloat   AS SummPartner_calc
          , tmpOperationGroup.SummPartner :: TFloat        AS SummPartner
          , tmpOperationGroup.SummPartner_10200 :: TFloat  AS SummPartner_10200
+         , tmpOperationGroup.SummPartner_10250 :: TFloat  AS SummPartner_10250
          , tmpOperationGroup.SummPartner_10300 :: TFloat  AS SummPartner_10300
          , (tmpOperationGroup.SummPartner - tmpOperationGroup.SummPartner_calc) :: TFloat  AS SummDiff
 
@@ -453,6 +474,8 @@ BEGIN
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
+          LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmpOperationGroup.PriceListId
+
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
           
           -- Товар и Вид товара
@@ -485,4 +508,4 @@ ALTER FUNCTION gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integ
 
 -- тест
 -- SELECT SUM (AmountPartner_Weight), SUM (SummPartner) FROM gpReport_GoodsMI_byMovement (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inDescId:= zc_Movement_Sale(), inUnitId:= 0, inJuridicalId:= 0, inInfoMoneyId:= 0, inPaidKindId:= 0, inGoodsGroupId:= 0, inGoodsId:=0, inSession:= zfCalc_UserAdmin());
---select * from gpReport_GoodsMI_byMovement (inStartDate := ('24.11.2021')::TDateTime , inEndDate := ('24.11.2021')::TDateTime , inDescId := 5 , inUnitId := 0 , inJuridicalId := 862910 , inInfoMoneyId := 0 , inPaidKindId := 0 , inGoodsGroupId := 0 , inGoodsId := 1613498 ,  inSession := '9457');
+--select * from gpReport_GoodsMI_byMovement (inStartDate := ('24.11.2022')::TDateTime , inEndDate := ('24.11.2022')::TDateTime , inDescId := 5 , inUnitId := 0 , inJuridicalId := 862910 , inInfoMoneyId := 0 , inPaidKindId := 0 , inGoodsGroupId := 0 , inGoodsId := 1613498 ,  inSession := '9457');

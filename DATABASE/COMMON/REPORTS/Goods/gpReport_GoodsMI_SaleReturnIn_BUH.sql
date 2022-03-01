@@ -282,6 +282,7 @@ BEGIN
                                                        END
                                                   ELSE 0
                                              END AS NUMERIC (16, 2))) AS Return_SummVAT
+                                , MAX (MIContainer.MovementId) AS MovementId_test
                            FROM tmpAnalyzer
                                 INNER JOIN MovementItemContainer AS MIContainer
                                                                  ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
@@ -342,6 +343,8 @@ BEGIN
 
                            WHERE (_tmpJuridical.JuridicalId > 0 OR vbIsJuridical = FALSE)
                              AND (MILinkObject_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0 OR _tmpJuridicalBranch.JuridicalId IS NOT NULL)
+                           --AND (vbUserId <> 5 OR MIContainer.MovementId = 21845765)
+                             
                            GROUP BY MIContainer.ContainerId_Analyzer
                                   , MIContainer.ObjectId_Analyzer
                                   , MIContainer.ObjectIntId_Analyzer
@@ -372,6 +375,7 @@ BEGIN
                                              END AS NUMERIC (16, 2)) AS Sale_SummVAT
 
                                 , 0 AS Return_SummVAT
+                                , Movement.Id AS MovementId_test
                            FROM Movement
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId     = zc_MI_Master()
@@ -423,6 +427,7 @@ BEGIN
                              AND (MovementLinkObject_From.ObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                              AND (ObjectLink_InfoMoney.ChildObjectId    = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
                              AND (COALESCE (inPaidKindId, 0) <> zc_Enum_PaidKind_SecondForm())
+                           --AND vbUserId <> 5
                           )
 
   , tmpOperationGroup AS (SELECT CASE WHEN inIsPartner = TRUE THEN tmpOperationGroup2.JuridicalId ELSE 0 END AS JuridicalId
@@ -441,6 +446,7 @@ BEGIN
                                , SUM (tmpOperationGroup2.Sale_SummVAT)                                    AS Sale_SummVAT
   --                             , SUM (tmpOperationGroup2.Return_Summ - tmpOperationGroup2.Return_SummVAT) AS Return_SummMVAT
                                , SUM (tmpOperationGroup2.Return_SummVAT)                                  AS Return_SummVAT
+                               , MAX (tmpOperationGroup2.MovementId_test) AS MovementId_test
                           FROM tmpOperationGroup2
                                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Contract
                                                              ON ContainerLinkObject_Contract.ContainerId = tmpOperationGroup2.ContainerId_Analyzer
@@ -486,6 +492,7 @@ BEGIN
                    , Object_GoodsKind.ValueData         AS GoodsKindName
                    , tmpOperationGroup.Sale_SummVAT       :: TFloat
                    , tmpOperationGroup.Return_SummVAT     :: TFloat
+                   , tmpOperationGroup.MovementId_test
               FROM tmpOperationGroup
                    LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
                    LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
@@ -503,7 +510,10 @@ BEGIN
               )
        -- результат
        SELECT tmp.GoodsGroupName, tmp.GoodsGroupNameFull
-            , COALESCE (_tmpMI.GoodsCode, tmp.GoodsCode) :: Integer AS GoodsCode
+            , CASE WHEN COALESCE (tmp.Sale_Summ, 0) = 0 AND COALESCE (_tmpMI.Sale_SummVAT, 0) > 0
+                   THEN _tmpMI.MovementId_test
+                   ELSE COALESCE (_tmpMI.GoodsCode, tmp.GoodsCode)
+              END:: Integer AS GoodsCode
             , COALESCE (_tmpMI.GoodsName, tmp.GoodsName) :: TVarChar AS GoodsName
             , COALESCE (_tmpMI.GoodsKindName, tmp.GoodsKindName) :: TVarChar AS GoodsKindName
             , tmp.MeasureName
@@ -519,7 +529,7 @@ BEGIN
             , tmp.RetailName, tmp.RetailReportName
             , tmp.AreaName, tmp.PartnerTagName
             , tmp.Address, tmp.RegionName, tmp.ProvinceName, tmp.CityKindName, tmp.CityName
-            , tmp.PartnerId, tmp.PartnerCode, tmp.PartnerName
+            , tmp.PartnerId, tmp.PartnerCode, COALESCE (tmp.PartnerName, Object_Partner.ValueData) :: TVarChar AS PartnerName
             , COALESCE (_tmpMI.ContractCode, tmp.ContractCode)     :: Integer  AS ContractCode
             , COALESCE (_tmpMI.ContractNumber, tmp.ContractNumber) :: TVarChar AS ContractNumber
             , tmp.ContractTagName, tmp.ContractTagGroupName
@@ -571,6 +581,7 @@ BEGIN
                            AND COALESCE (_tmpMI.TradeMarkId,0)  = COALESCE (tmp.TradeMarkId,0)
                            AND COALESCE (_tmpMI.GoodsId, 0)     = COALESCE (tmp.GoodsId, 0)
                            AND COALESCE (_tmpMI.GoodsKindId, 0) = COALESCE (tmp.GoodsKindId, 0)
+          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = _tmpMI.PartnerId
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
                                ON ObjectLink_Goods_GoodsGroupStat.ObjectId = COALESCE (_tmpMI.GoodsId, tmp.GoodsId)
                               AND ObjectLink_Goods_GoodsGroupStat.DescId   = zc_ObjectLink_Goods_GoodsGroupStat()
@@ -587,4 +598,4 @@ $BODY$
 */
 -- тест
 --
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_BUH (inStartDate:= '01.02.2019', inEndDate:= '01.02.2019', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsOLAP:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_BUH (inStartDate:= '01.02.2023', inEndDate:= '01.02.2023', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsOLAP:= TRUE, inSession:= zfCalc_UserAdmin());

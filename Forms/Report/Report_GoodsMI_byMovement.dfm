@@ -5,8 +5,9 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -234
   ExplicitWidth = 1144
-  ExplicitHeight = 412
+  ExplicitHeight = 413
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -103,6 +104,11 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = SummPartner_10300
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPartner_10250
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -179,6 +185,11 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = SummPartner_10300
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummPartner_10250
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -455,7 +466,7 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             Width = 80
           end
           object SummPartner_10200: TcxGridDBColumn
-            Caption = #1040#1082#1094#1080#1080', '#1075#1088#1085
+            Caption = #1057#1082#1080#1076#1082#1072' '#1086#1090' '#1087#1088#1072#1081#1089#1072', '#1075#1088#1085
             DataBinding.FieldName = 'SummPartner_10200'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -463,6 +474,16 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object SummPartner_10250: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1080', '#1075#1088#1085
+            DataBinding.FieldName = 'SummPartner_10250'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object SummPartner_10300: TcxGridDBColumn
             Caption = #1057#1082#1080#1076#1082#1072', '#1075#1088#1085
@@ -534,6 +555,20 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object ChangePercent: TcxGridDBColumn
+            Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
+            DataBinding.FieldName = 'ChangePercent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object PriceListName: TcxGridDBColumn
+            Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+            DataBinding.FieldName = 'PriceListName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
       end

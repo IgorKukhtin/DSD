@@ -606,6 +606,17 @@ END IF;*/
      -- определяется "Партионный учет долгов нал"
      IF vbIsPartionDoc_Branch = TRUE
      THEN
+         IF 1 < (SELECT COUNT(*)
+                 FROM (SELECT vbOperDatePartner AS OperDate) AS tmp
+                      LEFT JOIN Object_ContractCondition_View
+                             ON Object_ContractCondition_View.ContractId = vbContractId
+                            AND Object_ContractCondition_View.ContractConditionKindId IN (zc_Enum_ContractConditionKind_DelayDayCalendar(), zc_Enum_ContractConditionKind_DelayDayBank())
+                            AND Object_ContractCondition_View.Value <> 0
+                            AND vbOperDatePartner BETWEEN Object_ContractCondition_View.StartDate AND Object_ContractCondition_View.EndDate
+                )
+         THEN
+             RAISE EXCEPTION 'Ошибка.Дублируется условие в договоре № <%>.', lfGet_Object_ValueData (vbContractId);
+         END IF;
          -- определяется
          vbPaymentDate:= (SELECT tmp.OperDate + (tmp.OperDate - zfCalc_DetermentPaymentDate (COALESCE (Object_ContractCondition_View.ContractConditionKindId, 0), COALESCE (Value, 0) :: Integer, tmp.OperDate))
                           FROM (SELECT vbOperDatePartner AS OperDate) AS tmp

@@ -132,6 +132,9 @@ begin
   if not SameText(gc_User.Login, '') then
     // Caption := Caption + ' - Пользователь: ' + gc_User.Login;
     Caption := Caption + ' <' + gc_User.Login + '>';
+  //
+  //dmMain.cxLookAndFeelController.SkinName:='';
+  //
 end;
 
 end.
