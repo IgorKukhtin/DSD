@@ -83,6 +83,11 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PersonalSumma
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -139,6 +144,11 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PersonalSumma
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -344,6 +354,17 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
             Options.Editing = False
             Width = 65
           end
+          object PersonalSumma: TcxGridDBColumn
+            Caption = #1040#1074#1072#1085#1089#1086#1074#1099#1077' '#1086#1090#1095#1077#1090#1099
+            DataBinding.FieldName = 'PersonalSumma'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 65
+          end
           object DebetEnd: TcxGridDBColumn
             Caption = #1044#1086#1083#1075' '#1082#1086#1085#1077#1095#1085#1099#1081
             DataBinding.FieldName = 'DebetEnd'
@@ -372,7 +393,7 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
             VisibleForCustomization = False
             Width = 30
           end
-          object cxGridDBTableViewColumn1: TcxGridDBColumn
+          object InvNumber_Full: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1089#1095#1077#1090' ('#1080#1085#1092'.)'
             DataBinding.FieldName = 'InvNumber_Full'
             Visible = False
@@ -772,7 +793,7 @@ inherited Report_InvoiceForm: TReport_InvoiceForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime

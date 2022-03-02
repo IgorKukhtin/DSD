@@ -174,7 +174,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
             Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1085#1076#1089
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 77
@@ -183,7 +183,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
             Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1085#1076#1089' ('#1091#1087#1072#1082#1086#1074#1082#1080')'
             DataBinding.FieldName = 'PriceParent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1073#1077#1079' '#1085#1076#1089' ('#1091#1087#1072#1082#1086#1074#1082#1080')'
@@ -193,7 +193,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
             Caption = #1042#1083#1086#1078#1077#1085#1085#1086#1089#1090#1100
             DataBinding.FieldName = 'MeasureMult'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 57
@@ -202,7 +202,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
             Caption = #1056#1077#1082#1086#1084#1077#1085'. '#1094#1077#1085#1072' '#1073#1077#1079' '#1085#1076#1089' ('#1091#1087'.)'
             DataBinding.FieldName = 'EmpfPriceParent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1077#1082#1086#1084#1077#1085#1076#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072' '#1073#1077#1079' '#1085#1076#1089' ('#1091#1087#1072#1082#1086#1074#1082#1080')'
@@ -212,7 +212,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
             Caption = #1052#1080#1085' '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1091#1087#1082#1080
             DataBinding.FieldName = 'MinCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1084#1080#1085' '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1091#1087#1082#1080
@@ -222,7 +222,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
             Caption = #1056#1077#1082#1086#1084'. '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1091#1087#1082#1080
             DataBinding.FieldName = 'MinCountMult'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1077#1082#1086#1084#1077#1085#1076#1091#1077#1084#1086#1077' '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1091#1087#1082#1080
@@ -231,7 +231,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
           object WeightParent: TcxGridDBColumn
             DataBinding.FieldName = 'WeightParent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 57
@@ -363,6 +363,61 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end>
       RefreshOnTabSetChanges = True
     end
+    object actDoLoad_Gotthardt: TExecuteImportSettingsAction [1]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId_Gotthardt'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerId'
+          Value = ''
+          Component = GuidesPartner
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actGetImportSetting_Gotthardt: TdsdExecStoredProc [4]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_Gotthardt
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_Gotthardt
+        end>
+    end
+    object mactStartLoad_Gotthardt: TMultiAction [6]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_Gotthardt
+        end
+        item
+          Action = actDoLoad_Gotthardt
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Gotthardt '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Gotthardt'#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Gotthardt '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Gotthardt '#1080#1079' '#1092#1072#1081#1083#1072
+      ImageIndex = 27
+      WithoutNext = True
+    end
     inherited actUpdateMainDS: TdsdUpdateDataSet
       StoredProcList = <
         item
@@ -415,7 +470,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         item
         end>
     end
-    object actMeasureParentChoice: TOpenChoiceForm [13]
+    object actMeasureParentChoice: TOpenChoiceForm [16]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -442,7 +497,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end>
       isShowModal = True
     end
-    object actMeasureChoice: TOpenChoiceForm [14]
+    object actMeasureChoice: TOpenChoiceForm [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -469,7 +524,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end>
       isShowModal = True
     end
-    object actDiscountPartnerChoice: TOpenChoiceForm [15]
+    object actDiscountPartnerChoice: TOpenChoiceForm [18]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -496,7 +551,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end>
       isShowModal = True
     end
-    object actGoodsChoice: TOpenChoiceForm [16]
+    object actGoodsChoice: TOpenChoiceForm [19]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -845,6 +900,10 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad_Gotthardt'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -912,6 +971,10 @@ inherited PriceListMovementForm: TPriceListMovementForm
     end
     object bbStartLoad_Osculati: TdxBarButton
       Action = mactStartLoad_Osculati
+      Category = 0
+    end
+    object bbStartLoad_Gotthardt: TdxBarButton
+      Action = mactStartLoad_Gotthardt
       Category = 0
     end
   end
@@ -989,6 +1052,11 @@ inherited PriceListMovementForm: TPriceListMovementForm
       end
       item
         Name = 'ImportSettingId_Osculati'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingId_Gotthardt'
         Value = Null
         MultiSelectSeparator = ','
       end>
@@ -1581,5 +1649,39 @@ inherited PriceListMovementForm: TPriceListMovementForm
       end>
     Left = 912
     Top = 24
+  end
+  object spGetImportSettingId_Gotthardt: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 
+          'TPriceListGotthardtForm;zc_Object_ImportSetting_PriceListGotthar' +
+          'dt'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId_Gotthardt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 552
+    Top = 432
   end
 end

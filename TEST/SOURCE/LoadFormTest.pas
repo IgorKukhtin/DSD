@@ -2920,20 +2920,21 @@ end;
 
 procedure TLoadFormTest.LoadReportInvoiceFormTest;
 begin
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InvoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_InvoiceForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InvoiceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_InvoiceDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InvoiceDetailForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_InvoiceDetailForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoInvoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoInvoiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoInvoiceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoInvoiceDialogForm');
-
+  }
 end;
 
 procedure TLoadFormTest.LoadReportBranchFormTest;
