@@ -67,6 +67,7 @@ type
     GuidesPairDay: TdsdGuides;
     actWorkTimeKindChoiceForm: TOpenChoiceForm;
     WorkTimeKindName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public
