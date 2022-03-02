@@ -4,7 +4,7 @@
   ClientHeight = 313
   ClientWidth = 605
   ExplicitWidth = 611
-  ExplicitHeight = 338
+  ExplicitHeight = 341
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -90,15 +90,15 @@
     Caption = #1044#1077#1073#1077#1090', '#1089#1091#1084#1084#1072' ('#1082#1072#1089#1089#1072')'
   end
   object cxLabel10: TcxLabel [11]
-    Left = 10
-    Top = 207
+    Left = 288
+    Top = 206
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [12]
-    Left = 8
+    Left = 288
     Top = 227
     TabOrder = 7
-    Width = 591
+    Width = 311
   end
   object ceAmountKredit: TcxCurrencyEdit [13]
     Left = 416
@@ -190,6 +190,23 @@
     Properties.ReadOnly = True
     TabOrder = 23
     Width = 154
+  end
+  object cxLabel15: TcxLabel [24]
+    Left = 8
+    Top = 206
+    Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+  end
+  object ceInvoice: TcxButtonEdit [25]
+    Left = 8
+    Top = 227
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 25
+    Width = 263
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 11
@@ -296,7 +313,7 @@
       item
         Name = 'inContractId'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -326,8 +343,11 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_Invoice'
         Value = ''
-        ParamType = ptUnknown
+        Component = GuidesInvoice
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -500,14 +520,29 @@
       item
         Name = 'Contractid'
         Value = Null
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ContractInvNumber'
         Value = Null
-        Component = ContractGuides
+        Component = GuidesContract
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Invoice'
+        Value = Null
+        Component = GuidesInvoice
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Invoice'
+        Value = Null
+        Component = GuidesInvoice
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -694,21 +729,21 @@
       item
         Name = 'ContractId'
         Value = Null
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
         Value = Null
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         MultiSelectSeparator = ','
       end>
     Left = 386
     Top = 62
   end
-  object ContractGuides: TdsdGuides
+  object GuidesContract: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceContract
     FormNameParam.Value = 'TContractChoiceForm'
@@ -720,14 +755,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -760,5 +795,78 @@
       end>
     Left = 512
     Top = 117
+  end
+  object GuidesInvoice: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInvoice
+    Key = '0'
+    FormNameParam.Value = 'TInvoiceJournalDetailChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInvoiceJournalDetailChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesInvoice
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesInvoice
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AssetId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AssetName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 173
+    Top = 219
   end
 end

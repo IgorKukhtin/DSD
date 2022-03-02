@@ -40,7 +40,10 @@ type
     GuidesMoneyPlace: TdsdGuides;
     cxLabel9: TcxLabel;
     ceContract: TcxButtonEdit;
-    ContractGuides: TdsdGuides;
+    GuidesContract: TdsdGuides;
+    cxLabel15: TcxLabel;
+    ceInvoice: TcxButtonEdit;
+    GuidesInvoice: TdsdGuides;
   private
     { Private declarations }
   public

@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ProfitLossDirectionName TVarChar
              , ProfitLossName          TVarChar
              , ProfitLossName_all      TVarChar
+             , MovementId_Invoice Integer, InvNumber_Invoice TVarChar
              )
 AS
 $BODY$
@@ -153,6 +154,13 @@ BEGIN
                                 )
          , tmpProfitLoss_View AS (SELECT * FROM Object_ProfitLoss_View WHERE Object_ProfitLoss_View.ProfitLossId IN (SELECT tmpMI—_ProfitLoss.ProfitLossId FROM tmpMI—_ProfitLoss))
 
+         , tmpMLM AS (SELECT MovementLinkMovement.*
+                      FROM MovementLinkMovement
+                      WHERE MovementLinkMovement.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement)
+                        AND  MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
+                      )
+
+
        --–≈«”À‹“¿“ 
        SELECT
              tmpMovement.MovementId   AS Id
@@ -196,6 +204,9 @@ BEGIN
            , tmpProfitLoss_View.ProfitLossDirectionName ::TVarChar
            , tmpProfitLoss_View.ProfitLossName          ::TVarChar
            , tmpProfitLoss_View.ProfitLossName_all      ::TVarChar
+
+           , Movement_Invoice.Id                            AS MovementId_Invoice
+           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, COALESCE (MovementString_InvNumberPartner_Invoice.ValueData,'') || '/' || Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
        FROM tmpMovement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpMovement.StatusId
@@ -228,6 +239,14 @@ BEGIN
             LEFT JOIN tmpMI—_ProfitLoss ON tmpMI—_ProfitLoss.MovementId = tmpMovement.MovementId
             LEFT JOIN tmpProfitLoss_View ON tmpProfitLoss_View.ProfitLossId = tmpMI—_ProfitLoss.ProfitLossId
 
+            LEFT JOIN tmpMLM AS MLM_Invoice
+                             ON MLM_Invoice.MovementId = tmpMovement.MovementId
+                            AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Invoice.MovementChildId
+            LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner_Invoice
+                                     ON MovementString_InvNumberPartner_Invoice.MovementId =  Movement_Invoice.Id
+                                    AND MovementString_InvNumberPartner_Invoice.DescId = zc_MovementString_InvNumberPartner()
       ;
 
 END;
@@ -237,6 +256,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 02.03.22         * Invoice
  23.03.17         *
  06.10.16         * add inJuridicalBasisId
  07.05.15         * add Contract

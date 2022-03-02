@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Movement_PersonalReport()
+-- Function: lpInsertUpdate_Movement_PersonalReport()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PersonalReport (Integer, TVarChar, TDateTime, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 

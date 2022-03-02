@@ -193,7 +193,7 @@ BEGIN
        , tmpMovementList AS (SELECT *
                              FROM Movement
                              WHERE Movement.Id IN (SELECT DISTINCT tmpMLM_Invoice.MovementId FROM tmpMLM_Invoice)
-                               AND Movement.DescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_Service())
+                               AND Movement.DescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_Service(), zc_Movement_PersonalReport())
                                AND Movement.StatusId = zc_Enum_Status_Complete()
                                AND Movement.OperDate <= inEndDate
                             ) 
@@ -213,7 +213,7 @@ BEGIN
                     FROM (SELECT tmpListInvoice.MovementId AS MovementId_Invoice
                                , Movement.OperDate AS MLM_OperDate
                                , CASE WHEN Movement.DescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()) THEN -1 * MovementItem.Amount ELSE 0 END AS BankSumma
-                               , CASE WHEN Movement.DescId = zc_Movement_Service() THEN -1 * MovementItem.Amount ELSE 0 END AS ServiceSumma 
+                               , CASE WHEN Movement.DescId IN (zc_Movement_Service(), zc_Movement_PersonalReport()) THEN -1 * MovementItem.Amount ELSE 0 END AS ServiceSumma 
                            FROM tmpListInvoice
                                 INNER JOIN tmpMLM_Invoice AS MLM_Invoice
                                                           ON MLM_Invoice.MovementChildId = tmpListInvoice.MovementId
