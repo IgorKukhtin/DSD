@@ -1060,10 +1060,15 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CommodityStockForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_SupplierFailuresDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_SupplierFailuresDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_SupplierFailuresForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_SupplierFailuresForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CommodityStockForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CommodityStockForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_Supplement_v2Form'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_Supplement_v2Form'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_Supplement_v2Form');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractPriceListDialogForm'));

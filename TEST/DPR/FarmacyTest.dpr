@@ -1158,7 +1158,9 @@ uses
   SiteDiscontDialog in '..\..\FormsFarmacy\Guides\SiteDiscontDialog.pas' {SiteDiscontDialogForm: TParentForm},
   IniUtils in '..\..\FormsFarmacy\Cash\IniUtils.pas',
   ExchangeRatesEdit in '..\..\FormsFarmacy\Guides\ExchangeRatesEdit.pas' {ExchangeRatesEditForm: TParentForm},
-  ExchangeRates in '..\..\FormsFarmacy\Guides\ExchangeRates.pas' {ExchangeRatesForm: TParentForm};
+  ExchangeRates in '..\..\FormsFarmacy\Guides\ExchangeRates.pas' {ExchangeRatesForm: TParentForm},
+  Report_OrderExternal_SupplierFailuresDialog in '..\..\FormsFarmacy\Report\Report_OrderExternal_SupplierFailuresDialog.pas' {Report_OrderExternal_SupplierFailuresDialogForm: TParentForm},
+  Report_OrderExternal_SupplierFailures in '..\..\FormsFarmacy\Report\Report_OrderExternal_SupplierFailures.pas' {Report_OrderExternal_SupplierFailuresForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
