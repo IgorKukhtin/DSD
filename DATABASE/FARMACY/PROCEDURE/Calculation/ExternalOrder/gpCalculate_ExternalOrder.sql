@@ -57,7 +57,7 @@ BEGIN
 
        CREATE TEMP TABLE _tmpMI_OrderInternal_Master (MovementItemId Integer, PartionGoods TDateTime, MinimumLot TFloat, MCS TFloat, PriceFrom TFloat, 
                  JuridicalPrice TFloat, DefermentPrice TFloat, Remains TFloat, Reserved TFloat, Income TFloat, CheckAmount TFloat, 
-                 SendAmount TFloat, AmountDeferred TFloat, Maker TVarChar, PartnerGoodsCode TVarChar, PartnerGoodsName TVarChar, 
+                 SendAmount TFloat, AmountDeferred TFloat, AmountSF TFloat, Maker TVarChar, PartnerGoodsCode TVarChar, PartnerGoodsName TVarChar, 
                  isClose Boolean, isFirst Boolean, isSecond Boolean, isTOP Boolean, isUnitTOP Boolean, isMCSNotRecalc Boolean, isMCSIsClose Boolean, 
                  GoodsId_partner Integer, JuridicalId Integer, ContractId Integer) ON COMMIT DROP;
        CREATE TEMP TABLE _tmpMI_OrderInternal_Child  (MovementItemId Integer, GoodsId Integer, PartionGoods TDateTime, Price TFloat, JuridicalPrice TFloat, 
@@ -97,12 +97,12 @@ BEGIN
 
        INSERT INTO _tmpMI_OrderInternal_Master (MovementItemId, PartionGoods, MinimumLot, MCS, PriceFrom, 
                  JuridicalPrice, DefermentPrice, Remains, Reserved, Income, CheckAmount, 
-                 SendAmount, AmountDeferred, Maker, PartnerGoodsCode, PartnerGoodsName,
+                 SendAmount, AmountDeferred, AmountSF, Maker, PartnerGoodsCode, PartnerGoodsName,
                  isClose, isFirst, isSecond, isTOP, isUnitTOP, isMCSNotRecalc, isMCSIsClose, 
                  GoodsId_partner, JuridicalId, ContractId)
          SELECT vbRec.Id, vbRec.PartionGoodsDate, vbRec.MinimumLot, vbRec.MCS, vbRec.Price, 
                 vbRec.SuperFinalPrice, vbRec.SuperFinalPrice_Deferment, vbRec.RemainsInUnit, vbRec.Reserved, vbRec.Income_Amount, vbRec.CheckAmount, 
-                vbRec.SendAmount, vbRec.AmountDeferred, vbRec.MakerName,  vbRec.PartnerGoodsCode, vbRec.PartnerGoodsName,
+                vbRec.SendAmount, vbRec.AmountDeferred, vbRec.AmountSF, vbRec.MakerName,  vbRec.PartnerGoodsCode, vbRec.PartnerGoodsName,
                 vbRec.isClose, vbRec.isFirst, vbRec.isSecond, vbRec.isTOP, vbRec.isTOP_Price, vbRec.MCSNotRecalc, vbRec.MCSIsClose, 
                 COALESCE (vbRec.PartnerGoodsId, 0), COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0)
          FROM gpSelect_MovementItem_OrderInternal_Master (inInternalOrder, FALSE, FALSE, FALSE, inSession) AS vbRec;
@@ -116,6 +116,7 @@ BEGIN
              , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_Check()         , MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.CheckAmount, 0))
              , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_Send()          , MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.SendAmount, 0))
              , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_AmountDeferred(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.AmountDeferred, 0))
+             , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_AmountSF()      , MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.AmountSF, 0))
              , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_PriceFrom()     , MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.PriceFrom, 0))
              , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_JuridicalPrice(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.JuridicalPrice, 0))
              , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_DefermentPrice(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.DefermentPrice, 0))

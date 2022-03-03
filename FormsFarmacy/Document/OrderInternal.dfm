@@ -134,6 +134,11 @@ inherited OrderInternalForm: TOrderInternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Layout
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSF
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -286,6 +291,11 @@ inherited OrderInternalForm: TOrderInternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Layout
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSF
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -706,7 +716,14 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 62
           end
-          object Amount: TcxGridDBColumn [49]
+          object AmountSF: TcxGridDBColumn [49]
+            Caption = #1054#1090#1082#1072#1079' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'AmountSF'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object Amount: TcxGridDBColumn [50]
             Caption = #1057#1087#1077#1094#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCalcEditProperties'
@@ -716,7 +733,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.IncSearch = False
             Width = 48
           end
-          object AmountAll: TcxGridDBColumn [50]
+          object AmountAll: TcxGridDBColumn [51]
             Caption = #1057#1087#1077#1094' + '#1040#1074#1090#1086
             DataBinding.FieldName = 'AmountAll'
             PropertiesClassName = 'TcxCalcEditProperties'
@@ -726,7 +743,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 62
           end
-          object isTOP_Price: TcxGridDBColumn [51]
+          object isTOP_Price: TcxGridDBColumn [52]
             Caption = #1058#1054#1055' '#1090#1086#1095#1082#1080
             DataBinding.FieldName = 'isTOP_Price'
             HeaderAlignmentHorz = taCenter

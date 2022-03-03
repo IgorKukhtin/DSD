@@ -371,7 +371,7 @@ BEGIN
     
     
     IF vbIsSUN = FALSE AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
-      AND vbFromId NOT IN (7117700) 
+      AND vbFromId NOT IN (7117700, 12607257) 
      -- AND vbUnitId NOT IN (17146811, 18712512) 
       AND COALESCE (vbAmountStorage, 0) = COALESCE (inAmountStorage, 0)
       AND COALESCE (inAmountStorage, 0) > 0
@@ -610,6 +610,7 @@ BEGIN
       IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
                 WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId in (zc_Enum_Role_PharmacyManager(), zc_Enum_Role_SeniorManager()))
          AND vbUserId NOT IN (183242, 11263040)
+         AND (vbUserId <> 8037524 or vbFromId <> 12607257)  -- Безверхая на мира 14
       THEN
 
         IF COALESCE (vbAmountManual, 0) <> COALESCE (inAmountManual, 0) OR

@@ -145,12 +145,22 @@ BEGIN
             , tmpPrice AS (SELECT ObjectLink_Price_Unit.ChildObjectId     AS UnitId
                                          , Price_Goods.ChildObjectId               AS GoodsId
                                          , ROUND(Price_Value.ValueData,2)::TFloat  AS Price
-                                         , (COALESCE(tmpLayoutAll.Amount, 0) + COALESCE(MCS_Value.ValueData, 0))::TFloat      AS MCSValue
+                                           -- 03.03.2022 поменял на большее значение НТЗ или выкладка
+                                         , CASE WHEN COALESCE(tmpLayoutAll.Amount, 0) > COALESCE(MCS_Value.ValueData, 0) 
+                                                THEN COALESCE(tmpLayoutAll.Amount, 0)
+                                                ELSE COALESCE(MCS_Value.ValueData, 0) END ::TFloat      AS MCSValue
+--                                         , (COALESCE(tmpLayoutAll.Amount, 0) + COALESCE(MCS_Value.ValueData, 0))::TFloat      AS MCSValue
                                          , CASE WHEN Price_MCSValueMin.ValueData is not null
                                                 THEN CASE WHEN COALESCE (Price_MCSValueMin.ValueData, 0) < 
-                                                               COALESCE (COALESCE(tmpLayoutAll.Amount, 0) + COALESCE(MCS_Value.ValueData, 0), 0) 
+                                                               CASE WHEN COALESCE(tmpLayoutAll.Amount, 0) > COALESCE(MCS_Value.ValueData, 0) 
+                                                                    THEN COALESCE(tmpLayoutAll.Amount, 0)
+                                                                    ELSE COALESCE(MCS_Value.ValueData, 0) END 
+--                                                               COALESCE (COALESCE(tmpLayoutAll.Amount, 0) + COALESCE(MCS_Value.ValueData, 0), 0) 
                                                           THEN COALESCE(Price_MCSValueMin.ValueData,0) 
-                                                          ELSE COALESCE(tmpLayoutAll.Amount, 0) + COALESCE(MCS_Value.ValueData, 0) END
+                                                          ELSE CASE WHEN COALESCE(tmpLayoutAll.Amount, 0) > COALESCE(MCS_Value.ValueData, 0) 
+                                                                    THEN COALESCE(tmpLayoutAll.Amount, 0)
+                                                                    ELSE COALESCE(MCS_Value.ValueData, 0) END  END
+--                                                          ELSE COALESCE(tmpLayoutAll.Amount, 0) + COALESCE(MCS_Value.ValueData, 0) END
                                                 ELSE 0
                                            END ::TFloat AS MCSValue_min
                                          , COALESCE(tmpLayoutAll.Amount, 0) AS Layout
@@ -321,6 +331,15 @@ BEGIN
                                   AND Movement.OperDate >= CURRENT_DATE - INTERVAL '30 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '30 DAY'
                              GROUP BY MovementItem.ObjectId
                             )
+    -- Отказы поставщиков
+   , tmpSupplierFailures AS (SELECT DISTINCT 
+                                    SupplierFailures.OperDate
+                                  , SupplierFailures.DateFinal
+                                  , SupplierFailures.GoodsId
+                                  , SupplierFailures.JuridicalId
+                                  , SupplierFailures.ContractId
+                             FROM lpSelect_PriceList_SupplierFailuresAll(inUnitId, vbUserId) AS SupplierFailures
+                             )
    , tmpMI_OrderExternal AS (SELECT MI_OrderExternal.ObjectId                AS GoodsId
                                   , SUM (MI_OrderExternal.Amount) ::TFloat   AS Amount
                              FROM Movement AS Movement_OrderExternal
@@ -336,9 +355,24 @@ BEGIN
                                                           ON MI_OrderExternal.MovementId = Movement_OrderExternal.Id
                                                          AND MI_OrderExternal.DescId = zc_MI_Master()
                                                          AND MI_OrderExternal.isErased = FALSE
-
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                               ON MovementLinkObject_From.MovementId = Movement_OrderExternal.Id
+                                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                               ON MovementLinkObject_Contract.MovementId = Movement_OrderExternal.Id
+                                                              AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                                   ON MILinkObject_Goods.MovementItemId = MI_OrderExternal.Id
+                                                                  AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                  LEFT JOIN tmpSupplierFailures ON tmpSupplierFailures.OperDate <= Movement_OrderExternal.OperDate
+                                                               AND tmpSupplierFailures.DateFinal > Movement_OrderExternal.OperDate
+                                                               AND tmpSupplierFailures.GoodsId = MILinkObject_Goods.ObjectId
+                                                               AND tmpSupplierFailures.JuridicalId = MovementLinkObject_From.ObjectId
+                                                               AND tmpSupplierFailures.ContractId = MovementLinkObject_Contract.ObjectId
+                                  
                              WHERE Movement_OrderExternal.DescId = zc_Movement_OrderExternal()
                                AND Movement_OrderExternal.StatusId = zc_Enum_Status_Complete()
+                               AND COALESCE (tmpSupplierFailures.GoodsId, 0) = 0
                              GROUP BY MI_OrderExternal.ObjectId
                              HAVING SUM (MI_OrderExternal.Amount) <> 0
                             )
@@ -572,7 +606,7 @@ BEGIN
     -- !!!ВРЕМЕННО для ТЕСТА!!!
     IF inSession = zfCalc_UserAdmin()
     THEN
-       RAISE EXCEPTION 'Тест прошел успешно для <%> <%>', inSession, outOrderExists;
+       RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inSession, outOrderExists, (SELECT COUNT(*) FROM MovementItem WHERE MovementItem.MovementId = vbMovementId);
     END IF;
     
 END;
