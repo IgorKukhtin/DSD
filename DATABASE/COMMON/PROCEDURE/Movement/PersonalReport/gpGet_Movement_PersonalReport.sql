@@ -195,7 +195,19 @@ BEGIN
            , Object_Car.Id                      AS CarId
            , (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName
 
+           , Movement_Invoice.Id                AS MovementId_Invoice
+           , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, COALESCE(MovementString_InvNumberPartner_Invoice.ValueData,'') || '/' || Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
+
        FROM Movement
+
+            LEFT JOIN MovementLinkMovement AS MLM_Invoice
+                                           ON MLM_Invoice.MovementId = Movement.Id
+                                          AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Invoice.MovementChildId
+            LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner_Invoice
+                                     ON MovementString_InvNumberPartner_Invoice.MovementId =  Movement_Invoice.Id
+                                    AND MovementString_InvNumberPartner_Invoice.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
