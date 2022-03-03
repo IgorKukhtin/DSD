@@ -251,6 +251,14 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
             Options.Editing = False
             Width = 70
           end
+          object isNotPack: TcxGridDBColumn
+            Caption = #1053#1077' '#1091#1087#1072#1082#1086#1074#1099#1074#1072#1090#1100
+            DataBinding.FieldName = 'isNotPack'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1054#1055
+            Width = 70
+          end
           object NormPack: TcxGridDBColumn
             Caption = #1053#1086#1088#1084#1099' '#1091#1087'. ('#1074' '#1082#1075'/'#1095#1072#1089')'
             DataBinding.FieldName = 'NormPack'
@@ -738,6 +746,15 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'IsTop'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsNotPack'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IsNotPack'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

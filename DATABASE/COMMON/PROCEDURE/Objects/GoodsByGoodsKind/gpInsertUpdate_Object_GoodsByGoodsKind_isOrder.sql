@@ -4,7 +4,8 @@ DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_isOrder (Integer
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_isOrder (Integer, Integer, Integer, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_isOrder (Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_isOrder (Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_isOrder (Integer, Integer, Integer, Boolean, Boolean, Boolean, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_isOrder (Integer, Integer, Integer, Boolean, Boolean, Boolean, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_isOrder (Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind_isOrder(
  INOUT ioId                  Integer  , -- ключ объекта <Товар>
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind_isOrder(
     IN inIsNotMobile         Boolean  , -- НЕ используется в моб.агенте
     IN inIsTop               Boolean  , --
    OUT outIsTop              Boolean  , --
+    IN inIsNotPack           Boolean  , -- не упковывать
     IN inNormPack            TFloat   , -- Нормы упаковывания (в кг/час)
     IN inSession             TVarChar 
 )
@@ -25,6 +27,7 @@ $BODY$
    DECLARE vbIsNotMobile Boolean;
    DECLARE vbIsTop Boolean;
    DECLARE vbNormPack TFloat;
+   DECLARE vbisNotPack Boolean;
 BEGIN
 
    vbUserId:= lpGetUserBySession (inSession);
@@ -81,8 +84,10 @@ BEGIN
    vbIsOrder     :=(SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = ioId AND ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()) :: Boolean;
    vbIsNotMobile :=(SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = ioId AND ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_NotMobile()):: Boolean;
    vbNormPack    :=(SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormPack()) ::TFloat;
+   vbisNotPack   :=(SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = ioId AND ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_NotPack()):: Boolean;
 
    IF COALESCE (vbIsNotMobile,False) <> COALESCE (inIsNotMobile,False) OR COALESCE (vbIsOrder,False) <> COALESCE (inIsOrder,False) OR COALESCE (vbNormPack,0) <> COALESCE (inNormPack,0)
+   OR COALESCE (vbisNotPack,False) <> COALESCE (inisNotPack,False)
    THEN
         -- проверка прав пользователя на вызов процедуры
         vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsByGoodsKind_isOrder());
@@ -95,6 +100,9 @@ BEGIN
 
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_NormPack(), ioId, inNormPack);
+
+        -- сохранили свойство <>
+        PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_NotPack(), ioId, inIsNotPack);
 
    END IF;
    
@@ -123,6 +131,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.03.22         * add inIsNotPack
  28.10.21         * add inNormPack
  09.06.17         * add NotMobile
  24.03.16                                        * 
