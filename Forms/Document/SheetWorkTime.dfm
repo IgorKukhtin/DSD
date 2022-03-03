@@ -1613,6 +1613,13 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         ComponentItem = 'AmountHours'
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPersonalGroup'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 398

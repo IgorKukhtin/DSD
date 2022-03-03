@@ -1318,6 +1318,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeJournalForm');
   exit;

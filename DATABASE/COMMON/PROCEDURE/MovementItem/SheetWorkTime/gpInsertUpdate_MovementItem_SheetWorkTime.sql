@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTime(
     IN inMemberId            Integer   , -- Ключ физ. лицо
@@ -16,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTime(
  INOUT ioValue               TVarChar  , -- часы
  INOUT ioTypeId              Integer   , 
    OUT OutAmountHours        Tfloat    , 
+    IN inisPersonalGroup     Boolean   , -- вызов из док. список бригад
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS RECORD
@@ -281,7 +283,9 @@ BEGIN
         ELSE
 /*        IF (vbValue >= 0 AND vbValue <= 24 AND POSITION ('0' IN zfGet_ViewWorkHour ('0', ioTypeId)) = 1) --  AND zfConvert_StringToNumber (ioValue) > 0)
         OR (ioTypeId = 0 AND vbValue >= 0 AND vbValue <= 24)
-        THEN*/
+        THEN
+*/
+        
             IF zfConvert_StringToFloat(SPLIT_PART (UPPER (TRIM (ioValue)), '/', 1)) > 0 AND SPLIT_PART (UPPER (TRIM (ioValue)), '/', 2) <> ''
                AND EXISTS (SELECT 1
                            FROM ObjectString AS ObjectString_WorkTimeKind_ShortName
@@ -345,12 +349,20 @@ BEGIN
                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_StorageLine
                                                                      ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id 
                                                                     AND MIObject_StorageLine.DescId = zc_MILinkObject_StorageLine() 
+
+                              --нужно учитывать тип Раб. времени только при вызове из док. список бригад
+                              LEFT JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
+                                                               ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id
+                                                              AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
+
                           WHERE MI_SheetWorkTime.MovementId = vbMovementId
                             AND MI_SheetWorkTime.ObjectId   = inMemberId
                             AND COALESCE (MIObject_Position.ObjectId, 0)      = COALESCE (inPositionId, 0)
                             AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inPositionLevelId, 0)
                             AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
                             AND COALESCE (MIObject_StorageLine.ObjectId, 0)   = COALESCE (inStorageLineId, 0)
+                            --
+                            AND (inisPersonalGroup = FALSE OR (inisPersonalGroup = TRUE AND MIObject_WorkTimeKind.ObjectId = inWorkTimeKindId ))
                          );
 
 

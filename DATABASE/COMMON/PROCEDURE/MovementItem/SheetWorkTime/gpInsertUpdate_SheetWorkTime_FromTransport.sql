@@ -34,6 +34,7 @@ BEGIN
               inOperDate        := Movement.OperDate                   , -- дата установки часов
               ioValue           := SUM (CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat))::TVarChar                    , -- часы
               ioTypeId          := zc_Enum_WorkTimeKind_Work()         , 
+              inisPersonalGroup := FALSE                               , -- используется при сохранении из списка бригад
               inSession         := inSession)    -- сессия пользователя
        FROM Movement
             LEFT JOIN MovementFloat AS MovementFloat_HoursWork
@@ -69,6 +70,7 @@ BEGIN
               inOperDate        := Movement.OperDate                   , -- дата установки часов
               ioValue           := SUM(CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat))::TVarChar                    , -- часы
               ioTypeId          := zc_Enum_WorkTimeKind_Work()         , 
+              inisPersonalGroup := FALSE                               , -- используется при сохранении из списка бригад
               inSession         := inSession)    -- сессия пользователя
        FROM Movement
             LEFT JOIN MovementFloat AS MovementFloat_HoursWork
@@ -105,6 +107,7 @@ BEGIN
               inOperDate        := Movement.OperDate                   , -- дата установки часов
               ioValue           := SUM(CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat))::TVarChar                    , -- часы
               ioTypeId          := zc_Enum_WorkTimeKind_Work()         , 
+              inisPersonalGroup := FALSE                               , -- используется при сохранении из списка бригад
               inSession         := inSession)    -- сессия пользователя
        FROM Movement
             LEFT JOIN MovementFloat AS MovementFloat_HoursWork
@@ -137,6 +140,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03,03,22         *
  26.05.17         * add StorageLine
  25.02.14                         * Replace inPersonalId <> inMemberId
 

@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , isOrder Boolean, isScaleCeh Boolean, isNotMobile Boolean
              , isNewQuality Boolean
              , isTop Boolean
+             , isNotPack Boolean
              , GoodsSubId Integer, GoodsSubCode Integer, GoodsSubName TVarChar, MeasureSubName TVarChar
              , GoodsKindSubId Integer, GoodsKindSubName TVarChar
              , GoodsSubSendId Integer, GoodsSubSendCode Integer, GoodsSubSendName TVarChar, MeasureSubSendName TVarChar
@@ -188,6 +189,7 @@ BEGIN
            , COALESCE (ObjectBoolean_NotMobile.ValueData, False)       AS isNotMobile
            , COALESCE (ObjectBoolean_NewQuality.ValueData, False)      AS isNewQuality
            , COALESCE (ObjectBoolean_Top.ValueData, False)             AS isTop
+           , COALESCE (ObjectBoolean_NotPack.ValueData, False) ::Boolean AS isNotPack
 
            , Object_GoodsSub.Id               AS GoodsSubId
            , Object_GoodsSub.ObjectCode       AS GoodsSubCode
@@ -342,6 +344,10 @@ BEGIN
                                     ON ObjectBoolean_Top.ObjectId = Object_GoodsByGoodsKind_View.Id
                                    AND ObjectBoolean_Top.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Top()
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_NotPack
+                                    ON ObjectBoolean_NotPack.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                   AND ObjectBoolean_NotPack.DescId = zc_ObjectBoolean_GoodsByGoodsKind_NotPack()
+
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_GoodsByGoodsKind_View.GoodsId
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
@@ -462,6 +468,7 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 03.03.22        *
  18.04.21        *
  25.03.21        *
  19.02.21        * DaysQ
