@@ -362,7 +362,7 @@ BEGIN
                             AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
                             AND COALESCE (MIObject_StorageLine.ObjectId, 0)   = COALESCE (inStorageLineId, 0)
                             --
-                            AND (inisPersonalGroup = FALSE OR (inisPersonalGroup = TRUE AND MIObject_WorkTimeKind.ObjectId = inWorkTimeKindId ))
+                            AND (inisPersonalGroup = FALSE OR (inisPersonalGroup = TRUE AND MIObject_WorkTimeKind.ObjectId = ioTypeId ))
                          );
 
 
