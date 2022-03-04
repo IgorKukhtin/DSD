@@ -1060,6 +1060,9 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_SupplierFailuresAllForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_SupplierFailuresAllForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_SupplierFailuresDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_SupplierFailuresDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_SupplierFailuresForm'));
