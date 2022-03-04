@@ -109,7 +109,7 @@ BEGIN
                                   ), 0);
 
      -- если есть классификатор
-     IF COALESCE (inGoodsPropertyId, 0) <> 0
+     IF COALESCE (inGoodsPropertyId, 0) <> 0 AND TRIM (inGLNCode) <>''
      THEN
          -- Находим vbGoodsId и vbGoodsKindId
          SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId     AS GoodsId

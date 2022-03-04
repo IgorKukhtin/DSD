@@ -9,7 +9,9 @@ uses
   EDIOrdersLoader.Main in '..\EDIOrdersLoader\EDIOrdersLoader.Main.pas' {MainForm},
   dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas',
   Log in '..\SOURCE\Log.pas',
-  UtilConst in '..\SOURCE\UtilConst.pas';
+  UtilConst in '..\SOURCE\UtilConst.pas',
+  DOCUMENTINVOICE_PRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
+  DOCUMENTINVOICE_TN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas';
 
 {$R *.res}
 
