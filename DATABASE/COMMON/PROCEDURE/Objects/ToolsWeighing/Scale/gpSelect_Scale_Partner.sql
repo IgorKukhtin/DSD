@@ -324,6 +324,7 @@ BEGIN
                                                            AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                   WHERE ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
                                     AND ObjectLink_ContractPartner_Partner.ChildObjectId >0
+                                  --AND 1=0
                                  )
           , tmpPartner AS (SELECT DISTINCT
                                   Object_Partner.Id         AS PartnerId
@@ -376,6 +377,7 @@ BEGIN
                                   -- филиал Ћьвов + филиал  иев
                                   OR (ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = 3080683 AND vbBranchId_Constraint = 8379)
                                   OR vbIsConstraint = FALSE
+                                --OR 1=1
                                  )
                            /*GROUP BY Object_Partner.Id
                                   , Object_Partner.ObjectCode

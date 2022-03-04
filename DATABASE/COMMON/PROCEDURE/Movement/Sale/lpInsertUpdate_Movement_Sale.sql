@@ -154,17 +154,17 @@ BEGIN
 
 
      -- определяем ключ доступа !!!то что захардкоженно - временно!!!
-     vbAccessKeyId:= CASE WHEN COALESCE (ioId, 0) = 0 AND inFromId = 8411 -- Склад ГП ф Киев
+     vbAccessKeyId:= CASE WHEN /*COALESCE (ioId, 0) = 0 AND*/ inFromId = 8411 -- Склад ГП ф Киев
                                THEN zc_Enum_Process_AccessKey_DocumentKiev() 
-                          WHEN COALESCE (ioId, 0) = 0 AND inFromId = 346093 -- Склад ГП ф.Одесса
+                          WHEN /*COALESCE (ioId, 0) = 0 AND*/ inFromId = 346093 -- Склад ГП ф.Одесса
                                THEN zc_Enum_Process_AccessKey_DocumentOdessa() 
-                          WHEN COALESCE (ioId, 0) = 0 AND inFromId = 8413 -- Склад ГП ф.Кривой Рог
+                          WHEN /*COALESCE (ioId, 0) = 0 AND*/ inFromId = 8413 -- Склад ГП ф.Кривой Рог
                                THEN zc_Enum_Process_AccessKey_DocumentKrRog() 
-                          WHEN COALESCE (ioId, 0) = 0 AND inFromId = 8417 -- Склад ГП ф.Николаев (Херсон)
+                          WHEN /*COALESCE (ioId, 0) = 0 AND*/ inFromId = 8417 -- Склад ГП ф.Николаев (Херсон)
                                THEN zc_Enum_Process_AccessKey_DocumentNikolaev() 
-                          WHEN COALESCE (ioId, 0) = 0 AND inFromId = 8425 -- Склад ГП ф.Харьков
+                          WHEN /*COALESCE (ioId, 0) = 0 AND*/ inFromId = 8425 -- Склад ГП ф.Харьков
                                THEN zc_Enum_Process_AccessKey_DocumentKharkov() 
-                          WHEN COALESCE (ioId, 0) = 0 AND inFromId = 8415 -- Склад ГП ф.Черкассы (Кировоград)
+                          WHEN /*COALESCE (ioId, 0) = 0 AND*/ inFromId = 8415 -- Склад ГП ф.Черкассы (Кировоград)
                                THEN zc_Enum_Process_AccessKey_DocumentCherkassi() 
                           ELSE lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner())
                      END;
@@ -174,6 +174,9 @@ BEGIN
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Sale(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
+
+     UPDATE Movement SET AccessKeyId = vbAccessKeyId WHERE Movement.Id = ioId AND Movement.AccessKeyId <> vbAccessKeyId;
+
 
      -- сохранили свойство <Дата накладной у контрагента>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
