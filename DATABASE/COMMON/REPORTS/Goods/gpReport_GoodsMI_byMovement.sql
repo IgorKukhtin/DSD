@@ -384,6 +384,7 @@ BEGIN
                                                    ON MovementLinkObject_PriceList.MovementId = tmpListContainerSumm.MovementId
                                                   AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
                  GROUP BY MovementDesc.ItemName
+                        , Movement.Id
                         , Movement.InvNumber
                         , Movement.OperDate
                         , MovementFloat_ChangePercent.ValueData
