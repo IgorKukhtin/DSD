@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, MemberId Integer
              , WorkTimeKindId Integer, WorkTimeKindName TVarChar
              , UnitName_inf TVarChar, PositionName_inf TVarChar
              , Amount TFloat
+             , Comment TVarChar
              , isErased Boolean
               )
 AS
@@ -64,6 +65,8 @@ BEGIN
             , View_Personal.PositionName     AS PositionName_inf
 
             , MovementItem.Amount :: TFloat  AS Amount
+            
+            , MIString_Comment.ValueData :: TVarChar AS Comment
 
             , MovementItem.isErased
 
@@ -89,6 +92,10 @@ BEGIN
                                              ON MILinkObject_WorkTimeKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
             LEFT JOIN Object AS Object_WorkTimeKind ON Object_WorkTimeKind.Id = MILinkObject_WorkTimeKind.ObjectId
+
+            LEFT JOIN MovementItemString AS MIString_Comment
+                                         ON MIString_Comment.MovementItemId = MovementItem.Id
+                                        AND MIString_Comment.DescId = zc_MIString_Comment()
       ;
 
 END;
@@ -98,6 +105,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.03.22         * Comment
  22.11.21         *
 */
 

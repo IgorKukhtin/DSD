@@ -300,6 +300,19 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
         end>
       Caption = 'actUpdate_SupplierFailures'
     end
+    object actReport_OrderExternal_SupplierFailures: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+      Hint = #1054#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+      ImageIndex = 3
+      FormName = 'TReport_OrderExternal_SupplierFailuresForm'
+      FormNameParam.Value = 'TReport_OrderExternal_SupplierFailuresForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -369,6 +382,14 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_OrderExternal_SupplierFailures'
         end
         item
           Visible = True
@@ -484,6 +505,10 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
+      Category = 0
+    end
+    object bbReport_OrderExternal_SupplierFailures: TdxBarButton
+      Action = actReport_OrderExternal_SupplierFailures
       Category = 0
     end
   end

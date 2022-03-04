@@ -571,7 +571,7 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_Name_BUHDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_Name_BUHDialogForm');
 
@@ -579,7 +579,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
 
    exit;
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_AssetProdForm');
   exit;
@@ -603,13 +603,14 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKindForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_NormForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_NormForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_OrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_OrderForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_ScaleCehForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_ScaleCehForm');
 
@@ -630,13 +631,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsExternalForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_UKTZEDForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_UKTZEDForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_ParamForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_ParamForm');
-
+  }
 end;
 
 procedure TLoadFormTest.LoadGoodsBrandFormTest;
@@ -1318,6 +1319,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeJournalForm');
   exit;
@@ -2920,20 +2922,21 @@ end;
 
 procedure TLoadFormTest.LoadReportInvoiceFormTest;
 begin
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InvoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_InvoiceForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InvoiceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_InvoiceDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InvoiceDetailForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_InvoiceDetailForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoInvoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoInvoiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoInvoiceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoInvoiceDialogForm');
-
+  }
 end;
 
 procedure TLoadFormTest.LoadReportBranchFormTest;

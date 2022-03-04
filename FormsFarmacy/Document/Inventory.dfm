@@ -926,7 +926,7 @@ inherited InventoryForm: TInventoryForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'inOperDate'
           DataType = ftDateTime
@@ -1253,7 +1253,7 @@ inherited InventoryForm: TInventoryForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1595,7 +1595,7 @@ inherited InventoryForm: TInventoryForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1779,43 +1779,11 @@ inherited InventoryForm: TInventoryForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Inventory_SetErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 486
     Top = 464
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Inventory_SetUnErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 486
     Top = 416
   end
@@ -2151,6 +2119,7 @@ inherited InventoryForm: TInventoryForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -2163,6 +2132,7 @@ inherited InventoryForm: TInventoryForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = -1
       end>
+    ShowFieldImageList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
     Left = 526
@@ -2179,6 +2149,7 @@ inherited InventoryForm: TInventoryForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <
@@ -2187,6 +2158,7 @@ inherited InventoryForm: TInventoryForm
       item
       end>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 560
     Top = 152
@@ -2239,7 +2211,7 @@ inherited InventoryForm: TInventoryForm
       end
       item
         Name = 'inAmountUser'
-        Value = '1'
+        Value = 1.000000000000000000
         Component = ceAmount
         DataType = ftFloat
         ParamType = ptInput
@@ -2353,7 +2325,7 @@ inherited InventoryForm: TInventoryForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -2395,7 +2367,7 @@ inherited InventoryForm: TInventoryForm
       end
       item
         Name = 'inOperDate'
-        Value = 0.000000000000000000
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput

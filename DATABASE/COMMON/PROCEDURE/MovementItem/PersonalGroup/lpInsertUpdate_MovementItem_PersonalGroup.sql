@@ -1,7 +1,8 @@
 -- Function: lpInsertUpdate_MovementItem_PersonalGroup()
 
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalGroup (Integer, Integer, Integer, Integer, Integer, TFloat, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalGroup (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalGroup (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalGroup (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalGroup(
  INOUT ioId                    Integer   , --  люч объекта <Ёлемент документа>
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalGroup(
     IN inPositionLevelId       Integer   , --
     IN inWorkTimeKindId        Integer   , --
     IN inAmount                TFloat    , -- 
+    IN inComment               TVarChar ,   -- 
     IN inUserId                Integer     -- пользователь
 )                               
 RETURNS Integer
@@ -131,6 +133,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PositionLevel(), ioId, inPositionLevelId);
      -- сохранили св€зь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_WorkTimeKind(), ioId, inWorkTimeKindId);
+
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
      -- пересчитали »тоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);

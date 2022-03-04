@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Movement_PersonalReport()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PersonalReport (integer, tvarchar, TDateTime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PersonalReport (integer, tvarchar, TDateTime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, tvarchar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PersonalReport (integer, tvarchar, TDateTime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PersonalReport (integer, tvarchar, TDateTime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalReport(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -16,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalReport(
     IN inUnitId                   Integer   ,
     IN inMoneyPlaceId             Integer   ,
     IN inCarId                    Integer   ,
+    IN inMovementId_Invoice       Integer   , -- документ счет
     IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -66,6 +68,9 @@ BEGIN
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_PersonalReport(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
 
+     -- сохранили связь с документом <Счет>
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), ioId, inMovementId_Invoice);
+     
      -- определяем <Элемент документа>
      SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
 
@@ -110,6 +115,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.03.22         * inMovementId_Invoice
  07,05,15         * add contract
  12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp
  15.09.14                                                        *

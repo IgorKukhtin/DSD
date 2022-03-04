@@ -576,6 +576,14 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 70
           end
+          object isNotPack: TcxGridDBColumn
+            Caption = #1053#1077' '#1091#1087#1072#1082#1086#1074#1099#1074#1072#1090#1100
+            DataBinding.FieldName = 'isNotPack'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1054#1055
+            Width = 70
+          end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
@@ -1354,6 +1362,15 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         Component = MasterCDS
         ComponentItem = 'DaysQ'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsNotPack'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IsNotPack'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

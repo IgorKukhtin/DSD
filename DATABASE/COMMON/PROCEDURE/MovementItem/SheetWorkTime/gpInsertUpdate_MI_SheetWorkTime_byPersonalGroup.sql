@@ -29,7 +29,8 @@ BEGIN
                                                      , tmp.StorageLineId      :: Integer    -- линия произ-ва
                                                      , tmp.OperDate           :: TDateTime  -- дата
                                                      , COALESCE (tmp.Value,NULL)              :: TVarChar   -- часы
-                                                     , COALESCE (tmp.WorkTimeKindId,NULL)     :: Integer    
+                                                     , COALESCE (tmp.WorkTimeKindId,NULL)     :: Integer
+                                                     , TRUE                   :: Boolean    -- inisPersonalGroup   -- если вызываем от сюда нужно учесть вид смены при поиске MovementItem
                                                      , inSession              :: TVarChar
                                                      )
      FROM (WITH
@@ -95,12 +96,13 @@ BEGIN
               , tmpMI.PersonalGroupId
               , tmpMI.StorageLineId
               , tmpMI.UnitId
-              , CASE WHEN inisDel = FALSE THEN tmpMI.WorkTimeKindId ELSE 0 END ::Integer AS WorkTimeKindId
+              ---, CASE WHEN inisDel = FALSE THEN tmpMI.WorkTimeKindId ELSE 0 END ::Integer AS WorkTimeKindId
+              , tmpMI.WorkTimeKindId ::Integer AS WorkTimeKindId
               , zfCalc_ViewWorkHour (tmpMI.Amount, ObjectString_ShortName.ValueData) ::TVarChar AS Value
          FROM tmpMI
-             LEFT JOIN ObjectString AS ObjectString_ShortName
-                                    ON ObjectString_ShortName.ObjectId = CASE WHEN inisDel = FALSE THEN tmpMI.WorkTimeKindId ELSE 0 END
-                                   AND ObjectString_ShortName.DescId = zc_objectString_WorkTimeKind_ShortName()
+             INNER JOIN ObjectString AS ObjectString_ShortName
+                                     ON ObjectString_ShortName.ObjectId = CASE WHEN inisDel = FALSE THEN tmpMI.WorkTimeKindId ELSE 0 END
+                                    AND ObjectString_ShortName.DescId = zc_objectString_WorkTimeKind_ShortName()
      ) AS tmp
      ;
 

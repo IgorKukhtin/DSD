@@ -62,6 +62,9 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_PriceListSkiDooJournal() RETURN
 CREATE OR REPLACE FUNCTION zc_Enum_ImportType_PriceListOsculati() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_PriceListOsculati' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_PriceListOsculati() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_PriceListOsculati' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- !!! загрузка Прайслиста Gotthardt
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_PriceListGotthardt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_PriceListGotthardt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_PriceListGotthardt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_PriceListGotthardt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 
 -- !!!

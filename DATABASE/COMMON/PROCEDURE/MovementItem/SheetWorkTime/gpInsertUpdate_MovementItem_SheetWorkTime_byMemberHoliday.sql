@@ -97,6 +97,7 @@ BEGIN
                                                      , tmp.OperDate           :: TDateTime  -- дата
                                                      , COALESCE (tmp.Value,NULL)              :: TVarChar   -- часы
                                                      , COALESCE (tmp.WorkTimeKindId,NULL)     :: Integer    
+                                                     , FALSE                  :: Boolean    -- используется при сохранении из списка бригад
                                                      , inSession              :: TVarChar
                                                      )
      FROM (WITH

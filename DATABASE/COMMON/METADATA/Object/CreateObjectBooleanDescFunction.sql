@@ -325,6 +325,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_GoodsByGoodsKind_Top() RETURNS Integ
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_GoodsByGoodsKind(), 'zc_ObjectBoolean_GoodsByGoodsKind_Top', 'Товар с признаком ТОП' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_GoodsByGoodsKind_Top');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_GoodsByGoodsKind_NotPack() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_GoodsByGoodsKind_NotPack'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_GoodsByGoodsKind(), 'zc_ObjectBoolean_GoodsByGoodsKind_NotPack', 'Не упаковывать' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_GoodsByGoodsKind_NotPack');
+
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Retail_OperDateOrder() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Retail_OperDateOrder'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
@@ -1206,6 +1211,7 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 03.03.22         * zc_ObjectBoolean_GoodsByGoodsKind_NotPack
  18.02.22                                                                                                          * zc_ObjectBoolean_Unit_SUN_SupplementAddCash
  11.02.22                                                                                                          * zc_ObjectBoolean_Unit_PositionFixed
  03.02.22                                                                                                          * zc_ObjectBoolean_Unit_SUN_v2_Supplement

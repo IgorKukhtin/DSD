@@ -73,6 +73,11 @@ type
     actDiscountPartnerChoice: TOpenChoiceForm;
     actMeasureChoice: TOpenChoiceForm;
     actMeasureParentChoice: TOpenChoiceForm;
+    spGetImportSettingId_Gotthardt: TdsdStoredProc;
+    mactStartLoad_Gotthardt: TMultiAction;
+    actDoLoad_Gotthardt: TExecuteImportSettingsAction;
+    actGetImportSetting_Gotthardt: TdsdExecStoredProc;
+    bbStartLoad_Gotthardt: TdxBarButton;
   private
     { Private declarations }
   public

@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_PersonalGroup()
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalGroup (Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalGroup (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalGroup (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalGroup (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalGroup(
  INOUT ioId                    Integer   , --  люч объекта <Ёлемент документа>
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalGroup(
     IN inPositionLevelId       Integer   , --
     IN inWorkTimeKindId        Integer   , --
  INOUT ioAmount                TFloat    , --
+    IN inComment               TVarChar  , --
     IN inSession               TVarChar    -- сесси€ пользовател€
 )
 RETURNS RECORD AS
@@ -96,6 +98,7 @@ BEGIN
                                                       , inPositionLevelId := inPositionLevelId
                                                       , inWorkTimeKindId  := inWorkTimeKindId
                                                       , inAmount          := ioAmount
+                                                      , inComment         := inComment
                                                       , inUserId          := vbUserId
                                                        ) AS tmp;
 

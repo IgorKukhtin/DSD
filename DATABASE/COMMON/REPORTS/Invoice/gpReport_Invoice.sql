@@ -23,6 +23,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , AmountSumm TFloat  
              , TotalSumm TFloat  -- 
              , ServiceSumma TFloat
+             , PersonalSumma TFloat
              , RemStart TFloat
              , BankSumma TFloat
              , RemEnd TFloat
@@ -193,7 +194,7 @@ BEGIN
        , tmpMovementList AS (SELECT *
                              FROM Movement
                              WHERE Movement.Id IN (SELECT DISTINCT tmpMLM_Invoice.MovementId FROM tmpMLM_Invoice)
-                               AND Movement.DescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_Service())
+                               AND Movement.DescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_Service(), zc_Movement_PersonalReport())
                                AND Movement.StatusId = zc_Enum_Status_Complete()
                                AND Movement.OperDate <= inEndDate
                             ) 
@@ -210,10 +211,13 @@ BEGIN
                            , SUM (CASE WHEN tmp.MLM_OperDate BETWEEN inStartDate AND inEndDate THEN tmp.BankSumma ELSE 0 END) AS BankSumma
                            , SUM (CASE WHEN tmp.MLM_OperDate < inStartDate THEN tmp.ServiceSumma ELSE 0 END) AS ServiceSumma_Before
                            , SUM (CASE WHEN tmp.MLM_OperDate BETWEEN inStartDate AND inEndDate THEN tmp.ServiceSumma ELSE 0 END) AS ServiceSumma
+                           , SUM (CASE WHEN tmp.MLM_OperDate < inStartDate THEN tmp.PersonalSumma ELSE 0 END) AS PersonalSumma_Before
+                           , SUM (CASE WHEN tmp.MLM_OperDate BETWEEN inStartDate AND inEndDate THEN tmp.PersonalSumma ELSE 0 END) AS PersonalSumma
                     FROM (SELECT tmpListInvoice.MovementId AS MovementId_Invoice
                                , Movement.OperDate AS MLM_OperDate
                                , CASE WHEN Movement.DescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()) THEN -1 * MovementItem.Amount ELSE 0 END AS BankSumma
-                               , CASE WHEN Movement.DescId = zc_Movement_Service() THEN -1 * MovementItem.Amount ELSE 0 END AS ServiceSumma 
+                               , CASE WHEN Movement.DescId IN (zc_Movement_Service()) THEN -1 * MovementItem.Amount ELSE 0 END AS ServiceSumma 
+                               , CASE WHEN Movement.DescId IN (zc_Movement_PersonalReport()) THEN -1 * MovementItem.Amount ELSE 0 END AS PersonalSumma 
                            FROM tmpListInvoice
                                 INNER JOIN tmpMLM_Invoice AS MLM_Invoice
                                                           ON MLM_Invoice.MovementChildId = tmpListInvoice.MovementId
@@ -324,13 +328,14 @@ BEGIN
          END :: TFloat AS AmountSumm
        , tmpMIInvoice.TotalSumm           :: TFloat AS TotalSumm
        , tmpMLM.ServiceSumma              :: TFloat AS ServiceSumma
+       , tmpMLM.PersonalSumma             :: TFloat AS PersonalSumma
        , (tmpMIInvoice.TotalSumm - COALESCE (tmpMLM.BankSumma_Before, 0)) :: TFloat AS RemStart                 --îñò.íà÷.ñ÷åò
        , tmpMLM.BankSumma                 :: TFloat AS BankSumma
        , (tmpMIInvoice.TotalSumm - COALESCE (tmpMLM.BankSumma_Before, 0) - COALESCE (tmpMLM.BankSumma, 0))   ::TFloat  AS RemEnd
        , tmpIncomeGroup.IncomeTotalSumma  :: TFloat AS IncomeTotalSumma
        , tmpIncome.IncomeSumma            :: TFloat AS IncomeSumma
-       , (-1 * (COALESCE (tmpMLM.BankSumma_Before, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma_Before, 0) - COALESCE (tmpMLM.ServiceSumma_Before, 0))) :: TFloat AS DebetStart
-       , (-1 * (COALESCE (tmpMLM.BankSumma_Before, 0) + COALESCE (tmpMLM.BankSumma, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma_Before, 0) - COALESCE (tmpMLM.ServiceSumma_Before, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma, 0) - COALESCE (tmpMLM.ServiceSumma, 0))) :: TFloat AS DebetEnd
+       , (-1 * (COALESCE (tmpMLM.BankSumma_Before, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma_Before, 0) - COALESCE (tmpMLM.ServiceSumma_Before, 0) - COALESCE (tmpMLM.PersonalSumma_Before, 0) )) :: TFloat AS DebetStart
+       , (-1 * (COALESCE (tmpMLM.BankSumma_Before, 0) + COALESCE (tmpMLM.BankSumma, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma_Before, 0) - COALESCE (tmpMLM.ServiceSumma_Before, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma, 0) - COALESCE (tmpMLM.ServiceSumma, 0) - COALESCE (tmpMLM.PersonalSumma_Before, 0) )) :: TFloat AS DebetEnd
        , tmpMIInvoiceChild.AmountSumm     :: TFloat AS PaymentPlan
 
   FROM tmpMIInvoice
@@ -377,6 +382,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 02.03.22         * PersonalSumma
  03.08.16         *
  24.07.16         * 
 */

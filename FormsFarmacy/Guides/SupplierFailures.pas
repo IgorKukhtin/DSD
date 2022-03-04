@@ -53,6 +53,8 @@ type
     actUpdate_SupplierFailures: TdsdExecStoredProc;
     OperDate: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
+    actReport_OrderExternal_SupplierFailures: TdsdOpenForm;
+    bbReport_OrderExternal_SupplierFailures: TdxBarButton;
   private
     { Private declarations }
   public

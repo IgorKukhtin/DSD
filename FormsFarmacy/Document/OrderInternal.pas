@@ -166,6 +166,7 @@ type
     SupplierFailuresColor: TcxGridDBColumn;
     colSupplierFailuresColor: TcxGridDBColumn;
     isSupplierFailures: TcxGridDBColumn;
+    AmountSF: TcxGridDBColumn;
   private
     { Private declarations }
   public

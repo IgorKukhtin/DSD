@@ -40,7 +40,7 @@ type
     bbPrint1: TdxBarButton;
     bbPrint2: TdxBarButton;
     actOpenReportForm: TdsdOpenForm;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    InvNumber_Full: TcxGridDBColumn;
     bbOpenReportForm: TdxBarButton;
     actOpenForm: TdsdOpenForm;
     actGetForm: TdsdExecStoredProc;

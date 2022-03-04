@@ -888,6 +888,50 @@ inherited OrderExternalForm: TOrderExternalForm
       ShortCut = 16463
       QuestionBeforeExecute = #1055#1086#1084#1077#1089#1090#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1074' "'#1054#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074'"?'
     end
+    object mactSupplierFailuresLoad: TMultiAction
+      Category = 'Load'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingId
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1089#1090#1072#1090#1082#1080
+      ImageIndex = 41
+    end
+    object actGetImportSettingId: TdsdExecStoredProc
+      Category = 'Load'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSettingId'
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = 'Load'
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1030,6 +1074,14 @@ inherited OrderExternalForm: TOrderExternalForm
         end
         item
           Visible = True
+          ItemName = 'bbSupplierFailuresLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -1073,6 +1125,11 @@ inherited OrderExternalForm: TOrderExternalForm
     end
     object bbInsertUpdate_SupplierFailures: TdxBarButton
       Action = actInsertUpdate_SupplierFailures
+      Category = 0
+    end
+    object bbSupplierFailuresLoad: TdxBarButton
+      Action = mactSupplierFailuresLoad
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1090#1082#1072#1079#1086#1074' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
       Category = 0
     end
   end
@@ -1199,6 +1256,11 @@ inherited OrderExternalForm: TOrderExternalForm
         Name = 'inOperDate'
         Value = 43831d
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingId'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 288
@@ -2162,5 +2224,37 @@ inherited OrderExternalForm: TOrderExternalForm
     PackSize = 1
     Left = 176
     Top = 424
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TOrderExternalForm;zc_Object_ImportSetting_SupplierFailures'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 864
+    Top = 368
   end
 end

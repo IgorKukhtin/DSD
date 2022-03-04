@@ -41,6 +41,7 @@ BEGIN
              , CheckAmount      TFloat
              , SendAmount       TFloat
              , AmountDeferred   TFloat
+             , AmountSF         TFloat
              , ListDiffAmount   TFloat
              , AmountReal       TFloat
              , SendSUNAmount    TFloat
@@ -151,6 +152,10 @@ BEGIN
                                     FROM tmpMIF
                                     WHERE tmpMIF.DescId = zc_MIFloat_AmountDeferred()
                                     )
+        , tmpMIF_AmountSF AS (SELECT tmpMIF.*
+                              FROM tmpMIF
+                              WHERE tmpMIF.DescId = zc_MIFloat_AmountSF()
+                              )
         , tmpMIF_ListDiff AS (SELECT tmpMIF.*
                               FROM tmpMIF
                               WHERE tmpMIF.DescId = zc_MIFloat_ListDiff()
@@ -211,6 +216,7 @@ BEGIN
             , MIFloat_Check.ValueData              AS CheckAmount
             , MIFloat_Send.ValueData               AS SendAmount
             , MIFloat_AmountDeferred.ValueData     AS AmountDeferred
+            , MIFloat_AmountSF.ValueData           AS AmountSF
             , MIFloat_ListDiff.ValueData           AS ListDiffAmount
 
             , MIFloat_AmountReal.ValueData :: TFloat  AS AmountReal
@@ -271,6 +277,7 @@ BEGIN
               LEFT JOIN tmpMIF_Check          AS MIFloat_Check          ON MIFloat_Check.MovementItemId          = MovementItem.Id
               LEFT JOIN tmpMIF_Send           AS MIFloat_Send           ON MIFloat_Send.MovementItemId           = MovementItem.Id
               LEFT JOIN tmpMIF_AmountDeferred AS MIFloat_AmountDeferred ON MIFloat_AmountDeferred.MovementItemId = MovementItem.Id
+              LEFT JOIN tmpMIF_AmountSF       AS MIFloat_AmountSF       ON MIFloat_AmountSF.MovementItemId       = MovementItem.Id
               LEFT JOIN tmpMIF_ListDiff       AS MIFloat_ListDiff       ON MIFloat_ListDiff.MovementItemId       = MovementItem.Id
               LEFT JOIN tmpMIF_AmountSUA      AS MIFloat_AmountSUA      ON MIFloat_AmountSUA.MovementItemId      = MovementItem.Id
               LEFT JOIN tmpMIF_AmountReal     AS MIFloat_AmountReal     ON MIFloat_AmountReal.MovementItemId     = MovementItem.Id
@@ -287,6 +294,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 03.03.22                                                                     * add AmountSF
  22.03.21                                                                     *
  01.11.18         *
  31.08.18         *

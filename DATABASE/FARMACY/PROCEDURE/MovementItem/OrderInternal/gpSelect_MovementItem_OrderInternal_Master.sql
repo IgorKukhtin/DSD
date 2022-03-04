@@ -71,6 +71,7 @@ RETURNS TABLE (Id                    Integer
              , SendAmount            TFloat
 
              , AmountDeferred        TFloat
+             , AmountSF              TFloat
              , ListDiffAmount        TFloat
 
              , AmountReal            TFloat
@@ -1020,6 +1021,7 @@ BEGIN
            , tmpMI.CheckAmount                                      AS CheckAmount
            , tmpMI.SendAmount                                       AS SendAmount
            , tmpMI.AmountDeferred                                   AS AmountDeferred
+           , tmpMI.AmountSF                                         AS AmountSF
            , tmpMI.ListDiffAmount                       ::TFloat    AS ListDiffAmount
 
            , tmpMI.AmountReal                           ::TFloat    AS AmountReal
@@ -1722,10 +1724,20 @@ BEGIN
                                   WHERE tmpOrderSheduleList.DoW = vbCURRENT_DOW  OR tmpOrderSheduleList.DoW_D = vbCURRENT_DOW
                                  )
 
+    -- Отказы поставщиков все
+   , tmpSupplierFailuresAll AS (SELECT DISTINCT 
+                                       SupplierFailures.OperDate
+                                     , SupplierFailures.DateFinal
+                                     , SupplierFailures.GoodsId
+                                     , SupplierFailures.JuridicalId
+                                     , SupplierFailures.ContractId
+                                FROM lpSelect_PriceList_SupplierFailuresAll(vbUnitId, vbUserId) AS SupplierFailures
+                                )
      -- Заказ отложен
       , tmpDeferred_All AS (SELECT Movement_OrderExternal.Id
                                  , MI_OrderExternal.ObjectId                AS GoodsId
                                  , SUM (MI_OrderExternal.Amount) ::TFloat   AS Amount
+                                 , SUM (CASE WHEN COALESCE (tmpSupplierFailuresAll.GoodsId, 0) <> 0 THEN MI_OrderExternal.Amount END) ::TFloat   AS AmountSF
                             FROM Movement AS Movement_OrderExternal
                                  INNER JOIN MovementBoolean AS MovementBoolean_Deferred
                                                        ON MovementBoolean_Deferred.MovementId = Movement_OrderExternal.Id
@@ -1739,6 +1751,20 @@ BEGIN
                                                     ON MI_OrderExternal.MovementId = Movement_OrderExternal.Id
                                                    AND MI_OrderExternal.DescId = zc_MI_Master()
                                                    AND MI_OrderExternal.isErased = FALSE
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                              ON MovementLinkObject_From.MovementId = Movement_OrderExternal.Id
+                                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                              ON MovementLinkObject_Contract.MovementId = Movement_OrderExternal.Id
+                                                             AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                                  ON MILinkObject_Goods.MovementItemId = MI_OrderExternal.Id
+                                                                 AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                 LEFT JOIN tmpSupplierFailuresAll ON tmpSupplierFailuresAll.OperDate <= Movement_OrderExternal.OperDate
+                                                                 AND tmpSupplierFailuresAll.DateFinal > Movement_OrderExternal.OperDate
+                                                                 AND tmpSupplierFailuresAll.GoodsId = MILinkObject_Goods.ObjectId
+                                                                 AND tmpSupplierFailuresAll.JuridicalId = MovementLinkObject_From.ObjectId
+                                                                 AND tmpSupplierFailuresAll.ContractId = MovementLinkObject_Contract.ObjectId
                             WHERE Movement_OrderExternal.DescId = zc_Movement_OrderExternal()
                               AND Movement_OrderExternal.StatusId = zc_Enum_Status_Complete()
                             GROUP BY MI_OrderExternal.ObjectId, Movement_OrderExternal.Id
@@ -1746,6 +1772,7 @@ BEGIN
                        )
       , tmpDeferred AS (SELECT Movement_OrderExternal.GoodsId                 AS GoodsId
                              , SUM (Movement_OrderExternal.Amount) ::TFloat   AS AmountDeferred
+                             , SUM (Movement_OrderExternal.AmountSF) ::TFloat AS AmountSF
                         FROM tmpDeferred_All AS Movement_OrderExternal
                             LEFT JOIN MovementLinkMovement AS MLM_Order
                                                            ON MLM_Order.MovementChildId = Movement_OrderExternal.Id     --MLM_Order.MovementId = Movement_Income.Id
@@ -2894,6 +2921,7 @@ BEGIN
            , tmpSend.Amount                                     ::TFloat     AS SendAmount
 
            , tmpDeferred.AmountDeferred                                      AS AmountDeferred
+           , tmpDeferred.AmountSF                                            AS AmountSF
            , tmpMI.ListDiffAmount                               ::TFloat     AS ListDiffAmount
 
            , tmpMI.AmountReal                           ::TFloat    AS AmountReal
@@ -3568,10 +3596,20 @@ BEGIN
                                   WHERE tmpOrderSheduleList.DoW = vbCURRENT_DOW  OR tmpOrderSheduleList.DoW_D = vbCURRENT_DOW
                                  )
 
+      -- Отказы поставщиков все
+     , tmpSupplierFailuresAll AS (SELECT DISTINCT 
+                                         SupplierFailures.OperDate
+                                       , SupplierFailures.DateFinal
+                                       , SupplierFailures.GoodsId
+                                       , SupplierFailures.JuridicalId
+                                       , SupplierFailures.ContractId
+                                  FROM lpSelect_PriceList_SupplierFailuresAll(vbUnitId, vbUserId) AS SupplierFailures
+                                  )
      -- Заказ отложен
       , tmpDeferred_All AS (SELECT Movement_OrderExternal.Id
                                  , MI_OrderExternal.ObjectId                AS GoodsId
                                  , SUM (MI_OrderExternal.Amount) ::TFloat   AS Amount
+                                 , SUM (CASE WHEN COALESCE (tmpSupplierFailuresAll.GoodsId, 0) <> 0 THEN MI_OrderExternal.Amount END) ::TFloat   AS AmountSF
                             FROM Movement AS Movement_OrderExternal
                                  INNER JOIN MovementBoolean AS MovementBoolean_Deferred
                                                        ON MovementBoolean_Deferred.MovementId = Movement_OrderExternal.Id
@@ -3585,6 +3623,20 @@ BEGIN
                                                     ON MI_OrderExternal.MovementId = Movement_OrderExternal.Id
                                                    AND MI_OrderExternal.DescId = zc_MI_Master()
                                                    AND MI_OrderExternal.isErased = FALSE
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                              ON MovementLinkObject_From.MovementId = Movement_OrderExternal.Id
+                                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                              ON MovementLinkObject_Contract.MovementId = Movement_OrderExternal.Id
+                                                             AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                                  ON MILinkObject_Goods.MovementItemId = MI_OrderExternal.Id
+                                                                 AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                 LEFT JOIN tmpSupplierFailuresAll ON tmpSupplierFailuresAll.OperDate <= Movement_OrderExternal.OperDate
+                                                                 AND tmpSupplierFailuresAll.DateFinal > Movement_OrderExternal.OperDate
+                                                                 AND tmpSupplierFailuresAll.GoodsId = MILinkObject_Goods.ObjectId
+                                                                 AND tmpSupplierFailuresAll.JuridicalId = MovementLinkObject_From.ObjectId
+                                                                 AND tmpSupplierFailuresAll.ContractId = MovementLinkObject_Contract.ObjectId
                             WHERE Movement_OrderExternal.DescId = zc_Movement_OrderExternal()
                               AND Movement_OrderExternal.StatusId = zc_Enum_Status_Complete()
                             GROUP BY MI_OrderExternal.ObjectId, Movement_OrderExternal.Id
@@ -3592,6 +3644,7 @@ BEGIN
                        )
       , tmpDeferred AS (SELECT Movement_OrderExternal.GoodsId                 AS GoodsId
                              , SUM (Movement_OrderExternal.Amount) ::TFloat   AS AmountDeferred
+                             , SUM (Movement_OrderExternal.AmountSF) ::TFloat AS AmountSF
                         FROM tmpDeferred_All AS Movement_OrderExternal
                             LEFT JOIN MovementLinkMovement AS MLM_Order
                                                            ON MLM_Order.MovementChildId = Movement_OrderExternal.Id     --MLM_Order.MovementId = Movement_Income.Id
@@ -4702,6 +4755,7 @@ BEGIN
            , tmpSend.Amount                                     ::TFloat     AS SendAmount
 
            , tmpDeferred.AmountDeferred                                      AS AmountDeferred
+           , tmpDeferred.AmountSF                                            AS AmountSF
            , tmpMI.ListDiffAmount                               ::TFloat     AS ListDiffAmount
 
            , 0                                                  ::TFloat    AS AmountReal
@@ -4912,4 +4966,4 @@ where Movement.DescId = zc_Movement_OrderInternal()
 
 --select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 26893369    , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3') order by GoodsId;
 
-select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 26958571 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 27068185 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
