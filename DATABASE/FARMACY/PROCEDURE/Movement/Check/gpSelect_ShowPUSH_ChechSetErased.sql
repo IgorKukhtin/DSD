@@ -20,6 +20,8 @@ BEGIN
   outShowMessage := False;
   vbText := '';
 
+    RETURN;
+
   IF COALESCE (inMovementID, 0) = 0 /*OR inSession <> '3'*/
   THEN
     RETURN;

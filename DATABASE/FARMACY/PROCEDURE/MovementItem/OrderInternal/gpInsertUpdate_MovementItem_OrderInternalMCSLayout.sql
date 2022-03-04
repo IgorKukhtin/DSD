@@ -299,7 +299,7 @@ BEGIN
                                                                 ON MovementDate_Branch.MovementId = Movement_Income.Id
                                                                AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
                                                                -- AND MovementDate_Branch.ValueData >= CURRENT_DATE
-                                                               AND MovementDate_Branch.ValueData BETWEEN CURRENT_DATE - INTERVAL '7 DAY' AND CURRENT_DATE + INTERVAL '7 DAY'
+                                                               AND MovementDate_Branch.ValueData BETWEEN CURRENT_DATE - INTERVAL '15 DAY' AND CURRENT_DATE + INTERVAL '7 DAY'
                                 WHERE Movement_Income.DescId = zc_Movement_Income()
                                   AND Movement_Income.StatusId = zc_Enum_Status_UnComplete()
                                 GROUP BY MovementItem_Income.ObjectId
