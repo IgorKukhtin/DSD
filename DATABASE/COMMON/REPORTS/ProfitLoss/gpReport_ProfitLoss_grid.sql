@@ -32,6 +32,9 @@ RETURNS TABLE (ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, P
              , Amount_0   TFloat    -- без филиала
 
              , ProfitLossGroup_dop Integer   -- дополнительная группировка
+             , GoodsGroupName TVarChar
+             , GoodsGroupNameFull TVarChar
+             , LocationName  TVarChar
               )
 AS
 $BODY$
@@ -42,18 +45,25 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Блокируем ему просмотр
-     IF vbUserId = 9457 -- Климентьев К.И.
+    /* IF vbUserId = 9457 -- Климентьев К.И.
      THEN
          vbUserId:= NULL;
          RETURN;
      END IF;
-
+*/
      -- Результат
      RETURN QUERY
       WITH 
       tmpReport AS (SELECT tmp.*
                     FROM gpReport_ProfitLoss (inStartDate, inEndDate, inSession) AS tmp
                     )
+
+    , tmpPersonal AS (SELECT lfSelect.MemberId
+                           , lfSelect.UnitId
+                      FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                      WHERE lfSelect.Ord = 1
+                     )
+
 
       SELECT
              tmpReport.ProfitLossGroupName
@@ -89,28 +99,124 @@ BEGIN
            , CASE WHEN inisDirectionDesc = TRUE THEN tmpReport.DirectionObjectCode ELSE 0  END ::Integer  AS DirectionObjectCode
            , CASE WHEN inisDirectionDesc = TRUE THEN tmpReport.DirectionObjectName ELSE '' END ::TVarChar AS DirectionObjectName
            , tmpReport.DirectionDescName   AS DirectionDescName
-           , CASE WHEN inisDestinationDesc = TRUE THEN tmpReport.DestinationObjectCode ELSE 0  END ::Integer  AS DestinationObjectCode
-           , CASE WHEN inisDestinationDesc = TRUE THEN tmpReport.DestinationObjectName ELSE '' END ::TVarChar AS DestinationObjectName
-           , tmpReport.DestinationDescName AS DestinationDescName
+           
+           --, CASE WHEN inisDestinationDesc = TRUE THEN tmpReport.DestinationObjectCode ELSE 0  END ::Integer  AS DestinationObjectCode
+           , CASE WHEN inisDestinationDesc = TRUE 
+                  THEN CASE WHEN tmpReport.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Inventory(), zc_Movement_Transport())
+                             AND tmpReport.DestinationDescId = zc_Object_Goods()
+                            THEN 0
+                            ELSE tmpReport.DestinationObjectCode
+                       END
+                  ELSE 0
+             END ::Integer  AS DestinationObjectCode
+           --, CASE WHEN inisDestinationDesc = TRUE THEN tmpReport.DestinationObjectName ELSE '' END ::TVarChar AS DestinationObjectName
+           , CASE WHEN inisDestinationDesc = TRUE 
+                  THEN CASE WHEN tmpReport.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Inventory(), zc_Movement_Transport())
+                             AND tmpReport.DestinationDescId = zc_Object_Goods()
+                            THEN ''
+                            ELSE tmpReport.DestinationObjectName
+                       END
+                  ELSE ''
+             END ::TVarChar  AS DestinationObjectName
 
+           , tmpReport.DestinationDescName AS DestinationDescName
            , tmpReport.MovementDescName
 
-           , tmpReport.Amount :: TFloat AS Amount
+           , SUM (tmpReport.Amount) :: TFloat AS Amount
 
-           , tmpReport.Amount_Dn  :: TFloat
-           , tmpReport.Amount_Kh  :: TFloat
-           , tmpReport.Amount_Od  :: TFloat
-           , tmpReport.Amount_Zp  :: TFloat
-           , tmpReport.Amount_Kv  :: TFloat
-           , tmpReport.Amount_Kr  :: TFloat
-           , tmpReport.Amount_Nik :: TFloat
-           , tmpReport.Amount_Ch  :: TFloat
-           , tmpReport.Amount_Lv  :: TFloat
-           , tmpReport.Amount_0   :: TFloat
+           , SUM (tmpReport.Amount_Dn)  :: TFloat
+           , SUM (tmpReport.Amount_Kh)  :: TFloat
+           , SUM (tmpReport.Amount_Od)  :: TFloat
+           , SUM (tmpReport.Amount_Zp)  :: TFloat
+           , SUM (tmpReport.Amount_Kv)  :: TFloat
+           , SUM (tmpReport.Amount_Kr)  :: TFloat
+           , SUM (tmpReport.Amount_Nik) :: TFloat
+           , SUM (tmpReport.Amount_Ch)  :: TFloat
+           , SUM (tmpReport.Amount_Lv)  :: TFloat
+           , SUM (tmpReport.Amount_0)   :: TFloat
 
            -- доп.группа для промежуточного итога   "итого сумма у покупателя"
-           ,  tmpReport.ProfitLossGroup_dop
+           , tmpReport.ProfitLossGroup_dop
+
+           , Object_GoodsGroup.ValueData AS GoodsGroupName
+           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           
+           , CASE WHEN tmpReport.UnitDescId = zc_Object_Member() THEN Object_Unit_member.ValueData
+                  WHEN tmpReport.UnitDescId = zc_Object_InfoMoney() THEN '-'             ---- если "Элемент Подразделения" = "Статьи списания", тогда тянем "От кого" из документа "Списание"
+                  WHEN tmpReport.UnitDescId = zc_Object_Founder() THEN 'Административный'
+                  WHEN tmpReport.UnitDescId = zc_Object_Partner() THEN 'Павильоны'
+                  WHEN tmpReport.UnitDescId = zc_Object_Unit() THEN tmpReport.UnitName_ProfitLoss
+                  ELSE ''
+             END ::TVarChar AS LocationName
+
       FROM tmpReport
+
+           LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                  ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpReport.DestinationObjectId
+                                 AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpReport.DestinationObjectId
+                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+           LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = tmpReport.UnitId_ProfitLoss
+           LEFT JOIN Object AS Object_Unit_member ON Object_Unit_member.Id = tmpPersonal.UnitId
+
+      GROUP BY tmpReport.ProfitLossGroupName
+             , tmpReport.ProfitLossDirectionName
+             , tmpReport.ProfitLossName
+             , tmpReport.PL_GroupName_original
+             , tmpReport.PL_DirectionName_original
+             , tmpReport.PL_Name_original
+             , tmpReport.onComplete
+             , tmpReport.BusinessName
+             , tmpReport.JuridicalName_Basis
+             , tmpReport.BranchName_ProfitLoss
+             , tmpReport.UnitName_ProfitLoss
+             , tmpReport.UnitDescName
+             , tmpReport.InfoMoneyGroupCode
+             , tmpReport.InfoMoneyDestinationCode
+             , tmpReport.InfoMoneyCode
+             , tmpReport.InfoMoneyGroupName
+             , tmpReport.InfoMoneyDestinationName
+             , tmpReport.InfoMoneyName
+             , tmpReport.InfoMoneyGroupCode_Detail
+             , tmpReport.InfoMoneyDestinationCode_Detail
+             , tmpReport.InfoMoneyCode_Detail
+             , tmpReport.InfoMoneyGroupName_Detail
+             , tmpReport.InfoMoneyDestinationName_Detail
+             , tmpReport.InfoMoneyName_Detail
+             , CASE WHEN inisDirectionDesc = TRUE THEN tmpReport.DirectionObjectCode ELSE 0  END
+             , CASE WHEN inisDirectionDesc = TRUE THEN tmpReport.DirectionObjectName ELSE '' END
+             , tmpReport.DirectionDescName
+             , CASE WHEN inisDestinationDesc = TRUE 
+                    THEN CASE WHEN tmpReport.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Inventory(), zc_Movement_Transport())
+                               AND tmpReport.DestinationDescId = zc_Object_Goods()
+                              THEN 0
+                              ELSE tmpReport.DestinationObjectCode
+                         END
+                    ELSE 0
+               END
+             , CASE WHEN inisDestinationDesc = TRUE 
+                    THEN CASE WHEN tmpReport.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Inventory(), zc_Movement_Transport())
+                               AND tmpReport.DestinationDescId = zc_Object_Goods()
+                              THEN ''
+                              ELSE tmpReport.DestinationObjectName
+                         END
+                    ELSE ''
+               END
+             , tmpReport.DestinationDescName
+             , tmpReport.MovementDescName
+             , tmpReport.ProfitLossGroup_dop
+             , Object_GoodsGroup.ValueData
+             , ObjectString_Goods_GoodsGroupFull.ValueData
+             , CASE WHEN tmpReport.UnitDescId = zc_Object_Member() THEN Object_Unit_member.ValueData
+                  WHEN tmpReport.UnitDescId = zc_Object_InfoMoney() THEN '-'             ---- если "Элемент Подразделения" = "Статьи списания", тогда тянем "От кого" из документа "Списание"
+                  WHEN tmpReport.UnitDescId = zc_Object_Founder() THEN 'Административный'
+                  WHEN tmpReport.UnitDescId = zc_Object_Partner() THEN 'Павильоны'
+                  WHEN tmpReport.UnitDescId = zc_Object_Unit() THEN tmpReport.UnitName_ProfitLoss
+                  ELSE ''
+             END
       ;
 
 END;
@@ -125,3 +231,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_ProfitLoss_grid (inStartDate:= '31.05.2021', inEndDate:= '31.05.2021',  inisDirectionDesc:=FAlse, inisDestinationDesc:= True, inSession:= '2') WHERE Amount <> 0 ORDER BY 5
+-- SELECT * FROM gpReport_ProfitLoss_grid (inStartDate:= '04.03.2022', inEndDate:= '04.03.2022',  inisDirectionDesc:=FAlse, inisDestinationDesc:= True, inSession:= '2') WHERE Amount <> 0 ORDER BY 5

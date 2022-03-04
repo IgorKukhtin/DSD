@@ -10,12 +10,15 @@ CREATE OR REPLACE FUNCTION gpReport_ProfitLoss(
 RETURNS TABLE (ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, ProfitLossName  TVarChar
              , PL_GroupName_original TVarChar, PL_DirectionName_original TVarChar, PL_Name_original  TVarChar
              , OnComplete Boolean
-             , BusinessName TVarChar, JuridicalName_Basis TVarChar, BranchName_ProfitLoss TVarChar, UnitName_ProfitLoss TVarChar, UnitDescName TVarChar
+             , BusinessName TVarChar, JuridicalName_Basis TVarChar, BranchName_ProfitLoss TVarChar
+             , UnitId_ProfitLoss Integer, UnitName_ProfitLoss TVarChar
+             , UnitDescId Integer, UnitDescName TVarChar
              , InfoMoneyGroupCode Integer, InfoMoneyDestinationCode Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , InfoMoneyGroupCode_Detail Integer, InfoMoneyDestinationCode_Detail Integer, InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar
              , DirectionObjectCode Integer, DirectionObjectName TVarChar, DirectionDescName TVarChar
-             , DestinationObjectCode Integer, DestinationObjectName TVarChar, DestinationDescName TVarChar
-             , MovementDescName TVarChar
+             , DestinationObjectId Integer, DestinationObjectCode Integer, DestinationObjectName TVarChar
+             , DestinationDescId Integer, DestinationDescName TVarChar
+             , MovementDescId Integer, MovementDescName TVarChar
              , Amount TFloat
 
              , Amount_Dn  TFloat    -- Днепр
@@ -374,7 +377,9 @@ BEGIN
            , Object_Business.ValueData          AS BusinessName
            , Object_JuridicalBasis.ValueData    AS JuridicalName_Basis
            , Object_Branch_ProfitLoss.ValueData AS BranchName_ProfitLoss
+           , Object_Unit_ProfitLoss.Id          AS UnitId_ProfitLoss
            , Object_Unit_ProfitLoss.ValueData   AS UnitName_ProfitLoss
+           , ObjectDesc_Unit.Id                 AS UnitDescId
            , ObjectDesc_Unit.ItemName           AS UnitDescName
 
            , View_InfoMoney.InfoMoneyGroupCode
@@ -394,10 +399,13 @@ BEGIN
            , Object_Direction.ObjectCode     AS DirectionObjectCode
            , Object_Direction.ValueData      AS DirectionObjectName
            , ObjectDesc_Direction.ItemName   AS DirectionDescName
+           , Object_Destination.Id           AS DestinationObjectId
            , Object_Destination.ObjectCode   AS DestinationObjectCode
            , Object_Destination.ValueData    AS DestinationObjectName
+           , ObjectDesc_Destination.Id       AS DestinationDescId
            , ObjectDesc_Destination.ItemName AS DestinationDescName
 
+           , MovementDesc.Id               AS MovementDescId
            , MovementDesc.ItemName         AS MovementDescName
 
            , tmpReport.Amount :: TFloat AS Amount
@@ -454,7 +462,9 @@ BEGIN
            , Object_Business.ValueData          AS BusinessName
            , Object_JuridicalBasis.ValueData    AS JuridicalName_Basis
            , Object_Branch_ProfitLoss.ValueData AS BranchName_ProfitLoss
+           , Object_Unit_ProfitLoss.Id          AS UnitId_ProfitLoss
            , Object_Unit_ProfitLoss.ValueData   AS UnitName_ProfitLoss
+           , ObjectDesc_Unit.Id                 AS UnitDescId
            , ObjectDesc_Unit.ItemName           AS UnitDescName
 
            , View_InfoMoney.InfoMoneyGroupCode
@@ -474,10 +484,13 @@ BEGIN
            , Object_Direction.ObjectCode     AS DirectionObjectCode
            , Object_Direction.ValueData      AS DirectionObjectName
            , ObjectDesc_Direction.ItemName   AS DirectionDescName
+           , Object_Destination.Id           AS DestinationObjectId
            , Object_Destination.ObjectCode   AS DestinationObjectCode
            , Object_Destination.ValueData    AS DestinationObjectName
+           , ObjectDesc_Destination.Id       AS DestinationDescId
            , ObjectDesc_Destination.ItemName AS DestinationDescName
 
+           , MovementDesc.Id               AS MovementDescId
            , MovementDesc.ItemName         AS MovementDescName
 
            , tmpReport.Amount :: TFloat AS Amount
@@ -538,4 +551,4 @@ ALTER FUNCTION gpReport_ProfitLoss (TDateTime, TDateTime, TVarChar) OWNER TO pos
 */
 
 -- тест
--- SELECT * FROM gpReport_ProfitLoss (inStartDate:= '01.08.2021', inEndDate:= '31.08.2021', inSession:= '5') WHERE Amount <> 0 ORDER BY 5
+-- SELECT * FROM gpReport_ProfitLoss (inStartDate:= '04.03.2022', inEndDate:= '04.03.2022', inSession:= '5') WHERE Amount <> 0 ORDER BY 5

@@ -13,17 +13,17 @@ inherited Report_ProfitLoss_gridForm: TReport_ProfitLoss_gridForm
     Width = 945
     Height = 347
     TabOrder = 3
-    ExplicitWidth = 606
+    ExplicitWidth = 945
     ExplicitHeight = 347
     ClientRectBottom = 347
     ClientRectRight = 945
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 606
+      ExplicitWidth = 945
       ExplicitHeight = 347
       inherited cxGrid: TcxGrid
         Width = 945
         Height = 347
-        ExplicitWidth = 606
+        ExplicitWidth = 945
         ExplicitHeight = 347
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -196,6 +196,31 @@ inherited Report_ProfitLoss_gridForm: TReport_ProfitLoss_gridForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object GoodsGroupNameFull: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
+          end
+          object GoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 172
+          end
+          object LocationName: TcxGridDBColumn
+            Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072
+            DataBinding.FieldName = 'LocationName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 102
+          end
           object Amount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Amount'
@@ -250,7 +275,7 @@ inherited Report_ProfitLoss_gridForm: TReport_ProfitLoss_gridForm
   end
   inherited Panel: TPanel
     Width = 945
-    ExplicitWidth = 606
+    ExplicitWidth = 945
     inherited deStart: TcxDateEdit
       Left = 97
       EditValue = 43405d
@@ -307,6 +332,7 @@ inherited Report_ProfitLoss_gridForm: TReport_ProfitLoss_gridForm
       Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
       Hint = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefreshDestination: TdsdDataSetRefresh [1]
@@ -320,6 +346,7 @@ inherited Report_ProfitLoss_gridForm: TReport_ProfitLoss_gridForm
       Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
       Hint = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object ExecuteDialog: TExecuteDialog

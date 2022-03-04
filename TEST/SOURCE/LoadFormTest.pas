@@ -2462,12 +2462,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Balance_gridForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Balance_gridForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLoss_gridForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLoss_gridForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLoss_gridDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLoss_gridDialogForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossForm');
   exit;
