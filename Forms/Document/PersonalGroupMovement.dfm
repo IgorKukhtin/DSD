@@ -3,7 +3,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
   ClientHeight = 426
   ClientWidth = 915
   ExplicitWidth = 931
-  ExplicitHeight = 464
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -24,11 +24,32 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
         ExplicitWidth = 915
         ExplicitHeight = 275
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count_Personal
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = PersonalName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count_Personal
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -38,7 +59,6 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = True
           OptionsView.GroupByBox = True
-          OptionsView.GroupSummaryLayout = gslStandard
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -123,7 +143,16 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object UnitName_inf: TcxGridDBColumn [7]
+          object Count_Personal: TcxGridDBColumn [7]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086#1090#1088'.'
+            DataBinding.FieldName = 'Count_Personal'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
+            Options.Editing = False
+            Width = 55
+          end
+          object UnitName_inf: TcxGridDBColumn [8]
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'UnitName_inf'
             Visible = False
@@ -133,7 +162,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
             Options.Editing = False
             Width = 92
           end
-          object PositionName_inf: TcxGridDBColumn [8]
+          object PositionName_inf: TcxGridDBColumn [9]
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'PositionName_inf'
             Visible = False
@@ -143,7 +172,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
             Options.Editing = False
             Width = 100
           end
-          object Comment: TcxGridDBColumn [9]
+          object Comment: TcxGridDBColumn [10]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter

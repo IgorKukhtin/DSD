@@ -107,12 +107,6 @@ BEGIN
      ;
 
 
--- !!! бпелеммн !!!
-IF vbUserId = 5 AND 1=1 THEN
-    RAISE EXCEPTION 'Admin - Test = OK';
-END IF;
-
-
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

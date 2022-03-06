@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpSelect_MovementItem_PersonalGroup (Integer, Boolean, T
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalGroup(
     IN inMovementId  Integer      , -- ключ Документа
-    IN inIsErased    Boolean      , -- 
+    IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, MemberId Integer
@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, MemberId Integer
              , WorkTimeKindId Integer, WorkTimeKindName TVarChar
              , UnitName_inf TVarChar, PositionName_inf TVarChar
              , Amount TFloat
+             , Count_Personal TFloat
              , Comment TVarChar
              , isErased Boolean
               )
@@ -43,7 +44,7 @@ BEGIN
                                                   AND MovementItem.DescId = zc_MI_Master()
                                                   AND MovementItem.isErased = tmpIsErased.isErased
                      )
-            
+
        -- Результат
        SELECT MovementItem.Id
             , View_Personal.MemberId
@@ -57,7 +58,7 @@ BEGIN
             , Object_PositionLevel.ValueData AS PositionLevelName
             , Object_PersonalGroup.Id        AS PersonalGroupId
             , Object_PersonalGroup.ValueData AS PersonalGroupName
-            
+
             , Object_WorkTimeKind.Id         AS WorkTimeKindId
             , Object_WorkTimeKind.ValueData  AS WorkTimeKindName
 
@@ -65,7 +66,8 @@ BEGIN
             , View_Personal.PositionName     AS PositionName_inf
 
             , MovementItem.Amount :: TFloat  AS Amount
-            
+            , CASE WHEN MovementItem.Amount <> 0 THEN 1 ELSE 0 END :: TFloat  AS Count_Personal
+
             , MIString_Comment.ValueData :: TVarChar AS Comment
 
             , MovementItem.isErased

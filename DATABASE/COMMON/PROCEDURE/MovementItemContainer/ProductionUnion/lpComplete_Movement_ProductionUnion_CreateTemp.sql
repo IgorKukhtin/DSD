@@ -39,6 +39,14 @@ BEGIN
      CREATE TEMP TABLE _tmpItem_Partion (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, ReceiptId Integer, PartionGoodsDate TDateTime, OperCount TFloat, Count_onCount TFloat) ON COMMIT DROP;
      -- таблица - 
      CREATE TEMP TABLE _tmpItem_Partion_child (MovementItemId_Parent Integer, MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsDate TDateTime, OperCount TFloat) ON COMMIT DROP;
+     
+     -- таблица - 
+     IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpList_Goods_1942')
+     THEN
+         CREATE TEMP TABLE _tmpList_Goods_1942 ON COMMIT DROP
+            AS SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (1942) AS lfSelect -- СО-ЭМУЛЬСИИ
+        ;
+     END IF;
 
 
 END;$BODY$

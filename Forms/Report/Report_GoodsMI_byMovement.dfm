@@ -5,7 +5,6 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -234
   ExplicitWidth = 1144
   ExplicitHeight = 413
   PixelsPerInch = 96

@@ -1565,5 +1565,5 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 
 -- тест
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.03.2020', inEndDate:= '01.03.2020', inBranchId:= 0, inItearationCount:= 10, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2459386, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.02.2022', inEndDate:= '28.02.2022', inBranchId:= 0, inItearationCount:= 200, inInsert:= 1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2459386, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.11.2021', inEndDate:= '30.11.2021', inBranchId:= 0, inItearationCount:= 50, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (149113)

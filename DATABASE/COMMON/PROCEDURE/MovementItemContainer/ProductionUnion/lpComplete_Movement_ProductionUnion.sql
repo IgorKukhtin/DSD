@@ -291,6 +291,7 @@ BEGIN
                                THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                           WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                            AND vbIsPartionGoodsKind_Unit_To = TRUE
+                           AND _tmpList_Goods_1942.GoodsId IS NULL
                                THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                           ELSE 0
                      END AS GoodsKindId
@@ -354,6 +355,8 @@ BEGIN
                                        AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
+                   LEFT JOIN _tmpList_Goods_1942 ON _tmpList_Goods_1942.GoodsId = MovementItem.ObjectId
+
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_ProductionUnion()
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
@@ -394,6 +397,7 @@ BEGIN
                                THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                           WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                            AND vbIsPartionGoodsKind_Unit_From = TRUE
+                           AND _tmpList_Goods_1942.GoodsId IS NULL
                                THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                           ELSE 0
                      END AS GoodsKindId
@@ -401,6 +405,7 @@ BEGIN
                                THEN COALESCE (MILinkObject_GoodsKindComplete.ObjectId, CASE WHEN _tmpItem_pr.GoodsKindId <> zc_GoodsKind_WorkProgress() THEN _tmpItem_pr.GoodsKindId ELSE 0 END)
                           WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                            AND vbIsPartionGoodsKind_Unit_From = TRUE
+                           AND _tmpList_Goods_1942.GoodsId IS NULL
                                THEN COALESCE (MILinkObject_GoodsKindComplete.ObjectId, CASE WHEN _tmpItem_pr.GoodsKindId <> zc_GoodsKind_WorkProgress() THEN _tmpItem_pr.GoodsKindId ELSE 0 END)
                           ELSE 0
                      END AS GoodsKindId_complete
@@ -464,6 +469,8 @@ BEGIN
                                         ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                                        AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
+                   LEFT JOIN _tmpList_Goods_1942 ON _tmpList_Goods_1942.GoodsId = MovementItem.ObjectId
 
               -- WHERE Movement.Id = inMovementId
               --   AND Movement.DescId = zc_Movement_ProductionUnion()
@@ -560,6 +567,8 @@ BEGIN
                                                     )
                                                 AND vbIsPeresort = FALSE
                                                 AND _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()  -- Основное сырье + Мясное сырье
+                                                AND NOT EXISTS (SELECT 1 FROM _tmpList_Goods_1942 WHERE _tmpList_Goods_1942.GoodsId = _tmpItem_pr.GoodsId)
+
                                                    THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem_pr.PartionGoodsDate
                                                                                         , inGoodsKindId_complete := _tmpItem_pr.GoodsKindId_complete
                                                                                          )
@@ -573,12 +582,14 @@ BEGIN
                                                    THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem_pr.PartionGoodsDate
                                                                                         , inGoodsKindId_complete := _tmpItem_pr.GoodsKindId_complete
                                                                                          )
+                                               -- 
                                                WHEN _tmpItem_pr.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
                                                                                          , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                          , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
                                                                                           )
                                                    THEN 0
 
+                                               -- 
                                                WHEN (_tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                   OR _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                   OR _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
@@ -591,6 +602,7 @@ BEGIN
                                                                                          , inOperDate      := _tmpItem_pr.PartionGoodsDate
                                                                                          , inPrice         := NULL
                                                                                           )
+                                               -- 
                                                WHEN (_tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                   OR _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                   OR _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции

@@ -38,6 +38,15 @@ BEGIN
                                , PriceListPrice TFloat, PriceListJurPrice TFloat, Price TFloat, Price_Currency TFloat, Price_original TFloat, CountForPrice TFloat
                                 ) ON COMMIT DROP;
 
+     -- Ú‡·ÎËˆ‡ - 
+     IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpList_Goods_1942')
+     THEN
+         CREATE TEMP TABLE _tmpList_Goods_1942 ON COMMIT DROP
+            AS SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (1942) AS lfSelect -- —Œ-›Ã”À‹—»»
+        ;
+     END IF;
+
+
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 

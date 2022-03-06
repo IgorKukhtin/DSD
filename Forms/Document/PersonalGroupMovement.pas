@@ -68,6 +68,7 @@ type
     actWorkTimeKindChoiceForm: TOpenChoiceForm;
     WorkTimeKindName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    Count_Personal: TcxGridDBColumn;
   private
     { Private declarations }
   public
