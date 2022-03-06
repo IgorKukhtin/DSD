@@ -60,8 +60,6 @@ BEGIN
      END IF;
      
      
-     RAISE EXCEPTION 'Ошибка. <%>', lfGet_Object_ValueData (inPersonalId);
-     
      
      --пробуем найти строку док, если уже сохранили сотрудника
      vbMI_Id := (SELECT MovementItem.Id
