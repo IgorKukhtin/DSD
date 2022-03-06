@@ -157,17 +157,17 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 35
+            Width = 47
           end
           object TotalSumm: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
+            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 45
+            Width = 75
           end
           object ContractName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072' '
@@ -486,6 +486,19 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1083#1086#1078#1077#1085'  - '#1044#1072
       ImageIndex = 52
     end
+    object actReport_SupplierFailuresAll: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' '#1079#1072' '#1076#1077#1085#1100
+      Hint = #1054#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' '#1079#1072' '#1076#1077#1085#1100
+      ImageIndex = 16
+      FormName = 'TReport_OrderExternal_SupplierFailuresAllForm'
+      FormNameParam.Value = 'TReport_OrderExternal_SupplierFailuresAllForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -616,6 +629,14 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_SupplierFailuresAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -669,6 +690,10 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       Action = spUpdateisDeferredNo
       Category = 0
       ImageIndex = 58
+    end
+    object bbReport_SupplierFailuresAll: TdxBarButton
+      Action = actReport_SupplierFailuresAll
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

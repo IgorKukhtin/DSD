@@ -183,7 +183,7 @@ inherited OrderExternalForm: TOrderExternalForm
             Width = 43
           end
           object Summ: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072
+            Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072' '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -2194,6 +2194,14 @@ inherited OrderExternalForm: TOrderExternalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartnerGoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperdate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

@@ -53,6 +53,8 @@ type
     bbDeferredNo: TdxBarButton;
     LetterSubject: TcxGridDBColumn;
     isUseSubject: TcxGridDBColumn;
+    actReport_SupplierFailuresAll: TdsdOpenForm;
+    bbReport_SupplierFailuresAll: TdxBarButton;
   private
     { Private declarations }
   public

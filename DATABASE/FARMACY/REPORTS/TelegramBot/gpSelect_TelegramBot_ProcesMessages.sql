@@ -69,7 +69,7 @@ BEGIN
        FROM gpSelect_Object_ExchangeRates(False, zfCalc_UserAdmin()) AS tmp WHERE tmp.OperDate = vbOperDate;
 
      ELSE
-       outResult := 'Неизвестная комманда\n\n' + inText;
+       outResult := 'Неверный формат ввода\n\n'||inText;
      END IF;
    END IF;
 
@@ -84,5 +84,4 @@ $BODY$
 */
 
 -- тест
-
-select * from gpSelect_TelegramBot_ProcesMessages(inChatId := 568330367, inText := 'Курс\n28.02.2022\n33,00');
+-- select * from gpSelect_TelegramBot_ProcesMessages(inChatId := 568330367, inText := 'Курс\n28.02.2022\n33,00');

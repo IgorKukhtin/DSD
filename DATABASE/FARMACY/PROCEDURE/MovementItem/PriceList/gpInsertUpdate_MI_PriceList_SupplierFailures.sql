@@ -1,9 +1,10 @@
 -- Function: gpInsertUpdate_MI_PriceList_SupplierFailures()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PriceList_SupplierFailures(Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PriceList_SupplierFailures(Integer, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PriceList_SupplierFailures(
     IN inGoodsId        Integer   ,     -- Товар
+    IN inOperdate       TDateTime    , -- на дату
     IN inJuridicalId    Integer   ,     -- Юр. лицо
     IN inContractId     Integer   ,     -- Договор
     IN inUnitId         Integer   ,     -- Аптека
@@ -23,106 +24,29 @@ BEGIN
      RAISE EXCEPTION 'Ошибка. Коды товара, юр. лица и договора должны быть заполнены.';   
    END IF;
    
-   IF NOT EXISTS(SELECT * 
-                 FROM  MovementItemLinkObject AS MILinkObject_Goods
-
-                       -- Прайс-лист (поставщика) - MovementItem
-                       INNER JOIN MovementItem AS PriceList ON PriceList.Id = MILinkObject_Goods.MovementItemId
-                       
-                       -- Прайс-лист (поставщика) - Movement
-                       INNER JOIN LastPriceList_find_View ON LastPriceList_find_View.MovementId = PriceList.MovementId
-
-                 WHERE MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                   AND MILinkObject_Goods.ObjectId = inGoodsId
-                   AND LastPriceList_find_View.JuridicalId = inJuridicalId
-                   AND LastPriceList_find_View.ContractId = inContractId)
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpPriceList'))
+    THEN
+      DROP TABLE _tmpPriceList;
+    END IF;
+    
+   CREATE TEMP TABLE _tmpPriceList ON COMMIT DROP AS
+   SELECT * FROM gpSelect_PriceList_GoodsDate (inOperDate    := inOperDate
+                                             , inGoodsId     := inGoodsId
+                                             , inUnitId      := inUnitId
+                                             , inJuridicalId := inJuridicalId
+                                             , inContractId  := inContractId
+                                             , inSession     := inSession);
+   
+   IF NOT EXISTS(SELECT * FROM _tmpPriceList)
    THEN 
-     RAISE EXCEPTION 'Ошибка. В прайсах поставщика товар не найден.';      
+     RAISE NOTICE 'Ошибка. Не найден товар в прайсе по регионам аптеки.';   
+     RETURN;
    END IF;
 
-   IF EXISTS(SELECT * 
-             FROM  MovementItemLinkObject AS MILinkObject_Goods
-
-                   -- Прайс-лист (поставщика) - MovementItem
-                   INNER JOIN MovementItem AS PriceList ON PriceList.Id = MILinkObject_Goods.MovementItemId
-                   
-                   -- Прайс-лист (поставщика) - Movement
-                   INNER JOIN LastPriceList_find_View ON LastPriceList_find_View.MovementId = PriceList.MovementId
-
-             WHERE MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-               AND MILinkObject_Goods.ObjectId = inGoodsId
-               AND LastPriceList_find_View.JuridicalId = inJuridicalId
-               AND LastPriceList_find_View.ContractId = inContractId
-               AND COALESCE(LastPriceList_find_View.AreaId, 0) <> 0)
-   THEN 
-   
-      IF COALESCE (inUnitId, 0) = 0
-      THEN
-        RAISE EXCEPTION 'Ошибка. Не заполнено подразделение для определения региона.';   
-      END IF;
-   
-      IF EXISTS(SELECT * 
-                FROM  MovementItemLinkObject AS MILinkObject_Goods
- 
-                      -- Прайс-лист (поставщика) - MovementItem
-                      INNER JOIN MovementItem AS PriceList ON PriceList.Id = MILinkObject_Goods.MovementItemId
-                      
-                      -- Прайс-лист (поставщика) - Movement
-                      INNER JOIN LastPriceList_find_View ON LastPriceList_find_View.MovementId = PriceList.MovementId
-                       
-                WHERE MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                  AND MILinkObject_Goods.ObjectId = inGoodsId
-                  AND LastPriceList_find_View.JuridicalId = inJuridicalId
-                  AND LastPriceList_find_View.ContractId = inContractId
-                  AND COALESCE(LastPriceList_find_View.AreaId, 0) IN 
-                                     (SELECT DISTINCT tmp.AreaId_Juridical         AS AreaId
-                                      FROM lpSelect_Object_JuridicalArea_byUnit (inUnitId , 0) AS tmp
-                                      WHERE tmp.JuridicalId = inJuridicalId
-                                      ))
-      THEN
-         SELECT PriceList.MovementId
-         INTO vbPriceListId 
-         FROM  MovementItemLinkObject AS MILinkObject_Goods
-
-               -- Прайс-лист (поставщика) - MovementItem
-               INNER JOIN MovementItem AS PriceList ON PriceList.Id = MILinkObject_Goods.MovementItemId
-               
-               -- Прайс-лист (поставщика) - Movement
-               INNER JOIN LastPriceList_find_View ON LastPriceList_find_View.MovementId = PriceList.MovementId
-                         
-         WHERE MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-           AND MILinkObject_Goods.ObjectId = inGoodsId
-           AND LastPriceList_find_View.JuridicalId = inJuridicalId
-           AND LastPriceList_find_View.ContractId = inContractId
-           AND COALESCE(LastPriceList_find_View.AreaId, 0) IN 
-                                     (SELECT DISTINCT tmp.AreaId_Juridical         AS AreaId
-                                      FROM lpSelect_Object_JuridicalArea_byUnit (inUnitId , 0) AS tmp
-                                      WHERE tmp.JuridicalId = inJuridicalId
-                                      )    
-         LIMIT 1;   
-      ELSE
-         RAISE EXCEPTION 'Ошибка. Не найден товар в прайсе по региону аптеки.';   
-      END IF;
-   ELSE
-   
-     SELECT PriceList.MovementId
-     INTO vbPriceListId 
-     FROM  MovementItemLinkObject AS MILinkObject_Goods
-
-           -- Прайс-лист (поставщика) - MovementItem
-           INNER JOIN MovementItem AS PriceList ON PriceList.Id = MILinkObject_Goods.MovementItemId
-           
-           -- Прайс-лист (поставщика) - Movement
-           INNER JOIN LastPriceList_find_View ON LastPriceList_find_View.MovementId = PriceList.MovementId
-
-     WHERE MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-       AND MILinkObject_Goods.ObjectId = inGoodsId
-       AND LastPriceList_find_View.JuridicalId = inJuridicalId
-       AND LastPriceList_find_View.ContractId = inContractId
-     LIMIT 1;
-   
-   END IF;
-   
+   SELECT _tmpPriceList.Id
+   INTO vbPriceListId 
+   FROM _tmpPriceList
+   LIMIT 1;   
       
    IF NOT EXISTS(SELECT 1 
                  FROM MovementItem

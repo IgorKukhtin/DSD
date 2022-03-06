@@ -431,6 +431,20 @@ BEGIN
 
     END IF;    
 
+    -- Удаление вчарашних заказов по нашему сайту
+    IF date_part('HOUR',  CURRENT_TIME)::Integer = 12 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 20
+    THEN
+
+      BEGIN
+         PERFORM gpRun_Movement_Check_Delay_Site (zfCalc_UserAdmin());
+      EXCEPTION
+         WHEN others THEN
+           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+         PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpRun_Movement_Check_Delay_Site', True, text_var1::TVarChar, vbUserId);
+      END;    
+
+    END IF;    
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
