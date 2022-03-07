@@ -48,6 +48,7 @@ type
     ContractName: TcxGridDBColumn;
     Summ: TcxGridDBColumn;
     SummWithNDS: TcxGridDBColumn;
+    JuridicalMainName: TcxGridDBColumn;
   private
     { Private declarations }
   public

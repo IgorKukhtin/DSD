@@ -81,7 +81,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_UseSubject(), ioId, isisUseSubject);
 
      -- пересчитали Итоговые суммы по накладной
---     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
+--     PERFORM lpInsertUpdate_OrderExternal_TotalSumm (ioId);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, FALSE);

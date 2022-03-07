@@ -55,6 +55,11 @@ inherited OrderExternalForm: TOrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummWithNDS
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -94,6 +99,11 @@ inherited OrderExternalForm: TOrderExternalForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummWithNDS
             end>
           OptionsBehavior.CellHints = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -187,6 +197,16 @@ inherited OrderExternalForm: TOrderExternalForm
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
+          end
+          object SummWithNDS: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'SummWithNDS'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

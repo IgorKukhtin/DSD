@@ -48,7 +48,7 @@ BEGIN
      END IF;
 
      -- пересчитали Итоговые суммы
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     PERFORM lpInsertUpdate_OrderExternal_TotalSumm (inMovementId);
 
 
      -- сохранили протокол

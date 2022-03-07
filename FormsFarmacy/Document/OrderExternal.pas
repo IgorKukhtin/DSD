@@ -124,6 +124,7 @@ type
     actGetImportSettingId: TdsdExecStoredProc;
     actDoLoad: TExecuteImportSettingsAction;
     bbSupplierFailuresLoad: TdxBarButton;
+    SummWithNDS: TcxGridDBColumn;
   private
     { Private declarations }
   public

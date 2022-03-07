@@ -1,29 +1,29 @@
 inherited Report_OrderExternal_SupplierFailuresAllForm: TReport_OrderExternal_SupplierFailuresAllForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' '#1079#1072' '#1076#1077#1085#1100'>'
   ClientHeight = 480
-  ClientWidth = 1001
+  ClientWidth = 1057
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1017
+  ExplicitWidth = 1073
   ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 1001
+    Width = 1057
     Height = 421
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 583
+    ExplicitWidth = 1001
     ExplicitHeight = 421
     ClientRectBottom = 421
-    ClientRectRight = 1001
+    ClientRectRight = 1057
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 583
+      ExplicitWidth = 1001
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
-        Width = 1001
+        Width = 1057
         Height = 421
-        ExplicitWidth = 583
+        ExplicitWidth = 1001
         ExplicitHeight = 421
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -247,6 +247,14 @@ inherited Report_OrderExternal_SupplierFailuresAllForm: TReport_OrderExternal_Su
             Options.Editing = False
             Width = 222
           end
+          object JuridicalMainName: TcxGridDBColumn
+            Caption = #1070#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalMainName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 108
+          end
           object JuridicalName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'JuridicalName'
@@ -256,7 +264,7 @@ inherited Report_OrderExternal_SupplierFailuresAllForm: TReport_OrderExternal_Su
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 182
+            Width = 148
           end
           object ContractName: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088
@@ -264,7 +272,7 @@ inherited Report_OrderExternal_SupplierFailuresAllForm: TReport_OrderExternal_Su
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 173
+            Width = 154
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1086#1090#1082#1072#1079#1072
@@ -302,9 +310,9 @@ inherited Report_OrderExternal_SupplierFailuresAllForm: TReport_OrderExternal_Su
     end
   end
   inherited Panel: TPanel
-    Width = 1001
+    Width = 1057
     Height = 33
-    ExplicitWidth = 583
+    ExplicitWidth = 1001
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 49
