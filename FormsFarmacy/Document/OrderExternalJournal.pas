@@ -56,6 +56,7 @@ type
     actReport_SupplierFailuresAll: TdsdOpenForm;
     bbReport_SupplierFailuresAll: TdxBarButton;
     TotaSummWithNDS: TcxGridDBColumn;
+    isSupplierFailures: TcxGridDBColumn;
   private
     { Private declarations }
   public

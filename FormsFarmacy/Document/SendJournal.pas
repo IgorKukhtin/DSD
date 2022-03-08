@@ -112,6 +112,10 @@ type
     bbPrintFilter: TdxBarButton;
     actDirectoryDialog: TFileDialogAction;
     isSendLossFrom: TcxGridDBColumn;
+    spUpdate_AmountStorage: TdsdStoredProc;
+    actUpdate_AmountStorage: TdsdExecStoredProc;
+    dxBarButton1: TdxBarButton;
+    mactUpdate_AmountStorage: TMultiAction;
   private
     { Private declarations }
   public

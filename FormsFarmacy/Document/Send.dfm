@@ -1857,7 +1857,8 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'actChoiceIncome'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1089' '#1087#1088#1080#1093#1086#1076#1085#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1089' '#1087#1088#1080#1093#1086#1076#1085#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       FormName = 'TChoiceIncomeForm'
       FormNameParam.Value = 'TChoiceIncomeForm'
       FormNameParam.DataType = ftString
@@ -2036,6 +2037,21 @@ inherited SendForm: TSendForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1042' '#1087#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077' '#1085#1072' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103'"'
       ImageIndex = 76
       QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1042' '#1087#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077' '#1085#1072' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103'"?'
+    end
+    object actUpdate_AmountStorage: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_AmountStorage
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_AmountStorage
+        end>
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103'"'
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103'"'
+      ImageIndex = 79
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103'"?'
     end
   end
   inherited MasterDS: TDataSource
@@ -2268,6 +2284,10 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton12'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2364,6 +2384,10 @@ inherited SendForm: TSendForm
     end
     object dxBarButton11: TdxBarButton
       Action = actUpdateSendLossFrom
+      Category = 0
+    end
+    object dxBarButton12: TdxBarButton
+      Action = actUpdate_AmountStorage
       Category = 0
     end
   end
@@ -2481,6 +2505,12 @@ inherited SendForm: TSendForm
       item
         Name = 'SendPartionDateChangeId'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAdmin'
+        Value = Null
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 344
@@ -2775,6 +2805,14 @@ inherited SendForm: TSendForm
         Name = 'isSUN_v3'
         Value = Null
         Component = cbSUN_v3
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAdmin'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isAdmin'
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -3782,7 +3820,7 @@ inherited SendForm: TSendForm
       end>
     PackSize = 1
     Left = 880
-    Top = 283
+    Top = 275
   end
   object spInsert_Send_WriteRestFromPoint: TdsdStoredProc
     StoredProcName = 'gpInsert_MovementItem_Send_WriteRestFromPoint'
@@ -3918,7 +3956,7 @@ inherited SendForm: TSendForm
       end>
     PackSize = 1
     Left = 878
-    Top = 336
+    Top = 328
   end
   object spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Send_Child'
@@ -4110,7 +4148,7 @@ inherited SendForm: TSendForm
       end>
     PackSize = 1
     Left = 878
-    Top = 400
+    Top = 424
   end
   object spUpdate_Movement_Confirmed: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Confirmed'
@@ -4326,7 +4364,7 @@ inherited SendForm: TSendForm
       end>
     PackSize = 1
     Left = 878
-    Top = 472
+    Top = 480
   end
   object spGet_SendPartionDateChangeId: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_SendPartionDateChangeId'
@@ -4376,5 +4414,22 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 878
     Top = 528
+  end
+  object spUpdate_AmountStorage: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Send_AmountStorage'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 878
+    Top = 376
   end
 end

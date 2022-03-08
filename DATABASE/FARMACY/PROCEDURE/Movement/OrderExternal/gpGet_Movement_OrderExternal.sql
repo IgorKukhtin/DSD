@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , LetterSubject      TVarChar
              , Address TVarChar, Phone TVarChar, TimeWork TVarChar, PharmacyManager TVarChar
              , isUseSubject       Boolean
+             , isSupplierFailures Boolean
               )
 AS
 $BODY$
@@ -63,7 +64,8 @@ BEGIN
              , CAST ('' AS TVarChar) 		                AS Phone
              , CAST ('' AS TVarChar) 		                AS TimeWork
              , CAST ('' AS TVarChar) 		                AS PharmacyManager
-             , FALSE                                            AS isUseSubject
+             , FALSE                                        AS isUseSubject
+             , FALSE                                        AS isSupplierFailures
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -162,7 +164,7 @@ BEGIN
              END) :: TVarChar AS TimeWork
            , ObjectString_Unit_PharmacyManager.ValueData                    AS PharmacyManager
            , COALESCE (MovementBoolean_UseSubject.ValueData, FALSE) :: Boolean AS isUseSubject
-             
+           , COALESCE (MovementBoolean_SupplierFailures.ValueData, FALSE) :: Boolean AS isSupplierFailures             
            
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -174,6 +176,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                       ON MovementBoolean_Deferred.MovementId = Movement.Id
                                      AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_SupplierFailures
+                                      ON MovementBoolean_SupplierFailures.MovementId = Movement.Id
+                                     AND MovementBoolean_SupplierFailures.DescId = zc_MovementBoolean_SupplierFailures()
 
             -- точка другого юр.лица
             LEFT JOIN MovementBoolean AS MovementBoolean_Different

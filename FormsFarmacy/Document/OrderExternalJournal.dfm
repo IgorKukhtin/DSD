@@ -325,6 +325,14 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Options.Editing = False
             Width = 100
           end
+          object isSupplierFailures: TcxGridDBColumn
+            Caption = #1047#1072#1075#1088#1091#1078#1077#1085' '#1086#1090#1082#1072#1079
+            DataBinding.FieldName = 'isSupplierFailures'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 69
+          end
         end
       end
     end
