@@ -486,7 +486,6 @@ BEGIN
                                                , COALESCE (Movement_Data.PositionLevelId, Object_Data.PositionLevelId) -- AS PositionLevelId
                                                , COALESCE (Movement_Data.PersonalGroupId, Object_Data.PersonalGroupId) -- AS PersonalGroupId
                                                , COALESCE (Movement_Data.StorageLineId, Object_Data.StorageLineId)     -- AS PositionLevelId
-                                               , COALESCE (Movement_Data.WorkTimeKindId, 0)     -- AS PositionLevelId
                                                 ] :: Integer[]
                                          , COALESCE (Movement_Data.OperDate, Object_Data.OperDate) AS OperDate
                                          , ARRAY[(zfCalc_ViewWorkHour (COALESCE(Movement_Data.Amount, 0), COALESCE (Movement_Data.ShortName, ObjectString_WorkTimeKind_ShortName.ValueData))) :: VarChar
@@ -494,8 +493,8 @@ BEGIN
                                                , COALESCE (Movement_Data.Color_Calc, Object_Data.Color_Calc) :: VarChar
                                                 ] :: TVarChar
                                     FROM (WITH tmpAll AS (SELECT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId
-                                                               , tmpOperDate.OperDate, tmpMI.ObjectId AS WorkTimeKindId
-                                                          FROM (SELECT DISTINCT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId, tmpMI.ObjectId FROM tmpMI) AS tmpMI
+                                                               , tmpOperDate.OperDate
+                                                          FROM (SELECT DISTINCT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId FROM tmpMI) AS tmpMI
                                                                CROSS JOIN tmpOperDate
                                                          )
                                           SELECT tmpAll.MemberId
@@ -507,7 +506,6 @@ BEGIN
                                                , tmpMI.Amount, tmpMI.ShortName
                                                , COALESCE (tmpMI.ObjectId, 0) AS ObjectId
                                                , COALESCE (tmpMI.Color_Calc, zc_Color_White()) AS Color_Calc
-                                               , CASE WHEN ' || inUnitId :: TVarChar ||' = 8451 THEN tmpAll.WorkTimeKindId ELSE 0 END AS WorkTimeKindId
                                           FROM tmpAll
                                                LEFT JOIN tmpMI ON tmpMI.OperDate        = tmpAll.OperDate
                                                               AND tmpMI.MemberId        = tmpAll.MemberId
@@ -516,7 +514,6 @@ BEGIN
                                                               AND tmpMI.PersonalGroupId = tmpAll.PersonalGroupId
                                                               AND tmpMI.StorageLineId   = tmpAll.StorageLineId
                                                               AND (tmpMI.isErased = 1 OR ' || inisErased :: TVarChar || ' = TRUE)
-                                                              AND (tmpMI.ObjectId = tmpAll.WorkTimeKindId AND ' || inUnitId :: TVarChar ||' = 8451)
                                          ) AS Movement_Data
                                         FULL JOIN
                                          (SELECT tmpOperDate.OperDate,
