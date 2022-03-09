@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , FineSubjectId Integer, FineSubjectName TVarChar
              , UnitFineSubjectId Integer, UnitFineSubjectName TVarChar
+             , StaffListSummKindName TVarChar
              , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, SummService TFloat
              , SummCard TFloat, SummCardRecalc TFloat, SummCardSecond TFloat, SummCardSecondRecalc TFloat, SummCardSecondDiff TFloat, SummCardSecondCash TFloat
              , SummNalog TFloat, SummNalogRecalc TFloat
@@ -182,10 +183,16 @@ BEGIN
                      )
           , tmpMIChild AS (SELECT  MovementItem.ParentId    AS ParentId
                                  , SUM(MovementItem.Amount) AS Amount
+                                 , STRING_AGG (DISTINCT Object_StaffListSummKind.ValueData, ';') AS StaffListSummKindName
                            FROM tmpIsErased
                               INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                      AND MovementItem.DescId = zc_MI_Child()
                                                      AND MovementItem.isErased = tmpIsErased.isErased
+
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_StaffListSummKind
+                                                               ON MILinkObject_StaffListSummKind.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_StaffListSummKind.DescId = zc_MILinkObject_StaffListSummKind()
+                              LEFT JOIN Object AS Object_StaffListSummKind ON Object_StaffListSummKind.Id = MILinkObject_StaffListSummKind.ObjectId
                            GROUP BY MovementItem.ParentId
                        )
 
@@ -281,6 +288,8 @@ BEGIN
 
             , COALESCE (Object_UnitFineSubject.Id, 0)         :: Integer  AS UnitFineSubjectId
             , COALESCE (Object_UnitFineSubject.ValueData, '') :: TVarChar AS UnitFineSubjectName
+            
+            , COALESCE (tmpMIChild.StaffListSummKindName,'') ::TVarChar AS StaffListSummKindName
 
             , tmpAll.Amount :: TFloat           AS Amount
             , MIFloat_SummToPay.ValueData       AS AmountToPay

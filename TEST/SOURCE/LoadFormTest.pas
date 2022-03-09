@@ -844,7 +844,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceForm');
-
+    exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalForm');
 
