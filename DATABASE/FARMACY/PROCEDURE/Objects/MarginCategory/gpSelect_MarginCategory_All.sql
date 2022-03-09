@@ -43,6 +43,7 @@ BEGIN
                                 INNER join Object ON Object.Id = ObjectFloat_MinPrice.ObjectId
                                                  AND Object.IsErased = FALSE
                            WHERE ObjectFloat_MinPrice.DescId = zc_ObjectFloat_MarginCategoryItem_MinPrice()
+                             AND ObjectFloat_MinPrice.ValueData <> 300
                            ) AS tmp
                        )
 
@@ -68,6 +69,7 @@ BEGIN
                                      FROM Object_MarginCategoryItem_View AS Object_MarginCategoryItem
                                           INNER JOIN Object ON Object.Id = Object_MarginCategoryItem.Id
                                                            AND Object.isErased = FALSE
+                                     WHERE Object_MarginCategoryItem.minPrice <> 300
                                      GROUP BY Object_MarginCategoryItem.MarginCategoryId
                                             , Object_MarginCategoryItem.MarginPercent
                                             , Object_MarginCategoryItem.minPrice

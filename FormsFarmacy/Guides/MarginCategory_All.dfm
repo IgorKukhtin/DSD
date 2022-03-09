@@ -4,7 +4,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
   ClientWidth = 1227
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1243
-  ExplicitHeight = 636
+  ExplicitHeight = 637
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -104,7 +104,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
             Width = 74
           end
           object Value_5: TcxGridDBColumn
-            Caption = '200-300'
+            Caption = '200-500'
             DataBinding.FieldName = 'Value_5'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -112,7 +112,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
             Width = 74
           end
           object Value_6: TcxGridDBColumn
-            Caption = '300-1000'
+            Caption = '500-1000'
             DataBinding.FieldName = 'Value_6'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -831,7 +831,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         end
         item
           Name = 'Val1'
-          Value = '0'
+          Value = 0.000000000000000000
           Component = FormParams
           ComponentItem = 'Val1'
           DataType = ftFloat
@@ -840,7 +840,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         end
         item
           Name = 'Val2'
-          Value = '0'
+          Value = 0.000000000000000000
           Component = FormParams
           ComponentItem = 'Val2'
           DataType = ftFloat
@@ -849,7 +849,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         end
         item
           Name = 'Val3'
-          Value = '0'
+          Value = 0.000000000000000000
           Component = FormParams
           ComponentItem = 'Val3'
           DataType = ftFloat
@@ -858,7 +858,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         end
         item
           Name = 'Val4'
-          Value = '0'
+          Value = 0.000000000000000000
           Component = FormParams
           ComponentItem = 'Val4'
           DataType = ftFloat
@@ -867,7 +867,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         end
         item
           Name = 'Val5'
-          Value = '0'
+          Value = 0.000000000000000000
           Component = FormParams
           ComponentItem = 'Val5'
           DataType = ftFloat
@@ -876,7 +876,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         end
         item
           Name = 'Val6'
-          Value = '0'
+          Value = 0.000000000000000000
           Component = FormParams
           ComponentItem = 'Val6'
           DataType = ftFloat
@@ -885,7 +885,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         end
         item
           Name = 'Val7'
-          Value = '0'
+          Value = 0.000000000000000000
           Component = FormParams
           ComponentItem = 'Val7'
           DataType = ftFloat
@@ -1525,7 +1525,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'StartDate'
         DataType = ftDateTime
@@ -1567,6 +1567,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorValueList = <>
@@ -1601,6 +1602,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 1166
     Top = 321

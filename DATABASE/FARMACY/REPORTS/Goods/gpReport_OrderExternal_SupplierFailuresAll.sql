@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_OrderExternal_SupplierFailuresAll(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
+             , JuridicalMainId Integer, JuridicalMainCode Integer, JuridicalMainName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , Amount TFloat, Summ TFloat, SummWithNDS TFloat
@@ -137,10 +138,14 @@ BEGIN
          , Object_Unit.ObjectCode                AS UnitCode
          , Object_Unit.ValueData                 AS UnitName
         
+         , Object_JuridicalMain.Id               AS JuridicalMainId
+         , Object_JuridicalMain.ObjectCode       AS JuridicalMainCode
+         , Object_JuridicalMain.ValueData        AS JuridicalMainName
+        
          , Object_Juridical.Id                   AS JuridicalId
          , Object_Juridical.ObjectCode           AS JuridicalCode
          , Object_Juridical.ValueData            AS JuridicalName
-        
+
          , Object_Contract.Id                    AS ContractId
          , Object_Contract.ObjectCode            AS ContractCode
          , Object_Contract.ValueData             AS ContractName
@@ -152,6 +157,11 @@ BEGIN
     FROM tmpSupplierFailuresSum AS tmpSupplierFailures
 
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpSupplierFailures.UnitId
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                             ON ObjectLink_Unit_Juridical.ObjectId = tmpSupplierFailures.UnitId
+                            AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+        LEFT JOIN Object AS Object_JuridicalMain ON Object_JuridicalMain.ID = ObjectLink_Unit_Juridical.ChildObjectId
+        
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpSupplierFailures.JuridicalId
         LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpSupplierFailures.ContractId
                                                  
@@ -162,6 +172,10 @@ BEGIN
            , Object_Unit.Id
            , Object_Unit.ObjectCode
            , Object_Unit.ValueData
+           
+           , Object_JuridicalMain.Id
+           , Object_JuridicalMain.ObjectCode
+           , Object_JuridicalMain.ValueData           
           
            , Object_Juridical.Id
            , Object_Juridical.ObjectCode

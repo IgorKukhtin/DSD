@@ -45,24 +45,18 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Блокируем ему просмотр
-    /* IF vbUserId = 9457 -- Климентьев К.И.
+     IF vbUserId = 9457 -- Климентьев К.И.
      THEN
          vbUserId:= NULL;
          RETURN;
      END IF;
-*/
+
      -- Результат
      RETURN QUERY
       WITH 
       tmpReport AS (SELECT tmp.*
                     FROM gpReport_ProfitLoss (inStartDate, inEndDate, inSession) AS tmp
                     )
-
-    , tmpPersonal AS (SELECT lfSelect.MemberId
-                           , lfSelect.UnitId
-                      FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
-                      WHERE lfSelect.Ord = 1
-                     )
 
 
       SELECT
@@ -141,13 +135,7 @@ BEGIN
            , Object_GoodsGroup.ValueData AS GoodsGroupName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            
-           , CASE WHEN tmpReport.UnitDescId = zc_Object_Member() THEN Object_Unit_member.ValueData
-                  WHEN tmpReport.UnitDescId = zc_Object_InfoMoney() THEN '-'             ---- если "Элемент Подразделения" = "Статьи списания", тогда тянем "От кого" из документа "Списание"
-                  WHEN tmpReport.UnitDescId = zc_Object_Founder() THEN 'Административный'
-                  WHEN tmpReport.UnitDescId = zc_Object_Partner() THEN 'Павильоны'
-                  WHEN tmpReport.UnitDescId = zc_Object_Unit() THEN tmpReport.UnitName_ProfitLoss
-                  ELSE ''
-             END ::TVarChar AS LocationName
+           , tmpReport.LocationName ::TVarChar AS LocationName
 
       FROM tmpReport
 
@@ -158,9 +146,6 @@ BEGIN
                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpReport.DestinationObjectId
                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-
-           LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = tmpReport.UnitId_ProfitLoss
-           LEFT JOIN Object AS Object_Unit_member ON Object_Unit_member.Id = tmpPersonal.UnitId
 
       GROUP BY tmpReport.ProfitLossGroupName
              , tmpReport.ProfitLossDirectionName
@@ -210,13 +195,7 @@ BEGIN
              , tmpReport.ProfitLossGroup_dop
              , Object_GoodsGroup.ValueData
              , ObjectString_Goods_GoodsGroupFull.ValueData
-             , CASE WHEN tmpReport.UnitDescId = zc_Object_Member() THEN Object_Unit_member.ValueData
-                  WHEN tmpReport.UnitDescId = zc_Object_InfoMoney() THEN '-'             ---- если "Элемент Подразделения" = "Статьи списания", тогда тянем "От кого" из документа "Списание"
-                  WHEN tmpReport.UnitDescId = zc_Object_Founder() THEN 'Административный'
-                  WHEN tmpReport.UnitDescId = zc_Object_Partner() THEN 'Павильоны'
-                  WHEN tmpReport.UnitDescId = zc_Object_Unit() THEN tmpReport.UnitName_ProfitLoss
-                  ELSE ''
-             END
+             , tmpReport.LocationName
       ;
 
 END;

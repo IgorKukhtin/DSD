@@ -1,25 +1,25 @@
 inherited SendJournalForm: TSendJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 535
-  ClientWidth = 826
+  ClientWidth = 856
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 842
+  ExplicitWidth = 872
   ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 826
+    Width = 856
     Height = 478
     TabOrder = 3
     ExplicitWidth = 826
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 826
+    ClientRectRight = 856
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 826
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 826
+        Width = 856
         Height = 478
         ExplicitWidth = 826
         ExplicitHeight = 478
@@ -541,7 +541,7 @@ inherited SendJournalForm: TSendJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 826
+    Width = 856
     ExplicitWidth = 826
     inherited deStart: TcxDateEdit
       EditValue = 42005d
@@ -1127,6 +1127,35 @@ inherited SendJournalForm: TSendJournalForm
       Param.DataType = ftString
       Param.MultiSelectSeparator = ','
     end
+    object actUpdate_AmountStorage: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_AmountStorage
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_AmountStorage
+        end>
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103'"'
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103'"'
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103'"?'
+    end
+    object mactUpdate_AmountStorage: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_AmountStorage
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103'"?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103'"'
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103'"'
+      ImageIndex = 79
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1324,6 +1353,10 @@ inherited SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1397,6 +1430,10 @@ inherited SendJournalForm: TSendJournalForm
     end
     object bbPrintFilter: TdxBarButton
       Action = macPrintFilter
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = mactUpdate_AmountStorage
       Category = 0
     end
   end
@@ -1892,5 +1929,22 @@ inherited SendJournalForm: TSendJournalForm
     PackSize = 1
     Left = 720
     Top = 403
+  end
+  object spUpdate_AmountStorage: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Send_AmountStorage'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 182
+    Top = 288
   end
 end

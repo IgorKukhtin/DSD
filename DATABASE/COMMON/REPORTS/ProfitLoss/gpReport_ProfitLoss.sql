@@ -33,6 +33,8 @@ RETURNS TABLE (ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, P
              , Amount_0   TFloat    -- без филиала
 
              , ProfitLossGroup_dop Integer   -- дополнительная группировка
+             
+             , LocationName TVarChar -- место учета
               )
 AS
 $BODY$
@@ -163,7 +165,9 @@ BEGIN
 
                                    -- Вид Товара
                                  , MILO_GoodsKind.ObjectId AS GoodsKindId_inf
-
+                                 
+                                 --место учето для статьи , док списания
+                                 , MovementLinkObject_From.ObjectId AS FromId
 
                             FROM MovementItemContainer AS MIContainer
                                  LEFT JOIN MovementItem AS MovementItem_1
@@ -204,6 +208,10 @@ BEGIN
                                                                        ON MILO_GoodsKind.MovementItemId = MovementItem_2.Id
                                                                       AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                                                                       AND 1=0*/
+                                 --для статьи определяем место учета по документу (от кого)
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                              ON MovementLinkObject_From.MovementId = MIContainer.MovementId
+                                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
 
                             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               AND MIContainer.AccountId = zc_Enum_Account_100301()
@@ -249,6 +257,8 @@ BEGIN
 
                                      -- Вид Товара
                                    , MILO_GoodsKind.ObjectId
+                                   -- от кого
+                                   , MovementLinkObject_From.ObjectId
                            )
         , tmpProfitLoss AS (SELECT CLO_Branch.ObjectId                    AS BranchId_ProfitLoss
                                  , CLO_ProfitLoss.ObjectId                AS ProfitLossId
@@ -260,6 +270,7 @@ BEGIN
                                  , tmpMIContainer.UnitId_ProfitLoss
                                  , tmpMIContainer.ObjectId_inf
                                  , tmpMIContainer.GoodsKindId_inf
+                                 , tmpMIContainer.FromId
                                  , SUM (tmpMIContainer.Amount) AS Amount
                             FROM tmpMIContainer
                                  LEFT JOIN ObjectLink AS OL_Goods_InfoMoney
@@ -290,6 +301,7 @@ BEGIN
                                    , tmpMIContainer.UnitId_ProfitLoss
                                    , tmpMIContainer.ObjectId_inf
                                    , tmpMIContainer.GoodsKindId_inf
+                                   , tmpMIContainer.FromId
                            )
 
       , tmpReport AS (SELECT tmpProfitLoss.ProfitLossId
@@ -311,6 +323,7 @@ BEGIN
                            , 0 AS InfoMoneyId_Detail
                            , tmpProfitLoss.ObjectId_inf AS ObjectId_inf
                            , tmpProfitLoss.GoodsKindId_inf
+                           , tmpProfitLoss.FromId
                            /*, ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail
                            , ContainerLinkObject_Juridical.ObjectId       AS JuridicalId_inf
                            , ContainerLinkObject_Personal.ObjectId        AS PersonalId_inf
@@ -355,12 +368,19 @@ BEGIN
                              , tmpProfitLoss.MovementDescId
                              , tmpProfitLoss.ObjectId_inf
                              , tmpProfitLoss.GoodsKindId_inf
+                             , tmpProfitLoss.FromId
                              /*, ContainerLinkObject_InfoMoneyDetail.ObjectId
                              , ContainerLinkObject_Juridical.ObjectId
                              , ContainerLinkObject_Personal.ObjectId
                              , ContainerLinkObject_Unit.ObjectId
                              , ContainerLinkObject_Car.ObjectId
                              , ContainerLinkObject_Goods.ObjectId*/
+                     )
+
+    , tmpPersonal AS (SELECT lfSelect.MemberId
+                           , lfSelect.UnitId
+                      FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                      WHERE lfSelect.Ord = 1
                      )
       --
       SELECT
@@ -423,7 +443,14 @@ BEGIN
 
            -- доп.группа для промежуточного итога   "итого сумма у покупателя"
            ,  CASE WHEN ProfitLossDirectionId IN (9221, 9222, 565318, 9223) THEN 1 ELSE 2 END ProfitLossGroup_dop
-
+           --место учета
+           , CASE WHEN Object_Unit_ProfitLoss.DescId = zc_Object_Member() THEN Object_Unit_member.ValueData
+                  WHEN Object_Unit_ProfitLoss.DescId = zc_Object_InfoMoney() THEN Object_From.ValueData              ---- если "Элемент Подразделения" = "Статьи списания", тогда тянем "От кого" из документа "Списание"
+                  WHEN Object_Unit_ProfitLoss.DescId = zc_Object_Founder() THEN 'Административный'
+                  WHEN Object_Unit_ProfitLoss.DescId = zc_Object_Partner() THEN 'Павильоны'
+                  WHEN Object_Unit_ProfitLoss.DescId = zc_Object_Unit() THEN Object_Unit_ProfitLoss.ValueData
+                  ELSE ''
+             END ::TVarChar AS LocationName
       FROM Object_ProfitLoss_View AS View_ProfitLoss
 
            LEFT JOIN tmpReport ON tmpReport.ProfitLossId = View_ProfitLoss.ProfitLossId
@@ -439,12 +466,17 @@ BEGIN
            LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id = tmpReport.DirectionId
            LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = tmpReport.ObjectId_inf
 
+
            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
 
            --desc
            LEFT JOIN ObjectDesc AS ObjectDesc_Direction   ON ObjectDesc_Direction.Id   = Object_Direction.DescId
            LEFT JOIN ObjectDesc AS ObjectDesc_Destination ON ObjectDesc_Destination.Id = Object_Destination.DescId
            LEFT JOIN ObjectDesc AS ObjectDesc_Unit        ON ObjectDesc_Unit.Id        = Object_Unit_ProfitLoss.DescId
+           --
+           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpReport.FromId
+           LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = tmpReport.UnitId_ProfitLoss
+           LEFT JOIN Object AS Object_Unit_member ON Object_Unit_member.Id = tmpPersonal.UnitId
       WHERE View_ProfitLoss.ProfitLossCode <> 90101 --
 
      UNION ALL
@@ -508,7 +540,14 @@ BEGIN
 
            -- доп.группа для промежуточного итога   "итого сумма у покупателя"
            ,  CASE WHEN ProfitLossDirectionId IN (9221, 9222, 565318, 9223) THEN 1 ELSE 2 END ProfitLossGroup_dop
-
+           --место учета
+           , CASE WHEN Object_Unit_ProfitLoss.DescId = zc_Object_Member() THEN Object_Unit_member.ValueData
+                  WHEN Object_Unit_ProfitLoss.DescId = zc_Object_InfoMoney() THEN Object_From.ValueData              ---- если "Элемент Подразделения" = "Статьи списания", тогда тянем "От кого" из документа "Списание"
+                  WHEN Object_Unit_ProfitLoss.DescId = zc_Object_Founder() THEN 'Административный'
+                  WHEN Object_Unit_ProfitLoss.DescId = zc_Object_Partner() THEN 'Павильоны'
+                  WHEN Object_Unit_ProfitLoss.DescId = zc_Object_Unit() THEN Object_Unit_ProfitLoss.ValueData
+                  ELSE ''
+             END ::TVarChar AS LocationName
       FROM tmpReport
 
            LEFT JOIN Object_ProfitLoss_View AS View_ProfitLoss ON View_ProfitLoss.ProfitLossId = tmpReport.ProfitLossId
@@ -532,6 +571,10 @@ BEGIN
            LEFT JOIN ObjectDesc AS ObjectDesc_Destination ON ObjectDesc_Destination.Id = Object_Destination.DescId
            LEFT JOIN ObjectDesc AS ObjectDesc_Unit        ON ObjectDesc_Unit.Id        = Object_Unit_ProfitLoss.DescId
 
+           --
+           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpReport.FromId
+           LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = tmpReport.UnitId_ProfitLoss
+           LEFT JOIN Object AS Object_Unit_member ON Object_Unit_member.Id = tmpPersonal.UnitId
       WHERE View_ProfitLoss.ProfitLossId IS NULL
       ;
 

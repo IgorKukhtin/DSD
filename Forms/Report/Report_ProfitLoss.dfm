@@ -215,6 +215,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       DataBinding.FieldName = 'DestinationDescName'
       UniqueName = 'ByObjectName'
     end
+    object clLocationName: TcxDBPivotGridField
+      AreaIndex = 17
+      IsCaptionAssigned = True
+      Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072
+      DataBinding.FieldName = 'LocationName'
+      Visible = True
+      UniqueName = 'ByObjectName'
+    end
     object clAmount: TcxDBPivotGridField
       Area = faData
       AreaIndex = 0

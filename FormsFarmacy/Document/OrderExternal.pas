@@ -124,6 +124,10 @@ type
     actGetImportSettingId: TdsdExecStoredProc;
     actDoLoad: TExecuteImportSettingsAction;
     bbSupplierFailuresLoad: TdxBarButton;
+    SummWithNDS: TcxGridDBColumn;
+    cbSupplierFailures: TcxCheckBox;
+    spUpdate_SetSupplierFailures: TdsdStoredProc;
+    actUpdate_SetSupplierFailures: TdsdExecStoredProc;
   private
     { Private declarations }
   public

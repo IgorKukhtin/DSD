@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer
              , PartnerGoodsId Integer, PartnerGoodsCode TVarChar, PartnerGoodsName TVarChar
              , RetailName TVarChar, AreaName TVarChar
              , NDS_PriceList TVarChar
-             , Amount TFloat, Price TFloat, Summ TFloat
+             , Amount TFloat, Price TFloat, Summ TFloat, SummWithNDS TFloat
              , PartionGoodsDate TDateTime
              , Comment TVarChar, isErased Boolean
              , isSP     Boolean
@@ -115,6 +115,33 @@ BEGIN
                     AND Object_Goods.isErased = FALSE
                  )
    --
+   , tmpMI_All AS (SELECT MovementItem.Id 
+                        , MovementItem.PartnerGoodsCode
+                        , MovementItem.PartnerGoodsId
+                        , MovementItem.GoodsCode
+                        , MovementItem.GoodsName
+                        , MovementItem.Amount
+                        , MovementItem.Price
+                        , MovementItem.Summ
+                        , MovementItem.isErased
+                        , MovementItem.GoodsId
+                        , MovementItem.PartionGoodsDate
+                        , MovementItem.Comment
+                        , ObjectFloat_Goods_MinimumLot.ValueData           AS MinimumLot
+                        , CEIL (MovementItem.Amount / COALESCE(ObjectFloat_Goods_MinimumLot.ValueData, 1)) * COALESCE(ObjectFloat_Goods_MinimumLot.ValueData, 1)  AS CalcAmount
+                        
+                        
+                   FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                         JOIN MovementItem_OrderExternal_View AS MovementItem 
+                                                              ON MovementItem.MovementId = inMovementId
+                                                             AND MovementItem.isErased   = tmpIsErased.isErased
+
+                         LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_MinimumLot
+                                                ON ObjectFloat_Goods_MinimumLot.ObjectId = MovementItem.PartnerGoodsId
+                                               AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
+                                               AND ObjectFloat_Goods_MinimumLot.ValueData <> 0
+                                               
+                  )
    , tmpMI AS (SELECT MovementItem.Id 
                     , MovementItem.PartnerGoodsCode
                     , MovementItem.PartnerGoodsId
@@ -123,23 +150,24 @@ BEGIN
                     , MovementItem.Amount
                     , MovementItem.Price
                     , MovementItem.Summ
+                    , Round(MovementItem.Amount * MovementItem.Price * 
+                      (100 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0)) / 100, 2)    AS SummWithNDS
                     , MovementItem.isErased
                     , MovementItem.GoodsId
                     , MovementItem.PartionGoodsDate
                     , MovementItem.Comment
-                    , ObjectFloat_Goods_MinimumLot.ValueData           AS MinimumLot
-                    , CEIL (MovementItem.Amount / COALESCE(ObjectFloat_Goods_MinimumLot.ValueData, 1)) * COALESCE(ObjectFloat_Goods_MinimumLot.ValueData, 1)  AS CalcAmount
+                    , MovementItem.MinimumLot
+                    , MovementItem.CalcAmount
                     
                     
-               FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                     JOIN MovementItem_OrderExternal_View AS MovementItem 
-                                                          ON MovementItem.MovementId = inMovementId
-                                                         AND MovementItem.isErased   = tmpIsErased.isErased
+               FROM tmpMI_All AS MovementItem
 
-                     LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_MinimumLot
-                                            ON ObjectFloat_Goods_MinimumLot.ObjectId = MovementItem.PartnerGoodsId
-                                           AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
-                                           AND ObjectFloat_Goods_MinimumLot.ValueData <> 0
+                    LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.GoodsId
+                    LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
+ 
+                    LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                          ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods_Main.NDSKindId
+                                         AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
               )
    , tmpData AS (SELECT tmpMI.Id            AS Id
                       , COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)     AS GoodsId
@@ -150,6 +178,7 @@ BEGIN
                       , tmpMI.Amount                                  AS Amount
                       , tmpMI.Price                                   AS Price
                       , tmpMI.Summ::TFloat                            AS Summ
+                      , tmpMI.SummWithNDS::TFloat                     AS SummWithNDS
                       , tmpMI.PartionGoodsDate                        AS PartionGoodsDate
                       , tmpMI.Comment                                 AS Comment
                       , tmpMI.MinimumLot                              AS MinimumLot
@@ -258,6 +287,7 @@ BEGIN
            , tmpMI.Amount               AS Amount
            , tmpMI.Price                AS Price
            , tmpMI.Summ ::TFloat        AS Summ
+           , tmpMI.SummWithNDS ::TFloat AS SummWithNDS
            
            , tmpMI.PartionGoodsDate     AS PartionGoodsDate
            , tmpMI.Comment              AS Comment

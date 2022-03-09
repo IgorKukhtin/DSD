@@ -55,6 +55,11 @@ inherited OrderExternalForm: TOrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummWithNDS
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -94,6 +99,11 @@ inherited OrderExternalForm: TOrderExternalForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummWithNDS
             end>
           OptionsBehavior.CellHints = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -187,6 +197,16 @@ inherited OrderExternalForm: TOrderExternalForm
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
+          end
+          object SummWithNDS: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'SummWithNDS'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -443,8 +463,8 @@ inherited OrderExternalForm: TOrderExternalForm
       Width = 149
     end
     object cbDifferent: TcxCheckBox
-      Left = 665
-      Top = 135
+      Left = 663
+      Top = 123
       Hint = #1072#1087#1090#1077#1082#1072' '#1076#1088'. '#1102#1088'.'#1083#1080#1094#1072
       Caption = #1072#1087#1090'. '#1076#1088'. '#1102#1088'.'#1083#1080#1094#1072
       ParentShowHint = False
@@ -521,6 +541,17 @@ inherited OrderExternalForm: TOrderExternalForm
       ShowHint = True
       TabOrder = 26
       Width = 202
+    end
+    object cbSupplierFailures: TcxCheckBox
+      Left = 1025
+      Top = 172
+      Hint = #1047#1072#1075#1088#1091#1078#1077#1085' '#1086#1090#1082#1072#1079
+      Caption = #1047#1072#1075#1088#1091#1078#1077#1085' '#1086#1090#1082#1072#1079
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 27
+      Width = 133
     end
   end
   object cxLabel5: TcxLabel [2]
@@ -899,6 +930,9 @@ inherited OrderExternalForm: TOrderExternalForm
           Action = actDoLoad
         end
         item
+          Action = actUpdate_SetSupplierFailures
+        end
+        item
           Action = actRefresh
         end>
       QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074'?'
@@ -931,6 +965,17 @@ inherited OrderExternalForm: TOrderExternalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
+    end
+    object actUpdate_SetSupplierFailures: TdsdExecStoredProc
+      Category = 'Load'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SetSupplierFailures
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SetSupplierFailures
+        end>
+      Caption = 'actUpdate_SetSupplierFailures'
     end
   end
   inherited MasterDS: TDataSource
@@ -1487,6 +1532,13 @@ inherited OrderExternalForm: TOrderExternalForm
         Name = 'isUseSubject'
         Value = Null
         Component = cbUseSubject
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSupplierFailures'
+        Value = Null
+        Component = cbSupplierFailures
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -2264,5 +2316,29 @@ inherited OrderExternalForm: TOrderExternalForm
     PackSize = 1
     Left = 864
     Top = 368
+  end
+  object spUpdate_SetSupplierFailures: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderExternal_SupplierFailures'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSupplierFailures'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 410
+    Top = 360
   end
 end

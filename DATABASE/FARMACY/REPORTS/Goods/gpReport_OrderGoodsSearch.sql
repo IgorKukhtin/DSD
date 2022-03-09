@@ -235,7 +235,10 @@ BEGIN
                   WHEN Movement.DescId = zc_Movement_OrderInternal() THEN MIFloat_JuridicalPrice.ValueData
                   ELSE MIFloat_Price.ValueData
              END ::TFloat AS Price
-            ,MIFloat_PriceWithVAT.ValueData ::TFloat  AS PriceWithVAT 
+            ,COALESCE(MIFloat_PriceWithVAT.ValueData, 
+                      CASE WHEN  Movement.DescId <> zc_Movement_Income() THEN NULL
+                           WHEN COALESCE(MovementBoolean_PriceWithVAT.ValueData, TRUE) THEN MIFloat_Price.ValueData
+                           ELSE (MIFloat_Price.ValueData * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0)/100)) END) ::TFloat  AS PriceWithVAT 
             ,COALESCE (MIFloat_PriceSample.ValueData, 0) ::TFloat AS PriceSample
             ,Status.ValueData                         AS STatusNAme
             ,CASE WHEN Movement.DescId = zc_Movement_Check() THEN MIFloat_Price.ValueData ELSE MIFloat_PriceSale.ValueData END ::TFloat AS PriceSale
@@ -270,6 +273,12 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                   ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                  AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                     ON MovementLinkObject_NDSKind.MovementId = Movement.Id
+                                    AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+        LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                              ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
+                             AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
 
         LEFT JOIN tmpGoods_Juridical AS Object_PartnerGoods 
                                      ON Object_PartnerGoods.Id = Movement.GoodsJuridicalId 
@@ -396,4 +405,4 @@ ALTER FUNCTION gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime, TVarCha
 --SELECT * FROM gpReport_OrderGoodsSearch (inGoodsId:= 9247, inStartDate:= '01.01.2019', inEndDate:= '01.12.2019', inSession:= '183242')
 --select * from gpReport_OrderGoodsSearch(inGoodsId := 2848982 , inStartDate := ('01.10.2020')::TDateTime , inEndDate := ('31.10.2020')::TDateTime ,  inSession := '3');
 
-select * from gpReport_OrderGoodsSearch(inGoodsId := 325 , inStartDate := ('01.10.2020')::TDateTime , inEndDate := ('31.10.2020')::TDateTime ,  inSession := '3');
+select * from gpReport_OrderGoodsSearch(inGoodsId := 37207 , inStartDate := ('21.02.2022')::TDateTime , inEndDate := ('07.03.2022')::TDateTime ,  inSession := '3');

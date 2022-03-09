@@ -35,7 +35,7 @@ BEGIN
   END IF;
 
   -- пересчитали Итоговые суммы по накладной
-  PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
+  PERFORM lpInsertUpdate_OrderExternal_TotalSumm (vbMovementId);
 
 END;
 $BODY$

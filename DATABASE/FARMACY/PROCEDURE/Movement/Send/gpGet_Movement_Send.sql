@@ -25,12 +25,14 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isBanFiscalSale Boolean
              , isSendLoss Boolean, isSendLossFrom Boolean
              , SetFocused TVarChar
+             , isAdmin Boolean
               )
 AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbUnitKey TVarChar;
   DECLARE vbUnitId Integer;
+  DECLARE vbisAdmin Boolean;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -42,6 +44,8 @@ BEGIN
        vbUnitKey := '0';
      END IF;
      vbUnitId := vbUnitKey::Integer;
+     
+     vbisAdmin := EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin());
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -85,6 +89,7 @@ BEGIN
              , FALSE                                            AS isSendLoss
              , FALSE                                            AS isSendLossFrom
              , ''::TVarChar                                     AS SetFocused 
+             , vbisAdmin                                        AS isAdmin
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -136,6 +141,7 @@ BEGIN
                    AND COALESCE (MovementBoolean_Received.ValueData, FALSE) = False
                   THEN 'AmountManual' 
                   ELSE '' END::TVarChar    AS SetFocused 
+           , vbisAdmin                                        AS isAdmin
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
