@@ -110,7 +110,7 @@ BEGIN
                                  );
 
 
-IF inUserId = 5
+IF inUserId = 5 AND 1=0
 THEN
     RAISE EXCEPTION 'Ошибка.test' ;
 END IF;
