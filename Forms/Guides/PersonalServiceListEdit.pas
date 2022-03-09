@@ -77,6 +77,9 @@ type
     cbDetail: TcxCheckBox;
     edKoeffSummCardSecond: TcxCurrencyEdit;
     cxLabel13: TcxLabel;
+    cxLabel14: TcxLabel;
+    cePersonalHead: TcxButtonEdit;
+    GuidesPersonalHead: TdsdGuides;
   private
     { Private declarations }
   public

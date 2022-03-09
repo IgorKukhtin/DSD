@@ -2,7 +2,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
-  ClientHeight = 543
+  ClientHeight = 582
   ClientWidth = 297
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   end
   object cxButton1: TcxButton
     Left = 32
-    Top = 508
+    Top = 548
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   end
   object cxButton2: TcxButton
     Left = 176
-    Top = 508
+    Top = 548
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -182,13 +182,13 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   end
   object cxLabel33: TcxLabel
     Left = 10
-    Top = 367
+    Top = 407
     Hint = #1050#1086#1101#1092#1092'. '#1076#1083#1103' '#1084#1086#1076#1077#1083#1080' '#1088#1072#1073#1086#1095#1077#1077' '#1074#1088#1077#1084#1103' '#1080#1079' '#1087#1091#1090'. '#1083#1080#1089#1090#1072
     Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095'-'#1080#1103' '#1082#1086#1084#1087#1077#1085#1089'.'
   end
   object edCompensation: TcxCurrencyEdit
     Left = 10
-    Top = 384
+    Top = 424
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -198,7 +198,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   end
   object cbRecalc: TcxCheckBox
     Left = 154
-    Top = 384
+    Top = 424
     Hint = #1044#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1074' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1092#1072#1082#1090
     Caption = #1056#1072#1089#1087#1088#1077#1076'. '#1074' '#1074#1077#1076'. '#1092#1072#1082#1090
     ParentShowHint = False
@@ -215,12 +215,12 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   end
   object cxLabel12: TcxLabel
     Left = 10
-    Top = 408
+    Top = 448
     Caption = #1056'/'#1057#1095#1077#1090
   end
   object edBankAccount: TcxButtonEdit
     Left = 10
-    Top = 425
+    Top = 465
     Properties.Buttons = <
       item
         Default = True
@@ -232,13 +232,13 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   end
   object cxLabel9: TcxLabel
     Left = 193
-    Top = 406
+    Top = 446
     Hint = #1058#1080#1087' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1074' '#1073#1072#1085#1082
     Caption = #1058#1080#1087' '#1074#1099#1075#1088'. '#1074' '#1073#1072#1085#1082
   end
   object edPSLExportKind: TcxButtonEdit
     Left = 193
-    Top = 425
+    Top = 465
     Hint = #1058#1080#1087' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1074' '#1073#1072#1085#1082
     ParentShowHint = False
     Properties.Buttons = <
@@ -252,24 +252,24 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   end
   object edContentType: TcxTextEdit
     Left = 10
-    Top = 475
+    Top = 515
     TabOrder = 29
     Width = 133
   end
   object cxLabel10: TcxLabel
     Left = 10
-    Top = 456
+    Top = 496
     Caption = 'Content-Type'
   end
   object edOnFlowType: TcxTextEdit
     Left = 150
-    Top = 475
+    Top = 515
     TabOrder = 31
     Width = 133
   end
   object cxLabel11: TcxLabel
     Left = 150
-    Top = 456
+    Top = 496
     Caption = #1042#1080#1076' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1074' '#1073#1072#1085#1082#1077
   end
   object cbDetail: TcxCheckBox
@@ -303,6 +303,23 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Caption = #1050#1086#1101#1092#1092'. '#1074#1099#1075#1088'. 2'#1092'.'
     ParentShowHint = False
     ShowHint = True
+  end
+  object cxLabel14: TcxLabel
+    Left = 10
+    Top = 366
+    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1100' '#1087#1086#1076#1088'.)'
+  end
+  object cePersonalHead: TcxButtonEdit
+    Left = 10
+    Top = 383
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 37
+    Width = 273
   end
   object ActionList: TActionList
     Left = 88
@@ -416,6 +433,14 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Name = 'inMemberBookkeeperId'
         Value = Null
         Component = GuidesMemberBookkeeper
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalHeadId'
+        Value = Null
+        Component = GuidesPersonalHead
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -731,6 +756,21 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Component = edKoeffSummCardSecond
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalHeadId'
+        Value = Null
+        Component = GuidesPersonalHead
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalHeadName'
+        Value = Null
+        Component = GuidesPersonalHead
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -956,7 +996,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 85
+    Left = 93
     Top = 328
   end
   object GuidesBankAccount: TdsdGuides
@@ -986,7 +1026,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         MultiSelectSeparator = ','
       end>
     Left = 82
-    Top = 421
+    Top = 461
   end
   object GuidesPSLExportKind: TdsdGuides
     KeyField = 'Id'
@@ -1013,6 +1053,36 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         MultiSelectSeparator = ','
       end>
     Left = 219
-    Top = 414
+    Top = 454
+  end
+  object GuidesPersonalHead: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePersonalHead
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonalHead
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonalHead
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 183
+    Top = 367
   end
 end
