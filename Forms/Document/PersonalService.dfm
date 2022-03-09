@@ -632,7 +632,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 63
           end
           object StaffListSummKindName: TcxGridDBColumn [15]
-            AlternateCaption = '80'
             Caption = #1058#1080#1087#1099' '#1089#1091#1084#1084' '#1076#1083#1103' '#1096#1090#1072#1090#1085#1086#1075#1086' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1103
             DataBinding.FieldName = 'StaffListSummKindName'
             HeaderAlignmentHorz = taCenter
