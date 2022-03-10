@@ -57,6 +57,9 @@ type
     bbReport_SupplierFailuresAll: TdxBarButton;
     TotaSummWithNDS: TcxGridDBColumn;
     isSupplierFailures: TcxGridDBColumn;
+    ProvinceCityName: TcxGridDBColumn;
+    actReport_JuridicalItog: TdsdOpenForm;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

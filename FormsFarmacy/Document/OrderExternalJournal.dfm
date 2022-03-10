@@ -333,6 +333,14 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Options.Editing = False
             Width = 69
           end
+          object ProvinceCityName: TcxGridDBColumn
+            Caption = #1056#1072#1081#1086#1085
+            DataBinding.FieldName = 'ProvinceCityName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 94
+          end
         end
       end
     end
@@ -522,6 +530,19 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_JuridicalItog: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1090#1086#1075#1080' '#1087#1086' '#1102#1088'. '#1083#1080#1094#1072#1084
+      Hint = #1048#1090#1086#1075#1080' '#1087#1086' '#1102#1088'. '#1083#1080#1094#1072#1084
+      ImageIndex = 16
+      FormName = 'TReport_OrderExternal_JuridicalItogForm'
+      FormNameParam.Value = 'TReport_OrderExternal_JuridicalItogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -656,6 +677,10 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -716,6 +741,10 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     end
     object bbReport_SupplierFailuresAll: TdxBarButton
       Action = actReport_SupplierFailuresAll
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actReport_JuridicalItog
       Category = 0
     end
   end

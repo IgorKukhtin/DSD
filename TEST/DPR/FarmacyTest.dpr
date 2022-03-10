@@ -1161,7 +1161,8 @@ uses
   ExchangeRates in '..\..\FormsFarmacy\Guides\ExchangeRates.pas' {ExchangeRatesForm: TParentForm},
   Report_OrderExternal_SupplierFailuresDialog in '..\..\FormsFarmacy\Report\Report_OrderExternal_SupplierFailuresDialog.pas' {Report_OrderExternal_SupplierFailuresDialogForm: TParentForm},
   Report_OrderExternal_SupplierFailures in '..\..\FormsFarmacy\Report\Report_OrderExternal_SupplierFailures.pas' {Report_OrderExternal_SupplierFailuresForm: TParentForm},
-  Report_OrderExternal_SupplierFailuresAll in '..\..\FormsFarmacy\Report\Report_OrderExternal_SupplierFailuresAll.pas' {Report_OrderExternal_SupplierFailuresAllForm: TParentForm};
+  Report_OrderExternal_SupplierFailuresAll in '..\..\FormsFarmacy\Report\Report_OrderExternal_SupplierFailuresAll.pas' {Report_OrderExternal_SupplierFailuresAllForm: TParentForm},
+  Report_OrderExternal_JuridicalItog in '..\..\FormsFarmacy\Report\Report_OrderExternal_JuridicalItog.pas' {Report_OrderExternal_JuridicalItogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

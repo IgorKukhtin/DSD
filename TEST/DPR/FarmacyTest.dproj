@@ -4182,6 +4182,10 @@
 				<Form>Report_OrderExternal_SupplierFailuresAllForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_OrderExternal_JuridicalItog.pas">
+				<Form>Report_OrderExternal_JuridicalItogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

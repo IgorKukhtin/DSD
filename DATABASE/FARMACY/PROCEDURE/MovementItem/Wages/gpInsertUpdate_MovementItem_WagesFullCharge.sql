@@ -81,8 +81,14 @@ BEGIN
                     LEFT JOIN MovementItemBoolean AS MIB_isIssuedBy
                                                   ON MIB_isIssuedBy.MovementItemId = MovementItem.Id
                                                  AND MIB_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
+                                                                     
+                    LEFT JOIN MovementItemFloat AS MIFloat_SummaFullCharge
+                                                ON MIFloat_SummaFullCharge.MovementItemId = MovementItem.Id
+                                               AND MIFloat_SummaFullCharge.DescId = zc_MIFloat_SummaFullCharge()
+                                               
               WHERE MovementItem.Id = vbId
-                AND COALESCE (MIB_isIssuedBy.ValueData, FALSE) = True)
+                AND COALESCE (MIB_isIssuedBy.ValueData, FALSE) = True
+                AND COALESCE(MIFloat_SummaFullCharge.ValueData, 0) <> 0)
     THEN
       RAISE EXCEPTION 'Ошибка. Дополнительные расходы выданы. Изменение сумм запрещено.';
     END IF;

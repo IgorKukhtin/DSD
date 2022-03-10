@@ -327,97 +327,7 @@ inherited CreatePretensionForm: TCreatePretensionForm
       Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
     end
   end
-  inherited spInsertUpdateMIMaster: TdsdStoredProc [2]
-    Params = <
-      item
-        Name = 'inAmount'
-        Value = 0.000000000000000000
-        Component = MasterCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountManual'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountManual'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountDiff'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountDiff'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end>
-    Left = 160
-    Top = 368
-  end
-  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [3]
-    Left = 155
-    Top = 416
-  end
-  inherited cxPropertiesStore: TcxPropertiesStore [4]
-    Components = <
-      item
-        Component = Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Tag'
-          'Width')
-      end>
-    Left = 40
-    Top = 432
-  end
-  inherited spSelect: TdsdStoredProc [5]
-    StoredProcName = 'gpSelect_MovementItem_Income_CreatePretension'
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inShowAll'
-        Value = False
-        Component = actShowAll
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsErased'
-        Value = False
-        Component = actShowErased
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 0d
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end>
-    Left = 160
-    Top = 248
-  end
-  inherited ActionList: TActionList [6]
+  inherited ActionList: TActionList [2]
     Left = 39
     Top = 279
     inherited actRefresh: TdsdDataSetRefresh
@@ -690,15 +600,11 @@ inherited CreatePretensionForm: TCreatePretensionForm
       StoredProcList = <
         item
           StoredProc = spPUSHNewPretension
-        end
-        item
-        end
-        item
         end>
       Caption = 'actPUSHNewPretension'
     end
   end
-  inherited BarManager: TdxBarManager [7]
+  inherited BarManager: TdxBarManager [3]
     Left = 80
     Top = 207
     DockControlHeights = (
@@ -863,11 +769,11 @@ inherited CreatePretensionForm: TCreatePretensionForm
       ImageIndex = 47
     end
   end
-  inherited DBViewAddOn: TdsdDBViewAddOn [8]
+  inherited DBViewAddOn: TdsdDBViewAddOn [4]
     Left = 502
     Top = 409
   end
-  inherited PopupMenu: TPopupMenu [9]
+  inherited PopupMenu: TPopupMenu [5]
     Left = 512
     Top = 344
     object N2: TMenuItem
@@ -877,7 +783,7 @@ inherited CreatePretensionForm: TCreatePretensionForm
       Action = actMISetUnErased
     end
   end
-  inherited FormParams: TdsdFormParams [10]
+  inherited FormParams: TdsdFormParams [6]
     Params = <
       item
         Name = 'Id'
@@ -921,15 +827,15 @@ inherited CreatePretensionForm: TCreatePretensionForm
     Left = 288
     Top = 416
   end
-  inherited StatusGuides: TdsdGuides [11]
+  inherited StatusGuides: TdsdGuides [7]
     Left = 80
     Top = 48
   end
-  inherited spChangeStatus: TdsdStoredProc [12]
+  inherited spChangeStatus: TdsdStoredProc [8]
     Left = 80
     Top = 88
   end
-  inherited spGet: TdsdStoredProc [13]
+  inherited spGet: TdsdStoredProc [9]
     StoredProcName = 'gpGet_Movement_Income'
     Params = <
       item
@@ -1080,7 +986,7 @@ inherited CreatePretensionForm: TCreatePretensionForm
     Left = 216
     Top = 248
   end
-  inherited spInsertUpdateMovement: TdsdStoredProc [14]
+  inherited spInsertUpdateMovement: TdsdStoredProc [10]
     Params = <
       item
         Name = 'inId'
@@ -1100,7 +1006,7 @@ inherited CreatePretensionForm: TCreatePretensionForm
     Left = 162
     Top = 312
   end
-  inherited GuidesFiller: TGuidesFiller [15]
+  inherited GuidesFiller: TGuidesFiller [11]
     GuidesList = <
       item
       end
@@ -1109,35 +1015,125 @@ inherited CreatePretensionForm: TCreatePretensionForm
     Left = 160
     Top = 192
   end
-  inherited HeaderSaver: THeaderSaver [16]
+  inherited HeaderSaver: THeaderSaver [12]
     ControlList = <
       item
       end>
     Left = 232
     Top = 193
   end
-  inherited RefreshAddOn: TRefreshAddOn [17]
+  inherited RefreshAddOn: TRefreshAddOn [13]
     FormName = 'TCreatePretensionJournal'
     DataSet = 'MasterCDS'
     Left = 616
     Top = 280
   end
-  inherited MasterDS: TDataSource [18]
+  inherited MasterDS: TDataSource [14]
     Top = 368
   end
-  inherited MasterCDS: TClientDataSet [19]
+  inherited MasterCDS: TClientDataSet [15]
     Left = 96
     Top = 280
   end
-  inherited spErasedMIMaster: TdsdStoredProc [20]
+  inherited spErasedMIMaster: TdsdStoredProc [16]
     StoredProcName = ''
     Left = 390
     Top = 408
   end
-  inherited spUnErasedMIMaster: TdsdStoredProc [21]
+  inherited spUnErasedMIMaster: TdsdStoredProc [17]
     StoredProcName = ''
     Left = 390
     Top = 328
+  end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [18]
+    Left = 155
+    Top = 416
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore [19]
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Tag'
+          'Width')
+      end>
+    Left = 40
+    Top = 432
+  end
+  inherited spSelect: TdsdStoredProc [20]
+    StoredProcName = 'gpSelect_MovementItem_Income_CreatePretension'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShowAll'
+        Value = False
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = 0d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    Left = 160
+    Top = 248
+  end
+  inherited spInsertUpdateMIMaster: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inAmount'
+        Value = 0.000000000000000000
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountManual'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountManual'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountDiff'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountDiff'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    Left = 160
+    Top = 368
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     Params = <
