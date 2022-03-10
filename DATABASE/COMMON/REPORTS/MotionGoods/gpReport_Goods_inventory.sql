@@ -127,7 +127,7 @@ BEGIN
                                 --LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
                                 INNER JOIN _tmpLocation ON _tmpLocation.LocationId = MovementLinkObject_From.ObjectId
                            WHERE Movement.DescId = zc_Movement_Inventory()
-                           AND Movement.OperDate >= inStartDate
+                           AND Movement.OperDate >= inStartDate - INTERVAL '1 MONTH'
                            AND Movement.StatusId <> zc_Enum_Status_Erased()
                            )
 
@@ -202,15 +202,20 @@ BEGIN
     -- Движение по проведенным документамвсе ContainerId
     , tmpMIContainer AS (SELECT MIContainer.*
                          FROM MovementItemContainer AS MIContainer
+                              LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = MIContainer.ContainerId
+                                                                          AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
                          WHERE MIContainer.OperDate > (SELECT MIN (tmpInv.OperDate) AS OperDate FROM tmpInv)
                            AND MIContainer.DescId = zc_Container_Count()
-                           AND MIContainer.WhereObjectId_Analyzer IN (SELECT DISTINCT tmpInv.FromId FROM tmpInv)
+                           AND MIContainer.WhereObjectId_Analyzer IN (SELECT DISTINCT _tmpLocation.LocationId FROM _tmpLocation)
                            AND MIContainer.ObjectId_Analyzer IN (SELECT DISTINCT tmpGoods.GoodsId FROM tmpGoods)
                            AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()
                                                             , zc_Movement_Income(), zc_Movement_ReturnOut()
                                                             , zc_Movement_Send(), zc_Movement_Loss()
                                                             , zc_Movement_ProductionSeparate(), zc_Movement_ProductionUnion()
                                                             )
+                           AND ((CLO_Account.ContainerId > 0 AND inAccountGroupId = zc_Enum_AccountGroup_110000()) -- Транзит
+                             OR (CLO_Account.ContainerId IS NULL AND inAccountGroupId <> zc_Enum_AccountGroup_110000()) -- Транзит
+                              )
                            --and MIContainer.ObjectId_Analyzer  = 7984
                          )
   
@@ -330,8 +335,8 @@ BEGIN
                                                            , zc_Movement_Send(), zc_Movement_Loss()
                                                            , zc_Movement_ProductionSeparate(), zc_Movement_ProductionUnion()
                                                            )
-                                     AND (MovementLinkObject_From.ObjectId IN (SELECT DISTINCT tmpInv.FromId FROM tmpInv)
-                                       OR MovementLinkObject_To.ObjectId IN (SELECT DISTINCT tmpInv.FromId FROM tmpInv)
+                                     AND (MovementLinkObject_From.ObjectId IN (SELECT DISTINCT _tmpLocation.LocationId FROM _tmpLocation)
+                                       OR MovementLinkObject_To.ObjectId IN (SELECT DISTINCT _tmpLocation.LocationId FROM _tmpLocation)
                                          )
                                  )
  
@@ -410,6 +415,7 @@ BEGIN
                      , 0 ::TFloat AS CountOut_ProductionSeparate_un
                      , 0 ::TFloat AS CountOut_ProductionUnion_un
                 FROM tmpInv_MI AS tmp
+                WHERE COALESCE (tmp.Amount,0) <> 0
               UNION ALL
                 --движение
                 SELECT tmp.LocationId
@@ -441,6 +447,17 @@ BEGIN
                      , 0 ::TFloat AS CountOut_ProductionSeparate_un
                      , 0 ::TFloat AS CountOut_ProductionUnion_un
                 FROM tmpMIContainerAll AS tmp
+                WHERE COALESCE (tmp.CountIn_Income,0) <> 0
+                   OR COALESCE (tmp.CountIn_Loss,0) <> 0
+                   OR COALESCE (tmp.CountIn_Send,0) <> 0
+                   OR COALESCE (tmp.CountIn_ReturnIn,0) <> 0
+                   OR COALESCE (tmp.CountIn_ProductionSeparate,0) <> 0
+                   OR COALESCE (tmp.CountIn_ProductionUnion,0) <> 0
+                   OR COALESCE (tmp.CountOut_Sale,0) <> 0
+                   OR COALESCE (tmp.CountOut_Loss,0) <> 0
+                   OR COALESCE (tmp.CountOut_Send,0) <> 0
+                   OR COALESCE (tmp.CountOut_ProductionSeparate,0) <> 0
+                   OR COALESCE (tmp.CountOut_ProductionUnion,0) <> 0
               UNION ALL
                 SELECT tmp.LocationId
                      , tmp.GoodsId
@@ -471,62 +488,76 @@ BEGIN
                      , tmp.CountOut_ProductionSeparate AS CountOut_ProductionSeparate_un
                      , tmp.CountOut_ProductionUnion    AS CountOut_ProductionUnion_un   
                 FROM tmpMI_UnComplete AS tmp
+                WHERE COALESCE (tmp.CountIncome,0) <> 0
+                   OR COALESCE (tmp.CountIn_Loss,0) <> 0
+                   OR COALESCE (tmp.CountIn_Send,0) <> 0
+                   OR COALESCE (tmp.CountIn_ReturnIn,0) <> 0
+                   OR COALESCE (tmp.CountIn_ProductionSeparate,0) <> 0
+                   OR COALESCE (tmp.CountIn_ProductionUnion,0) <> 0
+                   OR COALESCE (tmp.CountOut_Sale,0) <> 0
+                   OR COALESCE (tmp.CountOut_Loss,0) <> 0
+                   OR COALESCE (tmp.CountOut_Send,0) <> 0
+                   OR COALESCE (tmp.CountOut_ProductionSeparate,0) <> 0
+                   OR COALESCE (tmp.CountOut_ProductionUnion,0) <> 0
                 )
  
 
     , tmpResult AS (SELECT tmp.LocationId
                          , tmp.GoodsId
                          , tmp.GoodsKindId
-                         , tmp.CountStart
-                         , tmp.Count_Inventory
-                         , (COALESCE (tmp.CountStart,0) 
-                          + COALESCE (tmp.CountIn_Income,0)
-                          + COALESCE (tmp.CountIn_Loss,0)
-                          + COALESCE (tmp.CountIn_Send,0)
-                          + COALESCE (tmp.CountIn_ReturnIn,0)
-                          + COALESCE (tmp.CountIn_ProductionSeparate,0)
-                          + COALESCE (tmp.CountIn_ProductionUnion,0)
-                          - COALESCE (tmp.CountOut_Sale,0)
-                          - COALESCE (tmp.CountOut_Loss,0)
-                          - COALESCE (tmp.CountOut_Send,0)
-                          - COALESCE (tmp.CountOut_ProductionSeparate,0)
-                          - COALESCE (tmp.CountOut_ProductionUnion,0)
-                          
-                          + COALESCE (tmp.CountIn_Income_un,0)
-                          + COALESCE (tmp.CountIn_Loss_un,0)
-                          + COALESCE (tmp.CountIn_Send_un,0)
-                          + COALESCE (tmp.CountIn_ReturnIn_un,0)
-                          + COALESCE (tmp.CountIn_ProductionSeparate_un,0)
-                          + COALESCE (tmp.CountIn_ProductionUnion_un,0)
-                          - COALESCE (tmp.CountOut_Sale_un,0)
-                          - COALESCE (tmp.CountOut_Loss_un,0)
-                          - COALESCE (tmp.CountOut_Send_un,0)
-                          - COALESCE (tmp.CountOut_ProductionSeparate_un,0)
-                          - COALESCE (tmp.CountOut_ProductionUnion_un,0) ) ::TFloat AS CountEnd
+                         , SUM (COALESCE (tmp.CountStart,0)) AS CountStart
+                         , SUM (COALESCE (tmp.Count_Inventory,0)) AS Count_Inventory
+                         , SUM (COALESCE (tmp.CountStart,0) 
+                              + COALESCE (tmp.CountIn_Income,0)
+                              + COALESCE (tmp.CountIn_Loss,0)
+                              + COALESCE (tmp.CountIn_Send,0)
+                              + COALESCE (tmp.CountIn_ReturnIn,0)
+                              + COALESCE (tmp.CountIn_ProductionSeparate,0)
+                              + COALESCE (tmp.CountIn_ProductionUnion,0)
+                              - COALESCE (tmp.CountOut_Sale,0)
+                              - COALESCE (tmp.CountOut_Loss,0)
+                              - COALESCE (tmp.CountOut_Send,0)
+                              - COALESCE (tmp.CountOut_ProductionSeparate,0)
+                              - COALESCE (tmp.CountOut_ProductionUnion,0)
+                              
+                              + COALESCE (tmp.CountIn_Income_un,0)
+                              + COALESCE (tmp.CountIn_Loss_un,0)
+                              + COALESCE (tmp.CountIn_Send_un,0)
+                              + COALESCE (tmp.CountIn_ReturnIn_un,0)
+                              + COALESCE (tmp.CountIn_ProductionSeparate_un,0)
+                              + COALESCE (tmp.CountIn_ProductionUnion_un,0)
+                              - COALESCE (tmp.CountOut_Sale_un,0)
+                              - COALESCE (tmp.CountOut_Loss_un,0)
+                              - COALESCE (tmp.CountOut_Send_un,0)
+                              - COALESCE (tmp.CountOut_ProductionSeparate_un,0)
+                              - COALESCE (tmp.CountOut_ProductionUnion_un,0) ) ::TFloat AS CountEnd
 
-                         , tmp.CountIn_Income
-                         , tmp.CountIn_Loss
-                         , tmp.CountIn_Send
-                         , tmp.CountIn_ReturnIn
-                         , tmp.CountIn_ProductionSeparate
-                         , tmp.CountIn_ProductionUnion
-                         , tmp.CountOut_Sale
-                         , tmp.CountOut_Loss
-                         , tmp.CountOut_Send
-                         , tmp.CountOut_ProductionSeparate
-                         , tmp.CountOut_ProductionUnion
-                         , tmp.CountIn_Income_un
-                         , tmp.CountIn_Loss_un
-                         , tmp.CountIn_Send_un
-                         , tmp.CountIn_ReturnIn_un
-                         , tmp.CountIn_ProductionSeparate_un
-                         , tmp.CountIn_ProductionUnion_un
-                         , tmp.CountOut_Sale_un
-                         , tmp.CountOut_Loss_un
-                         , tmp.CountOut_Send_un
-                         , tmp.CountOut_ProductionSeparate_un
-                         , tmp.CountOut_ProductionUnion_un
+                         , SUM (COALESCE (tmp.CountIn_Income,0))                 AS CountIn_Income
+                         , SUM (COALESCE (tmp.CountIn_Loss,0))                   AS CountIn_Loss
+                         , SUM (COALESCE (tmp.CountIn_Send,0))                   AS CountIn_Send
+                         , SUM (COALESCE (tmp.CountIn_ReturnIn,0))               AS CountIn_ReturnIn
+                         , SUM (COALESCE (tmp.CountIn_ProductionSeparate,0))     AS CountIn_ProductionSeparate
+                         , SUM (COALESCE (tmp.CountIn_ProductionUnion,0))        AS CountIn_ProductionUnion
+                         , SUM (COALESCE (tmp.CountOut_Sale,0))                  AS CountOut_Sale
+                         , SUM (COALESCE (tmp.CountOut_Loss,0))                  AS CountOut_Loss
+                         , SUM (COALESCE (tmp.CountOut_Send,0))                  AS CountOut_Send
+                         , SUM (COALESCE (tmp.CountOut_ProductionSeparate,0))    AS CountOut_ProductionSeparate
+                         , SUM (COALESCE (tmp.CountOut_ProductionUnion,0))       AS CountOut_ProductionUnion
+                         , SUM (COALESCE (tmp.CountIn_Income_un,0))              AS CountIn_Income_un
+                         , SUM (COALESCE (tmp.CountIn_Loss_un,0))                AS CountIn_Loss_un
+                         , SUM (COALESCE (tmp.CountIn_Send_un,0))                AS CountIn_Send_un
+                         , SUM (COALESCE (tmp.CountIn_ReturnIn_un,0))            AS CountIn_ReturnIn_un
+                         , SUM (COALESCE (tmp.CountIn_ProductionSeparate_un,0))  AS CountIn_ProductionSeparate_un
+                         , SUM (COALESCE (tmp.CountIn_ProductionUnion_un,0))     AS CountIn_ProductionUnion_un
+                         , SUM (COALESCE (tmp.CountOut_Sale_un,0))               AS CountOut_Sale_un
+                         , SUM (COALESCE (tmp.CountOut_Loss_un,0))               AS CountOut_Loss_un
+                         , SUM (COALESCE (tmp.CountOut_Send_un,0))               AS CountOut_Send_un
+                         , SUM (COALESCE (tmp.CountOut_ProductionSeparate_un,0)) AS CountOut_ProductionSeparate_un
+                         , SUM (COALESCE (tmp.CountOut_ProductionUnion_un,0))    AS CountOut_ProductionUnion_un
                     FROM tmpUnion AS tmp
+                    GROUP BY tmp.LocationId
+                           , tmp.GoodsId
+                           , tmp.GoodsKindId
                     )
   
   
@@ -578,10 +609,7 @@ BEGIN
 /*        , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.CountOut ELSE 0 END :: TFloat AS CountOut_sh
         , (tmpResult.CountOut * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountOut_Weight
 */
-   
-
-
-      FROM tmpResult
+     FROM tmpResult
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsId
         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId
         LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmpResult.LocationId
