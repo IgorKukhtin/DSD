@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MemberHeadManagerId Integer, MemberHeadManagerName TVarChar
              , MemberManagerId Integer, MemberManagerName TVarChar
              , MemberBookkeeperId Integer, MemberBookkeeperName TVarChar
+             , PersonalHeadId Integer, PersonalHeadName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
              , PSLExportKindId Integer, PSLExportKindName TVarChar
              , ContentType TVarChar
@@ -57,6 +58,9 @@ BEGIN
            , CAST ('' as TVarChar)  AS MemberManagerName
            , 0                      AS MemberBookkeeperId
            , CAST ('' as TVarChar)  AS MemberBookkeeperName
+
+           , CAST (0 as Integer)    AS PersonalHeadId
+           , CAST ('' as TVarChar)  AS PersonalHeadName
            
            , 0                      AS BankAccountId
            , CAST ('' as TVarChar)  AS BankAccountName
@@ -100,6 +104,8 @@ BEGIN
            , Object_MemberBookkeeper.Id           AS MemberBookkeeperId
            , Object_MemberBookkeeper.ValueData    AS MemberBookkeeperName
 
+           , Object_PersonalHead.Id               AS PersonalHeadId
+           , Object_PersonalHead.ValueData        AS PersonalHeadName
 
            , Object_BankAccount.Id             AS BankAccountId
            , Object_BankAccount.ValueData      AS BankAccountName
@@ -194,6 +200,11 @@ BEGIN
                                AND ObjectLink_PersonalServiceList_PSLExportKind.DescId = zc_ObjectLink_PersonalServiceList_PSLExportKind()
            LEFT JOIN Object AS Object_PSLExportKind ON Object_PSLExportKind.Id = ObjectLink_PersonalServiceList_PSLExportKind.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PersonalHead
+                                ON ObjectLink_PersonalServiceList_PersonalHead.ObjectId = Object_PersonalServiceList.Id 
+                               AND ObjectLink_PersonalServiceList_PersonalHead.DescId   = zc_ObjectLink_PersonalServiceList_PersonalHead()
+           LEFT JOIN Object AS Object_PersonalHead ON Object_PersonalHead.Id = ObjectLink_PersonalServiceList_PersonalHead.ChildObjectId
+
            LEFT JOIN ObjectString AS ObjectString_ContentType 
                                   ON ObjectString_ContentType.ObjectId = Object_PersonalServiceList.Id 
                                  AND ObjectString_ContentType.DescId = zc_ObjectString_PersonalServiceList_ContentType()
@@ -214,6 +225,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 09.03.22         *
  18.11.21         * KoeffSummCardSecond
  28.04.21         * add isDetail
  18.08.21         *

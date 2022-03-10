@@ -1365,6 +1365,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_PersonalServiceList_PSLExportKind() RET
   INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_PersonalServiceList_PSLExportKind', 'Связь Ведомости начисления с Тип выгрузки ведомости в банк', zc_Object_PersonalServiceList(), zc_Object_PSLExportKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PersonalServiceList_PSLExportKind');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PersonalServiceList_PersonalHead() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PersonalServiceList_PersonalHead'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_PersonalServiceList_PersonalHead', 'Руководитель подразделения', zc_Object_PersonalServiceList(), zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PersonalServiceList_PersonalHead');
+
+
 ---
 CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsQuality_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsQuality_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
   INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
@@ -2780,6 +2785,7 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 09.03.22         * zc_ObjectLink_PersonalServiceList_PersonalHead
  09.02.22                                                                                      * zc_ObjectLink_SupplierFailures_...
  15.12.21         * zc_ObjectLink_Unit_PersonalHead
  25.11.21                                                                                      * zc_ObjectLink_SurchargeWages_...

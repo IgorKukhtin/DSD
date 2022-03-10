@@ -11,7 +11,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integ
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
 
 
 
@@ -27,6 +28,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PersonalServiceList(
     IN inMemberHeadManagerId   Integer   ,     -- Физ лица(исполнительный директор)
     IN inMemberManagerId       Integer   ,     -- Физ лица(директор)
     IN inMemberBookkeeperId    Integer   ,     -- Физ лица(бухгалтер)
+    IN inPersonalHeadId        Integer   ,     -- Руководитель подразделения
     IN inBankAccountId         Integer   ,     --
     IN inPSLExportKindId       Integer   ,     --
     IN inCompensation          TFloat    ,     -- месяц компенсации
@@ -34,7 +36,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PersonalServiceList(
     IN inisSecond              Boolean   ,     -- 
     IN inisRecalc              Boolean   ,     -- 
     IN inisBankOut             Boolean   ,     -- 
-    IN inisDetail             Boolean   ,     -- 
+    IN inisDetail              Boolean   ,     -- 
     IN inContentType           TVarChar   ,     --
     IN inOnFlowType            TVarChar   ,     --
    -- IN inMemberId            Integer   ,     -- Физ лица(пользователь)
@@ -82,6 +84,9 @@ BEGIN
    -- сохранили св-во 
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_MemberBookkeeper(), ioId, inMemberBookkeeperId);
 
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_PersonalHead(), ioId, inPersonalHeadId);
+
    -- сохранили св-во 
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_BankAccount(), ioId, inBankAccountId);
    -- сохранили св-во 
@@ -118,6 +123,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.03.22         * inPersonalHeadId
  18.11.21         *
  28.04.21         * inisDetail
  18.03.21         * 

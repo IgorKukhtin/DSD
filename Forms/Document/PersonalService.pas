@@ -257,6 +257,7 @@ type
     actInsertUpdate_MemberMinus: TdsdExecStoredProc;
     macInsertUpdate_MemberMinus: TMultiAction;
     bbInsertUpdate_MemberMinus: TdxBarButton;
+    StaffListSummKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

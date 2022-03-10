@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MemberHeadManagerId Integer, MemberHeadManagerName TVarChar
              , MemberManagerId Integer, MemberManagerName TVarChar
              , MemberBookkeeperId Integer, MemberBookkeeperName TVarChar
+             , PersonalHeadId Integer, PersonalHeadCode Integer, PersonalHeadName TVarChar, UnitName_Head TVarChar, BranchName_Head TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
              , PSLExportKindId Integer, PSLExportKindName TVarChar
              , ContentType TVarChar
@@ -64,6 +65,12 @@ BEGIN
            , Object_MemberManager.ValueData       AS MemberManagerName
            , Object_MemberBookkeeper.Id           AS MemberBookkeeperId
            , Object_MemberBookkeeper.ValueData    AS MemberBookkeeperName
+
+           , Object_PersonalHead.PersonalId       AS PersonalHeadId
+           , Object_PersonalHead.PersonalCode     AS PersonalHeadCode
+           , Object_PersonalHead.PersonalName     AS PersonalHeadName
+           , Object_PersonalHead.UnitName         AS UnitName_Head
+           , Object_PersonalHead.BranchName       AS BranchName_Head
 
            , Object_BankAccount.Id                AS BankAccountId
            , Object_BankAccount.ValueData         AS BankAccountName
@@ -174,6 +181,12 @@ BEGIN
                                AND ObjectLink_PersonalServiceList_PSLExportKind.DescId = zc_ObjectLink_PersonalServiceList_PSLExportKind()
            LEFT JOIN Object AS Object_PSLExportKind ON Object_PSLExportKind.Id = ObjectLink_PersonalServiceList_PSLExportKind.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PersonalHead
+                                ON ObjectLink_PersonalServiceList_PersonalHead.ObjectId = Object_PersonalServiceList.Id
+                               AND ObjectLink_PersonalServiceList_PersonalHead.DescId   = zc_ObjectLink_PersonalServiceList_PersonalHead()
+           LEFT JOIN Object_Personal_View AS Object_PersonalHead ON Object_PersonalHead.PersonalId = ObjectLink_PersonalServiceList_PersonalHead.ChildObjectId
+
+
            LEFT JOIN ObjectString AS ObjectString_ContentType 
                                   ON ObjectString_ContentType.ObjectId = Object_PersonalServiceList.Id 
                                  AND ObjectString_ContentType.DescId = zc_ObjectString_PersonalServiceList_ContentType()
@@ -194,6 +207,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                  ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 09.03.22         *
  18.11.21          *
  28.04.21          * isDetail
  17.11.20          * isBankOut
