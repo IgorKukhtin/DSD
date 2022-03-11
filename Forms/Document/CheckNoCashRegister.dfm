@@ -14,17 +14,17 @@ inherited CheckNoCashRegisterForm: TCheckNoCashRegisterForm
     Height = 477
     TabOrder = 3
     ExplicitTop = 77
-    ExplicitWidth = 896
+    ExplicitWidth = 900
     ExplicitHeight = 477
     ClientRectBottom = 477
     ClientRectRight = 900
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 896
+      ExplicitWidth = 900
       ExplicitHeight = 477
       inherited cxGrid: TcxGrid
         Width = 900
         Height = 477
-        ExplicitWidth = 896
+        ExplicitWidth = 900
         ExplicitHeight = 477
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -340,7 +340,7 @@ inherited CheckNoCashRegisterForm: TCheckNoCashRegisterForm
   inherited Panel: TPanel
     Width = 900
     Height = 51
-    ExplicitWidth = 896
+    ExplicitWidth = 900
     ExplicitHeight = 51
     inherited deStart: TcxDateEdit
       EditValue = 42370d
@@ -404,25 +404,37 @@ inherited CheckNoCashRegisterForm: TCheckNoCashRegisterForm
           MultiSelectSeparator = ','
         end>
     end
-    inherited actUnComplete: TdsdChangeMovementStatus
+    inherited actComplete: TdsdChangeMovementStatus
       Enabled = False
     end
-    inherited actComplete: TdsdChangeMovementStatus
+    inherited actUnComplete: TdsdChangeMovementStatus
       Enabled = False
     end
     inherited actSetErased: TdsdChangeMovementStatus
       Enabled = False
     end
-    inherited actReCompleteList: TMultiAction
+    inherited mactReCompleteList: TMultiAction
       Enabled = False
     end
-    inherited actCompleteList: TMultiAction
+    inherited mactCompleteList: TMultiAction
       Enabled = False
     end
-    inherited actUnCompleteList: TMultiAction
+    inherited mactUnCompleteList: TMultiAction
       Enabled = False
     end
-    inherited actSetErasedList: TMultiAction
+    inherited mactSetErasedList: TMultiAction
+      Enabled = False
+    end
+    inherited mactSimpleReCompleteList: TMultiAction
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1087#1088#1086#1094#1077#1076#1091#1088#1091' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1086#1090#1086#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
+    end
+    inherited mactSimpleCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactSimpleUncompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactSimpleErasedList: TMultiAction
       Enabled = False
     end
     inherited spCompete: TdsdExecStoredProc
@@ -432,18 +444,6 @@ inherited CheckNoCashRegisterForm: TCheckNoCashRegisterForm
       Enabled = False
     end
     inherited spErased: TdsdExecStoredProc
-      Enabled = False
-    end
-    inherited actSimpleCompleteList: TMultiAction
-      Enabled = False
-    end
-    inherited actSimpleUncompleteList: TMultiAction
-      Enabled = False
-    end
-    inherited actSimpleReCompleteList: TMultiAction
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1087#1088#1086#1094#1077#1076#1091#1088#1091' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1086#1090#1086#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
-    end
-    inherited actSimpleErased: TMultiAction
       Enabled = False
     end
     object actGet_UserUnit: TdsdExecStoredProc
@@ -729,7 +729,6 @@ inherited CheckNoCashRegisterForm: TCheckNoCashRegisterForm
     Left = 184
     Top = 296
     object N13: TMenuItem [11]
-      Action = actSimpleReCompleteList
     end
   end
   inherited RefreshDispatcher: TRefreshDispatcher
@@ -859,7 +858,7 @@ inherited CheckNoCashRegisterForm: TCheckNoCashRegisterForm
       end
       item
         Name = 'inIsLastComplete'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -473,6 +473,9 @@ end;
 
 procedure TLoadFormTest.LoadCheckFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckRedForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckRedForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckSummCardForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckSummCardForm');
 
@@ -1060,8 +1063,8 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_SupplierFailuresAllForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_SupplierFailuresAllForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_JuridicalItogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_JuridicalItogForm');
 
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_SupplierFailuresAllForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_SupplierFailuresAllForm');

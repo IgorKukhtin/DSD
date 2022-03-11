@@ -13,17 +13,17 @@ inherited Report_OrderExternal_JuridicalItogForm: TReport_OrderExternal_Juridica
     Height = 421
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 1057
+    ExplicitWidth = 1086
     ExplicitHeight = 421
     ClientRectBottom = 421
     ClientRectRight = 1086
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1057
+      ExplicitWidth = 1086
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
         Width = 1086
         Height = 421
-        ExplicitWidth = 1057
+        ExplicitWidth = 1086
         ExplicitHeight = 421
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -382,31 +382,29 @@ inherited Report_OrderExternal_JuridicalItogForm: TReport_OrderExternal_Juridica
   inherited Panel: TPanel
     Width = 1086
     Height = 33
-    ExplicitWidth = 1057
+    ExplicitWidth = 1086
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
-      Left = 49
-      ExplicitLeft = 49
+      Left = 89
+      Top = 4
+      ExplicitLeft = 89
+      ExplicitTop = 4
     end
     inherited deEnd: TcxDateEdit
-      Left = 140
-      Top = 31
-      Visible = False
-      ExplicitLeft = 140
-      ExplicitTop = 31
+      Left = 316
+      Top = 4
+      ExplicitLeft = 316
+      ExplicitTop = 4
     end
     inherited cxLabel1: TcxLabel
       Top = 5
-      Caption = #1044#1072#1090#1072':'
+      Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072':'
       ExplicitTop = 5
-      ExplicitWidth = 34
+      ExplicitWidth = 73
     end
     inherited cxLabel2: TcxLabel
-      Left = 24
-      Top = 32
-      Visible = False
-      ExplicitLeft = 24
-      ExplicitTop = 32
+      Top = 5
+      ExplicitTop = 5
     end
   end
   inherited ActionList: TActionList
@@ -478,15 +476,22 @@ inherited Report_OrderExternal_JuridicalItogForm: TReport_OrderExternal_Juridica
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TDataDialogForm'
-      FormNameParam.Value = 'TDataDialogForm'
+      FormName = 'TReport_PeriodDialogForm'
+      FormNameParam.Value = 'TReport_PeriodDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'inOperDate'
+          Name = 'StartDate'
           Value = Null
           Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
@@ -550,9 +555,17 @@ inherited Report_OrderExternal_JuridicalItogForm: TReport_OrderExternal_Juridica
     StoredProcName = 'gpReport_OrderExternal_JuridicalItog'
     Params = <
       item
-        Name = 'inOperdate'
+        Name = 'inDateStart'
         Value = Null
         Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateEnd'
+        Value = Null
+        Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','

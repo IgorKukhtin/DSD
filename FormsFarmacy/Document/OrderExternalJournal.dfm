@@ -535,7 +535,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       MoveParams = <>
       Caption = #1048#1090#1086#1075#1080' '#1087#1086' '#1102#1088'. '#1083#1080#1094#1072#1084
       Hint = #1048#1090#1086#1075#1080' '#1087#1086' '#1102#1088'. '#1083#1080#1094#1072#1084
-      ImageIndex = 16
+      ImageIndex = 19
       FormName = 'TReport_OrderExternal_JuridicalItogForm'
       FormNameParam.Value = 'TReport_OrderExternal_JuridicalItogForm'
       FormNameParam.DataType = ftString
@@ -677,7 +677,11 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_JuridicalItog'
         end
         item
           Visible = True
@@ -743,7 +747,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       Action = actReport_SupplierFailuresAll
       Category = 0
     end
-    object dxBarButton1: TdxBarButton
+    object bbReport_JuridicalItog: TdxBarButton
       Action = actReport_JuridicalItog
       Category = 0
     end

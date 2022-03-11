@@ -59,7 +59,7 @@ type
     isSupplierFailures: TcxGridDBColumn;
     ProvinceCityName: TcxGridDBColumn;
     actReport_JuridicalItog: TdsdOpenForm;
-    dxBarButton1: TdxBarButton;
+    bbReport_JuridicalItog: TdxBarButton;
   private
     { Private declarations }
   public

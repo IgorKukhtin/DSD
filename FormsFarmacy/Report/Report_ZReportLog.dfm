@@ -1,26 +1,26 @@
 inherited Report_ZReportLogForm: TReport_ZReportLogForm
   Caption = 'Z '#1086#1090#1095#1077#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
   ClientHeight = 632
-  ClientWidth = 734
+  ClientWidth = 786
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 750
+  ExplicitWidth = 802
   ExplicitHeight = 671
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
-    Width = 734
+    Width = 786
     Height = 555
     ExplicitTop = 77
     ExplicitWidth = 734
     ExplicitHeight = 555
     ClientRectBottom = 555
-    ClientRectRight = 734
+    ClientRectRight = 786
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 734
       ExplicitHeight = 555
       inherited cxGrid: TcxGrid
-        Width = 734
+        Width = 786
         Height = 306
         ExplicitWidth = 734
         ExplicitHeight = 306
@@ -137,7 +137,15 @@ inherited Report_ZReportLogForm: TReport_ZReportLogForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 310
+            Width = 265
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
           end
           object SummaCash: TcxGridDBColumn
             Caption = #1054#1073#1086#1088#1086#1090' '#1085#1072#1083
@@ -179,11 +187,12 @@ inherited Report_ZReportLogForm: TReport_ZReportLogForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 314
-        Width = 734
+        Width = 786
         Height = 241
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 734
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ZReportDS
@@ -342,15 +351,16 @@ inherited Report_ZReportLogForm: TReport_ZReportLogForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 306
-        Width = 734
+        Width = 786
         Height = 8
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitWidth = 734
       end
     end
   end
   inherited Panel: TPanel
-    Width = 734
+    Width = 786
     Height = 51
     ExplicitWidth = 734
     ExplicitHeight = 51

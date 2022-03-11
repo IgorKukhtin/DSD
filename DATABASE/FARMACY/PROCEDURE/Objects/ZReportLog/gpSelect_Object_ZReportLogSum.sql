@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ZReportLogSum(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate TDateTime
-             , UnitID Integer, UnitCode Integer, UnitName TVarChar
+             , UnitID Integer, UnitCode Integer, UnitName TVarChar, JuridicalName TVarChar
 
              , SummaCash TFloat
              , SummaCard TFloat
@@ -30,9 +30,10 @@ BEGIN
   WITH tmpZReportLog AS (SELECT * FROM gpSelect_Object_ZReportLog(inStartDate := inStartDate, inEndDate := inEndDate, inUnitId := inUnitId,  inSession := inSession))
 
   SELECT ZReportLog.OperDate
-       , Object_Unit.ID            AS UnitID
-       , Object_Unit.ObjectCode    AS UnitCode
-       , Object_Unit.ValueData     AS UnitName
+       , Object_Unit.ID                       AS UnitID
+       , Object_Unit.ObjectCode               AS UnitCode
+       , Object_Unit.ValueData                AS UnitName
+       , Object_Juridical.ValueData           AS JuridicalName
 
        , SUM(ZReportLog.SummaCash)::TFloat    AS SummaCash
        , SUM(ZReportLog.SummaCard)::TFloat    AS SummaCard
@@ -52,10 +53,13 @@ BEGIN
                             
        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ZReportLog.UnitId
 
+       LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+
   GROUP BY ZReportLog.OperDate
          , Object_Unit.ID
          , Object_Unit.ObjectCode
          , Object_Unit.ValueData 
+         , Object_Juridical.ValueData 
   ORDER BY ZReportLog.OperDate
          , Object_Unit.ValueData;
 
@@ -72,4 +76,5 @@ $BODY$
 -- тест
 -- 
 
-select * from gpSelect_Object_ZReportLogSum(inStartDate := ('05.08.2021')::TDateTime , inEndDate := ('05.08.2021')::TDateTime , inUnitId := 10779386 ,  inSession := '3');
+
+select * from gpSelect_Object_ZReportLogSum(inStartDate := ('09.03.2022')::TDateTime , inEndDate := ('09.03.2022')::TDateTime , inUnitId := 0 ,  inSession := '3');

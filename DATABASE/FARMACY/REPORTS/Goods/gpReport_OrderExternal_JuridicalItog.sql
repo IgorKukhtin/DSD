@@ -1,14 +1,13 @@
 -- Function: gpReport_OrderExternal_JuridicalItog()
 
-DROP FUNCTION IF EXISTS gpReport_OrderExternal_JuridicalItog (TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_OrderExternal_JuridicalItog (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_OrderExternal_JuridicalItog(
-    IN inOperDate    TDateTime    , -- на дату
+    IN inDateStart   TDateTime    , -- Дата начала
+    IN inDateEnd     TDateTime    , -- Дата конца
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (/*Id Integer, InvNumber TVarChar, OperDate TDateTime
-             , UnitId Integer, UnitCode Integer, UnitName TVarChar*/
-               JuridicalMainId Integer, JuridicalMainCode Integer, JuridicalMainName TVarChar
+RETURNS TABLE (JuridicalMainId Integer, JuridicalMainCode Integer, JuridicalMainName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , Amount TFloat, Summ TFloat, SummWithNDS TFloat
@@ -23,16 +22,16 @@ $BODY$
 BEGIN
 
     RETURN QUERY
-    WITH tmpMovementAll AS (SELECT MAX (Movement.OperDate)
-                                   OVER (PARTITION BY MovementLinkObject_Juridical.ObjectId
-                                                    , COALESCE (MovementLinkObject_Contract.ObjectId, 0)
-                                                    , COALESCE (MovementLinkObject_Area.ObjectId, 0)
-                                        ) AS Max_Date
-                                 , Movement.OperDate                                  AS OperDate
+    WITH tmpMovementAll AS (SELECT 
+                                   Movement.OperDate                                  AS OperDate
                                  , Movement.Id                                        AS MovementId
                                  , MovementLinkObject_Juridical.ObjectId              AS JuridicalId
                                  , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
                                  , COALESCE (MovementLinkObject_Area.ObjectId, 0)     AS AreaId
+                                 , ROW_NUMBER() OVER (PARTITION BY MovementLinkObject_Juridical.ObjectId
+                                                                 , COALESCE (MovementLinkObject_Contract.ObjectId, 0)
+                                                                 , COALESCE (MovementLinkObject_Area.ObjectId, 0)
+                                                      ORDER BY Movement.OperDate) AS Ord
                             FROM Movement
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                                               ON MovementLinkObject_Juridical.MovementId = Movement.Id
@@ -44,49 +43,60 @@ BEGIN
                                                               ON MovementLinkObject_Area.MovementId = Movement.Id
                                                              AND MovementLinkObject_Area.DescId = zc_MovementLinkObject_Area()
                             WHERE Movement.DescId = zc_Movement_PriceList()
-                              AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                              AND Movement.OperDate <= inOperdate
-                            ),
+                              AND Movement.StatusId = zc_Enum_Status_UnComplete()),
         tmpJuridicalArea AS (SELECT DISTINCT
                                     tmp.UnitId                   AS UnitId
                                   , tmp.JuridicalId              AS JuridicalId
                                   , tmp.AreaId_Juridical         AS AreaId
                              FROM lpSelect_Object_JuridicalArea_byUnit (0 , 0) AS tmp
                              ),
-        tmpLastMovement AS (SELECT PriceList.JuridicalId
-                                 , PriceList.ContractId
-                                 , PriceList.AreaId
-                                 , PriceList.MovementId
-                                 , PriceList.OperDate
-                            FROM tmpMovementAll AS PriceList
+        tmpMovement AS (SELECT PriceList.OperDate
+                             , COALESCE (PriceListNext.OperDate, zc_DateEnd()) AS DateFinal
+                             , PriceList.JuridicalId
+                             , PriceList.ContractId
+                             , PriceList.AreaId
+                             , PriceList.MovementId
+                        FROM tmpMovementAll AS PriceList
                             
-                            WHERE PriceList.Max_Date = PriceList.OperDate),
+                             LEFT JOIN tmpMovementAll AS PriceListNext 
+                                                      ON PriceListNext.JuridicalId  = PriceList.JuridicalId
+                                                     AND PriceListNext.ContractId   = PriceList.ContractId
+                                                     AND PriceListNext.AreaId       = PriceList.AreaId
+                                                     AND PriceListNext.Ord          = PriceList.Ord + 1
+                                                             
+                        WHERE COALESCE (PriceListNext.OperDate, zc_DateEnd()) >= '20.02.2022'
+                        ),
         tmpMovementItemAll AS (SELECT DISTINCT
-                                   LastMovement.JuridicalId
-                                 , LastMovement.ContractId
-                                 , LastMovement.AreaId
-                                 , MovementItem.ObjectId                AS GoodsJuridicalId 
-                            FROM tmpLastMovement AS LastMovement
+                                   Movement.OperDate
+                                 , Movement.DateFinal
+                                 , MovementItem.ObjectId               AS GoodsJuridicalId 
+                                 , Movement.JuridicalId
+                                 , Movement.ContractId
+                                 , Movement.AreaId 
                             
-                                 INNER JOIN MovementItem ON MovementItem.MovementId = LastMovement.MovementId
-                                                        AND MovementItem.DescId = zc_MI_Child()
+                            FROM tmpMovement AS Movement
 
-                                 INNER JOIN MovementItemBoolean AS MIBoolean_SupplierFailures
-                                                                ON MIBoolean_SupplierFailures.MovementItemId = MovementItem.Id
-                                                               AND MIBoolean_SupplierFailures.DescId         = zc_MIBoolean_SupplierFailures()
-                                                               AND MIBoolean_SupplierFailures.ValueData      = True), 
-        tmpMovementItem AS (SELECT tmpJuridicalArea.UnitId
-                                 , LastMovement.JuridicalId
-                                 , LastMovement.ContractId
-                                 , LastMovement.GoodsJuridicalId
-                            FROM tmpMovementItemAll AS LastMovement
+                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.MovementId
+                                                       AND MovementItem.DescId = zc_MI_Child()
+
+                                INNER JOIN MovementItemBoolean AS MIBoolean_SupplierFailures
+                                                              ON MIBoolean_SupplierFailures.MovementItemId = MovementItem.Id
+                                                             AND MIBoolean_SupplierFailures.DescId = zc_MIBoolean_SupplierFailures()
+                                                             AND MIBoolean_SupplierFailures.ValueData = TRUE
+                            ),
+        tmpMovementItem AS (SELECT DISTINCT
+                                   tmpJuridicalArea.UnitId
+                                 , Movement.OperDate
+                                 , Movement.DateFinal
+                                 , Movement.GoodsJuridicalId
+                                 , Movement.JuridicalId
+                                 , Movement.ContractId
                             
-                                 INNER JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId    = LastMovement.JuridicalId
-                                                            AND tmpJuridicalArea.AreaId         = LastMovement.AreaId
-                            GROUP BY tmpJuridicalArea.UnitId
-                                 , LastMovement.JuridicalId
-                                 , LastMovement.ContractId
-                                 , LastMovement.GoodsJuridicalId), 
+                            FROM tmpMovementItemAll AS Movement
+                                                             
+                                INNER JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = Movement.JuridicalId
+                                                           AND tmpJuridicalArea.AreaId = Movement.AreaId 
+                            ), 
         tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
                             , ObjectFloat_NDSKind_NDS.ValueData
                        FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
@@ -108,7 +118,8 @@ BEGIN
                                                                       AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                      WHERE Movement_OrderExternal.DescId = zc_Movement_OrderExternal()
                                        AND Movement_OrderExternal.StatusId = zc_Enum_Status_Complete()
-                                       AND Movement_OrderExternal.OperDate = inOperdate
+                                       AND Movement_OrderExternal.OperDate >= inDateStart
+                                       AND Movement_OrderExternal.OperDate <= inDateEnd
                                      ),
         tmpOrderExternal AS (SELECT Movement_OrderExternal.*
                                   , MI_OrderExternal.Id                      AS MovementItemId
@@ -124,6 +135,8 @@ BEGIN
                                                                    ON MILinkObject_Goods.MovementItemId = MI_OrderExternal.Id
                                                                   AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                                   LEFT JOIN tmpMovementItem ON tmpMovementItem.GoodsJuridicalId = MILinkObject_Goods.ObjectId
+                                                           AND tmpMovementItem.OperDate         <= Movement_OrderExternal.OperDate
+                                                           AND tmpMovementItem.DateFinal        >  Movement_OrderExternal.OperDate
                                                            AND tmpMovementItem.UnitId           = Movement_OrderExternal.UnitId 
                                                            AND tmpMovementItem.JuridicalId      = Movement_OrderExternal.JuridicalId
                                                            AND tmpMovementItem.ContractId       = Movement_OrderExternal.ContractId
@@ -153,15 +166,7 @@ BEGIN
                                                           ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods_Main.NDSKindId
                                )                              
 
-    SELECT /*tmpSupplierFailures.Id                AS Id
-         , tmpSupplierFailures.InvNumber         AS InvNumber
-         , tmpSupplierFailures.OperDate          AS OperDate
-        
-         , Object_Unit.Id                        AS UnitId
-         , Object_Unit.ObjectCode                AS UnitCode
-         , Object_Unit.ValueData                 AS UnitName*/
-        
-           Object_JuridicalMain.Id               AS JuridicalMainId
+    SELECT Object_JuridicalMain.Id               AS JuridicalMainId
          , Object_JuridicalMain.ObjectCode       AS JuridicalMainCode
          , Object_JuridicalMain.ValueData        AS JuridicalMainName
         
@@ -196,15 +201,7 @@ BEGIN
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpSupplierFailures.JuridicalId
         LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpSupplierFailures.ContractId
                                                  
-    GROUP BY /*tmpSupplierFailures.Id
-           , tmpSupplierFailures.InvNumber
-           , tmpSupplierFailures.OperDate
-          
-           , Object_Unit.Id
-           , Object_Unit.ObjectCode
-           , Object_Unit.ValueData*/
-           
-             Object_JuridicalMain.Id
+    GROUP BY Object_JuridicalMain.Id
            , Object_JuridicalMain.ObjectCode
            , Object_JuridicalMain.ValueData           
           
@@ -231,4 +228,4 @@ $BODY$
 -- тест
 -- 
 
-select * from gpReport_OrderExternal_JuridicalItog(inOperdate := ('04.03.2022')::TDateTime ,  inSession := '3');
+select * from gpReport_OrderExternal_JuridicalItog(inDateStart := ('07.03.2022')::TDateTime ,  inDateEnd := ('09.03.2022')::TDateTime ,  inSession := '3');
