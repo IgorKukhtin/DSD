@@ -122,31 +122,31 @@ BEGIN
                                        AND MIFloat_WorkTimeHoursOne.DescId = zc_MIFloat_WorkTimeHoursOne()
 
             LEFT JOIN MovementItemFloat AS MIFloat_WorkTimeHours
-                                        ON MIFloat_WorkTimeHours.MovementItemId = tmpMI .MovementItemId
+                                        ON MIFloat_WorkTimeHours.MovementItemId = tmpMI.MovementItemId
                                        AND MIFloat_WorkTimeHours.DescId = zc_MIFloat_WorkTimeHours()
 
             LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                        ON MIFloat_Price.MovementItemId = tmpMI .MovementItemId
+                                        ON MIFloat_Price.MovementItemId = tmpMI.MovementItemId
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
             LEFT JOIN MovementItemFloat AS MIFloat_HoursPlan
-                                        ON MIFloat_HoursPlan.MovementItemId = tmpMI .MovementItemId
+                                        ON MIFloat_HoursPlan.MovementItemId = tmpMI.MovementItemId
                                        AND MIFloat_HoursPlan.DescId = zc_MIFloat_HoursPlan()
 
             LEFT JOIN MovementItemFloat AS MIFloat_HoursDay
-                                        ON MIFloat_HoursDay.MovementItemId = tmpMI .MovementItemId
+                                        ON MIFloat_HoursDay.MovementItemId = tmpMI.MovementItemId
                                        AND MIFloat_HoursDay.DescId = zc_MIFloat_HoursDay()
 
             LEFT JOIN MovementItemFloat AS MIFloat_PersonalCount
-                                        ON MIFloat_PersonalCount.MovementItemId = tmpMI .MovementItemId
+                                        ON MIFloat_PersonalCount.MovementItemId = tmpMI.MovementItemId
                                        AND MIFloat_PersonalCount.DescId = zc_MIFloat_PersonalCount()
             LEFT JOIN MovementItemFloat AS MIFloat_GrossOne
-                                        ON MIFloat_GrossOne.MovementItemId = tmpMI .MovementItemId
+                                        ON MIFloat_GrossOne.MovementItemId = tmpMI.MovementItemId
                                        AND MIFloat_GrossOne.DescId = zc_MIFloat_GrossOne()
             LEFT JOIN MovementItemFloat AS MIFloat_Koeff
-                                        ON MIFloat_Koeff.MovementItemId = tmpMI .MovementItemId
+                                        ON MIFloat_Koeff.MovementItemId = tmpMI.MovementItemId
                                        AND MIFloat_Koeff.DescId = zc_MIFloat_Koeff()
 
-            LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpMI .MemberId
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpMI.MemberId
 
             LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = tmpMI.PositionLevelId
             LEFT JOIN Object AS Object_StaffList ON Object_StaffList.Id = tmpMI.StaffListId

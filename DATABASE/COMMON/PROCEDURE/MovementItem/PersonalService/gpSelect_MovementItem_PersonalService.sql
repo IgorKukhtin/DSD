@@ -32,6 +32,10 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummChild TFloat, SummChildRecalc TFloat, SummMinusExt TFloat, SummMinusExtRecalc TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
              , TotalSummChild TFloat, SummDiff TFloat
+             , DayCount_child TFloat
+             , WorkTimeHoursOne_child TFloat
+             , Price_child TFloat
+            
              , SummAddOth TFloat, SummAddOthRecalc TFloat
              , SummHouseAdd TFloat
              , SummCompensation TFloat, SummCompensationRecalc TFloat
@@ -183,6 +187,9 @@ BEGIN
                      )
           , tmpMIChild AS (SELECT  MovementItem.ParentId    AS ParentId
                                  , SUM(MovementItem.Amount) AS Amount
+                                 , SUM(MIFloat_DayCount.ValueData)         AS DayCount
+                                 , SUM(MIFloat_WorkTimeHoursOne.ValueData) AS WorkTimeHoursOne
+                                 , SUM(MIFloat_Price.ValueData)            AS Price
                                  , STRING_AGG (DISTINCT Object_StaffListSummKind.ValueData, ';') AS StaffListSummKindName
                            FROM tmpIsErased
                               INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -193,6 +200,16 @@ BEGIN
                                                                ON MILinkObject_StaffListSummKind.MovementItemId = MovementItem.Id
                                                               AND MILinkObject_StaffListSummKind.DescId = zc_MILinkObject_StaffListSummKind()
                               LEFT JOIN Object AS Object_StaffListSummKind ON Object_StaffListSummKind.Id = MILinkObject_StaffListSummKind.ObjectId
+                              --
+                              LEFT JOIN MovementItemFloat AS MIFloat_DayCount
+                                                          ON MIFloat_DayCount.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_DayCount.DescId = zc_MIFloat_DayCount()
+                              LEFT JOIN MovementItemFloat AS MIFloat_WorkTimeHoursOne
+                                                          ON MIFloat_WorkTimeHoursOne.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_WorkTimeHoursOne.DescId = zc_MIFloat_WorkTimeHoursOne()
+                              LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
                            GROUP BY MovementItem.ParentId
                        )
 
@@ -337,6 +354,9 @@ BEGIN
 
             , COALESCE (tmpMIChild.Amount, 0)                                                 :: TFloat AS TotalSummChild
             , (COALESCE (tmpMIChild.Amount, 0) - COALESCE (MIFloat_SummService.ValueData, 0)) :: TFloat AS SummDiff
+            , COALESCE (tmpMIChild.DayCount, 0)         ::TFloat AS DayCount_child
+            , COALESCE (tmpMIChild.WorkTimeHoursOne, 0) ::TFloat AS WorkTimeHoursOne_child
+            , COALESCE (tmpMIChild.Price, 0)            ::TFloat AS Price_child
 
             , MIFloat_SummAddOth.ValueData              AS SummAddOth
             , MIFloat_SummAddOthRecalc.ValueData        AS SummAddOthRecalc
@@ -353,6 +373,8 @@ BEGIN
             , MIFloat_DayHoliday.ValueData              ::TFloat AS DayHoliday
             , MIFloat_DayWork.ValueData                 ::TFloat AS DayWork
             , MIFloat_DayAudit.ValueData                ::TFloat AS DayAudit
+
+
 
             , MIString_Number.ValueData   ::TVarChar AS Number
             , MIString_Comment.ValueData             AS Comment
