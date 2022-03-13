@@ -4967,6 +4967,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actCheckRed: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1050#1088#1072#1089#1085#1099#1077' '#1082#1072#1089#1089#1086#1074#1099#1077' '#1095#1077#1082#1080
+      FormName = 'TCheckRedForm'
+      FormNameParam.Value = 'TCheckRedForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6312,6 +6323,9 @@
         end
         object N174: TMenuItem
           Action = actCheckNoCashRegister
+        end
+        object N340: TMenuItem
+          Action = actCheckRed
         end
         object N182: TMenuItem
           Action = actGoodsInventory

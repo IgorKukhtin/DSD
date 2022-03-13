@@ -9,9 +9,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderExternal(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat, TotalSumm TFloat
+             , TotalCount TFloat, TotalSumm TFloat, TotaSummWithNDS TFloat
              , FromId Integer, FromName TVarChar
-             , ToId Integer, ToName TVarChar, JuridicalName TVarChar
+             , ToId Integer, ToName TVarChar, JuridicalName TVarChar, ProvinceCityName TVarChar
              , ContractId Integer, ContractName TVarChar
              , MasterId Integer, MasterInvNumber TVarChar, OrderKindName TVarChar
              , Comment TVarChar
@@ -187,12 +187,13 @@ BEGIN
            , Movement_OrderExternal_View.StatusName
            , Movement_OrderExternal_View.TotalCount
            , Movement_OrderExternal_View.TotalSum
---           , Movement_OrderExternal_View.PriceWithVAT
+           , MovementFloat_TotalSummPVAT.ValueData      AS TotaSummWithNDS
            , Movement_OrderExternal_View.FromId
            , Movement_OrderExternal_View.FromName
            , Movement_OrderExternal_View.ToId
            , Movement_OrderExternal_View.ToName
            , Movement_OrderExternal_View.JuridicalName
+           , Object_ProvinceCity.ValueData              AS ProvinceCityName
            , Movement_OrderExternal_View.ContractId
            , Movement_OrderExternal_View.ContractName
            , Movement_OrderExternal_View.MasterId
@@ -259,6 +260,16 @@ BEGIN
           LEFT JOIN MovementBoolean AS MovementBoolean_UseSubject
                                     ON MovementBoolean_UseSubject.MovementId = Movement_OrderExternal_View.Id
                                    AND MovementBoolean_UseSubject.DescId = zc_MovementBoolean_UseSubject()
+
+          LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+                                  ON MovementFloat_TotalSummPVAT.MovementId = Movement_OrderExternal_View.Id
+                                 AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
+                                 
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_ProvinceCity
+                               ON ObjectLink_Unit_ProvinceCity.DescId = zc_ObjectLink_Unit_ProvinceCity()
+                              AND ObjectLink_Unit_ProvinceCity.ObjectId = Movement_OrderExternal_View.ToId
+          LEFT JOIN Object AS Object_ProvinceCity 
+                           ON Object_ProvinceCity.Id = ObjectLink_Unit_ProvinceCity.ChildObjectId
     ;
 
 END;

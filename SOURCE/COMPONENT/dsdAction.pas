@@ -4351,50 +4351,54 @@ begin
           (Assigned(StoredProcList[i].TabSheet) and
           (StoredProcList[i].TabSheet.PageControl.ActivePage = StoredProcList[i].TabSheet)) then
         begin
-          StoredProcList[i].StoredProc.Execute;
-          ASpecialLighting := False; ATextColor := clWindowText; AColor := clCream; ABold := False;
-          if not Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outShowMessage')) then
-          begin
-            raise Exception.Create('Не найден возвращаемый параметр <outShowMessage> в функции ' + StoredProcList[i].StoredProc.StoredProcName);
-            Exit;
-          end;
-          if not StoredProcList[i].StoredProc.Params.ParamByName('outShowMessage').Value then Continue;
-
-          if Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outSpecialLighting')) then
-          begin
-            ASpecialLighting := StoredProcList[i].StoredProc.Params.ParamByName('outSpecialLighting').Value;
-
-            if ASpecialLighting and Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outTextColor')) then
-              ATextColor := StoredProcList[i].StoredProc.Params.ParamByName('outTextColor').Value;
-
-            if ASpecialLighting and Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outColor')) then
-              AColor := StoredProcList[i].StoredProc.Params.ParamByName('outColor').Value;
-
-            if ASpecialLighting and Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outBold')) then
-              ABold := StoredProcList[i].StoredProc.Params.ParamByName('outBold').Value;
-          end;
-
-          if FPUSHMessageType = pmtResult then
-          begin
-            if not Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outPUSHType')) then
+          try
+            StoredProcList[i].StoredProc.Execute;
+            ASpecialLighting := False; ATextColor := clWindowText; AColor := clCream; ABold := False;
+            if not Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outShowMessage')) then
             begin
-              raise Exception.Create('Не найден возвращаемый параметр <outPUSHType> в функции ' + StoredProcList[i].StoredProc.StoredProcName);
+              raise Exception.Create('Не найден возвращаемый параметр <outShowMessage> в функции ' + StoredProcList[i].StoredProc.StoredProcName);
               Exit;
             end;
+            if not StoredProcList[i].StoredProc.Params.ParamByName('outShowMessage').Value then Continue;
 
-            case StoredProcList[i].StoredProc.Params.ParamByName('outPUSHType').Value of
-              1 : MessageType := pmtWarning;
-              2 : MessageType := pmtError;
-              3 : MessageType := pmtInformation;
-              4 : MessageType := pmtConfirmation;
-              else
-              begin
-                raise Exception.Create('Неверный тип PUSH сообщения из функции ' + StoredProcList[i].StoredProc.StoredProcName);
-                Exit;
-              end;
+            if Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outSpecialLighting')) then
+            begin
+              ASpecialLighting := StoredProcList[i].StoredProc.Params.ParamByName('outSpecialLighting').Value;
+
+              if ASpecialLighting and Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outTextColor')) then
+                ATextColor := StoredProcList[i].StoredProc.Params.ParamByName('outTextColor').Value;
+
+              if ASpecialLighting and Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outColor')) then
+                AColor := StoredProcList[i].StoredProc.Params.ParamByName('outColor').Value;
+
+              if ASpecialLighting and Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outBold')) then
+                ABold := StoredProcList[i].StoredProc.Params.ParamByName('outBold').Value;
             end;
 
-          end else MessageType := FPUSHMessageType;
+            if FPUSHMessageType = pmtResult then
+            begin
+              if not Assigned(StoredProcList[i].StoredProc.Params.ParamByName('outPUSHType')) then
+              begin
+                raise Exception.Create('Не найден возвращаемый параметр <outPUSHType> в функции ' + StoredProcList[i].StoredProc.StoredProcName);
+                Exit;
+              end;
+
+              case StoredProcList[i].StoredProc.Params.ParamByName('outPUSHType').Value of
+                1 : MessageType := pmtWarning;
+                2 : MessageType := pmtError;
+                3 : MessageType := pmtInformation;
+                4 : MessageType := pmtConfirmation;
+                else
+                begin
+                  raise Exception.Create('Неверный тип PUSH сообщения из функции ' + StoredProcList[i].StoredProc.StoredProcName);
+                  Exit;
+                end;
+              end;
+
+            end else MessageType := FPUSHMessageType;
+          except
+            on E:Exception do raise Exception.Create('Ошибка вывода ПУШ ' + Self.Name + ': ' + e.Message);
+          end;
 
           case MessageType of
             pmtWarning : ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtWarning, ASpecialLighting, ATextColor, AColor, ABold);
@@ -5931,25 +5935,29 @@ var
   procedure AddParamToJSON(AName: string; AValue: Variant; ADataType: TFieldType);
     var intValue: integer; n : Double;
   begin
-    if AValue = NULL then
-      JSONObject.AddPair(LowerCase(AName), TJSONNull.Create)
-    else if ADataType = ftDateTime then
-      JSONObject.AddPair(LowerCase(AName), FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', AValue))
-    else if ADataType = ftFloat then
-    begin
-      if TryStrToFloat(AValue, n) then
-        JSONObject.AddPair(LowerCase(AName), TJSONNumber.Create(n))
+    try
+      if AValue = NULL then
+        JSONObject.AddPair(LowerCase(AName), TJSONNull.Create)
+      else if ADataType = ftDateTime then
+        JSONObject.AddPair(LowerCase(AName), FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', AValue))
+      else if ADataType = ftFloat then
+      begin
+        if TryStrToFloat(AValue, n) then
+          JSONObject.AddPair(LowerCase(AName), TJSONNumber.Create(n))
+        else
+          JSONObject.AddPair(LowerCase(AName), TJSONNull.Create);
+      end else if ADataType = ftInteger then
+      begin
+        if TryStrToInt(AValue, intValue) then
+          JSONObject.AddPair(LowerCase(AName), TJSONNumber.Create(intValue))
+        else
+          JSONObject.AddPair(LowerCase(AName), TJSONNull.Create);
+      end
       else
-        JSONObject.AddPair(LowerCase(AName), TJSONNull.Create);
-    end else if ADataType = ftInteger then
-    begin
-      if TryStrToInt(AValue, intValue) then
-        JSONObject.AddPair(LowerCase(AName), TJSONNumber.Create(intValue))
-      else
-        JSONObject.AddPair(LowerCase(AName), TJSONNull.Create);
-    end
-    else
-      JSONObject.AddPair(LowerCase(AName), TJSONString.Create(AValue));
+        JSONObject.AddPair(LowerCase(AName), TJSONString.Create(AValue));
+    except
+      on E:Exception do raise Exception.Create('Ошибка добавления <' + AName + '> в Json: ' + e.Message);
+    end;
   end;
 
 begin
@@ -6004,8 +6012,9 @@ begin
           DataSource.DataSet.First;
           with TGaugeFactory.GetGauge(Caption, 0,
             DataSource.DataSet.RecordCount) do
+          begin
+            Start;
             try
-              Start;
               while not DataSource.DataSet.Eof do
               begin
                 JSONObject := TJSONObject.Create;
@@ -6035,13 +6044,15 @@ begin
             finally
               Finish;
             end;
+          end;
         finally
           Application.ProcessMessages;
           // DataSource.DataSet.EnableControls;
         end;
       end;
     end;
-  finally
+  except
+    on E:Exception do raise Exception.Create('Ошибка формирования Json: ' + e.Message);
   end;
 end;
 

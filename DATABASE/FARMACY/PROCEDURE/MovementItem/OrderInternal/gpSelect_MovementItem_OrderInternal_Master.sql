@@ -1359,6 +1359,7 @@ BEGIN
                                    FROM gpSelect_Object_JuridicalPriorities (inSession) AS tmp
                                    WHERE tmp.isErased = FALSE
                                      AND COALESCE (tmp.Priorities,0) <> 0
+                                     AND FALSE
                                    )
        -- Отказы поставщиков
       , tmpSupplierFailures AS (SELECT DISTINCT
@@ -3233,6 +3234,7 @@ BEGIN
                                    FROM gpSelect_Object_JuridicalPriorities (inSession) AS tmp
                                    WHERE tmp.isErased = FALSE
                                      AND COALESCE (tmp.Priorities,0) <> 0
+                                     AND FALSE
                                    )
      -- Отказы поставщиков
     , tmpSupplierFailures AS (SELECT DISTINCT 

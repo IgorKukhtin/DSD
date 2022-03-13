@@ -299,6 +299,7 @@ BEGIN
                          WHERE Object_BarCode.DescId = zc_Object_BarCode()
                            AND Object_BarCode.isErased = False
                            AND COALESCE(ObjectFloat_MaxPrice.ValueData, 0) > 0
+                           AND FALSE
                          GROUP BY ObjectLink_BarCode_Goods.ChildObjectId)
   , ResultSet AS
     (
@@ -587,7 +588,8 @@ BEGIN
                           INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = ObjectLink_JuridicalPriorities_Goods.ChildObjectId
 
                       WHERE Object_JuridicalPriorities.DescId = zc_Object_JuridicalPriorities()
-                        AND Object_JuridicalPriorities.isErased =False  )
+                        AND Object_JuridicalPriorities.isErased = False
+                        AND FALSE)
 
     ----
     SELECT

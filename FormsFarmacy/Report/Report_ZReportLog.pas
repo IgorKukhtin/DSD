@@ -51,6 +51,7 @@ type
     ColorRA_calc: TcxGridDBColumn;
     chSummaTotal: TcxGridDBColumn;
     dxBarButton4: TdxBarButton;
+    JuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

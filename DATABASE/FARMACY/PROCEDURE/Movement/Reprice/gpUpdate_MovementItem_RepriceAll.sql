@@ -89,31 +89,34 @@ BEGIN
   END IF;
 
   PERFORM gpUpdate_MovementItem_Reprice(MovementItem.ID, inSession)
-  FROM Movement
+  FROM (SELECT MovementItem.ID
+             , ROW_NUMBER() OVER (PARTITION BY MovementLinkObject_Unit.ObjectId ORDER BY Movement.ID DESC)::Integer AS ORD 
+        FROM Movement
 
-       INNER JOIN MovementItem ON Movement.ID = MovementItem.MovementId
-                              AND MovementItem.ObjectId = vbGoodsId
+             INNER JOIN MovementItem ON Movement.ID = MovementItem.MovementId
+                                    AND MovementItem.ObjectId = vbGoodsId
 
-       LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                    ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                   AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
 
-       LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
-                                     ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
-                                    AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
+                                           ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
+                                          AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
 
-       LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
-                                   ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
-                                  AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+             LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                         ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
+                                        AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
 
-       LEFT JOIN MovementItemBoolean AS MIBoolean_ClippedReprice
-                                     ON MIBoolean_ClippedReprice.MovementItemId = MovementItem.Id
-                                    AND MIBoolean_ClippedReprice.DescId         = zc_MIBoolean_ClippedReprice()
+             LEFT JOIN MovementItemBoolean AS MIBoolean_ClippedReprice
+                                           ON MIBoolean_ClippedReprice.MovementItemId = MovementItem.Id
+                                          AND MIBoolean_ClippedReprice.DescId         = zc_MIBoolean_ClippedReprice()
 
-  WHERE Movement.OperDate = vbOperDate
-    AND Movement.DescId = zc_Movement_Reprice()
-    AND COALESCE(MovementLinkObject_UnitForwarding.ObjectId, 0) = 0
-    AND COALESCE(MIBoolean_ClippedReprice.ValueData, False) = True;
+        WHERE Movement.OperDate = vbOperDate
+          AND Movement.DescId = zc_Movement_Reprice()
+          AND COALESCE(MovementLinkObject_UnitForwarding.ObjectId, 0) = 0
+          AND COALESCE(MIBoolean_ClippedReprice.ValueData, False) = True) AS MovementItem
+  WHERE MovementItem.ORD = 1;
 
 
 --  RAISE EXCEPTION 'Ошибка. %', inMovementItemID;
@@ -131,4 +134,5 @@ ALTER FUNCTION gpUpdate_MovementItem_Reprice(Integer, TVarChar) OWNER TO postgre
 */
 
 -- тест
--- SELECT * FROM gpUpdate_MovementItem_RepriceAll (8563866, '3')
+-- 
+select * from gpUpdate_MovementItem_RepriceAll(inMovementItemId := 500019226 ,  inSession := '3');

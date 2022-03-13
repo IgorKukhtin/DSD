@@ -3,7 +3,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
   ClientHeight = 426
   ClientWidth = 915
   ExplicitWidth = 931
-  ExplicitHeight = 465
+  ExplicitHeight = 464
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -460,7 +460,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
           Name = 'GoodsName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PartnerName'
+          ComponentItem = 'PersonalName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','

@@ -26,6 +26,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementId Integer;
    DECLARE vbMovementItemId Integer;
+   DECLARE vbTypeId Integer;
    DECLARE vbIsInsert Boolean;
 
    DECLARE vbEndDate   TDateTime;
@@ -258,6 +259,8 @@ BEGIN
                                 ;
     END IF;
 
+    -- при вызове процедуры для док. Список бригады нужен для определения строки Тип. раб. времени 
+    vbTypeId := ioTypeId;
     
     IF (ioValue = '0' OR TRIM (ioValue) = '')
     THEN
@@ -362,7 +365,7 @@ BEGIN
                             AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
                             AND COALESCE (MIObject_StorageLine.ObjectId, 0)   = COALESCE (inStorageLineId, 0)
                             --
-                            AND (inisPersonalGroup = FALSE OR (inisPersonalGroup = TRUE AND MIObject_WorkTimeKind.ObjectId = ioTypeId ))
+                            AND (inisPersonalGroup = FALSE OR (inisPersonalGroup = TRUE AND MIObject_WorkTimeKind.ObjectId = vbTypeId ))
                          );
 
 
@@ -417,7 +420,7 @@ BEGIN
                                                                ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id 
                                                               AND MIObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
                        WHERE MovementLinkObject_Unit.ObjectId = inUnitId
-                         AND MI_SheetWorkTime.ObjectId   = inMemberId
+                         AND MI_SheetWorkTime.ObjectId = inMemberId
                          AND COALESCE (MIObject_Position.ObjectId, 0)      = COALESCE (inPositionId, 0)
                          AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inPositionLevelId, 0)
                          AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
