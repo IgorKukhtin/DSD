@@ -370,7 +370,7 @@ BEGIN
     END IF;
     
     
-    IF vbIsSUN = FALSE AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+/*    IF vbIsSUN = FALSE AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
       AND vbFromId NOT IN (7117700, 12607257) 
      -- AND vbUnitId NOT IN (17146811, 18712512) 
       AND COALESCE (vbAmountStorage, 0) = COALESCE (inAmountStorage, 0)
@@ -402,7 +402,7 @@ BEGIN
       THEN
         RAISE EXCEPTION 'Ошибка. Данная позиция пришла к вам по СУН и остается на реализацию. Если нужно срочно переместить товар в другую аптеки - свяжитесь с IT отделом.';          
       END IF;
-    END IF;
+    END IF;*/
 
     -- Для роли "Безнал" отключаем проверки
     IF NOT EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser

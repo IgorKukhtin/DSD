@@ -31,7 +31,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PaymentDays TFloat
              , MemberIncomeCheckId Integer, MemberIncomeCheckName TVarChar, CheckDate TDateTime
              , Comment TVarChar, isUseNDSKind Boolean
-             , isConduct Boolean, DateConduct TDateTime
+             , isConduct Boolean, DateConduct TDateTime, isPretension Boolean, isPretensionUnComplete Boolean
+             , FromINN TVarChar
              )
 
 AS
@@ -279,7 +280,90 @@ BEGIN
                                              AND MovementDate_Update_Order.DescId = zc_MovementDate_Update()
 
                   WHERE MLM_Order.MovementId in (SELECT Movement_Income.Id FROM Movement_Income)
-                    AND MLM_Order.DescId = zc_MovementLinkMovement_Order())
+                    AND MLM_Order.DescId = zc_MovementLinkMovement_Order()),
+        tmpPretension AS (SELECT Movement_Income.Id
+                               , MAX(CASE WHEN Movement.StatusId = zc_Enum_Status_Complete() 
+                                          THEN MovementLinkMovement.MovementChildId ELSE 0 END)   AS MovementCompleteId
+                               , MAX(CASE WHEN Movement.StatusId = zc_Enum_Status_UnComplete() 
+                                          THEN MovementLinkMovement.MovementChildId ELSE 0 END)   AS MovementUnCompleteId
+                          FROM Movement_Income 
+                               INNER JOIN MovementLinkMovement ON MovementLinkMovement.DescId = zc_MovementLinkMovement_Income()
+                                                              AND MovementLinkMovement.MovementChildId = Movement_Income.Id
+                               INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementId
+                                                  AND Movement.DescId = zc_Movement_Pretension()
+                                                  AND Movement.StatusId <> zc_Enum_Status_Erased()
+                          GROUP BY Movement_Income.Id),
+        tmpObjectHistory AS (SELECT *
+                             FROM ObjectHistory
+                             WHERE ObjectHistory.DescId = zc_ObjectHistory_JuridicalDetails()
+                               AND ObjectHistory.enddate::timestamp with time zone = zc_dateend()::timestamp with time zone
+                             ),
+        tmpJuridicalDetails AS (SELECT ObjectHistory_JuridicalDetails.ObjectId                                        AS JuridicalId
+                                    , COALESCE(ObjectHistory_JuridicalDetails.StartDate, zc_DateStart())             AS StartDate
+                                    , ObjectHistoryString_JuridicalDetails_FullName.ValueData                        AS FullName
+                                    , ObjectHistoryString_JuridicalDetails_JuridicalAddress.ValueData                AS JuridicalAddress
+                                    , ObjectHistoryString_JuridicalDetails_OKPO.ValueData                            AS OKPO
+                                    , ObjectHistoryString_JuridicalDetails_INN.ValueData                             AS INN
+                                    , ObjectHistoryString_JuridicalDetails_NumberVAT.ValueData                       AS NumberVAT
+                                    , ObjectHistoryString_JuridicalDetails_AccounterName.ValueData                   AS AccounterName
+                                    , ObjectHistoryString_JuridicalDetails_BankAccount.ValueData                     AS BankAccount
+                                    , ObjectHistoryString_JuridicalDetails_Phone.ValueData                           AS Phone
+                         
+                                    , ObjectHistoryString_JuridicalDetails_MainName.ValueData                        AS MainName
+                                    , ObjectHistoryString_JuridicalDetails_MainName_Cut.ValueData                    AS MainName_Cut
+                                    , ObjectHistoryString_JuridicalDetails_Reestr.ValueData                          AS Reestr
+                                    , ObjectHistoryString_JuridicalDetails_Decision.ValueData                        AS Decision
+                                    , ObjectHistoryString_JuridicalDetails_License.ValueData                         AS License
+                                    , ObjectHistoryDate_JuridicalDetails_Decision.ValueData                          AS DecisionDate
+                         
+                               FROM tmpObjectHistory AS ObjectHistory_JuridicalDetails
+                                    LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_FullName
+                                           ON ObjectHistoryString_JuridicalDetails_FullName.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                          AND ObjectHistoryString_JuridicalDetails_FullName.DescId = zc_ObjectHistoryString_JuridicalDetails_FullName()
+                                    LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_JuridicalAddress
+                                           ON ObjectHistoryString_JuridicalDetails_JuridicalAddress.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                          AND ObjectHistoryString_JuridicalDetails_JuridicalAddress.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
+                                    LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_OKPO
+                                           ON ObjectHistoryString_JuridicalDetails_OKPO.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                          AND ObjectHistoryString_JuridicalDetails_OKPO.DescId = zc_ObjectHistoryString_JuridicalDetails_OKPO()
+                                    LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_INN
+                                           ON ObjectHistoryString_JuridicalDetails_INN.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                          AND ObjectHistoryString_JuridicalDetails_INN.DescId = zc_ObjectHistoryString_JuridicalDetails_INN()
+                                    LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_NumberVAT
+                                           ON ObjectHistoryString_JuridicalDetails_NumberVAT.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                          AND ObjectHistoryString_JuridicalDetails_NumberVAT.DescId = zc_ObjectHistoryString_JuridicalDetails_NumberVAT()
+                                    LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_AccounterName
+                                           ON ObjectHistoryString_JuridicalDetails_AccounterName.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                          AND ObjectHistoryString_JuridicalDetails_AccounterName.DescId = zc_ObjectHistoryString_JuridicalDetails_AccounterName()
+                                    LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_BankAccount
+                                           ON ObjectHistoryString_JuridicalDetails_BankAccount.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                          AND ObjectHistoryString_JuridicalDetails_BankAccount.DescId = zc_ObjectHistoryString_JuridicalDetails_BankAccount()
+                                    LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_Phone
+                                           ON ObjectHistoryString_JuridicalDetails_Phone.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                          AND ObjectHistoryString_JuridicalDetails_Phone.DescId = zc_ObjectHistoryString_JuridicalDetails_Phone()
+                                  
+                                    LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_MainName
+                                           ON ObjectHistoryString_JuridicalDetails_MainName.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                          AND ObjectHistoryString_JuridicalDetails_MainName.DescId = zc_ObjectHistoryString_JuridicalDetails_MainName()
+                                    LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_MainName_Cut
+                                           ON ObjectHistoryString_JuridicalDetails_MainName_Cut.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                          AND ObjectHistoryString_JuridicalDetails_MainName_Cut.DescId = zc_ObjectHistoryString_JuridicalDetails_MainName_Cut()
+                                  
+                                    LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_Reestr
+                                           ON ObjectHistoryString_JuridicalDetails_Reestr.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                          AND ObjectHistoryString_JuridicalDetails_Reestr.DescId = zc_ObjectHistoryString_JuridicalDetails_Reestr()
+                                    LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_Decision
+                                           ON ObjectHistoryString_JuridicalDetails_Decision.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                          AND ObjectHistoryString_JuridicalDetails_Decision.DescId = zc_ObjectHistoryString_JuridicalDetails_Decision()
+                                  
+                                    LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_License
+                                           ON ObjectHistoryString_JuridicalDetails_License.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                          AND ObjectHistoryString_JuridicalDetails_License.DescId = zc_ObjectHistoryString_JuridicalDetails_License()
+                                  
+                                    LEFT JOIN ObjectHistoryDate AS ObjectHistoryDate_JuridicalDetails_Decision
+                                           ON ObjectHistoryDate_JuridicalDetails_Decision.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                                          AND ObjectHistoryDate_JuridicalDetails_Decision.DescId = zc_ObjectHistoryDate_JuridicalDetails_Decision()
+                               )
  
         SELECT Movement_Income.Id
              , Movement_Income.InvNumber
@@ -335,6 +419,11 @@ BEGIN
              
              , tmpMovementBoolean.isConduct
              , tmpMovementDate.DateConduct
+             , COALESCE (tmpPretension.MovementCompleteId, 0) > 0               AS isPretension
+             , COALESCE (tmpPretension.MovementUnCompleteId, 0) > 0             AS isPretensionUnComplete
+             
+             , tmpJuridicalDetails.INN                                          AS FromINN
+             
         FROM Movement_Income
 
             LEFT JOIN tmpUnit ON tmpUnit.UnitId = Movement_Income.ToId
@@ -390,6 +479,10 @@ BEGIN
 
             LEFT JOIN Object AS Object_MemberIncomeCheck ON Object_MemberIncomeCheck.Id = tmpMovementLinkObject.MemberIncomeCheckId 
             
+            LEFT JOIN tmpPretension ON tmpPretension.Id = Movement_Income.Id
+            
+            LEFT JOIN tmpJuridicalDetails ON tmpJuridicalDetails.JuridicalId = Movement_Income.FromId
+            
         WHERE COALESCE(tmpUnit.UnitId, 0) <> 0 OR COALESCE(Movement_Income.ToId, 0) = 0
         ;
 
@@ -428,4 +521,4 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar
 --SELECT * FROM gpSelect_Movement_Income (inStartDate:= '29.01.2016', inEndDate:= '01.02.2016', inIsErased := FALSE, inSession:= '2')
 --where PaymentDate is not null
 
-select * from gpSelect_Movement_Income(instartdate := ('01.11.2021')::TDateTime , inenddate := ('12.11.2021')::TDateTime , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_Movement_Income(instartdate := ('01.03.2022')::TDateTime , inenddate := ('12.03.2022')::TDateTime , inIsErased := 'False' ,  inSession := '3');
