@@ -11,17 +11,17 @@ inherited LossForm: TLossForm
     Width = 1036
     Height = 555
     ExplicitTop = 113
-    ExplicitWidth = 984
+    ExplicitWidth = 1036
     ExplicitHeight = 555
     ClientRectBottom = 555
     ClientRectRight = 1036
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 984
+      ExplicitWidth = 1036
       ExplicitHeight = 531
       inherited cxGrid: TcxGrid
         Width = 1036
         Height = 531
-        ExplicitWidth = 984
+        ExplicitWidth = 1036
         ExplicitHeight = 531
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -269,7 +269,7 @@ inherited LossForm: TLossForm
     Width = 1036
     Height = 87
     TabOrder = 3
-    ExplicitWidth = 984
+    ExplicitWidth = 1036
     ExplicitHeight = 87
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1529,6 +1529,21 @@ inherited LossForm: TLossForm
         Component = GuidesAsset
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAssetId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AssetId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAssetName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AssetName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item

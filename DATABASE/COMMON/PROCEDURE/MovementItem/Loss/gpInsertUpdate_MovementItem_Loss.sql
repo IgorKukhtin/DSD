@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Loss(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -18,14 +19,19 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Loss(
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inAssetId_top         Integer   , -- Основные средства из Шапки документа
     IN inPartionGoodsId      Integer   , -- Партии товаров (для партии расхода если с МО)
+   OUT outAssetId            Integer   , -- Основные средства (для которых закупается ТМЦ)
+   OUT outAssetName          TVarChar  , -- Основные средства (для которых закупается ТМЦ)
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Loss());
+
+     outAssetId := (CASE WHEN COALESCE (inAssetId,0) = 0 THEN inAssetId_top ELSE inAssetId END) :: Integer;
+     outAssetName := (SELECT Object.ValueData FROM Object WHERE Object.Id = outAssetId);
 
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_Loss (ioId                  := ioId
@@ -38,7 +44,7 @@ BEGIN
                                             , inPartionGoods        := inPartionGoods
                                             , inGoodsKindId         := inGoodsKindId
                                             , inGoodsKindCompleteId := inGoodsKindCompleteId
-                                            , inAssetId             := CASE WHEN COALESCE (inAssetId,0) = 0 THEN inAssetId_top ELSE inAssetId END :: Integer
+                                            , inAssetId             := outAssetId :: Integer
                                             , inPartionGoodsId      := inPartionGoodsId
                                             , inUserId              := vbUserId
                                              );
@@ -50,6 +56,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.03.22         *
  10.10.14                                        * add inPartionGoodsId
  06.09.14                                        * add lpInsertUpdate_MovementItem_Loss
  01.09.14                                                       * + PartionGoodsDate
