@@ -102,7 +102,7 @@ $BODY$
 
   DECLARE vbPriceListId_begin Integer;
   DECLARE vbOperDate_pl TDateTime;
-  
+
   DECLARE vbMovementId_Order Integer;
 
 BEGIN
@@ -117,6 +117,8 @@ THEN
     PERFORM lpComplete_Movement_Sale_NEW (inMovementId, inUserId, FALSE);
     RETURN;
 END IF;*/
+
+
 
      -- !!!временно!!!
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= inMovementId);
@@ -439,6 +441,16 @@ END IF;*/
                             --AND EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
                                  ;
 
+     -- если схема Павильоны
+     IF EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = vbPartnerId_To AND OL.ChildObjectId > 0 AND OL.DescId = zc_ObjectLink_Partner_Unit())
+        -- AND inUserId = 5
+     THEN
+         -- Пересчитали
+         PERFORM gpUpdate_MovementItem_Sale_PriceIn (inMovementId:= inMovementId, inSession:= inUserId :: TVarChar);
+
+     END IF;
+
+
      -- !!!Пересчет цен - если надо!!!!
      IF vbIsPriceList_begin_recalc = TRUE AND inIsRecalcPrice = TRUE
      THEN
@@ -464,7 +476,7 @@ END IF;*/
 
          -- Сохранили Прайс
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PriceList(), inMovementId, vbPriceListId_begin);
-         
+
          -- текущие элементы
          INSERT INTO _tmpItem_Promo_recalc (MovementItemId, GoodsId, GoodsKindId, OperPrice, MovementId_promo, OperPrice_promo, CountForPrice_promo, isChangePercent_promo)
             SELECT MovementItem.Id                               AS MovementItemId

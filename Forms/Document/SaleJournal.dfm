@@ -6,7 +6,7 @@ inherited SaleJournalForm: TSaleJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1382
-  ExplicitHeight = 679
+  ExplicitHeight = 680
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -272,6 +272,14 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
+          object isPav: TcxGridDBColumn
+            Caption = #1055#1072#1074#1080#1083#1100#1086#1085#1099
+            DataBinding.FieldName = 'isPav'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object OKPO_To: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO_To'
@@ -491,6 +499,7 @@ inherited SaleJournalForm: TSaleJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1074#1093'. ('#1089#1093#1077#1084#1072' '#1055#1072#1074#1080#1083#1100#1086#1085#1099')'
             Width = 80
           end
           object InfoMoneyCode: TcxGridDBColumn
@@ -3594,10 +3603,12 @@ inherited SaleJournalForm: TSaleJournalForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099' '#1076#1083#1103' '#1042#1057#1045#1061' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
-      InfoAfterExecute = #1042#1093'. '#1094#1077#1085#1099' '#1079#1072#1087#1086#1083#1085#1077#1085#1099
-      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099
-      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099
+      QuestionBeforeExecute = 
+        #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099' ('#1089#1093#1077#1084#1072' '#1055#1072#1074#1080#1083#1100#1086#1085#1099') '#1076#1083#1103' '#1042#1057#1045#1061' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090 +
+        #1086#1074'?'
+      InfoAfterExecute = #1042#1093'. '#1094#1077#1085#1099' ('#1089#1093#1077#1084#1072' '#1055#1072#1074#1080#1083#1100#1086#1085#1099') '#1079#1072#1087#1086#1083#1085#1077#1085#1099
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099' ('#1089#1093#1077#1084#1072' '#1055#1072#1074#1080#1083#1100#1086#1085#1099')'
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099' ('#1089#1093#1077#1084#1072' '#1055#1072#1074#1080#1083#1100#1086#1085#1099')'
       ImageIndex = 80
     end
   end

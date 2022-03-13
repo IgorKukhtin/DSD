@@ -49,6 +49,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isError Boolean
              , isPrinted Boolean
              , isPromo Boolean
+             , isPav Boolean
              , MovementPromo TVarChar
              , InsertDate TDateTime
              , Comment TVarChar
@@ -153,4 +154,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale (inStartDate:= '01.03.2018', inEndDate:= '31.03.2018', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Sale (inStartDate:= '01.03.2022', inEndDate:= '01.03.2022', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())

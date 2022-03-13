@@ -291,6 +291,7 @@ type
     macUpdateMI_Sale_PriceIn_list: TMultiAction;
     macUpdateMI_Sale_PriceIn: TMultiAction;
     bbUpdateMI_Sale_PriceIn: TdxBarButton;
+    isPav: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -3,8 +3,9 @@ inherited SaleForm: TSaleForm
   ClientHeight = 645
   ClientWidth = 1278
   AddOnFormData.OnLoadAction = actSetDefaults
+  ExplicitLeft = -401
   ExplicitWidth = 1294
-  ExplicitHeight = 683
+  ExplicitHeight = 684
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -360,7 +361,7 @@ inherited SaleForm: TSaleForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1074#1093'.'
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. ('#1089#1093#1077#1084#1072' '#1055#1072#1074#1080#1083#1100#1086#1085#1099')'
             Options.Editing = False
             Width = 70
           end
@@ -1042,7 +1043,7 @@ inherited SaleForm: TSaleForm
   object cxLabel29: TcxLabel [25]
     Left = 804
     Top = 85
-    Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1074#1093'.'
+    Caption = #1055#1088#1072#1081#1089' '#1074#1093'. ('#1089#1093'. '#1055#1072#1074#1080#1083#1100#1086#1085#1099')'
   end
   object edPriceListIn: TcxButtonEdit [26]
     Left = 804
@@ -2627,10 +2628,10 @@ inherited SaleForm: TSaleForm
         item
           Action = actRefreshMI
         end>
-      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099'?'
-      InfoAfterExecute = #1042#1093'. '#1094#1077#1085#1099' '#1079#1072#1087#1086#1083#1085#1077#1085#1099
-      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099
-      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099' ('#1089#1093#1077#1084#1072' '#1055#1072#1074#1080#1083#1100#1086#1085#1099')?'
+      InfoAfterExecute = #1042#1093'. '#1094#1077#1085#1099' ('#1089#1093#1077#1084#1072' '#1055#1072#1074#1080#1083#1100#1086#1085#1099') '#1079#1072#1087#1086#1083#1085#1077#1085#1099
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099' ('#1089#1093#1077#1084#1072' '#1055#1072#1074#1080#1083#1100#1086#1085#1099')'
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099' ('#1089#1093#1077#1084#1072' '#1055#1072#1074#1080#1083#1100#1086#1085#1099')'
       ImageIndex = 80
     end
   end
@@ -3084,6 +3085,7 @@ inherited SaleForm: TSaleForm
     end
     object bbUpdateMI_Sale_PriceIn: TdxBarButton
       Action = macUpdateMI_Sale_PriceIn
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099' ('#1055#1072#1074#1080#1083#1100#1086#1085#1099')'
       Category = 0
     end
   end
@@ -5977,8 +5979,8 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 908
-    Top = 72
+    Left = 924
+    Top = 112
   end
   object spUpdateMI_Sale_PriceIn: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementItem_Sale_PriceIn'

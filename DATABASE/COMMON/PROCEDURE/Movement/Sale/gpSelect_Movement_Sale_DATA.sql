@@ -48,6 +48,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isError Boolean
              , isPrinted Boolean
              , isPromo Boolean
+             , isPav Boolean
              , MovementPromo TVarChar
              , InsertDate TDateTime
              , Comment TVarChar
@@ -546,6 +547,11 @@ end if;
                                     WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpRoute.Id FROM tmpRoute)
                                       AND ObjectLink.DescId = zc_ObjectLink_Route_RouteGroup()
                                     )
+       , tmpOL_Partner_Unit AS (SELECT ObjectLink.*
+                                    FROM ObjectLink
+                                    WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpMovementLinkObject_To.ObjectId FROM tmpMovementLinkObject_To)
+                                      AND ObjectLink.DescId = zc_ObjectLink_Partner_Unit()
+                                    )
        , tmpPersonal AS (SELECT MovementLinkObject_Personal.MovementId
                               , Object_Personal.*
                          FROM tmpMLO_Personal AS MovementLinkObject_Personal
@@ -741,17 +747,17 @@ end if;
            , Object_Personal_4_TTN.ValueData           AS PersonalName_4_TTN
            
 
-           , COALESCE (MovementLinkMovement_Sale.MovementChildId, 0) <> 0 AS isEDI
-           , COALESCE (MovementBoolean_Electron.ValueData, FALSE)         AS isElectron
-           , COALESCE (MovementBoolean_Medoc.ValueData, FALSE)            AS isMedoc
+           , (COALESCE (MovementLinkMovement_Sale.MovementChildId, 0) <> 0) :: Boolean AS isEDI
+           , COALESCE (MovementBoolean_Electron.ValueData, FALSE)           :: Boolean AS isElectron
+           , COALESCE (MovementBoolean_Medoc.ValueData, FALSE)              :: Boolean AS isMedoc
 
-           , COALESCE (MovementBoolean_EdiOrdspr.ValueData, FALSE)    AS EdiOrdspr
-           , COALESCE (MovementBoolean_EdiInvoice.ValueData, FALSE)   AS EdiInvoice
-           , COALESCE (MovementBoolean_EdiDesadv.ValueData, FALSE)    AS EdiDesadv
+           , COALESCE (MovementBoolean_EdiOrdspr.ValueData, FALSE)    :: Boolean AS EdiOrdspr
+           , COALESCE (MovementBoolean_EdiInvoice.ValueData, FALSE)   :: Boolean AS EdiInvoice
+           , COALESCE (MovementBoolean_EdiDesadv.ValueData, FALSE)    :: Boolean AS EdiDesadv
 
-           , COALESCE (ObjectBoolean_EdiOrdspr.ValueData, CAST (False AS Boolean))     AS isEdiOrdspr_partner
-           , COALESCE (ObjectBoolean_EdiInvoice.ValueData, CAST (False AS Boolean))    AS isEdiInvoice_partner
-           , COALESCE (ObjectBoolean_EdiDesadv.ValueData, CAST (False AS Boolean))     AS isEdiDesadv_partner
+           , COALESCE (ObjectBoolean_EdiOrdspr.ValueData, CAST (False AS Boolean))     :: Boolean AS isEdiOrdspr_partner
+           , COALESCE (ObjectBoolean_EdiInvoice.ValueData, CAST (False AS Boolean))    :: Boolean AS isEdiInvoice_partner
+           , COALESCE (ObjectBoolean_EdiDesadv.ValueData, CAST (False AS Boolean))     :: Boolean AS isEdiDesadv_partner
 
            , CAST (CASE WHEN Movement_DocumentMaster.Id IS NOT NULL -- MovementLinkMovement_Master.MovementChildId IS NOT NULL
                               AND (Movement_DocumentMaster.StatusId <> zc_Enum_Status_Complete()
@@ -766,16 +772,17 @@ end if;
                                   )
                         THEN TRUE
                         ELSE FALSE
-                   END AS Boolean) AS isError
-           , COALESCE (MovementBoolean_Print.ValueData, False) AS isPrinted
-           , COALESCE (MovementBoolean_Promo.ValueData, False) AS isPromo
+                   END AS Boolean)  :: Boolean AS isError
+           , COALESCE (MovementBoolean_Print.ValueData, False)  :: Boolean AS isPrinted
+           , COALESCE (MovementBoolean_Promo.ValueData, False)  :: Boolean AS isPromo
+           , CASE WHEN tmpOL_Partner_Unit.ChildObjectId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPav
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
 
-           , MovementDate_Insert.ValueData AS InsertDate
-           , MovementString_Comment.ValueData       AS Comment
+           , MovementDate_Insert.ValueData    AS InsertDate
+           , MovementString_Comment.ValueData AS Comment
 
-           , Object_ReestrKind.Id             		    AS ReestrKindId
-           , Object_ReestrKind.ValueData       		    AS ReestrKindName
+           , Object_ReestrKind.Id             AS ReestrKindId
+           , Object_ReestrKind.ValueData      AS ReestrKindName
 
            , Movement_Production.Id               AS MovementId_Production
            , (CASE WHEN Movement_Production.StatusId = zc_Enum_Status_Erased()
@@ -898,6 +905,8 @@ end if;
             LEFT JOIN tmpJuridicalTo AS Object_JuridicalTo ON Object_JuridicalTo.ToId = Object_To.Id
             LEFT JOIN tmpJuridicalDetails AS ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_JuridicalTo.Id
             -- LEFT JOIN tmpBranchJuridical ON tmpBranchJuridical.JuridicalId = Object_JuridicalTo.Id
+
+            LEFT JOIN tmpOL_Partner_Unit ON tmpOL_Partner_Unit.ObjectId = Object_To.Id
 
             LEFT JOIN tmpMovementLinkObject_PaidKind AS MovementLinkObject_PaidKind
                                                      ON MovementLinkObject_PaidKind.MovementId = Movement.Id
@@ -1081,6 +1090,6 @@ $BODY$
 
 -- тест
 --
--- SELECT * FROM gpSelect_Movement_Sale_DATA (inStartDate:= '05.01.2020', inEndDate:= '10.01.2020', inIsPartnerDate:= FALSE, inIsErased:= FALSE, inJuridicalBasisId:= 0, inUserId:= zfCalc_UserAdmin() :: Integer)
+-- SELECT * FROM gpSelect_Movement_Sale_DATA (inStartDate:= '10.01.2022', inEndDate:= '10.01.2022', inIsPartnerDate:= FALSE, inIsErased:= FALSE, inJuridicalBasisId:= 0, inUserId:= zfCalc_UserAdmin() :: Integer)
 --Ѕыло 1 мес€ц - 3 мин 21 сек
 --сейчас 1 мес€ц - 28 сек
