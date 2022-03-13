@@ -14,7 +14,7 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
   OnKeyUp = FormKeyUp
   OnShow = FormShow
   ExplicitWidth = 683
-  ExplicitHeight = 716
+  ExplicitHeight = 720
   PixelsPerInch = 96
   TextHeight = 16
   inherited bbPanel: TPanel

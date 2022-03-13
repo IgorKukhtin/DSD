@@ -89,7 +89,7 @@ BEGIN
                                       INNER JOIN MovementItemLinkObject AS MILinkObject_Partner
                                                                        ON MILinkObject_Partner.MovementItemId = MovementItem.Id
                                                                       AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
-                                                                      AND MILinkObject_Partner.ObjectId = inPartnerId
+                                                                      AND (MILinkObject_Partner.ObjectId = inPartnerId OR inPartnerId = 0)
                                  )
 
 
@@ -181,16 +181,18 @@ BEGIN
            , zfCalc_PartionMovementName (Movement_Transport.DescId, MovementDesc_Transport.ItemName, Movement_Transport.InvNumber, Movement_Transport.OperDate) ::TVarChar AS InvNumber_Transport_Full
 
        FROM (SELECT Movement.id
+                  , MovementLinkObject_To.ObjectId AS ToId
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Sale() AND Movement.StatusId = tmpStatus.StatusId
                   JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
                   INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                 ON MovementLinkObject_To.MovementId = Movement.Id
                                                AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                                               AND MovementLinkObject_To.ObjectId   = inPartnerId -- OR COALESCE (inPartnerId, 0) = 0
+                                               AND (MovementLinkObject_To.ObjectId   = inPartnerId OR COALESCE (inPartnerId, 0) = 0)
              WHERE inIsPartnerDate = FALSE
             UNION ALL
              SELECT MovementDate_OperDatePartner.MovementId  AS Id
+                  , MovementLinkObject_To.ObjectId AS ToId
              FROM MovementDate AS MovementDate_OperDatePartner
                   JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_Sale()
                   JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
@@ -198,13 +200,14 @@ BEGIN
                   INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                 ON MovementLinkObject_To.MovementId = MovementDate_OperDatePartner.MovementId
                                                AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                                               AND MovementLinkObject_To.ObjectId   = inPartnerId -- OR COALESCE (inPartnerId, 0) = 0
+                                               AND (MovementLinkObject_To.ObjectId   = inPartnerId OR COALESCE (inPartnerId, 0) = 0)
              WHERE inIsPartnerDate = TRUE
                AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
             UNION ALL
             --Заявка на возврат тары
              SELECT tmpOrderReturnTare.Id
+                  , inPartnerId AS ToId
              FROM tmpOrderReturnTare
             ) AS tmpMovement
 
@@ -275,7 +278,7 @@ BEGIN
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
-            LEFT JOIN Object AS Object_To ON Object_To.Id = inPartnerId
+            LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovement.ToId
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id

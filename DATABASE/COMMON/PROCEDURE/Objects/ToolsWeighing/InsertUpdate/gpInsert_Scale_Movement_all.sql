@@ -795,6 +795,7 @@ BEGIN
                                                   , inToId                  := CASE WHEN tmp.DescId_to IN (zc_Object_Member(), zc_Object_Car()) THEN tmp.ToId ELSE ContractId END -- !!!не ошибка!!!
                                                   , inArticleLossId         := CASE WHEN tmp.DescId_to IN (zc_Object_Member(), zc_Object_Car()) THEN 0        ELSE ToId       END -- !!!не ошибка!!!
                                                   , inPaidKindId            := zc_Enum_PaidKind_SecondForm()
+                                                  , inComment               := tmp.Comment
                                                   , inUserId                := vbUserId
                                                    )
                                           WHEN vbMovementDescId = zc_Movement_Send()

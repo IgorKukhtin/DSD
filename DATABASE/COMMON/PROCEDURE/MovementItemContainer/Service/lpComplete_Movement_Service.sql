@@ -555,7 +555,11 @@ BEGIN
      IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
                                                                                , zc_Enum_InfoMoneyDestination_70200() -- Капитальный ремонт
                                                                                , zc_Enum_InfoMoneyDestination_70400() -- Капитальное строительство
-                                                                                ))
+                                                                                )
+                                       OR _tmpItem.InfoMoneyId IN (8945 -- Общефирменные + Услуги полученные + Аренда оборудования
+                                                                 , -1   -- Ремонт оборудования
+                                                                  )
+               )
      AND NOT EXISTS (SELECT _tmpItem.AssetId FROM _tmpItem WHERE _tmpItem.AssetId > 0)
      THEN
          RAISE EXCEPTION 'Ошибка.Для УП статьи <%> необходимо заполнить значение <для Основного средства>.Проведение невозможно.', lfGet_Object_ValueData ((SELECT _tmpItem.InfoMoneyId FROM _tmpItem LIMIT 1));

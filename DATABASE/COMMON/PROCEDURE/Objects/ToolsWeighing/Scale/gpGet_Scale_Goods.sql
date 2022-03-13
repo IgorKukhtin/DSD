@@ -22,6 +22,7 @@ RETURNS TABLE (GoodsId    Integer
              , MeasureCode  Integer
              , MeasureName  TVarChar
              , Amount TFloat, Weight_gd TFloat, WeightTare_gd TFloat, CountForWeight_gd TFloat
+             , Price TFloat, CountForPrice TFloat
              , isEnterCount Boolean
               )
 AS
@@ -164,6 +165,9 @@ BEGIN
               END                        :: TFloat AS Weight_gd
             , ObjectFloat_WeightTare.ValueData     AS WeightTare_gd
             , ObjectFloat_CountForWeight.ValueData AS CountForWeight_gd
+            
+            , 0 :: TFloat AS Price
+            , 0 :: TFloat AS CountForPrice
 
             , CASE WHEN Object_Goods.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() THEN TRUE ELSE FALSE END :: Boolean AS isEnterCount
 

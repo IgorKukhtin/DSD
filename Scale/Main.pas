@@ -323,6 +323,7 @@ type
     procedure myActiveControl;
     procedure pSetDriverReturn;
     procedure pSetSubjectDoc;
+    procedure pSetComment;
     procedure pSetReason;
 
   public
@@ -455,7 +456,9 @@ begin
      then begin
          if MessageDlg('Ошибка.'+#10+#13+'Не установлено значение <Основание Возврат>.'+#10+#13+'Хотите исправить?',mtConfirmation,mbYesNoCancel,0) = 6
          then begin pSetSubjectDoc; exit; end;
-     end;
+     end
+     else if ParamsMovement.ParamByName('isComment').AsBoolean = TRUE
+          then pSetComment;
 
      //параметры для списания на сотрудника
      if Save_Movement_PersonalLoss(ParamsMovement) = FALSE then
@@ -799,6 +802,7 @@ begin
         begin
              //в ШК - закодированый товар + кол-во, т.е. для Retail
              Result:=DMMainScaleForm.gpGet_Scale_GoodsRetail(ParamsMovement,ParamsMI,BarCode);
+             //
              if Result then
              begin
                    ParamsMI.ParamByName('CountTare1').AsFloat:=0;
@@ -835,13 +839,40 @@ begin
         else
             begin
                  //в ШК - Id товара или товар+вид товара
-                 DMMainScaleForm.gpGet_Scale_Goods(ParamsMI,BarCode);
+                 Result:= DMMainScaleForm.gpGet_Scale_Goods(ParamsMI,BarCode);
                  if ParamsMI.ParamByName('GoodsId').AsInteger=0 then
                  begin
                       ShowMessage('Ошибка.Товар не найден.');
                       Result:=false;
                       myActiveControl;
                       exit;
+                 end;
+                 //
+                 //Гофротара, уже есть кол-во, тоже сразу сохраняем
+                 if ParamsMI.ParamByName('Amount_Goods').AsFloat > 0
+                 then begin
+                         ParamsMI.ParamByName('RealWeight').AsFloat := ParamsMI.ParamByName('Amount_Goods').AsFloat;
+                         ParamsMI.ParamByName('isBarCode').AsBoolean:= TRUE;
+                         //
+                         ParamsMI.ParamByName('CountTare1').AsFloat:=0;
+                         ParamsMI.ParamByName('CountTare2').AsFloat:=0;
+                         ParamsMI.ParamByName('CountTare3').AsFloat:=0;
+                         ParamsMI.ParamByName('CountTare4').AsFloat:=0;
+                         ParamsMI.ParamByName('CountTare5').AsFloat:=0;
+                         ParamsMI.ParamByName('CountTare6').AsFloat:=0;
+                         //
+                         ParamsMI.ParamByName('Count').AsFloat:=0;
+                         ParamsMI.ParamByName('HeadCount').AsFloat:=0;
+                         //сохранение MovementItem
+                         DMMainScaleForm.gpInsert_Scale_MI(ParamsMovement,ParamsMI);
+                         EmptyValuesParams(ParamsMI);
+                         Initialize_afterSave_MI;
+                         RefreshDataSet;
+                         WriteParamsMovement;
+                         CDS.First;
+                         //
+                         myActiveControl;
+                         exit;//!!!выход!!! т.к. открывать диалог для параметров товара и проверять есть ли там сканируемый товар - пока не надо
                  end;
             end
      else EmptyValuesParams(ParamsMI); //очистили предыдущие и откроем диалог для ввода всех параметров товара
@@ -1352,6 +1383,26 @@ begin
      WriteParamsMovement;
 end;
 //---------------------------------------------------------------------------------------------
+procedure TMainForm.pSetComment;
+var execParams:TParams;
+begin
+     if ParamsMovement.ParamByName('isComment').AsBoolean = FALSE then exit;
+     //
+     with DialogStringValueForm do
+     begin
+          LabelStringValue.Caption:='Ввод примечания для <'+ParamsMovement.ParamByName('MovementDescName_master').asString+'>';
+          ActiveControl:=StringValueEdit;
+          StringValueEdit.Text:=ParamsMovement.ParamByName('DocumentComment').AsString;
+          if Execute (false, false)
+          then ParamsMovement.ParamByName('DocumentComment').AsString:= StringValueEdit.Text;
+          //
+          EditSubjectDoc.Text:= ParamsMovement.ParamByName('DocumentComment').AsString;
+          //
+          DMMainScaleForm.gpInsertUpdate_Scale_Movement(ParamsMovement);
+     end;
+     //
+end;
+//---------------------------------------------------------------------------------------------
 procedure TMainForm.pSetSubjectDoc;
 var execParams:TParams;
 begin
@@ -1445,7 +1496,9 @@ procedure TMainForm.EditSubjectDocPropertiesButtonClick(Sender: TObject;AButtonI
 begin
      {if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
       or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_SendOnPrice)
-     then} pSetSubjectDoc;
+     then}
+     if (ParamsMovement.ParamByName('isComment').AsBoolean = false)
+     then pSetSubjectDoc;
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainForm.EditReasonPropertiesButtonClick(Sender: TObject;

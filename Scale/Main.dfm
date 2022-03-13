@@ -1759,8 +1759,7 @@ object MainForm: TMainForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitLeft = -2
-        ExplicitTop = -2
+        ExplicitWidth = 119
       end
       object EditPartionGoods: TEdit
         Left = 5
@@ -2179,10 +2178,10 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
-          ExplicitWidth = 103
+          ExplicitLeft = -5
         end
         object EditSubjectDoc: TcxButtonEdit
-          Left = 4
+          Left = 3
           Top = 15
           ParentFont = False
           Properties.Buttons = <
@@ -2634,6 +2633,8 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 1
+      ExplicitLeft = 45
+      ExplicitTop = -5
     end
     object infoPanel: TPanel
       Left = 0

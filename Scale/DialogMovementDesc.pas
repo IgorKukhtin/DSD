@@ -11,7 +11,17 @@ uses
   Data.SqlExpr, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
   cxContainer, cxEdit, dxSkinsCore, dxSkinsDefaultPainters, cxTextEdit,
   cxMaskEdit, cxButtonEdit
-, UtilScale, Vcl.Buttons;
+, UtilScale, Vcl.Buttons, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TDialogMovementDescForm = class(TAncestorDialogScaleForm)
@@ -107,6 +117,7 @@ begin
            ParamsMovement.ParamByName('isArticleLoss').asBoolean           := CDS.FieldByName('isArticleLoss').asBoolean;
            ParamsMovement.ParamByName('isTransport_link').asBoolean        := CDS.FieldByName('isTransport_link').asBoolean;
            ParamsMovement.ParamByName('isSubjectDoc').asBoolean            := CDS.FieldByName('isSubjectDoc').asBoolean;
+           ParamsMovement.ParamByName('isComment').asBoolean               := CDS.FieldByName('isComment').asBoolean;
            ParamsMovement.ParamByName('isPersonalGroup').asBoolean         := CDS.FieldByName('isPersonalGroup').asBoolean;
            ParamsMovement.ParamByName('isSticker_Ceh').asBoolean           := CDS.FieldByName('isSticker_Ceh').asBoolean;
            ParamsMovement.ParamByName('isSticker_KVK').asBoolean           := CDS.FieldByName('isSticker_KVK').asBoolean;
@@ -373,6 +384,7 @@ begin
           ParamByName('isArticleLoss').asBoolean           := CDS.FieldByName('isArticleLoss').asBoolean;
           ParamByName('isTransport_link').asBoolean        := CDS.FieldByName('isTransport_link').asBoolean;
           ParamByName('isSubjectDoc').asBoolean            := CDS.FieldByName('isSubjectDoc').asBoolean;
+          ParamByName('isComment').asBoolean               := CDS.FieldByName('isComment').asBoolean;
           ParamByName('isPersonalGroup').asBoolean         := CDS.FieldByName('isPersonalGroup').asBoolean;
           ParamByName('isSticker_Ceh').asBoolean           := CDS.FieldByName('isSticker_Ceh').asBoolean;
           ParamByName('isSticker_KVK').asBoolean           := CDS.FieldByName('isSticker_KVK').asBoolean;

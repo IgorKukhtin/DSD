@@ -866,6 +866,11 @@ begin
               ParamByName('GoodsKindName').asString := DataSet.FieldByName('GoodsKindName').asString;
               //
               ParamByName('Amount_Goods').asFloat   := DataSet.FieldByName('Amount').asFloat;
+              if ParamByName('Amount_Goods').asFloat > 0 then
+              begin
+                   ParamByName('Price').AsFloat        := DataSet.FieldByName('Price').AsFloat;
+                   ParamByName('CountForPrice').AsFloat:= DataSet.FieldByName('CountForPrice').AsFloat;
+              end;
          end
          else
          begin
@@ -1574,6 +1579,7 @@ begin
                         execParamsMovement.ParamByName('isPartionGoodsDate').asBoolean:= CDS.FieldByName('isPartionGoodsDate').asBoolean;
                         execParamsMovement.ParamByName('isTransport_link').asBoolean:= CDS.FieldByName('isTransport_link').asBoolean;
                         execParamsMovement.ParamByName('isSubjectDoc').asBoolean:= CDS.FieldByName('isSubjectDoc').asBoolean;
+                        execParamsMovement.ParamByName('isComment').asBoolean:= CDS.FieldByName('isComment').asBoolean;
                         execParamsMovement.ParamByName('isListInventory').asBoolean:= CDS.FieldByName('isListInventory').asBoolean;
                         //
                         if CDS.FieldByName('isSendOnPriceIn').asBoolean = TRUE
@@ -1610,6 +1616,7 @@ begin
                         ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean:= CDS.FieldByName('isPartionGoodsDate').asBoolean;
                         ParamsMovement.ParamByName('isTransport_link').asBoolean:= CDS.FieldByName('isTransport_link').asBoolean;
                         ParamsMovement.ParamByName('isSubjectDoc').asBoolean:= CDS.FieldByName('isSubjectDoc').asBoolean;
+                        ParamsMovement.ParamByName('isComment').asBoolean:= CDS.FieldByName('isComment').asBoolean;
                         ParamsMovement.ParamByName('isListInventory').asBoolean:= CDS.FieldByName('isListInventory').asBoolean;
                         //
                         if CDS.FieldByName('isSendOnPriceIn').asBoolean = TRUE

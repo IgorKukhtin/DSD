@@ -54,6 +54,7 @@ BEGIN
          LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectAuthent
                                  ON ObjectBoolean_ProjectAuthent.ObjectId = Object_User.Id
                                 AND ObjectBoolean_ProjectAuthent.DescId   = zc_ObjectBoolean_User_ProjectAuthent()
+                                AND 1=0
          LEFT JOIN ObjectString AS ObjectString_PhoneAuthent
                                 ON ObjectString_PhoneAuthent.ObjectId = Object_User.Id
                                AND ObjectString_PhoneAuthent.DescId   = zc_ObjectString_User_PhoneAuthent()

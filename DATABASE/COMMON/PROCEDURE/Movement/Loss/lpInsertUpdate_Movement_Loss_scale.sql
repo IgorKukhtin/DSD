@@ -1,6 +1,8 @@
 -- Function: lpInsertUpdate_Movement_Loss_scale() - !!!сделана т.к. для печати из scale нужны цены и суммы!!!
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Loss_scale (Integer, TVarChar, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Loss_scale (Integer, TVarChar, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Loss_scale (Integer, TVarChar, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, TVarChar, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Loss_scale(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -12,6 +14,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Loss_scale(
     IN inToId                Integer   , -- Кому (в документе)
     IN inArticleLossId       Integer   , -- Статьи списания
     IN inPaidKindId          Integer   , -- Виды форм оплаты
+    IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -25,7 +28,7 @@ BEGIN
                                          , inFromId           := inFromId
                                          , inToId             := inToId
                                          , inArticleLossId    := inArticleLossId
-                                         , inComment          := '' ::TVarChar
+                                         , inComment          := inComment
                                          , inUserId           := inUserId
                                           );
 
