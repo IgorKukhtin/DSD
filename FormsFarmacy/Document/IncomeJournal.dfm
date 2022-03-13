@@ -498,6 +498,30 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Options.Editing = False
             Width = 137
           end
+          object isPretension: TcxGridDBColumn
+            Caption = #1055#1086#1076#1072#1085#1072' '#1087#1088#1077#1090#1077#1085#1079#1080#1103' '#1087#1088#1086#1074#1077#1076#1077#1085#1072
+            DataBinding.FieldName = 'isPretension'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 77
+          end
+          object isPretensionUnComplete: TcxGridDBColumn
+            Caption = #1055#1086#1076#1072#1085#1072' '#1087#1088#1077#1090#1077#1085#1079#1080#1103' '#1085#1077#1087#1088#1086#1074#1077#1076#1077#1085#1072
+            DataBinding.FieldName = 'isPretensionUnComplete'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
+          end
+          object FromINN: TcxGridDBColumn
+            Caption = #1048#1053#1053' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            DataBinding.FieldName = 'FromINN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
         end
       end
     end

@@ -109,6 +109,9 @@ type
     DateConduct: TcxGridDBColumn;
     spPUSHComplete: TdsdStoredProc;
     actPUSHInfo: TdsdShowPUSHMessage;
+    isPretension: TcxGridDBColumn;
+    isPretensionUnComplete: TcxGridDBColumn;
+    FromINN: TcxGridDBColumn;
   private
     { Private declarations }
   public
