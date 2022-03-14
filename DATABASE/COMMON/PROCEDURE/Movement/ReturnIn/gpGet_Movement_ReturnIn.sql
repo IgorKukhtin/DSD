@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , CurrencyPartnerId Integer, CurrencyPartnerName TVarChar
              , JuridicalId_From Integer, JuridicalName_From TVarChar
              , PriceListId Integer, PriceListName TVarChar
+             , PriceListInId Integer, PriceListInName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , StartDateTax TDateTime
              , MovementId_Partion Integer, PartionMovementName TVarChar
@@ -87,6 +88,8 @@ BEGIN
 
              , Object_PriceList.Id                      AS PriceListId
              , Object_PriceList.ValueData               AS PriceListName
+             , CAST (0  AS INTEGER)                     AS PriceListInId
+             , CAST ('' AS TVarChar) 			AS PriceListInName
              , 0                     		        AS DocumentTaxKindId
              , CAST ('' as TVarChar) 		        AS DocumentTaxKindName
              , (DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '4 MONTH') :: TDateTime AS StartDateTax
@@ -214,6 +217,9 @@ BEGIN
 
            , (SELECT tmpPriceList.PriceListId   FROM tmpPriceList) AS PriceListId
            , (SELECT tmpPriceList.PriceListName FROM tmpPriceList) AS PriceListName
+
+           , Object_PriceListIn.Id                    AS PriceListInId
+           , Object_PriceListIn.ValueData :: TVarChar AS PriceListInName
 
            , Object_TaxKind.Id                	    AS DocumentTaxKindId
            , Object_TaxKind.ValueData         	    AS DocumentTaxKindName
@@ -368,6 +374,11 @@ BEGIN
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceListIn
+                                         ON MovementLinkObject_PriceListIn.MovementId = Movement.Id
+                                        AND MovementLinkObject_PriceListIn.DescId = zc_MovementLinkObject_PriceListIn()
+            LEFT JOIN Object AS Object_PriceListIn ON Object_PriceListIn.Id = MovementLinkObject_PriceListIn.ObjectId
+
 --add Tax
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                          ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
@@ -406,6 +417,7 @@ ALTER FUNCTION gpGet_Movement_ReturnIn (Integer, TDateTime, TVarChar) OWNER TO p
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».     Ã‡Ì¸ÍÓ ƒ.¿.
+ 14.03.22         *
  12.05.18         *
  14.05.16         *
  10.05.16         * add StartDateTax

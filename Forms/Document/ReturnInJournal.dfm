@@ -256,6 +256,23 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 102
           end
+          object PriceListName: TcxGridDBColumn
+            Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+            DataBinding.FieldName = 'PriceListName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object PriceListInName: TcxGridDBColumn
+            Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1074#1093'.'
+            DataBinding.FieldName = 'PriceListInName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1074#1093'. ('#1089#1093#1077#1084#1072' '#1055#1072#1074#1080#1083#1100#1086#1085#1099')'
+            Width = 80
+          end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'TotalCount'

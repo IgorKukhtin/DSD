@@ -274,7 +274,19 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object PricePromo: TcxGridDBColumn [14]
+          object PriceIn: TcxGridDBColumn [14]
+            Caption = #1062#1077#1085#1072' '#1074#1093'.'
+            DataBinding.FieldName = 'PriceIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'.'
+            Options.Editing = False
+            Width = 70
+          end
+          object PricePromo: TcxGridDBColumn [15]
             Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'PricePromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -285,7 +297,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             Options.Editing = False
             Width = 70
           end
-          object Price_Pricelist: TcxGridDBColumn [15]
+          object Price_Pricelist: TcxGridDBColumn [16]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price_Pricelist'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -296,7 +308,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             Options.Editing = False
             Width = 70
           end
-          object Price_Pricelist_vat: TcxGridDBColumn [16]
+          object Price_Pricelist_vat: TcxGridDBColumn [17]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price_Pricelist_vat'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -307,7 +319,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             Options.Editing = False
             Width = 70
           end
-          object isCheck_Pricelist: TcxGridDBColumn [17]
+          object isCheck_Pricelist: TcxGridDBColumn [18]
             Caption = #1054#1096#1080#1073#1082#1072' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'isCheck_Pricelist'
             HeaderAlignmentHorz = taCenter
@@ -315,7 +327,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             Options.Editing = False
             Width = 59
           end
-          object AmountSumm: TcxGridDBColumn [18]
+          object AmountSumm: TcxGridDBColumn [19]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -325,7 +337,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             Options.Editing = False
             Width = 91
           end
-          object AmountSummVat: TcxGridDBColumn [19]
+          object AmountSummVat: TcxGridDBColumn [20]
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'AmountSummVat'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -335,7 +347,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             Options.Editing = False
             Width = 91
           end
-          object PartionMovementName: TcxGridDBColumn [20]
+          object PartionMovementName: TcxGridDBColumn [21]
             Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'PartionMovementName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -350,7 +362,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 145
           end
-          object MovementPromo: TcxGridDBColumn [21]
+          object MovementPromo: TcxGridDBColumn [22]
             Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'MovementPromo'
             HeaderAlignmentHorz = taCenter
@@ -364,6 +376,9 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -1078,6 +1093,23 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       TabOrder = 44
       Width = 128
     end
+    object cxLabel29: TcxLabel
+      Left = 892
+      Top = 85
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1074#1093'.'
+    end
+    object edPriceListIn: TcxButtonEdit
+      Left = 892
+      Top = 103
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 46
+      Width = 97
+    end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
     Left = 892
@@ -1171,15 +1203,15 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Width = 223
   end
   object cxLabel18: TcxLabel [12]
-    Left = 892
+    Left = 995
     Top = 85
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [13]
-    Left = 892
+    Left = 995
     Top = 103
     TabOrder = 17
-    Width = 248
+    Width = 145
   end
   object cxLabel22: TcxLabel [14]
     Left = 788
@@ -3907,6 +3939,21 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Component = cbPrinted
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListInId'
+        Value = Null
+        Component = GuidesPriceListIn
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListInName'
+        Value = Null
+        Component = GuidesPriceListIn
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 248
@@ -5863,5 +5910,67 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     PackSize = 1
     Left = 1131
     Top = 298
+  end
+  object GuidesPriceListIn: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceListIn
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPriceList_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceList_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPriceListIn
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPriceListIn
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = False
+        Component = edPriceWithVAT
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = 0.000000000000000000
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 916
+    Top = 88
   end
 end

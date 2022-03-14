@@ -296,6 +296,9 @@ type
     spInsert_MI_byOrderReturnTare: TdsdStoredProc;
     actInsert_MI_byOrderReturnTare: TdsdExecStoredProc;
     HeaderExit: THeaderExit;
+    cxLabel29: TcxLabel;
+    edPriceListIn: TcxButtonEdit;
+    GuidesPriceListIn: TdsdGuides;
   private
     { Private declarations }
   public
