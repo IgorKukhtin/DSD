@@ -111,7 +111,7 @@ $BODY$
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_MovementItem_ReturnIn',        inSession:= zfCalc_UserAdmin()); -- +
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_MovementItemChild_ReturnIn',   inSession:= zfCalc_UserAdmin()); -- +
 
--- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_Movement_BankAccount',         inSession:= zfCalc_UserAdmin()); -- +
+-- *** SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_Movement_BankAccount',         inSession:= zfCalc_UserAdmin()); -- +
 
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_Movement_Tax',                 inSession:= zfCalc_UserAdmin()); -- +
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_Movement_TaxCorrective',       inSession:= zfCalc_UserAdmin()); -- +

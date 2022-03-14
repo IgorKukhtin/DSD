@@ -446,7 +446,7 @@ END IF;*/
         -- AND inUserId = 5
      THEN
          -- Пересчитали
-         PERFORM gpUpdate_MovementItem_Sale_PriceIn (inMovementId:= inMovementId, inSession:= inUserId :: TVarChar);
+         PERFORM lpUpdate_MovementItem_Sale_PriceIn (inMovementId:= inMovementId, inUserId:= inUserId);
 
      END IF;
 

@@ -55,6 +55,8 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                        , SaleReturn_Summ, SaleReturn_Summ_10300, SaleReturn_SummCost, SaleReturn_SummCost_40200, SaleReturn_Amount_Weight, SaleReturn_Amount_Sh
                        , BonusBasis, Bonus, Plan_Weight, Plan_Summ
                        , Money_Summ, SendDebt_Summ, Money_SendDebt_Summ
+                       
+                       , Sale_SummIn_pav, ReturnIn_SummIn_pav
 
                        , ContractConditionKindId, BonusKindId, BonusTax
                        , GoodsByGoodsKindId
@@ -114,6 +116,9 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10800() THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Return_SummCost
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_40200() THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Return_SummCost_40200
 
+                              , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()     THEN -1 * MIContainer.Amount * COALESCE (MIFloat_PriceIn.ValueData, 0) * 1.2 ELSE 0 END) AS Sale_SummIn_pav
+                              , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800() THEN  1 * MIContainer.Amount * COALESCE (MIFloat_PriceIn.ValueData, 0) * 1.2 ELSE 0 END) AS ReturnIn_SummIn_pav
+
                          FROM tmpAnalyzer
                               INNER JOIN MovementItemContainer AS MIContainer
                                                                ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
@@ -137,6 +142,9 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                               LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
                                                           ON MIFloat_PromoMovement.MovementItemId = MIContainer.MovementItemId
                                                          AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                              LEFT JOIN MovementItemFloat AS MIFloat_PriceIn
+                                                          ON MIFloat_PriceIn.MovementItemId = MIContainer.MovementItemId
+                                                         AND MIFloat_PriceIn.DescId         = zc_MIFloat_PriceIn()
                          GROUP BY MIContainer.OperDate
                                 , CLO_Juridical.ObjectId
                                 , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer /*MovementLinkObject_Partner.ObjectId*/ END
@@ -392,6 +400,9 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , (tmpOperation_SaleReturn.Return_SummCost)       AS Return_SummCost
                  , (tmpOperation_SaleReturn.Return_SummCost_40200) AS Return_SummCost_40200
 
+                 , (tmpOperation_SaleReturn.Sale_SummIn_pav)       AS Sale_SummIn_pav
+                 , (tmpOperation_SaleReturn.ReturnIn_SummIn_pav)   AS ReturnIn_SummIn_pav
+
                  , 0 AS BonusBasis
                  , 0 AS Bonus
 
@@ -450,6 +461,9 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , 0 AS Return_SummCost
                  , 0 AS Return_SummCost_40200
 
+                 , 0 AS Sale_SummIn_pav
+                 , 0 AS ReturnIn_SummIn_pav
+
                  , (tmpBonus.BonusBasis) AS BonusBasis
                  , (tmpBonus.Bonus)      AS Bonus
 
@@ -501,6 +515,9 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
 
                  , SUM (tmpOperation_all.Return_SummCost)       AS Return_SummCost
                  , SUM (tmpOperation_all.Return_SummCost_40200) AS Return_SummCost_40200
+
+                 , SUM (tmpOperation_all.Sale_SummIn_pav)       AS Sale_SummIn_pav
+                 , SUM (tmpOperation_all.ReturnIn_SummIn_pav)   AS ReturnIn_SummIn_pav
 
                  , SUM (tmpOperation_all.BonusBasis) AS BonusBasis
                  , SUM (tmpOperation_all.Bonus)      AS Bonus
@@ -617,6 +634,9 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
            , 0, 0
            , 0, 0, 0
 
+           , tmpResult.Sale_SummIn_pav
+           , tmpResult.ReturnIn_SummIn_pav
+
            , tmpResult.ContractConditionKindId
            , tmpResult.BonusKindId
            , tmpResult.BonusTax
@@ -674,6 +694,9 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
 
                  , SUM (tmpOperation.Return_SummCost)       AS Return_SummCost
                  , SUM (tmpOperation.Return_SummCost_40200) AS Return_SummCost_40200
+
+                 , SUM (tmpOperation.Sale_SummIn_pav)       AS Sale_SummIn_pav
+                 , SUM (tmpOperation.ReturnIn_SummIn_pav)   AS ReturnIn_SummIn_pav
 
                  , SUM (tmpOperation.BonusBasis) AS BonusBasis
                  , SUM (tmpOperation.Bonus)      AS Bonus
@@ -802,6 +825,9 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
            , -1 * SUM (CASE WHEN Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount()) THEN MovementItemContainer.Amount ELSE 0 END) AS Money_Summ
            , -1 * SUM (CASE WHEN Movement.DescId = zc_Movement_SendDebt() THEN MovementItemContainer.Amount ELSE 0 END) AS SendDebt_Summ
            , -1 * SUM (MovementItemContainer.Amount) AS Money_SendDebt_Summ
+
+           , 0 AS Sale_SummIn_pav
+           , 0 AS ReturnIn_SummIn_pav
 
            , 0 AS ContractConditionKindId
            , 0 AS BonusKindId

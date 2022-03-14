@@ -345,6 +345,15 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Значение <Дата(склад)> должно соответствовать значению <Дата документа у покупателя>.';
      END IF;
 
+     -- если схема Павильоны
+     IF EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = vbPartnerId_From AND OL.ChildObjectId > 0 AND OL.DescId = zc_ObjectLink_Partner_Unit())
+        -- AND inUserId = 5
+     THEN
+         -- Пересчитали
+         PERFORM lpUpdate_MovementItem_Sale_PriceIn (inMovementId:= inMovementId, inUserId:= inUserId);
+
+     END IF;
+
 
      -- определяется Управленческие назначения, параметр нужен для для формирования Аналитик в проводках (для Покупателя)
      SELECT View_InfoMoney.InfoMoneyDestinationId INTO vbInfoMoneyDestinationId_From FROM lfGet_Object_InfoMoney (vbInfoMoneyId_From) AS View_InfoMoney;
@@ -2415,7 +2424,7 @@ end if;
                                  );
 
 -- !!! ВРЕМЕННО !!!
- IF inUserId = 5 and 1=1 THEN
+ IF inUserId = 5 and 1=0 THEN
     RAISE EXCEPTION 'Admin - Test = OK : %   %', vbOperSumm_Partner_ChangePercent_byItem, vbOperSumm_Partner_ChangePercent
       ;
 END IF;

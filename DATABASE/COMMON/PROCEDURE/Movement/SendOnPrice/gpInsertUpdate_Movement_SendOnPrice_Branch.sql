@@ -99,7 +99,10 @@ BEGIN
                                       , inSubjectDocId     := CASE WHEN vbIsProcess_BranchIn = FALSE THEN inSubjectDocId ELSE (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_SubjectDoc()) END
                                       , inMovementId_Order := inMovementId_Order
                                       , ioPriceListId      := CASE WHEN vbIsProcess_BranchIn = FALSE THEN ioPriceListId ELSE (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_PriceList()) END
-                                      , inProcessId        := zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch()
+                                      , inProcessId        := CASE WHEN EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = inUserId AND ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin())
+                                                                        THEN zc_Enum_Process_InsertUpdate_Movement_SendOnPrice()
+                                                                        ELSE zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch()
+                                                              END
                                       , inUserId           := vbUserId
                                        ) AS tmp;
 
