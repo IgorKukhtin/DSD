@@ -1,8 +1,8 @@
--- Function: gpUpdate_MI_Send_AmountStorage()
+-- Function: gpUpdate_MI_Send_ClearAmountStorage()
 
-DROP FUNCTION IF EXISTS gpUpdate_MI_Send_AmountStorage (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_Send_ClearAmountStorage (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_AmountStorage(
+CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_ClearAmountStorage(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inSession             TVarChar    -- пользователь
 )
@@ -46,12 +46,14 @@ BEGIN
      END IF;
              
      -- сохранили
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountStorage(), MovementItem.id, MovementItem.amount)
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountStorage(), MovementItem.id, 0)
      FROM MovementItem 
+          INNER JOIN MovementItemFloat AS MIFloat_AmountStorage
+                                       ON MIFloat_AmountStorage.MovementItemId = MovementItem.Id
+                                      AND MIFloat_AmountStorage.DescId = zc_MIFloat_AmountStorage()   
+                                      AND MIFloat_AmountStorage.ValueData <> 0  
      WHERE MovementItem.MovementId = inMovementId
-       AND MovementItem.Amount > 0
-       AND MovementItem.DescId = zc_MI_Master()
-       AND MovementItem.isErased = False;
+       AND MovementItem.DescId = zc_MI_Master();
 
 END;
 $BODY$
@@ -64,4 +66,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdate_MI_Send_AmountStorage (inMovementId:= 0, inUserId:= 2)
+-- SELECT * FROM gpUpdate_MI_Send_ClearAmountStorage (inMovementId:= 0, inUserId:= 2)

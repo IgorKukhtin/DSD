@@ -3000,6 +3000,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCreatePretensionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCreatePretensionForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPretensionJournalIncomeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPretensionJournalIncomeForm');
 end;
 
 procedure TLoadFormTest.LoadPriceListFormTest;

@@ -1,8 +1,8 @@
--- Function: gpUpdate_MI_Send_AmountStorage()
+-- Function: gpUpdate_MI_Send_ClearAmountManual()
 
-DROP FUNCTION IF EXISTS gpUpdate_MI_Send_AmountStorage (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_Send_ClearAmountManual (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_AmountStorage(
+CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_ClearAmountManual(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inSession             TVarChar    -- пользователь
 )
@@ -20,7 +20,7 @@ BEGIN
      
      IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
-        RAISE EXCEPTION 'Ошибка. Изменение <Факт кол-во точки-отправителя> разрешено только администратору.';
+        RAISE EXCEPTION 'Ошибка. Изменение <Факт кол-во точки-получателя> разрешено только администратору.';
      END IF;
 
      SELECT Movement.StatusId
@@ -46,12 +46,14 @@ BEGIN
      END IF;
              
      -- сохранили
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountStorage(), MovementItem.id, MovementItem.amount)
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual(), MovementItem.id, 0)
      FROM MovementItem 
+          INNER JOIN MovementItemFloat AS MIFloat_AmountManual
+                                       ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                      AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()   
+                                      AND MIFloat_AmountManual.ValueData <> 0  
      WHERE MovementItem.MovementId = inMovementId
-       AND MovementItem.Amount > 0
-       AND MovementItem.DescId = zc_MI_Master()
-       AND MovementItem.isErased = False;
+       AND MovementItem.DescId = zc_MI_Master();
 
 END;
 $BODY$
@@ -64,4 +66,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdate_MI_Send_AmountStorage (inMovementId:= 0, inUserId:= 2)
+-- SELECT * FROM gpUpdate_MI_Send_ClearAmountManual (inMovementId:= 0, inUserId:= 2)

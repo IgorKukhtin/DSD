@@ -1306,6 +1306,26 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         end>
       Caption = 'actPUSHNewPretension'
     end
+    object actPretensionJournalIncome: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1077#1090#1077#1085#1079#1080#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1091
+      Hint = #1055#1088#1077#1090#1077#1085#1079#1080#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1091
+      ImageIndex = 25
+      FormName = 'TPretensionJournalIncomeForm'
+      FormNameParam.Value = 'TPretensionJournalIncomeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'IncomeId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 376
@@ -1477,6 +1497,14 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1551,6 +1579,10 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     end
     object bbCreatePretension: TdxBarButton
       Action = actCreatePretension
+      Category = 0
+    end
+    object dxBarButton6: TdxBarButton
+      Action = actPretensionJournalIncome
       Category = 0
     end
   end

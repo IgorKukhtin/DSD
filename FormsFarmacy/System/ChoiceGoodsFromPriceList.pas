@@ -74,6 +74,7 @@ type
     spGet_Area_byUser: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     colPriceSite: TcxGridDBColumn;
+    isClose: TcxGridDBColumn;
   private
     { Private declarations }
   public

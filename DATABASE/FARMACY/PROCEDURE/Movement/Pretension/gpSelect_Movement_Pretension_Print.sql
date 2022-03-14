@@ -228,8 +228,12 @@ BEGIN
              , Object_ReasonDifferences.Id          AS ReasonDifferencesId
              , Object_ReasonDifferences.ValueData   AS ReasonDifferencesName
              , MIFloat_Amount.ValueData         AS AmountIncome
-             , MIFloat_AmountManual.ValueData   AS AmountManual
-             , (COALESCE(MIFloat_AmountManual.ValueData, 0) - COALESCE( MIFloat_Amount.ValueData,0))::TFloat AS AmountDiff
+             , CASE WHEN MIFloat_AmountManual.ValueData + MI_Pretension.Amount < 0 THEN 0                   
+                    WHEN MI_Pretension.Amount < 0 THEN MIFloat_AmountManual.ValueData + MI_Pretension.Amount
+                    ELSE MIFloat_AmountManual.ValueData END::TFloat   AS AmountManual
+             , (CASE WHEN MIFloat_AmountManual.ValueData + MI_Pretension.Amount < 0 THEN 0                   
+                     WHEN MI_Pretension.Amount < 0 THEN MIFloat_AmountManual.ValueData + MI_Pretension.Amount
+                     ELSE MIFloat_AmountManual.ValueData END - COALESCE( MIFloat_Amount.ValueData,0))::TFloat AS AmountDiff
              , MIBoolean_Checked.ValueData      AS isChecked
              , MI_Pretension.isErased
              , Object_PartnerGoods.Code         AS PartnerGoodsCode
@@ -282,4 +286,5 @@ ALTER FUNCTION gpSelect_Movement_Pretension_Print (Integer,TVarChar) OWNER TO po
 */
 
 
-select * from gpSelect_Movement_Pretension_Print(inMovementId := 26008006 ,  inSession := '3');
+select * from gpSelect_Movement_Pretension_Print(inMovementId := 27180869 ,  inSession := '3');
+

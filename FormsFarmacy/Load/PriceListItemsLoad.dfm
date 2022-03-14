@@ -151,6 +151,14 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
             Options.Editing = False
             Width = 72
           end
+          object IsClose: TcxGridDBColumn
+            Caption = #1047#1072#1082#1088#1099#1090
+            DataBinding.FieldName = 'IsClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 59
+          end
         end
       end
     end
