@@ -211,6 +211,13 @@ type
     spUpdate_AmountStorage: TdsdStoredProc;
     actUpdate_AmountStorage: TdsdExecStoredProc;
     dxBarButton12: TdxBarButton;
+    dxBarSubItem2: TdxBarSubItem;
+    actUpdate_ClearAmountStorage: TdsdExecStoredProc;
+    spUpdate_ClearAmountStorage: TdsdStoredProc;
+    dxBarButton13: TdxBarButton;
+    spUpdate_ClearAmountManual: TdsdStoredProc;
+    actUpdate_ClearAmountManual: TdsdExecStoredProc;
+    dxBarButton14: TdxBarButton;
   private
     { Private declarations }
   public

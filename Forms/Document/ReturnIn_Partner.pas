@@ -238,6 +238,9 @@ type
     macOpenTax_child: TMultiAction;
     spGet_checkopen_Tax: TdsdStoredProc;
     actGet_checkopen_Tax: TdsdExecStoredProc;
+    cxLabel29: TcxLabel;
+    edPriceListIn: TcxButtonEdit;
+    GuidesPriceListIn: TdsdGuides;
   private
     { Private declarations }
   public

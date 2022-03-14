@@ -136,6 +136,8 @@ type
     actPUSHComplete: TdsdShowPUSHMessage;
     spPUSHNewPretension: TdsdStoredProc;
     actPUSHNewPretension: TdsdShowPUSHMessage;
+    actPretensionJournalIncome: TdsdOpenForm;
+    dxBarButton6: TdxBarButton;
   private
     { Private declarations }
   public

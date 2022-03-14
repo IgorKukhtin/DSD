@@ -282,7 +282,19 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 63
           end
-          object PricePromo: TcxGridDBColumn [15]
+          object PriceIn: TcxGridDBColumn [15]
+            Caption = #1062#1077#1085#1072' '#1074#1093'.'
+            DataBinding.FieldName = 'PriceIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. ('#1089#1093#1077#1084#1072' '#1055#1072#1074#1080#1083#1100#1086#1085#1099')'
+            Options.Editing = False
+            Width = 70
+          end
+          object PricePromo: TcxGridDBColumn [16]
             Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'PricePromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -293,7 +305,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 70
           end
-          object Price_Pricelist: TcxGridDBColumn [16]
+          object Price_Pricelist: TcxGridDBColumn [17]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price_Pricelist'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -304,7 +316,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 75
           end
-          object Price_Pricelist_vat: TcxGridDBColumn [17]
+          object Price_Pricelist_vat: TcxGridDBColumn [18]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price_Pricelist_vat'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -315,7 +327,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 70
           end
-          object isCheck_Pricelist: TcxGridDBColumn [18]
+          object isCheck_Pricelist: TcxGridDBColumn [19]
             Caption = #1054#1096#1080#1073#1082#1072' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'isCheck_Pricelist'
             HeaderAlignmentHorz = taCenter
@@ -323,7 +335,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 59
           end
-          object AmountSumm: TcxGridDBColumn [19]
+          object AmountSumm: TcxGridDBColumn [20]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -333,7 +345,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 91
           end
-          object AmountSummVat: TcxGridDBColumn [20]
+          object AmountSummVat: TcxGridDBColumn [21]
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'AmountSummVat'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -343,7 +355,7 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 91
           end
-          object PartionMovementName: TcxGridDBColumn [21]
+          object PartionMovementName: TcxGridDBColumn [22]
             Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'PartionMovementName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -358,7 +370,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 145
           end
-          object MovementPromo: TcxGridDBColumn [22]
+          object MovementPromo: TcxGridDBColumn [23]
             Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1080
             DataBinding.FieldName = 'MovementPromo'
             HeaderAlignmentHorz = taCenter
@@ -2056,6 +2068,23 @@ inherited ReturnInForm: TReturnInForm
       TabOrder = 44
       Visible = False
       Width = 144
+    end
+    object cxLabel29: TcxLabel
+      Left = 717
+      Top = 127
+      Caption = #1055#1088#1072#1081#1089' '#1074#1093'.'
+    end
+    object edPriceListIn: TcxButtonEdit
+      Left = 717
+      Top = 145
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 46
+      Width = 140
     end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
@@ -5322,6 +5351,21 @@ inherited ReturnInForm: TReturnInForm
         Component = GuidesReturnKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListInId'
+        Value = Null
+        Component = GuidesPriceListIn
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListInName'
+        Value = Null
+        Component = GuidesPriceListIn
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 264
@@ -7845,5 +7889,67 @@ inherited ReturnInForm: TReturnInForm
     Action = actInsert_MI_byOrderReturnTare
     Left = 640
     Top = 208
+  end
+  object GuidesPriceListIn: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceListIn
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPriceList_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceList_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPriceListIn
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPriceListIn
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = False
+        Component = edPriceWithVAT
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = 0.000000000000000000
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 780
+    Top = 144
   end
 end

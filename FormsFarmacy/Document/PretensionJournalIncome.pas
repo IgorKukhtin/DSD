@@ -1,4 +1,4 @@
-unit PretensionJournal;
+unit PretensionJournalIncome;
 
 interface
 
@@ -17,7 +17,7 @@ uses
   dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.DBActns;
 
 type
-  TPretensionJournalForm = class(TAncestorJournalForm)
+  TPretensionJournalIncomeForm = class(TAncestorJournalForm)
     FromName: TcxGridDBColumn;
     ToName: TcxGridDBColumn;
     TotalDeficit: TcxGridDBColumn;
@@ -34,18 +34,14 @@ type
     JuridicalName: TcxGridDBColumn;
     IncomeOperDate: TcxGridDBColumn;
     IncomeInvNumber: TcxGridDBColumn;
-    actUpdatePretension_PartnerData: TdsdExecStoredProc;
     spUpdatePretension_BranchDate: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
-    DataSetPost1: TDataSetPost;
-    actPrintTTN: TdsdPrintAction;
     BranchUser: TcxGridDBColumn;
     InsertName: TcxGridDBColumn;
     InsertDate: TcxGridDBColumn;
     UpdateName: TcxGridDBColumn;
     UpdateDate: TcxGridDBColumn;
     isDeferred: TcxGridDBColumn;
-    actPrintOptima: TdsdPrintAction;
     bbPrintOptima: TdxBarButton;
     CheckedName: TcxGridDBColumn;
     GoodsReceiptsDate: TcxGridDBColumn;
@@ -53,8 +49,6 @@ type
     TotalSubstandard: TcxGridDBColumn;
     TotalSummActual: TcxGridDBColumn;
     TotalSummNotActual: TcxGridDBColumn;
-    dsdUpdateDataSet1: TdsdUpdateDataSet;
-    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public
@@ -65,5 +59,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TPretensionJournalForm);
+  RegisterClass(TPretensionJournalIncomeForm);
 end.

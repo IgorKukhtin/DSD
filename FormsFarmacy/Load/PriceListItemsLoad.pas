@@ -67,6 +67,7 @@ type
     actUpdate_inResolution_224_No: TdsdExecStoredProc;
     bbisResolution_224_Yes: TdxBarButton;
     bbtinResolution_224_No: TdxBarButton;
+    IsClose: TcxGridDBColumn;
   private
     { Private declarations }
   public

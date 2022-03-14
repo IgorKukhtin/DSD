@@ -156,6 +156,38 @@ BEGIN
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
        WHERE Object_InfoMoney.ObjectCode = 20301
+      UNION All
+       SELECT 0    :: Integer AS Id
+            , NULL :: Integer AS Code
+            , '”ƒ¿À»“‹' ::TVarChar   AS Name
+            , ''        ::TVarChar   AS DescName
+
+            , 0          AS MeasureId
+            , ''        ::TVarChar   AS MeasureName
+
+            , 0    :: Integer        AS AssetGroupId
+            , NULL :: Integer        AS AssetGroupCode
+            , ''        ::TVarChar   AS AssetGroupName
+
+            , 0    :: Integer  AS JuridicalId
+            , NULL :: Integer  AS JuridicalCode
+            , ''   :: TVarChar AS JuridicalName
+
+            , 0    :: Integer  AS MakerId
+            , NULL :: Integer  AS MakerCode
+            , ''   :: TVarChar AS MakerName
+         
+            , CAST (CURRENT_DATE AS TDateTime) AS Release
+         
+            , '' :: TVarChar AS InvNumber
+            , '' :: TVarChar AS FullName
+            , '' :: TVarChar AS SerialNumber
+            , '' :: TVarChar AS PassportNumber
+            , '' :: TVarChar AS Comment
+
+            , NULL :: TFloat AS PeriodUse
+
+            , FALSE  AS isErased
        ;  
 
 END;

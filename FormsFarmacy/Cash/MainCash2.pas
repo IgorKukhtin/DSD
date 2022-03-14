@@ -3331,13 +3331,13 @@ begin
       exit;
     end;
 
-    if (CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
-      ('Amount').asCurrency) <> FormParams.ParamByName('HelsiQty').Value then
+    if RoundTo(CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
+      ('Amount').asCurrency, -2) <> FormParams.ParamByName('HelsiQty').Value then
     begin
       ShowMessage('Ошибка.'#13#10'В рецепте выписано: ' + FormatCurr('0.####',
         FormParams.ParamByName('HelsiQty').Value) + ' единиц'#13#10'В чеке: ' +
-        FormatCurr('0.####', CheckCDS.FieldByName('CountSP').asCurrency *
-        CheckCDS.FieldByName('Amount').asCurrency) +
+        FormatCurr('0.####', RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
+        CheckCDS.FieldByName('Amount').asCurrency, -2)) +
         ' единиц'#13#10'Проверьте количество товара, опущенного в чек.');
       exit;
     end;
@@ -3762,8 +3762,8 @@ begin
     begin
       if not CreateNewDispense(CheckCDS.FieldByName('IdSP').AsString,
         CheckCDS.FieldByName('ProgramIdSP').AsString,
-        CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
-        ('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,
+        RoundTo(CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
+        ('Amount').asCurrency, -2), CheckCDS.FieldByName('PriceSale').asCurrency,
         RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
         CheckCDS.FieldByName('PriceSale').asCurrency, -2),
         RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
@@ -3779,8 +3779,8 @@ begin
     begin
       if not CreateLikiDniproeHealthNewDispense(CheckCDS.FieldByName('IdSP').AsString,
         CheckCDS.FieldByName('ProgramIdSP').AsString,
-        CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
-        ('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,
+        RoundTo(CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
+        ('Amount').asCurrency, -2), CheckCDS.FieldByName('PriceSale').asCurrency,
         RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
         CheckCDS.FieldByName('PriceSale').asCurrency, -2),
         RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
@@ -3935,8 +3935,8 @@ begin
 
               if CreateNewDispense(CheckCDS.FieldByName('IdSP').AsString,
                 CheckCDS.FieldByName('ProgramIdSP').AsString,
-                CheckCDS.FieldByName('CountSP').asCurrency *
-                CheckCDS.FieldByName('Amount').asCurrency,
+                RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
+                CheckCDS.FieldByName('Amount').asCurrency, -2),
                 CheckCDS.FieldByName('PriceSale').asCurrency,
                 RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
                 CheckCDS.FieldByName('PriceSale').asCurrency, -2),

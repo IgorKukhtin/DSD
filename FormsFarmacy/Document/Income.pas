@@ -201,6 +201,8 @@ type
     spPUSHNewPretension: TdsdStoredProc;
     spPUSHLinkCheck: TdsdStoredProc;
     actPUSHLinkCheck: TdsdShowPUSHMessage;
+    actPretensionJournalIncome: TdsdOpenForm;
+    dxBarButton5: TdxBarButton;
   private
     { Private declarations }
   public

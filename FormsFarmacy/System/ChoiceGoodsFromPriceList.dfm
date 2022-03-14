@@ -195,6 +195,14 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             Options.Editing = False
             Width = 60
           end
+          object isClose: TcxGridDBColumn
+            Caption = #1047#1072#1082#1088#1099#1090
+            DataBinding.FieldName = 'isClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
         end
       end
       object Panel1: TPanel

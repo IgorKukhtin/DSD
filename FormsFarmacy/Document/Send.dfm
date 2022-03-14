@@ -1,26 +1,26 @@
 inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 617
-  ClientWidth = 992
+  ClientWidth = 1002
   AddOnFormData.SetFocusedAction = actSetFocused
-  ExplicitWidth = 1008
+  ExplicitWidth = 1018
   ExplicitHeight = 656
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 155
-    Width = 992
+    Width = 1002
     Height = 462
     ExplicitTop = 155
     ExplicitWidth = 992
     ExplicitHeight = 462
     ClientRectBottom = 462
-    ClientRectRight = 992
+    ClientRectRight = 1002
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 992
       ExplicitHeight = 438
       inherited cxGrid: TcxGrid
-        Width = 992
+        Width = 1002
         Height = 318
         ExplicitWidth = 992
         ExplicitHeight = 318
@@ -546,20 +546,22 @@ inherited SendForm: TSendForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 318
-        Width = 992
+        Width = 1002
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitWidth = 992
       end
       object cxGrid1: TcxGrid
         Left = 0
         Top = 326
-        Width = 992
+        Width = 1002
         Height = 112
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 2
+        ExplicitWidth = 992
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -702,7 +704,7 @@ inherited SendForm: TSendForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 992
+    Width = 1002
     Height = 129
     TabOrder = 3
     ExplicitWidth = 992
@@ -2053,6 +2055,36 @@ inherited SendForm: TSendForm
       ImageIndex = 79
       QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103'"?'
     end
+    object actUpdate_ClearAmountStorage: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_ClearAmountStorage
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ClearAmountStorage
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103'"'
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103'"'
+      ImageIndex = 76
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103'"?'
+    end
+    object actUpdate_ClearAmountManual: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_ClearAmountManual
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ClearAmountManual
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103'"'
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103'"'
+      ImageIndex = 76
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103'"?'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 424
@@ -2276,15 +2308,7 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdteSendLoss'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton11'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton12'
+          ItemName = 'dxBarSubItem2'
         end
         item
           Visible = True
@@ -2388,6 +2412,41 @@ inherited SendForm: TSendForm
     end
     object dxBarButton12: TdxBarButton
       Action = actUpdate_AmountStorage
+      Category = 0
+    end
+    object dxBarSubItem2: TdxBarSubItem
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 79
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbUpdteSendLoss'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton11'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton12'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton13'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton14'
+        end>
+    end
+    object dxBarButton13: TdxBarButton
+      Action = actUpdate_ClearAmountStorage
+      Category = 0
+    end
+    object dxBarButton14: TdxBarButton
+      Action = actUpdate_ClearAmountManual
       Category = 0
     end
   end
@@ -4430,6 +4489,40 @@ inherited SendForm: TSendForm
       end>
     PackSize = 1
     Left = 878
+    Top = 376
+  end
+  object spUpdate_ClearAmountStorage: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Send_ClearAmountStorage'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 526
+    Top = 344
+  end
+  object spUpdate_ClearAmountManual: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Send_ClearAmountManual'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 526
     Top = 376
   end
 end

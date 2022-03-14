@@ -435,6 +435,17 @@ BEGIN
                          AND MovementItem.isErased = FALSE
                      )
 
+          , tmpMIChild AS (SELECT MovementItem.ParentId    AS ParentId
+                                , SUM(MIFloat_WorkTimeHoursOne.ValueData) AS WorkTimeHoursOne
+                           FROM MovementItem
+                              LEFT JOIN MovementItemFloat AS MIFloat_WorkTimeHoursOne
+                                                          ON MIFloat_WorkTimeHoursOne.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_WorkTimeHoursOne.DescId = zc_MIFloat_WorkTimeHoursOne()
+                           WHERE MovementItem.MovementId = inMovementId
+                             AND MovementItem.DescId = zc_MI_Child()
+                             AND MovementItem.isErased = FALSE
+                           GROUP BY MovementItem.ParentId
+                       )
           , tmpMI AS (SELECT tmpMI_all_find.PersonalId
                            , tmpMI_all_find.UnitId
                            , tmpMI_all_find.PositionId
@@ -472,9 +483,11 @@ BEGIN
                            , SUM (tmpMI_all.SummTransportTaxi) AS SummTransportTaxi
                            , SUM (tmpMI_all.SummPhone)         AS SummPhone
                            , SUM (tmpMI_all.SummHouseAdd)      AS SummHouseAdd
+                           , SUM (COALESCE (tmpMIChild.WorkTimeHoursOne, 0)) ::TFloat AS WorkTimeHoursOne_child
 
                       FROM tmpMI_all As tmpMI_all_find
                            LEFT JOIN tmpMI_all ON tmpMI_all.MemberId = tmpMI_all_find.MemberId
+                           LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpMI_all_find.MovementItemId
                       WHERE tmpMI_all_find.Ord = 1 AND inisShowAll = FALSE
                       GROUP BY tmpMI_all_find.PersonalId
                              , tmpMI_all_find.UnitId
@@ -521,8 +534,10 @@ BEGIN
                            , SUM (tmpMI_all.SummTransportTaxi) AS SummTransportTaxi
                            , SUM (tmpMI_all.SummPhone)         AS SummPhone
                            , SUM (tmpMI_all.SummHouseAdd)      AS SummHouseAdd
+                           , SUM (COALESCE (tmpMIChild.WorkTimeHoursOne, 0)) ::TFloat AS WorkTimeHoursOne_child
 
                       FROM tmpMI_all
+                           LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpMI_all.MovementItemId
                       WHERE inisShowAll = TRUE
                       GROUP BY tmpMI_all.PersonalId
                              , tmpMI_all.UnitId
@@ -625,6 +640,7 @@ BEGIN
                             , tmpMI.SummTransportTaxi
                             , tmpMI.SummPhone
                             , tmpMI.SummHouseAdd
+                            , tmpMI.WorkTimeHoursOne_child
                        FROM tmpMI
                       UNION ALL
                        SELECT 0 AS Amount, tmpPersonal.PersonalId, tmpPersonal.UnitId, tmpPersonal.PositionId, tmpPersonal.MemberId, tmpPersonal.PersonalServiceListId
@@ -657,6 +673,7 @@ BEGIN
                             , 0 AS SummTransportTaxi
                             , 0 AS SummPhone
                             , 0 AS SummHouseAdd
+                            , 0 AS WorkTimeHoursOne_child
                         FROM tmpPersonal
                         WHERE tmpPersonal.Ord = 1
                       UNION ALL
@@ -692,6 +709,7 @@ BEGIN
                             , 0 AS SummTransportTaxi
                             , 0 AS SummPhone
                             , 0 AS SummHouseAdd
+                            , 0 AS WorkTimeHoursOne_child
                         FROM tmpMIContainer_pay
                              LEFT JOIN tmpMember_findPersonal ON tmpMember_findPersonal.MemberId = tmpMIContainer_pay.MemberId
                              LEFT JOIN tmpMI ON tmpMI.MemberId = tmpMIContainer_pay.MemberId
@@ -722,6 +740,7 @@ BEGIN
                                                                  ON CLO_Position.ContainerId = CLO_ServiceDate.ContainerId
                                                                 AND CLO_Position.DescId     = zc_ContainerLinkObject_Position()
                              )*/
+
        -- –ÂÁÛÎ¸Ú‡Ú
        SELECT 0 :: Integer                            AS Id
             , Object_Personal.Id                      AS PersonalId
@@ -787,6 +806,7 @@ BEGIN
             , ( 1 * tmpMIContainer_pay.Amount_avance)      :: TFloat AS Amount_avance
             , (-1 * tmpMIContainer_pay.Amount_avance_ret)  :: TFloat AS Amount_avance_ret
             , tmpMIContainer_pay.Amount_service :: TFloat AS Amount_pay_service
+            , tmpAll.WorkTimeHoursOne_child ::TFloat
 
             , tmpAll.Comment
 
@@ -856,6 +876,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 13.03.22         * 
  17.11.21         * add SummHouseAdd
  25.03.20         * add SummAuditAdd
  20.06.17         * add SummCardSecondCash

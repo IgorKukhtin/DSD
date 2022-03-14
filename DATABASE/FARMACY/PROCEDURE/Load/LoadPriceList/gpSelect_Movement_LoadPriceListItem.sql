@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_LoadPriceListItem(
 RETURNS TABLE (Id Integer, CommonCode Integer, BarCode TVarChar, CodeUKTZED TVarChar,
                GoodsCode TVarChar, GoodsName TVarChar, GoodsNDS TVarChar, 
                GoodsId Integer, Code Integer, Name TVarChar, LoadPriceListId Integer, 
-               Price TFloat, Remains TFloat, ProducerName TVarChar, ExpirationDate TDateTime)
+               Price TFloat, Remains TFloat, ProducerName TVarChar, ExpirationDate TDateTime,
+               PartnerGoodsID Integer, IsPromo Boolean, isResolution_224 Boolean, IsClose Boolean)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -43,8 +44,10 @@ BEGIN
          LoadPriceListItem.Remains, 
          LoadPriceListItem.ProducerName, 
          LoadPriceListItem.ExpirationDate,
-         PartnerGoods.ID                                AS PartnerGoodsID,
-         COALESCE(PartnerGoods.IsPromo, FALSE)          AS IsPromo
+         PartnerGoods.ID                                         AS PartnerGoodsID,
+         COALESCE(PartnerGoods.IsPromo, FALSE)                   AS IsPromo,
+         COALESCE(Object_Goods_Main.isResolution_224, FALSE)     AS isResolution_224,
+         COALESCE(Object_Goods_Main.IsClose, FALSE)              AS IsClose
        FROM LoadPriceListItem 
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = LoadPriceListItem.GoodsId
@@ -52,6 +55,8 @@ BEGIN
             LEFT JOIN Object_Goods_Juridical AS PartnerGoods ON PartnerGoods.JuridicalId  = vbJuridicalId
                                                             AND PartnerGoods.Code = LoadPriceListItem.GoodsCode
                                                             AND COALESCE(PartnerGoods.AreaId, 0) = vbAreaId
+
+            LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id  = PartnerGoods.GoodsMainId
                                                          
       WHERE LoadPriceListItem.LoadPriceListId = inLoadPriceListId;
 
@@ -73,3 +78,5 @@ ALTER FUNCTION gpSelect_Movement_LoadPriceListItem (Integer, TVarChar) OWNER TO 
 
 -- тест
 --  select * from gpSelect_Movement_LoadPriceListItem(inLoadPriceListId := 14774 ,  inSession := '3');
+
+select * from gpSelect_Movement_LoadPriceListItem(inLoadPriceListId := 36140 ,  inSession := '3');

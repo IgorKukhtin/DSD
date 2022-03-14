@@ -21,7 +21,8 @@ RETURNS TABLE (Id Integer, CommonCode Integer, BarCode TVarChar,
                AreaName TVarChar,
                ExpirationDate TDateTime,
                MinimumLot TFloat, NDS TFloat, LinkGoodsId Integer,
-               MarginPercent TFloat, NewPrice TFloat, PriceSite TFloat)
+               MarginPercent TFloat, NewPrice TFloat, PriceSite TFloat,
+               isClose Boolean)
 
 AS
 $BODY$
@@ -160,6 +161,8 @@ BEGIN
                            ObjectGoodsView.Price                                                            -- Цена у товара (фиксированная)
                          )         :: TFloat AS NewPrice
        , tmpPrice_Site.Price                 AS PriceSite
+       
+       , COALESCE(ObjectGoodsView.isClose, FALSE)             AS isClose
 
        FROM LoadPriceListItem
 
@@ -248,4 +251,4 @@ $BODY$
 
 --select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := 'детралекс%1000' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3');
 
-select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := 'трайкор' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3');
+select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := 'пуст%мл' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3');
