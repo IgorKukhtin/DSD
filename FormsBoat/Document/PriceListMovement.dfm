@@ -3,7 +3,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
   ClientHeight = 668
   ClientWidth = 1069
   ExplicitWidth = 1085
-  ExplicitHeight = 706
+  ExplicitHeight = 707
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -884,10 +884,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -896,11 +892,23 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbStartLoad_Osculati'
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbStartLoad_Gotthardt'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -922,6 +930,9 @@ inherited PriceListMovementForm: TPriceListMovementForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     inherited bbPrint: TdxBarButton
       Visible = ivNever
@@ -946,6 +957,9 @@ inherited PriceListMovementForm: TPriceListMovementForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       Visible = ivAlways
       ImageIndex = 18
+    end
+    inherited bbStatic: TdxBarStatic
+      ShowCaption = False
     end
     inherited bbAddMask: TdxBarButton
       Visible = ivNever

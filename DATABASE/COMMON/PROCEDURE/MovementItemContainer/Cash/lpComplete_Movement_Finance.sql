@@ -96,9 +96,13 @@ BEGIN
                                                            THEN zc_Enum_AccountDirection_30100() -- покупатели
 
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner())
-                                                       AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21400() -- Общефирменные + услуги полученные
-                                                                                             , zc_Enum_InfoMoneyDestination_80500() -- Собственный капитал + Прочие
-                                                                                              )
+                                                       AND (_tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21400() -- Общефирменные + услуги полученные
+                                                                                              , zc_Enum_InfoMoneyDestination_80500() -- Собственный капитал + Прочие
+                                                                                               )
+                                                         OR _tmpItem.InfoMoneyId IN (7867119 -- (80503) Собственный капитал Представительские, пакеты, подарки Военкоматы, волонтеры, армия
+                                                                                    )
+                                                           )
+                                                       
                                                            THEN zc_Enum_AccountDirection_70200() -- Кредиторы по услугам
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                                            THEN zc_Enum_AccountDirection_70300() -- Маркетинг

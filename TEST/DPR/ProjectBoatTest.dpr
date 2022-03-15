@@ -315,7 +315,7 @@ begin
   //dsdProject := prProject;
 
   if FindCmdLineSwitch('realProjectBoat', true)
-  then gc_AdminPassword := 'qsxqsxw1'
+  then gc_AdminPassword := 'АдминАдмин'
   else gc_AdminPassword := 'Админ';
 
   gc_ProgramName := 'ProjectBoat.exe';
