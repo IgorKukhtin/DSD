@@ -177,6 +177,16 @@
               Format = ',0.####'
               Kind = skSum
               Column = Sale_Summ_opt
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_SummIn_pav
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ReturnIn_SummIn_pav
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -333,6 +343,16 @@
               Format = ',0.####'
               Kind = skSum
               Column = Sale_Summ_opt
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_SummIn_pav
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ReturnIn_SummIn_pav
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -864,6 +884,30 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object Sale_SummIn_pav: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076'. '#1089#1091#1084#1084#1072' '#1074#1093'. ('#1089#1093#1077#1084#1072' '#1087#1072#1074'-'#1099'), '#1075#1088#1085
+            DataBinding.FieldName = 'Sale_SummIn_pav'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1076'. '#1089#1091#1084#1084#1072' '#1074#1093'. ('#1089#1093#1077#1084#1072' '#1087#1072#1074#1080#1083#1100#1086#1085#1099'), '#1075#1088#1085
+            Options.Editing = False
+            Width = 83
+          end
+          object ReturnIn_SummIn_pav: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088'. '#1074#1093'. ('#1089#1093#1077#1084#1072' '#1087#1072#1074'-'#1099'), '#1075#1088#1085
+            DataBinding.FieldName = 'ReturnIn_SummIn_pav'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1086#1079#1074#1088'. '#1089#1091#1084#1084#1072' '#1074#1093'. ('#1089#1093#1077#1084#1072' '#1087#1072#1074#1080#1083#1100#1086#1085#1099'), '#1075#1088#1085
+            Options.Editing = False
+            Width = 70
           end
           object Promo_AmountPartner_Weight: TcxGridDBColumn
             Caption = #1040#1082#1094#1080#1080', '#1074#1077#1089' ('#1087#1086#1082#1091#1087')'

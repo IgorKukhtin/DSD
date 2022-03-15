@@ -68,6 +68,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , OperDate TDateTime
              , DayOfWeekName_Full TVarChar
+             , Sale_SummIn_pav TFloat, ReturnIn_SummIn_pav TFloat  --- сумма вх (схема павильоны)
               )
 AS
 $BODY$
@@ -144,6 +145,9 @@ BEGIN
             , '' ::TVarChar AS PaidKindName
             , NULL ::TDateTime AS OperDate 
             , ''   ::TVarChar  AS DayOfWeekName_Full
+ 
+            , 0 ::TFloat AS Sale_SummIn_pav
+            , 0 ::TFloat AS ReturnIn_SummIn_pav
        FROM gpReport_GoodsMI_SaleReturnIn_OLD (inStartDate
                                              , inEndDate
                                              , inBranchId
@@ -172,6 +176,7 @@ BEGIN
             , ''   ::TVarChar AS PaidKindName
             , NULL ::TDateTime AS OperDate 
             , ''   ::TVarChar  AS DayOfWeekName_Full
+            , Sale_SummIn_pav TFloat, ReturnIn_SummIn_pav TFloat  --- сумма вх (схема павильоны)
        FROM gpReport_GoodsMI_SaleReturnIn_OLD_TWO (inStartDate
                                                  , inEndDate
                                                  , inBranchId
@@ -306,6 +311,9 @@ BEGIN
                                     , gpReport.PaidKindName
                                     , gpReport.OperDate            ::TDateTime
                                     , gpReport.DayOfWeekName_Full  ::TVarChar
+                                    -- сумма вх (схема павильоны)
+                                    , gpReport.Sale_SummIn_pav     :: TFloat
+                                    , gpReport.ReturnIn_SummIn_pav :: TFloat
                                FROM gpReport_GoodsMI_SaleReturnIn_Olap (inStartDate
                                                                       , vbEndDate_olap
                                                                       , inBranchId
@@ -367,6 +375,8 @@ BEGIN
                                     , gpReport.PaidKindName
                                     , gpReport.OperDate           ::TDateTime
                                     , gpReport.DayOfWeekName_Full ::TVarChar
+                                    , gpReport.Sale_SummIn_pav     :: TFloat
+                                    , gpReport.ReturnIn_SummIn_pav :: TFloat
                                FROM gpReport_GoodsMI_SaleReturnIn (vbEndDate_olap + INTERVAL '1 DAY'
                                                                  , inEndDate
                                                                  , inBranchId
@@ -436,6 +446,10 @@ BEGIN
 
             , gpReport.OperDate           ::TDateTime AS OperDate 
             , gpReport.DayOfWeekName_Full ::TVarChar  AS DayOfWeekName_Full
+
+            , SUM (gpReport.Sale_SummIn_pav)     ::TFloat AS Sale_SummIn_pav
+            , SUM (gpReport.ReturnIn_SummIn_pav) ::TFloat AS ReturnIn_SummIn_pav
+
        FROM tmpData AS gpReport
        GROUP BY gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
               , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
@@ -889,6 +903,10 @@ BEGIN
 
          , tmpOperationGroup.OperDate    ::TDateTime
          , tmpWeekDay.DayOfWeekName_Full ::TVarChar AS DayOfWeekName_Full         
+
+         , 0 ::TFloat AS Sale_SummIn_pav
+         , 0 ::TFloat AS ReturnIn_SummIn_pav
+
      FROM tmpOperationGroup
 
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
@@ -993,6 +1011,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 15.03.22         *
  28.12.21         * add OperDate
  25.08.21         * add PaidKind
  06.05.21         * 

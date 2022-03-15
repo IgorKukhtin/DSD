@@ -2229,13 +2229,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_inventoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_inventoryForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_inventoryDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_inventoryDialogForm');
   exit;
-   {
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DefermentPaymentOLAPTableForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_DefermentPaymentOLAPTableForm');
@@ -2461,7 +2461,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Balance_gridForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Balance_gridForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLoss_gridForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLoss_gridForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLoss_gridDialogForm'));
@@ -2470,7 +2470,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossDialogForm');
   exit;
@@ -2577,11 +2577,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnInNotOlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnInNotOlapForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnInForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnIn_BUHForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnIn_BUHForm');
   exit;

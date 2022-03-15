@@ -123,7 +123,7 @@ BEGIN
                                                     , inIsArc            := FALSE    :: Boolean
                                                     , inAmountMin        := 0             :: TFloat
                                                     , inAmountRefer      := 0             :: TFloat
-                                                    , inEKPrice          := inAmount      :: TFloat
+                                                    , inEKPrice          := CAST (CASE WHEN COALESCE (inMeasureMult,0) <> 0 THEN inAmount / inMeasureMult ELSE inAmount END AS NUMERIC (16,2)) :: TFloat
                                                     , inEmpfPrice        := 0             :: TFloat
                                                     , inGoodsGroupId     := 40422         :: Integer  --NEW
                                                     , inMeasureId        := vbMeasureId   :: Integer
@@ -195,7 +195,7 @@ BEGIN
                                                                    , inDiscountPartnerId := vbDiscountPartnerId            ::Integer
                                                                    , inMeasureId         := vbMeasureId                   ::Integer
                                                                    , inMeasureParentId   := vbMeasureParentId
-                                                                   , inAmount            := inAmount      ::TFloat
+                                                                   , inAmount            := CAST (CASE WHEN COALESCE (inMeasureMult,0) <> 0 THEN inAmount / inMeasureMult ELSE inAmount END AS NUMERIC (16,2)) ::TFloat
                                                                    , inMeasureMult       := inMeasureMult ::TFloat
                                                                    , inPriceParent       := inPriceParent ::TFloat
                                                                    , inEmpfPriceParent   := inEmpfPriceParent ::TFloat

@@ -61,6 +61,9 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , OperDate TDateTime
              , DayOfWeekName_Full TVarChar
+             -- сумма вх (схема павильоны)
+             , Sale_SummIn_pav TFloat
+             , ReturnIn_SummIn_pav TFloat
               )
 AS
 $BODY$
@@ -270,6 +273,9 @@ BEGIN
 
                               , SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Return_SummCost       ELSE 0 END) AS Return_SummCost
                               , SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Return_SummCost_40200 ELSE 0 END) AS Return_SummCost_40200
+                              -- сумма вх (схема павильоны)
+                              , SUM (SoldTable.Sale_SummIn_pav)     AS Sale_SummIn_pav
+                              , SUM (SoldTable.ReturnIn_SummIn_pav) AS ReturnIn_SummIn_pav
                          FROM SoldTable
                               LEFT JOIN _tmpJuridical ON _tmpJuridical.JuridicalId = SoldTable.JuridicalId
                               LEFT JOIN _tmpJuridicalBranch ON _tmpJuridicalBranch.JuridicalId = SoldTable.JuridicalId
@@ -355,6 +361,10 @@ BEGIN
 
                              OR SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Return_SummCost       ELSE 0 END) <> 0
                              OR SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Return_SummCost_40200 ELSE 0 END) <> 0
+
+                              -- сумма вх (схема павильоны)
+                             OR SUM (SoldTable.Sale_SummIn_pav) <> 0
+                             OR SUM (SoldTable.ReturnIn_SummIn_pav) <> 0
                         )
 
         -- выбираем данные по признаку товара ТОП из GoodsByGoodsKind
@@ -473,6 +483,10 @@ BEGIN
 
          , tmpOperationGroup.OperDate    ::TDateTime
          , tmpWeekDay.DayOfWeekName_Full ::TVarChar AS DayOfWeekName_Full
+
+         -- сумма вх (схема павильоны)
+         , tmpOperationGroup.Sale_SummIn_pav     :: TFloat AS Sale_SummIn_pav
+         , tmpOperationGroup.ReturnIn_SummIn_pav :: TFloat AS ReturnIn_SummIn_pav
      FROM tmpOperationGroup
           -- LEFT JOIN _tmp_noDELETE_Partner ON _tmp_noDELETE_Partner.FromId = tmpOperationGroup.PartnerId AND 1 = 0
 
@@ -542,6 +556,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 15.03.22         * 
  25.08.21         * add PaidKind
  03.06.21         * add isTop
  28.04.21         * add PartnerCategory
