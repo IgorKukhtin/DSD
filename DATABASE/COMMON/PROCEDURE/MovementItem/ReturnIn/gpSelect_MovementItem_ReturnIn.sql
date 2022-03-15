@@ -223,6 +223,7 @@ BEGIN
                              , MILinkObject_GoodsKind.ObjectId
                              , MIFloat_Price.ValueData
                              , MIFloat_ChangePercent.ValueData
+                             , COALESCE (MIFloat_PriceIn.ValueData, 0)
                      )
    , tmpMI_parent_find AS (SELECT tmp.MovementItemId
                                 , tmpMI_parent.GoodsId

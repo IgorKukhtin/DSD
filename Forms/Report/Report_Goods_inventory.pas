@@ -49,7 +49,7 @@ type
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
-    CountEnd: TcxGridDBColumn;
+    CountEnd_calc: TcxGridDBColumn;
     CountIn_ProductionSeparate_un: TcxGridDBColumn;
     GuidesGoodsGroup: TdsdGuides;
     GuidesLocation: TdsdGuides;
@@ -125,6 +125,7 @@ type
     bbPrint_MOAuto: TdxBarButton;
     actPrintCount: TdsdPrintAction;
     bbPrintCount: TdxBarButton;
+    OperDate: TcxGridDBColumn;
   private
   public
   end;
