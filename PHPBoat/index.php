@@ -1,6 +1,12 @@
 <?php
- ini_set("display_errors", 1);
- error_reporting(E_ALL);
+
+ ini_set('display_errors', 0);
+ ini_set('display_startup_errors', 0);
+ error_reporting(E_FATAL);
+
+; ini_set("display_errors", 1);
+; error_reporting(E_ALL);
+
  set_error_handler(function($errno, $errstr, $errfile, $errline ){
     throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
  });
@@ -43,6 +49,8 @@ try {
  set_time_limit (0);
  
 // Соединение, выбор базы данных
+
+//echo XML_MAX_TEXT_LENGTH;
 
 $dbconn = pg_connect($connectstring)
     or die('Could not connect: ' . pg_last_error());

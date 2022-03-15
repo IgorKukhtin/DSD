@@ -296,6 +296,19 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Position.ColIndex = 6
         Position.RowIndex = 0
       end
+      object WorkTimeKindName_key: TcxGridDBBandedColumn
+        Caption = #1042#1080#1076' '#1089#1084'.'
+        DataBinding.FieldName = 'WorkTimeKindName_key'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1080#1076' '#1089#1084#1077#1085#1099
+        Options.Editing = False
+        Width = 34
+        Position.BandIndex = 0
+        Position.ColIndex = 7
+        Position.RowIndex = 0
+      end
       object AmountHours: TcxGridDBBandedColumn
         Caption = '1.'#1095#1072#1089#1099
         DataBinding.FieldName = 'AmountHours'
@@ -309,7 +322,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Options.Moving = False
         Width = 30
         Position.BandIndex = 0
-        Position.ColIndex = 7
+        Position.ColIndex = 8
         Position.RowIndex = 0
       end
       object CountDay: TcxGridDBBandedColumn
@@ -325,7 +338,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Options.Moving = False
         Width = 30
         Position.BandIndex = 0
-        Position.ColIndex = 8
+        Position.ColIndex = 9
         Position.RowIndex = 0
       end
       object Amount_3: TcxGridDBBandedColumn
@@ -341,7 +354,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Options.Moving = False
         Width = 30
         Position.BandIndex = 0
-        Position.ColIndex = 9
+        Position.ColIndex = 10
         Position.RowIndex = 0
       end
       object Amount_4: TcxGridDBBandedColumn
@@ -358,7 +371,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Options.Moving = False
         Width = 64
         Position.BandIndex = 0
-        Position.ColIndex = 10
+        Position.ColIndex = 11
         Position.RowIndex = 0
       end
       object Amount_5: TcxGridDBBandedColumn
@@ -375,7 +388,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Options.Moving = False
         Width = 64
         Position.BandIndex = 0
-        Position.ColIndex = 11
+        Position.ColIndex = 12
         Position.RowIndex = 0
       end
       object Amount_6: TcxGridDBBandedColumn
@@ -392,7 +405,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Options.Moving = False
         Width = 64
         Position.BandIndex = 0
-        Position.ColIndex = 12
+        Position.ColIndex = 13
         Position.RowIndex = 0
       end
       object Value: TcxGridDBBandedColumn
@@ -890,6 +903,12 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       end
       item
         Component = StorageLineName
+        Properties.Strings = (
+          'Visible'
+          'Width')
+      end
+      item
+        Component = WorkTimeKindName_key
         Properties.Strings = (
           'Visible'
           'Width')

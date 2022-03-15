@@ -94,15 +94,20 @@ BEGIN
      -- все данные за мес€ц
      CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
             WITH
-            tmpMovement AS (SELECT tmpOperDate.operdate
+       tmpMovement_all AS (SELECT tmpOperDate.OperDate
                                --, CASE WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN 0 ELSE MI_SheetWorkTime.Amount END AS Amount
                                  , MI_SheetWorkTime.Amount
                                  , COALESCE(MI_SheetWorkTime.ObjectId, 0)        AS MemberId
                                  , COALESCE(MIObject_Position.ObjectId, 0)       AS PositionId
                                  , COALESCE(MIObject_PositionLevel.ObjectId, 0)  AS PositionLevelId
                                  , COALESCE (ObjectBoolean_NoSheetCalc.ValueData, FALSE) ::Boolean AS isNoSheetCalc
-                                 , COALESCE(MIObject_StorageLine.ObjectId, 0)    AS StorageLineId
                                  , COALESCE(MIObject_PersonalGroup.ObjectId, 0)  AS PersonalGroupId
+                                 , COALESCE(MIObject_StorageLine.ObjectId, 0)    AS StorageLineId
+                                 , CASE WHEN inUnitId = 8451
+                                             THEN CASE WHEN MI_SheetWorkTime.Amount > 0 AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN zc_Enum_WorkTimeKind_Work() ELSE COALESCE (MIObject_WorkTimeKind.ObjectId, 0) END
+                                        ELSE 0
+                                   END AS WorkTimeKindId_key
+
                                  , CASE WHEN MI_SheetWorkTime.Amount > 0 AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN zc_Enum_WorkTimeKind_Work() ELSE MIObject_WorkTimeKind.ObjectId END AS ObjectId
                                  , ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
                                  , CASE WHEN MI_SheetWorkTime.isErased = TRUE THEN 0 ELSE 1 END AS isErased
@@ -167,19 +172,121 @@ BEGIN
 
                                  LEFT JOIN gpSelect_Object_Calendar (vbStartDate, vbEndDate, inSession) AS tmpCalendar ON tmpCalendar.Value = tmpOperDate.OperDate
                             WHERE MovementLinkObject_Unit.ObjectId = inUnitId
-                            )
+                           )
+          , tmpMovement AS (SELECT tmpMovement_all.OperDate
+                               --, CASE WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN 0 ELSE MI_SheetWorkTime.Amount END AS Amount
+                                 , tmpMovement_all.Amount
+                                 , tmpMovement_all.MemberId
+                                 , tmpMovement_all.PositionId
+                                 , tmpMovement_all.PositionLevelId
+                                 , tmpMovement_all.isNoSheetCalc
+                                 , tmpMovement_all.PersonalGroupId
+                                 , tmpMovement_all.StorageLineId
+                                 , CASE -- если в этом дне есть день и Ќ≈“ ночь
+                                        WHEN tmpMovement_all_n.WorkTimeKindId_key IS NULL
+                                         AND tmpMovement_all_d.WorkTimeKindId_key IS NOT NULL
+                                             THEN 2237043 -- ночь 12ч
+                                        -- если в этом дне есть ночь и Ќ≈“ день
+                                        WHEN tmpMovement_all_n.WorkTimeKindId_key IS NOT NULL
+                                         AND tmpMovement_all_d.WorkTimeKindId_key IS NULL
+                                             THEN 2237042 -- день 12ч
+
+                                        -- если за мес€ц есть день + в этом дне Ќ≈“ день
+                                        WHEN tmpMovement_all_d_all.WorkTimeKindId_key IS NOT NULL
+                                         AND tmpMovement_all_d.WorkTimeKindId_key IS NULL
+                                             THEN 2237042 -- день 12ч
+
+                                        -- если за мес€ц есть ночь + в этом дне Ќ≈“ ночь
+                                        WHEN tmpMovement_all_n_all.WorkTimeKindId_key IS NOT NULL
+                                         AND tmpMovement_all_n.WorkTimeKindId_key IS NULL
+                                             THEN 2237043 -- ночь 12ч
+
+                                        ELSE tmpMovement_all.WorkTimeKindId_key
+
+                                   END AS WorkTimeKindId_key
+
+                                 , tmpMovement_all.ObjectId
+                                 , tmpMovement_all.ShortName
+                                 , tmpMovement_all.isErased
+                                 , tmpMovement_all.Color_Calc AS Color_Calc
+                                   --  выходн дни - желтым фоном + праздничные - зеленым, определ€етс€ в zc_Object_Calendar
+                            FROM tmpMovement_all
+                                 -- если в этот день заполнены день 12ч
+                                 LEFT JOIN tmpMovement_all AS tmpMovement_all_d
+                                                           ON inUnitId = 8451
+                                                          AND tmpMovement_all_d.WorkTimeKindId_key = 2237042 -- день 12ч
+                                                          AND tmpMovement_all_d.OperDate           = tmpMovement_all.OperDate
+                                                          AND tmpMovement_all_d.MemberId           = tmpMovement_all.MemberId
+                                                          AND tmpMovement_all_d.PositionId         = tmpMovement_all.PositionId
+                                                          AND tmpMovement_all_d.PositionLevelId    = tmpMovement_all.PositionLevelId
+                                                          AND tmpMovement_all_d.PersonalGroupId    = tmpMovement_all.PersonalGroupId
+                                                          AND tmpMovement_all_d.StorageLineId      = tmpMovement_all.StorageLineId
+                                                          AND tmpMovement_all_d.Amount             > 0
+                                                          AND tmpMovement_all.WorkTimeKindId_key NOT IN (2237042, 2237043)
+                                 -- если в этот день заполнены ночь 12ч
+                                 LEFT JOIN tmpMovement_all AS tmpMovement_all_n
+                                                           ON inUnitId = 8451
+                                                          AND tmpMovement_all_n.WorkTimeKindId_key = 2237043 -- ночь 12ч
+                                                          AND tmpMovement_all_n.OperDate           = tmpMovement_all.OperDate
+                                                          AND tmpMovement_all_n.MemberId           = tmpMovement_all.MemberId
+                                                          AND tmpMovement_all_n.PositionId         = tmpMovement_all.PositionId
+                                                          AND tmpMovement_all_n.PositionLevelId    = tmpMovement_all.PositionLevelId
+                                                          AND tmpMovement_all_n.PersonalGroupId    = tmpMovement_all.PersonalGroupId
+                                                          AND tmpMovement_all_n.StorageLineId      = tmpMovement_all.StorageLineId
+                                                          AND tmpMovement_all_n.Amount             > 0
+                                                          AND tmpMovement_all.WorkTimeKindId_key NOT IN (2237042, 2237043)
+                                 -- если за мес€ц заполнен хоть один день 12ч
+                                 LEFT JOIN (SELECT DISTINCT tmpMovement_all.MemberId
+                                                          , tmpMovement_all.PositionId
+                                                          , tmpMovement_all.PositionLevelId
+                                                          , tmpMovement_all.PersonalGroupId
+                                                          , tmpMovement_all.StorageLineId
+                                                          , tmpMovement_all.WorkTimeKindId_key
+                                            FROM tmpMovement_all
+                                            WHERE inUnitId = 8451
+                                              AND tmpMovement_all.WorkTimeKindId_key = 2237042 -- день 12ч
+                                              AND tmpMovement_all.Amount             > 0
+                                           ) AS tmpMovement_all_d_all
+                                             ON inUnitId = 8451
+                                            AND tmpMovement_all_d_all.MemberId           = tmpMovement_all.MemberId
+                                            AND tmpMovement_all_d_all.PositionId         = tmpMovement_all.PositionId
+                                            AND tmpMovement_all_d_all.PositionLevelId    = tmpMovement_all.PositionLevelId
+                                            AND tmpMovement_all_d_all.PersonalGroupId    = tmpMovement_all.PersonalGroupId
+                                            AND tmpMovement_all_d_all.StorageLineId      = tmpMovement_all.StorageLineId
+                                            AND tmpMovement_all.WorkTimeKindId_key NOT IN (2237042, 2237043)
+                                 -- если за мес€ц заполнен хоть один ночь 12ч
+                                 LEFT JOIN (SELECT DISTINCT tmpMovement_all.MemberId
+                                                          , tmpMovement_all.PositionId
+                                                          , tmpMovement_all.PositionLevelId
+                                                          , tmpMovement_all.PersonalGroupId
+                                                          , tmpMovement_all.StorageLineId
+                                                          , tmpMovement_all.WorkTimeKindId_key
+                                            FROM tmpMovement_all
+                                            WHERE inUnitId = 8451
+                                              AND tmpMovement_all.WorkTimeKindId_key = 2237043 -- ночь 12ч
+                                              AND tmpMovement_all.Amount             > 0
+                                           ) AS tmpMovement_all_n_all
+                                             ON inUnitId = 8451
+                                            AND tmpMovement_all_n_all.MemberId           = tmpMovement_all.MemberId
+                                            AND tmpMovement_all_n_all.PositionId         = tmpMovement_all.PositionId
+                                            AND tmpMovement_all_n_all.PositionLevelId    = tmpMovement_all.PositionLevelId
+                                            AND tmpMovement_all_n_all.PersonalGroupId    = tmpMovement_all.PersonalGroupId
+                                            AND tmpMovement_all_n_all.StorageLineId      = tmpMovement_all.StorageLineId
+                                            AND tmpMovement_all.WorkTimeKindId_key NOT IN (2237042, 2237043)
+                            WHERE (tmpMovement_all.WorkTimeKindId_key > 0 OR inUnitId <> 8451 OR tmpMovement_all.Amount > 0)
+                           )
             -- св€зываем даты до приема, после увольнени€ с текущими
           , tmpDateOut AS (SELECT tmpDateOut_All.OperDate
                                 , tmpDateOut_All.MemberId
                                 , tmpDateOut_All.PositionId
                                 , tmpMI.PositionLevelId
-                                , tmpMI.StorageLineId
                                 , tmpMI.PersonalGroupId
+                                , tmpMI.StorageLineId
                                 , zc_Color_White() AS Color_Calc
                                 , tmpDateOut_All.WorkTimeKindId
                                 , tmpDateOut_All.ShortName
                            FROM tmpDateOut_All
-                                INNER JOIN (SELECT DISTINCT tmpMI.MemberId, tmpMI.PositionId, PositionLevelId, StorageLineId, PersonalGroupId 
+                                INNER JOIN (SELECT DISTINCT tmpMI.MemberId, tmpMI.PositionId, PositionLevelId, PersonalGroupId , StorageLineId
                                             FROM tmpMovement AS tmpMI
                                            ) AS tmpMI ON tmpMI.MemberId   = tmpDateOut_All.MemberId
                                                      AND tmpMI.PositionId = tmpDateOut_All.PositionId
@@ -194,8 +301,9 @@ BEGIN
                  , tmp.PositionId
                  , tmp.PositionLevelId
                  , tmp.isNoSheetCalc
-                 , tmp.StorageLineId
                  , tmp.PersonalGroupId
+                 , tmp.StorageLineId
+                 , tmp.WorkTimeKindId_key
                  , COALESCE (tmpDateOut.WorkTimeKindId, tmp.ObjectId) AS ObjectId
                  , COALESCE (tmpDateOut.ShortName, tmp.ShortName)     AS ShortName
                  , tmp.isErased
@@ -215,8 +323,9 @@ BEGIN
                  , tmp.PositionId
                  , tmp.PositionLevelId
                  , FALSE AS isNoSheetCalc
-                 , tmp.StorageLineId
                  , tmp.PersonalGroupId
+                 , tmp.StorageLineId
+                 , 0 :: Integer AS WorkTimeKindId_key
                  , tmp.WorkTimeKindId AS ObjectId
                  , tmp.ShortName
                  , 1 AS isErased
@@ -267,6 +376,7 @@ BEGIN
            , tmp.PositionLevelId
            , tmp.PersonalGroupId
            , tmp.StorageLineId
+           , tmp.WorkTimeKindId_key
            , SUM (tmp.Amount) ::TFLoat AS Amount
            , tmp.ObjectId
      FROM (--кол-во часов
@@ -276,6 +386,7 @@ BEGIN
            , tmpMI.PositionLevelId
            , tmpMI.PersonalGroupId
            , tmpMI.StorageLineId
+           , tmpMI.WorkTimeKindId_key
            , SUM (tmpMI.Amount) AS Amount
            , 1  AS ObjectId
       FROM tmpOperDate
@@ -289,6 +400,7 @@ BEGIN
               , tmpMI.PositionLevelId
               , tmpMI.PersonalGroupId
               , tmpMI.StorageLineId
+              , tmpMI.WorkTimeKindId_key
     UNION
       -- кол-во смен 
       SELECT tmpOperDate.OperDate
@@ -297,18 +409,20 @@ BEGIN
            , tmpMI.PositionLevelId
            , tmpMI.PersonalGroupId
            , tmpMI.StorageLineId
+           , tmpMI.WorkTimeKindId_key
            , SUM (CASE WHEN COALESCE (tmpMI.Amount, 0) <> 0 THEN 1 ELSE 0 END) AS Amount
            , 2  AS ObjectId
       FROM tmpOperDate
           JOIN tmpMI ON tmpMI.operDate = tmpOperDate.OperDate
                     AND tmpMI.ObjectId NOT IN ( zc_Enum_WorkTimeKind_Quit(), zc_Enum_WorkTimeKind_DayOff())
                     AND tmpMI.isErased = 1
-       Group by tmpOperDate.OperDate
+       GROUP BY tmpOperDate.OperDate
               , tmpMI.MemberId
               , tmpMI.PositionId
               , tmpMI.PositionLevelId
               , tmpMI.PersonalGroupId
               , tmpMI.StorageLineId
+              , tmpMI.WorkTimeKindId_key
     UNION
       --  ол-во шт.ед
       SELECT tmp.OperDate
@@ -317,6 +431,7 @@ BEGIN
            , tmp.PositionLevelId
            , tmp.PersonalGroupId
            , tmp.StorageLineId
+           , tmp.WorkTimeKindId_key
            , SUM (tmp.Amount) AS Amount
            , 3  AS ObjectId
       FROM (SELECT tmpOperDate.OperDate
@@ -325,6 +440,7 @@ BEGIN
                  , tmpMI.PositionLevelId
                  , tmpMI.PersonalGroupId
                  , tmpMI.StorageLineId
+                 , tmpMI.WorkTimeKindId_key
                  , CASE WHEN COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay) <> 0
                             THEN tmpMI.Amount / COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay)
                         ELSE 1
@@ -357,6 +473,7 @@ BEGIN
              , tmp.PositionLevelId
              , tmp.PersonalGroupId
              , tmp.StorageLineId
+             , tmp.WorkTimeKindId_key
     UNION
       --  ол-во ЅЋ
       SELECT tmpOperDate.OperDate
@@ -365,6 +482,7 @@ BEGIN
            , tmpMI.PositionLevelId
            , tmpMI.PersonalGroupId
            , tmpMI.StorageLineId
+           , tmpMI.WorkTimeKindId_key
            , SUM (1) AS Amount
            , 4  AS ObjectId
       FROM tmpOperDate
@@ -377,6 +495,7 @@ BEGIN
               , tmpMI.PositionLevelId
               , tmpMI.PersonalGroupId
               , tmpMI.StorageLineId
+              , tmpMI.WorkTimeKindId_key
     UNION
       --  ол-во отпуска
       SELECT tmpOperDate.OperDate
@@ -385,6 +504,7 @@ BEGIN
            , tmpMI.PositionLevelId
            , tmpMI.PersonalGroupId
            , tmpMI.StorageLineId
+           , tmpMI.WorkTimeKindId_key
            , SUM (1) AS Amount
            , 5  AS ObjectId
       FROM tmpOperDate
@@ -398,6 +518,7 @@ BEGIN
               , tmpMI.PositionLevelId
               , tmpMI.PersonalGroupId
               , tmpMI.StorageLineId
+              , tmpMI.WorkTimeKindId_key
     UNION
       --  ол-во прогулов
       SELECT tmpOperDate.OperDate
@@ -406,6 +527,7 @@ BEGIN
            , tmpMI.PositionLevelId
            , tmpMI.PersonalGroupId
            , tmpMI.StorageLineId
+           , tmpMI.WorkTimeKindId_key
            , SUM (1) AS Amount
            , 6  AS ObjectId
       FROM tmpOperDate
@@ -419,6 +541,7 @@ BEGIN
               , tmpMI.PositionLevelId
               , tmpMI.PersonalGroupId
               , tmpMI.StorageLineId
+              , tmpMI.WorkTimeKindId_key
 )AS tmp
        Group by tmp.OperDate
               , tmp.MemberId
@@ -426,6 +549,7 @@ BEGIN
               , tmp.PositionLevelId
               , tmp.PersonalGroupId
               , tmp.StorageLineId
+              , tmp.WorkTimeKindId_key
               , tmp.ObjectId
       ;
       ----------------------------------------------------------------
@@ -458,18 +582,21 @@ BEGIN
 
 
      vbQueryText := '
-        SELECT Object_Member.Id             AS MemberId
-               , Object_Member.ObjectCode   AS MemberCode
-               , Object_Member.ValueData    AS MemberName
-               , Object_Position.Id         AS PositionId
-               , Object_Position.ValueData  AS PositionName
-               , Object_PositionLevel.Id         AS PositionLevelId
-               , Object_PositionLevel.ValueData  AS PositionLevelName
-               , Object_PersonalGroup.Id         AS PersonalGroupId
-               , Object_PersonalGroup.ValueData  AS PersonalGroupName
-               , Object_StorageLine.Id           AS StorageLineId
-               , Object_StorageLine.ValueData    AS StorageLineName
+        SELECT Object_Member.Id                      AS MemberId
+               , Object_Member.ObjectCode            AS MemberCode
+               , Object_Member.ValueData             AS MemberName
+               , Object_Position.Id                  AS PositionId
+               , Object_Position.ValueData           AS PositionName
+               , Object_PositionLevel.Id             AS PositionLevelId
+               , Object_PositionLevel.ValueData      AS PositionLevelName
+               , Object_PersonalGroup.Id             AS PersonalGroupId
+               , Object_PersonalGroup.ValueData      AS PersonalGroupName
+               , Object_StorageLine.Id               AS StorageLineId
+               , Object_StorageLine.ValueData        AS StorageLineName
+               , Object_WorkTimeKind_key.ValueData   AS WorkTimeKindName_key
+
                , CASE WHEN tmp.isErased = 0 THEN TRUE ELSE FALSE END AS isErased
+
               -- , CASE WHEN COALESCE (tmp.Amount, 0) <> 0 THEN zc_Color_Red() ELSE 0 END AS Color_Calc1
                , tmp.Amount                      AS AmountHours
                , tmp.CountDay::TFloat
@@ -481,20 +608,21 @@ BEGIN
                || vbFieldNameText ||
         ' FROM
          (SELECT * FROM CROSSTAB (''
-                                    SELECT ARRAY[COALESCE (Movement_Data.MemberId, Object_Data.MemberId)               -- AS MemberId
-                                               , COALESCE (Movement_Data.PositionId, Object_Data.PositionId)           -- AS PositionId
-                                               , COALESCE (Movement_Data.PositionLevelId, Object_Data.PositionLevelId) -- AS PositionLevelId
-                                               , COALESCE (Movement_Data.PersonalGroupId, Object_Data.PersonalGroupId) -- AS PersonalGroupId
-                                               , COALESCE (Movement_Data.StorageLineId, Object_Data.StorageLineId)     -- AS PositionLevelId
+                                    SELECT ARRAY[COALESCE (Movement_Data.MemberId, Object_Data.MemberId)                     -- AS MemberId
+                                               , COALESCE (Movement_Data.PositionId, Object_Data.PositionId)                 -- AS PositionId
+                                               , COALESCE (Movement_Data.PositionLevelId, Object_Data.PositionLevelId)       -- AS PositionLevelId
+                                               , COALESCE (Movement_Data.PersonalGroupId, Object_Data.PersonalGroupId)       -- AS PersonalGroupId
+                                               , COALESCE (Movement_Data.StorageLineId, Object_Data.StorageLineId)           -- AS PositionLevelId
+                                               , COALESCE (Movement_Data.WorkTimeKindId_key, 0)                              -- AS WorkTimeKindId_key
                                                 ] :: Integer[]
                                          , COALESCE (Movement_Data.OperDate, Object_Data.OperDate) AS OperDate
                                          , ARRAY[(zfCalc_ViewWorkHour (COALESCE(Movement_Data.Amount, 0), COALESCE (Movement_Data.ShortName, ObjectString_WorkTimeKind_ShortName.ValueData))) :: VarChar
                                                , COALESCE (Movement_Data.ObjectId,  COALESCE (tmpDateOut_All.WorkTimeKindId, 0)) :: VarChar
                                                , COALESCE (Movement_Data.Color_Calc, Object_Data.Color_Calc) :: VarChar
                                                 ] :: TVarChar
-                                    FROM (WITH tmpAll AS (SELECT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId
+                                    FROM (WITH tmpAll AS (SELECT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId, tmpMI.WorkTimeKindId_key
                                                                , tmpOperDate.OperDate
-                                                          FROM (SELECT DISTINCT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId FROM tmpMI) AS tmpMI
+                                                          FROM (SELECT DISTINCT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId, tmpMI.WorkTimeKindId_key FROM tmpMI) AS tmpMI
                                                                CROSS JOIN tmpOperDate
                                                          )
                                           SELECT tmpAll.MemberId
@@ -502,28 +630,30 @@ BEGIN
                                                , tmpAll.PositionLevelId
                                                , tmpAll.PersonalGroupId
                                                , tmpAll.StorageLineId
+                                               , tmpAll.WorkTimeKindId_key
                                                , tmpAll.OperDate
                                                , tmpMI.Amount, tmpMI.ShortName
                                                , COALESCE (tmpMI.ObjectId, 0) AS ObjectId
                                                , COALESCE (tmpMI.Color_Calc, zc_Color_White()) AS Color_Calc
                                           FROM tmpAll
-                                               LEFT JOIN tmpMI ON tmpMI.OperDate        = tmpAll.OperDate
-                                                              AND tmpMI.MemberId        = tmpAll.MemberId
-                                                              AND tmpMI.PositionId      = tmpAll.PositionId
-                                                              AND tmpMI.PositionLevelId = tmpAll.PositionLevelId
-                                                              AND tmpMI.PersonalGroupId = tmpAll.PersonalGroupId
-                                                              AND tmpMI.StorageLineId   = tmpAll.StorageLineId
+                                               LEFT JOIN tmpMI ON tmpMI.OperDate           = tmpAll.OperDate
+                                                              AND tmpMI.MemberId           = tmpAll.MemberId
+                                                              AND tmpMI.PositionId         = tmpAll.PositionId
+                                                              AND tmpMI.PositionLevelId    = tmpAll.PositionLevelId
+                                                              AND tmpMI.PersonalGroupId    = tmpAll.PersonalGroupId
+                                                              AND tmpMI.StorageLineId      = tmpAll.StorageLineId
+                                                              AND tmpMI.WorkTimeKindId_key = tmpAll.WorkTimeKindId_key
                                                               AND (tmpMI.isErased = 1 OR ' || inisErased :: TVarChar || ' = TRUE)
                                          ) AS Movement_Data
                                         FULL JOIN
                                          (SELECT tmpOperDate.OperDate,
-                                                 COALESCE(MemberId, 0) AS MemberId,
+                                                 COALESCE(Object_Personal_View.MemberId, 0)                   AS MemberId,
                                                  COALESCE(ObjectLink_Personal_Position.ChildObjectId, 0)      AS PositionId,
                                                  COALESCE(ObjectLink_Personal_PositionLevel.ChildObjectId, 0) AS PositionLevelId,
                                                  COALESCE(ObjectLink_Personal_PersonalGroup.ChildObjectId, 0) AS PersonalGroupId,
                                                  COALESCE(Object_Personal_View.StorageLineId, 0)              AS StorageLineId,
                                                  tmpOperDate.Color_Calc
-                                            FROM tmpOperDate, Object_Personal_View
+                                            FROM tmpOperDate, Object_Personal_View -- ON 1=1 -- inUnitId <> 8451 -- кроме ”ѕј ќ¬ »
                                                  LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
                                                                       ON ObjectLink_Personal_Position.ObjectId = Object_Personal_View.PersonalId
                                                                      AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
@@ -537,6 +667,9 @@ BEGIN
                                                                       ON ObjectLink_Personal_PersonalGroup.ObjectId = Object_Personal_View.PersonalId
                                                                      AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
                                             WHERE Object_Personal_View.isErased = FALSE
+                                              -- кроме ”ѕј ќ¬ »
+--                                              AND inUnitId <> 8451
+                                              --
                                               AND ObjectLink_Personal_Unit.ChildObjectId = ' || inUnitId :: TVarChar ||
                                         ') AS Object_Data
                                            ON Object_Data.OperDate = Movement_Data.OperDate
@@ -562,22 +695,25 @@ BEGIN
          LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = D.Key[3]
          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = D.Key[4]
          LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = D.Key[5]
-         LEFT JOIN (SELECT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId, tmpMI.isErased
+         LEFT JOIN Object AS Object_WorkTimeKind_key ON Object_WorkTimeKind_key.Id = D.Key[6]
+         LEFT JOIN (SELECT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId, tmpMI.WorkTimeKindId_key, tmpMI.isErased
                          , Sum (tmpMI.Amount) AS Amount
                          , Sum (CASE WHEN COALESCE (tmpMI.Amount, 0) <> 0 THEN 1 ELSE 0 END) AS CountDay 
                     FROM tmpMI
                     WHERE tmpMI.isErased = 1 OR ' || inisErased :: TVarChar || ' = TRUE
-                    GROUP BY tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.isErased, tmpMI.StorageLineId
-                   ) AS tmp ON tmp.MemberId                     = D.Key[1]
-                           AND COALESCE(tmp.PositionId, 0)      = D.Key[2]
-                           AND COALESCE(tmp.PositionLevelId, 0) = D.Key[3]
-                           AND COALESCE(tmp.PersonalGroupId, 0) = D.Key[4]
-                           AND COALESCE(tmp.StorageLineId, 0)   = D.Key[5]
+                    GROUP BY tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.isErased, tmpMI.StorageLineId, tmpMI.WorkTimeKindId_key
+                   ) AS tmp ON tmp.MemberId                        = D.Key[1]
+                           AND COALESCE(tmp.PositionId, 0)         = D.Key[2]
+                           AND COALESCE(tmp.PositionLevelId, 0)    = D.Key[3]
+                           AND COALESCE(tmp.PersonalGroupId, 0)    = D.Key[4]
+                           AND COALESCE(tmp.StorageLineId, 0)      = D.Key[5]
+                           AND COALESCE(tmp.WorkTimeKindId_key, 0) = D.Key[6]
          LEFT JOIN (SELECT tmpTotal.MemberId
                          , tmpTotal.PositionId
                          , tmpTotal.PositionLevelId
                          , tmpTotal.PersonalGroupId
                          , tmpTotal.StorageLineId
+                         , tmpTotal.WorkTimeKindId_key
                          , SUM (CASE WHEN tmpTotal.ObjectId = 3 THEN tmpTotal.Amount ELSE 0 END) AS Amount_3
                          , SUM (CASE WHEN tmpTotal.ObjectId = 4 THEN tmpTotal.Amount ELSE 0 END) AS Amount_4
                          , SUM (CASE WHEN tmpTotal.ObjectId = 5 THEN tmpTotal.Amount ELSE 0 END) AS Amount_5
@@ -588,11 +724,13 @@ BEGIN
                            , tmpTotal.PositionLevelId
                            , tmpTotal.PersonalGroupId
                            , tmpTotal.StorageLineId
-                    ) AS tmpTotal ON tmpTotal.MemberId                     = D.Key[1]
-                                 AND COALESCE(tmpTotal.PositionId, 0)      = D.Key[2]
-                                 AND COALESCE(tmpTotal.PositionLevelId, 0) = D.Key[3]
-                                 AND COALESCE(tmpTotal.PersonalGroupId, 0) = D.Key[4]
-                                 AND COALESCE(tmpTotal.StorageLineId, 0)   = D.Key[5]
+                           , tmpTotal.WorkTimeKindId_key
+                    ) AS tmpTotal ON tmpTotal.MemberId                        = D.Key[1]
+                                 AND COALESCE(tmpTotal.PositionId, 0)         = D.Key[2]
+                                 AND COALESCE(tmpTotal.PositionLevelId, 0)    = D.Key[3]
+                                 AND COALESCE(tmpTotal.PersonalGroupId, 0)    = D.Key[4]
+                                 AND COALESCE(tmpTotal.StorageLineId, 0)      = D.Key[5]
+                                 AND COALESCE(tmpTotal.WorkTimeKindId_key, 0) = D.Key[6]
         '
       /*ORDER BY Object_Member.ValueData
                , Object_Position.ValueData
@@ -679,5 +817,3 @@ where a.Id = MovementItem.Id
 
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_SheetWorkTime (inDate := NOW(), inUnitId:= 8465, inIsErased:= FALSE, inSession:= '5'); -- FETCH ALL "<unnamed portal 3>";
-
---select * from gpSelect_Object_WorkTimeKind( inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
