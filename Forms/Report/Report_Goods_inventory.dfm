@@ -2,7 +2,7 @@ object Report_Goods_inventoryForm: TReport_Goods_inventoryForm
   Left = 0
   Top = 0
   Caption = #1054#1090#1095#1077#1090' <'#1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' ('#1090#1077#1082#1091#1097#1080#1077')>'
-  ClientHeight = 670
+  ClientHeight = 671
   ClientWidth = 1344
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,9 +22,10 @@ object Report_Goods_inventoryForm: TReport_Goods_inventoryForm
     Left = 0
     Top = 80
     Width = 1344
-    Height = 590
+    Height = 591
     Align = alClient
     TabOrder = 0
+    ExplicitHeight = 590
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -668,6 +669,12 @@ object Report_Goods_inventoryForm: TReport_Goods_inventoryForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object OperDate_byReport: TcxGridDBColumn
+        DataBinding.FieldName = 'OperDate_byReport'
+        Visible = False
+        VisibleForCustomization = False
         Width = 70
       end
     end
@@ -2147,7 +2154,8 @@ object Report_Goods_inventoryForm: TReport_Goods_inventoryForm
         item
           Name = 'StartDate'
           Value = 42005d
-          Component = deStart
+          Component = MasterCDS
+          ComponentItem = 'OperDate_byReport'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','

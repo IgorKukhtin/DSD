@@ -126,6 +126,7 @@ type
     actPrintCount: TdsdPrintAction;
     bbPrintCount: TdxBarButton;
     OperDate: TcxGridDBColumn;
+    OperDate_byReport: TcxGridDBColumn;
   private
   public
   end;
