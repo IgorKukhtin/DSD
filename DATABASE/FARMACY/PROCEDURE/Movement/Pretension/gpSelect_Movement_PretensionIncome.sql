@@ -1,10 +1,9 @@
--- Function: gpSelect_Movement_Pretension()
+-- Function: gpSelect_Movement_PretensionIncome()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Pretension (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_PretensionIncome (Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Pretension(
-    IN inStartDate     TDateTime , --
-    IN inEndDate       TDateTime , --
+CREATE OR REPLACE FUNCTION gpSelect_Movement_PretensionIncome(
+    IN inIncomeId      Integer , --
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
@@ -62,19 +61,14 @@ BEGIN
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
-        , tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
-                        FROM ObjectLink AS ObjectLink_Unit_Juridical
-                           INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
-                        WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                          AND (ObjectLink_Unit_Juridical.ObjectId = vbUnitId OR vbUnitId = 0)
-                        )
         , tmpMI AS (SELECT Movement_Pretension.Id
                          , SUM(CASE WHEN MIBoolean_Checked.ValueData = True THEN 1 ELSE 0 END)      AS Checked
                          , Count(MI_Pretension.Id)::Integer                                         AS CountMI
-                    FROM Movement AS Movement_Pretension
+                    FROM MovementLinkMovement AS MLMovement_Income
+               
+                         LEFT JOIN Movement AS Movement_Pretension
+                                            ON Movement_Pretension.Id = MLMovement_Income.MovementId
+                         
                          LEFT JOIN MovementItem AS MI_Pretension
                                                  ON MI_Pretension.MovementId = Movement_Pretension.Id
                                                 AND MI_Pretension.isErased  = FALSE
@@ -82,8 +76,8 @@ BEGIN
                          LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
                                                        ON MIBoolean_Checked.MovementItemId = MI_Pretension.Id
                                                       AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
-                    WHERE Movement_Pretension.DescId = zc_Movement_Pretension()
-                      AND Movement_Pretension.OperDate BETWEEN inStartDate AND inEndDate
+                    WHERE MLMovement_Income.MovementChildId = inIncomeId
+                      AND MLMovement_Income.DescId = zc_MovementLinkMovement_Income()
                     GROUP BY Movement_Pretension.Id
                    )
 
@@ -123,9 +117,8 @@ BEGIN
            , MovementDate_Insert.ValueData        AS InsertDate
            , Object_Update.ValueData              AS UpdateName
            , MovementDate_Update.ValueData        AS UpdateDate
-       FROM tmpUnit
-           INNER JOIN Movement_Pretension_View ON Movement_Pretension_View.FromId = tmpUnit.UnitId
-                                              AND Movement_Pretension_View.OperDate BETWEEN inStartDate AND inEndDate
+       FROM Movement_Pretension_View
+       
            INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_Pretension_View.StatusId
 
            LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
@@ -149,13 +142,13 @@ BEGIN
            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId 
            
            LEFT JOIN tmpMI ON tmpMI.ID = Movement_Pretension_View.Id
-  ;
-
+                      
+     WHERE Movement_Pretension_View.MovementIncomeId = inIncomeId;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Pretension (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_PretensionIncome (Integer, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
@@ -165,5 +158,5 @@ ALTER FUNCTION gpSelect_Movement_Pretension (TDateTime, TDateTime, Boolean, TVar
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Pretension (inStartDate:= '01.12.2021', inEndDate:= '01.01.2022', inIsErased := FALSE, inSession:= '3')
-select * from gpSelect_Movement_Pretension(instartdate := ('01.12.2021')::TDateTime , inenddate := ('20.12.2021')::TDateTime , inIsErased := 'True' ,  inSession := '11868044');
+-- 
+select * from gpSelect_Movement_PretensionIncome(inIncomeId := 26966008, inIsErased := 'False',  inSession := '3');

@@ -396,9 +396,14 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_SupplierFailures() RETURNS integer
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_SupplierFailures', 'Загружен отказ'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_SupplierFailures');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_PaperRecipeSP() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_PaperRecipeSP'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_PaperRecipeSP', 'Бумажный рецепт по СП'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_PaperRecipeSP');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 15.03.22                                                                                   * zc_MovementBoolean_PaperRecipeSP
  08.03.22                                                                                   * zc_MovementBoolean_SupplierFailures
  21.02.22                                                                                   * zc_MovementBoolean_MobileApplication
  29.12.21                                                                                   * zc_MovementBoolean_SendLossFrom

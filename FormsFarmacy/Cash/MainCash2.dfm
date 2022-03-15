@@ -7242,6 +7242,12 @@ inherited MainCashForm2: TMainCashForm2
         Value = Null
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPaperRecipeSP'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 32
     Top = 24

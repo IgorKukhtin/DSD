@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, 
                                                            TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TFloat, Integer, Boolean, 
-                                                           Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TFloat, TFloat, Boolean, TVarChar);
+                                                           Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TFloat, TFloat, Boolean, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -35,6 +35,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inPercentIC                  TFloat    ,     -- Процент от продажи страховым компаниям для з/п фармацевтам
     IN inPercentUntilNextSUN        TFloat    ,     -- Процент для подсветки комента "Продано/Продажа до след СУН"
     IN inisEliminateColdSUN         Boolean   ,     -- Исключать Холод из СУН
+    IN inTurnoverMoreSUN2           TFloat    ,     -- Оборот больше за прошлый месяц для распределения СУН 2
     IN inSession                    TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -129,6 +130,9 @@ BEGIN
 
       -- сохранили Процент для подсветки комента "Продано/Продажа до след СУН"
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_PercentUntilNextSUN(), vbID, inPercentUntilNextSUN);
+
+      -- сохранили 	Оборот больше за прошлый месяц для распределения СУН 2
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_TurnoverMoreSUN2(), vbID, inTurnoverMoreSUN2);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (vbID, vbUserId);

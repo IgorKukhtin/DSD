@@ -1723,6 +1723,7 @@ begin
   FormParams.ParamByName('Category1303Id').Value := 0;
   FormParams.ParamByName('Category1303Name').Value := '';
   FormParams.ParamByName('isAutoVIPforSales').Value := False;
+  FormParams.ParamByName('isPaperRecipeSP').Value := False;
 
   ClearFilterAll;
 
@@ -6324,6 +6325,7 @@ var
   SPTax: Currency;
   HelsiID, HelsiIDList, HelsiName, HelsiProgramId, HelsiProgramName: string;
   HelsiQty: Currency;
+  isPaperRecipeSP : Boolean;
   Res : TArray<string>;
 begin
 
@@ -6397,6 +6399,7 @@ begin
       HelsiQty := Self.FormParams.ParamByName('HelsiQty').Value;
       HelsiProgramId := Self.FormParams.ParamByName('HelsiProgramId').Value;
       HelsiProgramName := Self.FormParams.ParamByName('HelsiProgramName').Value;
+      isPaperRecipeSP := False;
 
       //
       if Self.FormParams.ParamByName('PartnerMedicalId').Value > 0 then
@@ -6406,7 +6409,7 @@ begin
       if not DiscountDialogExecute(PartnerMedicalId, SPKindId,
         PartnerMedicalName, Ambulance, MedicSP, InvNumberSP, SPKindName,
         OperDateSP, SPTax, MemberSPID, MemberSP, HelsiID, HelsiIDList,
-        HelsiName, HelsiQty, HelsiProgramId, HelsiProgramName) then
+        HelsiName, HelsiQty, HelsiProgramId, HelsiProgramName, isPaperRecipeSP) then
         exit;
     finally
       Free;
@@ -6419,8 +6422,9 @@ begin
     spAvailabilityCheckMedicalProgram.ParamByName('inProgramId').Value := HelsiProgramId;
     spAvailabilityCheckMedicalProgram.ParamByName('outMedicalProgramSPID').Value := Null;
     spAvailabilityCheckMedicalProgram.Execute;
-    if (spAvailabilityCheckMedicalProgram.ParamByName('outMedicalProgramSPID').Value = Null) or
-       (spAvailabilityCheckMedicalProgram.ParamByName('outMedicalProgramSPID').Value = 0) then
+    if (isPaperRecipeSP = False) and
+       ((spAvailabilityCheckMedicalProgram.ParamByName('outMedicalProgramSPID').Value = Null) or
+       (spAvailabilityCheckMedicalProgram.ParamByName('outMedicalProgramSPID').Value = 0)) then
     begin
       ShowMessage('Медицынская программа <' + HelsiProgramName + '> не подключена для аптеки.');
       exit;
@@ -6461,6 +6465,7 @@ begin
   FormParams.ParamByName('HelsiQty').Value := HelsiQty;
   FormParams.ParamByName('HelsiProgramId').Value := HelsiProgramId;
   FormParams.ParamByName('HelsiProgramName').Value := HelsiProgramName;
+  FormParams.ParamByName('isPaperRecipeSP').Value := isPaperRecipeSP;
 
   //
   if FormParams.ParamByName('SPTax').Value <> 0 then
@@ -6470,7 +6475,7 @@ begin
     lblSPKindName.Caption := '  ' + FormParams.ParamByName('SPKindName').Value;
   pnlSP.Visible := InvNumberSP <> '';
   btnGoodsSPReceiptList.Visible := FormParams.ParamByName('HelsiIDList').Value <> '';
-  if FormParams.ParamByName('HelsiID').Value <> '' then
+  if (FormParams.ParamByName('HelsiID').Value <> '') or (isPaperRecipeSP = true) then
   begin
     Label30.Caption := '     Медикамент.: ';
     Label7.Caption := 'Вып.';
@@ -6482,7 +6487,13 @@ begin
     RemainsCDS.Filtered := false;
     try
       try
-        if HelsiIDList <> '' then
+        if isPaperRecipeSP = True then
+        begin
+          RemainsCDS.Filter :=
+            '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and (';
+          RemainsCDS.Filter := RemainsCDS.Filter + 'IdSP <> '''')';
+        end
+        else if HelsiIDList <> '' then
         begin
           Res := TRegEx.Split(HelsiIDList, FormatSettings.ListSeparator);
 
@@ -6498,44 +6509,46 @@ begin
                 QuotedStr(Res[I]);
           end;
           RemainsCDS.Filter := RemainsCDS.Filter + ')'
-        end
-        else
+        end else
           RemainsCDS.Filter :=
             '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and DosageIdSP = '
             + QuotedStr(HelsiID);
 
-         RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP <> CountSPMin and CountSPMin <= ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value) +
-           ' or CountSP = CountSPMin';
+        if isPaperRecipeSP = False then
+        begin
+           RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP <> CountSPMin and CountSPMin <= ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value) +
+             ' or CountSP = CountSPMin';
 
-         RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP = ' +
-          CurrToStr(FormParams.ParamByName('HelsiQty').Value) + ' or CountSP = '
-          + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 2) +
-          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-          / 3) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
-          .Value / 4) + ' or CountSP = ' +
-          CurrToStr(FormParams.ParamByName('HelsiQty').Value / 5) +
-          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-          / 6) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
-          .Value / 7) + ' or CountSP = ' +
-          CurrToStr(FormParams.ParamByName('HelsiQty').Value / 8) +
-          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-          / 9) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
-          .Value / 10) + ' or CountSP = ' +
-          CurrToStr(FormParams.ParamByName('HelsiQty').Value / 11) +
-          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-          / 12) + ' or CountSP = ' +
-          CurrToStr(FormParams.ParamByName('HelsiQty').Value / 13) +
-          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-          / 14) + ' or CountSP = ' +
-          CurrToStr(FormParams.ParamByName('HelsiQty').Value / 15) +
-          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-          / 16) + ' or CountSP = ' +
-          CurrToStr(FormParams.ParamByName('HelsiQty').Value / 17) +
-          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-          / 18) + ' or CountSP = ' +
-          CurrToStr(FormParams.ParamByName('HelsiQty').Value / 19) +
-          ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-          / 20) + '))';
+           RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP = ' +
+            CurrToStr(FormParams.ParamByName('HelsiQty').Value) + ' or CountSP = '
+            + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 2) +
+            ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+            / 3) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
+            .Value / 4) + ' or CountSP = ' +
+            CurrToStr(FormParams.ParamByName('HelsiQty').Value / 5) +
+            ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+            / 6) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
+            .Value / 7) + ' or CountSP = ' +
+            CurrToStr(FormParams.ParamByName('HelsiQty').Value / 8) +
+            ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+            / 9) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
+            .Value / 10) + ' or CountSP = ' +
+            CurrToStr(FormParams.ParamByName('HelsiQty').Value / 11) +
+            ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+            / 12) + ' or CountSP = ' +
+            CurrToStr(FormParams.ParamByName('HelsiQty').Value / 13) +
+            ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+            / 14) + ' or CountSP = ' +
+            CurrToStr(FormParams.ParamByName('HelsiQty').Value / 15) +
+            ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+            / 16) + ' or CountSP = ' +
+            CurrToStr(FormParams.ParamByName('HelsiQty').Value / 17) +
+            ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+            / 18) + ' or CountSP = ' +
+            CurrToStr(FormParams.ParamByName('HelsiQty').Value / 19) +
+            ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
+            / 20) + '))';
+        end;
         RemainsCDS.Filtered := True;
       except
         RemainsCDS.Filter :=
@@ -10392,6 +10405,7 @@ begin
   FormParams.ParamByName('Category1303Id').Value := 0;
   FormParams.ParamByName('Category1303Name').Value := '';
   FormParams.ParamByName('isAutoVIPforSales').Value := False;
+  FormParams.ParamByName('isPaperRecipeSP').Value := False;
 
   FFiscalNumber := '';
   pnlVIP.Visible := false;
