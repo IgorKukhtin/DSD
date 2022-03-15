@@ -226,8 +226,8 @@ object CashSettingsEditForm: TCashSettingsEditForm
     Caption = #1044#1085#1077#1081' '#1076#1086' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1087#1086' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1077#1082#1090#1072#1084
   end
   object edMethodsAssortment: TcxButtonEdit
-    Left = 232
-    Top = 482
+    Left = 587
+    Top = 303
     Properties.Buttons = <
       item
         Default = True
@@ -237,34 +237,34 @@ object CashSettingsEditForm: TCashSettingsEditForm
     Width = 293
   end
   object cxLabel13: TcxLabel
-    Left = 20
-    Top = 482
+    Left = 540
+    Top = 284
     Caption = #1052#1077#1090#1086#1076#1099' '#1074#1099#1073#1086#1088#1072' '#1072#1087#1090#1077#1082' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072
   end
   object ceAssortmentGeograph: TcxCurrencyEdit
-    Left = 232
-    Top = 505
+    Left = 759
+    Top = 325
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 31
     Width = 73
   end
   object cxLabel14: TcxLabel
-    Left = 20
-    Top = 506
+    Left = 540
+    Top = 326
     Caption = #9#1040#1087#1090#1077#1082' '#1072#1085#1072#1083#1080#1090#1080#1082#1086#1074' '#1087#1086' '#1075#1077#1086#1075#1088#1072#1092#1080#1080
   end
   object ceAssortmentSales: TcxCurrencyEdit
-    Left = 452
-    Top = 505
+    Left = 759
+    Top = 347
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 33
     Width = 73
   end
   object cxLabel15: TcxLabel
-    Left = 367
-    Top = 506
+    Left = 640
+    Top = 348
     Caption = #1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084
   end
   object ceCustomerThreshold: TcxCurrencyEdit
@@ -416,6 +416,19 @@ object CashSettingsEditForm: TCashSettingsEditForm
     ShowHint = True
     TabOrder = 55
     Width = 338
+  end
+  object ceTurnoverMoreSUN2: TcxCurrencyEdit
+    Left = 404
+    Top = 468
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00; ;'
+    TabOrder = 56
+    Width = 121
+  end
+  object cxLabel25: TcxLabel
+    Left = 20
+    Top = 469
+    Caption = #1054#1073#1086#1088#1086#1090' '#1073#1086#1083#1100#1096#1077' '#1079#1072' '#1087#1088#1086#1096#1083#1099#1081' '#1084#1077#1089#1103#1094' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1057#1059#1053' 2'
   end
   object ActionList: TActionList
     Left = 344
@@ -687,6 +700,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTurnoverMoreSUN2'
+        Value = Null
+        Component = ceTurnoverMoreSUN2
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -907,6 +928,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Component = cbEliminateColdSUN
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TurnoverMoreSUN2'
+        Value = Null
+        Component = ceTurnoverMoreSUN2
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -962,7 +990,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 373
-    Top = 460
+    Left = 789
+    Top = 276
   end
 end

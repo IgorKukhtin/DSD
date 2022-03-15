@@ -37,6 +37,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PercentIC TFloat
              , PercentUntilNextSUN TFloat
              , isEliminateColdSUN Boolean
+             , TurnoverMoreSUN2 TFloat
              ) AS
 $BODY$
 BEGIN
@@ -79,6 +80,7 @@ BEGIN
         , ObjectFloat_CashSettings_PercentIC.ValueData                             AS PercentIC
         , ObjectFloat_CashSettings_PercentUntilNextSUN.ValueData                   AS PercentUntilNextSUN
         , COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE)   AS isEliminateColdSUN
+        , ObjectFloat_CashSettings_TurnoverMoreSUN2.ValueData                      AS TurnoverMoreSUN2
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -177,6 +179,9 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_PercentUntilNextSUN
                               ON ObjectFloat_CashSettings_PercentUntilNextSUN.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_PercentUntilNextSUN.DescId = zc_ObjectFloat_CashSettings_PercentUntilNextSUN()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_TurnoverMoreSUN2
+                              ON ObjectFloat_CashSettings_TurnoverMoreSUN2.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_TurnoverMoreSUN2.DescId = zc_ObjectFloat_CashSettings_TurnoverMoreSUN2()
 
    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
    LIMIT 1;

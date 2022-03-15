@@ -75,7 +75,8 @@ type
   public
      function DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String;
        var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer; var AMemberSPName: String;
-       var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency; var AHelsiProgramId, AHelsiProgramName : String): boolean;
+       var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency; var AHelsiProgramId, AHelsiProgramName : String;
+       var AisPaperRecipeSP : Boolean): boolean;
      function CheckInvNumberSP(ASPKind : integer; ANumber : string) : boolean;
   end;
 
@@ -213,7 +214,7 @@ begin
           exit;
     end;
 
-    if not Panel2.Visible and not CheckInvNumberSP(Key, edInvNumberSP.Text) then
+    if not Panel2.Visible and (Length(edInvNumberSP.Text) > 5) and not CheckInvNumberSP(Key, edInvNumberSP.Text) then
     begin ActiveControl:=edInvNumberSP;
           ModalResult:=mrNone; // не надо закрывать
           exit;
@@ -314,9 +315,10 @@ end;
 
 function TSPDialogForm.DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String;
   var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer; var AMemberSPName: String;
-  var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency; var AHelsiProgramId, AHelsiProgramName : String): boolean;
+  var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency; var AHelsiProgramId, AHelsiProgramName : String;
+  var AisPaperRecipeSP : Boolean): boolean;
 Begin
-      FHelsiID := ''; FHelsiIDList := ''; FHelsiName := '';  AHelsiProgramId := ''; AHelsiProgramName := '';
+      FHelsiID := ''; FHelsiIDList := ''; FHelsiName := '';  AHelsiProgramId := ''; AHelsiProgramName := ''; AisPaperRecipeSP := False;
       edAmbulance.Text:= AAmbulance;
       edMedicSP.Text:= AMedicSP;
       edInvNumberSP.Text:= AInvNumberSP;
@@ -404,6 +406,7 @@ Begin
           AHelsiQty           := FHelsiQty;
           AHelsiProgramId     := FProgramId;
           AHelsiProgramName   := FProgramName;
+          AisPaperRecipeSP    := Length(AInvNumberSP) <= 5;
         end else
         begin
           AHelsiID            := '';
@@ -411,6 +414,7 @@ Begin
           AHelsiQty           := 0;
           AHelsiProgramId     := '';
           AHelsiProgramName   := '';
+          AisPaperRecipeSP    := False;
          end;
 
       end
@@ -430,6 +434,7 @@ Begin
               AHelsiQty           := 0;
               AHelsiProgramId     := '';
               AHelsiProgramName   := '';
+              AisPaperRecipeSP    := False;
            end;
 end;
 

@@ -2,7 +2,7 @@ object Report_Goods_inventoryForm: TReport_Goods_inventoryForm
   Left = 0
   Top = 0
   Caption = #1054#1090#1095#1077#1090' <'#1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' ('#1090#1077#1082#1091#1097#1080#1077')>'
-  ClientHeight = 670
+  ClientHeight = 671
   ClientWidth = 1344
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,9 +22,10 @@ object Report_Goods_inventoryForm: TReport_Goods_inventoryForm
     Left = 0
     Top = 80
     Width = 1344
-    Height = 590
+    Height = 591
     Align = alClient
     TabOrder = 0
+    ExplicitHeight = 590
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -39,7 +40,7 @@ object Report_Goods_inventoryForm: TReport_Goods_inventoryForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = CountEnd
+          Column = CountEnd_calc
         end
         item
           Format = ',0.####'
@@ -150,6 +151,11 @@ object Report_Goods_inventoryForm: TReport_Goods_inventoryForm
           Format = ',0.####'
           Kind = skSum
           Column = CountOut_Send_un
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountEnd
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -160,7 +166,7 @@ object Report_Goods_inventoryForm: TReport_Goods_inventoryForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = CountEnd
+          Column = CountEnd_calc
         end
         item
           Format = ',0.####'
@@ -276,6 +282,11 @@ object Report_Goods_inventoryForm: TReport_Goods_inventoryForm
           Format = ',0.####'
           Kind = skSum
           Column = CountOut_Send_un
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountEnd
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -293,6 +304,13 @@ object Report_Goods_inventoryForm: TReport_Goods_inventoryForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object OperDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1048#1085#1074#1077#1085#1090'. ('#1080#1085#1092'.)'
+        DataBinding.FieldName = 'OperDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 73
+      end
       object AccountCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1089#1095'.'
         DataBinding.FieldName = 'AccountCode'
@@ -401,8 +419,20 @@ object Report_Goods_inventoryForm: TReport_Goods_inventoryForm
         Width = 80
       end
       object CountEnd: TcxGridDBColumn
-        Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095'. '#1082#1086#1083'. ('#1088#1072#1089#1095#1077#1090')'
+        Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095'. '#1082#1086#1083'.'
         DataBinding.FieldName = 'CountEnd'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1089#1090'. '#1082#1086#1085#1077#1095'. '#1082#1086#1083'. ('#1088#1072#1089#1095#1077#1090')'
+        Options.Editing = False
+        Width = 80
+      end
+      object CountEnd_calc: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095'. '#1082#1086#1083'. ('#1088#1072#1089#1095#1077#1090')'
+        DataBinding.FieldName = 'CountEnd_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -639,6 +669,12 @@ object Report_Goods_inventoryForm: TReport_Goods_inventoryForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object OperDate_byReport: TcxGridDBColumn
+        DataBinding.FieldName = 'OperDate_byReport'
+        Visible = False
+        VisibleForCustomization = False
         Width = 70
       end
     end
@@ -2118,7 +2154,8 @@ object Report_Goods_inventoryForm: TReport_Goods_inventoryForm
         item
           Name = 'StartDate'
           Value = 42005d
-          Component = deStart
+          Component = MasterCDS
+          ComponentItem = 'OperDate_byReport'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','

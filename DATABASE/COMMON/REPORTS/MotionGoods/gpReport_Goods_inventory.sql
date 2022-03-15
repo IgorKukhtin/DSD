@@ -19,6 +19,7 @@ RETURNS TABLE (LocationId Integer, LocationCode Integer, LocationName TVarChar
              , Weight TFloat
              , CountStart  TFloat 
              , CountEnd    TFloat 
+             , CountEnd_calc TFloat
              , Count_Inventory    TFloat
              , CountIn_Income    TFloat
              , CountIn_Loss    TFloat
@@ -42,6 +43,8 @@ RETURNS TABLE (LocationId Integer, LocationCode Integer, LocationName TVarChar
              , CountOut_Send_un    TFloat
              , CountOut_ProductionSeparate_un    TFloat
              , CountOut_ProductionUnion_un    TFloat
+             , OperDate TDateTime
+             , OperDate_byReport TDateTime
               )
 AS
 $BODY$
@@ -97,8 +100,12 @@ BEGIN
 
     -- группа товаров или товар или все товары из проводок
      , tmpObjectGoods AS (SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup
-                          WHERE inGoodsGroupId > 0
-                          )
+                          WHERE inGoodsGroupId > 0 AND inGoodsId = 0
+                         UNION
+                          SELECT inGoodsId AS GoodsId
+                          WHERE inGoodsId <> 0
+                         )
+
      , tmpGoods AS (SELECT tmpObjectGoods.GoodsId 
                          , ObjectLink_Goods_GoodsGroup.ChildObjectId AS GoodsGroupId
                     FROM tmpObjectGoods
@@ -228,6 +235,7 @@ BEGIN
     , tmpMIContainerAll AS (SELECT MIContainer.WhereObjectId_Analyzer AS LocationId
                                  , MIContainer.ObjectId_Analyzer AS GoodsId
                                  , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                 , tmpInv_MI.OperDate
 
                                  , SUM (CASE WHEN MIContainer.OperDate > tmpInv_MI.OperDate
                                               AND MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut())
@@ -244,21 +252,21 @@ BEGIN
 
                                  , SUM (CASE WHEN MIContainer.OperDate > tmpInv_MI.OperDate
                                               AND MIContainer.MovementDescId IN (zc_Movement_Send())
-                                              AND MIContainer.isActive = TRUE
-                                             THEN COALESCE (MIContainer.Amount, 0)
+                                              AND MIContainer.isActive = FALSE
+                                             THEN -1 *COALESCE (MIContainer.Amount, 0)
                                              ELSE 0
                                         END) AS CountOut_Send
                                  , SUM (CASE WHEN MIContainer.OperDate > tmpInv_MI.OperDate
                                               AND MIContainer.MovementDescId IN (zc_Movement_Send())
-                                              AND MIContainer.isActive = FALSE
-                                             THEN -1 * COALESCE (MIContainer.Amount, 0)
+                                              AND MIContainer.isActive = TRUE
+                                             THEN COALESCE (MIContainer.Amount, 0)
                                              ELSE 0
                                         END) AS CountIn_Send
                                         
-                                 , SUM (CASE WHEN MIContainer.OperDate >= tmpInv_MI.OperDate
+                                 , SUM (CASE WHEN MIContainer.OperDate > tmpInv_MI.OperDate
                                               AND MIContainer.MovementDescId IN (zc_Movement_ProductionUnion())
                                               AND MIContainer.isActive = TRUE
-                                             THEN -1 * COALESCE (MIContainer.Amount, 0)
+                                             THEN COALESCE (MIContainer.Amount, 0)
                                              ELSE 0
                                         END
                                        ) AS CountIn_ProductionUnion
@@ -301,7 +309,7 @@ BEGIN
                                  , SUM (CASE WHEN MIContainer.OperDate > tmpInv_MI.OperDate
                                               AND MIContainer.MovementDescId IN (zc_Movement_Loss())
                                               AND MIContainer.isActive = TRUE
-                                             THEN 1 * COALESCE (MIContainer.Amount, 0)
+                                             THEN COALESCE (MIContainer.Amount, 0)
                                              ELSE 0
                                         END) AS CountIn_Loss
 
@@ -316,6 +324,7 @@ BEGIN
                            GROUP BY MIContainer.WhereObjectId_Analyzer
                                   , MIContainer.ObjectId_Analyzer
                                   , COALESCE (CLO_GoodsKind.ObjectId, 0)
+                                  , tmpInv_MI.OperDate
                           )
     --не проведенные документы
     , tmpMovement_UNComplete AS (SELECT Movement.*
@@ -355,6 +364,7 @@ BEGIN
     , tmpMI_UnComplete AS (SELECT tmpMI_all.FromId AS LocationId
                                 , MovementItem.ObjectId                        AS GoodsId
                                 , COALESCE (MILinkObject_GoodsKind.ObjectId,0) AS GoodsKindId
+                                , tmpMI_all.OperDate
                                 , SUM (CASE WHEN Movement.OperDate > tmpMI_all.OperDate AND Movement.DescId IN (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MovementItem.Amount ELSE 0 END) AS CountIncome
                                 , SUM (CASE WHEN Movement.OperDate > tmpMI_all.OperDate AND Movement.DescId = zc_Movement_Sale() THEN MovementItem.Amount ELSE 0 END) AS CountOut_Sale
                                 , SUM (CASE WHEN Movement.OperDate > tmpMI_all.OperDate AND Movement.DescId = zc_Movement_ReturnIn() THEN MovementItem.Amount ELSE 0 END) AS CountIn_ReturnIn
@@ -381,10 +391,95 @@ BEGIN
                            GROUP BY MovementItem.ObjectId
                                   , COALESCE (MILinkObject_GoodsKind.ObjectId,0)
                                   , tmpMI_all.FromId
+                                  , tmpMI_all.OperDate
                            )
  
+ -- остатки из проводок
+    , tmpContainer AS (SELECT _tmpLocation.LocationId
+                            , Container.Id AS ContainerId
+                            , Container.ObjectId AS GoodsId
+                            , tmpGoods.GoodsGroupId
+                            , Container.Amount
+                       FROM Container
+                            INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                            INNER JOIN _tmpLocation ON _tmpLocation.LocationId = ContainerLinkObject.ObjectId
+                                                   AND _tmpLocation.DescId = ContainerLinkObject.DescId
+                            INNER JOIN tmpGoods ON tmpGoods.GoodsId = Container.ObjectId
+     
+                            LEFT JOIN tmpAccount ON tmpAccount.AccountId = Container.ObjectId
+                            LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = Container.Id
+                                                                        AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                       WHERE Container.DescId = zc_Container_Count()
+                         AND ((CLO_Account.ContainerId > 0 AND inAccountGroupId = zc_Enum_AccountGroup_110000()) -- Транзит
+                            OR (CLO_Account.ContainerId IS NULL AND inAccountGroupId <> zc_Enum_AccountGroup_110000())) -- Транзит
+                       )
+    , tmpCLO_GoodsKind_rem AS (SELECT CLO_GoodsKind.*
+                               FROM ContainerLinkObject AS CLO_GoodsKind
+                               WHERE CLO_GoodsKind.ContainerId IN (SELECT DISTINCT tmpContainer.ContainerId FROM tmpContainer)
+                                 AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                              )
+
+     , tmpRemainsEnd AS (-- Остатки конечные
+                         SELECT tmpContainer.LocationId
+                              , tmpContainer.GoodsId
+                              , COALESCE (CLO_GoodsKind.ObjectId, 0)    AS GoodsKindId
+                              , SUM (COALESCE (tmpContainer.Amount,0)) AS Amount ---RemainsEnd
+                              , tmpInv.OperDate
+                         FROM tmpContainer
+                              LEFT JOIN tmpCLO_GoodsKind_rem AS CLO_GoodsKind
+                                                             ON CLO_GoodsKind.ContainerId = tmpContainer.ContainerId
+                                                            AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                                            
+                              LEFT JOIN tmpInv ON tmpInv.FromId = tmpContainer.LocationId
+                                              AND tmpInv.FromId = tmpContainer.GoodsGroupId
+                         GROUP BY tmpContainer.LocationId
+                          , tmpContainer.GoodsId
+                          , COALESCE (CLO_GoodsKind.ObjectId, 0)
+                          , tmpInv.OperDate
+                         HAVING SUM (COALESCE (tmpContainer.Amount,0)) <> 0
+                            )
+-------------- 
+    
+ 
+ 
+ 
+ 
  -- сворачиваем все в 1 таблицу
-    , tmpUnion AS (
+    , tmpUnion AS (--конечн. ост.
+                SELECT tmp.LocationId
+                     , tmp.GoodsId
+                     , tmp.GoodsKindId
+                     , 0 ::TFloat AS CountStart
+                     , 0 ::TFloat AS Count_Inventory
+                     , 0 ::TFloat AS CountIn_Income
+                     , 0 ::TFloat AS CountIn_Loss
+                     , 0 ::TFloat AS CountIn_Send
+                     , 0 ::TFloat AS CountIn_ReturnIn
+                     , 0 ::TFloat AS CountIn_ProductionSeparate
+                     , 0 ::TFloat AS CountIn_ProductionUnion
+                     , 0 ::TFloat AS CountOut_Sale
+                     , 0 ::TFloat AS CountOut_Loss
+                     , 0 ::TFloat AS CountOut_Send
+                     , 0 ::TFloat AS CountOut_ProductionSeparate
+                     , 0 ::TFloat AS CountOut_ProductionUnion
+                     
+                     , 0 ::TFloat AS CountIn_Income_un
+                     , 0 ::TFloat AS CountIn_Loss_un
+                     , 0 ::TFloat AS CountIn_Send_un
+                     , 0 ::TFloat AS CountIn_ReturnIn_un
+                     , 0 ::TFloat AS CountIn_ProductionSeparate_un
+                     , 0 ::TFloat AS CountIn_ProductionUnion_un
+                     , 0 ::TFloat AS CountOut_Sale_un
+                     , 0 ::TFloat AS CountOut_Loss_un
+                     , 0 ::TFloat AS CountOut_Send_un
+                     , 0 ::TFloat AS CountOut_ProductionSeparate_un
+                     , 0 ::TFloat AS CountOut_ProductionUnion_un
+                     , tmp.Amount AS CountEnd
+                     , tmp.OperDate ::TDateTime AS OperDate
+                FROM tmpRemainsEnd AS tmp
+                WHERE COALESCE (tmp.Amount,0) <> 0
+    
+               UNION ALL
                 --Инвентаризация
                 SELECT tmp.FromId AS LocationId
                      , tmp.GoodsId
@@ -414,6 +509,8 @@ BEGIN
                      , 0 ::TFloat AS CountOut_Send_un
                      , 0 ::TFloat AS CountOut_ProductionSeparate_un
                      , 0 ::TFloat AS CountOut_ProductionUnion_un
+                     , 0 ::TFloat AS CountEnd
+                     , tmp.OperDate ::TDateTime AS OperDate
                 FROM tmpInv_MI AS tmp
                 WHERE COALESCE (tmp.Amount,0) <> 0
               UNION ALL
@@ -446,6 +543,8 @@ BEGIN
                      , 0 ::TFloat AS CountOut_Send_un
                      , 0 ::TFloat AS CountOut_ProductionSeparate_un
                      , 0 ::TFloat AS CountOut_ProductionUnion_un
+                     , 0 ::TFloat AS CountEnd
+                     , tmp.OperDate ::TDateTime AS OperDate
                 FROM tmpMIContainerAll AS tmp
                 WHERE COALESCE (tmp.CountIn_Income,0) <> 0
                    OR COALESCE (tmp.CountIn_Loss,0) <> 0
@@ -486,7 +585,9 @@ BEGIN
                      , tmp.CountOut_Loss               AS CountOut_Loss_un              
                      , tmp.CountOut_Send               AS CountOut_Send_un              
                      , tmp.CountOut_ProductionSeparate AS CountOut_ProductionSeparate_un
-                     , tmp.CountOut_ProductionUnion    AS CountOut_ProductionUnion_un   
+                     , tmp.CountOut_ProductionUnion    AS CountOut_ProductionUnion_un
+                     , 0 ::TFloat AS CountEnd  
+                     , tmp.OperDate ::TDateTime AS OperDate
                 FROM tmpMI_UnComplete AS tmp
                 WHERE COALESCE (tmp.CountIncome,0) <> 0
                    OR COALESCE (tmp.CountIn_Loss,0) <> 0
@@ -505,7 +606,9 @@ BEGIN
     , tmpResult AS (SELECT tmp.LocationId
                          , tmp.GoodsId
                          , tmp.GoodsKindId
+                         , MAX (tmp.OperDate) AS OperDate
                          , SUM (COALESCE (tmp.CountStart,0)) AS CountStart
+                         , SUM (COALESCE (tmp.CountEnd,0))   AS CountEnd
                          , SUM (COALESCE (tmp.Count_Inventory,0)) AS Count_Inventory
                          , SUM (COALESCE (tmp.CountStart,0) 
                               + COALESCE (tmp.CountIn_Income,0)
@@ -530,7 +633,7 @@ BEGIN
                               - COALESCE (tmp.CountOut_Loss_un,0)
                               - COALESCE (tmp.CountOut_Send_un,0)
                               - COALESCE (tmp.CountOut_ProductionSeparate_un,0)
-                              - COALESCE (tmp.CountOut_ProductionUnion_un,0) ) ::TFloat AS CountEnd
+                              - COALESCE (tmp.CountOut_ProductionUnion_un,0) ) ::TFloat AS CountEnd_calc
 
                          , SUM (COALESCE (tmp.CountIn_Income,0))                 AS CountIn_Income
                          , SUM (COALESCE (tmp.CountIn_Loss,0))                   AS CountIn_Loss
@@ -558,6 +661,7 @@ BEGIN
                     GROUP BY tmp.LocationId
                            , tmp.GoodsId
                            , tmp.GoodsKindId
+                           --, tmp.OperDate
                     )
   
   
@@ -579,33 +683,36 @@ BEGIN
            , Object_Measure.ValueData       AS MeasureName
            , ObjectFloat_Weight.ValueData   AS Weight
    
-           , tmpResult.CountStart :: TFloat 
-           , tmpResult.CountEnd   :: TFloat 
+           , tmpResult.CountStart                   :: TFloat 
+           , tmpResult.CountEnd                     :: TFloat 
+           , tmpResult.CountEnd_calc                :: TFloat 
 
-           , tmpResult.Count_Inventory   :: TFloat
-           , tmpResult.CountIn_Income   :: TFloat
-           , tmpResult.CountIn_Loss   :: TFloat
-           , tmpResult.CountIn_Send   :: TFloat
-           , tmpResult.CountIn_ReturnIn   :: TFloat
+           , tmpResult.Count_Inventory              :: TFloat
+           , tmpResult.CountIn_Income               :: TFloat
+           , tmpResult.CountIn_Loss                 :: TFloat
+           , tmpResult.CountIn_Send                 :: TFloat
+           , tmpResult.CountIn_ReturnIn             :: TFloat
            , tmpResult.CountIn_ProductionSeparate   :: TFloat
-           , tmpResult.CountIn_ProductionUnion   :: TFloat
-           , tmpResult.CountOut_Sale   :: TFloat
-           , tmpResult.CountOut_Loss   :: TFloat
-           , tmpResult.CountOut_Send   :: TFloat
-           , tmpResult.CountOut_ProductionSeparate   :: TFloat
-           , tmpResult.CountOut_ProductionUnion   :: TFloat
-           , tmpResult.CountIn_Income_un   :: TFloat
-           , tmpResult.CountIn_Loss_un   :: TFloat
-           , tmpResult.CountIn_Send_un   :: TFloat
-           , tmpResult.CountIn_ReturnIn_un   :: TFloat
+           , tmpResult.CountIn_ProductionUnion      :: TFloat
+           , tmpResult.CountOut_Sale                :: TFloat
+           , tmpResult.CountOut_Loss                :: TFloat
+           , tmpResult.CountOut_Send                :: TFloat
+           , tmpResult.CountOut_ProductionSeparate  :: TFloat
+           , tmpResult.CountOut_ProductionUnion     :: TFloat
+           , tmpResult.CountIn_Income_un            :: TFloat
+           , tmpResult.CountIn_Loss_un              :: TFloat
+           , tmpResult.CountIn_Send_un              :: TFloat
+           , tmpResult.CountIn_ReturnIn_un          :: TFloat
            , tmpResult.CountIn_ProductionSeparate_un   :: TFloat
-           , tmpResult.CountIn_ProductionUnion_un   :: TFloat
-           , tmpResult.CountOut_Sale_un   :: TFloat
-           , tmpResult.CountOut_Loss_un   :: TFloat
-           , tmpResult.CountOut_Send_un   :: TFloat
-           , tmpResult.CountOut_ProductionSeparate_un   :: TFloat
-           , tmpResult.CountOut_ProductionUnion_un   :: TFloat
-                         
+           , tmpResult.CountIn_ProductionUnion_un      :: TFloat
+           , tmpResult.CountOut_Sale_un                :: TFloat
+           , tmpResult.CountOut_Loss_un                :: TFloat
+           , tmpResult.CountOut_Send_un                :: TFloat
+           , tmpResult.CountOut_ProductionSeparate_un  :: TFloat
+           , tmpResult.CountOut_ProductionUnion_un     :: TFloat
+           , tmpResult.OperDate ::TDateTime
+           , (COALESCE ((tmpResult.OperDate+INTERVAL '1 DAY'), inStartDate))  ::TDateTime AS OperDate_byReport
+
 /*        , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.CountOut ELSE 0 END :: TFloat AS CountOut_sh
         , (tmpResult.CountOut * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountOut_Weight
 */
@@ -643,4 +750,127 @@ $BODY$
 */
 
 -- тест
--- 
+-- select * from gpReport_Goods_inventory(inStartDate := ('07.03.2022')::TDateTime , inEndDate := ('14.03.2022')::TDateTime , inAccountGroupId := 9015 , inUnitGroupId := 8439 , inLocationId := 0 , inGoodsGroupId := 1945 , inGoodsId := 0 ,  inSession := '9457');
+
+
+/*
+SELECT MIContainer.WhereObjectId_Analyzer AS LocationId
+                                 , MIContainer.ObjectId_Analyzer AS GoodsId
+                               --  , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
+
+                                 , SUM (CASE WHEN MIContainer.OperDate > '06.03.2022'
+                                              AND MIContainer.MovementDescId in (zc_Movement_Income(), zc_Movement_ReturnOut())
+                                                  THEN COALESCE (MIContainer.Amount, 0)
+                                             ELSE 0
+                                        END) AS CountIn_Income
+
+                                 , SUM (CASE WHEN MIContainer.OperDate > '06.03.2022'
+                                              AND MIContainer.MovementDescId IN (zc_Movement_Sale())
+                                              AND MIContainer.isActive = TRUE
+                                             THEN COALESCE (MIContainer.Amount, 0)
+                                             ELSE 0
+                                        END ) AS CountOut_Sale
+
+                                 , SUM (CASE WHEN MIContainer.OperDate > '06.03.2022'
+                                              AND MIContainer.MovementDescId IN (zc_Movement_Send())
+                                              AND MIContainer.isActive = FALSE
+                                             THEN -1 *COALESCE (MIContainer.Amount, 0)
+                                             ELSE 0
+                                        END) AS CountOut_Send
+                                 , SUM (CASE WHEN MIContainer.OperDate > '06.03.2022'
+                                              AND MIContainer.MovementDescId IN (zc_Movement_Send())
+                                              AND MIContainer.isActive = TRUE
+                                             THEN  COALESCE (MIContainer.Amount, 0)
+                                             ELSE 0
+                                        END) AS CountIn_Send
+                                        
+                                 , SUM (CASE WHEN MIContainer.OperDate >= '06.03.2022'
+                                              AND MIContainer.MovementDescId IN (zc_Movement_ProductionUnion())
+                                              AND MIContainer.isActive = TRUE
+                                             THEN -1 * COALESCE (MIContainer.Amount, 0)
+                                             ELSE 0
+                                        END
+                                       ) AS CountIn_ProductionUnion
+                                 , SUM (CASE WHEN MIContainer.OperDate > '06.03.2022'
+                                              AND MIContainer.MovementDescId IN (zc_Movement_ProductionUnion())
+                                              AND MIContainer.isActive = FALSE
+                                             THEN -1 * COALESCE (MIContainer.Amount, 0)
+                                             ELSE 0
+                                        END
+                                       ) AS CountOut_ProductionUnion
+                                 , SUM (CASE WHEN MIContainer.OperDate > '06.03.2022'
+                                              AND MIContainer.MovementDescId IN (zc_Movement_ProductionSeparate())
+                                              AND MIContainer.isActive = FALSE
+                                             THEN -1 * COALESCE (MIContainer.Amount, 0)
+                                             ELSE 0
+                                        END
+                                       ) AS CountOut_ProductionSeparate
+
+                                 , SUM (CASE WHEN MIContainer.OperDate > '06.03.2022'
+                                              AND MIContainer.MovementDescId IN (zc_Movement_Loss())
+                                              AND MIContainer.isActive = FALSE
+                                             THEN -1 * COALESCE (MIContainer.Amount, 0)
+                                             ELSE 0
+                                        END
+                                       ) AS CountOut_Loss
+
+                                 , SUM (CASE WHEN MIContainer.OperDate > '06.03.2022'
+                                              AND MIContainer.MovementDescId IN (zc_Movement_ReturnIn())
+                                             THEN 1 * COALESCE (MIContainer.Amount, 0)
+                                             ELSE 0
+                                        END) AS CountIn_ReturnIn
+
+                                 , SUM (CASE WHEN MIContainer.OperDate > '06.03.2022'
+                                              AND MIContainer.MovementDescId IN (zc_Movement_ProductionSeparate())
+                                              AND MIContainer.isActive = TRUE
+                                             THEN COALESCE (MIContainer.Amount, 0)
+                                             ELSE 0
+                                        END) AS CountIn_ProductionSeparate
+
+                                 , SUM (CASE WHEN MIContainer.OperDate > '06.03.2022'
+                                              AND MIContainer.MovementDescId IN (zc_Movement_Loss())
+                                              AND MIContainer.isActive = TRUE
+                                             THEN 1 * COALESCE (MIContainer.Amount, 0)
+                                             ELSE 0
+                                        END) AS CountIn_Loss
+
+                           FROM MovementItemContainer AS MIContainer
+                           WHERE  MIContainer.OperDate > '28.02.2022'
+                           AND MIContainer.DescId = zc_Container_Count()
+                           AND MIContainer.WhereObjectId_Analyzer = 8442 
+                           AND  MIContainer.ObjectId_Analyzer = 4187 
+and MIContainer.MovementDescId IN (zc_Movement_ProductionSeparate())
+                           GROUP BY MIContainer.WhereObjectId_Analyzer
+                                  , MIContainer.ObjectId_Analyzer
+                                 
+with 
+ tmpObjectGoods AS (SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (1945 ) AS lfObject_Goods_byGoodsGroup
+                    
+                          )
+    -- , tmpGoods AS 
+(SELECT tmpObjectGoods.GoodsId 
+                         , ObjectLink_Goods_GoodsGroup.ChildObjectId AS GoodsGroupId
+                    FROM tmpObjectGoods
+                       LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                              ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpObjectGoods.GoodsId
+                             AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+where  tmpObjectGoods.GoodsId  = 4187
+                   )
+
+4187;1935  -- товар  код 4102,   участок бойни должно біть 413.8   а у меня 910,8
+
+(SELECT Movement.*
+                                , MovementLinkObject_From.ObjectId AS FromId
+                           FROM Movement
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                             ON MovementLinkObject_From.MovementId = Movement.Id
+                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                --LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                                
+                           WHERE Movement.DescId = zc_Movement_Inventory()
+                           AND Movement.OperDate >= '01.02.2022'
+                           AND Movement.StatusId <> zc_Enum_Status_Erased()
+and MovementLinkObject_From.ObjectId =  8442
+                           )
+
+*/

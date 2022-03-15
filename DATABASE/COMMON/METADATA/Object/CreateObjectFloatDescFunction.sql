@@ -2232,10 +2232,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_ExchangeRates_Exchange() RETURNS Integ
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_ExchangeRates(), 'zc_ObjectFloat_ExchangeRates_Exchange', 'Курс' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ExchangeRates_Exchange');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_TurnoverMoreSUN2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_TurnoverMoreSUN2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_TurnoverMoreSUN2', 'Оборот больше за прошлый месяц для распределения СУН 2' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_TurnoverMoreSUN2');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 15.03.22                                                                                      * zc_ObjectFloat_CashSettings_TurnoverMoreSUN2 
  24.02.22                                                                                      * zc_ObjectFloat_ExchangeRates_Exchange 
  16.02.22                                                                                      * zc_ObjectFloat_DiffKind_Packages 
  15.02.22                                                                                      * zc_ObjectFloat_PriceSite_DiscontAmount, zc_ObjectFloat_PriceSite_DiscontPercent

@@ -1358,6 +1358,7 @@ var
   PartnerMedicalName, MedicSP, Ambulance, InvNumberSP, SPKindName, MemberSP : String;
   OperDateSP : TDateTime; SPTax : Currency;
   HelsiID, HelsiIDList, HelsiName, HelsiProgramId, HelsiProgramName : string; HelsiQty : currency;
+  PaperRecipeSP : Boolean;
 begin
   if (not CheckCDS.IsEmpty) and (Self.FormParams.ParamByName('InvNumberSP').Value = '') then
   Begin
@@ -1382,7 +1383,7 @@ begin
      then OperDateSP   := Self.FormParams.ParamByName('OperDateSP').Value
      else OperDateSP   := NOW;
      if not DiscountDialogExecute(PartnerMedicalId, SPKindId, PartnerMedicalName, Ambulance, MedicSP, InvNumberSP, SPKindName, OperDateSP, SPTax,
-       MemberSPID, MemberSP, HelsiID, HelsiIDList, HelsiName, HelsiQty, HelsiProgramId, HelsiProgramName)
+       MemberSPID, MemberSP, HelsiID, HelsiIDList, HelsiName, HelsiQty, HelsiProgramId, HelsiProgramName, PaperRecipeSP)
      then exit;
   finally
      Free;

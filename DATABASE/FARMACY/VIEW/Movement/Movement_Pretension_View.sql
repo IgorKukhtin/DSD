@@ -12,8 +12,11 @@ SELECT       Movement.Id                                AS Id
            , MovementFloat_TotalDeficit.ValueData       AS TotalDeficit
            , MovementFloat_TotalProficit.ValueData      AS TotalProficit
            , MovementFloat_TotalSubstandard.ValueData   AS TotalSubstandard
-           , MovementFloat_TotalSummActual.ValueData    AS TotalSummActual
-           , MovementFloat_TotalSummNotActual.ValueData AS TotalSummNotActual
+           , CASE WHEN Movement.StatusId <> zc_Enum_Status_Complete()
+                  THEN MovementFloat_TotalSummActual.ValueData END::TFloat AS TotalSummActual
+           , (COALESCE(MovementFloat_TotalSummNotActual.ValueData, 0) +
+             COALESCE(CASE WHEN Movement.StatusId = zc_Enum_Status_Complete()
+                           THEN MovementFloat_TotalSummActual.ValueData END, 0))::TFloat AS TotalSummNotActual
            , MovementBlob_Comment.ValueData             AS Comment
            , MovementDate_Branch.ValueData              AS BranchDate
            , MovementDate_GoodsReceipts.ValueData       AS GoodsReceiptsDate

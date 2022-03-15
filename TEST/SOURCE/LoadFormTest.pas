@@ -2229,13 +2229,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_inventoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_inventoryForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_inventoryDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_inventoryDialogForm');
   exit;
-
+   {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DefermentPaymentOLAPTableForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_DefermentPaymentOLAPTableForm');

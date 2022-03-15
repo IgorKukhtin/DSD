@@ -3,7 +3,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
   ClientHeight = 668
   ClientWidth = 1069
   ExplicitWidth = 1085
-  ExplicitHeight = 707
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -347,8 +347,8 @@ inherited PriceListMovementForm: TPriceListMovementForm
           'Top'
           'Width')
       end>
-    Left = 32
-    Top = 136
+    Left = 24
+    Top = 200
   end
   inherited ActionList: TActionList
     Left = 55
@@ -388,6 +388,14 @@ inherited PriceListMovementForm: TPriceListMovementForm
           MultiSelectSeparator = ','
         end>
     end
+    inherited actMISetErased: TdsdUpdateErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIMaster
+        end
+        item
+        end>
+    end
     object actGetImportSetting_Gotthardt: TdsdExecStoredProc [4]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -396,6 +404,14 @@ inherited PriceListMovementForm: TPriceListMovementForm
       StoredProcList = <
         item
           StoredProc = spGetImportSettingId_Gotthardt
+        end>
+    end
+    inherited actMISetUnErased: TdsdUpdateErased
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIMaster
+        end
+        item
         end>
     end
     object mactStartLoad_Gotthardt: TMultiAction [6]

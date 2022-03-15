@@ -11,18 +11,16 @@ inherited PriceListJournalForm: TPriceListJournalForm
     Width = 782
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 615
+    ExplicitWidth = 782
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 782
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 615
+      ExplicitWidth = 782
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 782
         Height = 478
-        ExplicitLeft = -24
-        ExplicitTop = 16
         ExplicitWidth = 782
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -196,7 +194,7 @@ inherited PriceListJournalForm: TPriceListJournalForm
   end
   inherited Panel: TPanel
     Width = 782
-    ExplicitWidth = 615
+    ExplicitWidth = 782
     inherited deStart: TcxDateEdit
       EditValue = 42370d
     end
@@ -534,6 +532,22 @@ inherited PriceListJournalForm: TPriceListJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDelete'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowErased'
         end
         item
@@ -642,10 +656,9 @@ inherited PriceListJournalForm: TPriceListJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inislastcomplete'
         Value = True
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 80
