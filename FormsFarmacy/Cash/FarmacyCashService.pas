@@ -99,6 +99,8 @@ type
     CAT1303ID  : integer;         //Категория 1303
     //***14.12.21
     ISERRORRO  : boolean;       //ВИП чек по ошибке РРО
+    //***15.03.22
+    ISPAPERRSP  : boolean;       //Бумажный рецепт по СП
 
   end;
   TBodyRecord = record
@@ -1449,6 +1451,8 @@ begin
                 CAT1303ID := FieldByName('CAT1303ID').AsInteger;
                 //***14.12.21
                 ISERRORRO := FieldByName('ISERRORRO').AsBoolean;
+                //***15.03.22
+                ISPAPERRSP := FieldByName('ISPAPERRSP').AsBoolean;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1634,6 +1638,8 @@ begin
                   dsdSave.Params.AddParam('inCategory1303Id', ftInteger, ptInput, Head.CAT1303ID);
                   //***14.12.21
                   dsdSave.Params.AddParam('inisErrorRRO', ftBoolean, ptInput, Head.ISERRORRO);
+                  //***14.12.21
+                  dsdSave.Params.AddParam('inisPaperRecipeSP', ftBoolean, ptInput, Head.ISPAPERRSP);
 
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);

@@ -10,11 +10,12 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId     Integer;
-
+   DECLARE vbObjectId   Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
      vbUserId := inSession;
+     vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
      -- все Подразделения для схемы SUN Supplement_V2
      CREATE TEMP TABLE _tmpUnit_SUN_Supplement_V2 (UnitId Integer, DeySupplOut Integer, DeySupplIn Integer, isSUN_Supplement_V2_in Boolean, isSUN_Supplement_V2_out Boolean, isSUN_Supplement_V2_Priority Boolean) ON COMMIT DROP;
@@ -46,10 +47,23 @@ BEGIN
      CREATE TEMP TABLE _tmpResult_Supplement_V2   (UnitId_from Integer, UnitId_to Integer, GoodsId Integer, Amount TFloat, MovementId Integer, MovementItemId Integer) ON COMMIT DROP;
 
      -- !!!1 - сформировали данные во временные табл!!!
-     PERFORM lpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= inOperDate
-                                                            , inDriverId:= 0 -- vbDriverId_1
-                                                            , inUserId  := vbUserId
-                                                             );
+     IF EXISTS (SELECT Object_Goods_Retail.ID
+                     , Object_Goods_Retail.KoeffSUN_V2
+                FROM Object_Goods_Retail
+                     INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
+                                                 AND Object_Goods_Main.isSupplementSUN2 = TRUE
+                WHERE Object_Goods_Retail.RetailID = vbObjectId)     
+     THEN
+       PERFORM lpInsert_Movement_Send_RemainsSun_Supplement_V2_Sum (inOperDate:= inOperDate
+                                                                  , inDriverId:= 0 -- vbDriverId_1
+                                                                  , inUserId  := vbUserId
+                                                                    );
+     ELSE
+       PERFORM lpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= inOperDate
+                                                              , inDriverId:= 0 -- vbDriverId_1
+                                                              , inUserId  := vbUserId
+                                                               );
+     END IF;
 
      --raise notice 'Value 06: %', (select Count(*) from _tmpResult_Supplement_V2);
 
@@ -115,9 +129,19 @@ BEGIN
      FROM (SELECT DISTINCT _tmpResult_Supplement_V2.MovementId FROM _tmpResult_Supplement_V2 WHERE _tmpResult_Supplement_V2.MovementId > 0
           ) AS tmp;
 
-        
-     --raise notice 'Value 05: %', (select Count(*) from _tmpResult_Supplement_V2 WHERE _tmpResult_Supplement_V2.MovementId > 0);      
-     --RAISE EXCEPTION '<ok>';
+     -- Частим товары
+     IF EXISTS(SELECT _tmpResult_Supplement_V2.MovementId FROM _tmpResult_Supplement_V2 WHERE _tmpResult_Supplement_V2.MovementId > 0)
+     THEN
+       
+       PERFORM gpUpdate_Goods_inSupplementSUN2_Revert(inGoodsMainId       := Object_Goods_Main.Id 
+                                                    , inisSupplementSUN2  := Object_Goods_Main.isSupplementSUN2
+                                                    , inSession           := inSession)
+       FROM Object_Goods_Main 
+       WHERE Object_Goods_Main.isSupplementSUN2 = True;
+     END IF;
+             
+   /*  raise notice 'Value 05: %', (select Count(*) from _tmpResult_Supplement_V2 WHERE _tmpResult_Supplement_V2.MovementId > 0);      
+     RAISE EXCEPTION '<ok>';*/
 
 END;
 $BODY$
@@ -129,5 +153,4 @@ $BODY$
  18.07.19                                        *
 */
 
--- тест
--- SELECT * FROM gpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+-- тест SELECT * FROM gpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '5 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ

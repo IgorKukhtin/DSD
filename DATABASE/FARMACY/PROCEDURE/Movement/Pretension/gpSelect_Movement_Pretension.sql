@@ -71,10 +71,15 @@ BEGIN
                         WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                           AND (ObjectLink_Unit_Juridical.ObjectId = vbUnitId OR vbUnitId = 0)
                         )
+        , tmpMovement AS (SELECT Movement.Id
+                               , Movement.StatusId  
+                          FROM Movement 
+                          WHERE Movement.DescId = zc_Movement_Pretension()
+                            AND Movement.OperDate BETWEEN inStartDate AND inEndDate)
         , tmpMI AS (SELECT Movement_Pretension.Id
                          , SUM(CASE WHEN MIBoolean_Checked.ValueData = True THEN 1 ELSE 0 END)      AS Checked
                          , Count(MI_Pretension.Id)::Integer                                         AS CountMI
-                    FROM Movement AS Movement_Pretension
+                    FROM tmpMovement AS Movement_Pretension
                          LEFT JOIN MovementItem AS MI_Pretension
                                                  ON MI_Pretension.MovementId = Movement_Pretension.Id
                                                 AND MI_Pretension.isErased  = FALSE
@@ -82,18 +87,31 @@ BEGIN
                          LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
                                                        ON MIBoolean_Checked.MovementItemId = MI_Pretension.Id
                                                       AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
-                    WHERE Movement_Pretension.DescId = zc_Movement_Pretension()
-                      AND Movement_Pretension.OperDate BETWEEN inStartDate AND inEndDate
                     GROUP BY Movement_Pretension.Id
                    )
-
+        , tmpProtocol AS (SELECT ROW_NUMBER() OVER (PARTITION BY tmpMovement.Id ORDER BY MovementProtocol.OperDate) AS Ord,
+                                 tmpMovement.Id,
+                                 MovementProtocol.OperDate,
+                                 MovementProtocol.UserID
+                          FROM tmpMovement
+                               INNER JOIN MovementProtocol ON tmpMovement.Id = MovementProtocol.MovementId
+                            WHERE tmpMovement.StatusId = zc_Enum_Status_Complete()
+                              AND MovementProtocol.ProtocolData ILIKE '%Статус" FieldValue = "Проведен%'
+                          )
+        , tmpProtocolUser AS (SELECT tmpProtocol.Id,
+                                     tmpProtocol.OperDate,
+                                     tmpProtocol.UserID, 
+                                     Object_User.ValueData  AS UserName
+                              FROM tmpProtocol
+                                   LEFT JOIN Object AS Object_User ON Object_User.Id = tmpProtocol.UserID 
+                              WHERE tmpProtocol.Ord = 1)
 
        SELECT
              Movement_Pretension_View.Id
            , Movement_Pretension_View.InvNumber::Integer
            , Movement_Pretension_View.OperDate
-           , Movement_Pretension_View.BranchDate
-           , Movement_Pretension_View.BranchUserName
+           , COALESCE(Movement_Pretension_View.BranchDate, tmpProtocolUser.OperDate)::TDateTime AS BranchDate
+           , COALESCE(Movement_Pretension_View.BranchUserName, tmpProtocolUser.UserName)::TVarChar AS BranchUserName
            , Movement_Pretension_View.GoodsReceiptsDate
            , Movement_Pretension_View.SentDate
            , Movement_Pretension_View.StatusCode
@@ -149,6 +167,8 @@ BEGIN
            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId 
            
            LEFT JOIN tmpMI ON tmpMI.ID = Movement_Pretension_View.Id
+           
+           LEFT JOIN tmpProtocolUser ON tmpProtocolUser.Id = Movement_Pretension_View.Id
   ;
 
 
@@ -165,5 +185,5 @@ ALTER FUNCTION gpSelect_Movement_Pretension (TDateTime, TDateTime, Boolean, TVar
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Pretension (inStartDate:= '01.12.2021', inEndDate:= '01.01.2022', inIsErased := FALSE, inSession:= '3')
-select * from gpSelect_Movement_Pretension(instartdate := ('01.12.2021')::TDateTime , inenddate := ('20.12.2021')::TDateTime , inIsErased := 'True' ,  inSession := '11868044');
+-- 
+select * from gpSelect_Movement_Pretension(instartdate := ('01.03.2022')::TDateTime , inenddate := ('20.03.2022')::TDateTime , inIsErased := 'True' ,  inSession := '3');

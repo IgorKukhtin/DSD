@@ -857,8 +857,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersentSalaryDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersentSalaryDialogForm');
-  exit;
-  {
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryAllDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryAllDialogForm');
   exit;
@@ -1063,10 +1062,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_JuridicalItogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainingInsulinsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_RemainingInsulinsForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_JuridicalItogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_JuridicalItogForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_SupplierFailuresAllForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_SupplierFailuresAllForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_SupplierFailuresAllForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_SupplierFailuresDialogForm'));

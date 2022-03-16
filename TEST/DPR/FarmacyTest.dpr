@@ -1164,7 +1164,8 @@ uses
   Report_OrderExternal_SupplierFailuresAll in '..\..\FormsFarmacy\Report\Report_OrderExternal_SupplierFailuresAll.pas' {Report_OrderExternal_SupplierFailuresAllForm: TParentForm},
   Report_OrderExternal_JuridicalItog in '..\..\FormsFarmacy\Report\Report_OrderExternal_JuridicalItog.pas' {Report_OrderExternal_JuridicalItogForm: TParentForm},
   CheckRed in '..\..\FormsFarmacy\Document\CheckRed.pas' {CheckRedForm: TParentForm},
-  PretensionJournalIncome in '..\..\FormsFarmacy\Document\PretensionJournalIncome.pas' {PretensionJournalIncomeForm: TParentForm};
+  PretensionJournalIncome in '..\..\FormsFarmacy\Document\PretensionJournalIncome.pas' {PretensionJournalIncomeForm: TParentForm},
+  Report_RemainingInsulins in '..\..\FormsFarmacy\Report\Report_RemainingInsulins.pas' {Report_RemainingInsulinsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

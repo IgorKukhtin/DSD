@@ -6060,16 +6060,32 @@ function TdsdDataToJsonAction.LocalExecute: Boolean;
   var JsonArray: TJSONArray;
 begin
   result := False;
-  if Assigned(DataSource) or Assigned(View) then
-  begin
-    JSONArray := TJSONArray.Create();
-    try
-      DataSourceExecute(JsonArray);
-    finally
-      FJsonParam.Value := JSONArray.ToString;
-      result := FJsonParam.Value <> '';
-      JSONArray.Free;
+  try
+    if Assigned(DataSource) or Assigned(View) then
+    begin
+      JSONArray := TJSONArray.Create();
+      try
+        DataSourceExecute(JsonArray);
+      finally
+        try
+          FJsonParam.Value := JSONArray.ToString;
+        except
+          on E:Exception do raise Exception.Create('Ошибка передачи Json: ' + e.Message);
+        end;
+        try
+          result := FJsonParam.Value <> '';
+        except
+          on E:Exception do raise Exception.Create('Ошибка получение результата Json: ' + e.Message);
+        end;
+        try
+          JSONArray.Free;
+        except
+          on E:Exception do raise Exception.Create('Ошибка освобождения Json: ' + e.Message);
+        end;
+     end;
     end;
+  except
+    on E:Exception do raise Exception.Create('Ошибка сохранения Json: ' + e.Message);
   end;
 end;
 

@@ -57,6 +57,9 @@ BEGIN
 
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+
        -- ѕроверим а не провели за врем€ отложки были прицеденты
      IF COALESCE ((SELECT MB.ValueData FROM MovementBoolean AS MB 
                    WHERE MB.MovementId = inMovementId 

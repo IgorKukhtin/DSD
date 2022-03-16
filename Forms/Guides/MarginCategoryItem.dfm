@@ -4,7 +4,7 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
   ClientWidth = 800
   AddOnFormData.Params = FormParams
   ExplicitWidth = 816
-  ExplicitHeight = 379
+  ExplicitHeight = 380
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,7 +23,6 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
         ExplicitWidth = 800
         ExplicitHeight = 315
         inherited cxGridDBTableView: TcxGridDBTableView
-          OptionsData.Appending = True
           OptionsData.Inserting = True
           Styles.Content = nil
           Styles.Inactive = nil

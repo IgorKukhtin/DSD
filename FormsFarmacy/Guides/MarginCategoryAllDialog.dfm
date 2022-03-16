@@ -124,7 +124,7 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
   object cbVal5: TcxCheckBox
     Left = 9
     Top = 140
-    Caption = '200-300'
+    Caption = '200-500'
     ParentShowHint = False
     ShowHint = True
     State = cbsChecked
@@ -134,7 +134,7 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
   object cbVal6: TcxCheckBox
     Left = 9
     Top = 170
-    Caption = '300-1000'
+    Caption = '500-1000'
     ParentShowHint = False
     ShowHint = True
     State = cbsChecked
@@ -238,7 +238,7 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
-            item
+      item
         Name = 'isVal2'
         Value = Null
         Component = cbVal2
@@ -246,7 +246,7 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
-            item
+      item
         Name = 'isVal3'
         Value = Null
         Component = cbVal3
@@ -254,7 +254,7 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
-            item
+      item
         Name = 'isVal4'
         Value = Null
         Component = cbVal4
@@ -262,7 +262,7 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
-            item
+      item
         Name = 'isVal5'
         Value = Null
         Component = cbVal5
@@ -270,7 +270,7 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
-            item
+      item
         Name = 'isVal6'
         Value = Null
         Component = cbVal6
@@ -278,7 +278,7 @@ object MarginCategoryAllDialogForm: TMarginCategoryAllDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
-            item
+      item
         Name = 'isVal7'
         Value = Null
         Component = cbVal7

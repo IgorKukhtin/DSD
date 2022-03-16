@@ -80,14 +80,31 @@ BEGIN
                       AND MLMovement_Income.DescId = zc_MovementLinkMovement_Income()
                     GROUP BY Movement_Pretension.Id
                    )
+        , tmpProtocol AS (SELECT ROW_NUMBER() OVER (PARTITION BY Movement.Id ORDER BY MovementProtocol.OperDate) AS Ord,
+                                 Movement.Id,
+                                 MovementProtocol.OperDate,
+                                 MovementProtocol.UserID
+                          FROM Movement
+                               INNER JOIN MovementProtocol ON Movement.Id = MovementProtocol.MovementId
+                            WHERE Movement.ID = inIncomeId
+                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                              AND MovementProtocol.ProtocolData ILIKE '%Статус" FieldValue = "Проведен%'
+                          )
+        , tmpProtocolUser AS (SELECT tmpProtocol.Id,
+                                     tmpProtocol.OperDate,
+                                     tmpProtocol.UserID, 
+                                     Object_User.ValueData  AS UserName
+                              FROM tmpProtocol
+                                   LEFT JOIN Object AS Object_User ON Object_User.Id = tmpProtocol.UserID 
+                              WHERE tmpProtocol.Ord = 1)
 
 
        SELECT
              Movement_Pretension_View.Id
            , Movement_Pretension_View.InvNumber::Integer
            , Movement_Pretension_View.OperDate
-           , Movement_Pretension_View.BranchDate
-           , Movement_Pretension_View.BranchUserName
+           , COALESCE(Movement_Pretension_View.BranchDate, tmpProtocolUser.OperDate)::TDateTime AS BranchDate
+           , COALESCE(Movement_Pretension_View.BranchUserName, tmpProtocolUser.UserName)::TVarChar AS BranchUserName
            , Movement_Pretension_View.GoodsReceiptsDate
            , Movement_Pretension_View.SentDate
            , Movement_Pretension_View.StatusCode
@@ -143,6 +160,8 @@ BEGIN
            
            LEFT JOIN tmpMI ON tmpMI.ID = Movement_Pretension_View.Id
                       
+           LEFT JOIN tmpProtocolUser ON tmpProtocolUser.Id = Movement_Pretension_View.Id
+
      WHERE Movement_Pretension_View.MovementIncomeId = inIncomeId;
 
 END;

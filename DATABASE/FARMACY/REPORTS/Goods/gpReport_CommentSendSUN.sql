@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, UnitCode Integer, UnitName TVarChar, TypeSUN TVarChar
              , PercentZeroingRange TFloat
              , Sale TFloat, Efficiency TFloat
              , Color_UntilNextSUN Integer
+             , isSendPartionDate Boolean
               )
 
 AS
@@ -105,6 +106,7 @@ BEGIN
                                  WHEN COALESCE (MovementBoolean_SUN_v3.ValueData, FALSE) = TRUE THEN 'Ý-ÑÓÍ'
                                  WHEN COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE) = TRUE THEN 'ÑÓÍ-v2'
                                  ELSE 'ÑÓÍ-v1' END::TVarChar                                               AS TypeSUN 
+                          , COALESCE (ObjectBoolean_CommentSun_SendPartionDate.ValueData, False)           AS isSendPartionDate
                      FROM tmpMovement AS Movement
                           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                        ON MovementLinkObject_From.MovementId = Movement.Id
@@ -133,6 +135,9 @@ BEGIN
                                                     ON MovementBoolean_SUN_v4.MovementId = Movement.Id
                                                    AND MovementBoolean_SUN_v4.DescId = zc_MovementBoolean_SUN_v4()
                      
+                          LEFT JOIN ObjectBoolean AS ObjectBoolean_CommentSun_SendPartionDate
+                                                  ON ObjectBoolean_CommentSun_SendPartionDate.ObjectId = MILinkObject_CommentSend.ObjectId
+                                                 AND ObjectBoolean_CommentSun_SendPartionDate.DescId   = zc_ObjectBoolean_CommentSun_SendPartionDate()
                      )
      , tmpProtocolUnion AS (SELECT  MovementItemProtocol.Id
                                   , MovementItemProtocol.MovementItemId
@@ -235,6 +240,7 @@ BEGIN
                    tmpUntilNextSUN.PercentUntilNextSUN >= tmpCashSettings.PercentUntilNextSUN 
               THEN zc_Color_Yelow()
               ELSE zc_Color_White() END Color_UntilNextSUN
+       , tmpResult.isSendPartionDate
   FROM tmpResult
        LEFT JOIN Object AS Object_From ON Object_From.Id = tmpResult.UnitId
        LEFT JOIN Object AS Object_CommentSend ON Object_CommentSend.Id = tmpResult.CommentSendID
@@ -263,4 +269,4 @@ ALTER FUNCTION gpReport_PercentageOverdueSUN (TDateTime, TDateTime, TVarChar) OW
 -- òåñò
 -- SELECT * FROM gpReport_CommentSendSUN (inStartDate:= '25.08.2020', inEndDate:= '25.08.2020', inSession:= '3')
 
-select * from gpReport_CommentSendSUN(inStartDate := ('14.02.2022')::TDateTime , inEndDate := ('16.02.2022')::TDateTime ,  inSession := '3');
+select * from gpReport_CommentSendSUN(inStartDate := ('01.01.2022')::TDateTime , inEndDate := ('16.03.2022')::TDateTime ,  inSession := '3');
