@@ -78,6 +78,8 @@ type
     actDoLoad_Gotthardt: TExecuteImportSettingsAction;
     actGetImportSetting_Gotthardt: TdsdExecStoredProc;
     bbStartLoad_Gotthardt: TdxBarButton;
+    Article: TcxGridDBColumn;
+    GoodsGroupNameFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

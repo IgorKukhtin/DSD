@@ -2,8 +2,9 @@ inherited PriceListMovementForm: TPriceListMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
   ClientHeight = 668
   ClientWidth = 1069
+  ExplicitTop = -44
   ExplicitWidth = 1085
-  ExplicitHeight = 706
+  ExplicitHeight = 707
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -85,15 +86,44 @@ inherited PriceListMovementForm: TPriceListMovementForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object GoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'GoodsCode'
+          object GoodsGroupNameFull: TcxGridDBColumn [0]
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 100
+          end
+          object Article: TcxGridDBColumn [1]
+            Caption = 'Artikel Nr'
+            DataBinding.FieldName = 'Article'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object GoodsCode: TcxGridDBColumn [2]
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'GoodsCode'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 63
           end
-          object GoodsName: TcxGridDBColumn
+          object GoodsName: TcxGridDBColumn [3]
             Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -108,16 +138,22 @@ inherited PriceListMovementForm: TPriceListMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 206
           end
-          object GoodsName_translate: TcxGridDBColumn
+          object GoodsName_translate: TcxGridDBColumn [4]
             Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1087#1077#1088#1077#1074#1086#1076')'
             DataBinding.FieldName = 'GoodsName_translate'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 131
           end
-          object DiscountPartnerName: TcxGridDBColumn
+          object DiscountPartnerName: TcxGridDBColumn [5]
             Caption = #1043#1088#1091#1087#1087#1072' '#1089#1082'. '#1091' '#1087#1086#1089#1090'.'
             DataBinding.FieldName = 'DiscountPartnerName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -131,23 +167,26 @@ inherited PriceListMovementForm: TPriceListMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1043#1088#1091#1087#1087#1072' '#1089#1082#1080#1076#1082#1080' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Options.Editing = False
             Width = 97
           end
-          object MeasureName: TcxGridDBColumn
+          object MeasureName: TcxGridDBColumn [6]
             Caption = #1045#1076'.'#1080#1079#1084
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
-          object MeasureParentName: TcxGridDBColumn
+          object MeasureParentName: TcxGridDBColumn [7]
             Caption = #1045#1076'.'#1080#1079#1084' ('#1091#1087#1072#1082#1086#1074#1082#1080')'
             DataBinding.FieldName = 'MeasureParentName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 78
           end
-          object MeasureName_translate: TcxGridDBColumn
+          object MeasureName_translate: TcxGridDBColumn [8]
             Caption = #1045#1076'.'#1080#1079#1084' ('#1087#1077#1088#1077#1074#1086#1076')'
             DataBinding.FieldName = 'MeasureName_translate'
             HeaderAlignmentHorz = taCenter
@@ -155,7 +194,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
             Options.Editing = False
             Width = 69
           end
-          object MeasureParentName_translate: TcxGridDBColumn
+          object MeasureParentName_translate: TcxGridDBColumn [9]
             Caption = #1045#1076'.'#1080#1079#1084' ('#1091#1087#1072#1082#1086#1074#1082#1080') ('#1087#1077#1088#1077#1074#1086#1076')'
             DataBinding.FieldName = 'MeasureParentName_translate'
             HeaderAlignmentHorz = taCenter
@@ -163,23 +202,25 @@ inherited PriceListMovementForm: TPriceListMovementForm
             Options.Editing = False
             Width = 79
           end
-          object isOutlet: TcxGridDBColumn
+          object isOutlet: TcxGridDBColumn [10]
             Caption = 'Outlet'
             DataBinding.FieldName = 'isOutlet'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 62
           end
-          object Amount: TcxGridDBColumn
+          object Amount: TcxGridDBColumn [11]
             Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1085#1076#1089
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 77
           end
-          object PriceParent: TcxGridDBColumn
+          object PriceParent: TcxGridDBColumn [12]
             Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1085#1076#1089' ('#1091#1087#1072#1082#1086#1074#1082#1080')'
             DataBinding.FieldName = 'PriceParent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -187,18 +228,20 @@ inherited PriceListMovementForm: TPriceListMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1073#1077#1079' '#1085#1076#1089' ('#1091#1087#1072#1082#1086#1074#1082#1080')'
+            Options.Editing = False
             Width = 77
           end
-          object MeasureMult: TcxGridDBColumn
+          object MeasureMult: TcxGridDBColumn [13]
             Caption = #1042#1083#1086#1078#1077#1085#1085#1086#1089#1090#1100
             DataBinding.FieldName = 'MeasureMult'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 57
           end
-          object EmpfPriceParent: TcxGridDBColumn
+          object EmpfPriceParent: TcxGridDBColumn [14]
             Caption = #1056#1077#1082#1086#1084#1077#1085'. '#1094#1077#1085#1072' '#1073#1077#1079' '#1085#1076#1089' ('#1091#1087'.)'
             DataBinding.FieldName = 'EmpfPriceParent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -206,9 +249,10 @@ inherited PriceListMovementForm: TPriceListMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1077#1082#1086#1084#1077#1085#1076#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072' '#1073#1077#1079' '#1085#1076#1089' ('#1091#1087#1072#1082#1086#1074#1082#1080')'
+            Options.Editing = False
             Width = 57
           end
-          object MinCount: TcxGridDBColumn
+          object MinCount: TcxGridDBColumn [15]
             Caption = #1052#1080#1085' '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1091#1087#1082#1080
             DataBinding.FieldName = 'MinCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -216,9 +260,10 @@ inherited PriceListMovementForm: TPriceListMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1084#1080#1085' '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1091#1087#1082#1080
+            Options.Editing = False
             Width = 57
           end
-          object MinCountMult: TcxGridDBColumn
+          object MinCountMult: TcxGridDBColumn [16]
             Caption = #1056#1077#1082#1086#1084'. '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1091#1087#1082#1080
             DataBinding.FieldName = 'MinCountMult'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -226,21 +271,28 @@ inherited PriceListMovementForm: TPriceListMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1077#1082#1086#1084#1077#1085#1076#1091#1077#1084#1086#1077' '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1091#1087#1082#1080
+            Options.Editing = False
             Width = 57
           end
-          object WeightParent: TcxGridDBColumn
+          object WeightParent: TcxGridDBColumn [17]
             DataBinding.FieldName = 'WeightParent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 57
           end
-          object CatalogPage: TcxGridDBColumn
+          object CatalogPage: TcxGridDBColumn [18]
             DataBinding.FieldName = 'CatalogPage'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 171
+          end
+          inherited colIsErased: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
         end
       end
