@@ -623,11 +623,11 @@ end if;
                                               END) AS CountSendOnPriceOut_10900
 
                                        , SUM (CASE 
-                                                  when inUserId = 5
+                                                  /*when inUserId = 5
                                                    and MIContainer.MovementId in (21051995 , 21057967 , 21059620)
                                                        then -1 * MIContainer.Amount
                                                   when inUserId = 5
-                                                       then -1 * MIContainer.Amount
+                                                       then -1 * MIContainer.Amount*/
                                        
                                        
                                        

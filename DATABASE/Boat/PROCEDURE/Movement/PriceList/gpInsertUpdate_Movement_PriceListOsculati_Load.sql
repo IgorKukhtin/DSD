@@ -159,7 +159,27 @@ BEGIN
               --Италия          
           IF COALESCE (inGoodsName_ita,'') <> ''
           THEN
-              --пробуем найти
+              -- проверка
+              IF 1 < (SELECT COUNT(*)
+                      FROM Object AS Object_TranslateObject
+                           INNER JOIN ObjectLink AS ObjectLink_Language
+                                                 ON ObjectLink_Language.ObjectId = Object_TranslateObject.Id
+                                                AND ObjectLink_Language.DescId = zc_ObjectLink_TranslateObject_Language()
+                                                AND ObjectLink_Language.ChildObjectId = 40528 --италия
+                           INNER JOIN ObjectLink AS ObjectLink_Object
+                                                ON ObjectLink_Object.ObjectId = Object_TranslateObject.Id
+                                               AND ObjectLink_Object.DescId = zc_ObjectLink_TranslateObject_Object()
+                                               AND ObjectLink_Object.ChildObjectId = vbGoodsId
+                           INNER JOIN Object ON Object.Id = ObjectLink_Object.ChildObjectId
+                                            AND Object.DescId = zc_Object_Goods()
+                      WHERE Object_TranslateObject.DescId = zc_Object_TranslateObject()
+                        AND Object_TranslateObject.isErased = FALSE
+                     )
+              THEN
+                  RAISE EXCEPTION 'Ошибка.Перевод <%>  <%>', vbGoodsId, lfGet_Object_ValueData_sh (40528);
+              END IF;
+
+              -- пробуем найти
               vbObjectId_ita := (SELECT Object_TranslateObject.Id
                                 FROM Object AS Object_TranslateObject
                                      INNER JOIN ObjectLink AS ObjectLink_Language
