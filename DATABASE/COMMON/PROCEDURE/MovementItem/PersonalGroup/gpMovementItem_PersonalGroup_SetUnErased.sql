@@ -31,6 +31,9 @@ BEGIN
       RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
   END IF;
 
+  -- сохранили протокол
+  PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
+
   -- пересчитали Итоговые суммы по накладной
   PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
 
