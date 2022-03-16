@@ -1,10 +1,10 @@
 inherited MainForm: TMainForm
-  Caption = 'ProjectBoat'
+  Caption = 'ProjectBoat - 64bit'
   ClientHeight = 168
   ClientWidth = 805
   KeyPreview = True
   ExplicitWidth = 821
-  ExplicitHeight = 226
+  ExplicitHeight = 227
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
