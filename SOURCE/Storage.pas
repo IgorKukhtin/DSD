@@ -641,11 +641,11 @@ begin
       Logger.AddToLog(' try ... AttemptCount = ' + IntToStr(AttemptCount));
       if dsdProject = prBoat then
       begin
-        if FindCmdLineSwitch('log', true)
-        then ShowMessage(CString + GetAddConnectString(pExecOnServer)+#10+#13+ FSendList.Text);
+        //if FindCmdLineSwitch('log', true)
+        //then ShowMessage(CString + GetAddConnectString(pExecOnServer)+#10+#13+ FSendList.Text);
         Logger.AddToLog(CString + GetAddConnectString(pExecOnServer)+#10+#13+ FSendList.Text);
-        if FindCmdLineSwitch('log', true)
-        then ShowMessage('start idHTTP.Post ...');
+        //if FindCmdLineSwitch('log', true)
+        //then ShowMessage('start idHTTP.Post ...');
         //
         idHTTP.Post(CString + GetAddConnectString(pExecOnServer), FSendList, FReceiveStreamBytes,
             {$IFDEF DELPHI103RIO} IndyTextEncoding(IdTextEncodingType.encUTF8) {$ELSE} TIdTextEncoding.UTF8 {$ENDIF});
