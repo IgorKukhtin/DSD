@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SheetWorkTime_byPersonalGroup(
     IN inSession           TVarChar    -- сессия пользователя
 )                              
 RETURNS VOID
-AS
+AS 
 $BODY$
    DECLARE vbStartDate TDateTime;
    DECLARE vbEndDAte   TDateTime;
@@ -101,7 +101,7 @@ BEGIN
               , zfCalc_ViewWorkHour (tmpMI.Amount, ObjectString_ShortName.ValueData) ::TVarChar AS Value
          FROM tmpMI
              INNER JOIN ObjectString AS ObjectString_ShortName
-                                     ON ObjectString_ShortName.ObjectId = CASE WHEN inisDel = FALSE THEN tmpMI.WorkTimeKindId ELSE 0 END
+                                     ON ObjectString_ShortName.ObjectId = tmpMI.WorkTimeKindId
                                     AND ObjectString_ShortName.DescId = zc_objectString_WorkTimeKind_ShortName()
      ) AS tmp
      ;
