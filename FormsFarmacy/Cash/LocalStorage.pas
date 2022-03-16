@@ -109,6 +109,8 @@ begin
       AddIntField(LocalDataBaseHead,  'CAT1303ID');   //Категория 1303
       //***26.10.21
       AddBoolField(LocalDataBaseHead, 'ISERRORRO');   //ВИП чек по ошибке РРО
+      //***15.03.22
+      AddBoolField(LocalDataBaseHead, 'ISPAPERRSP');   //	Бумажный рецепт по СП
 
       LocalDataBaseHead.CreateTable;
     end
@@ -191,6 +193,8 @@ begin
         if FindField('CAT1303ID') = nil then AddIntField(LFieldDefs,  'CAT1303ID');     //Категория 1303
         //***14.12.21
         if FindField('ISERRORRO') = nil then AddBoolField(LFieldDefs,  'ISERRORRO');     //ВИП чек по ошибке РРО
+        //***15.03.22
+        if FindField('ISPAPERRSP') = nil then AddBoolField(LFieldDefs,  'ISPAPERRSP');    //	Бумажный рецепт по СП
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -283,7 +287,9 @@ begin
         //***27.10.21
         (FindField('CAT1303ID') = nil) or
         //***14.12.21
-        (FindField('ISERRORRO') = nil));
+        (FindField('ISERRORRO') = nil) or
+        //***15.03.22
+        (FindField('ISPAPERRSP') = nil));
 
       Close;
 

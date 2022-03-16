@@ -148,7 +148,8 @@ uses
   CashCloseJeckdawsDialog in '..\FormsFarmacy\Cash\CashCloseJeckdawsDialog.pas' {CashCloseJeckdawsDialogForm: TParentForm},
   dsdXMLTransform in '..\SOURCE\COMPONENT\dsdXMLTransform.pas',
   PrintSendDialog in '..\FormsFarmacy\Cash\PrintSendDialog.pas' {PrintSendDialogForm: TParentForm},
-  UnitGetCash in '..\FormsFarmacy\Cash\UnitGetCash.pas';
+  UnitGetCash in '..\FormsFarmacy\Cash\UnitGetCash.pas',
+  ChoiceMedicalProgramSP in '..\FormsFarmacy\Cash\ChoiceMedicalProgramSP.pas' {ChoiceMedicalProgramSPForm: TParentForm};
 
 {$R *.res}
 

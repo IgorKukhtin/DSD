@@ -857,8 +857,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersentSalaryDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersentSalaryDialogForm');
-  exit;
-  {
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryAllDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryAllDialogForm');
   exit;

@@ -605,6 +605,7 @@ type
     actAddGoodsSupplement: TAction;
     mmAddGoodsSupplement: TMenuItem;
     spGoods_AddSupplement: TdsdStoredProc;
+    spGetMedicalProgramSP: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -932,7 +933,7 @@ type
       ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
       AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors, AisDiscountCommit : Boolean;
       AMedicalProgramSPId: Integer; AisManual : Boolean; ACategory1303Id : Integer;
-      ANeedComplete, AisErrorRRO: Boolean; AZReport : Integer; AFiscalCheckNumber: String;
+      ANeedComplete, AisErrorRRO, AisPaperRecipeSP: Boolean; AZReport : Integer; AFiscalCheckNumber: String;
       AID: Integer; out AUID: String): Boolean;
 
     procedure pGet_OldSP(var APartnerMedicalId: Integer;
@@ -997,7 +998,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog,
   EnterLoyaltySaveMoney, ChoosingPresent, ChoosingRelatedProduct,
   LoyaltySMList, EnterLoyaltySMDiscount, GetSystemInfo, ListSelection,
   LikiDniproReceipt, EnterRecipeNumber1303, LikiDniproReceiptDialog, Clipbrd,
-  TestingUser;
+  TestingUser, ChoiceMedicalProgramSP;
 
 const
   StatusUnCompleteCode = 1;
@@ -1620,6 +1621,7 @@ begin
 
         False, // NeedComplete
         FErrorRRO, // isErrorRRO
+        FormParams.ParamByName('isPaperRecipeSP').Value,
         0,     // ZReport
         '',    // FiscalCheckNumber
         FormParams.ParamByName('CheckId').Value,  // ID чека
@@ -3910,6 +3912,7 @@ begin
 
         True, // NeedComplete
         False, // isErrorRRO
+        FormParams.ParamByName('isPaperRecipeSP').Value,
         ZReport,     // Номер Z отчета
         CheckNumber, // FiscalCheckNumber
         FormParams.ParamByName('CheckId').Value,  // ID чека
@@ -5680,6 +5683,7 @@ begin
 
     , false // NeedComplete
     , False // isErrorRRO
+    , FormParams.ParamByName('isPaperRecipeSP').Value
     , 0  // ZReport
     , '' // FiscalCheckNumber
     , FormParams.ParamByName('CheckId').Value // Id чека
@@ -5798,6 +5802,7 @@ begin
 
     , false // NeedComplete
     , False // isErrorRRO
+    , FormParams.ParamByName('isPaperRecipeSP').Value
     , 0  // ZReport
     , '' // FiscalCheckNumber
     , FormParams.ParamByName('CheckId').Value // Id чека
@@ -6911,6 +6916,7 @@ begin
 
     , false // NeedComplete
     , False // isErrorRRO
+    , FormParams.ParamByName('isPaperRecipeSP').Value
     , 0 // ZReport
     , '' // FiscalCheckNumber
     , FormParams.ParamByName('CheckId').Value // Id чека
@@ -8674,7 +8680,7 @@ begin
       else if (SourceClientDataSet.FieldByName('isSP').AsBoolean = True) and
         (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
       begin
-        if FormParams.ParamByName('MedicalProgramSPId').Value = SourceClientDataSet.FieldByName('MedicalProgramSPId').AsInteger  then
+        if (FormParams.ParamByName('MedicalProgramSPId').Value = SourceClientDataSet.FieldByName('MedicalProgramSPId').AsInteger) then
         begin
           // цена БЕЗ скидки
           lPriceSale := SourceClientDataSet.FieldByName('PriceSaleSP').asCurrency;
@@ -12004,7 +12010,7 @@ function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
   ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
   AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors, AisDiscountCommit : Boolean;
   AMedicalProgramSPId: Integer; AisManual : Boolean; ACategory1303Id : Integer;
-  ANeedComplete, AisErrorRRO: Boolean; AZReport : Integer; AFiscalCheckNumber: String;
+  ANeedComplete, AisErrorRRO, AisPaperRecipeSP: Boolean; AZReport : Integer; AFiscalCheckNumber: String;
   AID: Integer; out AUID: String): Boolean;
 var
   NextVIPId: Integer;
@@ -12281,7 +12287,8 @@ begin
           AMedicalProgramSPId,       // Медицинская программа соц. проектов
           AisManual,                  // ручной выбор медикаментов
           ACategory1303Id,            // Категория 1303
-          AisErrorRRO                 // ВИП чек по ошибке РРО
+          AisErrorRRO,                 // ВИП чек по ошибке РРО
+          AisPaperRecipeSP            // Бумажный рецепт по СП
           ]));
       End
       else
@@ -12405,6 +12412,8 @@ begin
         FLocalDataBaseHead.FieldByName('CAT1303ID').Value := ACategory1303Id;
         //ВИП чек по ошибке РРО
         FLocalDataBaseHead.FieldByName('ISERRORRO').Value := AisErrorRRO;
+        //Бумажный рецепт по СП
+        FLocalDataBaseHead.FieldByName('ISPAPERRSP').Value := AisPaperRecipeSP;
         FLocalDataBaseHead.Post;
       End;
     except
@@ -13952,6 +13961,34 @@ end;
 
 procedure TMainCashForm2.LoadMedicalProgramSPGoods(AGoodsId : Integer);
 begin
+
+  if (FormParams.ParamByName('isPaperRecipeSP').Value = True) and
+     (FormParams.ParamByName('MedicalProgramSPId').Value = 0) then
+  begin
+    MedicalProgramSPGoodsCDS.Close;
+    spGetMedicalProgramSP.ParamByName('inSPKindId').Value := FormParams.ParamByName('SPKindId').Value;
+    spGetMedicalProgramSP.ParamByName('inGoodsId').Value := AGoodsId;
+    spGetMedicalProgramSP.ParamByName('inCashSessionId').Value := iniLocalGUIDGet;
+    spGetMedicalProgramSP.Execute;
+
+    if MedicalProgramSPGoodsCDS.IsEmpty then
+    begin
+      raise Exception.Create('Ошибка получения медицинской программы медикамента. Возможно к вашей аптеке она не подключена.');
+    end else if MedicalProgramSPGoodsCDS.RecordCount = 1 then
+    begin
+      FormParams.ParamByName('MedicalProgramSPId').Value := MedicalProgramSPGoodsCDS.FieldByName('MedicalProgramSPId').AsInteger;
+      lblMemberSP.Caption := MedicalProgramSPGoodsCDS.FieldByName('MedicalProgramSPName').AsString;
+    end else
+    begin
+      if ChoiceMedicalProgramSPExecute then
+      begin
+        FormParams.ParamByName('MedicalProgramSPId').Value := MedicalProgramSPGoodsCDS.FieldByName('MedicalProgramSPId').AsInteger;
+        lblMemberSP.Caption := MedicalProgramSPGoodsCDS.FieldByName('MedicalProgramSPName').AsString;
+      end else raise Exception.Create('Ошибка не выбрана медицинская программа.');
+    end;
+    MedicalProgramSPGoodsCDS.Close;
+  end;
+
   if not MedicalProgramSPGoodsCDS.Active or
     (MedicalProgramSPGoodsCDS.FieldByName('MedicalProgramSPID').AsInteger <> FormParams.ParamByName('MedicalProgramSPId').Value) then
   begin
@@ -13965,6 +14002,7 @@ begin
   if not MedicalProgramSPGoodsCDS.Active or not MedicalProgramSPGoodsCDS.Locate('GoodsId', AGoodsId, []) or
     (MedicalProgramSPGoodsCDS.FieldByName('MedicalProgramSPID').AsInteger <> FormParams.ParamByName('MedicalProgramSPId').Value) then
     raise Exception.Create('Ошибка получения данных по программе для медикамента. Покажите это окно системному администратору');
+
 end;
 
 procedure TMainCashForm2.MoveLogFile;

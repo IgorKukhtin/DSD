@@ -9,7 +9,9 @@ CREATE OR REPLACE FUNCTION gpSelect_GetMedicalProgramSP (
     IN inSession             TVarChar     -- сессия пользователя
 )
 
-RETURNS TABLE (MedicalProgramSPID Integer
+RETURNS TABLE (GoodsId Integer
+             , MedicalProgramSPID Integer
+             , MedicalProgramSPCode Integer
              , MedicalProgramSPName TVarChar
               )
 AS
@@ -60,7 +62,7 @@ BEGIN
                                , COALESCE (MIString_ProgramIdSP.ValueData, '')::TVarChar AS ProgramIdSP
                                , MIString_DosageIdSP.ValueData AS DosageIdSP
                                                                 -- № п/п - на всякий случай
-                               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
+                               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MLO_MedicalProgramSP.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
                           FROM Movement
                                INNER JOIN MovementDate AS MovementDate_OperDateStart
                                                        ON MovementDate_OperDateStart.MovementId = Movement.Id
@@ -133,8 +135,10 @@ BEGIN
                                       FROM CashSessionSnapShot
                                       WHERE CashSessionSnapShot.CashSessionId = inCashSessionId) 
                           
-    SELECT tmpGoodsSP.MedicalProgramSPID
-         , Object_MedicalProgramSP.ValueData AS MedicalProgramSPName
+    SELECT tmpGoodsSP.GoodsId
+         , tmpGoodsSP.MedicalProgramSPID
+         , Object_MedicalProgramSP.ObjectCode      AS MedicalProgramSPCode
+         , Object_MedicalProgramSP.ValueData       AS MedicalProgramSPName
     FROM tmpGoodsSP
     
          INNER JOIN tmpCashSessionSnapShot AS CashSessionSnapShot ON CashSessionSnapShot.ObjectId = tmpGoodsSP.GoodsId                                       
@@ -158,4 +162,4 @@ ALTER FUNCTION gpSelect_GetMedicalProgramSP (Integer, Integer, TVarChar, TVarCha
 */
 
 -- 
-select * from gpSelect_GetMedicalProgramSP(inSPKindId := 4823009 , inGoodsId := 49756 , inCashSessionId := '{1C5FB73B-D0AC-4715-B40A-982B534450A3}' ,  inSession := '3');
+select * from gpSelect_GetMedicalProgramSP(inSPKindId := 4823009 , inGoodsId := 38116 , inCashSessionId := '{1C5FB73B-D0AC-4715-B40A-982B534450A3}' ,  inSession := '3');

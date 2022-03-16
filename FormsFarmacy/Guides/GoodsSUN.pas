@@ -228,6 +228,11 @@ type
     mactUpdate_isColdSUN: TMultiAction;
     actUpdate_isColdSUN: TdsdExecStoredProc;
     dxBarButton20: TdxBarButton;
+    isSupplementSUN2: TcxGridDBColumn;
+    actUpdateisSupplementSUN2: TMultiAction;
+    execUpdate_SupplementSUN2: TdsdExecStoredProc;
+    dxBarButton21: TdxBarButton;
+    spUpdate_isSupplementSUN2_Revert: TdsdStoredProc;
   private
     { Private declarations }
   public
