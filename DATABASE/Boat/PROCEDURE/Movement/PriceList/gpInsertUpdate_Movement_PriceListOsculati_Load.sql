@@ -37,7 +37,7 @@ $BODY$
   DECLARE vbMovementItemId   Integer;
   DECLARE vbMeasureId        Integer;
   DECLARE vbMeasureParentId        Integer;
-  DECLARE vbObjectIdMeasure_ita        Integer;
+  DECLARE vbObjectIdMeasure_ita    Integer;
   DECLARE vbObjectId_eng        Integer;
   DECLARE vbObjectId_fra        Integer;
   DECLARE vbObjectId_ita        Integer;
@@ -55,7 +55,7 @@ BEGIN
 
    IF COALESCE (inMeasureName,'')<> ''
    THEN
-       vbMeasureId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Measure() AND Object.ValueData Like TRIM (inMeasureName));    
+       vbMeasureId := (SELECT MIN (Object.Id) FROM Object WHERE Object.DescId = zc_Object_Measure() AND TRIM (Object.ValueData) = TRIM (inMeasureName) );    -- UPPER (TRIM (Object.ValueData))
        --если не находим создаем
        IF COALESCE (vbMeasureId,0) = 0
        THEN
@@ -73,7 +73,7 @@ BEGIN
 
    IF COALESCE (inMeasureParentName,'')<> ''
    THEN
-       vbMeasureParentId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Measure() AND Object.ValueData Like TRIM (inMeasureParentName));    
+       vbMeasureParentId := (SELECT MIN (Object.Id) FROM Object WHERE Object.DescId = zc_Object_Measure() AND TRIM (Object.ValueData) = TRIM (inMeasureParentName) );    --если вдруг больше одного берем с мин. Id --AND Object.isErased = FALSE
        --если не находим создаем
        IF COALESCE (vbMeasureParentId,0) = 0
        THEN
@@ -91,18 +91,18 @@ BEGIN
 
    IF COALESCE (inDiscountPartnerName,'')<> ''
    THEN
-       vbDiscountPartnerId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_DiscountPartner() AND Object.ValueData Like TRIM (inDiscountPartnerName));    
+       vbDiscountPartnerId := (SELECT MIN (Object.Id) FROM Object WHERE Object.DescId = zc_Object_DiscountPartner() AND TRIM (Object.ValueData) = TRIM (inDiscountPartnerName));    
        --если не находим создаем
        IF COALESCE (vbDiscountPartnerId,0) = 0
        THEN
 
        vbDiscountPartnerId := (SELECT tmp.ioId
                               FROM gpInsertUpdate_Object_DiscountPartner (ioId           := 0         :: Integer
-                                                                       , ioCode         := 0         :: Integer
-                                                                       , inName         := TRIM (inDiscountPartnerName) :: TVarChar
-                                                                       , inComment      := ''        :: TVarChar
-                                                                       , inSession      := inSession :: TVarChar
-                                                                        ) AS tmp);
+                                                                        , ioCode         := 0         :: Integer
+                                                                        , inName         := TRIM (inDiscountPartnerName) :: TVarChar
+                                                                        , inComment      := ''        :: TVarChar
+                                                                        , inSession      := inSession :: TVarChar
+                                                                         ) AS tmp);
        END IF;
    END IF;
    
@@ -161,31 +161,31 @@ BEGIN
           THEN
               --пробуем найти
               vbObjectId_ita := (SELECT Object_TranslateObject.Id
-                                FROM Object AS Object_TranslateObject
-                                     INNER JOIN ObjectLink AS ObjectLink_Language
-                                                           ON ObjectLink_Language.ObjectId = Object_TranslateObject.Id
-                                                          AND ObjectLink_Language.DescId = zc_ObjectLink_TranslateObject_Language()
-                                                          AND ObjectLink_Language.ChildObjectId = 40528 --италия
-                                     INNER JOIN ObjectLink AS ObjectLink_Object
-                                                          ON ObjectLink_Object.ObjectId = Object_TranslateObject.Id
-                                                         AND ObjectLink_Object.DescId = zc_ObjectLink_TranslateObject_Object()
-                                                         AND ObjectLink_Object.ChildObjectId = vbGoodsId
-                                     INNER JOIN Object ON Object.Id = ObjectLink_Object.ChildObjectId
-                                                      AND Object.DescId = zc_Object_Goods()
-                                WHERE Object_TranslateObject.DescId = zc_Object_TranslateObject()
-                                  AND Object_TranslateObject.isErased = FALSE
+                                 FROM Object AS Object_TranslateObject
+                                      INNER JOIN ObjectLink AS ObjectLink_Language
+                                                            ON ObjectLink_Language.ObjectId = Object_TranslateObject.Id
+                                                           AND ObjectLink_Language.DescId = zc_ObjectLink_TranslateObject_Language()
+                                                           AND ObjectLink_Language.ChildObjectId = 40528 --италия
+                                      INNER JOIN ObjectLink AS ObjectLink_Object
+                                                           ON ObjectLink_Object.ObjectId = Object_TranslateObject.Id
+                                                          AND ObjectLink_Object.DescId = zc_ObjectLink_TranslateObject_Object()
+                                                          AND ObjectLink_Object.ChildObjectId = vbGoodsId
+                                      INNER JOIN Object ON Object.Id = ObjectLink_Object.ChildObjectId
+                                                       AND Object.DescId = zc_Object_Goods()
+                                 WHERE Object_TranslateObject.DescId = zc_Object_TranslateObject()
+                                   AND Object_TranslateObject.isErased = FALSE
                                 );
               
               IF COALESCE(vbObjectId_ita,0)=0
               THEN 
                    vbObjectId_ita := (SELECT tmp.ioId
                                       FROM gpInsertUpdate_Object_TranslateObject(ioId          := COALESCE (vbObjectId_ita,0)   ::Integer,       -- ключ объекта <>
-                                                                            ioCode        := lfGet_ObjectCode(0, zc_Object_TranslateObject())   ::Integer,       -- свойство <Код 
-                                                                            inName        := inGoodsName_ita   ::TVarChar,      -- Название 
-                                                                            inLanguageId  := 40528       ::Integer,
-                                                                            inObjectId    := vbGoodsId   ::Integer,
-                                                                            inSession     := inSession   ::TVarChar
-                                                                            )AS tmp);
+                                                                                 ioCode        := lfGet_ObjectCode(0, zc_Object_TranslateObject())   ::Integer,       -- свойство <Код 
+                                                                                 inName        := inGoodsName_ita   ::TVarChar,      -- Название 
+                                                                                 inLanguageId  := 40528       ::Integer,
+                                                                                 inObjectId    := vbGoodsId   ::Integer,
+                                                                                 inSession     := inSession   ::TVarChar
+                                                                                 )AS tmp);
               END IF;
           END IF;
 
@@ -213,12 +213,12 @@ BEGIN
               THEN 
                    vbObjectId_fra := (SELECT tmp.ioId
                                       FROM gpInsertUpdate_Object_TranslateObject(ioId          := COALESCE (vbObjectId_fra,0)   ::Integer,       -- ключ объекта <>
-                                                                            ioCode        := lfGet_ObjectCode(0, zc_Object_TranslateObject())   ::Integer,       -- свойство <Код 
-                                                                            inName        := inGoodsName_fra   ::TVarChar,      -- Название 
-                                                                            inLanguageId  := 40529       ::Integer,
-                                                                            inObjectId    := vbGoodsId   ::Integer,
-                                                                            inSession     := inSession   ::TVarChar
-                                                                            )AS tmp);
+                                                                                 ioCode        := lfGet_ObjectCode(0, zc_Object_TranslateObject())   ::Integer,       -- свойство <Код 
+                                                                                 inName        := inGoodsName_fra   ::TVarChar,      -- Название 
+                                                                                 inLanguageId  := 40529       ::Integer,
+                                                                                 inObjectId    := vbGoodsId   ::Integer,
+                                                                                 inSession     := inSession   ::TVarChar
+                                                                                 )AS tmp);
               END IF;
           END IF;
 
@@ -246,12 +246,12 @@ BEGIN
               THEN 
                    vbObjectId_eng := (SELECT tmp.ioId
                                       FROM gpInsertUpdate_Object_TranslateObject(ioId          := COALESCE (vbObjectId_eng,0)   ::Integer,       -- ключ объекта <>
-                                                                            ioCode        := lfGet_ObjectCode(0, zc_Object_TranslateObject())   ::Integer,       -- свойство <Код 
-                                                                            inName        := inGoodsName_eng   ::TVarChar,      -- Название 
-                                                                            inLanguageId  := 179       ::Integer,
-                                                                            inObjectId    := vbGoodsId   ::Integer,
-                                                                            inSession     := inSession   ::TVarChar
-                                                                            )AS tmp);
+                                                                                 ioCode        := lfGet_ObjectCode(0, zc_Object_TranslateObject())   ::Integer,       -- свойство <Код 
+                                                                                 inName        := inGoodsName_eng   ::TVarChar,      -- Название 
+                                                                                 inLanguageId  := 179       ::Integer,
+                                                                                 inObjectId    := vbGoodsId   ::Integer,
+                                                                                 inSession     := inSession   ::TVarChar
+                                                                                 )AS tmp);
               END IF;
           END IF;
 
@@ -279,12 +279,12 @@ BEGIN
               THEN 
                    vbObjectIdMeasure_ita := (SELECT tmp.ioId
                                              FROM gpInsertUpdate_Object_TranslateObject(ioId          := COALESCE (vbObjectIdMeasure_ita,0)   ::Integer,       -- ключ объекта <>
-                                                                                         ioCode        := lfGet_ObjectCode(0, zc_Object_TranslateObject())   ::Integer,       -- свойство <Код 
-                                                                                         inName        := inMeasure_ita   ::TVarChar,      -- Название 
-                                                                                         inLanguageId  := 40528       ::Integer,
-                                                                                         inObjectId    := vbMeasureParentId   ::Integer,
-                                                                                         inSession     := inSession   ::TVarChar
-                                                                                         )AS tmp);
+                                                                                        ioCode        := lfGet_ObjectCode(0, zc_Object_TranslateObject())   ::Integer,       -- свойство <Код 
+                                                                                        inName        := TRIM (inMeasure_ita)   ::TVarChar,      -- Название 
+                                                                                        inLanguageId  := 40528       ::Integer,
+                                                                                        inObjectId    := vbMeasureParentId   ::Integer,
+                                                                                        inSession     := inSession   ::TVarChar
+                                                                                        )AS tmp);
               END IF;
           END IF;
 
