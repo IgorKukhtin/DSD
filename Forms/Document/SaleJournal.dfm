@@ -6,7 +6,7 @@ inherited SaleJournalForm: TSaleJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1382
-  ExplicitHeight = 680
+  ExplicitHeight = 679
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -3611,6 +3611,121 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099' ('#1089#1093#1077#1084#1072' '#1055#1072#1074#1080#1083#1100#1086#1085#1099')'
       ImageIndex = 80
     end
+    object actUpdateIsMedoc: TdsdExecStoredProc
+      Category = 'TaxLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateIsMedoc
+      StoredProcList = <
+        item
+          StoredProc = spUpdateIsMedoc
+        end>
+      Caption = 'actUpdateIsMedoc'
+    end
+    object actSelect_Medoc: TdsdExecStoredProc
+      Category = 'TaxLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectTax_Client
+      StoredProcList = <
+        item
+          StoredProc = spSelectTax_Client
+        end>
+      Caption = 'actSelect_Medoc'
+    end
+    object MedocAction: TMedocAction
+      Category = 'TaxLib'
+      MoveParams = <>
+      Caption = 'MedocAction'
+      HeaderDataSet = PrintHeaderCDS
+      ItemsDataSet = PrintItemsCDS
+    end
+    object mactMeDoc: TMultiAction
+      Category = 'TaxLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateIsMedoc
+        end
+        item
+          Action = actSelect_Medoc
+        end
+        item
+          Action = MedocAction
+        end
+        item
+          Action = actRefresh
+        end>
+      InfoAfterExecute = #1060#1072#1081#1083' '#1091#1089#1087#1077#1096#1085#1086' '#1074#1099#1075#1088#1091#1078#1077#1085' '#1076#1083#1103' '#1052#1077#1044#1086#1082
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1052#1077#1044#1086#1082' '#1076#1086#1082'. '#1055#1088#1086#1076#1072#1078#1080
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1052#1077#1044#1086#1082' '#1076#1086#1082'. '#1055#1088#1086#1076#1072#1078#1080
+      ImageIndex = 30
+    end
+    object actGetDirectory: TdsdExecStoredProc
+      Category = 'TaxLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetDirectoryName
+      StoredProcList = <
+        item
+          StoredProc = spGetDirectoryName
+        end>
+      Caption = 'actGetDirectory'
+    end
+    object actSelect_Medoc_list: TdsdExecStoredProc
+      Category = 'TaxLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectTax_Client
+      StoredProcList = <
+        item
+          StoredProc = spSelectTax_Client
+        end>
+      Caption = 'actSelect_Medoc_list'
+    end
+    object MedocListAction: TMedocAction
+      Category = 'TaxLib'
+      MoveParams = <>
+      Caption = 'MedocListAction'
+      HeaderDataSet = PrintHeaderCDS
+      ItemsDataSet = PrintItemsCDS
+      AskFilePath = False
+    end
+    object mactMEDOCGrid: TMultiAction
+      Category = 'TaxLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateIsMedoc
+        end
+        item
+          Action = actSelect_Medoc_list
+        end
+        item
+          Action = MedocListAction
+        end>
+      View = cxGridDBTableView
+      Caption = 'mactMEDOCGrid'
+    end
+    object mactMedocALL: TMultiAction
+      Category = 'TaxLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetDirectory
+        end
+        item
+          Action = mactMEDOCGrid
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1074#1099#1075#1088#1091#1079#1082#1077' '#1074' '#1052#1045#1044#1054#1050' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1086#1076#1072#1078#1080'?'
+      InfoAfterExecute = #1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1086#1076#1072#1078#1080' '#1074#1099#1075#1088#1091#1078#1077#1085#1099' '#1074' '#1052#1045#1044#1054#1050
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1042#1057#1045#1061' '#1076#1086#1082'. '#1055#1088#1086#1076#1072#1078' '#1074' '#1052#1045#1044#1054#1050
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1042#1057#1045#1061' '#1076#1086#1082'. '#1055#1088#1086#1076#1072#1078' '#1074' '#1052#1045#1044#1054#1050
+      ImageIndex = 28
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -4108,6 +4223,10 @@ inherited SaleJournalForm: TSaleJournalForm
       Action = macUpdateMI_Sale_PriceIn
       Category = 0
     end
+    object bbmactMeDoc: TdxBarButton
+      Action = mactMeDoc
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -4495,8 +4614,8 @@ inherited SaleJournalForm: TSaleJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 535
-    Top = 296
+    Left = 1127
+    Top = 280
   end
   object spSelectTax_Us: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Tax_Print'
@@ -5770,5 +5889,38 @@ inherited SaleJournalForm: TSaleJournalForm
     PackSize = 1
     Left = 1088
     Top = 419
+  end
+  object spUpdateIsMedoc: TdsdStoredProc
+    StoredProcName = 'gpUpdate_IsMedoc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1232
+    Top = 200
+  end
+  object spGetDirectoryName: TdsdStoredProc
+    StoredProcName = 'gpGetDirectoryName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Directory'
+        Value = Null
+        ComponentItem = 'Directory'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1232
+    Top = 312
   end
 end
