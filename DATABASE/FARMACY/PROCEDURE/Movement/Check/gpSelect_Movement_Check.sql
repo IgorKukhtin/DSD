@@ -59,6 +59,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isOffsetVIP Boolean
              , isErrorRRO Boolean
              , isAutoVIPforSales Boolean
+             , isPaperRecipeSP Boolean
               )
 AS
 $BODY$
@@ -179,6 +180,7 @@ BEGIN
            , COALESCE(MovementBoolean_OffsetVIP.ValueData, False)         AS isOffsetVIP
            , COALESCE(MovementBoolean_ErrorRRO.ValueData, False)          AS isErrorRRO
            , COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False)   AS isAutoVIPforSales
+           , COALESCE(MovementBoolean_PaperRecipeSP.ValueData, False)     AS isPaperRecipeSP
            
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -483,6 +485,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_AutoVIPforSales
                                       ON MovementBoolean_AutoVIPforSales.MovementId = Movement_Check.Id
                                      AND MovementBoolean_AutoVIPforSales.DescId = zc_MovementBoolean_AutoVIPforSales()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_PaperRecipeSP
+                                      ON MovementBoolean_PaperRecipeSP.MovementId = Movement_Check.Id
+                                     AND MovementBoolean_PaperRecipeSP.DescId = zc_MovementBoolean_PaperRecipeSP()
       ;
 
 END;

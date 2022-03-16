@@ -4978,6 +4978,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_RemainingInsulins: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1085#1072#1083#1080#1095#1080#1102' '#1080#1085#1089#1091#1083#1080#1085#1086#1074
+      FormName = 'TReport_RemainingInsulinsForm'
+      FormNameParam.Value = 'TReport_RemainingInsulinsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5127,6 +5138,9 @@
         end
         object miReport_SummSP: TMenuItem
           Action = actReport_SummSP
+        end
+        object N341: TMenuItem
+          Action = actReport_RemainingInsulins
         end
         object N134: TMenuItem
           Caption = '-'

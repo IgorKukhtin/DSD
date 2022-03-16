@@ -82,6 +82,7 @@ type
     Color_UntilNextSUN: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     cxDBCurrencyEdit1: TcxDBCurrencyEdit;
+    isSendPartionDate: TcxGridDBColumn;
   private
   public
   end;

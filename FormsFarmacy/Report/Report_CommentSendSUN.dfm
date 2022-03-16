@@ -364,6 +364,14 @@ object Report_CommentSendSUNForm: TReport_CommentSendSUNForm
         Visible = False
         VisibleForCustomization = False
       end
+      object isSendPartionDate: TcxGridDBColumn
+        Caption = #1055#1086#1082#1072#1079' PUSH'
+        DataBinding.FieldName = 'isSendPartionDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

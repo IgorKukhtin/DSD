@@ -100,6 +100,7 @@ type
     isOffsetVIP: TcxGridDBColumn;
     isErrorRRO: TcxGridDBColumn;
     isAutoVIPforSales: TcxGridDBColumn;
+    isPaperRecipeSP: TcxGridDBColumn;
   private
     { Private declarations }
   public

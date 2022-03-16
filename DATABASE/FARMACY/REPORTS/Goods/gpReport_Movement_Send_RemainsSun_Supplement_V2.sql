@@ -32,41 +32,84 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, isClose b
 AS
 $BODY$
   DECLARE vbUserId     Integer;
+  DECLARE vbObjectId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId:= lpGetUserBySession (inSession);
      vbUserId := inSession;
+     vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
      
-    RETURN QUERY    
-    SELECT
-           Result.GoodsId
-         , Result.GoodsCode
-         , Result.GoodsName
-         , Result.isClose
-         , Result.UnitId_From 
-         , Result.UnitName_From 
+    IF EXISTS (SELECT Object_Goods_Retail.ID
+                    , Object_Goods_Retail.KoeffSUN_V2
+               FROM Object_Goods_Retail
+                    INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
+                                                AND Object_Goods_Main.isSupplementSUN2 = TRUE
+               WHERE Object_Goods_Retail.RetailID = vbObjectId)     
+    THEN
+    
+      RETURN QUERY    
+      SELECT
+             Result.GoodsId
+           , Result.GoodsCode
+           , Result.GoodsName
+           , Result.isClose
+           , Result.UnitId_From 
+           , Result.UnitName_From 
 
-         , Result.UnitId_To 
-         , Result.UnitName_To 
-         , Result.Amount 
-         , Round(Result.Amount * Result.Price_From, 2)::TFloat 
-         , Round(Result.Amount * Result.Price_To, 2)::TFloat 
-         , Result.MinExpirationDate
+           , Result.UnitId_To 
+           , Result.UnitName_To 
+           , Result.Amount 
+           , Round(Result.Amount * Result.Price_From, 2)::TFloat 
+           , Round(Result.Amount * Result.Price_To, 2)::TFloat 
+           , Result.MinExpirationDate
 
-         , Result.MCS_From 
-         , Result.isCloseMCS_From
-         , Result.Layout_From
-         , Result.PromoUnit_From
-         , Result.AmountRemains_From 
-         , Result.AmountSalesDey_From 
-         , Result.Give_From 
+           , Result.MCS_From 
+           , Result.isCloseMCS_From
+           , Result.Layout_From
+           , Result.PromoUnit_From
+           , Result.AmountRemains_From 
+           , Null::TFloat                AS AmountSalesDey_From 
+           , Result.Give_From 
 
-         , Result.MCS_To 
-         , Result.isCloseMCS_To
-         , Result.AmountRemains_To 
-         , Result.AmountSalesDey_To 
-         , Result.Need_To 
-    FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2(inOperDate, 0, vbUserId) AS Result;
+           , Result.MCS_To 
+           , Result.isCloseMCS_To
+           , Result.AmountRemains_To 
+           , Null::TFloat                AS AmountSalesDey_To 
+           , Result.Need_To 
+      FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2_Sum(inOperDate, 0, vbUserId) AS Result;
+    ELSE
+     
+      RETURN QUERY    
+      SELECT
+             Result.GoodsId
+           , Result.GoodsCode
+           , Result.GoodsName
+           , Result.isClose
+           , Result.UnitId_From 
+           , Result.UnitName_From 
+
+           , Result.UnitId_To 
+           , Result.UnitName_To 
+           , Result.Amount 
+           , Round(Result.Amount * Result.Price_From, 2)::TFloat 
+           , Round(Result.Amount * Result.Price_To, 2)::TFloat 
+           , Result.MinExpirationDate
+
+           , Result.MCS_From 
+           , Result.isCloseMCS_From
+           , Result.Layout_From
+           , Result.PromoUnit_From
+           , Result.AmountRemains_From 
+           , Result.AmountSalesDey_From 
+           , Result.Give_From 
+
+           , Result.MCS_To 
+           , Result.isCloseMCS_To
+           , Result.AmountRemains_To 
+           , Result.AmountSalesDey_To 
+           , Result.Need_To 
+      FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2(inOperDate, 0, vbUserId) AS Result;
+    END IF;
 
 
 END;
@@ -82,4 +125,4 @@ $BODY$
 
 -- SELECT * FROM gpReport_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '0 DAY', inSession:= '3');
 
-SELECT * FROM gpReport_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= ('11.04.2021')::TDateTime, inSession:= '3');
+SELECT * FROM gpReport_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= ('21.03.2022')::TDateTime, inSession:= '3');

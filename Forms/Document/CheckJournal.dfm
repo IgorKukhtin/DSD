@@ -585,6 +585,14 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 67
           end
+          object isPaperRecipeSP: TcxGridDBColumn
+            Caption = #1041#1091#1084#1072#1078#1085#1099#1081' '#1088#1077#1094#1077#1087#1090' '#1087#1086' '#1057#1055
+            DataBinding.FieldName = 'isPaperRecipeSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
         end
       end
     end
