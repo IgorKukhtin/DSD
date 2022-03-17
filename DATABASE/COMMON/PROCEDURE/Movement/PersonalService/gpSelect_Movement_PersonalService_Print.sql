@@ -487,7 +487,7 @@ BEGIN
 
                       FROM tmpMI_all As tmpMI_all_find
                            LEFT JOIN tmpMI_all ON tmpMI_all.MemberId = tmpMI_all_find.MemberId
-                           LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpMI_all_find.MovementItemId
+                           LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpMI_all.MovementItemId
                       WHERE tmpMI_all_find.Ord = 1 AND inisShowAll = FALSE
                       GROUP BY tmpMI_all_find.PersonalId
                              , tmpMI_all_find.UnitId
