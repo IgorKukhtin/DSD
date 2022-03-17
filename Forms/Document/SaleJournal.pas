@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  dsdInternetAction;
+  dsdInternetAction, MeDOC;
 
 type
   TSaleJournalForm = class(TAncestorJournalForm)
@@ -292,6 +292,18 @@ type
     macUpdateMI_Sale_PriceIn: TMultiAction;
     bbUpdateMI_Sale_PriceIn: TdxBarButton;
     isPav: TcxGridDBColumn;
+    spUpdateIsMedoc: TdsdStoredProc;
+    actUpdateIsMedoc: TdsdExecStoredProc;
+    actSelect_Medoc: TdsdExecStoredProc;
+    MedocAction: TMedocAction;
+    mactMeDoc: TMultiAction;
+    bbmactMeDoc: TdxBarButton;
+    spGetDirectoryName: TdsdStoredProc;
+    actGetDirectory: TdsdExecStoredProc;
+    actSelect_Medoc_list: TdsdExecStoredProc;
+    MedocListAction: TMedocAction;
+    mactMEDOCGrid: TMultiAction;
+    mactMedocALL: TMultiAction;
   private
     { Private declarations }
   public
