@@ -4989,6 +4989,28 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_PaperRecipeSP: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1057#1055' '#1073#1091#1084#1072#1078#1085#1099#1077' '#1088#1077#1094#1088#1077#1094#1077#1087#1090#1099
+      FormName = 'TReport_PaperRecipeSPForm'
+      FormNameParam.Value = 'TReport_PaperRecipeSPForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_PaperRecipeSPInsulin: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1057#1055' '#1073#1091#1084#1072#1078#1085#1099#1077' '#1088#1077#1094#1088#1077#1094#1077#1087#1090#1099' '#1080#1085#1089#1091#1083#1080#1085#1099
+      FormName = 'TReport_PaperRecipeSPInsulinForm'
+      FormNameParam.Value = 'TReport_PaperRecipeSPInsulinForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5141,6 +5163,12 @@
         end
         object N341: TMenuItem
           Action = actReport_RemainingInsulins
+        end
+        object N342: TMenuItem
+          Action = actReport_PaperRecipeSP
+        end
+        object N343: TMenuItem
+          Action = actReport_PaperRecipeSPInsulin
         end
         object N134: TMenuItem
           Caption = '-'

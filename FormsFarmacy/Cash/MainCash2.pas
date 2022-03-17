@@ -6482,11 +6482,19 @@ begin
   btnGoodsSPReceiptList.Visible := FormParams.ParamByName('HelsiIDList').Value <> '';
   if (FormParams.ParamByName('HelsiID').Value <> '') or (isPaperRecipeSP = true) then
   begin
-    Label30.Caption := '     Медикамент.: ';
+    if FormParams.ParamByName('isPaperRecipeSP').Value = True then
+    begin
+      Label30.Caption := '       ФИО Врача: ';
+      lblPartnerMedicalName.Caption := '  ' + FormParams.ParamByName('MedicSP').Value;
+    end else
+    begin
+      Label30.Caption := '     Медикамент.: ';
+      lblPartnerMedicalName.Caption := '  ' + HelsiName;
+    end;
     Label7.Caption := 'Вып.';
     Label31.Caption := 'Программа.';
-    lblPartnerMedicalName.Caption := '  ' + HelsiName;
     lblMemberSP.Caption := '  ' + HelsiProgramName;
+
     // + '  /  № амб. ' + Ambulance;
     RemainsCDS.DisableControls;
     RemainsCDS.Filtered := false;

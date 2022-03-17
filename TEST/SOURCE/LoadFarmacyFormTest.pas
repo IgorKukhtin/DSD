@@ -1062,6 +1062,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaperRecipeSPInsulinForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PaperRecipeSPInsulinForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaperRecipeSPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PaperRecipeSPForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainingInsulinsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainingInsulinsForm');
 
@@ -3313,6 +3318,9 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSP_ICForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMedicSP_ICForm');
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSP_PaperRecipeForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TMedicSP_PaperRecipeForm');
 
     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicKashtanForm'));

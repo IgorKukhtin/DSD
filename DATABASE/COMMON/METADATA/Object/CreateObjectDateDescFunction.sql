@@ -629,10 +629,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_ExchangeRates_OperDate() RETURNS Intege
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_ExchangeRates(), 'zc_ObjectDate_ExchangeRates_OperDate', 'Дата начала действия' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ExchangeRates_OperDate');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_User_KeyExpireDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_KeyExpireDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_User(), 'zc_ObjectDate_User_KeyExpireDate', 'Дата истечения срока действия файлового ключа' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_KeyExpireDate');
+
 
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 17.03.22                                                                                     * zc_ObjectDate_User_KeyExpireDate
  24.02.22                                                                                     * zc_ObjectDate_ExchangeRates_OperDate
  15.02.22                                                                                     * zc_ObjectDate_PriceSite_DiscontStart, zc_ObjectDate_PriceSite_DiscontEnd
  15.02.22                                                                                     * zc_ObjectDate_Goods_DiscontSiteStart, zc_ObjectDate_Goods_DiscontSiteEnd

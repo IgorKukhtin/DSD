@@ -52,7 +52,7 @@ BEGIN
                      AND ObjectBoolean_CommentSun_SendPartionDate.ValueData = TRUE
                      AND COALESCE(MIFloat_MISendPDChangeId.ValueData, 0) = 0
                      AND MovementLinkObject_From.ObjectId = inUnitID
-                     AND MovementDate_Insert.ValueData >= '31.08.2020')
+                     AND MovementDate_Insert.ValueData >= CURRENT_DATE - INTERVAL '30 DAY')
        , tmpProtocolAll AS (SELECT  MovementItem.Id
                                   , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
                                   , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
@@ -110,4 +110,5 @@ $BODY$
  28.08.20                                                       *
 */
 
--- SELECT * FROM gpSelect_SendToSendPDChange_PUSH_Cash(1, 394426 , '3');
+-- 
+SELECT * FROM gpSelect_SendToSendPDChange_PUSH_Cash(1, 12607257  , '3');

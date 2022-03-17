@@ -247,6 +247,14 @@ begin
             ShowMessage ('Внимание.Значение <Медицинское учреждение> не установлено.');
             ModalResult:=mrOk; // ??? может не надо закрывать
       end else ModalResult:=mrOk;
+    end else if (Length(trim (edInvNumberSP.Text)) <= 5) and (SPKindGuides.Params.ParamByName('Key').Value = 4823009) then
+    begin
+      if trim (edMedicSP.Text) = '' then
+      begin ActiveControl:=edMedicSP;
+            ShowMessage ('Ошибка.Значение <ФИО врача> не определено');
+            ModalResult:=mrNone; // не надо закрывать
+            exit;
+      end else ModalResult:=mrOk;
     end
     // а здесь уже все ОК
     else ModalResult:=mrOk;
@@ -448,8 +456,21 @@ procedure TSPDialogForm.edSPKindPropertiesChange(Sender: TObject);
 begin
   inherited;
   if SPKindGuides.Params.ParamByName('Key').Value <> '' then
-     Panel2.Visible := SPKindGuides.Params.ParamByName('Key').Value = 4823010
-  else Panel2.Visible := False;
+  begin
+     Panel2.Visible := (SPKindGuides.Params.ParamByName('Key').Value = 4823010);
+
+    if SPKindGuides.Params.ParamByName('Key').Value = 4823009 then
+    begin
+      PartnerMedicalGuides.Params.ParamByName('Key').Value      := 0;
+      PartnerMedicalGuides.Params.ParamByName('TextValue').Value:= '';
+      MedicSPGuides.FormNameParam.Value := 'TMedicSP_PaperRecipeForm';
+      edMedicSP.Properties.ReadOnly := False;
+    end else
+    begin
+      MedicSPGuides.FormNameParam.Value := 'TMedicSP_ObjectForm';
+      edMedicSP.Properties.ReadOnly := True;
+    end;
+  end else Panel2.Visible := False;
 end;
 
 End.

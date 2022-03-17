@@ -41,7 +41,7 @@ type
     actRefreshJuridical: TdsdDataSetRefresh;
     Ord: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
-    MainName_Cut: TcxGridDBColumn;
+    FullName: TcxGridDBColumn;
     bbMoneyBoxSun: TdxBarButton;
     TimeWork: TcxGridDBColumn;
     Address: TcxGridDBColumn;
@@ -49,6 +49,7 @@ type
     GoodsName: TcxGridDBColumn;
     Remaining: TcxGridDBColumn;
     License: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

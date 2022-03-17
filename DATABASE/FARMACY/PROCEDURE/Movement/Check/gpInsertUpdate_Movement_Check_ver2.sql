@@ -240,6 +240,25 @@ BEGIN
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_RoundingTo10(), ioId, True);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_RoundingDown(), ioId, inRoundingDown);
+    
+    IF COALESCE (inisPaperRecipeSP, FALSE) = TRUE AND COALESCE(TRIM(inMedicSP), '') <> ''
+    THEN
+      IF NOT EXISTS (SELECT Object.Id 
+                     FROM Object 
+                     WHERE Object.DescId = zc_Object_MedicSP() 
+                       AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(TRIM(inMedicSP)))
+         THEN 
+             -- не нашли Сохраняем
+             PERFORM gpInsertUpdate_Object_MedicSP (ioId               := 0
+                                                  , inCode             := lfGet_ObjectCode(0, zc_Object_MedicSP()) 
+                                                  , inName             := TRIM(inMedicSP)::TVarChar
+                                                  , inPartnerMedicalId := 0
+                                                  , inAmbulantClinicSP := 0
+                                                  , inSession          := inSession
+                                                  );
+      END IF;    
+    END IF;
+    
     -- сохранили <>
     IF inInvNumberSP <> ''
     THEN
