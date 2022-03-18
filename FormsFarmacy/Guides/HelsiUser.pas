@@ -69,6 +69,7 @@ type
     PasswordEHels: TcxGridDBColumn;
     dsdUpdateDataSet: TdsdUpdateDataSet;
     spInsertUpdate: TdsdStoredProc;
+    KeyExpireDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

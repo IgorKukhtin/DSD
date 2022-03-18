@@ -10144,8 +10144,8 @@ inherited MainCashForm2: TMainCashForm2
       end>
     PackSize = 1
     AfterExecute = spLayoutFileFTPParamsAfterExecute
-    Left = 64
-    Top = 560
+    Left = 48
+    Top = 544
   end
   object spGoods_AddSupplement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Goods_AddSupplement'
@@ -10198,5 +10198,28 @@ inherited MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 856
     Top = 544
+  end
+  object spUpdate_User_KeyExpireDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_User_KeyExpireDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inID'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKeyExpireDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    AfterExecute = spLayoutFileFTPParamsAfterExecute
+    Left = 48
+    Top = 592
   end
 end

@@ -71,6 +71,12 @@ BEGIN
 
       , lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_SUN_NotSold(), inId, COALESCE (ObjectBoolean_SUN_NotSold.ValueData, FALSE))
 
+      , lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_SUN_v2_Supplement_out(), inId, COALESCE (ObjectBoolean_SUN_v2_Supplement_out.ValueData, FALSE))
+      , lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_SUN_v2_Supplement_in(), inId, COALESCE (ObjectBoolean_SUN_v2_Supplement_in.ValueData, FALSE))
+      , lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_SUN_SupplementAddCash(), inId, COALESCE (ObjectBoolean_SUN_v2_SupplementAddCash.ValueData, FALSE))
+      , lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_SUN_OnlyTiming(), inId, COALESCE (ObjectBoolean_OnlyTimingSUN.ValueData, FALSE))
+      , lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_OutUKTZED_SUN1(), inId, COALESCE (ObjectBoolean_OutUKTZED_SUN1.ValueData, FALSE))
+
 
     FROM Object AS Object_Unit
 
@@ -152,6 +158,26 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_LockSale
                                 ON ObjectBoolean_SUN_v2_LockSale.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_v2_LockSale.DescId = zc_ObjectBoolean_Unit_SUN_v2_LockSale()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_Supplement_in
+                                ON ObjectBoolean_SUN_v2_Supplement_in.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_v2_Supplement_in.DescId = zc_ObjectBoolean_Unit_SUN_v2_Supplement_in()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_Supplement_out
+                                ON ObjectBoolean_SUN_v2_Supplement_out.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_v2_Supplement_out.DescId = zc_ObjectBoolean_Unit_SUN_v2_Supplement_out()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_SupplementAddCash
+                                ON ObjectBoolean_SUN_v2_SupplementAddCash.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_v2_SupplementAddCash.DescId = zc_ObjectBoolean_Unit_SUN_SupplementAddCash()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_OnlyTimingSUN
+                                ON ObjectBoolean_OnlyTimingSUN.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_OnlyTimingSUN.DescId = zc_ObjectBoolean_Unit_SUN_OnlyTiming()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_OutUKTZED_SUN1
+                                ON ObjectBoolean_OutUKTZED_SUN1.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_OutUKTZED_SUN1.DescId = zc_ObjectBoolean_Unit_OutUKTZED_SUN1()
 
         LEFT JOIN ObjectFloat AS ObjectFloat_KoeffInSUN
                               ON ObjectFloat_KoeffInSUN.ObjectId = Object_Unit.Id

@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , UserPassword TVarChar
              , KeyPassword TVarChar
              , PasswordEHels TVarChar
+             , KeyExpireDate TDateTime
               )
 AS
 $BODY$
@@ -55,6 +56,8 @@ BEGIN
        , ObjectString_KeyPassword.ValueData
        , ObjectString_PasswordEHels.ValueData
        
+       , ObjectDate_User_KeyExpireDate.ValueData
+       
    FROM Object AS Object_User
 
         LEFT JOIN ObjectLink AS ObjectLink_User_Member
@@ -87,6 +90,10 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_PasswordEHels 
                 ON ObjectString_PasswordEHels.DescId = zc_ObjectString_User_Helsi_PasswordEHels() 
                AND ObjectString_PasswordEHels.ObjectId = Object_User.Id
+
+         LEFT JOIN ObjectDate AS ObjectDate_User_KeyExpireDate
+                ON ObjectDate_User_KeyExpireDate.DescId = zc_ObjectDate_User_KeyExpireDate() 
+               AND ObjectDate_User_KeyExpireDate.ObjectId = Object_User.Id
 
    WHERE Object_User.DescId = zc_Object_User()
      AND COALESCE(ObjectString_UserName.ValueData, '') <> '';

@@ -1168,7 +1168,8 @@ uses
   Report_RemainingInsulins in '..\..\FormsFarmacy\Report\Report_RemainingInsulins.pas' {Report_RemainingInsulinsForm: TParentForm},
   Report_PaperRecipeSP in '..\..\FormsFarmacy\Report\Report_PaperRecipeSP.pas' {Report_PaperRecipeSPForm: TParentForm},
   MedicSP_PaperRecipe in '..\..\FormsFarmacy\Guides\MedicSP_PaperRecipe.pas' {MedicSP_PaperRecipeForm: TParentForm},
-  Report_PaperRecipeSPInsulin in '..\..\FormsFarmacy\Report\Report_PaperRecipeSPInsulin.pas' {Report_PaperRecipeSPInsulinForm: TParentForm};
+  Report_PaperRecipeSPInsulin in '..\..\FormsFarmacy\Report\Report_PaperRecipeSPInsulin.pas' {Report_PaperRecipeSPInsulinForm: TParentForm},
+  Report_PaymentSum in '..\..\FormsFarmacy\Report\Report_PaymentSum.pas' {Report_PaymentSumForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

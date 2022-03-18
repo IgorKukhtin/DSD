@@ -1,9 +1,9 @@
-object Report_PaperRecipeSPInsulinForm: TReport_PaperRecipeSPInsulinForm
+object Report_PaymentSumForm: TReport_PaymentSumForm
   Left = 0
   Top = 0
-  Caption = #1054#1090#1095#1077#1090' '#1057#1055' '#1073#1091#1084#1072#1078#1085#1099#1077' '#1088#1077#1094#1077#1087#1090#1099' '#1080#1085#1089#1091#1083#1080#1085#1099
+  Caption = #1054#1087#1083#1072#1090#1072' '#1087#1088#1080#1093#1086#1076#1086#1074' '#1080#1090#1086#1075#1080' '#1087#1086' '#1102#1088'. '#1083#1080#1094#1072#1084
   ClientHeight = 440
-  ClientWidth = 1086
+  ClientWidth = 807
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,10 +21,11 @@ object Report_PaperRecipeSPInsulinForm: TReport_PaperRecipeSPInsulinForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1086
+    Width = 807
     Height = 31
     Align = alTop
     TabOrder = 0
+    ExplicitWidth = 613
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -57,19 +58,20 @@ object Report_PaperRecipeSPInsulinForm: TReport_PaperRecipeSPInsulinForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 1086
+    Width = 807
     Height = 383
     Align = alClient
     TabOrder = 5
+    ExplicitWidth = 613
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <
         item
-          Format = ',0.####'
+          Format = ',0.00;-,0.00; ;'
           Kind = skSum
-          Column = Amount
+          Column = TotalSummUnComplete
         end
         item
           Format = ',0.00'
@@ -119,12 +121,12 @@ object Report_PaperRecipeSPInsulinForm: TReport_PaperRecipeSPInsulinForm
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
           Position = spFooter
-          Column = SummsSP
+          Column = TotalSummComplete
         end
         item
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
-          Column = SummsSP
+          Column = TotalSummComplete
         end
         item
           Format = ',0.00;-,0.00; ;'
@@ -153,9 +155,9 @@ object Report_PaperRecipeSPInsulinForm: TReport_PaperRecipeSPInsulinForm
           Kind = skCount
         end
         item
-          Format = ',0.####'
+          Format = ',0.00;-,0.00; ;'
           Kind = skSum
-          Column = Amount
+          Column = TotalSummUnComplete
         end
         item
           Format = ',0.00'
@@ -192,12 +194,12 @@ object Report_PaperRecipeSPInsulinForm: TReport_PaperRecipeSPInsulinForm
         item
           Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = BrandSPName
+          Column = JuridicalName
         end
         item
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
-          Column = SummsSP
+          Column = TotalSummComplete
         end
         item
           Format = ',0.00;-,0.00; ;'
@@ -206,7 +208,7 @@ object Report_PaperRecipeSPInsulinForm: TReport_PaperRecipeSPInsulinForm
         item
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
-          Column = SummChangePercent
+          Column = TotalSum
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -221,126 +223,71 @@ object Report_PaperRecipeSPInsulinForm: TReport_PaperRecipeSPInsulinForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
+      OptionsView.GroupByBox = False
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object InvNumber: TcxGridDBColumn
-        Caption = #8470' '#1044#1086#1082'-'#1090#1072
-        DataBinding.FieldName = 'InvNumber'
+      object JuridicalCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'JuridicalCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object JuridicalName: TcxGridDBColumn
+        Caption = #1070#1088'. '#1083#1080#1094#1086
+        DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 58
+        Width = 239
       end
-      object OperDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1074#1110#1076#1087#1091#1089#1082#1091' '#1088#1077#1094#1077#1087#1090#1072
-        DataBinding.FieldName = 'OperDate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 77
-      end
-      object BrandSPName: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1072' '#1085#1072#1079#1074#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091
-        DataBinding.FieldName = 'BrandSPName'
+      object JuridicalFromCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1087#1086#1089#1090'.'
+        DataBinding.FieldName = 'JuridicalFromCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 149
+        Width = 47
       end
-      object MakerSP: TcxGridDBColumn
-        Caption = #1053#1072#1081#1084#1077#1085#1091#1074#1072#1085#1085#1103' '#1074#1080#1088#1086#1073#1085#1080#1082#1072
-        DataBinding.FieldName = 'MakerSP'
+      object JuridicalFromName: TcxGridDBColumn
+        Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+        DataBinding.FieldName = 'JuridicalFromName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 138
+        Width = 171
       end
-      object KindOutSPName: TcxGridDBColumn
-        Caption = #1060#1086#1088#1084#1072' '#1074#1080#1087#1091#1089#1082#1091
-        DataBinding.FieldName = 'KindOutSPName'
+      object TotalSummUnComplete: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085#1086', '#1075#1088#1085
+        DataBinding.FieldName = 'TotalSummUnComplete'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 2
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 79
+        Width = 88
       end
-      object CommentSendName: TcxGridDBColumn
-        Caption = #1057#1080#1083#1072' '#1076#1110#1111' ('#1076#1086#1079#1091#1074#1072#1085#1085#1103'), '#1054#1044'/'#1084#1083
-        DataBinding.FieldName = 'Pack'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 83
-      end
-      object CountSP: TcxGridDBColumn
-        Caption = 
-          #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1052#1054' '#1074' '#1087#1077#1088#1074#1080#1085#1085#1110#1081' '#1091#1087#1072#1082#1086#1074#1094#1110' ('#1092#1083#1072#1082#1086#1085', '#1082#1072#1088#1090#1088#1080#1076#1078', '#1096#1087#1088#1080#1094'-'#1088#1091#1095#1082#1072 +
-          ')'
-        DataBinding.FieldName = 'CountSP'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 97
-      end
-      object PriceSP: TcxGridDBColumn
-        Caption = 
-          #1056#1086#1079#1084#1110#1088' '#1074#1110#1076#1096#1082#1086#1076#1091#1074#1072#1085#1085#1103' '#1079#1072' '#1087#1077#1088#1074#1080#1085#1085#1091' '#1091#1087#1072#1082#1086#1074#1082#1091' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091' '#1074#1110#1076 +
-          #1087#1086#1074#1110#1076#1085#1086' '#1076#1086' '#1056#1077#1108#1089#1090#1088#1091', '#1075#1088#1085
-        DataBinding.FieldName = 'PriceSP'
+      object TotalSummComplete: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1087#1088#1086#1074#1077#1076#1077#1085#1086', '#1075#1088#1085
+        DataBinding.FieldName = 'TotalSummComplete'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 126
+        Width = 90
       end
-      object CountSPMin: TcxGridDBColumn
-        Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1087#1077#1088#1074#1080#1085#1085#1080#1093' '#1091#1087#1072#1082#1086#1074#1086#1082' '#1091' '#1074#1090#1086#1088#1080#1085#1085#1110#1081', '#1096#1090'  '
-        DataBinding.FieldName = 'CountSPMin'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 89
-      end
-      object PriceSPMin: TcxGridDBColumn
-        Caption = 
-          #1056#1086#1079#1084#1110#1088' '#1074#1110#1076#1096#1082#1086#1076#1091#1074#1072#1085#1085#1103' '#1079#1072' '#1074#1090#1086#1088#1080#1085#1085#1091' '#1091#1087#1072#1082#1086#1074#1082#1091' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091', '#1075#1088 +
-          #1085
-        DataBinding.FieldName = 'PriceSPMin'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 100
-      end
-      object Amount: TcxGridDBColumn
-        Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1074#1110#1076#1087#1091#1097#1077#1085#1080#1093' '#1074#1090#1086#1088#1080#1085#1085#1080#1093' '#1091#1087#1072#1082#1086#1074#1086#1082', '#1096#1090
-        DataBinding.FieldName = 'Amount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object SummsSP: TcxGridDBColumn
-        Caption = #1057#1091#1084#1072' '#1074#1110#1076#1096#1082#1086#1076#1091#1074#1072#1085#1085#1103' '#1074#1110#1076#1087#1086#1074#1110#1076#1085#1086' '#1076#1086' '#1056#1077#1108#1089#1090#1088#1091
-        DataBinding.FieldName = 'SummsSP'
+      object TotalSum: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086', '#1075#1088#1085
+        DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
-      end
-      object SummChangePercent: TcxGridDBColumn
-        Caption = #1057#1091#1084#1072' '#1092#1072#1082#1090#1080#1095#1085#1086#1075#1086' '#1074#1110#1076#1096#1082#1086#1076#1091#1074#1072#1085#1085#1103', '#1075#1088#1085'  '
-        DataBinding.FieldName = 'SummChangePercent'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 76
+        Width = 81
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -439,10 +386,6 @@ object Report_PaperRecipeSPInsulinForm: TReport_PaperRecipeSPInsulinForm
           BeginGroup = True
           Visible = True
           ItemName = 'bbStaticText'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate'
         end
         item
           Visible = True
@@ -651,7 +594,7 @@ object Report_PaperRecipeSPInsulinForm: TReport_PaperRecipeSPInsulinForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpReport_PaperRecipeSPInsulin'
+    StoredProcName = 'gpReport_PaymentSum'
     DataSet = ClientDataSet
     DataSets = <
       item
