@@ -53,7 +53,7 @@ BEGIN
     -- limit 1 -- для теста
       ; 
 
-     --создаем документы НН по предоплате
+     -- создаем документы НН по предоплате
      PERFORM lpInsert_Movement_Tax_isAutoPrepay (inId                 := 0 ::Integer    -- Ключ объекта <Документ Налоговая>
                                                , inInvNumber          := ''                    ::TVarChar   -- Номер документа
                                                , inInvNumberPartner   := ''                    ::TVarChar   -- Номер налогового документа

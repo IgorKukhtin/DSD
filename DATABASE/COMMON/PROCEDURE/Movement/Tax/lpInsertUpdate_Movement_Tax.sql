@@ -120,10 +120,10 @@ BEGIN
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportLviv())
                   END;
      -- проверка
-     IF COALESCE (vbBranchId, 0) = 0 AND (inContractId > 0 OR inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Prepay())
+   /*IF COALESCE (vbBranchId, 0) = 0 AND (inContractId > 0 OR inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Prepay())
      THEN
          RAISE EXCEPTION 'Ошибка.Невозможно определить <Филиал>.';
-     END IF;
+     END IF;*/
 
      -- определяется  Номер филиала
      IF inOperDate < '01.01.2016'
@@ -179,7 +179,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), ioId, inDocumentTaxKindId);
 
      -- сохранили связь с <филиал>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), ioId, vbBranchId);
+     IF vbIsInsert = TRUE THEN PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), ioId, vbBranchId); END IF;
 
 
      -- пересчитали Итоговые суммы по накладной

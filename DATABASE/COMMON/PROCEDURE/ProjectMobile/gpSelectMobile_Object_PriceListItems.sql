@@ -62,7 +62,7 @@ BEGIN
                                 )
                   -- создаем список идентификаторов прайс-листов, что доступны торговому агенту 
                 , tmpPriceList AS (SELECT COALESCE(ObjectLink_Partner_PriceList.ChildObjectId
-                                                 , ObjectLink_Contract_PriceList.ChildObjectId
+                                               --, ObjectLink_Contract_PriceList.ChildObjectId
                                                  , ObjectLink_Juridical_PriceList.ChildObjectId
                                                  , zc_PriceList_Basis()) AS PriceListId
                                    FROM tmpPartner
@@ -72,13 +72,7 @@ BEGIN
                                         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
                                                              ON ObjectLink_Juridical_PriceList.ObjectId = tmpPartner.JuridicalId
                                                             AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
-                                        LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                                             ON ObjectLink_Contract_Juridical.ChildObjectId = tmpPartner.JuridicalId
-                                                            AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-                                        LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
-                                                             ON ObjectLink_Contract_PriceList.ObjectId = ObjectLink_Contract_Juridical.ObjectId
-                                                            AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
-                                   UNION                                    
+                                  UNION                                    
                                    SELECT COALESCE(ObjectLink_Partner_PriceListPrior.ChildObjectId
                                                  , ObjectLink_Juridical_PriceListPrior.ChildObjectId
                                                  , zc_PriceList_Basis() /*zc_PriceList_BasisPrior()*/) AS PriceListId
@@ -89,8 +83,35 @@ BEGIN
                                         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceListPrior
                                                              ON ObjectLink_Juridical_PriceListPrior.ObjectId = tmpPartner.JuridicalId
                                                             AND ObjectLink_Juridical_PriceListPrior.DescId = zc_ObjectLink_Juridical_PriceListPrior()
+                                  UNION                                    
+                                   SELECT OL_ContractPriceList_PriceList.ChildObjectId AS PriceListId
+                                   FROM tmpPartner
+                                        JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                        ON ObjectLink_Contract_Juridical.ChildObjectId = tmpPartner.JuridicalId
+                                                       AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
+                                        -- убрали Удаленные
+                                        JOIN Object AS Object_Contract
+                                                    ON Object_Contract.Id       = ObjectLink_Contract_Juridical.ObjectId
+                                                   AND Object_Contract.isErased = FALSE
+                                        INNER JOIN ObjectLink AS OL_ContractPriceList_Contract
+                                                              ON OL_ContractPriceList_Contract.ChildObjectId = Object_Contract.Id
+                                                             AND OL_ContractPriceList_Contract.DescId        = zc_ObjectLink_ContractPriceList_Contract()
+                                        INNER JOIN Object AS Object_ContractPriceList ON Object_ContractPriceList.Id       = OL_ContractPriceList_Contract.ObjectId
+                                                                                     AND Object_ContractPriceList.isErased = FALSE
+                                        INNER JOIN ObjectDate AS ObjectDate_StartDate
+                                                              ON ObjectDate_StartDate.ObjectId = Object_ContractPriceList.Id
+                                                             AND ObjectDate_StartDate.DescId   = zc_ObjectDate_ContractPriceList_StartDate()
+                                        INNER JOIN ObjectDate AS ObjectDate_EndDate
+                                                              ON ObjectDate_EndDate.ObjectId = Object_ContractPriceList.Id
+                                                             AND ObjectDate_EndDate.DescId   = zc_ObjectDate_ContractPriceList_EndDate()
+                                        INNER JOIN ObjectLink AS OL_ContractPriceList_PriceList
+                                                              ON OL_ContractPriceList_PriceList.ObjectId = Object_ContractPriceList.Id
+                                                             AND OL_ContractPriceList_PriceList.DescId   = zc_ObjectLink_ContractPriceList_PriceList()
+                                                             AND OL_ContractPriceList_PriceList.ChildObjectId > 0
+                                   WHERE CURRENT_DATE + INTERVAL '1 DAY' BETWEEN ObjectDate_StartDate.ValueData AND ObjectDate_EndDate.ValueData
                                   )
                 , tmpGoods AS (SELECT DISTINCT tmp.GoodsId FROM gpSelectMobile_Object_GoodsByGoodsKind (inSyncDateIn, inSession) AS tmp)
+
              SELECT Object_PriceListItem.Id
                   , ObjectLink_PriceListItem_Goods.ChildObjectId            AS GoodsId
                   , ObjectLink_PriceListItem_PriceList.ChildObjectId        AS PriceListId

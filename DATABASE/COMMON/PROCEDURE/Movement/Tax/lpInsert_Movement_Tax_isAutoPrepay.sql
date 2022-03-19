@@ -28,13 +28,20 @@ $BODY$
    DECLARE vbBranchId Integer;
 BEGIN
 
-    --сохранили документ
+    -- сохранили документ
     SELECT tmp.ioId
- INTO inId
+           INTO inId
     FROM lpInsertUpdate_Movement_Tax (inId, inInvNumber, inInvNumberPartner, inInvNumberBranch, inOperDate
                                     , inChecked, inDocument, inPriceWithVAT, inVATPercent
                                     , inFromId, inToId, inPartnerId, inContractId, inDocumentTaxKindId, inUserId
                                      ) AS tmp;    
+
+    --  омментарий
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId
+                                         , (SELECT
+                                            FROM  WHERE 
+                                           )
+                                          );
 
     -- сохранили свойство <јвтоматически>
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), inId, inisAuto);
@@ -42,7 +49,7 @@ BEGIN
     --строка документа 
     PERFORM lpInsertUpdate_MovementItem_Tax (ioId                 := 0
                                            , inMovementId         := inId
-                                           , inGoodsId            := 0
+                                           , inGoodsId            := (SELECT Object.Id FROM Object WHERE Object.ObjectCode = 4 AND Object.DescId = zc_Object_Goods())
                                            , inAmount             := inAmount
                                            , inPrice              := 1
                                            , ioCountForPrice      := 1

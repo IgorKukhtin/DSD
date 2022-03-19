@@ -610,7 +610,10 @@ BEGIN
         , Object_Goods.ObjectCode        AS GoodsCode
         , CAST (COALESCE(Object_Goods.ValueData, '') AS TVarChar)        AS GoodsName
         , CAST (COALESCE(Object_GoodsKind.Id, 0) AS Integer)             AS GoodsKindId
-        , CAST (COALESCE(Object_GoodsKind.ValueData, '') AS TVarChar)    AS GoodsKindName
+        , CASE WHEN Object_GoodsKind.ValueData          <> '' THEN Object_GoodsKind.ValueData
+               WHEN Object_GoodsKind_complete.ValueData <> '' THEN Object_GoodsKind_complete.ValueData
+               ELSE ''
+          END :: TVarChar AS GoodsKindName
         , CAST (COALESCE(Object_GoodsKind_complete.ValueData, '') AS TVarChar) AS GoodsKindName_complete
         , Object_Measure.ValueData           AS MeasureName
         , ObjectFloat_Weight.ValueData       AS Weight

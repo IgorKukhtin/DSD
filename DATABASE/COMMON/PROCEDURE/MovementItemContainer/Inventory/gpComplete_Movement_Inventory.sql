@@ -306,11 +306,16 @@ BEGIN
 
                                    WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- ќсновное сырье + ћ€сное сырье
                                     AND vbIsPartionGoodsKind_Unit = TRUE
+                                    AND _tmpList_Goods_1942.GoodsId IS NULL
                                         THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
 
                                    ELSE 0
                               END AS GoodsKindId
-                            , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId_complete
+
+                            , CASE WHEN _tmpList_Goods_1942.GoodsId IS NULL
+                                        THEN COALESCE (MILinkObject_GoodsKindComplete.ObjectId, zc_GoodsKind_Basis())
+                                   ELSE 0
+                              END AS GoodsKindId_complete
 
                             , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
                             , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId_Item
@@ -364,6 +369,8 @@ BEGIN
                                                                              AND Object.DescId              <> zc_Object_Fuel()
                             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Fuel ON View_InfoMoney_Fuel.InfoMoneyId = zc_Enum_InfoMoney_20401()
                                                                                   AND Object.DescId                   = zc_Object_Fuel()
+
+                            LEFT JOIN _tmpList_Goods_1942 ON _tmpList_Goods_1942.GoodsId = MovementItem.ObjectId
 
                             LEFT JOIN MovementItemFloat AS MIFloat_Count
                                                         ON MIFloat_Count.MovementItemId = MovementItem.Id

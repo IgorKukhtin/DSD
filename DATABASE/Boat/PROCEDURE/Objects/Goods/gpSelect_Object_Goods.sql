@@ -30,6 +30,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , isDoc Boolean, isPhoto Boolean
+             , InvNumber_pl TVarChar
+             , Comment_pl TVarChar
+             , myCount_pl Integer
              , isErased Boolean
               )
 AS
@@ -47,7 +50,28 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-       WITH tmpPhoto AS (SELECT ObjectLink_GoodsPhoto_Goods.ChildObjectId AS GoodsId
+       WITH tmpMovementPL_all AS (SELECT Movement.Id
+                                       , Movement.InvNumber       AS InvNumber
+                                       , MovementString.ValueData AS Comment
+                                       , MovementItem.ObjectId    AS GoodsId
+                                  FROM Movement
+                                       INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                              AND MovementItem.DescId    = zc_MI_Master()
+                                       LEFT JOIN MovementString ON MovementString.MovementId = Movement.Id
+                                                               AND MovementString.DescId     = zc_MovementString_Comment()
+                                  WHERE Movement.OperDate BETWEEN '01.01.2022' AND CURRENT_DATE
+                                    AND Movement.DescId   = zc_Movement_PriceList()
+                                    AND Movement.StatusId = zc_Enum_Status_Complete()
+                                  ORDER BY MovementItem.ObjectId, Movement.Id
+                                 )
+          , tmpMovementPL AS (SELECT STRING_AGG (tmpMovementPL_all.InvNumber, ';')    AS InvNumber
+                                   , STRING_AGG (tmpMovementPL_all.Comment, ';') AS Comment
+                                   , tmpMovementPL_all.GoodsId
+                              FROM (SELECT DISTINCT tmpMovementPL_all.InvNumber, tmpMovementPL_all.Comment, tmpMovementPL_all.GoodsId, tmpMovementPL_all.Id FROM tmpMovementPL_all ORDER BY tmpMovementPL_all.GoodsId, tmpMovementPL_all.Id
+                                   ) AS tmpMovementPL_all
+                              GROUP BY tmpMovementPL_all.GoodsId
+                             )
+          , tmpPhoto AS (SELECT ObjectLink_GoodsPhoto_Goods.ChildObjectId AS GoodsId
                               , Object_GoodsPhoto.Id                      AS PhotoId
                               , ROW_NUMBER() OVER (PARTITION BY ObjectLink_GoodsPhoto_Goods.ChildObjectId ORDER BY Object_GoodsPhoto.Id) AS Ord
                          FROM Object AS Object_GoodsPhoto
@@ -154,10 +178,23 @@ BEGIN
 
             , CASE WHEN tmpDoc.GoodsId    > 0 THEN TRUE ELSE FALSE END :: Boolean AS isDoc
             , CASE WHEN tmpPhoto1.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPhoto
+            
+            , tmpMovementPL.InvNumber     :: TVarChar AS InvNumber_pl
+            , tmpMovementPL.Comment       :: TVarChar AS Comment_pl
+            , tmpMovementPL_count.myCount :: Integer  AS myCount_pl
 
             , Object_Goods.isErased              AS isErased
 
        FROM Object AS Object_Goods
+            LEFT JOIN tmpMovementPL ON tmpMovementPL.GoodsId = Object_Goods.Id
+            LEFT JOIN (SELECT tmpMovementPL_count.GoodsId, MAX (tmpMovementPL_count.myCount) AS myCount
+                       FROM (SELECT tmpMovementPL_all.Id, tmpMovementPL_all.GoodsId, COUNT(*) AS myCount
+                             FROM tmpMovementPL_all
+                             GROUP BY tmpMovementPL_all.Id, tmpMovementPL_all.GoodsId
+                             HAVING COUNT(*) > 1
+                            ) AS tmpMovementPL_count
+                       GROUP BY tmpMovementPL_count.GoodsId
+                      ) AS tmpMovementPL_count ON tmpMovementPL_count.GoodsId = Object_Goods.Id
             LEFT JOIN ObjectString AS ObjectString_Comment
                                    ON ObjectString_Comment.ObjectId = Object_Goods.Id
                                   AND ObjectString_Comment.DescId = zc_ObjectString_Goods_Comment()

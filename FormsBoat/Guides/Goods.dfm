@@ -434,6 +434,30 @@ object GoodsForm: TGoodsForm
         Options.Editing = False
         Width = 70
       end
+      object InvNumber_pl: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1087#1088#1072#1081#1089
+        DataBinding.FieldName = 'InvNumber_pl'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object Comment_pl: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1086#1082'. '#1087#1088#1072#1081#1089
+        DataBinding.FieldName = 'Comment_pl'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object myCount_pl: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1076#1086#1082'. '#1087#1088#1072#1081#1089
+        DataBinding.FieldName = 'myCount_pl'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
       object IsArc: TcxGridDBColumn
         Caption = #1040#1088#1093#1080#1074
         DataBinding.FieldName = 'isArc'

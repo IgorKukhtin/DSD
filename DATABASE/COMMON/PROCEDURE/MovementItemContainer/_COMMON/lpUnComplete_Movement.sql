@@ -98,7 +98,7 @@ BEGIN
          AND inUserId <> 128491 -- Хохлова Е.Ю. !!!временно!!!
          AND inUserId <> 12120 -- Нагорнова Т.С. !!!временно!!!
          AND inUserId <> 131160 -- Удовик Е.Е. !!!временно!!!
-         -- AND inUserId <> 81241 -- Марухно А.В. !!!временно!!!
+         AND inUserId <> 81241 -- Марухно А.В. !!!временно!!!
       THEN
           RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на распроведение документа № <%> от <%> филиал <%>.', lfGet_Object_ValueData (inUserId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_Branch()));
       END IF;
@@ -117,6 +117,7 @@ BEGIN
       IF lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()) -- (SELECT ProcessId FROM Object_Process_User_View WHERE UserId = inUserId AND ProcessId IN (zc_Enum_Process_InsertUpdate_Movement_TaxCorrective())))
          <> vbAccessKeyId AND COALESCE (vbAccessKeyId, 0) <> 0
      AND inUserId <> 12120 -- Нагорнова Т.С. !!!временно!!!
+     AND inUserId <> 81241 -- Марухно А.В. !!!временно!!!
       THEN
           RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на распроведение документа <%> № <%> от <%> филиал <%>.', lfGet_Object_ValueData (inUserId), (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_Branch()));
       END IF;

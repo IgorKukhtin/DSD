@@ -38,7 +38,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inProdColorId            Integer, 
     IN inPartnerId              Integer, 
     IN inUnitId                 Integer, 
-    IN inDiscountPartnerId       Integer, 
+    IN inDiscountPartnerId      Integer, 
     IN inTaxKindId              Integer, 
     IN inEngineId               Integer, 
     IN inSession                TVarChar    -- сессия пользователя
@@ -69,9 +69,13 @@ BEGIN
    IF TRIM (COALESCE (inName, '')) = ''
    THEN
        --RAISE EXCEPTION 'Ошибка.Значение <Название> должно быть установлено.';
-       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Значение <Название> должно быть установлено.'
-                                             , inProcedureName := 'gpInsertUpdate_Object_Goods'
-                                             , inUserId        := vbUserId);
+       RAISE EXCEPTION '% <%> <%>'
+                     , lfMessageTraslate (inMessage       := 'Ошибка.Значение <Название> должно быть установлено.'
+                                        , inProcedureName := 'gpInsertUpdate_Object_Goods'
+                                        , inUserId        := vbUserId
+                                         )
+                     , inArticle, inEAN
+                      ;
    END IF;
 
    -- проверка <GoodsGroupId>
@@ -110,7 +114,11 @@ BEGIN
    -- сохранили свойство <Полное название группы>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_GroupNameFull(), ioId, vbGroupNameFull);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_FeeNumber(), ioId, inFeeNumber);
+   IF inFeeNumber <> ''
+   THEN
+       PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_FeeNumber(), ioId, TRIM (inFeeNumber));
+   END IF;
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Article(), ioId, inArticle);      
    -- сохранили свойство <>

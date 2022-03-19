@@ -80,7 +80,7 @@ BEGIN
                                        , COALESCE (tmpContract_Key.ContractId_Key, ObjectLink_Contract_Juridical.ObjectId) AS ContractId_Key
 
                                        , tmpPartner.JuridicalId                      AS JuridicalId
-                                       , ObjectLink_Contract_PriceList.ChildObjectId AS PriceListId
+                                     --, ObjectLink_Contract_PriceList.ChildObjectId AS PriceListId
 
                                          -- потом уберем Закрытые
                                        , COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) AS ContractStateKindId
@@ -89,10 +89,6 @@ BEGIN
                                                        ON ObjectLink_Contract_Juridical.ChildObjectId = tmpPartner.JuridicalId
                                                       AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
                                        LEFT JOIN tmpContract_Key ON tmpContract_Key.ContractId = ObjectLink_Contract_Juridical.ObjectId
-                                       -- нашли прайс
-                                       LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
-                                                            ON ObjectLink_Contract_PriceList.ObjectId = ObjectLink_Contract_Juridical.ObjectId
-                                                           AND ObjectLink_Contract_PriceList.DescId   = zc_ObjectLink_Contract_PriceList()
                                        -- убрали Удаленные
                                        JOIN Object AS Object_Contract
                                                    ON Object_Contract.Id       = COALESCE (tmpContract_Key.ContractId_Key, ObjectLink_Contract_Juridical.ObjectId)
@@ -113,6 +109,25 @@ BEGIN
                                   -- НЕ убрали Закрытые
                                   -- WHERE ObjectLink_Contract_ContractStateKind.ChildObjectId IS NULL
                                  )
+                 , tmpContract_PriceList AS (SELECT tmpContract.ContractId, OL_ContractPriceList_PriceList.ChildObjectId AS PriceListId
+                                                  , ObjectDate_StartDate.ValueData AS StartDate, ObjectDate_EndDate.ValueData AS EndDate
+                                             FROM (SELECT DISTINCT tmpContract.ContractId FROM tmpContract) AS tmpContract
+                                                  INNER JOIN ObjectLink AS OL_ContractPriceList_Contract
+                                                                        ON OL_ContractPriceList_Contract.ChildObjectId = tmpContract.ContractId
+                                                                       AND OL_ContractPriceList_Contract.DescId        = zc_ObjectLink_ContractPriceList_Contract()
+                                                  INNER JOIN Object AS Object_ContractPriceList ON Object_ContractPriceList.Id       = OL_ContractPriceList_Contract.ObjectId
+                                                                                               AND Object_ContractPriceList.isErased = FALSE
+                                                  INNER JOIN ObjectDate AS ObjectDate_StartDate
+                                                                        ON ObjectDate_StartDate.ObjectId = Object_ContractPriceList.Id
+                                                                       AND ObjectDate_StartDate.DescId   = zc_ObjectDate_ContractPriceList_StartDate()
+                                                  INNER JOIN ObjectDate AS ObjectDate_EndDate
+                                                                        ON ObjectDate_EndDate.ObjectId = Object_ContractPriceList.Id
+                                                                       AND ObjectDate_EndDate.DescId   = zc_ObjectDate_ContractPriceList_EndDate()
+                                                  INNER JOIN ObjectLink AS OL_ContractPriceList_PriceList
+                                                                       ON OL_ContractPriceList_PriceList.ObjectId = Object_ContractPriceList.Id
+                                                                      AND OL_ContractPriceList_PriceList.DescId   = zc_ObjectLink_ContractPriceList_PriceList()
+                                                                      AND OL_ContractPriceList_PriceList.ChildObjectId > 0
+                                            )
           , tmpContract_state AS (SELECT tmpContract_find.PartnerId
                                        , tmpContract_find.ContractId_Key
                                        , tmpContract_find.ContractId_Key_calc
@@ -309,6 +324,7 @@ BEGIN
                     Object_Partner.Id
                   , Object_Partner.ObjectCode
                   , Object_Partner.ValueData
+                --, ('(' ||COALESCE (Object_PriceList.ValueData, '') || ') ' ||Object_Partner.ValueData) :: TVarChar
                   , ObjectString_Partner_GUID.ValueData      AS GUID
                   , ObjectString_Partner_ShortName.ValueData AS ShortName
                   , ObjectString_Partner_Address.ValueData   AS Address
@@ -338,7 +354,7 @@ BEGIN
 
                     -- в следующем порядке: 1.1) ---акционный у контрагента 1.2) ---акционный у договора 1.3) ---акционный у юр.лица 2.1) обычный у контрагента 2.2) обычный у договора 2.3) обычный у юр.лица 3) zc_PriceList_Basis
                   , COALESCE (ObjectLink_Partner_PriceList.ChildObjectId
-                            , COALESCE (tmpContract.PriceListId
+                            , COALESCE (tmpContract_PriceList.PriceListId
                                       , COALESCE (ObjectLink_Juridical_PriceList.ChildObjectId
                                                 , zc_PriceList_Basis()))) AS PriceListId
 
@@ -365,6 +381,11 @@ BEGIN
                   JOIN tmpContract ON tmpContract.ContractId = tmpContract_state.ContractId_Key_calc
                   LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpContract.ContractId
                   
+                  -- нашли прайс
+                  LEFT JOIN tmpContract_PriceList ON tmpContract_PriceList.ContractId  = tmpContract.ContractId
+                                                 AND tmpContract_PriceList.PriceListId > 0
+                                                 AND CURRENT_DATE + INTERVAL '1 DAY' BETWEEN tmpContract_PriceList.StartDate AND tmpContract_PriceList.EndDate
+
                   LEFT JOIN tmpDebt ON tmpDebt.PartnerId  = Object_Partner.Id
                                    -- AND tmpDebt.ContractId = tmpContract.ContractId
                                    AND tmpDebt.ContractId = tmpContract.ContractId_Key
@@ -434,6 +455,10 @@ BEGIN
                                         ON ObjectFloat_SummOrderMin.ObjectId = tmpContract.JuridicalId
                                        AND ObjectFloat_SummOrderMin.DescId   = zc_ObjectFloat_Juridical_SummOrderMin()
                                          
+                  LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id  = COALESCE (ObjectLink_Partner_PriceList.ChildObjectId
+                                                                                         , COALESCE (tmpContract_PriceList.PriceListId
+                                                                                                   , COALESCE (ObjectLink_Juridical_PriceList.ChildObjectId
+                                                                                                             , zc_PriceList_Basis())))
 
              WHERE Object_Partner.DescId   = zc_Object_Partner()
                AND Object_Partner.isErased = FALSE

@@ -114,6 +114,9 @@ type
     bbSearchName: TdxBarControlContainerItem;
     lbArticle: TcxLabel;
     actSetFocused: TdsdSetFocusedAction;
+    InvNumber_pl: TcxGridDBColumn;
+    Comment_pl: TcxGridDBColumn;
+    myCount_pl: TcxGridDBColumn;
   private
     { Private declarations }
   public

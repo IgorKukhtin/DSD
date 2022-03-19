@@ -16,14 +16,14 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- изменения только для zc_Enum_DocumentTaxKind_Prepay
      
-     IF (SELECT MLO.ObjectId
+   /*IF (SELECT MLO.ObjectId
          FROM MovementLinkObject AS MLO
          WHERE MLO.MovementId = inMovementId
            AND MLO.DescId = zc_MovementLinkObject_DocumentTaxKind()
          ) <> zc_Enum_DocumentTaxKind_Prepay()
      THEN 
          RAISE EXCEPTION 'Ошибка.Нет прав изменять параметр <Филиал>.';
-     END IF;
+     END IF;*/
      
      
      IF (SELECT DescId FROM Movement WHERE Id = inMovementId) = zc_Movement_Tax() 

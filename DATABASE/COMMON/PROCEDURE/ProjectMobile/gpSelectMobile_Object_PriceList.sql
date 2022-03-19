@@ -42,14 +42,19 @@ BEGIN
                                     AND ObjectProtocol.OperDate > inSyncDateIn
                                   GROUP BY ObjectProtocol.ObjectId                                                                  
                                  )
+                  -- определяем список контрагентов+юр.лиц, что доступны торговому агенту
+                , tmpPartner AS (SELECT OP.Id
+                                      , OP.JuridicalId
+                                 FROM lfSelectMobile_Object_Partner (inIsErased:= FALSE, inSession:= inSession) AS OP
+                                )
                 , tmpPriceList AS (SELECT DISTINCT COALESCE(ObjectLink_Partner_PriceList.ChildObjectId
-                                                          , ObjectLink_Contract_PriceList.ChildObjectId
+                                                        --, ObjectLink_Contract_PriceList.ChildObjectId
                                                           , ObjectLink_Juridical_PriceList.ChildObjectId
                                                           , zc_PriceList_Basis()) AS PriceListId
                                                  , COALESCE(ObjectLink_Partner_PriceListPrior.ChildObjectId
                                                           , ObjectLink_Juridical_PriceListPrior.ChildObjectId
                                                           , zc_PriceList_Basis() /*zc_PriceList_BasisPrior()*/) AS PriceListPriorId
-                                   FROM lfSelectMobile_Object_Partner (inIsErased:= FALSE, inSession:= inSession) AS OP
+                                   FROM tmpPartner AS OP
                                         LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
                                                              ON ObjectLink_Partner_PriceList.ObjectId = OP.Id
                                                             AND ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
@@ -59,15 +64,42 @@ BEGIN
                                         LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                                              ON ObjectLink_Contract_Juridical.ChildObjectId = OP.JuridicalId
                                                             AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-                                        LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
+                                      /*LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
                                                              ON ObjectLink_Contract_PriceList.ObjectId = ObjectLink_Contract_Juridical.ObjectId
-                                                            AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
+                                                            AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()*/
                                         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
                                                              ON ObjectLink_Juridical_PriceList.ObjectId = OP.JuridicalId
                                                             AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
                                         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceListPrior
                                                              ON ObjectLink_Juridical_PriceListPrior.ObjectId = OP.JuridicalId
                                                             AND ObjectLink_Juridical_PriceListPrior.DescId = zc_ObjectLink_Juridical_PriceListPrior()
+                                  UNION                                    
+                                   SELECT OL_ContractPriceList_PriceList.ChildObjectId AS PriceListId
+                                        , OL_ContractPriceList_PriceList.ChildObjectId AS PriceListPriorId
+                                   FROM tmpPartner
+                                        JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                        ON ObjectLink_Contract_Juridical.ChildObjectId = tmpPartner.JuridicalId
+                                                       AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
+                                        -- убрали Удаленные
+                                        JOIN Object AS Object_Contract
+                                                    ON Object_Contract.Id       = ObjectLink_Contract_Juridical.ObjectId
+                                                   AND Object_Contract.isErased = FALSE
+                                        INNER JOIN ObjectLink AS OL_ContractPriceList_Contract
+                                                              ON OL_ContractPriceList_Contract.ChildObjectId = Object_Contract.Id
+                                                             AND OL_ContractPriceList_Contract.DescId        = zc_ObjectLink_ContractPriceList_Contract()
+                                        INNER JOIN Object AS Object_ContractPriceList ON Object_ContractPriceList.Id       = OL_ContractPriceList_Contract.ObjectId
+                                                                                     AND Object_ContractPriceList.isErased = FALSE
+                                        INNER JOIN ObjectDate AS ObjectDate_StartDate
+                                                              ON ObjectDate_StartDate.ObjectId = Object_ContractPriceList.Id
+                                                             AND ObjectDate_StartDate.DescId   = zc_ObjectDate_ContractPriceList_StartDate()
+                                        INNER JOIN ObjectDate AS ObjectDate_EndDate
+                                                              ON ObjectDate_EndDate.ObjectId = Object_ContractPriceList.Id
+                                                             AND ObjectDate_EndDate.DescId   = zc_ObjectDate_ContractPriceList_EndDate()
+                                        INNER JOIN ObjectLink AS OL_ContractPriceList_PriceList
+                                                              ON OL_ContractPriceList_PriceList.ObjectId = Object_ContractPriceList.Id
+                                                             AND OL_ContractPriceList_PriceList.DescId   = zc_ObjectLink_ContractPriceList_PriceList()
+                                                             AND OL_ContractPriceList_PriceList.ChildObjectId > 0
+                                   WHERE CURRENT_DATE + INTERVAL '1 DAY' BETWEEN ObjectDate_StartDate.ValueData AND ObjectDate_EndDate.ValueData
                                   ) 
                 , tmpFilter AS (SELECT tmpProtocol.PriceListId FROM tmpProtocol
                                 UNION

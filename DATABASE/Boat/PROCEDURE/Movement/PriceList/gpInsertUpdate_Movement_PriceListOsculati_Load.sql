@@ -125,8 +125,12 @@ BEGIN
              -- создаем
              vbGoodsId := gpInsertUpdate_Object_Goods(ioId               := COALESCE (vbGoodsId,0)::  Integer
                                                     , inCode             := lfGet_ObjectCode(0, zc_Object_Goods())    :: Integer
-                                                    , inName             := TRIM (inGoodsName)       :: TVarChar
-                                                    , inArticle          := TRIM (inArticle)      :: TVarChar
+                                                    , inName             := CASE WHEN TRIM (inGoodsName) <> ''     THEN TRIM (inGoodsName)
+                                                                                 WHEN TRIM (inGoodsName_eng) <> '' THEN TRIM (inGoodsName_eng)
+                                                                                 WHEN TRIM (inGoodsName_ita) <> '' THEN TRIM (inGoodsName_ita)
+                                                                                 WHEN TRIM (inGoodsName_fra) <> '' THEN TRIM (inGoodsName_fra)
+                                                                            END
+                                                    , inArticle          := TRIM (inArticle)
                                                     , inArticleVergl     := Null     :: TVarChar
                                                     , inEAN              := inEAN    :: TVarChar
                                                     , inASIN             := Null     :: TVarChar
@@ -362,7 +366,7 @@ BEGIN
                                                                    , inDiscountPartnerId := vbDiscountPartnerId            ::Integer
                                                                    , inMeasureId         := vbMeasureId                   ::Integer
                                                                    , inMeasureParentId   := vbMeasureParentId
-                                                                   , inAmount            := inAmount      ::TFloat
+                                                                   , inAmount            := CASE WHEN inMeasureMult > 1 THEN inAmount ELSE inPriceParent END
                                                                    , inMeasureMult       := inMeasureMult ::TFloat
                                                                    , inPriceParent       := inPriceParent ::TFloat
                                                                    , inEmpfPriceParent   := inEmpfPriceParent ::TFloat

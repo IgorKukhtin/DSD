@@ -21,12 +21,17 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PriceList(
     IN inisOutlet            Boolean   ,
     IN inUserId              Integer     -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
+   DECLARE vbIsInsert Boolean;
 BEGIN
 
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
+
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, NULL, inMovementId, inAmount, NULL,inUserId);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, NULL, inMovementId, inAmount, NULL, inUserId);
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MeasureMult(), ioId, inMeasureMult);
@@ -39,7 +44,10 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MinCountMult(), ioId, inMinCountMult);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightParent(), ioId, inWeightParent);
+     IF inWeightParent <> 0
+     THEN
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightParent(), ioId, inWeightParent);
+     END IF;
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_CatalogPage(), ioId, inCatalogPage);
@@ -55,9 +63,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MeasureParent(), ioId, inMeasureParentId);
 
 
-
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$
