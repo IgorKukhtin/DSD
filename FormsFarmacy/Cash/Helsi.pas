@@ -16,6 +16,7 @@ type
     FRESTClient: TRESTClient;
 
     // Данные текущего пользователя
+    FUserId : Integer;
     FUserName : String;
     FPassword : String;
     FBase64Key : String;
@@ -129,6 +130,8 @@ function CheckRequest_Number(ANumber : string) : boolean;
 
 function GetStateReceipt : boolean;
 
+function GetKey_expireDate(var AUserId : integer; var AKey_expireDate : TDateTime) : boolean;
+
 implementation
 
 uses MainCash2, RegularExpressions, System.Generics.Collections, Soap.EncdDecd,
@@ -218,6 +221,7 @@ begin
 
   FAccess_Token := '';
   FRefresh_Token := '';
+  FUserId := 0;
 end;
 
 destructor THelsiApi.Destroy;
@@ -1080,6 +1084,7 @@ begin
           end;
         end;
 
+        HelsiApi.FUserId := ds.FieldByName('Id').AsInteger;
         HelsiApi.FUserName := ds.FieldByName('UserName').AsString;
         HelsiApi.FPassword := DecodeString(ds.FieldByName('UserPassword').AsString);
         HelsiApi.FBase64Key := ds.FieldByName('Key').AsString;
@@ -1415,6 +1420,17 @@ begin
   end;
 end;
 
+function GetKey_expireDate(var AUserId : integer; var AKey_expireDate : TDateTime) : boolean;
+begin
+  Result := False;
+  if not Assigned(HelsiApi) then Exit;
+
+  if HelsiApi.FUserId = 0 then Exit;
+
+  AUserId := HelsiApi.FUserId;
+  AKey_expireDate := HelsiApi.FKey_expireDate;
+  Result := True;
+end;
 
 initialization
   HelsiApi := Nil;

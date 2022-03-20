@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , LikiDnepr_UnitId Integer, LikiDnepr_UnitName TVarChar
              , LikiDnepr_UserEmail TVarChar
              , LikiDnepr_PasswordEHels TVarChar
+             , KeyExpireDate TDateTime
 ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -52,6 +53,8 @@ BEGIN
         , Object_LikiDnepr_Unit.ValueData AS LikiDnepr_UnitName
         , ObjectString_LikiDnepr_UserEmail.ValueData
         , ObjectString_LikiDnepr_PasswordEHels.ValueData
+        
+        , ObjectDate_User_KeyExpireDate.ValueData
 
    FROM Object AS Object_User
 
@@ -88,6 +91,10 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_LikiDnepr_PasswordEHels
                 ON ObjectString_LikiDnepr_PasswordEHels.DescId = zc_ObjectString_User_LikiDnepr_PasswordEHels() 
                AND ObjectString_LikiDnepr_PasswordEHels.ObjectId = Object_User.Id
+
+         LEFT JOIN ObjectDate AS ObjectDate_User_KeyExpireDate
+                ON ObjectDate_User_KeyExpireDate.DescId = zc_ObjectDate_User_KeyExpireDate() 
+               AND ObjectDate_User_KeyExpireDate.ObjectId = Object_User.Id
 
    WHERE Object_User.Id = inId;
   

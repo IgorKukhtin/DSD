@@ -173,6 +173,21 @@
     Top = 154
     Caption = 'E-mail '#1087#1088#1086#1074#1080#1079#1086#1088#1072' '#1045'-'#1061#1077#1083#1089' '#1076#1083#1103' '#1052#1048#1057' '#171#1050#1072#1096#1090#1072#1085#187
   end
+  object edKeyExpireDate: TcxDateEdit
+    Left = 309
+    Top = 271
+    EditValue = 42951d
+    Properties.ReadOnly = True
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 22
+    Width = 116
+  end
+  object cxLabel10: TcxLabel
+    Left = 309
+    Top = 250
+    Caption = #1044#1072#1090#1072' '#1080#1089#1090#1077#1095#1077#1085#1080#1103' '#1089#1088#1086#1082#1072' '#1076#1077#1081#1089#1090#1074#1080#1103' '#1092#1072#1081#1083#1086#1074#1086#1075#1086' '#1082#1083#1102#1095#1072
+  end
   object ActionList: TActionList
     Left = 309
     Top = 40
@@ -394,6 +409,13 @@
         Value = Null
         Component = edLikiDnepr_PasswordEHels
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'KeyExpireDate'
+        Value = Null
+        Component = edKeyExpireDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1

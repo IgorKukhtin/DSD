@@ -4198,6 +4198,22 @@
 				<Form>Report_RemainingInsulinsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_PaperRecipeSP.pas">
+				<Form>Report_PaperRecipeSPForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MedicSP_PaperRecipe.pas">
+				<Form>MedicSP_PaperRecipeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_PaperRecipeSPInsulin.pas">
+				<Form>Report_PaperRecipeSPInsulinForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_PaymentSum.pas">
+				<Form>Report_PaymentSumForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

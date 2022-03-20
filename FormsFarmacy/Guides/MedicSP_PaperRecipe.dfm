@@ -1,9 +1,9 @@
-object HelsiUserForm: THelsiUserForm
+object MedicSP_PaperRecipeForm: TMedicSP_PaperRecipeForm
   Left = 0
   Top = 0
-  Caption = #1054#1090#1095#1077#1090' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1087#1072#1088#1086#1083#1080' '#1045#1093#1077#1083#1089' ('#1057#1055')'
-  ClientHeight = 439
-  ClientWidth = 1145
+  Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
+  ClientHeight = 344
+  ClientWidth = 615
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,19 +14,19 @@ object HelsiUserForm: THelsiUserForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 1145
-    Height = 413
+    Width = 615
+    Height = 318
     Align = alClient
     PopupMenu = pmGrid
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 1051
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -37,92 +37,30 @@ object HelsiUserForm: THelsiUserForm
       Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.CancelOnExit = False
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
-      OptionsView.HeaderAutoHeight = True
+      OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 69
+        Width = 70
       end
       object Name: TcxGridDBColumn
-        Caption = #1051#1086#1075#1080#1085
+        Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
         DataBinding.FieldName = 'Name'
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 166
-      end
-      object MemberName: TcxGridDBColumn
-        Caption = #1060#1080#1079'. '#1083#1080#1094#1086
-        DataBinding.FieldName = 'MemberName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 142
-      end
-      object PositionName: TcxGridDBColumn
-        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
-        DataBinding.FieldName = 'PositionName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 82
-      end
-      object UnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080' '#1082#1083#1102#1095
-        DataBinding.FieldName = 'UnitName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 151
-      end
-      object UserName: TcxGridDBColumn
-        Caption = #1048#1084#1103' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103' '#1085#1072' '#1089#1072#1081#1090#1077
-        DataBinding.FieldName = 'UserName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 103
-      end
-      object UserPassword: TcxGridDBColumn
-        Caption = #1055#1072#1088#1086#1083#1100' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103' '#1085#1072' '#1089#1072#1081#1090#1077
-        DataBinding.FieldName = 'UserPassword'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 99
-      end
-      object KeyPassword: TcxGridDBColumn
-        Caption = #1055#1072#1088#1086#1083#1100' '#1082' '#1092#1072#1081#1083#1086#1074#1086#1084#1091' '#1082#1083#1102#1095#1091
-        DataBinding.FieldName = 'KeyPassword'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 87
-      end
-      object KeyExpireDate: TcxGridDBColumn
-        Caption = #1057#1088#1086#1082' '#1076#1077#1081#1089#1090#1074#1080#1103' '#1082#1083#1102#1095#1072
-        DataBinding.FieldName = 'KeyExpireDate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1072#1090#1072' '#1080#1089#1090#1077#1095#1077#1085#1080#1103' '#1089#1088#1086#1082#1072' '#1076#1077#1081#1089#1090#1074#1080#1103' '#1092#1072#1081#1083#1086#1074#1086#1075#1086' '#1082#1083#1102#1095#1072
-        Options.Editing = False
-        Width = 82
-      end
-      object PasswordEHels: TcxGridDBColumn
-        Caption = #1055#1072#1088#1086#1083#1100' '#1045'-'#1061#1077#1083#1089
-        DataBinding.FieldName = 'PasswordEHels'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 121
+        Width = 198
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -224,6 +162,10 @@ object HelsiUserForm: THelsiUserForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -297,6 +239,13 @@ object HelsiUserForm: THelsiUserForm
       Action = ProtocolOpenForm
       Category = 0
     end
+    object bbStartLoad: TdxBarButton
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1060#1048#1054' '#1074#1088#1072#1095#1072' ('#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090')'
+      Category = 0
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1060#1048#1054' '#1074#1088#1072#1095#1072' ('#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090')'
+      Visible = ivAlways
+      ImageIndex = 41
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -334,6 +283,20 @@ object HelsiUserForm: THelsiUserForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerMedicalId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PartnerMedicalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerMedicalName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PartnerMedicalName'
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -380,21 +343,9 @@ object HelsiUserForm: THelsiUserForm
         end>
       isShowModal = False
     end
-    object dsdUpdateDataSet: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate
-        end>
-      Caption = 'dsdUpdateDataSet'
-      DataSource = DataSource
-    end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_HelsiUser'
+    StoredProcName = 'gpSelect_Object_MedicSPPaperRecipe'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -469,30 +420,77 @@ object HelsiUserForm: THelsiUserForm
       ShortCut = 32776
     end
   end
-  object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_User_PasswordEHels'
-    DataSets = <>
-    OutputType = otResult
+  object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'inId'
+        Name = 'ImportSettingId'
         Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPasswordEHels'
+        Name = 'ImportSettingIsUploadId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingIsSpecConditionId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerMedicalId'
         Value = ''
-        Component = ClientDataSet
-        ComponentItem = 'PasswordEHels'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerMedicalName'
+        Value = ''
         DataType = ftString
-        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterOperDate'
+        Value = Null
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterSPKindId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterSPKindName'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
-    PackSize = 1
-    Left = 365
-    Top = 208
+    Left = 512
+    Top = 136
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+      end
+      item
+      end
+      item
+      end>
+    Left = 440
+    Top = 112
   end
 end

@@ -260,9 +260,10 @@ BEGIN
 
          LEFT JOIN MovementItemFloat AS MIFloat_MITRId
                                      ON MIFloat_MITRId.MovementItemId = MovementItem.Id
-                                     AND MIFloat_MITRId.DescId = zc_MIFloat_MITechnicalRediscountId()
+                                    AND MIFloat_MITRId.DescId = zc_MIFloat_MITechnicalRediscountId()
                                                                                                                                     
          LEFT JOIN MovementItem AS MITR ON MITR.ID = MIFloat_MITRId.ValueData::Integer
+                               AND MITR.isErased = False
 
          LEFT JOIN Movement AS MovementTR ON MovementTR.ID = MITR.MovementId
                                      
@@ -407,6 +408,7 @@ BEGIN
     -- Для роли "Безнал" отключаем проверки
     IF NOT EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
               WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_Cashless())
+       AND vbUserId <> 8037524 
     THEN
       -- Для роли "Кассир аптеки"
       IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser

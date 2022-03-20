@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_RemainingInsulins(
 )
 RETURNS TABLE (Ord Integer, JuridicalId  Integer, JuridicalName  TVarChar
              , UnitId Integer, UnitName TVarChar, Address TVarChar
-             , License TVarChar, MainName_Cut TVarChar, TimeWork TVarChar, OpennessStatus TVarChar
+             , License TVarChar, FullName TVarChar, TimeWork TVarChar, OpennessStatus TVarChar
 
              , GoodsCode Integer, GoodsName TVarChar
              , Remaining TFloat
@@ -176,8 +176,9 @@ BEGIN
              , Object_Unit.ValueData                                 AS UnitName
              , ObjectString_Unit_Address.ValueData                   AS Address
              , tmpJuridicalDetails.License
-             , tmpJuridicalDetails.MainName_Cut
-             , (CASE WHEN COALESCE(ObjectDate_MondayStart.ValueData ::Time,'00:00') <> '00:00' AND COALESCE(ObjectDate_MondayStart.ValueData ::Time,'00:00') <> '00:00'
+             , tmpJuridicalDetails.FullName
+             , (COALESCE (
+                CASE WHEN COALESCE(ObjectDate_MondayStart.ValueData ::Time,'00:00') <> '00:00' AND COALESCE(ObjectDate_MondayStart.ValueData ::Time,'00:00') <> '00:00'
                      THEN 'Ïí-Ïò '||LEFT ((ObjectDate_MondayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_MondayEnd.ValueData::Time)::TVarChar,5)||'; '
                      ELSE ''
                 END||'' ||
@@ -188,7 +189,7 @@ BEGIN
                 CASE WHEN COALESCE(ObjectDate_SundayStart.ValueData ::Time,'00:00') <> '00:00' AND COALESCE(ObjectDate_SundayEnd.ValueData ::Time,'00:00') <> '00:00'
                      THEN 'Íä '||LEFT ((ObjectDate_SundayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_SundayEnd.ValueData::Time)::TVarChar,5)
                      ELSE ''
-                END) :: TVarChar AS TimeWork
+                END||Chr(13), '')||COALESCE ('Òåë. '||ObjectString_Unit_Phone.ValueData, '')) :: TVarChar AS TimeWork
                 
              , 'Ïðàöþº'::TVarChar AS OpennessStatus
              
@@ -235,6 +236,10 @@ BEGIN
                                   ON ObjectDate_FirstCheck.ObjectId = Object_Unit.Id
                                  AND ObjectDate_FirstCheck.DescId = zc_ObjectDate_Unit_FirstCheck()
                                  
+             LEFT JOIN ObjectString AS ObjectString_Unit_Phone
+                                    ON ObjectString_Unit_Phone.ObjectId = Object_Unit.Id
+                                   AND ObjectString_Unit_Phone.DescId = zc_ObjectString_Unit_Phone()
+
              LEFT JOIN tmpJuridicalDetails ON tmpJuridicalDetails.JuridicalId = Object_Juridical.Id
 
         ORDER BY Object_Juridical.ValueData

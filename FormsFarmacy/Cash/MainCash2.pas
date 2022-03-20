@@ -606,6 +606,7 @@ type
     mmAddGoodsSupplement: TMenuItem;
     spGoods_AddSupplement: TdsdStoredProc;
     spGetMedicalProgramSP: TdsdStoredProc;
+    spUpdate_User_KeyExpireDate: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -807,6 +808,8 @@ type
 
     FError_Blink: Integer;
     FErrorRRO: Boolean;
+
+    FUpdateKey_expireDate: Boolean;
 
     aDistributionPromoId : array of Integer;
     aDistributionPromoAmount : array of Currency;
@@ -6482,11 +6485,19 @@ begin
   btnGoodsSPReceiptList.Visible := FormParams.ParamByName('HelsiIDList').Value <> '';
   if (FormParams.ParamByName('HelsiID').Value <> '') or (isPaperRecipeSP = true) then
   begin
-    Label30.Caption := '     Медикамент.: ';
+    if FormParams.ParamByName('isPaperRecipeSP').Value = True then
+    begin
+      Label30.Caption := '       ФИО Врача: ';
+      lblPartnerMedicalName.Caption := '  ' + FormParams.ParamByName('MedicSP').Value;
+    end else
+    begin
+      Label30.Caption := '     Медикамент.: ';
+      lblPartnerMedicalName.Caption := '  ' + HelsiName;
+    end;
     Label7.Caption := 'Вып.';
     Label31.Caption := 'Программа.';
-    lblPartnerMedicalName.Caption := '  ' + HelsiName;
     lblMemberSP.Caption := '  ' + HelsiProgramName;
+
     // + '  /  № амб. ' + Ambulance;
     RemainsCDS.DisableControls;
     RemainsCDS.Filtered := false;
@@ -6591,7 +6602,8 @@ var
   HelsiID, HelsiIDList, HelsiName, ProgramId, ProgramName: string;
   HelsiQty: Currency;
   Res: TArray<string>;
-  I: Integer;
+  I, UserId: Integer;
+  Key_expireDate : TDateTime;
 begin
 
   if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
@@ -6681,21 +6693,37 @@ begin
       exit;
   end;
 
-  if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
-  begin
-    if not GetHelsiReceipt(InvNumberSP, HelsiID, HelsiIDList, HelsiName, HelsiQty,
-      OperDateSP, ProgramId, ProgramName) then
+  try
+
+    if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
     begin
-      NewCheck(false);
-      exit;
+      if not GetHelsiReceipt(InvNumberSP, HelsiID, HelsiIDList, HelsiName, HelsiQty,
+        OperDateSP, ProgramId, ProgramName) then
+      begin
+        NewCheck(false);
+        exit;
+      end;
+    end else if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 2 then
+    begin
+      if not GetLikiDniproeHealthReceipt(InvNumberSP, HelsiID, HelsiIDList, HelsiName, HelsiQty,
+        OperDateSP) then
+      begin
+        NewCheck(false);
+        exit;
+      end;
     end;
-  end else if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 2 then
-  begin
-    if not GetLikiDniproeHealthReceipt(InvNumberSP, HelsiID, HelsiIDList, HelsiName, HelsiQty,
-      OperDateSP) then
+
+  finally
+
+    if not gc_User.Local and (FUpdateKey_expireDate = False) and GetKey_expireDate(UserId, Key_expireDate) then
     begin
-      NewCheck(false);
-      exit;
+      try
+        spUpdate_User_KeyExpireDate.ParamByName('inID').Value := UserId;
+        spUpdate_User_KeyExpireDate.ParamByName('inKeyExpireDate').Value := Key_expireDate;
+        spUpdate_User_KeyExpireDate.Execute;
+        FUpdateKey_expireDate := True;
+      except
+      end;
     end;
   end;
 
@@ -8026,6 +8054,7 @@ begin
   TimerServiceRun.Enabled := True;
   FOldAnalogFilter := '';
   FAnalogFilter := 0;
+  FUpdateKey_expireDate := False;
 
   isLog_RRO := iniLog_RRO;
 

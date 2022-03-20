@@ -8,7 +8,8 @@ uses
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
   cxPropertiesStore, dsdAddOn, dsdGuides, dsdDB, dsdAction, Vcl.ActnList,
   cxMaskEdit, cxButtonEdit, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel,
-  cxTextEdit, dxSkinsCore, dxSkinsDefaultPainters, cxCheckBox;
+  cxTextEdit, dxSkinsCore, dxSkinsDefaultPainters, cxCheckBox, Vcl.ComCtrls,
+  dxCore, cxDateUtils, cxDropDownEdit, cxCalendar;
 
 type
   TUserHelsiEditForm = class(TParentForm)
@@ -46,6 +47,8 @@ type
     edLikiDnepr_UserEmail: TcxTextEdit;
     cxLabel9: TcxLabel;
     LikiDnepr_UnitGuides: TdsdGuides;
+    edKeyExpireDate: TcxDateEdit;
+    cxLabel10: TcxLabel;
   private
     { Private declarations }
   public

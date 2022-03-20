@@ -1,4 +1,4 @@
-unit HelsiUser;
+unit MedicSP_PaperRecipe;
 
 interface
 
@@ -22,10 +22,12 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  Vcl.Menus;
+  Vcl.Menus, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit,
+  cxLabel, Vcl.ExtCtrls, ExternalLoad, Vcl.ComCtrls, dxCore, cxDateUtils,
+  cxDropDownEdit, cxCalendar;
 
 type
-  THelsiUserForm = class(TParentForm)
+  TMedicSP_PaperRecipeForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -60,16 +62,9 @@ type
     N4: TMenuItem;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    MemberName: TcxGridDBColumn;
-    PositionName: TcxGridDBColumn;
-    UnitName: TcxGridDBColumn;
-    UserName: TcxGridDBColumn;
-    UserPassword: TcxGridDBColumn;
-    KeyPassword: TcxGridDBColumn;
-    PasswordEHels: TcxGridDBColumn;
-    dsdUpdateDataSet: TdsdUpdateDataSet;
-    spInsertUpdate: TdsdStoredProc;
-    KeyExpireDate: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
+    bbStartLoad: TdxBarButton;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public
@@ -81,6 +76,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(THelsiUserForm);
+  RegisterClass(TMedicSP_PaperRecipeForm);
 
 end.

@@ -254,7 +254,7 @@ BEGIN
                                         AND MIFloat_Amount.DescId = zc_MIFloat_Amount()
              LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
                                          ON MIFloat_AmountManual.MovementItemId = MI_Pretension.Id
-                                        AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+                                        AND MIFloat_AmountManual.DescId = zc_MIFloat_Amount()
 
              LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
                                            ON MIBoolean_Checked.MovementItemId = MI_Pretension.Id
@@ -286,5 +286,4 @@ ALTER FUNCTION gpSelect_Movement_Pretension_Print (Integer,TVarChar) OWNER TO po
 */
 
 
-select * from gpSelect_Movement_Pretension_Print(inMovementId := 27180869 ,  inSession := '3');
-
+select * from gpSelect_Movement_Pretension_Print(inMovementId := 27229235 ,  inSession := '3');

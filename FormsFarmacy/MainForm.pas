@@ -924,6 +924,12 @@ type
     N340: TMenuItem;
     actReport_RemainingInsulins: TdsdOpenForm;
     N341: TMenuItem;
+    actReport_PaperRecipeSP: TdsdOpenForm;
+    N342: TMenuItem;
+    actReport_PaperRecipeSPInsulin: TdsdOpenForm;
+    N343: TMenuItem;
+    actReport_PaymentSum: TdsdOpenForm;
+    N344: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
