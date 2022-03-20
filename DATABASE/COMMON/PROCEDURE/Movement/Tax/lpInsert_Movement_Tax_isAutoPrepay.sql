@@ -36,10 +36,21 @@ BEGIN
                                     , inFromId, inToId, inPartnerId, inContractId, inDocumentTaxKindId, inUserId
                                      ) AS tmp;    
 
-    -- Комментарий
-    PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId
-                                         , (SELECT
-                                            FROM  WHERE 
+    -- Примечание
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), inId
+                                         , (SELECT STRING_AGG (Object_PersonalCollation.ValueData, ';')
+                                            FROM (SELECT DISTINCT ObjectLink_Contract_PersonalCollation.ChildObjectId AS PersonalId_collation
+                                                  FROM Object_Contract_View
+                                                       LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalCollation
+                                                                            ON ObjectLink_Contract_PersonalCollation.ObjectId = Object_Contract_View.ContractId 
+                                                                           AND ObjectLink_Contract_PersonalCollation.DescId = zc_ObjectLink_Contract_PersonalCollation()
+                                                  WHERE Object_Contract_View.JuridicalId = inToId
+                                                    AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                                    AND Object_Contract_View.InfoMoneyId         = zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
+                                                    AND Object_Contract_View.isErased            = FALSE
+                                                    
+                                                 ) AS tmp
+                                                 LEFT JOIN Object AS Object_PersonalCollation ON Object_PersonalCollation.Id = tmp.PersonalId_collation
                                            )
                                           );
 

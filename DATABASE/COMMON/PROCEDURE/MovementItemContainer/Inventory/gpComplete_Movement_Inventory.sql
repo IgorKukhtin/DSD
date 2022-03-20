@@ -519,6 +519,7 @@ BEGIN
                                                WHEN vbIsPartionDate_Unit      = TRUE
                                                 AND vbIsPartionGoodsKind_Unit = TRUE
                                                 AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()  -- ќсновное сырье + ћ€сное сырье
+                                                AND NOT EXISTS (SELECT 1 FROM _tmpList_Goods_1942 WHERE _tmpList_Goods_1942.GoodsId = _tmpItem.GoodsId)
                                                     THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem.PartionGoodsDate
                                                                                          , inGoodsKindId_complete := CASE WHEN _tmpItem.GoodsKindId_complete = zc_GoodsKind_Basis() THEN  0 ELSE _tmpItem.GoodsKindId_complete END
                                                                                           )

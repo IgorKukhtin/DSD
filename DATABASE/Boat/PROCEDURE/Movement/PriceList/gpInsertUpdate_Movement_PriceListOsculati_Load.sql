@@ -52,6 +52,11 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не выбран Поставщик';
     END IF;
 
+  /*IF inArticle = '66.045.02'
+    THEN
+         RAISE EXCEPTION 'Ошибка. %   %   %', inAmount, inPriceParent, inMeasureMult;
+    END IF;*/
+
 
    IF COALESCE (inMeasureName,'')<> ''
    THEN
