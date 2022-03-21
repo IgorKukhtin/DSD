@@ -1,25 +1,25 @@
 inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 456
-  ClientWidth = 1291
-  ExplicitWidth = 1307
+  ClientWidth = 1388
+  ExplicitWidth = 1404
   ExplicitHeight = 494
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1291
+    Width = 1388
     Height = 290
     ExplicitTop = 166
     ExplicitWidth = 1291
     ExplicitHeight = 290
     ClientRectBottom = 290
-    ClientRectRight = 1291
+    ClientRectRight = 1388
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1291
       ExplicitHeight = 266
       inherited cxGrid: TcxGrid
-        Width = 1291
+        Width = 1388
         Height = 266
         ExplicitWidth = 1291
         ExplicitHeight = 266
@@ -484,7 +484,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1291
+    Width = 1388
     Height = 140
     TabOrder = 3
     ExplicitWidth = 1291
@@ -635,14 +635,14 @@ inherited Sale_OrderForm: TSale_OrderForm
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
     object cxLabel13: TcxLabel
-      Left = 1268
-      Top = 85
+      Left = 1292
+      Top = 5
       Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
       Visible = False
     end
     object edRouteSorting: TcxButtonEdit
-      Left = 1268
-      Top = 103
+      Left = 1270
+      Top = 17
       Properties.Buttons = <
         item
           Default = True
@@ -975,6 +975,23 @@ inherited Sale_OrderForm: TSale_OrderForm
       Properties.ReadOnly = True
       TabOrder = 61
       Width = 140
+    end
+    object cxLabel31: TcxLabel
+      Left = 1269
+      Top = 85
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082#1091#1087'.'
+    end
+    object edReturnIn: TcxButtonEdit
+      Left = 1269
+      Top = 103
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 63
+      Width = 116
     end
   end
   object edChangePercentAmount: TcxCurrencyEdit [2]
@@ -3493,6 +3510,21 @@ inherited Sale_OrderForm: TSale_OrderForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_ReturnIn'
+        Value = Null
+        Component = GuidesReturnIn
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_ReturnInFull'
+        Value = Null
+        Component = GuidesReturnIn
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -3647,6 +3679,14 @@ inherited Sale_OrderForm: TSale_OrderForm
         Name = 'inMovementId_Order'
         Value = Null
         Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_ReturnIn'
+        Value = Null
+        Component = GuidesReturnIn
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5738,5 +5778,51 @@ inherited Sale_OrderForm: TSale_OrderForm
     PackSize = 1
     Left = 1120
     Top = 235
+  end
+  object GuidesReturnIn: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edReturnIn
+    Key = '0'
+    FormNameParam.Value = 'TReturnInJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TReturnInJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesReturnIn
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesReturnIn
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 1300
+    Top = 96
   end
 end

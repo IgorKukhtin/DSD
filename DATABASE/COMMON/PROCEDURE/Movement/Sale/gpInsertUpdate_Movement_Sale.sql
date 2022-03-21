@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
@@ -25,6 +26,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
     IN inCurrencyPartnerId     Integer    , -- Валюта (контрагента)
     IN inDocumentTaxKindId_inf Integer    , -- Тип формирования налогового документа
     IN inMovementId_Order      Integer    , -- ключ Документа
+    IN inMovementId_ReturnIn   Integer    , -- ключ Документа Возврат
  INOUT ioPriceListId           Integer    , -- Прайс лист
    OUT outPriceListName        TVarChar   , -- Прайс лист
    OUT outCurrencyValue        TFloat     , -- Курс для перевода в валюту баланса
@@ -71,16 +73,15 @@ BEGIN
                                       , inCurrencyDocumentId   := inCurrencyDocumentId
                                       , inCurrencyPartnerId    := inCurrencyPartnerId
                                       , inMovementId_Order     := inMovementId_Order
+                                      , inMovementId_ReturnIn  := inMovementId_ReturnIn
                                       , ioPriceListId          := ioPriceListId
                                       , ioCurrencyPartnerValue := ioCurrencyPartnerValue
                                       , ioParPartnerValue      := ioParPartnerValue
                                       , inUserId               := vbUserId
                                        ) AS tmp;
-
     -- Комментарий
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
    
-
     -- сформировали связь у расходной накл. с EDI (такую же как и у заявки)
     PERFORM lpUpdate_Movement_Sale_Edi_byOrder (ioId, inMovementId_Order, vbUserId);
 
@@ -117,6 +118,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.03.22         * 
  28.06.16         * add ReestrKind
  24.07.14         * add inCurrencyDocumentId
                         inCurrencyPartnerId

@@ -115,6 +115,7 @@ BEGIN
                                                                         WHERE MovementLinkMovement.MovementId = ioId
                                                                           AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master())
                                            , inMovementId_Order := (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = ioId AND DescId = zc_MovementLinkMovement_Order())
+                                           , inMovementId_ReturnIn := (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = ioId AND DescId = zc_MovementLinkMovement_ReturnIn())
                                            , ioPriceListId      := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_PriceList())
                                            , ioCurrencyPartnerValue := (SELECT ValueData FROM MovementFloat WHERE MovementId = ioId AND DescId = zc_MovementFloat_CurrencyPartnerValue())
                                            , ioParPartnerValue      := (SELECT ValueData FROM MovementFloat WHERE MovementId = ioId AND DescId = zc_MovementFloat_ParPartnerValue())
@@ -153,6 +154,7 @@ BEGIN
                                                                         WHERE MovementLinkMovement.MovementId = ioId
                                                                           AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master())
                                            , inMovementId_Order := (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = ioId AND DescId = zc_MovementLinkMovement_Order())
+                                           , inMovementId_ReturnIn := (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = ioId AND DescId = zc_MovementLinkMovement_ReturnIn())
                                            , ioPriceListId      := ioPriceListId
                                            , ioCurrencyPartnerValue := (SELECT ValueData FROM MovementFloat WHERE MovementId = ioId AND DescId = zc_MovementFloat_CurrencyPartnerValue())
                                            , ioParPartnerValue      := (SELECT ValueData FROM MovementFloat WHERE MovementId = ioId AND DescId = zc_MovementFloat_ParPartnerValue())
@@ -188,6 +190,7 @@ BEGIN
                                                                         WHERE MovementLinkMovement.MovementId = ioId
                                                                           AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master())
                                            , inMovementId_Order := (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = ioId AND DescId = zc_MovementLinkMovement_Order())
+                                           , inMovementId_ReturnIn := (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = ioId AND DescId = zc_MovementLinkMovement_ReturnIn())
                                            , ioPriceListId      := ioPriceListId
                                            , ioCurrencyPartnerValue := (SELECT ValueData FROM MovementFloat WHERE MovementId = ioId AND DescId = zc_MovementFloat_CurrencyPartnerValue())
                                            , ioParPartnerValue      := (SELECT ValueData FROM MovementFloat WHERE MovementId = ioId AND DescId = zc_MovementFloat_ParPartnerValue())
@@ -215,6 +218,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 21.03.22         *
  21.08.14                                        * add inRouteId
  22.05.14                                        * restore find inOperDatePartner
  23.04.14                                        * add COALESCE ...

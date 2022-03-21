@@ -37,6 +37,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isPromo Boolean
              , Comment TVarChar
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
+             , MovementId_ReturnIn Integer, InvNumber_ReturnInFull TVarChar
              , PartionGoodsDate TDateTime
               )
 AS
@@ -112,6 +113,8 @@ BEGIN
 
              , 0                                            AS MovementId_Production
              , CAST ('' AS TVarChar)                        AS InvNumber_ProductionFull
+             , 0                                            AS MovementId_ReturnIn
+             , CAST ('' AS TVarChar)                        AS InvNumber_ReturnInFull
              , inOperDate                                   AS PartionGoodsDate
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
@@ -275,6 +278,9 @@ BEGIN
                || zfCalc_PartionMovementName (Movement_Production.DescId, MovementDesc_Production.ItemName, Movement_Production.InvNumber, Movement_Production.OperDate)
                  , ' ')                     :: TVarChar      AS InvNumber_ProductionFull
 
+               , Movement_ReturnIn.Id                                                                                             AS MovementId_ReturnIn
+               , ('π ' || Movement_ReturnIn.InvNumber || ' ÓÚ ' || Movement_ReturnIn.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_ReturnInFull
+
                , Movement.OperDate AS PartionGoodsDate
            FROM Movement
                 LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -426,6 +432,11 @@ BEGIN
                LEFT JOIN Movement AS Movement_Production ON Movement_Production.Id = MovementLinkMovement_Production.MovementId
                LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_Production.DescId
 
+               LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ReturnIn
+                                              ON MovementLinkMovement_ReturnIn.MovementId = Movement.Id
+                                             AND MovementLinkMovement_ReturnIn.DescId     = zc_MovementLinkMovement_ReturnIn()
+               LEFT JOIN Movement AS Movement_ReturnIn ON Movement_ReturnIn.Id = MovementLinkMovement_ReturnIn.MovementChildId
+              
            WHERE Movement.Id     = inMovementId
              AND Movement.DescId = zc_Movement_Sale();
 
@@ -438,6 +449,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 21.03.22         * 
  26.01.22         *
  04.07.18         *
  03.10.16         * add Movement_Production

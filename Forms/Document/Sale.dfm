@@ -1,27 +1,26 @@
 inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 645
-  ClientWidth = 1278
+  ClientWidth = 1362
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -401
-  ExplicitWidth = 1294
-  ExplicitHeight = 684
+  ExplicitWidth = 1378
+  ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 167
-    Width = 1278
+    Width = 1362
     Height = 478
     ExplicitTop = 167
     ExplicitWidth = 1278
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 1278
+    ClientRectRight = 1362
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1278
       ExplicitHeight = 454
       inherited cxGrid: TcxGrid
-        Width = 1278
+        Width = 1362
         Height = 454
         ExplicitWidth = 1278
         ExplicitHeight = 454
@@ -530,7 +529,7 @@ inherited SaleForm: TSaleForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1278
+    Width = 1362
     Height = 141
     TabOrder = 3
     ExplicitWidth = 1278
@@ -682,14 +681,14 @@ inherited SaleForm: TSaleForm
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
     object cxLabel13: TcxLabel
-      Left = 1271
-      Top = 85
+      Left = 1319
+      Top = 5
       Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
       Visible = False
     end
     object edRouteSorting: TcxButtonEdit
-      Left = 1271
-      Top = 103
+      Left = 1319
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
@@ -849,6 +848,23 @@ inherited SaleForm: TSaleForm
       Top = 44
       Caption = #1053#1086#1084#1080#1085#1072#1083
     end
+    object cxLabel30: TcxLabel
+      Left = 360
+      Top = 85
+      Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
+    end
+    object cxButtonEdit1: TcxButtonEdit
+      Left = 360
+      Top = 103
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 42
+      Width = 170
+    end
   end
   object cxLabel17: TcxLabel [2]
     Left = 1072
@@ -944,8 +960,8 @@ inherited SaleForm: TSaleForm
     Width = 47
   end
   object cxLabel25: TcxLabel [14]
-    Left = 360
-    Top = 85
+    Left = 281
+    Top = 80
     Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
   end
   object edInvNumberTransport: TcxButtonEdit [15]
@@ -1056,6 +1072,23 @@ inherited SaleForm: TSaleForm
     Properties.ReadOnly = True
     TabOrder = 30
     Width = 140
+  end
+  object cxLabel31: TcxLabel [27]
+    Left = 1245
+    Top = 85
+    Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082#1091#1087'.'
+  end
+  object edReturnIn: TcxButtonEdit [28]
+    Left = 1245
+    Top = 103
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 32
+    Width = 116
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -2634,6 +2667,17 @@ inherited SaleForm: TSaleForm
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099' ('#1089#1093#1077#1084#1072' '#1055#1072#1074#1080#1083#1100#1086#1085#1099')'
       ImageIndex = 80
     end
+    object actInsert_MI_Sale_byReturnIn: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI_Sale_byReturnIn
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI_Sale_byReturnIn
+        end>
+      Caption = 'actInsert_MI_byOrderReturnTare'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -3248,8 +3292,8 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 136
-    Top = 64
+    Left = 48
+    Top = 96
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale'
@@ -3657,6 +3701,21 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_ReturnIn'
+        Value = Null
+        Component = GuidesReturnIn
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_ReturnInFull'
+        Value = Null
+        Component = GuidesReturnIn
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -3811,6 +3870,14 @@ inherited SaleForm: TSaleForm
         Name = 'inMovementId_Order'
         Value = Null
         Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_ReturnIn'
+        Value = Null
+        Component = GuidesReturnIn
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4431,8 +4498,8 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1312
-    Top = 96
+    Left = 1384
+    Top = 16
   end
   object spTax: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'
@@ -5142,8 +5209,8 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 979
-    Top = 52
+    Left = 971
+    Top = 4
   end
   object GuidesInvNumberOrder: TdsdGuides
     KeyField = 'Id'
@@ -5998,5 +6065,93 @@ inherited SaleForm: TSaleForm
     PackSize = 1
     Left = 1120
     Top = 235
+  end
+  object GuidesReturnIn: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edReturnIn
+    Key = '0'
+    FormNameParam.Value = 'TReturnInJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TReturnInJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesReturnIn
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesReturnIn
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 1300
+    Top = 96
+  end
+  object spInsert_MI_Sale_byReturnIn: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_Sale_byReturnIn'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_ReturnIn'
+        Value = '0'
+        Component = GuidesReturnIn
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1266
+    Top = 288
+  end
+  object HeaderExit: THeaderExit
+    ExitList = <
+      item
+        Control = edReturnIn
+      end
+      item
+      end
+      item
+      end
+      item
+      end
+      item
+      end>
+    Action = actInsert_MI_Sale_byReturnIn
+    Left = 1264
+    Top = 240
   end
 end

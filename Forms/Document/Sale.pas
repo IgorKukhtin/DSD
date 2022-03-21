@@ -262,6 +262,14 @@ type
     actUpdateMI_Sale_PriceIn: TdsdExecStoredProc;
     macUpdateMI_Sale_PriceIn: TMultiAction;
     bbUpdateMI_Sale_PriceIn: TdxBarButton;
+    cxLabel30: TcxLabel;
+    cxButtonEdit1: TcxButtonEdit;
+    GuidesReturnIn: TdsdGuides;
+    cxLabel31: TcxLabel;
+    edReturnIn: TcxButtonEdit;
+    spInsert_MI_Sale_byReturnIn: TdsdStoredProc;
+    HeaderExit: THeaderExit;
+    actInsert_MI_Sale_byReturnIn: TdsdExecStoredProc;
   private
     { Private declarations }
   public

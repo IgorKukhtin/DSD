@@ -2,8 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale_Partner (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale_Partner (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale_Partner (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
-
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale_Partner (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale_Partner (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale_Partner(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ Перемещение>
@@ -25,6 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale_Partner(
     IN inCurrencyPartnerId     Integer    , -- Валюта (контрагента)
     IN inDocumentTaxKindId_inf Integer    , -- Тип формирования налогового документа
     IN inMovementId_Order      Integer    , -- ключ Документа
+    In inMovementId_ReturnIn   Integer    , -- Возврат
  INOUT ioPriceListId           Integer    , -- Прайс лист
    OUT outPriceListName        TVarChar   , -- Прайс лист
    OUT outCurrencyValue        TFloat     , -- Курс для перевода в валюту баланса
@@ -142,6 +143,7 @@ BEGIN
                                       , inCurrencyDocumentId   := inCurrencyDocumentId
                                       , inCurrencyPartnerId    := inCurrencyPartnerId
                                       , inMovementId_Order     := inMovementId_Order
+                                      , inMovementId_ReturnIn  := inMovementId_ReturnIn
                                       , ioPriceListId          := ioPriceListId
                                       , ioCurrencyPartnerValue := ioCurrencyPartnerValue
                                       , ioParPartnerValue      := ioParPartnerValue

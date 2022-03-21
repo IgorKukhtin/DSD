@@ -54,6 +54,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Comment TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
+             , MovementId_ReturnIn Integer, InvNumber_ReturnInFull TVarChar
               )
 AS
 $BODY$
@@ -462,6 +463,7 @@ end if;
                                                         , zc_MovementLinkMovement_Promo()
                                                         , zc_MovementLinkMovement_Production()
                                                         , zc_MovementLinkMovement_Transport()
+                                                        , zc_MovementLinkMovement_ReturnIn()
                                                         )
                      )
        , tmpMS_InvNumberPartner AS (SELECT MovementString.*
@@ -634,6 +636,13 @@ end if;
                                                             ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
                                     WHERE MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
                                    )
+        , tmpMovement_ReturnIn AS (SELECT MovementLinkMovement_ReturnIn.MovementId
+                                        , Movement_ReturnIn.*
+                                   FROM tmpMLM AS MovementLinkMovement_ReturnIn
+                                        LEFT JOIN Movement AS Movement_ReturnIn
+                                                           ON Movement_ReturnIn.Id = MovementLinkMovement_ReturnIn.MovementChildId
+                                   WHERE MovementLinkMovement_ReturnIn.DescId = zc_MovementLinkMovement_ReturnIn()
+                                  )
         , tmpMovement_Promo AS (SELECT MovementLinkMovement_Promo.MovementId
                                      , Movement_Promo.*
                                 FROM tmpMLM AS MovementLinkMovement_Promo
@@ -794,6 +803,8 @@ end if;
            || zfCalc_PartionMovementName (CASE WHEN MovementBoolean_Peresort.ValueData = TRUE THEN -1 ELSE 1 END * Movement_Production.DescId, MovementDesc_Production.ItemName, Movement_Production.InvNumber, Movement_Production.OperDate)
              ) :: TVarChar AS InvNumber_ProductionFull
 
+           , Movement_ReturnIn.Id                                                                                             AS MovementId_ReturnIn
+           , ('№ ' || Movement_ReturnIn.InvNumber || ' от ' || Movement_ReturnIn.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_ReturnInFull
        FROM tmpMovement AS Movement
 
             LEFT JOIN tmpStatus AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -1033,6 +1044,8 @@ end if;
                                 ON MovementBoolean_Peresort.MovementId = Movement_Production.Id
                                AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
 
+            LEFT JOIN tmpMovement_ReturnIn AS Movement_ReturnIn ON Movement_ReturnIn.MovementId = Movement.Id
+
             -- Путевой лист
             LEFT JOIN tmpMovement_Transport AS Movement_Transport ON Movement_Transport.MovementId = Movement.Id
 
@@ -1056,6 +1069,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.03.22         *
  26.01.22         * 
  09.04.18         *
  24.10.17         * add Movement_Transport_Reestr

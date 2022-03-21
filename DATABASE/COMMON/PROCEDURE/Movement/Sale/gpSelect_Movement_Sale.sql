@@ -55,6 +55,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Comment TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
+             , MovementId_ReturnIn Integer, InvNumber_ReturnInFull TVarChar
               )
 AS
 $BODY$

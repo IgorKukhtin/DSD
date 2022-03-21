@@ -5983,8 +5983,8 @@ inherited ReturnInForm: TReturnInForm
     Top = 312
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 700
-    Top = 100
+    Left = 628
+    Top = 140
   end
   object RefreshDispatcher: TRefreshDispatcher
     CheckIdParam = True
@@ -7887,8 +7887,8 @@ inherited ReturnInForm: TReturnInForm
       item
       end>
     Action = actInsert_MI_byOrderReturnTare
-    Left = 640
-    Top = 208
+    Left = 720
+    Top = 216
   end
   object GuidesPriceListIn: TdsdGuides
     KeyField = 'Id'

@@ -244,6 +244,9 @@ type
     actUpdateMI_Sale_PriceIn: TdsdExecStoredProc;
     macUpdateMI_Sale_PriceIn: TMultiAction;
     bbUpdateMI_Sale_PriceIn: TdxBarButton;
+    cxLabel31: TcxLabel;
+    edReturnIn: TcxButtonEdit;
+    GuidesReturnIn: TdsdGuides;
   private
     { Private declarations }
   public

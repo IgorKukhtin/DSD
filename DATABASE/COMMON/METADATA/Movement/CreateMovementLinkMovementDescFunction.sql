@@ -79,9 +79,15 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkMovement_Loss() RETURNS Integer AS $BO
 INSERT INTO MovementLinkMovementDesc (Code, ItemName)
   SELECT 'zc_MovementLinkMovement_Loss', 'Списание' WHERE NOT EXISTS (SELECT * FROM MovementLinkMovementDesc WHERE Code = 'zc_MovementLinkMovement_Loss');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkMovement_ReturnIn() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkMovementDesc WHERE Code = 'zc_MovementLinkMovement_ReturnIn'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkMovementDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkMovement_ReturnIn', 'На основании № возврат' WHERE NOT EXISTS (SELECT * FROM MovementLinkMovementDesc WHERE Code = 'zc_MovementLinkMovement_ReturnIn');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А. Шаблий О.В.
+ 21.03.22         * zc_MovementLinkMovement_ReturnIn
  29.12.21                                                                   * zc_MovementLinkMovement_Loss
  14.12.21                                                                   * zc_MovementLinkMovement_Pretension
  13.10.20                                                                   * zc_MovementLinkMovement_RelatedProduct
