@@ -43,6 +43,8 @@ type
     edUnit: TcxButtonEdit;
     UnitGuides: TdsdGuides;
     RefreshDispatcher: TRefreshDispatcher;
+    GoodsCode: TcxGridDBColumn;
+    Article: TcxGridDBColumn;
   private
     { Private declarations }
   public

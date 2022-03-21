@@ -1,11 +1,11 @@
 inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1086#1074'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1090#1080#1080' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1093'>'
   ClientHeight = 399
   ClientWidth = 853
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
   ExplicitWidth = 869
-  ExplicitHeight = 437
+  ExplicitHeight = 438
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -51,8 +51,22 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
             Options.Editing = False
             Width = 147
           end
+          object Article: TcxGridDBColumn
+            Caption = 'Artikel Nr'
+            DataBinding.FieldName = 'Article'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object GoodsCode: TcxGridDBColumn
+            Caption = 'Interne Nr'
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object GoodsName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
+            Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -219,7 +233,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     Align = alTop
     TabOrder = 5
     object edGoods: TcxButtonEdit
-      Left = 433
+      Left = 488
       Top = 6
       Properties.Buttons = <
         item
@@ -232,7 +246,7 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     object cxLabel3: TcxLabel
       Left = 393
       Top = 7
-      Caption = #1058#1086#1074#1072#1088
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077':'
     end
   end
   object cxLabel1: TcxLabel [2]
@@ -330,10 +344,25 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'GoodsCode'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'GoodsName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Article'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

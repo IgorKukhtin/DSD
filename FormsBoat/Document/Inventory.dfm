@@ -104,34 +104,47 @@ object InventoryForm: TInventoryForm
           end
           object EAN: TcxGridDBColumn
             DataBinding.FieldName = 'EAN'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPartionGoodsChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = 'EAN'
-            Options.Editing = False
             Width = 106
           end
           object Article: TcxGridDBColumn
             Caption = 'Artikel Nr'
             DataBinding.FieldName = 'Article'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPartionGoodsChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 81
-          end
-          object PartNumber: TcxGridDBColumn
-            Caption = 'S/N'
-            DataBinding.FieldName = 'PartNumber'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
-            Width = 70
           end
           object GoodsCode: TcxGridDBColumn
             Caption = 'Interne Nr'
             DataBinding.FieldName = 'GoodsCode'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPartionGoodsChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 90
           end
           object GoodsName: TcxGridDBColumn
@@ -147,7 +160,6 @@ object InventoryForm: TInventoryForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 137
           end
           object MeasureName: TcxGridDBColumn
@@ -159,16 +171,13 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 47
           end
-          object Price: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1074#1093'.'
-            DataBinding.FieldName = 'Price'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object PartNumber: TcxGridDBColumn
+            Caption = 'S/N'
+            DataBinding.FieldName = 'PartNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1074#1093'.'
-            Width = 55
+            HeaderHint = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
+            Width = 70
           end
           object Amount: TcxGridDBColumn
             Caption = #1060#1072#1082#1090' '#1086#1089#1090#1072#1090#1086#1082
@@ -180,6 +189,17 @@ object InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1092#1072#1082#1090' '#1074' '#1084#1072#1075#1072#1079#1080#1085#1077' ('#1073#1077#1079' '#1076#1086#1083#1075#1086#1074')'
             Width = 71
+          end
+          object Price: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1074#1093'.'
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'.'
+            Width = 55
           end
           object Summa: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1086#1089#1090'. '#1092#1072#1082#1090' '#1084#1072#1075'.)'
@@ -775,6 +795,14 @@ object InventoryForm: TInventoryForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertRecord_goods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertRecord'
         end
         item
@@ -893,15 +921,22 @@ object InventoryForm: TInventoryForm
       Category = 0
     end
     object bbInsertRecord: TdxBarButton
-      Action = InsertRecord
+      Action = actInsertRecord_partion
       Category = 0
     end
     object bb: TdxBarButton
-      Action = actUpdateAmountRemains
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' "'#1054#1089#1090#1072#1090#1086#1082' '#1088#1072#1089#1095#1077#1090#1085#1099#1081'" + "'#1044#1086#1083#1075#1080'"'
       Category = 0
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' "'#1054#1089#1090#1072#1090#1086#1082' '#1088#1072#1089#1095#1077#1090#1085#1099#1081'" + "'#1044#1086#1083#1075#1080'"'
+      Visible = ivAlways
+      ImageIndex = 41
     end
     object bbReport_Goods: TdxBarButton
       Action = actReport_Goods
+      Category = 0
+    end
+    object bbInsertRecord_goods: TdxBarButton
+      Action = actInsertRecord_goods
       Category = 0
     end
   end
@@ -1027,19 +1062,13 @@ object InventoryForm: TInventoryForm
           StoredProc = spSelectMI
         end
         item
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actRefreshItemEdit: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <
-        item
+          StoredProc = spSelectBarCode
         end
         item
+          StoredProc = spSelectBarCode_PartNumber
+        end
+        item
+          StoredProc = spSelectBarCode_Amount
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1249,116 +1278,6 @@ object InventoryForm: TInventoryForm
         end>
       isShowModal = False
     end
-    object InsertRecord: TInsertRecord
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      View = cxGridDBTableView
-      Action = actPartionGoodsChoice
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      ShortCut = 45
-      ImageIndex = 0
-    end
-    object GoodsOpenChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      Caption = 'TGoodsForm'
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'EAN'
-          Value = Null
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actPartionGoodsChoice: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      Caption = 'TPartionGoodsChoiceForm'
-      FormName = 'TPartionGoodsChoiceForm'
-      FormNameParam.Value = 'TPartionGoodsChoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'MasterUnitId'
-          Value = Null
-          Component = GuidesUnit
-          ComponentItem = 'Key'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MasterUnitName'
-          Value = Null
-          Component = GuidesUnit
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PartionId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EKPrice'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Price'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actUpdateAmountRemains: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMovement
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMovement
-        end
-        item
-          StoredProc = spUpdate_MI_Inventory_AmountRemains
-        end
-        item
-          StoredProc = spSelectMI
-        end>
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' "'#1054#1089#1090#1072#1090#1086#1082' '#1088#1072#1089#1095#1077#1090#1085#1099#1081'" + "'#1044#1086#1083#1075#1080'"'
-      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' "'#1054#1089#1090#1072#1090#1086#1082' '#1088#1072#1089#1095#1077#1090#1085#1099#1081'" + "'#1044#1086#1083#1075#1080'"'
-      ImageIndex = 41
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' "'#1054#1089#1090#1072#1090#1086#1082' '#1088#1072#1089#1095#1077#1090#1085#1099#1081'" + "'#1044#1086#1083#1075#1080'"?'
-      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' "'#1054#1089#1090#1072#1090#1086#1082' '#1088#1072#1089#1095#1077#1090#1085#1099#1081'" + "'#1044#1086#1083#1075#1080'"'
-    end
     object actReport_Goods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1458,6 +1377,146 @@ object InventoryForm: TInventoryForm
         end>
       isShowModal = False
     end
+    object actInsertRecord_partion: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView
+      Action = actPartionGoodsChoice
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1072#1088#1090#1080#1103' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1093'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1072#1088#1090#1080#1103' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1093'>'
+      ImageIndex = 0
+    end
+    object actPartionGoodsChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = 'TPartionGoodsChoiceForm'
+      FormName = 'TPartionGoodsChoiceForm'
+      FormNameParam.Value = 'TPartionGoodsChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MasterUnitId'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterUnitName'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EKPrice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Article'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actInsertRecord_goods: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView
+      Action = actGoodsChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      ImageIndex = 54
+    end
+    object actGoodsChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = 'TGoodsForm'
+      FormName = 'TGoodsForm'
+      FormNameParam.Value = 'TGoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Article'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionId'
+          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'PartionId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object macGoodsItem: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1517,35 +1576,8 @@ object InventoryForm: TInventoryForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-      DataSetRefresh = actRefreshItemEdit
+      DataSetRefresh = actRefreshMI
       IdFieldName = 'Id'
-    end
-    object actGoodsItemForm2: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1058#1086#1074#1072#1088
-      Hint = #1058#1086#1074#1072#1088
-      FormName = 'TInventoryItemEditForm'
-      FormNameParam.Value = 'TInventoryItemEditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inBarCode'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inMovementId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
     end
     object actUpdateBarCodeDS3: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1671,12 +1703,12 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
+        Name = 'ioAmount'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -1686,6 +1718,14 @@ object InventoryForm: TInventoryForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summa'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
@@ -1704,14 +1744,6 @@ object InventoryForm: TInventoryForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountSumm'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Summa'
-        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -1864,14 +1896,14 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'FromId'
+        Name = 'UnitId'
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'FromName'
+        Name = 'UnitName'
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'TextValue'
@@ -1897,17 +1929,6 @@ object InventoryForm: TInventoryForm
         Name = 'Comment'
         Value = Null
         Component = ceComment
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ToId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ToName'
-        Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
       end>

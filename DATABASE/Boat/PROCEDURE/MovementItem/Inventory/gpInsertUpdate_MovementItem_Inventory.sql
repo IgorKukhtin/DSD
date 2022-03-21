@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
     IN inMovementId                         Integer   , -- Ключ объекта <Документ>
     IN inGoodsId                            Integer   , -- Товары
     IN inPartionId                          Integer   , -- Партия
-    IN inAmount                             TFloat    , -- Количество 
+ INOUT ioAmount                             TFloat    , -- Количество 
     IN inPrice                              TFloat    , -- Цена
    OUT outAmountSumm                        TFloat    , -- Сумма расчетная
     IN inPartNumber                         TVarChar  , -- 
@@ -46,13 +46,31 @@ BEGIN
      FROM Object_PartionGoods
      WHERE Object_PartionGoods.MovementItemId = inPartionId;
 */
+     IF ioAmount = 0 THEN ioAmount:= 1; END IF;
+
      -- нужен ПОИСК
      IF ioId < 0
      THEN
-         -- нашли
-         ioId:= (SELECT MI.Id FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.PartionId = inPartionId AND MI.isErased = FALSE);
+         IF inPartionId > 0
+         THEN
+             -- Проверка
+             IF 1 < (SELECT COUNT(*) FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.PartionId = inPartionId AND MI.isErased = FALSE)
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Найдено несколько строк с такой партией.%<%>.', CHR (13), inPartionId;
+             END IF;
+             -- нашли
+             ioId:= (SELECT MI.Id FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.PartionId = inPartionId AND MI.isErased = FALSE);
+         ELSE
+             -- Проверка
+             IF 1 < (SELECT COUNT(*) FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.ObjectId = inGoodsId AND MI.isErased = FALSE)
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Найдено несколько строк с таким комплектующим.%<%>.', CHR (13), lfGet_Object_ValueData (inGoodsId);
+             END IF;
+             -- нашли
+             ioId:= (SELECT MI.Id FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.ObjectId = inGoodsId AND MI.isErased = FALSE);
+         END IF;
          -- 
-         inAmount:= inAmount + COALESCE ((SELECT MI.Amount FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.PartionId = inPartionId AND MI.isErased = FALSE), 0);
+         ioAmount:= ioAmount + COALESCE ((SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = ioId), 0);
 
      END IF;
      
@@ -60,7 +78,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа> -
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inPartionId, inMovementId, inAmount, NULL, inUserId);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inPartionId, inMovementId, ioAmount, NULL, vbUserId);
 
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
@@ -72,7 +90,7 @@ BEGIN
 
 
      -- расчитали сумму по элементу, для грида
-     outAmountSumm := CAST(inAmount * inPrice AS NUMERIC (16, 2));
+     outAmountSumm := CAST(ioAmount * inPrice AS NUMERIC (16, 2));
 
     -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);

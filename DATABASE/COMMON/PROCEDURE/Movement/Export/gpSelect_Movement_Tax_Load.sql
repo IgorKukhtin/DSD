@@ -207,6 +207,7 @@ BEGIN
             )
         AND MovementFloat_TotalSummPVAT.ValueData <> 0
         AND COALESCE (MovementString_InvNumberBranch.ValueData, '') <> '2'
+        AND MovementString_InvNumberRegistered.ValueData <> ''
      ;
 
 END;

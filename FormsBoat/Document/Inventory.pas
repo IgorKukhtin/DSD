@@ -103,11 +103,10 @@ type
     cxLabel3: TcxLabel;
     cxLabel11: TcxLabel;
     ceStatus: TcxButtonEdit;
-    InsertRecord: TInsertRecord;
+    actInsertRecord_partion: TInsertRecord;
     actPartionGoodsChoice: TOpenChoiceForm;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
-    actUpdateAmountRemains: TdsdExecStoredProc;
     spUpdate_MI_Inventory_AmountRemains: TdsdStoredProc;
     bb: TdxBarButton;
     Comment: TcxGridDBColumn;
@@ -115,11 +114,9 @@ type
     bbReport_Goods: TdxBarButton;
    cxSplitter1: TcxSplitter;
     dsdDBViewAddOn0: TdsdDBViewAddOn;
-    actGoodsItemForm2: TdsdOpenForm;
     macGoodsItem: TMultiAction;
     actGoodsItem: TdsdInsertUpdateAction;
-    actRefreshItemEdit: TdsdDataSetRefresh;
-    GoodsOpenChoiceForm: TOpenChoiceForm;
+    actGoodsChoiceForm: TOpenChoiceForm;
     EAN: TcxGridDBColumn;
     ClientDataSet: TClientDataSet;
     DataSource: TDataSource;
@@ -154,6 +151,8 @@ type
     spGet_dop1: TdsdStoredProc;
     spGet_dop3: TdsdStoredProc;
     spGet_dop2: TdsdStoredProc;
+    actInsertRecord_goods: TInsertRecord;
+    bbInsertRecord_goods: TdxBarButton;
   private
   public
   end;

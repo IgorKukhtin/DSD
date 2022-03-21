@@ -49,17 +49,17 @@ BEGIN
           SELECT Object_PartionGoods.ObjectId
                , Object_PartionGoods.MovementItemId
                , MIString_PartNumber.ValueData
-         INTO vbGoodsId, vbPartionId, vbPartNumber
+                 INTO vbGoodsId, vbPartionId, vbPartNumber
           FROM MovementItemString AS MIString_PartNumber
                INNER JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MIString_PartNumber.MovementItemId
           WHERE MIString_PartNumber.ValueData = TRIM (inPartNumber)
-             AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+            AND MIString_PartNumber.DescId    = zc_MIString_PartNumber()
           ;
           
           -- если НЕ нашли
           IF COALESCE (vbGoodsId, 0) = 0
           THEN
-              RAISE EXCEPTION 'Ошибка.Товар с S/N = <%> не найден.', inPartNumber;
+              RAISE EXCEPTION 'Ошибка.Комплектующее с S/N = <%> не найден.', inPartNumber;
           END IF;
      END IF;
 
@@ -75,52 +75,27 @@ BEGIN
                                                   AND ObjectString_EAN.ValueData = TRIM (inBarCode)
                        WHERE Object.DescId = zc_Object_Goods()
                         -- AND Object.Id = zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) :: Integer
-                       );
+                      );
           
+          -- если НЕ нашли
+          IF COALESCE (vbGoodsId, 0) = 0
+          THEN
+              RAISE EXCEPTION 'Ошибка.Комплектующее с Штрихкодом = <%> не найден.', inBarCode;
+          END IF;
+
           -- пробуем найти
-          SELECT Object_PartionGoods.MovementItemId
+        /*SELECT Object_PartionGoods.MovementItemId
                , MIString_PartNumber.ValueData
-         INTO vbPartionId, vbPartNumber
+                 INTO vbPartionId, vbPartNumber
           FROM Object_PartionGoods
-              LEFT JOIN MovementItemString AS MIString_PartNumber
-                                           ON MIString_PartNumber.MovementItemId = Object_PartionGoods.MovementItemId
-                                          AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+               LEFT JOIN MovementItemString AS MIString_PartNumber
+                                            ON MIString_PartNumber.MovementItemId = Object_PartionGoods.MovementItemId
+                                           AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
           WHERE Object_PartionGoods.ObjectId = vbGoodsId
-            AND vbGoodsId > 0;
+            AND vbGoodsId > 0;*/
 
-          -- если НЕ нашли
-          IF COALESCE (vbGoodsId, 0) = 0
-          THEN
-              RAISE EXCEPTION 'Ошибка.Товар со Штрихкодом = <%> не найден.', inBarCode;
-          END IF;
      END IF;
 
-/*
-     --ИД товара, товар вібран из справочника
-     IF COALESCE (inBarCode, '') <> '' AND CHAR_LENGTH (inBarCode) < 12
-     THEN
-          -- последние 10 - это Код
-          vbGoodsId:= (SELECT Object.Id
-                       FROM Object
-                       WHERE Object.DescId = zc_Object_Goods()
-                         AND Object.ObjectCode = zfConvert_StringToNumber (inBarCode) :: Integer
-                       );
-          -- пробуем найти
-          SELECT Object_PartionGoods.MovementItemId
-               , Object_PartionGoods.OperPriceList
-         INTO vbPartionId, vbOperPriceList
-          FROM Object_PartionGoods
-          WHERE Object_PartionGoods.ObjectId = vbGoodsId
-            AND vbGoodsId > 0;
-
-          -- если НЕ нашли
-          IF COALESCE (vbGoodsId, 0) = 0
-          THEN
-              RAISE EXCEPTION 'Ошибка.Товар с Идентификатором = <%> не найден.', inBarCode;
-          END IF;
-
-     END IF;
-     */
      
      -- Результат
      RETURN QUERY
