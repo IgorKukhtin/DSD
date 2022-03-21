@@ -104,6 +104,9 @@ $BODY$
   DECLARE vbOperDate_pl TDateTime;
 
   DECLARE vbMovementId_Order Integer;
+  
+  DECLARE vbisRealEx Boolean;
+  DECLARE vbMovementId_ReturnIn Integer;
 
 BEGIN
 
@@ -233,6 +236,10 @@ END IF;*/
           , COALESCE (MovementFloat_ParValue.ValueData, 0)                                    AS ParValue
           , COALESCE (MovementFloat_CurrencyPartnerValue.ValueData, 0)                        AS CurrencyPartnerValue
           , COALESCE (ObjectLink_Contract_PriceList.ChildObjectId, ObjectLink_Juridical_PriceList.ChildObjectId) AS PriceListId_Jur
+          
+          --
+          , COALESCE (MovementLinkMovement_ReturnIn.MovementChildId,0)           AS MovementId_ReturnIn
+          , COALESCE (ObjectBoolean_Contract_RealEx.ValueData, False) :: Boolean AS isRealEx
 
             INTO vbIsHistoryCost, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbIsDiscountPrice
                , vbMovementDescId, vbOperDate, vbOperDatePartner
@@ -243,6 +250,7 @@ END IF;*/
                , vbJuridicalId_Basis_From, vbBusinessId_From, vbBusinessId_To
                , vbCurrencyDocumentId, vbCurrencyPartnerId, vbCurrencyValue, vbParValue, vbCurrencyPartnerValue, vbParPartnerValue
                , vbPriceListId_Jur
+               , vbMovementId_ReturnIn, vbisRealEx
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                  ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -399,9 +407,17 @@ END IF;*/
           LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
                                ON ObjectLink_Contract_PriceList.ObjectId = MovementLinkObject_Contract.ObjectId
                               AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Contract_RealEx
+                                  ON ObjectBoolean_Contract_RealEx.ObjectId = MovementLinkObject_Contract.ObjectId
+                                 AND ObjectBoolean_Contract_RealEx.DescId = zc_ObjectBoolean_Contract_RealEx()
+
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
                                ON ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                               AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
+          --док основание возврат
+          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ReturnIn
+                                         ON MovementLinkMovement_ReturnIn.MovementId = Movement.Id
+                                        AND MovementLinkMovement_ReturnIn.DescId     = zc_MovementLinkMovement_ReturnIn()
 
      WHERE Movement.Id = inMovementId
        AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SaleAsset())
@@ -430,7 +446,13 @@ END IF;*/
                         ;
      END IF;
 
-
+     --проверка если договор RealEx = TRUE, тогда "На основании № (возврат)" должен быть заполнен
+     IF COALESCE (vbisRealEx,FALSE) = TRUE AND COALESCE (vbMovementId_ReturnIn,0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не Заполнено значение На основании № (возврат).';
+     END IF;
+     
+     
      -- Эти параметры прайс-листа нужны для ...
      SELECT lfGet.PriceWithVAT, lfGet.VATPercent INTO vbPriceWithVAT_PriceList, vbVATPercent_PriceList FROM lfGet_Object_PriceList (zc_PriceList_Basis()) AS lfGet;
      -- Эти параметры СПЕЦ. прайс-листа нужны для ...
@@ -449,7 +471,6 @@ END IF;*/
          PERFORM lpUpdate_MovementItem_Sale_PriceIn (inMovementId:= inMovementId, inUserId:= inUserId);
 
      END IF;
-
 
      -- !!!Пересчет цен - если надо!!!!
      IF vbIsPriceList_begin_recalc = TRUE AND inIsRecalcPrice = TRUE

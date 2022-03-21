@@ -11,17 +11,17 @@ inherited Sale_OrderForm: TSale_OrderForm
     Width = 1388
     Height = 290
     ExplicitTop = 166
-    ExplicitWidth = 1291
+    ExplicitWidth = 1388
     ExplicitHeight = 290
     ClientRectBottom = 290
     ClientRectRight = 1388
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1291
+      ExplicitWidth = 1388
       ExplicitHeight = 266
       inherited cxGrid: TcxGrid
         Width = 1388
         Height = 266
-        ExplicitWidth = 1291
+        ExplicitWidth = 1388
         ExplicitHeight = 266
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -487,7 +487,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     Width = 1388
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1291
+    ExplicitWidth = 1388
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -979,7 +979,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     object cxLabel31: TcxLabel
       Left = 1269
       Top = 85
-      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082#1091#1087'.'
+      Caption = #1053#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#8470' ('#1074#1086#1079#1074#1088#1072#1090')'
     end
     object edReturnIn: TcxButtonEdit
       Left = 1269

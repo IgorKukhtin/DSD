@@ -254,11 +254,11 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             Width = 80
           end
           object InvNumber_ReturnInFull: TcxGridDBColumn
-            Caption = #1053#1072' '#1086#1089#1085'. '#8470' '#1076#1086#1082'. '#1074#1086#1079#1074#1088#1072#1090
+            Caption = #1053#1072' '#1086#1089#1085'. '#8470' ('#1074#1086#1079#1074#1088#1072#1090')'
             DataBinding.FieldName = 'InvNumber_ReturnInFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#8470' '#1076#1086#1082'. '#1074#1086#1079#1074#1088#1072#1090
+            HeaderHint = #1053#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#8470' ('#1074#1086#1079#1074#1088#1072#1090')'
             Options.Editing = False
             Width = 108
           end
