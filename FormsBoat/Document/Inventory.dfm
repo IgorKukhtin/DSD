@@ -1307,14 +1307,14 @@ object InventoryForm: TInventoryForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'key'
+          Name = 'GoodsId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsId'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'TextValue'
+          Name = 'GoodsName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsName'
@@ -1322,89 +1322,17 @@ object InventoryForm: TInventoryForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PartionId'
+          Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartionId'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'GroupNameFull'
+          Name = 'EKPrice'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsGroupNamefull'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MeasureName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MeasureName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'CompositionName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'CompositionName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'CompositionGroupName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'CompositionGroupName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsInfoName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsInfoName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'LineFabricaName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'LineFabricaName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'LabelName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'LabelName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsSizeName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsSizeName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PriceSale'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'OperPriceList'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperPrice'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'OperPrice'
+          ComponentItem = 'Price'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -1761,12 +1689,29 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPartNumber'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartNumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summa'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
