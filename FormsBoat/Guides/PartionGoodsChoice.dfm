@@ -299,6 +299,14 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'EKPrice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'EKPrice'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'OperDate'
           Value = Null
           Component = MasterCDS
@@ -315,9 +323,18 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'GoodsId'
           Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
           DataType = ftString
-          ParamType = ptUnknown
           MultiSelectSeparator = ','
         end>
     end

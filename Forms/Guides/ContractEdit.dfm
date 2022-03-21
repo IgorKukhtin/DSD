@@ -270,8 +270,6 @@
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 30
-    ExplicitLeft = 607
-    ExplicitTop = 41
     object cxGridContractCondition: TcxGrid
       Left = 0
       Top = 26
@@ -632,7 +630,7 @@
   end
   object cbisDefault: TcxCheckBox [39]
     Left = 109
-    Top = 41
+    Top = 26
     Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
     ParentShowHint = False
@@ -642,7 +640,7 @@
   end
   object ceisStandart: TcxCheckBox [40]
     Left = 109
-    Top = 8
+    Top = 5
     Caption = #1058#1080#1087#1086#1074#1086#1081
     TabOrder = 42
     Width = 67
@@ -719,7 +717,7 @@
   end
   object ceisPersonal: TcxCheckBox [49]
     Left = 175
-    Top = 8
+    Top = 5
     Hint = #1057#1083#1091#1078#1077#1073#1085#1072#1103' '#1079#1072#1087#1080#1089#1082#1072
     Caption = #1057#1083#1091#1078'. '#1079#1072#1087#1080#1089#1082#1072
     ParentShowHint = False
@@ -729,7 +727,7 @@
   end
   object ceIsUnique: TcxCheckBox [50]
     Left = 275
-    Top = 8
+    Top = 5
     Caption = #1056#1072#1089#1095#1077#1090' '#1076#1086#1083#1075#1072
     TabOrder = 51
     Width = 92
@@ -963,8 +961,8 @@
     Width = 50
   end
   object cbisDefaultOut: TcxCheckBox [79]
-    Left = 212
-    Top = 41
+    Left = 109
+    Top = 46
     Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1080#1089#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1080#1089#1093'. '#1087#1083'.)'
     ParentShowHint = False
@@ -988,6 +986,16 @@
       #1082#1077
     TabOrder = 85
     Width = 161
+  end
+  object cbisRealEx: TcxCheckBox [82]
+    Left = 275
+    Top = 26
+    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
+    Caption = #1060#1080#1079'. '#1086#1073#1084#1077#1085
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 86
+    Width = 92
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 587
@@ -1716,6 +1724,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisRealEx'
+        Value = Null
+        Component = cbisRealEx
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPriceListPromoId'
         Value = Null
         Component = GuidesPriceListPromo
@@ -1741,6 +1757,7 @@
       end
       item
         Value = Null
+        DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
@@ -2225,6 +2242,13 @@
         Component = GuidesBranch
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isRealEx'
+        Value = Null
+        Component = cbisRealEx
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 392

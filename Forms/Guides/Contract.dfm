@@ -1570,6 +1570,15 @@
           Options.Editing = False
           Width = 30
         end
+        object isRealEx: TcxGridDBColumn
+          Caption = #1060#1080#1079'. '#1086#1073#1084#1077#1085
+          DataBinding.FieldName = 'isRealEx'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1060#1080#1079'. '#1086#1073#1084#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+          Options.Editing = False
+          Width = 46
+        end
         object IsErased: TcxGridDBColumn
           Caption = #1059#1076#1072#1083#1077#1085
           DataBinding.FieldName = 'isErased'

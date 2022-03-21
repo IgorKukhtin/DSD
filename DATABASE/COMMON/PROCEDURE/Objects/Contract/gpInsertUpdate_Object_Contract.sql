@@ -29,11 +29,18 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarCh
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                       , Boolean, Boolean, Boolean, Boolean, Boolean, Integer, TDateTime, TDateTime, TVarChar);*/
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                      , Tfloat, Tfloat, TDateTime, TDateTime, TDateTime
+                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Integer, TDateTime, TDateTime, TVarChar);*/
+
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                       , Tfloat, Tfloat, TDateTime, TDateTime, TDateTime
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
-                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Integer, TDateTime, TDateTime, TVarChar);
+                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, TDateTime, TDateTime, TVarChar);
+
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
@@ -82,7 +89,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inisStandart          Boolean  ,     -- Типовой
 
     IN inisPersonal          Boolean  ,     -- Служебная записка
-    IN inisUnique            Boolean  ,     -- Без группировки 
+    IN inisUnique            Boolean  ,     -- Без группировки3
+    IN inisRealEx            Boolean  ,     -- Физ обмен
 
     --IN inPriceListId         Integer   ,    -- Прайс-лист
     IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
@@ -344,7 +352,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_Personal(), ioId, inisPersonal);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_Unique(), ioId, inisUnique);
-
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_RealEx(), ioId, inisRealEx);
+   
    -- сохранили связь с <Юридическое лицо>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Juridical(), ioId, inJuridicalId);
    -- сохранили связь с <Главным юридическим лицом>
@@ -430,6 +440,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.03.22         * inisRealEx
  03.11.21         * inBranchId Филиал (расчеты нал)
  27.05.21         * del inPriceListId
  

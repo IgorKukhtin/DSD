@@ -316,6 +316,7 @@ type
     bbSetErasedCC: TdxBarButton;
     bbSetUnErased——: TdxBarButton;
     BranchName: TcxGridDBColumn;
+    isRealEx: TcxGridDBColumn;
 
   private
     { Private declarations }

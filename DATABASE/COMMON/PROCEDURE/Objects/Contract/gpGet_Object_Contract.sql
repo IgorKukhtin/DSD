@@ -44,6 +44,7 @@ RETURNS TABLE (Id Integer, Code Integer
 
              , isPersonal Boolean
              , isUnique Boolean
+             , isRealEx Boolean
              
              , PriceListId Integer, PriceListName TVarChar
              , PriceListPromoId Integer, PriceListPromoName TVarChar
@@ -142,6 +143,7 @@ BEGIN
 
            , CAST (false as Boolean)   AS isPersonal 
            , CAST (false as Boolean)   AS isUnique
+           , CAST (false as Boolean)   AS isRealEx
 
            , CAST (0 as Integer)       AS PriceListId 
            , CAST ('' as TVarChar)     AS PriceListName 
@@ -245,6 +247,7 @@ BEGIN
 
            , COALESCE (ObjectBoolean_Personal.ValueData, False)  AS isPersonal
            , COALESCE (ObjectBoolean_Unique.ValueData, False)    AS isUnique
+           , COALESCE (ObjectBoolean_RealEx.ValueData, False) :: Boolean AS isRealEx
            
            , Object_PriceList.Id         AS PriceListId 
            , Object_PriceList.ValueData  AS PriceListName 
@@ -322,6 +325,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Unique
                                     ON ObjectBoolean_Unique.ObjectId = Object_Contract_View.ContractId
                                    AND ObjectBoolean_Unique.DescId = zc_ObjectBoolean_Contract_Unique()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_RealEx
+                                    ON ObjectBoolean_RealEx.ObjectId = Object_Contract_View.ContractId
+                                   AND ObjectBoolean_RealEx.DescId = zc_ObjectBoolean_Contract_RealEx()
 
             LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                  ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
@@ -432,6 +439,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.03.22         * isRealEx
  03.11.21         * add Branch
  04.02.19         * add BankAccountIn
  18.01.19         * add isDefaultOut

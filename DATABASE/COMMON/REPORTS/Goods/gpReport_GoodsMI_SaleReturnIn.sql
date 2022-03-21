@@ -69,6 +69,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , OperDate TDateTime
              , DayOfWeekName_Full TVarChar
              , Sale_SummIn_pav TFloat, ReturnIn_SummIn_pav TFloat  --- сумма вх (схема павильоны)
+             , isRealEx Boolean -- Физ обмен договор
               )
 AS
 $BODY$
@@ -148,6 +149,7 @@ BEGIN
  
             , 0 ::TFloat AS Sale_SummIn_pav
             , 0 ::TFloat AS ReturnIn_SummIn_pav
+            , COALESCE (ObjectBoolean_RealEx.ValueData, False) :: Boolean AS isRealEx
        FROM gpReport_GoodsMI_SaleReturnIn_OLD (inStartDate
                                              , inEndDate
                                              , inBranchId
@@ -163,12 +165,16 @@ BEGIN
                                              , inIsGoods
                                              , inIsGoodsKind
                                              , inSession
-                                              ) AS gpReport;
+                                              ) AS gpReport
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_RealEx
+                                  ON ObjectBoolean_RealEx.ObjectId = gpReport.ContractId
+                                 AND ObjectBoolean_RealEx.DescId = zc_ObjectBoolean_Contract_RealEx()
+       ;
        RETURN;
     ELSE
     IF inEndDate < '01.07.2015' OR inStartDate < '01.07.2015' THEN
        RETURN QUERY
-       SELECT * 
+       SELECT gpReport.* 
             , 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
             , 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
             , FALSE AS isTop
@@ -177,6 +183,7 @@ BEGIN
             , NULL ::TDateTime AS OperDate 
             , ''   ::TVarChar  AS DayOfWeekName_Full
             , Sale_SummIn_pav TFloat, ReturnIn_SummIn_pav TFloat  --- сумма вх (схема павильоны)
+            , COALESCE (ObjectBoolean_RealEx.ValueData, False) :: Boolean AS isRealEx
        FROM gpReport_GoodsMI_SaleReturnIn_OLD_TWO (inStartDate
                                                  , inEndDate
                                                  , inBranchId
@@ -192,7 +199,11 @@ BEGIN
                                                  , inIsGoods
                                                  , inIsGoodsKind
                                                  , inSession
-                                                  );
+                                                  ) AS gpReport
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_RealEx
+                                  ON ObjectBoolean_RealEx.ObjectId = gpReport.ContractId
+                                 AND ObjectBoolean_RealEx.DescId = zc_ObjectBoolean_Contract_RealEx()
+          ;
        RETURN;
     END IF;
     END IF;
@@ -417,7 +428,7 @@ BEGIN
             , gpReport.AreaName, gpReport.PartnerTagName, gpReport.PartnerCategory
             , gpReport.Address, gpReport.RegionName, gpReport.ProvinceName, gpReport.CityKindName, gpReport.CityName
             , gpReport.PartnerId, gpReport.PartnerCode, gpReport.PartnerName
-            , gpReport.ContractId, gpReport.ContractCode, gpReport.ContractNumber, gpReport.ContractTagName, gpReport.ContractTagGroupName
+            , gpReport.ContractId, gpReport.ContractCode, gpReport.ContractNumber, gpReport.ContractTagName, gpReport.ContractTagGroupName                        
             , gpReport.PersonalName, gpReport.UnitName_Personal, gpReport.BranchName_Personal
             , gpReport.PersonalTradeName, gpReport.UnitName_PersonalTrade
             , gpReport.InfoMoneyGroupName, gpReport.InfoMoneyDestinationName
@@ -450,7 +461,11 @@ BEGIN
             , SUM (gpReport.Sale_SummIn_pav)     ::TFloat AS Sale_SummIn_pav
             , SUM (gpReport.ReturnIn_SummIn_pav) ::TFloat AS ReturnIn_SummIn_pav
 
+            , COALESCE (ObjectBoolean_RealEx.ValueData, False) :: Boolean AS isRealEx
        FROM tmpData AS gpReport
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_RealEx
+                                  ON ObjectBoolean_RealEx.ObjectId = gpReport.ContractId
+                                 AND ObjectBoolean_RealEx.DescId = zc_ObjectBoolean_Contract_RealEx()
        GROUP BY gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
               , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
               , gpReport.GoodsKindId, gpReport.GoodsKindName, gpReport.MeasureName
@@ -465,6 +480,7 @@ BEGIN
               , gpReport.Address, gpReport.RegionName, gpReport.ProvinceName, gpReport.CityKindName, gpReport.CityName
               , gpReport.PartnerId, gpReport.PartnerCode, gpReport.PartnerName
               , gpReport.ContractId, gpReport.ContractCode, gpReport.ContractNumber, gpReport.ContractTagName, gpReport.ContractTagGroupName
+              , COALESCE (ObjectBoolean_RealEx.ValueData, False)
               , gpReport.PersonalName, gpReport.UnitName_Personal, gpReport.BranchName_Personal
               , gpReport.PersonalTradeName, gpReport.UnitName_PersonalTrade
               , gpReport.InfoMoneyGroupName, gpReport.InfoMoneyDestinationName
@@ -907,6 +923,7 @@ BEGIN
          , 0 ::TFloat AS Sale_SummIn_pav
          , 0 ::TFloat AS ReturnIn_SummIn_pav
 
+         , COALESCE (ObjectBoolean_RealEx.ValueData, False) :: Boolean AS isRealEx
      FROM tmpOperationGroup
 
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
@@ -1000,6 +1017,10 @@ BEGIN
 
           LEFT JOIN _tmpTOP ON _tmpTOP.GoodsId = tmpOperationGroup.GoodsId
                            AND COALESCE (_tmpTOP.GoodsKindId,0) = COALESCE (tmpOperationGroup.GoodsKindId,0)
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_RealEx
+                                  ON ObjectBoolean_RealEx.ObjectId = View_Contract_InvNumber.ContractId
+                                 AND ObjectBoolean_RealEx.DescId = zc_ObjectBoolean_Contract_RealEx()
 
           LEFT JOIN zfCalc_DayOfWeekName (tmpOperationGroup.OperDate) AS tmpWeekDay ON 1=1
     ;

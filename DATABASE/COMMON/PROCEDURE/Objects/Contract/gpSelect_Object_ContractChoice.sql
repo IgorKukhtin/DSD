@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , OKPO TVarChar
              , ChangePercent TFloat
              , JuridicalBasisId Integer, JuridicalBasisName TVarChar
+             , isRealEx Boolean
              , isErased Boolean
               )
 AS
@@ -146,6 +147,7 @@ BEGIN
        , Object_JuridicalBasis.Id           AS JuridicalBasisId
        , Object_JuridicalBasis.ValueData    AS JuridicalBasisName
 
+       , COALESCE (ObjectBoolean_RealEx.ValueData, False) :: Boolean AS isRealEx
        , Object_Contract_View.isErased
        
    FROM 
@@ -194,6 +196,10 @@ BEGIN
                              ON ObjectLink_Contract_Currency.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
         LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_RealEx
+                                ON ObjectBoolean_RealEx.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_RealEx.DescId = zc_ObjectBoolean_Contract_RealEx()
 
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги
@@ -346,6 +352,10 @@ BEGIN
                             AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
         LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_RealEx
+                                ON ObjectBoolean_RealEx.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_RealEx.DescId = zc_ObjectBoolean_Contract_RealEx()
+
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги
                                                                 )
@@ -473,6 +483,10 @@ BEGIN
                             AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
         LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_RealEx
+                                ON ObjectBoolean_RealEx.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_RealEx.DescId = zc_ObjectBoolean_Contract_RealEx()
+
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги
                                                                 )
@@ -591,6 +605,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isBranchAll
                                 ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
                                AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_RealEx
+                                ON ObjectBoolean_RealEx.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_RealEx.DescId = zc_ObjectBoolean_Contract_RealEx()
 
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги

@@ -198,6 +198,7 @@ type
     cxLabel37: TcxLabel;
     edBranch: TcxButtonEdit;
     GuidesBranch: TdsdGuides;
+    cbisRealEx: TcxCheckBox;
   private
     { Private declarations }
   public
