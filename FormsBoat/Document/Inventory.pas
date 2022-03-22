@@ -115,7 +115,7 @@ type
    cxSplitter1: TcxSplitter;
     dsdDBViewAddOn0: TdsdDBViewAddOn;
     macGoodsItem: TMultiAction;
-    actGoodsItem: TdsdInsertUpdateAction;
+    actGoodsItem1: TdsdInsertUpdateAction;
     actGoodsChoiceForm: TOpenChoiceForm;
     EAN: TcxGridDBColumn;
     ClientDataSet: TClientDataSet;
@@ -128,14 +128,26 @@ type
     bbInsertRecord_goods: TdxBarButton;
     edPartNumber: TcxTextEdit;
     cxLabel4: TcxLabel;
-    edBarCode: TcxTextEdit;
+    edBarCode2: TcxTextEdit;
     cxLabel5: TcxLabel;
     edAmount: TcxCurrencyEdit;
     cxLabel29: TcxLabel;
-    EnterMoveNext: TEnterMoveNext;
-    HeaderExit: THeaderExit;
+    EnterMoveNext2: TEnterMoveNext;
+    HeaderExit2: THeaderExit;
     spGet_dop: TdsdStoredProc;
-    actGoodsItem_New: TdsdInsertUpdateAction;
+    actGoodsItem_2: TdsdInsertUpdateAction;
+    spGet_dop1: TdsdStoredProc;
+    spGet_dop2: TdsdStoredProc;
+    spGet_dop3: TdsdStoredProc;
+    cxLabel6: TcxLabel;
+    edBarCode1: TcxTextEdit;
+    cxLabel7: TcxLabel;
+    edBarCode3: TcxTextEdit;
+    actGoodsItem3: TdsdInsertUpdateAction;
+    HeaderExit1: THeaderExit;
+    EnterMoveNext1: TEnterMoveNext;
+    HeaderExit3: THeaderExit;
+    EnterMoveNext3: TEnterMoveNext;
   private
   public
   end;

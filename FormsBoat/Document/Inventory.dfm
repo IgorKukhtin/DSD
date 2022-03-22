@@ -3,7 +3,7 @@ object InventoryForm: TInventoryForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 579
-  ClientWidth = 836
+  ClientWidth = 808
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,33 +20,33 @@ object InventoryForm: TInventoryForm
   TextHeight = 13
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 120
-    Width = 836
-    Height = 459
+    Top = 163
+    Width = 808
+    Height = 416
     Align = alClient
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 75
-    ExplicitWidth = 990
-    ExplicitHeight = 504
-    ClientRectBottom = 459
-    ClientRectRight = 836
+    ExplicitTop = 120
+    ExplicitWidth = 836
+    ExplicitHeight = 459
+    ClientRectBottom = 416
+    ClientRectRight = 808
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 990
-      ExplicitHeight = 480
+      ExplicitWidth = 836
+      ExplicitHeight = 435
       object cxGrid: TcxGrid
         Left = 0
         Top = 8
-        Width = 836
-        Height = 427
+        Width = 808
+        Height = 384
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = -160
-        ExplicitTop = 3
+        ExplicitWidth = 836
+        ExplicitHeight = 427
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -263,26 +263,25 @@ object InventoryForm: TInventoryForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 0
-        Width = 836
+        Width = 808
         Height = 8
         HotZoneClassName = 'TcxXPTaskBarStyle'
         HotZone.Visible = False
         AlignSplitter = salTop
         Control = cxGrid
-        ExplicitTop = 65
-        ExplicitWidth = 990
+        ExplicitWidth = 836
       end
     end
   end
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 836
-    Height = 94
+    Width = 808
+    Height = 137
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 5
-    ExplicitWidth = 990
+    TabOrder = 3
+    ExplicitWidth = 836
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -310,8 +309,8 @@ object InventoryForm: TInventoryForm
       Caption = #1044#1072#1090#1072
     end
     object edUnit: TcxButtonEdit
-      Left = 343
-      Top = 23
+      Left = 9
+      Top = 66
       Properties.Buttons = <
         item
           Default = True
@@ -319,11 +318,11 @@ object InventoryForm: TInventoryForm
         end>
       Properties.ReadOnly = True
       TabOrder = 2
-      Width = 162
+      Width = 326
     end
     object cxLabel3: TcxLabel
-      Left = 343
-      Top = 5
+      Left = 9
+      Top = 48
       Caption = #1057#1082#1083#1072#1076
     end
     object cxLabel11: TcxLabel
@@ -354,19 +353,19 @@ object InventoryForm: TInventoryForm
       Width = 160
     end
     object cxLabel16: TcxLabel
-      Left = 513
-      Top = 5
+      Left = 9
+      Top = 89
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 513
-      Top = 23
+      Left = 9
+      Top = 107
       TabOrder = 9
-      Width = 312
+      Width = 326
     end
     object edAmount: TcxCurrencyEdit
-      Left = 9
-      Top = 65
+      Left = 395
+      Top = 107
       EditValue = 1.000000000000000000
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -376,32 +375,54 @@ object InventoryForm: TInventoryForm
       Width = 104
     end
     object cxLabel29: TcxLabel
-      Left = 9
-      Top = 47
+      Left = 395
+      Top = 89
       Caption = #1050#1086#1083'-'#1074#1086
     end
   end
   object edPartNumber: TcxTextEdit
-    Left = 123
-    Top = 65
-    TabOrder = 6
-    Width = 144
+    Left = 395
+    Top = 66
+    TabOrder = 5
+    Width = 104
   end
   object cxLabel4: TcxLabel
-    Left = 123
-    Top = 47
-    Caption = ' <S/N>  '#1074#1074#1086#1076
+    Left = 395
+    Top = 48
+    Caption = '<S/N>  '#1074#1074#1086#1076
   end
-  object edBarCode: TcxTextEdit
-    Left = 275
-    Top = 65
+  object edBarCode2: TcxTextEdit
+    Left = 510
+    Top = 66
     TabOrder = 8
     Width = 179
   end
   object cxLabel5: TcxLabel
-    Left = 275
-    Top = 47
+    Left = 510
+    Top = 48
     Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
+  end
+  object cxLabel6: TcxLabel
+    Left = 510
+    Top = 5
+    Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
+  end
+  object edBarCode1: TcxTextEdit
+    Left = 510
+    Top = 23
+    TabOrder = 11
+    Width = 179
+  end
+  object cxLabel7: TcxLabel
+    Left = 510
+    Top = 89
+    Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
+  end
+  object edBarCode3: TcxTextEdit
+    Left = 510
+    Top = 107
+    TabOrder = 13
+    Width = 179
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1229,14 +1250,14 @@ object InventoryForm: TInventoryForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actGoodsItem
+          Action = actGoodsItem1
         end
         item
           Action = actRefreshMI
         end>
       Caption = 'macGoodsItem'
     end
-    object actGoodsItem_New: TdsdInsertUpdateAction
+    object actGoodsItem_2: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
@@ -1257,7 +1278,7 @@ object InventoryForm: TInventoryForm
         item
           Name = 'inBarCode'
           Value = Null
-          Component = edBarCode
+          Component = edBarCode2
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1272,7 +1293,51 @@ object InventoryForm: TInventoryForm
         end
         item
           Name = 'inAmount'
+          Value = 1.000000000000000000
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      DataSetRefresh = actRefreshMI
+      IdFieldName = 'Id'
+    end
+    object actGoodsItem3: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      FormName = 'TInventoryItemEditForm'
+      FormNameParam.Value = 'TInventoryItemEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementId'
           Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBarCode'
+          Value = ''
+          Component = edBarCode3
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartNumber'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inAmount'
+          Value = 1.000000000000000000
           Component = edAmount
           DataType = ftFloat
           ParamType = ptInput
@@ -1282,7 +1347,7 @@ object InventoryForm: TInventoryForm
       DataSetRefresh = actRefreshMI
       IdFieldName = 'Id'
     end
-    object actGoodsItem: TdsdInsertUpdateAction
+    object actGoodsItem1: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
@@ -1303,8 +1368,7 @@ object InventoryForm: TInventoryForm
         item
           Name = 'inBarCode'
           Value = Null
-          Component = FormParams
-          ComponentItem = 'inBarCode'
+          Component = edBarCode1
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1312,17 +1376,13 @@ object InventoryForm: TInventoryForm
         item
           Name = 'inPartNumber'
           Value = Null
-          Component = FormParams
-          ComponentItem = 'inPartNumber'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'inAmount'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inAmount'
+          Value = 1.000000000000000000
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1398,8 +1458,8 @@ object InventoryForm: TInventoryForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 584
-    Top = 8
+    Left = 128
+    Top = 56
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -1573,8 +1633,8 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 354
-    Top = 192
+    Left = 362
+    Top = 248
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -1601,8 +1661,8 @@ object InventoryForm: TInventoryForm
         Control = ceComment
       end>
     GetStoredProc = spGet
-    Left = 264
-    Top = 201
+    Left = 320
+    Top = 377
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Inventory'
@@ -1677,8 +1737,8 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 200
-    Top = 240
+    Left = 248
+    Top = 448
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'
@@ -1701,8 +1761,8 @@ object InventoryForm: TInventoryForm
       item
         Action = actInsertUpdateMovement
       end>
-    Left = 144
-    Top = 200
+    Left = 264
+    Top = 424
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Inventory_SetErased'
@@ -2015,36 +2075,25 @@ object InventoryForm: TInventoryForm
     Left = 718
     Top = 361
   end
-  object EnterMoveNext: TEnterMoveNext
+  object EnterMoveNext2: TEnterMoveNext
     EnterMoveNextList = <
-      item
-        Control = edAmount
-      end
       item
         Control = edPartNumber
       end
       item
-        Control = edBarCode
+        Control = edBarCode2
       end>
-    Left = 688
-    Top = 64
+    Left = 752
+    Top = 56
   end
-  object HeaderExit: THeaderExit
+  object HeaderExit2: THeaderExit
     ExitList = <
       item
-        Control = edBarCode
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
+        Control = edBarCode2
       end>
-    Action = actGoodsItem_New
-    Left = 744
-    Top = 64
+    Action = actGoodsItem_2
+    Left = 704
+    Top = 56
   end
   object spGet_dop: TdsdStoredProc
     StoredProcName = 'gpGet_byBarcode'
@@ -2054,7 +2103,7 @@ object InventoryForm: TInventoryForm
       item
         Name = 'inBarCode'
         Value = Null
-        Component = edBarCode
+        Component = edBarCode2
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2102,5 +2151,211 @@ object InventoryForm: TInventoryForm
     PackSize = 1
     Left = 392
     Top = 456
+  end
+  object spGet_dop1: TdsdStoredProc
+    StoredProcName = 'gpGet_byBarcode'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inBarCode'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BarCode_Goods'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartNumber'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BarCode_PartNumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCode'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inBarCode'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartNumber'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inPartNumber'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inAmount'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 496
+    Top = 456
+  end
+  object spGet_dop2: TdsdStoredProc
+    StoredProcName = 'gpGet_byBarcode'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inBarCode'
+        Value = Null
+        ComponentItem = 'BarCode_Goods'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCode'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inBarCode'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartNumber'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inPartNumber'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inAmount'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 744
+    Top = 440
+  end
+  object spGet_dop3: TdsdStoredProc
+    StoredProcName = 'gpGet_byBarcode'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inBarCode'
+        Value = Null
+        ComponentItem = 'BarCode_Goods'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCode'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inBarCode'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartNumber'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inPartNumber'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inAmount'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 616
+    Top = 456
+  end
+  object HeaderExit1: THeaderExit
+    ExitList = <
+      item
+        Control = edBarCode1
+      end>
+    Action = actGoodsItem1
+    Left = 696
+    Top = 8
+  end
+  object EnterMoveNext1: TEnterMoveNext
+    EnterMoveNextList = <
+      item
+        Control = edBarCode1
+      end>
+    Left = 768
+    Top = 8
+  end
+  object HeaderExit3: THeaderExit
+    ExitList = <
+      item
+        Control = edBarCode3
+      end>
+    Action = actGoodsItem3
+    Left = 704
+    Top = 104
+  end
+  object EnterMoveNext3: TEnterMoveNext
+    EnterMoveNextList = <
+      item
+        Control = edAmount
+      end
+      item
+        Control = edBarCode3
+      end>
+    Left = 768
+    Top = 104
   end
 end
