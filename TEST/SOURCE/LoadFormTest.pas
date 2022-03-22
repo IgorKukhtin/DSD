@@ -2229,6 +2229,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturnIn_RealExForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturnIn_RealExForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturnIn_RealExDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturnIn_RealExDialogForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_inventoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_inventoryForm');

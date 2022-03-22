@@ -1361,6 +1361,8 @@ type
     miReport_Goods_inventory: TMenuItem;
     actReport_AssetRepair: TdsdOpenForm;
     miReport_AssetRepair: TMenuItem;
+    actReport_SaleReturnIn_RealEx: TdsdOpenForm;
+    miReport_SaleReturnIn_RealEx: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

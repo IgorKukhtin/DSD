@@ -1353,7 +1353,9 @@ uses
   Report_Goods_inventory in '..\..\Forms\Report\Report_Goods_inventory.pas' {Report_Goods_inventoryForm: TParentForm},
   Report_Goods_inventoryDialog in '..\..\Forms\Report\Report_Goods_inventoryDialog.pas' {Report_Goods_inventoryDialogForm: TParentForm},
   Report_AssetRepair in '..\..\Forms\Report\Report_AssetRepair.pas' {Report_AssetRepairForm: TParentForm},
-  Report_AssetRepairDialog in '..\..\Forms\Report\Report_AssetRepairDialog.pas' {Report_AssetRepairDialogForm: TParentForm};
+  Report_AssetRepairDialog in '..\..\Forms\Report\Report_AssetRepairDialog.pas' {Report_AssetRepairDialogForm: TParentForm},
+  Report_SaleReturnIn_RealExDialog in '..\..\Forms\Report\Report_SaleReturnIn_RealExDialog.pas' {Report_SaleReturnIn_RealExDialogForm: TParentForm},
+  Report_SaleReturnIn_RealEx in '..\..\Forms\Report\Report_SaleReturnIn_RealEx.pas' {Report_SaleReturnIn_RealExForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
