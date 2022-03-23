@@ -27,17 +27,12 @@ object InventoryForm: TInventoryForm
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 120
-    ExplicitWidth = 836
-    ExplicitHeight = 459
     ClientRectBottom = 416
     ClientRectRight = 808
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 836
-      ExplicitHeight = 435
       object cxGrid: TcxGrid
         Left = 0
         Top = 8
@@ -45,8 +40,6 @@ object InventoryForm: TInventoryForm
         Height = 384
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 836
-        ExplicitHeight = 427
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -269,7 +262,6 @@ object InventoryForm: TInventoryForm
         HotZone.Visible = False
         AlignSplitter = salTop
         Control = cxGrid
-        ExplicitWidth = 836
       end
     end
   end
@@ -280,8 +272,7 @@ object InventoryForm: TInventoryForm
     Height = 137
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 3
-    ExplicitWidth = 836
+    TabOrder = 2
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -364,8 +355,8 @@ object InventoryForm: TInventoryForm
       Width = 326
     end
     object edAmount: TcxCurrencyEdit
-      Left = 395
-      Top = 107
+      Left = 400
+      Top = 112
       EditValue = 1.000000000000000000
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -381,9 +372,9 @@ object InventoryForm: TInventoryForm
     end
   end
   object edPartNumber: TcxTextEdit
-    Left = 395
-    Top = 66
-    TabOrder = 5
+    Left = 400
+    Top = 71
+    TabOrder = 4
     Width = 104
   end
   object cxLabel4: TcxLabel
@@ -394,7 +385,7 @@ object InventoryForm: TInventoryForm
   object edBarCode2: TcxTextEdit
     Left = 510
     Top = 66
-    TabOrder = 8
+    TabOrder = 7
     Width = 179
   end
   object cxLabel5: TcxLabel
@@ -410,7 +401,7 @@ object InventoryForm: TInventoryForm
   object edBarCode1: TcxTextEdit
     Left = 510
     Top = 23
-    TabOrder = 11
+    TabOrder = 10
     Width = 179
   end
   object cxLabel7: TcxLabel
@@ -2089,7 +2080,13 @@ object InventoryForm: TInventoryForm
   object HeaderExit2: THeaderExit
     ExitList = <
       item
+        Control = edPartNumber
+      end
+      item
         Control = edBarCode2
+      end
+      item
+        Control = edPartNumber
       end>
     Action = actGoodsItem_2
     Left = 704
@@ -2341,7 +2338,13 @@ object InventoryForm: TInventoryForm
   object HeaderExit3: THeaderExit
     ExitList = <
       item
+        Control = edAmount
+      end
+      item
         Control = edBarCode3
+      end
+      item
+        Control = edAmount
       end>
     Action = actGoodsItem3
     Left = 704
