@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SheetWorkTime_byPersonalGroup(Integer,
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SheetWorkTime_byPersonalGroup(
     IN inMovementId_pg     Integer   , -- ID Movement_PersonalGroup
-    IN inisDel             Boolean   , -- если проводим устанавливаем данные в табель (FALSE), если распроводим/удалем устанавливаем NULL (TRUE)
+    IN inIsDel             Boolean   , -- если проводим устанавливаем данные в табель (FALSE), если распроводим/удалем устанавливаем NULL (TRUE)
     IN inSession           TVarChar    -- сессия пользователя
 )                              
 RETURNS VOID
@@ -16,10 +16,8 @@ $BODY$
    DECLARE vbWorkTimeKindId Integer;
 BEGIN
 
-
-     --автоматом проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind - при распроведении или удалении - в табеле удаляется WorkTimeKind
-
-     --vbWorkTimeKindId := (SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId_mh AND MovementLinkObject.DescId = zc_MovementLinkObject_WorkTimeKind());
+     -- автоматом проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind - при распроведении или удалении - в табеле удаляется WorkTimeKind
+     -- vbWorkTimeKindId := (SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId_mh AND MovementLinkObject.DescId = zc_MovementLinkObject_WorkTimeKind());
 
      PERFORM gpInsertUpdate_MovementItem_SheetWorkTime(tmp.MemberId           :: Integer    -- Ключ физ. лицо
                                                      , tmp.PositionId         :: Integer    -- Должность
@@ -47,8 +45,13 @@ BEGIN
                                     ELSE zc_Enum_WorkTimeKind_WorkD()--день
                                END AS WorkTimeKindId
                              */
-                          , MILinkObject_WorkTimeKind.ObjectId        AS WorkTimeKindId
-                          , CASE WHEN inisDel = FALSE THEN MovementItem.Amount ELSE 0 END AS Amount
+                          , CASE WHEN MovementItem.isErased = TRUE AND MovementLinkObject_PairDay.ObjectId = 7438171
+                                      THEN  zc_Enum_WorkTimeKind_WorkN() -- ночь
+                                 WHEN MovementItem.isErased = TRUE AND MovementLinkObject_PairDay.ObjectId = 7438170 
+                                      THEN   zc_Enum_WorkTimeKind_WorkD()-- день
+                                 ELSE MILinkObject_WorkTimeKind.ObjectId
+                            END AS WorkTimeKindId
+                          , CASE WHEN inIsDel = FALSE THEN MovementItem.Amount ELSE 0 END AS Amount
                      FROM Movement
                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                        ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -64,7 +67,7 @@ BEGIN
                           
                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                  AND MovementItem.DescId = zc_MI_Master()
-                                                 AND MovementItem.isErased = FALSE
+                                                 AND (MovementItem.isErased = FALSE OR inIsDel = TRUE)
                           
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
                                                            ON MILinkObject_Position.MovementItemId = MovementItem.Id
@@ -86,8 +89,8 @@ BEGIN
                                               AND ObjectLink_Personal_StorageLine.DescId = zc_ObjectLink_Personal_StorageLine()
  
                      WHERE Movement.Id = inMovementId_pg
-                     )
-         
+                    )
+         -- Результат
          SELECT tmpMI.OperDate
               , tmpMI.MemberId
               , tmpMI.PersonalId
@@ -96,7 +99,7 @@ BEGIN
               , tmpMI.PersonalGroupId
               , tmpMI.StorageLineId
               , tmpMI.UnitId
-              ---, CASE WHEN inisDel = FALSE THEN tmpMI.WorkTimeKindId ELSE 0 END ::Integer AS WorkTimeKindId
+              ---, CASE WHEN inIsDel = FALSE THEN tmpMI.WorkTimeKindId ELSE 0 END ::Integer AS WorkTimeKindId
               , tmpMI.WorkTimeKindId ::Integer AS WorkTimeKindId
               , zfCalc_ViewWorkHour (tmpMI.Amount, ObjectString_ShortName.ValueData) ::TVarChar AS Value
          FROM tmpMI

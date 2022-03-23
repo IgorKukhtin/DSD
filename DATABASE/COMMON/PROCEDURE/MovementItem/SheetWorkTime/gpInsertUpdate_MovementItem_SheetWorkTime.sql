@@ -162,6 +162,7 @@ BEGIN
                                AND Object_Personal_View.MemberId   = inMemberId
                                AND Object_Personal_View.PositionId = inPositionId
                             )
+               AND vbUserId <> 5
             THEN
                 RAISE EXCEPTION 'ќшибка. —отрудник <%> <%>  <%> уволен с <%>.¬вод в табеле закрыт.'
                               , lfGet_Object_ValueData_sh (inMemberId)

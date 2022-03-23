@@ -18,6 +18,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 
+   DECLARE vbRetailId         Integer;
    DECLARE vbBranchId         Integer;
    DECLARE vbIsUnitCheck      Boolean;
    DECLARE vbIsSendOnPriceIn  Boolean;
@@ -93,6 +94,19 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.В заявке указан неправильный № договора = <%> <%>.', lfGet_Object_ValueData ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_Contract())), lfGet_Object_ValueData (zc_Enum_InfoMoneyDestination_21500());
      END IF;
 
+
+     -- определили
+     vbRetailId:= (SELECT ObjectLink_Juridical_Retail.ChildObjectId
+                   FROM MovementLinkObject AS MovementLinkObject_To
+                        LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                             ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                            AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                        LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                             ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                            AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+                   WHERE MovementLinkObject_To.MovementId = inMovementId
+                     AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                  );
 
      -- определили
      vbBranchId:= CASE WHEN inBranchCode > 100 THEN zc_Branch_Basis()
@@ -1115,7 +1129,10 @@ BEGIN
                                                         , inMovementId          := vbMovementId_begin
                                                         , inGoodsId             := tmp.GoodsId
                                                         , inAmount              := tmp.Amount
-                                                        , inAmountPartner       := tmp.AmountPartner
+                                                        , inAmountPartner       := CASE WHEN vbRetailId IN (310828) -- Метро
+                                                                                             THEN CAST (tmp.AmountPartner AS NUMERIC (16, 2))
+                                                                                        ELSE tmp.AmountPartner
+                                                                                   END
                                                         , inAmountChangePercent := tmp.AmountChangePercent
                                                         , inChangePercentAmount := tmp.ChangePercentAmount
                                                         , inPrice               := tmp.Price
