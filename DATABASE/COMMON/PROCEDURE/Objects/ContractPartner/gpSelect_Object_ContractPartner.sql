@@ -110,5 +110,40 @@ ALTER FUNCTION gpSelect_Object_ContractPartner (TVarChar) OWNER TO postgres;
  05.02.15         * 
 */
 
+/*
+CREATE TABLE _tmpContractPartner_22_03_22 (
+   Id                    INTEGER NOT NULL, 
+   ContractId                INTEGER NOT NULL, 
+   PartnerId              Integer NOT NULL, 
+   isErased         Boolean
+     
+);
+
+insert into _tmpContractPartner_22_03_22 (Id, ContractId, PartnerId, isErased)
+       SELECT 
+             Object_ContractPartner.Id          AS Id
+         
+           , COALESCE (View_Contract.ContractId, 0) as ContractId
+--           , View_Contract.*
+
+           , COALESCE (Object_Partner.Id, 0)         AS PartnerId
+       
+           , Object_ContractPartner.isErased     AS isErased
+           
+       FROM Object AS Object_ContractPartner
+                                                            
+            LEFT JOIN ObjectLink AS ObjectLink_ContractPartner_Contract
+                                 ON ObjectLink_ContractPartner_Contract.ObjectId = Object_ContractPartner.Id
+                                AND ObjectLink_ContractPartner_Contract.DescId = zc_ObjectLink_ContractPartner_Contract()
+            LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = ObjectLink_ContractPartner_Contract.ChildObjectId
+            
+            LEFT JOIN ObjectLink AS ObjectLink_ContractPartner_Partner
+                                 ON ObjectLink_ContractPartner_Partner.ObjectId = Object_ContractPartner.Id
+                                AND ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_ContractPartner_Partner.ChildObjectId
+
+
+     WHERE Object_ContractPartner.DescId = zc_Object_ContractPartner()
+*/
 -- тест
 -- SELECT * FROM gpSelect_Object_ContractPartner (zfCalc_UserAdmin())

@@ -188,6 +188,7 @@ BEGIN
         AND (NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = ABS (inUserId))
           OR ABS (inUserId) = zfCalc_UserAdmin() :: Integer
             )
+     AND inUserId <> 6561986 -- Брикова В.В.
      AND inUserId > 0
      AND NOT EXISTS (SELECT 1
                      FROM ObjectBoolean AS ObjectBoolean_PersonalOut

@@ -33,6 +33,11 @@ BEGIN
    THEN 
        RAISE EXCEPTION 'Ошибка.Контрагент не установлен.';
    END IF;   
+   -- проверка
+   IF COALESCE (inContractConditionId, 0) = 0
+   THEN 
+       RAISE EXCEPTION 'Ошибка.Условие договора не установлено.';
+   END IF;   
 
    -- проверка уникальности
    IF EXISTS (SELECT 1

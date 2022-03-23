@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_ContractPartner (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_isErased_ContractPartner(
-    IN inObjectId Integer, 
+    IN inObjectId Integer,
     IN inSession  TVarChar
 )
 RETURNS VOID AS
@@ -12,6 +12,19 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_isErased_ContractPartner());
+
+     -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
+     INSERT INTO ObjectProtocol (ObjectId, OperDate, UserId, ProtocolData, isInsert)
+       SELECT (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId = zc_ObjectLink_ContractPartner_Contract())
+            , CLOCK_TIMESTAMP(), vbUserId
+           , '<XML>'
+          || '<Field FieldName = "Код" FieldValue = "' || COALESCE ((SELECT Object.ObjectCode FROM ObjectLink AS OL JOIN Object ON Object.Id = OL.ChildObjectId WHERE OL.ObjectId = inObjectId AND OL.DescId = zc_ObjectLink_ContractPartner_Partner()) :: TVarChar, '') || '"/>'
+          || '<Field FieldName = "Название" FieldValue = "' || COALESCE ((SELECT Object.ValueData FROM ObjectLink AS OL JOIN Object ON Object.Id = OL.ChildObjectId WHERE OL.ObjectId = inObjectId AND OL.DescId = zc_ObjectLink_ContractPartner_Partner()) :: TVarChar, '') || '"/>'
+          || '<Field FieldName = "Id" FieldValue = "' || COALESCE (inObjectId, 0) :: TVarChar || '"/>'
+          || '<Field FieldName = "Key" FieldValue = "' || COALESCE ((SELECT ObjectDesc.ItemName || ' (' || ObjectDesc.Code || ')' FROM Object JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId WHERE Object.Id = inObjectId) :: TVarChar, '') || '"/>'
+          || '<Field FieldName = "Comment" FieldValue = "Удаление"/>'
+          || '</XML>'
+           , TRUE;
 
    -- изменили
    -- PERFORM lpUpdate_Object_isErased (inObjectId:= inObjectId, inUserId:= vbUserId);
