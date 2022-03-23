@@ -607,6 +607,8 @@ type
     spGoods_AddSupplement: TdsdStoredProc;
     spGetMedicalProgramSP: TdsdStoredProc;
     spUpdate_User_KeyExpireDate: TdsdStoredProc;
+    actUser_expireDate: TAction;
+    pmUser_expireDate: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -766,6 +768,7 @@ type
     procedure actOpenLayoutFileExecute(Sender: TObject);
     procedure spLayoutFileFTPParamsAfterExecute(Sender: TObject);
     procedure actAddGoodsSupplementExecute(Sender: TObject);
+    procedure actUser_expireDateExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -1001,7 +1004,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog,
   EnterLoyaltySaveMoney, ChoosingPresent, ChoosingRelatedProduct,
   LoyaltySMList, EnterLoyaltySMDiscount, GetSystemInfo, ListSelection,
   LikiDniproReceipt, EnterRecipeNumber1303, LikiDniproReceiptDialog, Clipbrd,
-  TestingUser, ChoiceMedicalProgramSP;
+  TestingUser, ChoiceMedicalProgramSP, SimpleGauge;
 
 const
   StatusUnCompleteCode = 1;
@@ -7206,6 +7209,55 @@ begin
   UpdateRemainsFromDiff(nil);
 end;
 
+procedure TMainCashForm2.actUser_expireDateExecute(Sender: TObject);
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+  Key_expireDate : TDateTime;
+begin
+  sp := TdsdStoredProc.Create(nil);
+  try
+    ds := TClientDataSet.Create(nil);
+    try
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_Object_HelsiUserKey';
+        sp.Execute(False,False);
+
+        with TGaugeFactory.GetGauge('Проверить срок действия по всем файловым ключам', 0, ds.RecordCount) do
+        begin
+          Start;
+          try
+            ds.First;
+            while not ds.Eof do
+            begin
+              if (ds.FieldByName('Base64Key').AsString <> '') and (ds.FieldByName('KeyPassword').AsString <> '') then
+                if GetKey_User_expireDate(ds.FieldByName('Base64Key').AsString, ds.FieldByName('KeyPassword').AsString , Key_expireDate) then
+              begin
+                spUpdate_User_KeyExpireDate.ParamByName('inID').Value := ds.FieldByName('Id').AsInteger;
+                spUpdate_User_KeyExpireDate.ParamByName('inKeyExpireDate').Value := Key_expireDate;
+                spUpdate_User_KeyExpireDate.Execute;
+              end;
+              ds.Next;
+              IncProgress(1);
+            end;
+          finally
+            Finish;
+          end;
+        end;
+
+      Except ON E:Exception do
+      end;
+    finally
+      ds.free;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
 procedure TMainCashForm2.actWagesUserExecute(Sender: TObject);
 var
   cPasswordWages, S: string;
@@ -10649,8 +10701,8 @@ begin
   if not gc_User.Local then
   Begin
     spGet_User_IsAdmin.Execute;
-    pm_CheckHelsiAllUnit.Visible := spGet_User_IsAdmin.ParamByName
-      ('gpGet_User_IsAdmin').Value = True;
+    pm_CheckHelsiAllUnit.Visible := spGet_User_IsAdmin.ParamByName('gpGet_User_IsAdmin').Value = True;
+    pmUser_expireDate.Visible := spGet_User_IsAdmin.ParamByName('gpGet_User_IsAdmin').Value = True;
   End;
   actOverdueJournal.Enabled := UnitConfigCDS.FieldByName('DividePartionDate').AsBoolean;
   actOverdueJournal.Visible := UnitConfigCDS.FieldByName('DividePartionDate').AsBoolean;

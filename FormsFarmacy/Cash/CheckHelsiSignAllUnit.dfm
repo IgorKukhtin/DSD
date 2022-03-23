@@ -488,6 +488,7 @@ inherited CheckHelsiSignAllUnitForm: TCheckHelsiSignAllUnitForm
     OnDblClickActionList = <>
     ActionItemList = <>
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         BackGroundValueColumn = colColor_calc
@@ -496,6 +497,8 @@ inherited CheckHelsiSignAllUnitForm: TCheckHelsiSignAllUnitForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 600
     Top = 320
   end

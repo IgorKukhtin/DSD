@@ -96,6 +96,7 @@ type
     function SetPayment : boolean;
     function RejectDispense : boolean;
     function IntegrationClientKeyInfo : boolean;
+    function IntegrationClientGetKeyInfo(ABase64Key, AKeyPassword : String; var AKey_expireDate : TDateTime) : boolean;
     function IntegrationClientSign : boolean;
     function ProcessSignedDispense : boolean;
     function GetHTTPLocation : Boolean;
@@ -111,7 +112,7 @@ type
 function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName : string;
   var AQty : currency; var ADate : TDateTime; var AProgramId, AProgramName : String) : boolean;
 
-function GetHelsiReceiptState(const AReceipt : String; var AState : string) : boolean;
+function GetHelsiReceiptState(const AReceipt : String; var AState : string; var AIniError : boolean) : boolean;
 
 function CreateNewDispense(AIDSP, AProgramIdSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
   ACode : string) : boolean;  overload;
@@ -131,6 +132,8 @@ function CheckRequest_Number(ANumber : string) : boolean;
 function GetStateReceipt : boolean;
 
 function GetKey_expireDate(var AUserId : integer; var AKey_expireDate : TDateTime) : boolean;
+
+function GetKey_User_expireDate(ABase64Key, AKeyPassword : String; var AKey_expireDate : TDateTime) : boolean;
 
 implementation
 
@@ -765,6 +768,63 @@ begin
   end;
 end;
 
+function THelsiApi.IntegrationClientGetKeyInfo(ABase64Key, AKeyPassword : String; var AKey_expireDate : TDateTime) : boolean;
+var
+  jValue : TJSONValue;
+  jsonBody: TJSONObject;
+  JSONA: TJSONArray;
+  cError : string;
+begin
+
+  Result := False;
+
+  jsonBody := TJSONObject.Create;
+  try
+    jsonBody.AddPair('base64Key', ABase64Key);
+    jsonBody.AddPair('password', AKeyPassword);
+
+    FRESTClient.BaseURL := FIntegrationClient;
+    FRESTClient.ContentType := 'application/json';
+
+    FRESTRequest.ClearBody;
+    FRESTRequest.Method := TRESTRequestMethod.rmPOST;
+    FRESTRequest.Resource := '/api/v1/keyinfo';
+    // required parameters
+    FRESTRequest.Params.Clear;
+
+    FRESTRequest.Body.Add(jsonBody.ToString, TRESTContentType.ctAPPLICATION_JSON);
+  finally
+    jsonBody.Destroy;
+  end;
+
+  try
+    FRESTRequest.Execute;
+  except
+  end;
+
+  case FRESTResponse.StatusCode of
+    200 : begin
+            JSONA := FRESTResponse.JSONValue.GetValue<TJSONArray>;
+            jValue := JSONA.Items[0];
+            if jValue.FindValue('index') <> Nil then
+              FKey_index := jValue.GetValue<TJSONNumber>('index').AsInt64;
+
+            if jValue.FindValue('certificates') <> Nil then
+            begin
+               jValue := jValue.FindValue('certificates');
+               JSONA := jValue.GetValue<TJSONArray>;
+               jValue := JSONA.Items[0];
+               if jValue.FindValue('drfo') <> Nil then
+               begin
+                 FKey_taxId := DelDoubleQuote(jValue.FindValue('drfo').ToString);
+                 if not StrToDateSite(jValue.FindValue('expireDate').ToString, AKey_expireDate) then Exit;
+                 Result := True;
+               end;
+            end;
+          end;
+  end;
+end;
+
 function THelsiApi.IntegrationClientSign : boolean;
 var
   jValue : TJSONValue;
@@ -1216,7 +1276,7 @@ begin
   end;
 end;
 
-function GetHelsiReceiptState(const AReceipt : String; var AState : string) : boolean;
+function GetHelsiReceiptState(const AReceipt : String; var AState : string; var AIniError : boolean) : boolean;
   var I : integer;
 begin
   Result := False;
@@ -1224,7 +1284,11 @@ begin
 
   if not CheckRequest_Number(AReceipt) then Exit;
 
-  if not InitHelsiApi then Exit;
+  if not InitHelsiApi then
+  begin
+    AIniError := True;
+    Exit;
+  end;
 
   HelsiApi.FNumber := AReceipt;
 
@@ -1430,6 +1494,19 @@ begin
   AUserId := HelsiApi.FUserId;
   AKey_expireDate := HelsiApi.FKey_expireDate;
   Result := True;
+end;
+
+function GetKey_User_expireDate(ABase64Key, AKeyPassword : String; var AKey_expireDate : TDateTime) : boolean;
+begin
+  Result := False;
+
+  if not Assigned(HelsiApi) then
+  begin
+    ShowMessage('Не активирован модуль работы с Хелси...');
+    raise Exception.Create('Не активирован модуль работы с Хелси');
+  end;
+
+  Result := HelsiApi.IntegrationClientGetKeyInfo(ABase64Key, AKeyPassword, AKey_expireDate);
 end;
 
 initialization

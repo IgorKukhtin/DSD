@@ -14,6 +14,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , KeyPassword TVarChar
              , PasswordEHels TVarChar
              , KeyExpireDate TDateTime
+             , isUserKeyDate boolean
+             , Color_calc Integer
               )
 AS
 $BODY$
@@ -37,7 +39,39 @@ BEGIN
                         FROM Object_Personal_View AS View_Personal
                         WHERE View_Personal.isErased = FALSE
                         GROUP BY View_Personal.MemberId
-                       )
+                       ),
+        tmpMedicalProgramSPUnit AS (SELECT DISTINCT ObjectLink_Unit.ChildObjectId                     AS UnitId 
+                                    FROM Object AS Object_MedicalProgramSPLink
+                                         INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                               ON ObjectLink_Unit.ObjectId = Object_MedicalProgramSPLink.Id
+                                                              AND ObjectLink_Unit.DescId = zc_ObjectLink_MedicalProgramSPLink_Unit()
+                                     WHERE Object_MedicalProgramSPLink.DescId = zc_Object_MedicalProgramSPLink()
+                                       AND Object_MedicalProgramSPLink.isErased = False),
+        tmpUserKeyUnit AS (SELECT DISTINCT ObjectLink_User_Unit.ChildObjectId AS UnitId
+                           FROM Object AS Object_User
+
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_User_Unit
+                                        ON ObjectLink_User_Unit.ObjectId = Object_User.Id
+                                       AND ObjectLink_User_Unit.DescId = zc_ObjectLink_User_Helsi_Unit()
+
+                                 LEFT JOIN ObjectDate AS ObjectDate_User_KeyExpireDate
+                                        ON ObjectDate_User_KeyExpireDate.DescId = zc_ObjectDate_User_KeyExpireDate() 
+                                       AND ObjectDate_User_KeyExpireDate.ObjectId = Object_User.Id
+
+                                 LEFT JOIN ObjectString AS ObjectString_KeyPassword 
+                                        ON ObjectString_KeyPassword.DescId = zc_ObjectString_User_Helsi_KeyPassword() 
+                                       AND ObjectString_KeyPassword.ObjectId = Object_User.Id
+
+                                 LEFT JOIN ObjectBlob AS ObjectBlob_Key
+                                        ON ObjectBlob_Key.DescId = zc_ObjectBlob_User_Helsi_Key() 
+                                       AND ObjectBlob_Key.ObjectId = Object_User.Id
+
+                           WHERE Object_User.DescId = zc_Object_User()
+                             AND ObjectDate_User_KeyExpireDate.ValueData >= CURRENT_DATE 
+                             AND COALESCE(ObjectBlob_Key.ValueData, '') <> '' 
+                             AND COALESCE(ObjectString_KeyPassword.ValueData, '') <> '')
+                         
    SELECT 
          Object_User.Id                             AS Id
        , Object_User.ObjectCode                     AS Code
@@ -57,6 +91,18 @@ BEGIN
        , ObjectString_PasswordEHels.ValueData
        
        , ObjectDate_User_KeyExpireDate.ValueData
+       
+       , CASE WHEN COALESCE(tmpMedicalProgramSPUnit.UnitId, 0) <> 0 AND 
+                   COALESCE(tmpUserKeyUnit.UnitId, 0) = 0
+              THEN True ELSE False END                                                    AS isUserKeyDate     
+
+       , CASE WHEN Object_Unit.ValueData ILIKE '%Зачинена%' OR Object_Unit.ValueData ILIKE '%ЗАКРЫТА%' 
+              THEN zfCalc_Color (255, 165, 0)
+              WHEN COALESCE(ObjectBlob_Key.ValueData, '') <> '' AND 
+                   COALESCE(ObjectString_KeyPassword.ValueData, '') <> '' AND
+                   COALESCE(ObjectDate_User_KeyExpireDate.ValueData, CURRENT_DATE + INTERVAL '1 DAY') < CURRENT_DATE
+              THEN zc_Color_Yelow() 
+              ELSE zc_Color_White() END AS Color_calc     
        
    FROM Object AS Object_User
 
@@ -94,6 +140,14 @@ BEGIN
          LEFT JOIN ObjectDate AS ObjectDate_User_KeyExpireDate
                 ON ObjectDate_User_KeyExpireDate.DescId = zc_ObjectDate_User_KeyExpireDate() 
                AND ObjectDate_User_KeyExpireDate.ObjectId = Object_User.Id
+
+         LEFT JOIN ObjectBlob AS ObjectBlob_Key
+                ON ObjectBlob_Key.DescId = zc_ObjectBlob_User_Helsi_Key() 
+               AND ObjectBlob_Key.ObjectId = Object_User.Id
+
+         LEFT JOIN tmpMedicalProgramSPUnit ON tmpMedicalProgramSPUnit.UnitId = ObjectLink_User_Unit.ChildObjectId
+         
+         LEFT JOIN tmpUserKeyUnit ON tmpUserKeyUnit.UnitId = ObjectLink_User_Unit.ChildObjectId
 
    WHERE Object_User.DescId = zc_Object_User()
      AND COALESCE(ObjectString_UserName.ValueData, '') <> '';

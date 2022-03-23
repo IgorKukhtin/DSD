@@ -70,6 +70,8 @@ type
     dsdUpdateDataSet: TdsdUpdateDataSet;
     spInsertUpdate: TdsdStoredProc;
     KeyExpireDate: TcxGridDBColumn;
+    Color_calc: TcxGridDBColumn;
+    isUserKeyDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

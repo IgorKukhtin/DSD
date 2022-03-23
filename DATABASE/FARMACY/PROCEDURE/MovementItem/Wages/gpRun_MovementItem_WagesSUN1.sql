@@ -27,7 +27,7 @@ BEGIN
 
 --    raise notice 'Прошло. % % %', vbOparDate1, vbOparDate2, vbOparDate3;
 
-     -- Расчет необходимости штрафа
+/*     -- Расчет необходимости штрафа
     BEGIN
         PERFORM lpInsertUpdate_MovementItem_WagesSUN1 (inSummaSUN1 := SummaSUN1, inUnitID := T1.UnitID, inInvNumber := InvNumber, inUserId := vbUserId)
         FROM (WITH
@@ -92,7 +92,7 @@ BEGIN
           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
         PERFORM lpLog_Run_Schedule_Function('gpRun_MovementItem_WagesSUN1', True, text_var1::TVarChar, vbUserId);
     END;
-
+*/
      -- Расчет СУН-Экспресс
     BEGIN
         PERFORM gpInsert_Movement_Send_RemainsSun_express (inOperDate:= CURRENT_DATE, inSession:= zfCalc_UserAdmin()); 

@@ -3,7 +3,7 @@ object HelsiUserForm: THelsiUserForm
   Top = 0
   Caption = #1054#1090#1095#1077#1090' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1087#1072#1088#1086#1083#1080' '#1045#1093#1077#1083#1089' ('#1057#1055')'
   ClientHeight = 439
-  ClientWidth = 1145
+  ClientWidth = 1206
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,14 +19,14 @@ object HelsiUserForm: THelsiUserForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 1145
+    Width = 1206
     Height = 413
     Align = alClient
     PopupMenu = pmGrid
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 1051
+    ExplicitWidth = 1145
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -82,7 +82,7 @@ object HelsiUserForm: THelsiUserForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 151
+        Width = 133
       end
       object UserName: TcxGridDBColumn
         Caption = #1048#1084#1103' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103' '#1085#1072' '#1089#1072#1081#1090#1077
@@ -117,6 +117,14 @@ object HelsiUserForm: THelsiUserForm
         Options.Editing = False
         Width = 82
       end
+      object isUserKeyDate: TcxGridDBColumn
+        Caption = #1055#1088#1086#1089#1088#1086#1095#1077#1085#1099' '#1074#1089#1077' '#1092#1072#1081#1083#1086#1074#1099#1077' '#1082#1083#1102#1095#1080
+        DataBinding.FieldName = 'isUserKeyDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 96
+      end
       object PasswordEHels: TcxGridDBColumn
         Caption = #1055#1072#1088#1086#1083#1100' '#1045'-'#1061#1077#1083#1089
         DataBinding.FieldName = 'PasswordEHels'
@@ -133,6 +141,11 @@ object HelsiUserForm: THelsiUserForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 78
+      end
+      object Color_calc: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_calc'
+        Visible = False
+        VisibleForCustomization = False
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -429,7 +442,11 @@ object HelsiUserForm: THelsiUserForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>

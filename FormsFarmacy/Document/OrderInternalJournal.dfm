@@ -65,6 +65,11 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = TotalSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -103,6 +108,11 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = TotalSumm
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -164,7 +174,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             Width = 107
           end
           object TotalSumm: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
+            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072', '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4

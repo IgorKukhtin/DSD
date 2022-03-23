@@ -6385,6 +6385,10 @@ inherited MainCashForm2: TMainCashForm2
       Visible = False
       OnExecute = actAddGoodsSupplementExecute
     end
+    object actUser_expireDate: TAction
+      Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1089#1088#1086#1082' '#1076#1077#1081#1089#1090#1074#1080#1103' '#1087#1086' '#1074#1089#1077#1084' '#1092#1072#1081#1083#1086#1074#1099#1084' '#1082#1083#1102#1095#1072#1084
+      OnExecute = actUser_expireDateExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -6761,6 +6765,10 @@ inherited MainCashForm2: TMainCashForm2
     end
     object C1: TMenuItem
       Action = actSenClipboardName
+    end
+    object pmUser_expireDate: TMenuItem
+      Action = actUser_expireDate
+      Visible = False
     end
   end
   object FormParams: TdsdFormParams

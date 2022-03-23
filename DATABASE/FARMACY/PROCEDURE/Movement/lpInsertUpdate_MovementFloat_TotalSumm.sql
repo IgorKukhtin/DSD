@@ -315,6 +315,18 @@ BEGIN
                                -- !!!очень важное кол-во, для него расчет сумм!!!
                              , SUM (CASE WHEN Movement.DescId IN (zc_Movement_SendOnPrice(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_EDI(), zc_Movement_WeighingPartner())
                                               THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                                         WHEN Movement.DescId IN (zc_Movement_OrderInternal())     
+                                              THEN NULLIF (COALESCE (-- Количество, установленное вручную
+                                                                     MIFloat_AmountManual.ValueData
+                                                                     -- округлили ВВЕРХ AllLot
+                                                                   , CEIL ((                       -- Спецзаказ    -- Количество дополнительное                            -- кол-во отказов
+                                                                          CASE WHEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (MIFloat_ListDiff.ValueData, 0)
+                                                                                THEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
+                                                                                ELSE COALESCE (MIFloat_ListDiff.ValueData, 0)                                                   -- кол-во отказов
+                                                                           END
+                                                                           ) / COALESCE (ObjectFloat_Goods_MinimumLot.ValueData, 1)
+                                                                          ) * COALESCE (ObjectFloat_Goods_MinimumLot.ValueData, 1)     
+                                                                    ), 0)
                                          ELSE MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
                                     END) AS OperCount_calc
 
@@ -343,6 +355,7 @@ BEGIN
                         FROM Movement
                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                     AND MovementItem.isErased = FALSE
+                                                   -- AND MovementItem.DescId = zc_MI_Master()
                              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -360,7 +373,7 @@ BEGIN
 
                              LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                        AND MIFloat_Price.DescId = CASE WHEN Movement.DescId = zc_Movement_OrderInternal() THEN zc_MIFloat_PriceFrom() ELSE zc_MIFloat_Price() END
                              LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                          ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                         AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
@@ -415,6 +428,20 @@ BEGIN
                                                          ON MIFloat_AmountPlanMax.MovementItemId = MovementItem.Id
                                                         AND MIFloat_AmountPlanMax.DescId = zc_MIFloat_AmountPlanMax()
                                                         AND Movement.DescId = zc_Movement_PromoUnit()
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_AmountManual   
+                                                         ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+                                                        AND Movement.DescId = zc_Movement_OrderInternal()
+                             LEFT JOIN MovementItemFloat AS MIFloat_ListDiff     
+                                                         ON MIFloat_ListDiff.MovementItemId    = MovementItem.Id
+                                                        AND MIFloat_ListDiff.DescId = zc_MIFloat_ListDiff() 
+                                                        AND Movement.DescId = zc_Movement_OrderInternal()
+                             LEFT JOIN ObjectFloat AS ObjectFloat_Goods_MinimumLot
+                                                   ON ObjectFloat_Goods_MinimumLot.ObjectId = MovementItem.ObjectId
+                                                  AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
+                                                  AND ObjectFloat_Goods_MinimumLot.ValueData <> 0
+                                                  AND Movement.DescId = zc_Movement_OrderInternal()
 
                              LEFT JOIN MovementItemBoolean AS MIBoolean_Present
                                                            ON MIBoolean_Present.MovementItemId = MovementItem.Id

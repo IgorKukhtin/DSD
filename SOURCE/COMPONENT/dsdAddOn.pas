@@ -5351,6 +5351,9 @@ end;
 procedure TEnterMoveNext.OnFormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   var Control: TComponent; I, J : Integer; fFind : Boolean;
 begin
+
+  if Assigned(FOnFormKeyDown) then FOnFormKeyDown (Sender, Key, Shift);
+
   if (Key = VK_RETURN) AND ((Shift = []) or (Shift = [ssCtrl]))
   then
   Begin

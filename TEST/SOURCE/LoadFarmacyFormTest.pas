@@ -3426,10 +3426,10 @@ begin
  {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMethodsAssortmentForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMethodsAssortmentForm');
-
+}
     TdsdFormStorageFactory.GetStorage.Save(GetForm('THelsiUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('THelsiUserForm');
-
+ {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TLog_CashRemainsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TLog_CashRemainsForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheck_CashRegisterForm'));

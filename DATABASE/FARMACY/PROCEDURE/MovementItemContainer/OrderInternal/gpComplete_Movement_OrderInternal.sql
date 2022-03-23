@@ -18,6 +18,9 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := inSession; --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_OrderInternal());
 
+     -- пересчет сумм документа
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm(inMovementId := inMovementId);
+
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := zc_Movement_OrderInternal()

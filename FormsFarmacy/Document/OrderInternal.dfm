@@ -537,7 +537,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.IncSearch = False
           end
           object Price: TcxGridDBColumn [25]
-            Caption = #1062#1077#1085#1072
+            Caption = #1062#1077#1085#1072', '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'Price'
             Options.Editing = False
             Width = 40
@@ -566,7 +566,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Width = 91
           end
           object SummAll: TcxGridDBColumn [28]
-            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
+            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072', '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'SummAll'
             HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072' = ['#1042#1089#1077#1075#1086' '#1089' '#1084#1080#1085'. '#1086#1082#1088'.] '#1061' ['#1062#1077#1085#1072']'
             Options.Editing = False

@@ -63,6 +63,7 @@ type
     procedure actSignExecute(Sender: TObject);
   private
     { Private declarations }
+    FIniError : Boolean;
   public
   end;
 
@@ -79,9 +80,12 @@ procedure TCheckHelsiSignForm.actLoadStateCurrExecute(Sender: TObject);
 begin
   if ClientDataSet.IsEmpty then Exit;
 
-  if GetHelsiReceiptState(ClientDataSet.FieldByName('InvNumberSP').AsString,  cState) then
-  else if GetHelsiReceiptState(ClientDataSet.FieldByName('InvNumberSP').AsString,  cState) then
-  else cState := 'Ош. получения';
+  if not FIniError then
+  begin
+    if GetHelsiReceiptState(ClientDataSet.FieldByName('InvNumberSP').AsString, cState, FIniError) then
+    else if not FIniError and GetHelsiReceiptState(ClientDataSet.FieldByName('InvNumberSP').AsString, cState, FIniError) then
+    else cState := 'Ош. получения';
+  end else cState := 'Ош. получения';
   nColor := clFuchsia;
 
   if cState = 'ACTIVE' then
@@ -176,6 +180,7 @@ begin
   FormClassName := Self.ClassName;
   UserSettingsStorageAddOn.LoadUserSettings;
   deStart.Date := Date;
+  FIniError := False;
   actOpen.Execute;
 end;
 
