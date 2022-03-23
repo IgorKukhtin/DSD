@@ -3710,6 +3710,73 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1099
       ImageIndex = 80
     end
+    object ExecuteDialogUpdateAmountPartner: TExecuteDialog
+      Category = 'UpdateAmount'
+      MoveParams = <>
+      Caption = 'actAmountDialog'
+      FormName = 'TAmountDialogForm'
+      FormNameParam.Value = 'TAmountDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Amount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Amount'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1050#1086#1083'-'#1074#1086' '#1079#1085#1072#1082#1086#1074' '#1076#1083#1103' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1103
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actRoundAmountPartner: TdsdExecStoredProc
+      Category = 'UpdateAmount'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_AmountPartner_round
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_AmountPartner_round
+        end>
+      Caption = 'actUpdate_MI_AmountPartner_round'
+    end
+    object macRoundAmountPartner_list: TMultiAction
+      Category = 'UpdateAmount'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actRoundAmountPartner
+        end>
+      View = cxGridDBTableView
+      Caption = #1054#1082#1088#1091#1075#1083#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      ImageIndex = 45
+    end
+    object macRoundAmountPartner: TMultiAction
+      Category = 'UpdateAmount'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogUpdateAmountPartner
+        end
+        item
+          Action = macRoundAmountPartner_list
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1054#1082#1088#1091#1075#1083#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1074' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090 +
+        #1072#1093'?'
+      InfoAfterExecute = #1042' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1082#1088#1091#1075#1083#1077#1085#1086' '#1082#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'.'
+      Caption = #1054#1082#1088#1091#1075#1083#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      Hint = #1054#1082#1088#1091#1075#1083#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      ImageIndex = 45
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -3859,6 +3926,14 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         item
           Visible = True
           ItemName = 'bbUpdateMI_Sale_PriceIn'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRoundAmountPartner'
         end
         item
           Visible = True
@@ -4203,6 +4278,10 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     end
     object bbUpdateMI_Sale_PriceIn: TdxBarButton
       Action = macUpdateMI_Sale_PriceIn
+      Category = 0
+    end
+    object bbRoundAmountPartner: TdxBarButton
+      Action = macRoundAmountPartner
       Category = 0
     end
   end
@@ -5895,5 +5974,31 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     PackSize = 1
     Left = 1120
     Top = 323
+  end
+  object spUpdate_MI_AmountPartner_round: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Sale_AmountPartner_round'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1233
+    Top = 258
   end
 end

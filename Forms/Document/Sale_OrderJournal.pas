@@ -281,6 +281,12 @@ type
     macUpdateMI_Sale_PriceIn_list: TMultiAction;
     macUpdateMI_Sale_PriceIn: TMultiAction;
     bbUpdateMI_Sale_PriceIn: TdxBarButton;
+    spUpdate_MI_AmountPartner_round: TdsdStoredProc;
+    ExecuteDialogUpdateAmountPartner: TExecuteDialog;
+    actRoundAmountPartner: TdsdExecStoredProc;
+    macRoundAmountPartner_list: TMultiAction;
+    macRoundAmountPartner: TMultiAction;
+    bbRoundAmountPartner: TdxBarButton;
   private
     { Private declarations }
   public
