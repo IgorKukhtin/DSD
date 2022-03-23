@@ -2,7 +2,7 @@ object HelsiUserForm: THelsiUserForm
   Left = 0
   Top = 0
   Caption = #1054#1090#1095#1077#1090' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1087#1072#1088#1086#1083#1080' '#1045#1093#1077#1083#1089' ('#1057#1055')'
-  ClientHeight = 439
+  ClientHeight = 471
   ClientWidth = 1206
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -14,19 +14,20 @@ object HelsiUserForm: THelsiUserForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.PUSHMessage = actPUSHInfo
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
     Width = 1206
-    Height = 413
+    Height = 445
     Align = alClient
     PopupMenu = pmGrid
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 1145
+    ExplicitHeight = 413
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -405,6 +406,17 @@ object HelsiUserForm: THelsiUserForm
       Caption = 'dsdUpdateDataSet'
       DataSource = DataSource
     end
+    object actPUSHInfo: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHInfo
+      StoredProcList = <
+        item
+          StoredProc = spPUSHInfo
+        end>
+      Caption = 'actPUSHInfo'
+      PUSHMessageType = pmtInformation
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_HelsiUser'
@@ -511,5 +523,31 @@ object HelsiUserForm: THelsiUserForm
     PackSize = 1
     Left = 365
     Top = 208
+  end
+  object spPUSHInfo: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_HelsiUserKey'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 450
+    Top = 128
   end
 end

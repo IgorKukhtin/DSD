@@ -1355,7 +1355,8 @@ uses
   Report_AssetRepair in '..\..\Forms\Report\Report_AssetRepair.pas' {Report_AssetRepairForm: TParentForm},
   Report_AssetRepairDialog in '..\..\Forms\Report\Report_AssetRepairDialog.pas' {Report_AssetRepairDialogForm: TParentForm},
   Report_SaleReturnIn_RealExDialog in '..\..\Forms\Report\Report_SaleReturnIn_RealExDialog.pas' {Report_SaleReturnIn_RealExDialogForm: TParentForm},
-  Report_SaleReturnIn_RealEx in '..\..\Forms\Report\Report_SaleReturnIn_RealEx.pas' {Report_SaleReturnIn_RealExForm: TParentForm};
+  Report_SaleReturnIn_RealEx in '..\..\Forms\Report\Report_SaleReturnIn_RealEx.pas' {Report_SaleReturnIn_RealExForm: TParentForm},
+  AmountDialog in '..\..\Forms\System\AmountDialog.pas' {AmountDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -2,8 +2,8 @@ object AmountDialogForm: TAmountDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1042#1074#1086#1076' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
-  ClientHeight = 160
+  Caption = #1042#1074#1086#1076' '#1079#1085#1072#1095#1077#1085#1080#1103
+  ClientHeight = 145
   ClientWidth = 324
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object AmountDialogForm: TAmountDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 41
-    Top = 114
+    Top = 104
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object AmountDialogForm: TAmountDialogForm
   end
   object cxButton2: TcxButton
     Left = 215
-    Top = 111
+    Top = 101
     Width = 75
     Height = 28
     Caption = #1054#1090#1084#1077#1085#1072
@@ -38,17 +38,17 @@ object AmountDialogForm: TAmountDialogForm
   end
   object ceNotSalePastDay: TcxCurrencyEdit
     Left = 41
-    Top = 76
+    Top = 53
     EditValue = 0.000000000000000000
-    Properties.DecimalPlaces = 3
-    Properties.DisplayFormat = ',0.000'
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0.'
     TabOrder = 2
     Width = 249
   end
   object cxMemo1: TcxMemo
     AlignWithMargins = True
     Left = 41
-    Top = 23
+    Top = 13
     TabStop = False
     Enabled = False
     Lines.Strings = (
@@ -61,7 +61,7 @@ object AmountDialogForm: TAmountDialogForm
     StyleDisabled.BorderStyle = ebsNone
     StyleDisabled.TextColor = clWindowText
     TabOrder = 3
-    Height = 47
+    Height = 26
     Width = 249
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

@@ -304,6 +304,12 @@ type
     MedocListAction: TMedocAction;
     mactMEDOCGrid: TMultiAction;
     mactMedocALL: TMultiAction;
+    actRoundAmountPartner: TdsdExecStoredProc;
+    macRoundAmountPartner_list: TMultiAction;
+    macRoundAmountPartner: TMultiAction;
+    spUpdate_MI_AmountPartner_round: TdsdStoredProc;
+    ExecuteDialogUpdateAmountPartner: TExecuteDialog;
+    bbRoundAmountPartner: TdxBarButton;
   private
     { Private declarations }
   public

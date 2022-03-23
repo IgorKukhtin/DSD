@@ -5022,6 +5022,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_LoginProtocol: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1087#1086#1076#1082#1083#1102#1095#1077#1085#1080#1103' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
+      FormName = 'TReport_LoginProtocolForm'
+      FormNameParam.Value = 'TReport_LoginProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6525,6 +6536,9 @@
       inherited miProtocolAll: TMenuItem
         object elegram1: TMenuItem
           Action = actTelegramProtocol
+        end
+        object N345: TMenuItem
+          Action = actReport_LoginProtocol
         end
       end
       object N10: TMenuItem [32]

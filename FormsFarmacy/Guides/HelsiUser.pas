@@ -72,6 +72,8 @@ type
     KeyExpireDate: TcxGridDBColumn;
     Color_calc: TcxGridDBColumn;
     isUserKeyDate: TcxGridDBColumn;
+    spPUSHInfo: TdsdStoredProc;
+    actPUSHInfo: TdsdShowPUSHMessage;
   private
     { Private declarations }
   public
