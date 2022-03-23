@@ -3281,7 +3281,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataChoiceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDataChoiceDialogForm');
 
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTelegramProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LoginProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_LoginProtocolForm');
+
+  //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTelegramProtocolForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TTelegramProtocolForm');
 
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStringDialogForm'));

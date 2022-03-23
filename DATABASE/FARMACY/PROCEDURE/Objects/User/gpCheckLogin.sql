@@ -1,11 +1,13 @@
 -- Function: gpCheckLogin(TVarChar, TVarChar, TVarChar)
 
- DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpCheckLogin(
     IN inUserLogin    TVarChar, 
     IN inUserPassword TVarChar, 
     IN inIP           TVarChar, 
+    IN inProjectName  TVarChar, 
  INOUT Session TVarChar
 )
 RETURNS TVarChar
@@ -34,6 +36,7 @@ BEGIN
                 , '<XML>'
                || '<Field FieldName = "IP" FieldValue = "' || zfStrToXmlStr (inIP) || '"/>'
                || '<Field FieldName = "Логин" FieldValue = "' || zfStrToXmlStr (inUserLogin) || '"/>'
+               || '<Field FieldName = "Программа" FieldValue = "' || zfStrToXmlStr (inProjectName) || '"/>'
                || '</XML>'
                 ;
         

@@ -233,6 +233,12 @@ type
     execUpdate_SupplementSUN2: TdsdExecStoredProc;
     dxBarButton21: TdxBarButton;
     spUpdate_isSupplementSUN2_Revert: TdsdStoredProc;
+    dxBarSubItem6: TdxBarSubItem;
+    actDoLoadinSupplementSUN2: TExecuteImportSettingsAction;
+    macLoadinSupplementSUN2: TMultiAction;
+    actGetImportSetting_Goods_inSupplementSUN2: TdsdExecStoredProc;
+    spGetImportSetting_Goods_inSupplementSUN2: TdsdStoredProc;
+    dxBarButton22: TdxBarButton;
   private
     { Private declarations }
   public

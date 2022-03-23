@@ -1444,7 +1444,7 @@ inherited GoodsSUNForm: TGoodsSUNForm
         item
           StoredProc = spGetImportSetting_Goods_inSupplementSUN1
         end>
-      Caption = 'actGetImportSetting_Goods_Price'
+      Caption = 'actGetImportSetting_Goods_inSupplementSUN1'
     end
     object actDoLoadinSupplementSUN1: TExecuteImportSettingsAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
@@ -1909,6 +1909,45 @@ inherited GoodsSUNForm: TGoodsSUNForm
         end>
       Caption = 'execUpdate_isSupplementSUN2'
     end
+    object actGetImportSetting_Goods_inSupplementSUN2: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting_Goods_inSupplementSUN2
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting_Goods_inSupplementSUN2
+        end>
+      Caption = 'actGetImportSetting_Goods_inSupplementSUN2'
+    end
+    object actDoLoadinSupplementSUN2: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <>
+    end
+    object macLoadinSupplementSUN2: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_Goods_inSupplementSUN2
+        end
+        item
+          Action = actDoLoadinSupplementSUN2
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1087#1088#1080#1079#1085#1072#1082#1086#1074' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1082' '#1057#1059#1053'2?'
+      InfoAfterExecute = #1055#1088#1080#1079#1085#1072#1082#1080' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1082' '#1057#1059#1053'1 '#1080#1079' '#1092#1072#1081#1083#1072' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1082' '#1057#1059#1053'2'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1082' '#1057#1059#1053'2'
+      ImageIndex = 66
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -1997,6 +2036,14 @@ inherited GoodsSUNForm: TGoodsSUNForm
         end
         item
           Visible = True
+          ItemName = 'dxBarSubItem6'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateGoods_KoeffSUN'
         end
         item
@@ -2006,14 +2053,6 @@ inherited GoodsSUNForm: TGoodsSUNForm
         item
           Visible = True
           ItemName = 'bbUpdate_GoodsPairSun'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton5'
         end
         item
           Visible = True
@@ -2445,6 +2484,25 @@ inherited GoodsSUNForm: TGoodsSUNForm
     end
     object dxBarButton21: TdxBarButton
       Action = actUpdateisSupplementSUN2
+      Category = 0
+    end
+    object dxBarSubItem6: TdxBarSubItem
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 12
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton22'
+        end>
+    end
+    object dxBarButton22: TdxBarButton
+      Action = macLoadinSupplementSUN2
       Category = 0
     end
   end
@@ -3562,5 +3620,37 @@ inherited GoodsSUNForm: TGoodsSUNForm
     PackSize = 1
     Left = 512
     Top = 368
+  end
+  object spGetImportSetting_Goods_inSupplementSUN2: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TGoodsForm;zc_Object_ImportSetting_inSupplementSUN2'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 328
+    Top = 48
   end
 end

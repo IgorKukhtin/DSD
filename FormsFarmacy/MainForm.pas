@@ -930,6 +930,8 @@ type
     N343: TMenuItem;
     actReport_PaymentSum: TdsdOpenForm;
     N344: TMenuItem;
+    actReport_LoginProtocol: TdsdOpenForm;
+    N345: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

@@ -874,6 +874,8 @@ type
   TEnterMoveNextListItem = class(TCollectionItem)
   private
     FControl: TWinControl;
+    FEnterAction: TCustomAction;
+    FExitAction: TCustomAction;
 
     procedure SetControl(const Value: TWinControl);
   protected
@@ -882,6 +884,8 @@ type
     procedure Assign(Source: TPersistent); override;
   published
     property Control: TWinControl read FControl write SetControl;
+    property EnterAction: TCustomAction read FEnterAction write FEnterAction;
+    property ExitAction: TCustomAction read FExitAction write FExitAction;
   end;
 
   TEnterMoveNextList = class(TOwnedCollection)
@@ -5334,6 +5338,9 @@ var
 begin
   inherited Notification(AComponent, Operation);
 
+  if csDestroying in ComponentState then
+     exit;
+
   if csDesigning in ComponentState then
     if Operation = opRemove then
     begin
@@ -5341,9 +5348,11 @@ begin
       begin
         for I := 0 to Pred(EnterMoveNextList.Count) do
           if EnterMoveNextList[I].Control = AComponent then
-          begin
             EnterMoveNextList[I].Control := nil;
-          end;
+           if EnterMoveNextList[I].EnterAction = AComponent then
+              EnterMoveNextList[I].EnterAction := nil;
+           if EnterMoveNextList[I].ExitAction = AComponent then
+              EnterMoveNextList[I].ExitAction := nil;
       end;
     end;
 end;
@@ -5372,7 +5381,11 @@ begin
     fFind:=false;
     for I := 0 to Pred(EnterMoveNextList.Count) do
      if Assigned(EnterMoveNextList[I].Control) and (EnterMoveNextList[I].Control = Control)
-    then fFind:= true;
+    then
+    begin
+      if Assigned (EnterMoveNextList[I].ExitAction) then EnterMoveNextList[I].ExitAction.Execute;
+      fFind:= true;
+    end;
     // выход
     if not fFind then exit;
 
@@ -5389,6 +5402,7 @@ begin
                  if Assigned(EnterMoveNextList[J].Control) then
                  begin
                    TWinControl(EnterMoveNextList[J].Control).SetFocus;
+                   if Assigned (EnterMoveNextList[J].EnterAction) then EnterMoveNextList[J].EnterAction.Execute;
                    Exit;
                  end;
         end;
@@ -5397,6 +5411,7 @@ begin
           if Assigned(EnterMoveNextList[I].Control) then
         begin
           TWinControl(EnterMoveNextList[I].Control).SetFocus;
+          if Assigned (EnterMoveNextList[I].EnterAction) then EnterMoveNextList[I].EnterAction.Execute;
           Exit;
         end;
       end else
@@ -5410,6 +5425,7 @@ begin
                  if Assigned(EnterMoveNextList[J].Control) then
                  begin
                    TWinControl(EnterMoveNextList[J].Control).SetFocus;
+                   if Assigned (EnterMoveNextList[J].EnterAction) then EnterMoveNextList[J].EnterAction.Execute;
                    Exit;
                  end;
         end;
@@ -5418,6 +5434,7 @@ begin
           if Assigned(EnterMoveNextList[I].Control) then
         begin
           TWinControl(EnterMoveNextList[I].Control).SetFocus;
+          if Assigned (EnterMoveNextList[I].EnterAction) then EnterMoveNextList[I].EnterAction.Execute;
           Exit;
         end;
       end;

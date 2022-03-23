@@ -184,7 +184,7 @@ class function TAuthentication.CheckLogin(pStorage: IStorage;
 var IP_str:string;
     N: IXMLNode;
     pXML : String;
-    BoutiqueName, IniFileName, S: String;
+    BoutiqueName, IniFileName, S, ProjectName: String;
     f: TIniFile;
     isBoutique, isProject : Boolean;
 begin
@@ -197,6 +197,9 @@ begin
    isProject:= (AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Project.exe'))
            and (UpperCase(S) <> UpperCase('ProjectTest.exe'))
               ;
+   if Pos('.', gc_ProgramName) > 0 then
+     ProjectName := Copy(gc_ProgramName, 1, Pos('.', gc_ProgramName) - 1)
+   else ProjectName := gc_ProgramName;
 
   {создаем XML вызова процедуры на сервере}
   if isBoutique = TRUE
@@ -238,6 +241,17 @@ begin
             '<ioPhoneAuthent DataType="ftString" Value="%s" />' +
           '</gpCheckLogin>' +
         '</xml>'
+      else if POS(AnsiUpperCase('Farmacy'), AnsiUpperCase(ProjectName)) = 1
+      then
+        pXML :=
+        '<xml Session = "" >' +
+          '<gpCheckLogin OutputType="otResult">' +
+            '<inUserLogin    DataType="ftString" Value="%s" />' +
+            '<inUserPassword DataType="ftString" Value="%s" />' +
+            '<inIP           DataType="ftString" Value="%s" />' +
+            '<inProjectName  DataType="ftString" Value="%s" />' +
+          '</gpCheckLogin>' +
+        '</xml>'
       else
         pXML :=
         '<xml Session = "" >' +
@@ -263,6 +277,8 @@ begin
        then
          // для Project - еще 1 параметр - Телефон для аутентификации
          N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IP_str, BoutiqueName]), False, 4, ANeedShowException)).DocumentElement
+       else if POS(AnsiUpperCase('Farmacy'), AnsiUpperCase(ProjectName)) = 1 then
+         N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IP_str, ProjectName]), False, 4, ANeedShowException)).DocumentElement
        else
          N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IP_str]), False, 4, ANeedShowException)).DocumentElement;
   //
