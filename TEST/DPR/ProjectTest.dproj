@@ -4690,6 +4690,14 @@
 				<Form>Report_AssetRepairDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_SaleReturnIn_RealExDialog.pas">
+				<Form>Report_SaleReturnIn_RealExDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_SaleReturnIn_RealEx.pas">
+				<Form>Report_SaleReturnIn_RealExForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
