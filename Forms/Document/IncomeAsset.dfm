@@ -315,9 +315,6 @@ object IncomeAssetForm: TIncomeAssetForm
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -624,9 +621,6 @@ object IncomeAssetForm: TIncomeAssetForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1177,7 +1171,7 @@ object IncomeAssetForm: TIncomeAssetForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 81
+    Left = 89
     Top = 232
   end
   object ActionList: TActionList
@@ -1577,7 +1571,7 @@ object IncomeAssetForm: TIncomeAssetForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = ClientDataCost
           ComponentItem = 'MasterOperDate'
           DataType = ftDateTime
@@ -1609,7 +1603,7 @@ object IncomeAssetForm: TIncomeAssetForm
         end
         item
           Name = 'isOnlyService'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1932,13 +1926,13 @@ object IncomeAssetForm: TIncomeAssetForm
         end
         item
           Name = 'ShowAll'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           ComponentItem = 'MasterOperDate'
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -2117,6 +2111,7 @@ object IncomeAssetForm: TIncomeAssetForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -2129,6 +2124,7 @@ object IncomeAssetForm: TIncomeAssetForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 6
       end>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 347
     Top = 337
@@ -2184,7 +2180,7 @@ object IncomeAssetForm: TIncomeAssetForm
       end
       item
         Name = 'inPriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
@@ -2279,8 +2275,8 @@ object IncomeAssetForm: TIncomeAssetForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 402
-    Top = 224
+    Left = 418
+    Top = 192
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -2358,7 +2354,7 @@ object IncomeAssetForm: TIncomeAssetForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -2431,7 +2427,7 @@ object IncomeAssetForm: TIncomeAssetForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','

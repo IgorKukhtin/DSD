@@ -1,7 +1,7 @@
 object Report_AssetRepairForm: TReport_AssetRepairForm
   Left = 0
   Top = 0
-  Caption = #1054#1090#1095#1077#1090' <'#1056#1077#1084#1086#1085#1090' '#1090#1088#1072#1085#1089#1087#1086#1088#1090#1072'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1056#1077#1084#1086#1085#1090' '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1103'>'
   ClientHeight = 395
   ClientWidth = 954
   Color = clBtnFace
@@ -377,6 +377,7 @@ object Report_AssetRepairForm: TReport_AssetRepairForm
       2)
     Categories.Visibles = (
       True)
+    ImageOptions.Images = dmMain.ImageList
     NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
@@ -731,7 +732,7 @@ object Report_AssetRepairForm: TReport_AssetRepairForm
         MultiSelectSeparator = ','
       end>
     Left = 391
-    Top = 30
+    Top = 22
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -760,7 +761,7 @@ object Report_AssetRepairForm: TReport_AssetRepairForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 415
-    Top = 6
+    Left = 431
+    Top = 65534
   end
 end

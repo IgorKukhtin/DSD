@@ -145,7 +145,7 @@ BEGIN
                          , MILinkObject_Asset.ObjectId     AS AssetId
                          , COALESCE (MovementItem.Amount,0)*(-1) AS Summa
                          --, MIFloat_Price.ValueData         AS Price
-                         , COALESCE (MIFloat_Count.ValueData,1)         AS Amount -- количество
+                         , COALESCE (MIFloat_Count.ValueData,-1)*(-1) AS Amount -- количество
                          , MIString_Comment.ValueData        AS Comment
                     FROM Movement
                          LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
