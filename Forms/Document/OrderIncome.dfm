@@ -195,7 +195,6 @@ object OrderIncomeForm: TOrderIncomeForm
       Properties.Buttons = <
         item
           Default = True
-          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -873,6 +872,9 @@ object OrderIncomeForm: TOrderIncomeForm
       ReportNameParam.Value = 'PrintMovement_Income'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -1408,6 +1410,7 @@ object OrderIncomeForm: TOrderIncomeForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -1420,6 +1423,8 @@ object OrderIncomeForm: TOrderIncomeForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 6
       end>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 347
     Top = 337
   end
@@ -1458,7 +1463,7 @@ object OrderIncomeForm: TOrderIncomeForm
       end
       item
         Name = 'inOperDatePartner'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDatePartner
         DataType = ftDateTime
         ParamType = ptInput
@@ -1467,7 +1472,7 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'inUnitId'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1483,7 +1488,7 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'inContractId'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1491,22 +1496,30 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'inPaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCurrencyDocumentId'
+        Name = 'ioCurrencyDocumentId'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCurrencyDocumentName'
+        Value = Null
+        Component = GuidesCurrencyDocument
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
@@ -1616,7 +1629,7 @@ object OrderIncomeForm: TOrderIncomeForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1653,7 +1666,7 @@ object OrderIncomeForm: TOrderIncomeForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'True'
+        Value = True
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1689,14 +1702,14 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'ContractId'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1704,14 +1717,14 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'PaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1719,14 +1732,14 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'CurrencyDocumentId'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyDocumentName'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1755,7 +1768,7 @@ object OrderIncomeForm: TOrderIncomeForm
       end
       item
         Name = 'OperDatePartner'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDatePartner
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1763,14 +1776,14 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'UnitId'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1797,7 +1810,7 @@ object OrderIncomeForm: TOrderIncomeForm
         Guides = GuidesFrom
       end
       item
-        Guides = PaidKindGuides
+        Guides = GuidesPaidKind
       end>
     ActionItemList = <
       item
@@ -1806,7 +1819,7 @@ object OrderIncomeForm: TOrderIncomeForm
     Left = 144
     Top = 224
   end
-  object ContractGuides: TdsdGuides
+  object GuidesContract: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContract
     FormNameParam.Value = 'TContractChoiceForm'
@@ -1818,7 +1831,7 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1827,7 +1840,7 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1851,7 +1864,7 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'PaidKindId'
         Value = Null
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1859,7 +1872,7 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'PaidKindName'
         Value = Null
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1875,7 +1888,7 @@ object OrderIncomeForm: TOrderIncomeForm
     Left = 592
     Top = 8
   end
-  object PaidKindGuides: TdsdGuides
+  object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
@@ -1887,7 +1900,7 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'Key'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1896,7 +1909,7 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2042,7 +2055,7 @@ object OrderIncomeForm: TOrderIncomeForm
     Left = 500
     Top = 204
   end
-  object CurrencyDocumentGuides: TdsdGuides
+  object GuidesCurrencyDocument: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCurrencyDocument
     FormNameParam.Value = 'TCurrency_ObjectForm'
@@ -2054,7 +2067,7 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'Key'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2062,7 +2075,7 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2156,7 +2169,7 @@ object OrderIncomeForm: TOrderIncomeForm
       end
       item
         Name = 'inIsCalcAmountPartner'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2230,7 +2243,7 @@ object OrderIncomeForm: TOrderIncomeForm
     Left = 150
     Top = 343
   end
-  object UnitGuides: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
@@ -2242,7 +2255,7 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2251,7 +2264,7 @@ object OrderIncomeForm: TOrderIncomeForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

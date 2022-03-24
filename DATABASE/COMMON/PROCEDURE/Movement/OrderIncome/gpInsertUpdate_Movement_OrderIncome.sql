@@ -12,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderIncome(
     IN inJuridicalId         Integer   , -- Поставщик
     IN inContractId          Integer   , -- Договор 
     IN inPaidKindId          Integer   , -- Форма оплаты
-    IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
+    IN ioCurrencyDocumentId  Integer   , -- Валюта (документа)
+   OUT outCurrencyDocumentName TVarChar , -- Валюта (документа)
 
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
@@ -51,8 +52,19 @@ BEGIN
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
 
+
+     --валюту документа берем из договора , если договор пустой, берем то что введут в контроле
+     IF COALESCE (inContractId,0) <> 0
+     THEN
+         ioCurrencyDocumentId := (SELECT ObjectLink_Contract_Currency.ChildObjectId
+                                  FROM ObjectLink AS ObjectLink_Contract_Currency
+                                  WHERE ObjectLink_Contract_Currency.ObjectId = inContractId
+                                    AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
+                                  );
+     END IF;
      -- сохранили связь с <Валюта (документа)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyDocument(), ioId, inCurrencyDocumentId);
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyDocument(), ioId, ioCurrencyDocumentId);
+     outCurrencyDocumentName := (SELECT Object.ValueData FROM Object WHERE Object.Id = ioCurrencyDocumentId);
 
 
      -- сохранили свойство <Цена с НДС (да/нет)>
@@ -63,9 +75,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
 
      -- рассчет курса для баланса
-     IF inCurrencyDocumentId <> zc_Enum_Currency_Basis()
+     IF ioCurrencyDocumentId <> zc_Enum_Currency_Basis()
      THEN SELECT Amount, ParValue INTO outCurrencyValue, outParValue
-          FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDate, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= inCurrencyDocumentId, inPaidKindId:= CASE WHEN inPaidKindId <> 0 THEN inPaidKindId ELSE zc_Enum_PaidKind_FirstForm() END);
+          FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDate, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= ioCurrencyDocumentId, inPaidKindId:= CASE WHEN inPaidKindId <> 0 THEN inPaidKindId ELSE zc_Enum_PaidKind_FirstForm() END);
      ELSE outCurrencyValue:= 0;
           outParValue:=0;
      END IF;

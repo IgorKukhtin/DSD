@@ -84,8 +84,8 @@ type
     edContract: TcxButtonEdit;
     cxLabel10: TcxLabel;
     edPaidKind: TcxButtonEdit;
-    ContractGuides: TdsdGuides;
-    PaidKindGuides: TdsdGuides;
+    GuidesContract: TdsdGuides;
+    GuidesPaidKind: TdsdGuides;
     SetErased: TdsdUpdateErased;
     SetUnErased: TdsdUpdateErased;
     actShowErased: TBooleanStoredProcAction;
@@ -109,7 +109,7 @@ type
     edCurrencyValue: TcxCurrencyEdit;
     cxLabel14: TcxLabel;
     edCurrencyDocument: TcxButtonEdit;
-    CurrencyDocumentGuides: TdsdGuides;
+    GuidesCurrencyDocument: TdsdGuides;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     MovementItemProtocolOpenForm: TdsdOpenForm;
@@ -141,7 +141,7 @@ type
     edOperDatePartner: TcxDateEdit;
     cxLabel4: TcxLabel;
     edUnit: TcxButtonEdit;
-    UnitGuides: TdsdGuides;
+    GuidesUnit: TdsdGuides;
   private
   public
   end;
