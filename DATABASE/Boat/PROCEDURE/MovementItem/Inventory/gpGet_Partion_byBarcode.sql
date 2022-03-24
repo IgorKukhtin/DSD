@@ -24,6 +24,8 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpGetUserBySession (inSession);
      
+     vbGoodsId:=0; vbPartionId:=0; vbPartNumber:='';
+
      -- Если Пустой
      IF TRIM (inBarCode) = '' AND TRIM (inPartNumber) = '' THEN
 
@@ -57,10 +59,11 @@ BEGIN
           ;
           
           -- если НЕ нашли
-          IF COALESCE (vbGoodsId, 0) = 0
+         /* IF COALESCE (vbGoodsId, 0) = 0
           THEN
               RAISE EXCEPTION 'Ошибка.Комплектующее с S/N = <%> не найден.', inPartNumber;
           END IF;
+          */
      END IF;
 
      -- Если это Штрихкод

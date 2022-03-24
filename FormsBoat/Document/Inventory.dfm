@@ -24,7 +24,7 @@ object InventoryForm: TInventoryForm
     Width = 808
     Height = 416
     Align = alClient
-    TabOrder = 4
+    TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 416
@@ -277,7 +277,7 @@ object InventoryForm: TInventoryForm
       Left = 9
       Top = 23
       Properties.ReadOnly = True
-      TabOrder = 0
+      TabOrder = 6
       Width = 70
     end
     object cxLabel1: TcxLabel
@@ -291,7 +291,7 @@ object InventoryForm: TInventoryForm
       EditValue = 42160d
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 1
+      TabOrder = 8
       Width = 82
     end
     object cxLabel2: TcxLabel
@@ -308,7 +308,7 @@ object InventoryForm: TInventoryForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 2
+      TabOrder = 5
       Width = 326
     end
     object cxLabel3: TcxLabel
@@ -340,7 +340,7 @@ object InventoryForm: TInventoryForm
         end>
       Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
-      TabOrder = 7
+      TabOrder = 10
       Width = 160
     end
     object cxLabel16: TcxLabel
@@ -351,7 +351,7 @@ object InventoryForm: TInventoryForm
     object ceComment: TcxTextEdit
       Left = 9
       Top = 107
-      TabOrder = 9
+      TabOrder = 12
       Width = 326
     end
     object edAmount: TcxCurrencyEdit
@@ -362,7 +362,7 @@ object InventoryForm: TInventoryForm
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
-      TabOrder = 10
+      TabOrder = 3
       Width = 104
     end
     object cxLabel29: TcxLabel
@@ -370,50 +370,50 @@ object InventoryForm: TInventoryForm
       Top = 89
       Caption = #1050#1086#1083'-'#1074#1086
     end
-  end
-  object edPartNumber: TcxTextEdit
-    Left = 400
-    Top = 66
-    TabOrder = 1
-    Width = 104
-  end
-  object cxLabel4: TcxLabel
-    Left = 400
-    Top = 48
-    Caption = '<S/N>  '#1074#1074#1086#1076
-  end
-  object edBarCode2: TcxTextEdit
-    Left = 510
-    Top = 66
-    TabOrder = 2
-    Width = 179
-  end
-  object cxLabel5: TcxLabel
-    Left = 510
-    Top = 48
-    Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
-  end
-  object cxLabel6: TcxLabel
-    Left = 510
-    Top = 5
-    Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
-  end
-  object edBarCode1: TcxTextEdit
-    Left = 510
-    Top = 23
-    TabOrder = 0
-    Width = 179
-  end
-  object cxLabel7: TcxLabel
-    Left = 510
-    Top = 89
-    Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
-  end
-  object edBarCode3: TcxTextEdit
-    Left = 510
-    Top = 107
-    TabOrder = 3
-    Width = 179
+    object edPartNumber: TcxTextEdit
+      Left = 400
+      Top = 66
+      TabOrder = 1
+      Width = 104
+    end
+    object cxLabel4: TcxLabel
+      Left = 400
+      Top = 48
+      Caption = '<S/N>  '#1074#1074#1086#1076
+    end
+    object edBarCode2: TcxTextEdit
+      Left = 510
+      Top = 66
+      TabOrder = 2
+      Width = 179
+    end
+    object cxLabel5: TcxLabel
+      Left = 510
+      Top = 48
+      Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
+    end
+    object cxLabel6: TcxLabel
+      Left = 510
+      Top = 5
+      Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
+    end
+    object edBarCode1: TcxTextEdit
+      Left = 510
+      Top = 23
+      TabOrder = 0
+      Width = 179
+    end
+    object cxLabel7: TcxLabel
+      Left = 510
+      Top = 89
+      Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
+    end
+    object edBarCode3: TcxTextEdit
+      Left = 510
+      Top = 107
+      TabOrder = 4
+      Width = 179
+    end
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -778,16 +778,13 @@ object InventoryForm: TInventoryForm
     object actRefreshMI: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectMI
+      StoredProc = spBarcode_null
       StoredProcList = <
         item
+          StoredProc = spBarcode_null
+        end
+        item
           StoredProc = spSelectMI
-        end
-        item
-        end
-        item
-        end
-        item
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1236,6 +1233,42 @@ object InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
+    object macGoodsItem3: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGoodsItem3
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = 'macGoodsItem'
+    end
+    object macGoodsItem2: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGoodsItem2
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = 'macGoodsItem'
+    end
+    object macGoodsItem1: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGoodsItem1
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = 'macGoodsItem'
+    end
     object macGoodsItem: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1409,16 +1442,6 @@ object InventoryForm: TInventoryForm
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = DataSource
-    end
-    object dsdOpenForm1: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'dsdOpenForm1'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
     end
   end
   object MasterDS: TDataSource
@@ -2083,6 +2106,7 @@ object InventoryForm: TInventoryForm
       end
       item
         Control = edBarCode2
+        ExitAction = macGoodsItem2
       end>
     Left = 752
     Top = 56
@@ -2317,19 +2341,10 @@ object InventoryForm: TInventoryForm
     EnterMoveNextList = <
       item
         Control = edBarCode1
-        ExitAction = actGoodsItem1
+        ExitAction = macGoodsItem1
       end>
     Left = 752
     Top = 8
-  end
-  object HeaderExit3: THeaderExit
-    ExitList = <
-      item
-        Control = edBarCode3
-      end>
-    Action = actGoodsItem3
-    Left = 704
-    Top = 104
   end
   object EnterMoveNext3: TEnterMoveNext
     EnterMoveNextList = <
@@ -2338,17 +2353,46 @@ object InventoryForm: TInventoryForm
       end
       item
         Control = edBarCode3
+        ExitAction = macGoodsItem3
       end>
     Left = 768
     Top = 104
   end
-  object HeaderExit2: THeaderExit
-    ExitList = <
+  object spBarcode_null: TdsdStoredProc
+    StoredProcName = 'gpGet_byBarcode_null'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
       item
-        Control = edBarCode2
+        Name = 'BarCode'
+        Value = Null
+        Component = edBarCode1
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCode'
+        Value = Null
+        Component = edBarCode2
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCode'
+        Value = Null
+        Component = edBarCode3
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartNumber'
+        Value = Null
+        Component = edPartNumber
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Action = actGoodsItem2
-    Left = 704
-    Top = 64
+    PackSize = 1
+    Left = 656
+    Top = 416
   end
 end

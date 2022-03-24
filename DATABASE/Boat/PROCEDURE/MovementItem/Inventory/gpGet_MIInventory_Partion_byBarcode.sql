@@ -39,6 +39,12 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+    /* IF inBarCode = '' AND inPartNumber = ''
+     THEN
+         RETURN;
+     END IF;
+
+*/
      IF inBarCode = '' AND inPartNumber = '' THEN
        RETURN QUERY
        SELECT 0  :: Integer  AS Id
@@ -60,7 +66,7 @@ BEGIN
             , 0  :: TFloat   AS OperCount
              ;
      END IF;
-     
+    
 
      -- Нашли
      SELECT tmp.PartionId
@@ -113,7 +119,7 @@ BEGIN
             , Object_Partner.ValueData                    AS PartnerName
             , Object_PartionGoods.ekPrice                 AS Price
             , tmpRemains.Remains           :: TFloat      AS AmountRemains
-            , (COALESCE (inAmount,1) + COALESCE ((SELECT SUM (MI.Amount) FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.PartionId = vbPartionId AND MI.isErased = FALSE), 0)
+            , (COALESCE (inAmount,1) + COALESCE ((SELECT SUM (MI.Amount) FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.ObjectId = vbGoodsId AND MI.isErased = FALSE), 0)
               )                                 :: TFloat AS TotalCount
             , COALESCE (inAmount,1)             :: TFloat AS OperCount
 

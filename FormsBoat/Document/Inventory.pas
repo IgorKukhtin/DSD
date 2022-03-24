@@ -144,10 +144,11 @@ type
     edBarCode3: TcxTextEdit;
     actGoodsItem3: TdsdInsertUpdateAction;
     EnterMoveNext1: TEnterMoveNext;
-    HeaderExit3: THeaderExit;
     EnterMoveNext3: TEnterMoveNext;
-    HeaderExit2: THeaderExit;
-    dsdOpenForm1: TdsdOpenForm;
+    spBarcode_null: TdsdStoredProc;
+    macGoodsItem1: TMultiAction;
+    macGoodsItem3: TMultiAction;
+    macGoodsItem2: TMultiAction;
   private
   public
   end;
