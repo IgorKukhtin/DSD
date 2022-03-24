@@ -121,9 +121,9 @@ BEGIN
                          , CASE WHEN inIsMovement = TRUE THEN MILinkObject_InfoMoney.ObjectId ELSE 0 END AS ObjectId
                          --, MILinkObject_InfoMoney.ObjectId AS ObjectId
                          --, MILinkObject_Asset.ObjectId     AS AssetId
-                         , COALESCE (MovementItem.Amount,0) AS Amount
-                         , MIFloat_Price.ValueData         AS Price
-                         , MIFloat_Count.ValueData         AS Summa
+
+                         , COALESCE (MovementItem.Amount,0)*(-1) AS Summa
+                         , COALESCE (MIFloat_Count.ValueData,1)         AS Amount -- количество
                     FROM Movement
                          LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
                          INNER JOIN MovementItemLinkObject AS MILinkObject_Asset
@@ -143,9 +143,6 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_Count
                                                      ON MIFloat_Count.MovementItemId = MovementItem.Id
                                                     AND MIFloat_Count.DescId = zc_MIFloat_Count()
-                         LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
                     WHERE Movement.DescId = zc_Movement_Service()
                       AND Movement.OperDate BETWEEN inStartDate AND inEndDate
