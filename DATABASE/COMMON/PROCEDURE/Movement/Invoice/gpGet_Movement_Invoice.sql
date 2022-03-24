@@ -82,7 +82,7 @@ BEGIN
                                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                                        AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementItemId()
                                                        AND MIFloat_MovementId.ValueData      > 0
-                           INNER JOIN MovementItem AS MI_OrderIncome ON MI_OrderIncome.Id       = MIFloat_MovementId.ValueData :: Integer
+                           INNER JOIN MovementItem AS MI_OrderIncome ON MI_OrderIncome.Id = MIFloat_MovementId.ValueData :: Integer
                                                                     AND MI_OrderIncome.isErased = FALSE
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_Master()
