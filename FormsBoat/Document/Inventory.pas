@@ -133,9 +133,8 @@ type
     edAmount: TcxCurrencyEdit;
     cxLabel29: TcxLabel;
     EnterMoveNext2: TEnterMoveNext;
-    HeaderExit2: THeaderExit;
     spGet_dop: TdsdStoredProc;
-    actGoodsItem_2: TdsdInsertUpdateAction;
+    actGoodsItem2: TdsdInsertUpdateAction;
     spGet_dop1: TdsdStoredProc;
     spGet_dop2: TdsdStoredProc;
     spGet_dop3: TdsdStoredProc;
@@ -147,6 +146,8 @@ type
     EnterMoveNext1: TEnterMoveNext;
     HeaderExit3: THeaderExit;
     EnterMoveNext3: TEnterMoveNext;
+    HeaderExit2: THeaderExit;
+    dsdOpenForm1: TdsdOpenForm;
   private
   public
   end;

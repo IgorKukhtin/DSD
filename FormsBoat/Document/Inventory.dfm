@@ -24,7 +24,7 @@ object InventoryForm: TInventoryForm
     Width = 808
     Height = 416
     Align = alClient
-    TabOrder = 0
+    TabOrder = 4
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 416
@@ -272,7 +272,7 @@ object InventoryForm: TInventoryForm
     Height = 137
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 1
+    TabOrder = 5
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -356,7 +356,7 @@ object InventoryForm: TInventoryForm
     end
     object edAmount: TcxCurrencyEdit
       Left = 400
-      Top = 112
+      Top = 107
       EditValue = 1.000000000000000000
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -366,26 +366,26 @@ object InventoryForm: TInventoryForm
       Width = 104
     end
     object cxLabel29: TcxLabel
-      Left = 395
+      Left = 400
       Top = 89
       Caption = #1050#1086#1083'-'#1074#1086
     end
   end
   object edPartNumber: TcxTextEdit
     Left = 400
-    Top = 71
-    TabOrder = 3
+    Top = 66
+    TabOrder = 1
     Width = 104
   end
   object cxLabel4: TcxLabel
-    Left = 395
+    Left = 400
     Top = 48
     Caption = '<S/N>  '#1074#1074#1086#1076
   end
   object edBarCode2: TcxTextEdit
     Left = 510
     Top = 66
-    TabOrder = 6
+    TabOrder = 2
     Width = 179
   end
   object cxLabel5: TcxLabel
@@ -401,7 +401,7 @@ object InventoryForm: TInventoryForm
   object edBarCode1: TcxTextEdit
     Left = 510
     Top = 23
-    TabOrder = 9
+    TabOrder = 0
     Width = 179
   end
   object cxLabel7: TcxLabel
@@ -412,7 +412,7 @@ object InventoryForm: TInventoryForm
   object edBarCode3: TcxTextEdit
     Left = 510
     Top = 107
-    TabOrder = 13
+    TabOrder = 3
     Width = 179
   end
   object FormParams: TdsdFormParams
@@ -1248,7 +1248,7 @@ object InventoryForm: TInventoryForm
         end>
       Caption = 'macGoodsItem'
     end
-    object actGoodsItem_2: TdsdInsertUpdateAction
+    object actGoodsItem2: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
@@ -1409,6 +1409,16 @@ object InventoryForm: TInventoryForm
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = DataSource
+    end
+    object dsdOpenForm1: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'dsdOpenForm1'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
     end
   end
   object MasterDS: TDataSource
@@ -2077,21 +2087,6 @@ object InventoryForm: TInventoryForm
     Left = 752
     Top = 56
   end
-  object HeaderExit2: THeaderExit
-    ExitList = <
-      item
-        Control = edPartNumber
-      end
-      item
-        Control = edBarCode2
-      end
-      item
-        Control = edPartNumber
-      end>
-    Action = actGoodsItem_2
-    Left = 704
-    Top = 56
-  end
   object spGet_dop: TdsdStoredProc
     StoredProcName = 'gpGet_byBarcode'
     DataSets = <>
@@ -2324,19 +2319,13 @@ object InventoryForm: TInventoryForm
         Control = edBarCode1
         ExitAction = actGoodsItem1
       end>
-    Left = 768
+    Left = 752
     Top = 8
   end
   object HeaderExit3: THeaderExit
     ExitList = <
       item
-        Control = edAmount
-      end
-      item
         Control = edBarCode3
-      end
-      item
-        Control = edAmount
       end>
     Action = actGoodsItem3
     Left = 704
@@ -2352,5 +2341,14 @@ object InventoryForm: TInventoryForm
       end>
     Left = 768
     Top = 104
+  end
+  object HeaderExit2: THeaderExit
+    ExitList = <
+      item
+        Control = edBarCode2
+      end>
+    Action = actGoodsItem2
+    Left = 704
+    Top = 64
   end
 end
