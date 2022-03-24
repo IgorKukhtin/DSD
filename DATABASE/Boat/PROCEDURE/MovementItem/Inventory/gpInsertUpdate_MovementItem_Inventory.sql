@@ -37,7 +37,6 @@ BEGIN
      WHERE Movement.Id = inMovementId;
 
 
-
     /* -- данные из партии : OperPrice + CountForPrice + OperPriceList
      SELECT Object_PartionGoods.CountForPrice
           , Object_PartionGoods.OperPrice
@@ -62,18 +61,36 @@ BEGIN
              ioId:= (SELECT MI.Id FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.PartionId = inPartionId AND MI.isErased = FALSE);
          ELSE
              -- Проверка
-             IF 1 < (SELECT COUNT(*) FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.ObjectId = inGoodsId AND MI.isErased = FALSE)
+             IF 1 < (SELECT COUNT(*) FROM MovementItem AS MI 
+                                 LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                              ON MIString_PartNumber.MovementItemId = MI.Id
+                                                             AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                     WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE
+                       AND MI.ObjectId = inGoodsId
+                       AND MI.PartionId = inPartionId
+                       AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
+                     )
              THEN
                  RAISE EXCEPTION 'Ошибка.Найдено несколько строк с таким комплектующим.%<%>.', CHR (13), lfGet_Object_ValueData (inGoodsId);
              END IF;
              -- нашли
-             ioId:= (SELECT MI.Id FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.ObjectId = inGoodsId AND MI.isErased = FALSE);
+             ioId:= (SELECT MI.Id FROM MovementItem AS MI
+                                 LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                              ON MIString_PartNumber.MovementItemId = MI.Id
+                                                             AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                     WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE
+                       AND MI.ObjectId = inGoodsId
+                       AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
+                     );
          END IF;
          -- 
          ioAmount:= ioAmount + COALESCE ((SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = ioId), 0);
 
      END IF;
-     
+
+
+     --
+          
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 

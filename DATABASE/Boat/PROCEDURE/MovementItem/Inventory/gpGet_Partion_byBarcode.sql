@@ -43,31 +43,9 @@ BEGIN
 
 
     --RAISE EXCEPTION 'Ошибка.Ошибка в Штрихкоде <%>.', inBarCode;
-     
-     -- Если это PartNumber
-     IF COALESCE (inPartNumber, '') <> '' --AND CHAR_LENGTH (inBarCode) >= 12
-     THEN
-          -- 
-          SELECT Object_PartionGoods.ObjectId
-               , Object_PartionGoods.MovementItemId
-               , MIString_PartNumber.ValueData
-                 INTO vbGoodsId, vbPartionId, vbPartNumber
-          FROM MovementItemString AS MIString_PartNumber
-               INNER JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MIString_PartNumber.MovementItemId
-          WHERE MIString_PartNumber.ValueData = TRIM (inPartNumber)
-            AND MIString_PartNumber.DescId    = zc_MIString_PartNumber()
-          ;
-          
-          -- если НЕ нашли
-         /* IF COALESCE (vbGoodsId, 0) = 0
-          THEN
-              RAISE EXCEPTION 'Ошибка.Комплектующее с S/N = <%> не найден.', inPartNumber;
-          END IF;
-          */
-     END IF;
 
      -- Если это Штрихкод
-     IF COALESCE (inBarCode, '') <> '' AND COALESCE (vbGoodsId, 0) = 0
+     IF COALESCE (inBarCode, '') <> '' 
      THEN
           -- последние 10 - это ИД
           vbGoodsId:= (SELECT Object.Id
@@ -99,6 +77,16 @@ BEGIN
 
      END IF;
 
+     -- 
+     SELECT Object_PartionGoods.MovementItemId
+         INTO vbPartionId
+     FROM Object_PartionGoods 
+          LEFT JOIN MovementItemString AS MIString_PartNumber
+                                       ON MIString_PartNumber.MovementItemId = Object_PartionGoods.MovementItemId
+                                      AND MIString_PartNumber.DescId    = zc_MIString_PartNumber()
+     WHERE Object_PartionGoods.ObjectId = vbGoodsId
+       AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (TRIM (inPartNumber),'')
+     ;
      
      -- Результат
      RETURN QUERY

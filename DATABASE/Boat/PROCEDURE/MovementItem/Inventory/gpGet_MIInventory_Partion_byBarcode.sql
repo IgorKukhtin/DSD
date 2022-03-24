@@ -110,7 +110,7 @@ BEGIN
             , Object_Goods.ObjectCode                     AS GoodsCode
             , Object_Goods.ValueData                      AS GoodsName
             , ObjectString_Article.ValueData              AS Article
-            , vbPartNumber    ::TVarChar                  AS PartNumber
+            , inPartNumber    ::TVarChar                  AS PartNumber
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , Object_GoodsGroup.Id                        AS GoodsGroupId
             , Object_GoodsGroup.ValueData                 AS GoodsGroupName
@@ -119,7 +119,16 @@ BEGIN
             , Object_Partner.ValueData                    AS PartnerName
             , Object_PartionGoods.ekPrice                 AS Price
             , tmpRemains.Remains           :: TFloat      AS AmountRemains
-            , (COALESCE (inAmount,1) + COALESCE ((SELECT SUM (MI.Amount) FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.ObjectId = vbGoodsId AND MI.isErased = FALSE), 0)
+            , (COALESCE (inAmount,1) + COALESCE ((SELECT SUM (MI.Amount)
+                                                  FROM MovementItem AS MI
+                                                       LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                                                    ON MIString_PartNumber.MovementItemId = MI.Id
+                                                                                   AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                                                  WHERE MI.MovementId = inMovementId
+                                                    AND MI.DescId = zc_MI_Master()
+                                                    AND MI.ObjectId = vbGoodsId AND MI.isErased = FALSE
+                                                    AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
+                                                    ), 0)
               )                                 :: TFloat AS TotalCount
             , COALESCE (inAmount,1)             :: TFloat AS OperCount
 
