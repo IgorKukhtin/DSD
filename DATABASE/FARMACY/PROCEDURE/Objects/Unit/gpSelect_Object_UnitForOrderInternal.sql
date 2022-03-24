@@ -78,6 +78,7 @@ BEGIN
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.id = ObjectLinkJuridical.childobjectid
     WHERE ObjectLinkJuridical.childobjectid <> 393053
       AND Object_Unit.ValueData NOT ILIKE '%ЗАКРЫТА%'
+      AND Object_Unit.ValueData NOT ILIKE '%Зачинена%'
     ;
             
 END;

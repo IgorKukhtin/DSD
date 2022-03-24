@@ -5698,14 +5698,14 @@
       object N144: TMenuItem
         Action = actReport_GoodsRemainsLight
       end
+      object miReportMovementCheckFarmForm: TMenuItem
+        Action = actReportMovementCheckFarmForm
+      end
       object miReport_GoodsRemainsCurrent: TMenuItem
         Action = actReport_GoodsRemainsCurrent
       end
       object miReportMovementCheckForm: TMenuItem
         Action = actReportMovementCheckForm
-      end
-      object miReportMovementCheckFarmForm: TMenuItem
-        Action = actReportMovementCheckFarmForm
       end
       object miReportMovementCheckFLForm: TMenuItem
         Action = actReportMovementCheckFLForm

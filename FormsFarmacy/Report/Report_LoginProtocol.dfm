@@ -86,7 +86,15 @@ inherited Report_LoginProtocolForm: TReport_LoginProtocolForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 275
+            Width = 249
+          end
+          object UserRoleName: TcxGridDBColumn
+            Caption = #1056#1086#1083#1080
+            DataBinding.FieldName = 'UserRoleName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 155
           end
         end
       end

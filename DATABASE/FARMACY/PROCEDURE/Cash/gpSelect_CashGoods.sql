@@ -162,6 +162,13 @@ BEGIN
                                                          FROM LoadPriceList
                                                          WHERE COALESCE(LoadPriceList.AreaId, 0) = 0 OR COALESCE(LoadPriceList.AreaId, 0) = vbAreaId)
                 )
+            -- Отказы поставщиков
+          , tmpSupplierFailures AS (SELECT DISTINCT
+                                           SupplierFailures.GoodsId
+                                         , SupplierFailures.JuridicalId
+                                         , SupplierFailures.ContractId
+                                    FROM lpSelect_PriceList_SupplierFailures(vbUnitId, vbUserId) AS SupplierFailures
+                                    )
           , tmpLoadPriceList AS
                 (SELECT LoadPriceList.*
                  FROM LoadPriceList
@@ -222,10 +229,16 @@ BEGIN
                                                                                                     AND JuridicalSettings.ContractId = COALESCE (LoadPriceList.ContractId, 0)
 
                             INNER JOIN LoadPriceListItem ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
-                           
+                            
+                            LEFT JOIN tmpSupplierFailures AS SupplierFailures
+                                                          ON SupplierFailures.GoodsId = LoadPriceListItem.GoodsId
+                                                         AND SupplierFailures.JuridicalId = LoadPriceList.JuridicalId
+                                                         AND SupplierFailures.ContractId = LoadPriceList.ContractId
+
                      WHERE COALESCE (tmpContractSettings.isErased, False) = False
                        AND COALESCE (JuridicalSettings.isPriceCloseOrder, TRUE) = False
                        AND tmpMainJuridicalArea.MainJuridicalId = vbJuridicalId
+                       AND COALESCE (SupplierFailures.GoodsId, 0) = 0
               )
           , tmpExpirationDate AS
                  (SELECT tmpLoadPriceListItem.JuridicalId

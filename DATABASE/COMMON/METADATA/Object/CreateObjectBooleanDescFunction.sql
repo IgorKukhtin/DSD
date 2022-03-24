@@ -1215,10 +1215,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_SupplementSUN2() RETURNS Integ
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_SupplementSUN2', 'Дополнение СУН2' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_SupplementSUN2');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Contract_DefermentContract() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Contract_DefermentContract'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Contract(), 'zc_ObjectBoolean_Contract_DefermentContract', 'Использовать в приходе отсрочку из договора' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Contract_DefermentContract');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 15.03.22                                                                                                          * zc_ObjectBoolean_Contract_DefermentContract
  15.03.22                                                                                                          * zc_ObjectBoolean_Goods_SupplementSUN2
  03.03.22         * zc_ObjectBoolean_GoodsByGoodsKind_NotPack
  18.02.22                                                                                                          * zc_ObjectBoolean_Unit_SUN_SupplementAddCash

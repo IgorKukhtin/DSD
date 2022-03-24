@@ -20,6 +20,7 @@ type
     UserCode: TcxGridDBColumn;
     UserName: TcxGridDBColumn;
     operDate: TcxGridDBColumn;
+    UserRoleName: TcxGridDBColumn;
   private
     { Private declarations }
   public

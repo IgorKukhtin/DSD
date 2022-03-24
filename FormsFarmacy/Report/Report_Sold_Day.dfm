@@ -12,6 +12,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
     Width = 1129
     Height = 527
     TabOrder = 3
+    Properties.ActivePage = tsPivot
     ExplicitTop = 48
     ExplicitWidth = 1129
     ExplicitHeight = 527
@@ -259,15 +260,13 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0
-        Width = 1129
+        Width = 579
         Height = 503
-        Align = alClient
+        Align = alLeft
         DataSource = MasterDS
         Groups = <>
         OptionsView.RowGrandTotalWidth = 118
         TabOrder = 0
-        ExplicitLeft = -40
-        ExplicitTop = -3
         object pcolPlanDate: TcxDBPivotGridField
           AreaIndex = 2
           AllowedAreas = [faColumn, faRow, faFilter]
@@ -356,6 +355,40 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
           UniqueName = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
         end
       end
+      object grChartItog: TcxGrid
+        Left = 587
+        Top = 0
+        Width = 542
+        Height = 503
+        Align = alClient
+        TabOrder = 1
+        object cxGridDBChartView1: TcxGridDBChartView
+          DataController.DataSource = ChartItogDS
+          DiagramLine.Active = True
+          DiagramLine.Values.LineWidth = 3
+          ToolBox.CustomizeButton = True
+          ToolBox.DiagramSelector = True
+          object cxGridDBChart_PlanDate: TcxGridDBChartDataGroup
+            DataBinding.FieldName = 'PlanDate'
+            DisplayText = #1044#1072#1090#1072
+          end
+          object cxGridDBChart_FactAmount: TcxGridDBChartSeries
+            DataBinding.FieldName = 'FactAmount'
+            DisplayText = #1060#1072#1082#1090
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBChartView1
+        end
+      end
+      object cxSplitter2: TcxSplitter
+        Left = 579
+        Top = 0
+        Width = 8
+        Height = 503
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        Control = cxDBPivotGrid1
+      end
     end
   end
   inherited Panel: TPanel
@@ -418,6 +451,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
   inherited ActionList: TActionList
     inherited actGridToExcel: TdsdGridToExcel
       TabSheet = tsMain
+      Enabled = False
     end
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -473,7 +507,6 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
       Category = 'DSDLib'
       TabSheet = tsPivot
       MoveParams = <>
-      Enabled = False
       Grid = cxDBPivotGrid1
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -527,6 +560,14 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Report_SoldDay'
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end
+      item
+        DataSet = ChartItogCDS
+      end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMonth'
@@ -764,5 +805,17 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
     PackSize = 1
     Left = 272
     Top = 168
+  end
+  object ChartItogDS: TDataSource
+    DataSet = ChartItogCDS
+    Left = 72
+    Top = 320
+  end
+  object ChartItogCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 24
+    Top = 320
   end
 end

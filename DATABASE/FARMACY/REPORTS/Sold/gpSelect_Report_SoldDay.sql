@@ -10,24 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Report_SoldDay(
     IN inisSP             Boolean   , -- Без учета реимбурсации
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (
-
-    PlanDate            TDateTime,  --Месяц плана
-    UnitJuridical       TVarChar,   --Юрлицо
-    UnitName            TVarChar,   --подразделение
-    ProvinceCityName    TVarChar,   -- район
-    PlanAmount          TFloat,     --План
-    PlanAmountAccum     TFloat,     --План с накоплением
-    FactAmount          TFloat,     --Факт
-    FactAmountAccum     TFloat,     --Факт с накоплением
-    FactAmountSale      TFloat,     --Факт безнал
-    FactAmountSaleAccum TFloat,     --Факт безнал с накоплением
-    DiffAmount          TFloat,     --Разница (Факт - План)
-    DiffAmountAccum     TFloat,     --Разница в накоплении (Факт с накоплением - План с накоплением)
-    PercentMake         TFloat,     --% выполнение плана
-    PercentMakeAccum    TFloat      --% выпонения по накоплению
-)
-
+RETURNS SETOF refcursor
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -35,6 +18,9 @@ $BODY$
    DECLARE vbEndDate TDateTime;
    DECLARE vbTmpDate TDateTime;
    DECLARE vbDayInMonth TFloat;
+
+   DECLARE Cursor1 refcursor;
+   DECLARE Cursor2 refcursor;
 BEGIN
     vbStartDate := date_trunc('month', inMonth);
     vbEndDate := date_trunc('month', inMonth) + Interval '1 MONTH';
@@ -386,9 +372,10 @@ BEGIN
                                 AND _TIME.PlanDate = _PartDay.PlanDate;
 
 
-    RETURN QUERY
+     -- Результат
+     OPEN Cursor1 FOR
         SELECT
-            T0.PlanDate::TDateTime                                              AS PlanAmount
+            T0.PlanDate::TDateTime                                              AS PlanDate
            ,Object_Juridical.ValueData::TVarChar                                AS UnitJuridical
            ,Object_Unit.ValueData::TVarChar                                     AS UnitName
            ,Object_ProvinceCity.ValueData                                       AS ProvinceCityName
@@ -448,6 +435,24 @@ BEGIN
        ORDER BY
            Object_Unit.ValueData
           ,T0.PlanDate;
+     RETURN NEXT Cursor1;
+     
+     -- Результат
+     OPEN Cursor2 FOR
+       SELECT
+           _PartDay.PlanDate
+          ,COALESCE(SUM(_TMP.FactAmount),0)     AS FactAmount
+       FROM
+           _PartDay
+           LEFT OUTER JOIN _TMP ON _PartDay.PlanDate = _TMP.PlanDate
+                               AND _PartDay.UnitId = _TMP.UnitId
+       WHERE _PartDay.PlanDate <= CURRENT_DATE
+       GROUP BY
+           _PartDay.PlanDate
+       ORDER BY
+           _PartDay.PlanDate;
+     RETURN NEXT Cursor2;
+          
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -464,4 +469,4 @@ ALTER FUNCTION gpSelect_Report_SoldDay (TDateTime, Integer, Boolean, Boolean, Bo
  28.09.15                                                                        *
 */
 
-select * from gpSelect_Report_SoldDay(inMonth := ('02.06.2021')::TDateTime , inUnitId := 377605 , inQuasiSchedule := 'False' , inisNoStaticCodes := 'True' , inisSP := 'False' ,  inSession := '3');
+select * from gpSelect_Report_SoldDay(inMonth := ('31.03.2022')::TDateTime , inUnitId := 6608396 , inQuasiSchedule := 'False' , inisNoStaticCodes := 'True' , inisSP := 'True' ,  inSession := '3');

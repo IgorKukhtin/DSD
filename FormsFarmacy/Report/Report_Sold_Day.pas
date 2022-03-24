@@ -73,6 +73,14 @@ type
     dxBarButton1: TdxBarButton;
     FactAmountSale: TcxGridDBColumn;
     pcolFactAmountSale: TcxDBPivotGridField;
+    grChartItog: TcxGrid;
+    cxGridDBChartView1: TcxGridDBChartView;
+    cxGridDBChart_PlanDate: TcxGridDBChartDataGroup;
+    cxGridDBChart_FactAmount: TcxGridDBChartSeries;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter2: TcxSplitter;
+    ChartItogDS: TDataSource;
+    ChartItogCDS: TClientDataSet;
   private
     { Private declarations }
   public
