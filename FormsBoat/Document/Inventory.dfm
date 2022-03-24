@@ -272,7 +272,7 @@ object InventoryForm: TInventoryForm
     Height = 137
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 2
+    TabOrder = 1
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -374,7 +374,7 @@ object InventoryForm: TInventoryForm
   object edPartNumber: TcxTextEdit
     Left = 400
     Top = 71
-    TabOrder = 4
+    TabOrder = 3
     Width = 104
   end
   object cxLabel4: TcxLabel
@@ -385,7 +385,7 @@ object InventoryForm: TInventoryForm
   object edBarCode2: TcxTextEdit
     Left = 510
     Top = 66
-    TabOrder = 7
+    TabOrder = 6
     Width = 179
   end
   object cxLabel5: TcxLabel
@@ -401,7 +401,7 @@ object InventoryForm: TInventoryForm
   object edBarCode1: TcxTextEdit
     Left = 510
     Top = 23
-    TabOrder = 10
+    TabOrder = 9
     Width = 179
   end
   object cxLabel7: TcxLabel
@@ -2318,19 +2318,11 @@ object InventoryForm: TInventoryForm
     Left = 616
     Top = 456
   end
-  object HeaderExit1: THeaderExit
-    ExitList = <
-      item
-        Control = edBarCode1
-      end>
-    Action = actGoodsItem1
-    Left = 696
-    Top = 8
-  end
   object EnterMoveNext1: TEnterMoveNext
     EnterMoveNextList = <
       item
         Control = edBarCode1
+        ExitAction = actGoodsItem1
       end>
     Left = 768
     Top = 8

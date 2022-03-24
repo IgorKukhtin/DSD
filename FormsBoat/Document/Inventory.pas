@@ -144,7 +144,6 @@ type
     cxLabel7: TcxLabel;
     edBarCode3: TcxTextEdit;
     actGoodsItem3: TdsdInsertUpdateAction;
-    HeaderExit1: THeaderExit;
     EnterMoveNext1: TEnterMoveNext;
     HeaderExit3: THeaderExit;
     EnterMoveNext3: TEnterMoveNext;
