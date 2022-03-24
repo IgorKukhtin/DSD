@@ -5,16 +5,18 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Invoice(Integer, TVarChar, TDate
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Invoice(Integer, TVarChar, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Invoice(Integer, TVarChar, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Invoice(Integer, TVarChar, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Invoice(Integer, TVarChar, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Invoice(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
+ INOUT ioId                  Integer   , -- Ключ объекта <Документ >
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа (формирование заказа)
     IN inInvNumberPartner    TVarChar  , -- Номер документа у поставщика
     IN inJuridicalId         Integer   , -- Поставщик
     IN inContractId          Integer   , -- Договор 
     IN inPaidKindId          Integer   , -- Форма оплаты
-    IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
+ INOUT ioCurrencyDocumentId  Integer   , -- Валюта (документа)
+   OUT outCurrencyDocumentName TVarChar , -- Валюта (документа)
     
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
@@ -31,9 +33,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Invoice(
 RETURNS RECORD
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-
+   DECLARE vbUserId   Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbCurrencyDocumentId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -52,8 +54,40 @@ BEGIN
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
 
+     --валюту документа берем из 1) из заявки, если там пусто 2) из договора , если и там пусто, берем то что введут в контроле
+     vbCurrencyDocumentId := (SELECT MovementLinkObject_CurrencyDocument.ObjectId
+                              FROM MovementItem
+                                   INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                                ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                               AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementItemId()
+                                                               AND MIFloat_MovementId.ValueData      > 0
+                                   INNER JOIN MovementItem AS MI_OrderIncome ON MI_OrderIncome.Id = MIFloat_MovementId.ValueData :: Integer
+                                                                            AND MI_OrderIncome.isErased = FALSE
+                                   INNER JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
+                                                                 ON MovementLinkObject_CurrencyDocument.MovementId = MI_OrderIncome.MovementId
+                                                                AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
+                              WHERE MovementItem.MovementId = ioId
+                                AND MovementItem.DescId     = zc_MI_Master()
+                                AND MovementItem.isErased   = FALSE
+                                AND MovementItem.Amount     > 0
+                              ORDER BY MovementItem.Id DESC
+                              LIMIT 1);
+     
+     IF COALESCE (inContractId,0) <> 0 AND COALESCE (vbCurrencyDocumentId,0) = 0
+     THEN
+         vbCurrencyDocumentId := (SELECT ObjectLink_Contract_Currency.ChildObjectId
+                                  FROM ObjectLink AS ObjectLink_Contract_Currency
+                                  WHERE ObjectLink_Contract_Currency.ObjectId = inContractId
+                                    AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
+                                  );
+     END IF;
+     --определили 
+     ioCurrencyDocumentId := COALESCE (vbCurrencyDocumentId,ioCurrencyDocumentId);
+     outCurrencyDocumentName := (SELECT Object.ValueData FROM Object WHERE Object.Id = ioCurrencyDocumentId);
+     
      -- сохранили связь с <Валюта (документа)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyDocument(), ioId, inCurrencyDocumentId);
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyDocument(), ioId, ioCurrencyDocumentId);
+          
 
      -- сохранили свойство <Номер накладной у поставщика>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
@@ -66,11 +100,11 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
 
      -- рассчет курса для баланса
-     IF (inCurrencyDocumentId <> zc_Enum_Currency_Basis()) AND COALESCE (ioId, 0) = 0 AND COALESCE (ioCurrencyValue,0) = 0
+     IF (ioCurrencyDocumentId <> zc_Enum_Currency_Basis()) AND COALESCE (ioId, 0) = 0 AND COALESCE (ioCurrencyValue,0) = 0
      THEN 
          SELECT Amount, ParValue 
       INTO ioCurrencyValue, ioParValue
-         FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDate, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= inCurrencyDocumentId, inPaidKindId:= CASE WHEN inPaidKindId <> 0 THEN inPaidKindId ELSE zc_Enum_PaidKind_FirstForm() END);
+         FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDate, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= ioCurrencyDocumentId, inPaidKindId:= CASE WHEN inPaidKindId <> 0 THEN inPaidKindId ELSE zc_Enum_PaidKind_FirstForm() END);
    --  ELSE outCurrencyValue:= 0;
    --       outParValue:=0;
      END IF;
@@ -107,7 +141,7 @@ BEGIN
 
      SELECT -- оплата б/н
             CASE WHEN inPaidKindId = zc_Enum_PaidKind_FirstForm()
-                 THEN CASE WHEN inCurrencyDocumentId IN (0, zc_Enum_Currency_Basis())
+                 THEN CASE WHEN ioCurrencyDocumentId IN (0, zc_Enum_Currency_Basis())
                            THEN MovementFloat_TotalSumm.ValueData         - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
                            ELSE MovementFloat_TotalSummCurrency.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
                       END 
@@ -116,7 +150,7 @@ BEGIN
 
              -- оплата нал
           , CASE WHEN inPaidKindId = zc_Enum_PaidKind_SecondForm()
-                 THEN CASE WHEN inCurrencyDocumentId IN (0, zc_Enum_Currency_Basis())
+                 THEN CASE WHEN ioCurrencyDocumentId IN (0, zc_Enum_Currency_Basis())
                            THEN MovementFloat_TotalSumm.ValueData         - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
                            ELSE MovementFloat_TotalSummCurrency.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
                       END 

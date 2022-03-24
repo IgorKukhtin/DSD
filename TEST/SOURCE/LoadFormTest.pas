@@ -1633,14 +1633,14 @@ end;
 
 procedure TLoadFormTest.LoadInvoiceFormTest;
 begin
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInvoiceForm');
   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInvoiceJournalForm');
   //
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInvoiceJournalDetailChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInvoiceJournalDetailChoiceForm');
   exit;

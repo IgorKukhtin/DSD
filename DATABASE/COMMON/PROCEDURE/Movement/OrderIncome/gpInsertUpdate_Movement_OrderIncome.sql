@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderIncome(
     IN inJuridicalId         Integer   , -- Поставщик
     IN inContractId          Integer   , -- Договор 
     IN inPaidKindId          Integer   , -- Форма оплаты
-    IN ioCurrencyDocumentId  Integer   , -- Валюта (документа)
+ INOUT ioCurrencyDocumentId  Integer   , -- Валюта (документа)
    OUT outCurrencyDocumentName TVarChar , -- Валюта (документа)
 
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)

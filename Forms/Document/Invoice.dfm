@@ -194,7 +194,6 @@ object InvoiceForm: TInvoiceForm
       Properties.Buttons = <
         item
           Default = True
-          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -833,7 +832,7 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'inOrderIncomeId'
         Value = Null
-        Component = OrderIncomeGuides
+        Component = GuidesOrderIncome
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2093,6 +2092,7 @@ object InvoiceForm: TInvoiceForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -2105,6 +2105,7 @@ object InvoiceForm: TInvoiceForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 4
       end>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 131
     Top = 377
@@ -2161,7 +2162,7 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'inContractId'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2169,17 +2170,25 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'inPaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCurrencyDocumentId'
+        Name = 'ioCurrencyDocumentId'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCurrencyDocumentName'
+        Value = Null
+        Component = GuidesCurrencyDocument
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -2318,7 +2327,7 @@ object InvoiceForm: TInvoiceForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -2398,14 +2407,14 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'ContractId'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2413,14 +2422,14 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'PaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2428,14 +2437,14 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'CurrencyDocumentId'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyDocumentName'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2465,14 +2474,14 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'OrderIncomeId'
         Value = Null
-        Component = OrderIncomeGuides
+        Component = GuidesOrderIncome
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'OrderIncomeName'
         Value = Null
-        Component = OrderIncomeGuides
+        Component = GuidesOrderIncome
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2520,7 +2529,7 @@ object InvoiceForm: TInvoiceForm
         Guides = GuidesFrom
       end
       item
-        Guides = OrderIncomeGuides
+        Guides = GuidesOrderIncome
       end>
     ActionItemList = <
       item
@@ -2529,7 +2538,7 @@ object InvoiceForm: TInvoiceForm
     Left = 144
     Top = 224
   end
-  object ContractGuides: TdsdGuides
+  object GuidesContract: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContract
     FormNameParam.Value = 'TContractChoiceForm'
@@ -2541,7 +2550,7 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2550,7 +2559,7 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2574,7 +2583,7 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'PaidKindId'
         Value = Null
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2582,7 +2591,7 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'PaidKindName'
         Value = Null
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2598,7 +2607,7 @@ object InvoiceForm: TInvoiceForm
     Left = 592
     Top = 8
   end
-  object PaidKindGuides: TdsdGuides
+  object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
@@ -2610,7 +2619,7 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'Key'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2619,7 +2628,7 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2765,7 +2774,7 @@ object InvoiceForm: TInvoiceForm
     Left = 500
     Top = 204
   end
-  object CurrencyDocumentGuides: TdsdGuides
+  object GuidesCurrencyDocument: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCurrencyDocument
     FormNameParam.Value = 'TCurrency_ObjectForm'
@@ -2777,7 +2786,7 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'Key'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2785,7 +2794,7 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2953,7 +2962,7 @@ object InvoiceForm: TInvoiceForm
     Left = 222
     Top = 311
   end
-  object OrderIncomeGuides: TdsdGuides
+  object GuidesOrderIncome: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInvNumberOrderIncome
     Key = '0'
@@ -2966,7 +2975,7 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'Key'
         Value = '0'
-        Component = OrderIncomeGuides
+        Component = GuidesOrderIncome
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2975,7 +2984,7 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'InvNumber_Full'
         Value = ''
-        Component = OrderIncomeGuides
+        Component = GuidesOrderIncome
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2999,7 +3008,7 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'ContractId'
         Value = Null
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3007,7 +3016,7 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'ContractName'
         Value = Null
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -3016,7 +3025,7 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'PaidKindId'
         Value = Null
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3024,7 +3033,7 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'PaidKindName'
         Value = Null
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -3033,7 +3042,7 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'CurrencyDocumentId'
         Value = Null
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3041,7 +3050,7 @@ object InvoiceForm: TInvoiceForm
       item
         Name = 'CurrencyDocumentName'
         Value = Null
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -3102,6 +3111,7 @@ object InvoiceForm: TInvoiceForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = chOperDate
@@ -3118,6 +3128,7 @@ object InvoiceForm: TInvoiceForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
+    ShowFieldImageList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
     Left = 878
@@ -3170,7 +3181,7 @@ object InvoiceForm: TInvoiceForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -3187,8 +3198,8 @@ object InvoiceForm: TInvoiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 788
-    Top = 224
+    Left = 748
+    Top = 208
   end
   object spSelectMIChild: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_Invoice_Child'
