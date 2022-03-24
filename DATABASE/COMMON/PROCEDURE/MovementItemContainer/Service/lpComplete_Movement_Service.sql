@@ -390,6 +390,7 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                               ON MILinkObject_Asset.MovementItemId = _tmpItem.MovementItemId
                                              AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                                             AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
         WHERE (ObjectLink_Unit_Contract.ChildObjectId IS NULL -- !!!если НЕ перевыставление!!!
            AND (_tmpItem.OperDate < zc_DateStart_Asset() OR _tmpItem.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_70000() OR vbMovementDescId <> zc_Movement_Service())
               )
@@ -551,18 +552,37 @@ BEGIN
        ;
 
 
-     -- проверка1 - для ОС
+     -- проверка 1.1. - для ОС
      IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
                                                                                , zc_Enum_InfoMoneyDestination_70200() -- Капитальный ремонт
                                                                                , zc_Enum_InfoMoneyDestination_70400() -- Капитальное строительство
                                                                                 )
-                                       OR _tmpItem.InfoMoneyId IN (8945 -- Общефирменные + Услуги полученные + Аренда оборудования
-                                                                 , -1   -- Ремонт оборудования
-                                                                  )
                )
      AND NOT EXISTS (SELECT _tmpItem.AssetId FROM _tmpItem WHERE _tmpItem.AssetId > 0)
      THEN
-         RAISE EXCEPTION 'Ошибка.Для УП статьи <%> необходимо заполнить значение <для Основного средства>.Проведение невозможно.', lfGet_Object_ValueData ((SELECT _tmpItem.InfoMoneyId FROM _tmpItem LIMIT 1));
+         RAISE EXCEPTION 'Ошибка.Для УП статьи <%> необходимо заполнить значение <для Основного средства>.Проведение невозможно.<%>'
+                       , lfGet_Object_ValueData ((SELECT _tmpItem.InfoMoneyId FROM _tmpItem LIMIT 1))
+                       , (SELECT COUNT(*) FROM _tmpItem WHERE _tmpItem.AssetId > 0)
+                        ;
+     END IF;
+
+     -- проверка 1.2. - для ОС
+     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.InfoMoneyId IN (8945    -- Общефирменные + Услуги полученные + Аренда оборудования
+                                                                    , 7900450 -- Общефирменные + Услуги полученные + Ремонт оборудования
+                                                                     )
+               )
+        AND NOT EXISTS (SELECT 1
+                        FROM _tmpItem
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                              ON MILinkObject_Asset.MovementItemId = _tmpItem.MovementItemId
+                                                             AND MILinkObject_Asset.DescId         = zc_MILinkObject_Asset()
+                        WHERE MILinkObject_Asset.ObjectId > 0
+                       )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для УП статьи <%> необходимо заполнить значение <для Основного средства>.Проведение невозможно.<%>'
+                       , lfGet_Object_ValueData ((SELECT _tmpItem.InfoMoneyId FROM _tmpItem LIMIT 1))
+                       , (SELECT COUNT(*) FROM _tmpItem WHERE _tmpItem.AssetId > 0)
+                        ;
      END IF;
 
      -- проверка2 - для ОС

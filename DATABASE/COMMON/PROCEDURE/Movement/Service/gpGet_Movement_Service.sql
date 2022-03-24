@@ -122,13 +122,13 @@ BEGIN
                       
            , CASE WHEN inMovementId = 0 
                        THEN 0
-                  WHEN MovementItem.Amount > 0
+                  WHEN MovementItem.Amount > 0 AND COALESCE (MIFloat_Count.ValueData, 0) = 0
                        THEN MovementItem.Amount
                   ELSE 0
              END                       :: TFloat AS AmountIn
            , CASE WHEN inMovementId = 0
                        THEN 0
-                  WHEN MovementItem.Amount < 0 
+                  WHEN MovementItem.Amount < 0 AND COALESCE (MIFloat_Count.ValueData, 0) = 0 
                        THEN -1 * MovementItem.Amount
                   ELSE 0
              END                       :: TFloat AS AmountOut

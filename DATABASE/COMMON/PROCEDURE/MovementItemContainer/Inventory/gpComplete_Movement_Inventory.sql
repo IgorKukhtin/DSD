@@ -232,6 +232,7 @@ BEGIN
             SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (5064881) AS lfSelect -- ян-онянк
            UNION
             SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (1938)    AS lfSelect -- я-оепепюанрйю
+            WHERE vbUnitId <> 8447 -- жеу ЙНКАЮЯМШИ
            ;
 
      ELSE
