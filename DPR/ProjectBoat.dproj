@@ -75,6 +75,7 @@
 			<UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win64)'!=''">
+			<Icon_MainIcon>mainicon.ico</Icon_MainIcon>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<DCC_DcuOutput>..\TEMP</DCC_DcuOutput>
 			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
@@ -85,6 +86,7 @@
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win32)'!=''">
+			<Icon_MainIcon>mainicon.ico</Icon_MainIcon>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<DCC_DcuOutput>..\TEMP</DCC_DcuOutput>
 			<DCC_UsePackage>dxTileControlRS16;dxdborRS16;dxPScxVGridLnkRS16;cxLibraryRS16;dxLayoutControlRS16;dxPScxPivotGridLnkRS16;dxCoreRS16;cxExportRS16;ZComponent;dxBarRS16;dxSkinsdxNavBarPainterRS16;cxSpreadSheetRS16;ProjectComponent;TeeDB;dxDBXServerModeRS16;cxTreeListdxBarPopupMenuRS16;frxTee16;Rave100VCL;vclib;inetdbbde;cxPivotGridOLAPRS16;dxPSCoreRS16;dxPScxGridLnkRS16;cxPageControlRS16;dxRibbonRS16;DBXSybaseASEDriver;dxPScxTLLnkRS16;dxPsPrVwAdvRS16;vclimg;fmi;cxTreeListRS16;dxComnRS16;ZLibEx;vcldb;dxSkinsdxRibbonPainterRS16;dxADOServerModeRS16;vcldsnap;dac160;dxBarExtDBItemsRS16;unidacvcl160;DBXDb2Driver;Intraweb_120_160;vclribbon;frxe16;dxSkinscxSchedulerPainterRS16;vcl;CloudService;DBXMSSQLDriver;FmxTeeUI;cxDataRS16;cxBarEditItemRS16;unidac160;dxDockingRS16;cxPageControldxBarPopupMenuRS16;dxPSDBTeeChartRS16;cxSchedulerGridRS16;webdsnap;dxBarExtItemsRS16;dxtrmdRS16;dxSkinsdxDLPainterRS16;dxPSLnksRS16;dxPSTeeChartRS16;adortl;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;ProjectDesignComponent;dxPScxExtCommonRS16;vcldbx;dxNavBarRS16;ZDbc;frx16;dxPSdxDBOCLnkRS16;dxSkinsdxBarPainterRS16;ZPlain;crcontrols160;Tee;DBXOdbcDriver;dxdbtrRS16;dxSkinsCoreRS16;svnui;cxPivotGridChartRS16;dxPScxCommonRS16;dxmdsRS16;dxSpellCheckerRS16;intrawebdb_120_160;frxDB16;cxGridRS16;dxSkinscxPCPainterRS16;fs16;vclactnband;FMXTee;TeeUI;cxEditorsRS16;bindcompvcl;cxPivotGridRS16;dxServerModeRS16;dxPScxSchedulerLnkRS16;vclie;dxPScxSSLnkRS16;dxPSdxDBTVLnkRS16;cxSchedulerRS16;dxPSPrVwRibbonRS16;ZCore;vcltouch;dacvcl160;vquery160;websnap;VclSmp;dxTabbedMDIRS16;DataSnapConnectors;unidacfmx160;dxPSdxOCLnkRS16;dsnapcon;dxPSdxFCLnkRS16;dxThemeRS16;dcldxSkinsCoreRS16;dxPScxPCProdRS16;ZParseSql;vclx;svn;dxFlowChartRS16;bdertl;dxGDIPlusRS16;dxBarDBNavRS16;$(DCC_UsePackage)</DCC_UsePackage>
@@ -105,12 +107,14 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
+			<Icon_MainIcon>mainicon.ico</Icon_MainIcon>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_Locale>1033</VerInfo_Locale>
 			<AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
 			<AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<Icon_MainIcon>mainicon.ico</Icon_MainIcon>
 			<Debugger_RunParams>/log </Debugger_RunParams>
 			<VerInfo_Build>70</VerInfo_Build>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
@@ -130,12 +134,14 @@
 			<DCC_DebugInformation>0</DCC_DebugInformation>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
+			<Icon_MainIcon>mainicon.ico</Icon_MainIcon>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_Locale>1033</VerInfo_Locale>
 			<AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
 			<AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+			<Icon_MainIcon>mainicon.ico</Icon_MainIcon>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_Locale>1033</VerInfo_Locale>
