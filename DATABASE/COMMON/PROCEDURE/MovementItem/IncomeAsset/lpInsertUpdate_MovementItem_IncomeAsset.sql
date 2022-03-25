@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_IncomeAsset()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_IncomeAsset (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_IncomeAsset (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_IncomeAsset(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,10 +9,11 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_IncomeAsset(
     IN inGoodsId             Integer   , -- Товары
     IN inUnitId              Integer   , -- Подразделение
     IN inAssetId             Integer   , -- Для ОС
+    IN inMIId_Invoice        Integer    , --
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
     IN inCountForPrice       TFloat    , -- Цена за количество
-    IN inMIId_Invoice        TFloat    , --
+
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer

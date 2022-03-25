@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_IncomeAsset (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_IncomeAsset (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_IncomeAsset (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_IncomeAsset(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -9,9 +10,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_IncomeAsset(
     IN inGoodsId               Integer   , -- Товары
     IN inUnitId                Integer   , -- Подразделение
     IN inAssetId               Integer   , -- Для ОС
+    IN inMIId_Invoice          Integer   , -- элемент документа Cчет
  INOUT ioAmount                TFloat    , -- Количество
     IN inPrice                 TFloat    , -- Цена
-    IN inMIId_Invoice          TFloat    , -- элемент документа Cчет
  INOUT ioCountForPrice         TFloat    , -- Цена за количество
    OUT outAmountSumm           TFloat    , -- Сумма расчетная
  INOUT ioInvNumber_Asset       TVarChar  , -- 
@@ -85,10 +86,10 @@ BEGIN
                                                    , inGoodsId            := inGoodsId
                                                    , inUnitId             := inUnitId
                                                    , inAssetId            := inAssetId
+                                                   , inMIId_Invoice       := inMIId_Invoice
                                                    , inAmount             := ioAmount
                                                    , inPrice              := inPrice
                                                    , inCountForPrice      := ioCountForPrice
-                                                   , inMIId_Invoice       := inMIId_Invoice
                                                    , inUserId             := vbUserId
                                                     );
 

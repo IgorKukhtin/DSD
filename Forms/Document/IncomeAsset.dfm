@@ -2036,6 +2036,14 @@ object IncomeAssetForm: TIncomeAssetForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMIId_Invoice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MIId_Invoice'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioAmount'
         Value = Null
         Component = MasterCDS
@@ -2049,15 +2057,6 @@ object IncomeAssetForm: TIncomeAssetForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMIId_Invoice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MIId_Invoice'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
