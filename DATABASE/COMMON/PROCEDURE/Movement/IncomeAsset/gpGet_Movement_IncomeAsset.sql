@@ -58,9 +58,12 @@ BEGIN
              , 0                     AS ContractId
              , CAST ('' AS TVarChar) AS ContractName
 
-             , ObjectCurrency.Id         AS CurrencyDocumentId	-- грн
-             , ObjectCurrency.ValueData  AS CurrencyDocumentName
-           
+            -- , ObjectCurrency.Id         AS CurrencyDocumentId	-- грн
+            -- , ObjectCurrency.ValueData  AS CurrencyDocumentName
+            --валюта подставляется из счета
+             , 0                     AS CurrencyDocumentId
+             , CAST ('' AS TVarChar) AS CurrencyDocumentName
+
              , 0                     AS CurrencyPartnerId
              , CAST ('' AS TVarChar) AS CurrencyPartnerName
 
@@ -72,8 +75,10 @@ BEGIN
              , 0                                    AS InvoiceId
              , CAST ('' AS TVarChar) 	            AS InvoiceName
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
-              JOIN Object AS ObjectCurrency ON ObjectCurrency.descid= zc_Object_Currency()
-                                            AND ObjectCurrency.id = 14461;	             -- грн
+            /*  JOIN Object AS ObjectCurrency ON ObjectCurrency.descid= zc_Object_Currency()
+                                            AND ObjectCurrency.id = 14461	             -- грн
+            */
+          ;
      ELSE
        RETURN QUERY 
        
