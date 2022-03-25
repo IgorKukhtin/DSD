@@ -41,6 +41,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,InsertDate TDateTime    --Дата (созд.)
               ,InsertName TVarChar     --Пользователь(созд.)
               ,PriceSite TFloat
+              ,isSupplierFailures Boolean
               )
 
 
@@ -203,7 +204,13 @@ BEGIN
                                                                WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                                                  AND Object_BarCode.isErased = False
                                                                  AND Object_Object.isErased = False)
-                      )
+                      ),
+     tmpSupplierFailures AS (SELECT DISTINCT 
+                                    tmp.OperDate
+                                  , tmp.DateFinal
+                                  , tmp.UnitId
+                                  , tmp.JuridicalId
+                             FROM lpSelect_PriceList_SupplierFailuresGoods (inGoodsId := inGoodsId, inUnitId := 0, inUserId := vbUserId) AS tmp)
 
       --
       SELECT Movement.Id                              AS MovementId
@@ -258,6 +265,8 @@ BEGIN
             ,Movement.InsertName
             
             ,tmpPrice_Site.Price                      AS PriceSite
+            
+            ,COALESCE (tmpSupplierFailures.UnitId, 0) > 0 AS isSupplierFailures
 
       FROM tmpMovement AS Movement
 
@@ -373,6 +382,12 @@ BEGIN
                                  AND Movement.DescId = zc_Movement_OrderInternal()
                                  
         LEFT JOIN tmpPrice_Site ON 1 = 1 
+        
+        LEFT JOIN tmpSupplierFailures ON tmpSupplierFailures.OperDate    <= Movement.OperDate
+                                     AND tmpSupplierFailures.DateFinal   > Movement.OperDate
+                                     AND tmpSupplierFailures.UnitId      = COALESCE(MovementLinkObject_Unit.ObjectId, MovementLinkObject_To.ObjectId)
+                                     AND tmpSupplierFailures.JuridicalId = MovementLinkObject_From.ObjectId 
+                                     AND Movement.DescId                 = zc_Movement_OrderExternal()
 
     WHERE (Object_Unit.Id = vbUnitId OR vbUnitId = 0)
       AND (ObjectLink_Juridical_Retail.ChildObjectId = vbRetailId OR vbRetailId = 0)
@@ -405,4 +420,4 @@ ALTER FUNCTION gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime, TVarCha
 --SELECT * FROM gpReport_OrderGoodsSearch (inGoodsId:= 9247, inStartDate:= '01.01.2019', inEndDate:= '01.12.2019', inSession:= '183242')
 --select * from gpReport_OrderGoodsSearch(inGoodsId := 2848982 , inStartDate := ('01.10.2020')::TDateTime , inEndDate := ('31.10.2020')::TDateTime ,  inSession := '3');
 
-select * from gpReport_OrderGoodsSearch(inGoodsId := 37207 , inStartDate := ('21.02.2022')::TDateTime , inEndDate := ('07.03.2022')::TDateTime ,  inSession := '3');
+select * from gpReport_OrderGoodsSearch(inGoodsId := 22306 , inStartDate := ('01.03.2022')::TDateTime , inEndDate := ('25.03.2022')::TDateTime ,  inSession := '3');

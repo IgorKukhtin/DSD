@@ -546,9 +546,9 @@ inherited OrderExternalForm: TOrderExternalForm
       Left = 1025
       Top = 172
       Hint = #1047#1072#1075#1088#1091#1078#1077#1085' '#1086#1090#1082#1072#1079
-      Caption = #1047#1072#1075#1088#1091#1078#1077#1085' '#1086#1090#1082#1072#1079
+      Caption = #1054#1090#1082#1072#1079#1099' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1099
       ParentShowHint = False
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       ShowHint = True
       TabOrder = 27
       Width = 133
@@ -2340,5 +2340,44 @@ inherited OrderExternalForm: TOrderExternalForm
     PackSize = 1
     Left = 410
     Top = 360
+  end
+  object HeaderSaverSupplierFailures: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
+    StoredProc = spUpdate_isSupplierFailures
+    ControlList = <
+      item
+        Control = cbSupplierFailures
+      end>
+    GetStoredProc = spGet
+    Left = 1008
+    Top = 321
+  end
+  object spUpdate_isSupplierFailures: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderExternal_SupplierFailures'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSupplierFailures'
+        Value = True
+        Component = cbSupplierFailures
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1010
+    Top = 384
   end
 end

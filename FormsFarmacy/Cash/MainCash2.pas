@@ -609,6 +609,8 @@ type
     spUpdate_User_KeyExpireDate: TdsdStoredProc;
     actUser_expireDate: TAction;
     pmUser_expireDate: TMenuItem;
+    actSupplierFailuresCash: TdsdOpenForm;
+    N62: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

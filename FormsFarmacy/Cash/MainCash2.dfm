@@ -6389,6 +6389,18 @@ inherited MainCashForm2: TMainCashForm2
       Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1089#1088#1086#1082' '#1076#1077#1081#1089#1090#1074#1080#1103' '#1087#1086' '#1074#1089#1077#1084' '#1092#1072#1081#1083#1086#1074#1099#1084' '#1082#1083#1102#1095#1072#1084
       OnExecute = actUser_expireDateExecute
     end
+    object actSupplierFailuresCash: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+      Hint = #1052#1077#1090#1086#1076#1080#1095#1082#1072
+      FormName = 'TReport_OrderExternal_SupplierFailuresCashForm'
+      FormNameParam.Value = 'TReport_OrderExternal_SupplierFailuresCashForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -6596,6 +6608,9 @@ inherited MainCashForm2: TMainCashForm2
       end
       object N18: TMenuItem
         Action = actShowListDiff
+      end
+      object N62: TMenuItem
+        Action = actSupplierFailuresCash
       end
     end
     object N30: TMenuItem

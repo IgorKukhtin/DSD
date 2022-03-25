@@ -252,6 +252,14 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             VisibleForCustomization = False
             Width = 105
           end
+          object isSupplierFailures: TcxGridDBColumn
+            Caption = #1054#1090#1082#1072#1079' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'isSupplierFailures'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 54
+          end
           object PartnerGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'PartnerGoodsName'

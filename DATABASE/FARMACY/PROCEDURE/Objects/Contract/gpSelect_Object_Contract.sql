@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isReport Boolean,
                isMorionCode Boolean, isBarCode Boolean, 
                isMorionCodeLoad Boolean, isBarCodeLoad Boolean, 
-               isPartialPay Boolean,
+               isPartialPay Boolean, isDefermentContract Boolean,
                isErased Boolean) AS
 $BODY$
 BEGIN
@@ -72,6 +72,7 @@ BEGIN
            , COALESCE (ObjectBoolean_MorionCodeLoad.ValueData, FALSE):: Boolean   AS isMorionCodeLoad
            , COALESCE (ObjectBoolean_BarCodeLoad.ValueData, FALSE)   :: Boolean   AS isBarCodeLoad
            , COALESCE (ObjectBoolean_PartialPay.ValueData, FALSE)    :: Boolean   AS isPartialPay
+           , COALESCE (ObjectBoolean_DefermentContract.ValueData, FALSE):: Boolean AS isDefermentContract
            
            , Object_Contract_View.isErased
        FROM Object_Contract_View
@@ -129,6 +130,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_PartialPay
                                    ON ObjectBoolean_PartialPay.ObjectId = Object_Contract_View.ContractId
                                   AND ObjectBoolean_PartialPay.DescId = zc_ObjectBoolean_Contract_PartialPay()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_DefermentContract
+                                   ON ObjectBoolean_DefermentContract.ObjectId = Object_Contract_View.ContractId
+                                  AND ObjectBoolean_DefermentContract.DescId = zc_ObjectBoolean_Contract_DefermentContract()
 
            LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
                                 ON ObjectLink_BankAccount_Bank.ObjectId = Object_Contract_View.BankAccountId

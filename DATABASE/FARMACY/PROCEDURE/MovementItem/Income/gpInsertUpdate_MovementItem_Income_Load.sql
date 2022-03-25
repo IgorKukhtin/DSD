@@ -231,13 +231,19 @@ BEGIN
        END IF;
 
        --Если дата оплаты пустая - то вытягиваем её из договора
-       IF inPaymentDate is Null or inPaymentDate = '19000101'::TDateTime
+       --Если Использовать в приходе отсрочку из договора 
+       IF inPaymentDate is Null or inPaymentDate = '19000101'::TDateTime or
+          EXISTS(SELECT 1 FROM ObjectBoolean AS ObjectBoolean_DefermentContract
+                 WHERE ObjectBoolean_DefermentContract.ObjectId = vbContractId
+                   AND ObjectBoolean_DefermentContract.DescId = zc_ObjectBoolean_Contract_DefermentContract()
+                   AND ObjectBoolean_DefermentContract.ValueData = TRUE)
        THEN
-           SELECT inOperDate::Date + COALESCE(_tmpContract.Deferment, 0)::Integer
+          SELECT inOperDate::Date + COALESCE(_tmpContract.Deferment, 0)::Integer
           INTO inPaymentDate
-           FROM _tmpContract
-           WHERE _tmpContract.ContractId = vbContractId;
+          FROM _tmpContract
+          WHERE _tmpContract.ContractId = vbContractId;
        END IF;
+       
 
        IF inPaymentDate IS NULL
        THEN
@@ -460,7 +466,7 @@ BEGIN
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
-
+     
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

@@ -1,10 +1,9 @@
--- Function: gpReport_OrderExternal_SupplierFailures()
+-- Function: gpReport_OrderExternal_SupplierFailuresCash()
 
-DROP FUNCTION IF EXISTS gpReport_OrderExternal_SupplierFailures (TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_OrderExternal_SupplierFailuresCash (TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_OrderExternal_SupplierFailures(
+CREATE OR REPLACE FUNCTION gpReport_OrderExternal_SupplierFailuresCash(
     IN inOperdate    TDateTime    , -- на дату
-    IN inUnitId      Integer      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
@@ -15,11 +14,20 @@ RETURNS TABLE (Id Integer
 )
 AS
 $BODY$
-  DECLARE vbMainJuridicalId Integer;
-  DECLARE vbAreaId   Integer;
-  DECLARE vbCostCredit TFloat;
+   DECLARE vbUserId Integer;
+   DECLARE vbUnitId Integer;
+   DECLARE vbUnitKey TVarChar;
 BEGIN
 
+    -- проверка прав пользователя на вызов процедуры
+    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
+    vbUserId:= lpGetUserBySession (inSession);
+    vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+    IF vbUnitKey = '' THEN
+       vbUnitKey := '0';
+    END IF;
+    vbUnitId := vbUnitKey::Integer;
+    
     RETURN QUERY
     WITH tmpMovementAll AS (SELECT MAX (Movement.OperDate)
                                    OVER (PARTITION BY MovementLinkObject_Juridical.ObjectId
@@ -48,7 +56,7 @@ BEGIN
         tmpJuridicalArea AS (SELECT DISTINCT
                                     tmp.JuridicalId              AS JuridicalId
                                   , tmp.AreaId_Juridical         AS AreaId
-                             FROM lpSelect_Object_JuridicalArea_byUnit (inUnitId , 0) AS tmp
+                             FROM lpSelect_Object_JuridicalArea_byUnit (vbUnitId , 0) AS tmp
                              ),
         tmpLastMovement AS (SELECT PriceList.JuridicalId
                                  , PriceList.ContractId
@@ -60,7 +68,7 @@ BEGIN
                                  LEFT JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = PriceList.JuridicalId
                                                            AND tmpJuridicalArea.AreaId = PriceList.AreaId 
                             WHERE PriceList.Max_Date = PriceList.OperDate
-                              AND (COALESCE (inUnitId, 0) = 0 OR COALESCE(tmpJuridicalArea.AreaId, 0) <> 0)),
+                              AND (COALESCE (vbUnitId, 0) = 0 OR COALESCE(tmpJuridicalArea.AreaId, 0) <> 0)),
         tmpMovementItem AS (SELECT DISTINCT
                                    LastMovement.JuridicalId
                                  , LastMovement.ContractId
@@ -82,7 +90,7 @@ BEGIN
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                               ON MovementLinkObject_Unit.MovementId = Movement_OrderExternal.Id
                                                              AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To()
-                                                             AND MovementLinkObject_Unit.ObjectId = inUnitId
+                                                             AND MovementLinkObject_Unit.ObjectId = vbUnitId
                                      INNER JOIN MovementItem AS MI_OrderExternal
                                                         ON MI_OrderExternal.MovementId = Movement_OrderExternal.Id
                                                        AND MI_OrderExternal.DescId = zc_MI_Master()
@@ -158,9 +166,9 @@ BEGIN
          LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.ObjectId
          LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
          
-    WHERE Movement_OrderExternal_View.ToId = inUnitId
+    WHERE Movement_OrderExternal_View.ToId = vbUnitId
       AND Movement_OrderExternal_View.OperDate = inOperDate
-      AND COALESCE(Movement_OrderExternal_View.FromId, 0) = 0        
+      AND COALESCE(Movement_OrderExternal_View.FromId, 0) = 0
         ;
 
 
@@ -171,9 +179,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 03.03.22                                                       *
+ 25.03.22                                                       *
 */
 
 -- тест
 -- 
-SELECT * FROM gpReport_OrderExternal_SupplierFailures (inOperDate := ('03.03.2022')::TDateTime,  inUnitId := 183292, inSession := '3')
+SELECT * FROM gpReport_OrderExternal_SupplierFailuresCash (inOperDate := ('25.03.2022')::TDateTime,  inSession := '3')

@@ -24,6 +24,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract
      (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
      (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Boolean, Tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
+     (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Tvarchar);
      
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Договор>
@@ -46,6 +48,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inStartDate               TDateTime,     -- Дата с которой действует договор
     IN inEndDate                 TDateTime,     -- Дата до которой действует договор    
     IN inisPartialPay            Boolean  ,     -- Оплата частями
+    IN inisDefermentContract     Boolean  ,     -- Использовать в приходе отсрочку из договора
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -114,6 +117,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_OrderSumm(), ioId, inOrderSummComment);
       -- сохранили свойство <Оплата частями>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_PartialPay(), ioId, inisPartialPay);
+      -- сохранили свойство <Использовать в приходе отсрочку из договора>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_DefermentContract(), ioId, inisDefermentContract);
+
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

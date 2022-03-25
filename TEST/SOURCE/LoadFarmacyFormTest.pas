@@ -1062,7 +1062,10 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaymentSumForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_SupplierFailuresCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_SupplierFailuresCashForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaymentSumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PaymentSumForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaperRecipeSPInsulinForm'));
@@ -1070,7 +1073,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaperRecipeSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PaperRecipeSPForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainingInsulinsForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainingInsulinsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainingInsulinsForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_JuridicalItogForm'));
@@ -1807,12 +1810,12 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SoldForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_SoldForm');
-}
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sold_DayForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Sold_DayForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sold_DayUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Sold_DayUserForm');
- {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ByPartionGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ByPartionGoodsForm');
 
@@ -1854,10 +1857,10 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsDialogForm');
-}
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LiquidityForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_LiquidityForm');
- {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdraftForm'));
     TdsdFormStorageFactory.GetStorage.Load('TOverdraftForm');
 

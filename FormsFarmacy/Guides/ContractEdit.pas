@@ -68,6 +68,7 @@ type
     edMember: TcxButtonEdit;
     GuidesMember: TdsdGuides;
     cbPartialPay: TcxCheckBox;
+    cbDefermentContract: TcxCheckBox;
   private
     { Private declarations }
   public

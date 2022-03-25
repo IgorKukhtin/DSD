@@ -50,6 +50,7 @@ type
     InvNumberBranch: TcxGridDBColumn;
     BranchDate: TcxGridDBColumn;
     PriceSite: TcxGridDBColumn;
+    isSupplierFailures: TcxGridDBColumn;
   private
     { Private declarations }
   public

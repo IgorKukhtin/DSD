@@ -287,6 +287,14 @@ inherited ContractEditForm: TContractEditForm
     TabOrder = 40
     Width = 107
   end
+  object cbDefermentContract: TcxCheckBox [41]
+    Left = 201
+    Top = 402
+    Hint = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1074' '#1087#1088#1080#1093#1086#1076#1077' '#1086#1090#1089#1088#1086#1095#1082#1091' '#1080#1079' '#1076#1086#1075#1086#1074#1086#1088#1072
+    Caption = #1054#1090#1089#1088#1086#1095#1082#1091' '#1080#1079' '#1076#1086#1075#1086#1074#1086#1088#1072
+    TabOrder = 41
+    Width = 146
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 291
     Top = 118
@@ -434,7 +442,7 @@ inherited ContractEditForm: TContractEditForm
       end
       item
         Name = 'inSigningDate'
-        Value = 'NULL'
+        Value = Null
         Component = edSigningDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -460,6 +468,14 @@ inherited ContractEditForm: TContractEditForm
         Name = 'inisPartialPay'
         Value = Null
         Component = cbPartialPay
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDefermentContract'
+        Value = Null
+        Component = cbDefermentContract
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -551,21 +567,21 @@ inherited ContractEditForm: TContractEditForm
       end
       item
         Name = 'SigningDate'
-        Value = 'NULL'
+        Value = Null
         Component = edSigningDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'StartDate'
-        Value = 'NULL'
+        Value = Null
         Component = edStartDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
-        Value = 'NULL'
+        Value = Null
         Component = edEndDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -653,6 +669,13 @@ inherited ContractEditForm: TContractEditForm
         Name = 'isPartialPay'
         Value = Null
         Component = cbPartialPay
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDefermentContract'
+        Value = Null
+        Component = cbDefermentContract
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

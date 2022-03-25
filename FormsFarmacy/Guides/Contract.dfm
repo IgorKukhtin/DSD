@@ -255,6 +255,15 @@ inherited ContractForm: TContractForm
             Options.Editing = False
             Width = 88
           end
+          object isDefermentContract: TcxGridDBColumn
+            Caption = #1054#1090#1089#1088#1086#1095#1082#1091' '#1080#1079' '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'isDefermentContract'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1074' '#1087#1088#1080#1093#1086#1076#1077' '#1086#1090#1089#1088#1086#1095#1082#1091' '#1080#1079' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Options.Editing = False
+            Width = 77
+          end
         end
       end
     end

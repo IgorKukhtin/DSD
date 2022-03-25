@@ -74,6 +74,8 @@ type
     isUserKeyDate: TcxGridDBColumn;
     spPUSHInfo: TdsdStoredProc;
     actPUSHInfo: TdsdShowPUSHMessage;
+    actShowAll: TBooleanStoredProcAction;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

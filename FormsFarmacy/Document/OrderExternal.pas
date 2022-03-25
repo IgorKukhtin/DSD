@@ -128,6 +128,8 @@ type
     cbSupplierFailures: TcxCheckBox;
     spUpdate_SetSupplierFailures: TdsdStoredProc;
     actUpdate_SetSupplierFailures: TdsdExecStoredProc;
+    HeaderSaverSupplierFailures: THeaderSaver;
+    spUpdate_isSupplierFailures: TdsdStoredProc;
   private
     { Private declarations }
   public

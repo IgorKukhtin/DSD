@@ -57,6 +57,7 @@ type
     bbUpdate_isMorionCodeLoad: TdxBarButton;
     bbUpdate_isBarCodeLoad: TdxBarButton;
     Code: TcxGridDBColumn;
+    isDefermentContract: TcxGridDBColumn;
   private
     { Private declarations }
   public

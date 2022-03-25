@@ -26,6 +26,17 @@ BEGIN
     vbUserId := inSession;
     --проверили расчетный счет
     
+    IF COALESCE (inId, 0) = 0
+    THEN
+      IF EXISTS(SELECT 1 FROM  MovementItemFloat 
+                WHERE MovementItemFloat.DescId = zc_MIFloat_MovementId()
+                  AND MovementItemFloat.MovementItemId in (SELECT MovementItem.Id FROM MovementItem WHERE MovementItem.MovementId = inMovementId)
+                  AND MovementItemFloat.ValueData = inIncomeId)
+      THEN
+        RAISE EXCEPTION 'Ошибка! Приходная накладная <%> уже использована в оплате.', (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inIncomeId);      
+      END IF;
+    END IF;
+    
     PERFORM lpInsertUpdate_MovementItem_Payment (ioId               := inId
                                             , inMovementId          := inMovementId
                                             , inIncomeId            := inIncomeId
