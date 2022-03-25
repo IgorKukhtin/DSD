@@ -710,6 +710,9 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -728,7 +731,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -793,7 +796,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1091,7 +1094,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -1175,7 +1178,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
       end
       item
         Name = 'inisSnab'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1303,10 +1306,13 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 216
   end

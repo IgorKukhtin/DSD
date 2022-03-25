@@ -174,10 +174,10 @@ BEGIN
                                    AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
            LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
                                    ON MovementFloat_CurrencyPartnerValue.MovementId = Movement.Id
-                                  AND MovementFloat_CurrencyPartnerValue.DescId = CASE WHEN Movement.DescId = zc_Movement_Income() THEN zc_MovementFloat_CurrencyValue() ELSE zc_MovementFloat_CurrencyPartnerValue() END
+                                  AND MovementFloat_CurrencyPartnerValue.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Income(),zc_Movement_OrderIncome(), zc_Movement_Invoice()) THEN zc_MovementFloat_CurrencyValue() ELSE zc_MovementFloat_CurrencyPartnerValue() END
            LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
                                    ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
-                                  AND MovementFloat_ParPartnerValue.DescId = CASE WHEN Movement.DescId = zc_Movement_Income() THEN zc_MovementFloat_ParValue() ELSE zc_MovementFloat_ParPartnerValue() END
+                                  AND MovementFloat_ParPartnerValue.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Income(),zc_Movement_OrderIncome(), zc_Movement_Invoice()) THEN zc_MovementFloat_ParValue() ELSE zc_MovementFloat_ParPartnerValue() END
 
       WHERE Movement.Id = inMovementId;
 
@@ -296,7 +296,7 @@ BEGIN
             -- Сумма в валюте
           , CAST (CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() THEN OperSumm_Partner_Currency ELSE OperSumm_Partner END
                   -- так переводится в валюту CurrencyPartnerId
-                * CASE WHEN vbMovementDescId <> zc_Movement_Invoice() AND vbMovementDescId <> zc_Movement_Income()
+                * CASE WHEN vbMovementDescId <> zc_Movement_Invoice() AND vbMovementDescId <> zc_Movement_Income() AND vbMovementDescId <> zc_Movement_OrderIncome()
                        THEN CASE WHEN vbCurrencyPartnerId <> vbCurrencyDocumentId THEN CASE WHEN vbParPartnerValue = 0 THEN 0 ELSE vbCurrencyPartnerValue / vbParPartnerValue END ELSE CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN 0 ELSE 1 END END
                        ELSE 1
                   END

@@ -100,7 +100,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
 
      -- рассчет курса для баланса
-     IF (ioCurrencyDocumentId <> zc_Enum_Currency_Basis()) AND COALESCE (ioId, 0) = 0 AND COALESCE (ioCurrencyValue,0) = 0
+     IF (ioCurrencyDocumentId <> zc_Enum_Currency_Basis()) /*AND COALESCE (ioId, 0) = 0*/ AND COALESCE (ioCurrencyValue,0) = 0
      THEN 
          SELECT Amount, ParValue 
       INTO ioCurrencyValue, ioParValue

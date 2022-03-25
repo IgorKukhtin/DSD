@@ -2228,7 +2228,7 @@ object InvoiceForm: TInvoiceForm
         Value = Null
         Component = edParValue
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
