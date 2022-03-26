@@ -1,8 +1,9 @@
 -- Function: gpSelect_Object_HelsiUser (TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_HelsiUser (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_HelsiUser (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_HelsiUser(
+    IN inIsShowAll   Boolean,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
@@ -150,12 +151,19 @@ BEGIN
          LEFT JOIN tmpUserKeyUnit ON tmpUserKeyUnit.UnitId = ObjectLink_User_Unit.ChildObjectId
 
    WHERE Object_User.DescId = zc_Object_User()
-     AND COALESCE(ObjectString_UserName.ValueData, '') <> '';
+     AND COALESCE(ObjectString_UserName.ValueData, '') <> ''
+     AND (CASE WHEN Object_Unit.ValueData ILIKE '%Зачинена%' OR Object_Unit.ValueData ILIKE '%ЗАКРЫТА%' 
+              THEN False
+              WHEN COALESCE(ObjectBlob_Key.ValueData, '') <> '' AND 
+                   COALESCE(ObjectString_KeyPassword.ValueData, '') <> '' AND
+                   COALESCE(ObjectDate_User_KeyExpireDate.ValueData, CURRENT_DATE + INTERVAL '1 DAY') < CURRENT_DATE
+              THEN False 
+              ELSE True END = TRUE OR inIsShowAll = TRUE);
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_HelsiUser (TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_HelsiUser (Boolean, TVarChar) OWNER TO postgres;
 
 -------------------------------------------------------------------------------
 /*
@@ -165,4 +173,4 @@ ALTER FUNCTION gpSelect_Object_HelsiUser (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_HelsiUser ('3')
+-- SELECT * FROM gpSelect_Object_HelsiUser (False, '3')

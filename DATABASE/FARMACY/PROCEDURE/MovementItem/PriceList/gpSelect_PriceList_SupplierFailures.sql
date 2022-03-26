@@ -112,6 +112,44 @@ BEGIN
         LEFT JOIN Object_Goods_Juridical AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId 
         LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
    WHERE COALESCE(MIBoolean_SupplierFailures.ValueData, False) = True OR inShowAll = TRUE
+    UNION ALL
+    SELECT Max(Movement_OrderExternal_View.Id)::Integer
+         , NULL::INTEGER                        AS GoodsJuridicalId
+         , NULL::TVarChar                       AS GoodsJuridicalCode
+         , NULL::TVarChar                       AS GoodsJuridicalName
+        
+         , Object_Goods_Main.ObjectCode          AS GoodsCode
+         , Object_Goods_Main.Name                AS GoodsName
+
+         , NULL::INTEGER                         AS JuridicalId
+         , NULL::INTEGER                         AS JuridicalCode
+         , 'Дефектура рынка'::TVarChar           AS JuridicalName
+        
+         , NULL::INTEGER                         AS ContractId
+         , NULL::INTEGER                         AS ContractCode
+         , NULL::TVarChar                        AS ContractName
+        
+         , NULL::INTEGER                         AS AreaId
+         , NULL::INTEGER                         AS AreaCode
+         , NULL::TVarChar                        AS AreaName
+
+         , False                                 AS isSupplierFailures
+
+         , NULL::TDateTime                       AS DateUpdate
+         , NULL::TVarChar                        AS UserUpdate
+         , NULL::TDateTime                       AS OperDate
+         
+    FROM Movement_OrderExternal_View 
+     
+         INNER JOIN MovementItem ON MovementItem.MovementId =  Movement_OrderExternal_View.Id
+
+         LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.ObjectId
+         LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
+         
+    WHERE Movement_OrderExternal_View.OperDate = inOperDate
+      AND COALESCE(Movement_OrderExternal_View.FromId, 0) = 0   
+    GROUP BY Object_Goods_Main.ObjectCode
+           , Object_Goods_Main.Name       
         ;
 
 
@@ -127,4 +165,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpSelect_PriceList_SupplierFailures (inOperDate := ('23.02.2022')::TDateTime,  inShowAll := FALSE, inSession   := '3')
+select * from gpSelect_PriceList_SupplierFailures(inOperdate := ('25.03.2022')::TDateTime , inShowAll := 'True' ,  inSession := '3');

@@ -5033,6 +5033,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object acTReport_NotPaySumIncome: TdsdOpenForm
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1053#1077' '#1086#1087#1083#1072#1095#1077#1085#1085#1099#1077' '#1087#1088#1080#1093#1086#1076#1099' '#1080#1090#1086#1075#1080' '#1087#1086' '#1102#1088'. '#1083#1080#1094#1072#1084
+      FormName = 'TReport_NotPaySumIncomeForm'
+      FormNameParam.Value = 'TReport_NotPaySumIncomeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5897,6 +5908,9 @@
       end
       object N344: TMenuItem
         Action = actReport_PaymentSum
+      end
+      object N346: TMenuItem
+        Action = acTReport_NotPaySumIncome
       end
     end
     object N200: TMenuItem [6]

@@ -1062,6 +1062,9 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_NotPaySumIncomeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_NotPaySumIncomeForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_SupplierFailuresCashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_SupplierFailuresCashForm');
 

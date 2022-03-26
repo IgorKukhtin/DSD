@@ -1171,7 +1171,8 @@ uses
   Report_PaperRecipeSPInsulin in '..\..\FormsFarmacy\Report\Report_PaperRecipeSPInsulin.pas' {Report_PaperRecipeSPInsulinForm: TParentForm},
   Report_PaymentSum in '..\..\FormsFarmacy\Report\Report_PaymentSum.pas' {Report_PaymentSumForm: TParentForm},
   Report_LoginProtocol in '..\..\FormsFarmacy\Report\Report_LoginProtocol.pas' {Report_LoginProtocolForm: TParentForm},
-  Report_OrderExternal_SupplierFailuresCash in '..\..\FormsFarmacy\Report\Report_OrderExternal_SupplierFailuresCash.pas' {Report_OrderExternal_SupplierFailuresCashForm: TParentForm};
+  Report_OrderExternal_SupplierFailuresCash in '..\..\FormsFarmacy\Report\Report_OrderExternal_SupplierFailuresCash.pas' {Report_OrderExternal_SupplierFailuresCashForm: TParentForm},
+  Report_NotPaySumIncome in '..\..\FormsFarmacy\Report\Report_NotPaySumIncome.pas' {Report_NotPaySumIncomeForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

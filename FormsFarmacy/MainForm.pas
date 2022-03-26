@@ -932,6 +932,8 @@ type
     N344: TMenuItem;
     actReport_LoginProtocol: TdsdOpenForm;
     N345: TMenuItem;
+    acTReport_NotPaySumIncome: TdsdOpenForm;
+    N346: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

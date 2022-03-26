@@ -151,7 +151,7 @@ BEGIN
 
          , NULL::INTEGER                         AS JuridicalId
          , NULL::INTEGER                         AS JuridicalCode
-         , NULL::TVarChar                        AS JuridicalName
+         , 'Дефектура рынка'::TVarChar           AS JuridicalName
         
          , NULL::INTEGER                         AS ContractId
          , NULL::INTEGER                         AS ContractCode
