@@ -350,8 +350,8 @@ BEGIN
                                         --, ObjectLink_ContractCondition_ContractSend.ChildObjectId AS ContractId_send
 
                                              -- если нужно считать по условиям - для НАЛ
-                                           --, CASE WHEN tmpContractCondition.PaidKindId_calc = zc_Enum_PaidKind_SecondForm() THEN tmpContractCondition.ContractConditionId ELSE 0 END AS ContractConditionId
-                                           , tmpContractCondition.ContractConditionId AS ContractConditionId
+                                          -- , CASE WHEN tmpContractCondition.PaidKindId_calc = zc_Enum_PaidKind_SecondForm() THEN tmpContractCondition.ContractConditionId ELSE 0 END AS ContractConditionId
+                                           , tmpContractCondition.ContractConditionId
 
                                       FROM tmpContractCondition
                                            -- а это сам договор, в котором бонусное условие
@@ -454,7 +454,7 @@ BEGIN
 
                                              -- если нужно считать по условиям - для НАЛ
                                            --, CASE WHEN tmpContractCondition.PaidKindId_calc = zc_Enum_PaidKind_SecondForm() THEN tmpContractCondition.ContractConditionId ELSE 0 END AS ContractConditionId
-                                           , tmpContractCondition.ContractConditionId AS ContractConditionId
+                                           , tmpContractCondition.ContractConditionId
 
                                       FROM tmpContractCondition
                                            -- а это сам договор, в котором бонусное условие
@@ -2150,6 +2150,7 @@ BEGIN
             LEFT JOIN Object AS Object_Currency_child ON Object_Currency_child.Id = ObjectLink_Contract_Currency.ChildObjectId
 
           ;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

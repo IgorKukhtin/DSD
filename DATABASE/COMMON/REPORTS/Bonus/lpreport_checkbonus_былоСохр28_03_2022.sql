@@ -1,98 +1,19 @@
--- FunctiON: lpReport_CheckBonus () 
+-- Function: lpreport_checkbonus(tdatetime, tdatetime, integer, integer, integer, integer, boolean, boolean, boolean, tvarchar)
 
-DROP FUNCTION IF EXISTS lpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+-- DROP FUNCTION lpreport_checkbonus(tdatetime, tdatetime, integer, integer, integer, integer, boolean, boolean, boolean, tvarchar);
 
-CREATE OR REPLACE FUNCTION lpReport_CheckBonus (
-    IN inStartDate           TDateTime ,
-    IN inEndDate             TDateTime ,
-    IN inPaidKindID          Integer   ,
-    IN inJuridicalId         Integer   ,
-    IN inBranchId            Integer   ,
-    IN inMemberId            Integer   ,
-    IN inisMovement          Boolean   , -- по документам
-    IN inisDetail            Boolean   , -- детализация  выводим группу тов, произ площадку, Goods_Business, GoodsTag, GoodsGroupAnalyst
-    IN inisGoods             Boolean   , -- выводим товар + вид товара
-    IN inSessiON             TVarChar    -- сессия пользователя
-)
-RETURNS TABLE (OperDate_Movement TDateTime, OperDatePartner TDateTime, InvNumber_Movement TVarChar, DescName_Movement TVarChar
-             , ContractId_master Integer, ContractId_child Integer, ContractId_find Integer, InvNumber_master TVarChar, InvNumber_child TVarChar, InvNumber_find TVarChar
-             , ContractTagName_child TVarChar, ContractStateKindCode_child Integer
-             , InfoMoneyId_master Integer, InfoMoneyId_child Integer, InfoMoneyId_find Integer
-             , InfoMoneyName_master TVarChar, InfoMoneyName_child TVarChar, InfoMoneyName_find TVarChar
-             , JuridicalId Integer, JuridicalName TVarChar
-             , PaidKindId Integer, PaidKindName TVarChar
-             , PaidKindId_Child Integer, PaidKindName_Child TVarChar
-             , ConditionKindId Integer, ConditionKindName TVarChar
-             , BonusKindId Integer, BonusKindName TVarChar
-             , BranchId Integer, BranchName TVarChar
-             , BranchId_inf Integer, BranchName_inf TVarChar
-             , RetailName TVarChar
-             , PersonalTradeId Integer, PersonalTradeCode Integer, PersonalTradeName TVarChar
-             , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
-
-             , PartnerId Integer, PartnerName TVarChar
-             , AreaId Integer, AreaName TVarChar
-             , Value TFloat
-             , PercentRetBonus TFloat
-             , PercentRetBonus_fact TFloat
-             , PercentRetBonus_diff TFloat
-
-             , PercentRetBonus_fact_weight TFloat
-             , PercentRetBonus_diff_weight TFloat
-
-             , Sum_CheckBonus      TFloat
-             , Sum_CheckBonusFact  TFloat
-             , Sum_Bonus           TFloat
-             , Sum_BonusFact       TFloat
-             , Sum_SaleFact        TFloat
-             , Sum_Account         TFloat
-             , Sum_AccountSendDebt TFloat
-             , Sum_Sale            TFloat
-             , Sum_Return          TFloat
-             , Sum_SaleReturnIn    TFloat
-
-             , Sum_CheckBonus_curr      TFloat
-             , Sum_Bonus_curr           TFloat
-             , Sum_Account_curr         TFloat
-             , Sum_AccountSendDebt_curr TFloat
-             , Sum_Sale_curr            TFloat
-             , Sum_Return_curr          TFloat
-             , Sum_SaleReturnIn_curr    TFloat
-
-             , Sum_Sale_weight     TFloat
-             , Sum_ReturnIn_weight TFloat
-
-             , Comment TVarChar
-             , ReportBonusId Integer
-             , isSend Boolean
-             , FromName_Movement          TVarChar
-             , ToName_Movement            TVarChar
-             , PaidKindName_Movement      TVarChar
-             , ContractCode_Movement      TVarChar
-             , ContractName_Movement      TVarChar
-             , ContractTagName_Movement   TVarChar
-             , TotalCount_Movement        TFloat
-             , TotalCountPartner_Movement TFloat
-             , TotalSumm_Movement         TFloat
-             , ContractConditionId        Integer
-             , isSalePart Boolean
-             , AmountKg  TFloat
-             , AmountSh  TFloat
-             , PartKg    TFloat
-
-            , GoodsCode Integer
-            , GoodsName TVarChar
-            , GoodsKindName TVarChar
-            , GoodsGroupName        TVarChar
-            , GoodsGroupNameFull    TVarChar
-            , BusinessName          TVarChar
-            , GoodsTagName          TVarChar
-            , GoodsPlatformName     TVarChar
-            , GoodsGroupAnalystName TVarChar
-            , CurrencyId_child   Integer 
-            , CurrencyName_child TVarChar
-              )
-AS
+CREATE OR REPLACE FUNCTION lpreport_checkbonus(
+    IN instartdate tdatetime,
+    IN inenddate tdatetime,
+    IN inpaidkindid integer,
+    IN injuridicalid integer,
+    IN inbranchid integer,
+    IN inmemberid integer,
+    IN inismovement boolean,
+    IN inisdetail boolean,
+    IN inisgoods boolean,
+    IN insession tvarchar)
+  RETURNS TABLE(operdate_movement tdatetime, operdatepartner tdatetime, invnumber_movement tvarchar, descname_movement tvarchar, contractid_master integer, contractid_child integer, contractid_find integer, invnumber_master tvarchar, invnumber_child tvarchar, invnumber_find tvarchar, contracttagname_child tvarchar, contractstatekindcode_child integer, infomoneyid_master integer, infomoneyid_child integer, infomoneyid_find integer, infomoneyname_master tvarchar, infomoneyname_child tvarchar, infomoneyname_find tvarchar, juridicalid integer, juridicalname tvarchar, paidkindid integer, paidkindname tvarchar, paidkindid_child integer, paidkindname_child tvarchar, conditionkindid integer, conditionkindname tvarchar, bonuskindid integer, bonuskindname tvarchar, branchid integer, branchname tvarchar, branchid_inf integer, branchname_inf tvarchar, retailname tvarchar, personaltradeid integer, personaltradecode integer, personaltradename tvarchar, personalid integer, personalcode integer, personalname tvarchar, partnerid integer, partnername tvarchar, areaid integer, areaname tvarchar, value tfloat, percentretbonus tfloat, percentretbonus_fact tfloat, percentretbonus_diff tfloat, percentretbonus_fact_weight tfloat, percentretbonus_diff_weight tfloat, sum_checkbonus tfloat, sum_checkbonusfact tfloat, sum_bonus tfloat, sum_bonusfact tfloat, sum_salefact tfloat, sum_account tfloat, sum_accountsenddebt tfloat, sum_sale tfloat, sum_return tfloat, sum_salereturnin tfloat, sum_checkbonus_curr tfloat, sum_bonus_curr tfloat, sum_account_curr tfloat, sum_accountsenddebt_curr tfloat, sum_sale_curr tfloat, sum_return_curr tfloat, sum_salereturnin_curr tfloat, sum_sale_weight tfloat, sum_returnin_weight tfloat, comment tvarchar, reportbonusid integer, issend boolean, fromname_movement tvarchar, toname_movement tvarchar, paidkindname_movement tvarchar, contractcode_movement tvarchar, contractname_movement tvarchar, contracttagname_movement tvarchar, totalcount_movement tfloat, totalcountpartner_movement tfloat, totalsumm_movement tfloat, contractconditionid integer, issalepart boolean, amountkg tfloat, amountsh tfloat, partkg tfloat, goodscode integer, goodsname tvarchar, goodskindname tvarchar, goodsgroupname tvarchar, goodsgroupnamefull tvarchar, businessname tvarchar, goodstagname tvarchar, goodsplatformname tvarchar, goodsgroupanalystname tvarchar, currencyid_child integer, currencyname_child tvarchar) AS
 $BODY$
     DECLARE vbUserId Integer;
 --    DECLARE inisMovement  Boolean ; -- по документам
@@ -205,10 +126,8 @@ BEGIN
                               , tmpContractCondition.PaidKindId_byBase
                                 -- Форма оплаты - в какой надо начислить БОНУСЫ
                               , tmpContractCondition.PaidKindId_calc
-                              
-                              -- если нужно считать по условиям - для НАЛ
-                              --, CASE WHEN tmpContractCondition.PaidKindId_calc = zc_Enum_PaidKind_SecondForm() THEN tmpContractCondition.ContractConditionId ELSE 0 END AS ContractConditionId
-                              --07,01,2022 - для БН тоже огр. по выбранным контрагентам
+                                -- если нужно считать по условиям - для НАЛ
+                            --, CASE WHEN tmpContractCondition.PaidKindId_calc = zc_Enum_PaidKind_SecondForm() THEN tmpContractCondition.ContractConditionId ELSE 0 END AS ContractConditionId
                               , tmpContractCondition.ContractConditionId
                          FROM tmpContract_full
 
@@ -241,7 +160,6 @@ BEGIN
                      --!!!WHERE tmpContract_full.PaidKindId = inPaidKindId
                          )
            -- Для нал еще zc_Object_ContractConditionPartner - если выбраны то бонусы только на них считаем
-              -- 07.01.2020 - для БН аналогично как и НАЛ
          , tmpCCPartner AS (SELECT tmp.ContractId
                                  , tmp.ContractConditionId
                                  , tmp.JuridicalId
@@ -299,8 +217,7 @@ BEGIN
                                        , tmpCCPartner.PaidKindId_byBase
                                        , tmpCCPartner.PaidKindId_calc
                                          -- если нужно считать по условиям - для НАЛ
-                                       --, CASE WHEN tmpCCPartner.PaidKindId_calc = zc_Enum_PaidKind_SecondForm() THEN tmpCCPartner.ContractConditionId ELSE 0 END AS ContractConditionId
-                                       , tmpCCPartner.ContractConditionId
+                                       , CASE WHEN tmpCCPartner.PaidKindId_calc = zc_Enum_PaidKind_SecondForm() THEN tmpCCPartner.ContractConditionId ELSE 0 END AS ContractConditionId
                                   FROM tmpCCPartner
                                        LEFT JOIN tmpContractPartner_all ON tmpContractPartner_all.ContractConditionId = tmpCCPartner.ContractConditionId
                                                                         AND tmpContractPartner_all.PartnerId           = tmpCCPartner.PartnerId
@@ -350,8 +267,8 @@ BEGIN
                                         --, ObjectLink_ContractCondition_ContractSend.ChildObjectId AS ContractId_send
 
                                              -- если нужно считать по условиям - для НАЛ
-                                          -- , CASE WHEN tmpContractCondition.PaidKindId_calc = zc_Enum_PaidKind_SecondForm() THEN tmpContractCondition.ContractConditionId ELSE 0 END AS ContractConditionId
-                                           , tmpContractCondition.ContractConditionId
+--                                           , CASE WHEN tmpContractCondition.PaidKindId_calc = zc_Enum_PaidKind_SecondForm() THEN tmpContractCondition.ContractConditionId ELSE 0 END AS ContractConditionId
+                              , tmpContractCondition.ContractConditionId
 
                                       FROM tmpContractCondition
                                            -- а это сам договор, в котором бонусное условие
@@ -453,7 +370,7 @@ BEGIN
                                              END AS ContractId_baza
 
                                              -- если нужно считать по условиям - для НАЛ
-                                           --, CASE WHEN tmpContractCondition.PaidKindId_calc = zc_Enum_PaidKind_SecondForm() THEN tmpContractCondition.ContractConditionId ELSE 0 END AS ContractConditionId
+                                         --, CASE WHEN tmpContractCondition.PaidKindId_calc = zc_Enum_PaidKind_SecondForm() THEN tmpContractCondition.ContractConditionId ELSE 0 END AS ContractConditionId
                                            , tmpContractCondition.ContractConditionId
 
                                       FROM tmpContractCondition
@@ -726,7 +643,7 @@ BEGIN
                                   , tmpContainer.ContractConditionId
 
                                   , COALESCE (ObjectLink_PersonalServiceList_Branch.ChildObjectId,0) AS BranchId
-                                  , CASE WHEN Object.DescId = zc_Object_Partner() THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
+                                  , CASE WHEN Object.DescId = zc_Object_Partner() THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(),zc_Movement_Cash(), zc_Movement_SendDebt()) THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
                                          ELSE 0
                                     END    AS PartnerId
                                     -- Только продажи
@@ -2153,82 +2070,8 @@ BEGIN
 
 END;
 $BODY$
-  LANGUAGE plpgsql VOLATILE;
-
-/*-------------------------------------------------------------------------------
- ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 03.06.20         *
- 20.05.20         * add inBranchId
- 14.06.17         *
- 20.05.14                                        * add View_Contract_find_tag
- 08.05.14                                        * add <> 0
- 01.05.14         *
- 26.04.14                                        * add ContractTagName_child and ContractStateKindCode_child
- 17.04.14                                        * all
- 10.04.14         *
-*/
-
--- тест
--- select * from lpReport_CheckBonus (inStartDate:= '15.03.2016', inEndDate:= '15.03.2016', inPaidKindID:= zc_Enum_PaidKind_FirstForm(), inJuridicalId:= 0, inBranchId:= 0, inSession:= zfCalc_UserAdmin());
--- select * from lpReport_CheckBonus(inStartDate := ('28.05.2020')::TDateTime , inEndDate := ('28.05.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 344240 , inBranchId := 0 ,  inSession := '5');--
---select * from lpReport_CheckBonus(inStartDate := ('01.07.2020')::TDateTime , inEndDate := ('03.07.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 0 , inBranchId := 0 ,  inSession := '5');
--- select Sum_SaleReturnIn, ContractConditionId, * from lpReport_CheckBonus (inStartDate := ('01.11.2020')::TDateTime , inEndDate := ('30.11.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 2012467 , inBranchId := 0 , inisMovement := 'False' ,  inSession := '5');
---select Sum_SaleReturnIn, ContractConditionId, * from lpReport_CheckBonus (inStartDate := ('01.11.2020')::TDateTime , inEndDate := ('02.11.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 2012467 , inBranchId := 0 , inMemberId :=0, inisMovement := 'False' ,  inSession := '5');
-/*select 1,
-               SUM (Value)
-             , SUM (PercentRetBonus)
-             , SUM (PercentRetBonus_fact)
-             , SUM (PercentRetBonus_diff)
-
-             , SUM (PercentRetBonus_fact_weight)
-             , SUM (PercentRetBonus_diff_weight)
-
-             , SUM (Sum_CheckBonus     )
-             , SUM (Sum_CheckBonusFact )
-             , SUM (Sum_Bonus          )
-             , SUM (Sum_BonusFact      )
-             , SUM (Sum_SaleFact       )
-             , SUM (Sum_Account        )
-             , SUM (Sum_AccountSendDebt)
-             , SUM (Sum_Sale           )
-             , SUM (Sum_Return         )
-             , SUM (Sum_SaleReturnIn   )
-
-             , SUM (Sum_Sale_weight    )
-             , SUM (Sum_ReturnIn_weight)
-
-             , SUM (AmountKg )
-             , SUM (AmountSh )
-             , SUM (PartKg   )
-from lpReport_CheckBonus (inStartDate:= '01.07.2021', inEndDate:= '31.07.2021', inPaidKindID:= zc_Enum_PaidKind_FirstForm(), inJuridicalId:= 0, inBranchId:= 0, inMemberId:= 0,inisMovement:= false,inisDetail := TRUE, inisGoods:= false, inSession:= zfCalc_UserAdmin())
-union all
-select 2,
-               SUM (Value)
-             , SUM (PercentRetBonus)
-             , SUM (PercentRetBonus_fact)
-             , SUM (PercentRetBonus_diff)
-
-             , SUM (PercentRetBonus_fact_weight)
-             , SUM (PercentRetBonus_diff_weight)
-
-             , SUM (Sum_CheckBonus     )
-             , SUM (Sum_CheckBonusFact )
-             , SUM (Sum_Bonus          )
-             , SUM (Sum_BonusFact      )
-             , SUM (Sum_SaleFact       )
-             , SUM (Sum_Account        )
-             , SUM (Sum_AccountSendDebt)
-             , SUM (Sum_Sale           )
-             , SUM (Sum_Return         )
-             , SUM (Sum_SaleReturnIn   )
-
-             , SUM (Sum_Sale_weight    )
-             , SUM (Sum_ReturnIn_weight)
-
-             , SUM (AmountKg )
-             , SUM (AmountSh )
-             , SUM (PartKg   )
-from lpReport_CheckBonus (inStartDate:= '01.07.2021', inEndDate:= '31.07.2021', inPaidKindID:= zc_Enum_PaidKind_SecondForm(), inJuridicalId:= 0, inBranchId:= 0, inMemberId:= 0,inisMovement:= false, inSession:= zfCalc_UserAdmin())
-order by 1
-*/
+  LANGUAGE plpgsql VOLATILE
+  COST 100
+  ROWS 1000;
+ALTER FUNCTION lpreport_checkbonus(tdatetime, tdatetime, integer, integer, integer, integer, boolean, boolean, boolean, tvarchar)
+  OWNER TO admin;
