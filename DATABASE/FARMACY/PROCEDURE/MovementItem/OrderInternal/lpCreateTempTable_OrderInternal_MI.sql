@@ -43,6 +43,7 @@ BEGIN
              , AmountDeferred   TFloat
              , AmountSF         TFloat
              , ListDiffAmount   TFloat
+             , SupplierFailuresAmount TFloat
              , AmountReal       TFloat
              , SendSUNAmount    TFloat
              , SendDefSUNAmount TFloat
@@ -160,6 +161,10 @@ BEGIN
                               FROM tmpMIF
                               WHERE tmpMIF.DescId = zc_MIFloat_ListDiff()
                              )
+        , tmpMIF_SupplierFailures AS (SELECT tmpMIF.*
+                                      FROM tmpMIF
+                                      WHERE tmpMIF.DescId = zc_MIFloat_SupplierFailures()
+                                     )
         , tmpMIF_AmountSUA AS (SELECT tmpMIF.*
                                FROM tmpMIF
                                WHERE tmpMIF.DescId = zc_MIFloat_AmountSUA()
@@ -218,6 +223,7 @@ BEGIN
             , MIFloat_AmountDeferred.ValueData     AS AmountDeferred
             , MIFloat_AmountSF.ValueData           AS AmountSF
             , MIFloat_ListDiff.ValueData           AS ListDiffAmount
+            , MIFloat_SupplierFailures.ValueData   AS SupplierFailuresAmount
 
             , MIFloat_AmountReal.ValueData :: TFloat  AS AmountReal
             , MIFloat_SendSUN.ValueData    :: TFloat  AS SendSUNAmount
@@ -279,6 +285,7 @@ BEGIN
               LEFT JOIN tmpMIF_AmountDeferred AS MIFloat_AmountDeferred ON MIFloat_AmountDeferred.MovementItemId = MovementItem.Id
               LEFT JOIN tmpMIF_AmountSF       AS MIFloat_AmountSF       ON MIFloat_AmountSF.MovementItemId       = MovementItem.Id
               LEFT JOIN tmpMIF_ListDiff       AS MIFloat_ListDiff       ON MIFloat_ListDiff.MovementItemId       = MovementItem.Id
+              LEFT JOIN tmpMIF_SupplierFailures AS MIFloat_SupplierFailures ON MIFloat_SupplierFailures.MovementItemId = MovementItem.Id
               LEFT JOIN tmpMIF_AmountSUA      AS MIFloat_AmountSUA      ON MIFloat_AmountSUA.MovementItemId      = MovementItem.Id
               LEFT JOIN tmpMIF_AmountReal     AS MIFloat_AmountReal     ON MIFloat_AmountReal.MovementItemId     = MovementItem.Id
               LEFT JOIN tmpMIF_SendSUN        AS MIFloat_SendSUN        ON MIFloat_SendSUN.MovementItemId        = MovementItem.Id

@@ -139,6 +139,11 @@ inherited OrderInternalForm: TOrderInternalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSF
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SupplierFailuresAmount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -296,6 +301,11 @@ inherited OrderInternalForm: TOrderInternalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSF
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SupplierFailuresAmount
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -448,7 +458,15 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 35
           end
-          object AmountReal: TcxGridDBColumn [17]
+          object SupplierFailuresAmount: TcxGridDBColumn [17]
+            Caption = #1055#1077#1088#1077#1079#1072#1082#1072#1079' '#1086#1090#1082#1072#1079' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'SupplierFailuresAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Options.Editing = False
+            Width = 49
+          end
+          object AmountReal: TcxGridDBColumn [18]
             Caption = #1047#1072#1082#1072#1079' '#1073#1077#1079' '#1091#1095#1077#1090#1072' '#1057#1059#1053
             DataBinding.FieldName = 'AmountReal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -461,7 +479,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.IncSearch = False
             Width = 71
           end
-          object RemainsSUN: TcxGridDBColumn [18]
+          object RemainsSUN: TcxGridDBColumn [19]
             Caption = #1054#1089#1090'. '#1089#1088#1086#1082#1086#1074#1099#1093
             DataBinding.FieldName = 'RemainsSUN'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -474,7 +492,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.IncSearch = False
             Width = 48
           end
-          object SendSUNAmount: TcxGridDBColumn [19]
+          object SendSUNAmount: TcxGridDBColumn [20]
             Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' '#1079#1072' '#1089#1077#1075#1086#1076#1085#1103' ('#1091#1076#1072#1083#1077#1085')'
             DataBinding.FieldName = 'SendSUNAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -487,7 +505,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.IncSearch = False
             Width = 48
           end
-          object SendSUNAmount_save: TcxGridDBColumn [20]
+          object SendSUNAmount_save: TcxGridDBColumn [21]
             Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'-1 ('#1089#1086#1093#1088#1072#1085#1077#1085#1086')'
             DataBinding.FieldName = 'SendSUNAmount_save'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -500,7 +518,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.IncSearch = False
             Width = 48
           end
-          object SendDefSUNAmount_save: TcxGridDBColumn [21]
+          object SendDefSUNAmount_save: TcxGridDBColumn [22]
             Caption = #1055#1077#1088#1077#1084#1077#1097'. '#1087#1086' '#1057#1059#1053'-2+2'#1055#1048' ('#1089#1086#1093#1088#1072#1085#1077#1085#1086')'
             DataBinding.FieldName = 'SendDefSUNAmount_save'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -513,19 +531,19 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.IncSearch = False
             Width = 48
           end
-          object MinimumLot: TcxGridDBColumn [22]
+          object MinimumLot: TcxGridDBColumn [23]
             Caption = #1052#1080#1085'. '#1086#1082#1088#1091#1075#1083'.'
             DataBinding.FieldName = 'MinimumLot'
             Options.Editing = False
             Width = 53
           end
-          object Multiplicity: TcxGridDBColumn [23]
+          object Multiplicity: TcxGridDBColumn [24]
             Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100
             DataBinding.FieldName = 'Multiplicity'
             Options.Editing = False
             Width = 62
           end
-          object CalcAmountAll: TcxGridDBColumn [24]
+          object CalcAmountAll: TcxGridDBColumn [25]
             Caption = #1042#1089#1077#1075#1086' '#1089' '#1086#1082#1088#1091#1075#1083'.'
             DataBinding.FieldName = 'CalcAmountAll'
             PropertiesClassName = 'TcxCalcEditProperties'
@@ -536,13 +554,13 @@ inherited OrderInternalForm: TOrderInternalForm
               #1083#1077#1085#1080#1103
             Options.IncSearch = False
           end
-          object Price: TcxGridDBColumn [25]
+          object Price: TcxGridDBColumn [26]
             Caption = #1062#1077#1085#1072', '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'Price'
             Options.Editing = False
             Width = 40
           end
-          object SuperFinalPrice_Deferment: TcxGridDBColumn [26]
+          object SuperFinalPrice_Deferment: TcxGridDBColumn [27]
             Caption = #1062#1077#1085#1072' '#1089#1088#1072#1074#1085#1077#1085#1080#1103' ('#1082#1088#1077#1076'.'#1088#1077#1089'.)'
             DataBinding.FieldName = 'SuperFinalPrice_Deferment'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -553,7 +571,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 55
           end
-          object PriceOptSP: TcxGridDBColumn [27]
+          object PriceOptSP: TcxGridDBColumn [28]
             Caption = #1052#1072#1082#1089'. '#1094#1077#1085#1072' '#1087#1086#1089#1090'-'#1082#1072' '#1087#1086' '#1057#1055' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'PriceOptSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -565,50 +583,50 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 91
           end
-          object SummAll: TcxGridDBColumn [28]
+          object SummAll: TcxGridDBColumn [29]
             Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072', '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'SummAll'
             HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072' = ['#1042#1089#1077#1075#1086' '#1089' '#1084#1080#1085'. '#1086#1082#1088'.] '#1061' ['#1062#1077#1085#1072']'
             Options.Editing = False
             Width = 56
           end
-          object isCalculated: TcxGridDBColumn [29]
+          object isCalculated: TcxGridDBColumn [30]
             Caption = #1040#1074#1090#1086
             DataBinding.FieldName = 'isCalculated'
             Options.Editing = False
             Width = 33
           end
-          object PartnerGoodsCode: TcxGridDBColumn [30]
+          object PartnerGoodsCode: TcxGridDBColumn [31]
             Caption = #1050#1086#1076' '#1091' '#1087#1088#1086#1076#1072#1074#1094#1072
             DataBinding.FieldName = 'PartnerGoodsCode'
             Options.Editing = False
             Width = 65
           end
-          object PartnerGoodsName: TcxGridDBColumn [31]
+          object PartnerGoodsName: TcxGridDBColumn [32]
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1088#1086#1076#1072#1074#1094#1072
             DataBinding.FieldName = 'PartnerGoodsName'
             Options.Editing = False
             Width = 80
           end
-          object MakerName: TcxGridDBColumn [32]
+          object MakerName: TcxGridDBColumn [33]
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
             Options.Editing = False
             Width = 65
           end
-          object ContractName: TcxGridDBColumn [33]
+          object ContractName: TcxGridDBColumn [34]
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072
             DataBinding.FieldName = 'ContractName'
             Options.Editing = False
             Width = 60
           end
-          object PartionGoodsDate: TcxGridDBColumn [34]
+          object PartionGoodsDate: TcxGridDBColumn [35]
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'PartionGoodsDate'
             Options.Editing = False
             Width = 75
           end
-          object NDSKindName: TcxGridDBColumn [35]
+          object NDSKindName: TcxGridDBColumn [36]
             Caption = #1042#1080#1076' '#1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             Visible = False
@@ -617,13 +635,13 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 70
           end
-          object NDS: TcxGridDBColumn [36]
+          object NDS: TcxGridDBColumn [37]
             Caption = #1057#1090#1072#1074#1082#1072' '#1053#1044#1057
             DataBinding.FieldName = 'NDS'
             Options.Editing = False
             Width = 71
           end
-          object NDS_PriceList: TcxGridDBColumn [37]
+          object NDS_PriceList: TcxGridDBColumn [38]
             Caption = #1053#1044#1057' ('#1087#1088#1072#1081#1089')'
             DataBinding.FieldName = 'NDS_PriceList'
             FooterAlignmentHorz = taCenter
@@ -635,32 +653,32 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 65
           end
-          object PartionGoodsDateColor: TcxGridDBColumn [38]
+          object PartionGoodsDateColor: TcxGridDBColumn [39]
             DataBinding.FieldName = 'PartionGoodsDateColor'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
           end
-          object isPriceDiff: TcxGridDBColumn [39]
+          object isPriceDiff: TcxGridDBColumn [40]
             Caption = #1054#1090#1082#1083'. '#1087#1086' '#1094#1077#1085#1077' '#1057#1055
             DataBinding.FieldName = 'isPriceDiff'
             Options.Editing = False
             Width = 60
           end
-          object isTopColor: TcxGridDBColumn [40]
+          object isTopColor: TcxGridDBColumn [41]
             DataBinding.FieldName = 'isTopColor'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
           end
-          object IsClose: TcxGridDBColumn [41]
+          object IsClose: TcxGridDBColumn [42]
             Caption = #1047#1072#1082#1088#1099#1090' '#1082#1086#1076' '#1087#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
             DataBinding.FieldName = 'IsClose'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 56
           end
-          object isFirst: TcxGridDBColumn [42]
+          object isFirst: TcxGridDBColumn [43]
             Caption = '1-'#1074#1099#1073#1086#1088
             DataBinding.FieldName = 'isFirst'
             HeaderAlignmentHorz = taCenter
@@ -668,7 +686,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 60
           end
-          object isSecond: TcxGridDBColumn [43]
+          object isSecond: TcxGridDBColumn [44]
             Caption = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088
             DataBinding.FieldName = 'isSecond'
             HeaderAlignmentHorz = taCenter
@@ -676,7 +694,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 60
           end
-          object isTOP: TcxGridDBColumn [44]
+          object isTOP: TcxGridDBColumn [45]
             Caption = #1058#1054#1055' '#1089#1077#1090#1080
             DataBinding.FieldName = 'isTOP'
             HeaderAlignmentHorz = taCenter
@@ -684,7 +702,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 60
           end
-          object OperDatePromo: TcxGridDBColumn [45]
+          object OperDatePromo: TcxGridDBColumn [46]
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1073#1086#1085#1091#1089#1085' .'#1082#1086#1085#1090#1088#1072#1082#1090#1072
             DataBinding.FieldName = 'OperDatePromo'
             HeaderAlignmentHorz = taCenter
@@ -692,7 +710,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 80
           end
-          object isPromo: TcxGridDBColumn [46]
+          object isPromo: TcxGridDBColumn [47]
             Caption = #1041#1086#1085#1091#1089#1085'. '#1082#1086#1085#1090#1088#1072#1082#1090' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isPromo'
             HeaderAlignmentHorz = taCenter
@@ -701,7 +719,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 50
           end
-          object isPromoAll: TcxGridDBColumn [47]
+          object isPromoAll: TcxGridDBColumn [48]
             Caption = #1052#1072#1088#1082#1077#1090'. '#1082#1086#1085#1090#1088#1072#1082#1090' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isPromoAll'
             HeaderAlignmentHorz = taCenter
@@ -710,20 +728,20 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 50
           end
-          object AmountDeferred: TcxGridDBColumn [48]
+          object AmountDeferred: TcxGridDBColumn [49]
             Caption = #1047#1072#1082#1072#1079' '#1086#1090#1083#1086#1078#1077#1085
             DataBinding.FieldName = 'AmountDeferred'
             Options.Editing = False
             Width = 62
           end
-          object AmountSF: TcxGridDBColumn [49]
+          object AmountSF: TcxGridDBColumn [50]
             Caption = #1054#1090#1082#1072#1079' '#1087#1086#1089#1090'.'
             DataBinding.FieldName = 'AmountSF'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
-          object Amount: TcxGridDBColumn [50]
+          object Amount: TcxGridDBColumn [51]
             Caption = #1057#1087#1077#1094#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCalcEditProperties'
@@ -733,7 +751,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.IncSearch = False
             Width = 48
           end
-          object AmountAll: TcxGridDBColumn [51]
+          object AmountAll: TcxGridDBColumn [52]
             Caption = #1057#1087#1077#1094' + '#1040#1074#1090#1086
             DataBinding.FieldName = 'AmountAll'
             PropertiesClassName = 'TcxCalcEditProperties'
@@ -743,7 +761,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 62
           end
-          object isTOP_Price: TcxGridDBColumn [52]
+          object isTOP_Price: TcxGridDBColumn [53]
             Caption = #1058#1054#1055' '#1090#1086#1095#1082#1080
             DataBinding.FieldName = 'isTOP_Price'
             HeaderAlignmentHorz = taCenter
@@ -1189,6 +1207,8 @@ inherited OrderInternalForm: TOrderInternalForm
           end
           object colSupplierFailuresColor: TcxGridDBColumn
             DataBinding.FieldName = 'SupplierFailuresColor'
+            Visible = False
+            VisibleForCustomization = False
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -2001,6 +2021,47 @@ inherited OrderInternalForm: TOrderInternalForm
         end>
       isShowModal = False
     end
+    object actDataDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actDataDialog'
+      FormName = 'TDataDialogForm'
+      FormNameParam.Value = 'TDataDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'OperDateDialog'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdateSupplierFailures: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actDataDialog
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateSupplierFailures
+      StoredProcList = <
+        item
+          StoredProc = spUpdateSupplierFailures
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectChild
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' '#1079#1072' '#1076#1077#1085#1100
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' '#1079#1072' '#1076#1077#1085#1100
+      ImageIndex = 80
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -2117,6 +2178,14 @@ inherited OrderInternalForm: TOrderInternalForm
         item
           Visible = True
           ItemName = 'bbUpdateListDiff'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateSupplierFailures'
         end
         item
           Visible = True
@@ -2323,6 +2392,10 @@ inherited OrderInternalForm: TOrderInternalForm
       Action = actListDiffFormVIPSend
       Category = 0
     end
+    object bbUpdateSupplierFailures: TdxBarButton
+      Action = actUpdateSupplierFailures
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
@@ -2408,6 +2481,12 @@ inherited OrderInternalForm: TOrderInternalForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDateDialog'
+        Value = Null
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 264
@@ -3544,5 +3623,39 @@ inherited OrderInternalForm: TOrderInternalForm
     PackSize = 1
     Left = 698
     Top = 424
+  end
+  object spUpdateSupplierFailures: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_OrderInternal_SupplierFailures'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperdate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperDateDialog'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1128
+    Top = 384
   end
 end

@@ -1,6 +1,5 @@
 -- Function: lpInsertUpdate_MI_OrderInternal_SUN()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderInternal_SUN(Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderInternal_SUN(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_OrderInternal_SUN(
@@ -66,14 +65,12 @@ BEGIN
      -- заменили inAmountManual
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual(), inId, tmp.AmountManual)
      FROM (SELECT -- округлили ВВЕРХ AllLot
-                  CEIL((-- Спецзаказ
-                        MovementItem.Amount
-                        -- Количество дополнительное
-                      + inAmount
-                        -- кол-во отказов
-                      + COALESCE (MIFloat_ListDiff.ValueData, 0)
-                        -- кол-во СУА
-                      + COALESCE (MIFloat_AmountSUA.ValueData, 0)
+                  CEIL ((                                -- Спецзаказ + Количество дополнительное                        -- кол-во отказов
+                         CASE WHEN (COALESCE (MovementItem.Amount, 0) + inAmount) >= 
+                                   (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_SupplierFailures.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))
+                              THEN (COALESCE (MovementItem.Amount, 0) + inAmount)                            -- Спецзаказ + Количество дополнительное
+                              ELSE (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_SupplierFailures.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))     -- кол-во отказов + СУА
+                         END
                        ) / COALESCE (vbMinimumLot, 1)
                       ) * COALESCE (vbMinimumLot, 1)
                   AS AmountManual
@@ -81,6 +78,9 @@ BEGIN
                 LEFT OUTER JOIN MovementItemFloat AS MIFloat_ListDiff
                                                   ON MIFloat_ListDiff.MovementItemId = MovementItem.Id
                                                  AND MIFloat_ListDiff.DescId         = zc_MIFloat_ListDiff()
+                LEFT OUTER JOIN MovementItemFloat AS MIFloat_SupplierFailures
+                                                  ON MIFloat_SupplierFailures.MovementItemId = MovementItem.Id
+                                                 AND MIFloat_SupplierFailures.DescId         = zc_MIFloat_SupplierFailures()
                 LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSUA
                                                   ON MIFloat_AmountSUA.MovementItemId = MovementItem.Id
                                                  AND MIFloat_AmountSUA.DescId         = zc_MIFloat_AmountSUA()

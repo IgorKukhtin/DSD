@@ -203,12 +203,12 @@ BEGIN
                     inAmount := (COALESCE (-- Количество, установленное вручную
                                            MIFloat_AmountManual.ValueData
                                            -- округлили ВВЕРХ AllLot
-                                         , CEIL ((-- Спецзаказ
-                                                  MovementItem.Amount
-                                                  -- Количество дополнительное
-                                                + COALESCE (MIFloat_AmountSecond.ValueData, 0)
-                                                  -- кол-во отказов
-                                                + COALESCE (MIFloat_ListDiff.ValueData, 0)
+                                         , CEIL ((-- Спецзаказ + Количество дополнительное                        -- кол-во отказов
+                                                  CASE WHEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= 
+                                                            (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_SupplierFailures.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))
+                                                       THEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
+                                                       ELSE (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_SupplierFailures.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))     -- кол-во отказов + СУА
+                                                  END
                                                  ) / COALESCE (CASE WHEN Object_Goods.MinimumLot = 0 THEN 1 ELSE Object_Goods.MinimumLot END, 1)
                                                 ) * COALESCE (CASE WHEN Object_Goods.MinimumLot = 0 THEN 1 ELSE Object_Goods.MinimumLot END,  1)
                                           )) :: TFloat,
@@ -255,6 +255,12 @@ BEGIN
                LEFT OUTER JOIN MovementItemFloat AS MIFloat_ListDiff
                                                  ON MIFloat_ListDiff.MovementItemId = MovementItem.Id
                                                 AND MIFloat_ListDiff.DescId         = zc_MIFloat_ListDiff()
+               LEFT OUTER JOIN MovementItemFloat AS MIFloat_SupplierFailures
+                                                 ON MIFloat_SupplierFailures.MovementItemId = MovementItem.Id
+                                                AND MIFloat_SupplierFailures.DescId         = zc_MIFloat_SupplierFailures()
+               LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSUA
+                                                 ON MIFloat_AmountSUA.MovementItemId = MovementItem.Id
+                                                AND MIFloat_AmountSUA.DescId         = zc_MIFloat_AmountSUA()
 
                LEFT JOIN (SELECT * FROM
                                       (SELECT *, MIN(Id) OVER (PARTITION BY MovementItemId) AS MinId FROM
@@ -277,7 +283,11 @@ BEGIN
            AND MovementItem.DescId     = zc_MI_Master()
            AND MovementItem.isErased   = FALSE
            AND COALESCE (MIFloat_AmountManual.ValueData
-                       , (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData,0) + COALESCE (MIFloat_ListDiff.ValueData, 0))
+                       , (MovementItem.Amount + 
+                          COALESCE (MIFloat_AmountSecond.ValueData,0) + 
+                          COALESCE (MIFloat_ListDiff.ValueData, 0) + 
+                          COALESCE (MIFloat_SupplierFailures.ValueData, 0) + 
+                          COALESCE (MIFloat_AmountSUA.ValueData, 0))
                         ) > 0
            AND COALESCE (COALESCE(PriceList.Price, PriceListMax.Price, MinPrice.Price), 0) <> 0;
 
@@ -291,7 +301,10 @@ BEGIN
                inMainGoodsId := ddd.ObjectId,
                    inGoodsId := ddd.ObjectId,
                     inAmount := COALESCE (ddd.AmountManual
-                                        , ddd.Amount + COALESCE (AmountSecond, 0) + COALESCE (ListDiffAmount, 0)
+                                        , CASE WHEN ddd.Amount + COALESCE (ddd.AmountSecond, 0) >
+                                                    COALESCE (ddd.ListDiffAmount, 0) + COALESCE (ddd.SupplierFailuresAmount, 0) + COALESCE (ddd.AmountSUA, 0)
+                                               THEN ddd.Amount + COALESCE (ddd.AmountSecond, 0) 
+                                               ELSE COALESCE (ddd.ListDiffAmount, 0) + COALESCE (ddd.SupplierFailuresAmount, 0) + COALESCE (ddd.AmountSUA, 0) END
                                          ),
                      inPrice := 0,
           inPartionGoodsDate := NULL,
@@ -334,6 +347,12 @@ BEGIN
                        LEFT OUTER JOIN MovementItemFloat AS MIFloat_ListDiff
                                                          ON MIFloat_ListDiff.MovementItemId = MovementItem.Id
                                                         AND MIFloat_ListDiff.DescId         = zc_MIFloat_ListDiff()
+                       LEFT OUTER JOIN MovementItemFloat AS MIFloat_SupplierFailures
+                                                         ON MIFloat_SupplierFailures.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_SupplierFailures.DescId         = zc_MIFloat_SupplierFailures()
+                       LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSUA
+                                                         ON MIFloat_AmountSUA.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_AmountSUA.DescId         = zc_MIFloat_AmountSUA()
 
                        LEFT JOIN (SELECT *
                                   FROM (SELECT *
@@ -351,16 +370,19 @@ BEGIN
                       AND MovementItem.DescId     = zc_MI_Master()
                       AND MovementItem.isErased   = FALSE
                       AND COALESCE (MIFloat_AmountManual.ValueData
-                                  , (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) + COALESCE (MIFloat_ListDiff.ValueData, 0))
+                                  , (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) + 
+                                     COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_SupplierFailures.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))
                                    ) > 0
                       AND COALESCE (COALESCE (PriceList.Price, MinPrice.Price), 0) <> 0
                     )
 
         SELECT MovementItem.*
-             , MIFloat_AmountSecond.ValueData AS AmountSecond
-             , MIFloat_AmountManual.ValueData AS AmountManual
-             , MIFloat_ListDiff.ValueData     AS ListDiffAmount
-             , MIString_Comment.ValueData     AS Comment
+             , MIFloat_AmountSecond.ValueData     AS AmountSecond
+             , MIFloat_AmountManual.ValueData     AS AmountManual
+             , MIFloat_ListDiff.ValueData         AS ListDiffAmount
+             , MIFloat_SupplierFailures.ValueData AS SupplierFailuresAmount
+             , MIFloat_AmountSUA.ValueData        AS AmountSUA
+             , MIString_Comment.ValueData         AS Comment
         FROM MovementItem
              LEFT OUTER JOIN MovementItemString AS MIString_Comment
                                                 ON MIString_Comment.MovementItemId = MovementItem.Id
@@ -374,18 +396,24 @@ BEGIN
              LEFT OUTER JOIN MovementItemFloat AS MIFloat_ListDiff
                                                ON MIFloat_ListDiff.MovementItemId = MovementItem.Id
                                               AND MIFloat_ListDiff.DescId         = zc_MIFloat_ListDiff()
+             LEFT OUTER JOIN MovementItemFloat AS MIFloat_SupplierFailures
+                                               ON MIFloat_SupplierFailures.MovementItemId = MovementItem.Id
+                                              AND MIFloat_SupplierFailures.DescId         = zc_MIFloat_SupplierFailures()
+             LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSUA
+                                               ON MIFloat_AmountSUA.MovementItemId = MovementItem.Id
+                                              AND MIFloat_AmountSUA.DescId         = zc_MIFloat_AmountSUA()
         WHERE MovementId = inInternalOrder
           AND Id NOT IN (SELECT Id FROM ddd)
         ) AS DDD
     WHERE
         COALESCE (ddd.AmountManual
-                , ddd.Amount + COALESCE (AmountSecond, 0) + COALESCE (ListDiffAmount, 0)
+                , ddd.Amount + COALESCE (ddd.AmountSecond, 0) + COALESCE (ddd.ListDiffAmount, 0) + COALESCE (ddd.SupplierFailuresAmount, 0)
                  ) > 0;
 
 
-   -- IF vb1 = 3 THEN
-   --  RAISE EXCEPTION '<%>   <%>', (select count(*) from _tmpMI_OrderInternal_Master), (select count(*) from _tmpMI_OrderInternal_Child);
-   -- END IF;
+/*   IF vb1 = 3 THEN
+      RAISE EXCEPTION '<%>   <%>', (select count(*) from _tmpMI_OrderInternal_Master), (select count(*) from _tmpMI_OrderInternal_Child);
+   END IF;*/
 
 END;
 $BODY$
