@@ -13,6 +13,7 @@ RETURNS TABLE (JuridicalCode Integer
              , JuridicalFromName TVarChar
              , TotalSumm TFloat
              , TotalPaySumm TFloat
+             , TotalPaySummDate TFloat
               )
 
 AS
@@ -38,6 +39,7 @@ BEGIN
                                , MovementLinkObject_To.ObjectId             AS ToId
                                , MovementFloat_TotalSumm.ValueData          AS TotalSumm
                                , tmpContainer.Amount                        AS PaySumm
+                               , CASE WHEN MovementDate_Payment.ValueData <= inEndDate THEN tmpContainer.Amount END AS PaySummDate
                           FROM Movement AS Movement_Income
                                                                        
                                LEFT JOIN tmpContainer ON Movement_Income.Id = tmpContainer.MovementId
@@ -53,6 +55,10 @@ BEGIN
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                             ON MovementLinkObject_To.MovementId = Movement_Income.Id
                                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                          
+                               LEFT JOIN MovementDate AS MovementDate_Payment
+                                                      ON MovementDate_Payment.MovementId =  Movement_Income.Id
+                                                     AND MovementDate_Payment.DescId = zc_MovementDate_Payment()                                                          
                                                                        
                           WHERE Movement_Income.DescId = zc_Movement_Income()
                             AND Movement_Income.OperDate BETWEEN inStartDate AND inEndDate
@@ -62,6 +68,7 @@ BEGIN
                                , ObjectLink_Unit_Juridical.ChildObjectId    AS JuridicalId
                                , SUM(Movement_Income.TotalSumm)::TFloat     AS TotalSumm
                                , SUM(Movement_Income.PaySumm)::TFloat       AS PaySumm
+                               , SUM(Movement_Income.PaySummDate)::TFloat   AS PaySummDate
                           FROM tmpIncome AS Movement_Income
                                                                        
                                LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
@@ -77,6 +84,7 @@ BEGIN
          , Object_From.ValueData                      AS FromName
          , Movement_Income.TotalSumm
          , Movement_Income.PaySumm
+         , Movement_Income.PaySummDate
     FROM tmpData AS Movement_Income
                                                                          
          LEFT JOIN Object AS Object_From ON Object_From.Id = Movement_Income.FromId
@@ -95,5 +103,6 @@ ALTER FUNCTION gpReport_NotPaySumIncome (TDateTime, TDateTime, TVarChar) OWNER T
  25.03.22                                                       *
 */
 
+select * from gpReport_NotPaySumIncome(inStartDate := ('01.03.2022')::TDateTime , inEndDate := ('26.03.2022')::TDateTime ,  inSession := '3');
 
-select * from gpReport_NotPaySumIncome(inStartDate := ('10.01.2022')::TDateTime , inEndDate := ('10.01.2022')::TDateTime , inSession := '3');
+
