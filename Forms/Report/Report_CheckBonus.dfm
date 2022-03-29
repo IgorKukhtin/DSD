@@ -4,7 +4,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
   ClientWidth = 1180
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1196
-  ExplicitHeight = 379
+  ExplicitHeight = 380
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

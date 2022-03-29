@@ -25,6 +25,34 @@ BEGIN
    THEN
        RETURN;
    END IF;
+   
+/*IF inUnitId NOT IN (8451, 951601)
+THEN
+    RAISE EXCEPTION 'Ошибка.<%>', lfGet_Object_ValueData_sh (inUnitId);
+ELSE
+    RETURN;
+END IF;*/
+
+   -- 
+   IF EXISTS (SELECT 1
+              FROM Movement
+                   JOIN MovementBoolean AS MB ON MB.MovementId = Movement.Id AND MB.DescId = zc_MovementBoolean_Closed() AND MB.ValueData =  TRUE
+                   INNER JOIN MovementLinkObject AS MLO_From
+                                                 ON MLO_From.MovementId = Movement.Id
+                                                AND MLO_From.DescId     = zc_MovementLinkObject_From()
+                                                AND MLO_From.ObjectId   = inUnitId
+                   INNER JOIN MovementLinkObject AS MLO_To
+                                                 ON MLO_To.MovementId = Movement.Id
+                                                AND MLO_To.DescId     = zc_MovementLinkObject_To()
+                                                AND MLO_To.ObjectId   = inUnitId
+
+              WHERE Movement.OperDate = inStartDate
+                AND Movement.DescId   = zc_Movement_ProductionUnion()
+                AND Movement.StatusId = zc_Enum_Status_UnComplete()
+             )
+   THEN
+       RETURN;
+   END IF;
 
    -- Пересчет
    PERFORM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate  := TRUE

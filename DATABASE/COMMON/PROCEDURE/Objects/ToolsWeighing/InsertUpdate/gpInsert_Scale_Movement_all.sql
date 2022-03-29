@@ -755,7 +755,7 @@ BEGIN
                                                    )
                                           WHEN vbMovementDescId = zc_Movement_ReturnIn()
                                                     -- <Возврат от покупателя>
-                                               THEN lpInsertUpdate_Movement_ReturnIn
+                                               THEN lpInsertUpdate_Movement_ReturnIn_scale
                                                    (ioId                    := 0
                                                   , inInvNumber             := CAST (NEXTVAL ('movement_ReturnIn_seq') AS TVarChar)
                                                   , inInvNumberPartner      := ''
@@ -773,6 +773,7 @@ BEGIN
                                                   , inToId                  := ToId
                                                   , inPaidKindId            := PaidKindId
                                                   , inContractId            := ContractId
+                                                  , inSubjectDocId          := SubjectDocId
                                                   , inCurrencyDocumentId    := NULL
                                                   , inCurrencyPartnerId     := NULL
                                                   , inCurrencyValue         := NULL

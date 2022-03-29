@@ -5,6 +5,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid (TDateTime, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer ,Integer ,Integer ,Integer ,Integer , Integer, Integer ,Integer ,TVarChar,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid (
+   OUT outId                    Integer ,
     IN inOperDate               TDateTime ,  
     IN inSum_Bonus              TFloat ,
     IN inSumIn                  TFloat ,
@@ -24,7 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService_ByReport_By
     IN inComment                TVarChar ,
     IN inSession                TVarChar        -- сессия пользователя
 )
-RETURNS VOID
+RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -41,7 +42,7 @@ BEGIN
      PERFORM lpComplete_Movement_Finance_CreateTemp();
 
      -- 
-     PERFORM lpInsertUpdate_Movement_ProfitLossService (ioId                := 0
+     outId:= lpInsertUpdate_Movement_ProfitLossService (ioId                := 0
                                                       , inInvNumber         := CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar) 
                                                       , inOperDate          := inOperDate
                                                       , inAmountIn          := COALESCE (inSumIn,0)              :: TFloat
@@ -62,8 +63,7 @@ BEGIN
                                                       , inCurrencyPartnerId := inCurrencyPartnerId
                                                       , inIsLoad            := TRUE                            :: Boolean
                                                       , inUserId            := vbUserId
-                                                       )
-     ;
+                                                       );
 
 END;
 $BODY$

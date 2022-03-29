@@ -122,6 +122,7 @@ BEGIN
          , tmpContract_full AS (SELECT View_Contract.*
                                 FROM Object_Contract_View AS View_Contract
                                 WHERE (View_Contract.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
+                                and (View_Contract.ContractId IN (603080, 603073) OR vbUserId <> 5)
                                 )
          , tmpContract_all AS (SELECT *
                                FROM tmpContract_full
@@ -181,6 +182,7 @@ BEGIN
                                      AND Object_ContractCondition_View.Value <> 0
                                    --AND inStartDate BETWEEN Object_ContractCondition_View.StartDate AND Object_ContractCondition_View.EndDate
                                      AND inEndDate   BETWEEN Object_ContractCondition_View.StartDate AND Object_ContractCondition_View.EndDate
+                                   --AND (vbUserId <> 5 OR View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_21512())
                                 )
           -- Условия Договора на Дату
         , tmpContractCondition AS (SELECT tmpContractCondition_all.ContractId
@@ -1167,7 +1169,9 @@ BEGIN
 
                                   , tmpContract.InfoMoneyId_master
                                   , tmpContract.InfoMoneyId_child
-                                  , CASE WHEN tmpContract.InfoMoneyId_Condition <> 0 AND tmpContractBonus.ContractId_find > 0
+                                  , CASE WHEN inStartDate >= '01.01.2022' /*AND vbUserId = 5*/ AND tmpContract.InfoMoneyId_Condition = zc_Enum_InfoMoney_21512() -- Маркетинг + Маркетинговый бюджет
+                                              THEN tmpContract.InfoMoneyId_Condition
+                                         WHEN tmpContract.InfoMoneyId_Condition <> 0 AND tmpContractBonus.ContractId_find > 0
                                               THEN tmpContractBonus.InfoMoneyId_find
                                          WHEN tmpContract.InfoMoneyId_master = zc_Enum_InfoMoney_30101() -- Готовая продукция
                                               THEN zc_Enum_InfoMoney_21501() -- Маркетинг + Бонусы за продукцию
@@ -1415,6 +1419,8 @@ BEGIN
                          -- оплата по долевым в процке gpReport_CheckBonus_PersentSalePart
                          AND COALESCE (MILinkObject_ContractConditionKind.ObjectId,0) <> zc_Enum_ContractConditionKind_BonusPercentSalePart()
                          AND MILinkObject_PaidKind.ObjectId = inPaidKindId
+                       --AND (vbUserId <> 5 or MovementBoolean_isLoad.ValueData = TRUE)
+                         AND vbUserId <> 5
 
                       UNION ALL
                        -- бонус - ежемесячный платеж

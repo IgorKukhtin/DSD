@@ -85,6 +85,8 @@ type
     macInsertUpdate_ByGrid_list: TMultiAction;
     macInsertUpdate_ByGrid: TMultiAction;
     BranchName: TcxGridDBColumn;
+    InfoMoneyCode_21512: TcxGridDBColumn;
+    InfoMoneyName_21512: TcxGridDBColumn;
   private
     { Private declarations }
   public

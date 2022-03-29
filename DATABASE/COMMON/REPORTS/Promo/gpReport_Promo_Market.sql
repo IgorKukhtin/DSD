@@ -64,6 +64,8 @@ RETURNS TABLE(
     , JuridicalName_str_fact TVarChar -- Юр.лица из док. продаж/возврата
     , ContractId Integer, ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar
     , ContractId_21512 Integer, ContractCode_21512 Integer, ContractNumber_21512 TVarChar, ContractTagName_21512 TVarChar
+    , InfoMoneyId_21512 Integer, InfoMoneyCode_21512 Integer, InfoMoneyName_21512 TVarChar
+    , PaidKindId_21512 Integer
      )
 AS
 $BODY$
@@ -159,7 +161,7 @@ BEGIN
                              LEFT JOIN Object AS Object_PromoStateKind ON Object_PromoStateKind.Id = MovementLinkObject_PromoStateKind.ObjectId
                         )
 
-        -- выбираем все док продажи и возврата по док. Акция
+          -- выбираем все док продажи и возврата по док. Акция
         , tmpMovementSale_1 AS (SELECT Movement.Id
                                      , Movement.OperDate
                                      , MovementDate_OperDatePartner.ValueData AS OperDatePartner
@@ -340,12 +342,27 @@ BEGIN
 
          , tmpContract AS (SELECT * FROM Object_Contract_InvNumber_View WHERE Object_Contract_InvNumber_View.ContractId IN (SELECT DISTINCT tmpDataFact.ContractId FROM tmpDataFact))
            --
-         , tmpContractCondition AS (SELECT *
+         , tmpContractCondition AS (SELECT Object_ContractCondition_View.*
+                                         , ObjectLink_ContractCondition_ContractSend.ChildObjectId AS ContractId_send
+                                         , COALESCE (ObjectLink_ContractCondition_InfoMoney.ChildObjectId, Object_ContractCondition_View.InfoMoneyId) AS InfoMoneyId_send
+                                           -- № п/п
+                                         , ROW_NUMBER() OVER (PARTITION BY Object_ContractCondition_View.ContractId ORDER BY COALESCE (ObjectLink_ContractCondition_InfoMoney.ChildObjectId, 0) DESC) AS Ord
+
                                     FROM Object_ContractCondition_View
+                                         LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_ContractSend
+                                                              ON ObjectLink_ContractCondition_ContractSend.ObjectId = Object_ContractCondition_View.ContractConditionId
+                                                             AND ObjectLink_ContractCondition_ContractSend.DescId = zc_ObjectLink_ContractCondition_ContractSend()
+                                         -- УП статья в условии договора
+                                         LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_InfoMoney
+                                                              ON ObjectLink_ContractCondition_InfoMoney.ObjectId = Object_ContractCondition_View.ContractConditionId
+                                                             AND ObjectLink_ContractCondition_InfoMoney.DescId   = zc_ObjectLink_ContractCondition_InfoMoney()
                                     WHERE Object_ContractCondition_View.ContractId IN (SELECT DISTINCT tmpDataFact.ContractId FROM tmpDataFact)
-                                      AND Object_ContractCondition_View.InfoMoneyId = zc_Enum_InfoMoney_21512() -- Маркетинговый бюджет
+                                      AND (Object_ContractCondition_View.InfoMoneyId            = zc_Enum_InfoMoney_21512() -- Маркетинговый бюджет
+                                        OR ObjectLink_ContractCondition_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_21512() -- Маркетинговый бюджет
+                                          )
+                                      AND ObjectLink_ContractCondition_ContractSend.ChildObjectId > 0
                                    )
-         , tmpContract_21512_all AS (SELECT ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId, tmpContract.ContractId
+       /*, tmpContract_21512_all AS (SELECT ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId, tmpContract.ContractId
                                      FROM tmpContract
                                           JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                                           ON ObjectLink_Contract_Juridical.ObjectId = tmpContract.ContractId
@@ -355,7 +372,7 @@ BEGIN
                                                          AND ObjectLink_Contract_PaidKind.DescId        = zc_ObjectLink_Contract_PaidKind()
                                                          AND ObjectLink_Contract_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
                                      WHERE tmpContract.InfoMoneyId = zc_Enum_InfoMoney_21512() -- Маркетинговый бюджет
-                                    UNION 
+                                    UNION
                                      SELECT ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId, tmpContractCondition.ContractId
                                      FROM tmpContractCondition
                                           JOIN ObjectLink AS ObjectLink_Contract_Juridical
@@ -365,10 +382,9 @@ BEGIN
                                         OR (tmpContractCondition.PaidKindId = zc_Enum_PaidKind_FirstForm()
                                         AND COALESCE (tmpContractCondition.PaidKindId_Condition, 0) = 0
                                            )
-                                    )
-         , tmpContract_21512 AS (SELECT tmpContract_21512_all.JuridicalId, MAX (tmpContract_21512_all.ContractId) AS ContractId
-                                 FROM tmpContract_21512_all
-                                 GROUP BY tmpContract_21512_all.JuridicalId
+                                    )*/
+         , tmpContract_21512 AS (-- SELECT tmpContract_21512_all.JuridicalId, MAX (tmpContract_21512_all.ContractId) AS ContractId FROM tmpContract_21512_all GROUP BY tmpContract_21512_all.JuridicalId
+                                 SELECT tmpContractCondition.ContractId AS ContractId_base, tmpContractCondition.ContractId_send, tmpContractCondition.InfoMoneyId_send FROM tmpContractCondition WHERE tmpContractCondition.Ord =  1
                                 )
         --
         SELECT
@@ -473,11 +489,15 @@ BEGIN
           , View_Contract_InvNumber.ContractCode
           , View_Contract_InvNumber.InvNumber     AS ContractNumber
           , View_Contract_InvNumber.ContractTagName
-          
-          , tmpContract_21512.ContractId       :: Integer AS ContractId_21512
+
+          , tmpContract_21512.ContractId_send  :: Integer AS ContractId_21512
           , View_Contract_InvNumber_21512.ContractCode    AS ContractCode_21512
           , View_Contract_InvNumber_21512.InvNumber       AS ContractNumber_21512
           , View_Contract_InvNumber_21512.ContractTagName AS ContractTagName_21512
+
+          , Object_InfoMoney_21512.Id AS InfoMoneyId_21512, Object_InfoMoney_21512.ObjectCode AS InfoMoneyCode_21512, Object_InfoMoney_21512.ValueData AS InfoMoneyName_21512
+          
+          , zc_Enum_PaidKind_FirstForm() :: Integer AS PaidKindId_21512
 
         FROM tmpDataFact
             LEFT JOIN tmpMovement_Promo AS Movement_Promo
@@ -491,16 +511,17 @@ BEGIN
                                  ON ObjectLink_Goods_TradeMark.ObjectId = tmpDataFact.GoodsId
                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
             LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
-            
-            LEFT JOIN tmpContract_21512 ON tmpContract_21512.JuridicalId = tmpDataFact.JuridicalId
 
-            LEFT JOIN tmpContract AS View_Contract_InvNumber_21512 ON View_Contract_InvNumber_21512.ContractId = tmpContract_21512.ContractId
+            LEFT JOIN tmpContract_21512 ON tmpContract_21512.ContractId_base = tmpDataFact.ContractId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber_21512 ON View_Contract_InvNumber_21512.ContractId = tmpContract_21512.ContractId_send
+            LEFT JOIN Object AS Object_InfoMoney_21512 ON Object_InfoMoney_21512.Id = tmpContract_21512.InfoMoneyId_send
+      
             LEFT JOIN tmpContract AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpDataFact.ContractId
 
-           LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                                ON ObjectLink_Unit_Branch.ObjectId = Movement_Promo.UnitId
-                               AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                 ON ObjectLink_Unit_Branch.ObjectId = Movement_Promo.UnitId
+                                AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
 
         ;
 

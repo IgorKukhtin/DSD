@@ -4,7 +4,7 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
   ClientWidth = 1098
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   ExplicitWidth = 1114
-  ExplicitHeight = 472
+  ExplicitHeight = 473
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -437,6 +437,20 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
             DataBinding.FieldName = 'BranchName'
             Visible = False
             Width = 70
+          end
+          object InfoMoneyCode_21512: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055' '#1089#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'InfoMoneyCode_21512'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object InfoMoneyName_21512: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName_21512'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
         end
       end
@@ -1177,7 +1191,7 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
       end
       item
         Name = 'inSumIn'
-        Value = Null
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'Summ_diff'
         DataType = ftFloat
@@ -1218,6 +1232,8 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
       item
         Name = 'inInfoMoneyId_find'
         Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'InfoMoneyId_21512'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1238,6 +1254,8 @@ inherited Report_Promo_MarketForm: TReport_Promo_MarketForm
       item
         Name = 'inPaidKindId'
         Value = '4'
+        Component = MasterCDS
+        ComponentItem = 'PaidKindId_21512'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
