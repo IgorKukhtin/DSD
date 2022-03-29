@@ -16,7 +16,8 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion (
     IN inSession            TVarChar       -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
-             , isPeresort Boolean, DocumentKindName TVarChar
+             , isPeresort Boolean, isClosed Boolean
+             , DocumentKindName TVarChar
              , SubjectDocName  TVarChar
              , PartionGoods TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar
@@ -96,6 +97,7 @@ BEGIN
       WITH tmpMI_ContainerIn AS
                        (SELECT CASE WHEN inIsMovement = FALSE THEN 0 ELSE MIContainer.MovementId END AS MovementId
                              , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) AS isPeresort
+                             , COALESCE (MovementBoolean_Closed.ValueData, False)   AS isClosed
                              , COALESCE (MLO_DocumentKind.ObjectId, 0)              AS DocumentKindId
                              , Object_SubjectDoc.ValueData                          AS SubjectDocName
                              , MIContainer.DescId                 AS MIContainerDescId
@@ -111,6 +113,10 @@ BEGIN
                              LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
                                                        ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
                                                       AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
+                             LEFT JOIN MovementBoolean AS MovementBoolean_Closed
+                                                       ON MovementBoolean_Closed.MovementId = MIContainer.MovementId
+                                                      AND MovementBoolean_Closed.DescId = zc_MovementBoolean_Closed()
+
                              LEFT JOIN MovementLinkObject AS MLO_DocumentKind
                                                           ON MLO_DocumentKind.MovementId = MIContainer.MovementId
                                                          AND MLO_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
@@ -125,6 +131,7 @@ BEGIN
                           AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                         GROUP BY CASE WHEN inIsMovement = FALSE THEN 0 ELSE MIContainer.MovementId END
                                , MovementBoolean_Peresort.ValueData
+                               , COALESCE (MovementBoolean_Closed.ValueData, False)
                                , MLO_DocumentKind.ObjectId
                                , MIContainer.DescId
                                , MIContainer.ContainerId
@@ -145,6 +152,7 @@ BEGIN
                        (SELECT CASE WHEN inIsMovement = FALSE THEN 0 ELSE MIContainer.MovementId END AS MovementId
                              , MIContainer.DescId                AS MIContainerDescId
                              , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) AS isPeresort
+                             , COALESCE (MovementBoolean_Closed.ValueData, False)   AS isClosed
                              , COALESCE (MLO_DocumentKind.ObjectId, 0)              AS DocumentKindId
                              , tmpContainer_in.GoodsId           AS GoodsId_in
                              , tmpContainer_in.GoodsKindId       AS GoodsKindId_in
@@ -165,12 +173,16 @@ BEGIN
                              LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
                                                        ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
                                                       AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
+                             LEFT JOIN MovementBoolean AS MovementBoolean_Closed
+                                                       ON MovementBoolean_Closed.MovementId = MIContainer.MovementId
+                                                      AND MovementBoolean_Closed.DescId = zc_MovementBoolean_Closed()
                              LEFT JOIN MovementLinkObject AS MLO_DocumentKind
                                                           ON MLO_DocumentKind.MovementId = MIContainer.MovementId
                                                          AND MLO_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
                         GROUP BY CASE WHEN inIsMovement = FALSE THEN 0 ELSE MIContainer.MovementId END
                                , MIContainer.DescId
                                , MovementBoolean_Peresort.ValueData
+                               , COALESCE (MovementBoolean_Closed.ValueData, False)
                                , MLO_DocumentKind.ObjectId
                                , tmpContainer_in.GoodsId
                                , tmpContainer_in.GoodsKindId
@@ -184,6 +196,7 @@ BEGIN
            , Movement.OperDate
            
            , tmpOperationGroup.isPeresort :: Boolean AS isPeresort
+           , tmpOperationGroup.isClosed   :: Boolean AS isClosed
            , Object_DocumentKind.ValueData  AS DocumentKindName
 
            , tmpOperationGroup.SubjectDocName :: TVarChar
@@ -234,6 +247,7 @@ BEGIN
               END) ::TFloat AS ChildAmount_weight
       FROM (SELECT tmpMI_in.MovementId
                  , tmpMI_in.isPeresort
+                 , tmpMI_in.isClosed
                  , tmpMI_in.DocumentKindId
                  , tmpMI_in.PartionGoodsId
                  , tmpMI_in.GoodsId       
@@ -250,6 +264,7 @@ BEGIN
 
             FROM (SELECT tmpMI_ContainerIn.MovementId
                        , tmpMI_ContainerIn.isPeresort
+                       , tmpMI_ContainerIn.isClosed
                        , tmpMI_ContainerIn.DocumentKindId
                        , COALESCE (tmpContainer_in.PartionGoodsId, 0) AS PartionGoodsId
                        , tmpMI_ContainerIn.GoodsId       
@@ -261,6 +276,7 @@ BEGIN
                        LEFT JOIN tmpContainer_in ON tmpContainer_in.ContainerId = tmpMI_ContainerIn.ContainerId
                   GROUP BY tmpMI_ContainerIn.MovementId
                          , tmpMI_ContainerIn.isPeresort
+                         , tmpMI_ContainerIn.isClosed
                          , tmpMI_ContainerIn.DocumentKindId
                          , COALESCE (tmpContainer_in.PartionGoodsId, 0)
                          , tmpMI_ContainerIn.GoodsId       
@@ -268,6 +284,7 @@ BEGIN
                  ) AS tmpMI_in
                  LEFT JOIN (SELECT tmpMI_ContainerOut.MovementId
                                  , tmpMI_ContainerOut.isPeresort
+                                 , tmpMI_ContainerOut.isClosed
                                  , tmpMI_ContainerOut.DocumentKindId
                                  , tmpMI_ContainerOut.GoodsId_in
                                  , tmpMI_ContainerOut.GoodsKindId_in
@@ -283,6 +300,7 @@ BEGIN
                                                               AND ContainerLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                             GROUP BY tmpMI_ContainerOut.MovementId
                                    , tmpMI_ContainerOut.isPeresort
+                                   , tmpMI_ContainerOut.isClosed
                                    , tmpMI_ContainerOut.DocumentKindId
                                    , tmpMI_ContainerOut.GoodsId_in
                                    , tmpMI_ContainerOut.GoodsKindId_in
@@ -358,6 +376,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 29.03.22         * isClosed
  17.02.20         * add SubjectDocName
  15.02.16                                        * ALL
  24.09.15         * add GoodsKind
