@@ -89,6 +89,10 @@ type
     bbPrintNoGroup: TdxBarButton;
     cbisPeresort: TcxCheckBox;
     actPersonalChoiceForm: TOpenChoiceForm;
+    cbClosed: TcxCheckBox;
+    spUpdate_Closed: TdsdStoredProc;
+    actUpdate_Closed: TdsdExecStoredProc;
+    bbUpdate_Closed: TdxBarButton;
   private
     { Private declarations }
   public

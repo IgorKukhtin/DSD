@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
              , MovementId_Order Integer, InvNumber_Order_Full TVarChar
              , isPeresort Boolean
+             , isClosed Boolean
               )
 AS
 $BODY$
@@ -81,6 +82,7 @@ BEGIN
            , ('№ ' || Movement_Order.InvNumber || ' от ' || Movement_Order.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Order_Full
            
            , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) :: Boolean AS isPeresort
+           , COALESCE (MovementBoolean_Closed.ValueData, False)   :: Boolean AS isClosed
 
      FROM (SELECT Movement.id
              FROM tmpStatus
@@ -131,6 +133,10 @@ BEGIN
                                     ON MovementBoolean_isAuto.MovementId = Movement.Id
                                    AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
 
+          LEFT JOIN MovementBoolean AS MovementBoolean_Closed
+                                    ON MovementBoolean_Closed.MovementId = Movement.Id
+                                   AND MovementBoolean_Closed.DescId = zc_MovementBoolean_Closed()
+
           LEFT JOIN MovementDate AS MovementDate_Insert
                                  ON MovementDate_Insert.MovementId = Movement.Id
                                 AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -154,6 +160,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.03.22         * isClosed
  17.02.20         * SubjectDoc
  31.05.17         * add Movement_Order
  05.10.16         * add inJuridicalBasisId

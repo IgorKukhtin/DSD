@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
              , MovementId_Order Integer, InvNumber_Order TVarChar
              , isPeresort Boolean
+             , isClosed Boolean
                )
 AS
 $BODY$
@@ -60,6 +61,7 @@ BEGIN
              , 0                                                AS MovementId_Order
              , '' :: TVarChar                                   AS InvNumber_Order
              , FALSE  :: Boolean                                AS isPeresort
+             , FALSE  :: Boolean                                AS isClosed
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
@@ -89,6 +91,7 @@ BEGIN
          , ('№ ' || Movement_Order.InvNumber || ' от ' || Movement_Order.OperDate  :: Date :: TVarChar) :: TVarChar AS InvNumber_Order
          
          , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) :: Boolean AS isPeresort
+         , COALESCE (MovementBoolean_Closed.ValueData, False)   :: Boolean AS isClosed
      FROM Movement
           LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -114,6 +117,10 @@ BEGIN
           LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
                                     ON MovementBoolean_Peresort.MovementId = Movement.Id
                                    AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
+
+          LEFT JOIN MovementBoolean AS MovementBoolean_Closed
+                                    ON MovementBoolean_Closed.MovementId = Movement.Id
+                                   AND MovementBoolean_Closed.DescId = zc_MovementBoolean_Closed()
 
           LEFT JOIN MovementDate AS MovementDate_Insert
                                  ON MovementDate_Insert.MovementId = Movement.Id
@@ -150,6 +157,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.03.22         * isClosed
  31.05.17         *
  26.06.16         *
  13.06.16         *
