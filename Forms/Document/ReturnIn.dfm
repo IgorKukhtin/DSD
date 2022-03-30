@@ -1380,6 +1380,7 @@ inherited ReturnInForm: TReturnInForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitTop = 297
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS_Reason
@@ -2084,7 +2085,36 @@ inherited ReturnInForm: TReturnInForm
         end>
       Properties.ReadOnly = True
       TabOrder = 46
-      Width = 140
+      Width = 137
+    end
+    object cxLabel30: TcxLabel
+      Left = 319
+      Top = 130
+      Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072
+    end
+    object edSubjectDoc: TcxButtonEdit
+      Left = 320
+      Top = 145
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 48
+      Width = 381
+    end
+    object cbisWeighing_inf: TcxCheckBox
+      Left = 213
+      Top = 145
+      Hint = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' '#1076#1072'/'#1085#1077#1090
+      Caption = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 49
+      Width = 100
     end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
@@ -2378,7 +2408,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inJuridicalId'
           Value = ''
-          Component = JuridicalFromGuides
+          Component = GuidesJuridicalFrom
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2386,7 +2416,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inJuridicalName'
           Value = ''
-          Component = JuridicalFromGuides
+          Component = GuidesJuridicalFrom
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -2465,7 +2495,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inJuridicalId'
           Value = ''
-          Component = JuridicalFromGuides
+          Component = GuidesJuridicalFrom
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2473,7 +2503,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inJuridicalName'
           Value = ''
-          Component = JuridicalFromGuides
+          Component = GuidesJuridicalFrom
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -2552,7 +2582,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inJuridicalId'
           Value = Null
-          Component = JuridicalFromGuides
+          Component = GuidesJuridicalFrom
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2560,7 +2590,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inJuridicalName'
           Value = Null
-          Component = JuridicalFromGuides
+          Component = GuidesJuridicalFrom
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -2569,7 +2599,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inPaidKindId'
           Value = 'False'
-          Component = PaidKindGuides
+          Component = GuidesPaidKind
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2577,7 +2607,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inPaidKindName'
           Value = Null
-          Component = PaidKindGuides
+          Component = GuidesPaidKind
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -2612,7 +2642,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inContractId'
           Value = Null
-          Component = ContractGuides
+          Component = GuidesContract
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2620,7 +2650,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inContractName'
           Value = Null
-          Component = ContractGuides
+          Component = GuidesContract
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -2978,7 +3008,21 @@ inherited ReturnInForm: TReturnInForm
         item
         end>
     end
-    object macMemberOpenForm: TMultiAction [23]
+    object macUpdateMovementSubjectDoc: TMultiAction [23]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenSubjectDocForm
+        end
+        item
+          Action = actUpdateMovementSubjectDoc
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072
+      ImageIndex = 80
+    end
+    object macMemberOpenForm: TMultiAction [24]
       Category = 'Member'
       MoveParams = <>
       ActionList = <
@@ -2992,7 +3036,51 @@ inherited ReturnInForm: TReturnInForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1074#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088
       ImageIndex = 55
     end
-    object macContractOpenForm: TMultiAction [24]
+    object actUpdateMovementSubjectDoc: TdsdExecStoredProc [25]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMovementSubjectDoc
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMovementSubjectDoc
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072
+      Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072
+      ImageIndex = 80
+    end
+    object actOpenSubjectDocForm: TOpenChoiceForm [26]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072
+      ImageIndex = 80
+      FormName = 'TSubjectDocForm'
+      FormNameParam.Value = 'TSubjectDocForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = ''
+          Component = GuidesSubjectDoc
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = ''
+          Component = GuidesSubjectDoc
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object macContractOpenForm: TMultiAction [27]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -3006,7 +3094,7 @@ inherited ReturnInForm: TReturnInForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1090#1086#1083#1100#1082#1086' '#8470' '#1076#1086#1075#1086#1074#1086#1088#1072' ('#1074' '#1079#1072#1082#1088#1099#1090#1086#1084' '#1087#1077#1088#1080#1086#1076#1077')'
       ImageIndex = 43
     end
-    object actContractOpenForm: TOpenChoiceForm [25]
+    object actContractOpenForm: TOpenChoiceForm [28]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3021,7 +3109,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'MasterJuridicalId'
           Value = ''
-          Component = JuridicalFromGuides
+          Component = GuidesJuridicalFrom
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -3029,7 +3117,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'MasterJuridicalName'
           Value = ''
-          Component = JuridicalFromGuides
+          Component = GuidesJuridicalFrom
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -3038,7 +3126,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'Key'
           Value = ''
-          Component = ContractGuides
+          Component = GuidesContract
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -3046,7 +3134,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'TextValue'
           Value = ''
-          Component = ContractGuides
+          Component = GuidesContract
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -3055,7 +3143,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'ContractTagName'
           Value = Null
-          Component = ContractTagGuides
+          Component = GuidesContractTag
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -3063,7 +3151,7 @@ inherited ReturnInForm: TReturnInForm
         end>
       isShowModal = True
     end
-    object actUpdateMovementMember: TdsdExecStoredProc [26]
+    object actUpdateMovementMember: TdsdExecStoredProc [29]
       Category = 'Member'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3075,7 +3163,7 @@ inherited ReturnInForm: TReturnInForm
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1074#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088
       Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1074#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088
     end
-    object mactPrintAkt: TMultiAction [27]
+    object mactPrintAkt: TMultiAction [30]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -3086,7 +3174,7 @@ inherited ReturnInForm: TReturnInForm
       Hint = #1040#1082#1090' '#1074#1086#1079#1074#1088#1072#1090#1072
       ImageIndex = 15
     end
-    object actUpdateMovementContract: TdsdExecStoredProc [28]
+    object actUpdateMovementContract: TdsdExecStoredProc [31]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3098,7 +3186,7 @@ inherited ReturnInForm: TReturnInForm
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
       Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
     end
-    object mactPrintPriceCorr: TMultiAction [29]
+    object mactPrintPriceCorr: TMultiAction [32]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -3112,7 +3200,7 @@ inherited ReturnInForm: TReturnInForm
       Hint = #1050#1054#1056#1045#1043#1059#1070#1063#1040' '#1058#1054#1042#1040#1056#1053#1040' '#1053#1040#1050#1051#1040#1044#1053#1040
       ImageIndex = 16
     end
-    object mactPrint: TMultiAction [30]
+    object mactPrint: TMultiAction [33]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -3130,7 +3218,7 @@ inherited ReturnInForm: TReturnInForm
       ImageIndex = 3
       ShortCut = 16464
     end
-    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction [31]
+    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction [34]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintTaxCorrective_Client
@@ -3175,7 +3263,7 @@ inherited ReturnInForm: TReturnInForm
         item
         end>
     end
-    object actTaxJournalChoice: TOpenChoiceForm [35]
+    object actTaxJournalChoice: TOpenChoiceForm [38]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3244,7 +3332,7 @@ inherited ReturnInForm: TReturnInForm
         end>
       isShowModal = True
     end
-    object MIChildProtocolOpenForm: TdsdOpenForm [36]
+    object MIChildProtocolOpenForm: TdsdOpenForm [39]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -3629,7 +3717,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inPaidKindId'
           Value = ''
-          Component = PaidKindGuides
+          Component = GuidesPaidKind
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -3637,7 +3725,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inPaidKindName'
           Value = ''
-          Component = PaidKindGuides
+          Component = GuidesPaidKind
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -3672,7 +3760,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inContractId'
           Value = ''
-          Component = ContractGuides
+          Component = GuidesContract
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -3680,7 +3768,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inContractName'
           Value = ''
-          Component = ContractGuides
+          Component = GuidesContract
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -3706,7 +3794,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inJuridicalId'
           Value = ''
-          Component = JuridicalFromGuides
+          Component = GuidesJuridicalFrom
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -3714,7 +3802,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inJuridicalName'
           Value = ''
-          Component = JuridicalFromGuides
+          Component = GuidesJuridicalFrom
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -3943,7 +4031,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inPaidKindId'
           Value = ''
-          Component = PaidKindGuides
+          Component = GuidesPaidKind
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -3951,7 +4039,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inPaidKindName'
           Value = ''
-          Component = PaidKindGuides
+          Component = GuidesPaidKind
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -3986,7 +4074,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inContractId'
           Value = ''
-          Component = ContractGuides
+          Component = GuidesContract
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -3994,7 +4082,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inContractName'
           Value = ''
-          Component = ContractGuides
+          Component = GuidesContract
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -4020,7 +4108,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inJuridicalId'
           Value = ''
-          Component = JuridicalFromGuides
+          Component = GuidesJuridicalFrom
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -4028,7 +4116,7 @@ inherited ReturnInForm: TReturnInForm
         item
           Name = 'inJuridicalName'
           Value = ''
-          Component = JuridicalFromGuides
+          Component = GuidesJuridicalFrom
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -4591,6 +4679,14 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateMovementSubjectDoc'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateAmountPartner'
         end
         item
@@ -4839,6 +4935,10 @@ inherited ReturnInForm: TReturnInForm
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103'>'
       Category = 0
     end
+    object bbUpdateMovementSubjectDoc: TdxBarButton
+      Action = macUpdateMovementSubjectDoc
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnlyEditingCellOnEnter = True
@@ -5011,14 +5111,14 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'ParentId'
         Value = Null
-        Component = ParentChoiceGuides
+        Component = GuidesParentChoice
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_Parent'
         Value = Null
-        Component = ParentChoiceGuides
+        Component = GuidesParentChoice
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -5106,28 +5206,28 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'PaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -5135,7 +5235,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'ContractTagName'
         Value = Null
-        Component = ContractTagGuides
+        Component = GuidesContractTag
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -5158,14 +5258,14 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'CurrencyPartnerId'
         Value = ''
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyPartnerName'
         Value = ''
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -5195,14 +5295,14 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'DocumentTaxKindId'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'DocumentTaxKindName'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -5210,14 +5310,14 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'MovementId_Partion'
         Value = Null
-        Component = SaleChoiceGuides
+        Component = GuidesSaleChoice
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PartionMovementName'
         Value = Null
-        Component = SaleChoiceGuides
+        Component = GuidesSaleChoice
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -5260,14 +5360,14 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'JuridicalId_From'
         Value = Null
-        Component = JuridicalFromGuides
+        Component = GuidesJuridicalFrom
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName_From'
         Value = Null
-        Component = JuridicalFromGuides
+        Component = GuidesJuridicalFrom
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -5366,6 +5466,28 @@ inherited ReturnInForm: TReturnInForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SubjectDocId'
+        Value = Null
+        Component = GuidesSubjectDoc
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SubjectDocName'
+        Value = Null
+        Component = GuidesSubjectDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isWeighing_inf'
+        Value = Null
+        Component = cbisWeighing_inf
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 264
@@ -5408,7 +5530,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inParentId'
         Value = Null
-        Component = ParentChoiceGuides
+        Component = GuidesParentChoice
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5496,7 +5618,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inPaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5504,7 +5626,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inContractId'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5520,7 +5642,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inCurrencyPartnerId'
         Value = ''
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5731,7 +5853,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inMovementId_PartionTop'
         Value = Null
-        Component = SaleChoiceGuides
+        Component = GuidesSaleChoice
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5902,7 +6024,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inMovementId_PartionTop'
         Value = Null
-        Component = SaleChoiceGuides
+        Component = GuidesSaleChoice
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5983,8 +6105,8 @@ inherited ReturnInForm: TReturnInForm
     Top = 312
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 628
-    Top = 140
+    Left = 796
+    Top = 236
   end
   object RefreshDispatcher: TRefreshDispatcher
     CheckIdParam = True
@@ -5998,7 +6120,7 @@ inherited ReturnInForm: TReturnInForm
         Component = PriceListGuides
       end
       item
-        Component = ParentChoiceGuides
+        Component = GuidesParentChoice
       end>
     Left = 464
     Top = 360
@@ -6081,7 +6203,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inDocumentTaxKindId'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -6089,7 +6211,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inDocumentTaxKindId_inf'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -6112,14 +6234,14 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'outDocumentTaxKindId'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindName'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -6142,7 +6264,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 469
     Top = 294
   end
-  object DocumentTaxKindGuides: TdsdGuides
+  object GuidesDocumentTaxKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edDocumentTaxKind
     FormNameParam.Value = 'TDocumentTaxKindForm'
@@ -6154,7 +6276,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'Key'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -6163,7 +6285,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -6233,7 +6355,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inDocumentTaxKindId'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -6241,7 +6363,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inDocumentTaxKindId_inf'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -6264,14 +6386,14 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'outDocumentTaxKindId'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'outDocumentTaxKindName'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'TextValue'
         MultiSelectSeparator = ','
       end
@@ -6287,7 +6409,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 280
     Top = 336
   end
-  object ContractGuides: TdsdGuides
+  object GuidesContract: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContract
     FormNameParam.Value = 'TContractForm'
@@ -6299,7 +6421,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -6308,7 +6430,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -6421,14 +6543,14 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -6436,14 +6558,14 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'ContractTagId'
         Value = Null
-        Component = ContractTagGuides
+        Component = GuidesContractTag
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ContractTagName'
         Value = Null
-        Component = ContractTagGuides
+        Component = GuidesContractTag
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -6466,14 +6588,14 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'PaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -6488,7 +6610,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 360
     Top = 1
   end
-  object PaidKindGuides: TdsdGuides
+  object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
@@ -6500,7 +6622,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'Key'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -6509,14 +6631,14 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 744
-    Top = 4
+    Left = 680
+    Top = 20
   end
   object CurrencyDocumentGuides: TdsdGuides
     KeyField = 'Id'
@@ -6548,7 +6670,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 1128
     Top = 216
   end
-  object CurrencyPartnerGuides: TdsdGuides
+  object GuidesCurrencyPartner: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCurrencyPartner
     FormNameParam.Value = 'TCurrency_ObjectForm'
@@ -6560,7 +6682,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'Key'
         Value = ''
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -6569,7 +6691,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -6732,7 +6854,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 775
     Top = 388
   end
-  object ContractTagGuides: TdsdGuides
+  object GuidesContractTag: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContractTag
     FormNameParam.Value = 'TContractTagForm'
@@ -6744,7 +6866,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'Key'
         Value = ''
-        Component = ContractTagGuides
+        Component = GuidesContractTag
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -6753,7 +6875,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractTagGuides
+        Component = GuidesContractTag
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -6787,7 +6909,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 504
     Top = 408
   end
-  object SaleChoiceGuides: TdsdGuides
+  object GuidesSaleChoice: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInvNumberSale
     Key = '0'
@@ -6800,7 +6922,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'Key'
         Value = '0'
-        Component = SaleChoiceGuides
+        Component = GuidesSaleChoice
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -6809,7 +6931,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'InvNumber_Full'
         Value = ''
-        Component = SaleChoiceGuides
+        Component = GuidesSaleChoice
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -6830,10 +6952,10 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 396
-    Top = 96
+    Left = 380
+    Top = 80
   end
-  object ParentChoiceGuides: TdsdGuides
+  object GuidesParentChoice: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInvNumberParent
     Key = '0'
@@ -6846,7 +6968,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'Key'
         Value = '0'
-        Component = ParentChoiceGuides
+        Component = GuidesParentChoice
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -6855,7 +6977,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'InvNumber_Full'
         Value = ''
-        Component = ParentChoiceGuides
+        Component = GuidesParentChoice
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -7099,7 +7221,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 224
     Top = 364
   end
-  object JuridicalFromGuides: TdsdGuides
+  object GuidesJuridicalFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridicalFrom
     FormNameParam.Name = 'TJuridical_ObjectForm'
@@ -7186,14 +7308,14 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inContractId'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 290
-    Top = 296
+    Left = 114
+    Top = 272
   end
   object GuidesMember: TdsdGuides
     KeyField = 'Id'
@@ -7598,8 +7720,8 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1024
-    Top = 144
+    Left = 1000
+    Top = 136
   end
   object GuidesReturnKind: TdsdGuides
     KeyField = 'Id'
@@ -7864,7 +7986,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inMovementId_Order'
         Value = '0'
-        Component = SaleChoiceGuides
+        Component = GuidesSaleChoice
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -7951,5 +8073,59 @@ inherited ReturnInForm: TReturnInForm
       end>
     Left = 780
     Top = 144
+  end
+  object GuidesSubjectDoc: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edSubjectDoc
+    FormNameParam.Value = 'TSubjectDocForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TSubjectDocForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesSubjectDoc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesSubjectDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 464
+    Top = 128
+  end
+  object spUpdateMovementSubjectDoc: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ReturnIn_SubjectDoc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSubjectDocId'
+        Value = ''
+        Component = GuidesSubjectDoc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 98
+    Top = 328
   end
 end

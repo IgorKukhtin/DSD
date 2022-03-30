@@ -29,11 +29,13 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , MemberId Integer, MemberName TVarChar, MemberInsertName TVarChar
              , MemberExpId Integer, MemberExpName TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
+             , SubjectDocId Integer, SubjectDocName TVarChar
              , ReasonId Integer, ReasonName  TVarChar
              , Comment TVarChar
              , isPromo Boolean
              , isList Boolean
              , isPrinted Boolean
+             , isWeighing_inf Boolean
              )
 AS
 $BODY$
@@ -105,6 +107,9 @@ BEGIN
              , 0                   		        AS ReestrKindId
              , CAST ('' AS TVarChar)                    AS ReestrKindName 
 
+             , 0                   		        AS SubjectDocId
+             , CAST ('' AS TVarChar)                    AS SubjectDocName
+
              , 0                   		        AS ReasonId
              , CAST ('' AS TVarChar)                    AS ReasonName 
 
@@ -112,7 +117,7 @@ BEGIN
              , CAST (FALSE AS Boolean)                  AS isPromo 
              , CAST (FALSE AS Boolean)                  AS isList
              , CAST (FALSE AS Boolean)                  AS isPrinted
-
+             , CAST (FALSE AS Boolean)                  AS isWeighing_inf
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
                LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
@@ -173,6 +178,13 @@ BEGIN
                                   LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmp.PriceListId
                              LIMIT 1
                             )
+        -- взвешивание контрагент
+        , tmpWeighingPartner AS (SELECT DISTINCT Movement.ParentId
+                                 FROM Movement
+                                 WHERE Movement.ParentId = inMovementId
+                                   AND Movement.DescId = zc_Movement_WeighingPartner()
+                                )
+
 
        SELECT
              Movement.Id
@@ -238,6 +250,9 @@ BEGIN
            , Object_ReestrKind.Id             	    AS ReestrKindId
            , Object_ReestrKind.ValueData       	    AS ReestrKindName
 
+           , Object_SubjectDoc.Id                   AS SubjectDocId
+           , Object_SubjectDoc.ValueData            AS SubjectDocName
+
            , 0                   		    AS ReasonId
            , CAST ('' AS TVarChar)                  AS ReasonName 
 
@@ -246,6 +261,7 @@ BEGIN
            , COALESCE (MovementBoolean_Promo.ValueData, FALSE):: Boolean AS isPromo
            , COALESCE (MovementBoolean_List.ValueData, FALSE) :: Boolean AS isList
            , COALESCE (MovementBoolean_Print.ValueData, False):: Boolean AS isPrinted
+           , CASE WHEN tmpWeighingPartner.ParentId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isWeighing_inf
 
        FROM Movement
             LEFT JOIN tmpMI ON 1 = 1
@@ -374,6 +390,11 @@ BEGIN
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                         ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                        AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceListIn
                                          ON MovementLinkObject_PriceListIn.MovementId = Movement.Id
                                         AND MovementLinkObject_PriceListIn.DescId = zc_MovementLinkObject_PriceListIn()
@@ -404,6 +425,8 @@ BEGIN
                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
             LEFT JOIN Object AS Object_MemberInsert ON Object_MemberInsert.Id = ObjectLink_User_Member.ChildObjectId
 
+            LEFT JOIN tmpWeighingPartner ON tmpWeighingPartner.ParentId = Movement.Id
+ 
          WHERE Movement.Id     =  inMovementId
            AND Movement.DescId = zc_Movement_ReturnIn();
 

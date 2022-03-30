@@ -36,12 +36,14 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MemberId Integer, MemberName TVarChar
              , MemberExpId Integer, MemberExpName TVarChar, MemberExpName_calc TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
+             , SubjectDocId Integer, SubjectDocName TVarChar
              , Comment TVarChar
              , isError Boolean
              , isEDI Boolean
              , isList Boolean
              , isPrinted Boolean
              , isPromo Boolean
+             , isWeighing_inf Boolean
              , MovementPromo TVarChar
 
              , InsertName TVarChar
@@ -143,6 +145,13 @@ BEGIN
                                LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmp.PersonalId
                                )
 
+        -- взвешивание контрагент
+        , tmpWeighingPartner AS (SELECT DISTINCT Movement.ParentId
+                                 FROM Movement
+                                 WHERE Movement.ParentId IN (SELECT tmpMovement.Id FROM tmpMovement)
+                                   AND Movement.DescId = zc_Movement_WeighingPartner()
+                                )
+        
        -- Результат
        SELECT
              Movement.Id                                AS Id
@@ -202,6 +211,8 @@ BEGIN
            , tmpPersonal_Calc.PersonalName :: TVarChar  AS MemberExpName_calc
            , Object_ReestrKind.Id             	        AS ReestrKindId
            , Object_ReestrKind.ValueData       	        AS ReestrKindName
+           , Object_SubjectDoc.Id                       AS SubjectDocId
+           , Object_SubjectDoc.ValueData                AS SubjectDocName
            , MovementString_Comment.ValueData           AS Comment
            , MovementBoolean_Error.ValueData            AS isError
            , COALESCE (MovementLinkMovement_MasterEDI.MovementChildId, 0) <> 0 AS isEDI
@@ -210,6 +221,8 @@ BEGIN
            , COALESCE (MovementBoolean_Print.ValueData, False):: Boolean AS isPrinted
 
            , COALESCE(MovementBoolean_Promo.ValueData, FALSE) AS isPromo
+           , CASE WHEN tmpWeighingPartner.ParentId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isWeighing_inf
+
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndReturn.ValueData) AS MovementPromo
 
            , Object_User.ValueData                  AS InsertName
@@ -373,6 +386,11 @@ BEGIN
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                         ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                        AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
+
 --add Tax
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                          ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
@@ -426,6 +444,9 @@ BEGIN
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
 
             LEFT JOIN tmpPersonal_Calc ON tmpPersonal_Calc.MovementId = Movement.Id
+            
+            LEFT JOIN tmpWeighingPartner ON tmpWeighingPartner.ParentId = Movement.Id
+
      /*WHERE vbIsXleb = FALSE OR (View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Хлеб
                                 AND vbIsXleb = TRUE)*/
     ;
@@ -444,7 +465,7 @@ $BODY$
  05.10.16         * add inJuridicalBasisId
  14.05.16         *
  21.08.15         * add isPartner
- 26.06.15         * add Comment, Parent
+ 26.06.15         * add Comment, ParentId
  13.11.14                                        * add zc_Enum_Process_AccessKey_DocumentAll
  12.08.14                                        * add isEDI
  24.07.14         * add zc_MovementFloat_CurrencyValue
