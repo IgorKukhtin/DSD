@@ -234,6 +234,7 @@ type
     EditRepl_offset: TEdit;
     cbTransportList: TCheckBox;
     Timer_Auto_PrimeCost: TTimer;
+    Button1: TButton;
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
@@ -250,6 +251,8 @@ type
     procedure OKDocumentButtonClick(Sender: TObject);
     procedure cbSnapshotClick(Sender: TObject);
     procedure Timer_Auto_PrimeCostTimer(Sender: TObject);
+    procedure OKGuideButtonClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
@@ -828,6 +831,7 @@ var
   Year, Month, Day, Hour, Min, Sec, MSec: Word;
   i : Integer;
 begin
+exit;
      try if Pos('br-', ParamStr(5)) = 1 then GroupId_branch:= StrToInt(Copy(ParamStr(5), 4, 2));
          BranchEdit.Text:= 'BranchId : ' + IntToStr(GroupId_branch);
      except GroupId_branch:= -1;
@@ -850,7 +854,7 @@ begin
          with toZConnection do begin
             Connected:=false;
             HostName:='integer-srv.alan.dp.ua';
-          //HostName:='192.168.0.219';
+            //HostName:='192.168.0.219';
             User:='admin';
             Password:='vas6ok';
             Database:='project';
@@ -1707,6 +1711,24 @@ begin
      //
      //
      fStop:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.OKGuideButtonClick(Sender: TObject);
+begin
+     ShowMessage('');
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.Button1Click(Sender: TObject);
+begin
+     cbCurrency.Checked:= true;
+
+     StartDateEdit.Text:='01.03.2022';
+     StartDateCompleteEdit.Text:=StartDateEdit.Text;
+
+     EndDateEdit.Text:='25.03.2022';
+     EndDateCompleteEdit.Text:=EndDateEdit.Text;
+
+     pLoad_https_Currency_all;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.PanelErrDblClick(Sender: TObject);

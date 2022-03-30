@@ -48,13 +48,12 @@ object MainForm: TMainForm
       ExplicitWidth = 1307
     end
     object OKGuideButton: TButton
-      Left = 37
-      Top = 25
-      Width = 135
+      Left = 152
+      Top = 27
+      Width = 22
       Height = 25
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' GUIDE'
       DragMode = dmAutomatic
-      Enabled = False
       TabOrder = 0
     end
     object StopButton: TButton
@@ -102,7 +101,7 @@ object MainForm: TMainForm
       OnClick = OKDocumentButtonClick
     end
     object OKCompleteDocumentButton: TButton
-      Left = 326
+      Left = 319
       Top = 25
       Width = 151
       Height = 25
@@ -117,6 +116,15 @@ object MainForm: TMainForm
       Height = 17
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' MI'
       TabOrder = 7
+    end
+    object Button1: TButton
+      Left = 8
+      Top = 25
+      Width = 138
+      Height = 25
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' Currency_all'
+      TabOrder = 8
+      OnClick = Button1Click
     end
   end
   object GuidePanel: TPanel
@@ -2448,6 +2456,8 @@ object MainForm: TMainForm
         'LogMemo')
       ParentFont = False
       TabOrder = 1
+      ExplicitLeft = -4
+      ExplicitTop = 33
     end
     object LogMemo2: TMemo
       Left = 1
