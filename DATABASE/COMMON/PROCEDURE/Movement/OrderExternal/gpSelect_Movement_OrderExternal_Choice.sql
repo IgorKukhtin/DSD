@@ -44,6 +44,7 @@ BEGIN
         , tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
         , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                          UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
+                         UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND AccessKeyId = zc_Enum_Process_AccessKey_DocumentAll())
                               )
         , tmpMovement AS (SELECT Movement.*
                          , MovementLinkObject_From.ObjectId AS FromId
@@ -303,7 +304,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderExternal_Choice (inStartDate:= '01.06.2014', inEndDate:= '08.11.2014', inIsErased := FALSE, inPartnerId:= 0, inSession:= '2')
-
- --select * from gpSelect_Movement_OrderExternal_Choice(instartdate := ('01.11.2014')::TDateTime , inenddate := ('30.11.2014')::TDateTime , inIsErased := 'False' , inPartnerId:= 0,  inSession := '5');
---select * from gpSelect_Movement_OrderExternal_Choice(instartdate := ('27.03.2020')::TDateTime , inenddate := ('30.03.2022')::TDateTime , inIsErased := 'False' , inPartnerId := 8411 ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_OrderExternal_Choice (inStartDate:= '01.06.2022', inEndDate:= '01.06.2022', inIsErased := FALSE, inPartnerId:= 0, inSession:= '2')
