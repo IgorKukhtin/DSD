@@ -164,10 +164,12 @@ BEGIN
                 )
             -- Отказы поставщиков
           , tmpSupplierFailures AS (SELECT DISTINCT
-                                           SupplierFailures.GoodsId
+                                           Object_Goods_Juridical.GoodsMainId AS GoodsId
                                          , SupplierFailures.JuridicalId
                                          , SupplierFailures.ContractId
                                     FROM lpSelect_PriceList_SupplierFailures(vbUnitId, vbUserId) AS SupplierFailures
+                                    
+                                         INNER JOIN Object_Goods_Juridical ON Object_Goods_Juridical.Id = SupplierFailures.GoodsId
                                     )
           , tmpLoadPriceList AS
                 (SELECT LoadPriceList.*
@@ -177,6 +179,33 @@ BEGIN
 
                  WHERE (LoadPriceList.AreaId = vbAreaId OR COALESCE (LoadPriceList.AreaId, 0) = 0 OR 
                         vbAreaId = 5959067 AND COALESCE (LoadPriceList.AreaId, 0) = zc_Area_Basis() AND COALESCE(tmpJuridicalPriceBasis.ID, 0) <> 0))
+                        
+          , tmpJuridicalSettings AS (SELECT DISTINCT
+                                            ObjectLink_JuridicalSettings_Juridical.ChildObjectId                AS JuridicalId
+                                          , ObjectLink_JuridicalSettings_MainJuridical.ChildObjectId            AS MainJuridicalId
+                                          , COALESCE (ObjectLink_JuridicalSettings_Contract.ChildObjectId, 0)   AS ContractId
+                                          , COALESCE (ObjectBoolean_isPriceCloseOrder.ValueData, FALSE)         AS isPriceCloseOrder
+                                     FROM ObjectLink AS ObjectLink_JuridicalSettings_Retail
+
+                                          JOIN ObjectLink AS ObjectLink_JuridicalSettings_Juridical
+                                                          ON ObjectLink_JuridicalSettings_Juridical.DescId = zc_ObjectLink_JuridicalSettings_Juridical()
+                                                         AND ObjectLink_JuridicalSettings_Juridical.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+
+                                          JOIN ObjectLink AS ObjectLink_JuridicalSettings_MainJuridical
+                                                          ON ObjectLink_JuridicalSettings_MainJuridical.DescId = zc_ObjectLink_JuridicalSettings_MainJuridical()
+                                                         AND ObjectLink_JuridicalSettings_MainJuridical.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+
+                                          LEFT JOIN ObjectLink AS ObjectLink_JuridicalSettings_Contract
+                                                               ON ObjectLink_JuridicalSettings_Contract.DescId = zc_ObjectLink_JuridicalSettings_Contract()
+                                                              AND ObjectLink_JuridicalSettings_Contract.ObjectId = ObjectLink_JuridicalSettings_Juridical.ObjectId
+
+                                          LEFT JOIN ObjectBoolean AS ObjectBoolean_isPriceCloseOrder
+                                                                  ON ObjectBoolean_isPriceCloseOrder.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                                                 AND ObjectBoolean_isPriceCloseOrder.DescId = zc_ObjectBoolean_JuridicalSettings_isPriceCloseOrder()
+
+                                     WHERE ObjectLink_JuridicalSettings_Retail.DescId = zc_ObjectLink_JuridicalSettings_Retail()
+                                     AND ObjectLink_JuridicalSettings_Retail.ChildObjectId = vbRetailId)
+                                 
           , tmpLoadPriceListItem AS
                 (SELECT
                          LoadPriceList.JuridicalId           AS JuridicalId,
@@ -198,35 +227,10 @@ BEGIN
                                                          AND tmpContractSettings.ContractId = LoadPriceList.ContractId
                                                          AND (COALESCE (tmpContractSettings.AreaId, 0) = COALESCE (LoadPriceList.AreaId, 0))
 
-                            LEFT JOIN
-                                (SELECT DISTINCT
-                                        ObjectLink_JuridicalSettings_Juridical.ChildObjectId                AS JuridicalId
-                                      , ObjectLink_JuridicalSettings_MainJuridical.ChildObjectId            AS MainJuridicalId
-                                      , COALESCE (ObjectLink_JuridicalSettings_Contract.ChildObjectId, 0)   AS ContractId
-                                      , COALESCE (ObjectBoolean_isPriceCloseOrder.ValueData, FALSE)         AS isPriceCloseOrder
-                                 FROM ObjectLink AS ObjectLink_JuridicalSettings_Retail
-
-                                      JOIN ObjectLink AS ObjectLink_JuridicalSettings_Juridical
-                                                      ON ObjectLink_JuridicalSettings_Juridical.DescId = zc_ObjectLink_JuridicalSettings_Juridical()
-                                                     AND ObjectLink_JuridicalSettings_Juridical.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
-
-                                      JOIN ObjectLink AS ObjectLink_JuridicalSettings_MainJuridical
-                                                      ON ObjectLink_JuridicalSettings_MainJuridical.DescId = zc_ObjectLink_JuridicalSettings_MainJuridical()
-                                                     AND ObjectLink_JuridicalSettings_MainJuridical.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
-
-                                      LEFT JOIN ObjectLink AS ObjectLink_JuridicalSettings_Contract
-                                                           ON ObjectLink_JuridicalSettings_Contract.DescId = zc_ObjectLink_JuridicalSettings_Contract()
-                                                          AND ObjectLink_JuridicalSettings_Contract.ObjectId = ObjectLink_JuridicalSettings_Juridical.ObjectId
-
-                                      LEFT JOIN ObjectBoolean AS ObjectBoolean_isPriceCloseOrder
-                                                              ON ObjectBoolean_isPriceCloseOrder.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
-                                                             AND ObjectBoolean_isPriceCloseOrder.DescId = zc_ObjectBoolean_JuridicalSettings_isPriceCloseOrder()
-
-                                 WHERE ObjectLink_JuridicalSettings_Retail.DescId = zc_ObjectLink_JuridicalSettings_Retail()
-                                 AND ObjectLink_JuridicalSettings_Retail.ChildObjectId = vbRetailId) AS JuridicalSettings
-                                                                                                     ON JuridicalSettings.JuridicalId = LoadPriceList.JuridicalId
-                                                                                                    AND JuridicalSettings.MainJuridicalId = tmpMainJuridicalArea.MainJuridicalId
-                                                                                                    AND JuridicalSettings.ContractId = COALESCE (LoadPriceList.ContractId, 0)
+                            LEFT JOIN tmpJuridicalSettings AS JuridicalSettings
+                                                           ON JuridicalSettings.JuridicalId = LoadPriceList.JuridicalId
+                                                          AND JuridicalSettings.MainJuridicalId = tmpMainJuridicalArea.MainJuridicalId
+                                                          AND JuridicalSettings.ContractId = COALESCE (LoadPriceList.ContractId, 0)
 
                             INNER JOIN LoadPriceListItem ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
                             
@@ -239,7 +243,7 @@ BEGIN
                        AND COALESCE (JuridicalSettings.isPriceCloseOrder, TRUE) = False
                        AND tmpMainJuridicalArea.MainJuridicalId = vbJuridicalId
                        AND COALESCE (SupplierFailures.GoodsId, 0) = 0
-              )
+                    )
           , tmpExpirationDate AS
                  (SELECT tmpLoadPriceListItem.JuridicalId
                        , tmpLoadPriceListItem.GoodsID  
@@ -344,7 +348,7 @@ BEGIN
              CURRENT_DATE + (COALESCE(tmpExpirationDateMonth.DateMonth::Integer, 0)::tvarchar||' MONTH')::INTERVAL);
 
      ANALYSE _GoodsPriceAll;
-
+     
      RETURN QUERY
      WITH GoodsPriceAll AS (SELECT
                                   ROW_NUMBER() OVER (PARTITION BY _GoodsPriceAll.GoodsId ORDER BY _GoodsPriceAll.Price, _GoodsPriceAll.ContractId)::Integer AS Ord,
@@ -452,4 +456,4 @@ $BODY$
 */
 
 -- тест 
-SELECT * FROM gpSelect_CashGoods('3');
+SELECT * FROM gpSelect_CashGoods('3')

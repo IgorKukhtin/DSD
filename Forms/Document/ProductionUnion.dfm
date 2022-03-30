@@ -1,24 +1,24 @@
 inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
-  ClientWidth = 1000
-  ExplicitWidth = 1016
+  ClientWidth = 1074
+  ExplicitWidth = 1090
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 122
-    Width = 1000
+    Width = 1074
     Height = 552
     TabOrder = 2
     ExplicitTop = 122
     ExplicitWidth = 1000
     ExplicitHeight = 552
     ClientRectBottom = 552
-    ClientRectRight = 1000
+    ClientRectRight = 1074
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1000
       ExplicitHeight = 528
       inherited cxGrid: TcxGrid
-        Width = 1000
+        Width = 1074
         Height = 220
         ExplicitWidth = 1000
         ExplicitHeight = 220
@@ -407,7 +407,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       inherited cxGridChild: TcxGrid
         Top = 225
-        Width = 1000
+        Width = 1074
         ExplicitTop = 225
         ExplicitWidth = 1000
         inherited cxGridDBTableViewChild: TcxGridDBTableView
@@ -578,14 +578,14 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       inherited cxBottomSplitter: TcxSplitter
         Top = 220
-        Width = 1000
+        Width = 1074
         ExplicitTop = 220
         ExplicitWidth = 1000
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 1000
+    Width = 1074
     Height = 96
     ExplicitWidth = 1000
     ExplicitHeight = 96
@@ -661,6 +661,15 @@ inherited ProductionUnionForm: TProductionUnionForm
       TabOrder = 15
       Visible = False
       Width = 64
+    end
+    object cbClosed: TcxCheckBox
+      Left = 928
+      Top = 23
+      Hint = #1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1087#1077#1088#1077#1089#1095#1077#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+      Caption = #1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1087#1077#1088#1077#1089#1095#1077#1090#1072
+      Properties.ReadOnly = True
+      TabOrder = 16
+      Width = 145
     end
   end
   object edIsAuto: TcxCheckBox [2]
@@ -747,7 +756,22 @@ inherited ProductionUnionForm: TProductionUnionForm
       ReportName = 'PrintMovement_Send'
       ReportNameParam.Value = 'PrintMovement_Send'
     end
-    object actUpdateChildDS: TdsdUpdateDataSet [10]
+    object actUpdate_Closed: TdsdExecStoredProc [10]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Closed
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Closed
+        end
+        item
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1087#1077#1088#1077#1089#1095#1077#1090#1072'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1087#1077#1088#1077#1089#1095#1077#1090#1072'" ('#1076#1072'/'#1085#1077#1090')'
+      ImageIndex = 77
+    end
+    object actUpdateChildDS: TdsdUpdateDataSet [11]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -759,7 +783,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
     end
-    object actPrint1: TdsdPrintAction [15]
+    object actPrint1: TdsdPrintAction [16]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint1
@@ -797,7 +821,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actGoodsKindChoiceChild: TOpenChoiceForm [21]
+    object actGoodsKindChoiceChild: TOpenChoiceForm [22]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -824,7 +848,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         end>
       isShowModal = True
     end
-    object actPersonalChoiceForm: TOpenChoiceForm [22]
+    object actPersonalChoiceForm: TOpenChoiceForm [23]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -851,7 +875,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         end>
       isShowModal = True
     end
-    object actGoodsKindChoiceMaster: TOpenChoiceForm [23]
+    object actGoodsKindChoiceMaster: TOpenChoiceForm [24]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1050,6 +1074,14 @@ inherited ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Closed'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -1121,6 +1153,10 @@ inherited ProductionUnionForm: TProductionUnionForm
     end
     object bbPrintNoGroup: TdxBarButton
       Action = actPrintNoGroup
+      Category = 0
+    end
+    object bbUpdate_Closed: TdxBarButton
+      Action = actUpdate_Closed
       Category = 0
     end
   end
@@ -1279,6 +1315,13 @@ inherited ProductionUnionForm: TProductionUnionForm
         Name = 'isPeresort'
         Value = Null
         Component = cbisPeresort
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isClosed'
+        Value = Null
+        Component = cbClosed
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -1956,5 +1999,37 @@ inherited ProductionUnionForm: TProductionUnionForm
     PackSize = 1
     Left = 551
     Top = 432
+  end
+  object spUpdate_Closed: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ProductionUnion_Closed'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisClosed'
+        Value = False
+        Component = cbClosed
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outClosed'
+        Value = False
+        Component = cbClosed
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 80
+    Top = 420
   end
 end

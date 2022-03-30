@@ -229,6 +229,15 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
             Options.Editing = False
             Width = 36
           end
+          object isClosed: TcxGridDBColumn
+            Caption = #1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1087#1077#1088#1077#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'isClosed'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1087#1077#1088#1077#1089#1095#1077#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 80
+          end
           object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'. '#1082#1083#1072#1076#1086#1074#1097'.'
             DataBinding.FieldName = 'InsertDate'
@@ -876,7 +885,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
       end
       item
         Name = 'inisItem'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1027,7 +1036,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
       end
       item
         Name = 'inisItem'
-        Value = 'true'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

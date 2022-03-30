@@ -43,14 +43,12 @@ BEGIN
 
         -- заменили inAmountManual
         SELECT -- округлили ВВЕРХ AllLot
-               CEIL((-- Спецзаказ
-                     inAmount
-                     -- Количество дополнительное
-                   + COALESCE (MIFloat_AmountSecond.ValueData, 0)
-                     -- кол-во отказов
-                   + COALESCE (MIFloat_ListDiff.ValueData, 0)
-                     -- кол-во СУА
-                   + COALESCE (MIFloat_AmountSUA.ValueData, 0)
+               CEIL((-- Спецзаказ + Количество дополнительное                        -- кол-во отказов
+                     CASE WHEN (COALESCE (inAmount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= 
+                               (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_SupplierFailures.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))
+                          THEN (COALESCE (inAmount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
+                          ELSE (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_SupplierFailures.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))     -- кол-во отказов + СУА
+                     END-- Спецзаказ
                     ) / COALESCE (vbMinimumLot, 1)
                    ) * COALESCE (vbMinimumLot, 1)
         INTO
@@ -63,6 +61,9 @@ BEGIN
             LEFT OUTER JOIN MovementItemFloat AS MIFloat_ListDiff
                                               ON MIFloat_ListDiff.MovementItemId = MovementItem.Id
                                              AND MIFloat_ListDiff.DescId         = zc_MIFloat_ListDiff()
+            LEFT OUTER JOIN MovementItemFloat AS MIFloat_SupplierFailures
+                                              ON MIFloat_SupplierFailures.MovementItemId = MovementItem.Id
+                                             AND MIFloat_SupplierFailures.DescId         = zc_MIFloat_SupplierFailures()
             LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSUA
                                               ON MIFloat_AmountSUA.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountSUA.DescId         = zc_MIFloat_AmountSUA()
@@ -77,8 +78,8 @@ BEGIN
     -- сохранили свойство <Сумма заказа>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, COALESCE(inPrice, 0));
 
-     -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+    -- сохранили протокол
+    PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
 
 END;

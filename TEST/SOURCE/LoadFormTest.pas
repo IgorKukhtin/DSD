@@ -1487,11 +1487,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerForm');
-   exit;
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerJournalForm');
    exit;
+   {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalChoiceForm');
@@ -1719,19 +1719,18 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionForm');
-     exit;
-     {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechJournalForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechEditForm');
   exit;
-  {
+
   // 11,12,14 Инна
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortJournalForm');
@@ -2236,13 +2235,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturnIn_RealExForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturnIn_RealExForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturnIn_RealExDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturnIn_RealExDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_inventoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_inventoryForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_inventoryDialogForm'));
@@ -2590,11 +2589,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnInNotOlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnInNotOlapForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnInForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnIn_BUHForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnIn_BUHForm');
   exit;
@@ -2637,11 +2636,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalCollationDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportCollation_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportCollation_ObjectForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportCollation_ObjectDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportCollation_ObjectDialogForm');
   exit;
@@ -2720,17 +2719,18 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionDialogForm');
   //exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionSeparateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionSeparateForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionSeparateUnionDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionSeparateUnionDialogForm');
   exit;
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionUnionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionUnionForm');
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionUnionMDForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionUnionMDForm');

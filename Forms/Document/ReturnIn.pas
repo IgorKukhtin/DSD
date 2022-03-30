@@ -43,8 +43,8 @@ type
     cxLabel8: TcxLabel;
     GuidesTo: TdsdGuides;
     GuidesFrom: TdsdGuides;
-    PaidKindGuides: TdsdGuides;
-    ContractGuides: TdsdGuides;
+    GuidesPaidKind: TdsdGuides;
+    GuidesContract: TdsdGuides;
     edOperDatePartner: TcxDateEdit;
     cxLabel10: TcxLabel;
     edIsChecked: TcxCheckBox;
@@ -68,7 +68,7 @@ type
     PrintItemsCDS: TClientDataSet;
     edDocumentTaxKind: TcxButtonEdit;
     cxLabel5: TcxLabel;
-    DocumentTaxKindGuides: TdsdGuides;
+    GuidesDocumentTaxKind: TdsdGuides;
     edPriceList: TcxButtonEdit;
     cxLabel11: TcxLabel;
     PriceListGuides: TdsdGuides;
@@ -100,7 +100,7 @@ type
     edCurrencyValue: TcxCurrencyEdit;
     cxLabel17: TcxLabel;
     edCurrencyPartner: TcxButtonEdit;
-    CurrencyPartnerGuides: TdsdGuides;
+    GuidesCurrencyPartner: TdsdGuides;
     TaxCorrectiveCDS: TClientDataSet;
     TaxCorrectiveDS: TDataSource;
     gpUpdateTaxCorrective: TdsdStoredProc;
@@ -124,7 +124,7 @@ type
     colContractCode: TcxGridDBColumn;
     cxLabel20: TcxLabel;
     edContractTag: TcxButtonEdit;
-    ContractTagGuides: TdsdGuides;
+    GuidesContractTag: TdsdGuides;
     cbCalcAmountPartner: TcxCheckBox;
     bbCalcAmountPartner: TdxBarControlContainerItem;
     actGoodsKindChoice: TOpenChoiceForm;
@@ -136,14 +136,14 @@ type
     GoodsGroupNameFull: TcxGridDBColumn;
     cxLabel19: TcxLabel;
     edInvNumberSale: TcxButtonEdit;
-    SaleChoiceGuides: TdsdGuides;
+    GuidesSaleChoice: TdsdGuides;
     PartionMovementName: TcxGridDBColumn;
     actSaleJournalChoice: TOpenChoiceForm;
     cxLabel18: TcxLabel;
     ceComment: TcxTextEdit;
     cxLabel21: TcxLabel;
     edInvNumberParent: TcxButtonEdit;
-    ParentChoiceGuides: TdsdGuides;
+    GuidesParentChoice: TdsdGuides;
     actGoodsChoice: TOpenChoiceForm;
     actOpenTaxCorrective: TdsdOpenForm;
     bbOpenTaxCorrective: TdxBarButton;
@@ -193,7 +193,7 @@ type
     ToCode: TcxGridDBColumn;
     ToName: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
-    JuridicalFromGuides: TdsdGuides;
+    GuidesJuridicalFrom: TdsdGuides;
     actOpenReportCheckForm: TdsdOpenForm;
     bbReportCheck: TdxBarButton;
     actChoiceSale: TOpenChoiceForm;
@@ -299,6 +299,15 @@ type
     cxLabel29: TcxLabel;
     edPriceListIn: TcxButtonEdit;
     GuidesPriceListIn: TdsdGuides;
+    cxLabel30: TcxLabel;
+    edSubjectDoc: TcxButtonEdit;
+    GuidesSubjectDoc: TdsdGuides;
+    spUpdateMovementSubjectDoc: TdsdStoredProc;
+    macUpdateMovementSubjectDoc: TMultiAction;
+    actOpenSubjectDocForm: TOpenChoiceForm;
+    actUpdateMovementSubjectDoc: TdsdExecStoredProc;
+    bbUpdateMovementSubjectDoc: TdxBarButton;
+    cbisWeighing_inf: TcxCheckBox;
   private
     { Private declarations }
   public

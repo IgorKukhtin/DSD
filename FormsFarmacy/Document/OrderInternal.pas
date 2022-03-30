@@ -167,6 +167,11 @@ type
     colSupplierFailuresColor: TcxGridDBColumn;
     isSupplierFailures: TcxGridDBColumn;
     AmountSF: TcxGridDBColumn;
+    SupplierFailuresAmount: TcxGridDBColumn;
+    spUpdateSupplierFailures: TdsdStoredProc;
+    actUpdateSupplierFailures: TdsdExecStoredProc;
+    actDataDialog: TExecuteDialog;
+    bbUpdateSupplierFailures: TdxBarButton;
   private
     { Private declarations }
   public

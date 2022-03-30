@@ -241,6 +241,15 @@ type
     cxLabel29: TcxLabel;
     edPriceListIn: TcxButtonEdit;
     GuidesPriceListIn: TdsdGuides;
+    spUpdateMovementSubjectDoc: TdsdStoredProc;
+    actOpenSubjectDocForm: TOpenChoiceForm;
+    actUpdateMovementSubjectDoc: TdsdExecStoredProc;
+    macUpdateMovementSubjectDoc: TMultiAction;
+    bbUpdateMovementSubjectDoc: TdxBarButton;
+    cxLabel30: TcxLabel;
+    edSubjectDoc: TcxButtonEdit;
+    GuidesSubjectDoc: TdsdGuides;
+    cbisWeighing_inf: TcxCheckBox;
   private
     { Private declarations }
   public

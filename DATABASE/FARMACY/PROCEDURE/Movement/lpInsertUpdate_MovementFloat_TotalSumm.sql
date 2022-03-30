@@ -320,9 +320,10 @@ BEGIN
                                                                      MIFloat_AmountManual.ValueData
                                                                      -- округлили ВВЕРХ AllLot
                                                                    , CEIL ((                       -- Спецзаказ    -- Количество дополнительное                            -- кол-во отказов
-                                                                          CASE WHEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (MIFloat_ListDiff.ValueData, 0)
+                                                                          CASE WHEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= 
+                                                                                    (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_SupplierFailures.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))
                                                                                 THEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
-                                                                                ELSE COALESCE (MIFloat_ListDiff.ValueData, 0)                                                   -- кол-во отказов
+                                                                                ELSE COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_SupplierFailures.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0) -- кол-во отказов
                                                                            END
                                                                            ) / COALESCE (ObjectFloat_Goods_MinimumLot.ValueData, 1)
                                                                           ) * COALESCE (ObjectFloat_Goods_MinimumLot.ValueData, 1)     
@@ -436,6 +437,14 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_ListDiff     
                                                          ON MIFloat_ListDiff.MovementItemId    = MovementItem.Id
                                                         AND MIFloat_ListDiff.DescId = zc_MIFloat_ListDiff() 
+                                                        AND Movement.DescId = zc_Movement_OrderInternal()
+                             LEFT JOIN MovementItemFloat AS MIFloat_SupplierFailures     
+                                                         ON MIFloat_SupplierFailures.MovementItemId    = MovementItem.Id
+                                                        AND MIFloat_SupplierFailures.DescId = zc_MIFloat_SupplierFailures() 
+                                                        AND Movement.DescId = zc_Movement_OrderInternal()
+                             LEFT JOIN MovementItemFloat AS MIFloat_AmountSUA     
+                                                         ON MIFloat_AmountSUA.MovementItemId    = MovementItem.Id
+                                                        AND MIFloat_AmountSUA.DescId = zc_MIFloat_AmountSUA() 
                                                         AND Movement.DescId = zc_Movement_OrderInternal()
                              LEFT JOIN ObjectFloat AS ObjectFloat_Goods_MinimumLot
                                                    ON ObjectFloat_Goods_MinimumLot.ObjectId = MovementItem.ObjectId

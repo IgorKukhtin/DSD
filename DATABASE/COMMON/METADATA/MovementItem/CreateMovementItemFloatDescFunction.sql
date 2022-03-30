@@ -1532,10 +1532,14 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_AmountSF() RETURNS Integer AS $BODY$BEGIN 
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_AmountSF', 'Отказ поставщика' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountSF');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_SupplierFailures() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SupplierFailures'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_SupplierFailures', 'Кол-во отказов поставщиков' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SupplierFailures');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 28.03.22                                                                                                     * zc_MIFloat_SupplierFailures
  03.03.22                                                                                                     * zc_MIFloat_AmountSF
  26.01.22         * zc_MIFloat_PriceIn
  25.11.21                                                                                                     * zc_MIFloat_SummaIC

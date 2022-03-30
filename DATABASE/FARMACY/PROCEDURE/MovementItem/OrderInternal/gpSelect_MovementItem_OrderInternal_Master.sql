@@ -73,6 +73,7 @@ RETURNS TABLE (Id                    Integer
              , AmountDeferred        TFloat
              , AmountSF              TFloat
              , ListDiffAmount        TFloat
+             , SupplierFailuresAmount TFloat
 
              , AmountReal            TFloat
              , SendSUNAmount         TFloat
@@ -993,9 +994,10 @@ BEGIN
                                MIFloat_AmountManual.ValueData
                                -- округлили ВВЕРХ AllLot
                              , CEIL ((
-                                      CASE WHEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= (COALESCE (tmpMI.ListDiffAmount, 0) + COALESCE (tmpMI.AmountSUA, 0))
+                                      CASE WHEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= 
+                                                (COALESCE (tmpMI.ListDiffAmount, 0) + COALESCE (tmpMI.SupplierFailuresAmount, 0) + COALESCE (tmpMI.AmountSUA, 0))
                                            THEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
-                                           ELSE (COALESCE (tmpMI.ListDiffAmount, 0) + COALESCE (tmpMI.AmountSUA, 0))                -- кол-во отказов + СУА
+                                           ELSE (COALESCE (tmpMI.ListDiffAmount, 0) + COALESCE (tmpMI.SupplierFailuresAmount, 0) + COALESCE (tmpMI.AmountSUA, 0))  -- кол-во отказов + СУА
                                       END
                                      ) / COALESCE (tmpMI.MinimumLot, 1)
                                     ) * COALESCE (tmpMI.MinimumLot, 1)
@@ -1005,16 +1007,14 @@ BEGIN
                       * COALESCE (-- Количество, установленное вручную
                                   MIFloat_AmountManual.ValueData
                                   -- округлили ВВЕРХ AllLot
-                                , CEIL ((-- Спецзаказ
-                                         tmpMI.Amount
-                                         -- Количество дополнительное
-                                       + COALESCE (MIFloat_AmountSecond.ValueData, 0)
-                                         -- кол-во отказов
-                                       + COALESCE (tmpMI.ListDiffAmount, 0)
-                                         -- кол-во СУА
-                                       + COALESCE (tmpMI.AmountSUA, 0)
-                                        ) / COALESCE (tmpMI.MinimumLot, 1)
-                                       ) * COALESCE (tmpMI.MinimumLot, 1)
+                                , CEIL ((
+                                      CASE WHEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= 
+                                                (COALESCE (tmpMI.ListDiffAmount, 0) + COALESCE (tmpMI.SupplierFailuresAmount, 0) + COALESCE (tmpMI.AmountSUA, 0))
+                                           THEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
+                                           ELSE (COALESCE (tmpMI.ListDiffAmount, 0) + COALESCE (tmpMI.SupplierFailuresAmount, 0) + COALESCE (tmpMI.AmountSUA, 0))  -- кол-во отказов + СУА
+                                      END
+                                     ) / COALESCE (tmpMI.MinimumLot, 1)
+                                    ) * COALESCE (tmpMI.MinimumLot, 1)
                                  )
              )                                          ::TFloat    AS SummAll
 
@@ -1023,6 +1023,7 @@ BEGIN
            , tmpMI.AmountDeferred                                   AS AmountDeferred
            , tmpMI.AmountSF                                         AS AmountSF
            , tmpMI.ListDiffAmount                       ::TFloat    AS ListDiffAmount
+           , tmpMI.SupplierFailuresAmount               ::TFloat    AS SupplierFailuresAmount
 
            , tmpMI.AmountReal                           ::TFloat    AS AmountReal
            , tmpSendSun.Amount                          ::TFLoat    AS SendSUNAmount
@@ -1994,6 +1995,10 @@ BEGIN
                             FROM tmpMIF
                             WHERE tmpMIF.DescId = zc_MIFloat_ListDiff()
                            )
+      , tmpMIF_SupplierFailures AS (SELECT tmpMIF.*
+                                    FROM tmpMIF
+                                    WHERE tmpMIF.DescId = zc_MIFloat_SupplierFailures()
+                                   )
       , tmpMIF_AmountSUA AS (SELECT tmpMIF.*
                             FROM tmpMIF
                             WHERE tmpMIF.DescId = zc_MIFloat_AmountSUA()
@@ -2108,15 +2113,17 @@ BEGIN
                                     ) / COALESCE (MovementItem.MinimumLot, 1)
                                    ) * COALESCE(MovementItem.MinimumLot, 1)                    AS CalcAmountAll
                              */
-                            , CEIL (( CASE WHEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))
+                            , CEIL (( CASE WHEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= 
+                                                (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_SupplierFailures.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))
                                           THEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
-                                          ELSE (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))     -- кол-во отказов + СУА
+                                          ELSE (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_SupplierFailures.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))     -- кол-во отказов + СУА
                                      END
                                      ) / COALESCE (MovementItem.MinimumLot, 1)
                                    ) * COALESCE(MovementItem.MinimumLot, 1)                    AS CalcAmountAll
 
                             , MIFloat_AmountManual.ValueData                                   AS AmountManual
                             , MIFloat_ListDiff.ValueData                                       AS ListDiffAmount
+                            , MIFloat_SupplierFailures.ValueData                               AS SupplierFailuresAmount
                             , MIFloat_AmountSUA.ValueData                                      AS AmountSUA
 
                             , MIFloat_AmountReal.ValueData :: TFloat  AS AmountReal
@@ -2155,15 +2162,16 @@ BEGIN
                             --                                  ON ObjectFloat_Goods_MinimumLot.ObjectId = COALESCE (PriceList.GoodsId, MinPrice.GoodsId)
                                                  --- AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
 
-                            LEFT JOIN tmpMIF_Summ AS MIFloat_Summ ON MIFloat_Summ.MovementItemId = MovementItem.Id
-                            LEFT JOIN tmpMIF_AmountSecond AS MIFloat_AmountSecond ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                            LEFT JOIN tmpMIF_AmountManual AS MIFloat_AmountManual ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
-                            LEFT JOIN tmpMIF_ListDiff     AS MIFloat_ListDiff     ON MIFloat_ListDiff.MovementItemId    = MovementItem.Id
-                            LEFT JOIN tmpMIF_AmountSUA    AS MIFloat_AmountSUA     ON MIFloat_AmountSUA.MovementItemId    = MovementItem.Id
-                            LEFT JOIN tmpMIF_AmountReal     AS MIFloat_AmountReal     ON MIFloat_AmountReal.MovementItemId     = MovementItem.Id
-                            LEFT JOIN tmpMIF_SendSUN        AS MIFloat_SendSUN        ON MIFloat_SendSUN.MovementItemId        = MovementItem.Id
-                            LEFT JOIN tmpMIF_SendDefSUN     AS MIFloat_SendDefSUN     ON MIFloat_SendDefSUN.MovementItemId     = MovementItem.Id
-                            LEFT JOIN tmpMIF_RemainsSUN     AS MIFloat_RemainsSUN     ON MIFloat_RemainsSUN.MovementItemId     = MovementItem.Id
+                            LEFT JOIN tmpMIF_Summ             AS MIFloat_Summ              ON MIFloat_Summ.MovementItemId             = MovementItem.Id
+                            LEFT JOIN tmpMIF_AmountSecond     AS MIFloat_AmountSecond      ON MIFloat_AmountSecond.MovementItemId     = MovementItem.Id
+                            LEFT JOIN tmpMIF_AmountManual     AS MIFloat_AmountManual      ON MIFloat_AmountManual.MovementItemId     = MovementItem.Id
+                            LEFT JOIN tmpMIF_ListDiff         AS MIFloat_ListDiff          ON MIFloat_ListDiff.MovementItemId         = MovementItem.Id
+                            LEFT JOIN tmpMIF_SupplierFailures AS MIFloat_SupplierFailures  ON MIFloat_SupplierFailures.MovementItemId = MovementItem.Id
+                            LEFT JOIN tmpMIF_AmountSUA        AS MIFloat_AmountSUA         ON MIFloat_AmountSUA.MovementItemId        = MovementItem.Id
+                            LEFT JOIN tmpMIF_AmountReal       AS MIFloat_AmountReal        ON MIFloat_AmountReal.MovementItemId       = MovementItem.Id
+                            LEFT JOIN tmpMIF_SendSUN          AS MIFloat_SendSUN           ON MIFloat_SendSUN.MovementItemId          = MovementItem.Id
+                            LEFT JOIN tmpMIF_SendDefSUN       AS MIFloat_SendDefSUN        ON MIFloat_SendDefSUN.MovementItemId       = MovementItem.Id
+                            LEFT JOIN tmpMIF_RemainsSUN       AS MIFloat_RemainsSUN        ON MIFloat_RemainsSUN.MovementItemId       = MovementItem.Id
      --LIMIT 2
                        )
 
@@ -2202,6 +2210,7 @@ BEGIN
                        , tmpMI_all_MinLot.CalcAmountAll
                        , tmpMI_all_MinLot.AmountManual
                        , tmpMI_all_MinLot.ListDiffAmount
+                       , tmpMI_all_MinLot.SupplierFailuresAmount
                        , tmpMI_all_MinLot.AmountSUA
                        , tmpMI_all_MinLot.AmountReal
                        , tmpMI_all_MinLot.SendSUNAmount
@@ -2287,6 +2296,7 @@ BEGIN
                          , NULLIF (COALESCE (tmpMI.AmountManual, tmpMI.CalcAmountAll), 0)   AS CalcAmountAll
                          , tmpMI.Price * COALESCE (tmpMI.AmountManual, tmpMI.CalcAmountAll) AS SummAll
                          , tmpMI.ListDiffAmount
+                         , tmpMI.SupplierFailuresAmount
                          , tmpMI.AmountSUA
                          , tmpMI.AmountReal
                          , tmpMI.SendSUNAmount
@@ -2924,6 +2934,7 @@ BEGIN
            , tmpDeferred.AmountDeferred                                      AS AmountDeferred
            , tmpDeferred.AmountSF                                            AS AmountSF
            , tmpMI.ListDiffAmount                               ::TFloat     AS ListDiffAmount
+           , tmpMI.SupplierFailuresAmount                       ::TFloat     AS SupplierFailuresAmount
 
            , tmpMI.AmountReal                           ::TFloat    AS AmountReal
            , tmpSendSun.Amount                          ::TFLoat    AS SendSUNAmount
@@ -3868,6 +3879,10 @@ BEGIN
                             FROM tmpMIF
                             WHERE tmpMIF.DescId = zc_MIFloat_ListDiff()
                            )
+      , tmpMIF_SupplierFailures AS (SELECT tmpMIF.*
+                                    FROM tmpMIF
+                                    WHERE tmpMIF.DescId = zc_MIFloat_SupplierFailures()
+                                   )
       , tmpMIF_AmountSUA AS (SELECT tmpMIF.*
                              FROM tmpMIF
                              WHERE tmpMIF.DescId = zc_MIFloat_AmountSUA()
@@ -3967,15 +3982,17 @@ BEGIN
 */
 --27.01.2020 Люба просит чтоб в расчет ложилась не сумма а большее из "Спец + Авто" и "Отказы" - поскольку сумма этих колонок приводит к затоварке аптек
                             , CEIL ((                                -- Спецзаказ + Количество дополнительное                        -- кол-во отказов
-                                     CASE WHEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))
+                                     CASE WHEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= 
+                                               (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_SupplierFailures.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))
                                           THEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
-                                          ELSE (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))     -- кол-во отказов + СУА
+                                          ELSE (COALESCE (MIFloat_ListDiff.ValueData, 0) + COALESCE (MIFloat_SupplierFailures.ValueData, 0) + COALESCE (MIFloat_AmountSUA.ValueData, 0))     -- кол-во отказов + СУА
                                      END
                                     ) / COALESCE (MovementItem.MinimumLot, 1)
                                    ) * COALESCE (MovementItem.MinimumLot, 1)                   AS CalcAmountAll
 
                             , MIFloat_AmountManual.ValueData                                   AS AmountManual
                             , MIFloat_ListDiff.ValueData                                       AS ListDiffAmount
+                            , MIFloat_SupplierFailures.ValueData                               AS SupplierFailuresAmount
                             , MIFloat_AmountSUA.ValueData                                      AS AmountSUA
                             , MovementItem.isErased
                             , COALESCE (PriceList.GoodsId, MinPrice.GoodsId)                   AS GoodsId_MinLot
@@ -4008,11 +4025,12 @@ BEGIN
                             --                                  ON ObjectFloat_Goods_MinimumLot.ObjectId = COALESCE (PriceList.GoodsId, MinPrice.GoodsId)
                                                  --- AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
 
-                            LEFT JOIN tmpMIF_Summ AS MIFloat_Summ ON MIFloat_Summ.MovementItemId = MovementItem.Id
-                            LEFT JOIN tmpMIF_AmountSecond AS MIFloat_AmountSecond ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                            LEFT JOIN tmpMIF_AmountManual AS MIFloat_AmountManual ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
-                            LEFT JOIN tmpMIF_ListDiff     AS MIFloat_ListDiff     ON MIFloat_ListDiff.MovementItemId     = MovementItem.Id
-                            LEFT JOIN tmpMIF_AmountSUA    AS MIFloat_AmountSUA    ON MIFloat_AmountSUA.MovementItemId    = MovementItem.Id
+                            LEFT JOIN tmpMIF_Summ             AS MIFloat_Summ             ON MIFloat_Summ.MovementItemId             = MovementItem.Id
+                            LEFT JOIN tmpMIF_AmountSecond     AS MIFloat_AmountSecond     ON MIFloat_AmountSecond.MovementItemId     = MovementItem.Id
+                            LEFT JOIN tmpMIF_AmountManual     AS MIFloat_AmountManual     ON MIFloat_AmountManual.MovementItemId     = MovementItem.Id
+                            LEFT JOIN tmpMIF_ListDiff         AS MIFloat_ListDiff         ON MIFloat_ListDiff.MovementItemId         = MovementItem.Id
+                            LEFT JOIN tmpMIF_SupplierFailures AS MIFloat_SupplierFailures ON MIFloat_SupplierFailures.MovementItemId = MovementItem.Id
+                            LEFT JOIN tmpMIF_AmountSUA        AS MIFloat_AmountSUA        ON MIFloat_AmountSUA.MovementItemId        = MovementItem.Id
      --LIMIT 2
                        )
 
@@ -4051,6 +4069,7 @@ BEGIN
                        , tmpMI_all_MinLot.CalcAmountAll
                        , tmpMI_all_MinLot.AmountManual
                        , tmpMI_all_MinLot.ListDiffAmount
+                       , tmpMI_all_MinLot.SupplierFailuresAmount
                        , tmpMI_all_MinLot.AmountSUA
                        , tmpMI_all_MinLot.isErased
                   FROM tmpMI_all_MinLot
@@ -4132,6 +4151,7 @@ BEGIN
                          , NULLIF (COALESCE (tmpMI.AmountManual, tmpMI.CalcAmountAll), 0)   AS CalcAmountAll
                          , tmpMI.Price * COALESCE (tmpMI.AmountManual, tmpMI.CalcAmountAll) AS SummAll
                          , tmpMI.ListDiffAmount
+                         , tmpMI.SupplierFailuresAmount
                          , tmpMI.AmountSUA
                     FROM tmpGoods
                          FULL JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
@@ -4759,6 +4779,7 @@ BEGIN
            , tmpDeferred.AmountDeferred                                      AS AmountDeferred
            , tmpDeferred.AmountSF                                            AS AmountSF
            , tmpMI.ListDiffAmount                               ::TFloat     AS ListDiffAmount
+           , tmpMI.SupplierFailuresAmount                       ::TFloat     AS SupplierFailuresAmount
 
            , 0                                                  ::TFloat    AS AmountReal
            , tmpSendSun.Amount                                  ::TFloat    AS SendSUNAmount

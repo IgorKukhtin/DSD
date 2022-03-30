@@ -3,7 +3,7 @@ object Report_NotPaySumIncomeForm: TReport_NotPaySumIncomeForm
   Top = 0
   Caption = #1053#1077' '#1086#1087#1083#1072#1095#1077#1085#1085#1099#1077' '#1087#1088#1080#1093#1086#1076#1099' '#1080#1090#1086#1075#1080' '#1087#1086' '#1102#1088'. '#1083#1080#1094#1072#1084
   ClientHeight = 440
-  ClientWidth = 751
+  ClientWidth = 846
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,11 @@ object Report_NotPaySumIncomeForm: TReport_NotPaySumIncomeForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 751
+    Width = 846
     Height = 31
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 807
+    ExplicitWidth = 751
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -58,11 +58,11 @@ object Report_NotPaySumIncomeForm: TReport_NotPaySumIncomeForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 751
+    Width = 846
     Height = 383
     Align = alClient
     TabOrder = 5
-    ExplicitWidth = 807
+    ExplicitWidth = 751
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -206,6 +206,11 @@ object Report_NotPaySumIncomeForm: TReport_NotPaySumIncomeForm
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
           Column = TotalPaySumm
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = TotalPaySummDate
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -266,6 +271,16 @@ object Report_NotPaySumIncomeForm: TReport_NotPaySumIncomeForm
         HeaderAlignmentVert = vaCenter
         Width = 115
       end
+      object TotalPaySummDate: TcxGridDBColumn
+        Caption = #1055#1083#1072#1090#1080#1090#1100' '#1085#1072' '#1076#1072#1090#1091' '#1082#1086#1085#1094#1072' '#1087#1077#1088#1080#1086#1076#1072', '#1075#1088#1085
+        DataBinding.FieldName = 'TotalPaySummDate'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 97
+      end
       object TotalPaySumm: TcxGridDBColumn
         Caption = #1053#1077' '#1086#1087#1083#1072#1095#1077#1085#1086', '#1075#1088#1085
         DataBinding.FieldName = 'TotalPaySumm'
@@ -274,7 +289,7 @@ object Report_NotPaySumIncomeForm: TReport_NotPaySumIncomeForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 100
+        Width = 94
       end
     end
     object cxGridLevel: TcxGridLevel

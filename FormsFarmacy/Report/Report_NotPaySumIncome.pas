@@ -71,6 +71,7 @@ type
     TotalPaySumm: TcxGridDBColumn;
     JuridicalFromCode: TcxGridDBColumn;
     JuridicalFromName: TcxGridDBColumn;
+    TotalPaySummDate: TcxGridDBColumn;
   private
   public
   end;

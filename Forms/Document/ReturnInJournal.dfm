@@ -162,24 +162,32 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 70
           end
-          object isError: TcxGridDBColumn [2]
-            Caption = #1054#1096#1080#1073#1082#1072' '#1087#1088#1080#1074#1103#1079#1082#1080
-            DataBinding.FieldName = 'isError'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object OperDatePartner: TcxGridDBColumn [3]
+          object OperDatePartner: TcxGridDBColumn [2]
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          inherited colInvNumber: TcxGridDBColumn [4]
+          inherited colInvNumber: TcxGridDBColumn [3]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Width = 70
+          end
+          object isError: TcxGridDBColumn
+            Caption = #1054#1096#1080#1073#1082#1072' '#1087#1088#1080#1074#1103#1079#1082#1080
+            DataBinding.FieldName = 'isError'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object isWeighing_inf: TcxGridDBColumn
+            Caption = #1042#1079#1074#1077#1096'-'#1080#1077' '#1076#1072'/'#1085#1077#1090
+            DataBinding.FieldName = 'isWeighing_inf'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' '#1076#1072'/'#1085#1077#1090
+            Width = 55
           end
           object ReestrKindName: TcxGridDBColumn
             Caption = #1042#1080#1079#1072' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
@@ -219,6 +227,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object SubjectDocName: TcxGridDBColumn
+            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072
+            DataBinding.FieldName = 'SubjectDocName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 109
           end
           object DocumentTaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
