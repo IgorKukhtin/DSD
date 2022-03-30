@@ -1,5 +1,5 @@
-inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
-  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'  ('#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084')>'
+inherited Report_GoodsMI_byMovementAllForm: TReport_GoodsMI_byMovementAllForm
+  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'   ('#1074#1089#1077' '#1089#1090#1072#1090#1091#1089#1099')>'
   ClientHeight = 374
   ClientWidth = 1128
   AddOnFormData.isSingle = False
@@ -200,6 +200,32 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object StatusCode: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089
+            DataBinding.FieldName = 'StatusCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object ItemName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082'.'
             DataBinding.FieldName = 'ItemName'
@@ -580,14 +606,14 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 59
-      EditValue = 41640d
+      EditValue = 44562d
       Properties.SaveTime = False
       ExplicitLeft = 59
     end
     inherited deEnd: TcxDateEdit
       Left = 59
       Top = 30
-      EditValue = 41640d
+      EditValue = 44562d
       Properties.SaveTime = False
       ExplicitLeft = 59
       ExplicitTop = 30
@@ -914,7 +940,7 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_GoodsMI_byMovement'
+    StoredProcName = 'gpReport_GoodsMI_byMovementAll'
     Params = <
       item
         Name = 'inStartDate'
@@ -988,8 +1014,8 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 200
-    Top = 240
+    Left = 112
+    Top = 192
   end
   inherited BarManager: TdxBarManager
     Left = 160

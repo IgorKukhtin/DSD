@@ -1113,6 +1113,8 @@ inherited ReturnInForm: TReturnInForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitLeft = 80
+        ExplicitTop = -6
         object cxGridDBTableViewDetail: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS_Reason
@@ -1380,7 +1382,6 @@ inherited ReturnInForm: TReturnInForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitTop = 297
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS_Reason
@@ -6105,8 +6106,8 @@ inherited ReturnInForm: TReturnInForm
     Top = 312
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 796
-    Top = 236
+    Left = 788
+    Top = 276
   end
   object RefreshDispatcher: TRefreshDispatcher
     CheckIdParam = True
@@ -6668,7 +6669,7 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     Left = 1128
-    Top = 216
+    Top = 288
   end
   object GuidesCurrencyPartner: TdsdGuides
     KeyField = 'Id'
@@ -6770,8 +6771,8 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 930
-    Top = 226
+    Left = 898
+    Top = 266
   end
   object spMovementCompleteTaxCorrective: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_TaxCorrective'
@@ -7992,8 +7993,8 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 538
-    Top = 208
+    Left = 530
+    Top = 272
   end
   object HeaderExit: THeaderExit
     ExitList = <
@@ -8009,8 +8010,8 @@ inherited ReturnInForm: TReturnInForm
       item
       end>
     Action = actInsert_MI_byOrderReturnTare
-    Left = 720
-    Top = 216
+    Left = 704
+    Top = 264
   end
   object GuidesPriceListIn: TdsdGuides
     KeyField = 'Id'

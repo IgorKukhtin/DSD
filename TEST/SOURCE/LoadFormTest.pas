@@ -2570,7 +2570,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SendOnPriceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SendOnPriceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SendOnPriceDialogForm');
-
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementAllForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementAllForm');
+  exit;
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementDialogForm'));
