@@ -235,6 +235,15 @@ inherited Report_GoodsMI_byMovementAllForm: TReport_GoodsMI_byMovementAllForm
             Options.Editing = False
             Width = 95
           end
+          object isWeighing_inf: TcxGridDBColumn
+            Caption = #1042#1079#1074#1077#1096'-'#1080#1077' '#1076#1072'/'#1085#1077#1090
+            DataBinding.FieldName = 'isWeighing_inf'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' '#1076#1072'/'#1085#1077#1090
+            Options.Editing = False
+            Width = 69
+          end
           object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'

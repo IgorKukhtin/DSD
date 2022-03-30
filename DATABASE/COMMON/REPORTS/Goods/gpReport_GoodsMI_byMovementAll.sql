@@ -33,6 +33,7 @@ RETURNS TABLE (ItemName TVarChar, StatusCode Integer
              , WeightTotal TFloat -- Вес в упаковке - GoodsByGoodsKind
              , ChangePercentAmount TFloat
              , isBarCode  Boolean
+             , isWeighing_inf Boolean
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              )   
 AS
@@ -226,10 +227,10 @@ BEGIN
 
        -- непроведенные и удаленные документы
        , tmpMovement_dop AS (SELECT Movement.Id
-                                  , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
-                                  , View_Contract_InvNumber.InfoMoneyId        AS InfoMoneyId
-                                  , MovementLinkObject_From.ObjectId           AS PartnerId
-                                  , MovementLinkObject_To.ObjectId             AS UnitId
+                                  , ObjectLink_Partner_Juridical.ChildObjectId  AS JuridicalId
+                                  , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
+                                  , MovementLinkObject_From.ObjectId            AS PartnerId
+                                  , MovementLinkObject_To.ObjectId              AS UnitId
                              FROM Movement
                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                                ON MovementLinkObject_To.MovementId = Movement.Id
@@ -251,7 +252,13 @@ BEGIN
                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                                ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                               AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                  LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+
+                                  LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                                       ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject_Contract.ObjectId
+                                                      AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+       -- LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Contract_InfoMoney.ChildObjectId
+       
+                               --   LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
 
                              WHERE Movement.DescId = zc_Movement_ReturnIn()
                                AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
@@ -259,7 +266,7 @@ BEGIN
                                AND (_tmpUnit.UnitId > 0 OR vbIsUnit = FALSE)
                                AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                                AND (MovementLinkObject_PaidKind.ObjectId       = inPaidKindId  OR COALESCE (inPaidKindId, 0)  = 0)
-                               AND (View_Contract_InvNumber.InfoMoneyId        = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
+                               AND (ObjectLink_Contract_InfoMoney.ChildObjectId        = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
                              )
 
        , tmpMB AS (SELECT MovementBoolean_PriceWithVAT.*
@@ -566,6 +573,17 @@ BEGIN
                         , tmpListContainerSumm.ChangePercentAmount
                 )
 
+        -- взвешивание контрагент
+        , tmpWeighingPartner AS (SELECT DISTINCT Movement.ParentId
+                                 FROM Movement
+                                 WHERE Movement.ParentId IN (SELECT tmpOperationGroup.MovementId FROM tmpOperationGroup)
+                                   AND Movement.DescId = zc_Movement_WeighingPartner()
+                                )
+                     
+        , tmpInfoMoney_View AS (SELECT View_InfoMoney.*
+                                FROM Object_InfoMoney_View AS View_InfoMoney
+                                WHERE View_InfoMoney.InfoMoneyId IN (SELECT DISTINCT tmpOperationGroup.InfoMoneyId FROM tmpOperationGroup)
+                                )
 
     -- Результат
     SELECT tmpOperationGroup.ItemName
@@ -617,6 +635,7 @@ BEGIN
          --% скидки вес
          , tmpOperationGroup.ChangePercentAmount :: TFloat
          , tmpOperationGroup.isBarCode  ::Boolean
+         , CASE WHEN tmpWeighingPartner.ParentId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isWeighing_inf
 
          , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
          , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
@@ -644,7 +663,7 @@ BEGIN
 
           LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmpOperationGroup.PriceListId
 
-          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
+          LEFT JOIN tmpInfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
           
           -- Товар и Вид товара
           LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId     = tmpOperationGroup.GoodsId
@@ -653,6 +672,8 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
                                 ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
                                AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
+          --взвешивание
+          LEFT JOIN tmpWeighingPartner ON tmpWeighingPartner.ParentId = tmpOperationGroup.MovementId
    ;
 
 END;
