@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , GoodsGroupNameFull TVarChar
              , Amount TFloat, AmountChangePercent TFloat, AmountPartner TFloat
              , ChangePercentAmount TFloat, TotalPercentAmount TFloat, ChangePercent TFloat
-             , Price TFloat, PriceIn TFloat
+             , Price TFloat, PriceIn TFloat, PriceTare TFloat
              , CountForPrice TFloat, PriceCost TFloat, SumCost TFloat, Price_Pricelist TFloat, Price_Pricelist_vat TFloat
              , HeadCount TFloat, BoxCount TFloat
              , PartionGoods TVarChar
@@ -202,6 +202,7 @@ BEGIN
 
                                  , MIFloat_Price.ValueData                       AS Price
                                  , MIFloat_PriceIn.ValueData                     AS PriceIn
+                                 , MIFloat_PriceTare.ValueData                   AS PriceTare
                                  , MIFloat_CountForPrice.ValueData               AS CountForPrice
 
                                  , MIFloat_HeadCount.ValueData                   AS HeadCount
@@ -242,6 +243,9 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_PriceIn
                                                              ON MIFloat_PriceIn.MovementItemId = MovementItem.Id
                                                             AND MIFloat_PriceIn.DescId = zc_MIFloat_PriceIn()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_PriceTare
+                                                             ON MIFloat_PriceTare.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_PriceTare.DescId = zc_MIFloat_PriceTare()
 
                                  LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
@@ -381,6 +385,8 @@ BEGIN
            , CASE WHEN vbPriceWithVAT = FALSE THEN COALESCE (tmpPriceListIn_kind.Price_Pricelist, tmpPriceListIn.Price_Pricelist)
                   WHEN vbPriceWithVAT = TRUE  THEN COALESCE (tmpPriceListIn_kind.Price_Pricelist_vat, tmpPriceListIn.Price_Pricelist_vat)
              END :: TFloat              AS PriceIn 
+
+           , 0 :: TFloat                AS PriceTare
 
            , CAST (1 AS TFloat)         AS CountForPrice
 
@@ -532,6 +538,7 @@ BEGIN
 
            , tmpMI_Goods.Price
            , tmpMI_Goods.PriceIn
+           , tmpMI_Goods.PriceTare
            , tmpMI_Goods.CountForPrice
 
            , CASE WHEN tmpMI_Goods.Amount <> 0 THEN tmpPriceCost.SumCost / tmpMI_Goods.Amount ELSE 0 END  ::TFloat AS PriceCost
@@ -703,6 +710,7 @@ BEGIN
 
                                  , MIFloat_Price.ValueData                       AS Price
                                  , MIFloat_PriceIn.ValueData                     AS PriceIn
+                                 , MIFloat_PriceTare.ValueData                   AS PriceTare
                                  , MIFloat_CountForPrice.ValueData               AS CountForPrice
 
                                  , MIFloat_HeadCount.ValueData                   AS HeadCount
@@ -745,6 +753,9 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_PriceIn
                                                              ON MIFloat_PriceIn.MovementItemId = MovementItem.Id
                                                             AND MIFloat_PriceIn.DescId = zc_MIFloat_PriceIn()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_PriceTare
+                                                             ON MIFloat_PriceTare.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_PriceTare.DescId = zc_MIFloat_PriceTare()
 
                                  LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
@@ -884,6 +895,7 @@ BEGIN
                    
                               , tmpMI_Goods.Price
                               , tmpMI_Goods.PriceIn
+                              , tmpMI_Goods.PriceTare
                               , tmpMI_Goods.CountForPrice
                               , CASE WHEN tmpMI_Goods.Amount <> 0 THEN tmpPriceCost.SumCost / tmpMI_Goods.Amount ELSE 0 END  ::TFloat AS PriceCost
                               , tmpPriceCost.SumCost :: TFloat         AS SumCost
@@ -1034,6 +1046,7 @@ BEGIN
 
            , tmpResult.Price
            , tmpResult.PriceIn
+           , tmpResult.PriceTare
            , tmpResult.CountForPrice
            , tmpResult.PriceCost
            , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.SumCost ELSE 0 END :: TFloat AS SumCost
@@ -1092,6 +1105,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 30.03.22         *
  03.12.21         *
  09.08.21         *
  07.12.20         *
