@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , GoodsGroupNameFull TVarChar
              , Amount TFloat, AmountChangePercent TFloat, AmountPartner TFloat, AmountOrder TFloat
              , ChangePercentAmount TFloat, TotalPercentAmount TFloat, ChangePercent TFloat
-             , Price TFloat, CountForPrice TFloat, Price_Pricelist TFloat, Price_Pricelist_vat TFloat
+             , Price TFloat, PriceTare TFloat, CountForPrice TFloat, Price_Pricelist TFloat, Price_Pricelist_vat TFloat
              , HeadCount TFloat, BoxCount TFloat
              , PartionGoods TVarChar, PartionGoodsDate TDateTime
              , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
@@ -578,7 +578,7 @@ BEGIN
            , tmpMI.HeadCount          :: TFloat AS HeadCount
            , tmpMI.BoxCount           :: TFloat AS BoxCount
 
-           , tmpMI.PartionGoods
+           , tmpMI.PartionGoods       :: TVarChar
            , tmpMI.PartionGoodsDate   :: TDateTime
            , Object_GoodsKind.Id                    AS GoodsKindId
            , Object_GoodsKind.ValueData             AS GoodsKindName
@@ -1023,7 +1023,7 @@ BEGIN
            , tmpMI.HeadCount          :: TFloat AS HeadCount
            , tmpMI.BoxCount           :: TFloat AS BoxCount
 
-           , tmpMI.PartionGoods
+           , tmpMI.PartionGoods       :: TVarChar
            , tmpMI.PartionGoodsDate   :: TDateTime
            , Object_GoodsKind.Id                    AS GoodsKindId
            , Object_GoodsKind.ValueData             AS GoodsKindName
