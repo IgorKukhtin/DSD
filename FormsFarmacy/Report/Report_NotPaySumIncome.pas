@@ -72,6 +72,10 @@ type
     JuridicalFromCode: TcxGridDBColumn;
     JuridicalFromName: TcxGridDBColumn;
     TotalPaySummDate: TcxGridDBColumn;
+    AmountBonus: TcxGridDBColumn;
+    AmountReturnOut: TcxGridDBColumn;
+    AmountOther: TcxGridDBColumn;
+    AmountPartialSale: TcxGridDBColumn;
   private
   public
   end;

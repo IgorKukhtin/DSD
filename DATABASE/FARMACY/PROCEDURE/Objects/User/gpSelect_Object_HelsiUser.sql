@@ -101,6 +101,10 @@ BEGIN
               THEN zfCalc_Color (255, 165, 0)
               WHEN COALESCE(ObjectBlob_Key.ValueData, '') <> '' AND 
                    COALESCE(ObjectString_KeyPassword.ValueData, '') <> '' AND
+                   date_part('YEAR', COALESCE(ObjectDate_User_KeyExpireDate.ValueData, CURRENT_DATE + INTERVAL '1 DAY')) < 2000
+              THEN zfCalc_Color (192, 192, 192) 
+              WHEN COALESCE(ObjectBlob_Key.ValueData, '') <> '' AND 
+                   COALESCE(ObjectString_KeyPassword.ValueData, '') <> '' AND
                    COALESCE(ObjectDate_User_KeyExpireDate.ValueData, CURRENT_DATE + INTERVAL '1 DAY') < CURRENT_DATE
               THEN zc_Color_Yelow() 
               ELSE zc_Color_White() END AS Color_calc     
@@ -174,3 +178,7 @@ ALTER FUNCTION gpSelect_Object_HelsiUser (Boolean, TVarChar) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM gpSelect_Object_HelsiUser (False, '3')
+
+select * from gpSelect_Object_HelsiUser(inIsShowAll := 'True' ,  inSession := '3');
+
+

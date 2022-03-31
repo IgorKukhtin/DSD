@@ -1249,7 +1249,7 @@ type
     FJsonParam: TdsdParam;
     FPairParams: TOwnedCollection;
 
-    procedure DataSourceExecute(JsonArray: TJSONArray);
+    procedure DataSourceExecute(var JsonArray: TJSONArray);
     procedure SetDataSource(const Value: TDataSource);
     procedure SetView(const Value: TcxGridTableView);
   protected
@@ -5927,7 +5927,7 @@ begin
   inherited;
 end;
 
-procedure TdsdDataToJsonAction.DataSourceExecute(JsonArray: TJSONArray);
+procedure TdsdDataToJsonAction.DataSourceExecute(var JsonArray: TJSONArray);
 var
   i, j : Integer;
   JSONObject: TJSONObject;
@@ -6060,32 +6060,32 @@ function TdsdDataToJsonAction.LocalExecute: Boolean;
   var JsonArray: TJSONArray;
 begin
   result := False;
-  try
-    if Assigned(DataSource) or Assigned(View) then
-    begin
+  if Assigned(DataSource) or Assigned(View) then
+  begin
+    try
       JSONArray := TJSONArray.Create();
-      try
-        DataSourceExecute(JsonArray);
-      finally
-        try
-          FJsonParam.Value := JSONArray.ToString;
-        except
-          on E:Exception do raise Exception.Create('Ошибка передачи Json: ' + e.Message);
-        end;
-        try
-          result := FJsonParam.Value <> '';
-        except
-          on E:Exception do raise Exception.Create('Ошибка получение результата Json: ' + e.Message);
-        end;
-        try
-          JSONArray.Free;
-        except
-          on E:Exception do raise Exception.Create('Ошибка освобождения Json: ' + e.Message);
-        end;
-     end;
+    except
+      on E:Exception do raise Exception.Create('Ошибка создания JSONArray: ' + e.Message);
     end;
-  except
-    on E:Exception do raise Exception.Create('Ошибка сохранения Json: ' + e.Message);
+    try
+      DataSourceExecute(JsonArray);
+      try
+        FJsonParam.Value := JSONArray.ToString;
+      except
+        on E:Exception do raise Exception.Create('Ошибка передачи Json: ' + e.Message);
+      end;
+      try
+        result := FJsonParam.Value <> '';
+      except
+        on E:Exception do raise Exception.Create('Ошибка получение результата Json: ' + e.Message);
+      end;
+    finally
+      try
+        JSONArray.Free;
+      except
+        on E:Exception do raise Exception.Create('Ошибка освобождения Json: ' + e.Message);
+      end;
+    end;
   end;
 end;
 

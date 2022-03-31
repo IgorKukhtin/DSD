@@ -214,7 +214,7 @@ begin
           exit;
     end;
 
-    if not Panel2.Visible and (Length(edInvNumberSP.Text) > 5) and not CheckInvNumberSP(Key, edInvNumberSP.Text) then
+    if not Panel2.Visible and (Length(edInvNumberSP.Text) > 15) and not CheckInvNumberSP(Key, edInvNumberSP.Text) then
     begin ActiveControl:=edInvNumberSP;
           ModalResult:=mrNone; // не надо закрывать
           exit;
@@ -247,7 +247,7 @@ begin
             ShowMessage ('Внимание.Значение <Медицинское учреждение> не установлено.');
             ModalResult:=mrOk; // ??? может не надо закрывать
       end else ModalResult:=mrOk;
-    end else if (Length(trim (edInvNumberSP.Text)) <= 5) and (SPKindGuides.Params.ParamByName('Key').Value = 4823009) then
+    end else if (Length(trim (edInvNumberSP.Text)) <= 15) and (SPKindGuides.Params.ParamByName('Key').Value = 4823009) then
     begin
       if trim (edMedicSP.Text) = '' then
       begin ActiveControl:=edMedicSP;
@@ -414,7 +414,7 @@ Begin
           AHelsiQty           := FHelsiQty;
           AHelsiProgramId     := FProgramId;
           AHelsiProgramName   := FProgramName;
-          AisPaperRecipeSP    := Length(AInvNumberSP) <= 5;
+          AisPaperRecipeSP    := Length(AInvNumberSP) <= 15;
         end else
         begin
           AHelsiID            := '';

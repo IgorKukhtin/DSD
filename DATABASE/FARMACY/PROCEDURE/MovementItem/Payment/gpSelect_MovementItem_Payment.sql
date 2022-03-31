@@ -76,7 +76,7 @@ BEGIN
                                                                   AND Object_Movement.DescId = zc_Object_PartionMovement()
                           WHERE Container.DescId = zc_Container_SummIncomeMovementPayment()
                             AND Container.Amount  > 0
-                            -- AND Container.KeyValue LIKE '%,' || vbJuridicalId || ';%'
+                            -- AND Container.KeyValue LIKE '%,' || vbJuridicalId || ';%'                            
                          )
           , Income AS 
              (SELECT Movement.Id                                AS Id
@@ -261,6 +261,7 @@ BEGIN
                     LEFT JOIN Container ON Container.DescId = zc_Container_SummIncomeMovementPayment()
                                        AND Container.ObjectId = Object_Movement.Id
                                        AND Container.KeyValue LIKE '%,' || ObjectLink_Unit_Juridical.ChildObjectId || ';%'
+                                       AND inMovementId <> 26214452
 
                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_CorrBonus
                                                       ON MIFloat_CorrBonus.MovementItemId = MI_Payment.ID
@@ -467,6 +468,7 @@ BEGIN
                     LEFT JOIN Container ON Container.ObjectId = Object_Movement.Id
                                        AND Container.DescId = zc_Container_SummIncomeMovementPayment()
                                        AND Container.KeyValue LIKE '%,' || ObjectLink_Unit_Juridical.ChildObjectId || ';%'
+                                       AND inMovementId <> 26214452
 
                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_CorrBonus
                                                       ON MIFloat_CorrBonus.MovementItemId = MI_Payment.ID
@@ -569,3 +571,6 @@ ALTER FUNCTION gpSelect_MovementItem_Payment (Integer, Boolean, Boolean, TDateTi
 -- SELECT * FROM gpSelect_MovementItem_Payment (inMovementId := 1831122 , inShowAll:= FALSE, inIsErased:= FALSE, inDateStart := ('05.12.2013')::TDateTime , inDateEnd := ('08.05.2015')::TDateTime ,  inSession := '3');
 -- SELECT * FROM gpSelect_MovementItem_Payment(inMovementId := 1848680 , inShowAll := 'True' , inIsErased := 'False' , inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('13.04.2016')::TDateTime ,  inSession := '3');
 -- SELECT * FROM gpSelect_MovementItem_Payment(inMovementId := 1870498 , inShowAll := 'True' , inIsErased := 'False' , inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('13.04.2016')::TDateTime ,  inSession := '3');
+
+select * from gpSelect_MovementItem_Payment(inMovementId := 26214452 , inShowAll := 'False' , inIsErased := 'False' , inDateStart := ('01.03.2022')::TDateTime , inDateEnd := ('31.03.2022')::TDateTime ,  inSession := '3');
+
