@@ -1,4 +1,4 @@
-object Report_MovementPriceList_CrossForm: TReport_MovementPriceList_CrossForm
+﻿object Report_MovementPriceList_CrossForm: TReport_MovementPriceList_CrossForm
   Left = 0
   Top = 0
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1055#1088#1072#1081#1089#1072#1084
@@ -171,21 +171,24 @@ object Report_MovementPriceList_CrossForm: TReport_MovementPriceList_CrossForm
           FixedKind = fkLeft
           Options.HoldOwnColumnsOnly = True
           Options.Moving = False
+          Width = 208
         end
         item
           Caption = #1055#1077#1088#1080#1086#1076
           Options.HoldOwnColumnsOnly = True
           Options.Moving = False
-          Width = 57
+          Visible = False
+          VisibleForCustomization = False
+          Width = 174
         end>
-      object CommonCode: TcxGridDBBandedColumn
+      object ObjectCode: TcxGridDBBandedColumn
         Caption = #1050#1086#1076
-        DataBinding.FieldName = 'CommonCode'
+        DataBinding.FieldName = 'ObjectCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Options.Moving = False
-        Width = 34
+        Width = 44
         Position.BandIndex = 0
         Position.ColIndex = 0
         Position.RowIndex = 0
@@ -204,28 +207,44 @@ object Report_MovementPriceList_CrossForm: TReport_MovementPriceList_CrossForm
         Position.ColIndex = 1
         Position.RowIndex = 0
       end
-      object Value: TcxGridDBBandedColumn
-        DataBinding.FieldName = 'Value'
+      object Value1p: TcxGridDBBandedColumn
+        Caption = #1055#1086#1089#1090' 1'
+        DataBinding.FieldName = 'Value1p'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         MinWidth = 40
+        VisibleForCustomization = False
         Width = 40
         Position.BandIndex = 1
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
-      object Value1: TcxGridDBBandedColumn
-        DataBinding.FieldName = 'Value1'
+      object Value2p: TcxGridDBBandedColumn
+        Caption = #1055#1086#1089#1090' 2'
+        DataBinding.FieldName = 'Value2p'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         MinWidth = 40
+        VisibleForCustomization = False
         Width = 40
         Position.BandIndex = 1
         Position.ColIndex = 1
+        Position.RowIndex = 0
+      end
+      object Value3p: TcxGridDBBandedColumn
+        Caption = #1055#1086#1089#1090' 3'
+        DataBinding.FieldName = 'Value3p'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 40
+        Position.BandIndex = 1
+        Position.ColIndex = 2
         Position.RowIndex = 0
       end
       object isErased: TcxGridDBBandedColumn
@@ -437,7 +456,7 @@ object Report_MovementPriceList_CrossForm: TReport_MovementPriceList_CrossForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -518,7 +537,7 @@ object Report_MovementPriceList_CrossForm: TReport_MovementPriceList_CrossForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 14
+    Left = 30
     Top = 119
     DockControlHeights = (
       0
@@ -661,7 +680,7 @@ object Report_MovementPriceList_CrossForm: TReport_MovementPriceList_CrossForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 51
+    Left = 75
     Top = 119
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -703,6 +722,9 @@ object Report_MovementPriceList_CrossForm: TReport_MovementPriceList_CrossForm
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -767,7 +789,7 @@ object Report_MovementPriceList_CrossForm: TReport_MovementPriceList_CrossForm
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -941,23 +963,6 @@ object Report_MovementPriceList_CrossForm: TReport_MovementPriceList_CrossForm
       end>
     Left = 240
   end
-  object CrossDBViewAddOn: TCrossDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridDBBandedTableView
-    OnDblClickActionList = <>
-    ActionItemList = <>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
-    ColumnAddOnList = <>
-    ColumnEnterList = <>
-    SummaryItemList = <>
-    HeaderDataSet = HeaderCDS
-    HeaderColumnName = 'ValueField'
-    TemplateColumn = Value
-    Left = 272
-    Top = 240
-  end
   object HeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
@@ -1121,5 +1126,41 @@ object Report_MovementPriceList_CrossForm: TReport_MovementPriceList_CrossForm
       end>
     Left = 456
     Top = 48
+  end
+  object CrossDBViewReportAddOn: TCrossDBViewReportAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    MultiplyColumnList = <>
+    TemplateColumnList = <
+      item
+        HeaderColumnName = 'ValueName1'
+        TemplateColumn = Value1p
+      end
+      item
+        HeaderColumnName = 'ValueName2'
+        TemplateColumn = Value2p
+      end
+      item
+        HeaderColumnName = 'ValueName3'
+        TemplateColumn = Value3p
+      end>
+    HeaderDataSet = HeaderCDS
+    BаndColumnName = 'ValueBandName'
+    Left = 240
+    Top = 232
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 134
+    Top = 117
   end
 end

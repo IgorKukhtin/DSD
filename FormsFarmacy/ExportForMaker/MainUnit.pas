@@ -1037,13 +1037,13 @@ begin
 
     if qryMaker.FieldByName('isQuarterAdd').AsBoolean then
     begin
-      DateEndQuarterAdd := IncMonth(DateEnd, 1);
+      DateEndQuarterAdd := StartOfTheDay(EndOfTheMonth(IncMonth(DateEnd, 1)));
       DateStartQuarterAdd := IncMonth(StartOfTheMonth(DateEndQuarterAdd), - 2);
     end;
 
     if qryMaker.FieldByName('is4MonthAdd').AsBoolean then
     begin
-      DateEnd4MonthAdd := IncMonth(DateEnd, 1);
+      DateEnd4MonthAdd := StartOfTheDay(EndOfTheMonth(IncMonth(DateEnd, 1)));
       DateStart4MonthAdd := IncMonth(StartOfTheMonth(DateEnd4MonthAdd), - 3);
     end;
 

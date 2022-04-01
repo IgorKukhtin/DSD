@@ -52,14 +52,13 @@ type
     bbStatic: TdxBarStatic;
     GridToExcel: TdsdGridToExcel;
     bbGridToExel: TdxBarButton;
-    CrossDBViewAddOn: TCrossDBViewAddOn;
     HeaderCDS: TClientDataSet;
     RefreshDispatcher: TRefreshDispatcher;
     cxGridDBBandedTableView: TcxGridDBBandedTableView;
-    CommonCode: TcxGridDBBandedColumn;
+    ObjectCode: TcxGridDBBandedColumn;
     GoodsName: TcxGridDBBandedColumn;
-    Value: TcxGridDBBandedColumn;
-    Value1: TcxGridDBBandedColumn;
+    Value1p: TcxGridDBBandedColumn;
+    Value2p: TcxGridDBBandedColumn;
     isErased: TcxGridDBBandedColumn;
     actShowErased: TBooleanStoredProcAction;
     ExecuteDialog: TExecuteDialog;
@@ -83,6 +82,9 @@ type
     edContract3: TcxButtonEdit;
     GuidesContract3: TdsdGuides;
     GuidesContract2: TdsdGuides;
+    Value3p: TcxGridDBBandedColumn;
+    CrossDBViewReportAddOn: TCrossDBViewReportAddOn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
   private
   public
   end;

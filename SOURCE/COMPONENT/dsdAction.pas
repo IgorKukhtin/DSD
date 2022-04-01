@@ -1249,7 +1249,6 @@ type
     FJsonParam: TdsdParam;
     FPairParams: TOwnedCollection;
 
-    procedure DataSourceExecute(var JsonArray: TJSONArray);
     procedure SetDataSource(const Value: TDataSource);
     procedure SetView(const Value: TcxGridTableView);
   protected
@@ -5918,6 +5917,8 @@ begin
   FPairParams := TOwnedCollection.Create(Self, TdsdPairParamsItem);
   FJsonParam := TdsdParam.Create(Nil);
   FJsonParam.DataType := ftWideString;
+  FDataSource := Nil;
+  FView := Nil;
 end;
 
 destructor TdsdDataToJsonAction.Destroy;
@@ -5927,10 +5928,9 @@ begin
   inherited;
 end;
 
-procedure TdsdDataToJsonAction.DataSourceExecute(var JsonArray: TJSONArray);
-var
-  i, j : Integer;
-  JSONObject: TJSONObject;
+function TdsdDataToJsonAction.LocalExecute: Boolean;
+  var JsonArray: TJSONArray;
+      JSONObject: TJSONObject;
 
   procedure AddParamToJSON(AName: string; AValue: Variant; ADataType: TFieldType);
     var intValue: integer; n : Double;
@@ -5960,8 +5960,10 @@ var
     end;
   end;
 
-begin
-  try
+  procedure DataSourceExecute;
+  var
+    i, j : Integer;
+  begin
     if Assigned(View) then
     begin
       with TGaugeFactory.GetGauge(Caption, 0,
@@ -5993,6 +5995,7 @@ begin
                                TcxDBDataController(View.DataController).DataSource.DataSet.Fields.Fields[J].DataType);
             end;
             JsonArray.AddElement(JSONObject);
+            JSONObject := Nil;
             IncProgress(1);
             Application.ProcessMessages;
           end;
@@ -6038,6 +6041,7 @@ begin
                 end;
                 JsonArray.AddElement(JSONObject);
                 IncProgress(1);
+                JSONObject := Nil;
                 Application.ProcessMessages;
                 DataSource.DataSet.Next
               end;
@@ -6051,40 +6055,24 @@ begin
         end;
       end;
     end;
-  except
-    on E:Exception do raise Exception.Create('Ошибка формирования Json: ' + e.Message);
   end;
-end;
 
-function TdsdDataToJsonAction.LocalExecute: Boolean;
-  var JsonArray: TJSONArray;
 begin
+
   result := False;
   if Assigned(DataSource) or Assigned(View) then
   begin
+    JSONArray := TJSONArray.Create();
     try
-      JSONArray := TJSONArray.Create();
-    except
-      on E:Exception do raise Exception.Create('Ошибка создания JSONArray: ' + e.Message);
-    end;
-    try
-      DataSourceExecute(JsonArray);
       try
-        FJsonParam.Value := JSONArray.ToString;
+        DataSourceExecute;
       except
-        on E:Exception do raise Exception.Create('Ошибка передачи Json: ' + e.Message);
+        on E:Exception do raise Exception.Create('Ошибка формирования Json: ' + e.Message);
       end;
-      try
-        result := FJsonParam.Value <> '';
-      except
-        on E:Exception do raise Exception.Create('Ошибка получение результата Json: ' + e.Message);
-      end;
+      FJsonParam.Value := JSONArray.ToString;
+      result := FJsonParam.Value <> '';
     finally
-      try
-        JSONArray.Free;
-      except
-        on E:Exception do raise Exception.Create('Ошибка освобождения Json: ' + e.Message);
-      end;
+      JSONArray.Free;
     end;
   end;
 end;
