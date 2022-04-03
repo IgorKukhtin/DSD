@@ -18,7 +18,7 @@ BEGIN
 
 
     -- если нашли
-    IF inId <> 0
+    IF inId <> 0 AND inKeyExpireDate IS NOT NULL AND date_part('YEAR', inKeyExpireDate) >= 2000
     THEN
         -- сохранили свойство <Дата истечения срока действия файлового ключа>
         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_User_KeyExpireDate(), inId, inKeyExpireDate);

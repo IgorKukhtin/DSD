@@ -407,8 +407,8 @@
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1072#1081#1089#1072#1084
-      FormName = 'TReport_MovementPriceListForm'
-      FormNameParam.Value = 'TReport_MovementPriceListForm'
+      FormName = 'TReport_MovementPriceList_CrossForm'
+      FormNameParam.Value = 'TReport_MovementPriceList_CrossForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -447,12 +447,12 @@
         end
         item
           Name = 'ContractId_1'
-          Value = '183338'
+          Value = '183358'
           MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId_2'
-          Value = '183275'
+          Value = '183257'
           MultiSelectSeparator = ','
         end
         item
@@ -462,13 +462,13 @@
         end
         item
           Name = 'ContractName_1'
-          Value = #1054#1087#1090#1080#1084#1072' '#1060#1072#1082#1090
+          Value = #1054#1087#1090#1080#1084#1072' '#1086#1090#1089#1088#1086#1095#1082#1072
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
           Name = 'ContractName_2'
-          Value = #1041#1072#1076#1084' '#1060#1072#1082#1090
+          Value = #1041#1072#1076#1084' '#1086#1090#1089#1088#1086#1095#1082#1072
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -6084,12 +6084,6 @@
       object N138: TMenuItem
         Caption = '-'
       end
-      object N137: TMenuItem
-        Action = actReport_MovementPriceList_Cross
-      end
-      object N148: TMenuItem
-        Caption = '-'
-      end
       object miReportMovementCheckGrowthAndFalling: TMenuItem
         Action = actReportMovementCheckGrowthAndFalling
       end
@@ -6120,6 +6114,9 @@
     end
     object N131: TMenuItem [8]
       Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075
+      object N137: TMenuItem
+        Action = actReport_MovementPriceList_Cross
+      end
       object miReport_MovementCheck_Cross: TMenuItem
         Action = actReport_MovementCheck_Cross
       end

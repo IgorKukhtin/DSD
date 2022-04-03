@@ -35,6 +35,7 @@ type
     procedure btnHelpClick(Sender: TObject);
     procedure btnLoadUserSettings(Sender: TObject);
     procedure btnSaveUserSettings(Sender: TObject);
+    procedure btnDubleForm(Sender: TObject);
     procedure cxGridDBTableViewTextGetProperties(
       Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
@@ -317,6 +318,11 @@ begin
          Exit;
       end;
   ShowMessage('Форма не поддерживает сохранение пользовательских настроек.');
+end;
+
+procedure TParentForm.btnDubleForm(Sender: TObject);
+begin
+  ShowMessage('По дублю формы загрузка и востановление пользовательских настроек невозможна.');
 end;
 
 procedure TParentForm.CloseAction(Sender: TObject);
@@ -619,19 +625,25 @@ begin
           //Находим все контексные меню
           if C is TPopupMenu then
           Begin
-            mni := TMenuItem.Create(C);
-            mni.Caption := '-';
-            (C as TPopupMenu).Items.Add(mni);
-            mni := TMenuItem.Create(C);
-            mni.Caption := 'Сохранить пользовательские настройки формы';
-            mni.ImageIndex := 79;
-            mni.OnClick := btnSaveUserSettings;
-            (C as TPopupMenu).Items.Add(mni);
-            mni := TMenuItem.Create(C);
-            mni.Caption := 'Загрузить пользовательские настройки формы';
-            mni.ImageIndex := 80;
-            mni.OnClick := btnLoadUserSettings;
-            (C as TPopupMenu).Items.Add(mni);
+            if not Assigned((C as TPopupMenu).Items.Find('Сохранить пользовательские настройки формы')) then
+            begin
+              mni := TMenuItem.Create(C);
+              mni.Caption := '-';
+              (C as TPopupMenu).Items.Add(mni);
+              mni := TMenuItem.Create(C);
+              mni.Caption := 'Сохранить пользовательские настройки формы';
+              mni.ImageIndex := 79;
+              mni.OnClick := btnSaveUserSettings;
+              (C as TPopupMenu).Items.Add(mni);
+            end else (C as TPopupMenu).Items.Find('Сохранить пользовательские настройки формы').OnClick := btnDubleForm;
+            if not Assigned((C as TPopupMenu).Items.Find('Загрузить пользовательские настройки формы')) then
+            begin
+              mni := TMenuItem.Create(C);
+              mni.Caption := 'Загрузить пользовательские настройки формы';
+              mni.ImageIndex := 80;
+              mni.OnClick := btnLoadUserSettings;
+              (C as TPopupMenu).Items.Add(mni);
+            end else (C as TPopupMenu).Items.Find('Загрузить пользовательские настройки формы').OnClick := btnDubleForm;
           End;
         end;
         Break;

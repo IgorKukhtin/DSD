@@ -25,7 +25,6 @@ object Report_NotPaySumIncomeForm: TReport_NotPaySumIncomeForm
     Height = 31
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 751
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -62,7 +61,6 @@ object Report_NotPaySumIncomeForm: TReport_NotPaySumIncomeForm
     Height = 383
     Align = alClient
     TabOrder = 5
-    ExplicitWidth = 751
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -211,6 +209,26 @@ object Report_NotPaySumIncomeForm: TReport_NotPaySumIncomeForm
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
           Column = TotalPaySummDate
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = AmountBonus
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = AmountReturnOut
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = AmountOther
+        end
+        item
+          Format = ',0.00;-,0.00; ;'
+          Kind = skSum
+          Column = AmountPartialSale
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -290,6 +308,46 @@ object Report_NotPaySumIncomeForm: TReport_NotPaySumIncomeForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 94
+      end
+      object AmountBonus: TcxGridDBColumn
+        Caption = #1041#1086#1085#1091#1089
+        DataBinding.FieldName = 'AmountBonus'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 85
+      end
+      object AmountReturnOut: TcxGridDBColumn
+        Caption = #1042#1086#1079#1074#1088#1072#1090
+        DataBinding.FieldName = 'AmountReturnOut'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 85
+      end
+      object AmountOther: TcxGridDBColumn
+        Caption = #1055#1088#1086#1095#1077#1077
+        DataBinding.FieldName = 'AmountOther'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 85
+      end
+      object AmountPartialSale: TcxGridDBColumn
+        Caption = #1054#1087#1083'. '#1095#1072#1089#1090#1103#1084#1080
+        DataBinding.FieldName = 'AmountPartialSale'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 85
       end
     end
     object cxGridLevel: TcxGridLevel

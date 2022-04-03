@@ -912,7 +912,7 @@ BEGIN
    
    IF inNumberPUSH in (1, 10) AND vbUserId IN (3, 4183126)
    THEN
-      SELECT string_agg(T1.Code||' - '||T1.Name, CHR(13)) FROM gpSelect_Object_HelsiUser ('3') AS T1
+      SELECT string_agg(T1.Code||' - '||T1.Name, CHR(13)) FROM gpSelect_Object_HelsiUser (True, '3') AS T1
       INTO vbText
       WHERE T1.KeyExpireDate >= CURRENT_DATE - INTERVAL '7 DAY'
         AND T1.KeyExpireDate <= CURRENT_DATE

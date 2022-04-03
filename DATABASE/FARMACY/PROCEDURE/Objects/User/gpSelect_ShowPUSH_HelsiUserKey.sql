@@ -43,7 +43,8 @@ BEGIN
                                        AND ObjectBlob_Key.ObjectId = Object_User.Id
 
                            WHERE Object_User.DescId = zc_Object_User()
-                             AND ObjectDate_User_KeyExpireDate.ValueData >= CURRENT_DATE 
+                             AND (ObjectDate_User_KeyExpireDate.ValueData >= CURRENT_DATE 
+                              OR date_part('YEAR', ObjectDate_User_KeyExpireDate.ValueData) < 2000)
                              AND COALESCE(ObjectBlob_Key.ValueData, '') <> '' 
                              AND COALESCE(ObjectString_KeyPassword.ValueData, '') <> '')
                              

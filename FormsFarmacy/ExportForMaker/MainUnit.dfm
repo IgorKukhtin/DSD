@@ -396,13 +396,14 @@ object MainForm: TMainForm
         '                      AS isCurrMonth'
       
         '     , COALESCE (isQuarter, FALSE) = TRUE AND date_part('#39'MONTH'#39',' +
-        ' CURRENT_DATE) IN (12, 3, 6, 9) AND'
+        ' CURRENT_DATE) IN (12, 3, 6, 9) AND COALESCE(AmountDay, 0) = 25 ' +
+        'AND'
       
         '       DATE_PART('#39'DAY'#39',  CURRENT_DATE + INTERVAL '#39'3 DAY'#39') = 1   ' +
         '                      AS isQuarterAdd'
       
         '     , COALESCE (isQuarter, FALSE) = TRUE AND date_part('#39'MONTH'#39',' +
-        ' CURRENT_DATE) IN (12, 4, 8) AND'
+        ' CURRENT_DATE) IN (12, 4, 8) AND COALESCE(AmountDay, 0) = 25 AND'
       
         '       DATE_PART('#39'DAY'#39',  CURRENT_DATE + INTERVAL '#39'3 DAY'#39') = 1   ' +
         '                      AS is4MonthAdd'
