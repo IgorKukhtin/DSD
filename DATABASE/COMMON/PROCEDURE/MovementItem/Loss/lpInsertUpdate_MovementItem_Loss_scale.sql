@@ -2,6 +2,7 @@
 
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Loss_scale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Loss_scale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Loss_scale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Loss_scale(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Loss_scale(
     IN inPartionGoodsDate    TDateTime , -- Дата партии/Дата перемещения
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
+    IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -30,7 +32,7 @@ BEGIN
                                             , inPartionGoods        := inPartionGoods
                                             , inGoodsKindId         := inGoodsKindId
                                             , inGoodsKindCompleteId := NULL -- !!!не ошибка, здесь не формируется!!!
-                                            , inAssetId             := NULL -- !!!не ошибка, здесь не формируется!!!
+                                            , inAssetId             := inAssetId
                                             , inPartionGoodsId      := NULL -- !!!не ошибка, здесь не формируется!!!
                                             , inUserId              := inUserId
                                              );

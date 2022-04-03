@@ -20,7 +20,7 @@ RETURNS TABLE (MovementItemId Integer, GoodsCode Integer, GoodsName TVarChar, Me
              , GoodsKindName TVarChar
              , BoxId Integer, BoxName TVarChar
              , PriceListName  TVarChar
-             , ReasonName  TVarChar
+             , ReasonName  TVarChar, AssetId  Integer, AssetName  TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isBarCode   Boolean
              , isPromo     Boolean
@@ -89,6 +89,7 @@ BEGIN
                            , COALESCE (MILinkObject_Box.ObjectId, 0)       AS BoxId
                            , COALESCE (MILinkObject_PriceList.ObjectId, 0) AS PriceListId
                            , COALESCE (MILinkObject_Reason.ObjectId, 0)    AS ReasonId
+                           , COALESCE (MILinkObject_Asset.ObjectId, 0)     AS AssetId
 
                            , MIDate_Insert.ValueData AS InsertDate
                            , MIDate_Update.ValueData AS UpdateDate
@@ -208,6 +209,9 @@ BEGIN
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Reason
                                                             ON MILinkObject_Reason.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Reason.DescId         = zc_MILinkObject_Reason()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                            ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Asset.DescId         = zc_MILinkObject_Asset()
                            LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode
                                                          ON MIBoolean_BarCode.MovementItemId =  MovementItem.Id
                                                         AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
@@ -295,7 +299,8 @@ BEGIN
            , Object_Box.ValueData            AS BoxName
            , Object_PriceList.ValueData      AS PriceListName
            , (Object_Reason.ValueData || ' (' || Object_ReturnKind.ValueData || ')') :: TVarChar AS ReasonName
-
+           , Object_Asset.Id                 AS  AssetId
+           , (Object_Asset.ValueData || ' (' || Object_Asset.ObjectCode :: TVarChar || ')' || CASE WHEN ObjectString_Asset_InvNumber.ValueData  <> '' THEN ' (' || ObjectString_Asset_InvNumber.ValueData || ')'  ELSE '' END) :: TVarChar AS AssetName
 
            , tmpMI.InsertDate :: TDateTime AS InsertDate
            , tmpMI.UpdateDate :: TDateTime AS UpdateDate
@@ -327,11 +332,16 @@ BEGIN
             LEFT JOIN Object AS Object_Box ON Object_Box.Id = tmpMI.BoxId
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmpMI.PriceListId
             LEFT JOIN Object AS Object_Reason ON Object_Reason.Id = tmpMI.ReasonId
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpMI.AssetId
 
             LEFT JOIN ObjectLink AS ObjectLink_ReturnKind
                                  ON ObjectLink_ReturnKind.ObjectId = Object_Reason.Id 
                                 AND ObjectLink_ReturnKind.DescId = zc_ObjectLink_Reason_ReturnKind()
             LEFT JOIN Object AS Object_ReturnKind ON Object_ReturnKind.Id = ObjectLink_ReturnKind.ChildObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_Asset_InvNumber
+                                   ON ObjectString_Asset_InvNumber.ObjectId = Object_Asset.Id
+                                  AND ObjectString_Asset_InvNumber.DescId = zc_ObjectString_Asset_InvNumber()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId

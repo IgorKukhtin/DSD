@@ -124,6 +124,8 @@ begin
            ParamsMovement.ParamByName('isLockStartWeighing').asBoolean     := CDS.FieldByName('isLockStartWeighing').asBoolean;
            ParamsMovement.ParamByName('isKVK').asBoolean                   := CDS.FieldByName('isKVK').asBoolean;
            ParamsMovement.ParamByName('isListInventory').asBoolean         := CDS.FieldByName('isListInventory').asBoolean;
+           ParamsMovement.ParamByName('isAsset').asBoolean                 := CDS.FieldByName('isAsset').asBoolean;
+           ParamsMovement.ParamByName('isReReturnIn').asBoolean            := CDS.FieldByName('isReReturnIn').asBoolean;
 
            ParamsMovement.ParamByName('FromId').AsInteger           := CDS.FieldByName('FromId').asInteger;
            ParamsMovement.ParamByName('FromCode').asString          := CDS.FieldByName('FromCode').asString;
@@ -391,6 +393,8 @@ begin
           ParamByName('isLockStartWeighing').asBoolean     := CDS.FieldByName('isLockStartWeighing').asBoolean;
           ParamByName('isKVK').asBoolean                   := CDS.FieldByName('isKVK').asBoolean;
           ParamByName('isListInventory').asBoolean         := CDS.FieldByName('isListInventory').asBoolean;
+          ParamByName('isAsset').asBoolean                 := CDS.FieldByName('isAsset').asBoolean;
+          ParamByName('isReReturnIn').asBoolean            := CDS.FieldByName('isReReturnIn').asBoolean;
 
           if  (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnIn)
             or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Income)

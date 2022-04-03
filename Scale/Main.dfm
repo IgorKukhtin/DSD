@@ -236,7 +236,7 @@ object MainForm: TMainForm
         OnClick = bbChangeCountPackClick
       end
       object bbChangeHeadCount: TSpeedButton
-        Left = 146
+        Left = 145
         Top = 2
         Width = 31
         Height = 29
@@ -274,7 +274,7 @@ object MainForm: TMainForm
         OnClick = bbChangeBoxCountClick
       end
       object bbChangePartionGoods: TSpeedButton
-        Left = 177
+        Left = 178
         Top = 2
         Width = 31
         Height = 29
@@ -688,7 +688,7 @@ object MainForm: TMainForm
       end
       object bbSetPartionGoods: TSpeedButton
         Left = 102
-        Top = 1
+        Top = 2
         Width = 31
         Height = 29
         Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1055#1040#1056#1058#1048#1071' '#1044#1072#1090#1072'>'
@@ -776,6 +776,44 @@ object MainForm: TMainForm
           00FFFF00FFFF00FFFF00FFFF00FFFF00FF0000FF0000FFFF00FF}
         ParentShowHint = False
         ShowHint = True
+      end
+      object bbSetAsset: TSpeedButton
+        Left = 129
+        Top = 2
+        Width = 31
+        Height = 29
+        Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1086#1074#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1054#1089#1085#1086#1074#1085#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086'>'
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          8888808800000000000888F0888888888888880F808888888888888FF0088888
+          888888800B308888888888880BB308888888888880BB308888888888880BB308
+          888888888880BB308888888888880BB308888888888880BB0088888888888800
+          0508888888888880FD0888888888888800888888888888888888}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbSetAssetClick
+      end
+      object bbUpdateAsset: TSpeedButton
+        Left = 166
+        Top = 2
+        Width = 31
+        Height = 29
+        Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1054#1089#1085#1086#1074#1085#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086'> '#1076#1083#1103' '#1101#1083#1077#1084#1077#1085#1090#1072
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          8888870888888888888873308888888888888733088888888888887330888888
+          8888888733088888888888887330888888888888873308888088888888733088
+          8008888888873308087088888888730700888888888880887888888888888088
+          0888888888880800888888888888808888888888888888888888}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbUpdateAssetClick
       end
     end
     object infoPanelTotalSumm: TPanel
@@ -1196,6 +1234,15 @@ object MainForm: TMainForm
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 55
+        end
+        object AssetName: TcxGridDBColumn
+          Caption = #1054#1057
+          DataBinding.FieldName = 'AssetName'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 110
         end
         object PartionGoods: TcxGridDBColumn
           Caption = #1055#1072#1088#1090#1080#1103' '#1057#1067#1056#1068#1071
@@ -2178,7 +2225,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
-          ExplicitLeft = -5
+          ExplicitWidth = 103
         end
         object EditSubjectDoc: TcxButtonEdit
           Left = 3
@@ -2633,8 +2680,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 1
-      ExplicitLeft = 45
-      ExplicitTop = -5
     end
     object infoPanel: TPanel
       Left = 0
@@ -2777,6 +2822,9 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
+          OnDblClick = PanelOrderExternalDblClick
+          ExplicitLeft = 5
+          ExplicitTop = 11
         end
       end
       object infoPanelContract: TPanel

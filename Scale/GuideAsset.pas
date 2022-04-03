@@ -1,4 +1,4 @@
-unit GuideReason;
+unit GuideAsset;
 
 interface
 
@@ -22,10 +22,10 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, cxCheckBox;
 
 type
-  TGuideReasonForm = class(TForm)
+  TGuideAssetForm = class(TForm)
     GridPanel: TPanel;
     ParamsPanel: TPanel;
     DS: TDataSource;
@@ -50,8 +50,6 @@ type
     actRefresh: TAction;
     actChoice: TAction;
     actExit: TAction;
-    ReturnKindName: TcxGridDBColumn;
-    Comment: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -83,7 +81,7 @@ type
   end;
 
 var
-  GuideReasonForm: TGuideReasonForm;
+  GuideAssetForm: TGuideAssetForm;
 
 implementation
 
@@ -91,7 +89,7 @@ implementation
 
 uses dmMainScale;
 {------------------------------------------------------------------------------}
-function TGuideReasonForm.Execute(var execParams:TParams): boolean;
+function TGuideAssetForm.Execute(var execParams:TParams): boolean;
 begin
      CopyValuesParamsFrom(execParams,Params_local);
 
@@ -119,13 +117,13 @@ begin
      if result then CopyValuesParamsFrom(Params_local,execParams);
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideReasonForm.CancelCxFilter;
+procedure TGuideAssetForm.CancelCxFilter;
 begin
      if cxDBGridDBTableView.DataController.Filter.Active
      then begin cxDBGridDBTableView.DataController.Filter.Clear;cxDBGridDBTableView.DataController.Filter.Active:=false;end
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideReasonForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
+procedure TGuideAssetForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
     if Key=13
     then
@@ -146,7 +144,7 @@ begin
       else actExitExecute(Self);
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideReasonForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);
+procedure TGuideAssetForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);
 begin
      //
      if (fEnterCode)and(trim(EditCode.Text)<>'')
@@ -162,7 +160,7 @@ begin
 
 end;
 {------------------------------------------------------------------------------}
-function TGuideReasonForm.Checked: boolean; //Проверка корректного ввода в Edit
+function TGuideAssetForm.Checked: boolean; //Проверка корректного ввода в Edit
 begin
      Result:=(CDS.RecordCount>0);
      //
@@ -170,14 +168,14 @@ begin
      then ActiveControl:=EditName
      else with Params_local do
           begin
-               ParamByName('Id').AsInteger:= CDS.FieldByName('Id').AsInteger;
-               ParamByName('Code').AsInteger:= CDS.FieldByName('Code').AsInteger;
-               ParamByName('Name').asString:= CDS.FieldByName('Name').asString;
-               ParamByName('ReturnKindName').asString:= CDS.FieldByName('ReturnKindName').asString;
+               ParamByName('Id').AsInteger      := CDS.FieldByName('Id').AsInteger;
+               ParamByName('Code').AsInteger    := CDS.FieldByName('Code').AsInteger;
+               ParamByName('Name').asString     := CDS.FieldByName('Name').asString;
+               ParamByName('InvNumber').asString:= CDS.FieldByName('InvNumber').asString;
           end;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideReasonForm.EditCodeChange(Sender: TObject);
+procedure TGuideAssetForm.EditCodeChange(Sender: TObject);
 begin
      if fEnterCode then
        with CDS do begin
@@ -188,13 +186,13 @@ begin
        end;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideReasonForm.EditCodeEnter(Sender: TObject);
+procedure TGuideAssetForm.EditCodeEnter(Sender: TObject);
 begin TEdit(Sender).SelectAll;
       EditName.Text:='';
       //if CDS.Filtered then CDS.Filtered:=false;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideReasonForm.EditCodeKeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
+procedure TGuideAssetForm.EditCodeKeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
 begin
      if(Key<>32)and(Key<>27)and(Key<>13)then
      begin
@@ -204,10 +202,10 @@ begin
      end
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideReasonForm.EditCodeKeyPress(Sender: TObject;var Key: Char);
+procedure TGuideAssetForm.EditCodeKeyPress(Sender: TObject;var Key: Char);
 begin if(Key=' ')or(Key='+')then Key:=#0;end;
 {------------------------------------------------------------------------------}
-procedure TGuideReasonForm.EditNameChange(Sender: TObject);
+procedure TGuideAssetForm.EditNameChange(Sender: TObject);
 begin
      if fEnterName then
        with CDS do begin
@@ -218,14 +216,14 @@ begin
        end;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideReasonForm.EditNameEnter(Sender: TObject);
+procedure TGuideAssetForm.EditNameEnter(Sender: TObject);
 begin
   TEdit(Sender).SelectAll;
   EditCode.Text:='';
   //if CDS.Filtered then CDS.Filtered:=false;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideReasonForm.EditNameKeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
+procedure TGuideAssetForm.EditNameKeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
 begin
      if(Key<>27)and(Key<>13)then
      begin
@@ -235,10 +233,10 @@ begin
      end
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideReasonForm.EditNameKeyPress(Sender: TObject; var Key: Char);
+procedure TGuideAssetForm.EditNameKeyPress(Sender: TObject; var Key: Char);
 begin if(Key='+')then Key:=#0;end;
 {------------------------------------------------------------------------------}
-procedure TGuideReasonForm.actRefreshExecute(Sender: TObject);
+procedure TGuideAssetForm.actRefreshExecute(Sender: TObject);
 var GuideReasonId:String;
 begin
     with spSelect do begin
@@ -249,30 +247,30 @@ begin
     end;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideReasonForm.actChoiceExecute(Sender: TObject);
+procedure TGuideAssetForm.actChoiceExecute(Sender: TObject);
 begin
      if Checked then ModalResult:=mrOK;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideReasonForm.actExitExecute(Sender: TObject);
+procedure TGuideAssetForm.actExitExecute(Sender: TObject);
 begin
      Close;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideReasonForm.FormCreate(Sender: TObject);
+procedure TGuideAssetForm.FormCreate(Sender: TObject);
 begin
-  Create_ParamsReason(Params_local);
+  Create_ParamsAsset(Params_local);
 
   with spSelect do
   begin
-       StoredProcName:='gpSelect_Object_Reason';
+       StoredProcName:='gpSelect_Object_AssetToPlace';
        OutputType:=otDataSet;
        Execute;
   end;
 
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideReasonForm.FormDestroy(Sender: TObject);
+procedure TGuideAssetForm.FormDestroy(Sender: TObject);
 begin
   Params_local.Free;
 end;

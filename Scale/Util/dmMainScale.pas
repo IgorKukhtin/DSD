@@ -516,6 +516,7 @@ begin
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        Params.AddParam('inComment', ftString, ptInput, execParamsMovement.ParamByName('DocumentComment').AsString);
        Params.AddParam('inIsListInventory', ftBoolean, ptInput, execParamsMovement.ParamByName('isListInventory').AsBoolean);
+       Params.AddParam('inMovementId_reReturnIn', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId_reReturnIn').AsInteger);
        //try
          Execute;
          execParamsMovement.ParamByName('MovementId').AsInteger:=DataSet.FieldByName('Id').asInteger;
@@ -578,7 +579,9 @@ begin
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        Params.AddParam('inMovementId_Promo', ftInteger, ptInput, execParamsMI.ParamByName('MovementId_Promo').AsInteger);
        Params.AddParam('inReasonId', ftInteger, ptInput, ParamsReason.ParamByName('ReasonId').AsInteger);
+       Params.AddParam('inAssetId', ftInteger, ptInput, execParamsMovement.ParamByName('AssetId').AsInteger);
        Params.AddParam('inIsReason', ftBoolean, ptInput, SettingMain.isReason);
+       Params.AddParam('inIsAsset', ftBoolean, ptInput, execParamsMovement.ParamByName('isAsset').AsBoolean);
        Params.AddParam('inIsBarCode', ftBoolean, ptInput, execParamsMI.ParamByName('isBarCode').AsBoolean);
        //try
          Execute;
@@ -1581,6 +1584,8 @@ begin
                         execParamsMovement.ParamByName('isSubjectDoc').asBoolean:= CDS.FieldByName('isSubjectDoc').asBoolean;
                         execParamsMovement.ParamByName('isComment').asBoolean:= CDS.FieldByName('isComment').asBoolean;
                         execParamsMovement.ParamByName('isListInventory').asBoolean:= CDS.FieldByName('isListInventory').asBoolean;
+                        execParamsMovement.ParamByName('isAsset').asBoolean:= CDS.FieldByName('isAsset').asBoolean;
+                        execParamsMovement.ParamByName('isReReturnIn').asBoolean:= CDS.FieldByName('isReReturnIn').asBoolean;
                         //
                         if CDS.FieldByName('isSendOnPriceIn').asBoolean = TRUE
                         then execParamsMovement.ParamByName('ChangePercentAmount').asFloat := 0;
@@ -1618,6 +1623,8 @@ begin
                         ParamsMovement.ParamByName('isSubjectDoc').asBoolean:= CDS.FieldByName('isSubjectDoc').asBoolean;
                         ParamsMovement.ParamByName('isComment').asBoolean:= CDS.FieldByName('isComment').asBoolean;
                         ParamsMovement.ParamByName('isListInventory').asBoolean:= CDS.FieldByName('isListInventory').asBoolean;
+                        ParamsMovement.ParamByName('isAsset').asBoolean:= CDS.FieldByName('isAsset').asBoolean;
+                        ParamsMovement.ParamByName('isReReturnIn').asBoolean:= CDS.FieldByName('isReReturnIn').asBoolean;
                         //
                         if CDS.FieldByName('isSendOnPriceIn').asBoolean = TRUE
                         then ParamsMovement.ParamByName('ChangePercentAmount').asFloat := 0;

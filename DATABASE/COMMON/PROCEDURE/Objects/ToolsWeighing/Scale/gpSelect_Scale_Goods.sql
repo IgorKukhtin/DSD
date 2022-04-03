@@ -32,10 +32,14 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , Amount_diff TFloat
              , Amount_diffWeight TFloat
              , isTax_diff Boolean
-             , Price TFloat
-             , Price_Return TFloat
+
+             , Price                 TFloat
+             , Price_Return          TFloat
              , CountForPrice         TFloat
              , CountForPrice_Return  TFloat
+             , Price_Income          TFloat
+             , CountForPrice_Income  TFloat
+
              , Color_calc            Integer
              , MovementId_Promo      Integer
              , isPromo               Boolean
@@ -510,6 +514,9 @@ BEGIN
                  , 0 :: TFloat                     AS Price_Return
                  , tmpMI.CountForPrice :: TFloat   AS CountForPrice
                  , 0 :: TFloat                     AS CountForPrice_Return
+
+                 , 0 :: TFloat                     AS Price_Income
+                 , 0 :: TFloat                     AS CountForPrice_Income
 
                  , CASE WHEN (tmpMI.Amount_Order - tmpMI.Amount_Weighing) > 0
                              THEN 1118719 -- clRed
@@ -1119,6 +1126,10 @@ BEGIN
                 , lfObjectHistory_PriceListItem_Return.Price :: TFloat AS Price_Return
                 , 1 :: TFloat                 AS CountForPrice
                 , 1 :: TFloat                 AS CountForPrice_Return
+
+                , 0 :: TFloat                 AS Price_Income
+                , 0 :: TFloat                 AS CountForPrice_Income
+
                 , 0                           AS Color_calc -- clBlack
                 , 0                           AS MovementId_Promo
                 , FALSE                       AS isPromo

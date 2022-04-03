@@ -130,6 +130,8 @@ type
   procedure Create_ParamsSubjectDoc(var Params:TParams);
   procedure Create_ParamsReason(var Params:TParams);
   procedure Create_ParamsUnit_OrderInternal(var Params:TParams);
+  procedure Create_ParamsAsset(var Params:TParams);
+  procedure Create_ParamsReReturnIn(var Params:TParams);
 
   // создает TParam с названием поля _Name и типом _DataType и добавляет к TParams
   procedure ParamAdd(var execParams:TParams;_Name:String;_DataType:TFieldType);
@@ -314,6 +316,17 @@ begin
      ParamAdd(Params,'isArticleLoss',ftBoolean);
      ParamAdd(Params,'isLockStartWeighing',ftBoolean);
      ParamAdd(Params,'isListInventory',ftBoolean);
+
+     ParamAdd(Params,'isAsset',ftBoolean);
+     ParamAdd(Params,'AssetId',ftInteger);
+     ParamAdd(Params,'AssetCode',ftInteger);
+     ParamAdd(Params,'AssetName',ftString);
+     ParamAdd(Params,'AssetInvNumber',ftString);
+
+     ParamAdd(Params,'isReReturnIn',ftBoolean);
+     ParamAdd(Params,'MovementId_reReturnIn',ftInteger);
+     ParamAdd(Params,'InvNumber_reReturnIn',ftString);
+     ParamAdd(Params,'OperDate_reReturnIn',ftDateTime);
 
      ParamAdd(Params,'OrderExternalId',ftInteger);
      ParamAdd(Params,'OrderExternal_DescId',ftInteger);
@@ -660,6 +673,24 @@ begin
      ParamAdd(Params,'Code', ftInteger); //
      ParamAdd(Params,'Name', ftString);  //
      ParamAdd(Params,'ReturnKindName', ftString);  //
+end;
+{------------------------------------------------------------------------}
+procedure Create_ParamsAsset(var Params:TParams);
+begin
+     Params:=nil;
+     ParamAdd(Params,'Id', ftInteger);        //
+     ParamAdd(Params,'Code', ftInteger);      //
+     ParamAdd(Params,'Name', ftString);       //
+     ParamAdd(Params,'InvNumber', ftString);  //
+end;
+{------------------------------------------------------------------------}
+procedure Create_ParamsReReturnIn(var Params:TParams);
+begin
+     Params:=nil;
+     ParamAdd(Params,'MovementId', ftInteger);   //
+     ParamAdd(Params,'InvNumber', ftString); //
+     ParamAdd(Params,'OperDate', ftDate);  //
+     ParamAdd(Params,'PartnerName', ftString);  //
 end;
 {------------------------------------------------------------------------}
 procedure Create_ParamsSubjectDoc(var Params:TParams);

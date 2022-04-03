@@ -262,6 +262,9 @@ type
     ReasonLabel: TLabel;
     EditReason: TcxButtonEdit;
     ReasonName: TcxGridDBColumn;
+    AssetName: TcxGridDBColumn;
+    bbSetAsset: TSpeedButton;
+    bbUpdateAsset: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -302,6 +305,9 @@ type
     procedure EditPartionGoodsEnter(Sender: TObject);
     procedure EditReasonPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
+    procedure PanelOrderExternalDblClick(Sender: TObject);
+    procedure bbUpdateAssetClick(Sender: TObject);
+    procedure bbSetAssetClick(Sender: TObject);
   private
     //aTest: Boolean;
     Scale_AP: IAPScale;
@@ -325,6 +331,8 @@ type
     procedure pSetSubjectDoc;
     procedure pSetComment;
     procedure pSetReason;
+    procedure pSetAsset;
+    procedure pSetReReturnIn;
 
   public
     function Save_Movement_PersonalComplete(execParams:TParams):Boolean;
@@ -344,7 +352,7 @@ implementation
 uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc
     ,GuideGoods,GuideGoodsPartner,GuideGoodsSticker
     ,GuideGoodsMovement,GuideMovement,GuideMovementTransport, GuidePartner
-    ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal, GuideSubjectDoc, GuideReason, DialogDateValue
+    ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal, GuideSubjectDoc, GuideReason, GuideAsset, DialogDateValue
     ,IdIPWatch, LookAndFillSettings;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -768,6 +776,17 @@ begin
                Initialize_afterSave_MI;
           end;
      end;
+     //
+     //
+     if ParamsMovement.ParamByName('isAsset').AsBoolean = TRUE
+     then pSetAsset;
+     //
+     //
+     if ParamsMovement.ParamByName('isReReturnIn').AsBoolean = TRUE
+     then pSetReReturnIn;
+     //
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('AssetName').Index].Visible:= ParamsMovement.ParamByName('isAsset').AsBoolean;
+     //
      myActiveControl;
 end;
 {------------------------------------------------------------------------}
@@ -1468,6 +1487,125 @@ begin
      execParams.Free;
 end;
 //---------------------------------------------------------------------------------------------
+procedure TMainForm.PanelOrderExternalDblClick(Sender: TObject);
+begin
+     pSetAsset;
+end;
+//------------------------------------------------------------------------------------------------
+procedure TMainForm.bbSetAssetClick(Sender: TObject);
+begin
+     pSetAsset;
+end;
+//------------------------------------------------------------------------------------------------
+procedure TMainForm.bbUpdateAssetClick(Sender: TObject);
+var execParams, execParams_two:TParams;
+begin
+     if ParamsMovement.ParamByName('isAsset').AsBoolean = FALSE then exit;
+     //
+     Create_ParamsAsset(execParams);
+     //
+     with execParams do
+     begin
+          ParamByName('Id').AsInteger:=CDS.FieldByName('AssetId').AsInteger;
+          ParamByName('Code').AsInteger:=0;
+          ParamByName('Name').asString:='';
+     end;
+     if GuideAssetForm.Execute(execParams)
+     then begin
+               execParams_two:=nil;
+               ParamAddValue(execParams_two,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
+               ParamAddValue(execParams_two,'inDescCode',ftString,'zc_MILinkObject_Asset');
+               ParamAddValue(execParams_two,'inObjectId',ftInteger,execParams.ParamByName('Id').AsInteger);
+               //
+               if DMMainScaleForm.gpUpdate_Scale_MILinkObject(execParams_two) then
+               begin
+                    CDS.Edit;
+                    CDS.FieldByName('AssetId').AsInteger:=execParams.ParamByName('Id').AsInteger;
+                    CDS.FieldByName('AssetName').AsString:=execParams.ParamByName('Name').AsString;
+                    CDS.Post;
+               end;
+               //
+               execParams_two.Free;
+     end;
+     //
+     execParams.Free;
+end;
+//---------------------------------------------------------------------------------------------
+procedure TMainForm.pSetAsset;
+var execParams:TParams;
+begin
+     if ParamsMovement.ParamByName('isAsset').AsBoolean = FALSE then exit;
+     //
+     Create_ParamsAsset(execParams);
+     //
+     with execParams do
+     begin
+          ParamByName('Id').AsInteger:=ParamsMovement.ParamByName('AssetId').AsInteger;
+          ParamByName('Code').AsInteger:=ParamsMovement.ParamByName('AssetCode').AsInteger;
+          ParamByName('Name').asString:=ParamsMovement.ParamByName('AssetName').asString;
+     end;
+     if GuideAssetForm.Execute(execParams)
+     then begin
+               ParamsMovement.ParamByName('AssetId').AsInteger:=execParams.ParamByName('Id').AsInteger;
+               ParamsMovement.ParamByName('AssetCode').AsInteger:=execParams.ParamByName('Code').AsInteger;
+               ParamsMovement.ParamByName('AssetName').AsString:=execParams.ParamByName('Name').AsString;
+               ParamsMovement.ParamByName('AssetInvNumber').AsString:=execParams.ParamByName('InvNumber').AsString;
+               //
+               PanelOrderExternal.Caption:= execParams.ParamByName('Name').AsString
+                                          + ' ('+execParams.ParamByName('Code').AsString+')'
+                                          + ' ('+execParams.ParamByName('InvNumber').AsString+')'
+                                           ;
+     end
+     else begin
+               ParamsMovement.ParamByName('AssetId').AsInteger:=0;
+               ParamsMovement.ParamByName('AssetCode').AsInteger:=0;
+               ParamsMovement.ParamByName('AssetName').AsString:='';
+               ParamsMovement.ParamByName('AssetInvNumber').AsString:='';
+               //
+               PanelOrderExternal.Caption:= '';
+     end;
+     //
+     execParams.Free;
+end;
+//---------------------------------------------------------------------------------------------
+procedure TMainForm.pSetReReturnIn;
+var execParams:TParams;
+begin
+     if ParamsMovement.ParamByName('isSubjectDoc').AsBoolean = FALSE then exit;
+     //
+     Create_ParamsSubjectDoc(execParams);
+     //
+     with execParams do
+     begin
+          ParamByName('SubjectDocId').AsInteger:=ParamsMovement.ParamByName('SubjectDocId').AsInteger;
+          ParamByName('SubjectDocCode').AsInteger:=ParamsMovement.ParamByName('SubjectDocCode').AsInteger;
+          ParamByName('SubjectDocName').asString:=ParamsMovement.ParamByName('SubjectDocName').asString;
+     end;
+     if GuideSubjectDocForm.Execute(execParams)
+     then begin
+               ParamsMovement.ParamByName('SubjectDocId').AsInteger:=execParams.ParamByName('SubjectDocId').AsInteger;
+               ParamsMovement.ParamByName('SubjectDocCode').AsInteger:=execParams.ParamByName('SubjectDocCode').AsInteger;
+               ParamsMovement.ParamByName('SubjectDocName').AsString:=execParams.ParamByName('SubjectDocName').AsString;
+               //
+               EditSubjectDoc.Text:=execParams.ParamByName('SubjectDocName').AsString;
+               //
+               with DialogStringValueForm do
+               begin
+                    LabelStringValue.Caption:='¬вод примечани€ дл€ <'+execParams.ParamByName('SubjectDocName').AsString+'>';
+                    ActiveControl:=StringValueEdit;
+                    StringValueEdit.Text:=ParamsMovement.ParamByName('DocumentComment').AsString;
+                    if Execute (false, false)
+                    then ParamsMovement.ParamByName('DocumentComment').AsString:= StringValueEdit.Text;
+                    //
+                    EditSubjectDoc.Text:= EditSubjectDoc.Text + ' / ' + ParamsMovement.ParamByName('DocumentComment').AsString;
+               end;
+               //
+               DMMainScaleForm.gpInsertUpdate_Scale_Movement(ParamsMovement);
+     end;
+     //
+     execParams.Free;
+end;
+//---------------------------------------------------------------------------------------------
 procedure TMainForm.pSetDriverReturn;
 var execParams:TParams;
 begin
@@ -1794,7 +1932,12 @@ begin
               else if ParamByName('OrderExternal_DescId').AsInteger=zc_Movement_ReturnIn
                    then PanelOrderExternal.Caption:=' в.'+ParamByName('OrderExternalName_master').asString
                    else PanelOrderExternal.Caption:=' ???'+ParamByName('OrderExternalName_master').asString
-    else PanelOrderExternal.Caption:='';
+    else if (ParamsMovement.ParamByName('isAsset').AsBoolean = TRUE) and (ParamsMovement.ParamByName('AssetId').AsInteger > 0)
+         then
+             PanelOrderExternal.Caption:= ParamsMovement.ParamByName('AssetName').AsString
+                                        + ' ('+ParamsMovement.ParamByName('AssetCode').AsString+')'
+                                        + ' ('+ParamsMovement.ParamByName('AssetInvNumber').AsString+')'
+          else PanelOrderExternal.Caption:='';
 
      EditBarCodeTransport.Text:=ParamByName('Transport_BarCode').asString;
      PanelInvNumberTransport.Caption:=ParamByName('Transport_InvNumber').asString;

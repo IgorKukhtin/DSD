@@ -266,6 +266,7 @@ type
     beginVACUUM : Integer;
     beginVACUUM_ii : Integer;
     fStartProcess : Boolean;
+    isMsgCurrency_all : Boolean;
 
     ArrayCurrencyList : TArrayCurrencyList;
 
@@ -392,6 +393,9 @@ procedure TMainForm.pLoad_https_Currency(OperDate : TDateTime);
             IdHTTP := TIdHTTP.Create(Nil);
             IdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(Nil);
             IdHTTP.IOHandler := IdSSLIOHandlerSocketOpenSSL;
+            IdSSLIOHandlerSocketOpenSSL.SSLOptions.Mode := sslmClient;
+            IdSSLIOHandlerSocketOpenSSL.SSLOptions.Method := sslvSSLv23;
+
             mStream := TMemoryStream.Create;
 
             try
@@ -412,9 +416,18 @@ procedure TMainForm.pLoad_https_Currency(OperDate : TDateTime);
 begin
 //  Memo1.Lines.Clear;
   XML := TXMLDocument.Create(nil);
+
+  // if OperDate >= StrToDate('20.03.2022') then ShowMessage(DateToStr(OperDate));
+  try
   XML.XML.Text := GetHTTPjson('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date='
                              + FormatDateTime('YYYYMMDD', OperDate)
                              );
+  except
+       if isMsgCurrency_all = true then ShowMessage(DateToStr(OperDate));
+  end;
+
+  try
+
   if XML.XML.Text <> '' then
   begin
     XML.Active := True;
@@ -448,6 +461,12 @@ begin
     end;
     XML.Active := False;
   end;
+
+  except
+       if isMsgCurrency_all = true then ShowMessage(DateToStr(OperDate));
+       if isMsgCurrency_all = true then ShowMessage(XML.XML.Text);
+  end;
+
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.StopButtonClick(Sender: TObject);
@@ -831,7 +850,6 @@ var
   Year, Month, Day, Hour, Min, Sec, MSec: Word;
   i : Integer;
 begin
-exit;
      try if Pos('br-', ParamStr(5)) = 1 then GroupId_branch:= StrToInt(Copy(ParamStr(5), 4, 2));
          BranchEdit.Text:= 'BranchId : ' + IntToStr(GroupId_branch);
      except GroupId_branch:= -1;
@@ -993,6 +1011,8 @@ exit;
      except
           ShowMessage ('not gpComplete_SelectAll_Sybase_Currency_List');
      end;
+
+     isMsgCurrency_all:= FALSE;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormShow(Sender: TObject);
@@ -1722,12 +1742,13 @@ procedure TMainForm.Button1Click(Sender: TObject);
 begin
      cbCurrency.Checked:= true;
 
-     StartDateEdit.Text:='01.03.2022';
-     StartDateCompleteEdit.Text:=StartDateEdit.Text;
+     //StartDateEdit.Text:='19.03.2022';
+     //StartDateCompleteEdit.Text:=StartDateEdit.Text;
 
-     EndDateEdit.Text:='25.03.2022';
-     EndDateCompleteEdit.Text:=EndDateEdit.Text;
+     //EndDateEdit.Text:='25.03.2022';
+     //EndDateCompleteEdit.Text:=EndDateEdit.Text;
 
+     isMsgCurrency_all:= true;
      pLoad_https_Currency_all;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------

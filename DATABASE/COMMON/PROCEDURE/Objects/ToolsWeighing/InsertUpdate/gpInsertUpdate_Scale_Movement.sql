@@ -8,26 +8,28 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integ
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Scale_Movement(
-    IN inId                   Integer   , -- Ключ объекта <Документ>
-    IN inOperDate             TDateTime , -- Дата документа
-    IN inMovementDescId       Integer   , -- Вид документа
-    IN inMovementDescNumber   Integer   , -- Вид документа
-    IN inFromId               Integer   , -- От кого (в документе)
-    IN inToId                 Integer   , -- Кому (в документе)
-    IN inContractId           Integer   , -- Договора
-    IN inPaidKindId           Integer   , -- Форма оплаты
-    IN inPriceListId          Integer   , -- 
-    IN inSubjectDocId         Integer   , -- 
-    IN inMovementId_Order     Integer   , -- ключ Документа заявка
-    IN inMovementId_Transport Integer   , -- ключ Документа ИЛИ - криво - через этот прараметр передаем - Через кого поступил возврат
-    IN inChangePercent        TFloat    , -- (-)% Скидки (+)% Наценки
-    IN inBranchCode           Integer   , -- 
-    IN inComment              TVarChar  , --
-    IN inIsListInventory      Boolean   , -- Инвентаризация только для выбранных товаров
-    IN inSession              TVarChar    -- сессия пользователя
+    IN inId                     Integer   , -- Ключ объекта <Документ>
+    IN inOperDate               TDateTime , -- Дата документа
+    IN inMovementDescId         Integer   , -- Вид документа
+    IN inMovementDescNumber     Integer   , -- Вид документа
+    IN inFromId                 Integer   , -- От кого (в документе)
+    IN inToId                   Integer   , -- Кому (в документе)
+    IN inContractId             Integer   , -- Договора
+    IN inPaidKindId             Integer   , -- Форма оплаты
+    IN inPriceListId            Integer   , -- 
+    IN inSubjectDocId           Integer   , -- 
+    IN inMovementId_Order       Integer   , -- ключ Документа заявка
+    IN inMovementId_Transport   Integer   , -- ключ Документа ИЛИ - криво - через этот прараметр передаем - Через кого поступил возврат
+    IN inChangePercent          TFloat    , -- (-)% Скидки (+)% Наценки
+    IN inBranchCode             Integer   , -- 
+    IN inComment                TVarChar  , --
+    IN inIsListInventory        Boolean   , -- Инвентаризация только для выбранных товаров
+    IN inMovementId_reReturnIn  Integer   , -- ключ Документа заявка
+    IN inSession                TVarChar    -- сессия пользователя
 )                              
 RETURNS TABLE (Id        Integer
              , InvNumber TVarChar

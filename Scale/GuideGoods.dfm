@@ -1366,8 +1366,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1055#1072#1088#1090#1080#1103
         TabOrder = 5
-        ExplicitLeft = -6
-        ExplicitTop = 209
         object EditPartionGoods_20103: TcxCurrencyEdit
           Left = 4
           Top = 16

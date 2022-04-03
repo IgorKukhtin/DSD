@@ -979,6 +979,8 @@ BEGIN
                                , MovementItem.ObjectId                               AS GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
                                , COALESCE (MILinkObject_Box.ObjectId, 0)             AS BoxId
+                               , COALESCE (MILinkObject_Asset.ObjectId, 0)           AS AssetId
+
                                , MIDate_PartionGoods.ValueData                       AS PartionGoodsDate
                                , COALESCE (MIString_PartionGoods.ValueData, '')      AS PartionGoods
                                , COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) AS ChangePercentAmount
@@ -1046,6 +1048,9 @@ BEGIN
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Box
                                                                  ON MILinkObject_Box.MovementItemId = MovementItem.Id
                                                                 AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
+                                LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                                 ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                                AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
 
                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
                                                             ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
@@ -1194,6 +1199,7 @@ BEGIN
                                                         , inCountForPrice       := tmp.CountForPrice
                                                         , inPartionGoods        := tmp.PartionGoods
                                                         , inGoodsKindId         := tmp.GoodsKindId
+                                                        , inAssetId             := tmp.AssetId
                                                         , inUserId              := vbUserId
                                                          )
                        WHEN vbMovementDescId = zc_Movement_Send()
@@ -1257,6 +1263,7 @@ BEGIN
                      , tmp.GoodsId
                      , tmp.GoodsKindId
                      , tmp.BoxId
+                     , tmp.AssetId
                      , tmp.PartionGoodsDate
                      , tmp.PartionGoods
                      , SUM (tmp.Amount)              AS Amount
@@ -1282,6 +1289,8 @@ BEGIN
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MILinkObject_Box.ObjectId, 0)        END AS BoxId
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE MIDate_PartionGoods.ValueData                  END AS PartionGoodsDate
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MIString_PartionGoods.ValueData, '') END AS PartionGoods
+
+                           , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
 
                            , CASE WHEN vbMovementDescId = zc_Movement_SendOnPrice() AND vbIsSendOnPriceIn = FALSE
                                        THEN MovementItem.Amount -- формируется только расход = вес без скидки
@@ -1415,6 +1424,9 @@ BEGIN
                                                             ON MILinkObject_Box.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
                                                            AND vbMovementDescId = zc_Movement_Sale()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                            ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
 
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                                 ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
@@ -1458,6 +1470,8 @@ BEGIN
                                        THEN ''
                                   ELSE tmpMI.PartionGoods
                              END AS PartionGoods
+
+                           , tmpMI.AssetId
 
                            , CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() AND vbMovementId_find > 0
                                        THEN 0 -- не заполняется - берем из реального взвешивания
@@ -1503,6 +1517,7 @@ BEGIN
                 GROUP BY tmp.GoodsId
                        , tmp.GoodsKindId
                        , tmp.BoxId
+                       , tmp.AssetId
                        , tmp.PartionGoodsDate
                        , tmp.PartionGoods
                        , tmp.ChangePercentAmount

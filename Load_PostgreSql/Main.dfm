@@ -48,27 +48,27 @@ object MainForm: TMainForm
       ExplicitWidth = 1307
     end
     object OKGuideButton: TButton
-      Left = 152
-      Top = 27
-      Width = 22
+      Left = 157
+      Top = 25
+      Width = 113
       Height = 25
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' GUIDE'
       DragMode = dmAutomatic
       TabOrder = 0
     end
     object StopButton: TButton
-      Left = 502
-      Top = 26
-      Width = 137
+      Left = 557
+      Top = 25
+      Width = 121
       Height = 25
       Caption = #1054#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1077#1081#1089#1090#1074#1080#1077
       TabOrder = 1
       OnClick = StopButtonClick
     end
     object CloseButton: TButton
-      Left = 654
-      Top = 27
-      Width = 87
+      Left = 683
+      Top = 25
+      Width = 68
       Height = 25
       Caption = #1042#1099#1093#1086#1076
       TabOrder = 2
@@ -92,18 +92,18 @@ object MainForm: TMainForm
       TabOrder = 4
     end
     object OKDocumentButton: TButton
-      Left = 178
+      Left = 278
       Top = 25
-      Width = 135
+      Width = 124
       Height = 25
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       TabOrder = 5
       OnClick = OKDocumentButtonClick
     end
     object OKCompleteDocumentButton: TButton
-      Left = 319
+      Left = 406
       Top = 25
-      Width = 151
+      Width = 146
       Height = 25
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       TabOrder = 6
