@@ -53,7 +53,7 @@ BEGIN
           , COALESCE(MovementBoolean_Daily.ValueData, False)           AS Daily
           , COALESCE(MovementBoolean_Poll.ValueData, False)            AS isPoll
 
-          , COALESCE(MovementString_Function.ValueData , MovementBlob_Message.ValueData)::TBlob AS Message
+          , COALESCE(NULLIF(MovementString_Function.ValueData, '') , MovementBlob_Message.ValueData)::TBlob AS Message
 
           , Object_Insert.ValueData                                    AS InsertName
           , MovementDate_Insert.ValueData                              AS InsertDate

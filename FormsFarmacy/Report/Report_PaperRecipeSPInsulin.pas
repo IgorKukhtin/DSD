@@ -78,6 +78,8 @@ type
     CountSP: TcxGridDBColumn;
     CountSPMin: TcxGridDBColumn;
     PriceSPMin: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
   private
   public
   end;

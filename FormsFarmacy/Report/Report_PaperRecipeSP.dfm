@@ -240,6 +240,22 @@ object Report_PaperRecipeSPForm: TReport_PaperRecipeSPForm
         HeaderAlignmentVert = vaCenter
         Width = 77
       end
+      object UnitName: TcxGridDBColumn
+        Caption = #1055#1110#1076#1088#1086#1079#1076#1110#1083
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 170
+      end
+      object JuridicalName: TcxGridDBColumn
+        Caption = #1070#1088'.'#1083#1080#1094#1077' '
+        DataBinding.FieldName = 'JuridicalName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 104
+      end
       object BrandSPName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072' '#1085#1072#1079#1074#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091
         DataBinding.FieldName = 'BrandSPName'

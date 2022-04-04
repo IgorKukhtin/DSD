@@ -95,10 +95,17 @@ type
     ceMedicalProgramSP: TcxButtonEdit;
     cxLabel9: TcxLabel;
     MedicalProgramSPGuides: TdsdGuides;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    MedicalProgramSPName: TcxGridDBColumn;
     edGroupMedicalProgramSP: TcxButtonEdit;
     cxLabel10: TcxLabel;
     GroupMedicalProgramSPGuides: TdsdGuides;
+    DSummaSP: TcxGridDBColumn;
+    Color_DSummaSP: TcxGridDBColumn;
+    actLoadFileToJson: TdsdDataToJsonAction;
+    actDataToJson: TdsdDataToJsonAction;
+    mactCheckingChecks: TMultiAction;
+    actCheckingChecks: TdsdOpenForm;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

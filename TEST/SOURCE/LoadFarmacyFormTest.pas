@@ -1067,8 +1067,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_SupplierFailuresCashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_SupplierFailuresCashForm');
-
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaymentSumForm'));
+ {
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaymentSumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PaymentSumForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaperRecipeSPInsulinForm'));
@@ -3411,7 +3411,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSPDialogForm');
 
-
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_SP_CheckingForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_SP_CheckingForm');
 end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
