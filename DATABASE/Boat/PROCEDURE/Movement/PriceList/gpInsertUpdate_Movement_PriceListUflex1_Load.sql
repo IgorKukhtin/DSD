@@ -218,7 +218,7 @@ $BODY$
 
 -- тест
 --
-
+/*
 select * from gpInsertUpdate_Movement_PriceListUflex1_Load
 (inOperDate := ('02.03.2022')::TDateTime , 
 inPartnerId := 2842 , 
@@ -235,3 +235,4 @@ inCatalogPage := '13' ,
 inAmount := 21.1 , 
 inAmount2 := 21.1 ,  
 inSession := '5');
+*/
