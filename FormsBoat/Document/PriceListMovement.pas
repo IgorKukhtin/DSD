@@ -80,6 +80,16 @@ type
     bbStartLoad_Gotthardt: TdxBarButton;
     Article: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
+    spGetImportSettingId_Uflex1: TdsdStoredProc;
+    spGetImportSettingId_Uflex2: TdsdStoredProc;
+    actGetImportSettingId_Uflex1: TdsdExecStoredProc;
+    actGetImportSettingId_Uflex2: TdsdExecStoredProc;
+    actDoLoad_Uflex1: TExecuteImportSettingsAction;
+    actDoLoad_Uflex2: TExecuteImportSettingsAction;
+    mactStartLoad_Uflex1: TMultiAction;
+    mactStartLoad_Uflex2: TMultiAction;
+    bbStartLoad_Uflex1: TdxBarButton;
+    bbStartLoad_Uflex2: TdxBarButton;
   private
     { Private declarations }
   public
