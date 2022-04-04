@@ -393,7 +393,7 @@ object ReceiptGoodsEditForm: TReceiptGoodsEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 183
+    Left = 143
     Top = 202
   end
   object GuidesColorPattern: TdsdGuides
