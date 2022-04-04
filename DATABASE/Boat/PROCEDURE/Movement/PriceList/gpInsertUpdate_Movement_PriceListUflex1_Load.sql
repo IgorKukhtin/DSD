@@ -190,15 +190,15 @@ BEGIN
                                                                    , inMovementId        := vbMovementId                  ::Integer
                                                                    , inGoodsId           := vbGoodsId                     ::Integer
                                                                    , inDiscountPartnerId := 0            ::Integer
-                                                                   , inMeasureId         := vbMeasureId  ::Integer
+                                                                   , inMeasureId         := 0            ::Integer
                                                                    , inMeasureParentId   := 0            ::Integer
                                                                    , inAmount            := inAmount     ::TFloat
-                                                                   , inMeasureMult       := Null         ::TFloat
-                                                                   , inPriceParent       := Null         ::TFloat
-                                                                   , inEmpfPriceParent   := Null         ::TFloat
-                                                                   , inMinCount          := Null         ::TFloat
-                                                                   , inMinCountMult      := Null         ::TFloat
-                                                                   , inWeightParent      := Null         ::TFloat
+                                                                   , inMeasureMult       := 0            ::TFloat
+                                                                   , inPriceParent       := 0            ::TFloat
+                                                                   , inEmpfPriceParent   := 0            ::TFloat
+                                                                   , inMinCount          := 0            ::TFloat
+                                                                   , inMinCountMult      := 0            ::TFloat
+                                                                   , inWeightParent      := 0            ::TFloat
                                                                    , inCatalogPage       := TRIM (inCatalogPage) ::TVarChar
                                                                    , inisOutlet          := FALSE        ::Boolean
                                                                    , inUserId            := vbUserId     :: Integer
@@ -218,3 +218,20 @@ $BODY$
 
 -- òåñò
 --
+
+select * from gpInsertUpdate_Movement_PriceListUflex1_Load
+(inOperDate := ('02.03.2022')::TDateTime , 
+inPartnerId := 2842 , 
+inArticle := '64415T' , 
+inGoodsName := 'Total length 365 mm, stroke 142 mm, output force 10 kg' , 
+inGoodsName_fra := 'Lunghezza totale 365 mm, corsa 142 mm, spinta 10 kg' , 
+inBrandName := 'UFLEX®' , 
+inModelName := 'U140-10-b' , 
+inCategory1 := 'U SERIES' , 
+inCategory2 := '.' , 
+inAccess := '.' , 
+inCatalogueSection := 'Gas springs' , 
+inCatalogPage := '13' , 
+inAmount := 21.1 , 
+inAmount2 := 21.1 ,  
+inSession := '5');

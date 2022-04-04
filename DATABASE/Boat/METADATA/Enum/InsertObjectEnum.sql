@@ -4490,7 +4490,7 @@ BEGIN
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inModelName';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 7, 
-                                                                inName          := 'inBrandName', 
+                                                                inName          := 'inModelName', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Model', 
                                                                 inImportTypeId  := vbImportTypeId, 
