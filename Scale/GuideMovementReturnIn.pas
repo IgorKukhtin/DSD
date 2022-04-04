@@ -1,4 +1,4 @@
-unit GuideMovementTransport;
+unit GuideMovementReturnIn;
 
 interface
 
@@ -25,7 +25,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TGuideMovementTransportForm = class(TForm)
+  TGuideMovementReturnInForm = class(TForm)
     GridPanel: TPanel;
     ParamsPanel: TPanel;
     DS: TDataSource;
@@ -45,13 +45,7 @@ type
     cxDBGridDBTableView: TcxGridDBTableView;
     Status: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
-    CarModelName: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
-    StartRunPlan: TcxGridDBColumn;
-    CarName: TcxGridDBColumn;
-    PersonalDriverName: TcxGridDBColumn;
-    RouteName: TcxGridDBColumn;
-    UnitForwardingName: TcxGridDBColumn;
     cxDBGridLevel: TcxGridLevel;
     DBViewAddOn: TdsdDBViewAddOn;
     ActionList: TActionList;
@@ -59,9 +53,7 @@ type
     actChoice: TAction;
     actExit: TAction;
     FormParams: TdsdFormParams;
-    IdBarCode: TcxGridDBColumn;
     cbAll: TCheckBox;
-    PersonalName: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -87,13 +79,13 @@ type
   end;
 
 var
-  GuideMovementTransportForm: TGuideMovementTransportForm;
+  GuideMovementReturnInForm: TGuideMovementReturnInForm;
 
 implementation
 {$R *.dfm}
 uses dmMainScale,UtilScale,UtilPrint,Main,DialogMovementDesc;
 {------------------------------------------------------------------------------}
-function TGuideMovementTransportForm.Execute(var execParamsMovement:TParams;isChoice:Boolean): boolean;
+function TGuideMovementReturnInForm.Execute(var execParamsMovement:TParams;isChoice:Boolean): boolean;
 begin
      CopyValuesParamsFrom(execParamsMovement,ParamsMovement_local);
 
@@ -105,17 +97,12 @@ begin
 
      EditInvNumber.Text:='';
 
-     fStartWrite:=true;
-     deStart.Text:=DateToStr(ParamsMovement_local.ParamByName('OperDate').AsDateTime);
-     deEnd.Text:=DateToStr(ParamsMovement_local.ParamByName('OperDate').AsDateTime);
-     fStartWrite:=false;
-
      CancelCxFilter;
      RefreshDataSet;
      CDS.Filtered:=false;
 
-     if ParamsMovement_local.ParamByName('TransportId').AsInteger<>0
-     then CDS.Locate('Id',ParamsMovement_local.ParamByName('TransportId').AsString,[]);
+     if ParamsMovement_local.ParamByName('MovementId_reReturnIn').AsInteger<>0
+     then CDS.Locate('Id',ParamsMovement_local.ParamByName('MovementId_reReturnIn').AsString,[]);
 
      ActiveControl:=EditInvNumber;
 
@@ -130,37 +117,36 @@ begin
      end;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideMovementTransportForm.RefreshDataSet;
+procedure TGuideMovementReturnInForm.RefreshDataSet;
 var StartDate,EndDate:TDateTime;
 begin
-     try StartDate:=StrToDate(deStart.Text); except if CDS.Active then StartDate:=spSelect.ParamByName('inStartDate').Value else StartDate:=ParamsMovement_local.ParamByName('OperDate').AsDateTime;deStart.Text:=DateToStr(StartDate);end;
-     try EndDate:=StrToDate(deEnd.Text); except if CDS.Active then EndDate:=spSelect.ParamByName('inEndDate').Value else EndDate:=ParamsMovement_local.ParamByName('OperDate').AsDateTime;deEnd.Text:=DateToStr(EndDate);end;
+     StartDate:=StrToDate(deStart.Text);
+     EndDate:=StrToDate(deEnd.Text);
 
      with spSelect do
      begin
           ParamByName('inStartDate').Value:=StartDate;
           ParamByName('inEndDate').Value:=EndDate;
           ParamByName('inBranchCode').Value:=SettingMain.BranchCode;
-          if cbAll.Checked
-          then ParamByName('inMovementId_order').Value:=0
-          else ParamByName('inMovementId_order').Value:=ParamsMovement_local.ParamByName('OrderExternalId').AsInteger;
-          ParamByName('inMovementDescId').Value:=ParamsMovement_local.ParamByName('MovementDescId').AsInteger;
+          ParamByName('inPartnerId').Value:=ParamsMovement_local.ParamByName('ToId').AsInteger;
+          ParamByName('inContractId').Value:=ParamsMovement_local.ParamByName('ContractId').AsInteger;
+          ParamByName('inUnitId').Value:=ParamsMovement_local.ParamByName('FromId').AsInteger;
           Execute;
      end;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideMovementTransportForm.cbAllClick(Sender: TObject);
+procedure TGuideMovementReturnInForm.cbAllClick(Sender: TObject);
 begin
      RefreshDataSet;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideMovementTransportForm.CancelCxFilter;
+procedure TGuideMovementReturnInForm.CancelCxFilter;
 begin
      if cxDBGridDBTableView.DataController.Filter.Active
      then begin cxDBGridDBTableView.DataController.Filter.Clear;cxDBGridDBTableView.DataController.Filter.Active:=false;end
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideMovementTransportForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
+procedure TGuideMovementReturnInForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
     if Key=13
     then
@@ -173,7 +159,7 @@ begin
       else actExitExecute(Self);
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideMovementTransportForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);
+procedure TGuideMovementReturnInForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);
 begin
      if (trim(EditInvNumber.Text)<>'')
      then
@@ -181,17 +167,19 @@ begin
        then Accept:=true else Accept:=false;
 end;
 {------------------------------------------------------------------------------}
-function TGuideMovementTransportForm.Checked: boolean; //Проверка корректного ввода в Edit
+function TGuideMovementReturnInForm.Checked: boolean; //Проверка корректного ввода в Edit
 begin
      Result:=(CDS.RecordCount>0)and(CDS.FieldByName('Id').AsInteger>0);
      if Result then
      begin
-         ParamsMovement_local.ParamByName('Transport_BarCode').AsString:=CDS.FieldByName('IdBarCode').AsString+CalcBarCode(CDS.FieldByName('IdBarCode').AsString);
+         ParamsMovement_local.ParamByName('MovementId_reReturnIn').AsInteger:=CDS.FieldByName('Id').AsInteger;
+         ParamsMovement_local.ParamByName('InvNumber_reReturnIn').AsString:=CDS.FieldByName('InvNumber').AsString;
+         ParamsMovement_local.ParamByName('OperDate_reReturnIn').AsString:=CDS.FieldByName('OperDate').AsString;
      end;
 end;
 
 {------------------------------------------------------------------------------}
-procedure TGuideMovementTransportForm.EditInvNumberChange(Sender: TObject);
+procedure TGuideMovementReturnInForm.EditInvNumberChange(Sender: TObject);
 begin
        with CDS do begin
            //***Filtered:=false;
@@ -201,7 +189,7 @@ begin
        end;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideMovementTransportForm.deStartPropertiesChange(Sender: TObject);
+procedure TGuideMovementReturnInForm.deStartPropertiesChange(Sender: TObject);
 var  Year, Month, Day, Hour, Min, Sec, MSec: Word;
 begin
      if fStartWrite then exit;
@@ -211,7 +199,7 @@ begin
      if (Year>2000)and(LengTh(deStart.Text)>=10) then RefreshDataSet;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideMovementTransportForm.deEndPropertiesChange(Sender: TObject);
+procedure TGuideMovementReturnInForm.deEndPropertiesChange(Sender: TObject);
 var  Year, Month, Day, Hour, Min, Sec, MSec: Word;
 begin
      if fStartWrite then exit;
@@ -221,7 +209,7 @@ begin
      if (Year>2000)and(LengTh(deStart.Text)>=10) then RefreshDataSet;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideMovementTransportForm.actRefreshExecute(Sender: TObject);
+procedure TGuideMovementReturnInForm.actRefreshExecute(Sender: TObject);
 var MovementId:String;
 begin
      MovementId:= CDS.FieldByName('Id').AsString;
@@ -230,34 +218,40 @@ begin
         CDS.Locate('Id',MovementId,[loCaseInsensitive]);
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideMovementTransportForm.actChoiceExecute(Sender: TObject);
+procedure TGuideMovementReturnInForm.actChoiceExecute(Sender: TObject);
 begin
      if Checked then ModalResult:=mrOK;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideMovementTransportForm.actExitExecute(Sender: TObject);
+procedure TGuideMovementReturnInForm.actExitExecute(Sender: TObject);
 begin
      Close;
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideMovementTransportForm.FormCreate(Sender: TObject);
+procedure TGuideMovementReturnInForm.FormCreate(Sender: TObject);
 begin
   Create_ParamsMovement(ParamsMovement_local);
 
+  fStartWrite:=true;
+  deStart.Text:=DateToStr(Date - 7);
+  deEnd.Text:=DateToStr(Date);
+  fStartWrite:=false;
+
   with spSelect do
   begin
-       StoredProcName:='gpSelect_Scale_MovementTransport';
+       StoredProcName:='gpSelect_Scale_MovementReReturnIn';
        Params.AddParam('inStartDate', ftDateTime, ptInput, 0);
        Params.AddParam('inEndDate', ftDateTime, ptInput,0);
        Params.AddParam('inBranchCode', ftInteger, ptInput,0);
-       Params.AddParam('inMovementId_order', ftInteger, ptInput,0);
-       Params.AddParam('inMovementDescId', ftInteger, ptInput,0);
+       Params.AddParam('inPartnerId', ftInteger, ptInput,0);
+       Params.AddParam('inContractId', ftInteger, ptInput,0);
+       Params.AddParam('inUnitId', ftInteger, ptInput,0);
        OutputType:=otDataSet;
   end;
 
 end;
 {------------------------------------------------------------------------------}
-procedure TGuideMovementTransportForm.FormDestroy(Sender: TObject);
+procedure TGuideMovementReturnInForm.FormDestroy(Sender: TObject);
 begin
   ParamsMovement_local.Free;
 end;

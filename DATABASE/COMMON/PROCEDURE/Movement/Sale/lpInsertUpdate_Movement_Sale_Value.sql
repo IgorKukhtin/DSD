@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_Sale_Value()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale_Value (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale_Value (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale_Value (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale_Value(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ Перемещение>
@@ -19,6 +20,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale_Value(
     IN inCurrencyDocumentId    Integer    , -- Валюта (документа)
     IN inCurrencyPartnerId     Integer    , -- Валюта (контрагента)
     IN inMovementId_Order      Integer    , -- ключ Документа
+    IN inMovementId_ReturnIn   Integer    , -- ключ Документа Возврат
     IN ioPriceListId           Integer    , -- Прайс лист
     IN ioCurrencyPartnerValue  TFloat     , -- Курс для расчета суммы операции
     IN ioParPartnerValue       TFloat     , -- Номинал для расчета суммы операции
@@ -48,7 +50,7 @@ BEGIN
                                       , inCurrencyDocumentId   := inCurrencyDocumentId
                                       , inCurrencyPartnerId    := inCurrencyPartnerId
                                       , inMovementId_Order     := inMovementId_Order
-                                      , inMovementId_ReturnIn  := 0
+                                      , inMovementId_ReturnIn  := inMovementId_ReturnIn
                                       , ioPriceListId          := ioPriceListId
                                       , ioCurrencyPartnerValue := ioCurrencyPartnerValue
                                       , ioParPartnerValue      := ioParPartnerValue

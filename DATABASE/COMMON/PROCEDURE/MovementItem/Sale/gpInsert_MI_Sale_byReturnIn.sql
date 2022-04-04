@@ -45,6 +45,9 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.По выбранному Возврату уже была сформирована Продажа.'; 
      END IF;
 
+     -- теперь ЭТО информативно
+     RETURN;
+
      -- сохранили <Элемент документа>
      PERFORM lpInsertUpdate_MovementItem_Sale (ioId                 := 0
                                              , inMovementId         := inMovementId

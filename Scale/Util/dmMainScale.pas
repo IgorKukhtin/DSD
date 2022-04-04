@@ -1552,6 +1552,10 @@ begin
        //
        SettingMain.isReason:=GetArrayList_Value_byName(Default_Array,'isReason') = AnsiUpperCase('TRUE');
        //
+       SettingMain.isAsset:=GetArrayList_Value_byName(Default_Array,'isAsset') = AnsiUpperCase('TRUE');
+       //
+       SettingMain.isReReturnIn:=GetArrayList_Value_byName(Default_Array,'isReReturnIn') = AnsiUpperCase('TRUE');
+       //
        SettingMain.isPartionGoods_20103:=GetArrayList_Value_byName(Default_Array,'isPartionGoods_20103') = AnsiUpperCase('TRUE');
   end;
   //

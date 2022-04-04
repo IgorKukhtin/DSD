@@ -43,7 +43,9 @@ CREATE OR REPLACE FUNCTION zc_FormClass_OrderInternal() RETURNS TVarChar AS $BOD
 CREATE OR REPLACE FUNCTION zc_FormClass_Over() RETURNS TVarChar AS $BODY$BEGIN RETURN ('TOverForm'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_FormClass_OrderExternal() RETURNS TVarChar AS $BODY$BEGIN RETURN ('TOrderExternalForm'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
     
-
+CREATE OR REPLACE FUNCTION zc_InvNumber_Status_UnComlete() RETURNS TVarChar AS $BODY$BEGIN RETURN ('***'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_InvNumber_Status_Erased()    RETURNS TVarChar AS $BODY$BEGIN RETURN ('---'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+    
 -- Почта - !!! VOLATILE !!! - !!!ФЛП_Шапиро И А!!!
 CREATE OR REPLACE FUNCTION zc_Mail_Host()     RETURNS TVarChar AS $BODY$BEGIN RETURN (/*'smtp.mail.ru'*/                 SELECT gpSelect.Value FROM gpSelect_Object_EmailSettings (inEmailId:= 0, inIsShowAll:= FALSE, inSession:= '') AS gpSelect WHERE gpSelect.EmailKindId = zc_Enum_EmailKind_OutReport() AND gpSelect.EmailToolsId = zc_Enum_EmailTools_Host() AND COALESCE (gpSelect.JuridicalId, 0) = /*393052*/ 0);     END; $BODY$ LANGUAGE PLPGSQL VOLATILE;
 CREATE OR REPLACE FUNCTION zc_Mail_Port()     RETURNS Integer  AS $BODY$BEGIN RETURN (/*465*/                            SELECT gpSelect.Value FROM gpSelect_Object_EmailSettings (inEmailId:= 0, inIsShowAll:= FALSE, inSession:= '') AS gpSelect WHERE gpSelect.EmailKindId = zc_Enum_EmailKind_OutReport() AND gpSelect.EmailToolsId = zc_Enum_EmailTools_Port() AND COALESCE (gpSelect.JuridicalId, 0) = /*393052*/ 0);     END; $BODY$ LANGUAGE PLPGSQL VOLATILE;

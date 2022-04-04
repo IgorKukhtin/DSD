@@ -1654,7 +1654,8 @@ object MainForm: TMainForm
         Align = alTop
         Alignment = taCenter
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
-        ExplicitWidth = 59
+        ExplicitLeft = 0
+        ExplicitTop = 0
       end
       object EditBarCode: TcxCurrencyEdit
         Left = 5
@@ -1959,13 +1960,14 @@ object MainForm: TMainForm
     end
     object TransportPanel: TPanel
       Left = 0
-      Top = 477
+      Top = 520
       Width = 130
       Height = 177
       Align = alTop
       Alignment = taLeftJustify
       BevelOuter = bvSpace
       TabOrder = 8
+      ExplicitTop = 477
       object BarCodeTransportPanel: TPanel
         Left = 1
         Top = 1
@@ -1975,6 +1977,7 @@ object MainForm: TMainForm
         Alignment = taLeftJustify
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitLeft = -4
         object BarCodeTransportLabel: TLabel
           Left = 0
           Top = 0
@@ -1992,7 +1995,7 @@ object MainForm: TMainForm
           ExplicitWidth = 113
         end
         object EditBarCodeTransport: TcxButtonEdit
-          Left = 4
+          Left = 3
           Top = 15
           ParentFont = False
           Properties.Buttons = <
@@ -2225,7 +2228,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
-          ExplicitWidth = 103
+          ExplicitLeft = -5
         end
         object EditSubjectDoc: TcxButtonEdit
           Left = 3
@@ -2268,6 +2271,8 @@ object MainForm: TMainForm
         Alignment = taLeftJustify
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitLeft = -4
+        ExplicitTop = 4
         object ReasonLabel: TLabel
           Left = 0
           Top = 0
@@ -2282,10 +2287,11 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
-          ExplicitWidth = 89
+          ExplicitLeft = -5
+          ExplicitTop = 3
         end
         object EditReason: TcxButtonEdit
-          Left = 4
+          Left = 3
           Top = 15
           ParentFont = False
           Properties.Buttons = <
@@ -2304,6 +2310,65 @@ object MainForm: TMainForm
           TabOrder = 0
           Text = 'EditReason'
           Width = 120
+        end
+      end
+    end
+    object infoReReturnInPanel: TPanel
+      Left = 0
+      Top = 477
+      Width = 130
+      Height = 43
+      Align = alTop
+      Alignment = taLeftJustify
+      BevelOuter = bvSpace
+      TabOrder = 12
+      ExplicitTop = 478
+      object ReReturnInPanel: TPanel
+        Left = 1
+        Top = 1
+        Width = 128
+        Height = 39
+        Align = alTop
+        Alignment = taLeftJustify
+        BevelOuter = bvNone
+        TabOrder = 0
+        object ReReturnInLabel: TLabel
+          Left = 0
+          Top = 0
+          Width = 128
+          Height = 14
+          Align = alTop
+          Alignment = taCenter
+          Caption = #8470' '#1076#1086#1082'. '#1042#1086#1079#1074#1088#1072#1090
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clMaroon
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+          ExplicitLeft = -5
+          ExplicitTop = 2
+        end
+        object EditReReturnIn: TcxButtonEdit
+          Left = 2
+          Top = 14
+          ParentFont = False
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          Properties.OnButtonClick = EditReReturnInPropertiesButtonClick
+          Style.Font.Charset = RUSSIAN_CHARSET
+          Style.Font.Color = clBlack
+          Style.Font.Height = -11
+          Style.Font.Name = 'Arial'
+          Style.Font.Style = [fsBold]
+          Style.IsFontAssigned = True
+          TabOrder = 0
+          Text = 'EditReReturnIn'
+          Width = 121
         end
       end
     end
@@ -2823,8 +2888,6 @@ object MainForm: TMainForm
           ParentFont = False
           TabOrder = 0
           OnDblClick = PanelOrderExternalDblClick
-          ExplicitLeft = 5
-          ExplicitTop = 11
         end
       end
       object infoPanelContract: TPanel

@@ -751,6 +751,7 @@ BEGIN
                                                   , ioPriceListId           := NULL
                                                   , ioCurrencyPartnerValue  := NULL
                                                   , ioParPartnerValue       := NULL
+                                                  , inMovementId_ReturnIn   := MLM_ReturnIn.MovementChildId
                                                   , inUserId                := vbUserId
                                                    )
                                           WHEN vbMovementDescId = zc_Movement_ReturnIn()
@@ -856,6 +857,9 @@ BEGIN
                                           END AS MovementId_begin
 
                                     FROM gpGet_Movement_WeighingPartner (inMovementId:= inMovementId, inSession:= inSession) AS tmp
+                                         LEFT JOIN MovementLinkMovement AS MLM_ReturnIn
+                                                                        ON MLM_ReturnIn.ObjectId = inMovementId
+                                                                       AND MLM_ReturnIn.DescId   = zc_MovementLinkMovement_ReturnIn()
                                          LEFT JOIN ObjectFloat AS ObjectFloat_PrepareDayCount
                                                                ON ObjectFloat_PrepareDayCount.ObjectId = tmp.ToId
                                                               AND ObjectFloat_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()
@@ -1197,6 +1201,7 @@ BEGIN
                                                         , inAmount              := tmp.Amount
                                                         , inPrice               := tmp.Price
                                                         , inCountForPrice       := tmp.CountForPrice
+                                                        , inPartionGoodsDate    := tmp.PartionGoodsDate
                                                         , inPartionGoods        := tmp.PartionGoods
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inAssetId             := tmp.AssetId

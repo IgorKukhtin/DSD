@@ -150,6 +150,13 @@ BEGIN
      END IF;
      
      -- дописали св-во - Инвентаризация только для выбранных товаров
+     IF inMovementId_reReturnIn > 0
+     THEN
+          -- сохранили 
+          PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_ReturnIn(), inId, inMovementId_reReturnIn);
+     END IF;
+     
+     -- дописали св-во - Инвентаризация только для выбранных товаров
      IF inMovementDescId = zc_Movement_Inventory() AND inIsListInventory = TRUE
      THEN
           -- сохранили

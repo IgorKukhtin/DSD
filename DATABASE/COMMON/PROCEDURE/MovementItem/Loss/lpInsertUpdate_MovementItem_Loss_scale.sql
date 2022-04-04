@@ -1,7 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_Loss_scale() - !!!сделана т.к. для печати из scale нужны цены и суммы!!!
 
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Loss_scale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Loss_scale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Loss_scale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Loss_scale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Loss_scale(

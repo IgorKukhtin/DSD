@@ -59,6 +59,8 @@ type
     isModeSorting:Boolean;  // ScaleCeh - Режим маркировка/сортировка
     isPartionDate:Boolean;  // Scale
     isReason     :Boolean;  // Scale
+    isReReturnIn :Boolean;  // Scale
+    isAsset      :Boolean;  // Scale
     isSticker:Boolean;      // Scale
     isCeh:Boolean;          // ScaleCeh or Scale
     isGoodsComplete:Boolean;// ScaleCeh or Scale - склад ГП/производство/упаковка or обвалка

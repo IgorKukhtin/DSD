@@ -803,8 +803,8 @@ end if;
            || zfCalc_PartionMovementName (CASE WHEN MovementBoolean_Peresort.ValueData = TRUE THEN -1 ELSE 1 END * Movement_Production.DescId, MovementDesc_Production.ItemName, Movement_Production.InvNumber, Movement_Production.OperDate)
              ) :: TVarChar AS InvNumber_ProductionFull
 
-           , Movement_ReturnIn.Id                                                                                             AS MovementId_ReturnIn
-           , ('№ ' || Movement_ReturnIn.InvNumber || ' от ' || Movement_ReturnIn.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_ReturnInFull
+           , Movement_ReturnIn.Id                                                                                                AS MovementId_ReturnIn
+           , zfCalc_InvNumber_isErased ('', Movement_ReturnIn.InvNumber, Movement_ReturnIn.OperDate, Movement_ReturnIn.StatusId) AS InvNumber_ReturnInFull
        FROM tmpMovement AS Movement
 
             LEFT JOIN tmpStatus AS Object_Status ON Object_Status.Id = Movement.StatusId

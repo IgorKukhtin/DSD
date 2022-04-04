@@ -265,6 +265,10 @@ type
     AssetName: TcxGridDBColumn;
     bbSetAsset: TSpeedButton;
     bbUpdateAsset: TSpeedButton;
+    infoReReturnInPanel: TPanel;
+    ReReturnInPanel: TPanel;
+    ReReturnInLabel: TLabel;
+    EditReReturnIn: TcxButtonEdit;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -308,6 +312,8 @@ type
     procedure PanelOrderExternalDblClick(Sender: TObject);
     procedure bbUpdateAssetClick(Sender: TObject);
     procedure bbSetAssetClick(Sender: TObject);
+    procedure EditReReturnInPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
   private
     //aTest: Boolean;
     Scale_AP: IAPScale;
@@ -332,7 +338,6 @@ type
     procedure pSetComment;
     procedure pSetReason;
     procedure pSetAsset;
-    procedure pSetReReturnIn;
 
   public
     function Save_Movement_PersonalComplete(execParams:TParams):Boolean;
@@ -351,7 +356,7 @@ implementation
 {$R *.dfm}
 uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc
     ,GuideGoods,GuideGoodsPartner,GuideGoodsSticker
-    ,GuideGoodsMovement,GuideMovement,GuideMovementTransport, GuidePartner
+    ,GuideGoodsMovement,GuideMovement,GuideMovementTransport, GuideMovementReturnIn, GuidePartner
     ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal, GuideSubjectDoc, GuideReason, GuideAsset, DialogDateValue
     ,IdIPWatch, LookAndFillSettings;
 //------------------------------------------------------------------------------------------------
@@ -778,12 +783,16 @@ begin
      end;
      //
      //
-     if ParamsMovement.ParamByName('isAsset').AsBoolean = TRUE
-     then pSetAsset;
+     if ParamsMovement.ParamByName('isAsset').AsBoolean = FALSE
+     then ParamsMovement.ParamByName('AssetId').AsInteger:=0;
      //
+     if ParamsMovement.ParamByName('isReReturnIn').AsBoolean = FALSE
+     then begin
+               EditReReturnIn.Text:='';
+               //
+               ParamsMovement.ParamByName('MovementId_reReturnIn').AsInteger:=0;
+     end;
      //
-     if ParamsMovement.ParamByName('isReReturnIn').AsBoolean = TRUE
-     then pSetReReturnIn;
      //
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('AssetName').Index].Visible:= ParamsMovement.ParamByName('isAsset').AsBoolean;
      //
@@ -1368,7 +1377,8 @@ begin
      PanelPersonalDriver.Caption:='';
      PanelCar.Caption:='';
      PanelRoute.Caption:='';
-     if trim(EditBarCodeTransport.Text) = '' then ActiveControl:=EditBarCode;
+     if trim(EditBarCodeTransport.Text) = '' then
+        if BarCodePanel.Visible then ActiveControl:=EditBarCode;
      end;
 end;
 //---------------------------------------------------------------------------------------------
@@ -1568,44 +1578,6 @@ begin
      execParams.Free;
 end;
 //---------------------------------------------------------------------------------------------
-procedure TMainForm.pSetReReturnIn;
-var execParams:TParams;
-begin
-     if ParamsMovement.ParamByName('isSubjectDoc').AsBoolean = FALSE then exit;
-     //
-     Create_ParamsSubjectDoc(execParams);
-     //
-     with execParams do
-     begin
-          ParamByName('SubjectDocId').AsInteger:=ParamsMovement.ParamByName('SubjectDocId').AsInteger;
-          ParamByName('SubjectDocCode').AsInteger:=ParamsMovement.ParamByName('SubjectDocCode').AsInteger;
-          ParamByName('SubjectDocName').asString:=ParamsMovement.ParamByName('SubjectDocName').asString;
-     end;
-     if GuideSubjectDocForm.Execute(execParams)
-     then begin
-               ParamsMovement.ParamByName('SubjectDocId').AsInteger:=execParams.ParamByName('SubjectDocId').AsInteger;
-               ParamsMovement.ParamByName('SubjectDocCode').AsInteger:=execParams.ParamByName('SubjectDocCode').AsInteger;
-               ParamsMovement.ParamByName('SubjectDocName').AsString:=execParams.ParamByName('SubjectDocName').AsString;
-               //
-               EditSubjectDoc.Text:=execParams.ParamByName('SubjectDocName').AsString;
-               //
-               with DialogStringValueForm do
-               begin
-                    LabelStringValue.Caption:='Ввод примечания для <'+execParams.ParamByName('SubjectDocName').AsString+'>';
-                    ActiveControl:=StringValueEdit;
-                    StringValueEdit.Text:=ParamsMovement.ParamByName('DocumentComment').AsString;
-                    if Execute (false, false)
-                    then ParamsMovement.ParamByName('DocumentComment').AsString:= StringValueEdit.Text;
-                    //
-                    EditSubjectDoc.Text:= EditSubjectDoc.Text + ' / ' + ParamsMovement.ParamByName('DocumentComment').AsString;
-               end;
-               //
-               DMMainScaleForm.gpInsertUpdate_Scale_Movement(ParamsMovement);
-     end;
-     //
-     execParams.Free;
-end;
-//---------------------------------------------------------------------------------------------
 procedure TMainForm.pSetDriverReturn;
 var execParams:TParams;
 begin
@@ -1656,6 +1628,23 @@ begin
                ActiveControl:=EditBarCodeTransport;
                EditBarCodeTransport.Text:=ParamsMovement.ParamByName('Transport_BarCode').AsString;
           end;
+end;
+//---------------------------------------------------------------------------------------------
+procedure TMainForm.EditReReturnInPropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+begin
+     //
+     if (ParamsMovement.ParamByName('isReReturnIn').AsBoolean = TRUE)
+     then if GuideMovementReturnInForm.Execute(ParamsMovement,TRUE)
+          then begin
+                    ActiveControl:=EditReReturnIn;
+                    EditReReturnIn.Text:='№ ' + ParamsMovement.ParamByName('InvNumber_reReturnIn').AsString
+                                        +' от ' + DateToStr(ParamsMovement.ParamByName('OperDate_reReturnIn').AsDateTime);
+                    //
+                    DMMainScaleForm.gpInsertUpdate_Scale_Movement(ParamsMovement);
+               end
+          else
+     else EditReReturnIn.Text:='';
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainForm.EditPartionGoodsEnter(Sender: TObject);
@@ -1830,6 +1819,13 @@ begin
   bbSetPartionGoods.Visible:= SettingMain.isPartionDate = TRUE;
   //
   infoReasonPanel.Visible:= SettingMain.isReason = TRUE;
+  //
+  infoReReturnInPanel.Visible:= SettingMain.isReReturnIn = TRUE;
+  //
+  bbSetAsset.Visible:= SettingMain.isAsset = TRUE;
+  bbUpdateAsset.Visible:= SettingMain.isAsset = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('AssetName').Index].Visible:= SettingMain.isAsset = TRUE;
+  //
   //bbSetReason.Visible:= SettingMain.isReason = TRUE;
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('ReasonName').Index].Visible:= SettingMain.isReason = TRUE;
   //
@@ -1954,6 +1950,11 @@ begin
   if ParamsReason.ParamByName('ReasonId').AsInteger > 0
   then EditReason.Text:=ParamsReason.ParamByName('ReasonName').AsString +  ' (' +  ParamsReason.ParamByName('ReturnKindName').AsString + ')'
   else EditReason.Text:='';
+  //
+  if ParamsMovement.ParamByName('MovementId_reReturnIn').AsInteger > 0
+  then EditReReturnIn.Text:='№ ' + ParamsMovement.ParamByName('InvNumber_reReturnIn').AsString
+                         +' от ' + DateToStr(ParamsMovement.ParamByName('OperDate_reReturnIn').AsDateTime)
+  else EditReReturnIn.Text:='' ;
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.RefreshDataSet;

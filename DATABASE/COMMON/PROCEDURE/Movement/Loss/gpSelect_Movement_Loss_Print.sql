@@ -77,7 +77,7 @@ BEGIN
            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
            , MIString_PartionGoods.ValueData    AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
-           , Object_GoodsKind.ValueData         AS GoodsKindName
+           , (TRIM (COALESCE (Object_GoodsKind.ValueData, '') || ' ' || COALESCE (Object_Asset.ValueData, ''))) :: TVarChar AS GoodsKindName
            , Object_Asset.Id                    AS AssetId
            , Object_Asset.ValueData             AS AssetName
            , Object_InfoMoney_View.InfoMoneyCode
@@ -173,4 +173,3 @@ ALTER FUNCTION gpSelect_Movement_Loss_Print (Integer,TVarChar) OWNER TO postgres
 */
 
 -- SELECT * FROM gpSelect_Movement_Loss_Print (inMovementId := 570596, inSession:= '5'); -- FETCH ALL "<unnamed portal 1>";
-

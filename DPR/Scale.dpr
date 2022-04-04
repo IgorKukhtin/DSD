@@ -68,7 +68,7 @@ uses
   StatusXML in '..\SOURCE\EDI\StatusXML.pas',
   GuidePartner in '..\Scale\GuidePartner.pas' {GuidePartnerForm},
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
-  GuideMovementTransport in '..\Scale\GuideMovementTransport.pas' {GuideMovementTransportForm},
+  GuideMovementReturnIn in '..\Scale\GuideMovementReturnIn.pas' {GuideMovementReturnInForm},
   DialogWeight in '..\Scale\DialogWeight.pas' {DialogWeightForm},
   DialogDateReport in '..\Scale\DialogDateReport.pas' {DialogDateReportForm: TParentForm},
   DialogPersonalComplete in '..\Scale\DialogPersonalComplete.pas' {DialogPersonalCompleteForm},
@@ -107,12 +107,14 @@ uses
   Medoc_J1201211 in '..\SOURCE\MeDOC\Medoc_J1201211.pas',
   Medoc_J1201012 in '..\SOURCE\MeDOC\Medoc_J1201012.pas',
   Medoc_J1201212 in '..\SOURCE\MeDOC\Medoc_J1201212.pas',
-  GuideReason in '..\Scale\GuideReason.pas' {GuideReasonForm},
   DialogPswSms in '..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
   GuideGoodsRemains in '..\Scale\GuideGoodsRemains.pas' {GuideGoodsRemainsForm},
   DOCUMENTINVOICE_PRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
   DOCUMENTINVOICE_TN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
-  IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas';
+  IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas',
+  GuideReason in '..\Scale\GuideReason.pas' {GuideReasonForm},
+  GuideAsset in '..\Scale\GuideAsset.pas' {GuideAssetForm},
+  GuideMovementTransport in '..\Scale\GuideMovementTransport.pas' {GuideMovementTransportForm};
 
 {$R *.res}
 
@@ -134,9 +136,8 @@ begin
          if gpCheck_BranchCode = FALSE then exit;
          //
          Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-  Application.CreateForm(TGuideGoodsRemainsForm, GuideGoodsRemainsForm);
-  //
+         Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
+         //
          // !!!важно первым!!!
          Application.CreateForm(TMainForm, MainForm);
          //
@@ -153,6 +154,7 @@ begin
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
          Application.CreateForm(TGuideMovementForm, GuideMovementForm);
          Application.CreateForm(TGuideMovementTransportForm, GuideMovementTransportForm);
+         Application.CreateForm(TGuideMovementReturnInForm, GuideMovementReturnInForm);
          Application.CreateForm(TDialogWeightForm, DialogWeightForm);
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
          Application.CreateForm(TDialogStringValueForm, DialogStringValueForm);
@@ -165,6 +167,8 @@ begin
          Application.CreateForm(TGuideReasonForm, GuideReasonForm);
          Application.CreateForm(TGuideUnitForm, GuideUnitForm);
          Application.CreateForm(TGuideGoodsRemainsForm, GuideGoodsRemainsForm);
+         Application.CreateForm(TGuideReasonForm, GuideReasonForm);
+         Application.CreateForm(TGuideAssetForm, GuideAssetForm);
   end
   else
 
@@ -198,6 +202,7 @@ begin
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
          Application.CreateForm(TGuideMovementForm, GuideMovementForm);
          Application.CreateForm(TGuideMovementTransportForm, GuideMovementTransportForm);
+         Application.CreateForm(TGuideMovementReturnInForm, GuideMovementReturnInForm);
          Application.CreateForm(TDialogWeightForm, DialogWeightForm);
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
          Application.CreateForm(TDialogStringValueForm, DialogStringValueForm);
@@ -210,6 +215,8 @@ begin
          Application.CreateForm(TGuideReasonForm, GuideReasonForm);
          Application.CreateForm(TGuideUnitForm, GuideUnitForm);
          Application.CreateForm(TGuideGoodsRemainsForm, GuideGoodsRemainsForm);
+         Application.CreateForm(TGuideReasonForm, GuideReasonForm);
+         Application.CreateForm(TGuideAssetForm, GuideAssetForm);
   end;
   //
   Application.Run;
