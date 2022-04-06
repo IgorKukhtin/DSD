@@ -1354,8 +1354,15 @@ object InventoryForm: TInventoryForm
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = Null
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
+      DataSource = MasterDS
       DataSetRefresh = actRefreshMI
       IdFieldName = 'Id'
     end
@@ -1399,8 +1406,15 @@ object InventoryForm: TInventoryForm
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = Null
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
+      DataSource = MasterDS
       DataSetRefresh = actRefreshMI
       IdFieldName = 'Id'
     end
@@ -1443,8 +1457,15 @@ object InventoryForm: TInventoryForm
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = Null
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
+      DataSource = MasterDS
       DataSetRefresh = actRefreshMI
       IdFieldName = 'Id'
     end
