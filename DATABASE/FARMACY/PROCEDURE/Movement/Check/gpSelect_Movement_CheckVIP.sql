@@ -100,38 +100,44 @@ BEGIN
                                                              AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                                              AND (MovementLinkObject_Unit.ObjectId = vbUnitId  OR vbUnitId  = 0)
                            WHERE isDeferred = TRUE)
-       , tmpMI_all AS (SELECT tmpMov.Id AS MovementId, tmpMov.UnitId, MovementItem.ObjectId AS GoodsId, SUM (MovementItem.Amount) AS Amount
-                      FROM tmpMov
-                           INNER JOIN MovementItem
-                                   ON MovementItem.MovementId = tmpMov.Id
-                                  AND MovementItem.DescId     = zc_MI_Master()
-                                  AND MovementItem.isErased   = FALSE
-                      GROUP BY tmpMov.Id, tmpMov.UnitId, MovementItem.ObjectId
-                     )
-          , tmpMI AS (SELECT tmpMI_all.UnitId, tmpMI_all.GoodsId, SUM (tmpMI_all.Amount) AS Amount
-                      FROM tmpMI_all
-                      GROUP BY tmpMI_all.UnitId, tmpMI_all.GoodsId
-                     )
-          , tmpRemains AS (SELECT tmpMI.GoodsId
+        , tmpMI_Full AS (SELECT *
+                        FROM MovementItem
+                                    WHERE MovementItem.MovementId in (SELECT tmpMov.Id FROM tmpMov)
+                                    AND MovementItem.DescId     = zc_MI_Master()
+                                    AND MovementItem.isErased   = FALSE
+                       )
+        , tmpMI_all AS (SELECT tmpMov.Id AS MovementId, tmpMov.UnitId, MovementItem.ObjectId AS GoodsId, SUM (MovementItem.Amount) AS Amount
+                        FROM tmpMov
+                             INNER JOIN tmpMI_Full AS MovementItem
+                                     ON MovementItem.MovementId = tmpMov.Id
+                                    AND MovementItem.DescId     = zc_MI_Master()
+                                    AND MovementItem.isErased   = FALSE
+                        GROUP BY tmpMov.Id, tmpMov.UnitId, MovementItem.ObjectId
+                       )
+        , tmpMI AS (SELECT tmpMI_all.UnitId, tmpMI_all.GoodsId, SUM (tmpMI_all.Amount) AS Amount
+                    FROM tmpMI_all
+                    GROUP BY tmpMI_all.UnitId, tmpMI_all.GoodsId
+                   )
+        , tmpRemains AS (SELECT tmpMI.GoodsId
+                              , tmpMI.UnitId
+                              , tmpMI.Amount           AS Amount_mi
+                              , COALESCE (SUM (Container.Amount), 0) AS Amount_remains
+                         FROM tmpMI
+                              LEFT JOIN Container ON Container.DescId = zc_Container_Count()
+                                                 AND Container.ObjectId = tmpMI.GoodsId
+                                                 AND Container.WhereObjectId = tmpMI.UnitId
+                                                 AND Container.Amount <> 0
+                         GROUP BY tmpMI.GoodsId
                                 , tmpMI.UnitId
-                                , tmpMI.Amount           AS Amount_mi
-                                , COALESCE (SUM (Container.Amount), 0) AS Amount_remains
-                           FROM tmpMI
-                                LEFT JOIN Container ON Container.DescId = zc_Container_Count()
-                                                   AND Container.ObjectId = tmpMI.GoodsId
-                                                   AND Container.WhereObjectId = tmpMI.UnitId
-                                                   AND Container.Amount <> 0
-                           GROUP BY tmpMI.GoodsId
-                                  , tmpMI.UnitId
-                                  , tmpMI.Amount
-                           HAVING COALESCE (SUM (Container.Amount), 0) < tmpMI.Amount
-                          )
-          , tmpErr AS (SELECT DISTINCT tmpMov.Id AS MovementId
-                       FROM tmpMov
-                            INNER JOIN tmpMI_all ON tmpMI_all.MovementId = tmpMov.Id
-                            INNER JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_all.GoodsId
-                                                 AND tmpRemains.UnitId  = tmpMI_all.UnitId
-                      )
+                                , tmpMI.Amount
+                         HAVING COALESCE (SUM (Container.Amount), 0) < tmpMI.Amount
+                        )
+        , tmpErr AS (SELECT DISTINCT tmpMov.Id AS MovementId
+                     FROM tmpMov
+                          INNER JOIN tmpMI_all ON tmpMI_all.MovementId = tmpMov.Id
+                          INNER JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_all.GoodsId
+                                               AND tmpRemains.UnitId  = tmpMI_all.UnitId
+                    )
 
        SELECT Movement.Id
             , Movement.InvNumber

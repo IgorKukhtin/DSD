@@ -1699,8 +1699,8 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         item
           Action = actPrintInvoiceDepartment
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' C'#1095#1077#1090#1072' ('#1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090')'
-      Hint = #1055#1077#1095#1072#1090#1100' C'#1095#1077#1090#1072' ('#1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090')'
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1089#1095#1077#1090' '#1053#1057#1047#1059
+      Hint = #1057#1086#1079#1076#1072#1090#1100' '#1089#1095#1077#1090' '#1053#1057#1047#1059
       ImageIndex = 15
     end
     object actGetReportNameSP: TdsdExecStoredProc
@@ -2068,6 +2068,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       Action = actPrint_152
       Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086#1089#1090'.152'
       Category = 0
+      Visible = ivNever
     end
     object dxBarControlContainerItem1: TdxBarControlContainerItem
       Caption = 'New Item'
@@ -2079,10 +2080,12 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
     object bbPrintInvoice: TdxBarButton
       Action = macPrintInvoice
       Category = 0
+      Visible = ivNever
     end
     object bbPrint_Pact: TdxBarButton
       Action = mactPrint_Pact
       Category = 0
+      Visible = ivNever
     end
     object bbPrintDepartment: TdxBarButton
       Action = actPrintDepartment
@@ -2091,6 +2094,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
     object bbPrintDepartment_152: TdxBarButton
       Action = actPrintDepartment_152
       Category = 0
+      Visible = ivNever
     end
     object bbPrintInvoiceDepartment: TdxBarButton
       Action = macPrintInvoiceDepartment
@@ -2099,6 +2103,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
     object bbPrint_PactDepartment: TdxBarButton
       Action = mactPrint_PactDepartment
       Category = 0
+      Visible = ivNever
     end
     object dxBarButton2: TdxBarButton
       Action = mactCheckingChecks

@@ -203,6 +203,10 @@ WITH -- Товары соц-проект
                                     ON MovementString_FiscalCheckNumber.MovementId = Movement.Id
                                    AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
 
+           LEFT JOIN MovementBoolean AS MovementBoolean_PaperRecipeSP
+                                     ON MovementBoolean_PaperRecipeSP.MovementId = Movement.Id
+                                    AND MovementBoolean_PaperRecipeSP.DescId = zc_MovementBoolean_PaperRecipeSP()
+
            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                  AND MovementItem.DescId     = zc_MI_Master()
                                  AND MovementItem.isErased   = FALSE   
@@ -225,15 +229,15 @@ WITH -- Товары соц-проект
 
            LEFT JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
-            -- получается GoodsMainId
-            LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = MovementItem.ObjectId
+           -- получается GoodsMainId
+           LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = MovementItem.ObjectId
                                                      AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
-            LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+           LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                     AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-            -- Соц Проект
-            LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
-                                AND tmpGoodsSP.Ord     = 1 -- № п/п - на всякий случай
-            LEFT JOIN  Object AS Object_IntenalSP ON Object_IntenalSP.Id = tmpGoodsSP.IntenalSPId
+           -- Соц Проект
+           LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
+                               AND tmpGoodsSP.Ord     = 1 -- № п/п - на всякий случай
+           LEFT JOIN  Object AS Object_IntenalSP ON Object_IntenalSP.Id = tmpGoodsSP.IntenalSPId                        
 
       WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate)
         AND Movement.OperDate < DATE_TRUNC ('DAY', inStartDate) + INTERVAL '1 DAY'
@@ -241,6 +245,7 @@ WITH -- Товары соц-проект
         AND Movement.StatusId = zc_Enum_Status_Complete()
         AND MovementItem.Amount > 0
         AND MovementItem.IsErased = False
+        AND COALESCE(MovementBoolean_PaperRecipeSP.ValueData, False) = False
       ORDER BY Object_Parent.ValueData, Object_Unit.ValueData, Movement.OperDate;
 
 END;
@@ -255,3 +260,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_CheckHelsiAllUnit (inStartDate:= '19.07.2021', inSession:= '3')
+
+select * from gpSelect_Movement_CheckHelsiAllUnit(inStartDate := ('05.04.2022')::TDateTime ,  inSession := '183242');

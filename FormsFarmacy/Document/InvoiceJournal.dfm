@@ -9,7 +9,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spUpdate
   ExplicitWidth = 761
-  ExplicitHeight = 529
+  ExplicitHeight = 530
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -284,6 +284,14 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 71
+          end
+          object NDS: TcxGridDBColumn
+            Caption = #1053#1044#1057
+            DataBinding.FieldName = 'NDS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 42
           end
           object TotalSummVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
