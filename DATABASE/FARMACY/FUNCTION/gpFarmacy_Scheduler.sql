@@ -445,6 +445,40 @@ BEGIN
 
     END IF;    
 
+    -- Удаление нулевых чеков
+    IF date_part('HOUR',  CURRENT_TIME)::Integer = 21 AND date_part('MINUTE',  CURRENT_TIME)::Integer >= 30 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 50
+    THEN
+
+      BEGIN
+         PERFORM gpSetErased_Movement_Check (Movement.Id, inSession) FROM
+         (WITH
+          tmpMovementCheck AS (SELECT Movement.Id
+                               FROM Movement
+                               WHERE Movement.DescId = zc_Movement_Check()
+                                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                 AND Movement.OperDate >= CURRENT_DATE - INTERVAL '10 DAY')
+
+          SELECT Movement.Id
+          FROM tmpMovementCheck AS Movement
+
+               LEFT JOIN MovementFloat AS MovementFloat_TotalCount
+                                       ON MovementFloat_TotalCount.MovementId = Movement.Id
+                                      AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+                     
+               LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                       ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                      AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                                                       
+          WHERE COALESCE (MovementFloat_TotalCount.ValueData, 0) = 0
+            AND COALESCE (MovementFloat_TotalSumm.ValueData, 0) = 0) AS Movement;
+      EXCEPTION
+         WHEN others THEN
+           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+         PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpSetErased_Movement_Check', True, text_var1::TVarChar, vbUserId);
+      END;    
+
+    END IF;    
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

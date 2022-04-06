@@ -75,6 +75,8 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     colPriceSite: TcxGridDBColumn;
     isClose: TcxGridDBColumn;
+    SupplierFailuresColor: TcxGridDBColumn;
+    isSupplierFailures: TcxGridDBColumn;
   private
     { Private declarations }
   public

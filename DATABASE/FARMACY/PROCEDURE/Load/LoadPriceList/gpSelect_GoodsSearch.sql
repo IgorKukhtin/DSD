@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, CommonCode Integer, BarCode TVarChar,
                ExpirationDate TDateTime,
                MinimumLot TFloat, NDS TFloat, LinkGoodsId Integer,
                MarginPercent TFloat, NewPrice TFloat, PriceSite TFloat,
-               isClose Boolean)
+               isClose Boolean, SupplierFailuresColor Integer)
 
 AS
 $BODY$
@@ -118,6 +118,7 @@ BEGIN
                                        AND Price_Value.DescId = zc_ObjectFloat_PriceSite_Value()
                             WHERE Object_PriceSite.DescId = zc_Object_PriceSite()
                             )
+        , tmpSupplierFailures AS (SELECT * FROM lpSelect_PriceList_SupplierFailures (inUnitId := 0 , inUserId := vbUserId))
              
    SELECT
          LoadPriceListItem.Id                AS Id,
@@ -163,6 +164,10 @@ BEGIN
        , tmpPrice_Site.Price                 AS PriceSite
        
        , COALESCE(ObjectGoodsView.isClose, FALSE)             AS isClose
+       
+       , CASE WHEN COALESCE (tmpSupplierFailures.GoodsId, 0) <> 0 THEN zfCalc_Color (255, 165, 0) -- orange 
+              ELSE zc_Color_White()
+          END  AS SupplierFailuresColor
 
        FROM LoadPriceListItem
 
@@ -211,6 +216,13 @@ BEGIN
             LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = LinkGoodsObject.GoodsId
             
             LEFT JOIN tmpPrice_Site ON tmpPrice_Site.GoodsId = LinkGoodsObject.GoodsId
+            
+            
+
+            LEFT JOIN tmpSupplierFailures ON tmpSupplierFailures.JuridicalId          = LoadPriceList.JuridicalId
+                                         AND tmpSupplierFailures.ContractId           = LoadPriceList.ContractId
+                                         AND COALESCE (tmpSupplierFailures.AreaId, 0) = COALESCE (LoadPriceList.AreaId, 0)
+                                         AND tmpSupplierFailures.GoodsId              = PartnerGoods.Id
       WHERE
         LoadPriceListItem.GoodsNameUpper ILIKE ('%' || inGoodsSearch || '%')
         AND
@@ -251,4 +263,5 @@ $BODY$
 
 --select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := 'детралекс%1000' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3');
 
-select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := 'пуст%мл' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3');
+
+select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := '' , inProducerSearch := '' , inCodeSearch := '5544' ,  inSession := '3');

@@ -1265,8 +1265,8 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       MoveParams = <>
       BeforeAction = actGetNDS
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090' - '#1092#1072#1082#1090#1091#1088#1072
-      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090' - '#1092#1072#1082#1090#1091#1088#1072
+      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090' - '#1092#1072#1082#1090#1091#1088#1072' '#1052#1062' 8,9'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090' - '#1092#1072#1082#1090#1091#1088#1072' '#1052#1062' 8,9'
       ImageIndex = 17
       DataSets = <
         item
@@ -1348,8 +1348,8 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       MoveParams = <>
       BeforeAction = actGetNDS
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1052#1062' 8,9'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1052#1062' 8,9'
       ImageIndex = 16
       DataSets = <
         item
@@ -1430,8 +1430,8 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       MoveParams = <>
       BeforeAction = actGetNDS
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1088#1077#1077#1089#1090#1088#1072' '#1052#1062' 5,8,11'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1088#1077#1077#1089#1090#1088#1072' '#1052#1062' 5,8,11'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -1515,8 +1515,8 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         item
           Action = actPrintInvoice
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1089#1095#1077#1090' '#1052#1062
+      Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1089#1095#1077#1090' '#1052#1062
       ImageIndex = 15
     end
     object actSaveMovement: TdsdExecStoredProc
@@ -1546,9 +1546,9 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       MoveParams = <>
       BeforeAction = actGetNDS
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303 ('#1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1087#1072#1094#1080#1077#1085#1090#1091')'
-      ImageIndex = 3
+      Caption = #1055#1077#1095#1072#1090#1100' '#1088#1077#1077#1089#1090#1088#1072' '#1052#1062' 9'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1088#1077#1077#1089#1090#1088#1072' '#1052#1062' 9'
+      ImageIndex = 18
       DataSets = <
         item
           UserName = 'frxDBDMaster'
@@ -1744,11 +1744,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintMemberSP'
+          ItemName = 'bbPrintInvoice'
         end
         item
           Visible = True
@@ -1756,7 +1752,11 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintInvoice'
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintMemberSP'
         end
         item
           Visible = True

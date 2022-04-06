@@ -36,6 +36,15 @@ BEGIN
      UNION ALL
      SELECT 7, (DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '1 DAY') + INTERVAL '1 MONTH' + INTERVAL '11 HOUR')::TDateTime, '568330367,300408824'::TVarChar, 'SELECT * FROM gpReport_TelegramBot_CheckSiteCountMonth (''3'')'::TVarChar
 
+     UNION ALL
+     SELECT 8, (CURRENT_DATE + INTERVAL '9 HOUR')::TDateTime, '568330367,300408824'::TVarChar, 'SELECT * FROM gpReport_TelegramBot_CheckRed (''3'')'::TVarChar
+     UNION ALL
+     SELECT 9, (CURRENT_DATE + INTERVAL '12 HOUR')::TDateTime, '568330367,300408824'::TVarChar, 'SELECT * FROM gpReport_TelegramBot_CheckRed (''3'')'::TVarChar
+     UNION ALL
+     SELECT 10, (CURRENT_DATE + INTERVAL '18 HOUR')::TDateTime, '568330367,300408824'::TVarChar, 'SELECT * FROM gpReport_TelegramBot_CheckRed (''3'')'::TVarChar
+     UNION ALL
+     SELECT 11, (CURRENT_DATE + INTERVAL '21 HOUR')::TDateTime, '568330367,300408824'::TVarChar, 'SELECT * FROM gpReport_TelegramBot_CheckRed (''3'')'::TVarChar
+
 /*     UNION ALL
      SELECT 100, CURRENT_DATE::TDateTime, ''::TVarChar, 'SELECT * FROM gpSelect_TelegramBot_TestMessage (:OperDate, ''3'')'::TVarChar*/
      ;

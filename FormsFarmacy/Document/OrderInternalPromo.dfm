@@ -1915,9 +1915,78 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Hint = #1054#1090#1087#1088#1072#1074#1082#1072' E-mail'
       ImageIndex = 53
     end
+    object actGetDocumentDataForEmailGroup: TdsdExecStoredProc
+      Category = 'SendEMail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetDocumentDataForEmailGroup
+      StoredProcList = <
+        item
+          StoredProc = spGetDocumentDataForEmailGroup
+        end>
+      Caption = 'actGetDocumentDataForEmailGroup'
+    end
+    object SMTPAction: TdsdSMTPAction
+      Category = 'SendEMail'
+      MoveParams = <>
+      Host.Value = Null
+      Host.Component = FormParams
+      Host.ComponentItem = 'Host'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Port.Value = 25
+      Port.Component = FormParams
+      Port.ComponentItem = 'Port'
+      Port.MultiSelectSeparator = ','
+      UserName.Value = Null
+      UserName.Component = FormParams
+      UserName.ComponentItem = 'UserName'
+      UserName.DataType = ftString
+      UserName.MultiSelectSeparator = ','
+      Password.Value = Null
+      Password.Component = FormParams
+      Password.ComponentItem = 'Password'
+      Password.DataType = ftString
+      Password.MultiSelectSeparator = ','
+      Body.Value = Null
+      Body.Component = FormParams
+      Body.ComponentItem = 'Body'
+      Body.DataType = ftWideString
+      Body.MultiSelectSeparator = ','
+      Subject.Value = Null
+      Subject.Component = FormParams
+      Subject.ComponentItem = 'Subject'
+      Subject.DataType = ftString
+      Subject.MultiSelectSeparator = ','
+      FromAddress.Value = Null
+      FromAddress.Component = FormParams
+      FromAddress.ComponentItem = 'AddressFrom'
+      FromAddress.DataType = ftString
+      FromAddress.MultiSelectSeparator = ','
+      ToAddress.Value = Null
+      ToAddress.Component = FormParams
+      ToAddress.ComponentItem = 'AddressTo'
+      ToAddress.DataType = ftString
+      ToAddress.MultiSelectSeparator = ','
+    end
+    object mactSMTPSendGroup: TMultiAction
+      Category = 'SendEMail'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetDocumentDataForEmailGroup
+        end
+        item
+          Action = SMTPAction
+        end>
+      Caption = #1054#1090#1087#1088#1072#1074#1082#1072' E-mail'
+      Hint = #1054#1090#1087#1088#1072#1074#1082#1072' E-mail'
+      ImageIndex = 53
+    end
     object actSMTPSend: TMultiAction
       Category = 'SendEMail'
       MoveParams = <>
+      AfterAction = mactSMTPSendGroup
       BeforeAction = actExecSPSelectExportJuridical
       ActionList = <
         item
@@ -3494,8 +3563,8 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 904
-    Top = 216
+    Left = 840
+    Top = 208
   end
   object spSelectExport: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_OrderInternalPromo_Export'
@@ -3564,6 +3633,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Subject'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -3571,6 +3641,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Body'
+        DataType = ftWideString
         MultiSelectSeparator = ','
       end
       item
@@ -3578,6 +3649,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Value = Null
         Component = FormParams
         ComponentItem = 'AddressFrom'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -3585,6 +3657,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Value = Null
         Component = FormParams
         ComponentItem = 'AddressTo'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -3592,6 +3665,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Host'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -3606,6 +3680,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Value = Null
         Component = FormParams
         ComponentItem = 'UserName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -3613,11 +3688,12 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Password'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 904
-    Top = 272
+    Left = 944
+    Top = 208
   end
   object ExportItemsDS: TDataSource
     DataSet = ExportItemsCDS
@@ -3666,5 +3742,85 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     DataSet = ExportJuridicalCDS
     Left = 968
     Top = 376
+  end
+  object spGetDocumentDataForEmailGroup: TdsdStoredProc
+    StoredProcName = 'gpGet_OrderInternalPromoForEmailGroup'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Subject'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Subject'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Body'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Body'
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AddressFrom'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'AddressFrom'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AddressTo'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'AddressTo'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Host'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Host'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Port'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Port'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Password'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Password'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 944
+    Top = 264
   end
 end
