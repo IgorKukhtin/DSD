@@ -114,16 +114,12 @@ type
     bbReport_Goods: TdxBarButton;
    cxSplitter1: TcxSplitter;
     dsdDBViewAddOn0: TdsdDBViewAddOn;
-    macGoodsItem: TMultiAction;
     actGoodsItem1: TdsdInsertUpdateAction;
     actGoodsChoiceForm: TOpenChoiceForm;
     EAN: TcxGridDBColumn;
     ClientDataSet: TClientDataSet;
     DataSource: TDataSource;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
-    actUpdateBarCodeDS1: TdsdUpdateDataSet;
-    actUpdateBarCodeDS2: TdsdUpdateDataSet;
-    actUpdateBarCodeDS3: TdsdUpdateDataSet;
     actInsertRecord_goods: TInsertRecord;
     bbInsertRecord_goods: TdxBarButton;
     edPartNumber: TcxTextEdit;

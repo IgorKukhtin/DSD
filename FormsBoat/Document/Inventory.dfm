@@ -821,10 +821,7 @@ object InventoryForm: TInventoryForm
           StoredProc = spSelectMI
         end
         item
-        end
-        item
-        end
-        item
+          StoredProc = spBarcode_null
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1296,11 +1293,8 @@ object InventoryForm: TInventoryForm
       ActionList = <
         item
           Action = actGoodsItem3
-        end
-        item
-          Action = actRefreshMI
         end>
-      Caption = 'macGoodsItem'
+      Caption = 'macGoodsItem3'
     end
     object macGoodsItem2: TMultiAction
       Category = 'DSDLib'
@@ -1308,11 +1302,8 @@ object InventoryForm: TInventoryForm
       ActionList = <
         item
           Action = actGoodsItem2
-        end
-        item
-          Action = actRefreshMI
         end>
-      Caption = 'macGoodsItem'
+      Caption = 'macGoodsItem2'
     end
     object macGoodsItem1: TMultiAction
       Category = 'DSDLib'
@@ -1320,68 +1311,8 @@ object InventoryForm: TInventoryForm
       ActionList = <
         item
           Action = actGoodsItem1
-        end
-        item
-          Action = actRefreshMI
         end>
-      Caption = 'macGoodsItem'
-    end
-    object macGoodsItem: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGoodsItem1
-        end
-        item
-          Action = actRefreshMI
-        end>
-      Caption = 'macGoodsItem'
-    end
-    object actGoodsItem2: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
-      FormName = 'TInventoryItemEditForm'
-      FormNameParam.Value = 'TInventoryItemEditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inMovementId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inBarCode'
-          Value = Null
-          Component = edBarCode2
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inPartNumber'
-          Value = Null
-          Component = edPartNumber
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inAmount'
-          Value = 1.000000000000000000
-          DataType = ftFloat
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      DataSetRefresh = actRefreshMI
-      IdFieldName = 'Id'
+      Caption = 'macGoodsItem1'
     end
     object actGoodsItem3: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -1420,6 +1351,51 @@ object InventoryForm: TInventoryForm
           Name = 'inAmount'
           Value = 1.000000000000000000
           Component = edAmount
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      DataSetRefresh = actRefreshMI
+      IdFieldName = 'Id'
+    end
+    object actGoodsItem2: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      FormName = 'TInventoryItemEditForm'
+      FormNameParam.Value = 'TInventoryItemEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBarCode'
+          Value = Null
+          Component = edBarCode2
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartNumber'
+          Value = Null
+          Component = edPartNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inAmount'
+          Value = 1.000000000000000000
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1471,34 +1447,6 @@ object InventoryForm: TInventoryForm
       isShowModal = True
       DataSetRefresh = actRefreshMI
       IdFieldName = 'Id'
-    end
-    object actUpdateBarCodeDS3: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actUpdateMasterDS'
-    end
-    object actUpdateBarCodeDS2: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actUpdateMasterDS'
-    end
-    object actUpdateBarCodeDS1: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actUpdateMasterDS'
-      DataSource = DataSource
     end
   end
   object MasterDS: TDataSource
