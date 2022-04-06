@@ -12,19 +12,19 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
     Width = 1074
     Height = 361
     TabOrder = 3
-    ExplicitTop = 86
-    ExplicitWidth = 1077
-    ExplicitHeight = 394
+    ExplicitTop = 119
+    ExplicitWidth = 1074
+    ExplicitHeight = 361
     ClientRectBottom = 361
     ClientRectRight = 1074
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1077
-      ExplicitHeight = 394
+      ExplicitWidth = 1074
+      ExplicitHeight = 361
       inherited cxGrid: TcxGrid
         Width = 1074
         Height = 361
-        ExplicitWidth = 1077
-        ExplicitHeight = 394
+        ExplicitWidth = 1074
+        ExplicitHeight = 361
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -490,6 +490,16 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Options.Editing = False
             Width = 103
           end
+          object DSummaSP: TcxGridDBColumn
+            Caption = #1056#1110#1079#1085#1080#1094#1103' '#1089#1091#1084#1072' '#1074#1110#1076#1096#1082#1086#1076#1091#1074#1072#1085#1085#1103', '#1075#1088#1085
+            DataBinding.FieldName = 'DSummaSP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '+,0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
           object JuridicalFullName: TcxGridDBColumn
             Caption = #1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103' ('#1087#1086#1074#1085#1072' '#1085#1072#1079#1074#1072')'
             DataBinding.FieldName = 'JuridicalFullName'
@@ -927,12 +937,18 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             VisibleForCustomization = False
             Width = 155
           end
-          object cxGridDBTableViewColumn1: TcxGridDBColumn
+          object MedicalProgramSPName: TcxGridDBColumn
             Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1072#1103' '#1087#1088#1086#1075#1088#1072#1084#1084#1072' '#1089#1086#1094'. '#1087#1088#1086#1077#1082#1090#1086#1074
             DataBinding.FieldName = 'MedicalProgramSPName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object Color_DSummaSP: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_DSummaSP'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
           end
         end
       end
@@ -949,7 +965,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
   inherited Panel: TPanel
     Width = 1074
     Height = 93
-    ExplicitWidth = 1194
+    ExplicitWidth = 1074
     ExplicitHeight = 93
     inherited deStart: TcxDateEdit
       Left = 26
@@ -1755,6 +1771,120 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actLoadFileToJson: TdsdDataToJsonAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      JsonParam.Value = Null
+      JsonParam.Component = FormParams
+      JsonParam.ComponentItem = 'FileJson'
+      JsonParam.DataType = ftWideString
+      JsonParam.MultiSelectSeparator = ','
+      PairParams = <
+        item
+          FieldName = 'E'
+          PairName = 'InvNumberSP'
+        end
+        item
+          FieldName = 'P'
+          PairName = 'SummaSP_pack'
+          DataType = ftFloat
+        end
+        item
+          FieldName = 'Q'
+          PairName = 'SummaSP'
+          DataType = ftFloat
+        end>
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1092#1072#1081#1083#1072
+    end
+    object actDataToJson: TdsdDataToJsonAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      View = cxGridDBTableView
+      JsonParam.Value = Null
+      JsonParam.Component = FormParams
+      JsonParam.ComponentItem = 'DataJson'
+      JsonParam.DataType = ftWideString
+      JsonParam.MultiSelectSeparator = ','
+      PairParams = <
+        item
+          FieldName = 'InvNumber_Full'
+          PairName = 'InvNumber_Full'
+        end
+        item
+          FieldName = 'UnitName'
+          PairName = 'UnitName'
+        end
+        item
+          FieldName = 'JuridicalName'
+          PairName = 'JuridicalName'
+        end
+        item
+          FieldName = 'OperDate'
+          PairName = 'OperDate'
+        end
+        item
+          FieldName = 'InvNumberSP'
+          PairName = 'InvNumberSP'
+        end
+        item
+          FieldName = 'SummaSP_pack'
+          PairName = 'SummaSP_pack'
+        end
+        item
+          FieldName = 'SummaSP'
+          PairName = 'SummaSP'
+        end>
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1089' '#1075#1088#1080#1076#1072
+    end
+    object actCheckingChecks: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actCheckingChecks'
+      FormName = 'TReport_Check_SP_CheckingForm'
+      FormNameParam.Value = 'TReport_Check_SP_CheckingForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'FileJson'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'FileJson'
+          DataType = ftWideString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DataJson'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DataJson'
+          DataType = ftWideString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object mactCheckingChecks: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actLoadFileToJson
+        end
+        item
+          Action = actDataToJson
+        end
+        item
+          Action = actCheckingChecks
+        end>
+      Caption = #1057#1074#1077#1088#1080#1090#1100' '#1095#1077#1082#1080' '#1089' '#1092#1072#1081#1083#1086#1084' '#1089' '#1089#1072#1081#1090#1072
+      ImageIndex = 30
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1888,10 +2018,6 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrintInvoiceDepartment'
         end
         item
@@ -1901,6 +2027,14 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         item
           Visible = True
           ItemName = 'bbPrint_PactDepartment'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
@@ -1966,8 +2100,17 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       Action = mactPrint_PactDepartment
       Category = 0
     end
+    object dxBarButton2: TdxBarButton
+      Action = mactCheckingChecks
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_DSummaSP
+        ColorValueList = <>
+      end>
     Left = 488
     Top = 248
   end
@@ -2181,6 +2324,18 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FileJson'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DataJson'
+        Value = Null
+        DataType = ftWideString
         MultiSelectSeparator = ','
       end>
     Left = 400

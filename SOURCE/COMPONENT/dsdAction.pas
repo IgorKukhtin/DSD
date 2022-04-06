@@ -5,7 +5,7 @@ unit dsdAction;
 interface
 
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj, Clipbrd,
-  cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView, cxDBPivotGrid,
+  cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView, cxDBPivotGrid, Math,
   cxGridDBTableView, frxClass, frxExportPDF, frxExportXLS, cxGridCustomView, Dialogs, Controls,
   dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, IdFTPCommon,
   System.IOUtils, IdHTTP, IdSSLOpenSSL, IdURI, IdAuthentication, {IdMultipartFormData,}
@@ -1229,6 +1229,7 @@ type
 
   TdsdPairParamsItem = class(TCollectionItem)
   private
+    FDataType: TFieldType;
     FFieldName : String;
     FPairName : String;
   protected
@@ -1239,6 +1240,7 @@ type
   published
     property FieldName: String read FFieldName write FFieldName;
     property PairName: String read FPairName write FPairName;
+    property DataType: TFieldType read FDataType write FDataType default ftString;
   end;
 
   TdsdDataToJsonAction = class(TdsdCustomAction)
@@ -1248,6 +1250,10 @@ type
 
     FJsonParam: TdsdParam;
     FPairParams: TOwnedCollection;
+
+    FFileOpenDialog: TFileOpenDialog;
+    FFileNameParam: TdsdParam;
+    FStartColumns: Integer;
 
     procedure SetDataSource(const Value: TDataSource);
     procedure SetView(const Value: TcxGridTableView);
@@ -1267,6 +1273,10 @@ type
     property JsonParam: TdsdParam read FJsonParam write FJsonParam;
     // Содержимое массива Json
     property PairParams: TOwnedCollection read FPairParams write FPairParams;
+    // Имя файла для загрузки данных
+    property FileNameParam: TdsdParam read FFileNameParam write FFileNameParam;
+    property StartColumns: Integer read FStartColumns write FStartColumns default 2;
+
     property QuestionBeforeExecute;
     property InfoAfterExecute;
     property Caption;
@@ -5887,6 +5897,7 @@ begin
   inherited;
   FFieldName := '';
   FPairName := '';
+  FDataType := ftString;
 end;
 
 function TdsdPairParamsItem.GetDisplayName: string;
@@ -5917,12 +5928,29 @@ begin
   FPairParams := TOwnedCollection.Create(Self, TdsdPairParamsItem);
   FJsonParam := TdsdParam.Create(Nil);
   FJsonParam.DataType := ftWideString;
+
+  FFileOpenDialog := TFileOpenDialog.Create(Self);
+  FFileOpenDialog.SetSubComponent(true);
+  FFileOpenDialog.FreeNotification(Self);
+  FFileOpenDialog.OkButtonLabel := 'Загрузить данные из файла';
+  with FFileOpenDialog.FileTypes.Add do
+  begin
+    DisplayName := 'Файл с данными';
+    FileMask := '*.xls;*.xlsx';
+  end;
+  FFileNameParam := TdsdParam.Create(nil);
+  FFileNameParam.DataType := ftString;
+  FFileNameParam.Value := '';
+  FStartColumns := 2;
+
   FDataSource := Nil;
   FView := Nil;
 end;
 
 destructor TdsdDataToJsonAction.Destroy;
 begin
+  FreeAndNil(FFileOpenDialog);
+  FreeAndNil(FFileNameParam);
   FreeAndNil(FJsonParam);
   FreeAndNil(FPairParams);
   inherited;
@@ -6057,15 +6085,143 @@ function TdsdDataToJsonAction.LocalExecute: Boolean;
     end;
   end;
 
+  function ConvertToValue(AValue: String; ADataType: TFieldType) : Variant;
+    var intValue: integer; n : Double; d : TDateTime;
+  begin
+    try
+      if ADataType = ftDateTime then
+      begin
+        if TryStrToDateTime(AValue, d) then
+          Result := d
+        else
+          Result := Null;
+      end else if ADataType = ftFloat then
+      begin
+        if TryStrToFloat(AValue, n) then
+          Result := n
+        else
+          Result := Null;
+      end else if ADataType = ftInteger then
+      begin
+        if TryStrToInt(AValue, intValue) then
+          Result := intValue
+        else
+          Result := Null;
+      end
+      else Result := AValue;
+    except
+      on E:Exception do raise Exception.Create('Ошибка преобразования <' + AValue + '>. ' + e.Message);
+    end;
+  end;
+
+  procedure XLSExecute;
+  const
+    ExcelAppName = 'Excel.Application';
+  var
+    CLSID: TCLSID;
+    Excel, Sheet: Variant;
+    Row, Code, j : Integer;
+    S, FileName : string;
+
+    function ConvertLaterToNum(ALater : String) : Integer;
+      var I, J, n : Integer;
+    begin
+      ALater := UpperCase(ALater);
+      Result := 0;
+      n := 0;
+      if ALater = '' then Exit;
+
+      for I := 1 to Length(ALater) do
+      begin
+        J := ORD(ALater[I]) - 64;
+
+        if (J <= 0) or (J > 26) then
+          raise Exception.Create('Ошибка получения данных колонки <' + ALater + '>');
+
+        n := n + J * Round(Power (26, Length(ALater) - I));
+      end;
+
+      Result := n;
+    end;
+
+  begin
+
+    if FFileNameParam.Value = '' then
+    begin
+      if not FFileOpenDialog.Execute then Exit;
+      FileName :=  FFileOpenDialog.FileName;
+    end else
+    begin
+      FileName:=  ExtractFilePath(ParamStr(0)) + FFileNameParam.Value;
+    end;
+
+    if not FileExists(FileName) then
+    begin
+      ShowMessage('Файл <' + FileName + '> не найден.');
+      Exit;
+    end;
+
+    if CLSIDFromProgID(PChar(ExcelAppName), CLSID) = S_OK then
+    begin
+      Excel := CreateOLEObject(ExcelAppName);
+
+      try
+        Excel.Visible := False;
+        Excel.Application.EnableEvents := False;
+        Excel.DisplayAlerts := False;
+        Excel.WorkBooks.Open(FileName);
+        Sheet := Excel.WorkBooks[1].WorkSheets[1];
+
+        with TGaugeFactory.GetGauge(Caption, 0,
+          Sheet.UsedRange.Rows.Count) do
+        begin
+          Start;
+          try
+            for Row := FStartColumns to Sheet.UsedRange.Rows.Count do
+            begin
+
+              if FPairParams.Count > 0 then
+              begin
+                JSONObject := TJSONObject.Create;
+                for j := 0 to FPairParams.Count - 1 do
+                  if (TdsdPairParamsItem(FPairParams.Items[j]).PairName <> '') and (TdsdPairParamsItem(FPairParams.Items[j]).FieldName <> '') then
+                  begin
+                    AddParamToJSON(TdsdPairParamsItem(FPairParams.Items[j]).PairName,
+                      ConvertToValue(Sheet.Cells[Row, ConvertLaterToNum(TdsdPairParamsItem(FPairParams.Items[j]).FieldName)].Value, TdsdPairParamsItem(FPairParams.Items[j]).DataType),
+                      TdsdPairParamsItem(FPairParams.Items[j]).DataType);
+                  end;
+                JsonArray.AddElement(JSONObject);
+                IncProgress(1);
+                JSONObject := Nil;
+                Application.ProcessMessages;
+              end
+
+            end;
+          finally
+            Finish;
+          end;
+        end;
+
+      finally
+        if not VarIsEmpty(Excel) then
+          Excel.Quit;
+
+        Excel := Unassigned;
+      end;
+    end;
+  end;
+
+
 begin
 
   result := False;
-  if Assigned(DataSource) or Assigned(View) then
+  if Assigned(DataSource) or Assigned(View) or (FPairParams.Count > 0)  then
   begin
     JSONArray := TJSONArray.Create();
     try
       try
-        DataSourceExecute;
+         if Assigned(DataSource) or Assigned(View) then DataSourceExecute
+         else XLSExecute;
       except
         on E:Exception do raise Exception.Create('Ошибка формирования Json: ' + e.Message);
       end;

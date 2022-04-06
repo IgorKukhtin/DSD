@@ -185,7 +185,6 @@ type
     Price_Pricelist: TcxGridDBColumn;
     actSPPrintSaleProcName: TdsdExecStoredProc;
     spInsertUpdateMovement_Params: TdsdStoredProc;
-    cxLabel25: TcxLabel;
     edInvNumberTransport: TcxButtonEdit;
     GuidesTransportChoice: TdsdGuides;
     HeaderSaver2: THeaderSaver;

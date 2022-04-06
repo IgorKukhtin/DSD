@@ -76,6 +76,8 @@ type
     MakerSP: TcxGridDBColumn;
     SummChangePercent: TcxGridDBColumn;
     CountSP: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
   private
   public
   end;

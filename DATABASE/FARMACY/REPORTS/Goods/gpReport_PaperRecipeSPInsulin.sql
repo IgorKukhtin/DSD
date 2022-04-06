@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_PaperRecipeSPInsulin(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
-             , UnitCode Integer, UnitName TVarChar
+             , UnitCode Integer, UnitName TVarChar, JuridicalCode Integer, JuridicalName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , BrandSPName TVarChar, MakerSP TVarChar, KindOutSPName TVarChar, Pack TVarChar, CountSP TFloat, PriceSP TFloat
              , CountSPMin TFloat, PriceSPMin TFloat
@@ -206,6 +206,8 @@ BEGIN
        , tmpMI.OperDate
        , Object_Unit.ObjectCode          AS UnitCode
        , Object_Unit.ValueData           AS UnitName 
+       , Object_Juridical.ObjectCode     AS JuridicalCode
+       , Object_Juridical.ValueData      AS JuridicalName 
        , Object_Goods_Main.ObjectCode    AS GoodsCode
        , Object_Goods_Main.Name          AS GoodsName
        
@@ -233,6 +235,11 @@ BEGIN
                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
        INNER JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
        
+       INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                             ON ObjectLink_Unit_Juridical.ObjectId = MovementLinkObject_Unit.ObjectId
+                            AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+       INNER JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+
        INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = tmpMI.GoodsId
        INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
 
@@ -258,4 +265,4 @@ ALTER FUNCTION gpReport_PaperRecipeSP (TDateTime, TDateTime, TVarChar) OWNER TO 
 
 -- тест
 -- 
-select * from gpReport_PaperRecipeSPInsulin(inStartDate := ('01.03.2022')::TDateTime , inEndDate := ('31.03.2022')::TDateTime ,  inSession := '3');
+select * from gpReport_PaperRecipeSPInsulin(inStartDate := ('01.03.2022')::TDateTime , inEndDate := ('30.04.2022')::TDateTime ,  inSession := '3');

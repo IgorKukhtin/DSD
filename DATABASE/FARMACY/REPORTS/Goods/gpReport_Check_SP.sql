@@ -1,9 +1,6 @@
 -- Function:  gpReport_Check_SP()
 
-DROP FUNCTION IF EXISTS gpReport_Check_SP (TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Check_SP (TDateTime, TDateTime, Integer,Integer,Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Check_SP (TDateTime, TDateTime, Integer,Integer,Integer,Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Check_SP (TDateTime, TDateTime, Integer,Integer,Integer,Integer,Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Check_SP (TDateTime, TDateTime, Integer,Integer,Integer,Integer,Integer,Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Check_SP(
     IN inStartDate           TDateTime,  -- Дата начала
@@ -114,6 +111,9 @@ RETURNS TABLE (MovementId     Integer
              , InsertDate_Check TDateTime
              , NDS TFloat
              , MedicalProgramSPName TVarChar
+             
+             , DSummaSP       TFloat
+             , Color_DSummaSP Integer
 )
 AS
 $BODY$
@@ -134,6 +134,11 @@ BEGIN
     RETURN QUERY
         -- результат
         SELECT tmp.*
+             , (tmp.SummaSP_pack - tmp.SummaSP)::TFloat   AS DSummaSP
+             , CASE WHEN tmp.SummaSP_pack < tmp.SummaSP THEN zfCalc_Color(255, 182, 203)
+                    WHEN tmp.SummaSP_pack > tmp.SummaSP THEN zfCalc_Color(152, 251, 152)
+                    ELSE zc_Color_White() END::Integer Color_DSummaSP
+
         FROM gpReport_Check_SP_01042019 (inStartDate          := inStartDate
                                        , inEndDate            := inEndDate          
                                        , inJuridicalId        := inJuridicalId      
@@ -148,6 +153,10 @@ BEGIN
     RETURN QUERY
         -- результат
         SELECT tmp.*
+             , (tmp.SummaSP_pack - tmp.SummaSP)::TFloat   AS DSummaSP
+             , CASE WHEN tmp.SummaSP_pack < tmp.SummaSP THEN zfCalc_Color(255, 182, 203)
+                    WHEN tmp.SummaSP_pack > tmp.SummaSP THEN zfCalc_Color(152, 251, 152)
+                    ELSE zc_Color_White() END::Integer Color_DSummaSP
         FROM gpReport_Check_SP_old (inStartDate          := inStartDate
                                   , inEndDate            := inEndDate          
                                   , inJuridicalId        := inJuridicalId      
@@ -177,4 +186,9 @@ $BODY$
 -- select * from gpReport_Check_SP(inStartDate := ('01.02.2011')::TDateTime , inEndDate := ('02.02.2011')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 10959824 ,  inSession := '3');
 
 
---select * from gpReport_Check_SP(inStartDate := ('01.10.2021')::TDateTime , inEndDate := ('05.10.2021')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 0 , inMedicalProgramSPId := 18076882 ,  inSession := '3');
+--
+
+select * from gpReport_Check_SP(inStartDate := ('01.03.2022')::TDateTime , inEndDate := ('05.03.2022')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 0 , inMedicalProgramSPId := 0 , inGroupMedicalProgramSPId := 0, inSession := '3');
+
+
+

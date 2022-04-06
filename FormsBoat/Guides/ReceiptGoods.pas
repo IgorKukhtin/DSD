@@ -164,6 +164,10 @@ type
     Color_value_ch1: TcxGridDBColumn;
     Color_Level_ch1: TcxGridDBColumn;
     actChoiceFormProdColor_goods_2: TOpenChoiceForm;
+    spGetImportSettingId_Osculati: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSettingId: TdsdExecStoredProc;
+    mactStartLoad: TMultiAction;
   private
     { Private declarations }
   public

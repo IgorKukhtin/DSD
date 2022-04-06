@@ -971,12 +971,7 @@ inherited SaleForm: TSaleForm
     TabOrder = 17
     Width = 47
   end
-  object cxLabel25: TcxLabel [14]
-    Left = 281
-    Top = 80
-    Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
-  end
-  object edInvNumberTransport: TcxButtonEdit [15]
+  object edInvNumberTransport: TcxButtonEdit [14]
     Left = 360
     Top = 103
     Properties.Buttons = <
@@ -985,31 +980,31 @@ inherited SaleForm: TSaleForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 19
+    TabOrder = 18
     Width = 170
   end
-  object cbPromo: TcxCheckBox [16]
+  object cbPromo: TcxCheckBox [15]
     Left = 683
     Top = 71
     Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
-    TabOrder = 20
+    TabOrder = 19
     Width = 100
   end
-  object cbPrinted: TcxCheckBox [17]
+  object cbPrinted: TcxCheckBox [16]
     Left = 8
     Top = 84
     Caption = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
-    TabOrder = 21
+    TabOrder = 20
     Width = 128
   end
-  object cxLabel26: TcxLabel [18]
+  object cxLabel26: TcxLabel [17]
     Left = 535
     Top = 85
     Caption = #1042#1080#1079#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
   end
-  object edReestrKind: TcxButtonEdit [19]
+  object edReestrKind: TcxButtonEdit [18]
     Left = 535
     Top = 103
     Properties.Buttons = <
@@ -1019,15 +1014,15 @@ inherited SaleForm: TSaleForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 23
+    TabOrder = 22
     Width = 144
   end
-  object cxLabel27: TcxLabel [20]
+  object cxLabel27: TcxLabel [19]
     Left = 948
     Top = 85
     Caption = #8470' '#1076#1086#1082'. '#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1099
   end
-  object edInvNumberProduction: TcxButtonEdit [21]
+  object edInvNumberProduction: TcxButtonEdit [20]
     Left = 948
     Top = 103
     Properties.Buttons = <
@@ -1037,24 +1032,24 @@ inherited SaleForm: TSaleForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 25
+    TabOrder = 24
     Width = 120
   end
-  object cxLabel28: TcxLabel [22]
+  object cxLabel28: TcxLabel [21]
     Left = 254
     Top = 85
     Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
   end
-  object edPartionGoodsDate: TcxDateEdit [23]
+  object edPartionGoodsDate: TcxDateEdit [22]
     Left = 254
     Top = 103
     EditValue = 43831d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 27
+    TabOrder = 26
     Width = 102
   end
-  object cbReCalcPrice: TcxCheckBox [24]
+  object cbReCalcPrice: TcxCheckBox [23]
     Left = 8
     Top = 121
     Hint = 
@@ -1065,15 +1060,15 @@ inherited SaleForm: TSaleForm
     Properties.ReadOnly = False
     ShowHint = True
     State = cbsChecked
-    TabOrder = 28
+    TabOrder = 27
     Width = 135
   end
-  object cxLabel29: TcxLabel [25]
+  object cxLabel29: TcxLabel [24]
     Left = 804
     Top = 85
     Caption = #1055#1088#1072#1081#1089' '#1074#1093'. ('#1089#1093'. '#1055#1072#1074#1080#1083#1100#1086#1085#1099')'
   end
-  object edPriceListIn: TcxButtonEdit [26]
+  object edPriceListIn: TcxButtonEdit [25]
     Left = 804
     Top = 103
     Properties.Buttons = <
@@ -1082,15 +1077,15 @@ inherited SaleForm: TSaleForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 30
+    TabOrder = 29
     Width = 140
   end
-  object cxLabel31: TcxLabel [27]
+  object cxLabel31: TcxLabel [26]
     Left = 1245
     Top = 85
     Caption = #1053#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#8470' ('#1074#1086#1079#1074#1088#1072#1090')'
   end
-  object edReturnIn: TcxButtonEdit [28]
+  object edReturnIn: TcxButtonEdit [27]
     Left = 1245
     Top = 103
     Properties.Buttons = <
@@ -1099,7 +1094,7 @@ inherited SaleForm: TSaleForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 32
+    TabOrder = 31
     Width = 116
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

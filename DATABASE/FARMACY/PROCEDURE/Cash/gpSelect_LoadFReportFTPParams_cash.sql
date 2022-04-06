@@ -28,7 +28,8 @@ BEGIN
     vbUnitId := vbUnitKey::Integer;
 
 
-    outHost := CASE WHEN vbUnitId = 11152911 THEN '134.249.189.115' ELSE 'ftp.neboley.dp.ua' END; --'134.249.138.177';
+--    outHost := CASE WHEN vbUnitId = 11152911 THEN '134.249.189.115' ELSE 'ftp.neboley.dp.ua' END; --'134.249.138.177';
+    outHost := 'ftp.neboley.dp.ua';
     outPort := 12021;
     outUsername := 'zreport';
     outPassword := 'ZAaYuMuDg3bv9ZHF';

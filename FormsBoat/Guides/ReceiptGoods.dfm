@@ -1171,6 +1171,18 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -1271,11 +1283,8 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       ShortCut = 16430
     end
     object bbStartLoad: TdxBarButton
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1042#1057#1045' '#1044#1072#1085#1085#1099#1077' '#1051#1086#1076#1082#1072#1084
+      Action = mactStartLoad
       Category = 0
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1042#1057#1045' '#1044#1072#1085#1085#1099#1077' '#1051#1086#1076#1082#1072#1084
-      Visible = ivAlways
-      ImageIndex = 41
     end
     object bbShowAllColorItems: TdxBarButton
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1042#1089#1077' '#1096#1072#1073#1083#1086#1085#1099
@@ -1952,6 +1961,61 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerId'
+          Value = ''
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actGetImportSettingId: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1059#1047#1051#1054#1042' ('#1090#1086#1074#1072#1088#1099')'
+    end
+    object mactStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingId
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1059#1047#1051#1054#1042' ('#1090#1086#1074#1072#1088#1099') '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1059#1047#1051#1054#1042' ('#1090#1086#1074#1072#1088#1099')'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1059#1047#1051#1054#1042' ('#1090#1086#1074#1072#1088#1099')'
+      ImageIndex = 27
+      WithoutNext = True
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReceiptGoods'
@@ -2267,8 +2331,8 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         Value = Null
         MultiSelectSeparator = ','
       end>
-    Left = 504
-    Top = 120
+    Left = 768
+    Top = 144
   end
   object spGetImportSettingId: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -2279,7 +2343,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     Params = <
       item
         Name = 'inDefaultKey'
-        Value = 'TBoat1Form;zc_Object_ImportSetting_Boat1'
+        Value = 'TReceiptGoodsForm;zc_Object_ImportSetting_ReceiptGoods'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2299,8 +2363,8 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 576
-    Top = 280
+    Left = 1144
+    Top = 104
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -2555,5 +2619,37 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     PackSize = 1
     Left = 896
     Top = 392
+  end
+  object spGetImportSettingId_Osculati: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TPriceListOsculatiForm;zc_Object_ImportSetting_PriceListOsculati'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId_Osculati'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 952
+    Top = 152
   end
 end

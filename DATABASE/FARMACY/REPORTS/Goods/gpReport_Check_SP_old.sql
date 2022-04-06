@@ -289,6 +289,10 @@ BEGIN
                                                         ON ObjectLink_GroupMedicalProgramSP.ObjectId = COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 18076882)
                                                        AND ObjectLink_GroupMedicalProgramSP.DescId = zc_ObjectLink_MedicalProgramSP_GroupMedicalProgramSP()
 
+                                   LEFT JOIN MovementBoolean AS MovementBoolean_PaperRecipeSP
+                                                             ON MovementBoolean_PaperRecipeSP.MovementId = Movement_Check.Id
+                                                            AND MovementBoolean_PaperRecipeSP.DescId = zc_MovementBoolean_PaperRecipeSP()
+
                               WHERE Movement_Check.DescId = zc_Movement_Check()
                                 AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY'
                                 AND Movement_Check.StatusId = zc_Enum_Status_Complete()
@@ -297,6 +301,7 @@ BEGIN
                                 AND COALESCE (MovementLinkObject_SPKind.ObjectId, 0) = zc_Enum_SPKind_SP()
                                 AND (COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 18076882) = inMedicalProgramSPId OR COALESCE(inMedicalProgramSPId, 0) = 0)
                                 AND (COALESCE (ObjectLink_GroupMedicalProgramSP.ChildObjectId, 0) = inGroupMedicalProgramSPId OR COALESCE(inGroupMedicalProgramSPId, 0) = 0)
+                                AND COALESCE (MovementBoolean_PaperRecipeSP.ValueData,  False) = False
                               )
 
         --
