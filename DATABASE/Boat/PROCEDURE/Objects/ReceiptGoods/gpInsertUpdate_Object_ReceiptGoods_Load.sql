@@ -1,6 +1,6 @@
 --
+
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoods_Load (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
-                                                              
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoods_Load(
     IN inArticle               TVarChar,
@@ -31,7 +31,7 @@ BEGIN
    IF COALESCE (TRIM (inGoodsName), '') = '' THEN RETURN; END IF;
 
 
-   -- пробуем найти Товар 1
+   -- пробуем найти Товар - Master
    IF COALESCE (inGoodsName, '') <> ''
    THEN
        -- по названию
@@ -49,14 +49,14 @@ BEGIN
                     );
 */
 
-          -- Eсли не нашли создаем товар
-          IF COALESCE (vbGoodsId,0) = 0
+          -- ВСЕГДА - создание/корректировка товара Master
+          IF COALESCE (vbGoodsId, 0) = 0 OR 1=1
           THEN
 
-             --группа товара пробуем найти
+             -- группа товара пробуем найти
              vbGoodsGroupId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsGroup() AND Object.ValueData = TRIM (inGroupName));
-             --если нет такой группы создаем
-             IF COALESCE (vbGoodsGroupId,0) = 0
+             -- если нет такой группы создаем
+             IF COALESCE (vbGoodsGroupId, 0) = 0
              THEN
                   vbGoodsGroupId := (SELECT tmp.ioId
                                      FROM gpInsertUpdate_Object_GoodsGroup (ioId              := 0         :: Integer
@@ -69,40 +69,41 @@ BEGIN
                                                                            ) AS tmp);
              END IF;
 
-             -- создаем
-             vbGoodsId := gpInsertUpdate_Object_Goods(ioId               := COALESCE (vbGoodsId,0)::  Integer
-                                                    , inCode             := lfGet_ObjectCode(0, zc_Object_Goods())    :: Integer
-                                                    , inName             := TRIM (inGoodsName) :: TVarChar
-                                                    , inArticle          := TRIM (inArticle)
-                                                    , inArticleVergl     := Null     :: TVarChar
-                                                    , inEAN              := Null     :: TVarChar
-                                                    , inASIN             := Null     :: TVarChar
-                                                    , inMatchCode        := Null     :: TVarChar 
-                                                    , inFeeNumber        := Null     :: TVarChar
-                                                    , inComment          := Null     :: TVarChar
-                                                    , inIsArc            := FALSE    :: Boolean
-                                                    , inAmountMin        := 0        :: TFloat
-                                                    , inAmountRefer      := 0        :: TFloat
-                                                    , inEKPrice          := 0        :: TFloat
-                                                    , inEmpfPrice        := 0        :: TFloat
-                                                    , inGoodsGroupId     := vbGoodsGroupId  :: Integer  
-                                                    , inMeasureId        := 0        :: Integer
-                                                    , inGoodsTagId       := 0        :: Integer
-                                                    , inGoodsTypeId      := 0        :: Integer
-                                                    , inGoodsSizeId      := 0        :: Integer
-                                                    , inProdColorId      := 0        :: Integer
-                                                    , inPartnerId        := 0        :: Integer
-                                                    , inUnitId           := 0        :: Integer
-                                                    , inDiscountPartnerId := 0       :: Integer
-                                                    , inTaxKindId        := 0        :: Integer
-                                                    , inEngineId         := NULL
-                                                    , inSession          := inSession:: TVarChar
-                                                    );
-               
+             -- создаем Master
+             vbGoodsId := gpInsertUpdate_Object_Goods (ioId                := COALESCE (vbGoodsId, 0) :: Integer
+                                                     , inCode              := 0
+                                                     , inName              := TRIM (inGoodsName) :: TVarChar
+                                                     , inArticle           := TRIM (inArticle)
+                                                     , inArticleVergl      := NULL     :: TVarChar
+                                                     , inEAN               := NULL     :: TVarChar
+                                                     , inASIN              := NULL     :: TVarChar
+                                                     , inMatchCode         := NULL     :: TVarChar
+                                                     , inFeeNumber         := NULL     :: TVarChar
+                                                     , inComment           := NULL     :: TVarChar
+                                                     , inIsArc             := FALSE    :: Boolean
+                                                     , inAmountMin         := 0        :: TFloat
+                                                     , inAmountRefer       := 0        :: TFloat
+                                                     , inEKPrice           := 0        :: TFloat
+                                                     , inEmpfPrice         := 0        :: TFloat
+                                                     , inGoodsGroupId      := vbGoodsGroupId  :: Integer
+                                                     , inMeasureId         := 0        :: Integer
+                                                     , inGoodsTagId        := 0        :: Integer
+                                                     , inGoodsTypeId       := 0        :: Integer
+                                                     , inGoodsSizeId       := 0        :: Integer
+                                                     , inProdColorId       := 0        :: Integer
+                                                     , inPartnerId         := 0        :: Integer
+                                                     , inUnitId            := 0        :: Integer
+                                                     , inDiscountPartnerId := 0       :: Integer
+                                                     , inTaxKindId         := 0        :: Integer
+                                                     , inEngineId          := NULL
+                                                     , inSession           := inSession:: TVarChar
+                                                      );
+
           END IF;
    END IF;
 
-   -- пробуем найти Товар 2
+
+   -- пробуем найти Товар - Child
    IF COALESCE (inGoodsName_child, '') <> ''
    THEN
        -- по названию
@@ -120,14 +121,13 @@ BEGIN
                           );
 */
 
-          -- Eсли не нашли создаем товар
-          IF COALESCE (vbGoodsId_child,0) = 0
+          -- ВСЕГДА - создание/корректировка товара Child
+          IF COALESCE (vbGoodsId_child, 0) = 0 OR 1=1
           THEN
-
-             --группа товара пробуем найти
+             -- группа товара пробуем найти
              vbGoodsGroupId_child := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsGroup() AND Object.ValueData = TRIM (inGroupName_child));
-             --если нет такой группы создаем
-             IF COALESCE (vbGoodsGroupId_child,0) = 0
+             -- если нет такой группы создаем
+             IF COALESCE (vbGoodsGroupId_child, 0) = 0
              THEN
                   vbGoodsGroupId_child := (SELECT tmp.ioId
                                            FROM gpInsertUpdate_Object_GoodsGroup (ioId              := 0         :: Integer
@@ -140,36 +140,36 @@ BEGIN
                                                                                  ) AS tmp);
              END IF;
 
-             -- создаем
-             vbGoodsId_child := gpInsertUpdate_Object_Goods(ioId               := COALESCE (vbGoodsId_child,0)::  Integer
-                                                          , inCode             := lfGet_ObjectCode(0, zc_Object_Goods())    :: Integer
-                                                          , inName             := TRIM (inGoodsName_child) :: TVarChar
-                                                          , inArticle          := TRIM (inArticle_child)
-                                                          , inArticleVergl     := Null     :: TVarChar
-                                                          , inEAN              := Null     :: TVarChar
-                                                          , inASIN             := Null     :: TVarChar
-                                                          , inMatchCode        := Null     :: TVarChar 
-                                                          , inFeeNumber        := Null     :: TVarChar
-                                                          , inComment          := Null     :: TVarChar
-                                                          , inIsArc            := FALSE    :: Boolean
-                                                          , inAmountMin        := 0        :: TFloat
-                                                          , inAmountRefer      := 0        :: TFloat
-                                                          , inEKPrice          := 0        :: TFloat
-                                                          , inEmpfPrice        := 0        :: TFloat
-                                                          , inGoodsGroupId     := vbGoodsGroupId_child  :: Integer  
-                                                          , inMeasureId        := 0        :: Integer
-                                                          , inGoodsTagId       := 0        :: Integer
-                                                          , inGoodsTypeId      := 0        :: Integer
-                                                          , inGoodsSizeId      := 0        :: Integer
-                                                          , inProdColorId      := 0        :: Integer
-                                                          , inPartnerId        := 0        :: Integer
-                                                          , inUnitId           := 0        :: Integer
-                                                          , inDiscountPartnerId := 0       :: Integer
-                                                          , inTaxKindId        := 0        :: Integer
-                                                          , inEngineId         := NULL
-                                                          , inSession          := inSession:: TVarChar
-                                                          );
-               
+             -- создаем Child
+             vbGoodsId_child := gpInsertUpdate_Object_Goods (ioId               := COALESCE (vbGoodsId_child,0)::  Integer
+                                                           , inCode             := 0
+                                                           , inName             := TRIM (inGoodsName_child) :: TVarChar
+                                                           , inArticle          := TRIM (inArticle_child)
+                                                           , inArticleVergl     := NULL     :: TVarChar
+                                                           , inEAN              := NULL     :: TVarChar
+                                                           , inASIN             := NULL     :: TVarChar
+                                                           , inMatchCode        := NULL     :: TVarChar
+                                                           , inFeeNumber        := NULL     :: TVarChar
+                                                           , inComment          := NULL     :: TVarChar
+                                                           , inIsArc            := FALSE    :: Boolean
+                                                           , inAmountMin        := 0        :: TFloat
+                                                           , inAmountRefer      := 0        :: TFloat
+                                                           , inEKPrice          := 0        :: TFloat
+                                                           , inEmpfPrice        := 0        :: TFloat
+                                                           , inGoodsGroupId     := vbGoodsGroupId_child  :: Integer
+                                                           , inMeasureId        := 0        :: Integer
+                                                           , inGoodsTagId       := 0        :: Integer
+                                                           , inGoodsTypeId      := 0        :: Integer
+                                                           , inGoodsSizeId      := 0        :: Integer
+                                                           , inProdColorId      := 0        :: Integer
+                                                           , inPartnerId        := 0        :: Integer
+                                                           , inUnitId           := 0        :: Integer
+                                                           , inDiscountPartnerId := 0       :: Integer
+                                                           , inTaxKindId        := 0        :: Integer
+                                                           , inEngineId         := NULL
+                                                           , inSession          := inSession:: TVarChar
+                                                            );
+
           END IF;
    END IF;
 
@@ -177,26 +177,27 @@ BEGIN
    --- ищем ReceiptGoods
    vbReceiptGoodsId := (SELECT ObjectLink.ObjectId
                         FROM ObjectLink
-                        WHERE ObjectLink.DescId = zc_ObjectLink_ReceiptGoods_Object()
+                        WHERE ObjectLink.DescId        = zc_ObjectLink_ReceiptGoods_Object()
                           AND ObjectLink.ChildObjectId = vbGoodsId
-                        );
+                       );
 
-   IF COALESCE (vbReceiptGoodsId,0) = 0
+   -- ВСЕГДА создание/корректировка
+   IF COALESCE (vbReceiptGoodsId, 0) = 0 OR 1=1
    THEN
-       --если не нашли создаем
-       vbReceiptGoodsId :=  gpInsertUpdate_Object_ReceiptGoods(ioId               := 0   :: Integer
-                                                             , inCode             := 0   :: Integer
-                                                             , inName             := TRIM (inGoodsName) :: TVarChar
-                                                             , inColorPatternId   := 0
-                                                             , inGoodsId          := vbGoodsId
-                                                             , inisMain           := FALSE    :: Boolean
-                                                             , inUserCode         := ''       :: TVarChar
-                                                             , inComment          := Null     :: TVarChar
-                                                             , inSession          := inSession:: TVarChar
-                                                             );
+       -- если не нашли создаем
+       vbReceiptGoodsId :=  gpInsertUpdate_Object_ReceiptGoods (ioId               := vbReceiptGoodsId
+                                                              , inCode             := 0   :: Integer
+                                                              , inName             := TRIM (inGoodsName) :: TVarChar
+                                                              , inColorPatternId   := 0
+                                                              , inGoodsId          := vbGoodsId
+                                                              , inisMain           := TRUE     :: Boolean
+                                                              , inUserCode         := ''       :: TVarChar
+                                                              , inComment          := NULL     :: TVarChar
+                                                              , inSession          := inSession:: TVarChar
+                                                               );
    END IF;
 
-   --ищем ReceiptGoodsChild
+   -- ищем ReceiptGoodsChild
    vbReceiptGoodsChildId := (SELECT Object_ReceiptGoodsChild.Id
                              FROM Object AS Object_ReceiptGoodsChild
                                   INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
@@ -211,19 +212,19 @@ BEGIN
                                AND Object_ReceiptGoodsChild.isErased = FALSE
                              );
 
-   IF COALESCE (vbReceiptGoodsChildId,0) = 0
+   IF COALESCE (vbReceiptGoodsChildId, 0) = 0
    THEN
-       --если не нашли создаем
-       PERFORM gpInsertUpdate_Object_ReceiptGoodsChild(ioId                 := COALESCE (vbReceiptGoodsChildId,0) ::Integer
-                                                     , inComment            := ''               ::TVarChar
-                                                     , inReceiptGoodsId     := vbReceiptGoodsId ::Integer   
-                                                     , inObjectId           := vbGoodsId_child  ::Integer   
-                                                     , inProdColorPatternId := 0                ::Integer   
-                                                     , ioValue              := inAmount         ::TFloat    
-                                                     , ioValue_service      := 0                ::TFloat    
-                                                     , inIsEnabled          := TRUE             ::Boolean   
-                                                     , inSession            := inSession        ::TVarChar
-                                                     );
+       -- если не нашли создаем
+       PERFORM gpInsertUpdate_Object_ReceiptGoodsChild (ioId                 := COALESCE (vbReceiptGoodsChildId,0) ::Integer
+                                                      , inComment            := ''               ::TVarChar
+                                                      , inReceiptGoodsId     := vbReceiptGoodsId ::Integer
+                                                      , inObjectId           := vbGoodsId_child  ::Integer
+                                                      , inProdColorPatternId := 0                ::Integer
+                                                      , ioValue              := inAmount         ::TFloat
+                                                      , ioValue_service      := 0                ::TFloat
+                                                      , inIsEnabled          := TRUE             ::Boolean
+                                                      , inSession            := inSession        ::TVarChar
+                                                       );
    END IF;
 
 

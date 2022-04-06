@@ -5,11 +5,11 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoods(Integer, Integer, TVa
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoods(
  INOUT ioId               Integer   ,    -- ключ объекта <Лодки>
-    IN inCode             Integer   ,    -- Код объекта 
+    IN inCode             Integer   ,    -- Код объекта
     IN inName             TVarChar  ,    -- Название объекта
     IN inColorPatternId   Integer   ,
     IN inGoodsId          Integer   ,
-    IN inisMain           Boolean   , 
+    IN inisMain           Boolean   ,
     IN inUserCode         TVarChar  ,    -- пользовательский код
     IN inComment          TVarChar  ,
     IN inSession          TVarChar       -- сессия пользователя
@@ -18,11 +18,11 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbIsInsert Boolean; 
+   DECLARE vbIsInsert Boolean;
    DECLARE vbGoodsName TVarChar;
    DECLARE vbGoodsCode TVarChar;
 BEGIN
-   
+
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ReceiptGoods());
    vbUserId:= lpGetUserBySession (inSession);
@@ -30,12 +30,22 @@ BEGIN
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-    -- Если код не установлен, определяем его как последний+1
-   inCode:= lfGet_ObjectCode (inCode, zc_Object_ReceiptGoods()); 
+   --
+   IF COALESCE (ioId, 0) = 0
+   THEN
+       -- Если код не установлен, определяем его как последний+1
+       inCode:= lfGet_ObjectCode (inCode, zc_Object_ReceiptGoods());
 
+   ELSEIF COALESCE (inCode, 0) = 0
+   THEN
+       -- Нашли код
+       inCode:= (SELECT Object.ObjectCode FROM Object WHERE Object.Id = ioId);
+   END IF;
+
+   --
    SELECT Goods.ValueData              AS GoodsName
         , Goods.ObjectCode :: TVarChar AS Code
-  INTO vbGoodsName, vbGoodsCode
+          INTO vbGoodsName, vbGoodsCode
    FROM Object AS Goods
    WHERE Goods.DescId = zc_Object_Goods() AND Goods.Id = inGoodsId;
 
@@ -55,7 +65,7 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_ReceiptGoods_Main(), ioId, inisMain);
-      
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoods_ColorPattern(), ioId, inColorPatternId);
    -- сохранили свойство <>
@@ -71,7 +81,7 @@ BEGIN
       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), ioId, CURRENT_TIMESTAMP);
       -- сохранили свойство <Пользователь (корр)>
       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Update(), ioId, vbUserId);
-   
+
    END IF;
 
    -- сохранили протокол
