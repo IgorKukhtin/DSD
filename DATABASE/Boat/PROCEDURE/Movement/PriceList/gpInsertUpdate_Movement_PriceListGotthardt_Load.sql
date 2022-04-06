@@ -25,10 +25,10 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-    -- Eсли не нашли пропускаем
+    -- Проверка - Eсли не нашли
     IF COALESCE (inPartnerId,0) = 0
     THEN
-         RAISE EXCEPTION 'Ошибка.Не выбран Поставщик';
+         RAISE EXCEPTION 'Ошибка.Не выбран Поставщик.';
     END IF;
 
 
