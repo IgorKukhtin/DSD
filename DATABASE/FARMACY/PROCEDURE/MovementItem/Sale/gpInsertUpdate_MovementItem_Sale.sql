@@ -78,14 +78,14 @@ BEGIN
                    RAISE EXCEPTION 'Ошибка. Запрет на отпуск товара по ПКМУ 1303 со ставкой НДС=20 проц. (ТОВАР БЕЗ РЕГИСТРАЦИИ !!!)';
             END IF;
 
-            SELECT CASE WHEN tt.Price < 100 THEN tt.Price * 1.25
-                         WHEN tt.Price >= 100 AND tt.Price < 500 THEN tt.Price * 1.2
-                         WHEN tt.Price >= 500 AND tt.Price < 1000 THEN tt.Price * 1.15
+            SELECT CASE WHEN tt.Price < 100 THEN tt.Price * 1.1 -- 1.25
+                         WHEN tt.Price >= 100 AND tt.Price < 500 THEN tt.Price * 1.1 -- 1.2
+                         WHEN tt.Price >= 500 AND tt.Price < 1000 THEN tt.Price * 1.1 -- 1.15
                          WHEN tt.Price >= 1000 THEN tt.Price * 1.1
                     END :: TFloat AS PriceCalc
-                  , CASE WHEN tt.Price < 100 THEN 25
-                         WHEN tt.Price >= 100 AND tt.Price < 500 THEN 20
-                         WHEN tt.Price >= 500 AND tt.Price < 1000 THEN 15
+                  , CASE WHEN tt.Price < 100 THEN 10 --25
+                         WHEN tt.Price >= 100 AND tt.Price < 500 THEN 10 --20
+                         WHEN tt.Price >= 500 AND tt.Price < 1000 THEN 10 --15
                          WHEN tt.Price >= 1000 THEN 10
                     END :: TFloat AS Persent
             INTO vbPriceCalc, vbPersent

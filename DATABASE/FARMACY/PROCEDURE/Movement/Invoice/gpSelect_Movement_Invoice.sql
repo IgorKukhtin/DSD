@@ -14,6 +14,7 @@ RETURNS TABLE (Id                  Integer
              , OperDate            TDateTime
              , StatusCode          Integer
              , StatusName          TVarChar
+             , TotalSummAll        TFloat
              , TotalSumm           TFloat
              , TotalSummWithOutVAT TFloat
              , TotalSummVAT        TFloat
@@ -22,6 +23,13 @@ RETURNS TABLE (Id                  Integer
              , Summ_Diff           TFloat
              , TotalCount          TFloat
              , ChangePercent       TFloat
+
+             , SummChangePercentAll TFloat
+             , SummChangePercent   TFloat
+             , NDSKindId           Integer
+             , NDS                 TFloat
+             , AmountSale          TFloat
+             , isErrorSum          Boolean
 
              , JuridicalId         Integer
              , JuridicalName       TVarChar
@@ -54,6 +62,7 @@ RETURNS TABLE (Id                  Integer
              , OKPO_Juridical      TVarChar
              , OKPO_PartnerMedical TVarChar
              , OKPO_Department     TVarChar
+             
               )
 
 AS
@@ -177,6 +186,116 @@ BEGIN
                                                      , zc_MovementLinkObject_Contract()
                                                       )
                   )
+     , tmpMovementCheck AS (SELECT Movement.Id          AS InvoiceId
+                                 , MLM_Child.MovementId AS Id
+                                 , MovementCheck.DescId
+                       FROM tmpMovement AS Movement
+                       
+                            INNER JOIN MovementLinkMovement AS MLM_Child
+                                                            ON MLM_Child.MovementChildId = Movement.Id
+                                                           AND MLM_Child.DescId = zc_MovementLinkMovement_Child()
+                                                           
+                            INNER JOIN Movement AS MovementCheck
+                                                ON MovementCheck.ID =  MLM_Child.MovementId 
+                                     
+                       )                  
+     , tmpMI_Check AS (SELECT MI_Check.*
+                       FROM MovementItem AS MI_Check
+                       WHERE MI_Check.MovementId IN (SELECT tmpMovementCheck.Id FROM tmpMovementCheck)
+                         AND MI_Check.DescId = zc_MI_Master()
+                         AND MI_Check.Amount <> 0
+                         AND MI_Check.isErased = FALSE
+                        )
+      -- информация из партий
+     , tmpMIC AS (SELECT MovementItemContainer.ContainerId
+                       , MovementItemContainer.MovementItemId
+                       , (-MovementItemContainer.Amount)::TFloat AS Amount
+                  FROM tmpMovementCheck
+
+                       INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = tmpMovementCheck.Id
+                                                       AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                                                       
+                  )
+     , tmpMIC_Info AS (SELECT tmpMIC.*
+                            , COALESCE (MIFloat_MovementItem.ValueData :: Integer, Object_PartionMovementItem.ObjectCode)   AS MIIncomeId
+                       FROM tmpMIC
+
+                            LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                          ON ContainerLinkObject_MovementItem.Containerid = tmpMIC.ContainerId
+                                                         AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                            LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+
+                            -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                            LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                        ON MIFloat_MovementItem.MovementItemId = Object_PartionMovementItem.ObjectCode
+                                                       AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                            
+                         )
+
+     , tmpMIFloat AS (SELECT *
+                      FROM MovementItemFloat
+                      WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_Check.Id FROM tmpMI_Check) 
+                      )
+     , tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_NDSKind_NDS.valuedata FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                             WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                            )
+                            
+     , impMIncome_NDS AS (SELECT MI_Income.Id
+                               , COALESCE(CASE WHEN MovementLinkObject_NDSKind.ObjectId = zc_Enum_NDSKind_Common() 
+                                               THEN zc_Enum_NDSKind_Medical() 
+                                               ELSE MovementLinkObject_NDSKind.ObjectId END, zc_Enum_NDSKind_Medical()) AS NDSKindId 
+                          FROM MovementItem AS MI_Income 
+     
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                            ON MovementLinkObject_NDSKind.MovementId = MI_Income.MovementId
+                                                           AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                                                                
+                          WHERE MI_Income.Id  IN (SELECT tmpMIC_Info.MIIncomeId FROM tmpMIC_Info))
+
+    , tmpMI_CheckSum AS (SELECT Movement_Check.InvoiceId                                                                        AS InvoiceId 
+                              , MI_Income.NDSKindId 
+                              , ROUND(SUM (CASE WHEN Movement_Check.DescId = zc_Movement_Check() AND Movement_Check.Id = 25920626
+                                                THEN COALESCE (MIFloat_SummChangePercent.ValueData, 0)
+                                                ELSE COALESCE(tmpMIC_Info.Amount, MI_Check.Amount) * COALESCE (MIFloat_PriceSale.ValueData, 0) -
+                                                     COALESCE(tmpMIC_Info.Amount, MI_Check.Amount) * COALESCE (MIFloat_Price.ValueData, 0) END), 2)::TFloat   AS SummChangePercent
+                              , SUM(COALESCE(tmpMIC_Info.Amount, MI_Check.Amount))    AS Amount
+                         FROM tmpMovementCheck AS Movement_Check
+                         
+                              INNER JOIN tmpMI_Check AS MI_Check ON MI_Check.MovementId = Movement_Check.Id
+                              
+                              LEFT JOIN tmpMIC_Info ON tmpMIC_Info.MovementItemId = MI_Check.Id
+                                                        
+                              --Сумма Скидки
+                              LEFT JOIN tmpMIFloat AS MIFloat_SummChangePercent
+                                                   ON MIFloat_SummChangePercent.MovementItemId = MI_Check.Id
+                                                  AND MIFloat_SummChangePercent.DescId = zc_MIFloat_SummChangePercent()
+
+                              LEFT JOIN tmpMIFloat AS MIFloat_PriceSale
+                                                   ON MIFloat_PriceSale.MovementItemId = MI_Check.Id
+                                                  AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+                              LEFT JOIN tmpMIFloat AS MIFloat_Price
+                                                   ON MIFloat_Price.MovementItemId = MI_Check.Id
+                                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                  
+                                                  
+                               LEFT JOIN impMIncome_NDS AS MI_Income ON MI_Income.Id      = tmpMIC_Info.MIIncomeId     
+                                                                                       
+                         GROUP BY Movement_Check.InvoiceId, MI_Income.NDSKindId 
+                         HAVING  SUM (CASE WHEN Movement_Check.DescId = zc_Movement_Check()
+                                           THEN COALESCE (MIFloat_SummChangePercent.ValueData, 0)
+                                           ELSE MI_Check.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0) -
+                                                MI_Check.Amount * COALESCE (MIFloat_Price.ValueData, 0) END) <> 0
+                         )                        
+    , tmpMI_CheckSumAll AS (SELECT Movement_Check.InvoiceId                            AS InvoiceId 
+                                 , MAX(Movement_Check.NDSKindId)::Integer              AS NDSKindId
+                                 , SUM(Movement_Check.SummChangePercent)::TFloat       AS SummChangePercent
+                                 , SUM(Movement_Check.Amount)::TFloat                  AS Amount
+                                 , count(*)                                            AS CountNDS
+                            FROM tmpMI_CheckSum AS Movement_Check
+                            GROUP BY Movement_Check.InvoiceId 
+                           )
+                                
+                        
 
         -- Результат
     SELECT     
@@ -189,14 +308,24 @@ BEGIN
       , Movement.OperDate
       , Object_Status.ObjectCode                               AS StatusCode
       , Object_Status.ValueData                                AS StatusName
-      , COALESCE (MovementFloat_TotalSumm.ValueData,0)::TFloat AS TotalSumm
-      , COALESCE (CAST (MovementFloat_TotalSumm.ValueData/(1.07) AS NUMERIC (16,2)),0) ::TFloat  AS TotalSummWithOutVAT
-      , COALESCE (CAST (MovementFloat_TotalSumm.ValueData - (MovementFloat_TotalSumm.ValueData/(1.07))  AS NUMERIC (16,2)),0) ::TFloat  AS TotalSummVAT
+      , COALESCE (MovementFloat_TotalSumm.ValueData,0)::TFloat AS TotalSummAll
+      , COALESCE (tmpMI_CheckSum.SummChangePercent, MovementFloat_TotalSumm.ValueData, 0)::TFloat AS TotalSumm
+      , COALESCE (CAST (COALESCE (tmpMI_CheckSum.SummChangePercent, MovementFloat_TotalSumm.ValueData, 0)/(1.0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 7) / 100) AS NUMERIC (16,2)),0) ::TFloat  AS TotalSummWithOutVAT
+      , COALESCE (CAST (COALESCE (tmpMI_CheckSum.SummChangePercent, MovementFloat_TotalSumm.ValueData, 0) - 
+        (COALESCE (tmpMI_CheckSum.SummChangePercent, MovementFloat_TotalSumm.ValueData, 0)/(1.0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 7) / 100))  AS NUMERIC (16,2)),0) ::TFloat  AS TotalSummVAT
       , COALESCE (ObjectFloat_TotalSumm.ValueData, 0)       :: TFloat AS TotalSumm_Contract
       , COALESCE (MovementFloat_TotalDiffSumm.ValueData,0)  :: TFloat AS TotalDiffSumm
-      , ( COALESCE (MovementFloat_TotalSumm.ValueData,0) - COALESCE (MovementFloat_TotalDiffSumm.ValueData,0) ) :: TFloat AS Summ_Diff
+      , (COALESCE (MovementFloat_TotalSumm.ValueData, 0) -  COALESCE (MovementFloat_TotalDiffSumm.ValueData,0) ) :: TFloat AS Summ_Diff
       , COALESCE (MovementFloat_TotalCount.ValueData,0)     :: TFloat AS TotalCount
       , COALESCE (MovementFloat_ChangePercent.ValueData, 0) :: TFloat AS ChangePercent
+
+      , tmpMI_CheckSumAll.SummChangePercent                    AS SummChangePercentAll
+      , tmpMI_CheckSum.SummChangePercent                       AS SummChangePercent 
+      , tmpMI_CheckSum.NDSKindId                               AS NDSKindId
+      , ObjectFloat_NDSKind_NDS.ValueData                      AS NDS
+      , tmpMI_CheckSumAll.Amount                               AS AmountSale
+      , COALESCE(tmpMI_CheckSum.SummChangePercent, 0) = 0 AND
+        COALESCE(tmpMI_CheckSumAll.CountNDS, 1) > 1            AS isErrorSum 
 
       , MovementLinkObject_Juridical.ObjectId                  AS JuridicalId
       , Object_Juridical.ValueData                             AS JuridicalName
@@ -235,7 +364,7 @@ BEGIN
       , ObjectHistory_JuridicalDetails.OKPO      AS OKPO_Juridical
       , ObjectHistory_PartnerMedicalDetails.OKPO AS OKPO_PartnerMedical
       , ObjectHistory_DepartmentDetails.OKPO     AS OKPO_Department
-
+      
     FROM tmpMovement AS Movement
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
         
@@ -326,6 +455,17 @@ BEGIN
                                        AND tmpContractDepartment.Contract_EndDate >= MovementDate_OperDateStart.ValueData
 
         LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := ObjectLink_PartnerMedical_Department.ChildObjectId, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_DepartmentDetails ON 1=1
+        
+        LEFT JOIN tmpMI_CheckSumAll ON tmpMI_CheckSumAll.InvoiceId = Movement.Id
+        
+        LEFT JOIN tmpMI_CheckSum ON tmpMI_CheckSum.InvoiceId = Movement.Id 
+                                AND tmpMI_CheckSumAll.SummChangePercent = COALESCE (MovementFloat_TotalSumm.ValueData,0)
+                                AND COALESCE(tmpMI_CheckSumAll.CountNDS, 1) > 1
+
+        LEFT JOIN tmpOF_NDSKind_NDS AS ObjectFloat_NDSKind_NDS
+                                    ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE(tmpMI_CheckSum.NDSKindId, tmpMI_CheckSumAll.NDSKindId, zc_Enum_NDSKind_Medical())
+                                    
+        
  ;
 
 END;
@@ -349,3 +489,7 @@ ALTER FUNCTION gpSelect_Movement_Invoice (TDateTime, TDateTime, Boolean, TVarCha
 
 -- тест
 --SELECT * FROM gpSelect_Movement_Invoice (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inIsErased := FALSE, inSession:= zfCalc_UserAdmin());
+
+
+select * from gpSelect_Movement_Invoice(inStartDate := ('07.06.2021')::TDateTime , inEndDate := ('20.04.2022')::TDateTime , inIsErased := 'False' ,  inSession := '3')
+-- where TotalSummAll <> TotalSumm

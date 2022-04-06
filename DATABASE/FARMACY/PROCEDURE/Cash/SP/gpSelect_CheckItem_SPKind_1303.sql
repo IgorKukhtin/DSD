@@ -53,14 +53,14 @@ BEGIN
                    RETURN;
             END IF;
             
-            SELECT CASE WHEN tt.Price < 100 THEN tt.Price * 1.249
-                         WHEN tt.Price >= 100 AND tt.Price < 500 THEN tt.Price * 1.199
-                         WHEN tt.Price >= 500 AND tt.Price < 1000 THEN tt.Price * 1.149
+            SELECT CASE WHEN tt.Price < 100 THEN tt.Price * 1.099  --1.249
+                         WHEN tt.Price >= 100 AND tt.Price < 500 THEN tt.Price * 1.099 -- 1.199
+                         WHEN tt.Price >= 500 AND tt.Price < 1000 THEN tt.Price * 1.099 -- 1.149
                          WHEN tt.Price >= 1000 THEN tt.Price * 1.099
                     END :: TFloat AS PriceCalc
-                  , CASE WHEN tt.Price < 100 THEN 25
-                         WHEN tt.Price >= 100 AND tt.Price < 500 THEN 20
-                         WHEN tt.Price >= 500 AND tt.Price < 1000 THEN 15
+                  , CASE WHEN tt.Price < 100 THEN 10 -- 25
+                         WHEN tt.Price >= 100 AND tt.Price < 500 THEN 10 -- 20
+                         WHEN tt.Price >= 500 AND tt.Price < 1000 THEN 10 -- 15
                          WHEN tt.Price >= 1000 THEN 10
                     END :: TFloat AS Persent
             INTO vbPriceCalc, vbPersent
@@ -110,8 +110,8 @@ BEGIN
             -- Предложение по цене
             IF (COALESCE (vbPriceCalc,0) < inPriceSale) AND (COALESCE (trunc(vbPriceCalc * 10) / 10, 0) > 0)
             THEN
-                   outSentence :=  'Применить максимально допустимую цену - '||to_char(outPrice, 'G999G999G999G999D99');
                    outPrice := trunc(vbPriceCalc * 10) / 10;
+                   outSentence :=  'Применить максимально допустимую цену - '||to_char(outPrice, 'G999G999G999G999D99');
             END IF;
     END IF;
 
@@ -125,4 +125,4 @@ $BODY$
  26.01.20                                                                                      *
 */
 
--- SELECT * FROM gpSelect_CheckItem_SPKind_1303(inSPKindId := zc_Enum_SPKind_1303(), inGoodsId := 499, inPriceSale := 1, inSession := '3');
+-- SELECT * FROM gpSelect_CheckItem_SPKind_1303(inSPKindId := zc_Enum_SPKind_1303(), inGoodsId := 499, inPriceSale := 1000, inSession := '3');

@@ -182,6 +182,10 @@ WITH -- Товары соц-проект
                                     ON MovementString_FiscalCheckNumber.MovementId = Movement.Id
                                    AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
 
+           LEFT JOIN MovementBoolean AS MovementBoolean_PaperRecipeSP
+                                     ON MovementBoolean_PaperRecipeSP.MovementId = Movement.Id
+                                    AND MovementBoolean_PaperRecipeSP.DescId = zc_MovementBoolean_PaperRecipeSP()
+
            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                  AND MovementItem.DescId     = zc_MI_Master()
                                  AND MovementItem.isErased   = FALSE   
@@ -220,6 +224,7 @@ WITH -- Товары соц-проект
         AND Movement.StatusId = zc_Enum_Status_Complete()
         AND MovementItem.Amount > 0
         AND MovementItem.IsErased = False
+        AND COALESCE(MovementBoolean_PaperRecipeSP.ValueData, False) = False
       ORDER BY Movement.OperDate;
 
 END;
