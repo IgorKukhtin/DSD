@@ -24,7 +24,7 @@ object InventoryForm: TInventoryForm
     Width = 808
     Height = 416
     Align = alClient
-    TabOrder = 2
+    TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 416
@@ -277,7 +277,7 @@ object InventoryForm: TInventoryForm
       Left = 9
       Top = 23
       Properties.ReadOnly = True
-      TabOrder = 6
+      TabOrder = 2
       Width = 70
     end
     object cxLabel1: TcxLabel
@@ -291,7 +291,7 @@ object InventoryForm: TInventoryForm
       EditValue = 42160d
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 8
+      TabOrder = 6
       Width = 82
     end
     object cxLabel2: TcxLabel
@@ -308,7 +308,7 @@ object InventoryForm: TInventoryForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 5
+      TabOrder = 0
       Width = 326
     end
     object cxLabel3: TcxLabel
@@ -340,7 +340,7 @@ object InventoryForm: TInventoryForm
         end>
       Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
-      TabOrder = 10
+      TabOrder = 9
       Width = 160
     end
     object cxLabel16: TcxLabel
@@ -354,65 +354,122 @@ object InventoryForm: TInventoryForm
       TabOrder = 12
       Width = 326
     end
-    object edAmount: TcxCurrencyEdit
-      Left = 400
-      Top = 107
-      EditValue = 1.000000000000000000
-      Properties.Alignment.Horz = taRightJustify
-      Properties.Alignment.Vert = taVCenter
-      Properties.DecimalPlaces = 3
-      Properties.DisplayFormat = ',0.###'
-      TabOrder = 3
-      Width = 104
+    object Panel1: TPanel
+      Left = 370
+      Top = 1
+      Width = 380
+      Height = 41
+      TabOrder = 7
+      object cxLabel6: TcxLabel
+        Left = 188
+        Top = 1
+        Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
+      end
+      object edBarCode1: TcxTextEdit
+        Left = 189
+        Top = 18
+        TabOrder = 0
+        Width = 179
+      end
+      object cxLabel8: TcxLabel
+        Left = 6
+        Top = 9
+        Caption = '1.'
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -19
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = []
+        Style.IsFontAssigned = True
+      end
     end
-    object cxLabel29: TcxLabel
-      Left = 400
-      Top = 89
-      Caption = #1050#1086#1083'-'#1074#1086
-    end
-    object edPartNumber: TcxTextEdit
-      Left = 400
-      Top = 66
-      TabOrder = 1
-      Width = 104
-    end
-    object cxLabel4: TcxLabel
-      Left = 400
+    object Panel2: TPanel
+      Left = 370
       Top = 48
-      Caption = '<S/N>  '#1074#1074#1086#1076
+      Width = 380
+      Height = 41
+      TabOrder = 10
+      object cxLabel5: TcxLabel
+        Left = 189
+        Top = 1
+        Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
+      end
+      object edPartNumber: TcxTextEdit
+        Left = 58
+        Top = 18
+        TabOrder = 0
+        Width = 125
+      end
+      object cxLabel4: TcxLabel
+        Left = 58
+        Top = 1
+        Caption = '<S/N>  '#1074#1074#1086#1076
+      end
+      object edBarCode2: TcxTextEdit
+        Left = 189
+        Top = 18
+        TabOrder = 1
+        Width = 179
+      end
+      object cxLabel9: TcxLabel
+        Left = 6
+        Top = 8
+        Caption = '2.'
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -19
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = []
+        Style.IsFontAssigned = True
+      end
     end
-    object edBarCode2: TcxTextEdit
-      Left = 510
-      Top = 66
-      TabOrder = 2
-      Width = 179
-    end
-    object cxLabel5: TcxLabel
-      Left = 510
-      Top = 48
-      Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
-    end
-    object cxLabel6: TcxLabel
-      Left = 510
-      Top = 5
-      Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
-    end
-    object edBarCode1: TcxTextEdit
-      Left = 510
-      Top = 23
-      TabOrder = 0
-      Width = 179
-    end
-    object cxLabel7: TcxLabel
-      Left = 510
-      Top = 89
-      Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
-    end
-    object edBarCode3: TcxTextEdit
-      Left = 510
-      Top = 107
-      TabOrder = 4
-      Width = 179
+    object Panel3: TPanel
+      Left = 370
+      Top = 95
+      Width = 380
+      Height = 41
+      TabOrder = 11
+      object edAmount: TcxCurrencyEdit
+        Left = 58
+        Top = 18
+        EditValue = 1.000000000000000000
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taVCenter
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.###'
+        TabOrder = 0
+        Width = 125
+      end
+      object cxLabel29: TcxLabel
+        Left = 58
+        Top = 1
+        Caption = #1050#1086#1083'-'#1074#1086
+      end
+      object cxLabel7: TcxLabel
+        Left = 189
+        Top = 1
+        Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
+      end
+      object edBarCode3: TcxTextEdit
+        Left = 189
+        Top = 18
+        TabOrder = 1
+        Width = 179
+      end
+      object cxLabel10: TcxLabel
+        Left = 6
+        Top = 8
+        Caption = '3.'
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -19
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = []
+        Style.IsFontAssigned = True
+      end
     end
   end
   object FormParams: TdsdFormParams

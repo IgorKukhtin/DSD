@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, cxSplitter;
+  cxImageComboBox, cxSplitter, Vcl.StdCtrls;
 
 type
   TInventoryForm = class(TParentForm)
@@ -149,6 +149,12 @@ type
     macGoodsItem1: TMultiAction;
     macGoodsItem3: TMultiAction;
     macGoodsItem2: TMultiAction;
+    Panel1: TPanel;
+    cxLabel8: TcxLabel;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    cxLabel9: TcxLabel;
+    cxLabel10: TcxLabel;
   private
   public
   end;
