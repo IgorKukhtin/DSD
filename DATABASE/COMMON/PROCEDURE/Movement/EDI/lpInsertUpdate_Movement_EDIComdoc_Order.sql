@@ -1,10 +1,12 @@
 -- Function: lpInsertUpdate_Movement_EDIComdoc_Order()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_EDIComdoc_Order (Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_EDIComdoc_Order (Integer, Integer, TVarChar);
+ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_EDIComdoc_Order (Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_EDIComdoc_Order(
     IN inMovementId      Integer   , --
     IN inUserId          Integer   , -- пользователь
+    IN inOperDate_StartBegin_0  TDateTime   , -- 
    OUT outMessageText    Text      ,
     IN inSession         TVarChar    -- сессия пользователя
 )                              
@@ -40,7 +42,12 @@ $BODY$
    DECLARE vbGLNCodeJuridical1 TVarChar;
    DECLARE vbGLNCodeJuridical2 TVarChar;
    DECLARE vbGLNCodeJuridical3 TVarChar;
+
+   DECLARE vbOperDate_StartBegin TDateTime;
 BEGIN
+
+     -- сразу запомнили время начала выполнения Проц.
+     vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 
      -- Определяются параметры (отдельно)
      vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
@@ -216,6 +223,9 @@ BEGIN
                               );
      END IF;
 
+     -- !!!для теста-временно!!!     
+     IF inUserId = 5 THEN vbMovementId_Order:= 0; END IF;
+
 
      -- проверка
      IF COALESCE (vbPartnerId, 0) = 0
@@ -256,6 +266,10 @@ BEGIN
                                WHERE MovementString_InvNumberPartner.ValueData = vbInvNumber
                                  AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
                               );
+
+         -- !!!для теста-временно!!!     
+         IF inUserId = 5 THEN vbMovementId_Order:= 0; END IF;
+
          IF vbMovementId_Order <> 0 
          THEN
              -- взяли параметры у найденной заявки
@@ -277,6 +291,8 @@ BEGIN
                         WHERE MovementString_InvNumberPartner.ValueData = vbInvNumber
                           AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
                        )
+                -- !!!для теста-временно!!!     
+                AND inUserId <> 5
              THEN
                  RAISE EXCEPTION 'Ошибка.Найдена заявка № <%> с другим значением Контрагент <%>.', vbInvNumber, lfGet_Object_ValueData (vbPartnerId);
              END IF;
@@ -521,7 +537,16 @@ BEGIN
 
 
      -- сохранили протокол
-     PERFORM lpInsert_Movement_EDIEvents (inMovementId, 'Завершен перенос данных из EDI в документ (' || (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_OrderExternal()) || ').', inUserId);
+     PERFORM lpInsert_Movement_EDIEvents (inMovementId, 'Завершен перенос данных из EDI в документ ('
+                                                     || (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_OrderExternal())
+                                                     || ').'
+                                                     || '('
+                                                     || (EXTRACT (EPOCH FROM (CLOCK_TIMESTAMP() - inOperDate_StartBegin_0) :: INTERVAL) :: Integer) :: TVarChar
+                                                     || ' sec)'
+                                                     || '('
+                                                     || (EXTRACT (EPOCH FROM (CLOCK_TIMESTAMP() - vbOperDate_StartBegin) :: INTERVAL) :: Integer) :: TVarChar
+                                                     || ' sec)'
+                                                      , inUserId);
 
 END;
 $BODY$

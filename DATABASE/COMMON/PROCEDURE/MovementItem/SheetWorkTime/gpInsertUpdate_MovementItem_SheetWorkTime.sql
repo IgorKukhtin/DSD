@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTime(
  INOUT ioValue               TVarChar  , -- часы
  INOUT ioTypeId              Integer   , 
    OUT OutAmountHours        Tfloat    , 
-    IN inisPersonalGroup     Boolean   , -- вызов из док. список бригад
+    IN inIsPersonalGroup     Boolean   , -- вызов из док. список бригад
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS RECORD
@@ -37,6 +37,11 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
     
+    -- временно???
+    IF inIsPersonalGroup = FALSE THEN inIsPersonalGroup:= inUnitId = 8451;
+    END IF;
+    
+
     IF zfConvert_StringToNumber (inSession) < 0
     THEN vbUserId := lpGetUserBySession ((ABS (inSession :: Integer)) :: TVarChar);
          vbIsCheck:= FALSE;
@@ -200,6 +205,8 @@ BEGIN
                  AND Movement_PersonalGroup.DescId   = zc_Movement_PersonalGroup()
                  AND Movement_PersonalGroup.StatusId = zc_Enum_Status_Complete()
                )
+      -- временно???
+      AND 1=0
     THEN
         RAISE EXCEPTION 'Ошибка.%У сотрудника <%>%<%>%<%>%<%>%на <%> сформированы данные%в документе <Список бригады>.Корректировка невозможна.'
                                , CHR (13)
@@ -366,7 +373,7 @@ BEGIN
                             AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
                             AND COALESCE (MIObject_StorageLine.ObjectId, 0)   = COALESCE (inStorageLineId, 0)
                             --
-                            AND (inisPersonalGroup = FALSE OR (inisPersonalGroup = TRUE AND MIObject_WorkTimeKind.ObjectId = vbTypeId ))
+                            AND (inIsPersonalGroup = FALSE OR (inIsPersonalGroup = TRUE AND MIObject_WorkTimeKind.ObjectId = vbTypeId ))
                          );
 
 

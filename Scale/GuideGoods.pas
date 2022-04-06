@@ -151,6 +151,7 @@ type
     isPartionGoods_20103: TcxGridDBColumn;
     gbPartionGoods_20103: TGroupBox;
     EditPartionGoods_20103: TcxCurrencyEdit;
+    Price_Income: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -1070,7 +1071,7 @@ begin
         )
      then exit;
      //
-      if (ActiveControl=EditPrice)and (ParamsMovement.ParamByName('MovementDescId').AsInteger <> zc_Movement_Income)
+      if (ActiveControl=EditPrice)and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
         and (CDS.FieldByName('Price_Income').AsFloat > 0)
       then begin
             EditPrice.Text:= FloatToStr(CDS.FieldByName('Price_Income').AsFloat);
@@ -1355,7 +1356,7 @@ begin
       //          PanelUpak.Caption:=GetStringValue('select zf_MyRound0(zf_CalcDivisionNoRound('+FormatToFloatServer(GoodsWeight)+',GoodsProperty_Detail.Ves_onUpakovka))as RetV from dba.GoodsProperty join dba.KindPackage on KindPackage.KindPackageCode = '+trim(EditKindPackageCode.Text)+' join dba.GoodsProperty_Detail on GoodsProperty_Detail.GoodsPropertyId=GoodsProperty.Id and GoodsProperty_Detail.KindPackageID=KindPackage.Id where GoodsProperty.GoodsCode = '+trim(EditGoodsCode.Text));
       //end;
       //
-      if (ActiveControl=EditPrice)and (ParamsMovement.ParamByName('MovementDescId').AsInteger <> zc_Movement_Income)
+      if (ActiveControl=EditPrice)and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
         and (CDS.FieldByName('Price_Income').AsFloat > 0)
       then begin
             EditPrice.Text:= FloatToStr(CDS.FieldByName('Price_Income').AsFloat);

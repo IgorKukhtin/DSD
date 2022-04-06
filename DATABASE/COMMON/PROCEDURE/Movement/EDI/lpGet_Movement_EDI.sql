@@ -42,7 +42,9 @@ $BODY$
 BEGIN
 
      RETURN QUERY 
-       WITH tmp AS
+       WITH tmpMLO_Contract AS (SELECT * FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+          , tmpObject_Contract AS (SELECT * FROM Object WHERE Object.Id IN (SELECT DISTINCT tmpMLO_Contract.ObjectId FROM tmpMLO_Contract))
+          , tmp AS
       (SELECT
              Movement.Id
            , Movement.InvNumber
@@ -68,10 +70,10 @@ BEGIN
            , Object_Juridical.ValueData             AS JuridicalNameFind
            , Object_Partner.ValueData               AS PartnerNameFind
 
-           , View_Contract_InvNumber.ContractId             AS ContractId
-           , View_Contract_InvNumber.ContractCode           AS ContractCode
-           , View_Contract_InvNumber.InvNumber              AS ContractName
-           , View_Contract_InvNumber.ContractTagName        AS ContractTagName
+           , View_Contract_InvNumber.Id             AS ContractId
+           , View_Contract_InvNumber.ObjectCode     AS ContractCode
+           , View_Contract_InvNumber.ValueData      AS ContractName
+           , Object_ContractTag.ValueData           AS ContractTagName
 
            , Object_Unit.Id            AS UnitId
            , Object_Unit.ValueData     AS UnitName
@@ -172,10 +174,17 @@ BEGIN
                                         AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN tmpMLO_Contract AS MovementLinkObject_Contract
+                                      ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+
+
+          --LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN tmpObject_Contract AS View_Contract_InvNumber ON View_Contract_InvNumber.Id = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTag
+                                 ON ObjectLink_Contract_ContractTag.ObjectId = View_Contract_InvNumber.Id
+                                AND ObjectLink_Contract_ContractTag.DescId   = zc_ObjectLink_Contract_ContractTag()
+            LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id

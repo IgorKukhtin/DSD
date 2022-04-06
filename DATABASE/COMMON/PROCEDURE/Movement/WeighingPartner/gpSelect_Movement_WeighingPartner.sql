@@ -91,14 +91,8 @@ BEGIN
 
              , Movement_Parent.Id                AS MovementId_parent
              , Movement_Parent.OperDate          AS OperDate_parent
-             , CASE WHEN Movement_Parent.StatusId = zc_Enum_Status_Complete()
-                         THEN Movement_Parent.InvNumber
-                    WHEN Movement_Parent.StatusId = zc_Enum_Status_UnComplete()
-                         THEN '***' || Movement_Parent.InvNumber
-                    WHEN Movement_Parent.StatusId = zc_Enum_Status_Erased()
-                         THEN '*' || Movement_Parent.InvNumber
-                    ELSE ''
-               END :: TVarChar AS InvNumber_parent
+
+             , zfCalc_InvNumber_isErased_sh ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
 
              , Movement_TransportGoods.Id            AS MovementId_TransportGoods
              , Movement_TransportGoods.InvNumber     AS InvNumber_TransportGoods

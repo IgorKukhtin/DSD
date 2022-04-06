@@ -47,11 +47,14 @@ DECLARE
 
    vbMovementId_EDI Integer;
    vbMessageText    Text;
+   DECLARE vbOperDate_StartBegin TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_SaleLinkEDI());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- сразу запомнили время начала выполнения Проц.
+     vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 
      -- !!!так для продажи!!!
      IF EXISTS (SELECT MovementString.MovementId FROM MovementString INNER JOIN MovementDesc ON MovementDesc.Code = MovementString.ValueData AND MovementDesc.Id = zc_Movement_Sale() WHERE MovementString.MovementId = inMovementId_EDI AND MovementString.DescId = zc_MovementString_Desc())
@@ -211,6 +214,7 @@ BEGIN
           SELECT tmp.outMessageText INTO vbMessageText
           FROM lpInsertUpdate_Movement_EDIComdoc_Order (inMovementId    := inMovementId_EDI
                                                       , inUserId        := vbUserId
+                                                      , inOperDate_StartBegin_0:= vbOperDate_StartBegin
                                                       , inSession       := inSession
                                                        ) AS tmp;
      -- END !!!так для заявки!!!
@@ -222,12 +226,6 @@ BEGIN
      END IF;
 
 
--- временно
-if vbUserId = 5 AND 1=1
-then
-    RAISE EXCEPTION 'Admin - Err _end';
-    -- 'Повторите действие через 3 мин.'
-end if;
 
 
      -- Результат     
@@ -237,6 +235,14 @@ end if;
      FROM lpGet_Movement_EDI (inMovementId:= inMovementId_EDI
                             , inUserId    := vbUserId
                              ) AS tmp;
+
+-- временно
+if vbUserId = 5 AND 1=1
+then
+    RAISE EXCEPTION 'Admin - Err _end';
+    -- 'Повторите действие через 3 мин.'
+end if;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

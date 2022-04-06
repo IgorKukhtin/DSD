@@ -172,6 +172,9 @@ BEGIN
 
          -- Результат
          RETURN QUERY
+           WITH tmpMS  AS (SELECT * FROM MovementString       WHERE MovementString.MovementId       = inMovementId)
+              , tmpMLO AS (SELECT * FROM MovementLinkObject   WHERE MovementLinkObject.MovementId   = inMovementId)
+              , tmpMLM AS (SELECT * FROM MovementLinkMovement WHERE MovementLinkMovement.MovementId = inMovementId)
            SELECT
                  Movement.Id                                    AS Id
                , Movement.InvNumber                             AS InvNumber
@@ -285,7 +288,7 @@ BEGIN
            FROM Movement
                 LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-                LEFT JOIN MovementString AS MovementString_InvNumberOrder
+                LEFT JOIN tmpMS AS MovementString_InvNumberOrder
                                          ON MovementString_InvNumberOrder.MovementId =  Movement.Id
                                         AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
 
@@ -338,32 +341,32 @@ BEGIN
                                         ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
                                        AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
 
-                LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                LEFT JOIN tmpMLO AS MovementLinkObject_From
                                              ON MovementLinkObject_From.MovementId = Movement.Id
                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                 LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
-                LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                LEFT JOIN tmpMLO AS MovementLinkObject_To
                                              ON MovementLinkObject_To.MovementId = Movement.Id
                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                 LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
-                LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                LEFT JOIN tmpMLO AS MovementLinkObject_PaidKind
                                              ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                             AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
                 LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
-                LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
+                LEFT JOIN tmpMLO AS MovementLinkObject_RouteSorting
                                              ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
                                             AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
                 LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
 
-                LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
+                LEFT JOIN tmpMLO AS MovementLinkObject_CurrencyDocument
                                              ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
                                             AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
                 LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
 
-                LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
+                LEFT JOIN tmpMLO AS MovementLinkObject_CurrencyPartner
                                              ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
                                             AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
                 LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
@@ -372,15 +375,15 @@ BEGIN
                                      ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id
                                     AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
 
-                LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+                LEFT JOIN tmpMLO AS MovementLinkObject_PriceList
                                              ON MovementLinkObject_PriceList.MovementId = Movement.Id
                                             AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
                 LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
-               LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceListIn
-                                            ON MovementLinkObject_PriceListIn.MovementId = Movement.Id
-                                           AND MovementLinkObject_PriceListIn.DescId = zc_MovementLinkObject_PriceListIn()
-               LEFT JOIN Object AS Object_PriceListIn ON Object_PriceListIn.Id = MovementLinkObject_PriceListIn.ObjectId
+                LEFT JOIN tmpMLO AS MovementLinkObject_PriceListIn
+                                             ON MovementLinkObject_PriceListIn.MovementId = Movement.Id
+                                            AND MovementLinkObject_PriceListIn.DescId = zc_MovementLinkObject_PriceListIn()
+                LEFT JOIN Object AS Object_PriceListIn ON Object_PriceListIn.Id = MovementLinkObject_PriceListIn.ObjectId
 
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
                                                ON MovementLinkMovement_TransportGoods.MovementId = Movement.Id
@@ -394,13 +397,13 @@ BEGIN
                 LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = NULL -- COALESCE (MLM_Transport_reestr.MovementChildId, MovementLinkMovement_Transport.MovementChildId)
                 -- !!! без этого работает в 20 раз дольше!!!
 
-                LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
+                LEFT JOIN tmpMLO AS MovementLinkObject_ReestrKind
                                              ON MovementLinkObject_ReestrKind.MovementId = Movement.Id
                                             AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
                 LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
     --add Tax
-                LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                LEFT JOIN tmpMLM AS MovementLinkMovement_Master
                                                ON MovementLinkMovement_Master.MovementId = Movement.Id
                                               AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
                 LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
@@ -413,10 +416,10 @@ BEGIN
                                             AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
                 LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
 
-               LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
+               LEFT JOIN tmpMLM AS MovementLinkMovement_Sale
                                               ON MovementLinkMovement_Sale.MovementId = Movement.Id
                                              AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
-               LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+               LEFT JOIN tmpMLM AS MovementLinkMovement_Order
                                               ON MovementLinkMovement_Order.MovementId = Movement.Id
                                              AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
                LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId

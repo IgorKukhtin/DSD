@@ -105,7 +105,7 @@ $BODY$
 
   DECLARE vbMovementId_Order Integer;
   
-  DECLARE vbisRealEx Boolean;
+  DECLARE vbIsRealEx Boolean;
   DECLARE vbMovementId_ReturnIn Integer;
 
 BEGIN
@@ -235,9 +235,11 @@ END IF;*/
           , COALESCE (MovementFloat_CurrencyValue.ValueData, 0)                               AS CurrencyValue
           , COALESCE (MovementFloat_ParValue.ValueData, 0)                                    AS ParValue
           , COALESCE (MovementFloat_CurrencyPartnerValue.ValueData, 0)                        AS CurrencyPartnerValue
+          , COALESCE (MovementFloat_ParPartnerValue.ValueData, 0)                             AS ParPartnerValue
+            --
           , COALESCE (ObjectLink_Contract_PriceList.ChildObjectId, ObjectLink_Juridical_PriceList.ChildObjectId) AS PriceListId_Jur
           
-          --
+            --
           , COALESCE (MovementLinkMovement_ReturnIn.MovementChildId,0)           AS MovementId_ReturnIn
           , COALESCE (ObjectBoolean_Contract_RealEx.ValueData, False) :: Boolean AS isRealEx
 
@@ -250,7 +252,7 @@ END IF;*/
                , vbJuridicalId_Basis_From, vbBusinessId_From, vbBusinessId_To
                , vbCurrencyDocumentId, vbCurrencyPartnerId, vbCurrencyValue, vbParValue, vbCurrencyPartnerValue, vbParPartnerValue
                , vbPriceListId_Jur
-               , vbMovementId_ReturnIn, vbisRealEx
+               , vbMovementId_ReturnIn, vbIsRealEx
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                  ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -447,7 +449,7 @@ END IF;*/
      END IF;
 
      --проверка если договор RealEx = TRUE, тогда "На основании № (возврат)" должен быть заполнен
-     IF COALESCE (vbisRealEx,FALSE) = TRUE AND COALESCE (vbMovementId_ReturnIn,0) = 0
+     IF COALESCE (vbIsRealEx,FALSE) = TRUE AND COALESCE (vbMovementId_ReturnIn,0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Не Заполнено значение На основании № (возврат).';
      END IF;
@@ -1360,7 +1362,7 @@ END IF;*/
      END IF;
 
      -- кроме Админа
-     IF inUserId <> zfCalc_UserAdmin() :: Integer AND 1=1
+     IF inUserId <> zfCalc_UserAdmin() :: Integer OR 1=1
      THEN
          -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Реализация" - !!!важно - здесь очищается _tmpMIContainer_insert, поэтому делаем ДО проводок!!!, но после заполнения _tmpItem
          PERFORM lpComplete_Movement_Sale_Recalc (inMovementId := inMovementId
@@ -3614,6 +3616,8 @@ END IF;*/
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), vbMovementId_Tax, (SELECT ValueData FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Checked()));
      END IF;
 
+
+     if inUserId = 5 AND 1=1 then RAISE EXCEPTION 'Нет Прав и нет Проверки - что б ничего не делать'; end if;
 
 
 END;

@@ -277,10 +277,11 @@ AND 1=0
             --, Amount               = inAmount
               , EKPrice              = inEKPrice
               , EKPrice_orig         = inEKPrice
+              , EKPrice_discount     = inEKPrice
               , CountForPrice        = inCountForPrice
             --, CostPrice            = inCostPrice
-              , EmpfPrice            = inEmpfPrice
-              , OperPriceList        = inOperPriceList ::TFloat
+              , EmpfPrice            = COALESCE (inEmpfPrice, 0)
+              , OperPriceList        = COALESCE (inOperPriceList, 0)
                                           /*CASE WHEN vbRePrice_exists = TRUE AND 1=0
                                                  THEN --(SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (zc_DateEnd() - INTERVAL '1 DAY', zc_PriceList_Basis(), inObjectId) AS tmp)
                                             WHEN vbPriceList_change = TRUE
@@ -303,13 +304,13 @@ AND 1=0
      IF NOT FOUND THEN
         -- добавили новый элемент
         INSERT INTO Object_PartionGoods (MovementItemId, MovementId, MovementDescId, FromId, UnitId, OperDate, ObjectId
-                                       , Amount, EKPrice, EKPrice_orig, CountForPrice, CostPrice, EmpfPrice, OperPriceList
+                                       , Amount, EKPrice, EKPrice_orig, EKPrice_discount, CountForPrice, CostPrice, EmpfPrice, OperPriceList
                                        , GoodsGroupId, GoodsTagId, GoodsTypeId, GoodsSizeId, ProdColorId, MeasureId, TaxKindId, TaxValue
                                        , isErased, isArc)
                                  VALUES (inMovementItemId, inMovementId, vbMovementDescId, inFromId, inUnitId, inOperDate, inObjectId
-                                       , 0 /*inAmount*/, inEKPrice, inEKPrice, inCountForPrice, 0, inEmpfPrice
+                                       , 0 /*inAmount*/, inEKPrice, inEKPrice, inEKPrice, inCountForPrice, 0, COALESCE (inEmpfPrice, 0)
                                          -- "сложно" получили цену
-                                       , inOperPriceList
+                                       , COALESCE (inOperPriceList, 0)
                                                            /*CASE WHEN vbRePrice_exists = TRUE
                                                                     THEN (SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (zc_DateEnd() - INTERVAL '1 DAY', zc_PriceList_Basis(), inObjectId) AS tmp)
                                                                  ELSE inOperPriceList

@@ -295,7 +295,7 @@ BEGIN
      -- сохранили связь с документом <Transport>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Transport(), ioId, vbMovementId_Transport);
 
-IF vbUserId = 5 AND 1=1
+IF vbUserId = 5 AND 1=0
 THEN
     RAISE EXCEPTION 'Ошибка.ok';
 END IF;

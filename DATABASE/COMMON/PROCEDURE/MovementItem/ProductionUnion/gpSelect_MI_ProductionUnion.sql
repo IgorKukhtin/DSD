@@ -11,10 +11,13 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_ProductionUnion(
 )
 RETURNS SETOF refcursor AS
 $BODY$
+  DECLARE vbUserId Integer;
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
 BEGIN
-
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId := lpGetUserBySession (inSession);
+   
    --PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_MovementItem_ProductionUnion());
    IF inShowAll THEN
     OPEN Cursor1 FOR
@@ -437,7 +440,7 @@ BEGIN
               MovementItem.Id					AS Id
             , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS  LineNum
             , Object_Goods.Id                   AS GoodsId
-            , Object_Goods.ObjectCode           AS GoodsCode
+            , case when vbUserId = 5 AND 1=0 then MovementItem. else Object_Goods.ObjectCode end :: Integer           AS GoodsCode
             , Object_Goods.ValueData            AS GoodsName
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
   

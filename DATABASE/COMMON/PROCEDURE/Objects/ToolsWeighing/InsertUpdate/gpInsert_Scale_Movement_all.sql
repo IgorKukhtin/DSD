@@ -858,8 +858,8 @@ BEGIN
 
                                     FROM gpGet_Movement_WeighingPartner (inMovementId:= inMovementId, inSession:= inSession) AS tmp
                                          LEFT JOIN MovementLinkMovement AS MLM_ReturnIn
-                                                                        ON MLM_ReturnIn.ObjectId = inMovementId
-                                                                       AND MLM_ReturnIn.DescId   = zc_MovementLinkMovement_ReturnIn()
+                                                                        ON MLM_ReturnIn.MovementId = inMovementId
+                                                                       AND MLM_ReturnIn.DescId     = zc_MovementLinkMovement_ReturnIn()
                                          LEFT JOIN ObjectFloat AS ObjectFloat_PrepareDayCount
                                                                ON ObjectFloat_PrepareDayCount.ObjectId = tmp.ToId
                                                               AND ObjectFloat_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()

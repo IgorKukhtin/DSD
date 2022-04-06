@@ -311,7 +311,18 @@ object GuideGoodsForm: TGuideGoodsForm
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderHint = #1062#1077#1085#1072' ('#1074#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
           Width = 50
+        end
+        object Price_Income: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072' ('#1087#1088#1080#1093#1086#1076')'
+          DataBinding.FieldName = 'Price_Income'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1062#1077#1085#1072' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
+          Options.Editing = False
+          Width = 55
         end
         object Amount_Order: TcxGridDBColumn
           Caption = #1047#1072#1103#1074#1082#1072
