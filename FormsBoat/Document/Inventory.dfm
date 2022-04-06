@@ -94,6 +94,14 @@ object InventoryForm: TInventoryForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object Ord: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'Ord'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupNameFull'
@@ -404,7 +412,7 @@ object InventoryForm: TInventoryForm
       object cxLabel4: TcxLabel
         Left = 58
         Top = 1
-        Caption = '<S/N>  '#1074#1074#1086#1076
+        Caption = '<S/N> '#1074#1074#1086#1076
       end
       object edBarCode2: TcxTextEdit
         Left = 189
@@ -445,7 +453,7 @@ object InventoryForm: TInventoryForm
       object cxLabel29: TcxLabel
         Left = 58
         Top = 1
-        Caption = #1050#1086#1083'-'#1074#1086
+        Caption = '<'#1050#1086#1083'-'#1074#1086'> '#1074#1074#1086#1076
       end
       object cxLabel7: TcxLabel
         Left = 189

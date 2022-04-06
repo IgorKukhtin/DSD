@@ -151,6 +151,7 @@ type
     Panel3: TPanel;
     cxLabel9: TcxLabel;
     cxLabel10: TcxLabel;
+    Ord: TcxGridDBColumn;
   private
   public
   end;

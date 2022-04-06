@@ -26,7 +26,7 @@ BEGIN
                                               , inUnitId            := inUnitId
                                               , inComment           := inComment
                                               , inUserId            := vbUserId
-                                              );
+                                               );
 
 END;
 $BODY$

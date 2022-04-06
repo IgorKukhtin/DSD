@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer
              , Summa TFloat
              , PartNumber TVarChar
              , Comment TVarChar
+             , Ord Integer
              , isErased Boolean
               )
 AS
@@ -100,6 +101,8 @@ BEGIN
            , tmpMI.PartNumber             ::TVarChar
            , tmpMI.Comment                ::TVarChar
            --, tmpProtocol.OperDate                  AS OperDate_pr
+
+           , ROW_NUMBER() OVER (ORDER BY tmpMI.Id ASC) :: Integer AS Ord
            , tmpMI.isErased
 
        FROM tmpMI
