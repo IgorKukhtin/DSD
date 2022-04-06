@@ -195,6 +195,14 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             Options.Editing = False
             Width = 60
           end
+          object isSupplierFailures: TcxGridDBColumn
+            Caption = #1054#1090#1082#1072#1079' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'isSupplierFailures'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 59
+          end
           object isClose: TcxGridDBColumn
             Caption = #1047#1072#1082#1088#1099#1090
             DataBinding.FieldName = 'isClose'
@@ -202,6 +210,11 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object SupplierFailuresColor: TcxGridDBColumn
+            DataBinding.FieldName = 'SupplierFailuresColor'
+            Visible = False
+            VisibleForCustomization = False
           end
         end
       end
@@ -736,6 +749,11 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = SupplierFailuresColor
+        ColorValueList = <>
+      end>
     Left = 552
     Top = 200
   end

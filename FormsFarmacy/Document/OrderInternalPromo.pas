@@ -197,6 +197,10 @@ type
     actLoadListUnit: TdsdLoadListValuesFileAction;
     ceDaysGrace: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
+    spGetDocumentDataForEmailGroup: TdsdStoredProc;
+    mactSMTPSendGroup: TMultiAction;
+    actGetDocumentDataForEmailGroup: TdsdExecStoredProc;
+    SMTPAction: TdsdSMTPAction;
   private
     { Private declarations }
   public
