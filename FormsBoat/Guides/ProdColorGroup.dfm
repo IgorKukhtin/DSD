@@ -1,7 +1,7 @@
 object ProdColorGroupForm: TProdColorGroupForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1072#1090#1077#1075#1086#1088#1080#1103' Boat Structure>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1077' Boat Structure>'
   ClientHeight = 376
   ClientWidth = 486
   Color = clBtnFace

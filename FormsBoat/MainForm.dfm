@@ -941,7 +941,7 @@ inherited MainForm: TMainForm
     object actProdColorGroup: TdsdOpenForm
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
-      Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' Boat Structure'
+      Caption = #1057#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1077' Boat Structure'
       FormName = 'TProdColorGroupForm'
       FormNameParam.Value = 'TProdColorGroupForm'
       FormNameParam.DataType = ftString
@@ -1139,11 +1139,11 @@ inherited MainForm: TMainForm
         Action = actProdColorPattern
         Caption = 'Boat Structure'
       end
-      object miProdColorGroup: TMenuItem
-        Action = actProdColorGroup
-      end
       object miColorPattern: TMenuItem
         Action = actColorPattern
+      end
+      object miProdColorGroup: TMenuItem
+        Action = actProdColorGroup
       end
       object miProdColor: TMenuItem
         Action = actProdColor
