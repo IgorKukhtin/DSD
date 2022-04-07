@@ -16,14 +16,13 @@ object InventoryItemEditForm: TInventoryItemEditForm
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
-  object cxButton1: TcxButton
+  object cxButtonOK: TcxButton
     Left = 88
     Top = 213
     Width = 75
     Height = 25
     Action = actInsertUpdate
-    Default = True
-    TabOrder = 1
+    TabOrder = 2
   end
   object cxButton2: TcxButton
     Left = 232
@@ -33,7 +32,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
     Action = actFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 2
+    TabOrder = 4
   end
   object cxLabel3: TcxLabel
     Left = 8
@@ -55,7 +54,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 0
+    TabOrder = 3
     Width = 313
   end
   object edGoodsGroup: TcxButtonEdit
@@ -68,7 +67,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 5
+    TabOrder = 7
     Width = 269
   end
   object edPartner: TcxButtonEdit
@@ -81,7 +80,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 6
+    TabOrder = 8
     Width = 269
   end
   object cxLabel8: TcxLabel
@@ -95,7 +94,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
-    TabOrder = 8
+    TabOrder = 10
     Width = 85
   end
   object cxLabel13: TcxLabel
@@ -110,7 +109,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
-    TabOrder = 10
+    TabOrder = 12
     Width = 72
   end
   object ceOperCount: TcxCurrencyEdit
@@ -118,7 +117,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
     Top = 160
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 11
+    TabOrder = 0
     Width = 72
   end
   object cxLabel2: TcxLabel
@@ -137,7 +136,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
-    TabOrder = 14
+    TabOrder = 15
     Width = 93
   end
   object cxLabel6: TcxLabel
@@ -154,7 +153,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
     Left = 288
     Top = 64
     Properties.ReadOnly = True
-    TabOrder = 17
+    TabOrder = 18
     Width = 111
   end
   object cxLabel1: TcxLabel
@@ -166,7 +165,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
     Left = 288
     Top = 21
     Properties.ReadOnly = True
-    TabOrder = 19
+    TabOrder = 1
     Width = 111
   end
   object ActionList: TActionList
@@ -210,6 +209,17 @@ object InventoryItemEditForm: TInventoryItemEditForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actGet_TotalCount: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_TotalCount
+      StoredProcList = <
+        item
+          StoredProc = spGet_TotalCount
+        end>
+      Caption = 'actGet_TotalCount'
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -681,5 +691,68 @@ object InventoryItemEditForm: TInventoryItemEditForm
       end>
     Left = 145
     Top = 10
+  end
+  object EnterMoveNext: TEnterMoveNext
+    EnterMoveNextList = <
+      item
+        Control = ceOperCount
+        ExitAction = actGet_TotalCount
+      end
+      item
+        Control = edPartNumber
+      end
+      item
+        Control = cxButtonOK
+      end>
+    Left = 320
+    Top = 80
+  end
+  object spGet_TotalCount: TdsdStoredProc
+    StoredProcName = 'gpGet_MI_Inventory_TotalCount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = 1.000000000000000000
+        Component = FormParams
+        ComponentItem = 'inMovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartNumber'
+        Value = Null
+        Component = edPartNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperCount'
+        Value = 0.000000000000000000
+        Component = ceOperCount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalCount'
+        Value = 0.000000000000000000
+        Component = ceTotalCount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 64
+    Top = 192
   end
 end

@@ -23,7 +23,7 @@ uses
 
 type
   TInventoryItemEditForm = class(TParentForm)
-    cxButton1: TcxButton;
+    cxButtonOK: TcxButton;
     cxButton2: TcxButton;
     ActionList: TActionList;
     spInsertUpdate: TdsdStoredProc;
@@ -56,6 +56,9 @@ type
     edArticle: TcxTextEdit;
     cxLabel1: TcxLabel;
     edPartNumber: TcxTextEdit;
+    EnterMoveNext: TEnterMoveNext;
+    spGet_TotalCount: TdsdStoredProc;
+    actGet_TotalCount: TdsdExecStoredProc;
   private
     { Private declarations }
   public
