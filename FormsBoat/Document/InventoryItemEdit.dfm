@@ -50,7 +50,6 @@ object InventoryItemEditForm: TInventoryItemEditForm
     Properties.Buttons = <
       item
         Default = True
-        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -373,6 +372,13 @@ object InventoryItemEditForm: TInventoryItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'GoodsGroupId'
+        Value = Null
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'GoodsGroupNameFull'
         Value = Null
         Component = GuidesGoodsGroup
@@ -470,11 +476,11 @@ object InventoryItemEditForm: TInventoryItemEditForm
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoods-Form'
+    FormNameParam.Value = 'TGoodsForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoods-Form'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TGoodsForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -485,12 +491,26 @@ object InventoryItemEditForm: TInventoryItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Code'
+        Value = Null
+        Component = edGoodsCode
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'TextValue'
         Value = ''
         Component = GuidesGoods
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Article'
+        Value = Null
+        Component = edArticle
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -509,49 +529,14 @@ object InventoryItemEditForm: TInventoryItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MeasureId'
+        Name = 'EKPrice'
         Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MeasureName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CompositionId'
-        Value = Null
-        Component = GuidesPartner
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CompositionName'
-        Value = Null
-        Component = GuidesPartner
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsInfoId'
-        Value = Null
+        Component = ceOperPriceList
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsInfoName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'LineFabricaId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'LineFabricaName'
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','

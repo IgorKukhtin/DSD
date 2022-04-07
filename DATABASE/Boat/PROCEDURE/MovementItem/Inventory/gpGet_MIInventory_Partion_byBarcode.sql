@@ -45,9 +45,9 @@ BEGIN
      END IF;
 
 */
-     IF inBarCode = '' AND inPartNumber = '' THEN
+     IF COALESCE (inBarCode,'') = '' AND COALESCE (inPartNumber,'') = '' THEN
        RETURN QUERY
-       SELECT 0  :: Integer  AS Id
+       SELECT -1 :: Integer  AS Id
             , 0  :: Integer  AS PartionId
             , 0  :: Integer  AS GoodsId
             , 0  :: Integer  AS GoodsCode
@@ -63,9 +63,9 @@ BEGIN
             , 0  :: TFloat   AS Price
             , 0  :: TFloat   AS AmountRemains
             , 0  :: TFloat   AS TotalCount
-            , 0  :: TFloat   AS OperCount
+            , 1  :: TFloat   AS OperCount
              ;
-     END IF;
+     ELSE
     
 
      -- Нашли
@@ -162,6 +162,7 @@ BEGIN
 
        WHERE Object_Goods.Id = vbGoodsId
       ;
+      END IF;
 
 END;
 $BODY$
