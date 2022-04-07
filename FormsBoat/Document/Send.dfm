@@ -3,7 +3,7 @@ object SendForm: TSendForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 567
-  ClientWidth = 1060
+  ClientWidth = 1053
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,8 +21,8 @@ object SendForm: TSendForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1060
-    Height = 97
+    Width = 1053
+    Height = 137
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -62,11 +62,11 @@ object SendForm: TSendForm
         end>
       Properties.ReadOnly = True
       TabOrder = 3
-      Width = 191
+      Width = 343
     end
     object edTo: TcxButtonEdit
-      Left = 385
-      Top = 23
+      Left = 186
+      Top = 63
       Properties.Buttons = <
         item
           Default = True
@@ -74,7 +74,7 @@ object SendForm: TSendForm
         end>
       Properties.ReadOnly = True
       TabOrder = 2
-      Width = 249
+      Width = 343
     end
     object cxLabel3: TcxLabel
       Left = 186
@@ -85,8 +85,8 @@ object SendForm: TSendForm
       ShowHint = True
     end
     object cxLabel4: TcxLabel
-      Left = 385
-      Top = 5
+      Left = 186
+      Top = 45
       Caption = #1050#1086#1084#1091
     end
     object cxLabel11: TcxLabel
@@ -117,40 +117,40 @@ object SendForm: TSendForm
       Width = 170
     end
     object cxLabel16: TcxLabel
-      Left = 186
-      Top = 45
+      Left = 337
+      Top = 88
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 186
-      Top = 63
+      Left = 337
+      Top = 106
       TabOrder = 11
-      Width = 448
+      Width = 192
     end
     object cxLabel12: TcxLabel
-      Left = 640
-      Top = 5
+      Left = 9
+      Top = 88
       Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
     end
     object edInsertDate: TcxDateEdit
-      Left = 640
-      Top = 23
+      Left = 9
+      Top = 106
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
       TabOrder = 13
-      Width = 146
+      Width = 170
     end
     object cxLabel13: TcxLabel
-      Left = 640
-      Top = 45
+      Left = 186
+      Top = 88
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
     end
     object edInsertName: TcxButtonEdit
-      Left = 640
-      Top = 63
+      Left = 186
+      Top = 106
       Properties.Buttons = <
         item
           Default = True
@@ -159,30 +159,151 @@ object SendForm: TSendForm
         end>
       Properties.ReadOnly = True
       TabOrder = 15
-      Width = 146
+      Width = 143
+    end
+    object Panel2: TPanel
+      Left = 578
+      Top = 3
+      Width = 380
+      Height = 41
+      TabOrder = 16
+      object cxLabel6: TcxLabel
+        Left = 188
+        Top = 1
+        Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
+      end
+      object edBarCode1: TcxTextEdit
+        Left = 189
+        Top = 18
+        TabOrder = 0
+        Width = 179
+      end
+      object cxLabel8: TcxLabel
+        Left = 6
+        Top = 9
+        Caption = '1.'
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -19
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = []
+        Style.IsFontAssigned = True
+      end
+    end
+    object Panel3: TPanel
+      Left = 578
+      Top = 46
+      Width = 380
+      Height = 41
+      TabOrder = 17
+      object cxLabel5: TcxLabel
+        Left = 189
+        Top = 1
+        Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
+      end
+      object edPartNumber: TcxTextEdit
+        Left = 58
+        Top = 18
+        TabOrder = 0
+        Width = 125
+      end
+      object cxLabel7: TcxLabel
+        Left = 58
+        Top = 1
+        Caption = '<S/N> '#1074#1074#1086#1076
+      end
+      object edBarCode2: TcxTextEdit
+        Left = 189
+        Top = 18
+        TabOrder = 1
+        Width = 179
+      end
+      object cxLabel9: TcxLabel
+        Left = 6
+        Top = 8
+        Caption = '2.'
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -19
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = []
+        Style.IsFontAssigned = True
+      end
+    end
+    object Panel4: TPanel
+      Left = 578
+      Top = 90
+      Width = 380
+      Height = 41
+      TabOrder = 18
+      object edAmount: TcxCurrencyEdit
+        Left = 58
+        Top = 18
+        EditValue = 1.000000000000000000
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taVCenter
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.###'
+        TabOrder = 0
+        Width = 125
+      end
+      object cxLabel29: TcxLabel
+        Left = 58
+        Top = 1
+        Caption = '<'#1050#1086#1083'-'#1074#1086'> '#1074#1074#1086#1076
+      end
+      object cxLabel10: TcxLabel
+        Left = 189
+        Top = 1
+        Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
+      end
+      object edBarCode3: TcxTextEdit
+        Left = 189
+        Top = 18
+        TabOrder = 1
+        Width = 179
+      end
+      object cxLabel14: TcxLabel
+        Left = 6
+        Top = 8
+        Caption = '3.'
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -19
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = []
+        Style.IsFontAssigned = True
+      end
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 123
-    Width = 1060
-    Height = 444
+    Top = 163
+    Width = 1053
+    Height = 404
     Align = alClient
     TabOrder = 5
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 444
-    ClientRectRight = 1060
+    ClientRectBottom = 404
+    ClientRectRight = 1053
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
       object cxGrid: TcxGrid
-        Left = 40
-        Top = 129
-        Width = 1060
-        Height = 223
+        Left = 0
+        Top = 0
+        Width = 1053
+        Height = 248
+        Align = alClient
         TabOrder = 0
+        ExplicitLeft = 9
+        ExplicitTop = 67
+        ExplicitHeight = 183
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -326,6 +447,21 @@ object SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 120
+          end
+          object EAN: TcxGridDBColumn
+            DataBinding.FieldName = 'EAN'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 'EAN'
+            Options.Editing = False
+            Width = 106
           end
           object Article: TcxGridDBColumn
             Caption = 'Artikel Nr'
@@ -499,8 +635,8 @@ object SendForm: TSendForm
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 296
-        Width = 1060
+        Top = 256
+        Width = 1053
         Height = 124
         Align = alBottom
         TabOrder = 1
@@ -788,347 +924,12 @@ object SendForm: TSendForm
       end
       object cxTopSplitter: TcxSplitter
         Left = 0
-        Top = 288
-        Width = 1060
+        Top = 248
+        Width = 1053
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
-      end
-      object Panel1: TPanel
-        Left = 0
-        Top = 0
-        Width = 1060
-        Height = 65
-        Align = alTop
-        Caption = 'Panel1'
-        TabOrder = 3
-        object cxGrid2: TcxGrid
-          Left = 298
-          Top = 1
-          Width = 367
-          Height = 63
-          Align = alClient
-          PopupMenu = PopupMenu
-          TabOrder = 0
-          object cxGridDBTableView2: TcxGridDBTableView
-            Navigator.Buttons.CustomButtons = <>
-            Navigator.Buttons.Append.Visible = False
-            DataController.DataSource = DataSource2
-            DataController.Filter.Options = [fcoCaseInsensitive]
-            DataController.Summary.DefaultGroupSummaryItems = <
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end>
-            DataController.Summary.FooterSummaryItems = <
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end>
-            DataController.Summary.SummaryGroups = <>
-            FilterRow.ApplyChanges = fracDelayed
-            Images = dmMain.SortImageList
-            OptionsCustomize.ColumnHiding = True
-            OptionsCustomize.ColumnsQuickCustomization = True
-            OptionsData.Deleting = False
-            OptionsData.DeletingConfirmation = False
-            OptionsData.Inserting = False
-            OptionsView.GroupByBox = False
-            OptionsView.HeaderAutoHeight = True
-            OptionsView.Indicator = True
-            Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-            object BarCode_Goods_ch4: TcxGridDBColumn
-              Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
-              DataBinding.FieldName = 'BarCode_Goods'
-              Width = 134
-            end
-          end
-          object cxGridLevel3: TcxGridLevel
-            GridView = cxGridDBTableView2
-          end
-        end
-        object cxGrid1: TcxGrid
-          Left = 1
-          Top = 1
-          Width = 297
-          Height = 63
-          Align = alLeft
-          PopupMenu = PopupMenu
-          TabOrder = 2
-          object cxGridDBTableView1: TcxGridDBTableView
-            Navigator.Buttons.CustomButtons = <>
-            Navigator.Buttons.Append.Visible = False
-            DataController.DataSource = DataSource
-            DataController.Filter.Options = [fcoCaseInsensitive]
-            DataController.Summary.DefaultGroupSummaryItems = <
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end>
-            DataController.Summary.FooterSummaryItems = <
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end>
-            DataController.Summary.SummaryGroups = <>
-            FilterRow.ApplyChanges = fracDelayed
-            Images = dmMain.SortImageList
-            OptionsCustomize.ColumnHiding = True
-            OptionsCustomize.ColumnsQuickCustomization = True
-            OptionsData.Deleting = False
-            OptionsData.DeletingConfirmation = False
-            OptionsData.Inserting = False
-            OptionsView.GroupByBox = False
-            OptionsView.HeaderAutoHeight = True
-            OptionsView.Indicator = True
-            Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-            object BarCode_PartNumber_ch1: TcxGridDBColumn
-              Caption = ' <S/N>  '#1074#1074#1086#1076
-              DataBinding.FieldName = 'BarCode_PartNumber'
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              Width = 100
-            end
-            object BarCode_Goods_ch1: TcxGridDBColumn
-              Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
-              DataBinding.FieldName = 'BarCode_Goods'
-              Width = 134
-            end
-          end
-          object cxGridLevel1: TcxGridLevel
-            GridView = cxGridDBTableView1
-          end
-        end
-        object cxGrid3: TcxGrid
-          Left = 665
-          Top = 1
-          Width = 394
-          Height = 63
-          Align = alRight
-          PopupMenu = PopupMenu
-          TabOrder = 1
-          object cxGridDBTableView3: TcxGridDBTableView
-            Navigator.Buttons.CustomButtons = <>
-            Navigator.Buttons.Append.Visible = False
-            DataController.DataSource = DataSource3
-            DataController.Filter.Options = [fcoCaseInsensitive]
-            DataController.Summary.DefaultGroupSummaryItems = <
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end>
-            DataController.Summary.FooterSummaryItems = <
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end>
-            DataController.Summary.SummaryGroups = <>
-            FilterRow.ApplyChanges = fracDelayed
-            Images = dmMain.SortImageList
-            OptionsCustomize.ColumnHiding = True
-            OptionsCustomize.ColumnsQuickCustomization = True
-            OptionsData.Deleting = False
-            OptionsData.DeletingConfirmation = False
-            OptionsData.Inserting = False
-            OptionsView.GroupByBox = False
-            OptionsView.HeaderAutoHeight = True
-            OptionsView.Indicator = True
-            Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-            object Amount_ch5: TcxGridDBColumn
-              Caption = #1050#1086#1083'-'#1074#1086
-              DataBinding.FieldName = 'Amount'
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              Width = 100
-            end
-            object BarCode_Goods_ch5: TcxGridDBColumn
-              Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
-              DataBinding.FieldName = 'BarCode_Goods'
-              Width = 134
-            end
-          end
-          object cxGridLevel4: TcxGridLevel
-            GridView = cxGridDBTableView3
-          end
-        end
       end
     end
   end
@@ -1185,7 +986,7 @@ object SendForm: TSendForm
       end>
     PackSize = 1
     Left = 256
-    Top = 263
+    Top = 287
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -1238,6 +1039,14 @@ object SendForm: TSendForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateActionMovement'
+        end
+        item
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -1518,6 +1327,10 @@ object SendForm: TSendForm
       Action = actPrint2
       Category = 0
     end
+    object bbUpdateActionMovement: TdxBarButton
+      Action = mactUpdateActionMovement
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1621,16 +1434,13 @@ object SendForm: TSendForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate_BarCode_Amount
       StoredProcList = <
         item
-          StoredProc = spInsertUpdate_BarCode_Amount
         end
         item
           StoredProc = spSelectMI
         end>
       Caption = 'actUpdateMasterDS'
-      DataSource = DataSource3
     end
     object actUpdateBarCodeDS2: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1645,22 +1455,18 @@ object SendForm: TSendForm
           StoredProc = spSelectMI
         end>
       Caption = 'actUpdateMasterDS'
-      DataSource = DataSource2
     end
     object actUpdateBarCodeDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate_BarCode_PartNumber
       StoredProcList = <
         item
-          StoredProc = spInsertUpdate_BarCode_PartNumber
         end
         item
           StoredProc = spSelectMI
         end>
       Caption = 'actUpdateMasterDS'
-      DataSource = DataSource
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1673,24 +1479,37 @@ object SendForm: TSendForm
         end
         item
           StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spBarcode_null
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
     end
+    object actRefreshMI: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectMI
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMIChild
+        end
+        item
+          StoredProc = spBarcode_null
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectBarCode_PartNumber
+      StoredProc = spGet
       StoredProcList = <
-        item
-          StoredProc = spSelectBarCode_PartNumber
-        end
-        item
-          StoredProc = spSelectBarCode
-        end
-        item
-          StoredProc = spSelectBarCode_Amount
-        end
         item
           StoredProc = spGet
         end
@@ -1699,6 +1518,9 @@ object SendForm: TSendForm
         end
         item
           StoredProc = spSelectMIChild
+        end
+        item
+          StoredProc = spBarcode_null
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -2507,6 +2329,254 @@ object SendForm: TSendForm
         end>
       isShowModal = False
     end
+    object actGoodsItem1: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      FormName = 'TSendItemEditForm'
+      FormNameParam.Value = 'TSendItemEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBarCode'
+          Value = ''
+          Component = edBarCode1
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartNumber'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inAmount'
+          Value = 1.000000000000000000
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = Null
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      DataSource = MasterDS
+      DataSetRefresh = actRefreshMI
+      IdFieldName = 'Id'
+    end
+    object actGoodsItem2: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      FormName = 'TSendItemEditForm'
+      FormNameParam.Value = 'TSendItemEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBarCode'
+          Value = ''
+          Component = edBarCode2
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartNumber'
+          Value = ''
+          Component = edPartNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inAmount'
+          Value = 1.000000000000000000
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = Null
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      DataSource = MasterDS
+      DataSetRefresh = actRefreshMI
+      IdFieldName = 'Id'
+    end
+    object actGoodsItem3: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      FormName = 'TSendItemEditForm'
+      FormNameParam.Value = 'TSendItemEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBarCode'
+          Value = ''
+          Component = edBarCode3
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartNumber'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inAmount'
+          Value = 1.000000000000000000
+          Component = edAmount
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = Null
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      DataSource = MasterDS
+      DataSetRefresh = actRefreshMI
+      IdFieldName = 'Id'
+    end
+    object mactUpdateActionMovement: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateAction
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      ImageIndex = 1
+      ShortCut = 113
+      WithoutNext = True
+    end
+    object macGoodsItem1: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGoodsItem1
+        end>
+      Caption = 'macGoodsItem1'
+    end
+    object actUpdateAction: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      ImageIndex = 1
+      FormName = 'TSendItemEditForm'
+      FormNameParam.Value = 'TSendItemEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBarCode'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartNumber'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inAmount'
+          Value = 1.000000000000000000
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = Null
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      ActionType = acUpdate
+      DataSource = MasterDS
+      IdFieldName = 'Id'
+    end
+    object macGoodsItem2: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGoodsItem2
+        end>
+      Caption = 'macGoodsItem2'
+    end
+    object macGoodsItem3: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGoodsItem3
+        end>
+      Caption = 'macGoodsItem3'
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -2546,8 +2616,8 @@ object SendForm: TSendForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 528
-    Top = 8
+    Left = 344
+    Top = 40
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -2649,8 +2719,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 150
-    Top = 287
+    Left = 174
+    Top = 303
   end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2894,8 +2964,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 200
-    Top = 240
+    Left = 208
+    Top = 224
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'
@@ -2946,8 +3016,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 622
-    Top = 288
+    Left = 678
+    Top = 304
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetUnErased'
@@ -3014,13 +3084,13 @@ object SendForm: TSendForm
     Aggregates = <>
     Params = <>
     Left = 548
-    Top = 257
+    Top = 297
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 548
-    Top = 302
+    Top = 342
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Send_Print'
@@ -3299,224 +3369,6 @@ object SendForm: TSendForm
     Left = 201
     Top = 472
   end
-  object DataSource: TDataSource
-    DataSet = ClientDataSet
-    Left = 176
-    Top = 155
-  end
-  object ClientDataSet: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 224
-    Top = 195
-  end
-  object dsdDBViewAddOn1: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridDBTableView1
-    OnDblClickActionList = <
-      item
-      end>
-    ActionItemList = <
-      item
-        ShortCut = 13
-      end>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = True
-    ChartList = <>
-    ColorRuleList = <>
-    ColumnAddOnList = <>
-    ColumnEnterList = <
-      item
-        Column = BarCode_PartNumber_ch1
-      end
-      item
-        Column = BarCode_Goods_ch1
-      end>
-    SummaryItemList = <>
-    ShowFieldImageList = <>
-    PropertiesCellList = <>
-    Left = 278
-    Top = 209
-  end
-  object spSelectBarCode_PartNumber: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_Send_BarCode'
-    DataSet = ClientDataSet
-    DataSets = <
-      item
-        DataSet = ClientDataSet
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 64
-    Top = 144
-  end
-  object spInsertUpdate_BarCode_PartNumber: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_Send_BarCode_PartNumber'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBarCode_Goods'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'BarCode_Goods'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBarCode_PartNumber'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'BarCode_PartNumber'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 918
-    Top = 231
-  end
-  object spSelectBarCode: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_Send_BarCode'
-    DataSet = ClientDataSet2
-    DataSets = <
-      item
-        DataSet = ClientDataSet2
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 384
-    Top = 160
-  end
-  object spSelectBarCode_Amount: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_Send_BarCode'
-    DataSet = ClientDataSet3
-    DataSets = <
-      item
-        DataSet = ClientDataSet3
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 896
-    Top = 176
-  end
-  object DataSource3: TDataSource
-    DataSet = ClientDataSet3
-    Left = 824
-    Top = 171
-  end
-  object ClientDataSet3: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 936
-    Top = 195
-  end
-  object DataSource2: TDataSource
-    DataSet = ClientDataSet2
-    Left = 352
-    Top = 163
-  end
-  object ClientDataSet2: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 472
-    Top = 171
-  end
-  object dsdDBViewAddOn2: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridDBTableView2
-    OnDblClickActionList = <
-      item
-      end>
-    ActionItemList = <
-      item
-        ShortCut = 13
-      end>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = True
-    ChartList = <>
-    ColorRuleList = <>
-    ColumnAddOnList = <>
-    ColumnEnterList = <
-      item
-        Column = BarCode_Goods_ch4
-      end>
-    SummaryItemList = <>
-    ShowFieldImageList = <>
-    PropertiesCellList = <>
-    Left = 510
-    Top = 169
-  end
-  object dsdDBViewAddOn3: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridDBTableView3
-    OnDblClickActionList = <
-      item
-      end>
-    ActionItemList = <
-      item
-        ShortCut = 13
-      end>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = True
-    ChartList = <>
-    ColorRuleList = <>
-    ColumnAddOnList = <>
-    ColumnEnterList = <
-      item
-        Column = Amount_ch5
-      end
-      item
-        Column = BarCode_Goods_ch5
-      end>
-    SummaryItemList = <>
-    ShowFieldImageList = <>
-    PropertiesCellList = <>
-    Left = 718
-    Top = 153
-  end
   object spInsertUpdate_BarCode: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_Send_BarCode'
     DataSets = <>
@@ -3539,8 +3391,6 @@ object SendForm: TSendForm
       item
         Name = 'inBarCode_Goods'
         Value = Null
-        Component = ClientDataSet2
-        ComponentItem = 'BarCode_Goods'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3549,45 +3399,74 @@ object SendForm: TSendForm
     Left = 918
     Top = 279
   end
-  object spInsertUpdate_BarCode_Amount: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_Send_BarCode_Amount'
+  object EnterMoveNext1: TEnterMoveNext
+    EnterMoveNextList = <
+      item
+        Control = edBarCode1
+        ExitAction = macGoodsItem1
+      end>
+    Left = 960
+    Top = 8
+  end
+  object EnterMoveNext2: TEnterMoveNext
+    EnterMoveNextList = <
+      item
+        Control = edPartNumber
+      end
+      item
+        Control = edBarCode2
+        ExitAction = macGoodsItem2
+      end>
+    Left = 960
+    Top = 56
+  end
+  object EnterMoveNext3: TEnterMoveNext
+    EnterMoveNextList = <
+      item
+        Control = edAmount
+      end
+      item
+        Control = edBarCode3
+        ExitAction = macGoodsItem3
+      end>
+    Left = 960
+    Top = 96
+  end
+  object spBarcode_null: TdsdStoredProc
+    StoredProcName = 'gpGet_byBarcode_null'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
-        Value = Null
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBarCode_Goods'
-        Value = Null
-        Component = ClientDataSet3
-        ComponentItem = 'BarCode_Goods'
+        Name = 'BarCode'
+        Value = ''
+        Component = edBarCode1
         DataType = ftString
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
-        Value = Null
-        Component = ClientDataSet3
-        ComponentItem = 'Amount'
-        DataType = ftFloat
-        ParamType = ptInput
+        Name = 'BarCode'
+        Value = ''
+        Component = edBarCode2
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCode'
+        Value = ''
+        Component = edBarCode3
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartNumber'
+        Value = ''
+        Component = edPartNumber
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 918
-    Top = 319
+    Left = 760
+    Top = 320
   end
 end

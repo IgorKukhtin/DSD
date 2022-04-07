@@ -298,7 +298,8 @@ uses
   PriceListJournal in '..\..\FormsBoat\Document\PriceListJournal.pas' {PriceListJournalForm: TParentForm},
   PriceListMovement in '..\..\FormsBoat\Document\PriceListMovement.pas' {PriceListMovementForm: TParentForm},
   DiscountPartner in '..\..\FormsBoat\Guides\DiscountPartner.pas' {DiscountPartnerForm: TParentForm},
-  DiscountPartnerEdit in '..\..\FormsBoat\Guides\DiscountPartnerEdit.pas' {DiscountPartnerEditForm: TParentForm};
+  DiscountPartnerEdit in '..\..\FormsBoat\Guides\DiscountPartnerEdit.pas' {DiscountPartnerEditForm: TParentForm},
+  SendItemEdit in '..\..\FormsBoat\Document\SendItemEdit.pas' {SendItemEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

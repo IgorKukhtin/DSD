@@ -1,8 +1,8 @@
-object InventoryItemEditForm: TInventoryItemEditForm
+object SendItemEditForm: TSendItemEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1058#1086#1074#1072#1088' '#1074' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1102
-  ClientHeight = 252
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1058#1086#1074#1072#1088' '#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+  ClientHeight = 282
   ClientWidth = 408
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
   TextHeight = 13
   object cxButtonOK: TcxButton
     Left = 88
-    Top = 213
+    Top = 247
     Width = 75
     Height = 25
     Action = actInsertUpdate
@@ -26,7 +26,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
   end
   object cxButton2: TcxButton
     Left = 232
-    Top = 213
+    Top = 247
     Width = 75
     Height = 25
     Action = actFormClose
@@ -83,18 +83,18 @@ object InventoryItemEditForm: TInventoryItemEditForm
     Width = 269
   end
   object cxLabel8: TcxLabel
-    Left = 184
+    Left = 288
     Top = 141
     Caption = #1062#1077#1085#1072' '#1074#1093'.'
   end
-  object ceOperPriceList: TcxCurrencyEdit
-    Left = 184
+  object ceOperPrice: TcxCurrencyEdit
+    Left = 288
     Top = 160
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     TabOrder = 10
-    Width = 85
+    Width = 111
   end
   object cxLabel13: TcxLabel
     Left = 86
@@ -111,7 +111,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
     TabOrder = 12
     Width = 72
   end
-  object ceOperCount: TcxCurrencyEdit
+  object edAmount: TcxCurrencyEdit
     Left = 8
     Top = 160
     Properties.DecimalPlaces = 4
@@ -165,6 +165,31 @@ object InventoryItemEditForm: TInventoryItemEditForm
     Top = 21
     TabOrder = 1
     Width = 111
+  end
+  object edCountForPrice: TcxCurrencyEdit
+    Left = 192
+    Top = 160
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.ReadOnly = True
+    TabOrder = 20
+    Width = 85
+  end
+  object cxLabel7: TcxLabel
+    Left = 192
+    Top = 141
+    Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
+  end
+  object edComment: TcxTextEdit
+    Left = 8
+    Top = 205
+    TabOrder = 22
+    Width = 391
+  end
+  object cxLabel9: TcxLabel
+    Left = 8
+    Top = 187
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ActionList: TActionList
     Left = 352
@@ -221,7 +246,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Inventory'
+    StoredProcName = 'gpInsertUpdate_MovementItem_Send'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -250,25 +275,25 @@ object InventoryItemEditForm: TInventoryItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPartionId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PartionId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inAmount'
         Value = 0.000000000000000000
-        Component = ceOperCount
+        Component = edAmount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPrice'
+        Name = 'inOperPrice'
         Value = 0.000000000000000000
-        Component = ceOperPriceList
+        Component = ceOperPrice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountForPrice'
+        Value = 1.000000000000000000
+        Component = edCountForPrice
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -284,13 +309,21 @@ object InventoryItemEditForm: TInventoryItemEditForm
       item
         Name = 'inComment'
         Value = Null
+        Component = edComment
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOn'
+        Value = True
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 183
-    Top = 199
+    Top = 233
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -306,11 +339,11 @@ object InventoryItemEditForm: TInventoryItemEditForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 275
-    Top = 144
+    Left = 235
+    Top = 168
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_MIInventory_Partion_byBarcode'
+    StoredProcName = 'gpGet_MI_Send_byBarcode'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -386,24 +419,9 @@ object InventoryItemEditForm: TInventoryItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PartnerId'
+        Name = 'Amount'
         Value = Null
-        Component = GuidesPartner
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PartnerName'
-        Value = Null
-        Component = GuidesPartner
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperCount'
-        Value = Null
-        Component = ceOperCount
+        Component = edAmount
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -415,17 +433,10 @@ object InventoryItemEditForm: TInventoryItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Price'
+        Name = 'OperPrice'
         Value = Null
-        Component = ceOperPriceList
+        Component = ceOperPrice
         DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PartionId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PartionId'
         MultiSelectSeparator = ','
       end
       item
@@ -447,6 +458,13 @@ object InventoryItemEditForm: TInventoryItemEditForm
         Value = Null
         Component = edPartNumber
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountForPrice'
+        Value = Null
+        Component = edCountForPrice
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -530,7 +548,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
       item
         Name = 'EKPrice'
         Value = Null
-        Component = ceOperPriceList
+        Component = ceOperPrice
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -679,7 +697,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
   object EnterMoveNext: TEnterMoveNext
     EnterMoveNextList = <
       item
-        Control = ceOperCount
+        Control = edAmount
         ExitAction = actGet_TotalCount
       end
       item
@@ -723,7 +741,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
       item
         Name = 'inOperCount'
         Value = 0.000000000000000000
-        Component = ceOperCount
+        Component = edAmount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -737,6 +755,6 @@ object InventoryItemEditForm: TInventoryItemEditForm
       end>
     PackSize = 1
     Left = 64
-    Top = 192
+    Top = 226
   end
 end
