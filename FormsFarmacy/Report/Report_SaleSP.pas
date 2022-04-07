@@ -99,6 +99,10 @@ type
     actPrintMemberSP: TdsdPrintAction;
     bbPrintMemberSP: TdxBarButton;
     isManual: TcxGridDBColumn;
+    PriceOOC: TcxGridDBColumn;
+    SumCompOOC: TcxGridDBColumn;
+    DSummaSP: TcxGridDBColumn;
+    Color_DSummaSP: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -44,6 +44,7 @@ BEGIN
          LEFT JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = MovementLinkObject_CashRegister.ObjectId
                    
     WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '7 DAY'
+      AND Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '5 MIN'
       AND Movement.DescId = zc_Movement_Check()
       AND COALESCE (Object_CashRegister.ValueData, '') <> ''
       AND Movement.StatusId = zc_Enum_Status_UnComplete();
