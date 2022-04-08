@@ -59,6 +59,7 @@ type
     EnterMoveNext: TEnterMoveNext;
     spGet_TotalCount: TdsdStoredProc;
     actGet_TotalCount: TdsdExecStoredProc;
+    GuidesFiller: TGuidesFiller;
   private
     { Private declarations }
   public

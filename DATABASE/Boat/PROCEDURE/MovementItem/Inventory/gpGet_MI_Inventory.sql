@@ -1,29 +1,29 @@
--- Function: gpGet_MI_Send_byBarcode()
+-- Function: gpGet_MIInventory_Partion_byBarcode()
 
-DROP FUNCTION IF EXISTS gpGet_MI_Send_byBarcode (Integer, TVarChar, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_Inventory (Integer, Integer, TVarChar, TFloat, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_MI_Send_byBarcode(
+CREATE OR REPLACE FUNCTION gpGet_MI_Inventory(
     IN inMovementId        Integer    , -- Ключ объекта <Документ>
-    IN inBarCode           TVarChar   , --
+    IN inGoodsId           Integer    , -- вариант когда вібирают товар из справочника
     IN inPartNumber        TVarChar   , --
     IN inAmount            TFloat     , --
     IN inSession           TVarChar     -- сессия пользователя
 )
 RETURNS TABLE (Id                 Integer
+             , PartionId          Integer
              , GoodsId            Integer
              , GoodsCode          Integer
              , GoodsName          TVarChar
-             , PartnerId          Integer
-             , PartnerName        TVarChar
              , Article            TVarChar
              , PartNumber         TVarChar
              , GoodsGroupNameFull TVarChar
              , GoodsGroupId       Integer
              , GoodsGroupName     TVarChar
-             , CountForPrice      TFloat
-             , OperPrice          TFloat
+             , PartnerId          Integer
+             , PartnerName        TVarChar
+             , Price              TFloat
              , TotalCount         TFloat
-             , Amount             TFloat
+             , OperCount          TFloat
               )
 AS
 $BODY$
@@ -35,56 +35,28 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-
-            IF COALESCE (inBarCode,'') = '' AND COALESCE (inPartNumber,'') = '' THEN
-           RETURN QUERY
-           SELECT -1 :: Integer  AS Id
-                , 0  :: Integer  AS GoodsId
-                , 0  :: Integer  AS GoodsCode
-                , '' :: TVarChar AS GoodsName
-                , 0  :: Integer  AS PartnerId
-                , '' :: TVarChar AS PartnerName
-                , '' :: TVarChar AS Article
-                , '' :: TVarChar AS PartNumber
-                , '' :: TVarChar AS GoodsGroupNameFull
-                , 0  :: Integer  AS GoodsGroupId
-                , '' :: TVarChar AS GoodsGroupName
-                , 1  :: TFloat   AS CountForPrice
-                , 0  :: TFloat   AS OperPrice
-                , 0  :: TFloat   AS TotalCount
-                , 1  :: TFloat   AS Amount
-                 ;
-         ELSE
-        
-    
-         -- Нашли
-         SELECT tmp.PartionId
-              , tmp.GoodsId
-              , tmp.PartNumber
-                INTO vbPartionId, vbGoodsId, vbPartNumber
-         FROM gpGet_Partion_byBarcode (inBarCode, inPartNumber, inSession) AS tmp;
-    
-         -- проверка
-         IF COALESCE (vbGoodsId, 0) = 0
-         THEN
-             RAISE EXCEPTION 'Ошибка.Ошибка в Штрихкоде <%>  или  S/N <%>.', inBarCode, inPartNumber;
-         END IF;
-      
-         -- Результат
+              -- Результат
          RETURN QUERY
+         WITH
+         tmpPartionGoods AS (SELECT Object_PartionGoods.*
+                                  , ROW_NUMBER () OVER (ORDER BY Object_PartionGoods.OperDate DESC, Object_PartionGoods.MovementItemId  DESC) AS ORD
+                             FROM Object_PartionGoods
+                             WHERE Object_PartionGoods.ObjectId = inGoodsId
+                            )
+
            SELECT -1                               :: Integer AS Id
+                , Object_PartionGoods.MovementItemId          AS PartionId
                 , Object_Goods.Id                             AS GoodsId
                 , Object_Goods.ObjectCode                     AS GoodsCode
                 , Object_Goods.ValueData                      AS GoodsName
-                , Object_Partner.ObjectCode                   AS PartnerId
-                , Object_Partner.ValueData                    AS PartnerName
                 , ObjectString_Article.ValueData              AS Article
-                , inPartNumber    ::TVarChar                  AS PartNumber
+                , COALESCE (TRIM(inPartNumber),'')    ::TVarChar AS PartNumber
                 , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                 , Object_GoodsGroup.Id                        AS GoodsGroupId
                 , Object_GoodsGroup.ValueData                 AS GoodsGroupName
-                , 1 :: TFloat AS CountForPrice
-                , Object_PartionGoods.ekPrice                 AS OperPrice
+                , Object_Partner.ObjectCode                   AS PartnerId
+                , Object_Partner.ValueData                    AS PartnerName
+                , Object_PartionGoods.ekPrice                 AS Price
                 , (COALESCE (inAmount,1) + COALESCE ((SELECT SUM (MI.Amount)
                                                       FROM MovementItem AS MI
                                                            LEFT JOIN MovementItemString AS MIString_PartNumber
@@ -92,26 +64,29 @@ BEGIN
                                                                                        AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
                                                       WHERE MI.MovementId = inMovementId
                                                         AND MI.DescId = zc_MI_Master()
-                                                        AND MI.ObjectId = vbGoodsId AND MI.isErased = FALSE
+                                                        AND MI.ObjectId = inGoodsId
+                                                        AND MI.isErased = FALSE
                                                         AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
                                                         ), 0)
                   )                                 :: TFloat AS TotalCount
-                , COALESCE (inAmount,1)             :: TFloat AS Amount
+                , COALESCE (inAmount,1)             :: TFloat AS OperCount
     
            FROM Object AS Object_Goods
      
-                LEFT JOIN Object_PartionGoods ON Object_PartionGoods.ObjectId = Object_Goods.Id AND Object_PartionGoods.MovementItemId = vbPartionId
+                LEFT JOIN tmpPartionGoods AS Object_PartionGoods ON Object_PartionGoods.ObjectId = Object_Goods.Id AND Object_PartionGoods.Ord = 1
     
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Partner
                                      ON ObjectLink_Goods_Partner.ObjectId = Object_Goods.Id
                                     AND ObjectLink_Goods_Partner.DescId = zc_ObjectLink_Goods_Partner()
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                     ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                 LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                      ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                     AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
     
-                LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                     ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
-                                    AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-    
-                LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = COALESCE (Object_PartionGoods.GoodsGroupId, ObjectLink_Goods_GoodsGroup.ChildObjectId)
                 LEFT JOIN Object AS Object_Partner     ON Object_Partner.Id     = COALESCE (Object_PartionGoods.FromId, ObjectLink_Goods_Partner.ChildObjectId)
+                LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = COALESCE (Object_PartionGoods.GoodsGroupId, ObjectLink_Goods_GoodsGroup.ChildObjectId)
     
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -121,9 +96,27 @@ BEGIN
                                        ON ObjectString_Article.ObjectId = Object_Goods.Id
                                       AND ObjectString_Article.DescId = zc_ObjectString_Article()
         
-           WHERE Object_Goods.Id = vbGoodsId
+           WHERE Object_Goods.Id = inGoodsId
+              AND inGoodsId <> 0
+          UNION
+           SELECT -1         :: Integer AS Id
+                , 0                     AS PartionId
+                , 0                     AS GoodsId
+                , 0                     AS GoodsCode
+                , '' ::TVarChar         AS GoodsName
+                , '' ::TVarChar         AS Article
+                , '' ::TVarChar         AS PartNumber
+                , '' ::TVarChar         AS GoodsGroupNameFull
+                , 0                     AS GoodsGroupId
+                , '' ::TVarChar         AS GoodsGroupName
+                , 0                     AS PartnerId
+                , '' ::TVarChar         AS PartnerName
+                , 0  ::TFloat           AS Price
+                , 1  ::TFloat           AS TotalCount
+                , 1  :: TFloat          AS OperCount
+           WHERE inGoodsId = 0
           ;
-          END IF;
+
 
 END;
 $BODY$
@@ -132,8 +125,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 07.02.22         *
+ 08.04.22         *
 */
 
 -- тест
---

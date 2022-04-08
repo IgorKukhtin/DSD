@@ -13,6 +13,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -114,6 +115,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
   object ceOperCount: TcxCurrencyEdit
     Left = 8
     Top = 160
+    EditValue = 1.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 0
@@ -305,12 +307,19 @@ object InventoryItemEditForm: TInventoryItemEditForm
         Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = '0'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 275
-    Top = 144
+    Left = 251
+    Top = 112
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_MIInventory_Partion_byBarcode'
+    StoredProcName = 'gpGet_MI_Inventory'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -323,11 +332,10 @@ object InventoryItemEditForm: TInventoryItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inBarCode'
+        Name = 'inGoodsId'
         Value = Null
         Component = FormParams
-        ComponentItem = 'inBarCode'
-        DataType = ftString
+        ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -450,8 +458,8 @@ object InventoryItemEditForm: TInventoryItemEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 208
-    Top = 4
+    Left = 344
+    Top = 12
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -465,8 +473,8 @@ object InventoryItemEditForm: TInventoryItemEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 376
-    Top = 196
+    Left = 336
+    Top = 116
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 313
@@ -532,34 +540,6 @@ object InventoryItemEditForm: TInventoryItemEditForm
         Value = Null
         Component = ceOperPriceList
         DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsInfoName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'LabelId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'LabelName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CompositionGroupId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CompositionGroupName'
-        Value = Null
-        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 164
@@ -632,7 +612,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 233
+    Left = 217
     Top = 47
   end
   object GuidesPartner: TdsdGuides
@@ -738,5 +718,20 @@ object InventoryItemEditForm: TInventoryItemEditForm
     PackSize = 1
     Left = 64
     Top = 192
+  end
+  object GuidesFiller: TGuidesFiller
+    IdParam.Value = '0'
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'GoodsId'
+    IdParam.MultiSelectSeparator = ','
+    GuidesList = <
+      item
+        Guides = GuidesGoods
+      end>
+    ActionItemList = <
+      item
+      end>
+    Left = 96
+    Top = 64
   end
 end
