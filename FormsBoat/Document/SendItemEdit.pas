@@ -1,4 +1,4 @@
-unit InventoryItemEdit;
+unit SendItemEdit;
 
 interface
 
@@ -22,7 +22,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TInventoryItemEditForm = class(TParentForm)
+  TSendItemEditForm = class(TParentForm)
     cxButtonOK: TcxButton;
     cxButton2: TcxButton;
     ActionList: TActionList;
@@ -43,11 +43,11 @@ type
     edPartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
     cxLabel8: TcxLabel;
-    ceOperPriceList: TcxCurrencyEdit;
+    ceOperPrice: TcxCurrencyEdit;
     actRefreshOperPriceList: TdsdDataSetRefresh;
     cxLabel13: TcxLabel;
     edGoodsCode: TcxCurrencyEdit;
-    ceOperCount: TcxCurrencyEdit;
+    edAmount: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
     cxLabel4: TcxLabel;
     ceTotalCount: TcxCurrencyEdit;
@@ -59,6 +59,10 @@ type
     EnterMoveNext: TEnterMoveNext;
     spGet_TotalCount: TdsdStoredProc;
     actGet_TotalCount: TdsdExecStoredProc;
+    edCountForPrice: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    edComment: TcxTextEdit;
+    cxLabel9: TcxLabel;
   private
     { Private declarations }
   public
@@ -70,6 +74,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TInventoryItemEditForm);
+  RegisterClass(TSendItemEditForm);
 
 end.

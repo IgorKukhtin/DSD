@@ -80,6 +80,11 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaCompWithOutVat
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumCompOOC
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -145,6 +150,11 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaCompWithOutVat
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumCompOOC
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -709,11 +719,10 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             DataBinding.FieldName = 'SummaComp'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 103
+            Width = 104
           end
           object SummaCompWithOutVat: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1073#1077#1079' '#1053#1044#1057', '#1075#1088#1085
@@ -737,6 +746,36 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Options.Editing = False
             VisibleForCustomization = False
             Width = 40
+          end
+          object PriceOOC: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1080#1079' '#1056#1077#1077#1089#1090#1088#1072' '#1054#1054#1062', '#1075#1088#1085
+            DataBinding.FieldName = 'PriceOOC'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 77
+          end
+          object SumCompOOC: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1087#1086' '#1056#1077#1077#1089#1090#1088#1091' '#1054#1054#1062', '#1075#1088#1085
+            DataBinding.FieldName = 'SumCompOOC'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
+          end
+          object DSummaSP: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072
+            DataBinding.FieldName = 'DSummaSP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '+,0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
           end
           object InvNumber_in: TcxGridDBColumn
             Caption = #1044#1086#1082'. '#1087#1088#1080#1093'.'
@@ -795,6 +834,12 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 81
+          end
+          object Color_DSummaSP: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_DSummaSP'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
           end
         end
       end
@@ -1821,6 +1866,13 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       Action = actPrintMemberSP
       Category = 0
     end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_DSummaSP
+        ColorValueList = <>
+      end>
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 200

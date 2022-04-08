@@ -67,6 +67,7 @@ type
     procedure LoadGoodsInventoryFormTest;
     procedure LoadGoodsCategoryFormTest;
     procedure LoadGoodsSPMovementFormTest;
+    procedure LoadGoodsSP_1303FormTest;
     procedure LoadGoodsRepriceFormTest;
     procedure LoadHardwareFormTest;
     procedure LoadHouseholdInventoryFormTest;
@@ -2620,6 +2621,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_Movement_CashForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPJournal_CashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSPJournal_CashForm');
+end;
+
+procedure TLoadFormTest.LoadGoodsSP_1303FormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP_1303Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_1303Form');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP_1303JournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_1303JournalForm');
 end;
 
 procedure TLoadFormTest.LoadLossFormTest;

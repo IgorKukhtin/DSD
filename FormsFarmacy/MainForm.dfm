@@ -5044,6 +5044,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actGoodsSP_1303: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1058#1086#1074#1072#1088#1099' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072'  '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303  ('#1076#1086#1082#1091#1084#1077#1085#1090')'
+      FormName = 'TGoodsSP_1303JournalForm'
+      FormNameParam.Value = 'TGoodsSP_1303JournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5194,6 +5205,9 @@
         object miReport_SummSP: TMenuItem
           Action = actReport_SummSP
         end
+        object miGoodsSPJournal: TMenuItem
+          Action = actGoodsSPJournal
+        end
         object N341: TMenuItem
           Action = actReport_RemainingInsulins
         end
@@ -5224,8 +5238,11 @@
         object N70: TMenuItem
           Action = actInvoice
         end
-        object miGoodsSPJournal: TMenuItem
+        object actGoodsSP13031: TMenuItem
           Action = actGoodsSPJournal
+        end
+        object N13032: TMenuItem
+          Action = actGoodsSP_1303
         end
       end
       object N103: TMenuItem

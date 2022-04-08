@@ -152,6 +152,8 @@ type
     cxLabel9: TcxLabel;
     cxLabel10: TcxLabel;
     Ord: TcxGridDBColumn;
+    actUpdateAction: TdsdInsertUpdateAction;
+    mactUpdateActionMovement: TMultiAction;
   private
   public
   end;

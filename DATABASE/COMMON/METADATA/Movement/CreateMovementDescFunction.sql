@@ -528,10 +528,15 @@ CREATE OR REPLACE FUNCTION zc_Movement_LayoutFile() RETURNS Integer AS $BODY$BEG
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_LayoutFile', 'Выкладка файлы для аптек' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_LayoutFile');
 
+CREATE OR REPLACE FUNCTION zc_Movement_GoodsSP_1303() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_GoodsSP_1303'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_GoodsSP_1303', 'Товары Соц. проекта 1303' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_GoodsSP_1303');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 07.04.22                                                                                     * zc_Movement_GoodsSP_1303
  04.02.22                                                                                     * zc_Movement_LayoutFile
  06.01.22         * zc_Movement_OrderReturnTare
  01.12.21                                                                                     * zc_Movement_Pretension

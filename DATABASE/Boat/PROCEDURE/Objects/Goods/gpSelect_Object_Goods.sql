@@ -346,7 +346,8 @@ BEGIN
              LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
 
        WHERE Object_Goods.DescId = zc_Object_Goods()
-         AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE);
+         AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE)
+       LIMIT 10000;
 
 END;
 $BODY$
