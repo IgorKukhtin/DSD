@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_HistoryCost()
+ -- Function: gpInsertUpdate_HistoryCost()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_HistoryCost (TDateTime, TDateTime, Integer, Integer, Integer, TFloat, TVarChar);
 
@@ -642,6 +642,10 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
      --DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (3324068, 3323606, 3325351, 2350884, 2349571, 2354329, 2350886, 2354546, 2349569, -- 07.2021
      -- 159538, 256304, 159542, 539314, 158860, 539309, 256017, 539308, 158859, 159537, 539307, 159539, 158864, 539315, 158861, 3617386, 449444, 539312, 467021);
 
+     -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (926000, 924971); -- 03.2022
+     
+
+
 
 
      IF inBranchId = 0 -- OR 1 = 1
@@ -767,17 +771,18 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
                  , CASE WHEN MIContainer_Count_Out.WhereObjectId_Analyzer = MIContainer_Summ_In.WhereObjectId_Analyzer THEN FALSE ELSE TRUE END AS isExternal
                  , 0 AS MovementDescId
                  -- , MIContainer_Count_Out.MovementDescId
-          /*FROM MIContainer_Count_Out
+            FROM MIContainer_Count_Out
                  JOIN MIContainer_Summ_Out ON MIContainer_Summ_Out.MovementId     = MIContainer_Count_Out.MovementId
                                           AND MIContainer_Summ_Out.MovementItemId = MIContainer_Count_Out.MovementItemId
                  JOIN Container AS Container_Summ_Out ON Container_Summ_Out.Id       = MIContainer_Summ_Out.ContainerId
                                                      AND Container_Summ_Out.ParentId = MIContainer_Count_Out.ContainerId
 
-                 JOIN MIContainer_Summ_In ON MIContainer_Summ_In.ParentId = MIContainer_Summ_Out.ParentId
+                 JOIN MIContainer_Summ_In ON MIContainer_Summ_In.Id = MIContainer_Summ_Out.ParentId
                  JOIN Container AS Container_Summ_In ON Container_Summ_In.Id       = MIContainer_Summ_In.ContainerId
 
                  JOIN MIContainer_Count_In ON MIContainer_Count_In.MovementItemId = MIContainer_Summ_In.MovementItemId
                                           AND MIContainer_Count_In.ContainerId    = Container_Summ_In.ParentId
+                                          AND MIContainer_Count_In.Id             = MIContainer_Count_Out.ParentId
 
                  LEFT JOIN MovementLinkObject AS MovementLinkObject_User
                                               ON MovementLinkObject_User.MovementId = MIContainer_Count_Out.MovementId
@@ -787,16 +792,15 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
                  LEFT JOIN tmpSeparate AS _tmp ON _tmp.MovementId = MIContainer_Count_Out.MovementId
                                               AND _tmp.ContainerId = MIContainer_Summ_Out.ContainerId
                                               AND _tmp.MovementItemId = MIContainer_Summ_Out.MovementItemId
-                                              AND MIContainer_Count_Out.MovementDescId = zc_Movement_ProductionSeparate()*/
+                                              AND MIContainer_Count_Out.MovementDescId = zc_Movement_ProductionSeparate()
 
-            FROM MIContainer_Count_Out
+          /*FROM MIContainer_Count_Out
 
-                 JOIN MIContainer_Count_In ON MIContainer_Count_In.MovementItemId = MIContainer_Count_Out.MovementItemId
-                                          AND MIContainer_Count_In.Id             = MIContainer_Count_Out.ParentId
+                 JOIN MIContainer_Count_In ON MIContainer_Count_In.Id             = MIContainer_Count_Out.ParentId
                                           AND MIContainer_Count_In.MovementId     = MIContainer_Count_Out.MovementId
                  JOIN Container AS Container_Summ_In ON Container_Summ_In.ParentId = MIContainer_Count_In.ContainerId
 
-                 JOIN MIContainer_Summ_In ON MIContainer_Summ_In.MovementItemId = MIContainer_Count_Out.MovementItemId
+                 JOIN MIContainer_Summ_In ON MIContainer_Summ_In.MovementItemId = MIContainer_Count_In.MovementItemId
                                          AND MIContainer_Summ_In.ContainerId    = Container_Summ_In.Id
                                          AND MIContainer_Summ_In.MovementId      = MIContainer_Count_Out.MovementId
 
@@ -816,7 +820,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
                  LEFT JOIN tmpSeparate AS _tmp ON _tmp.MovementId = MIContainer_Count_Out.MovementId
                                               AND _tmp.ContainerId = MIContainer_Summ_Out.ContainerId
                                               AND _tmp.MovementItemId = MIContainer_Summ_Out.MovementItemId
-                                              AND MIContainer_Count_Out.MovementDescId = zc_Movement_ProductionSeparate()
+                                              AND MIContainer_Count_Out.MovementDescId = zc_Movement_ProductionSeparate()*/
 
             WHERE MovementLinkObject_User.MovementId IS NULL
             GROUP BY MIContainer_Summ_In.ContainerId
@@ -844,6 +848,10 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
 
      END IF; -- if inBranchId = 0
 
+
+--    RAISE EXCEPTION 'Ошибка.<%>   %', (select sum(_tmpChild.OperCount) from _tmpChild where _tmpChild.MasterContainerId_Count = 2389013)
+-- , (select count(*) from _tmpChild where _tmpChild.MasterContainerId_Count = 2389013)
+--;
 
 /*     -- добавляются связи которых нет (т.к. нулевые проводки не формируются)
        -- добавляются связи которых нет (т.к. нулевые проводки не формируются) !!!по прошлому периоду если он > 01.06.2014!!!*/
@@ -874,6 +882,43 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
      -- !!! Ну а теперь - итерации для с/с !!!
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+     -- test
+/*     RAISE EXCEPTION 'Ошибка.<%>  <%>'
+     , (select _tmpChild.OperCount 
+      from _tmpChild
+      where _tmpChild.MasterContainerId = 3098974 and _tmpChild.ContainerId = 120200
+      )
+     , (select _tmpChild.OperCount  * _tmpPrice.OperPrice
+      from _tmpChild
+       JOIN (SELECT _tmpMaster.ContainerId
+                          , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
+                                      THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) <> 0
+                                                     THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
+                                                ELSE  0
+                                           END
+                                 WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0)
+                                    OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0))
+                                     THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
+                                 ELSE 0
+                            END AS OperPrice
+                          /*, CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
+                                      THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) <> 0
+                                                     THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
+                                                ELSE  0
+                                           END
+                                 WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) > 0)
+                                    OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) < 0))
+                                     THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount_external)
+                                 ELSE 0
+                            END AS OperPrice_external*/
+                     FROM _tmpMaster
+                    ) AS _tmpPrice
+                     ON _tmpChild.ContainerId = _tmpPrice.ContainerId
+                    
+      where _tmpChild.MasterContainerId = 3098974 and _tmpChild.ContainerId = 120200
+      );
+*/
 
      -- !!! 1-ая итерация для всех !!!
          UPDATE _tmpMaster SET CalcSumm          = _tmpSumm.CalcSumm
@@ -917,6 +962,22 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
               ) AS _tmpSumm
          WHERE _tmpMaster.ContainerId = _tmpSumm.ContainerId;
 
+/*
+     -- test
+     RAISE EXCEPTION 'Ошибка.<%>  <%>'
+     , (select _tmpMaster.CalcSumm from _tmpMaster where _tmpMaster.ContainerId = 3098974)
+     , (select CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE -- OR tmpErr.Id > 0 -- !!!временно!!!
+                             THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) <> 0
+                                            THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
+                                       ELSE  0
+                                  END
+                        WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0)
+                           OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0))
+                             THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
+                        ELSE 0
+                   END AS Price
+        from _tmpMaster where _tmpMaster.ContainerId = 3098974)
+     ;*/
 
 
      -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
@@ -1597,4 +1658,4 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 -- тест
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.02.2022', inEndDate:= '28.02.2022', inBranchId:= 0, inItearationCount:= 200, inInsert:= 1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2459386, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.03.2022', inEndDate:= '15.03.2022', inBranchId:= 0, inItearationCount:= 10, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2389081)
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.03.2022', inEndDate:= '28.03.2022', inBranchId:= 0, inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (2389081) -- ORDER BY ABS (Price) DESC

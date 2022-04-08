@@ -165,7 +165,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyId_Detail Integer, InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
 
-             , ContainerId_Summ Integer
+             , ContainerId_Summ Integer, ContainerId_count Integer
              , LineNum Integer
              , LocationName_inf TVarChar
 
@@ -307,8 +307,8 @@ BEGIN
                          WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                         )
        , tmpReport_all AS (SELECT * FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate, inAccountGroupId:= inAccountGroupId, inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId, inGoodsGroupId:= inGoodsGroupId, inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId))
-       , tmpReport_summ AS (SELECT * FROM tmpReport_all WHERE inIsInfoMoney = FALSE OR ContainerId_count <> ContainerId)
-       , tmpReport_count AS (SELECT * FROM tmpReport_all WHERE inIsInfoMoney = TRUE AND ContainerId_count = ContainerId)
+       , tmpReport_summ AS (SELECT * FROM tmpReport_all WHERE inIsInfoMoney = FALSE OR tmpReport_all.ContainerId_count <> tmpReport_all.ContainerId)
+       , tmpReport_count AS (SELECT * FROM tmpReport_all WHERE inIsInfoMoney = TRUE AND tmpReport_all.ContainerId_count = tmpReport_all.ContainerId)
        , tmpReport AS (SELECT COALESCE (tmpReport_summ.AccountId,         tmpReport_count.AccountId)         AS AccountId
                             , COALESCE (tmpReport_summ.ContainerId_count, tmpReport_count.ContainerId_count) AS ContainerId_count
                             , COALESCE (tmpReport_summ.ContainerId,       tmpReport_count.ContainerId)       AS ContainerId
@@ -398,6 +398,7 @@ BEGIN
 
        , tmpMIContainer_group AS (SELECT tmpMIContainer_all.AccountId                 AS AccountId
                                        , tmpMIContainer_all.ContainerId
+                                       , tmpMIContainer_all.ContainerId_count
                                        , tmpMIContainer_all.LocationId
                                        , tmpMIContainer_all.CarId
                                        , tmpMIContainer_all.GoodsId
@@ -560,6 +561,7 @@ BEGIN
                                        LEFT JOIN _tmpLocation_by ON _tmpLocation_by.LocationId = tmpMIContainer_all.LocationId_by
                                   GROUP BY tmpMIContainer_all.AccountId
                                          , tmpMIContainer_all.ContainerId
+                                         , tmpMIContainer_all.ContainerId_count
                                          , tmpMIContainer_all.LocationId
                                          , tmpMIContainer_all.CarId
                                          , tmpMIContainer_all.GoodsId
@@ -846,6 +848,8 @@ BEGIN
         , View_InfoMoneyDetail.InfoMoneyName_all        AS InfoMoneyName_all_Detail
 
         , tmpMIContainer_group.ContainerId              AS ContainerId_Summ
+        , tmpMIContainer_group.ContainerId_count        AS ContainerId_count
+
         , CAST (row_number() OVER () AS INTEGER)        AS LineNum
 
         , CAST( CASE WHEN COALESCE(Object_Car.ValueData,'') <> '' THEN Object_Car.ValueData ELSE COALESCE(Object_Location.ValueData,'') END  AS TVarChar)  AS LocationName_inf

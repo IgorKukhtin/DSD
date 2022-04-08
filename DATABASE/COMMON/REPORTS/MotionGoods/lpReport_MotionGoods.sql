@@ -530,7 +530,7 @@ end if;
                                        )
 
              , tmpMIContainer AS (SELECT _tmpContainer.ContainerDescId
-                                       , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_count ELSE 0 END AS ContainerId_count
+                                       , CASE WHEN inIsInfoMoney = TRUE OR inUserId = 5 THEN _tmpContainer.ContainerId_count ELSE 0 END AS ContainerId_count
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_begin ELSE 0 END AS ContainerId_begin
                                        , _tmpContainer.LocationId
                                        , _tmpContainer.CarId
@@ -994,7 +994,7 @@ end if;
                                                                    AND tmpPriceList_Basis.GoodsKindId = 0
 
                                   GROUP BY _tmpContainer.ContainerDescId
-                                         , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_count ELSE 0 END
+                                         , CASE WHEN inIsInfoMoney = TRUE OR inUserId = 5 THEN _tmpContainer.ContainerId_count ELSE 0 END
                                          , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_begin ELSE 0 END
                                          , _tmpContainer.LocationId
                                          , _tmpContainer.CarId
@@ -1411,7 +1411,7 @@ end if;
 
                                  UNION ALL
                                   SELECT _tmpContainer.ContainerDescId
-                                       , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_count ELSE 0 END AS ContainerId_count
+                                       , CASE WHEN inIsInfoMoney = TRUE OR inUserId = 5 THEN _tmpContainer.ContainerId_count ELSE 0 END AS ContainerId_count
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_begin ELSE 0 END AS ContainerId_begin
                                        , _tmpContainer.LocationId
                                        , _tmpContainer.CarId
