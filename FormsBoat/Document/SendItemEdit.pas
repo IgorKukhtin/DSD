@@ -63,6 +63,7 @@ type
     cxLabel7: TcxLabel;
     edComment: TcxTextEdit;
     cxLabel9: TcxLabel;
+    GuidesFiller: TGuidesFiller;
   private
     { Private declarations }
   public

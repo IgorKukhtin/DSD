@@ -36,7 +36,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-            IF COALESCE (inBarCode,'') = '' AND COALESCE (inPartNumber,'') = '' THEN
+         IF COALESCE (inBarCode,'') = '' AND COALESCE (inPartNumber,'') = '' THEN
            RETURN QUERY
            SELECT -1 :: Integer  AS Id
                 , 0  :: Integer  AS GoodsId
@@ -83,7 +83,7 @@ BEGIN
                 , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                 , Object_GoodsGroup.Id                        AS GoodsGroupId
                 , Object_GoodsGroup.ValueData                 AS GoodsGroupName
-                , 1 :: TFloat AS CountForPrice
+                , 1                                 :: TFloat AS CountForPrice
                 , Object_PartionGoods.ekPrice                 AS OperPrice
                 , (COALESCE (inAmount,1) + COALESCE ((SELECT SUM (MI.Amount)
                                                       FROM MovementItem AS MI

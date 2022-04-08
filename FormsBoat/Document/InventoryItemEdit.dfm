@@ -311,7 +311,6 @@ object InventoryItemEditForm: TInventoryItemEditForm
       item
         Name = 'GoodsId'
         Value = '0'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

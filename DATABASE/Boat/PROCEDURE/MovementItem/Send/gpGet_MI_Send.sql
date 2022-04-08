@@ -1,8 +1,8 @@
--- Function: gpGet_MI_Inventory()
+-- Function: gpGet_MI_Send()
 
-DROP FUNCTION IF EXISTS gpGet_MI_Inventory (Integer, Integer, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_Send (Integer, Integer, TVarChar, TFloat, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_MI_Inventory(
+CREATE OR REPLACE FUNCTION gpGet_MI_Send(
     IN inMovementId        Integer    , -- Ключ объекта <Документ>
     IN inGoodsId           Integer    , -- вариант когда вібирают товар из справочника
     IN inPartNumber        TVarChar   , --
@@ -21,9 +21,10 @@ RETURNS TABLE (Id                 Integer
              , GoodsGroupName     TVarChar
              , PartnerId          Integer
              , PartnerName        TVarChar
+             , CountForPrice      TFloat
              , Price              TFloat
              , TotalCount         TFloat
-             , OperCount          TFloat
+             , Amount          TFloat
               )
 AS
 $BODY$
@@ -60,6 +61,7 @@ BEGIN
                 , Object_GoodsGroup.ValueData                 AS GoodsGroupName
                 , Object_Partner.ObjectCode                   AS PartnerId
                 , Object_Partner.ValueData                    AS PartnerName
+                , 1  :: TFloat   AS CountForPrice
                 , Object_PartionGoods.ekPrice                 AS Price
                 , (COALESCE (inAmount,1) + COALESCE ((SELECT SUM (MI.Amount)
                                                       FROM MovementItem AS MI
@@ -73,7 +75,7 @@ BEGIN
                                                         AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
                                                         ), 0)
                   )                                 :: TFloat AS TotalCount
-                , COALESCE (inAmount,1)             :: TFloat AS OperCount
+                , COALESCE (inAmount,1)             :: TFloat AS Amount
     
            FROM Object AS Object_Goods
      
@@ -113,9 +115,10 @@ BEGIN
                 , '' ::TVarChar         AS GoodsGroupName
                 , 0                     AS PartnerId
                 , '' ::TVarChar         AS PartnerName
+                , 1  :: TFloat          AS CountForPrice
                 , 0  ::TFloat           AS Price
                 , 1  ::TFloat           AS TotalCount
-                , 1  :: TFloat          AS OperCount
+                , 1  :: TFloat          AS Amount
            WHERE inGoodsId = 0
           ;
 
