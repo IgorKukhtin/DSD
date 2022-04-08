@@ -1032,8 +1032,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
     ActionItemList = <
       item
       end>
-    Left = 80
-    Top = 24
+    Left = 136
+    Top = 80
   end
   object EnterMoveNext: TEnterMoveNext
     EnterMoveNextList = <
