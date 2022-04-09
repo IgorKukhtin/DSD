@@ -301,9 +301,6 @@ object SendForm: TSendForm
         Height = 248
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 9
-        ExplicitTop = 67
-        ExplicitHeight = 183
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1044,10 +1041,6 @@ object SendForm: TSendForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdateActionMovement'
-        end
-        item
-          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1057,6 +1050,10 @@ object SendForm: TSendForm
         item
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateActionMovement'
         end
         item
           Visible = True
@@ -1330,6 +1327,7 @@ object SendForm: TSendForm
     object bbUpdateActionMovement: TdxBarButton
       Action = mactUpdateActionMovement
       Category = 0
+      ImageIndex = 0
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1503,6 +1501,7 @@ object SendForm: TSendForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
@@ -2374,6 +2373,14 @@ object SendForm: TSendForm
           Value = Null
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = MasterDS
@@ -2425,6 +2432,14 @@ object SendForm: TSendForm
           Name = 'Id'
           Value = Null
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -2478,6 +2493,14 @@ object SendForm: TSendForm
           Value = Null
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = MasterDS
@@ -2489,7 +2512,7 @@ object SendForm: TSendForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actUpdateAction
+          Action = actInsertAction
         end
         item
           Action = actRefresh
@@ -2500,16 +2523,7 @@ object SendForm: TSendForm
       ShortCut = 113
       WithoutNext = True
     end
-    object macGoodsItem1: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGoodsItem1
-        end>
-      Caption = 'macGoodsItem1'
-    end
-    object actUpdateAction: TdsdInsertUpdateAction
+    object actInsertAction: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
@@ -2550,19 +2564,71 @@ object SendForm: TSendForm
         end
         item
           Name = 'Id'
-          Value = Null
+          Value = '-1'
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = '0'
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-      ActionType = acUpdate
       DataSource = MasterDS
       IdFieldName = 'Id'
+    end
+    object actGoodsItemGet2: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_dop2
+      StoredProcList = <
+        item
+          StoredProc = spGet_dop2
+        end>
+      Caption = 'actGoodsItemGet2'
+    end
+    object actGoodsItemGet1: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_dop1
+      StoredProcList = <
+        item
+          StoredProc = spGet_dop1
+        end>
+      Caption = 'actGoodsItemGet1'
+    end
+    object actGoodsItemGet3: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_dop3
+      StoredProcList = <
+        item
+          StoredProc = spGet_dop3
+        end>
+      Caption = 'actGoodsItemGet3'
+    end
+    object macGoodsItem1: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGoodsItemGet1
+        end
+        item
+          Action = actGoodsItem1
+        end>
+      Caption = 'macGoodsItem1'
     end
     object macGoodsItem2: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
+        item
+          Action = actGoodsItemGet2
+        end
         item
           Action = actGoodsItem2
         end>
@@ -2572,6 +2638,9 @@ object SendForm: TSendForm
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
+        item
+          Action = actGoodsItemGet3
+        end
         item
           Action = actGoodsItem3
         end>
@@ -3397,7 +3466,7 @@ object SendForm: TSendForm
       end>
     PackSize = 1
     Left = 918
-    Top = 279
+    Top = 311
   end
   object EnterMoveNext1: TEnterMoveNext
     EnterMoveNextList = <
@@ -3468,5 +3537,145 @@ object SendForm: TSendForm
     PackSize = 1
     Left = 760
     Top = 320
+  end
+  object spGet_dop1: TdsdStoredProc
+    StoredProcName = 'gpGet_MI_Send_byBarcode'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCode'
+        Value = ''
+        Component = edBarCode1
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = 1.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'GoodsId'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 872
+    Top = 232
+  end
+  object spGet_dop2: TdsdStoredProc
+    StoredProcName = 'gpGet_MI_Send_byBarcode'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCode'
+        Value = ''
+        Component = edBarCode2
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartNumber'
+        Value = ''
+        Component = edPartNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = 1.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'GoodsId'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 936
+    Top = 232
+  end
+  object spGet_dop3: TdsdStoredProc
+    StoredProcName = 'gpGet_MI_Send_byBarcode'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCode'
+        Value = ''
+        Component = edBarCode3
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = 1.000000000000000000
+        Component = edAmount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'GoodsId'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 992
+    Top = 232
   end
 end

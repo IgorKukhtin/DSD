@@ -216,11 +216,17 @@ type
     macGoodsItem1: TMultiAction;
     macGoodsItem2: TMultiAction;
     macGoodsItem3: TMultiAction;
-    actUpdateAction: TdsdInsertUpdateAction;
+    actInsertAction: TdsdInsertUpdateAction;
     mactUpdateActionMovement: TMultiAction;
     bbUpdateActionMovement: TdxBarButton;
     spBarcode_null: TdsdStoredProc;
     actRefreshMI: TdsdDataSetRefresh;
+    spGet_dop1: TdsdStoredProc;
+    spGet_dop2: TdsdStoredProc;
+    spGet_dop3: TdsdStoredProc;
+    actGoodsItemGet1: TdsdExecStoredProc;
+    actGoodsItemGet2: TdsdExecStoredProc;
+    actGoodsItemGet3: TdsdExecStoredProc;
   private
   public
   end;

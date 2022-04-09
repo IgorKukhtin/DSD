@@ -52,6 +52,8 @@ $BODY$
    DECLARE vbNeed TFloat;
    DECLARE vbKoeffSUN TFloat;
    DECLARE vbisEliminateColdSUN Boolean;
+   DECLARE vbDeySupplOut TFloat;
+   DECLARE vbDeySupplIn TFloat;
 BEGIN
      --
      --
@@ -63,11 +65,21 @@ BEGIN
                   ) :: TVarChar;
 
      SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE) 
+          , COALESCE(ObjectFloat_CashSettings_DeySupplOutSUN2.ValueData, 40)::Integer 
+          , COALESCE(ObjectFloat_CashSettings_DeySupplInSUN2.ValueData, 30)::Integer 
      INTO vbisEliminateColdSUN
+        , vbDeySupplOut
+        , vbDeySupplIn
      FROM Object AS Object_CashSettings
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
                                   ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
                                  AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN()
+          LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_DeySupplOutSUN2
+                                ON ObjectFloat_CashSettings_DeySupplOutSUN2.ObjectId = Object_CashSettings.Id 
+                               AND ObjectFloat_CashSettings_DeySupplOutSUN2.DescId = zc_ObjectFloat_CashSettings_DeySupplOutSUN2()
+          LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_DeySupplInSUN2
+                                ON ObjectFloat_CashSettings_DeySupplInSUN2.ObjectId = Object_CashSettings.Id 
+                               AND ObjectFloat_CashSettings_DeySupplInSUN2.DescId = zc_ObjectFloat_CashSettings_DeySupplInSUN2()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
 
@@ -148,8 +160,8 @@ BEGIN
      -- все ѕодразделени€ дл€ схемы SUN
      INSERT INTO _tmpUnit_SUN_Supplement_V2 (UnitId, DeySupplOut, DeySupplIn, isSUN_Supplement_V2_in, isSUN_Supplement_V2_out)
         SELECT OB.ObjectId
-             , 120::Integer              AS DeySupplOut
-             , 60::Integer              AS DeySupplIn
+             , vbDeySupplOut            AS DeySupplOut  -- 120
+             , vbDeySupplIn             AS DeySupplIn   -- 60
              , COALESCE (ObjectBoolean_SUN_v2_Supplement_V2_in.ValueData, FALSE)  :: Boolean   AS isSUN_Supplement_V2_in
              , COALESCE (ObjectBoolean_SUN_v2_Supplement_V2_out.ValueData, FALSE) :: Boolean   AS isSUN_Supplement_V2_out             
         FROM ObjectBoolean AS OB
@@ -663,7 +675,7 @@ BEGIN
        AND ceil(_tmpRemains_all_Supplement_V2.AmountSalesDay - _tmpRemains_all_Supplement_V2.AmountRemains) > 0;
               
      
-     -- 3. распредел€ем
+     -- 3. распредел€ем до Ќ“«
      --
      -- курсор1 - все что можно распределить
      OPEN curPartion_next FOR
@@ -673,10 +685,97 @@ BEGIN
              , COALESCE (OF_KoeffSUN.ValueData, 0)
        FROM _tmpRemains_all_Supplement_V2
 
+            INNER JOIN _tmpUnit_SUN_Supplement_V2 ON _tmpUnit_SUN_Supplement_V2.UnitId = _tmpRemains_all_Supplement_V2.UnitId
+                                                 AND _tmpUnit_SUN_Supplement_V2.isSUN_Supplement_V2_out = TRUE
+
+            LEFT JOIN ObjectFloat AS OF_KoeffSUN ON OF_KoeffSUN.ObjectId = _tmpRemains_all_Supplement_V2.GoodsId
+                                                AND OF_KoeffSUN.DescId    = zc_ObjectFloat_Goods_KoeffSUN_v2()
+                                                                                                                            
+       WHERE _tmpRemains_all_Supplement_V2.Give > 0
+       ORDER BY _tmpRemains_all_Supplement_V2.Give DESC
+              , _tmpRemains_all_Supplement_V2.UnitId
+              , _tmpRemains_all_Supplement_V2.GoodsId
+       ;
+       
+     -- начало цикла по курсору1 
+     LOOP
+         -- данные по курсору1
+         FETCH curPartion_next INTO vbUnitId_from, vbGoodsId, vbSurplus, vbKoeffSUN;
+         -- если данные закончились, тогда выход
+         IF NOT FOUND THEN EXIT; END IF;
+
+         -- курсор2. - ѕотребность дл€ vbGoodsId
+         OPEN curResult_next FOR
+             SELECT _tmpRemains_all_Supplement_v2.UnitId
+                  , CASE WHEN COALESCE (vbKoeffSUN, 0) = 0 
+                         THEN FLOOR(_tmpRemains_all_Supplement_v2.MCS - _tmpRemains_all_Supplement_v2.AmountRemains - _tmpRemains_all_Supplement_v2.AmountUse)
+                         ELSE FLOOR (FLOOR(_tmpRemains_all_Supplement_v2.MCS - _tmpRemains_all_Supplement_v2.AmountRemains - _tmpRemains_all_Supplement_v2.AmountUse) / vbKoeffSUN) * vbKoeffSUN END
+             FROM _tmpRemains_all_Supplement_v2
+
+                  INNER JOIN _tmpUnit_SUN_Supplement_V2 ON _tmpUnit_SUN_Supplement_V2.UnitId = _tmpRemains_all_Supplement_V2.UnitId
+                                                       AND _tmpUnit_SUN_Supplement_V2.isSUN_Supplement_V2_in = TRUE
+
+                  -- отбросили !!исключени€!!
+                  LEFT JOIN _tmpUnit_SunExclusion_Supplement_v2 ON _tmpUnit_SunExclusion_Supplement_v2.UnitId_from = vbUnitId_from
+                                                               AND _tmpUnit_SunExclusion_Supplement_v2.UnitId_to   = _tmpRemains_all_Supplement_v2.UnitId
+
+             WHERE CASE WHEN COALESCE (vbKoeffSUN, 0) = 0 
+                        THEN FLOOR(_tmpRemains_all_Supplement_v2.MCS - _tmpRemains_all_Supplement_v2.AmountRemains - _tmpRemains_all_Supplement_v2.AmountUse)
+                        ELSE FLOOR (FLOOR(_tmpRemains_all_Supplement_v2.MCS - _tmpRemains_all_Supplement_v2.AmountRemains - _tmpRemains_all_Supplement_v2.AmountUse) / vbKoeffSUN) * vbKoeffSUN END > 0
+               AND _tmpRemains_all_Supplement_v2.UnitId <> vbUnitId_from
+               AND _tmpRemains_all_Supplement_v2.GoodsId = vbGoodsId
+               AND _tmpUnit_SunExclusion_Supplement_v2.UnitId_to IS NULL
+             ORDER BY FLOOR(_tmpRemains_all_Supplement_v2.MCS - _tmpRemains_all_Supplement_v2.AmountRemains - _tmpRemains_all_Supplement_v2.AmountUse) DESC
+                    , _tmpRemains_all_Supplement_v2.UnitId
+                    , _tmpRemains_all_Supplement_v2.GoodsId;
+         -- начало цикла по курсору2 - остаток сроковых - под него надо найти јвтозаказ
+         LOOP
+             -- данные по јвтозаказ
+             FETCH curResult_next INTO vbUnitId_to, vbNeed;
+             -- если данные закончились, или все кол-во найдено тогда выход
+             IF NOT FOUND OR (vbSurplus) <= 0 THEN EXIT; END IF;
+
+             -- если данные закончились, или все кол-во найдено тогда выход
+             IF NOT FOUND OR FLOOR (vbSurplus) <= 0 THEN EXIT; END IF;
+             
+             INSERT INTO _tmpResult_Supplement_V2 (UnitId_from, UnitId_to, GoodsId, Amount)
+               VALUES (vbUnitId_from, vbUnitId_to, vbGoodsId, CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END);
+
+             UPDATE _tmpRemains_all_Supplement_v2 SET AmountUse = AmountUse + CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END
+             WHERE _tmpRemains_all_Supplement_v2.UnitId = vbUnitId_to
+               AND _tmpRemains_all_Supplement_v2.GoodsId = vbGoodsId;
+
+             UPDATE _tmpRemains_all_Supplement_v2 SET AmountUse = AmountUse + CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END
+             WHERE _tmpRemains_all_Supplement_v2.UnitId = vbUnitId_from
+               AND _tmpRemains_all_Supplement_v2.GoodsId = vbGoodsId;
+
+             vbSurplus := vbSurplus - CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END;
+
+         END LOOP; -- финиш цикла по курсору2
+         CLOSE curResult_next; -- закрыли курсор2.
+
+     END LOOP; -- финиш цикла по курсору1
+     CLOSE curPartion_next; -- закрыли курсор1
+
+raise notice 'Value 04: %', (select Count(*) from _tmpResult_Supplement_V2);      
+
+     -- 3. распредел€ем до ѕотребности
+     --
+     -- курсор1 - все что можно распределить
+     OPEN curPartion_next FOR
+        SELECT _tmpRemains_all_Supplement_V2.UnitId
+             , _tmpRemains_all_Supplement_V2.GoodsId
+             , _tmpRemains_all_Supplement_V2.Give - _tmpRemains_all_Supplement_V2.AmountUse
+             , COALESCE (OF_KoeffSUN.ValueData, 0)
+       FROM _tmpRemains_all_Supplement_V2
+
+            INNER JOIN _tmpUnit_SUN_Supplement_V2 ON _tmpUnit_SUN_Supplement_V2.UnitId = _tmpRemains_all_Supplement_V2.UnitId
+                                                 AND _tmpUnit_SUN_Supplement_V2.isSUN_Supplement_V2_out = TRUE
+
             LEFT JOIN ObjectFloat AS OF_KoeffSUN ON OF_KoeffSUN.ObjectId = _tmpRemains_all_Supplement_V2.GoodsId
                                                 AND OF_KoeffSUN.DescId    = zc_ObjectFloat_Goods_KoeffSUN_v2()
                                                                             
-       WHERE _tmpRemains_all_Supplement_V2.Give > 0
+       WHERE _tmpRemains_all_Supplement_V2.Give - _tmpRemains_all_Supplement_V2.AmountUse > 0
        ORDER BY _tmpRemains_all_Supplement_V2.Give DESC
               , _tmpRemains_all_Supplement_V2.UnitId
               , _tmpRemains_all_Supplement_V2.GoodsId
@@ -697,6 +796,9 @@ BEGIN
                          ELSE FLOOR (FLOOR(_tmpRemains_all_Supplement_v2.Need - _tmpRemains_all_Supplement_v2.AmountUse) / vbKoeffSUN) * vbKoeffSUN END
              FROM _tmpRemains_all_Supplement_v2
 
+                  INNER JOIN _tmpUnit_SUN_Supplement_V2 ON _tmpUnit_SUN_Supplement_V2.UnitId = _tmpRemains_all_Supplement_V2.UnitId
+                                                       AND _tmpUnit_SUN_Supplement_V2.isSUN_Supplement_V2_in = TRUE
+
                   -- отбросили !!исключени€!!
                   LEFT JOIN _tmpUnit_SunExclusion_Supplement_v2 ON _tmpUnit_SunExclusion_Supplement_v2.UnitId_from = vbUnitId_from
                                                                AND _tmpUnit_SunExclusion_Supplement_v2.UnitId_to   = _tmpRemains_all_Supplement_v2.UnitId
@@ -707,7 +809,8 @@ BEGIN
                AND _tmpRemains_all_Supplement_v2.UnitId <> vbUnitId_from
                AND _tmpRemains_all_Supplement_v2.GoodsId = vbGoodsId
                AND _tmpUnit_SunExclusion_Supplement_v2.UnitId_to IS NULL
-             ORDER BY FLOOR(_tmpRemains_all_Supplement_v2.Need - _tmpRemains_all_Supplement_v2.AmountUse) DESC
+             ORDER BY _tmpRemains_all_Supplement_v2.AmountUse
+                    , FLOOR(_tmpRemains_all_Supplement_v2.Need - _tmpRemains_all_Supplement_v2.AmountUse) DESC
                     , _tmpRemains_all_Supplement_v2.UnitId
                     , _tmpRemains_all_Supplement_v2.GoodsId;
          -- начало цикла по курсору2 - остаток сроковых - под него надо найти јвтозаказ
@@ -720,8 +823,20 @@ BEGIN
              -- если данные закончились, или все кол-во найдено тогда выход
              IF NOT FOUND OR FLOOR (vbSurplus) <= 0 THEN EXIT; END IF;
              
-             INSERT INTO _tmpResult_Supplement_V2 (UnitId_from, UnitId_to, GoodsId, Amount)
-               VALUES (vbUnitId_from, vbUnitId_to, vbGoodsId, CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END);
+             IF EXISTS(SELECT * 
+                       FROM _tmpResult_Supplement_V2
+                       WHERE _tmpResult_Supplement_V2.UnitId_from = vbUnitId_from
+                         AND _tmpResult_Supplement_V2.UnitId_to = vbUnitId_to
+                         AND _tmpResult_Supplement_V2.GoodsId = vbGoodsId)
+             THEN
+               UPDATE _tmpResult_Supplement_V2 SET Amount = _tmpResult_Supplement_V2.Amount + CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END
+               WHERE _tmpResult_Supplement_V2.UnitId_from = vbUnitId_from
+                 AND _tmpResult_Supplement_V2.UnitId_to = vbUnitId_to
+                 AND _tmpResult_Supplement_V2.GoodsId = vbGoodsId;
+             ELSE
+               INSERT INTO _tmpResult_Supplement_V2 (UnitId_from, UnitId_to, GoodsId, Amount)
+                 VALUES (vbUnitId_from, vbUnitId_to, vbGoodsId, CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END);
+             END IF;
 
              UPDATE _tmpRemains_all_Supplement_v2 SET AmountUse = AmountUse + CASE WHEN FLOOR (vbSurplus) > vbNeed THEN vbNeed ELSE FLOOR (vbSurplus) END
              WHERE _tmpRemains_all_Supplement_v2.UnitId = vbUnitId_to
@@ -734,9 +849,8 @@ BEGIN
 
      END LOOP; -- финиш цикла по курсору1
      CLOSE curPartion_next; -- закрыли курсор1
-
-
--- raise notice 'Value 05: %', (select Count(*) from _tmpResult_Supplement_V2);      
+     
+raise notice 'Value 05: %', (select Count(*) from _tmpResult_Supplement_V2);      
 
 
      -- –езультат
@@ -815,4 +929,4 @@ $BODY$
 
 -- 
 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= 0, inUserId:= 3);

@@ -38,6 +38,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PercentUntilNextSUN TFloat
              , isEliminateColdSUN Boolean
              , TurnoverMoreSUN2 TFloat
+             , DeySupplOutSUN2 Integer
+             , DeySupplInSUN2 Integer
              ) AS
 $BODY$
 BEGIN
@@ -81,6 +83,8 @@ BEGIN
         , ObjectFloat_CashSettings_PercentUntilNextSUN.ValueData                   AS PercentUntilNextSUN
         , COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE)   AS isEliminateColdSUN
         , ObjectFloat_CashSettings_TurnoverMoreSUN2.ValueData                      AS TurnoverMoreSUN2
+        , ObjectFloat_CashSettings_DeySupplOutSUN2.ValueData::Integer              AS DeySupplOutSUN2
+        , ObjectFloat_CashSettings_DeySupplInSUN2.ValueData::Integer               AS DeySupplInSUN2
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -182,6 +186,13 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_TurnoverMoreSUN2
                               ON ObjectFloat_CashSettings_TurnoverMoreSUN2.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_TurnoverMoreSUN2.DescId = zc_ObjectFloat_CashSettings_TurnoverMoreSUN2()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_DeySupplOutSUN2
+                              ON ObjectFloat_CashSettings_DeySupplOutSUN2.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_DeySupplOutSUN2.DescId = zc_ObjectFloat_CashSettings_DeySupplOutSUN2()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_DeySupplInSUN2
+                              ON ObjectFloat_CashSettings_DeySupplInSUN2.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_DeySupplInSUN2.DescId = zc_ObjectFloat_CashSettings_DeySupplInSUN2()
 
    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
    LIMIT 1;

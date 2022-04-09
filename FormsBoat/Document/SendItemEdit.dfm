@@ -338,12 +338,18 @@ object SendItemEditForm: TSendItemEditForm
         Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 235
     Top = 168
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_MI_Send_byBarcode'
+    StoredProcName = 'gpGet_MI_Send'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -356,11 +362,10 @@ object SendItemEditForm: TSendItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inBarCode'
+        Name = 'inGoodsId'
         Value = Null
         Component = FormParams
-        ComponentItem = 'inBarCode'
-        DataType = ftString
+        ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -756,5 +761,20 @@ object SendItemEditForm: TSendItemEditForm
     PackSize = 1
     Left = 64
     Top = 226
+  end
+  object GuidesFiller: TGuidesFiller
+    IdParam.Value = '0'
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'GoodsId'
+    IdParam.MultiSelectSeparator = ','
+    GuidesList = <
+      item
+        Guides = GuidesGoods
+      end>
+    ActionItemList = <
+      item
+      end>
+    Left = 96
+    Top = 64
   end
 end

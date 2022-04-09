@@ -83,6 +83,10 @@ type
     cbEliminateColdSUN: TcxCheckBox;
     ceTurnoverMoreSUN2: TcxCurrencyEdit;
     cxLabel25: TcxLabel;
+    ceDeySupplInSUN2: TcxCurrencyEdit;
+    ceDeySupplOutSUN2: TcxCurrencyEdit;
+    cxLabel26: TcxLabel;
+    cxLabel27: TcxLabel;
   private
     { Private declarations }
   public

@@ -188,5 +188,5 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpReport_Sale_PartialSale (inStartDate := CURRENT_DATE - INTERVAL '7 DAY',  inEndDate := CURRENT_DATE,  inJuridicalId := 13310756, inFromId := 9526799, inSession:= '3')
                               
+select * from gpReport_Sale_PartialSale(inStartDate := ('04.03.2022')::TDateTime , inEndDate := ('04.03.2022')::TDateTime , inJuridicalId := 0 , inFromId := 15033411 ,  inSession := '3');
