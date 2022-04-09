@@ -269,7 +269,7 @@ inherited Report_Movement_Send_RemainsSun_Supplement_v2Form: TReport_Movement_Se
             Position.RowIndex = 0
           end
           object AmountSalesDey_From: TcxGridDBBandedColumn
-            Caption = #1055#1088#1086#1076#1072#1078#1072' 120 '#1076#1085#1077#1081
+            Caption = #1055#1088#1086#1076#1072#1078#1072' '#1076#1085#1077#1081' '#1086#1090#1082#1091#1076#1072
             DataBinding.FieldName = 'AmountSalesDey_From'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -332,7 +332,7 @@ inherited Report_Movement_Send_RemainsSun_Supplement_v2Form: TReport_Movement_Se
             Position.RowIndex = 0
           end
           object AmountSalesDey_To: TcxGridDBBandedColumn
-            Caption = #1055#1088#1086#1076#1072#1078#1072' 60 '#1076#1085#1077#1081
+            Caption = #1055#1088#1086#1076#1072#1078#1072' '#1076#1085#1077#1081' '#1082#1091#1076#1072
             DataBinding.FieldName = 'AmountSalesDey_To'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -404,6 +404,36 @@ inherited Report_Movement_Send_RemainsSun_Supplement_v2Form: TReport_Movement_Se
       ExplicitLeft = 149
       ExplicitWidth = 20
     end
+    object ceDeySupplOutSUN2: TcxCurrencyEdit
+      Left = 436
+      Top = 5
+      TabStop = False
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = True
+      TabOrder = 4
+      Width = 121
+    end
+    object cxLabel27: TcxLabel
+      Left = 316
+      Top = 6
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1076#1085#1077#1081' '#1086#1090#1082#1091#1076#1072
+    end
+    object ceDeySupplInSUN2: TcxCurrencyEdit
+      Left = 707
+      Top = 5
+      TabStop = False
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = True
+      TabOrder = 6
+      Width = 121
+    end
+    object cxLabel26: TcxLabel
+      Left = 595
+      Top = 6
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1076#1085#1077#1081' '#1082#1091#1076#1072
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 91
@@ -412,6 +442,16 @@ inherited Report_Movement_Send_RemainsSun_Supplement_v2Form: TReport_Movement_Se
   inherited ActionList: TActionList
     Left = 103
     Top = 287
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spSelect
+        end>
+    end
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -988,5 +1028,212 @@ inherited Report_Movement_Send_RemainsSun_Supplement_v2Form: TReport_Movement_Se
     PackSize = 1
     Left = 648
     Top = 184
+  end
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_CashSettings'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ShareFromPriceName'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ShareFromPriceCode'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isGetHardwareData'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateBanSUN'
+        Value = 42993d
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummaFormSendVIP'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummaUrgentlySendVIP'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DaySaleForSUN'
+        Value = 0.000000000000000000
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DayNonCommoditySUN'
+        Value = 0.000000000000000000
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isBlockVIP'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPairedOnlyPromo'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AttemptsSub'
+        Value = 0.000000000000000000
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UpperLimitPromoBonus'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LowerLimitPromoBonus'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MinPercentPromoBonus'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DayCompensDiscount'
+        Value = 0.000000000000000000
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MethodsAssortmentId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MethodsAssortmentName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AssortmentGeograph'
+        Value = 0.000000000000000000
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AssortmentSales'
+        Value = 0.000000000000000000
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CustomerThreshold'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceCorrectionDay'
+        Value = 0.000000000000000000
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isRequireUkrName'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isRemovingPrograms'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceSamples'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Samples21'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Samples22'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Samples3'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TelegramBotToken'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PercentIC'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PercentUntilNextSUN'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isEliminateColdSUN'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TurnoverMoreSUN2'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DeySupplOutSUN2'
+        Value = 0.000000000000000000
+        Component = ceDeySupplOutSUN2
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DeySupplInSUN2'
+        Value = 0.000000000000000000
+        Component = ceDeySupplInSUN2
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 280
+    Top = 256
   end
 end

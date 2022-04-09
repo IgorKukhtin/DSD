@@ -2236,9 +2236,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_TurnoverMoreSUN2() RETURN
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_TurnoverMoreSUN2', 'Оборот больше за прошлый месяц для распределения СУН 2' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_TurnoverMoreSUN2');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_DeySupplOutSUN2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_DeySupplOutSUN2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_DeySupplOutSUN2', 'Продажи дней для аптек откуда' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_DeySupplOutSUN2');
+
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_DeySupplInSUN2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_DeySupplInSUN2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_DeySupplInSUN2', 'Продажи дней для аптек куда' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_DeySupplInSUN2');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 08.04.22                                                                                      * zc_ObjectFloat_CashSettings_DeySupplOutSUN2, zc_ObjectFloat_CashSettings_DeySupplInSUN2 
  15.03.22                                                                                      * zc_ObjectFloat_CashSettings_TurnoverMoreSUN2 
  24.02.22                                                                                      * zc_ObjectFloat_ExchangeRates_Exchange 
  16.02.22                                                                                      * zc_ObjectFloat_DiffKind_Packages 

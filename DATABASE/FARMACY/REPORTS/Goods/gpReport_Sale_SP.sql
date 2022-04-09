@@ -1,8 +1,8 @@
 -- Function:  gpReport_Sale_SP()
 
-DROP FUNCTION IF EXISTS gpReport_Sale_SP (TDateTime, TDateTime, Integer,Integer,Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Sale_SP (TDateTime, TDateTime, Integer,Integer,Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Sale_SP (TDateTime, TDateTime, Integer,Integer,Integer, Integer, TFloat, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_Sale_SP (TDateTime, TDateTime, Integer,Integer,Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_Sale_SP (TDateTime, TDateTime, Integer,Integer,Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_Sale_SP (TDateTime, TDateTime, Integer,Integer,Integer, Integer, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Sale_SP (TDateTime, TDateTime, Integer,Integer,Integer, Integer, TFloat, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_Sale_SP(
@@ -103,6 +103,11 @@ RETURNS TABLE (MovementId     Integer
              , SummWithOutVAT_in TFloat
              , ChargePersent_in TFloat
              , isManual Boolean
+             
+             , PriceOOC TFloat
+             , SumCompOOC TFloat
+             , DSummaSP TFloat
+             , Color_DSummaSP Integer
              )
 AS
 $BODY$
@@ -695,10 +700,32 @@ BEGIN
 
      , tmpGoodsMain AS (SELECT tmpGoods.GoodsId
                              , Object_Goods_Main.isResolution_224
+                             , Object_Goods_Main.Id                 AS GoodsMainId
                         FROM (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmpGoods
                              JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = tmpGoods.GoodsId 
                              JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
                         )
+     , tmpMovGoodsSP_1303 AS (SELECT Movement.Id                           AS Id
+                                   , Movement.OperDate                     AS OperDate
+                                   , ROW_NUMBER() OVER (ORDER BY Movement.OperDate DESC) AS ord
+                              FROM Movement 
+                              WHERE Movement.DescId = zc_Movement_GoodsSP_1303()
+                                AND Movement.StatusId <> zc_Enum_Status_Erased()
+                              )
+     , tmpMIGoodsSP_1303 AS (SELECT Movement.OperDate                     AS OperDate
+                                  , COALESCE (MovementNext.OperDate, zc_DateEnd()) AS DateEnd
+                                  , MovementItem.ObjectId                 AS GoodsId
+                                  , MovementItem.Amount                   AS PriceSale
+                             FROM tmpMovGoodsSP_1303 AS Movement
+                            
+                                  INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Master()
+                                                        AND MovementItem.MovementId = Movement.Id
+                                                        AND MovementItem.isErased = False
+                                                       
+                                  LEFT JOIN tmpMovGoodsSP_1303 AS MovementNext
+                                                               ON MovementNext.Ord =  Movement.Ord + 1
+                                                       
+                             )
 
 
         -- результат
@@ -785,6 +812,18 @@ BEGIN
            , (tmpPartionParam.PriceWithOutVAT * tmpData.Amount) ::TFloat AS SummWithOutVAT_in
            , tmpPartionParam.ChargePersent    ::TFloat    AS ChargePersent_in
            , COALESCE(MovementBoolean_Manual.ValueData, False)            AS isManual
+           
+           , tmpMIGoodsSP_1303.PriceSale :: TFloat                                                            AS PriceOOC
+           , ROUND(tmpMIGoodsSP_1303.PriceSale * tmpData.Amount * tmpData.ChangePercent / 100.0, 2) :: TFloat AS SumCompOOC
+                   
+           , (ROUND(tmpMIGoodsSP_1303.PriceSale * tmpData.Amount * tmpData.ChangePercent / 100.0, 2) :: TFloat - 
+                   CAST ((tmpData.SummOriginal - tmpData.SummSale) AS NUMERIC (16,2))  :: TFloat )::TFloat   AS DSummaSP
+           , CASE WHEN COALESCE(tmpMIGoodsSP_1303.PriceSale, 0)= 0  THEN zfCalc_Color(255, 165, 0)
+                  WHEN ROUND(tmpMIGoodsSP_1303.PriceSale * tmpData.Amount * tmpData.ChangePercent / 100.0, 2) :: TFloat < 
+                       CAST ((tmpData.SummOriginal - tmpData.SummSale) AS NUMERIC (16,2))  :: TFloat  THEN zfCalc_Color(255, 182, 203)
+                  WHEN ROUND(tmpMIGoodsSP_1303.PriceSale * tmpData.Amount * tmpData.ChangePercent / 100.0, 2) :: TFloat > 
+                       CAST ((tmpData.SummOriginal - tmpData.SummSale) AS NUMERIC (16,2))  :: TFloat  THEN zfCalc_Color(152, 251, 152)
+                  ELSE zc_Color_White() END::Integer Color_DSummaSP
         FROM tmpMI AS tmpData
              LEFT JOIN tmpMovDetails ON tmpData.MovementId = tmpMovDetails.MovementId
                                   --  AND tmpData.ChangePercent = tmpMovDetails.PercentSP
@@ -833,14 +872,18 @@ BEGIN
              
              LEFT JOIN tmpGoodsMain ON tmpGoodsMain.GoodsId = tmpData.GoodsId
 
-            LEFT JOIN MovementBoolean AS MovementBoolean_Manual
-                                      ON MovementBoolean_Manual.MovementId = tmpData.MovementId
-                                     AND MovementBoolean_Manual.DescId = zc_MovementBoolean_Manual()
+             LEFT JOIN MovementBoolean AS MovementBoolean_Manual
+                                       ON MovementBoolean_Manual.MovementId = tmpData.MovementId
+                                      AND MovementBoolean_Manual.DescId = zc_MovementBoolean_Manual()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Category1303
-                                         ON MovementLinkObject_Category1303.MovementId =  tmpData.MovementId
-                                        AND MovementLinkObject_Category1303.DescId = zc_MovementLinkObject_Category1303()
-            LEFT JOIN Object AS Object_Category1303 ON Object_Category1303.Id = MovementLinkObject_Category1303.ObjectId
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_Category1303
+                                          ON MovementLinkObject_Category1303.MovementId =  tmpData.MovementId
+                                         AND MovementLinkObject_Category1303.DescId = zc_MovementLinkObject_Category1303()
+             LEFT JOIN Object AS Object_Category1303 ON Object_Category1303.Id = MovementLinkObject_Category1303.ObjectId
+            
+             LEFT JOIN tmpMIGoodsSP_1303 ON tmpMIGoodsSP_1303.OperDate <= tmpData.OperDate
+                                        AND tmpMIGoodsSP_1303.DateEnd > tmpData.OperDate
+                                        AND tmpMIGoodsSP_1303.GoodsId = tmpGoodsMain.GoodsMainId
 
         WHERE COALESCE(inNDSKindId, 0) = 0 OR COALESCE(tmpPartionParam.NDSKindId, ObjectLink_Goods_NDSKind.ChildObjectId) = inNDSKindId
          ORDER BY Object_Unit.ValueData 
@@ -870,4 +913,5 @@ $BODY$
 -- SELECT * FROM gpReport_Sale_SP (inStartDate:= '01.09.2019', inEndDate:= '05.09.2019', inJuridicalId:= 0, inUnitId:= 0, inHospitalId:= 0, inGroupMemberSPId:= 0, inPercentSP:= 0, inisGroupMemberSP:= TRUE, inSession:= zfCalc_UserAdmin());
 
 
-select * from gpReport_Sale_SP(inStartDate := ('22.10.2021')::TDateTime , inEndDate := ('22.10.2021')::TDateTime , inJuridicalId := 0 , inUnitId := 377605 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0 ,  inSession := '3');
+select * from gpReport_Sale_SP(inStartDate := ('01.04.2022')::TDateTime , inEndDate := ('30.04.2022')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0 ,  inSession := '3');
+

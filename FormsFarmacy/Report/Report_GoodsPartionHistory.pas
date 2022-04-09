@@ -73,6 +73,7 @@ type
     actRefreshIsPartion: TdsdDataSetRefresh;
     cbPartion: TcxCheckBox;
     ceCode: TcxCurrencyEdit;
+    PartionGoods: TcxGridDBColumn;
   private
     { Private declarations }
   public

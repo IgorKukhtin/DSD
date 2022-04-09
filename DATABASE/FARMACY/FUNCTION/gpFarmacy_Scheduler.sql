@@ -468,9 +468,16 @@ BEGIN
                LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                        ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                       AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                                      
+               LEFT JOIN MovementBoolean AS MovementBoolean_AutoVIPforSales
+                                         ON MovementBoolean_AutoVIPforSales.MovementId = Movement.Id
+                                        AND MovementBoolean_AutoVIPforSales.DescId = zc_MovementBoolean_AutoVIPforSales()
+
+
                                                        
           WHERE COALESCE (MovementFloat_TotalCount.ValueData, 0) = 0
-            AND COALESCE (MovementFloat_TotalSumm.ValueData, 0) = 0) AS Movement;
+            AND COALESCE (MovementFloat_TotalSumm.ValueData, 0) = 0
+            AND COALESCE (MovementBoolean_AutoVIPforSales.ValueData, False) = False) AS Movement;
       EXCEPTION
          WHEN others THEN
            GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;

@@ -37,6 +37,7 @@ RETURNS TABLE (
     PartionOperDate  TDateTime, --Дата документа партии
     PartionDescName  TVarChar,  --вид документа партии
     PartionPrice     TFloat,    --цена партии
+    PartionGoods     TVarChar,  --Серия
     InsertName       TVarChar,  --Пользователь(созд.)
     InsertDate       TDateTime, --Дата(созд.)
     ExpirationDate   TDateTime,  -- срок годности
@@ -466,6 +467,7 @@ BEGIN
                          , COALESCE(Movement_Party.OperDate, NULL)  ::TDateTime AS PartionOperDate   -- Дата док.партии
                          , COALESCE(MovementDesc.ItemName, NULL)    ::TVarChar  AS PartionDescName
                          , COALESCE(MIFloat_Price.ValueData, NULL)  ::TFloat    AS PartionPrice
+                         , COALESCE(MIString_PartionGoods.ValueData, NULL)  ::TVarChar    AS PartionGoods
                          , CASE WHEN inIsPartion = True THEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) ELSE NULL END ::TDateTime  AS ExpirationDate
                          , CASE WHEN inIsPartion = TRUE
                                 THEN CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbOperDate THEN zc_Enum_PartionDateKind_0()
@@ -482,10 +484,6 @@ BEGIN
                           -- элемент прихода
                           LEFT JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode :: Integer
 
-                          LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
-                                                            ON MIFloat_Price.MovementItemId = MovementItem.ID
-                                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
-
                           LEFT JOIN Movement AS Movement_Party ON Movement_Party.Id = MovementItem.MovementId
                                                         --     AND inIsPartion = True
                           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_Party.DescId
@@ -500,6 +498,14 @@ BEGIN
                           LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
                                                             ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MovementItem.Id)  --Object_PartionMovementItem.ObjectCode
                                                            AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+
+                          LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
+                                                            ON MIFloat_Price.MovementItemId = COALESCE (MI_Income_find.Id,MovementItem.Id)
+                                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+                          LEFT OUTER JOIN MovementItemString AS MIString_PartionGoods
+                                                             ON MIString_PartionGoods.MovementItemId = COALESCE (MI_Income_find.Id,MovementItem.Id)
+                                                            AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
                     )
 
         -- результат
@@ -529,6 +535,7 @@ BEGIN
             Res.PartionOperDate       ::TDateTime,         -- Дата док.партии
             Res.PartionDescName       ::TVarChar,
             Res.PartionPrice          ::TFloat,
+            Res.PartionGoods          ::TVarChar,          --Серия
             Res.InsertName            ::TVarChar,          --Пользователь(созд.)
             Res.InsertDate            ::TDateTime,         --Дата(созд.)
 
@@ -564,3 +571,6 @@ $BODY$
 --select * from gpSelect_GoodsPartionHistory(inPartyId := 0 , inGoodsId := 18253 , inUnitId := 183292 , inStartDate := ('01.10.2015')::TDateTime , inEndDate := ('26.11.2016')::TDateTime , inIsPartion := 'False' ,  inSession := '3');
 --select * from gpSelect_GoodsPartionHistory(inPartyId := 0 , inGoodsId := 59173 , inUnitId := 183292 , inStartDate := ('01.01.2018')::TDateTime , inEndDate := ('31.05.2018')::TDateTime , inIsPartion := 'False' ,  inSession := '3');
 --select * from gpSelect_GoodsPartionHistory(inPartyId := 0 , inGoodsId := 59173 , inUnitId := 183292 , inStartDate := ('24.05.2018')::TDateTime , inEndDate := ('31.05.2018')::TDateTime , inIsPartion := 'False' ,  inSession := '3');
+
+
+select * from gpSelect_GoodsPartionHistory(inPartyId := 0 , inGoodsId := 16790452 , inUnitId := 5120968 , inStartDate := ('01.12.2019')::TDateTime , inEndDate := ('08.04.2022')::TDateTime , inIsPartion := 'True' ,  inSession := '3');

@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, Integer, Integer, Boolean, Boolean, 
                                                            TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TFloat, Integer, Boolean, 
-                                                           Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TFloat, TFloat, Boolean, TFloat, TVarChar);
+                                                           Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TFloat, TFloat, Boolean, TFloat, TFloat, 
+                                                           TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -36,6 +37,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inPercentUntilNextSUN        TFloat    ,     -- Процент для подсветки комента "Продано/Продажа до след СУН"
     IN inisEliminateColdSUN         Boolean   ,     -- Исключать Холод из СУН
     IN inTurnoverMoreSUN2           TFloat    ,     -- Оборот больше за прошлый месяц для распределения СУН 2
+    IN inDeySupplOutSUN2            Integer   ,     -- Продажи дней для аптек откуда дополнения СУН 2
+    IN inDeySupplInSUN2             Integer   ,     -- Продажи дней для аптек куда дополнения СУН 2
     IN inSession                    TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -133,6 +136,11 @@ BEGIN
 
       -- сохранили 	Оборот больше за прошлый месяц для распределения СУН 2
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_TurnoverMoreSUN2(), vbID, inTurnoverMoreSUN2);
+
+      -- сохранили 	Продажи дней для аптек откуда дополнения СУН 2
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_DeySupplOutSUN2(), vbID, inDeySupplOutSUN2);
+      -- сохранили 	Продажи дней для аптек куда дополнения СУН 2
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_DeySupplInSUN2(), vbID, inDeySupplInSUN2);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (vbID, vbUserId);

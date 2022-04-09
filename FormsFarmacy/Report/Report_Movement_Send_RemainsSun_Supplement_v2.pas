@@ -74,6 +74,11 @@ type
     isClose: TcxGridDBBandedColumn;
     isCloseMCS_From: TcxGridDBBandedColumn;
     isCloseMCS_To: TcxGridDBBandedColumn;
+    spGet: TdsdStoredProc;
+    ceDeySupplOutSUN2: TcxCurrencyEdit;
+    cxLabel27: TcxLabel;
+    ceDeySupplInSUN2: TcxCurrencyEdit;
+    cxLabel26: TcxLabel;
   private
     { Private declarations }
   public
