@@ -18,6 +18,8 @@ $BODY$
  20.02.21                                        *
 */
 
+-- vacuum full _replica.table_update_data_two
+-- vacuum analyze _replica.table_update_data_two
 -- truncate table _replica.table_update_data_two
 -- SELECT min (Id) , max (Id) , max (Id)   - min (Id) FROM _replica.table_update_data_two 
 -- SELECT min (Id) , max (Id) , max (Id)   - min (Id) FROM _replica.table_update_data
