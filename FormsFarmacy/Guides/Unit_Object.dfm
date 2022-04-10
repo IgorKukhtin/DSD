@@ -3,7 +3,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 614
   ClientWidth = 1442
   PopupMenu = PopupMenu
-  ExplicitLeft = -106
   ExplicitWidth = 1458
   ExplicitHeight = 653
   PixelsPerInch = 96
@@ -1056,6 +1055,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 105
+          end
+          object isSUN_NotSoldIn: TcxGridDBColumn
+            Caption = #1055#1086#1083#1091#1095#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1090#1086#1074#1072#1088' "'#1073#1077#1079' '#1087#1088#1086#1076#1072#1078'" '#1076#1083#1103' '#1057#1059#1053'-1'
+            DataBinding.FieldName = 'isSUN_NotSoldIn'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 92
           end
         end
       end
@@ -4043,6 +4050,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       Caption = 'actUpdate_SupplementAddCash'
     end
+    object mactUpdate_SUN_NotSoldIn: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_SUN_NotSoldIn
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1090#1086#1074#1072#1088' "'#1073#1077#1079' '#1087#1088#1086#1076#1072#1078'" '#1076#1083#1103' '#1057#1059#1053'-1"?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1090#1086#1074#1072#1088' "'#1073#1077#1079' '#1087#1088#1086#1076#1072#1078'" '#1076#1083#1103' '#1057#1059#1053'-1"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1091#1095#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1090#1086#1074#1072#1088' "'#1073#1077#1079' '#1087#1088#1086#1076#1072#1078'" '#1076#1083#1103' '#1057#1059#1053'-1"'
+      ImageIndex = 79
+    end
+    object actUpdate_SUN_NotSoldIn: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SUN_NotSoldIn
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SUN_NotSoldIn
+        end>
+      Caption = 'actUpdate_SUN_NotSoldIn'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -4806,6 +4838,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton33'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton11'
         end>
     end
@@ -4949,6 +4985,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton32: TdxBarButton
       Action = mactUpdate_SupplementAddCash
+      Category = 0
+    end
+    object dxBarButton33: TdxBarButton
+      Action = mactUpdate_SUN_NotSoldIn
       Category = 0
     end
   end
@@ -8063,5 +8103,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 442
     Top = 480
+  end
+  object spUpdate_SUN_NotSoldIn: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_SUN_NotSoldIn'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSUN_NotSoldIn'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSUN_NotSoldIn'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 586
+    Top = 464
   end
 end

@@ -70,6 +70,7 @@ BEGIN
       , lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_SUN_v2_LockSale(), inId, COALESCE (ObjectBoolean_SUN_v2_LockSale.ValueData, FALSE))
 
       , lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_SUN_NotSold(), inId, COALESCE (ObjectBoolean_SUN_NotSold.ValueData, FALSE))
+      , lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_SUN_NotSoldIn(), inId, COALESCE (ObjectBoolean_SUN_NotSoldIn.ValueData, FALSE))
 
       , lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_SUN_v2_Supplement_out(), inId, COALESCE (ObjectBoolean_SUN_v2_Supplement_out.ValueData, FALSE))
       , lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_SUN_v2_Supplement_in(), inId, COALESCE (ObjectBoolean_SUN_v2_Supplement_in.ValueData, FALSE))
@@ -154,6 +155,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_NotSold
                                 ON ObjectBoolean_SUN_NotSold.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_NotSold.DescId = zc_ObjectBoolean_Unit_SUN_NotSold()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_NotSoldIn
+                                ON ObjectBoolean_SUN_NotSoldIn.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_NotSoldIn.DescId = zc_ObjectBoolean_Unit_SUN_NotSoldIn()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_LockSale
                                 ON ObjectBoolean_SUN_v2_LockSale.ObjectId = Object_Unit.Id 

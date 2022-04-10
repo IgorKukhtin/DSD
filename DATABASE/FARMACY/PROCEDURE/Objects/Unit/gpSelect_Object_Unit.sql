@@ -1,6 +1,5 @@
 -- Function: gpSelect_Object_Unit()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Unit(TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Unit(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Unit(
@@ -57,6 +56,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isSUN_v4     Boolean, isSUN_v4_in  Boolean, isSUN_v4_out Boolean
              , isSUN_v2_LockSale Boolean
              , isSUN_NotSold Boolean
+             , isSUN_NotSoldIn Boolean
              , isTopNo     Boolean
              , isNotCashMCS     Boolean, isNotCashListDiff     Boolean
              , isTechnicalRediscount Boolean, isAlertRecounting Boolean
@@ -233,6 +233,7 @@ BEGIN
       , COALESCE (ObjectBoolean_SUN_v2_LockSale.ValueData, FALSE) :: Boolean  AS isSUN_v2_LockSale
 
       , COALESCE (ObjectBoolean_SUN_NotSold.ValueData, FALSE)     :: Boolean  AS isSUN_NotSold
+      , COALESCE (ObjectBoolean_SUN_NotSoldIn.ValueData, FALSE)     :: Boolean  AS isSUN_NotSoldIn
       , COALESCE (ObjectBoolean_TopNo.ValueData, FALSE)           :: Boolean  AS isTopNo
       , COALESCE (ObjectBoolean_NotCashMCS.ValueData, FALSE)      :: Boolean  AS isNotCashMCS
       , COALESCE (ObjectBoolean_NotCashListDiff.ValueData, FALSE) :: Boolean  AS isNotCashListDiff
@@ -491,6 +492,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_NotSold
                                 ON ObjectBoolean_SUN_NotSold.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_NotSold.DescId = zc_ObjectBoolean_Unit_SUN_NotSold()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_NotSoldIn
+                                ON ObjectBoolean_SUN_NotSoldIn.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_NotSoldIn.DescId = zc_ObjectBoolean_Unit_SUN_NotSoldIn()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_TopNo
                                 ON ObjectBoolean_TopNo.ObjectId = Object_Unit.Id 
