@@ -7,10 +7,12 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , Article TVarChar, Article_all TVarChar, ArticleVergl TVarChar, EAN TVarChar, ASIN TVarChar, MatchCode TVarChar
+             , Article TVarChar, Article_all TVarChar, ArticleVergl TVarChar, GoodsArticle TVarChar
+             , EAN TVarChar, ASIN TVarChar, MatchCode TVarChar
              , FeeNumber TVarChar, GoodsGroupNameFull TVarChar, Comment TVarChar
              , PartnerDate TDateTime
              , isArc Boolean
+             , Feet TFloat, Metres TFloat
              , AmountMin TFloat, AmountRefer TFloat
              , EKPrice TFloat, EKPriceWVAT TFloat
              , EmpfPrice TFloat, EmpfPriceWVAT TFloat
@@ -95,6 +97,16 @@ BEGIN
                                                                         , inOperDate   := CURRENT_DATE) AS tmp
                               )
 
+           , tmpGoodsArticle AS (SELECT ObjectLink_GoodsArticle_Goods.ChildObjectId   AS GoodsId
+                                      , STRING_AGG (Object.ValueData, ';') ::TVarChar AS GoodsArticle
+                                 FROM Object
+                                      INNER JOIN ObjectLink AS ObjectLink_GoodsArticle_Goods
+                                                            ON ObjectLink_GoodsArticle_Goods.ObjectId = Object.Id
+                                                           AND ObjectLink_GoodsArticle_Goods.DescId = zc_ObjectLink_GoodsArticle_Goods()
+                                 WHERE Object.DescId = zc_Object_GoodsArticle()
+                                   AND Object.isErased = FALSE
+                                 GROUP BY ObjectLink_GoodsArticle_Goods.ChildObjectId
+                                 )
 
        -- Результат
        SELECT Object_Goods.Id                     AS Id
@@ -103,6 +115,7 @@ BEGIN
             , ObjectString_Article.ValueData      AS Article
             , REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (ObjectString_Article.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '') :: TVarChar AS Article_all
             , ObjectString_ArticleVergl.ValueData AS ArticleVergl
+            , Object_GoodsArticle.GoodsArticle ::TVarChar AS GoodsArticle
             , ObjectString_EAN.ValueData          AS EAN
             , ObjectString_ASIN.ValueData         AS ASIN
             , ObjectString_MatchCode.ValueData    AS MatchCode
@@ -112,6 +125,9 @@ BEGIN
 
             , ObjectDate_PartnerDate.ValueData  :: TDateTime AS PartnerDate
             , COALESCE (ObjectBoolean_Arc.ValueData, FALSE) :: Boolean AS isArc
+            
+            , ObjectFloat_Feet.ValueData    ::TFloat AS Feet
+            , ObjectFloat_Metres.ValueData  ::TFloat AS Metres
 
             , ObjectFloat_Min.ValueData          AS AmountMin
             , ObjectFloat_Refer.ValueData        AS AmountRefer
@@ -296,6 +312,13 @@ BEGIN
                                    ON ObjectFloat_EmpfPrice.ObjectId = Object_Goods.Id
                                   AND ObjectFloat_EmpfPrice.DescId   = zc_ObjectFloat_Goods_EmpfPrice()
 
+             LEFT JOIN ObjectFloat AS ObjectFloat_Feet
+                                   ON ObjectFloat_Feet.ObjectId = Object_Goods.Id
+                                  AND ObjectFloat_Feet.DescId   = zc_ObjectFloat_Goods_Feet()
+             LEFT JOIN ObjectFloat AS ObjectFloat_Metres
+                                   ON ObjectFloat_Metres.ObjectId = Object_Goods.Id
+                                  AND ObjectFloat_Metres.DescId   = zc_ObjectFloat_Goods_Metres()
+
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Arc
                                      ON ObjectBoolean_Arc.ObjectId = Object_Goods.Id
                                     AND ObjectBoolean_Arc.DescId = zc_ObjectBoolean_Goods_Arc()
@@ -345,6 +368,7 @@ BEGIN
 
              LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
 
+             LEFT JOIN tmpGoodsArticle AS Object_GoodsArticle ON Object_GoodsArticle.GoodsId = Object_Goods.Id
        WHERE Object_Goods.DescId = zc_Object_Goods()
          AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE)
        LIMIT 10000;
@@ -357,6 +381,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.04.22         *
  11.11.20         *
 */
 

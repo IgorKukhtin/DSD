@@ -336,9 +336,14 @@ CREATE OR REPLACE FUNCTION zc_Object_TranslateObject() RETURNS Integer AS $BODY$
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_TranslateObject', 'Перевод Справочников' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_TranslateObject');
 
+CREATE OR REPLACE FUNCTION zc_Object_GoodsArticle() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsArticle'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_GoodsArticle', 'Артикул Комплектующие' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsArticle');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.04.22         * zc_Object_GoodsArticle
  16.02.22         * zc_Object_MeasureCode
                     zc_Object_TranslateObject
  21.04.21         * zc_Object_ProductDocument

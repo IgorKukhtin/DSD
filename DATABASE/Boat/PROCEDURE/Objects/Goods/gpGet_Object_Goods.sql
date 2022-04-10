@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              , PartnerDate TDateTime
              , isArc Boolean
+             , Feet TFloat, Metres TFloat
              , AmountMin TFloat, AmountRefer TFloat
              , EKPrice TFloat, EmpfPrice TFloat
              , GoodsGroupId Integer, GoodsGroupName TVarChar
@@ -61,6 +62,9 @@ BEGIN
            , CAST (NULL AS TDateTime) AS PartnerDate
            , FALSE      :: Boolean AS isArc
 
+           , CAST (0 as TFloat)    AS Feet
+           , CAST (0 as TFloat)    AS Metres
+
            , CAST (0 as TFloat)    AS AmountMin
            , CAST (0 as TFloat)    AS AmountRefer
            , CAST (0 as TFloat)    AS EKPrice
@@ -108,6 +112,9 @@ BEGIN
 --          , COALESCE (ObjectDate_PartnerDate.ValueData, CURRENT_DATE)  :: TDateTime AS PartnerDate
             , ObjectDate_PartnerDate.ValueData              :: TDateTime AS PartnerDate
             , COALESCE (ObjectBoolean_Arc.ValueData, FALSE) :: Boolean AS isArc
+
+            , ObjectFloat_Feet.ValueData    ::TFloat AS Feet
+            , ObjectFloat_Metres.ValueData  ::TFloat AS Metres
 
             , ObjectFloat_Min.ValueData          AS AmountMin
             , ObjectFloat_Refer.ValueData        AS AmountRefer
@@ -219,6 +226,13 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_EmpfPrice
                                    ON ObjectFloat_EmpfPrice.ObjectId = Object_Goods.Id
                                   AND ObjectFloat_EmpfPrice.DescId   = zc_ObjectFloat_Goods_EmpfPrice()
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_Feet
+                                   ON ObjectFloat_Feet.ObjectId = Object_Goods.Id
+                                  AND ObjectFloat_Feet.DescId   = zc_ObjectFloat_Goods_Feet()
+             LEFT JOIN ObjectFloat AS ObjectFloat_Metres
+                                   ON ObjectFloat_Metres.ObjectId = Object_Goods.Id
+                                  AND ObjectFloat_Metres.DescId   = zc_ObjectFloat_Goods_Metres()
 
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Arc
                                      ON ObjectBoolean_Arc.ObjectId = Object_Goods.Id
