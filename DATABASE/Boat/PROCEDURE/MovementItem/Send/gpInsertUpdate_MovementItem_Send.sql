@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
     IN ioAmount              TFloat    , -- Количество
     IN inOperPrice           TFloat    , -- Цена со скидкой
     IN inCountForPrice       TFloat    , -- Цена за кол.
-    IN inPartNumber          TVarChar  , --№ по тех паспорту
+    IN inPartNumber          TVarChar  , --№ по тех паспорту 
     IN inComment             TVarChar  , --
     IN inIsOn                Boolean   , -- вкл
    OUT outIsErased           Boolean   , -- удален
