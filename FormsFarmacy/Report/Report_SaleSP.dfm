@@ -1,30 +1,30 @@
 inherited Report_SaleSPForm: TReport_SaleSPForm
   Caption = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303'
-  ClientHeight = 480
-  ClientWidth = 1077
+  ClientHeight = 500
+  ClientWidth = 1256
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1093
-  ExplicitHeight = 519
+  ExplicitWidth = 1272
+  ExplicitHeight = 539
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 91
-    Width = 1077
-    Height = 389
+    Width = 1256
+    Height = 409
     TabOrder = 3
     ExplicitTop = 91
-    ExplicitWidth = 1077
-    ExplicitHeight = 389
-    ClientRectBottom = 389
-    ClientRectRight = 1077
+    ExplicitWidth = 1053
+    ExplicitHeight = 409
+    ClientRectBottom = 409
+    ClientRectRight = 1256
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1077
-      ExplicitHeight = 389
+      ExplicitWidth = 1053
+      ExplicitHeight = 409
       inherited cxGrid: TcxGrid
-        Width = 1077
-        Height = 389
-        ExplicitWidth = 1077
-        ExplicitHeight = 389
+        Width = 1256
+        Height = 409
+        ExplicitWidth = 1053
+        ExplicitHeight = 409
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -85,6 +85,11 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
               Format = ',0.####'
               Kind = skSum
               Column = SumCompOOC
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaRegistry
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -155,6 +160,11 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
               Format = ',0.####'
               Kind = skSum
               Column = SumCompOOC
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaRegistry
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -290,6 +300,14 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 217
+          end
+          object GoodsNameUkr: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' '#1091#1082#1088'.'
+            DataBinding.FieldName = 'GoodsNameUkr'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 182
           end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -785,6 +803,34 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Options.Editing = False
             Width = 90
           end
+          object isUsePriceOOC: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095#1077#1090' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
+            DataBinding.FieldName = 'isUsePriceOOC'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
+          object PriceRegistry: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072'  '#1089'  '#1053#1044#1057', '#1075#1088#1085
+            DataBinding.FieldName = 'PriceRegistry'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
+          end
+          object SummaRegistry: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057', '#1075#1088#1085
+            DataBinding.FieldName = 'SummaRegistry'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object JuridicalName_in: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'JuridicalName_in'
@@ -854,9 +900,9 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
     end
   end
   inherited Panel: TPanel
-    Width = 1077
+    Width = 1256
     Height = 65
-    ExplicitWidth = 1077
+    ExplicitWidth = 1053
     ExplicitHeight = 65
     inherited deStart: TcxDateEdit
       Left = 23
@@ -984,6 +1030,50 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       Left = 773
       Top = 6
       Caption = #1053#1044#1057':'
+    end
+    object edInvNumber: TcxTextEdit
+      Left = 1005
+      Top = 5
+      Enabled = False
+      Properties.ReadOnly = False
+      StyleDisabled.Color = 42495
+      StyleDisabled.TextColor = clWindowText
+      TabOrder = 17
+      Text = #1053#1077#1090' '#1094#1077#1085#1099' '#1089' '#1088#1077#1077#1089#1090#1088#1072
+      Width = 116
+    end
+    object cxTextEdit1: TcxTextEdit
+      Left = 1005
+      Top = 32
+      Enabled = False
+      Properties.ReadOnly = False
+      StyleDisabled.Color = 15453831
+      StyleDisabled.TextColor = clWindowText
+      TabOrder = 18
+      Text = #1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086
+      Width = 116
+    end
+    object cxTextEdit2: TcxTextEdit
+      Left = 1127
+      Top = 32
+      Enabled = False
+      Properties.ReadOnly = False
+      StyleDisabled.Color = 10025880
+      StyleDisabled.TextColor = clWindowText
+      TabOrder = 19
+      Text = #1044#1077#1096#1077#1074#1083#1077' '#1088#1077#1077#1089#1090#1088#1072
+      Width = 116
+    end
+    object cxTextEdit3: TcxTextEdit
+      Left = 1127
+      Top = 5
+      Enabled = False
+      Properties.ReadOnly = False
+      StyleDisabled.Color = 13350655
+      StyleDisabled.TextColor = clWindowText
+      TabOrder = 20
+      Text = #1044#1086#1088#1086#1078#1077' '#1088#1077#1077#1089#1090#1088#1072
+      Width = 116
     end
   end
   object cxLabel5: TcxLabel [2]
@@ -1662,6 +1752,141 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actCalculationSaleSP: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actDataToJson
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_CalculationSaleSP
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_CalculationSaleSP
+        end>
+      Caption = #1055#1077#1088#1077#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1089#1091#1084#1084' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+      ImageIndex = 10
+      QuestionBeforeExecute = #1055#1077#1088#1077#1088#1072#1089#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1089#1091#1084#1084' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086'.'
+    end
+    object actDataToJson: TdsdDataToJsonAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      DataSource = MasterDS
+      JsonParam.Value = Null
+      JsonParam.Component = FormParams
+      JsonParam.ComponentItem = 'Json'
+      JsonParam.DataType = ftWideString
+      JsonParam.MultiSelectSeparator = ','
+      PairParams = <
+        item
+          FieldName = 'MovementItemId'
+          PairName = 'MovementItemId'
+        end
+        item
+          FieldName = 'UnitId'
+          PairName = 'UnitId'
+        end
+        item
+          FieldName = 'SummOriginal'
+          PairName = 'SummOriginal'
+        end
+        item
+          FieldName = 'SummSale'
+          PairName = 'SummSale'
+        end
+        item
+          FieldName = 'PriceOOC'
+          PairName = 'PriceOOC'
+        end
+        item
+          FieldName = 'ChangePercent'
+          PairName = 'ChangePercent'
+        end
+        item
+          FieldName = 'Amount'
+          PairName = 'Amount'
+        end>
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1072#1085#1085#1099#1093
+    end
+    object actPrintCalculation: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actGetNDS
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1088#1077#1077#1089#1090#1088#1072' '#1052#1062'11'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1088#1077#1077#1089#1090#1088#1072' '#1052#1062'11'
+      ImageIndex = 19
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'JuridicalName;HospitalName;ContractName;isPrintLast;OperDate;Goo' +
+            'dsName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42736d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42736d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GroupMemberSPName'
+          Value = ''
+          Component = GroupMemberSPGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGroupMemberSP'
+          Value = False
+          Component = cbGroupMemberSP
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Invoice'
+          Value = ''
+          Component = edInvoice
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PercentSP'
+          Value = 0.000000000000000000
+          Component = cePercentSP
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NDS'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'NDS'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303('#1056#1072#1089#1095#1077#1090')'
+      ReportNameParam.Value = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303('#1056#1072#1089#1095#1077#1090')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -1821,6 +2046,22 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCalculationSaleSP'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1864,6 +2105,14 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
     end
     object bbPrintMemberSP: TdxBarButton
       Action = actPrintMemberSP
+      Category = 0
+    end
+    object bbCalculationSaleSP: TdxBarButton
+      Action = actCalculationSaleSP
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actPrintCalculation
       Category = 0
     end
   end
@@ -2211,8 +2460,40 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         Value = Null
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Json'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 336
+  end
+  object spUpdate_MI_CalculationSaleSP: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_CalculationSaleSP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDataJsonList'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Json'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 328
+    Top = 256
   end
 end

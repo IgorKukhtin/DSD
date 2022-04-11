@@ -103,6 +103,20 @@ type
     SumCompOOC: TcxGridDBColumn;
     DSummaSP: TcxGridDBColumn;
     Color_DSummaSP: TcxGridDBColumn;
+    isUsePriceOOC: TcxGridDBColumn;
+    PriceRegistry: TcxGridDBColumn;
+    SummaRegistry: TcxGridDBColumn;
+    GoodsNameUkr: TcxGridDBColumn;
+    spUpdate_MI_CalculationSaleSP: TdsdStoredProc;
+    actCalculationSaleSP: TdsdExecStoredProc;
+    actDataToJson: TdsdDataToJsonAction;
+    bbCalculationSaleSP: TdxBarButton;
+    edInvNumber: TcxTextEdit;
+    cxTextEdit1: TcxTextEdit;
+    cxTextEdit2: TcxTextEdit;
+    cxTextEdit3: TcxTextEdit;
+    actPrintCalculation: TdsdPrintAction;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

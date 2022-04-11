@@ -12,6 +12,7 @@ RETURNS TABLE (Id            Integer
              , GoodsId       Integer
              , GoodsCode     Integer
              , GoodsName     TVarChar
+             , GoodsNameUkr  TVarChar
              , NDS           TFloat
              , PriceOptSP    TFloat
              , PriceSale     TFloat
@@ -42,35 +43,37 @@ BEGIN
     
     RETURN QUERY
     WITH 
-        tmpGoodsMain AS (SELECT ObjectBoolean_Goods_isMain.ObjectId AS Id
-                         FROM ObjectBoolean AS ObjectBoolean_Goods_isMain 
-                              INNER JOIN Object AS Object_Goods 
-                                                ON Object_Goods.Id = ObjectBoolean_Goods_isMain.ObjectId
-                                               AND (Object_Goods.isErased = inIsErased OR inIsErased = TRUE)
-                         WHERE ObjectBoolean_Goods_isMain.DescId = zc_ObjectBoolean_Goods_isMain()
-                         )
+        tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
+                            , ObjectFloat_NDSKind_NDS.ValueData
+                       FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                       WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS())
+
 
         SELECT COALESCE (MovementItem.Id, 0)                         AS Id
-             , Object_Goods.      Id                                 AS GoodsId
-             , Object_Goods.ObjectCode                    ::Integer  AS GoodsCode
-             , Object_Goods.ValueData                                AS GoodsName
+             , tmpGoodsMain.Id                                       AS GoodsId
+             , tmpGoodsMain.ObjectCode                               AS GoodsCode
+             , tmpGoodsMain.Name                                     AS GoodsName
+             , tmpGoodsMain.NameUkr                                  AS GoodsNameUkr
+             , ObjectFloat_NDSKind_NDS.ValueData                     AS NDS
 
              , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
              , MovementItem.Amount                                   AS PriceSale
 
              , COALESCE (MovementItem.isErased, FALSE)    ::Boolean  AS isErased
 
-        FROM tmpGoodsMain
+        FROM Object_Goods_Main AS tmpGoodsMain
+        
              LEFT JOIN MovementItem ON MovementItem.ObjectId = tmpGoodsMain.Id
                                    AND MovementItem.MovementId = inMovementId
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
-                                       
-             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoodsMain.Id
-             
+                                                    
              LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
                                          ON MIFloat_PriceOptSP.MovementItemId = MovementItem.Id
                                         AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
+
+             LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
+                                  ON ObjectFloat_NDSKind_NDS.ObjectId = tmpGoodsMain.NDSKindId
             ;
 
     ELSE
@@ -111,12 +114,16 @@ BEGIN
                      AND MovementItem.MovementId = inMovementId
                      AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
                   )
-
+      , tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
+                            , ObjectFloat_NDSKind_NDS.ValueData
+                       FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                       WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS())
 
         SELECT MovementItem.Id                                       AS Id
              , COALESCE(MovementItem.GoodsId, tmpMI_Sale.GoodsId)    AS GoodsId
              , Object_Goods.ObjectCode                    ::Integer  AS GoodsCode
              , Object_Goods.Name                                     AS GoodsName
+             , Object_Goods.NameUkr                                  AS GoodsNameUkr
              , ObjectFloat_NDSKind_NDS.ValueData                     AS NDS
 
              , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
@@ -131,9 +138,8 @@ BEGIN
         
              LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = COALESCE(MovementItem.GoodsId, tmpMI_Sale.GoodsId) 
             
-             LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                   ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods.NDSKindId
-                                  AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
+             LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
+                                  ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods.NDSKindId
 
              LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
                                          ON MIFloat_PriceOptSP.MovementItemId = MovementItem.Id

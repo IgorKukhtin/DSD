@@ -78,9 +78,9 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-  LoadReportFromFile('Акт по претензии Бадм', ReportPath + '\Акт по претензии Бадм.fr3');
+{  LoadReportFromFile('Акт по претензии Бадм', ReportPath + '\Акт по претензии Бадм.fr3');
 
-{  LoadReportFromFile('Счет для страховой компании', ReportPath + '\Счет для страховой компании.fr3');
+  LoadReportFromFile('Счет для страховой компании', ReportPath + '\Счет для страховой компании.fr3');
 
   LoadReportFromFile('Возвратная ТТН', ReportPath + '\Возвратная ТТН.fr3');
   Exit;
@@ -105,12 +105,13 @@ begin
 
   LoadReportFromFile('Реестр лекарственных препаратов', ReportPath + '\Реестр лекарственных препаратов.fr3');
 
-
+}
   LoadReportFromFile('Счет постановление 1303', ReportPath + '\Счет постановление 1303.fr3');
   LoadReportFromFile('Pеестр по постановлению 1303', ReportPath + '\Pеестр по постановлению 1303.fr3');
   LoadReportFromFile('Pеестр по постановлению 1303(счет)', ReportPath + '\Pеестр по постановлению 1303(счет).fr3');
   LoadReportFromFile('Pеестр по постановлению 1303(накладная)', ReportPath + '\Pеестр по постановлению 1303(накладная).fr3');
-
+  LoadReportFromFile('Pеестр по постановлению 1303(Расчет)', ReportPath + '\Pеестр по постановлению 1303(Расчет).fr3');
+{
   exit;
 
   LoadReportFromFile('Отчет по продажам Соц.проекта', ReportPath + '\Отчет по продажам Соц.проекта.fr3');

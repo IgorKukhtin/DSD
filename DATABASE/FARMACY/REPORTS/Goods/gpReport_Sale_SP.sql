@@ -18,6 +18,8 @@ CREATE OR REPLACE FUNCTION  gpReport_Sale_SP(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId     Integer
+             , MovementItemId Integer
+             , UnitId         Integer
              , UnitName       TVarChar
              , Unit_Address   TVarChar
              , JuridicalId    Integer
@@ -39,11 +41,12 @@ RETURNS TABLE (MovementId     Integer
 
              , GoodsCode      Integer
              , GoodsName      TVarChar
+             , GoodsNameUkr   TVarChar
              , MeasureName    TVarChar
              , isResolution_224 Boolean
 
              , ChangePercent  TFloat
-             , Amount        TFloat
+             , Amount         TFloat
              , PriceSP        TFloat
              , PriceOriginal  TFloat
              , PriceComp      TFloat
@@ -108,6 +111,9 @@ RETURNS TABLE (MovementId     Integer
              , SumCompOOC TFloat
              , DSummaSP TFloat
              , Color_DSummaSP Integer
+             , isUsePriceOOC Boolean
+             , PriceRegistry TFloat
+             , SummaRegistry TFloat
              )
 AS
 $BODY$
@@ -323,7 +329,73 @@ BEGIN
                         )
 
             -- выбираем продажи по товарам соц.проекта
-            ,  tmpMI AS (SELECT Movement_Sale.Id   AS MovementId
+            ,  tmpMI_Sum AS (SELECT Movement_Sale.Id   AS MovementId
+                                  , Movement_Sale.OperDate
+                                  , Movement_Sale.UnitId
+                                  , Movement_Sale.JuridicalId
+                                  , Movement_Sale.HospitalId
+                                  , Movement_Sale.isListSP
+                                  , Movement_Sale.InvNumberSP
+                                  , Movement_Sale.MedicSP
+                                  , Movement_Sale.AmbulantClinicSP
+                                  , Movement_Sale.MemberSPId
+                                  , Movement_Sale.MemberSP
+                                  , Movement_Sale.OperDateSP
+                                  , Movement_Sale.GroupMemberSPId
+                                  , Movement_Sale.InvNumber_Invoice
+                                  , Movement_Sale.InvNumber_Invoice_Full
+                                  , MI_Sale.ObjectId                                          AS GoodsId         --tmpGoods.GoodsMainId                                      AS GoodsMainId
+                                  , MIFloat_ChangePercent.ValueData                           AS ChangePercent
+                                  , SUM (COALESCE (-1 * MIContainer.Amount, MI_Sale.Amount))  AS Amount
+                                  , SUM (COALESCE (-1 * MIContainer.Amount, MI_Sale.Amount) * COALESCE (MIFloat_Price.ValueData, 0))     AS SummSale
+                                  , SUM (COALESCE (-1 * MIContainer.Amount, MI_Sale.Amount) * COALESCE (MIFloat_PriceSale.ValueData, 0)) AS SummOriginal
+                                  , MAX(MI_Sale.Id)::Integer                                  AS MovementItemId
+                             FROM tmpSaleAll AS Movement_Sale
+                                  INNER JOIN MovementItem AS MI_Sale
+                                                          ON MI_Sale.MovementId = Movement_Sale.Id
+                                                         AND MI_Sale.DescId = zc_MI_Master()
+                                                         AND MI_Sale.isErased = FALSE
+                                  LEFT JOIN MovementItemBoolean AS MIBoolean_SP
+                                          ON MIBoolean_SP.MovementItemId = MI_Sale.Id
+                                         AND MIBoolean_SP.DescId = zc_MIBoolean_SP()
+                                         --AND MIBoolean_SP.ValueData = TRUE                        -- пока перенесла в where , т,к. в чеке это св-во не сохраняется
+                                  LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                          ON MIFloat_ChangePercent.MovementItemId = MI_Sale.Id
+                                         AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+
+                                  LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                         ON MIFloat_PriceSale.MovementItemId = MI_Sale.Id
+                                        AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+                                  LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                         ON MIFloat_Price.MovementItemId = MI_Sale.Id
+                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+                                  LEFT JOIN MovementItemContainer AS MIContainer
+                                                                  ON MIContainer.MovementItemId = MI_Sale.Id
+                                                                 AND MIContainer.DescId = zc_MIContainer_Count()
+                             WHERE (MIFloat_ChangePercent.ValueData = inPercentSP OR COALESCE (inPercentSP,0) = 0)
+                               AND (MIBoolean_SP.ValueData = TRUE OR Movement_Sale.DescId = zc_Movement_Check())
+                             GROUP BY Movement_Sale.Id
+                                    , Movement_Sale.UnitId
+                                    , Movement_Sale.JuridicalId
+                                    , Movement_Sale.HospitalId
+                                    , Movement_Sale.isListSP
+                                    , Movement_Sale.InvNumberSP
+                                    , Movement_Sale.MedicSP
+                                    , Movement_Sale.AmbulantClinicSP
+                                    , Movement_Sale.MemberSPId
+                                    , Movement_Sale.MemberSP
+                                    , Movement_Sale.OperDateSP
+                                    , Movement_Sale.GroupMemberSPId
+                                    , Movement_Sale.InvNumber_Invoice
+                                    , Movement_Sale.InvNumber_Invoice_Full
+                                    , MI_Sale.ObjectId
+                                    , MIFloat_ChangePercent.ValueData
+                                    , Movement_Sale.OperDate
+                             HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Sale.Amount)) <> 0
+                            )
+            -- выбираем продажи по товарам соц.проекта
+            ,  tmpMI AS (SELECT Movement_Sale.MovementId
                               , Movement_Sale.OperDate
                               , Movement_Sale.UnitId
                               , Movement_Sale.JuridicalId
@@ -338,54 +410,22 @@ BEGIN
                               , Movement_Sale.GroupMemberSPId
                               , Movement_Sale.InvNumber_Invoice
                               , Movement_Sale.InvNumber_Invoice_Full
-                              , MI_Sale.ObjectId                                          AS GoodsId         --tmpGoods.GoodsMainId                                      AS GoodsMainId
-                              , MIFloat_ChangePercent.ValueData                           AS ChangePercent
-                              , SUM (COALESCE (-1 * MIContainer.Amount, MI_Sale.Amount))  AS Amount
-                              , SUM (COALESCE (-1 * MIContainer.Amount, MI_Sale.Amount) * COALESCE (MIFloat_Price.ValueData, 0))     AS SummSale
-                              , SUM (COALESCE (-1 * MIContainer.Amount, MI_Sale.Amount) * COALESCE (MIFloat_PriceSale.ValueData, 0)) AS SummOriginal
-                         FROM tmpSaleAll AS Movement_Sale
-                              INNER JOIN MovementItem AS MI_Sale
-                                                      ON MI_Sale.MovementId = Movement_Sale.Id
-                                                     AND MI_Sale.DescId = zc_MI_Master()
-                                                     AND MI_Sale.isErased = FALSE
-                              LEFT JOIN MovementItemBoolean AS MIBoolean_SP
-                                      ON MIBoolean_SP.MovementItemId = MI_Sale.Id
-                                     AND MIBoolean_SP.DescId = zc_MIBoolean_SP()
-                                     --AND MIBoolean_SP.ValueData = TRUE                        -- пока перенесла в where , т,к. в чеке это св-во не сохраняется
-                              LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                      ON MIFloat_ChangePercent.MovementItemId = MI_Sale.Id
-                                     AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                              , Movement_Sale.GoodsId 
+                              , Movement_Sale.ChangePercent
+                              , Movement_Sale.Amount
+                              , Movement_Sale.SummSale
+                              , Movement_Sale.SummOriginal
+                              , Movement_Sale.MovementItemId
+                              , COALESCE(MIBoolean_UsePriceOOC.ValueData, False)       AS isUsePriceOOC
+                              , MIFloat_PriceSP.ValueData                              AS PriceRegistry
+                         FROM tmpMI_Sum AS Movement_Sale
+                              LEFT JOIN MovementItemBoolean AS MIBoolean_UsePriceOOC
+                                                            ON MIBoolean_UsePriceOOC.MovementItemId = Movement_Sale.MovementItemId
+                                                           AND MIBoolean_UsePriceOOC.DescId = zc_MIBoolean_UsePriceOOC()
 
-                              LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
-                                     ON MIFloat_PriceSale.MovementItemId = MI_Sale.Id
-                                    AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
-                              LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                     ON MIFloat_Price.MovementItemId = MI_Sale.Id
-                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
-
-                              LEFT JOIN MovementItemContainer AS MIContainer
-                                                              ON MIContainer.MovementItemId = MI_Sale.Id
-                                                             AND MIContainer.DescId = zc_MIContainer_Count()
-                         WHERE (MIFloat_ChangePercent.ValueData = inPercentSP OR COALESCE (inPercentSP,0) = 0)
-                           AND (MIBoolean_SP.ValueData = TRUE OR Movement_Sale.DescId = zc_Movement_Check())
-                         GROUP BY Movement_Sale.Id
-                                , Movement_Sale.UnitId
-                                , Movement_Sale.JuridicalId
-                                , Movement_Sale.HospitalId
-                                , Movement_Sale.isListSP
-                                , Movement_Sale.InvNumberSP
-                                , Movement_Sale.MedicSP
-                                , Movement_Sale.AmbulantClinicSP
-                                , Movement_Sale.MemberSPId
-                                , Movement_Sale.MemberSP
-                                , Movement_Sale.OperDateSP
-                                , Movement_Sale.GroupMemberSPId
-                                , Movement_Sale.InvNumber_Invoice
-                                , Movement_Sale.InvNumber_Invoice_Full
-                                , MI_Sale.ObjectId
-                                , MIFloat_ChangePercent.ValueData
-                                , Movement_Sale.OperDate
-                         HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Sale.Amount)) <> 0
+                              LEFT JOIN MovementItemFloat AS MIFloat_PriceSP
+                                                          ON MIFloat_PriceSP.MovementItemId = Movement_Sale.MovementItemId
+                                                         AND MIFloat_PriceSP.DescId = zc_MIFloat_PriceSP()
                         )
 
                   -- выбираем документы, прошедшие по условию % скидки
@@ -730,6 +770,8 @@ BEGIN
 
         -- результат
         SELECT tmpData.MovementId
+             , tmpData.MovementItemId
+             , Object_Unit.Id                      AS UnitId
              , Object_Unit.ValueData               AS UnitName
              , tmpMovDetails.Address               AS Unit_Address
              , Object_Juridical.Id                 AS JuridicalId
@@ -749,8 +791,9 @@ BEGIN
           
              , tmpData.OperDateSP        :: TDateTime
              , tmpData.OperDate          :: TDateTime
-             , Object_Goods.ObjectCode             AS GoodsCode
-             , Object_Goods.ValueData              AS GoodsName
+             , Object_Goods_Main.ObjectCode        AS GoodsCode
+             , Object_Goods_Main.Name              AS GoodsName
+             , COALESCE(NULLIF(Object_Goods_Main.NameUkr, ''), Object_Goods_Main.Name) :: TVarChar AS GoodsNameUkr
              , Object_Measure.ValueData            AS MeasureName
              , tmpGoodsMain.isResolution_224 :: Boolean
              , tmpData.ChangePercent     :: TFloat
@@ -765,7 +808,7 @@ BEGIN
              , CAST ((tmpData.SummOriginal - tmpData.SummSale) AS NUMERIC (16,2))  :: TFloat  AS SummaComp
              , CAST ((tmpData.SummOriginal - tmpData.SummSale) / (1 + COALESCE(tmpPartionParam.NDS, ObjectFloat_NDSKind_NDS.ValueData, 7) / 100) AS NUMERIC (16,2))  :: TFloat  AS SummaCompWithOutVat
 
-             , CAST (ROW_NUMBER() OVER (PARTITION BY Object_PartnerMedical.ValueData, Object_Contract.Id   ORDER BY tmpData.OperDate, Object_Goods.ValueData ) AS Integer) AS NumLine
+             , CAST (ROW_NUMBER() OVER (PARTITION BY Object_PartnerMedical.ValueData, Object_Contract.Id   ORDER BY tmpData.OperDate, Object_Goods_Main.Name) AS Integer) AS NumLine
              , CAST (tmpCountR.CountSP AS Integer) AS CountSP
 
            , COALESCE (tmpMovDetails.JuridicalFullName,Object_Juridical.ValueData)
@@ -819,11 +862,22 @@ BEGIN
            , (ROUND(tmpMIGoodsSP_1303.PriceSale * tmpData.Amount * tmpData.ChangePercent / 100.0, 2) :: TFloat - 
                    CAST ((tmpData.SummOriginal - tmpData.SummSale) AS NUMERIC (16,2))  :: TFloat )::TFloat   AS DSummaSP
            , CASE WHEN COALESCE(tmpMIGoodsSP_1303.PriceSale, 0)= 0  THEN zfCalc_Color(255, 165, 0)
+                  WHEN tmpData.isUsePriceOOC = TRUE AND
+                       ROUND(tmpMIGoodsSP_1303.PriceSale * tmpData.Amount * tmpData.ChangePercent / 100.0, 2) :: TFloat >=
+                       ROUND(tmpData.PriceRegistry * tmpData.Amount * tmpData.ChangePercent / 100.0, 2) :: TFloat THEN zfCalc_Color(135, 206, 235)
                   WHEN ROUND(tmpMIGoodsSP_1303.PriceSale * tmpData.Amount * tmpData.ChangePercent / 100.0, 2) :: TFloat < 
                        CAST ((tmpData.SummOriginal - tmpData.SummSale) AS NUMERIC (16,2))  :: TFloat  THEN zfCalc_Color(255, 182, 203)
                   WHEN ROUND(tmpMIGoodsSP_1303.PriceSale * tmpData.Amount * tmpData.ChangePercent / 100.0, 2) :: TFloat > 
                        CAST ((tmpData.SummOriginal - tmpData.SummSale) AS NUMERIC (16,2))  :: TFloat  THEN zfCalc_Color(152, 251, 152)
                   ELSE zc_Color_White() END::Integer Color_DSummaSP
+           , tmpData.isUsePriceOOC
+           
+           , CASE WHEN tmpData.isUsePriceOOC = TRUE
+                  THEN tmpData.PriceRegistry
+                  ELSE CAST ( (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.SummOriginal - tmpData.SummSale)/tmpData.Amount ELSE 0 END)  AS NUMERIC (16,2) ) END  :: TFloat  AS PriceRegistry
+           , ROUND(CASE WHEN tmpData.isUsePriceOOC = TRUE
+                        THEN tmpData.PriceRegistry * tmpData.Amount * tmpData.ChangePercent / 100.0
+                        ELSE CAST ((tmpData.SummOriginal - tmpData.SummSale) AS NUMERIC (16,2)) END, 2)  :: TFloat  AS SummaRegistry
         FROM tmpMI AS tmpData
              LEFT JOIN tmpMovDetails ON tmpData.MovementId = tmpMovDetails.MovementId
                                   --  AND tmpData.ChangePercent = tmpMovDetails.PercentSP
@@ -839,17 +893,16 @@ BEGIN
              --LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = tmpData.MemberSPId AND Object_MemberSP.DescId = zc_Object_MemberSP()
              --LEFT JOIN Object AS Object_MedicSP ON Object_MedicSP.Id = tmpData.MedicSPId AND Object_MedicSP.DescId = zc_Object_MedicSP()
 
-             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId AND Object_Goods.DescId = zc_Object_Goods()
+             LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = tmpData.GoodsId
+             LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
+             
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                   ON ObjectLink_Goods_Measure.ObjectId = tmpData.GoodsId
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                                  ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
-                                 AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
-             LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+             LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = Object_Goods_Main.NDSKindId
              LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                   ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
+                                   ON ObjectFloat_NDSKind_NDS.ObjectId = Object_NDSKind.Id
                                   AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
 
 
@@ -885,11 +938,11 @@ BEGIN
                                         AND tmpMIGoodsSP_1303.DateEnd > tmpData.OperDate
                                         AND tmpMIGoodsSP_1303.GoodsId = tmpGoodsMain.GoodsMainId
 
-        WHERE COALESCE(inNDSKindId, 0) = 0 OR COALESCE(tmpPartionParam.NDSKindId, ObjectLink_Goods_NDSKind.ChildObjectId) = inNDSKindId
+        WHERE COALESCE(inNDSKindId, 0) = 0 OR COALESCE(tmpPartionParam.NDSKindId, Object_Goods_Main.NDSKindId) = inNDSKindId
          ORDER BY Object_Unit.ValueData 
                 , Object_PartnerMedical.ValueData
                 , ContractName
-                , Object_Goods.ValueData
+                , Object_Goods_Main.Name
 ;
 
 END;
@@ -913,5 +966,4 @@ $BODY$
 -- SELECT * FROM gpReport_Sale_SP (inStartDate:= '01.09.2019', inEndDate:= '05.09.2019', inJuridicalId:= 0, inUnitId:= 0, inHospitalId:= 0, inGroupMemberSPId:= 0, inPercentSP:= 0, inisGroupMemberSP:= TRUE, inSession:= zfCalc_UserAdmin());
 
 
-select * from gpReport_Sale_SP(inStartDate := ('01.04.2022')::TDateTime , inEndDate := ('30.04.2022')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0 ,  inSession := '3');
-
+select * from gpReport_Sale_SP(inStartDate := ('01.04.2022')::TDateTime , inEndDate := ('30.04.2022')::TDateTime , inJuridicalId := 0 , inUnitId := 377605 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0 ,  inSession := '3');

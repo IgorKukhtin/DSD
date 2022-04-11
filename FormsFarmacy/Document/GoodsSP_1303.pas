@@ -60,6 +60,7 @@ type
     actGetImportSettingHelsi: TdsdExecStoredProc;
     actDoLoadHelsi: TExecuteImportSettingsAction;
     bbStartLoadHelsi: TdxBarButton;
+    GoodsNameUkr: TcxGridDBColumn;
   private
     { Private declarations }
   public

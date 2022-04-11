@@ -25,7 +25,7 @@ BEGIN
                                   WHERE MovementString_InvNumberOrder.MovementId = inMovementId
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()), '');
 
-    IF COALESCE (vbCheckSourceKind, 0) = zc_Enum_CheckSourceKind_Tabletki() /*OR vbInvNumberOrder <> ''*/
+    IF COALESCE (vbCheckSourceKind, 0) = zc_Enum_CheckSourceKind_Tabletki() OR vbInvNumberOrder <> ''
     THEN
        IF COALESCE (inCancelReasonId, 0) = 0
        THEN
