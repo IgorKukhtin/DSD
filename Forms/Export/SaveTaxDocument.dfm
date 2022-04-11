@@ -1,27 +1,27 @@
 inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
   ActiveControl = deStart
   Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1085#1072#1083#1086#1075#1086#1074#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1074' '#1052#1077#1076#1086#1082
-  ClientHeight = 170
-  ClientWidth = 503
+  ClientHeight = 202
+  ClientWidth = 512
   AddOnFormData.RefreshAction = nil
   AddOnFormData.isSingle = False
-  ExplicitWidth = 509
-  ExplicitHeight = 195
+  ExplicitWidth = 518
+  ExplicitHeight = 231
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 161
-    Top = 125
+    Left = 164
+    Top = 161
     Action = MultiAction
-    ExplicitLeft = 161
-    ExplicitTop = 125
+    ExplicitLeft = 164
+    ExplicitTop = 161
   end
   inherited bbCancel: TcxButton
-    Left = 289
-    Top = 125
+    Left = 292
+    Top = 161
     Action = actClose
-    ExplicitLeft = 289
-    ExplicitTop = 125
+    ExplicitLeft = 292
+    ExplicitTop = 161
   end
   object deStart: TcxDateEdit [2]
     Left = 132
@@ -66,14 +66,14 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
     Width = 343
   end
   object cxLabel5: TcxLabel [8]
-    Left = 307
-    Top = 55
+    Left = 429
+    Top = 153
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
     Visible = False
   end
   object edPaidKind: TcxButtonEdit [9]
-    Left = 402
-    Top = 110
+    Left = 420
+    Top = 173
     Properties.Buttons = <
       item
         Default = True
@@ -110,16 +110,32 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
     Caption = #1050#1086#1085#1077#1095#1085#1072#1103' '#1076#1072#1090#1072' ('#1088#1077#1075'.):'
   end
   object cbTaxCorrectiveOnly: TcxCheckBox [14]
-    Left = 5
+    Left = 3
     Top = 126
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1058#1086#1083#1100#1082#1086' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
     TabOrder = 14
-    Width = 146
+    Width = 140
+  end
+  object cbRegisterOnly: TcxCheckBox [15]
+    Left = 150
+    Top = 126
+    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+    Caption = #1058#1086#1083#1100#1082#1086' '#1079#1072#1088#1077#1075#1080#1089#1090#1088#1080#1088#1086#1074#1072#1085#1085#1099#1077
+    TabOrder = 15
+    Width = 169
+  end
+  object cbNotRegisterOnly: TcxCheckBox [16]
+    Left = 326
+    Top = 126
+    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+    Caption = #1058#1086#1083#1100#1082#1086' '#1085#1077' '#1079#1072#1088#1077#1075#1080#1089#1090#1088#1080#1088#1086#1074#1072#1085#1085#1099#1077
+    TabOrder = 16
+    Width = 184
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 107
-    Top = 128
+    Left = 155
+    Top = 160
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -149,11 +165,12 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
           'Key'
           'TextValue')
       end>
-    Top = 112
+    Left = 88
+    Top = 160
   end
   inherited ActionList: TActionList
-    Left = 63
-    Top = 111
+    Left = 23
+    Top = 159
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spTaxBillList
       StoredProcList = <
@@ -318,7 +335,7 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
       end
       item
         Name = 'inStartDateReg'
-        Value = 'NULL'
+        Value = Null
         Component = deStartReg
         DataType = ftDateTime
         ParamType = ptInput
@@ -326,7 +343,7 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
       end
       item
         Name = 'inEndDateReg'
-        Value = 'NULL'
+        Value = Null
         Component = deEndReg
         DataType = ftDateTime
         ParamType = ptInput
@@ -355,16 +372,32 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsRegisterOnly'
+        Value = Null
+        Component = cbRegisterOnly
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsNotRegisterOnly'
+        Value = Null
+        Component = cbNotRegisterOnly
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 368
-    Top = 112
+    Left = 328
+    Top = 152
   end
   object TaxBillList: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 408
-    Top = 120
+    Left = 384
+    Top = 152
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -425,8 +458,8 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 456
-    Top = 112
+    Left = 464
+    Top = 144
   end
   object PeriodChoiceReg: TPeriodChoice
     DateStart = deStartReg

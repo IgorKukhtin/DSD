@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_Load (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_Load (TDateTime, TDateTime, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_Load (TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_Load (TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_Load (TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Tax_Load(
     IN inStartDate            TDateTime , --
@@ -12,6 +13,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Tax_Load(
     IN inInfoMoneyId          Integer   ,
     IN inPaidKindId           Integer   ,
     IN inIsTaxCorrectiveOnly  Boolean   ,
+    IN inIsRegisterOnly       Boolean   , --только зарегистрированные
+    IN inIsNotRegisterOnly    Boolean   , --только не зарегистрированные
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (NPP TVarChar,  NUM TVarChar,   DATEV TDateTime, NAZP TVarChar, IPN TVarChar, 
@@ -28,6 +31,12 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Tax());
      vbUserId:= lpGetUserBySession (inSession);
 
+     --проверка если обе галки inIsRegisterOnly и inIsNotRegisterOnly = TRUE  - ошибка
+     IF inIsRegisterOnly = TRUE AND inIsNotRegisterOnly = TRUE
+     THEN
+         RAISE EXCEPTION 'Ошибка. Признаки Только зарегистрированные и Только не зарегистрированные не могут быть выбранны одновременно.';
+     END IF;
+     
      --
      RETURN QUERY
      WITH 
@@ -207,7 +216,10 @@ BEGIN
             )
         AND MovementFloat_TotalSummPVAT.ValueData <> 0
         AND COALESCE (MovementString_InvNumberBranch.ValueData, '') <> '2'
-        AND MovementString_InvNumberRegistered.ValueData <> ''
+        AND ((MovementString_InvNumberRegistered.ValueData <> '' AND inIsRegisterOnly = FALSE AND inIsNotRegisterOnly = FALSE) 
+            OR (MovementString_InvNumberRegistered.ValueData <> '' AND inIsRegisterOnly = TRUE)
+            OR (COALESCE (MovementString_InvNumberRegistered.ValueData, '') = '' AND inIsNotRegisterOnly = TRUE)
+            )
      ;
 
 END;
@@ -217,6 +229,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.04.22         *
  04.03.18         *
  15.08.14                                        * add MovementBoolean_Electron
  27.06.14                         * add inInfoMoneyId, inPaidKindId
