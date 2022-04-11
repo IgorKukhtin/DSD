@@ -299,7 +299,9 @@ uses
   PriceListMovement in '..\..\FormsBoat\Document\PriceListMovement.pas' {PriceListMovementForm: TParentForm},
   DiscountPartner in '..\..\FormsBoat\Guides\DiscountPartner.pas' {DiscountPartnerForm: TParentForm},
   DiscountPartnerEdit in '..\..\FormsBoat\Guides\DiscountPartnerEdit.pas' {DiscountPartnerEditForm: TParentForm},
-  SendItemEdit in '..\..\FormsBoat\Document\SendItemEdit.pas' {SendItemEditForm: TParentForm};
+  SendItemEdit in '..\..\FormsBoat\Document\SendItemEdit.pas' {SendItemEditForm: TParentForm},
+  Report_GoodsMotion in '..\..\FormsBoat\Report\Report_GoodsMotion.pas' {Report_GoodsMotionForm: TParentForm},
+  Report_GoodsMotionDialog in '..\..\FormsBoat\Report\Report_GoodsMotionDialog.pas' {Report_GoodsMotionDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

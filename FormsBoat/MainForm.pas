@@ -241,6 +241,8 @@ type
     actPriceListJournal: TdsdOpenForm;
     miPriceListJournal: TMenuItem;
     N21: TMenuItem;
+    actReport_GoodsMotion: TdsdOpenForm;
+    üøReport_GoodsMotion: TMenuItem;
   private
     { Private declarations }
   public
