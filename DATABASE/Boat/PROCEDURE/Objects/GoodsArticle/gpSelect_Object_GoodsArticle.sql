@@ -98,7 +98,7 @@ BEGIN
                               )
 
            , tmpGoodsArticle AS (SELECT ObjectLink_GoodsArticle_Goods.ChildObjectId   AS GoodsId
-                                      , STRING_AGG (Object.ValueData, '; ') ::TVarChar AS GoodsArticle
+                                      , STRING_AGG (Object.ValueData, ';') ::TVarChar AS GoodsArticle
                                  FROM Object
                                       INNER JOIN ObjectLink AS ObjectLink_GoodsArticle_Goods
                                                             ON ObjectLink_GoodsArticle_Goods.ObjectId = Object.Id
@@ -371,7 +371,6 @@ BEGIN
              LEFT JOIN tmpGoodsArticle AS Object_GoodsArticle ON Object_GoodsArticle.GoodsId = Object_Goods.Id
        WHERE Object_Goods.DescId = zc_Object_Goods()
          AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE)
-       --  and Object_Goods.Id = 236863
        LIMIT 10000;
 
 END;
