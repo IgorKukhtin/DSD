@@ -137,11 +137,11 @@ BEGIN
            , CASE WHEN Movement.DescId = zc_Movement_Tax() AND MovementBoolean_Electron.ValueData = TRUE
                        THEN 'œÕ≈'
                   WHEN Movement.DescId = zc_Movement_Tax()
-                       THEN 'œÕœ'
+                       THEN 'œÕ≈' -- 'œÕœ'
                   WHEN Movement.DescId = zc_Movement_TaxCorrective() AND MovementBoolean_Electron.ValueData = TRUE
                        THEN '– ≈'
                   WHEN Movement.DescId = zc_Movement_TaxCorrective()
-                       THEN '– œ'
+                       THEN '– ≈' -- '– œ'
                   ELSE ''
              END ::TVarChar AS WMDTYPESTR
 

@@ -15,33 +15,36 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Insert_Movement_TaxPrepay());
      
      -- временная таблица данные отчета  обороты по юр лицам по БН за период
-     CREATE TEMP TABLE tmpReport (JuridicalId Integer, ContractId Integer, Amount TFloat) ON COMMIT DROP;
-     INSERT INTO tmpReport (JuridicalId, ContractId, Amount)
+     CREATE TEMP TABLE tmpReport (JuridicalId Integer, ContractId Integer, Amount TFloat, PersonalCollationName TVarChar) ON COMMIT DROP;
+     INSERT INTO tmpReport (JuridicalId, ContractId, Amount, PersonalCollationName)
        SELECT tmp.JuridicalId
             , 0 AS ContractId  --, tmp.ContractId
             , (CASE WHEN tmp.EndAmount_A >= 0 AND tmp.StartAmount_A < 0 THEN (-1) * tmp.StartAmount_A
                     WHEN tmp.EndAmount_A < 0 AND tmp.StartAmount_A < 0 AND (-1) * tmp.EndAmount_A < (-1) * tmp.StartAmount_A THEN ((-1) * tmp.StartAmount_A - (-1) * tmp.EndAmount_A)
                     ELSE 0
                END) ::TFloat AS Amount
+            , tmp.PersonalCollationName
        FROM (SELECT tmp.JuridicalId
-                  , SUM (COALESCE (tmp.StartAmount_A,0)) AS StartAmount_A
-                  , SUM (COALESCE (tmp.EndAmount_A,0))   AS EndAmount_A
-             FROM gpReport_JuridicalSold(inStartDate              := inStartDate ::TDateTime
-                                 , inEndDate                := inEndDate   ::TDateTime
-                                 , inAccountId              := 0
-                                 , inInfoMoneyId            := zc_Enum_InfoMoney_30101()           --готовая продукция inInfoMoneyId := 8962
-                                 , inInfoMoneyGroupId       := 0
-                                 , inInfoMoneyDestinationId := 0
-                                 , inPaidKindId             := zc_Enum_PaidKind_FirstForm()
-                                 , inBranchId               := 0
-                                 , inJuridicalGroupId       := 0
-                                 , inCurrencyId             := 0
-                                 , inIsPartionMovement      := 'False'
-                                 , inSession                := inSession
-                                   ) AS tmp
+                  , SUM (COALESCE (tmp.StartAmount_A, 0)) AS StartAmount_A
+                  , SUM (COALESCE (tmp.EndAmount_A, 0))   AS EndAmount_A
+                  , STRING_AGG (COALESCE (tmp.PersonalCollationName, ''), ';') AS PersonalCollationName
+             FROM gpReport_JuridicalSold (inStartDate              := inStartDate ::TDateTime
+                                        , inEndDate                := inEndDate   ::TDateTime
+                                        , inAccountId              := 0
+                                        , inInfoMoneyId            := zc_Enum_InfoMoney_30101()           --готовая продукция inInfoMoneyId := 8962
+                                        , inInfoMoneyGroupId       := 0
+                                        , inInfoMoneyDestinationId := 0
+                                        , inPaidKindId             := zc_Enum_PaidKind_FirstForm()
+                                        , inBranchId               := 0
+                                        , inJuridicalGroupId       := 0
+                                        , inCurrencyId             := 0
+                                        , inIsPartionMovement      := FALSE
+                                        , inSession                := inSession
+                                         ) AS tmp
              WHERE tmp.AccountId IN (9128, 9121, 9130, 9136, 9129)
+               AND (tmp.StartAmount_A <> 0 OR tmp.EndAmount_A <> 0)
              GROUP BY tmp.JuridicalId
-             ) AS tmp
+            ) AS tmp
        WHERE (tmp.EndAmount_A >= 0 AND tmp.StartAmount_A < 0)
           OR (tmp.EndAmount_A < 0 AND tmp.StartAmount_A < 0 AND (-1) * tmp.EndAmount_A < (-1) * tmp.StartAmount_A)
           
@@ -56,24 +59,25 @@ BEGIN
       ;
 
 
-     --создаем документы НН по предоплате
-     PERFORM lpInsert_Movement_TaxCorrective_isAutoPrepay (inId                 := 0 ::Integer    -- Ключ объекта <Документ Налоговая>
-                                                         , inInvNumber          := ''                    ::TVarChar   -- Номер документа
-                                                         , inInvNumberPartner   := ''                    ::TVarChar   -- Номер налогового документа
-                                                         , inInvNumberBranch    := ''                    ::TVarChar   -- Номер филиала
-                                                         , inOperDate           := inEndDate             ::TDateTime  -- Дата документа
-                                                         , inisAuto             := TRUE                  ::Boolean    -- создан автоматически
-                                                         , inChecked            := FALSE                 ::Boolean    -- Проверен
-                                                         , inDocument           := FALSE                 ::Boolean    -- Есть ли подписанный документ
-                                                         , inPriceWithVAT       := FALSE                 ::Boolean    -- Цена с НДС (да/нет)
-                                                         , inVATPercent         := CAST (TaxPercent_View.Percent as TFloat) ::TFloat     -- % НДС
-                                                         , inAmount             := (1 / (1+TaxPercent_View.Percent/100) * tmpReport.Amount) ::TFloat -- сумма предоплаты без НДС
-                                                         , inFromId             := tmpReport.JuridicalId     ::Integer    -- От кого (в документе) 
-                                                         , inToId               := Object_Juridical_Basis.Id ::Integer    -- Кому (в документе) --АЛАН
-                                                         , inPartnerId          := 0                         ::Integer                      -- Контрагент
-                                                         , inContractId         := tmpReport.ContractId      ::Integer    -- Договора
-                                                         , inDocumentTaxKindId  := zc_Enum_DocumentTaxKind_Prepay() ::Integer    -- Тип формирования налогового документа
-                                                         , inUserId             := vbUserId ::Integer     -- пользователь 
+     -- создаем документы НН по предоплате
+     PERFORM lpInsert_Movement_TaxCorrective_isAutoPrepay (inId                   := 0 ::Integer    -- Ключ объекта <Документ Налоговая>
+                                                         , inInvNumber            := ''                    ::TVarChar   -- Номер документа
+                                                         , inInvNumberPartner     := ''                    ::TVarChar   -- Номер налогового документа
+                                                         , inInvNumberBranch      := ''                    ::TVarChar   -- Номер филиала
+                                                         , inOperDate             := inEndDate             ::TDateTime  -- Дата документа
+                                                         , inisAuto               := TRUE                  ::Boolean    -- создан автоматически
+                                                         , inChecked              := FALSE                 ::Boolean    -- Проверен
+                                                         , inDocument             := FALSE                 ::Boolean    -- Есть ли подписанный документ
+                                                         , inPriceWithVAT         := FALSE                 ::Boolean    -- Цена с НДС (да/нет)
+                                                         , inVATPercent           := CAST (TaxPercent_View.Percent as TFloat) ::TFloat     -- % НДС
+                                                         , inAmount               := (1 / (1+TaxPercent_View.Percent/100) * tmpReport.Amount) ::TFloat -- сумма предоплаты без НДС
+                                                         , inFromId               := tmpReport.JuridicalId     ::Integer    -- От кого (в документе) 
+                                                         , inToId                 := Object_Juridical_Basis.Id ::Integer    -- Кому (в документе) --АЛАН
+                                                         , inPartnerId            := 0                         ::Integer                      -- Контрагент
+                                                         , inContractId           := tmpReport.ContractId      ::Integer    -- Договора
+                                                         , inDocumentTaxKindId    := zc_Enum_DocumentTaxKind_Prepay() ::Integer    -- Тип формирования налогового документа
+                                                         , inPersonalCollationName:= tmpReport.PersonalCollationName
+                                                         , inUserId               := vbUserId ::Integer     -- пользователь 
                                                          )
     FROM tmpReport
          LEFT JOIN TaxPercent_View ON inEndDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
@@ -97,4 +101,4 @@ $BODY$
 --2.Если с-до кон. меньше 0, и с-до нач. меньше 0, и модуль с-до кон. больше модуля с-до нач., то сумма НН на ПП= модуль с-до кон. минус модуль с-до нач.
 
 -- тест
---select * from gpReport_JuridicalSold(inStartDate := ('06.12.2021')::TDateTime , inEndDate := ('07.12.2021')::TDateTime , inAccountId := 0 , inInfoMoneyId := 0 , inInfoMoneyGroupId := 0 , inInfoMoneyDestinationId := 0 , inPaidKindId := 3 , inBranchId := 0 , inJuridicalGroupId := 0 , inCurrencyId := 0 , inIsPartionMovement := 'False' ,  inSession := '9457');
+-- select * from gpReport_JuridicalSold(inStartDate := ('06.12.2021')::TDateTime , inEndDate := ('07.12.2021')::TDateTime , inAccountId := 0 , inInfoMoneyId := 0 , inInfoMoneyGroupId := 0 , inInfoMoneyDestinationId := 0 , inPaidKindId := 3 , inBranchId := 0 , inJuridicalGroupId := 0 , inCurrencyId := 0 , inIsPartionMovement := 'False' ,  inSession := '9457');
