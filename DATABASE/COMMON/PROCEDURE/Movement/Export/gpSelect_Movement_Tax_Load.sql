@@ -240,4 +240,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Tax_Load (inStartDate:= '31.10.2017', inEndDate:= '31.10.2017', inStartDateReg:= '01.10.2017', inEndDateReg:= '31.10.2017', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inIsTaxCorrectiveOnly:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Tax_Load (inStartDate:= '31.10.2017', inEndDate:= '31.10.2017', inStartDateReg:= '01.10.2017', inEndDateReg:= '31.10.2017', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inIsTaxCorrectiveOnly:= TRUE, , inIsRegisterOnly:= False, inIsNotRegisterOnly:= False, inSession:= zfCalc_UserAdmin())

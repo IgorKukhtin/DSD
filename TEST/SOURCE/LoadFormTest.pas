@@ -2081,7 +2081,7 @@ procedure TLoadFormTest.LoadExternalForm;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaveTaxDocumentForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaveTaxDocumentForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaveDocumentTo1CForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaveDocumentTo1CForm');
 
