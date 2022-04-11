@@ -97,6 +97,9 @@ object InventoryForm: TInventoryForm
           object Ord: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087
             DataBinding.FieldName = 'Ord'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -722,7 +725,7 @@ object InventoryForm: TInventoryForm
       Category = 0
     end
     object bbInsertRecord_goods: TdxBarButton
-      Action = mactInsertRecord
+      Action = mactAdd
       Category = 0
     end
   end
@@ -1241,33 +1244,6 @@ object InventoryForm: TInventoryForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 54
     end
-    object actGoodsChoiceForm_add: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      Caption = 'TGoodsForm'
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'GoodsId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartionId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'PartionId'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
     object actGoodsChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1523,12 +1499,12 @@ object InventoryForm: TInventoryForm
       DataSetRefresh = actRefreshMI
       IdFieldName = 'Id'
     end
-    object mactInsertRecord: TMultiAction
+    object mactAdd: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actInsertAction
+          Action = actAdd
         end
         item
           Action = actRefreshMI
@@ -1539,7 +1515,7 @@ object InventoryForm: TInventoryForm
       ShortCut = 113
       WithoutNext = True
     end
-    object actInsertAction: TdsdInsertUpdateAction
+    object actAdd: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'

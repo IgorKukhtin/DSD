@@ -440,6 +440,7 @@ BEGIN
 
                                , COALESCE (tmpMI.GoodsKindId, tmpMI_Order_find.GoodsKindId)     AS GoodsKindId
                                , COALESCE (tmpMI.Price, tmpMI_Order_find.Price)                 AS Price
+                               , tmpMI.PriceTare
                                , COALESCE (tmpMI.CountForPrice, tmpMI_Order_find.CountForPrice) AS CountForPrice
                                , COALESCE (tmpMI.isErased, FALSE) AS isErased
                           FROM tmpMI

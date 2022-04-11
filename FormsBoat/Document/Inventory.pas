@@ -152,9 +152,8 @@ type
     cxLabel9: TcxLabel;
     cxLabel10: TcxLabel;
     Ord: TcxGridDBColumn;
-    actInsertAction: TdsdInsertUpdateAction;
-    mactInsertRecord: TMultiAction;
-    actGoodsChoiceForm_add: TOpenChoiceForm;
+    actAdd: TdsdInsertUpdateAction;
+    mactAdd: TMultiAction;
     actGoodsItemGet1: TdsdExecStoredProc;
     actGoodsItemGet3: TdsdExecStoredProc;
     actGoodsItemGet2: TdsdExecStoredProc;

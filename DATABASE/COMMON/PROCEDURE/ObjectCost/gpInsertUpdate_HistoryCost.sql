@@ -1,4 +1,4 @@
- -- Function: gpInsertUpdate_HistoryCost()
+-- Function: gpInsertUpdate_HistoryCost()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_HistoryCost (TDateTime, TDateTime, Integer, Integer, Integer, TFloat, TVarChar);
 
@@ -755,81 +755,115 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
                                          , MIContainer_Summ_Out.MovementItemId
                                          , MIContainer_Summ_Out.ContainerId
                                  )
+                , tmpRes AS (SELECT COALESCE (MIContainer_Summ_In.ContainerId, 0)   AS MasterContainerId
+                                  , COALESCE (MIContainer_Summ_Out.ContainerId, 0)  AS ContainerId
+                                  , COALESCE (MIContainer_Count_In.ContainerId, 0)  AS MasterContainerId_Count
+                                  , COALESCE (MIContainer_Count_Out.ContainerId, 0) AS ContainerId_Count
+
+                                  , SUM (CASE WHEN MIContainer_Count_Out.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice())
+                                                  THEN COALESCE (1 * MIContainer_Count_In.Amount, 0)
+                                              WHEN MIContainer_Count_Out.MovementDescId IN (zc_Movement_ProductionUnion())
+                                                  THEN COALESCE (-1 * MIContainer_Count_Out.Amount, 0)
+                                              ELSE 0
+                                         END) AS OperCount
+
+                                  , CASE WHEN MIContainer_Count_Out.WhereObjectId_Analyzer = MIContainer_Summ_In.WhereObjectId_Analyzer THEN FALSE ELSE TRUE END AS isExternal
+                                  , 0 AS MovementDescId
+                                  -- , MIContainer_Count_Out.MovementDescId
+                             FROM MIContainer_Count_Out
+                                  JOIN MIContainer_Summ_Out ON MIContainer_Summ_Out.MovementId     = MIContainer_Count_Out.MovementId
+                                                           AND MIContainer_Summ_Out.MovementItemId = MIContainer_Count_Out.MovementItemId
+                                  JOIN Container AS Container_Summ_Out ON Container_Summ_Out.Id       = MIContainer_Summ_Out.ContainerId
+                                                                      AND Container_Summ_Out.ParentId = MIContainer_Count_Out.ContainerId
+                  
+                                  JOIN MIContainer_Summ_In ON MIContainer_Summ_In.Id = MIContainer_Summ_Out.ParentId
+                                  JOIN Container AS Container_Summ_In ON Container_Summ_In.Id       = MIContainer_Summ_In.ContainerId
+                  
+                                  JOIN MIContainer_Count_In ON MIContainer_Count_In.MovementItemId = MIContainer_Summ_In.MovementItemId
+                                                           AND MIContainer_Count_In.ContainerId    = Container_Summ_In.ParentId
+                                                           -- !!! в этом разница !!!
+                                                           AND MIContainer_Count_In.Id             = MIContainer_Count_Out.ParentId
+                  
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_User
+                                                               ON MovementLinkObject_User.MovementId = MIContainer_Count_Out.MovementId
+                                                              AND MovementLinkObject_User.DescId     = zc_MovementLinkObject_User()
+                                                              AND MovementLinkObject_User.ObjectId   = zc_Enum_Process_Auto_Defroster()
+                  
+                             WHERE MovementLinkObject_User.MovementId IS NULL
+                               -- !!! в этом разница !!!
+                               AND MIContainer_Count_Out.MovementDescId = zc_Movement_Send()
+                             GROUP BY MIContainer_Summ_In.ContainerId
+                                    , MIContainer_Summ_Out.ContainerId
+                                    , MIContainer_Count_In.ContainerId
+                                    , MIContainer_Count_Out.ContainerId
+                                    , MIContainer_Count_Out.WhereObjectId_Analyzer
+                                    , MIContainer_Summ_In.WhereObjectId_Analyzer
+                                    -- , MIContainer_Count_Out.MovementDescId
+                            UNION ALL
+                             SELECT COALESCE (MIContainer_Summ_In.ContainerId, 0)   AS MasterContainerId
+                                  , COALESCE (MIContainer_Summ_Out.ContainerId, 0)  AS ContainerId
+                                  , COALESCE (MIContainer_Count_In.ContainerId, 0)  AS MasterContainerId_Count
+                                  , COALESCE (MIContainer_Count_Out.ContainerId, 0) AS ContainerId_Count
+
+                                  , SUM (CASE WHEN MIContainer_Count_Out.MovementDescId IN (zc_Movement_ProductionSeparate())
+                                                  THEN CASE WHEN  COALESCE (_tmp.Summ, 0) <> 0 THEN COALESCE (-1 * MIContainer_Count_Out.Amount * MIContainer_Summ_In.Amount / _tmp.Summ, 0) ELSE 0 END
+                                              WHEN MIContainer_Count_Out.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice())
+                                                  THEN COALESCE (1 * MIContainer_Count_In.Amount, 0)
+                                              WHEN MIContainer_Count_Out.MovementDescId IN (zc_Movement_ProductionUnion())
+                                                  THEN COALESCE (-1 * MIContainer_Count_Out.Amount, 0)
+                                              ELSE 0
+                                         END) AS OperCount
+
+                                  , CASE WHEN MIContainer_Count_Out.WhereObjectId_Analyzer = MIContainer_Summ_In.WhereObjectId_Analyzer THEN FALSE ELSE TRUE END AS isExternal
+                                  , 0 AS MovementDescId
+                                  -- , MIContainer_Count_Out.MovementDescId
+                             FROM MIContainer_Count_Out
+                                  JOIN MIContainer_Summ_Out ON MIContainer_Summ_Out.MovementId     = MIContainer_Count_Out.MovementId
+                                                           AND MIContainer_Summ_Out.MovementItemId = MIContainer_Count_Out.MovementItemId
+                                  JOIN Container AS Container_Summ_Out ON Container_Summ_Out.Id       = MIContainer_Summ_Out.ContainerId
+                                                                      AND Container_Summ_Out.ParentId = MIContainer_Count_Out.ContainerId
+                  
+                                  JOIN MIContainer_Summ_In ON MIContainer_Summ_In.Id = MIContainer_Summ_Out.ParentId
+                                  JOIN Container AS Container_Summ_In ON Container_Summ_In.Id       = MIContainer_Summ_In.ContainerId
+                  
+                                  JOIN MIContainer_Count_In ON MIContainer_Count_In.MovementItemId = MIContainer_Summ_In.MovementItemId
+                                                           AND MIContainer_Count_In.ContainerId    = Container_Summ_In.ParentId
+                  
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_User
+                                                               ON MovementLinkObject_User.MovementId = MIContainer_Count_Out.MovementId
+                                                              AND MovementLinkObject_User.DescId     = zc_MovementLinkObject_User()
+                                                              AND MovementLinkObject_User.ObjectId   = zc_Enum_Process_Auto_Defroster()
+                  
+                                  LEFT JOIN tmpSeparate AS _tmp ON _tmp.MovementId = MIContainer_Count_Out.MovementId
+                                                               AND _tmp.ContainerId = MIContainer_Summ_Out.ContainerId
+                                                               AND _tmp.MovementItemId = MIContainer_Summ_Out.MovementItemId
+                                                               AND MIContainer_Count_Out.MovementDescId = zc_Movement_ProductionSeparate()
+                             WHERE MovementLinkObject_User.MovementId IS NULL
+                               -- !!! в этом разница !!!
+                               AND MIContainer_Count_Out.MovementDescId <> zc_Movement_Send()
+                             GROUP BY MIContainer_Summ_In.ContainerId
+                                    , MIContainer_Summ_Out.ContainerId
+                                    , MIContainer_Count_In.ContainerId
+                                    , MIContainer_Count_Out.ContainerId
+                                    , MIContainer_Count_Out.WhereObjectId_Analyzer
+                                    , MIContainer_Summ_In.WhereObjectId_Analyzer
+                                    -- , MIContainer_Count_Out.MovementDescId
+                            )
             -- Результат
-            SELECT COALESCE (MIContainer_Summ_In.ContainerId, 0)   AS MasterContainerId
-                 , COALESCE (MIContainer_Summ_Out.ContainerId, 0)  AS ContainerId
-                 , COALESCE (MIContainer_Count_In.ContainerId, 0)  AS MasterContainerId_Count
-                 , COALESCE (MIContainer_Count_Out.ContainerId, 0) AS ContainerId_Count
-                 , SUM (CASE WHEN MIContainer_Count_Out.MovementDescId IN (zc_Movement_ProductionSeparate())
-                                 THEN CASE WHEN  COALESCE (_tmp.Summ, 0) <> 0 THEN COALESCE (-1 * MIContainer_Count_Out.Amount * MIContainer_Summ_In.Amount / _tmp.Summ, 0) ELSE 0 END
-                             WHEN MIContainer_Count_Out.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice())
-                                 THEN COALESCE (1 * MIContainer_Count_In.Amount, 0)
-                             WHEN MIContainer_Count_Out.MovementDescId IN (zc_Movement_ProductionUnion())
-                                 THEN COALESCE (-1 * MIContainer_Count_Out.Amount, 0)
-                             ELSE 0
-                        END) AS OperCount
-                 , CASE WHEN MIContainer_Count_Out.WhereObjectId_Analyzer = MIContainer_Summ_In.WhereObjectId_Analyzer THEN FALSE ELSE TRUE END AS isExternal
-                 , 0 AS MovementDescId
-                 -- , MIContainer_Count_Out.MovementDescId
-            FROM MIContainer_Count_Out
-                 JOIN MIContainer_Summ_Out ON MIContainer_Summ_Out.MovementId     = MIContainer_Count_Out.MovementId
-                                          AND MIContainer_Summ_Out.MovementItemId = MIContainer_Count_Out.MovementItemId
-                 JOIN Container AS Container_Summ_Out ON Container_Summ_Out.Id       = MIContainer_Summ_Out.ContainerId
-                                                     AND Container_Summ_Out.ParentId = MIContainer_Count_Out.ContainerId
-
-                 JOIN MIContainer_Summ_In ON MIContainer_Summ_In.Id = MIContainer_Summ_Out.ParentId
-                 JOIN Container AS Container_Summ_In ON Container_Summ_In.Id       = MIContainer_Summ_In.ContainerId
-
-                 JOIN MIContainer_Count_In ON MIContainer_Count_In.MovementItemId = MIContainer_Summ_In.MovementItemId
-                                          AND MIContainer_Count_In.ContainerId    = Container_Summ_In.ParentId
-                                          AND MIContainer_Count_In.Id             = MIContainer_Count_Out.ParentId
-
-                 LEFT JOIN MovementLinkObject AS MovementLinkObject_User
-                                              ON MovementLinkObject_User.MovementId = MIContainer_Count_Out.MovementId
-                                             AND MovementLinkObject_User.DescId     = zc_MovementLinkObject_User()
-                                             AND MovementLinkObject_User.ObjectId   = zc_Enum_Process_Auto_Defroster()
-
-                 LEFT JOIN tmpSeparate AS _tmp ON _tmp.MovementId = MIContainer_Count_Out.MovementId
-                                              AND _tmp.ContainerId = MIContainer_Summ_Out.ContainerId
-                                              AND _tmp.MovementItemId = MIContainer_Summ_Out.MovementItemId
-                                              AND MIContainer_Count_Out.MovementDescId = zc_Movement_ProductionSeparate()
-
-          /*FROM MIContainer_Count_Out
-
-                 JOIN MIContainer_Count_In ON MIContainer_Count_In.Id             = MIContainer_Count_Out.ParentId
-                                          AND MIContainer_Count_In.MovementId     = MIContainer_Count_Out.MovementId
-                 JOIN Container AS Container_Summ_In ON Container_Summ_In.ParentId = MIContainer_Count_In.ContainerId
-
-                 JOIN MIContainer_Summ_In ON MIContainer_Summ_In.MovementItemId = MIContainer_Count_In.MovementItemId
-                                         AND MIContainer_Summ_In.ContainerId    = Container_Summ_In.Id
-                                         AND MIContainer_Summ_In.MovementId      = MIContainer_Count_Out.MovementId
-
-                 JOIN MIContainer_Summ_Out ON MIContainer_Summ_Out.ParentId       = MIContainer_Summ_In.Id
-                                          AND MIContainer_Summ_Out.MovementItemId = MIContainer_Count_Out.MovementItemId
-                                          AND MIContainer_Summ_Out.MovementId     = MIContainer_Count_Out.MovementId
-
-                 JOIN Container AS Container_Summ_Out ON Container_Summ_Out.Id       = MIContainer_Summ_Out.ContainerId
-                                                     AND Container_Summ_Out.ParentId = MIContainer_Count_Out.ContainerId
-
-
-                 LEFT JOIN MovementLinkObject AS MovementLinkObject_User
-                                              ON MovementLinkObject_User.MovementId = MIContainer_Count_Out.MovementId
-                                             AND MovementLinkObject_User.DescId     = zc_MovementLinkObject_User()
-                                             AND MovementLinkObject_User.ObjectId   = zc_Enum_Process_Auto_Defroster()
-
-                 LEFT JOIN tmpSeparate AS _tmp ON _tmp.MovementId = MIContainer_Count_Out.MovementId
-                                              AND _tmp.ContainerId = MIContainer_Summ_Out.ContainerId
-                                              AND _tmp.MovementItemId = MIContainer_Summ_Out.MovementItemId
-                                              AND MIContainer_Count_Out.MovementDescId = zc_Movement_ProductionSeparate()*/
-
-            WHERE MovementLinkObject_User.MovementId IS NULL
-            GROUP BY MIContainer_Summ_In.ContainerId
-                   , MIContainer_Summ_Out.ContainerId
-                   , MIContainer_Count_In.ContainerId
-                   , MIContainer_Count_Out.ContainerId
-                   , MIContainer_Count_Out.WhereObjectId_Analyzer
-                   , MIContainer_Summ_In.WhereObjectId_Analyzer
-                   -- , MIContainer_Count_Out.MovementDescId
+            SELECT tmpRes.MasterContainerId
+                 , tmpRes.ContainerId
+                 , tmpRes.MasterContainerId_Count
+                 , tmpRes.ContainerId_Count
+                 , SUM (tmpRes.OperCount) AS OperCount
+                 , tmpRes.isExternal
+                 , tmpRes.MovementDescId
+            FROM tmpRes
+            GROUP BY tmpRes.MasterContainerId
+                   , tmpRes.ContainerId
+                   , tmpRes.MasterContainerId_Count
+                   , tmpRes.ContainerId_Count
+                   , tmpRes.isExternal
+                   , tmpRes.MovementDescId
             ;
 
             -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!

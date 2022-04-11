@@ -63,13 +63,13 @@ type
     HeaderSaver: THeaderSaver;
     spGet: TdsdStoredProc;
     RefreshAddOn: TRefreshAddOn;
-    GridToExcel: TdsdGridToExcel;
+    actGridToExcel: TdsdGridToExcel;
     bbGridToExel: TdxBarButton;
     GuidesFiller: TGuidesFiller;
     actInsertUpdateMovement: TdsdExecStoredProc;
     bbInsertUpdateMovement: TdxBarButton;
-    SetErased: TdsdUpdateErased;
-    SetUnErased: TdsdUpdateErased;
+    actSetErased: TdsdUpdateErased;
+    actSetUnErased: TdsdUpdateErased;
     actShowErased: TBooleanStoredProcAction;
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;
@@ -79,19 +79,18 @@ type
     spUnErasedMIMaster: TdsdStoredProc;
     StatusGuides: TdsdGuides;
     spChangeStatus: TdsdStoredProc;
-    UnCompleteMovement: TChangeGuidesStatus;
-    CompleteMovement: TChangeGuidesStatus;
-    DeleteMovement: TChangeGuidesStatus;
+    actUnCompleteMovement: TChangeGuidesStatus;
+    actCompleteMovement: TChangeGuidesStatus;
+    actDeleteMovement: TChangeGuidesStatus;
     ceStatus: TcxButtonEdit;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
-    MovementItemProtocolOpenForm: TdsdOpenForm;
+    actMovementItemProtocolOpenForm: TdsdOpenForm;
     bbMovementItemProtocol: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     bbCalcAmountPartner: TdxBarControlContainerItem;
-    actGoodsKindChoice: TOpenChoiceForm;
     spInsertMaskMIMaster: TdsdStoredProc;
     actAddMask: TdsdExecStoredProc;
     bbAddMask: TdxBarButton;
@@ -102,9 +101,7 @@ type
     bbCompleteCost: TdxBarButton;
     bbactUnCompleteCost: TdxBarButton;
     bbactSetErasedCost: TdxBarButton;
-    actShowErasedCost: TBooleanStoredProcAction;
     bbShowErasedCost: TdxBarButton;
-    InsertRecordGoods: TInsertRecord;
     bbInsertRecordGoods: TdxBarButton;
     bbPrintSticker: TdxBarButton;
     bbPrintStickerTermo: TdxBarButton;
@@ -112,13 +109,10 @@ type
     actOpenFormInvoice: TdsdOpenForm;
     bbOpenFormInvoice: TdxBarButton;
     bbOpenFormService: TdxBarButton;
-    actUpdateClientDataCost: TdsdUpdateDataSet;
     actCompleteCost: TdsdChangeMovementStatus;
     actSetErasedCost: TdsdChangeMovementStatus;
     actUnCompleteCost: TdsdChangeMovementStatus;
-    InsertRecordCost: TInsertRecord;
-    CostJournalChoiceForm: TOpenChoiceForm;
-    MovementCostProtocolOpenForm: TdsdOpenForm;
+    actMovementCostProtocolOpenForm: TdsdOpenForm;
     cxLabel12: TcxLabel;
     edInsertDate: TcxDateEdit;
     cxLabel13: TcxLabel;
@@ -128,7 +122,7 @@ type
     ChildViewAddOn: TdsdDBViewAddOn;
     spSelectMIChild: TdsdStoredProc;
     spErasedMIchild: TdsdStoredProc;
-    SetErasedChild: TdsdUpdateErased;
+    actSetErasedChild: TdsdUpdateErased;
     bbSetErasedChild: TdxBarButton;
     GuidesFrom: TdsdGuides;
     cxPageControl: TcxPageControl;
@@ -178,7 +172,7 @@ type
     EngineNum_ch2: TcxGridDBColumn;
     EngineName_ch2: TcxGridDBColumn;
     spUnErasedMIchild: TdsdStoredProc;
-    SetUnErasedChild: TdsdUpdateErased;
+    actSetUnErasedChild: TdsdUpdateErased;
     bbUnErasedChild: TdxBarButton;
     actReport_Goods: TdsdOpenForm;
     actReport_Goods_child: TdsdOpenForm;
@@ -187,10 +181,7 @@ type
     AmountSecond: TcxGridDBColumn;
     actPrint2: TdsdPrintAction;
     bbPrint2: TdxBarButton;
-    actUpdateBarCodeDS: TdsdUpdateDataSet;
     spInsertUpdate_BarCode: TdsdStoredProc;
-    actUpdateBarCodeDS3: TdsdUpdateDataSet;
-    actUpdateBarCodeDS2: TdsdUpdateDataSet;
     Panel2: TPanel;
     cxLabel6: TcxLabel;
     edBarCode1: TcxTextEdit;
@@ -216,8 +207,8 @@ type
     macGoodsItem1: TMultiAction;
     macGoodsItem2: TMultiAction;
     macGoodsItem3: TMultiAction;
-    actInsertAction: TdsdInsertUpdateAction;
-    mactUpdateActionMovement: TMultiAction;
+    actAdd: TdsdInsertUpdateAction;
+    mactAdd: TMultiAction;
     bbUpdateActionMovement: TdxBarButton;
     spBarcode_null: TdsdStoredProc;
     actRefreshMI: TdsdDataSetRefresh;
@@ -227,6 +218,7 @@ type
     actGoodsItemGet1: TdsdExecStoredProc;
     actGoodsItemGet2: TdsdExecStoredProc;
     actGoodsItemGet3: TdsdExecStoredProc;
+    Ord: TcxGridDBColumn;
   private
   public
   end;

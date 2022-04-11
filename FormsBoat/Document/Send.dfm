@@ -99,16 +99,16 @@ object SendForm: TSendForm
       Top = 63
       Properties.Buttons = <
         item
-          Action = CompleteMovement
+          Action = actCompleteMovement
           Kind = bkGlyph
         end
         item
-          Action = UnCompleteMovement
+          Action = actUnCompleteMovement
           Default = True
           Kind = bkGlyph
         end
         item
-          Action = DeleteMovement
+          Action = actDeleteMovement
           Kind = bkGlyph
         end>
       Properties.Images = dmMain.ImageList
@@ -421,6 +421,17 @@ object SendForm: TSendForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object Ord: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'Ord'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object isOn: TcxGridDBColumn
             Caption = #1042#1082#1083'.'
             DataBinding.FieldName = 'isOn'
@@ -450,6 +461,7 @@ object SendForm: TSendForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = actGoodsChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -457,7 +469,6 @@ object SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = 'EAN'
-            Options.Editing = False
             Width = 106
           end
           object Article: TcxGridDBColumn
@@ -466,8 +477,8 @@ object SendForm: TSendForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = actGoodsChoiceForm
                 Default = True
-                Enabled = False
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
@@ -481,8 +492,8 @@ object SendForm: TSendForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = actGoodsChoiceForm
                 Default = True
-                Enabled = False
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
@@ -1205,15 +1216,15 @@ object SendForm: TSendForm
       Category = 0
     end
     object bbGridToExel: TdxBarButton
-      Action = GridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object bbErased: TdxBarButton
-      Action = SetErased
+      Action = actSetErased
       Category = 0
     end
     object bbUnErased: TdxBarButton
-      Action = SetUnErased
+      Action = actSetUnErased
       Category = 0
     end
     object bbMIContainer: TdxBarButton
@@ -1221,7 +1232,7 @@ object SendForm: TSendForm
       Category = 0
     end
     object bbMovementItemProtocol: TdxBarButton
-      Action = MovementItemProtocolOpenForm
+      Action = actMovementItemProtocolOpenForm
       Category = 0
     end
     object bbCalcAmountPartner: TdxBarControlContainerItem
@@ -1235,8 +1246,11 @@ object SendForm: TSendForm
       Category = 0
     end
     object bbInsertRecordCost: TdxBarButton
-      Action = InsertRecordCost
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
       Category = 0
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
+      Visible = ivAlways
+      ImageIndex = 0
     end
     object bbCompleteCost: TdxBarButton
       Action = actCompleteCost
@@ -1255,8 +1269,12 @@ object SendForm: TSendForm
       Category = 0
     end
     object bbInsertRecordGoods: TdxBarButton
-      Action = InsertRecordGoods
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       Category = 0
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Visible = ivAlways
+      ImageIndex = 0
+      ShortCut = 45
     end
     object bbPrintSticker: TdxBarButton
       Caption = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
@@ -1293,7 +1311,7 @@ object SendForm: TSendForm
       ImageIndex = 29
     end
     object bbSetErasedChild: TdxBarButton
-      Action = SetErasedChild
+      Action = actSetErasedChild
       Category = 0
     end
     object bbcInsert_MI_Send_Child: TdxBarButton
@@ -1309,7 +1327,7 @@ object SendForm: TSendForm
       Category = 0
     end
     object bbUnErasedChild: TdxBarButton
-      Action = SetUnErasedChild
+      Action = actSetUnErasedChild
       Category = 0
     end
     object bbReport_Goods: TdxBarButton
@@ -1325,9 +1343,8 @@ object SendForm: TSendForm
       Category = 0
     end
     object bbUpdateActionMovement: TdxBarButton
-      Action = mactUpdateActionMovement
+      Action = mactAdd
       Category = 0
-      ImageIndex = 0
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1362,28 +1379,6 @@ object SendForm: TSendForm
       Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 14
       ShortCut = 113
-    end
-    object actShowErasedCost: TBooleanStoredProcAction
-      Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
-      MoveParams = <>
-      StoredProc = spSelectMI
-      StoredProcList = <
-        item
-          StoredProc = spSelectMI
-        end
-        item
-        end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndex = 64
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndexTrue = 65
-      ImageIndexFalse = 64
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -1427,44 +1422,6 @@ object SendForm: TSendForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
-    end
-    object actUpdateBarCodeDS3: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end
-        item
-          StoredProc = spSelectMI
-        end>
-      Caption = 'actUpdateMasterDS'
-    end
-    object actUpdateBarCodeDS2: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate_BarCode
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate_BarCode
-        end
-        item
-          StoredProc = spSelectMI
-        end>
-      Caption = 'actUpdateMasterDS'
-    end
-    object actUpdateBarCodeDS: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end
-        item
-          StoredProc = spSelectMI
-        end>
-      Caption = 'actUpdateMasterDS'
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1633,7 +1590,7 @@ object SendForm: TSendForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object GridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -1642,7 +1599,7 @@ object SendForm: TSendForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object SetErasedChild: TdsdUpdateErased
+    object actSetErasedChild: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -1661,7 +1618,7 @@ object SendForm: TSendForm
       ErasedFieldName = 'isErased'
       DataSource = ChildDS
     end
-    object SetErased: TdsdUpdateErased
+    object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -1679,7 +1636,7 @@ object SendForm: TSendForm
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
-    object SetUnErasedChild: TdsdUpdateErased
+    object actSetUnErasedChild: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -1698,7 +1655,7 @@ object SendForm: TSendForm
       isSetErased = False
       DataSource = ChildDS
     end
-    object SetUnErased: TdsdUpdateErased
+    object actSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -1717,7 +1674,7 @@ object SendForm: TSendForm
       isSetErased = False
       DataSource = MasterDS
     end
-    object UnCompleteMovement: TChangeGuidesStatus
+    object actUnCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus
@@ -1735,7 +1692,7 @@ object SendForm: TSendForm
       Status = mtUncomplete
       Guides = StatusGuides
     end
-    object CompleteMovement: TChangeGuidesStatus
+    object actCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus
@@ -1753,7 +1710,7 @@ object SendForm: TSendForm
       Status = mtComplete
       Guides = StatusGuides
     end
-    object DeleteMovement: TChangeGuidesStatus
+    object actDeleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spChangeStatus
@@ -1792,7 +1749,7 @@ object SendForm: TSendForm
         end>
       isShowModal = False
     end
-    object MovementCostProtocolOpenForm: TdsdOpenForm
+    object actMovementCostProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -1819,7 +1776,7 @@ object SendForm: TSendForm
         end>
       isShowModal = False
     end
-    object MovementItemProtocolOpenForm: TdsdOpenForm
+    object actMovementItemProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -1849,33 +1806,6 @@ object SendForm: TSendForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
-    end
-    object actGoodsKindChoice: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actGoodsKindChoice'
-      FormName = 'TGoodsKind_ObjectForm'
-      FormNameParam.Value = 'TGoodsKind_ObjectForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
     end
     object actAddMask: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1928,19 +1858,6 @@ object SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object InsertRecordGoods: TInsertRecord
-      Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      Action = actGoodsChoiceForm
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-      ShortCut = 45
-      ImageIndex = 0
-    end
     object actOpenFormInvoice: TdsdOpenForm
       Category = 'OpenForm'
       MoveParams = <>
@@ -1966,68 +1883,6 @@ object SendForm: TSendForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
-    end
-    object CostJournalChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'CostJournalChoiceForm'
-      FormName = 'TCostJournalChoiceForm'
-      FormNameParam.Value = 'TCostJournalChoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvNumber_Full'
-          Value = Null
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'StatusCode'
-          Value = Null
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartnerName'
-          Value = Null
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InfoMoneyCode'
-          Value = Null
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InfoMoneyName'
-          Value = Null
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actUpdateClientDataCost: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end
-        item
-        end>
-      Caption = 'actUpdateClientDataCost'
     end
     object actCompleteCost: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -2061,17 +1916,6 @@ object SendForm: TSendForm
       Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
       ImageIndex = 11
       Status = mtUncomplete
-    end
-    object InsertRecordCost: TInsertRecord
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      Action = CostJournalChoiceForm
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
-      ImageIndex = 0
     end
     object macInsert_MI_Send: TMultiAction
       Category = 'DSDLib'
@@ -2507,27 +2351,26 @@ object SendForm: TSendForm
       DataSetRefresh = actRefreshMI
       IdFieldName = 'Id'
     end
-    object mactUpdateActionMovement: TMultiAction
+    object mactAdd: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actInsertAction
+          Action = actAdd
         end
         item
           Action = actRefresh
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
-      ImageIndex = 1
+      ImageIndex = 0
       ShortCut = 113
       WithoutNext = True
     end
-    object actInsertAction: TdsdInsertUpdateAction
+    object actAdd: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
-      ImageIndex = 1
       FormName = 'TSendItemEditForm'
       FormNameParam.Value = 'TSendItemEditForm'
       FormNameParam.DataType = ftString
