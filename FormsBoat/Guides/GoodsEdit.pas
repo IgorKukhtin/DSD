@@ -183,6 +183,10 @@ type
     OpenChoiceFormDocTag: TOpenChoiceForm;
     InsertRecordDoc: TInsertRecord;
     bb: TdxBarButton;
+    cxLabel288: TcxLabel;
+    ceFeet: TcxCurrencyEdit;
+    ceMetres: TcxCurrencyEdit;
+    cxLabel26: TcxLabel;
   private
     { Private declarations }
   public

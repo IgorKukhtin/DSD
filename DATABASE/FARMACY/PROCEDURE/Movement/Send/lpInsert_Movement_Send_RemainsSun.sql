@@ -105,6 +105,8 @@ $BODY$
    DECLARE vbGoodsId_PairSun Integer;
    DECLARE vbPrice_PairSun   TFloat;
    DECLARE vbisEliminateColdSUN Boolean;
+   DECLARE vbisNotSold100  Boolean;
+   DECLARE vbisNotSoldIn Boolean;
 
 BEGIN
      --
@@ -1130,7 +1132,7 @@ BEGIN
 
 
      -- 3.1. все остатки ОТПРАВИТЕЛЯ, СРОК + ...
-     INSERT INTO _tmpRemains_Partion_all (ContainerDescId, UnitId, ContainerId_Parent, ContainerId, GoodsId, Amount, PartionDateKindId, ExpirationDate, Amount_sun, Amount_notSold)
+     INSERT INTO _tmpRemains_Partion_all (ContainerDescId, UnitId, ContainerId_Parent, ContainerId, GoodsId, Amount, PartionDateKindId, ExpirationDate, Amount_sun, Amount_notSold, isNotSold100)
         WITH -- список для NotSold
              tmpContainer AS (SELECT Container.DescId           AS ContainerDescId
                                    , Container.Id               AS ContainerId
@@ -1506,6 +1508,7 @@ BEGIN
              , tmpRes_SUN.ExpirationDate
              , tmpRes_SUN.Amount AS Amount_sun
              , 0                 AS Amount_notSold
+             , COALESCE(tmpNotSold_all_all.ContainerId, 0) <> 0 AS isNotSold100
         FROM tmpRes_SUN
              -- если он есть в tmpNotSold, тогда распределяем только ВСЕ кол-во из tmpNotSold
              LEFT JOIN tmpNotSold ON tmpNotSold.UnitId = tmpRes_SUN.UnitId
@@ -1527,6 +1530,10 @@ BEGIN
                                      ON OB_Unit_SUN_in.ObjectId  = tmpRes_SUN.UnitId
                                     AND OB_Unit_SUN_in.DescId    = zc_ObjectBoolean_Unit_SUN_in()
                                     AND OB_Unit_SUN_in.ValueData = TRUE
+                                    
+             LEFT JOIN tmpNotSold_all_all ON tmpNotSold_all_all.ContainerId = tmpRes_SUN.ContainerId
+                                    
+                                    
 
         WHERE -- !!!
               tmpNotSold.GoodsId IS NULL
@@ -1550,6 +1557,7 @@ BEGIN
              , zc_DateEnd()      AS ExpirationDate
              , 0                 AS Amount_sun
              , tmpNotSold.Amount AS Amount_notSold
+             , COALESCE(tmpNotSold_all_all.ContainerId, 0) <> 0 AS isNotSold100
         FROM tmpNotSold
              -- !!!SUN - за 30 дней - если приходило, уходить уже не может!!!
              LEFT JOIN tmpSUN_Send ON tmpSUN_Send.UnitId_to = tmpNotSold.UnitId
@@ -1572,6 +1580,9 @@ BEGIN
                                      ON OB_Unit_SUN_in.ObjectId  = tmpNotSold.UnitId
                                     AND OB_Unit_SUN_in.DescId    = zc_ObjectBoolean_Unit_SUN_in()
                                     AND OB_Unit_SUN_in.ValueData = TRUE
+
+             LEFT JOIN tmpNotSold_all_all ON tmpNotSold_all_all.ContainerId = tmpNotSold.ContainerId
+
              -- если он есть в сроковых, тогда распределяем только сроковое кол-во
           -- LEFT JOIN tmpRes_SUN ON tmpRes_SUN.UnitId  = tmpNotSold.UnitId
           --                     AND tmpRes_SUN.GoodsId = tmpNotSold.GoodsId
@@ -1597,6 +1608,7 @@ BEGIN
                               , _tmpRemains_Partion_all.ExpirationDate
                               , SUM (_tmpRemains_Partion_all.Amount_sun)     AS Amount_sun
                               , SUM (_tmpRemains_Partion_all.Amount_notSold) AS Amount_notSold
+                              , SUM (CASE WHEN _tmpRemains_Partion_all.isNotSold100 = FALSE THEN 1 ELSE 0 END) = 0 AS isNotSold100
                          FROM _tmpRemains_Partion_all
                          GROUP BY _tmpRemains_Partion_all.ContainerDescId
                                 , _tmpRemains_Partion_all.UnitId
@@ -1625,6 +1637,7 @@ BEGIN
                                   , SUM (tmpRemains.Amount)         AS Amount
                                   , SUM (tmpRemains.Amount_sun)     AS Amount_sun
                                   , SUM (tmpRemains.Amount_notSold) AS Amount_notSold
+                                  , SUM (CASE WHEN tmpRemains.isNotSold100 = FALSE THEN 1 ELSE 0 END) = 0 AS isNotSold100
                              FROM tmpRemains
                              GROUP BY tmpRemains.ContainerDescId, tmpRemains.UnitId, tmpRemains.GoodsId
                             )
@@ -1735,7 +1748,7 @@ BEGIN
                                 AND OB_Goods_NOT.ValueData = TRUE
                              )
        -- Результат: все остатки у ОТПРАВИТЕЛЯ - SUN-1
-       INSERT INTO _tmpRemains_Partion (ContainerDescId, UnitId, GoodsId, MCSValue, Amount_sale, Amount, Amount_save, Amount_real, Amount_sun, Amount_notSold)
+       INSERT INTO _tmpRemains_Partion (ContainerDescId, UnitId, GoodsId, MCSValue, Amount_sale, Amount, Amount_save, Amount_real, Amount_sun, Amount_notSold, isNotSold100)
           SELECT tmp.ContainerDescId
                , tmp.UnitId
                , tmp.GoodsId
@@ -1801,6 +1814,7 @@ BEGIN
                         ) / COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
                        ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
                  AS Amount_notSold
+               , tmp.isNotSold100
 
           FROM tmpGoods_sum AS tmp
                -- автозаказ
@@ -2025,6 +2039,8 @@ BEGIN
              , COALESCE (_tmpGoods_SUN.KoeffSUN, 0)
                -- парный
              , _tmpGoods_SUN_PairSun.GoodsId_PairSun
+             
+             , _tmpRemains_Partion.isNotSold100
 
         FROM _tmpRemains_Partion
              -- начинаем с аптек, где расход может быть максимальным
@@ -2081,13 +2097,17 @@ BEGIN
      -- начало цикла по курсору1
      LOOP
          -- данные по курсору1
-         FETCH curPartion INTO vbUnitId_from, vbGoodsId, vbAmount, vbAmount_save, vbAmount_sun, vbKoeffSUN, vbGoodsId_PairSun;
+         FETCH curPartion INTO vbUnitId_from, vbGoodsId, vbAmount, vbAmount_save, vbAmount_sun, vbKoeffSUN, vbGoodsId_PairSun, vbisNotSold100;
          -- если данные закончились, тогда выход
          IF NOT FOUND THEN EXIT; END IF;
 
          -- курсор2. - Автозаказ МИНУС сколько уже распределили для vbGoodsId
          OPEN curResult FOR
-            SELECT _tmpRemains_calc.UnitId AS UnitId_to, _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) AS AmountResult, _tmpRemains_calc.Price, COALESCE (_tmpRemains_calc_PairSun.Price, _tmpRemains_calc.Price) AS Price_PairSun
+            SELECT _tmpRemains_calc.UnitId AS UnitId_to
+                 , _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) AS AmountResult
+                 , _tmpRemains_calc.Price
+                 , COALESCE (_tmpRemains_calc_PairSun.Price, _tmpRemains_calc.Price) AS Price_PairSun
+                 , COALESCE (OB_SUN_NotSoldIn.ValueData, FALSE)           AS isNotSoldIn
             FROM _tmpRemains_calc
                  -- сколько уже пришло после распределения-1
                  LEFT JOIN (SELECT _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId, SUM (_tmpResult_Partion.Amount) AS Amount FROM _tmpResult_Partion GROUP BY _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
@@ -2109,6 +2129,11 @@ BEGIN
                                                       ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_calc.UnitId
                                                      AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_calc.GoodsId
                  
+                 -- отключена Получать только товар "без продаж" для СУН-1
+                 LEFT JOIN ObjectBoolean AS OB_SUN_NotSoldIn
+                                         ON OB_SUN_NotSoldIn.ObjectId  = _tmpRemains_calc.UnitId
+                                        AND OB_SUN_NotSoldIn.DescId    = zc_ObjectBoolean_Unit_SUN_NotSoldIn()
+
             WHERE _tmpRemains_calc.GoodsId = vbGoodsId
               AND _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) > 0
               AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
@@ -2119,9 +2144,11 @@ BEGIN
          -- начало цикла по курсору2 - остаток сроковых - под него надо найти Автозаказ
          LOOP
              -- данные по Автозаказ
-             FETCH curResult INTO vbUnitId_to, vbAmountResult, vbPrice, vbPrice_PairSun;
+             FETCH curResult INTO vbUnitId_to, vbAmountResult, vbPrice, vbPrice_PairSun, vbisNotSoldIn;
              -- если данные закончились, или все кол-во найдено тогда выход
              IF NOT FOUND OR vbAmount = 0 THEN EXIT; END IF;
+
+             IF vbisNotSold100 = FALSE AND vbisNotSoldIn = TRUE THEN CONTINUE; END IF;
 
              -- если Автозаказ > Остаток
              IF vbAmountResult > vbAmount
@@ -2288,13 +2315,18 @@ BEGIN
      END LOOP; -- финиш цикла по курсору1
      CLOSE curPartion; -- закрыли курсор1
 
+     raise notice 'Value 01: %', (SELECT COUNT(*) FROM _tmpResult_Partion WHERE  _tmpResult_Partion.UnitId_to = 6741875 );
+
      -- 6.1.2. распределяем-2 остатки со сроками - по всем аптекам - здесь только !!!все что осталось!!!
      --
      -- курсор1 - все остатки, СРОК МИНУС сколько уже распределили
      OPEN curPartion_next FOR
-        SELECT _tmpRemains_Partion.UnitId AS UnitId_from, _tmpRemains_Partion.GoodsId, FLOOR(_tmpRemains_Partion.Amount -COALESCE (tmp.Amount, 0) - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0)) AS Amount
+        SELECT _tmpRemains_Partion.UnitId AS UnitId_from
+             , _tmpRemains_Partion.GoodsId
+             , FLOOR(_tmpRemains_Partion.Amount -COALESCE (tmp.Amount, 0) - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0)) AS Amount
              , _tmpRemains_Partion.Amount_sun
              , COALESCE (_tmpGoods_SUN.KoeffSUN, 0)
+             , _tmpRemains_Partion.isNotSold100
         FROM _tmpRemains_Partion
              -- сколько уже ушло после распределения - 1
              LEFT JOIN (SELECT _tmpResult_Partion.UnitId_from, _tmpResult_Partion.GoodsId, SUM (_tmpResult_Partion.Amount) AS Amount FROM _tmpResult_Partion GROUP BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.GoodsId
@@ -2331,13 +2363,16 @@ BEGIN
      -- начало цикла по курсору1
      LOOP
          -- данные по курсору1
-         FETCH curPartion_next INTO vbUnitId_from, vbGoodsId, vbAmount, vbAmount_sun, vbKoeffSUN;
+         FETCH curPartion_next INTO vbUnitId_from, vbGoodsId, vbAmount, vbAmount_sun, vbKoeffSUN, vbisNotSold100;
          -- если данные закончились, тогда выход
          IF NOT FOUND THEN EXIT; END IF;
 
          -- курсор2. - Автозаказ МИНУС сколько уже распределили для vbGoodsId
          OPEN curResult_next FOR
-            SELECT _tmpRemains_calc.UnitId AS UnitId_to, _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) AS AmountResult, _tmpRemains_calc.Price
+            SELECT _tmpRemains_calc.UnitId AS UnitId_to
+                 , _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) AS AmountResult
+                 , _tmpRemains_calc.Price
+                 , COALESCE (ObjectBoolean_SUN_NotSoldIn.ValueData, FALSE)  AS isNotSoldIn
             FROM _tmpRemains_calc
                  -- сколько уже пришло после распределения - 1+2
                  LEFT JOIN (SELECT _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId, SUM (_tmpResult_Partion.Amount + _tmpResult_Partion.Amount_next) AS Amount FROM _tmpResult_Partion GROUP BY _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
@@ -2380,6 +2415,9 @@ BEGIN
                                                       ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_calc.UnitId
                                                      AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_calc.GoodsId
 
+                 LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_NotSoldIn
+                                         ON ObjectBoolean_SUN_NotSoldIn.ObjectId = _tmpRemains_calc.UnitId
+                                        AND ObjectBoolean_SUN_NotSoldIn.DescId = zc_ObjectBoolean_Unit_SUN_NotSoldIn()
             WHERE _tmpRemains_calc.GoodsId = vbGoodsId
               AND _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) > 0
               -- !!!НЕ распределяем
@@ -2400,9 +2438,11 @@ BEGIN
          -- начало цикла по курсору2 - остаток сроковых - под него надо найти Автозаказ
          LOOP
              -- данные по Автозаказ
-             FETCH curResult_next INTO vbUnitId_to, vbAmountResult, vbPrice;
+             FETCH curResult_next INTO vbUnitId_to, vbAmountResult, vbPrice, vbisNotSoldIn;
              -- если данные закончились, или все кол-во найдено тогда выход
              IF NOT FOUND OR vbAmount = 0 THEN EXIT; END IF;
+             
+             IF vbisNotSold100 = FALSE AND vbisNotSoldIn = TRUE THEN CONTINUE; END IF;
 
              -- если Автозаказ > Остаток
              IF vbAmountResult > vbAmount
@@ -2557,6 +2597,7 @@ BEGIN
      END LOOP; -- финиш цикла по курсору1
      CLOSE curPartion_next; -- закрыли курсор1
 
+     raise notice 'Value 02: %', (SELECT COUNT(*) FROM _tmpResult_Partion WHERE  _tmpResult_Partion.UnitId_to = 6741875 );
 
      -- !!!Удаляем НЕ получившиеся пары!!!
 /*     DELETE FROM _tmpResult_Partion

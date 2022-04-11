@@ -90,6 +90,11 @@ type
     mactStartLoad_Uflex2: TMultiAction;
     bbStartLoad_Uflex1: TdxBarButton;
     bbStartLoad_Uflex2: TdxBarButton;
+    spGetImportSettingId_GoodsArticle: TdsdStoredProc;
+    actDoLoad_Uflex3: TExecuteImportSettingsAction;
+    mactStartLoad_Uflex3: TMultiAction;
+    actGetImportSettingId_Uflex3: TdsdExecStoredProc;
+    bbStartLoad_Uflex3: TdxBarButton;
   private
     { Private declarations }
   public

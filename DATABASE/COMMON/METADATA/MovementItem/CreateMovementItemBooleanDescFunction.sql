@@ -193,9 +193,14 @@ CREATE OR REPLACE FUNCTION zc_MIBoolean_SupplierFailures() RETURNS Integer AS $B
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_SupplierFailures', 'Отказ поставщика' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_SupplierFailures'); 
 
+CREATE OR REPLACE FUNCTION zc_MIBoolean_UsePriceOOC() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_UsePriceOOC'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_UsePriceOOC', 'Использовать цену из Реестра ООЦ' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_UsePriceOOC'); 
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.
+ 10.04.22                                                                       * zc_MIBoolean_UsePriceOOC
  20.02.22                                                                       * zc_MIBoolean_SupplierFailures
  24.11.21                                                                       * zc_MIBoolean_JuridicalTwo
  05.11.21                                                                       * zc_MovementBoolean_Conduct

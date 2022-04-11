@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
-  ClientHeight = 651
+  ClientHeight = 669
   ClientWidth = 863
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 75
-    Top = 610
+    Left = 72
+    Top = 636
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 211
-    Top = 610
+    Left = 208
+    Top = 636
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -73,12 +73,12 @@
   end
   object edRefer: TcxLabel
     Left = 184
-    Top = 468
+    Top = 500
     Caption = #1056#1077#1082#1086#1084#1077#1085#1076'. '#1082#1086#1083'. '#1079#1072#1082#1091#1087#1082#1080
   end
   object ceRefer: TcxCurrencyEdit
     Left = 182
-    Top = 486
+    Top = 518
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 9
@@ -264,7 +264,7 @@
   end
   object ceMin: TcxCurrencyEdit
     Left = 40
-    Top = 486
+    Top = 518
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.UseDisplayFormatWhenEditing = True
@@ -273,7 +273,7 @@
   end
   object cxLabel14: TcxLabel
     Left = 40
-    Top = 469
+    Top = 501
     Caption = #1052#1080#1085'. '#1082#1086#1083'. '#1085#1072' '#1089#1082#1083#1072#1076#1077
   end
   object cxLabel17: TcxLabel
@@ -352,13 +352,13 @@
   end
   object cxLabel2: TcxLabel
     Left = 40
-    Top = 512
+    Top = 544
     Hint = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057' '#1079#1072#1082#1091#1087'.'
     Caption = 'Netto EK'
   end
   object edEKPrice: TcxCurrencyEdit
     Left = 40
-    Top = 529
+    Top = 558
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.UseDisplayFormatWhenEditing = True
@@ -367,7 +367,7 @@
   end
   object edEmpfPrice: TcxCurrencyEdit
     Left = 182
-    Top = 529
+    Top = 558
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 47
@@ -375,18 +375,18 @@
   end
   object cxLabel15: TcxLabel
     Left = 184
-    Top = 511
+    Top = 543
     Hint = #1062#1077#1085#1072' '#1088#1077#1082#1086#1084#1077#1085#1076#1091#1077#1084#1072#1103' '#1073#1077#1079' '#1053#1044#1057
     Caption = 'Empf. VK'
   end
   object cxLabel16: TcxLabel
     Left = 182
-    Top = 556
+    Top = 582
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
     Left = 182
-    Top = 576
+    Top = 599
     TabOrder = 50
     Width = 137
   end
@@ -413,15 +413,17 @@
     Left = 344
     Top = 0
     Width = 519
-    Height = 651
+    Height = 669
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 53
+    ExplicitTop = -1
+    ExplicitHeight = 685
     object cxDBVerticalGrid: TcxDBVerticalGrid
       Left = 0
       Top = 327
       Width = 519
-      Height = 142
+      Height = 160
       Align = alClient
       Images = dmMain.ImageList
       LayoutStyle = lsMultiRecordView
@@ -437,6 +439,7 @@
       Styles.Header = dmMain.cxHeaderStyle
       TabOrder = 0
       DataController.DataSource = PhotoDS
+      ExplicitHeight = 142
       Version = 1
       object colFileName: TcxDBEditorRow
         Options.CanAutoHeight = False
@@ -475,13 +478,14 @@
     end
     object PanelPhoto: TPanel
       Left = 0
-      Top = 469
+      Top = 487
       Width = 519
       Height = 182
       Align = alBottom
       Caption = 'PanelPhoto'
       ShowCaption = False
       TabOrder = 3
+      ExplicitTop = 469
       object Image3: TcxImage
         Left = 341
         Top = 1
@@ -634,12 +638,12 @@
   end
   object cxLabel24: TcxLabel
     Left = 40
-    Top = 556
+    Top = 582
     Caption = 'Engine'
   end
   object edEngine: TcxButtonEdit
     Left = 40
-    Top = 576
+    Top = 599
     Properties.Buttons = <
       item
         Default = True
@@ -648,6 +652,33 @@
     Properties.ReadOnly = True
     TabOrder = 59
     Width = 135
+  end
+  object cxLabel288: TcxLabel
+    Left = 40
+    Top = 460
+    Caption = 'Feet'
+  end
+  object ceFeet: TcxCurrencyEdit
+    Left = 40
+    Top = 477
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.UseDisplayFormatWhenEditing = True
+    TabOrder = 61
+    Width = 135
+  end
+  object ceMetres: TcxCurrencyEdit
+    Left = 182
+    Top = 477
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 62
+    Width = 137
+  end
+  object cxLabel26: TcxLabel
+    Left = 184
+    Top = 459
+    Caption = 'Metres'
   end
   object ActionList: TActionList
     Left = 248
@@ -835,6 +866,22 @@
         Value = Null
         Component = ceisArc
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFeet'
+        Value = Null
+        Component = ceFeet
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMetres'
+        Value = Null
+        Component = ceMetres
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1262,6 +1309,20 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Feet'
+        Value = Null
+        Component = ceFeet
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Metres'
+        Value = Null
+        Component = ceMetres
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 8
@@ -1319,7 +1380,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 8
-    Top = 258
+    Top = 306
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
@@ -1360,8 +1421,8 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 185
-    Top = 539
+    Left = 233
+    Top = 562
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 16
@@ -1576,7 +1637,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 137
-    Top = 496
+    Top = 528
   end
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'
@@ -2270,7 +2331,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 86
-    Top = 554
+    Top = 580
   end
   object dsdDBViewAddOnDoc: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

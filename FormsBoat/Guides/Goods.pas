@@ -117,6 +117,9 @@ type
     InvNumber_pl: TcxGridDBColumn;
     Comment_pl: TcxGridDBColumn;
     myCount_pl: TcxGridDBColumn;
+    GoodsArticle: TcxGridDBColumn;
+    Metres: TcxGridDBColumn;
+    Feet: TcxGridDBColumn;
   private
     { Private declarations }
   public

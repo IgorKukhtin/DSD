@@ -103,6 +103,16 @@ object GoodsForm: TGoodsForm
         Options.Editing = False
         Width = 80
       end
+      object GoodsArticle: TcxGridDBColumn
+        Caption = 'Goods Article'
+        DataBinding.FieldName = 'GoodsArticle'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1040#1088#1090#1080#1082#1091#1083' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+        Options.Editing = False
+        Width = 80
+      end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
@@ -137,6 +147,22 @@ object GoodsForm: TGoodsForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 55
+      end
+      object Metres: TcxGridDBColumn
+        DataBinding.FieldName = 'Metres'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object Feet: TcxGridDBColumn
+        DataBinding.FieldName = 'Feet'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 70
       end
       object EngineName: TcxGridDBColumn
         Caption = 'Engine'

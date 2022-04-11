@@ -9,11 +9,15 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar,T
                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                   , TVarChar);
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar
                                                   , Boolean, TFloat, TFloat, TFloat, TFloat
                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
-                                                  , TVarChar);
+                                                  , TVarChar);*/
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar
+                                                  , Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                  , TVarChar);
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                     Integer   , -- ключ объекта <Товар>
     IN inCode                   Integer   , -- Код объекта <Товар>
@@ -26,6 +30,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inFeeNumber              TVarChar,
     IN inComment                TVarChar,
     IN inisArc                  Boolean,
+    IN inFeet                   TFloat,
+    IN inMetres                 TFloat,   
     IN inAmountMin              TFloat,
     IN inAmountRefer            TFloat,
     IN inEKPrice                TFloat,
@@ -151,6 +157,11 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_EmpfPrice(), ioId, inEmpfPrice);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Feet(), ioId, inFeet);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Metres(), ioId, inMetres);
+
 
    -- сохранили связь с <Группой товара>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroup(), ioId, inGoodsGroupId);
@@ -207,6 +218,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.04.22         *
  11.11.20         *
 */
 
