@@ -122,7 +122,7 @@ BEGIN
          , tmpContract_full AS (SELECT View_Contract.*
                                 FROM Object_Contract_View AS View_Contract
                                 WHERE (View_Contract.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
-                                and (View_Contract.ContractId IN (603080, 603073) OR vbUserId <> 5)
+                               -- and (View_Contract.ContractId IN (603080, 603073) OR vbUserId <> 5)
                                 )
          , tmpContract_all AS (SELECT *
                                FROM tmpContract_full
@@ -225,6 +225,10 @@ BEGIN
                                   LEFT JOIN ObjectLink AS ObjectLink_ContractPartner_Contract
                                                        ON ObjectLink_ContractPartner_Contract.ChildObjectId = tmpContractCondition.ContractId
                                                       AND ObjectLink_ContractPartner_Contract.DescId = zc_ObjectLink_ContractPartner_Contract()
+                                                      -- âðåìåííî?
+                                                      AND (tmpContract_full.ContractId <> 887538 -- (8556) 402Ð Ñ²ËÜÏÎ-ÔÓÄ ÒÎÂ
+                                                        OR inPaidKindID = zc_Enum_PaidKind_SecondForm()
+                                                          )
 
                                   LEFT JOIN ObjectLink AS ObjectLink_ContractPartner_Partner
                                                        ON ObjectLink_ContractPartner_Partner.ObjectId = ObjectLink_ContractPartner_Contract.ObjectId

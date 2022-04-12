@@ -87,7 +87,11 @@ BEGIN
            -- !!!замена!!!
            IF vbPrice_check > 0 THEN inPrice:= vbPrice_check; END IF;
 
-       ELSEIF COALESCE (inPrice, 0) <> COALESCE (vbPrice_check, 0) AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View AS RoleAccessKeyView WHERE RoleAccessKeyView.UserId = inUserId AND RoleAccessKeyView.AccessKeyId = zc_Enum_Process_Update_MI_OperPrice())
+       ELSEIF COALESCE (inPrice, 0) <> COALESCE (vbPrice_check, 0)
+          -- 
+          AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View AS RoleAccessKeyView WHERE RoleAccessKeyView.UserId = inUserId AND RoleAccessKeyView.AccessKeyId = zc_Enum_Process_Update_MI_OperPrice())
+          -- Проведение документов - нет проверки по филиалу
+          AND NOT EXISTS  (SELECT 1 FROM Object_Role_Process_View WHERE Object_Role_Process_View.ProcessId = zc_Enum_Process_UpdateMovement_Branch() AND Object_Role_Process_View.UserId = inUserId)
        THEN
            RAISE EXCEPTION 'Ошибка.У пользователя <%> нет прав ручного регулирования цены <%>.%Для <%>%Можно ввести цену <%> из прайса <%>.'
                          , lfGet_Object_ValueData_sh (inUserId)
