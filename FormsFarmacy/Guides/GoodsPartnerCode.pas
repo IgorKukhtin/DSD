@@ -130,6 +130,7 @@ type
     dxBarButton1: TdxBarButton;
     PromoBonus: TcxGridDBColumn;
     PromoBonusName: TcxGridDBColumn;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public

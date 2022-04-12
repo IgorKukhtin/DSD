@@ -22,7 +22,7 @@ object Report_PaperRecipeSPForm: TReport_PaperRecipeSPForm
     Left = 0
     Top = 0
     Width = 1086
-    Height = 31
+    Height = 55
     Align = alTop
     TabOrder = 0
     object deStart: TcxDateEdit
@@ -53,14 +53,70 @@ object Report_PaperRecipeSPForm: TReport_PaperRecipeSPForm
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
+    object edDateInvoice: TcxDateEdit
+      Left = 654
+      Top = 29
+      EditValue = 42736d
+      Properties.ShowTime = False
+      TabOrder = 4
+      Width = 79
+    end
+    object edInvoice: TcxTextEdit
+      Left = 550
+      Top = 29
+      TabOrder = 5
+      Text = '0'
+      Width = 79
+    end
+    object cxLabel8: TcxLabel
+      Left = 496
+      Top = 30
+      Caption = #1057#1095#1077#1090' '#8470
+    end
+    object edJuridical: TcxButtonEdit
+      Left = 101
+      Top = 29
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 230
+    end
+    object cxLabel4: TcxLabel
+      Left = 4
+      Top = 30
+      Caption = #1070#1088'. '#1083#1080#1094#1086' ('#1085#1072#1096#1077'):'
+    end
+    object edJuridicalMedic: TcxButtonEdit
+      Left = 550
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 9
+      Width = 183
+    end
+    object cxLabel6: TcxLabel
+      Left = 410
+      Top = 6
+      Caption = #1070#1088'.'#1083#1080#1094#1086' '#1054#1047' ('#1087#1083#1072#1090#1077#1083#1100#1096#1080#1082'):'
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 57
+    Top = 81
     Width = 1086
-    Height = 383
+    Height = 359
     Align = alClient
     TabOrder = 5
+    ExplicitTop = 57
+    ExplicitHeight = 383
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -119,12 +175,12 @@ object Report_PaperRecipeSPForm: TReport_PaperRecipeSPForm
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
           Position = spFooter
-          Column = SummsSP
+          Column = SummSP
         end
         item
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
-          Column = SummsSP
+          Column = SummSP
         end
         item
           Format = ',0.00;-,0.00; ;'
@@ -197,7 +253,7 @@ object Report_PaperRecipeSPForm: TReport_PaperRecipeSPForm
         item
           Format = ',0.00;-,0.00; ;'
           Kind = skSum
-          Column = SummsSP
+          Column = SummSP
         end
         item
           Format = ',0.00;-,0.00; ;'
@@ -255,6 +311,13 @@ object Report_PaperRecipeSPForm: TReport_PaperRecipeSPForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 104
+      end
+      object InvNumber_Invoice: TcxGridDBColumn
+        Caption = #8470' '#1057#1095#1077#1090#1072' ('#1057#1055')'
+        DataBinding.FieldName = 'InvNumber_Invoice'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 138
       end
       object BrandSPName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072' '#1085#1072#1079#1074#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091
@@ -318,9 +381,9 @@ object Report_PaperRecipeSPForm: TReport_PaperRecipeSPForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object SummsSP: TcxGridDBColumn
+      object SummSP: TcxGridDBColumn
         Caption = #1057#1091#1084#1072' '#1074#1110#1076#1096#1082#1086#1076#1091#1074#1072#1085#1085#1103' '#1074#1110#1076#1087#1086#1074#1110#1076#1085#1086' '#1076#1086' '#1056#1077#1108#1089#1090#1088#1091
-        DataBinding.FieldName = 'SummsSP'
+        DataBinding.FieldName = 'SummSP'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
@@ -338,10 +401,156 @@ object Report_PaperRecipeSPForm: TReport_PaperRecipeSPForm
         Options.Editing = False
         Width = 76
       end
+      object NumLine: TcxGridDBColumn
+        DataBinding.FieldName = 'NumLine'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+      end
+      object HospitalName: TcxGridDBColumn
+        DataBinding.FieldName = 'HospitalName'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+      end
+      object isPrintLast: TcxGridDBColumn
+        DataBinding.FieldName = 'isPrintLast'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+      end
+      object IntenalSPName: TcxGridDBColumn
+        DataBinding.FieldName = 'IntenalSPName'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+      end
+      object SummaSP: TcxGridDBColumn
+        DataBinding.FieldName = 'SummaSP'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+      end
+      object JuridicalFullName: TcxGridDBColumn
+        DataBinding.FieldName = 'JuridicalFullName'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 50
+      end
+      object JuridicalAddress: TcxGridDBColumn
+        DataBinding.FieldName = 'JuridicalAddress'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 50
+      end
+      object OKPO: TcxGridDBColumn
+        DataBinding.FieldName = 'OKPO'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 50
+      end
+      object MainName: TcxGridDBColumn
+        DataBinding.FieldName = 'MainName'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 50
+      end
+      object MainName_Cut: TcxGridDBColumn
+        DataBinding.FieldName = 'MainName_Cut'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 50
+      end
+      object AccounterName: TcxGridDBColumn
+        DataBinding.FieldName = 'AccounterName'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 50
+      end
+      object INN: TcxGridDBColumn
+        DataBinding.FieldName = 'INN'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 50
+      end
+      object NumberVAT: TcxGridDBColumn
+        DataBinding.FieldName = 'NumberVAT'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 50
+      end
+      object BankAccount: TcxGridDBColumn
+        DataBinding.FieldName = 'BankAccount'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 50
+      end
+      object Phone: TcxGridDBColumn
+        DataBinding.FieldName = 'Phone'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 50
+      end
+      object BankName: TcxGridDBColumn
+        DataBinding.FieldName = 'BankName'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 50
+      end
+      object MFO: TcxGridDBColumn
+        DataBinding.FieldName = 'MFO'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 50
+      end
+      object PartnerMedical_MainName: TcxGridDBColumn
+        DataBinding.FieldName = 'PartnerMedical_MainName'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+      end
+      object PartnerMedical_FullName: TcxGridDBColumn
+        DataBinding.FieldName = 'PartnerMedical_FullName'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+      end
+      object Department_FullName: TcxGridDBColumn
+        DataBinding.FieldName = 'Department_FullName'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+      end
+      object Department_MainName: TcxGridDBColumn
+        DataBinding.FieldName = 'Department_MainName'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
+  end
+  object cbisInsert: TcxCheckBox
+    Left = 200
+    Top = 93
+    Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1089#1095#1077#1090
+    Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1089#1095#1077#1090
+    TabOrder = 6
+    Width = 108
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -450,7 +659,15 @@ object Report_PaperRecipeSPForm: TReport_PaperRecipeSPForm
         end
         item
           Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
           ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
@@ -545,6 +762,17 @@ object Report_PaperRecipeSPForm: TReport_PaperRecipeSPForm
     end
     object bbUpdate: TdxBarButton
       Action = actUpdate
+      Category = 0
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cbisInsert
+    end
+    object dxBarButton1: TdxBarButton
+      Action = macPrintInvoice
       Category = 0
     end
   end
@@ -645,6 +873,73 @@ object Report_PaperRecipeSPForm: TReport_PaperRecipeSPForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actPrintDepartment: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072' ('#1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072' ('#1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090')'
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'JuridicalFullName;UnitName;NumLine'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 43466d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43466d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDepartment'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actSaveMovement: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSavePrintMovement
+      StoredProcList = <
+        item
+          StoredProc = spSavePrintMovement
+        end>
+      Caption = 'actSPSavePrintState'
+    end
+    object macPrintInvoice: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSaveMovement
+        end
+        item
+          Action = actPrintDepartment
+        end>
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1089#1095#1077#1090' '#1053#1057#1047#1059
+      Hint = #1057#1086#1079#1076#1072#1090#1100' '#1089#1095#1077#1090' '#1053#1057#1047#1059
+      ImageIndex = 15
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpReport_PaperRecipeSP'
@@ -669,6 +964,14 @@ object Report_PaperRecipeSPForm: TReport_PaperRecipeSPForm
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 64
@@ -691,6 +994,9 @@ object Report_PaperRecipeSPForm: TReport_PaperRecipeSPForm
     ComponentList = <
       item
         Component = PeriodChoice
+      end
+      item
+        Component = GuidesJuridical
       end>
     Left = 488
     Top = 48
@@ -896,5 +1202,127 @@ object Report_PaperRecipeSPForm: TReport_PaperRecipeSPForm
     PropertiesCellList = <>
     Left = 392
     Top = 304
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridicalCorporateForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridicalCorporateForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 208
+    Top = 8
+  end
+  object GuidesJuridicalMedic: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalMedic
+    FormNameParam.Value = 'TJuridicalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridicalForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridicalMedic
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridicalMedic
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 616
+  end
+  object spSavePrintMovement: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_Invoice_PaperRecipeSP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42370d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42370d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalMedicId'
+        Value = ''
+        Component = GuidesJuridicalMedic
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateInvoice'
+        Value = 42736d
+        Component = edDateInvoice
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvoice'
+        Value = '0'
+        Component = edInvoice
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisInsert'
+        Value = False
+        Component = cbisInsert
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 512
+    Top = 216
   end
 end

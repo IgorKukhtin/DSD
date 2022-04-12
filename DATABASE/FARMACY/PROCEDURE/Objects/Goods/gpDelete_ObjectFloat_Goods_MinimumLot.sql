@@ -10,7 +10,12 @@ CREATE OR REPLACE FUNCTION gpDelete_ObjectFloat_Goods_MinimumLot(
 )
 RETURNS VOID AS
 $BODY$
+   DECLARE vbUserId Integer;
+   DECLARE text_var1 text;
 BEGIN
+    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
+    vbUserId := inSession;
+
     IF COALESCE(inObjectId,0) = 0
     THEN
         RAISE EXCEPTION 'Ошибка. Сначала выберите поставщика';
@@ -34,6 +39,22 @@ BEGIN
                          AND ObjectLink_Goods_Object.ChildObjectId = inObjectId
                          AND COALESCE(ObjectLink_Goods_Area.ChildObjectId, zc_Area_Basis()) = inAreaId
                       );
+
+      -- Сохранили в плоскую таблицй
+    BEGIN
+      UPDATE Object_Goods_Juridical SET MinimumLot = NULL
+                                      , UserUpdateId = vbUserId
+                                      , DateUpdate   = CURRENT_TIMESTAMP
+                                      , UserUpdateMinimumLotId = vbUserId
+                                      , DateUpdateMinimumLot   = CURRENT_TIMESTAMP
+      WHERE Object_Goods_Juridical.JuridicalId = inObjectId
+        AND COALESCE(Object_Goods_Juridical.MinimumLot, 0) <> 0
+        AND COALESCE(Object_Goods_Juridical.AreaId, zc_Area_Basis()) <> inAreaId;  
+    EXCEPTION
+       WHEN others THEN 
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+         PERFORM lpAddObject_Goods_Temp_Error('gpDelete_ObjectFloat_Goods_MinimumLot', text_var1::TVarChar, vbUserId);
+    END;
 END;
 $BODY$
 

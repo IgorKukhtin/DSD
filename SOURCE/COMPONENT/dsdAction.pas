@@ -5998,6 +5998,7 @@ function TdsdDataToJsonAction.LocalExecute: Boolean;
         View.DataController.FilteredRecordCount) do
       begin
         Start;
+        View.BeginUpdate;
         try
           for i := 0 to View.DataController.FilteredRecordCount - 1 do
           begin
@@ -6028,6 +6029,7 @@ function TdsdDataToJsonAction.LocalExecute: Boolean;
             Application.ProcessMessages;
           end;
         finally
+          View.EndUpdate;
           Finish;
         end;
       end;
@@ -6045,6 +6047,7 @@ function TdsdDataToJsonAction.LocalExecute: Boolean;
             DataSource.DataSet.RecordCount) do
           begin
             Start;
+            DataSource.DataSet.DisableControls;
             try
               while not DataSource.DataSet.Eof do
               begin
@@ -6074,6 +6077,7 @@ function TdsdDataToJsonAction.LocalExecute: Boolean;
                 DataSource.DataSet.Next
               end;
             finally
+              DataSource.DataSet.EnableControls;
               Finish;
             end;
           end;

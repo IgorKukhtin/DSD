@@ -1,29 +1,29 @@
 inherited Report_SaleSPForm: TReport_SaleSPForm
   Caption = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303'
   ClientHeight = 500
-  ClientWidth = 1256
+  ClientWidth = 1331
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1272
+  ExplicitWidth = 1347
   ExplicitHeight = 539
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 91
-    Width = 1256
+    Width = 1331
     Height = 409
     TabOrder = 3
     ExplicitTop = 91
-    ExplicitWidth = 1053
+    ExplicitWidth = 1331
     ExplicitHeight = 409
     ClientRectBottom = 409
-    ClientRectRight = 1256
+    ClientRectRight = 1331
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1053
+      ExplicitWidth = 1331
       ExplicitHeight = 409
       inherited cxGrid: TcxGrid
-        Width = 1256
+        Width = 1331
         Height = 409
-        ExplicitWidth = 1053
+        ExplicitWidth = 1331
         ExplicitHeight = 409
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -900,9 +900,9 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
     end
   end
   inherited Panel: TPanel
-    Width = 1256
+    Width = 1331
     Height = 65
-    ExplicitWidth = 1053
+    ExplicitWidth = 1331
     ExplicitHeight = 65
     inherited deStart: TcxDateEdit
       Left = 23
@@ -1040,7 +1040,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       StyleDisabled.TextColor = clWindowText
       TabOrder = 17
       Text = #1053#1077#1090' '#1094#1077#1085#1099' '#1089' '#1088#1077#1077#1089#1090#1088#1072
-      Width = 116
+      Width = 164
     end
     object cxTextEdit1: TcxTextEdit
       Left = 1005
@@ -1050,11 +1050,11 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       StyleDisabled.Color = 15453831
       StyleDisabled.TextColor = clWindowText
       TabOrder = 18
-      Text = #1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086
-      Width = 116
+      Text = #1055#1086#1076#1086#1075#1085#1072#1085#1072' '#1088#1086#1079#1085'.'#1094#1077#1085' '#1087#1086#1076' '#1056#1054#1054#1062
+      Width = 164
     end
     object cxTextEdit2: TcxTextEdit
-      Left = 1127
+      Left = 1191
       Top = 32
       Enabled = False
       Properties.ReadOnly = False
@@ -1065,7 +1065,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       Width = 116
     end
     object cxTextEdit3: TcxTextEdit
-      Left = 1127
+      Left = 1191
       Top = 5
       Enabled = False
       Properties.ReadOnly = False
@@ -1400,8 +1400,8 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       MoveParams = <>
       BeforeAction = actGetNDS
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090' - '#1092#1072#1082#1090#1091#1088#1072' '#1052#1062' 8,9'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090' - '#1092#1072#1082#1090#1091#1088#1072' '#1052#1062' 8,9'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090' - '#1092#1072#1082#1090#1091#1088#1072' '#1052#1062' 8, 9'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090' - '#1092#1072#1082#1090#1091#1088#1072' '#1052#1062' 8, 9'
       ImageIndex = 17
       DataSets = <
         item
@@ -1483,8 +1483,8 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       MoveParams = <>
       BeforeAction = actGetNDS
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1052#1062' 8,9'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1052#1062' 8,9'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1052#1062' 8, 9'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1052#1062' 8, 9'
       ImageIndex = 16
       DataSets = <
         item
@@ -1565,8 +1565,8 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       MoveParams = <>
       BeforeAction = actGetNDS
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1088#1077#1077#1089#1090#1088#1072' '#1052#1062' 5,8,11'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1088#1077#1077#1089#1090#1088#1072' '#1052#1062' 5,8,11'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1088#1077#1077#1089#1090#1088#1072' '#1052#1062' 5, 8'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1088#1077#1077#1089#1090#1088#1072' '#1052#1062' 5, 8'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -1763,9 +1763,10 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         item
           StoredProc = spUpdate_MI_CalculationSaleSP
         end>
-      Caption = #1055#1077#1088#1077#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1089#1091#1084#1084' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+      Caption = #1055#1086#1076#1075#1086#1085#1082#1072' '#1088#1086#1079#1085'.'#1094#1077#1085' '#1087#1086#1076' '#1056#1054#1054#1062
+      Hint = #1055#1086#1076#1075#1086#1085#1082#1072' '#1088#1086#1079#1085'.'#1094#1077#1085' '#1087#1086#1076' '#1056#1054#1054#1062
       ImageIndex = 10
-      QuestionBeforeExecute = #1055#1077#1088#1077#1088#1072#1089#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1089#1091#1084#1084' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102'?'
+      QuestionBeforeExecute = #1055#1086#1076#1086#1075#1085#1072#1090#1100' '#1088#1086#1079#1085'.'#1094#1077#1085' '#1087#1086#1076' '#1056#1054#1054#1062'?'
       InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086'.'
     end
     object actDataToJson: TdsdDataToJsonAction
@@ -1816,8 +1817,8 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       MoveParams = <>
       BeforeAction = actGetNDS
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1088#1077#1077#1089#1090#1088#1072' '#1052#1062'11'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1088#1077#1077#1089#1090#1088#1072' '#1052#1062'11'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1088#1077#1077#1089#1090#1088#1072' '#1052#1062' 11, 4'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1088#1077#1077#1089#1090#1088#1072' '#1052#1062' 11, 4'
       ImageIndex = 19
       DataSets = <
         item

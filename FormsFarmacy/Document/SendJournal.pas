@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  dxBarBuiltInMenu, cxNavigator;
+  dxBarBuiltInMenu, cxNavigator, dsdExportToXLSAction;
 
 type
   TSendJournalForm = class(TAncestorJournalForm)
@@ -116,6 +116,13 @@ type
     actUpdate_AmountStorage: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
     mactUpdate_AmountStorage: TMultiAction;
+    actDataToJson: TdsdDataToJsonAction;
+    actDataForTTNToXLS: TdsdExportToXLS;
+    actExecDataForTTN: TdsdExecStoredProc;
+    mastDataForTTN: TMultiAction;
+    bbDataForTTN: TdxBarButton;
+    DataForXLSCDS: TClientDataSet;
+    spSelect_DataForTTN: TdsdStoredProc;
   private
     { Private declarations }
   public

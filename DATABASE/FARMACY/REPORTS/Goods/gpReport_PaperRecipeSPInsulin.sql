@@ -1,19 +1,49 @@
 -- Function: gpReport_PaperRecipeSPInsulin()
 
-DROP FUNCTION IF EXISTS gpReport_PaperRecipeSPInsulin (TDateTime, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_PaperRecipeSPInsulin (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_PaperRecipeSPInsulin (TDateTime, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_PaperRecipeSPInsulin(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
+    IN inJuridicalId   Integer ,   -- ёр. лицо наше
     IN inSession       TVarChar    -- сесси€ пользовател€
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
-             , UnitCode Integer, UnitName TVarChar, JuridicalCode Integer, JuridicalName TVarChar
+             , UnitCode Integer, UnitName TVarChar
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , BrandSPName TVarChar, MakerSP TVarChar, KindOutSPName TVarChar, Pack TVarChar, CountSP TFloat, PriceSP TFloat
              , CountSPMin TFloat, PriceSPMin TFloat
              , Price TFloat, Amount TFloat, Summa TFloat
-             , SummsSP TFloat, SummChangePercent TFloat
+             , SummSP TFloat, SummChangePercent TFloat
+             , InvNumber_Invoice      TVarChar
+             , InvNumber_Invoice_Full TVarChar
+             , OperDate_Invoice       TDateTime
+
+             , NumLine        Integer
+             , HospitalName TVarChar
+             , isPrintLast Boolean
+             , IntenalSPName TVarChar
+             , SummaSP TFloat
+             
+             , JuridicalFullName  TVarChar
+             , JuridicalAddress   TVarChar
+             , OKPO               TVarChar
+             , MainName           TVarChar
+             , MainName_Cut       TVarChar
+             , AccounterName      TVarChar
+             , INN                TVarChar
+             , NumberVAT          TVarChar
+             , BankAccount        TVarChar
+             , Phone              TVarChar
+             , BankName           TVarChar
+             , MFO                TVarChar
+
+             , PartnerMedical_MainName         TVarChar
+             , PartnerMedical_FullName         TVarChar
+             , Department_FullName             TVarChar
+             , Department_MainName             TVarChar
               )
 
 AS
@@ -127,6 +157,7 @@ BEGIN
                              , Object_SPKind.ValueData                            AS SPKindName
                              , MovementLinkObject_MedicalProgramSP.ObjectId       AS MedicalProgramSPId
                              , Object_MedicalProgramSP.ValueData                  AS MedicalProgramSPName
+                             , MLM_Child.MovementChildId                          AS Movement_Invoice 
                         FROM Movement AS Movement_Check
                              INNER JOIN MovementBoolean AS MovementBoolean_PaperRecipeSP
                                                         ON MovementBoolean_PaperRecipeSP.MovementId = Movement_Check.Id
@@ -142,6 +173,10 @@ BEGIN
                                                            ON MovementLinkObject_MedicalProgramSP.MovementId = Movement_Check.Id
                                                           AND MovementLinkObject_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
                              LEFT JOIN Object AS Object_MedicalProgramSP ON Object_MedicalProgramSP.Id = MovementLinkObject_MedicalProgramSP.ObjectId
+
+                             LEFT JOIN MovementLinkMovement AS MLM_Child
+                                                            ON MLM_Child.MovementId = Movement_Check.Id
+                                                           AND MLM_Child.descId = zc_MovementLinkMovement_Child()
                              
                         WHERE Movement_Check.DescId = zc_Movement_Check()
                           AND Movement_Check.StatusId = zc_Enum_Status_Complete() 
@@ -149,6 +184,13 @@ BEGIN
                           AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY' 
                           AND  MovementLinkObject_MedicalProgramSP.ObjectId IN (18078185, 18078194, 18078210, 18078197, 18078175)
                         ),
+        tmpMovement_Invoice AS (SELECT Movement_Invoice.Id
+                                     , Movement_Invoice.InvNumber                 :: TVarChar    AS InvNumber_Invoice 
+                                     , ('є ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full
+                                     , Movement_Invoice.OperDate                                 AS OperDate_Invoice
+                                FROM  Movement AS Movement_Invoice 
+                                WHERE Movement_Invoice.Id in (SELECT Movement_Invoice FROM tmpMovement)
+                                ),
         tmpMI_All AS (SELECT Movement.*
                            , MovementItem.Id        AS MovementItemId
                            , MovementItem.ObjectId  AS GoodsId
@@ -199,13 +241,63 @@ BEGIN
                                                   AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
                        -- элемента прихода от поставщика (если это парти€, котора€ была создана инвентаризацией)
                        LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)*/
-                 )
+                 ),
+        tmpBankAccount AS (SELECT ObjectLink_Juridical.ChildObjectId AS JuridicalId
+                                , Object_BankAccount.Id
+                                , Object_BankAccount.ValueData AS BankAccount
+                                , Object_Bank.ValueData AS BankName
+                                , ObjectString_MFO.ValueData AS MFO
+                           FROM Object AS Object_BankAccount
+                              LEFT JOIN ObjectLink AS ObjectLink_Juridical
+                                                   ON ObjectLink_Juridical.ObjectId = Object_BankAccount.Id
+                                                  AND ObjectLink_Juridical.DescId = zc_ObjectLink_BankAccount_Juridical()
+                              LEFT JOIN ObjectLink AS ObjectLink_Bank
+                                                   ON ObjectLink_Bank.ObjectId = Object_BankAccount.Id
+                                                  AND ObjectLink_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
+                              LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_Bank.ChildObjectId
+                              LEFT JOIN ObjectString AS ObjectString_MFO
+                                                     ON ObjectString_MFO.ObjectId = Object_Bank.Id 
+                                                    AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()
+                           WHERE Object_BankAccount.DescId = zc_object_BankAccount()
+                           ),                 
+        tmpParam AS (SELECT tmp.JuridicalId
+                          , ObjectHistory_JuridicalDetails.FullName AS JuridicalFullName
+                          , ObjectHistory_JuridicalDetails.JuridicalAddress
+                          , ObjectHistory_JuridicalDetails.OKPO
+                          , ObjectHistory_JuridicalDetails.MainName
+                          , ObjectHistory_JuridicalDetails.MainName_Cut
+                          , ObjectHistory_JuridicalDetails.AccounterName
+                          , ObjectHistory_JuridicalDetails.INN
+                          , ObjectHistory_JuridicalDetails.NumberVAT
+                          , ObjectHistory_JuridicalDetails.BankAccount ::TVarChar AS BankAccount 
+                          , ObjectHistory_JuridicalDetails.Phone
+                          , tmpBankAccount.BankName  ::TVarChar AS BankName 
+                          , tmpBankAccount.MFO ::TVarChar AS MFO   
+                       FROM (SELECT DISTINCT ObjectLink_Unit_Juridical.ChildObjectId AS JuridicalId
+                             FROM tmpMI
+
+                                  INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                ON MovementLinkObject_Unit.MovementId = tmpMI.Id
+                                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                  
+                                  INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                                        ON ObjectLink_Unit_Juridical.ObjectId = MovementLinkObject_Unit.ObjectId
+                                                       AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()                             
+                             ) AS tmp
+
+                          LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := tmp.JuridicalId, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_JuridicalDetails ON 1=1
+       
+                          LEFT JOIN tmpBankAccount ON tmpBankAccount.JuridicalId = tmp.JuridicalId
+                                                  AND tmpBankAccount.BankAccount = ObjectHistory_JuridicalDetails.BankAccount
+
+                       )
 
   SELECT tmpMI.Id
        , tmpMI.InvNumber 
        , tmpMI.OperDate
        , Object_Unit.ObjectCode          AS UnitCode
        , Object_Unit.ValueData           AS UnitName 
+       , Object_Juridical.Id             AS JuridicalId
        , Object_Juridical.ObjectCode     AS JuridicalCode
        , Object_Juridical.ValueData      AS JuridicalName 
        , Object_Goods_Main.ObjectCode    AS GoodsCode
@@ -224,9 +316,39 @@ BEGIN
        , Round(tmpMI.Amount * tmpGoodsSP.CountSP / CASE WHEN COALESCE (tmpGoodsSP.CountSPMin, 0) = 0 THEN tmpGoodsSP.CountSP ELSE tmpGoodsSP.CountSPMin END, 2):: TFloat  AS Amount
        , Round(tmpMI.Price * tmpMI.Amount, 2):: TFloat
        
-       , Round(tmpGoodsSP.PriceSP * tmpMI.Amount, 2):: TFloat AS SummsSP
+       , Round(tmpGoodsSP.PriceSP * tmpMI.Amount, 2):: TFloat AS SummSP
        , tmpMI.SummChangePercent
              
+       , Movement_Invoice.InvNumber_Invoice
+       , Movement_Invoice.InvNumber_Invoice_Full
+       , Movement_Invoice.OperDate_Invoice  
+
+       , CAST (ROW_NUMBER() OVER (PARTITION BY Object_Juridical.Id, Object_Unit.Id ORDER BY tmpGoodsSP.BrandSPName, tmpMI.OperDate ) AS Integer) AS NumLine  
+       , ''::TVarChar    AS HospitalName
+       , False           AS isPrintLast
+       , tmpGoodsSP.BrandSPName    AS IntenalSPName
+       , tmpMI.SummChangePercent   AS SummaSP
+       
+       
+       , COALESCE (tmpParam.JuridicalFullName, Object_Juridical.ValueData ) :: TVarChar  AS JuridicalFullName
+             
+       , COALESCE (tmpParam.JuridicalAddress, '') :: TVarChar  AS JuridicalAddress
+       , COALESCE (tmpParam.OKPO, '')                        :: TVarChar  AS OKPO
+       , COALESCE (tmpParam.MainName, '')                :: TVarChar  AS MainName
+             
+       , COALESCE (tmpParam.MainName_Cut, tmpParam.MainName)  :: TVarChar  AS MainName_Cut
+       , COALESCE (tmpParam.AccounterName, '')  :: TVarChar AS AccounterName
+       , COALESCE (tmpParam.INN, '')                      :: TVarChar AS INN
+       , COALESCE (tmpParam.NumberVAT,'')           :: TVarChar AS NumberVAT
+       , COALESCE (tmpParam.BankAccount, '')      :: TVarChar AS BankAccount
+       , COALESCE (tmpParam.Phone, '')                  :: TVarChar AS Phone
+       , COALESCE (tmpParam.BankName, '')            :: TVarChar AS BankName
+       , COALESCE (tmpParam.MFO, '')                      :: TVarChar AS MFO
+
+       , ''::TVarChar    AS PartnerMedical_MainName
+       , ''::TVarChar    AS PartnerMedical_FullName
+       , ''::TVarChar    AS Department_FullName
+       , ''::TVarChar    AS Department_MainName
              
   FROM tmpMI
 
@@ -248,7 +370,13 @@ BEGIN
                            AND DATE_TRUNC('DAY', tmpMI.OperDate ::TDateTime) >= tmpGoodsSP.OperDateStart
                            AND DATE_TRUNC('DAY', tmpMI.OperDate ::TDateTime) <= tmpGoodsSP.OperDateEnd
                            AND tmpGoodsSP.MedicalProgramSPId = tmpMI.MedicalProgramSPId
-                           
+
+       -- счет
+       LEFT JOIN tmpMovement_Invoice AS Movement_Invoice ON Movement_Invoice.Id = tmpMI.Movement_Invoice
+
+       LEFT JOIN tmpParam ON tmpParam.JuridicalId = ObjectLink_Unit_Juridical.ChildObjectId
+
+  WHERE Object_Juridical.Id = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0
   ORDER BY tmpMI.OperDate;
 
 END;
@@ -265,4 +393,4 @@ ALTER FUNCTION gpReport_PaperRecipeSP (TDateTime, TDateTime, TVarChar) OWNER TO 
 
 -- тест
 -- 
-select * from gpReport_PaperRecipeSPInsulin(inStartDate := ('01.03.2022')::TDateTime , inEndDate := ('30.04.2022')::TDateTime ,  inSession := '3');
+select * from gpReport_PaperRecipeSPInsulin(inStartDate := ('01.03.2022')::TDateTime , inEndDate := ('30.04.2022')::TDateTime , inJuridicalId := 0, inSession := '3');

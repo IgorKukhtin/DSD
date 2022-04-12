@@ -24,7 +24,7 @@ uses
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
   cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, dsdPivotGrid,
-  cxDBEdit;
+  cxDBEdit, dsdGuides, cxButtonEdit;
 
 type
   TReport_PaperRecipeSPInsulinForm = class(TParentForm)
@@ -69,7 +69,7 @@ type
     DBViewAddOn: TdsdDBViewAddOn;
     KindOutSPName: TcxGridDBColumn;
     PriceSP: TcxGridDBColumn;
-    SummsSP: TcxGridDBColumn;
+    SummSP: TcxGridDBColumn;
     actUpdate: TdsdInsertUpdateAction;
     bbUpdate: TdxBarButton;
     CommentSendName: TcxGridDBColumn;
@@ -80,6 +80,23 @@ type
     PriceSPMin: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
+    cbisInsert: TcxCheckBox;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    edDateInvoice: TcxDateEdit;
+    edInvoice: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    cxLabel4: TcxLabel;
+    edJuridicalMedic: TcxButtonEdit;
+    cxLabel6: TcxLabel;
+    GuidesJuridicalMedic: TdsdGuides;
+    GuidesJuridical: TdsdGuides;
+    InvNumber_Invoice: TcxGridDBColumn;
+    macPrintInvoice: TMultiAction;
+    spSavePrintMovement: TdsdStoredProc;
+    actSaveMovement: TdsdExecStoredProc;
+    dxBarButton1: TdxBarButton;
+    actPrintDepartment: TdsdPrintAction;
   private
   public
   end;

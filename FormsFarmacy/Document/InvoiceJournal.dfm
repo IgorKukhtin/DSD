@@ -92,6 +92,16 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ_Diff
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummCPMedical
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummCPSpecial_0
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -285,14 +295,6 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 71
           end
-          object NDS: TcxGridDBColumn
-            Caption = #1053#1044#1057
-            DataBinding.FieldName = 'NDS'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 42
-          end
           object TotalSummVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummVAT'
@@ -312,6 +314,26 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 69
+          end
+          object SummCPMedical: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' c '#1053#1044#1057' 7%'
+            DataBinding.FieldName = 'SummCPMedical'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 76
+          end
+          object SummCPSpecial_0: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' c '#1053#1044#1057' 0%'
+            DataBinding.FieldName = 'SummCPSpecial_0'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
           end
           object TotalDiffSumm: TcxGridDBColumn
             Caption = #1050#1086#1088#1088#1077#1082#1090'. '#1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057
@@ -491,7 +513,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
       ImageIndex = 3
       FormName = 'TCheckPrintDialogForm'
       FormNameParam.Value = 'TCheckPrintDialogForm'
-      FormNameParam.DataType = ftDateTime
+      FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptInputOutput
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

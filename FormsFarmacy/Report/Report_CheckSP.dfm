@@ -147,7 +147,6 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
           object InvNumber_Invoice: TcxGridDBColumn
             Caption = #8470' '#1057#1095#1077#1090#1072' ('#1057#1055')'
             DataBinding.FieldName = 'InvNumber_Invoice'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
