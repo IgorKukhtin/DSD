@@ -36,6 +36,8 @@ type
     cxLabel4: TcxLabel;
     cbTaxCorrectiveOnly: TcxCheckBox;
     PeriodChoiceReg: TPeriodChoice;
+    cbRegisterOnly: TcxCheckBox;
+    cbNotRegisterOnly: TcxCheckBox;
   private
     { Private declarations }
   public
