@@ -60,6 +60,13 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 55
       end
+      object Code1C: TcxGridDBColumn
+        Caption = #1050#1086#1076' 1'#1057
+        DataBinding.FieldName = 'Code1C'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 58
+      end
       object MemberName: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'MemberName'
@@ -1247,6 +1254,15 @@ object PersonalForm: TPersonalForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'StorageLineId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCode1C'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Code1C'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

@@ -9,7 +9,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Personal(
     IN inIsShowAll   Boolean,    --
     IN inSession     TVarChar    -- ÒÂÒÒËˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ
 )
-RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, DriverCertificate TVarChar, Card TVarChar, CardSecond TVarChar, BankName TVarChar, BankSecondName TVarChar
+RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar
+             , Code1C TVarChar
+             , DriverCertificate TVarChar, Card TVarChar, CardSecond TVarChar, BankName TVarChar, BankSecondName TVarChar
              , PositionId Integer, PositionCode Integer, PositionName TVarChar
              , PositionLevelId Integer, PositionLevelCode Integer, PositionLevelName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar, BranchCode Integer, BranchName TVarChar
@@ -106,6 +108,7 @@ BEGIN
            Object_Personal_View.PersonalId   AS Id
          , Object_Personal_View.PersonalCode AS MemberCode
          , Object_Personal_View.PersonalName AS MemberName
+         , ObjectString_Code1C.ValueData ::TVarChar AS Code1C
 
          , ObjectString_DriverCertificate.ValueData AS DriverCertificate
          , ObjectString_Card.ValueData              AS Card
@@ -186,6 +189,10 @@ BEGIN
      FROM Object_Personal_View
           LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Personal_View.AccessKeyId
           LEFT JOIN Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide ON View_RoleAccessKeyGuide.UserId = vbUserId AND View_RoleAccessKeyGuide.UnitId_PersonalService = Object_Personal_View.UnitId AND vbIsAllUnit = FALSE
+
+          LEFT JOIN ObjectString AS ObjectString_Code1C
+                                 ON ObjectString_Code1C.ObjectId = Object_Personal_View.PersonalId
+                                AND ObjectString_Code1C.DescId = zc_ObjectString_Personal_Code1C()
 
           LEFT JOIN ObjectString AS ObjectString_DriverCertificate
                                  ON ObjectString_DriverCertificate.ObjectId = Object_Personal_View.MemberId
@@ -278,7 +285,8 @@ BEGIN
         SELECT
            0   AS Id
          , 0 AS MemberCode
-         , CAST ('”ƒ¿À»“‹' as TVarChar)  AS MemberName
+         , CAST ('”ƒ¿À»“‹' as TVarChar)  AS MemberName  
+         , CAST ('' as TVarChar) AS Code1C
          , CAST ('' as TVarChar) AS DriverCertificate
          , CAST ('' as TVarChar) AS Card
          , CAST ('' as TVarChar) AS CardSecond
