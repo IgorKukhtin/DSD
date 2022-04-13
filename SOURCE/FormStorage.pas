@@ -280,6 +280,10 @@ begin
   StringStream.LoadFromStream(Stream);
   StringStream.Position := 0;
 
+  if (GetFilePlatfotm64(ParamStr(0))) and (Pos(AnsiUpperCase('Project'),AnsiUpperCase(gc_ProgramName)) > 0)
+  then
+     raise Exception.Create('Ошибка.Нет прав в 64-bit сохранить отчет <'+ReportName+'>');
+
   SaveStoredProc.ParamByName('FormName').Value := ReportName;
   SaveStoredProc.ParamByName('FormData').Value := ConvertConvert(StringStream.DataString);
   SaveStoredProc.Execute;
