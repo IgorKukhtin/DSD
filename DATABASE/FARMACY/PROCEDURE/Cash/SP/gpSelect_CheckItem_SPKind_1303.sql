@@ -67,7 +67,7 @@ BEGIN
              FROM (SELECT CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE THEN MIFloat_Price.ValueData
                                ELSE (MIFloat_Price.ValueData * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData,1)/100))::TFloat    -- в партии инвентаризации  цена с НДС, а параметра НДС нет
                           END AS Price   -- цена c НДС
-                        , ROW_NUMBER() OVER (ORDER BY Container.Id DESC) AS ord   -- Люба сказала смотреть по последней партии
+                        , ROW_NUMBER() OVER (ORDER BY MovementLinkObject_To.ObjectId <> vbUnitId, MI_Income.MovementId DESC) AS ord   -- Люба сказала смотреть по последней партии
                    FROM Container 
                       LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
                                                           ON CLI_MI.ContainerId = Container.Id
@@ -85,6 +85,9 @@ BEGIN
                       LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
                                                    ON MovementLinkObject_NDSKind.MovementId = MI_Income.MovementId
                                                   AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                      LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                   ON MovementLinkObject_To.MovementId = MI_Income.MovementId
+                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()   
                       LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                             ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
                                            AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
@@ -92,7 +95,7 @@ BEGIN
                    WHERE Container.ObjectId = inGoodsId
                      AND Container.DescId = zc_Container_Count()
                      AND Container.WhereObjectId = vbUnitId
-                     AND COALESCE (Container.Amount,0 ) > 0
+                     --AND COALESCE (Container.Amount,0 ) > 0
                      AND COALESCE (MIFloat_Price.ValueData ,0) > 0
                    ) AS tt
              WHERE tt.Ord = 1;
@@ -125,4 +128,5 @@ $BODY$
  26.01.20                                                                                      *
 */
 
--- SELECT * FROM gpSelect_CheckItem_SPKind_1303(inSPKindId := zc_Enum_SPKind_1303(), inGoodsId := 499, inPriceSale := 1000, inSession := '3');
+-- 
+SELECT * FROM gpSelect_CheckItem_SPKind_1303(inSPKindId := zc_Enum_SPKind_1303(), inGoodsId := 36643, inPriceSale := 1000, inSession := '3');

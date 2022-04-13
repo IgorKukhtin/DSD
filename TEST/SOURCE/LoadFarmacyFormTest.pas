@@ -750,7 +750,6 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TGoodsAllJuridicalForm');
     //exit;
 
-
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeForm');
     exit;
@@ -1068,7 +1067,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_SupplierFailuresCashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_SupplierFailuresCashForm');
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaymentSumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PaymentSumForm');
 
@@ -1076,7 +1075,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_PaperRecipeSPInsulinForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaperRecipeSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PaperRecipeSPForm');
-
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainingInsulinsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainingInsulinsForm');
 

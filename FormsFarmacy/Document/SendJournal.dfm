@@ -1,27 +1,27 @@
 inherited SendJournalForm: TSendJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 535
-  ClientWidth = 856
+  ClientWidth = 968
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 872
+  ExplicitWidth = 984
   ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 856
+    Width = 968
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 826
+    ExplicitWidth = 968
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 856
+    ClientRectRight = 968
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 826
+      ExplicitWidth = 968
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 856
+        Width = 968
         Height = 478
-        ExplicitWidth = 826
+        ExplicitWidth = 968
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -541,8 +541,8 @@ inherited SendJournalForm: TSendJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 856
-    ExplicitWidth = 826
+    Width = 968
+    ExplicitWidth = 968
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end
@@ -1156,6 +1156,153 @@ inherited SendJournalForm: TSendJournalForm
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103'"'
       ImageIndex = 79
     end
+    object actDataToJson: TdsdDataToJsonAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      View = cxGridDBTableView
+      JsonParam.Value = Null
+      JsonParam.Component = FormParams
+      JsonParam.ComponentItem = 'JsonId'
+      JsonParam.DataType = ftWideString
+      JsonParam.MultiSelectSeparator = ','
+      PairParams = <
+        item
+          FieldName = 'Id'
+          PairName = 'Id'
+        end>
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1089#1087#1080#1089#1082#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081
+    end
+    object actExecDataForTTN: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelect_DataForTTN
+      StoredProcList = <
+        item
+          StoredProc = spSelect_DataForTTN
+        end>
+      Caption = 'actExecDataForTTN'
+    end
+    object actDataForTTNToXLS: TdsdExportToXLS
+      Category = 'DSDLibExport'
+      MoveParams = <>
+      ItemsDataSet = DataForXLSCDS
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      TitleHeight = 1.000000000000000000
+      SignHeight = 1.000000000000000000
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      HeaderFont.Charset = DEFAULT_CHARSET
+      HeaderFont.Color = clWindowText
+      HeaderFont.Height = -11
+      HeaderFont.Name = 'Tahoma'
+      HeaderFont.Style = []
+      SignFont.Charset = DEFAULT_CHARSET
+      SignFont.Color = clWindowText
+      SignFont.Height = -11
+      SignFont.Name = 'Tahoma'
+      SignFont.Style = []
+      ColumnParams = <
+        item
+          Caption = #1053#1072#1087#1088#1077#1074#1083#1077#1085#1080#1077
+          FieldName = 'WayName'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 30
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1081' '#1090#1086#1074#1072#1088#1072
+          FieldName = 'GoodsCount'
+          DataType = ftInteger
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 20
+          CalcColumnLists = <>
+          DetailedTexts = <>
+          Kind = skSumma
+        end
+        item
+          Caption = #1048#1090#1086#1075#1086', '#1096#1090
+          FieldName = 'Amount'
+          DataType = ftCurrency
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 20
+          CalcColumnLists = <>
+          DetailedTexts = <>
+          Kind = skSumma
+        end
+        item
+          Caption = #1057#1088'. '#1094#1077#1085#1072', '#1075#1088#1085'.'
+          FieldName = 'Price'
+          DataType = ftCurrency
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 20
+          CalcColumnLists = <>
+          DetailedTexts = <>
+          Kind = skSumma
+        end
+        item
+          Caption = #1048#1090#1086#1075#1086', '#1075#1088#1085'.'
+          FieldName = 'Summ'
+          DataType = ftCurrency
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 20
+          CalcColumnLists = <>
+          DetailedTexts = <>
+          Kind = skSumma
+        end>
+      Caption = 'actDataForTTNToXLS'
+    end
+    object mastDataForTTN: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDataToJson
+        end
+        item
+          Action = actExecDataForTTN
+        end
+        item
+          Action = actDataForTTNToXLS
+        end>
+      Caption = #1044#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1058#1058#1053
+      Hint = #1044#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1058#1058#1053
+      ImageIndex = 38
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1370,6 +1517,18 @@ inherited SendJournalForm: TSendJournalForm
         item
           Visible = True
           ItemName = 'bbPrintFilter'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDataForTTN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     inherited dxBarStatic: TdxBarStatic
@@ -1434,6 +1593,10 @@ inherited SendJournalForm: TSendJournalForm
     end
     object dxBarButton1: TdxBarButton
       Action = mactUpdate_AmountStorage
+      Category = 0
+    end
+    object bbDataForTTN: TdxBarButton
+      Action = mastDataForTTN
       Category = 0
     end
   end
@@ -1567,6 +1730,12 @@ inherited SendJournalForm: TSendJournalForm
         Name = 'FileDirectory'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JsonId'
+        Value = Null
+        DataType = ftWideString
         MultiSelectSeparator = ','
       end>
     Left = 400
@@ -1946,5 +2115,32 @@ inherited SendJournalForm: TSendJournalForm
     PackSize = 1
     Left = 182
     Top = 288
+  end
+  object DataForXLSCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 828
+    Top = 265
+  end
+  object spSelect_DataForTTN: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Send_DataForTTN'
+    DataSet = DataForXLSCDS
+    DataSets = <
+      item
+        DataSet = DataForXLSCDS
+      end>
+    Params = <
+      item
+        Name = 'inDataJson'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'JsonId'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 195
   end
 end

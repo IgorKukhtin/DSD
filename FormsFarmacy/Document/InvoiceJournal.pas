@@ -49,7 +49,8 @@ type
     InvNumber_int: TcxGridDBColumn;
     SigningDate: TcxGridDBColumn;
     ChangePercent: TcxGridDBColumn;
-    NDS: TcxGridDBColumn;
+    SummCPMedical: TcxGridDBColumn;
+    SummCPSpecial_0: TcxGridDBColumn;
   private
     { Private declarations }
   public

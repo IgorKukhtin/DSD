@@ -14,7 +14,6 @@ RETURNS TABLE (Id                  Integer
              , OperDate            TDateTime
              , StatusCode          Integer
              , StatusName          TVarChar
-             , TotalSummAll        TFloat
              , TotalSumm           TFloat
              , TotalSummWithOutVAT TFloat
              , TotalSummVAT        TFloat
@@ -25,12 +24,17 @@ RETURNS TABLE (Id                  Integer
              , ChangePercent       TFloat
 
              , SummChangePercentAll TFloat
-             , SummChangePercent   TFloat
-             , NDSKindId           Integer
-             , NDS                 TFloat
              , AmountSale          TFloat
              , isErrorSum          Boolean
 
+             , SummCPMedical       TFloat
+             , NDSKindMedicalId    Integer
+             , NDSMedical          TFloat
+             
+             , SummCPSpecial_0     TFloat
+             , NDSKindSpecial_0Id  Integer
+             , NDSSpecial_0        TFloat
+             
              , JuridicalId         Integer
              , JuridicalName       TVarChar
              , PartnerMedicalId    Integer
@@ -306,26 +310,49 @@ BEGIN
              ELSE 0
         END :: integer  AS InvNumber_int
       , Movement.OperDate
-      , Object_Status.ObjectCode                               AS StatusCode
-      , Object_Status.ValueData                                AS StatusName
-      , COALESCE (MovementFloat_TotalSumm.ValueData,0)::TFloat AS TotalSummAll
-      , COALESCE (tmpMI_CheckSum.SummChangePercent, MovementFloat_TotalSumm.ValueData, 0)::TFloat AS TotalSumm
-      , COALESCE (CAST (COALESCE (tmpMI_CheckSum.SummChangePercent, MovementFloat_TotalSumm.ValueData, 0)/(1.0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 7) / 100) AS NUMERIC (16,2)),0) ::TFloat  AS TotalSummWithOutVAT
-      , COALESCE (CAST (COALESCE (tmpMI_CheckSum.SummChangePercent, MovementFloat_TotalSumm.ValueData, 0) - 
-        (COALESCE (tmpMI_CheckSum.SummChangePercent, MovementFloat_TotalSumm.ValueData, 0)/(1.0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 7) / 100))  AS NUMERIC (16,2)),0) ::TFloat  AS TotalSummVAT
+      , Object_Status.ObjectCode                                AS StatusCode
+      , Object_Status.ValueData                                 AS StatusName
+      , COALESCE (MovementFloat_TotalSumm.ValueData, 0)::TFloat AS TotalSumm
+      , COALESCE (CAST (COALESCE (MI_CheckSumAll.SummChangePercent, MovementFloat_TotalSumm.ValueData, 0)/(1.0 + COALESCE(OF_NDSKind_NDS_Medical.ValueData, OF_NDSKind_NDS.ValueData, 7) / 100) AS NUMERIC (16,2)),0) ::TFloat  AS TotalSummWithOutVAT
+      , COALESCE (CAST (COALESCE (MovementFloat_TotalSumm.ValueData, 0) - 
+        (COALESCE (MI_CheckSumAll.SummChangePercent, MovementFloat_TotalSumm.ValueData, 0)/(1.0 + COALESCE(OF_NDSKind_NDS_Medical.ValueData, OF_NDSKind_NDS.ValueData, 7) / 100))  AS NUMERIC (16,2)),0) ::TFloat  AS TotalSummVAT
+
       , COALESCE (ObjectFloat_TotalSumm.ValueData, 0)       :: TFloat AS TotalSumm_Contract
       , COALESCE (MovementFloat_TotalDiffSumm.ValueData,0)  :: TFloat AS TotalDiffSumm
       , (COALESCE (MovementFloat_TotalSumm.ValueData, 0) -  COALESCE (MovementFloat_TotalDiffSumm.ValueData,0) ) :: TFloat AS Summ_Diff
       , COALESCE (MovementFloat_TotalCount.ValueData,0)     :: TFloat AS TotalCount
       , COALESCE (MovementFloat_ChangePercent.ValueData, 0) :: TFloat AS ChangePercent
 
-      , tmpMI_CheckSumAll.SummChangePercent                    AS SummChangePercentAll
-      , tmpMI_CheckSum.SummChangePercent                       AS SummChangePercent 
-      , tmpMI_CheckSum.NDSKindId                               AS NDSKindId
-      , ObjectFloat_NDSKind_NDS.ValueData                      AS NDS
-      , tmpMI_CheckSumAll.Amount                               AS AmountSale
-      , COALESCE(tmpMI_CheckSum.SummChangePercent, 0) = 0 AND
-        COALESCE(tmpMI_CheckSumAll.CountNDS, 1) > 1            AS isErrorSum 
+      , MI_CheckSumAll.SummChangePercent                       AS SummChangePercentAll
+      , MI_CheckSumAll.Amount                                  AS AmountSale
+      , COALESCE(MI_CheckSumMedical.SummChangePercent, 0) = 0 AND
+        COALESCE(MI_CheckSumSpecial_0.SummChangePercent, 0) = 0 AND
+        COALESCE(MI_CheckSumAll.CountNDS, 1) > 1               AS isErrorSum 
+
+      , CASE WHEN COALESCE(MI_CheckSumAll.CountNDS, 0) = 1 AND MI_CheckSumAll.NDSKindId = zc_Enum_NDSKind_Medical()
+               OR COALESCE(MI_CheckSumAll.CountNDS, 0) = 0    
+             THEN COALESCE (MovementFloat_TotalSumm.ValueData, 0)
+             ELSE MI_CheckSumMedical.SummChangePercent END::TFloat     AS SummCPMedical
+      , CASE WHEN COALESCE(MI_CheckSumAll.CountNDS, 0) = 0
+             THEN 9
+             WHEN COALESCE(MI_CheckSumAll.CountNDS, 0) <= 1 AND MI_CheckSumAll.NDSKindId = zc_Enum_NDSKind_Medical()
+             THEN MI_CheckSumAll.NDSKindId
+             ELSE MI_CheckSumMedical.NDSKindId END::Integer            AS NDSKindMedicalId
+      , CASE WHEN COALESCE(MI_CheckSumAll.CountNDS, 0) = 0
+             THEN 7
+             WHEN COALESCE(MI_CheckSumAll.CountNDS, 0) <= 1 AND MI_CheckSumAll.NDSKindId = zc_Enum_NDSKind_Medical()
+             THEN OF_NDSKind_NDS.ValueData
+             ELSE OF_NDSKind_NDS_Medical.ValueData END::TFloat         AS NDSMedical
+
+      , CASE WHEN COALESCE(MI_CheckSumAll.CountNDS, 0) = 1 AND MI_CheckSumAll.NDSKindId = zc_Enum_NDSKind_Special_0()
+             THEN COALESCE (MovementFloat_TotalSumm.ValueData, 0)
+             ELSE MI_CheckSumSpecial_0.SummChangePercent END::TFloat   AS SummCPSpecial_0
+      , CASE WHEN COALESCE(MI_CheckSumAll.CountNDS, 0) = 1 AND MI_CheckSumAll.NDSKindId = zc_Enum_NDSKind_Special_0()
+             THEN MI_CheckSumAll.NDSKindId
+             ELSE MI_CheckSumSpecial_0.NDSKindId END::Integer          AS NDSKindSpecial_0Id
+      , CASE WHEN COALESCE(MI_CheckSumAll.CountNDS, 0) = 1 AND MI_CheckSumAll.NDSKindId = zc_Enum_NDSKind_Special_0()
+             THEN OF_NDSKind_NDS.ValueData
+             ELSE OF_NDSKind_NDS_Special_0.ValueData END::TFloat       AS NDSSpecial_0
 
       , MovementLinkObject_Juridical.ObjectId                  AS JuridicalId
       , Object_Juridical.ValueData                             AS JuridicalName
@@ -456,16 +483,27 @@ BEGIN
 
         LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := ObjectLink_PartnerMedical_Department.ChildObjectId, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_DepartmentDetails ON 1=1
         
-        LEFT JOIN tmpMI_CheckSumAll ON tmpMI_CheckSumAll.InvoiceId = Movement.Id
+        LEFT JOIN tmpMI_CheckSumAll AS MI_CheckSumAll
+                                    ON MI_CheckSumAll.InvoiceId = Movement.Id
+        LEFT JOIN tmpOF_NDSKind_NDS AS OF_NDSKind_NDS
+                                    ON OF_NDSKind_NDS.ObjectId = COALESCE(MI_CheckSumAll.NDSKindId, zc_Enum_NDSKind_Medical())
         
-        LEFT JOIN tmpMI_CheckSum ON tmpMI_CheckSum.InvoiceId = Movement.Id 
-                                AND tmpMI_CheckSumAll.SummChangePercent = COALESCE (MovementFloat_TotalSumm.ValueData,0)
-                                AND COALESCE(tmpMI_CheckSumAll.CountNDS, 1) > 1
+        LEFT JOIN tmpMI_CheckSum AS MI_CheckSumMedical
+                                 ON MI_CheckSumMedical.InvoiceId = Movement.Id 
+                                AND MI_CheckSumAll.SummChangePercent = COALESCE (MovementFloat_TotalSumm.ValueData,0)
+                                AND MI_CheckSumMedical.NDSKindId = zc_Enum_NDSKind_Medical()
 
-        LEFT JOIN tmpOF_NDSKind_NDS AS ObjectFloat_NDSKind_NDS
-                                    ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE(tmpMI_CheckSum.NDSKindId, tmpMI_CheckSumAll.NDSKindId, zc_Enum_NDSKind_Medical())
-                                    
-        
+        LEFT JOIN tmpOF_NDSKind_NDS AS OF_NDSKind_NDS_Medical
+                                    ON OF_NDSKind_NDS_Medical.ObjectId = MI_CheckSumMedical.NDSKindId
+                                            
+        LEFT JOIN tmpMI_CheckSum AS MI_CheckSumSpecial_0
+                                 ON MI_CheckSumSpecial_0.InvoiceId = Movement.Id 
+                                AND MI_CheckSumAll.SummChangePercent = COALESCE (MovementFloat_TotalSumm.ValueData,0)
+                                AND MI_CheckSumSpecial_0.NDSKindId = zc_Enum_NDSKind_Special_0()
+
+        LEFT JOIN tmpOF_NDSKind_NDS AS OF_NDSKind_NDS_Special_0
+                                    ON OF_NDSKind_NDS_Special_0.ObjectId = MI_CheckSumSpecial_0.NDSKindId
+
  ;
 
 END;
@@ -491,5 +529,8 @@ ALTER FUNCTION gpSelect_Movement_Invoice (TDateTime, TDateTime, Boolean, TVarCha
 --SELECT * FROM gpSelect_Movement_Invoice (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inIsErased := FALSE, inSession:= zfCalc_UserAdmin());
 
 
-select * from gpSelect_Movement_Invoice(inStartDate := ('07.06.2021')::TDateTime , inEndDate := ('20.04.2022')::TDateTime , inIsErased := 'False' ,  inSession := '3')
+--select * from gpSelect_Movement_Invoice(inStartDate := ('07.06.2021')::TDateTime , inEndDate := ('20.04.2022')::TDateTime , inIsErased := 'False' ,  inSession := '3')
 -- where TotalSummAll <> TotalSumm
+
+
+select * from gpSelect_Movement_Invoice(inStartDate := ('07.06.2021')::TDateTime , inEndDate := ('05.04.2022')::TDateTime , inIsErased := 'False' ,  inSession := '3');

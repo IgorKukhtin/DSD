@@ -22,8 +22,8 @@ BEGIN
 
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_DiscontSiteStart(), inGoodsId, inDiscontSiteStart);
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_DiscontSiteEnd(), inGoodsId, inDiscontSiteEnd);
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_DiscontAmountSite(), inGoodsId, inDiscontPercentSite);
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_DiscontPercentSite(), inGoodsId, inDiscontAmountSite);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_DiscontAmountSite(), inGoodsId, inDiscontAmountSite);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_DiscontPercentSite(), inGoodsId, inDiscontPercentSite);
    
     -- Сохранили в плоскую таблицй
    BEGIN

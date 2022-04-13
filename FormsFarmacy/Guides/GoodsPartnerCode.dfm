@@ -266,11 +266,11 @@
       end
       object cbUpdate: TcxCheckBox
         Left = 305
-        Top = 64
-        Caption = #1054#1073#1085#1086#1074#1083#1103#1090#1100' '#1076#1083#1103' '#1042#1057#1045#1061
+        Top = 80
+        Caption = #1054#1073#1085#1086#1074#1083#1103#1090#1100' '#1091#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103' '#1076#1083#1103' '#1042#1057#1045#1061
         Properties.ReadOnly = False
         TabOrder = 1
-        Width = 133
+        Width = 232
       end
     end
   end
@@ -709,9 +709,6 @@
           Action = actGetImportSetting_Goods_MinimumLot
         end
         item
-          Action = actDelete_ObjectFloat_Goods_MinimumLot
-        end
-        item
           Action = actDoLoad
         end
         item
@@ -742,7 +739,9 @@
         item
           StoredProc = spDelete_ObjectFloat_Goods_MinimumLot
         end>
-      Caption = 'actDelete_ObjectFloat_Goods_MinimumLot'
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1086#1077' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1086#1077' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077
+      ImageIndex = 77
     end
     object actDoLoad: TExecuteImportSettingsAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
@@ -1285,10 +1284,18 @@
         item
           Visible = True
           ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
         end>
     end
     object dxBarButton1: TdxBarButton
       Action = actStartLoadAction
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actDelete_ObjectFloat_Goods_MinimumLot
       Category = 0
     end
   end

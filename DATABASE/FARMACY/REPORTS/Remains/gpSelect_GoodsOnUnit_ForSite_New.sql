@@ -596,11 +596,32 @@ BEGIN
           , Price_Unit_all AS
                (SELECT _tmpList.UnitId
                      , _tmpList.GoodsId
-                     , CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
-                             AND ObjectFloat_Goods_Price.ValueData > 0
-                                 THEN ObjectFloat_Goods_Price.ValueData
-                            ELSE ObjectFloat_Price_Value.ValueData
-                       END AS Price
+                     , CASE WHEN PriceSite_DiscontStart.ValueData IS NOT NULL
+                             AND PriceSite_DiscontEnd.ValueData IS NOT NULL  
+                             AND PriceSite_DiscontStart.ValueData <= CURRENT_DATE
+                             AND PriceSite_DiscontEnd.ValueData >= CURRENT_DATE
+                             AND COALESCE (PriceSite_DiscontAmount.ValueData, 0) > 0
+                            THEN ROUND(CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                             AND ObjectFloat_Goods_Price.ValueData > 0
+                                                 THEN ObjectFloat_Goods_Price.ValueData
+                                            ELSE ObjectFloat_Price_Value.ValueData
+                                       END - COALESCE (PriceSite_DiscontAmount.ValueData, 0), 2)
+                            WHEN PriceSite_DiscontStart.ValueData IS NOT NULL
+                             AND PriceSite_DiscontEnd.ValueData IS NOT NULL  
+                             AND PriceSite_DiscontStart.ValueData <= CURRENT_DATE
+                             AND PriceSite_DiscontEnd.ValueData >= CURRENT_DATE
+                             AND COALESCE (PriceSite_DiscontPercent.ValueData, 0) > 0 
+                            THEN ROUND(CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                             AND ObjectFloat_Goods_Price.ValueData > 0
+                                                 THEN ObjectFloat_Goods_Price.ValueData
+                                            ELSE ObjectFloat_Price_Value.ValueData
+                                       END * (100 - COALESCE (PriceSite_DiscontPercent.ValueData, 0)) / 100, 1)
+                            ELSE CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                       AND ObjectFloat_Goods_Price.ValueData > 0
+                                           THEN ObjectFloat_Goods_Price.ValueData
+                                      ELSE ObjectFloat_Price_Value.ValueData
+                                 END 
+                            END::TFloat       AS Price
                      , COALESCE (NULLIF (ObjectBoolean_Goods_TOP.ValueData, FALSE), COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE))         AS isTop
                      , COALESCE (NULLIF (ObjectFloat_PercentMarkup.ValueData, 0), COALESCE (ObjectFloat_Goods_PercentMarkup.ValueData, 0)) AS PercentMarkup
                 -- FROM _tmpGoodsMinPrice_List
@@ -632,6 +653,18 @@ BEGIN
                      LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PercentMarkup
                                            ON ObjectFloat_Goods_PercentMarkup.ObjectId = _tmpList.GoodsId_retail
                                           AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()
+                     LEFT JOIN ObjectDate AS PriceSite_DiscontStart
+                                          ON PriceSite_DiscontStart.ObjectId = _tmpList.GoodsId_retail
+                                         AND PriceSite_DiscontStart.DescId = zc_ObjectDate_Goods_DiscontSiteStart()
+                     LEFT JOIN ObjectDate AS PriceSite_DiscontEnd
+                                          ON PriceSite_DiscontEnd.ObjectId = _tmpList.GoodsId_retail
+                                         AND PriceSite_DiscontEnd.DescId = zc_ObjectDate_Goods_DiscontSiteEnd()
+                     LEFT JOIN ObjectFloat AS PriceSite_DiscontAmount
+                                           ON PriceSite_DiscontAmount.ObjectId = _tmpList.GoodsId_retail
+                                          AND PriceSite_DiscontAmount.DescId = zc_ObjectFloat_Goods_DiscontAmountSite()
+                     LEFT JOIN ObjectFloat AS PriceSite_DiscontPercent
+                                           ON PriceSite_DiscontPercent.ObjectId = _tmpList.GoodsId_retail
+                                          AND PriceSite_DiscontPercent.DescId = zc_ObjectFloat_Goods_DiscontPercentSite()
                )
           , Price_Unit AS
                (SELECT Price_Unit_all.UnitId
@@ -1069,7 +1102,7 @@ $BODY$
 
 
 SELECT OBJECT_Unit.valuedata, OBJECT_Goods.valuedata, p.* FROM gpselect_goodsonunit_forsite ('16240371,8156016,377610,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377594,377574,15212291,12812109,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089', 
-                                                                                             '15889,19456'  /*16202529'  6649, 33004, 5925154, 5925280, 16290423'*/, TRUE, zfCalc_UserSite()) AS p
+                                                                                             '6649,15889,19456'  /*16202529'  6649, 33004, 5925154, 5925280, 16290423'*/, TRUE, zfCalc_UserSite()) AS p
  LEFT JOIN OBJECT AS OBJECT_Unit ON OBJECT_Unit.ID = p.UnitId
  LEFT JOIN OBJECT AS OBJECT_Goods ON OBJECT_Goods.ID = p.Id;
  
