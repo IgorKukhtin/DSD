@@ -499,7 +499,7 @@ BEGIN
         , tmpDataAll.GoodsId
         , tmpDataAll.GoodsCode
         , tmpDataAll.GoodsName
-        , Object_Partner.ValueData       AS PartnerName
+        , (Object_Partner.ValueData || ' (' || Object_Partner.Id :: TVarChar || ')') :: TVarChar AS PartnerName
         , ObjectString_Article.ValueData AS Article
         , tmpDataAll.PartNumber ::TVarChar
         , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull

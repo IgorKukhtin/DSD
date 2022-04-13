@@ -793,7 +793,9 @@ begin
       else
         DString := FReceiveStream.DataString;
 
-      Logger.AddToLog(' TStorage.ExecuteProc( ... if Ok then Length = ' + IntToStr(Length(DString)) + ' ...');
+      Logger.AddToLog('');
+      Logger.AddToLog(' Length DString = ' + IntToStr(Length(DString)) + ' ...');
+      Logger.AddToLog('');
 
       //Logger.AddToLog(' TStorage.ExecuteProc( ... if Ok then Length = ' + IntToStr(Length(DString)) + ' ...');
 
@@ -817,6 +819,10 @@ begin
         ProcessErrorCode(PrepareStr, ConvertXMLParamToStrings(pData))
       else if (ResultType = gcResult) or (ResultType = gcDataSet) then
         Result := PrepareStr;
+
+      //Logger.AddToLog('');
+      //Logger.AddToLog(' Length Result = ' + IntToStr(Length(Result)) + ' ...');
+      //Logger.AddToLog('');
 
       //Logger.AddToLog('_Res_:');
       //Logger.AddToLog('');
