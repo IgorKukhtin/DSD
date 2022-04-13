@@ -47,6 +47,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PositionCode1_Stick Integer, PositionName1_Stick TVarChar
              , UserName TVarChar
              , Comment TVarChar
+             , MovementId_ReturnIn Integer, InvNumber_ReturnInFull TVarChar
              , StartBegin_movement TDateTime, EndBegin_movement TDateTime, diffBegin_sec_movement TFloat -- для документа
              , StartBegin TDateTime, EndBegin TDateTime, diffBegin_sec TFloat                            -- для строк
              , GoodsCode Integer, GoodsName TVarChar, GoodsGroupNameFull TVarChar
@@ -232,6 +233,9 @@ BEGIN
 
              , Object_User.ValueData              AS UserName
              , MovementString_Comment.ValueData   AS Comment
+             
+             , Movement_ReturnIn.Id                                                                                                AS MovementId_ReturnIn
+             , zfCalc_InvNumber_isErased ('', Movement_ReturnIn.InvNumber, Movement_ReturnIn.OperDate, Movement_ReturnIn.StatusId) AS InvNumber_ReturnInFull
 
              , MovementDate_StartBegin.ValueData  AS StartBegin_movement
              , MovementDate_EndBegin.ValueData    AS EndBegin_movement
@@ -474,6 +478,11 @@ BEGIN
                                           AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
             LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ReturnIn
+                                           ON MovementLinkMovement_ReturnIn.MovementId = Movement.Id
+                                          AND MovementLinkMovement_ReturnIn.DescId = zc_MovementLinkMovement_ReturnIn()
+            LEFT JOIN Movement AS Movement_ReturnIn ON Movement_ReturnIn.Id = MovementLinkMovement_ReturnIn.MovementChildId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                          ON MovementLinkObject_Car.MovementId = Movement_Transport.Id
                                         AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
@@ -670,6 +679,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 12.04.22         *
  06.09.21         *
  08.02.21         * Comment
  17.08.20         *

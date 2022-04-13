@@ -52,6 +52,12 @@ type
     cbExclude: TcxCheckBox;
     GuidesJuridical: TdsdGuides;
     spGet_Juridical: TdsdStoredProc;
+    cxLabel10: TcxLabel;
+    edPriceList_5: TcxButtonEdit;
+    GuidesPriceList_5: TdsdGuides;
+    cxLabel12: TcxLabel;
+    edPriceList_6: TcxButtonEdit;
+    GuidesPriceList_6: TdsdGuides;
   private
     { Private declarations }
   public

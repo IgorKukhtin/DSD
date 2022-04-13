@@ -62,7 +62,7 @@ BEGIN
              , Object_Status.Name                       AS StatusName
              , FALSE :: Boolean                         AS Checked
              , FALSE :: Boolean                         AS isPartner
-             , inOperDate				AS OperDatePartner
+             , inOperDate                               AS OperDatePartner
              , CAST (False as Boolean)                  AS PriceWithVAT
              , CAST (TaxPercent_View.Percent as TFloat) AS VATPercent
              , CAST (0 as TFloat)                       AS ChangePercent
@@ -71,15 +71,15 @@ BEGIN
              , CAST (0 as TFloat)                       AS TotalSummPVAT
              , CAST (0 as TFloat)                       AS TotalSumm
              , CAST (0 as TFloat)                       AS CurrencyValue
-             , 0                     	                AS FromId
-             , CAST ('' as TVarChar) 	                AS FromName
+             , 0                                        AS FromId
+             , CAST ('' as TVarChar)                    AS FromName
              , Object_To.Id                             AS ToId
              , Object_To.ValueData                      AS ToName
-             , 0                     		        AS PaidKindId
-             , CAST ('' as TVarChar)		        AS PaidKindName
-             , 0                     		        AS ContractId
-             , CAST ('' as TVarChar) 	                AS ContractName
-             , CAST ('' AS TVarChar) 			AS ContractTagName
+             , 0                                        AS PaidKindId
+             , CAST ('' as TVarChar)                    AS PaidKindName
+             , 0                                        AS ContractId
+             , CAST ('' as TVarChar)                    AS ContractName
+             , CAST ('' AS TVarChar)                    AS ContractTagName
              , ObjectCurrency.Id                        AS CurrencyDocumentId	-- грн
              , ObjectCurrency.ValueData                 AS CurrencyDocumentName
              , 0                                        AS CurrencyPartnerId
@@ -91,12 +91,12 @@ BEGIN
              , Object_PriceList.Id                      AS PriceListId
              , Object_PriceList.ValueData               AS PriceListName
              , CAST (0  AS INTEGER)                     AS PriceListInId
-             , CAST ('' AS TVarChar) 			AS PriceListInName
-             , 0                     		        AS DocumentTaxKindId
-             , CAST ('' as TVarChar) 		        AS DocumentTaxKindName
+             , CAST ('' AS TVarChar)                    AS PriceListInName
+             , 0                                        AS DocumentTaxKindId
+             , CAST ('' as TVarChar)                    AS DocumentTaxKindName
              , (DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '4 MONTH') :: TDateTime AS StartDateTax
-             , 0                     		        AS MovementId_Partion
-             , CAST ('' as TVarChar) 		        AS PartionMovementName
+             , 0                                        AS MovementId_Partion
+             , CAST ('' as TVarChar)                    AS PartionMovementName
              , 0                                        AS MemberId
              , CAST ('' AS TVarChar)                    AS MemberName
              , CAST ('' AS TVarChar)                    AS MemberInsertName
@@ -104,16 +104,16 @@ BEGIN
              , 0                                        AS MemberExpId
              , CAST ('' AS TVarChar)                    AS MemberExpName
 
-             , 0                   		        AS ReestrKindId
+             , 0                   	                    AS ReestrKindId
              , CAST ('' AS TVarChar)                    AS ReestrKindName 
 
-             , 0                   		        AS SubjectDocId
+             , 0                   	                    AS SubjectDocId
              , CAST ('' AS TVarChar)                    AS SubjectDocName
 
-             , 0                   		        AS ReasonId
+             , 0                                        AS ReasonId
              , CAST ('' AS TVarChar)                    AS ReasonName 
 
-             , CAST ('' as TVarChar) 		        AS Comment
+             , CAST ('' as TVarChar)                    AS Comment
              , CAST (FALSE AS Boolean)                  AS isPromo 
              , CAST (FALSE AS Boolean)                  AS isList
              , CAST (FALSE AS Boolean)                  AS isPrinted

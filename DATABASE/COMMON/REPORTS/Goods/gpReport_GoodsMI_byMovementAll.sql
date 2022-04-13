@@ -19,6 +19,7 @@ RETURNS TABLE (ItemName TVarChar, StatusCode Integer
              , JuridicalCode Integer, JuridicalName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , UnitCode Integer, UnitName TVarChar
+             , SubjectDocName TVarChar, ReasonName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, MeasureName TVarChar
              , Price TFloat
@@ -507,6 +508,26 @@ BEGIN
                         , CASE WHEN vbIsGoods_show = TRUE THEN tmpListContainerSumm.isBarCode   ELSE FALSE END
                         , CASE WHEN vbIsGoods_show = TRUE THEN tmpListContainerSumm.ChangePercentAmount ELSE 0 END
                 )
+
+        , tmpMLO_SubjectDoc AS (SELECT MovementLinkObject_SubjectDoc.*
+                                FROM MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                WHERE MovementLinkObject_SubjectDoc.MovementId IN (SELECT tmpOperationGroup_all.MovementId FROM tmpOperationGroup_all)
+                                  AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+                                )
+
+        , tmpMI_Detail AS (SELECT MovementItem.MovementId
+                                , STRING_AGG (DISTINCT Object_Reason.ValueData, '; ') ::TVarChar AS ReasonName
+                           FROM tmpOperationGroup_all
+                                INNER JOIN MovementItem ON MovementItem.MovementId = tmpOperationGroup_all.MovementId
+                                                       AND MovementItem.DescId     = zc_MI_Detail()
+                                                       AND MovementItem.isErased   = FALSE
+                                INNER JOIN MovementItemLinkObject AS MILO_Reason
+                                                                  ON MILO_Reason.MovementItemId = MovementItem.Id
+                                                                 AND MILO_Reason.DescId = zc_MILinkObject_Reason()
+                                LEFT JOIN Object AS Object_Reason ON Object_Reason.Id = MILO_Reason.ObjectId
+                           GROUP BY MovementItem.MovementId
+                           )
+
        , tmpOperationGroup AS
                 (SELECT MovementDesc.ItemName
                       , Movement.Id                            AS MovementId
@@ -520,6 +541,7 @@ BEGIN
                       , tmpListContainerSumm.PartnerId
                       , tmpListContainerSumm.InfoMoneyId
                       , tmpListContainerSumm.UnitId
+                      , MovementLinkObject_SubjectDoc.ObjectId AS SubjectDocName
                       , tmpListContainerSumm.GoodsId
                       , tmpListContainerSumm.GoodsKindId
                       , tmpListContainerSumm.MeasureId
@@ -553,6 +575,10 @@ BEGIN
                       LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
                                                    ON MovementLinkObject_PriceList.MovementId = tmpListContainerSumm.MovementId
                                                   AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+
+                      LEFT JOIN tmpMLO_SubjectDoc AS MovementLinkObject_SubjectDoc
+                                                  ON MovementLinkObject_SubjectDoc.MovementId = tmpListContainerSumm.MovementId
+                      LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
                  GROUP BY MovementDesc.ItemName
                         , Movement.Id
                         , Movement.StatusId
@@ -571,6 +597,7 @@ BEGIN
                         , tmpListContainerSumm.Price
                         , tmpListContainerSumm.isBarCode
                         , tmpListContainerSumm.ChangePercentAmount
+                        , MovementLinkObject_SubjectDoc.ObjectId
                 )
 
         -- взвешивание контрагент
@@ -585,6 +612,8 @@ BEGIN
                                 WHERE View_InfoMoney.InfoMoneyId IN (SELECT DISTINCT tmpOperationGroup.InfoMoneyId FROM tmpOperationGroup)
                                 )
 
+
+            
     -- Результат
     SELECT tmpOperationGroup.ItemName
          , Object_Status.ObjectCode    AS StatusCode
@@ -599,6 +628,9 @@ BEGIN
          , Object_Partner.ValueData    AS PartnerName
          , Object_Unit.ObjectCode      AS UnitCode
          , Object_Unit.ValueData       AS UnitName
+         , tmpOperationGroup.SubjectDocName ::TVarChar
+         , tmpMI_Detail.ReasonName          ::TVarChar
+         
          , Object_GoodsGroup.ValueData            AS GoodsGroupName
          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
          , Object_Goods.ObjectCode                AS GoodsCode
@@ -674,6 +706,8 @@ BEGIN
                                AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
           --взвешивание
           LEFT JOIN tmpWeighingPartner ON tmpWeighingPartner.ParentId = tmpOperationGroup.MovementId
+
+          LEFT JOIN tmpMI_Detail ON tmpMI_Detail.MovementId = tmpOperationGroup.MovementId
    ;
 
 END;

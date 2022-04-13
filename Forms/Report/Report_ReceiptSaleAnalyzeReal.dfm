@@ -1,29 +1,29 @@
 inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1085#1072#1083#1080#1079' '#1088#1077#1094#1077#1087#1090#1091#1088' '#1080' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1060#1040#1050#1058'>'
   ClientHeight = 430
-  ClientWidth = 1266
+  ClientWidth = 1418
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1282
-  ExplicitHeight = 468
+  ExplicitWidth = 1434
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 1266
+    Width = 1418
     Height = 347
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 1130
+    ExplicitWidth = 1418
     ExplicitHeight = 347
     ClientRectBottom = 347
-    ClientRectRight = 1266
+    ClientRectRight = 1418
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1130
+      ExplicitWidth = 1418
       ExplicitHeight = 347
       inherited cxGrid: TcxGrid
-        Width = 1266
+        Width = 1418
         Height = 347
-        ExplicitWidth = 1130
+        ExplicitWidth = 1418
         ExplicitHeight = 347
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -479,6 +479,26 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object Price5_cost: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1079#1072#1090#1088#1072#1090#1099' '#1055#1088'.5'
+            DataBinding.FieldName = 'Price5_cost'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object Price6_cost: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1079#1072#1090#1088#1072#1090#1099' '#1055#1088'.6'
+            DataBinding.FieldName = 'Price6_cost'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object SummCost1_sale: TcxGridDBColumn
             Caption = #1047#1072#1090#1088#1072#1090#1099' '#1055#1088#1072#1081#1089'1 '#1088#1077#1072#1083#1080#1079'. ('#1088#1072#1089#1095'.)'
             DataBinding.FieldName = 'SummCost1_sale'
@@ -519,6 +539,26 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object SummCost5_sale: TcxGridDBColumn
+            Caption = #1047#1072#1090#1088#1072#1090#1099' '#1055#1088#1072#1081#1089'5 '#1088#1077#1072#1083#1080#1079'. ('#1088#1072#1089#1095'.)'
+            DataBinding.FieldName = 'SummCost5_sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object SummCost6_sale: TcxGridDBColumn
+            Caption = #1047#1072#1090#1088#1072#1090#1099' '#1055#1088#1072#1081#1089'6 '#1088#1077#1072#1083#1080#1079'. ('#1088#1072#1089#1095'.)'
+            DataBinding.FieldName = 'SummCost6_sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object SummPrice1_sale: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1055#1088#1072#1081#1089'1 '#1088#1077#1072#1083#1080#1079'. ('#1088#1072#1089#1095'.)'
             DataBinding.FieldName = 'SummPrice1_sale'
@@ -543,6 +583,28 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           object SummPrice3_sale: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1055#1088#1072#1081#1089'3 '#1088#1077#1072#1083#1080#1079'. ('#1088#1072#1089#1095'.)'
             DataBinding.FieldName = 'SummPrice3_sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
+          object SummPrice5_sale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1055#1088#1072#1081#1089'5 '#1088#1077#1072#1083#1080#1079'. ('#1088#1072#1089#1095'.)'
+            DataBinding.FieldName = 'SummPrice5_sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
+          object SummPrice6_sale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1055#1088#1072#1081#1089'6 '#1088#1077#1072#1083#1080#1079'. ('#1088#1072#1089#1095'.)'
+            DataBinding.FieldName = 'SummPrice6_sale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -1301,9 +1363,9 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
     end
   end
   inherited Panel: TPanel
-    Width = 1266
+    Width = 1418
     Height = 57
-    ExplicitWidth = 1130
+    ExplicitWidth = 1418
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 118
@@ -1332,12 +1394,12 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       ExplicitTop = 32
     end
     object cxLabel4: TcxLabel
-      Left = 936
+      Left = 1100
       Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 1026
+      Left = 1190
       Top = 5
       Properties.Buttons = <
         item
@@ -1345,7 +1407,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 231
+      Width = 217
     end
     object cxLabel3: TcxLabel
       Left = 205
@@ -1362,7 +1424,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 160
+      Width = 131
     end
     object cxLabel5: TcxLabel
       Left = 205
@@ -1379,15 +1441,15 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 160
+      Width = 132
     end
     object cxLabel11: TcxLabel
-      Left = 506
+      Left = 474
       Top = 7
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 1'
     end
     object edPriceList_1: TcxButtonEdit
-      Left = 576
+      Left = 544
       Top = 5
       Properties.Buttons = <
         item
@@ -1399,12 +1461,12 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       Width = 125
     end
     object cxLabel6: TcxLabel
-      Left = 506
+      Left = 474
       Top = 32
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 2'
     end
     object edPriceList_2: TcxButtonEdit
-      Left = 576
+      Left = 544
       Top = 30
       Properties.Buttons = <
         item
@@ -1416,12 +1478,12 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       Width = 125
     end
     object cxLabel7: TcxLabel
-      Left = 702
+      Left = 670
       Top = 6
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 3'
     end
     object edPriceList_3: TcxButtonEdit
-      Left = 808
+      Left = 776
       Top = 5
       Properties.Buttons = <
         item
@@ -1433,12 +1495,12 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       Width = 125
     end
     object cxLabel8: TcxLabel
-      Left = 701
+      Left = 669
       Top = 31
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1087#1088#1086#1076#1072#1078#1072
     end
     object edPriceList_sale: TcxButtonEdit
-      Left = 809
+      Left = 777
       Top = 30
       Properties.Buttons = <
         item
@@ -1450,12 +1512,12 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       Width = 125
     end
     object cxLabel9: TcxLabel
-      Left = 936
+      Left = 1100
       Top = 32
       Caption = #1070#1088'. '#1083#1080#1094#1086':'
     end
     object edJuridical: TcxButtonEdit
-      Left = 988
+      Left = 1152
       Top = 30
       Properties.Buttons = <
         item
@@ -1464,15 +1526,49 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         end>
       Properties.ReadOnly = True
       TabOrder = 19
-      Width = 187
+      Width = 173
     end
     object cbExclude: TcxCheckBox
-      Left = 1180
+      Left = 1329
       Top = 30
       Hint = #1055#1086' '#1090#1086#1074#1072#1088#1072#1084
       Caption = #1080#1089#1082#1083#1102#1095#1080#1090#1100
       TabOrder = 20
       Width = 79
+    end
+    object cxLabel10: TcxLabel
+      Left = 904
+      Top = 7
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 5'
+    end
+    object edPriceList_5: TcxButtonEdit
+      Left = 974
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 22
+      Width = 125
+    end
+    object cxLabel12: TcxLabel
+      Left = 904
+      Top = 32
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 6'
+    end
+    object edPriceList_6: TcxButtonEdit
+      Left = 974
+      Top = 28
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 24
+      Width = 125
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1533,9 +1629,23 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = GuidesPriceList_5
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesPriceList_6
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
   end
   inherited ActionList: TActionList
+    Left = 103
+    Top = 271
     object actRefreshStart: TdsdDataSetRefresh [0]
       Category = 'DSDLib'
       MoveParams = <>
@@ -1742,104 +1852,6 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Calc_PriceList: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = '0'
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end
-        item
-          FromParam.Value = 42186d
-          FromParam.Component = deStart
-          FromParam.DataType = ftDateTime
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'StartDate'
-          ToParam.Value = Null
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end
-        item
-          FromParam.Value = 42186d
-          FromParam.Component = deEnd
-          FromParam.DataType = ftDateTime
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'EndDate'
-          ToParam.Value = Null
-          ToParam.DataType = ftDateTime
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProcList = <>
-      Caption = 
-        #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1088#1077#1072#1083#1080#1079'. '#1055#1088#1072#1081#1089' + '#1094#1077#1085#1072' c/c '#1092#1072#1082#1090' + '#1088#1072#1089#1093#1086#1076#1099' '#1087#1086' '#1087#1088#1072 +
-        #1081#1089#1091'2)'
-      Hint = 
-        #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1088#1077#1072#1083#1080#1079'. '#1055#1088#1072#1081#1089' + '#1094#1077#1085#1072' c/c '#1092#1072#1082#1090' + '#1088#1072#1089#1093#1086#1076#1099' '#1087#1086' '#1087#1088#1072 +
-        #1081#1089#1091'2)'
-      ImageIndex = 22
-      DataSets = <
-        item
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
-          GridView = cxGridDBTableView
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 42186d
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 42186d
-          Component = deEnd
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsGroupName'
-          Value = ''
-          Component = GoodsGroupGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isGoodsKind'
-          Value = False
-          Component = cbGoodsKind
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isExcel'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
-      ReportName = #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1060#1072#1082#1090' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1080' '#1088#1072#1089#1093#1086#1076#1099' '#1080' '#1087#1088#1072#1081#1089')'
-      ReportNameParam.Value = #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1060#1072#1082#1090' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1080' '#1088#1072#1089#1093#1086#1076#1099' '#1080' '#1087#1088#1072#1081#1089')'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
     object actPrint_Calc: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -1938,6 +1950,104 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrint_Calc_PriceList: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42186d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42186d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = 
+        #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1088#1077#1072#1083#1080#1079'. '#1055#1088#1072#1081#1089' + '#1094#1077#1085#1072' c/c '#1092#1072#1082#1090' + '#1088#1072#1089#1093#1086#1076#1099' '#1087#1086' '#1087#1088#1072 +
+        #1081#1089#1091'2)'
+      Hint = 
+        #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1088#1077#1072#1083#1080#1079'. '#1055#1088#1072#1081#1089' + '#1094#1077#1085#1072' c/c '#1092#1072#1082#1090' + '#1088#1072#1089#1093#1086#1076#1099' '#1087#1086' '#1087#1088#1072 +
+        #1081#1089#1091'2)'
+      ImageIndex = 22
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42186d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42186d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = False
+          Component = cbGoodsKind
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isExcel'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1060#1072#1082#1090' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1080' '#1088#1072#1089#1093#1086#1076#1099' '#1080' '#1087#1088#1072#1081#1089')'
+      ReportNameParam.Value = #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1060#1072#1082#1090' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1080' '#1088#1072#1089#1093#1086#1076#1099' '#1080' '#1087#1088#1072#1081#1089')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint_Profit: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -2029,6 +2139,212 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         end>
       ReportName = #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1095#1080#1089#1090#1072#1103' '#1087#1088#1080#1073#1099#1083#1100')'
       ReportNameParam.Value = #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1095#1080#1089#1090#1072#1103' '#1087#1088#1080#1073#1099#1083#1100')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_CalcPrice6: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42736d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42736d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = #1062#1077#1085#1072' c/c '#1092#1072#1082#1090' + '#1088#1072#1089#1093#1086#1076#1099' '#1087#1086' '#1087#1088#1072#1081#1089#1091'6'
+      Hint = #1062#1077#1085#1072' c/c '#1092#1072#1082#1090' + '#1088#1072#1089#1093#1086#1076#1099' '#1087#1086' '#1087#1088#1072#1081#1089#1091'6'
+      ImageIndex = 16
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42736d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42736d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = False
+          Component = cbGoodsKind
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isExcel'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceList_6_Name'
+          Value = Null
+          Component = GuidesPriceList_6
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1094#1077#1085#1072' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1080' '#1088#1072#1089#1093#1086#1076#1099')'#1087#1088#1072#1081#1089'6'
+      ReportNameParam.Value = #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1094#1077#1085#1072' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1080' '#1088#1072#1089#1093#1086#1076#1099')'#1087#1088#1072#1081#1089'6'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_CalcPrice5: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42736d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42736d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = Null
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = #1062#1077#1085#1072' c/c '#1092#1072#1082#1090' + '#1088#1072#1089#1093#1086#1076#1099' '#1087#1086' '#1087#1088#1072#1081#1089#1091'5'
+      Hint = #1062#1077#1085#1072' c/c '#1092#1072#1082#1090' + '#1088#1072#1089#1093#1086#1076#1099' '#1087#1086' '#1087#1088#1072#1081#1089#1091'5'
+      ImageIndex = 16
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42736d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42736d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = False
+          Component = cbGoodsKind
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isExcel'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceList_5_Name'
+          Value = Null
+          Component = GuidesPriceList_5
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1094#1077#1085#1072' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1080' '#1088#1072#1089#1093#1086#1076#1099')'#1087#1088#1072#1081#1089'5'
+      ReportNameParam.Value = #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1094#1077#1085#1072' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1080' '#1088#1072#1089#1093#1086#1076#1099')'#1087#1088#1072#1081#1089'5'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -2332,14 +2648,6 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'EndDate'
-          Value = 42186d
-          Component = deEnd
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'FromUnitId'
           Value = ''
           Component = FromUnitGuides
@@ -2361,6 +2669,14 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           Value = ''
           Component = ToUnitGuides
           ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42186d
+          Component = deEnd
+          DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -2479,6 +2795,40 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           Value = Null
           Component = cbExclude
           DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceListId_5'
+          Value = Null
+          Component = GuidesPriceList_5
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceList_5_Name'
+          Value = Null
+          Component = GuidesPriceList_5
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceListId_6'
+          Value = Null
+          Component = GuidesPriceList_6
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceList_6_Name'
+          Value = Null
+          Component = GuidesPriceList_6
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -2685,6 +3035,22 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPriceListId_5'
+        Value = Null
+        Component = GuidesPriceList_5
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListId_6'
+        Value = Null
+        Component = GuidesPriceList_6
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsGoodsKind'
         Value = Null
         Component = cbGoodsKind
@@ -2786,6 +3152,14 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_CalcPrice5'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_CalcPrice6'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2872,6 +3246,16 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       Action = actPrint_Profit
       Category = 0
     end
+    object bbPrint_CalcPrice5: TdxBarButton
+      Action = actPrint_CalcPrice5
+      Category = 0
+      ImageIndex = 22
+    end
+    object bbPrint_CalcPrice6: TdxBarButton
+      Action = actPrint_CalcPrice6
+      Category = 0
+      ImageIndex = 18
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
@@ -2879,6 +3263,10 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         ValueColumn = Color_Profit
         ColorValueList = <>
       end>
+  end
+  inherited PopupMenu: TPopupMenu
+    Left = 136
+    Top = 272
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 128
@@ -2915,7 +3303,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1120
+    Left = 1248
     Top = 8
   end
   object FromUnitGuides: TdsdGuides
@@ -2974,8 +3362,8 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 464
-    Top = 24
+    Left = 440
+    Top = 8
   end
   object PriceList_1_Guides: TdsdGuides
     KeyField = 'Id'
@@ -3416,7 +3804,7 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1037
+    Left = 1221
     Top = 30
   end
   object spGet_Juridical: TdsdStoredProc
@@ -3449,5 +3837,123 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
     PackSize = 1
     Left = 928
     Top = 208
+  end
+  object GuidesPriceList_6: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList_6
+    FormNameParam.Value = 'TPriceList_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceList_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPriceList_6
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPriceList_6
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 1044
+    Top = 40
+  end
+  object GuidesPriceList_5: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList_5
+    FormNameParam.Value = 'TPriceList_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceList_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPriceList_5
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPriceList_5
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 1020
+    Top = 8
   end
 end
