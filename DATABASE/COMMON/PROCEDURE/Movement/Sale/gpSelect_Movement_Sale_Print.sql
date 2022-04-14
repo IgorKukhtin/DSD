@@ -394,14 +394,14 @@ BEGIN
                    , CASE WHEN MIFloat_ChangePercent.ValueData <> 0
                                THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
                                                         , inChangePercent:= MIFloat_ChangePercent.ValueData
-                                                        , inPrice        := MIFloat_Price.ValueData
+                                                        , inPrice        := COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
                                                         , inIsWithVAT    := vbPriceWithVAT
                                                          )
                           /*WHEN vbDiscountPercent <> 0
-                               THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                               THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                           WHEN vbExtraChargesPercent <> 0
-                               THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))*/
-                          ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                               THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))*/
+                          ELSE COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
                      END AS Price
                    , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
                    -- , SUM (MovementItem.Amount) AS Amount
@@ -421,9 +421,15 @@ BEGIN
                                                ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                               AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
                    LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                               -- AND MIFloat_Price.ValueData <> 0
+                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                               -- AND MIFloat_Price.ValueData <> 0 
+                   --если MIFloat_Price.ValueData = 0, тогда берем zc_MIFloat_PriceTare
+                   LEFT JOIN MovementItemFloat AS MIFloat_PriceTare
+                                               ON MIFloat_PriceTare.MovementItemId = MovementItem.Id
+                                              AND MIFloat_PriceTare.DescId = zc_MIFloat_PriceTare()
+                                              AND COALESCE (MIFloat_Price.ValueData,0) = 0
+
                    LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                               AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
@@ -435,6 +441,7 @@ BEGIN
               GROUP BY MovementItem.ObjectId
                      , MILinkObject_GoodsKind.ObjectId
                      , MIFloat_Price.ValueData
+                     , MIFloat_PriceTare.ValueData
                      , MIFloat_CountForPrice.ValueData
                      , MIFloat_ChangePercent.ValueData
              ) AS tmpMI
@@ -1258,22 +1265,22 @@ BEGIN
                   , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE -- !!!для НАЛ не учитываем, но НЕ всегда!!!
                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
                                                        , inChangePercent:= MIFloat_ChangePercent.ValueData
-                                                       , inPrice        := MIFloat_Price.ValueData
+                                                       , inPrice        := COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
                                                        , inIsWithVAT    := vbPriceWithVAT
                                                         )
                          WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = TRUE AND vbDescId <> zc_Movement_Sale()
                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
                                                        , inChangePercent:= -1 * vbDiscountPercent
-                                                       , inPrice        := MIFloat_Price.ValueData
+                                                       , inPrice        := COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
                                                        , inIsWithVAT    := vbPriceWithVAT
                                                         )
                          WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = TRUE AND vbDescId <> zc_Movement_Sale()
                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
                                                        , inChangePercent:= -1 * vbExtraChargesPercent
-                                                       , inPrice        := MIFloat_Price.ValueData
+                                                       , inPrice        := COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
                                                        , inIsWithVAT    := vbPriceWithVAT
                                                         )
-                         ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                         ELSE COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
                     END AS Price
                   , MIFloat_CountForPrice.ValueData AS CountForPrice
                   , SUM (MovementItem.Amount) AS Amount
@@ -1290,7 +1297,13 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                              --AND MIFloat_Price.ValueData <> 0
+                                              --AND MIFloat_Price.ValueData <> 0  
+                  --если MIFloat_Price.ValueData = 0, тогда берем zc_MIFloat_PriceTare
+                  LEFT JOIN MovementItemFloat AS MIFloat_PriceTare
+                                              ON MIFloat_PriceTare.MovementItemId = MovementItem.Id
+                                             AND MIFloat_PriceTare.DescId = zc_MIFloat_PriceTare()
+                                             AND COALESCE (MIFloat_Price.ValueData,0) = 0 
+
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -1320,22 +1333,22 @@ BEGIN
                     , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE -- !!!для НАЛ не учитываем, но НЕ всегда!!!
                                 THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
                                                          , inChangePercent:= MIFloat_ChangePercent.ValueData
-                                                         , inPrice        := MIFloat_Price.ValueData
+                                                         , inPrice        := COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
                                                          , inIsWithVAT    := vbPriceWithVAT
                                                           )
                            WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = TRUE AND vbDescId <> zc_Movement_Sale()
                                 THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
                                                          , inChangePercent:= -1 * vbDiscountPercent
-                                                         , inPrice        := MIFloat_Price.ValueData
+                                                         , inPrice        := COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
                                                          , inIsWithVAT    := vbPriceWithVAT
                                                           )
                            WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = TRUE AND vbDescId <> zc_Movement_Sale()
                                 THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
                                                          , inChangePercent:= -1 * vbExtraChargesPercent
-                                                         , inPrice        := MIFloat_Price.ValueData
+                                                         , inPrice        := COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
                                                          , inIsWithVAT    := vbPriceWithVAT
                                                           )
-                           ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                           ELSE COALESCE (MIFloat_PriceTare.ValueData, MIFloat_Price.ValueData, 0)
                       END
                     , MIFloat_CountForPrice.ValueData
                     , MIFloat_ChangePercent.ValueData
@@ -1669,8 +1682,13 @@ BEGIN
                           , SUM (MovementItem.Amount) AS AmountPartner
                      FROM MovementItem
                           LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                          --если MIFloat_Price.ValueData = 0, тогда берем zc_MIFloat_PriceTare 
+                          LEFT JOIN MovementItemFloat AS MIFloat_PriceTare
+                                                      ON MIFloat_PriceTare.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_PriceTare.DescId = zc_MIFloat_PriceTare()
+                                                     AND COALESCE (MIFloat_Price.ValueData,0) = 0
                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                       ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -1685,7 +1703,8 @@ BEGIN
 
                        AND MovementItem.DescId     = zc_MI_Master()
                        AND MovementItem.isErased   = FALSE
-                       -- AND COALESCE (MIFloat_Price.ValueData, 0) = 0
+                       ---- AND COALESCE (MIFloat_Price.ValueData, 0) = 0   
+                       --AND COALESCE (MIFloat_PriceTare.ValueData,0) <> 0
                        AND 1 = 0 -- !!!временно отключил!!!
                      GROUP BY MovementItem.ObjectId
                             , MILinkObject_GoodsKind.ObjectId

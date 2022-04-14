@@ -138,6 +138,16 @@ type
     GuidesJuridical: TdsdGuides;
     cbExclude: TcxCheckBox;
     spGet_Juridical: TdsdStoredProc;
+    cxLabel10: TcxLabel;
+    edPriceList_5: TcxButtonEdit;
+    cxLabel12: TcxLabel;
+    edPriceList_6: TcxButtonEdit;
+    GuidesPriceList_6: TdsdGuides;
+    GuidesPriceList_5: TdsdGuides;
+    actPrint_CalcPrice5: TdsdPrintAction;
+    actPrint_CalcPrice6: TdsdPrintAction;
+    bbPrint_CalcPrice5: TdxBarButton;
+    bbPrint_CalcPrice6: TdxBarButton;
   private
     { Private declarations }
   public

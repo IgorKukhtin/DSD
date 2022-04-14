@@ -3,7 +3,7 @@ object Report_ReceiptSaleAnalyzeRealDialogForm: TReport_ReceiptSaleAnalyzeRealDi
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1040#1085#1072#1083#1080#1079' '#1088#1077#1094#1077#1087#1090#1091#1088' '#1080' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080'>'
-  ClientHeight = 311
+  ClientHeight = 377
   ClientWidth = 470
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_ReceiptSaleAnalyzeRealDialogForm: TReport_ReceiptSaleAnalyzeRealDi
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 111
-    Top = 262
+    Top = 315
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_ReceiptSaleAnalyzeRealDialogForm: TReport_ReceiptSaleAnalyzeRealDi
   end
   object cxButton2: TcxButton
     Left = 285
-    Top = 262
+    Top = 315
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -98,7 +98,7 @@ object Report_ReceiptSaleAnalyzeRealDialogForm: TReport_ReceiptSaleAnalyzeRealDi
   end
   object cxLabel11: TcxLabel
     Left = 8
-    Top = 101
+    Top = 100
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 1'
   end
   object edPriceList_1: TcxButtonEdit
@@ -182,12 +182,12 @@ object Report_ReceiptSaleAnalyzeRealDialogForm: TReport_ReceiptSaleAnalyzeRealDi
   end
   object cxLabel9: TcxLabel
     Left = 8
-    Top = 203
+    Top = 251
     Caption = #1070#1088'. '#1083#1080#1094#1086':'
   end
   object edJuridical: TcxButtonEdit
     Left = 8
-    Top = 221
+    Top = 269
     Properties.Buttons = <
       item
         Default = True
@@ -199,11 +199,45 @@ object Report_ReceiptSaleAnalyzeRealDialogForm: TReport_ReceiptSaleAnalyzeRealDi
   end
   object cbExclude: TcxCheckBox
     Left = 247
-    Top = 221
+    Top = 269
     Hint = #1055#1086' '#1090#1086#1074#1072#1088#1072#1084
     Caption = #1080#1089#1082#1083#1102#1095#1080#1090#1100
     TabOrder = 22
     Width = 79
+  end
+  object cxLabel10: TcxLabel
+    Left = 8
+    Top = 198
+    Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 5'
+  end
+  object edPriceList_5: TcxButtonEdit
+    Left = 8
+    Top = 219
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 24
+    Width = 220
+  end
+  object cxLabel12: TcxLabel
+    Left = 237
+    Top = 199
+    Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' 6'
+  end
+  object edPriceList_6: TcxButtonEdit
+    Left = 237
+    Top = 219
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 26
+    Width = 220
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -213,7 +247,7 @@ object Report_ReceiptSaleAnalyzeRealDialogForm: TReport_ReceiptSaleAnalyzeRealDi
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 224
-    Top = 258
+    Top = 311
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -226,7 +260,7 @@ object Report_ReceiptSaleAnalyzeRealDialogForm: TReport_ReceiptSaleAnalyzeRealDi
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 400
-    Top = 260
+    Top = 313
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -396,9 +430,43 @@ object Report_ReceiptSaleAnalyzeRealDialogForm: TReport_ReceiptSaleAnalyzeRealDi
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListId_5'
+        Value = Null
+        Component = GuidesPriceList_5
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceList_5_Name'
+        Value = Null
+        Component = GuidesPriceList_5
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListId_6'
+        Value = Null
+        Component = GuidesPriceList_6
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceList_6_Name'
+        Value = Null
+        Component = GuidesPriceList_6
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 40
-    Top = 251
+    Top = 304
   end
   object FromUnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -837,7 +905,7 @@ object Report_ReceiptSaleAnalyzeRealDialogForm: TReport_ReceiptSaleAnalyzeRealDi
         MultiSelectSeparator = ','
       end>
     Left = 157
-    Top = 206
+    Top = 259
   end
   object spGet_Juridical: TdsdStoredProc
     StoredProcName = 'gpGet_ReceiptSaleAnalyzeReal'
@@ -868,6 +936,124 @@ object Report_ReceiptSaleAnalyzeRealDialogForm: TReport_ReceiptSaleAnalyzeRealDi
       end>
     PackSize = 1
     Left = 352
-    Top = 208
+    Top = 261
+  end
+  object GuidesPriceList_5: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList_5
+    FormNameParam.Value = 'TPriceList_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceList_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPriceList_5
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPriceList_5
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 124
+    Top = 202
+  end
+  object GuidesPriceList_6: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList_6
+    FormNameParam.Value = 'TPriceList_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceList_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPriceList_6
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPriceList_6
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 324
+    Top = 202
   end
 end

@@ -37,6 +37,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MemberExpId Integer, MemberExpName TVarChar, MemberExpName_calc TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
              , SubjectDocId Integer, SubjectDocName TVarChar
+             , ReasonName  TVarChar
              , Comment TVarChar
              , isError Boolean
              , isEDI Boolean
@@ -152,6 +153,19 @@ BEGIN
                                    AND Movement.DescId = zc_Movement_WeighingPartner()
                                 )
         
+        , tmpMI_Detail AS (SELECT tmpMovement.Id AS MovementId
+                                , STRING_AGG (DISTINCT Object_Reason.ValueData, '; ') ::TVarChar AS ReasonName
+                           FROM tmpMovement
+                                INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
+                                                       AND MovementItem.DescId     = zc_MI_Detail()
+                                                       AND MovementItem.isErased   = FALSE
+                                INNER JOIN MovementItemLinkObject AS MILO_Reason
+                                                                  ON MILO_Reason.MovementItemId = MovementItem.Id
+                                                                 AND MILO_Reason.DescId = zc_MILinkObject_Reason()
+                                LEFT JOIN Object AS Object_Reason ON Object_Reason.Id = MILO_Reason.ObjectId
+                           GROUP BY tmpMovement.Id
+                           )
+
        -- Результат
        SELECT
              Movement.Id                                AS Id
@@ -213,6 +227,7 @@ BEGIN
            , Object_ReestrKind.ValueData       	        AS ReestrKindName
            , Object_SubjectDoc.Id                       AS SubjectDocId
            , Object_SubjectDoc.ValueData                AS SubjectDocName
+           , tmpMI_Detail.ReasonName
            , MovementString_Comment.ValueData           AS Comment
            , MovementBoolean_Error.ValueData            AS isError
            , COALESCE (MovementLinkMovement_MasterEDI.MovementChildId, 0) <> 0 AS isEDI
@@ -446,6 +461,8 @@ BEGIN
             LEFT JOIN tmpPersonal_Calc ON tmpPersonal_Calc.MovementId = Movement.Id
             
             LEFT JOIN tmpWeighingPartner ON tmpWeighingPartner.ParentId = Movement.Id
+            
+            LEFT JOIN tmpMI_Detail ON tmpMI_Detail.MovementId = Movement.Id
 
      /*WHERE vbIsXleb = FALSE OR (View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Хлеб
                                 AND vbIsXleb = TRUE)*/
@@ -611,3 +628,4 @@ having  MIFloat_AmountPartner.ValueData <>  SUM (coalesce (MovementItem_Child.Am
 */
 -- тест
 -- SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '01.12.2015', inEndDate:= '01.12.2015', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
+--select * from gpSelect_Movement_ReturnIn(instartdate := ('28.03.2022')::TDateTime , inenddate := ('28.03.2022')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inSession := '9457');

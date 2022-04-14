@@ -49,6 +49,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , BranchCode    Integer
              , SubjectDocId Integer, SubjectDocName TVarChar
              , PersonalGroupId Integer, PersonalGroupName TVarChar, UnitName_PersonalGroup TVarChar
+             , MovementId_ReturnIn Integer, InvNumber_ReturnInFull TVarChar
               )
 AS
 $BODY$
@@ -188,6 +189,9 @@ BEGIN
              , Object_PersonalGroup.Id                       AS PersonalGroupId
              , Object_PersonalGroup.ValueData                AS PersonalGroupName
              , Object_Unit_PersonalGroup.ValueData           AS UnitName_PersonalGroup
+
+             , Movement_ReturnIn.Id                                                                                                AS MovementId_ReturnIn
+             , zfCalc_InvNumber_isErased ('', Movement_ReturnIn.InvNumber, Movement_ReturnIn.OperDate, Movement_ReturnIn.StatusId) AS InvNumber_ReturnInFull
        FROM tmpStatus
             INNER JOIN Movement ON Movement.DescId = zc_Movement_WeighingPartner()
                                AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -365,6 +369,11 @@ BEGIN
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
             --LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ReturnIn
+                                           ON MovementLinkMovement_ReturnIn.MovementId = Movement.Id
+                                          AND MovementLinkMovement_ReturnIn.DescId = zc_MovementLinkMovement_ReturnIn()
+            LEFT JOIN Movement AS Movement_ReturnIn ON Movement_ReturnIn.Id = MovementLinkMovement_ReturnIn.MovementChildId
+            
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
                                          ON MovementLinkObject_Route.MovementId = MovementLinkMovement_Order.MovementChildId
                                         AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
@@ -436,6 +445,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 12.04.22         *
  06.09.21         *
  08.02.21         * Comment
  17.08.20         *

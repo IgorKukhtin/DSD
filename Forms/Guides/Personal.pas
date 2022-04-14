@@ -109,6 +109,7 @@ type
     Member_ReferCode: TcxGridDBColumn;
     Member_MentorCode: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    Code1C: TcxGridDBColumn;
   private
     { Private declarations }
   public

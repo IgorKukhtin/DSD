@@ -142,6 +142,7 @@ type
     mactPrintAkt: TMultiAction;
     actPrintAkt: TdsdPrintAction;
     bbPrintAkt: TdxBarButton;
+    ReasonName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpReport_Check_ReturnInToLink (TDateTime,TDateTime, Inte
 
 CREATE OR REPLACE FUNCTION gpReport_Check_ReturnInToLink (
     IN inStartDate         TDateTime , --
-    IN inEndDate           TDateTime , --
+    IN inEndDate           TDateTime , --                                 vas6ok
     IN inJuridicalId       Integer   ,
     IN inPartnerId         Integer   , --
     IN inPaidKindId        Integer   , --
