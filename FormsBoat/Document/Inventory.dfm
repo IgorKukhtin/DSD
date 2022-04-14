@@ -1692,12 +1692,12 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPrice'
+        Name = 'ioPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -2108,59 +2108,38 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outAmountRemains'
+        Name = 'ioPrice'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'AmountRemains'
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summa'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outCountForPrice'
+        Name = 'inPartNumber'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'CountForPrice'
+        ComponentItem = 'PartNumber'
         DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outOperPrice'
+        Name = 'inComment'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'OperPrice'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outOperPriceList'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperPriceList'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountClient'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountClient'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountClientSumm'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountClientSumm'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountClientPriceListSumm'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountClientPriceListSumm'
-        DataType = ftFloat
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
