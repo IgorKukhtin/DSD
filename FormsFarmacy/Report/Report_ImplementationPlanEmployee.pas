@@ -753,7 +753,13 @@ begin
         nSum := Dataset['Amount'] * Dataset['Price' + FUnit.Strings[FUnitCalck]] *
         cdsUnitCategory.FieldByName('PremiumImplPlan').AsCurrency / 100;
     end;
-    Dataset['BonusAmountTab'] := nSum;
+
+    if EncodeDate(2022, 04, 01) = StartOfTheMonth(deStart.Date) then
+    begin
+      if Dataset['Amount'] >= Dataset['AmountPlanAward' + FUnit.Strings[FUnitCalck]] then
+        Dataset['BonusAmountTab'] := RoundTo(Dataset['AmountPlanAward' + FUnit.Strings[FUnitCalck]] * Dataset['Price' + FUnit.Strings[FUnitCalck]] * 0.03, -2)
+      else Dataset['BonusAmountTab'] := 0;
+    end else Dataset['BonusAmountTab'] := nSum;
   finally
     cdsUnitCategory.RecNo := rnUnitCategory;
     cdsUnit.RecNo := rnUnit;

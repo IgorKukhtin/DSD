@@ -1,25 +1,25 @@
 inherited GoodsForm: TGoodsForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1089#1077#1090#1080
-  ClientHeight = 443
+  ClientHeight = 544
   ClientWidth = 1165
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 1181
-  ExplicitHeight = 482
+  ExplicitHeight = 583
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1165
-    Height = 417
+    Height = 518
     ExplicitWidth = 1165
     ExplicitHeight = 417
-    ClientRectBottom = 417
+    ClientRectBottom = 518
     ClientRectRight = 1165
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1165
       ExplicitHeight = 417
       inherited cxGrid: TcxGrid
         Width = 1165
-        Height = 417
+        Height = 518
         ExplicitWidth = 1165
         ExplicitHeight = 417
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -2712,6 +2712,110 @@ inherited GoodsForm: TGoodsForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091' '#1076#1083#1103' '#1089#1072#1081#1090#1072
       ImageIndex = 43
     end
+    object actUpdate_isFirst_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isFirst_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isFirst_Yes
+        end>
+      Caption = 'ExecUpdate_isInvisibleSUN'
+    end
+    object mactUpdate_isFirst_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_isFirst_Yes
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "1-'#1074#1099#1073#1086#1088'"? '
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "1-'#1074#1099#1073#1086#1088'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "1-'#1074#1099#1073#1086#1088'"'
+      ImageIndex = 79
+    end
+    object actUpdate_isFirst_No: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isFirst_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isFirst_No
+        end>
+      Caption = 'ExecUpdate_isInvisibleSUN'
+    end
+    object mactUpdate_isFirst_No: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_isFirst_No
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "1-'#1074#1099#1073#1086#1088'"? '
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "1-'#1074#1099#1073#1086#1088'"'
+      Hint = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "1-'#1074#1099#1073#1086#1088'"'
+      ImageIndex = 77
+    end
+    object actUpdate_isSecond_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isSecond_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isSecond_Yes
+        end>
+      Caption = 'ExecUpdate_isInvisibleSUN'
+    end
+    object mactUpdate_isSecond_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_isSecond_Yes
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088'"? '
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088'"'
+      ImageIndex = 79
+    end
+    object actUpdate_isSecond_No: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isSecond_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isSecond_No
+        end>
+      Caption = 'ExecUpdate_isInvisibleSUN'
+    end
+    object mactUpdate_isSecond_No: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_isSecond_No
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088'"? '
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088'"'
+      Hint = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088'"'
+      ImageIndex = 77
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -3073,6 +3177,14 @@ inherited GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'bbUpdate_inTop_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbtUpdate_isFirst_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_isSecond_Yes'
         end>
     end
     object dxBarSubItem3: TdxBarSubItem
@@ -3096,6 +3208,14 @@ inherited GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'bbUpdate_inTop_No'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_isFirst_No'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_isSecond_No'
         end>
     end
     object dxBarSubItem4: TdxBarSubItem
@@ -3169,6 +3289,28 @@ inherited GoodsForm: TGoodsForm
     end
     object dxBarButton17: TdxBarButton
       Action = mactSiteDiscont
+      Category = 0
+    end
+    object dxBarButton18: TdxBarButton
+      Caption = 'New Button'
+      Category = 0
+      Hint = 'New Button'
+      Visible = ivAlways
+    end
+    object bbtUpdate_isFirst_Yes: TdxBarButton
+      Action = mactUpdate_isFirst_Yes
+      Category = 0
+    end
+    object bbUpdate_isSecond_Yes: TdxBarButton
+      Action = mactUpdate_isSecond_Yes
+      Category = 0
+    end
+    object bbUpdate_isFirst_No: TdxBarButton
+      Action = mactUpdate_isFirst_No
+      Category = 0
+    end
+    object bbUpdate_isSecond_No: TdxBarButton
+      Action = mactUpdate_isSecond_No
       Category = 0
     end
   end
@@ -5400,5 +5542,101 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 112
     Top = 376
+  end
+  object spUpdate_isFirst_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isFirst'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisFirst'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 168
+    Top = 435
+  end
+  object spUpdate_isFirst_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isFirst'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisFirst'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 56
+    Top = 435
+  end
+  object spUpdate_isSecond_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isSecond'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSecond'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 416
+    Top = 435
+  end
+  object spUpdate_isSecond_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isSecond'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSecond'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 288
+    Top = 435
   end
 end

@@ -3091,8 +3091,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
 
-
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerForm'));
@@ -3104,6 +3102,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBanCommentSendEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBanCommentSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBanCommentSendForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendWayNameForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendWayNameForm');
 
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionDateGoodsListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionDateGoodsListForm');

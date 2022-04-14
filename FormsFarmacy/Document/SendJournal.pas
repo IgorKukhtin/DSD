@@ -123,6 +123,12 @@ type
     bbDataForTTN: TdxBarButton;
     DataForXLSCDS: TClientDataSet;
     spSelect_DataForTTN: TdsdStoredProc;
+    actSendWayNameChoice: TOpenChoiceForm;
+    actExecspWayTTN: TdsdExecStoredProc;
+    actWayTTNToXLS: TdsdExportToXLS;
+    mactWayTTNToXLS: TMultiAction;
+    spSelect_WayTTN: TdsdStoredProc;
+    bbWayTTNToXLS: TdxBarButton;
   private
     { Private declarations }
   public

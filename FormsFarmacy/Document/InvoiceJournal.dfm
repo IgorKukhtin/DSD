@@ -183,6 +183,14 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 110
           end
+          object DateAdoptedByNSZU: TcxGridDBColumn
+            Caption = #1055#1088#1080#1085#1103#1090#1086' '#1053#1057#1047#1059
+            DataBinding.FieldName = 'DateAdoptedByNSZU'
+            PropertiesClassName = 'TcxDateEditProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 88
+          end
           object OKPO_PartnerMedical: TcxGridDBColumn
             Caption = #1054#1050#1055#1054' ('#1084#1077#1076'.'#1091#1095#1088#1077#1078#1076'.)'
             DataBinding.FieldName = 'OKPO_PartnerMedical'
@@ -778,6 +786,15 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         Component = MasterCDS
         ComponentItem = 'TotalDiffSumm'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateAdoptedByNSZU'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DateAdoptedByNSZU'
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

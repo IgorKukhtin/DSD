@@ -1,13 +1,13 @@
--- Function: gpSelect_SendWayName()
+-- Function: gpSelect_Movement_Send_SendWayName()
 
-DROP FUNCTION IF EXISTS gpSelect_SendWayName (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Send_WayName (TDateTime, TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_SendWayName(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Send_WayName(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
               )
 AS
 $BODY$
@@ -65,6 +65,7 @@ BEGIN
                      
                      
     SELECT (ROW_NUMBER() OVER (ORDER BY tmpDate.WayName))::Integer AS Id
+         , (ROW_NUMBER() OVER (ORDER BY tmpDate.WayName))::Integer AS Code
          , tmpDate.WayName::TVarChar  AS Name
     FROM tmpDate;
     
@@ -80,5 +81,5 @@ $BODY$
 
 -- тест
 -- 
-select * from gpSelect_SendWayName(inStartDate := ('01.03.2022')::TDateTime , inEndDate := ('30.04.2022')::TDateTime ,  inSession := '3');    
+select * from gpSelect_Movement_Send_WayName(inStartDate := ('01.03.2022')::TDateTime , inEndDate := ('30.04.2022')::TDateTime ,  inSession := '3');    
                       

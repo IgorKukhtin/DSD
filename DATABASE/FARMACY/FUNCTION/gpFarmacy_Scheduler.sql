@@ -445,10 +445,10 @@ BEGIN
 
     END IF;    
 
-    -- Удаление нулевых чеков
     IF date_part('HOUR',  CURRENT_TIME)::Integer = 21 AND date_part('MINUTE',  CURRENT_TIME)::Integer >= 30 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 50
     THEN
 
+      -- Удаление нулевых чеков
       BEGIN
          PERFORM gpSetErased_Movement_Check (Movement.Id, inSession) FROM
          (WITH
@@ -482,6 +482,32 @@ BEGIN
          WHEN others THEN
            GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
          PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpSetErased_Movement_Check', True, text_var1::TVarChar, vbUserId);
+      END;    
+
+      -- Проставление смен 
+      BEGIN
+         PERFORM gpUpdate_MI_EmployeeScheduleVIP_SetPayrollTypeVIP(inMovementId := Movement.Id,  inSession := inSession)
+         FROM Movement
+         WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
+           AND Movement.DescId = zc_Movement_EmployeeScheduleVIP()
+           AND Movement.StatusId = zc_Enum_Status_UnComplete();
+      EXCEPTION
+         WHEN others THEN
+           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+         PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpUpdate_MI_EmployeeScheduleVIP_SetPayrollTypeVIP', True, text_var1::TVarChar, vbUserId);
+      END;    
+
+      -- Расчет ЗП випам 
+      BEGIN
+         PERFORM gpInsertUpdate_Movement_WagesVIP_CalculationAllDay(inMovementId := Movement.Id,  inSession := inSession)
+         FROM Movement
+         WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
+           AND Movement.DescId = zc_Movement_WagesVIP()
+           AND Movement.StatusId = zc_Enum_Status_UnComplete();
+      EXCEPTION
+         WHEN others THEN
+           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+         PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpUpdate_MI_EmployeeScheduleVIP_SetPayrollTypeVIP', True, text_var1::TVarChar, vbUserId);
       END;    
 
     END IF;    

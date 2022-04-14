@@ -1190,7 +1190,8 @@ inherited SendJournalForm: TSendJournalForm
       Category = 'DSDLibExport'
       MoveParams = <>
       ItemsDataSet = DataForXLSCDS
-      FileNameParam.Value = ''
+      FileName = 'DataForTTN'
+      FileNameParam.Value = 'DataForTTN'
       FileNameParam.DataType = ftString
       FileNameParam.MultiSelectSeparator = ','
       TitleHeight = 1.000000000000000000
@@ -1302,6 +1303,177 @@ inherited SendJournalForm: TSendJournalForm
       Caption = #1044#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1058#1058#1053
       Hint = #1044#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1058#1058#1053
       ImageIndex = 38
+    end
+    object actSendWayNameChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actSendWayNameChoice'
+      FormName = 'TSendWayNameForm'
+      FormNameParam.Value = 'TSendWayNameForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'WayNameId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'WayName'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actExecspWayTTN: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelect_WayTTN
+      StoredProcList = <
+        item
+          StoredProc = spSelect_WayTTN
+        end>
+      Caption = 'actExecspWayTTN'
+    end
+    object actWayTTNToXLS: TdsdExportToXLS
+      Category = 'DSDLibExport'
+      MoveParams = <>
+      ItemsDataSet = DataForXLSCDS
+      FileNameParam.Value = ''
+      FileNameParam.Component = FormParams
+      FileNameParam.ComponentItem = 'WayName'
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      TitleHeight = 1.000000000000000000
+      SignHeight = 1.000000000000000000
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      HeaderFont.Charset = DEFAULT_CHARSET
+      HeaderFont.Color = clWindowText
+      HeaderFont.Height = -11
+      HeaderFont.Name = 'Tahoma'
+      HeaderFont.Style = []
+      SignFont.Charset = DEFAULT_CHARSET
+      SignFont.Color = clWindowText
+      SignFont.Height = -11
+      SignFont.Name = 'Tahoma'
+      SignFont.Style = []
+      ColumnParams = <
+        item
+          Caption = #1050#1086#1076
+          FieldName = 'ObjectCode'
+          DataType = ftInteger
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+          FieldName = 'Name'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 60
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1048#1090#1086#1075#1086', '#1096#1090
+          FieldName = 'Amount'
+          DataType = ftCurrency
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 20
+          CalcColumnLists = <>
+          DetailedTexts = <>
+          Kind = skSumma
+        end
+        item
+          Caption = #1057#1088'. '#1094#1077#1085#1072', '#1075#1088#1085'.'
+          FieldName = 'Price'
+          DataType = ftCurrency
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 20
+          CalcColumnLists = <>
+          DetailedTexts = <>
+          Kind = skSumma
+        end
+        item
+          Caption = #1048#1090#1086#1075#1086', '#1075#1088#1085'.'
+          FieldName = 'Summ'
+          DataType = ftCurrency
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 20
+          CalcColumnLists = <>
+          DetailedTexts = <>
+          Kind = skSumma
+        end>
+      Caption = 'actWayTTNToXLS'
+    end
+    object mactWayTTNToXLS: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSendWayNameChoice
+        end
+        item
+          Action = actDataToJson
+        end
+        item
+          Action = actExecspWayTTN
+        end
+        item
+          Action = actWayTTNToXLS
+        end>
+      Caption = #1044#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1058#1058#1053
+      Hint = #1044#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1058#1058#1053
+      ImageIndex = 19
     end
   end
   inherited MasterDS: TDataSource
@@ -1528,6 +1700,10 @@ inherited SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbWayTTNToXLS'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end>
     end
@@ -1597,6 +1773,10 @@ inherited SendJournalForm: TSendJournalForm
     end
     object bbDataForTTN: TdxBarButton
       Action = mastDataForTTN
+      Category = 0
+    end
+    object bbWayTTNToXLS: TdxBarButton
+      Action = mactWayTTNToXLS
       Category = 0
     end
   end
@@ -1736,6 +1916,17 @@ inherited SendJournalForm: TSendJournalForm
         Name = 'JsonId'
         Value = Null
         DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'WayNameId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'WayName'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 400
@@ -2120,7 +2311,7 @@ inherited SendJournalForm: TSendJournalForm
     Aggregates = <>
     Params = <>
     Left = 828
-    Top = 265
+    Top = 321
   end
   object spSelect_DataForTTN: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Send_DataForTTN'
@@ -2142,5 +2333,35 @@ inherited SendJournalForm: TSendJournalForm
     PackSize = 1
     Left = 824
     Top = 195
+  end
+  object spSelect_WayTTN: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Send_WayTTN'
+    DataSet = DataForXLSCDS
+    DataSets = <
+      item
+        DataSet = DataForXLSCDS
+      end>
+    Params = <
+      item
+        Name = 'inWayName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'WayName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDataJson'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'JsonId'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 259
   end
 end

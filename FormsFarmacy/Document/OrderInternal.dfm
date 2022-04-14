@@ -1210,6 +1210,14 @@ inherited OrderInternalForm: TOrderInternalForm
             Visible = False
             VisibleForCustomization = False
           end
+          object colisSupplierFailures: TcxGridDBColumn
+            Caption = #1054#1090#1082#1072#1079' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'isSupplierFailures'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableView1

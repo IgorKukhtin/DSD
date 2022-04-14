@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpUpdate_Movement_Invoice (Integer, TDateTime, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Movement_Invoice (Integer, TDateTime, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Movement_Invoice (Integer, TDateTime, TVarChar, Boolean, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Invoice (Integer, TDateTime, TVarChar, Boolean, TFloat, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_Invoice(
     IN inId                    Integer,    -- 
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_Invoice(
     IN inInvNumberRegistered   TVarChar ,  -- Номер платежки
     IN inisDocument            Boolean  ,  -- Есть наш экз.
     IN inTotalDiffSumm         TFloat   ,  -- Корректировочная Сумма
+    IN inDateAdoptedByNSZU     TDateTime,  -- Принято НСЗУ
    OUT outSumm_Diff            TFloat   ,  -- разница Сумма с НДС и Корректировочная Сумма
     IN inSession               TVarChar    -- сессия пользователя
 )
@@ -45,6 +47,9 @@ BEGIN
 
     -- Сохранили свойство <> 
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalDiffSumm(), inId, inTotalDiffSumm);
+    
+    -- Сохранили свойство <> 
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_AdoptedByNSZU(), inId, inDateAdoptedByNSZU);
 
     -- 
     outSumm_Diff := (COALESCE ( (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TotalSumm()), 0) - COALESCE (inTotalDiffSumm,0) ) :: TFloat;

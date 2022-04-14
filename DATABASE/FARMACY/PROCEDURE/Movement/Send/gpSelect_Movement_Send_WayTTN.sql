@@ -1,13 +1,14 @@
--- Function: gpSelect_Movement_Send_DataForTTN()
+-- Function: gpSelect_Movement_Send_WayTTN()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Send_DataForTTN(Text, Text, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Send_WayTTN(TVarChar, Text, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Send_DataForTTN(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Send_WayTTN(
+    IN inWayName         TVarChar  , -- Напревление    
     IN inDataJson        Text      , -- json Данные    
     IN inSession         TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (WayName            TVarChar,
-               GoodsCount         Integer,
+RETURNS TABLE (ObjectCode         Integer,
+               Name               TVarChar,
                Amount             TFloat,
                Price		      TFloat,
                Summ               TFloat
@@ -42,7 +43,7 @@ BEGIN
   RETURN QUERY
   WITH tmpMovement AS (SELECT Movement.id
                             , REPLACE(COALESCE (Object_ProvinceCity_From.ValueData, Object_Area_From.ValueData, '')||' - '||
-                                      COALESCE (Object_ProvinceCity_To.ValueData, Object_Area_To.ValueData, ''), 'г. ', '') AS WayName
+                              COALESCE (Object_ProvinceCity_To.ValueData, Object_Area_To.ValueData, ''), 'г. ', '') AS WayName
                        FROM tblDataJSON 
                        
                             INNER JOIN Movement ON Movement.Id = tblDataJSON.Id
@@ -100,18 +101,23 @@ BEGIN
                       LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
                                                         ON MIFloat_Price.MovementItemId = MovementItem.ID
                                                        AND MIFloat_Price.DescId = zc_MIFloat_PriceFrom()
- 
-
+                                                       
+                 WHERE Movement.WayName = inWayName
                  )
 
-   SELECT tmpMI.WayName::TVarChar                                                      AS WayName
-        , COUNT(DISTINCT  tmpMI.GoodsId)::Integer                                      AS GoodsCount
+   SELECT Object_Goods_Main.ObjectCode
+        , Object_Goods_Main.Name
         , sum(tmpMI.Amount)::TFloat                                                    AS Amount
         , ROUND(sum(tmpMI.Summ) / sum(tmpMI.Amount), 2)::TFloat                        AS Price
         , (ROUND(sum(tmpMI.Summ) / sum(tmpMI.Amount), 2) * sum(tmpMI.Amount))::TFloat  AS Summ
    FROM tmpMI
-   GROUP BY tmpMI.WayName
-   ORDER BY tmpMI.WayName;
+
+        LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = tmpMI.GoodsId
+        LEFT JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
+
+   GROUP BY Object_Goods_Main.ObjectCode
+          , Object_Goods_Main.Name
+   ORDER BY Object_Goods_Main.Name;
                              
 END;
 $BODY$
@@ -121,10 +127,11 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
- 11.04.22                                                                    *
+ 13.04.22                                                                    *
 */
 
 -- тест 
 
-select * from gpSelect_Movement_Send_DataForTTN(inDataJson := '[{"id":27448252},{"id":27448302},{"id":27448385},{"id":27448532},{"id":27448628},{"id":27448670},{"id":27448735},{"id":27448790},{"id":27448833},{"id":27448858},{"id":27448917},{"id":27448942},{"id":27448984},{"id":27449051},{"id":27449116},{"id":27449141},{"id":27449231},{"id":27449268},{"id":27449297},{"id":27449408},{"id":27449464},{"id":27449471},{"id":27449556},{"id":27449614},{"id":27449619},{"id":27449668},{"id":27449723},{"id":27449727},{"id":27449734},{"id":27449761},{"id":27449793},{"id":27449799},{"id":27449873},{"id":27449912}]' ,  inSession := '3');
+select * from gpSelect_Movement_Send_WayTTN(inWayName := 'Днепр - Каменское', inDataJson := '[{"id":27448252},{"id":27448302},{"id":27448385},{"id":27448532},{"id":27448628},{"id":27448670},{"id":27448735},{"id":27448790},{"id":27448833},{"id":27448858},{"id":27448917},{"id":27448942},{"id":27448984},{"id":27449051},{"id":27449116},{"id":27449141},{"id":27449231},{"id":27449268},{"id":27449297},{"id":27449408},{"id":27449464},{"id":27449471},{"id":27449556},{"id":27449614},{"id":27449619},{"id":27449668},{"id":27449723},{"id":27449727},{"id":27449734},{"id":27449761},{"id":27449793},{"id":27449799},{"id":27449873},{"id":27449912}]' ,  inSession := '3');
+
 
