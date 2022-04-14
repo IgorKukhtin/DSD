@@ -124,7 +124,7 @@ BEGIN
 
       -- определяются параметры для <Налогового документа>
       SELECT CASE WHEN Movement.DescId = zc_Movement_Sale() THEN inMovementId ELSE 0 END AS MovementId_Sale
-           , CASE WHEN Movement.DescId = zc_Movement_Tax() THEN inMovementId ELSE MovementLinkMovement.MovementChildId END AS MovementId_Tax
+           , CASE WHEN Movement.DescId = zc_Movement_Tax() THEN inMovementId ELSE Movement_Master.Id END AS MovementId_Tax
            , Movement.DescId AS MovementDescId
            , CASE WHEN Movement.DescId = zc_Movement_Tax()
                        THEN Movement.InvNumber -- остается тот что был
@@ -244,6 +244,7 @@ BEGIN
            LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = Movement.Id
                                          AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
            LEFT JOIN Movement AS Movement_Master ON Movement_Master.Id = MovementLinkMovement.MovementChildId
+                                                AND Movement_Master.StatusId <> zc_Enum_Status_Erased()
            LEFT JOIN MovementString AS MS_InvNumberPartner_Master
                                     ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement.MovementChildId
                                    AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()

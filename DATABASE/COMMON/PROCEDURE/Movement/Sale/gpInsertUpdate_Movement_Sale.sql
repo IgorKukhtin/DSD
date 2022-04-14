@@ -43,7 +43,12 @@ BEGIN
      -- Определяется налоговая для изменения
      IF ioId <> 0
      THEN
-         vbMovementId_Tax:= (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = ioId AND DescId = zc_MovementLinkMovement_Master());
+         vbMovementId_Tax:= (SELECT MLM.MovementChildId
+                             FROM MovementLinkMovement AS MLM
+                                  INNER JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MLM.MovementChildId
+                                                                                AND Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
+                             WHERE MLM.MovementId = ioId AND MLM.DescId = zc_MovementLinkMovement_Master()
+                            );
      END IF;
 
      -- сохранили <Документ>

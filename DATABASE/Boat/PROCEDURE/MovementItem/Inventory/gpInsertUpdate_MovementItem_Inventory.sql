@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
     IN inGoodsId                            Integer   , -- Товары
     IN inPartionId                          Integer   , -- Партия
  INOUT ioAmount                             TFloat    , -- Количество 
-    IN inPrice                              TFloat    , -- Цена
+ INOUT ioPrice                              TFloat    , -- Цена
    OUT outAmountSumm                        TFloat    , -- Сумма расчетная
     IN inPartNumber                         TVarChar  , -- 
     IN inComment                            TVarChar  , -- примечание
@@ -45,7 +45,13 @@ BEGIN
      FROM Object_PartionGoods
      WHERE Object_PartionGoods.MovementItemId = inPartionId;
 */
+
+     -- замена
      IF ioAmount = 0 THEN ioAmount:= 1; END IF;
+     
+     -- замена
+     ioPrice:= (SELECT lpGet.ValuePrice FROM lpGet_MovementItem_PriceList ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId), inGoodsId, vbUserId) AS lpGet);
+     
 
      -- нужен ПОИСК
      IF ioId < 0
@@ -98,7 +104,7 @@ BEGIN
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inPartionId, inMovementId, ioAmount, NULL, vbUserId);
 
      -- сохранили свойство <Цена>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, ioPrice);
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, inPartNumber);
@@ -107,7 +113,7 @@ BEGIN
 
 
      -- расчитали сумму по элементу, для грида
-     outAmountSumm := CAST(ioAmount * inPrice AS NUMERIC (16, 2));
+     outAmountSumm := CAST(ioAmount * ioPrice AS NUMERIC (16, 2));
 
     -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);

@@ -48,6 +48,7 @@ BEGIN
               , tmpData.GoodsId
               , tmpData.ValuePrice
               , tmpData.PartnerId
+              , Object_Partner.ValueData AS PartnerName
          FROM tmpData
               LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpData.PartnerId
          WHERE tmpData.Ord = 1

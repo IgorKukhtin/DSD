@@ -1,6 +1,6 @@
 -- Function: lpGet_ObjectHistory_PriceListItem ()
 
- DROP FUNCTION IF EXISTS lpGet_ObjectHistory_PriceListItem (TDateTime, Integer, Integer);
+DROP FUNCTION IF EXISTS lpGet_ObjectHistory_PriceListItem (TDateTime, Integer, Integer);
 DROP FUNCTION IF EXISTS lpGet_ObjectHistory_PriceListItem (TDateTime, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpGet_ObjectHistory_PriceListItem(
