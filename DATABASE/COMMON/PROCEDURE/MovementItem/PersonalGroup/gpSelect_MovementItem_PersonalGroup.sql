@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, MemberId Integer
              , PositionId Integer, PositionName TVarChar
              , PositionLevelId Integer, PositionLevelName TVarChar
              , PersonalGroupId Integer, PersonalGroupName TVarChar
-             , WorkTimeKindId Integer, WorkTimeKindName TVarChar
+             , WorkTimeKindId Integer, WorkTimeKindCode Integer, WorkTimeKindName TVarChar
              , UnitName_inf TVarChar, PositionName_inf TVarChar
              , DateOut TDateTime, isMain Boolean
              , Amount TFloat
@@ -60,7 +60,8 @@ BEGIN
             , Object_PersonalGroup.Id        AS PersonalGroupId
             , Object_PersonalGroup.ValueData AS PersonalGroupName
 
-            , Object_WorkTimeKind.Id         AS WorkTimeKindId
+            , Object_WorkTimeKind.Id         AS WorkTimeKindId     
+            , Object_WorkTimeKind.ObjectCode AS WorkTimeKindCode
             , Object_WorkTimeKind.ValueData  AS WorkTimeKindName
 
             , View_Personal.UnitName         AS UnitName_inf
@@ -118,6 +119,7 @@ $BODY$
 /*
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
                Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 15.04.22         * WorkTimeKindCode
  02.03.22         * Comment
  22.11.21         *
 */

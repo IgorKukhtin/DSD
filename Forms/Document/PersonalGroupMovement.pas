@@ -71,6 +71,7 @@ type
     Count_Personal: TcxGridDBColumn;
     DateOut: TcxGridDBColumn;
     isMain: TcxGridDBColumn;
+    WorkTimeKindCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

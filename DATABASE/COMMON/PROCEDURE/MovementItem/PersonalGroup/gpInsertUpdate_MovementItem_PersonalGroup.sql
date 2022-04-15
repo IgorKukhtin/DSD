@@ -10,7 +10,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalGroup(
     IN inPersonalId            Integer   , -- Сотрудники
     IN inPositionId            Integer   , --
     IN inPositionLevelId       Integer   , --
-    IN inWorkTimeKindId        Integer   , --
+    IN inWorkTimeKindCode      Integer   , --    
+   OUT outWorkTimeKindId       Integer   ,
+   OUT outWorkTimeKindName     TVarChar   ,
  INOUT ioAmount                TFloat    , --
     IN inComment               TVarChar  , --
     IN inSession               TVarChar    -- сессия пользователя
@@ -20,7 +22,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAmount TFloat;
    DECLARE vbUnitId Integer;
-   DECLARE vbHoursDay TFloat;
+   DECLARE vbHoursDay TFloat; 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalGroup());
@@ -73,8 +75,15 @@ BEGIN
                        ) AS tmp
                        );
 
+     -- определяем outWorkTimeKindId
+     SELECT Object.Id, Object.ValueData
+     INTO outWorkTimeKindId, outWorkTimeKindName
+     FROM Object 
+     WHERE Object.ObjectCode = inWorkTimeKindCode
+       AND Object.Desc = zc_Object_WorkTimeKind();
+
      --переопределяем кол-во часов если больничный или
-     IF inWorkTimeKindId IN (zc_Enum_WorkTimeKind_HospitalDoc(), zc_Enum_WorkTimeKind_HolidayNoZp(), zc_Enum_WorkTimeKind_WorkDayOff()
+     IF outWorkTimeKindId IN (zc_Enum_WorkTimeKind_HospitalDoc(), zc_Enum_WorkTimeKind_HolidayNoZp(), zc_Enum_WorkTimeKind_WorkDayOff()
                             ,zc_Enum_WorkTimeKind_DayOff(), zc_Enum_WorkTimeKind_Skip())
      THEN
          ioAmount := 0;
@@ -96,11 +105,11 @@ BEGIN
                                                       , inPersonalId      := inPersonalId
                                                       , inPositionId      := inPositionId
                                                       , inPositionLevelId := inPositionLevelId
-                                                      , inWorkTimeKindId  := inWorkTimeKindId
+                                                      , inWorkTimeKindId  := outWorkTimeKindId
                                                       , inAmount          := ioAmount
                                                       , inComment         := inComment
                                                       , inUserId          := vbUserId
-                                                       ) AS tmp;
+                                                       ) AS tmp;   
 
 END;
 $BODY$
@@ -109,6 +118,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.04.22         * inWorkTimeKindCode
  16.12.21         *
  09.12.21         *
  22.11.21         *
