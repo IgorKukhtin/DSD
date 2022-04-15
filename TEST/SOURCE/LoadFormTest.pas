@@ -3845,12 +3845,12 @@ begin
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKind_HolidayForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKind_HolidayForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindEditForm');
-
+  }
     //форма выбора
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKind_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKind_ObjectForm');

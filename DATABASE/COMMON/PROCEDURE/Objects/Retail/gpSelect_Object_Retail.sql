@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Retail(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , OperDateOrder Boolean
              , isOrderMin Boolean
-             , isWMS Boolean
+             , isWMS Boolean      
+             , RoundWeight TFloat
              , GLNCode TVarChar, GLNCodeCorporate TVarChar
              , OKPO TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
@@ -30,6 +31,8 @@ BEGIN
            , COALESCE (ObjectBoolean_OperDateOrder.ValueData, CAST (False AS Boolean)) AS OperDateOrder
            , COALESCE (ObjectBoolean_isOrderMin.ValueData, False::Boolean)             AS isOrderMin
            , COALESCE (ObjectBoolean_isWMS.ValueData, FALSE) :: Boolean                AS isWMS
+           
+           , ObjectFloat_RoundWeight.ValueData ::TFloat AS RoundWeight
  
            , GLNCode.ValueData               AS GLNCode
            , GLNCodeCorporate.ValueData      AS GLNCodeCorporate
@@ -67,6 +70,10 @@ BEGIN
                                 ON ObjectBoolean_isWMS.ObjectId = Object_Retail.Id 
                                AND ObjectBoolean_isWMS.DescId = zc_ObjectBoolean_Retail_isWMS()
 
+        LEFT JOIN ObjectFloat AS ObjectFloat_RoundWeight
+                              ON ObjectFloat_RoundWeight.ObjectId = Object_Retail.Id
+                             AND ObjectFloat_RoundWeight.DescId = zc_ObjectFloat_Retail_RoundWeight()
+
         LEFT JOIN ObjectLink AS ObjectLink_Retail_GoodsProperty
                              ON ObjectLink_Retail_GoodsProperty.ObjectId = Object_Retail.Id 
                             AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()
@@ -95,6 +102,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.04.22         * RoundWeight
  21.05.20         * isWMS
  14.05.19         * ClientKind
  29.01.19         * add OKPO

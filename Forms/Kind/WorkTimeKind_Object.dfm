@@ -5,7 +5,7 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
   ExplicitWidth = 530
-  ExplicitHeight = 414
+  ExplicitHeight = 415
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -145,6 +145,13 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
           Component = MasterCDS
           ComponentItem = 'Tax'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Code'
           MultiSelectSeparator = ','
         end>
     end

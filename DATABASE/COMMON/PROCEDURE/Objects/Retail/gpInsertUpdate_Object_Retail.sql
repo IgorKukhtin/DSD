@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar,
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Retail(
  INOUT ioId                    Integer   ,     -- ключ объекта <Торговая сеть> 
@@ -17,7 +18,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Retail(
     IN inGoodsPropertyId       Integer   ,     -- Классификаторы свойств товаров
     IN inPersonalMarketingId   Integer   ,     -- Сотрудник (Ответственный представитель маркетингового отдела)
     IN inPersonalTradeId       Integer   ,     -- Сотрудник (Ответственный представитель коммерческого отдела)
-    IN inClientKindId          Integer   ,     -- Категории покупателей
+    IN inClientKindId          Integer   ,     -- Категории покупателей     
+    IN inRoundWeight           TFloat    ,     -- Кол-во знаков для округления веса
     IN inSession               TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -59,6 +61,8 @@ BEGIN
    -- сохранили св-во <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Retail_OperDateOrder(), ioId, inOperDateOrder);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Retail_RoundWeight(), ioId, inRoundWeight);
    
    -- сохранили связь с <Классификаторы свойств товаров>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_GoodsProperty(), ioId, inGoodsPropertyId);   
@@ -80,6 +84,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.04.22         * inRoundWeight
  14.05.19         * inClientKindId
  29.01.19         * add OKPO
  24.11.15         * add inPersonalMarketingId
@@ -90,4 +95,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Retail(ioId:=null, inCode:=null, inName:='Торговая сеть 1', inSession:='2')
+-- 
