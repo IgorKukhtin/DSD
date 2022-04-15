@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,  Integer, TDateTime, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_PeriodClose(
  INOUT ioId	         Integer   ,     -- ключ объекта
@@ -11,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_PeriodClose(
     IN inRoleId          Integer   ,     -- Роль
     IN inRoleCode        Integer   ,     -- Роль
     IN inUserId_excl     Integer   ,     -- Пользователь - Исключение
-    IN inUserCode_excl   Integer   ,     -- Пользователь - Исключение
+    IN inUserCode_excl   Integer   ,     -- Пользователь - Исключение     
+    IN inUserByGroupId_excl Integer,     -- группировка пользователя - исключение
     IN inDescId          Integer   ,     -- Вид Документа
     IN inDescId_excl     Integer   ,     -- Вид Документа - Исключение
     IN inBranchId        Integer   ,     -- 
@@ -104,12 +106,13 @@ BEGIN
                             , UserId_excl     = inUserId_excl
                             , CloseDate_excl  = inCloseDate_excl
                             , CloseDate_store = inCloseDate_store 
+                            , UserByGroupId_excl = inUserByGroupId_excl
        WHERE Id = ioId;
        -- если такой элемент не был найден
        IF NOT FOUND THEN
           -- добавили новый элемент справочника со значением <Ключ объекта>
-          INSERT INTO PeriodClose (OperDate, UserId, RoleId, Period, CloseDate, Code, Name, DescId, DescId_excl, BranchId, PaidKindId, UserId_excl, CloseDate_excl, CloseDate_store)
-                  VALUES (CURRENT_TIMESTAMP, vbUserId, inRoleId, vbInterval, inCloseDate, inCode, inName, inDescId, inDescId_excl, inBranchId, inPaidKindId, inUserId_excl, inCloseDate_excl, inCloseDate_store)
+          INSERT INTO PeriodClose (OperDate, UserId, RoleId, Period, CloseDate, Code, Name, DescId, DescId_excl, BranchId, PaidKindId, UserId_excl, CloseDate_excl, CloseDate_store, UserByGroupId_excl)
+                  VALUES (CURRENT_TIMESTAMP, vbUserId, inRoleId, vbInterval, inCloseDate, inCode, inName, inDescId, inDescId_excl, inBranchId, inPaidKindId, inUserId_excl, inCloseDate_excl, inCloseDate_store, inUserByGroupId_excl)
                   RETURNING Id INTO ioId;
        END IF; -- if NOT FOUND
 
@@ -140,7 +143,10 @@ BEGIN
 
           || '<Field FieldName = "Дни" FieldValue = "' || COALESCE (inPeriod :: TVarChar, '') || '"/>'
 
-          || '<Field FieldName = "Период закрыт до" FieldValue = "' || zfConvert_DateToString (inCloseDate) || '"/>'
+          || '<Field FieldName = "Период закрыт до" FieldValue = "' || zfConvert_DateToString (inCloseDate) || '"/>'       
+
+          || '<Field FieldName = "Группировка - Исключение" FieldValue = "'|| COALESCE (lfGet_Object_ValueData (inUserByGroupId_excl), '') || '"/>'
+          
           || CASE WHEN inCloseDate_excl  > zc_DateStart() THEN '<Field FieldName = "Период закрыт до - Исключение с" FieldValue = "' || zfConvert_DateToString (inCloseDate_excl) || '"/>' ELSE '' END
           || CASE WHEN inCloseDate_store > zc_DateStart() THEN '<Field FieldName = "Период закрыт до - для кол-во склад" FieldValue = "' || zfConvert_DateToString (inCloseDate_store) || '"/>' ELSE '' END
 
@@ -157,6 +163,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.04.22         * add inUserByGroupId_excl
  09.12.16         * add inCloseDate_store
  24.04.16                                        *
  25.05.14                                        *

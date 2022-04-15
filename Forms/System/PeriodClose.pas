@@ -50,6 +50,8 @@ type
     spUpdate_CloseDate: TdsdStoredProc;
     bbUpdate_PeriodClose_all: TdxBarButton;
     mactUpdate_CloseDate: TMultiAction;
+    UserByGroupName_excl: TcxGridDBColumn;
+    actUserByGroupForm_excl: TOpenChoiceForm;
   private
     { Private declarations }
   public
