@@ -48,7 +48,7 @@ object RetailEditForm: TRetailEditForm
   end
   object cxLabel2: TcxLabel
     Left = 10
-    Top = 8
+    Top = 11
     Caption = #1050#1086#1076
   end
   object edCode: TcxCurrencyEdit
@@ -57,7 +57,7 @@ object RetailEditForm: TRetailEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 184
+    Width = 71
   end
   object cxLabel3: TcxLabel
     Left = 10
@@ -99,7 +99,7 @@ object RetailEditForm: TRetailEditForm
     Width = 311
   end
   object cbOperDateOrder: TcxCheckBox
-    Left = 200
+    Left = 87
     Top = 30
     Caption = #1094#1077#1085#1072' '#1087#1086' '#1076#1072#1090#1077' '#1079#1072#1103#1074#1082#1080
     TabOrder = 12
@@ -166,6 +166,25 @@ object RetailEditForm: TRetailEditForm
     Properties.ReadOnly = True
     TabOrder = 20
     Width = 144
+  end
+  object ceRoundWeight: TcxCurrencyEdit
+    Left = 226
+    Top = 30
+    Hint = #1050#1086#1083'-'#1074#1086' '#1079#1085#1072#1082#1086#1074' '#1076#1083#1103' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1103' '#1074#1077#1089#1072
+    ParentShowHint = False
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    Properties.EditFormat = '0'
+    ShowHint = True
+    TabOrder = 21
+    Width = 95
+  end
+  object cxLabel10: TcxLabel
+    Left = 225
+    Top = 11
+    Caption = #1050#1086#1083'. '#1079#1085'. '#1086#1082#1088'. '#1074#1077#1089#1072
   end
   object ActionList: TActionList
     Left = 152
@@ -292,8 +311,8 @@ object RetailEditForm: TRetailEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 104
-    Top = 56
+    Left = 56
+    Top = 64
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -304,7 +323,7 @@ object RetailEditForm: TRetailEditForm
         MultiSelectSeparator = ','
       end>
     Left = 96
-    Top = 8
+    Top = 88
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Retail'

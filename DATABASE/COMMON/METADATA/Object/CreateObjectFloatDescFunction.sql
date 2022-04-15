@@ -1732,6 +1732,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Retail_ShareFromPrice() RETURNS Intege
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Retail(), 'zc_ObjectFloat_Retail_ShareFromPrice', 'Делить медикамент от цены' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Retail_ShareFromPrice');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Retail_RoundWeight() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Retail_RoundWeight'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Retail(), 'zc_ObjectFloat_Retail_RoundWeight', 'Кол-во знаков для округления веса' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Retail_RoundWeight');
+ 
+ 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Juridical_CreditLimit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Juridical_CreditLimit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Juridical(), 'zc_ObjectFloat_Juridical_CreditLimit', 'Кредитный лимит по дистрибьютору' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Juridical_CreditLimit');
