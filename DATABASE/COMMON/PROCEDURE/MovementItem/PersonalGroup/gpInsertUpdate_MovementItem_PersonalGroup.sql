@@ -80,7 +80,7 @@ BEGIN
      INTO outWorkTimeKindId, outWorkTimeKindName
      FROM Object 
      WHERE Object.ObjectCode = inWorkTimeKindCode
-       AND Object.Desc = zc_Object_WorkTimeKind();
+       AND Object.DescId = zc_Object_WorkTimeKind();
 
      --переопределяем кол-во часов если больничный или
      IF outWorkTimeKindId IN (zc_Enum_WorkTimeKind_HospitalDoc(), zc_Enum_WorkTimeKind_HolidayNoZp(), zc_Enum_WorkTimeKind_WorkDayOff()
