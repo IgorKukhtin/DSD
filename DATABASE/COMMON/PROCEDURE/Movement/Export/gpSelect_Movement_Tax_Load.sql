@@ -216,9 +216,9 @@ BEGIN
             )
         AND MovementFloat_TotalSummPVAT.ValueData <> 0
         AND COALESCE (MovementString_InvNumberBranch.ValueData, '') <> '2'
-        AND ((MovementString_InvNumberRegistered.ValueData <> '' AND inIsRegisterOnly = FALSE AND inIsNotRegisterOnly = FALSE) 
-            OR (MovementString_InvNumberRegistered.ValueData <> '' AND inIsRegisterOnly = TRUE)
-            OR (COALESCE (MovementString_InvNumberRegistered.ValueData, '') = '' AND inIsNotRegisterOnly = TRUE)
+        AND ((inIsRegisterOnly = FALSE AND inIsNotRegisterOnly = FALSE) 
+          OR (MovementString_InvNumberRegistered.ValueData <> '' AND inIsRegisterOnly = TRUE)
+          OR (COALESCE (MovementString_InvNumberRegistered.ValueData, '') = '' AND inIsNotRegisterOnly = TRUE)
             )
      ;
 
