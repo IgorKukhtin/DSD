@@ -3,7 +3,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
   ClientHeight = 306
   ClientWidth = 798
   ExplicitWidth = 814
-  ExplicitHeight = 344
+  ExplicitHeight = 345
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -12,19 +12,17 @@ inherited PeriodCloseForm: TPeriodCloseForm
     Height = 248
     ExplicitTop = 58
     ExplicitWidth = 798
-    ExplicitHeight = 250
+    ExplicitHeight = 248
     ClientRectBottom = 248
     ClientRectRight = 798
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 798
-      ExplicitHeight = 250
+      ExplicitHeight = 248
       inherited cxGrid: TcxGrid
         Width = 798
         Height = 248
-        ExplicitLeft = 328
-        ExplicitTop = 3
         ExplicitWidth = 798
-        ExplicitHeight = 250
+        ExplicitHeight = 248
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsCustomize.DataRowSizing = False
           OptionsData.Appending = True
@@ -103,6 +101,22 @@ inherited PeriodCloseForm: TPeriodCloseForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
+          end
+          object UserByGroupName_excl: TcxGridDBColumn
+            AlternateCaption = '70'
+            Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' - '#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077'l'
+            DataBinding.FieldName = 'UserByGroupName_excl'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actUserByGroupForm_excl
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 105
           end
           object CloseDate_excl: TcxGridDBColumn
             Caption = #1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1089
@@ -306,6 +320,33 @@ inherited PeriodCloseForm: TPeriodCloseForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RoleName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actUserByGroupForm_excl: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actUserByGroupForm'
+      FormName = 'TUserByGroupForm'
+      FormNameParam.Value = 'TUserByGroupForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UserByGroupId_excl'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UserByGroupName_excl'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -575,6 +616,14 @@ inherited PeriodCloseForm: TPeriodCloseForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inUserByGroupId_excl'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UserByGroupId_excl'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inDescId'
         Value = Null
         Component = MasterCDS
@@ -632,7 +681,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
       end
       item
         Name = 'inCloseDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CloseDate'
         DataType = ftDateTime
@@ -641,7 +690,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
       end
       item
         Name = 'inCloseDate_excl'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CloseDate_excl'
         DataType = ftDateTime
@@ -650,7 +699,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
       end
       item
         Name = 'inCloseDate_store'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CloseDate_store'
         DataType = ftDateTime
@@ -676,7 +725,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
       end
       item
         Name = 'inCloseDate'
-        Value = 'NULL'
+        Value = Null
         Component = deOperDate
         DataType = ftDateTime
         ParamType = ptInput
