@@ -3,7 +3,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
   ClientHeight = 426
   ClientWidth = 915
   ExplicitWidth = 931
-  ExplicitHeight = 464
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -178,6 +178,22 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object DateOut: TcxGridDBColumn [11]
+            Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'DateOut'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object isMain: TcxGridDBColumn [12]
+            Caption = #1054#1089#1085#1086#1074'. '#1084#1077#1089#1090#1086' '#1088'.'
+            DataBinding.FieldName = 'isMain'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           inherited colIsErased: TcxGridDBColumn
             Width = 80

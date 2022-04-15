@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS gpSelect_MovementItem_SheetWorkTime(TDateTime, Integer, 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_SheetWorkTime(
     IN inDate        TDateTime , --
     IN inUnitId      Integer   , --
-    IN inisErased    Boolean   , --
+    IN inIsErased    Boolean   , --
     IN inSession     TVarChar    -- сессия пользователя
 )
   RETURNS SETOF refcursor
@@ -145,6 +145,7 @@ BEGIN
                                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                  JOIN MovementItem AS MI_SheetWorkTime ON MI_SheetWorkTime.MovementId = Movement.Id
+                                                                      AND (MI_SheetWorkTime.isErased = FALSE OR inIsErased = TRUE)
                                  LEFT JOIN MovementItemLinkObject AS MIObject_Position
                                                                   ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id
                                                                  AND MIObject_Position.DescId = zc_MILinkObject_Position()
@@ -593,6 +594,7 @@ BEGIN
                , Object_PersonalGroup.ValueData      AS PersonalGroupName
                , Object_StorageLine.Id               AS StorageLineId
                , Object_StorageLine.ValueData        AS StorageLineName
+               , Object_WorkTimeKind_key.Id          AS WorkTimeKindId_key
                , Object_WorkTimeKind_key.ValueData   AS WorkTimeKindName_key
 
                , CASE WHEN tmp.isErased = 0 THEN TRUE ELSE FALSE END AS isErased
@@ -643,7 +645,7 @@ BEGIN
                                                               AND tmpMI.PersonalGroupId    = tmpAll.PersonalGroupId
                                                               AND tmpMI.StorageLineId      = tmpAll.StorageLineId
                                                               AND tmpMI.WorkTimeKindId_key = tmpAll.WorkTimeKindId_key
-                                                              AND (tmpMI.isErased = 1 OR ' || inisErased :: TVarChar || ' = TRUE)
+                                                              AND (tmpMI.isErased = 1 OR ' || inIsErased :: TVarChar || ' = TRUE)
                                          ) AS Movement_Data
                                         FULL JOIN
                                          (SELECT tmpOperDate.OperDate,
@@ -700,7 +702,7 @@ BEGIN
                          , Sum (tmpMI.Amount) AS Amount
                          , Sum (CASE WHEN COALESCE (tmpMI.Amount, 0) <> 0 THEN 1 ELSE 0 END) AS CountDay 
                     FROM tmpMI
-                    WHERE tmpMI.isErased = 1 OR ' || inisErased :: TVarChar || ' = TRUE
+                    WHERE tmpMI.isErased = 1 OR ' || inIsErased :: TVarChar || ' = TRUE
                     GROUP BY tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.isErased, tmpMI.StorageLineId, tmpMI.WorkTimeKindId_key
                    ) AS tmp ON tmp.MemberId                        = D.Key[1]
                            AND COALESCE(tmp.PositionId, 0)         = D.Key[2]

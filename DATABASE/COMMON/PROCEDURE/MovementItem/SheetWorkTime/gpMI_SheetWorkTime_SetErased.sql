@@ -1,6 +1,7 @@
 -- Function: gpMI_SheetWorkTime_SetErased()
 
-DROP FUNCTION IF EXISTS gpMI_SheetWorkTime_SetErased(Integer, Integer, Integer, Integer, Integer, TDateTime, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpMI_SheetWorkTime_SetErased(Integer, Integer, Integer, Integer, Integer, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpMI_SheetWorkTime_SetErased(Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpMI_SheetWorkTime_SetErased(   
     IN inMemberId            Integer   , -- Ключ физ. лицо
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpMI_SheetWorkTime_SetErased(
     IN inPositionLevelId     Integer   , -- Разряд
     IN inUnitId              Integer   , -- Подразделение
     IN inPersonalGroupId     Integer   , -- Группировка Сотрудника
+    IN inWorkTimeKindId_key  Integer   ,
     IN inOperDate            TDateTime , -- дата (месяц, за который будут удалены все данные по этому сотруднику + ...)
  INOUT ioIsErased            Boolean   , -- новое значение
     IN inSession             TVarChar    -- сессия пользователя
@@ -38,7 +40,7 @@ BEGIN
                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                                            AND MovementLinkObject_Unit.ObjectId  = inUnitId
                               INNER JOIN MovementItem AS MI_SheetWorkTime ON MI_SheetWorkTime.MovementId = Movement.Id
-                                                                          AND MI_SheetWorkTime.ObjectId  = inMemberId
+                                                                         AND MI_SheetWorkTime.isErased   = ioIsErased
                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_Position
                                                                      ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
                                                                     AND MIObject_Position.DescId = zc_MILinkObject_Position() 
@@ -48,9 +50,16 @@ BEGIN
                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PersonalGroup
                                                                      ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
                                                                     AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
+                              -- нужно учитывать тип Раб. времени только при вызове из док. список бригад
+                              LEFT JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
+                                                               ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id
+                                                              AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
+
                          WHERE COALESCE (MIObject_Position.ObjectId, 0)      = COALESCE (inPositionId, 0)
                            AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inPositionLevelId, 0)
                            AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
+                           --
+                           AND (inUnitId <> 8451 OR (inUnitId = 8451 AND MIObject_WorkTimeKind.ObjectId = inWorkTimeKindId_key))
                         ;
 
     -- Проверка - период закрыт

@@ -423,12 +423,15 @@ BEGIN
                                                        , inObjectId_4        := tmp.PaidKindId
                                                        , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
                                                        , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
-                                                       , inDescId_6          := NULL -- ...zc_ContainerLinkObject_Currency()
-                                                       , inObjectId_6        := NULL -- ...vbCurrencyPartnerId
+                                                       , inDescId_6          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.PartnerId > 0 THEN zc_ContainerLinkObject_Partner() ELSE NULL END
+                                                       , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.PartnerId > 0 THEN tmp.PartnerId                    ELSE NULL END
+                                                       , inDescId_7          := NULL -- ...zc_ContainerLinkObject_Currency()
+                                                       , inObjectId_7        := NULL -- ...vbCurrencyPartnerId
                                                         ) AS ContainerId
                 , tmp.BusinessId
            FROM (SELECT _tmpItem.AccountId_Partner    AS AccountId
                       , vbJuridicalId_From            AS JuridicalId
+                      , vbPartnerId_From              AS PartnerId
                       , vbContractId                  AS ContractId
                       , vbInfoMoneyId_From            AS InfoMoneyId
                       , vbPaidKindId                  AS PaidKindId

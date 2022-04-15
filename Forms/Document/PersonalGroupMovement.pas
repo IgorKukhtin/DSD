@@ -69,6 +69,8 @@ type
     WorkTimeKindName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     Count_Personal: TcxGridDBColumn;
+    DateOut: TcxGridDBColumn;
+    isMain: TcxGridDBColumn;
   private
     { Private declarations }
   public

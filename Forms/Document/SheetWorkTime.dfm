@@ -1626,7 +1626,15 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'OutAmountHours'
+        Name = 'ioWorkTimeKindId_key'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WorkTimeKindId_key'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountHours'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountHours'
@@ -1756,6 +1764,14 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PersonalGroupId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWorkTimeKindId_key'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WorkTimeKindId_key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2008,6 +2024,14 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'StorageLineId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWorkTimeKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WorkTimeKindId_key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

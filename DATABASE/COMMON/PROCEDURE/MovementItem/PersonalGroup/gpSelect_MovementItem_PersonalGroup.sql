@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, MemberId Integer
              , PersonalGroupId Integer, PersonalGroupName TVarChar
              , WorkTimeKindId Integer, WorkTimeKindName TVarChar
              , UnitName_inf TVarChar, PositionName_inf TVarChar
+             , DateOut TDateTime, isMain Boolean
              , Amount TFloat
              , Count_Personal TFloat
              , Comment TVarChar
@@ -65,6 +66,10 @@ BEGIN
             , View_Personal.UnitName         AS UnitName_inf
             , View_Personal.PositionName     AS PositionName_inf
 
+              -- дата увольнения
+            , CASE WHEN COALESCE (ObjectDate_Personal_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE ObjectDate_Personal_DateOut.ValueData END :: TDateTime AS DateOut
+            , COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE) :: Boolean AS isMain
+
             , MovementItem.Amount :: TFloat  AS Amount
             , CASE WHEN MovementItem.Amount <> 0 THEN 1 ELSE 0 END :: TFloat  AS Count_Personal
 
@@ -98,6 +103,12 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
+            LEFT JOIN ObjectDate AS ObjectDate_Personal_DateOut
+                                 ON ObjectDate_Personal_DateOut.ObjectId = MovementItem.ObjectId
+                                AND ObjectDate_Personal_DateOut.DescId   = zc_ObjectDate_Personal_Out()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
+                                    ON ObjectBoolean_Personal_Main.ObjectId = MovementItem.ObjectId
+                                   AND ObjectBoolean_Personal_Main.DescId = zc_ObjectBoolean_Personal_Main()
       ;
 
 END;
