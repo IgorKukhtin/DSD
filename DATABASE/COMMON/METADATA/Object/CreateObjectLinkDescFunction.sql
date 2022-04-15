@@ -1966,8 +1966,13 @@ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_AreaContract_Branch', 'Филиал', zc_Object_AreaContract(), zc_Object_Branch() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_AreaContract_Branch');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_UserByGroupList_User() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_UserByGroupList_User'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_UserByGroupList_User', 'Пользователь', zc_Object_UserByGroupList(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_UserByGroupList_User');
 
-
+CREATE OR REPLACE FUNCTION zc_ObjectLink_UserByGroupList_UserByGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_UserByGroupList_UserByGroup'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_UserByGroupList_UserByGroup', 'Группировка пользователя', zc_Object_UserByGroupList(), zc_Object_UserByGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_UserByGroupList_UserByGroup');
 
 
 --!!! АПТЕКА

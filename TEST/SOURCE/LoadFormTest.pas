@@ -222,6 +222,7 @@ type
     procedure LoadVisitFormTest;
     procedure LoadUnionFormTest;
     procedure LoadUnitFormTest;
+    procedure LoadUserByGroupFormTest;
     procedure LoadWorkTimeKindFormTest;
     procedure LoadWeighingPartnerFormTest;
     procedure LoadWeighingProductionFormTest;
@@ -3190,6 +3191,18 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnit_SheetWorkTimeForm');
 end;
 
+procedure TLoadFormTest.LoadUserByGroupFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserByGroupListTreeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserByGroupListTreeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserByGroupListEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserByGroupListEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserByGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserByGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserByGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserByGroupEditForm');
+end;
 
 procedure TLoadFormTest.LoadToolsWeighingFormTest;
 begin

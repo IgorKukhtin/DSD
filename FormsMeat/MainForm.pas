@@ -1365,6 +1365,8 @@ type
     miReport_SaleReturnIn_RealEx: TMenuItem;
     actReport_GoodsMI_byMovementAllReturn: TdsdOpenForm;
     miReport_GoodsMI_byMovementAllReturn: TMenuItem;
+    actUserByGroupListTree: TdsdOpenForm;
+    miUserByGroupListTree: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
