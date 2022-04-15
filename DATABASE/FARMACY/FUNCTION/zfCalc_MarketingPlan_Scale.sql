@@ -17,64 +17,69 @@ BEGIN
 
   vbTotal := 0;
 
-  IF inScaleCalcMarketingPlanID = zc_Enum_ScaleCalcMarketingPlan_AB()
+  IF  date_trunc('month', inOperDate) = '01.04.2022'
   THEN
-    IF inOperDate < '01.08.2021'
-    THEN
-      vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 2  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 60 THEN - inAmountTheFineTab / 3  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 90 THEN inBonusAmountTab - inAmountTheFineTab
-                      ELSE inBonusAmountTab  END;  
-    ELSE
-      vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 2  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 60 THEN - inAmountTheFineTab / 3  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 90 THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
-                      ELSE inBonusAmountTab  END;  
-    END IF;
-  ELSEIF inScaleCalcMarketingPlanID = zc_Enum_ScaleCalcMarketingPlan_CC1()
-  THEN
-    IF inOperDate < '01.06.2021'
-    THEN
-      vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 30 THEN - inAmountTheFineTab / 2  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 50 THEN - inAmountTheFineTab / 3  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 80 THEN inBonusAmountTab - inAmountTheFineTab
-                      ELSE inBonusAmountTab  END;      
-    ELSEIF inOperDate < '01.08.2021'
-    THEN
-      vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 2  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 50 THEN - inAmountTheFineTab / 3  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 80 THEN inBonusAmountTab - inAmountTheFineTab
-                      ELSE inBonusAmountTab  END;          
-    ELSE
-      vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 2  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 50 THEN - inAmountTheFineTab / 3  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 80 THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
-                      ELSE inBonusAmountTab  END;          
-    END IF;
-  ELSEIF inScaleCalcMarketingPlanID = zc_Enum_ScaleCalcMarketingPlan_D()
-  THEN
-    IF inOperDate < '01.06.2021'
-    THEN
-      vbTotal := 0;     
-    ELSEIF inOperDate < '01.08.2021'
-    THEN
-      vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 30 THEN - inAmountTheFineTab / 2  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 3  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 70 THEN inBonusAmountTab - inAmountTheFineTab
-                      ELSE inBonusAmountTab  END;          
-    ELSE
-      vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 30 THEN - inAmountTheFineTab / 2  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 3  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 70 THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
-                      ELSE inBonusAmountTab  END;          
-    END IF;
+    vbTotal := inBonusAmountTab;
   ELSE
-    vbTotal := 0;
-  END IF;  
+    IF inScaleCalcMarketingPlanID = zc_Enum_ScaleCalcMarketingPlan_AB()
+    THEN
+      IF inOperDate < '01.08.2021'
+      THEN
+        vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 2  
+                        WHEN ROUND(inTotalExecutionLine, 2) < 60 THEN - inAmountTheFineTab / 3  
+                        WHEN ROUND(inTotalExecutionLine, 2) < 90 THEN inBonusAmountTab - inAmountTheFineTab
+                        ELSE inBonusAmountTab  END;  
+      ELSE
+        vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 2  
+                        WHEN ROUND(inTotalExecutionLine, 2) < 60 THEN - inAmountTheFineTab / 3  
+                        WHEN ROUND(inTotalExecutionLine, 2) < 90 THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
+                        ELSE inBonusAmountTab  END;  
+      END IF;
+    ELSEIF inScaleCalcMarketingPlanID = zc_Enum_ScaleCalcMarketingPlan_CC1()
+    THEN
+      IF inOperDate < '01.06.2021'
+      THEN
+        vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 30 THEN - inAmountTheFineTab / 2  
+                        WHEN ROUND(inTotalExecutionLine, 2) < 50 THEN - inAmountTheFineTab / 3  
+                        WHEN ROUND(inTotalExecutionLine, 2) < 80 THEN inBonusAmountTab - inAmountTheFineTab
+                        ELSE inBonusAmountTab  END;      
+      ELSEIF inOperDate < '01.08.2021'
+      THEN
+        vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 2  
+                        WHEN ROUND(inTotalExecutionLine, 2) < 50 THEN - inAmountTheFineTab / 3  
+                        WHEN ROUND(inTotalExecutionLine, 2) < 80 THEN inBonusAmountTab - inAmountTheFineTab
+                        ELSE inBonusAmountTab  END;          
+      ELSE
+        vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 2  
+                        WHEN ROUND(inTotalExecutionLine, 2) < 50 THEN - inAmountTheFineTab / 3  
+                        WHEN ROUND(inTotalExecutionLine, 2) < 80 THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
+                        ELSE inBonusAmountTab  END;          
+      END IF;
+    ELSEIF inScaleCalcMarketingPlanID = zc_Enum_ScaleCalcMarketingPlan_D()
+    THEN
+      IF inOperDate < '01.06.2021'
+      THEN
+        vbTotal := 0;     
+      ELSEIF inOperDate < '01.08.2021'
+      THEN
+        vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 30 THEN - inAmountTheFineTab / 2  
+                        WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 3  
+                        WHEN ROUND(inTotalExecutionLine, 2) < 70 THEN inBonusAmountTab - inAmountTheFineTab
+                        ELSE inBonusAmountTab  END;          
+      ELSE
+        vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 30 THEN - inAmountTheFineTab / 2  
+                        WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 3  
+                        WHEN ROUND(inTotalExecutionLine, 2) < 70 THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
+                        ELSE inBonusAmountTab  END;          
+      END IF;
+    ELSE
+      vbTotal := 0;
+    END IF;  
 
-  IF inOperDate >= '01.06.2021' AND inOperDate < '01.08.2021' AND vbTotal < 0
-  THEN
-    vbTotal := vbTotal / 2;   
+    IF inOperDate >= '01.06.2021' AND inOperDate < '01.08.2021' AND vbTotal < 0
+    THEN
+      vbTotal := vbTotal / 2;   
+    END IF;
   END IF;
 
   RETURN vbTotal;
@@ -91,4 +96,4 @@ ALTER FUNCTION zfCalc_MarketingPlan_Scale (Integer, TDateTime, TFloat, TFloat, T
 */
 
 -- тест 
-SELECT * FROM zfCalc_MarketingPlan_Scale (zc_Enum_ScaleCalcMarketingPlan_CC1(), '01.08.2021', 70, 20, 10)
+SELECT * FROM zfCalc_MarketingPlan_Scale (zc_Enum_ScaleCalcMarketingPlan_CC1(), '01.04.2022', 70, 20, 10)

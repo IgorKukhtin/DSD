@@ -10,13 +10,21 @@ CREATE OR REPLACE FUNCTION gpReport_PaperRecipeSPInsulin(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+             , InsertName_Check TVarChar, TotalSumm_Check TFloat
              , UnitCode Integer, UnitName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
-             , GoodsCode Integer, GoodsName TVarChar
+             , GoodsCode Integer, GoodsName TVarChar, NDS TFloat
              , BrandSPName TVarChar, MakerSP TVarChar, KindOutSPName TVarChar, Pack TVarChar, CountSP TFloat, PriceSP TFloat
+             , PriceRetSP TFloat, PaymentSP TFloat
              , CountSPMin TFloat, PriceSPMin TFloat
-             , Price TFloat, Amount TFloat, Summa TFloat
+             , PriceSale TFloat, Price TFloat, Amount TFloat, Summa TFloat, PriceCheckSP TFloat
              , SummSP TFloat, SummChangePercent TFloat
+             , OperDateSP             TDateTime
+             , InvNumberSP            TVarChar
+             , MedicSPName            TVarChar
+             , PartnerMedicalName     TVarChar
+             , MedicalProgramSPName   TVarChar
+
              , InvNumber_Invoice      TVarChar
              , InvNumber_Invoice_Full TVarChar
              , OperDate_Invoice       TDateTime
@@ -152,12 +160,38 @@ BEGIN
                                                             AND MI_KindOutSP.DescId = zc_MILinkObject_KindOutSP()
                             LEFT JOIN Object AS Object_KindOutSP ON Object_KindOutSP.Id = MI_KindOutSP.ObjectId
                        ), 
+        tmpMedicSP AS (SELECT Object_MedicSP.Id                 AS Id
+                            , Object_MedicSP.ObjectCode         AS Code
+                            , Object_MedicSP.ValueData          AS Name
+
+                            , Object_PartnerMedical.Id          AS PartnerMedicalId
+                            , Object_PartnerMedical.ValueData   AS PartnerMedicalName
+                            
+                            , ROW_NUMBER() OVER (PARTITION BY Object_MedicSP.ValueData
+                                                 ORDER BY COALESCE (Object_PartnerMedical.Id, 0) DESC) AS ORD
+
+                       FROM Object AS Object_MedicSP
+                           LEFT JOIN ObjectLink AS ObjectLink_MedicSP_PartnerMedical
+                                                ON ObjectLink_MedicSP_PartnerMedical.ObjectId = Object_MedicSP.Id
+                                               AND ObjectLink_MedicSP_PartnerMedical.DescId = zc_ObjectLink_MedicSP_PartnerMedical()
+                           LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = ObjectLink_MedicSP_PartnerMedical.ChildObjectId
+                       WHERE Object_MedicSP.DescId = zc_Object_MedicSP()
+                         AND Object_MedicSP.isErased = False
+                         ),
         tmpMovement AS (SELECT Movement_Check.*
                              , MovementLinkObject_SPKind.ObjectId                 AS SPKindId
                              , Object_SPKind.ValueData                            AS SPKindName
                              , MovementLinkObject_MedicalProgramSP.ObjectId       AS MedicalProgramSPId
                              , Object_MedicalProgramSP.ValueData                  AS MedicalProgramSPName
+                             , Object_Insert.ValueData                            AS InsertName_Check
+                             , MovementFloat_TotalSumm.ValueData                  AS TotalSumm_Check
                              , MLM_Child.MovementChildId                          AS Movement_Invoice 
+
+                             , MovementDate_OperDateSP.ValueData                  AS OperDateSP
+                             , MovementString_InvNumberSP.ValueData               AS InvNumberSP
+
+                             , MovementString_MedicSP.ValueData                   AS MedicSPName
+                             , tmpMedicSP.PartnerMedicalName                      AS PartnerMedicalName
                         FROM Movement AS Movement_Check
                              INNER JOIN MovementBoolean AS MovementBoolean_PaperRecipeSP
                                                         ON MovementBoolean_PaperRecipeSP.MovementId = Movement_Check.Id
@@ -174,10 +208,33 @@ BEGIN
                                                           AND MovementLinkObject_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
                              LEFT JOIN Object AS Object_MedicalProgramSP ON Object_MedicalProgramSP.Id = MovementLinkObject_MedicalProgramSP.ObjectId
 
+                             LEFT JOIN MovementLinkObject AS MLO_Insert
+                                                          ON MLO_Insert.MovementId = Movement_Check.Id
+                                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+                             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
+
+                             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                     ON MovementFloat_TotalSumm.MovementId = Movement_Check.Id
+                                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
                              LEFT JOIN MovementLinkMovement AS MLM_Child
                                                             ON MLM_Child.MovementId = Movement_Check.Id
                                                            AND MLM_Child.descId = zc_MovementLinkMovement_Child()
                              
+                             LEFT JOIN MovementString AS MovementString_InvNumberSP
+                                                      ON MovementString_InvNumberSP.MovementId = Movement_Check.Id
+                                                     AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
+                             LEFT JOIN MovementDate AS MovementDate_OperDateSP
+                                                    ON MovementDate_OperDateSP.MovementId = Movement_Check.Id
+                                                   AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
+
+                             LEFT JOIN MovementString AS MovementString_MedicSP
+                                                      ON MovementString_MedicSP.MovementId = Movement_Check.Id
+                                                     AND MovementString_MedicSP.DescId = zc_MovementString_MedicSP()
+                                                     
+                             LEFT JOIN tmpMedicSP ON tmpMedicSP.Name = MovementString_MedicSP.ValueData
+                                                 AND tmpMedicSP.ORD = 1 
+
                         WHERE Movement_Check.DescId = zc_Movement_Check()
                           AND Movement_Check.StatusId = zc_Enum_Status_Complete() 
                           AND Movement_Check.OperDate >= inStartDate
@@ -295,6 +352,8 @@ BEGIN
   SELECT tmpMI.Id
        , tmpMI.InvNumber 
        , tmpMI.OperDate
+       , tmpMI.InsertName_Check
+       , tmpMI.TotalSumm_Check
        , Object_Unit.ObjectCode          AS UnitCode
        , Object_Unit.ValueData           AS UnitName 
        , Object_Juridical.Id             AS JuridicalId
@@ -302,6 +361,7 @@ BEGIN
        , Object_Juridical.ValueData      AS JuridicalName 
        , Object_Goods_Main.ObjectCode    AS GoodsCode
        , Object_Goods_Main.Name          AS GoodsName
+       , ObjectFloat_NDSKind_NDS.ValueData  AS NDS
        
        , tmpGoodsSP.BrandSPName
        , tmpGoodsSP.MakerSP
@@ -309,15 +369,26 @@ BEGIN
        , tmpGoodsSP.Pack
        , tmpGoodsSP.CountSP
        , tmpGoodsSP.PriceSP
+       , tmpGoodsSP.PriceRetSP
+       , tmpGoodsSP.PaymentSP
+       
        , CASE WHEN COALESCE (tmpGoodsSP.CountSPMin, 0) = 0 THEN tmpGoodsSP.CountSP ELSE tmpGoodsSP.CountSPMin END :: TFloat 
        , (tmpGoodsSP.PriceSP * CASE WHEN COALESCE (tmpGoodsSP.CountSPMin, 0) = 0 THEN tmpGoodsSP.CountSP ELSE tmpGoodsSP.CountSPMin END / tmpGoodsSP.CountSP):: TFloat  AS PriceSPMin
 
+       , tmpMI.PriceSale
        , tmpMI.Price
        , Round(tmpMI.Amount * tmpGoodsSP.CountSP / CASE WHEN COALESCE (tmpGoodsSP.CountSPMin, 0) = 0 THEN tmpGoodsSP.CountSP ELSE tmpGoodsSP.CountSPMin END, 2):: TFloat  AS Amount
        , Round(tmpMI.Price * tmpMI.Amount, 2):: TFloat
+       , CAST ((tmpMI.SummChangePercent / tmpMI.Amount) AS NUMERIC(16,2)):: TFloat AS PriceCheckSP
        
        , Round(tmpGoodsSP.PriceSP * tmpMI.Amount, 2):: TFloat AS SummSP
        , tmpMI.SummChangePercent
+
+       , tmpMI.OperDateSP
+       , tmpMI.InvNumberSP
+       , tmpMI.MedicSPName
+       , tmpMI.PartnerMedicalName
+       , tmpMI.MedicalProgramSPName
              
        , Movement_Invoice.InvNumber_Invoice
        , Movement_Invoice.InvNumber_Invoice_Full
@@ -364,6 +435,10 @@ BEGIN
 
        INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = tmpMI.GoodsId
        INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
+       
+       LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                             ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods_Main.NDSKindId
+                            AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
 
        LEFT JOIN tmpGoodsSP AS tmpGoodsSP 
                             ON tmpGoodsSP.GoodsMainId = Object_Goods_Main.Id
@@ -377,7 +452,7 @@ BEGIN
        LEFT JOIN tmpParam ON tmpParam.JuridicalId = ObjectLink_Unit_Juridical.ChildObjectId
 
   WHERE Object_Juridical.Id = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0
-  ORDER BY tmpMI.OperDate;
+  ORDER BY tmpMI.OperDate, tmpMI.Id;
 
 END;
 $BODY$

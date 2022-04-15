@@ -541,7 +541,7 @@ BEGIN
                       , tmpListContainerSumm.PartnerId
                       , tmpListContainerSumm.InfoMoneyId
                       , tmpListContainerSumm.UnitId
-                      , MovementLinkObject_SubjectDoc.ObjectId AS SubjectDocName
+                      , MovementLinkObject_SubjectDoc.ObjectId AS SubjectDocId
                       , tmpListContainerSumm.GoodsId
                       , tmpListContainerSumm.GoodsKindId
                       , tmpListContainerSumm.MeasureId
@@ -628,8 +628,8 @@ BEGIN
          , Object_Partner.ValueData    AS PartnerName
          , Object_Unit.ObjectCode      AS UnitCode
          , Object_Unit.ValueData       AS UnitName
-         , tmpOperationGroup.SubjectDocName ::TVarChar
-         , tmpMI_Detail.ReasonName          ::TVarChar
+         , Object_SubjectDoc.ValueData  ::TVarChar AS SubjectDocName
+         , tmpMI_Detail.ReasonName      ::TVarChar
          
          , Object_GoodsGroup.ValueData            AS GoodsGroupName
          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
@@ -683,6 +683,8 @@ BEGIN
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = tmpOperationGroup.MeasureId
+          
+          LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = tmpOperationGroup.SubjectDocId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id

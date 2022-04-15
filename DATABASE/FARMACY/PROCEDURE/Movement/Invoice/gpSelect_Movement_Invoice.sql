@@ -49,6 +49,8 @@ RETURNS TABLE (Id                  Integer
              , DateRegistered      TDateTime
              , InvNumberRegistered TVarChar
 
+             , DateAdoptedByNSZU   TDateTime
+
              , BankAccount TVarChar
              , BankName    TVarChar
              , PartnerMedical_BankAccount TVarChar
@@ -305,10 +307,7 @@ BEGIN
     SELECT     
         Movement.Id
       , Movement.InvNumber
-      , CASE WHEN COALESCE (Movement.InvNumber, '') <> ''
-             THEN COALESCE (CAST (LEFT (Movement.InvNumber, CASE WHEN POSITION ('/' in Movement.InvNumber) = 0 THEN length (Movement.InvNumber) ELSE POSITION ('/' in Movement.InvNumber) -1 END ) AS NUMERIC (16,0)),0) 
-             ELSE 0
-        END :: integer  AS InvNumber_int
+      , zfConvert_InvNumberToInt(Movement.InvNumber)            AS InvNumber_int
       , Movement.OperDate
       , Object_Status.ObjectCode                                AS StatusCode
       , Object_Status.ValueData                                 AS StatusName
@@ -367,6 +366,8 @@ BEGIN
 
       , MovementDate_DateRegistered.ValueData                  AS DateRegistered
       , MovementString_InvNumberRegistered.ValueData           AS InvNumberRegistered
+      
+      , MovementDate_AdoptedByNSZU.ValueData                   AS DateAdoptedByNSZU
 
       , ObjectHistory_JuridicalDetails.BankAccount
       , tmpBankAccount.BankName ::TVarChar
@@ -421,6 +422,9 @@ BEGIN
         LEFT JOIN tmpMovementDate AS MovementDate_OperDateEnd
                                ON MovementDate_OperDateEnd.MovementId = Movement.Id
                               AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
+        LEFT JOIN tmpMovementDate AS MovementDate_AdoptedByNSZU
+                               ON MovementDate_AdoptedByNSZU.MovementId = Movement.Id
+                              AND MovementDate_AdoptedByNSZU.DescId = zc_MovementDate_AdoptedByNSZU()
 
         LEFT JOIN tmpMovementDate AS MovementDate_DateRegistered
                                   ON MovementDate_DateRegistered.MovementId = Movement.Id
@@ -532,5 +536,4 @@ ALTER FUNCTION gpSelect_Movement_Invoice (TDateTime, TDateTime, Boolean, TVarCha
 --select * from gpSelect_Movement_Invoice(inStartDate := ('07.06.2021')::TDateTime , inEndDate := ('20.04.2022')::TDateTime , inIsErased := 'False' ,  inSession := '3')
 -- where TotalSummAll <> TotalSumm
 
-
-select * from gpSelect_Movement_Invoice(inStartDate := ('07.06.2021')::TDateTime , inEndDate := ('05.04.2022')::TDateTime , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_Movement_Invoice(inStartDate := ('07.02.2022')::TDateTime , inEndDate := ('13.04.2022')::TDateTime , inIsErased := 'False' ,  inSession := '3');

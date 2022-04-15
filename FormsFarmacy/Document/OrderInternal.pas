@@ -172,6 +172,7 @@ type
     actUpdateSupplierFailures: TdsdExecStoredProc;
     actDataDialog: TExecuteDialog;
     bbUpdateSupplierFailures: TdxBarButton;
+    colisSupplierFailures: TcxGridDBColumn;
   private
     { Private declarations }
   public

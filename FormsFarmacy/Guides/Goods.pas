@@ -306,6 +306,23 @@ type
     spUpdate_SiteDiscont: TdsdStoredProc;
     actUpdate_SiteDiscont: TdsdExecStoredProc;
     dxBarButton17: TdxBarButton;
+    actUpdate_isFirst_No: TdsdExecStoredProc;
+    mactUpdate_isFirst_Yes: TMultiAction;
+    spUpdate_isFirst_No: TdsdStoredProc;
+    spUpdate_isFirst_Yes: TdsdStoredProc;
+    spUpdate_isSecond_No: TdsdStoredProc;
+    spUpdate_isSecond_Yes: TdsdStoredProc;
+    actUpdate_isFirst_Yes: TdsdExecStoredProc;
+    mactUpdate_isFirst_No: TMultiAction;
+    actUpdate_isSecond_Yes: TdsdExecStoredProc;
+    mactUpdate_isSecond_Yes: TMultiAction;
+    actUpdate_isSecond_No: TdsdExecStoredProc;
+    mactUpdate_isSecond_No: TMultiAction;
+    dxBarButton18: TdxBarButton;
+    bbtUpdate_isFirst_Yes: TdxBarButton;
+    bbUpdate_isSecond_Yes: TdxBarButton;
+    bbUpdate_isFirst_No: TdxBarButton;
+    bbUpdate_isSecond_No: TdxBarButton;
   private
     { Private declarations }
   public

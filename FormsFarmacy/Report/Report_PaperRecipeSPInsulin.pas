@@ -24,7 +24,7 @@ uses
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
   cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, dsdPivotGrid,
-  cxDBEdit, dsdGuides, cxButtonEdit;
+  cxDBEdit, dsdGuides, cxButtonEdit, Vcl.Menus;
 
 type
   TReport_PaperRecipeSPInsulinForm = class(TParentForm)
@@ -91,12 +91,24 @@ type
     cxLabel6: TcxLabel;
     GuidesJuridicalMedic: TdsdGuides;
     GuidesJuridical: TdsdGuides;
-    InvNumber_Invoice: TcxGridDBColumn;
+    InvNumber_Invoice_Full: TcxGridDBColumn;
     macPrintInvoice: TMultiAction;
     spSavePrintMovement: TdsdStoredProc;
     actSaveMovement: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
     actPrintDepartment: TdsdPrintAction;
+    InsertName_Check: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    PriceSale: TcxGridDBColumn;
+    PriceCheckSP: TcxGridDBColumn;
+    TotalSumm_Check: TcxGridDBColumn;
+    PriceRetSP: TcxGridDBColumn;
+    PopupMenu: TPopupMenu;
+    N1: TMenuItem;
+    Excel1: TMenuItem;
+    PaymentSP: TcxGridDBColumn;
+    MedicalProgramSPName: TcxGridDBColumn;
   private
   public
   end;

@@ -51,6 +51,7 @@ type
     ChangePercent: TcxGridDBColumn;
     SummCPMedical: TcxGridDBColumn;
     SummCPSpecial_0: TcxGridDBColumn;
+    DateAdoptedByNSZU: TcxGridDBColumn;
   private
     { Private declarations }
   public

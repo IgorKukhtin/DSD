@@ -68,11 +68,11 @@ BEGIN
                      AND Container.Amount > 0 
                      AND Container.ObjectId = inGoodsId
                      AND Container.WhereObjectId = vbUnitId
-                     AND COALESCE (ObjectDate_ExpirationDate.ValueData, MIDate_ExpirationDate.ValueData, zc_DateEnd()) > CURRENT_DATE + INTERVAL '60 DAY'
+                     AND COALESCE (ObjectDate_ExpirationDate.ValueData, MIDate_ExpirationDate.ValueData, zc_DateEnd()) > CURRENT_DATE + INTERVAL '90 DAY'
                    GROUP BY Container.ObjectId 
                    HAVING SUM(COALESCE(ContainerPD.Amount, Container.Amount)) >= 1)
    THEN
-     RAISE EXCEPTION 'Для добавления товара необходим остаток как минимум 1 уп. сроком более 60 дней.';          
+     RAISE EXCEPTION 'Для добавления товара необходим остаток как минимум 1 уп. сроком более 90 дней.';          
    END IF;
 
    IF EXISTS(SELECT 1
