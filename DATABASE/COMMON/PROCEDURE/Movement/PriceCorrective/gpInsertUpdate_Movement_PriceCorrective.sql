@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceCorrective (integer, tvarch
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceCorrective (integer, tvarchar, tdatetime, boolean, tfloat, tvarchar, tvarchar, integer, integer, integer, integer, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceCorrective (integer, tvarchar, tdatetime, boolean, tfloat, tvarchar, tvarchar, integer, integer, integer, integer, integer, tvarchar, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceCorrective (integer, integer, tvarchar, tdatetime, boolean, tfloat, tvarchar, tvarchar, integer, integer, integer, integer, integer, tvarchar, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceCorrective (integer, integer, tvarchar, tdatetime, boolean, tfloat, tvarchar, tvarchar, integer, integer, integer, integer, integer, integer, tvarchar, tvarchar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PriceCorrective(
@@ -20,6 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PriceCorrective(
     IN inPartnerId           Integer   , -- Контрагент
     IN inPaidKindId          Integer   , -- Виды форм оплаты
     IN inContractId          Integer   , -- Договора
+    IN inBranchId            Integer   , -- Филиал
     IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -44,7 +46,8 @@ BEGIN
                                       , inToId             := inToId
                                       , inPartnerId        := inPartnerId
                                       , inPaidKindId       := inPaidKindId
-                                      , inContractId       := inContractId
+                                      , inContractId       := inContractId   
+                                      , inBranchId         := inBranchId
                                       , inUserId           := vbUserId
                                        );
      -- Комментарий
@@ -57,6 +60,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.04.22         * inBranchId
  02.02.18         *
  17.06.14         * add inInvNumberPartner 
                       , inInvNumberMark  

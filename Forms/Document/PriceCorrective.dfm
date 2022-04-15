@@ -2,9 +2,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099'>'
   ClientHeight = 660
   ClientWidth = 1042
-  ExplicitLeft = -269
   ExplicitWidth = 1058
-  ExplicitHeight = 695
+  ExplicitHeight = 699
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -22,6 +21,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       inherited cxGrid: TcxGrid
         Width = 1042
         Height = 332
+        ExplicitLeft = 40
+        ExplicitTop = 24
         ExplicitWidth = 1042
         ExplicitHeight = 332
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -986,7 +987,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
           Kind = bkEllipsis
         end>
       TabOrder = 14
-      Width = 77
+      Width = 83
     end
     object cxLabel11: TcxLabel
       Left = 843
@@ -1061,15 +1062,15 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Width = 63
     end
     object cxLabel16: TcxLabel
-      Left = 9
-      Top = 85
+      Left = 179
+      Top = 86
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 9
+      Left = 179
       Top = 103
       TabOrder = 26
-      Width = 549
+      Width = 379
     end
     object cxLabel8: TcxLabel
       Left = 568
@@ -1087,6 +1088,23 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Properties.ReadOnly = True
       TabOrder = 28
       Width = 170
+    end
+    object cxLabel14: TcxLabel
+      Left = 8
+      Top = 86
+      Caption = #1060#1080#1083#1080#1072#1083
+    end
+    object edBranch: TcxButtonEdit
+      Left = 8
+      Top = 103
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 30
+      Width = 165
     end
   end
   object edIsChecked: TcxCheckBox [2]
@@ -2651,6 +2669,21 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Component = edStartDateTax
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchId'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchName'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -2763,6 +2796,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inBranchId'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -2827,6 +2868,9 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end
       item
         Control = edDocumentTax
+      end
+      item
+        Control = edBranch
       end>
     Left = 216
     Top = 225
@@ -3364,8 +3408,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 848
-    Top = 64
+    Left = 856
+    Top = 56
   end
   object spCorrective: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'
@@ -4022,5 +4066,35 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     PackSize = 1
     Left = 432
     Top = 384
+  end
+  object GuidesBranch: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBranch
+    FormNameParam.Value = 'TBranch_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBranch_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 80
+    Top = 96
   end
 end
