@@ -175,6 +175,9 @@ type
     bbTaxCorrective: TdxBarButton;
     actMIChildProtocolOpenForm: TdsdOpenForm;
     bbMIChildProtocolOpenForm: TdxBarButton;
+    cxLabel14: TcxLabel;
+    edBranch: TcxButtonEdit;
+    GuidesBranch: TdsdGuides;
   private
     { Private declarations }
   public

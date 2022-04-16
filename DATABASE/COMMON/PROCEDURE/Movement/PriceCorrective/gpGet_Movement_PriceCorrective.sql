@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
+             , BranchId Integer, BranchName TVarChar
              , StartDateTax TDateTime
              , Comment TVarChar
              )
@@ -60,15 +61,17 @@ BEGIN
              , 0                     	                AS PaidKindId
              , CAST ('' as TVarChar)	                AS PaidKindName
              , 0                     	                AS ContractId
-             , CAST ('' as TVarChar) 	                AS ContractName
-             , 0                     			AS DocumentTaxKindId
-             , CAST ('' as TVarChar) 			AS DocumentTaxKindName
+             , CAST ('' as TVarChar)                    AS ContractName
+             , 0                                        AS DocumentTaxKindId
+             , CAST ('' as TVarChar)                    AS DocumentTaxKindName 
+             , 0                                        AS BranchId
+             , CAST ('' as TVarChar)                    AS BranchName
              , (DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '4 MONTH') :: TDateTime AS StartDateTax
-             , CAST ('' as TVarChar) 		        AS Comment
+             , CAST ('' as TVarChar)                    AS Comment
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
-               --LEFT JOIN Object AS Object_To ON Object_To.Id = 8461
+               --LEFT JOIN Object AS Object_To ON Object_To.Id = 8461                                      
          ;
      ELSE
 
@@ -117,7 +120,9 @@ BEGIN
            , View_Contract_InvNumber.InvNumber      AS ContractName
 
            , Object_TaxKind.Id                	    AS DocumentTaxKindId
-           , Object_TaxKind.ValueData         	    AS DocumentTaxKindName
+           , Object_TaxKind.ValueData         	    AS DocumentTaxKindName    
+           , Object_Branch.Id                       AS BranchId
+           , Object_Branch.ValueData                AS BranchName
            , (DATE_TRUNC ('MONTH', Movement.OperDate) - INTERVAL '4 MONTH') :: TDateTime AS StartDateTax
            , MovementString_Comment.ValueData       AS Comment
 
@@ -190,6 +195,11 @@ BEGIN
                                         AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
 
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
+                                         ON MovementLinkObject_Branch.MovementId = Movement.Id
+                                        AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = MovementLinkObject_Branch.ObjectId
 
             -- Налоговая
             LEFT JOIN tmpMovementTax AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId

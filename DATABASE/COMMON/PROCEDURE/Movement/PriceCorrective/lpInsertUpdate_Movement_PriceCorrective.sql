@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PriceCorrective (integer, tvarchar, tdatetime, boolean, tfloat, integer, integer, integer, integer, integer, integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PriceCorrective (integer, tvarchar, tdatetime, boolean, tfloat, tvarchar, tvarchar, integer, integer, integer, integer, integer, integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PriceCorrective (integer, integer, tvarchar, tdatetime, boolean, tfloat, tvarchar, tvarchar, integer, integer, integer, integer, integer, integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PriceCorrective (integer, integer, tvarchar, tdatetime, boolean, tfloat, tvarchar, tvarchar, integer, integer, integer, integer, integer, integer, integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PriceCorrective(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат покупателя>
@@ -17,14 +18,15 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PriceCorrective(
     IN inToId                Integer   , -- Кому (в документе)
     IN inPartnerId           Integer   , -- Контрагент
     IN inPaidKindId          Integer   , -- Виды форм оплаты
-    IN inContractId          Integer   , -- Договора
+    IN inContractId          Integer   , -- Договора      
+    IN inBranchId            Integer   , -- Филиал
     IN inUserId              Integer     -- Пользователь
 )
 RETURNS Integer AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
-   DECLARE vbBranchId Integer;
+   --DECLARE vbBranchId Integer;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) 
@@ -45,7 +47,7 @@ BEGIN
      END IF;
 
      -- определяется филиал + проверка
-     vbBranchId:= zfGet_Branch_AccessKey (vbAccessKeyId);
+     --vbBranchId:= zfGet_Branch_AccessKey (vbAccessKeyId);
 
 
      -- определяем признак Создание/Корректировка
@@ -77,7 +79,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
 
      -- сохранили связь с <филиал>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), ioId, vbBranchId);
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), ioId, inBranchId);
 
 
      -- пересчитали Итоговые суммы по накладной
