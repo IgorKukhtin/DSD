@@ -71,7 +71,7 @@ BEGIN
                                  AND (lfSelect.DateOut >= vbOperDate
                                   AND lfSelect.DateIn  <= vbOperDate)
                                )
-              --штатное расписание №2Дневной план на человека 
+                -- штатное расписание №2Дневной план на человека 
               , tmpStaffList AS (SELECT ObjectLink_StaffList_Unit.ChildObjectId           AS UnitId
                                       , ObjectLink_StaffList_Position.ChildObjectId       AS PositionId
                                       , ObjectLink_StaffList_PositionLevel.ChildObjectId  AS PositionLevelId
@@ -97,7 +97,7 @@ BEGIN
                                          , ObjectLink_StaffList_PositionLevel.ChildObjectId
                        --HAVING MAX (COALESCE (ObjectFloat_HoursDay.ValueData,0)) <> 0
                        )
-               --Нужно найти сотрудников кто в отпуске в єтот день
+                -- Нужно найти сотрудников кто в отпуске в єтот день
               , tmpMov_Holiday AS (SELECT Movement.Id
                                      FROM MovementDate AS MovementDate_BeginDateStart
                                           INNER JOIN Movement ON Movement.Id = MovementDate_BeginDateStart.MovementId
@@ -128,13 +128,14 @@ BEGIN
             SELECT tmpPersonal.PersonalId
                  , tmpPersonal.PositionId
                  , tmpPersonal.PositionLevelId
-                 , COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay, 0) AS HoursDay
+               --, COALESCE (tmpStaffList.HoursDay, tmpStaffList2.HoursDay, 0) AS HoursDay
+                 , 0 AS HoursDay
             FROM tmpPersonal    
                  LEFT JOIN tmpHoliday ON tmpHoliday.PersonalId = tmpPersonal.PersonalId
                  LEFT JOIN tmpStaffList ON tmpStaffList.PositionId = tmpPersonal.PositionId
                                        AND COALESCE (tmpStaffList.PositionLevelId,0) = COALESCE (tmpPersonal.PositionLevelId,0)
                                        AND tmpStaffList.UnitId     = vbUnitId
-                 --второй раз без подразделения
+                 -- второй раз без подразделения
                  LEFT JOIN tmpStaffList AS tmpStaffList2
                                         ON tmpStaffList2.PositionId = tmpPersonal.PositionId
                                        AND COALESCE (tmpStaffList2.PositionLevelId,0) = COALESCE (tmpPersonal.PositionLevelId,0)
