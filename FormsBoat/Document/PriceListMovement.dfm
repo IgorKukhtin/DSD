@@ -3,7 +3,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
   ClientHeight = 668
   ClientWidth = 1069
   ExplicitWidth = 1085
-  ExplicitHeight = 706
+  ExplicitHeight = 707
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -491,6 +491,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
     object actDoLoad_Uflex2: TExecuteImportSettingsAction [5]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       ImportSettingsId.Value = Null
       ImportSettingsId.Component = FormParams
       ImportSettingsId.ComponentItem = 'ImportSettingId_Uflex2'
@@ -522,7 +523,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         item
           StoredProc = spGetImportSettingId_Uflex2
         end>
-      Caption = 'actGetImportSetting_SkiDoo'
+      Caption = 'actGetImportSetting__Uflex2'
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1080#1093#1086#1076#1072' '#1080#1079' '#1092#1072#1081#1083#1072
     end
     object actDoLoad_Uflex1: TExecuteImportSettingsAction [8]
@@ -1151,6 +1152,10 @@ inherited PriceListMovementForm: TPriceListMovementForm
         item
           Visible = True
           ItemName = 'bbStartLoad_Uflex1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_Uflex2'
         end
         item
           Visible = True
