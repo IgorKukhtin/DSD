@@ -4,27 +4,29 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, Integer, I
 DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,  Integer, TDateTime, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,  Integer, TDateTime, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_PeriodClose(
- INOUT ioId	         Integer   ,     -- ключ объекта
-    IN inCode            Integer   ,     -- 
-    IN inName            TVarChar  ,     -- Описание
-    IN inRoleId          Integer   ,     -- Роль
-    IN inRoleCode        Integer   ,     -- Роль
-    IN inUserId_excl     Integer   ,     -- Пользователь - Исключение
-    IN inUserCode_excl   Integer   ,     -- Пользователь - Исключение     
-    IN inUserByGroupId_excl Integer,     -- группировка пользователя - исключение
-    IN inDescId          Integer   ,     -- Вид Документа
-    IN inDescId_excl     Integer   ,     -- Вид Документа - Исключение
-    IN inBranchId        Integer   ,     -- 
-    IN inBranchCode      Integer   ,     -- 
-    IN inPaidKindId      Integer   ,     -- 
-    IN inPaidKindCode    Integer   ,     -- 
-    IN inPeriod          Integer   ,     -- Дни
-    IN inCloseDate       TDateTime ,     -- Закрытый период
-    IN inCloseDate_excl  TDateTime ,     -- Закрытый период - Исключение
-    IN inCloseDate_store TDateTime ,     -- Период закрыт до (для кол-во склад)
-    IN inSession         TVarChar        -- сессия пользователя
+ INOUT ioId	              Integer   ,     -- ключ объекта
+    IN inCode                 Integer   ,     -- 
+    IN inName                 TVarChar  ,     -- Описание
+    IN inRoleId               Integer   ,     -- Роль
+    IN inRoleCode             Integer   ,     -- Роль
+    IN inUserId_excl          Integer   ,     -- Пользователь - Исключение
+    IN inUserCode_excl        Integer   ,     -- Пользователь - Исключение     
+    IN inUserByGroupId_excl   Integer   ,     -- группировка пользователя - исключение
+    IN inUserByGroupCode_excl Integer   ,     -- группировка пользователя - исключение
+    IN inDescId               Integer   ,     -- Вид Документа
+    IN inDescId_excl          Integer   ,     -- Вид Документа - Исключение
+    IN inBranchId             Integer   ,     -- 
+    IN inBranchCode           Integer   ,     -- 
+    IN inPaidKindId           Integer   ,     -- 
+    IN inPaidKindCode         Integer   ,     -- 
+    IN inPeriod               Integer   ,     -- Дни
+    IN inCloseDate            TDateTime ,     -- Закрытый период
+    IN inCloseDate_excl       TDateTime ,     -- Закрытый период - Исключение
+    IN inCloseDate_store      TDateTime ,     -- Период закрыт до (для кол-во склад)
+    IN inSession              TVarChar        -- сессия пользователя
 )
   RETURNS Integer AS
 $BODY$
@@ -60,10 +62,11 @@ BEGIN
 
 
    -- замена
-   IF (inRoleCode      = 0) OR (inRoleId      = 0) THEN inRoleId     := NULL; END IF;
-   IF (inUserCode_excl = 0) OR (inUserId_excl = 0) THEN inUserId_excl:= NULL; END IF;
-   IF (inBranchCode    = 0) OR (inBranchId    = 0) THEN inBranchId   := NULL; END IF;
-   IF (inPaidKindCode  = 0) OR (inPaidKindId  = 0) THEN inPaidKindId := NULL; END IF;
+   IF (inRoleCode      = 0)        OR (inRoleId      = 0)        THEN inRoleId            := NULL; END IF;
+   IF (inUserCode_excl = 0)        OR (inUserId_excl = 0)        THEN inUserId_excl       := NULL; END IF;
+   IF (inBranchCode    = 0)        OR (inBranchId    = 0)        THEN inBranchId          := NULL; END IF;
+   IF (inPaidKindCode  = 0)        OR (inPaidKindId  = 0)        THEN inPaidKindId        := NULL; END IF;
+   IF (inUserByGroupCode_excl = 0) OR (inUserByGroupId_excl = 0) THEN inUserByGroupId_excl:= NULL; END IF;
 
 
    -- для Админа  - Все Права
@@ -131,6 +134,9 @@ BEGIN
 
           || '<Field FieldName = "Пользователь - Исключение" FieldValue = "'       || COALESCE (lfGet_Object_ValueData (inUserId_excl), '') || '"/>'
           || '<Field FieldName = "Пользователь - Исключение (код)" FieldValue = "' || COALESCE (inUserCode_excl :: TVarChar, '') || '"/>'
+
+          || '<Field FieldName = "Пользователь - Исключение" FieldValue = "'       || COALESCE (lfGet_Object_ValueData (inUserByGroupId_excl), '') || '"/>'
+          || '<Field FieldName = "Пользователь - Исключение (код)" FieldValue = "' || COALESCE (inUserByGroupCode_excl :: TVarChar, '') || '"/>'
 
 --          || '<Field FieldName = "Вид Документа" FieldValue = "' || COALESCE (inDescId :: TVarChar, '') || '"/>'
 --          || '<Field FieldName = "Вид Документа - Исключение" FieldValue = "' || COALESCE (inDescId_excl :: TVarChar, '') || '"/>'

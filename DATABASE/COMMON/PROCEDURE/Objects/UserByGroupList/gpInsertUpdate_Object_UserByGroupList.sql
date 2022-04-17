@@ -47,9 +47,29 @@ BEGIN
    ioId := lpInsertUpdate_Object (ioId, zc_Object_UserByGroupList(), 0, '');
 
    -- сохранили связь с < >
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_UserByGroupList_User(), ioId, inUserId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_UserByGroupList_User(), ioId, inUserId);
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_UserByGroupList_UserByGroup(), ioId, inUserByGroupId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_UserByGroupList_UserByGroup(), ioId, inUserByGroupId);
+
+
+   -- сохранили STRING_AGG
+   PERFORM lpInsertUpdate_Object (inUserByGroupId, zc_Object_UserByGroup()
+                                , (SELECT Object.ObjectCode FROM Object WHERE Object.Id = inUserByGroupId)
+                                , (SELECT STRING_AGG (tmp.UserName, ';')
+                                   FROM (SELECT Object_User.ValueData AS UserName
+                                         FROM ObjectLink AS ObjectLink_UserByGroupList_UserByGroup
+                                              JOIN Object AS Object_UserByGroupList ON Object_UserByGroupList.Id       = ObjectLink_UserByGroupList_UserByGroup.ObjectId
+                                                                                   AND Object_UserByGroupList.isErased = FALSE
+                                              JOIN ObjectLink AS ObjectLink_UserByGroupList_User
+                                                              ON ObjectLink_UserByGroupList_User.ObjectId = ObjectLink_UserByGroupList_UserByGroup.ObjectId
+                                                             AND ObjectLink_UserByGroupList_User.DescId   = zc_ObjectLink_UserByGroupList_User()
+                                              JOIN Object AS Object_User ON Object_User.Id       = ObjectLink_UserByGroupList_User.ChildObjectId
+                                         WHERE ObjectLink_UserByGroupList_UserByGroup.ChildObjectId = inUserByGroupId
+                                           AND ObjectLink_UserByGroupList_UserByGroup.DescId        = zc_ObjectLink_UserByGroupList_UserByGroup()
+                                         ORDER BY Object_User.ValueData
+                                        ) AS tmp
+                                  )
+                                 );
  
 
    -- сохранили протокол

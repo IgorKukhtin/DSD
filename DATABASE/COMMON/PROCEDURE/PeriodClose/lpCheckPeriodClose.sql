@@ -66,6 +66,23 @@ BEGIN
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpPeriodClose'))
      THEN
          -- таблица
+         CREATE TEMP TABLE _tmpPeriodClose_excl (PeriodCloseId Integer, UserId_excl Integer, CloseDate_excl TDateTime) ON COMMIT DROP;
+         INSERT INTO _tmpPeriodClose_excl (PeriodCloseId, UserId_excl, CloseDate_excl)
+             SELECT PeriodClose.Id AS PeriodCloseId
+                  , ObjectLink_UserByGroupList_User.ChildObjectId AS UserId_excl
+                  , PeriodClose.CloseDate_excl
+             FROM PeriodClose
+                  JOIN ObjectLink AS ObjectLink_UserByGroupList_UserByGroup
+                                  ON ObjectLink_UserByGroupList_UserByGroup.ChildObjectId = PeriodClose.UserByGroupId_excl
+                                 AND ObjectLink_UserByGroupList_UserByGroup.DescId        = zc_ObjectLink_UserByGroupList_UserByGroup()
+                  JOIN Object AS Object_UserByGroupList ON Object_UserByGroupList.Id       = ObjectLink_UserByGroupList_UserByGroup.ObjectId
+                                                       AND Object_UserByGroupList.isErased = FALSE
+                  JOIN ObjectLink AS ObjectLink_UserByGroupList_User
+                                  ON ObjectLink_UserByGroupList_User.ObjectId = ObjectLink_UserByGroupList_UserByGroup.ObjectId
+                                 AND ObjectLink_UserByGroupList_User.DescId   = zc_ObjectLink_UserByGroupList_User()
+             WHERE PeriodClose.UserByGroupId_excl > 0;
+
+         -- таблица
          CREATE TEMP TABLE _tmpPeriodClose (PeriodCloseId Integer, Code Integer, Name TVarChar, CloseDate TDateTime, UserId Integer, UserId_excl Integer, MovementDescId Integer, MovementDescId_excl Integer, BranchId Integer, PaidKindId Integer, CloseDate_excl TDateTime) ON COMMIT DROP;
          -- получили ВСЕ данные из PeriodClose
          WITH tmpDesc AS (SELECT tmp.DescId, tmp.MovementDescId FROM lpSelect_PeriodClose_Desc (inUserId:= inUserId) AS tmp
@@ -149,6 +166,7 @@ BEGIN
      THEN
          -- 1.2. Исключения
          IF EXISTS (SELECT 1 FROM _tmpPeriodClose WHERE _tmpPeriodClose.PeriodCloseId = vbPeriodCloseId AND _tmpPeriodClose.UserId_excl = inUserId AND _tmpPeriodClose.CloseDate_excl <= inOperDate)
+            OR EXISTS (SELECT 1 FROM _tmpPeriodClose_excl WHERE _tmpPeriodClose_excl.PeriodCloseId = vbPeriodCloseId AND _tmpPeriodClose_excl.UserId_excl = inUserId AND _tmpPeriodClose_excl.CloseDate_excl <= inOperDate)
          THEN -- !!!разрешили!!!
               RETURN;
          END IF;
@@ -246,6 +264,7 @@ BEGIN
      THEN
          -- 2.2. Исключения
          IF EXISTS (SELECT 1 FROM _tmpPeriodClose WHERE _tmpPeriodClose.PeriodCloseId = vbPeriodCloseId AND _tmpPeriodClose.UserId_excl = inUserId AND _tmpPeriodClose.CloseDate_excl <= inOperDate)
+            OR EXISTS (SELECT 1 FROM _tmpPeriodClose_excl WHERE _tmpPeriodClose_excl.PeriodCloseId = vbPeriodCloseId AND _tmpPeriodClose_excl.UserId_excl = inUserId AND _tmpPeriodClose_excl.CloseDate_excl <= inOperDate)
          THEN -- !!!разрешили!!!
               RETURN;
          END IF;
@@ -326,6 +345,7 @@ BEGIN
      THEN
          -- 3.2. Исключения
          IF EXISTS (SELECT 1 FROM _tmpPeriodClose WHERE _tmpPeriodClose.PeriodCloseId = vbPeriodCloseId AND _tmpPeriodClose.UserId_excl = inUserId AND _tmpPeriodClose.CloseDate_excl <= inOperDate)
+            OR EXISTS (SELECT 1 FROM _tmpPeriodClose_excl WHERE _tmpPeriodClose_excl.PeriodCloseId = vbPeriodCloseId AND _tmpPeriodClose_excl.UserId_excl = inUserId AND _tmpPeriodClose_excl.CloseDate_excl <= inOperDate)
          THEN -- !!!разрешили!!!
               RETURN;
          END IF;

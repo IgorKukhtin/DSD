@@ -1,25 +1,25 @@
 inherited PeriodCloseForm: TPeriodCloseForm
   Caption = #1047#1072#1082#1088#1099#1090#1080#1077' '#1087#1077#1088#1080#1086#1076#1072' ('#1076#1083#1103' '#1040#1076#1084#1080#1085#1080#1089#1090#1088#1072#1090#1086#1088#1072')'
   ClientHeight = 306
-  ClientWidth = 798
-  ExplicitWidth = 814
+  ClientWidth = 894
+  ExplicitWidth = 910
   ExplicitHeight = 345
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 58
-    Width = 798
+    Width = 894
     Height = 248
     ExplicitTop = 58
     ExplicitWidth = 798
     ExplicitHeight = 248
     ClientRectBottom = 248
-    ClientRectRight = 798
+    ClientRectRight = 894
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 798
       ExplicitHeight = 248
       inherited cxGrid: TcxGrid
-        Width = 798
+        Width = 894
         Height = 248
         ExplicitWidth = 798
         ExplicitHeight = 248
@@ -102,9 +102,16 @@ inherited PeriodCloseForm: TPeriodCloseForm
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
+          object UserByGroupCode_excl: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1075#1088'.'#1087#1086#1083#1100#1079'. - '#1048#1089#1082#1083'.'
+            DataBinding.FieldName = 'UserByGroupCode_excl'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1043#1088#1091#1087#1087#1099' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081' - '#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077
+            Width = 80
+          end
           object UserByGroupName_excl: TcxGridDBColumn
-            AlternateCaption = '70'
-            Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' - '#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077'l'
+            Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1083#1100#1079'. - '#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'UserByGroupName_excl'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -116,6 +123,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1043#1088#1091#1087#1087#1072' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081' - '#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077
             Width = 105
           end
           object CloseDate_excl: TcxGridDBColumn
@@ -252,10 +260,11 @@ inherited PeriodCloseForm: TPeriodCloseForm
   object Panel: TPanel [1]
     Left = 0
     Top = 0
-    Width = 798
+    Width = 894
     Height = 32
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 798
     object deOperDate: TcxDateEdit
       Left = 183
       Top = 5
@@ -340,6 +349,13 @@ inherited PeriodCloseForm: TPeriodCloseForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'UserByGroupId_excl'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UserByGroupCode_excl'
           MultiSelectSeparator = ','
         end
         item
@@ -620,6 +636,14 @@ inherited PeriodCloseForm: TPeriodCloseForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'UserByGroupId_excl'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserByGroupCode_excl'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UserByGroupCode_excl'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

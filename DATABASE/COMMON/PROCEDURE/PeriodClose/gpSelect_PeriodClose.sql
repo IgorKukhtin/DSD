@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Period Integer, CloseDate TDateTime, CloseDate_excl TDateTime, CloseDate_store TDateTime
              , UserId Integer, UserName TVarChar, OperDate TDateTime
 
-             , UserByGroupId_excl Integer, UserByGroupName_excl TVarChar
+             , UserByGroupId_excl Integer, UserByGroupCode_excl Integer, UserByGroupName_excl TVarChar
               )
 AS
 $BODY$
@@ -88,7 +88,8 @@ BEGIN
              , PeriodClose.OperDate
              
              , PeriodClose.UserByGroupId_excl
-             , Object_UserByGroup_excl.ValueData :: TVarChar AS UserByGroupName_excl
+             , Object_UserByGroup_excl.ObjectCode  AS UserByGroupCode_excl
+             , Object_UserByGroup_excl.ValueData   AS UserByGroupName_excl
 
         FROM PeriodClose
              LEFT JOIN tmpDesc ON tmpDesc.DescId = PeriodClose.DescId
