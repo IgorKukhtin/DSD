@@ -16,7 +16,7 @@ BEGIN
     END IF;
 
     -- 1.
-    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Partner(), MovementItem.Id, (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Partner()))
+    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Partner(), MovementItem.ObjectId, (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Partner()))
     FROM MovementItem
     WHERE MovementItem.MovementId = inMovementId
       AND MovementItem.DescId     = zc_MI_Master()
