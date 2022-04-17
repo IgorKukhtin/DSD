@@ -26,7 +26,7 @@ BEGIN
     THEN
          RAISE EXCEPTION 'Ошибка.Не выбран Поставщик';
     END IF;
-
+            
    
    IF COALESCE (inArticle,'') <> ''
    THEN
@@ -48,7 +48,9 @@ BEGIN
              -- создаем
              vbGoodsId := gpInsertUpdate_Object_Goods(ioId               := COALESCE (vbGoodsId,0)::  Integer
                                                     , inCode             := lfGet_ObjectCode(0, zc_Object_Goods())    :: Integer
-                                                    , inName             := (TRIM (inGoodsName) ||' / '||TRIM (inModelName) ) :: TVarChar
+                                                    , inName             := CASE WHEN COALESCE (TRIM (inModelName),'') <> '' THEN (TRIM (inGoodsName)  ||' / '||TRIM (inModelName) ) 
+                                                                                 ELSE TRIM (inGoodsName)
+                                                                            END :: TVarChar
                                                     , inArticle          := TRIM (inArticle)
                                                     , inArticleVergl     := Null     :: TVarChar
                                                     , inEAN              := Null     :: TVarChar
