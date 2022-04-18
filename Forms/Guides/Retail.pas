@@ -22,7 +22,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, cxCurrencyEdit;
 
 type
   TRetailForm = class(TParentForm)
@@ -84,6 +84,7 @@ type
     spUpdate_isWMS: TdsdStoredProc;
     actUpdate_isWMS: TdsdExecStoredProc;
     bbUpdate_isWMS: TdxBarButton;
+    RoundWeight: TcxGridDBColumn;
   private
     { Private declarations }
   public

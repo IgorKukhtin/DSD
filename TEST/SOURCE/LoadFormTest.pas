@@ -222,6 +222,7 @@ type
     procedure LoadVisitFormTest;
     procedure LoadUnionFormTest;
     procedure LoadUnitFormTest;
+    procedure LoadUserByGroupFormTest;
     procedure LoadWorkTimeKindFormTest;
     procedure LoadWeighingPartnerFormTest;
     procedure LoadWeighingProductionFormTest;
@@ -1182,10 +1183,11 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAmountDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAmountDialogForm');
   exit;
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnDescKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnDescKindForm');
   exit;
@@ -1226,14 +1228,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserSettingsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserSettingsForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserKeyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserKeyForm');
 
@@ -1270,10 +1272,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovementProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodCloseForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPeriodCloseForm');
   exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodClose_UserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPeriodClose_UserForm');
 
@@ -3047,7 +3050,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptSaleAnalyzeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptSaleAnalyzeForm');
   }
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptSaleAnalyzeRealçóêûùDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptSaleAnalyzeRealDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptSaleAnalyzeRealDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptSaleAnalyzeRealForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptSaleAnalyzeRealForm');
@@ -3190,6 +3193,18 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnit_SheetWorkTimeForm');
 end;
 
+procedure TLoadFormTest.LoadUserByGroupFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserByGroupListTreeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserByGroupListTreeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserByGroupListEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserByGroupListEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserByGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserByGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserByGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserByGroupEditForm');
+end;
 
 procedure TLoadFormTest.LoadToolsWeighingFormTest;
 begin
@@ -3830,12 +3845,12 @@ begin
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKind_HolidayForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKind_HolidayForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindEditForm');
-
+  }
     //ôîðìà âûáîðà
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKind_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKind_ObjectForm');

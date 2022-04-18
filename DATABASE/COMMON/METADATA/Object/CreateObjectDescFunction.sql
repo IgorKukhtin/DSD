@@ -990,6 +990,13 @@ CREATE OR REPLACE FUNCTION zc_Object_CardFuelKind() RETURNS Integer AS $BODY$BEG
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_CardFuelKind', 'Статус Топливные карты' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CardFuelKind');
 
+CREATE OR REPLACE FUNCTION zc_Object_UserByGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_UserByGroup'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_UserByGroup', 'Группировки пользователей' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_UserByGroup');
+
+CREATE OR REPLACE FUNCTION zc_Object_UserByGroupList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_UserByGroupList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_UserByGroupList', 'Элементы группировки пользователей' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_UserByGroupList');
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --!!! Аптека
@@ -1544,6 +1551,8 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 14.04.22         * zc_Object_UserByGroup
+                    zc_Object_UserByGroupList
  24.02.22                                                                                        * zc_Object_ExchangeRates  
  09.02.22                                                                                        * zc_Object_SupplierFailures  
  20.01.22                                                                                        * zc_Object_PickUpLogsAndDBF  

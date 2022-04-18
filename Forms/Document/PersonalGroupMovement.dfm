@@ -3,7 +3,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
   ClientHeight = 426
   ClientWidth = 915
   ExplicitWidth = 931
-  ExplicitHeight = 464
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -118,7 +118,14 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
             Options.Editing = False
             Width = 80
           end
-          object WorkTimeKindName: TcxGridDBColumn [5]
+          object WorkTimeKindCode: TcxGridDBColumn [5]
+            Caption = #1050#1086#1076' ('#1090#1080#1087' '#1088#1072#1073'. '#1074#1088#1077#1084#1077#1085#1080')'
+            DataBinding.FieldName = 'WorkTimeKindCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 74
+          end
+          object WorkTimeKindName: TcxGridDBColumn [6]
             Caption = #1058#1080#1087' '#1088#1072#1073'. '#1074#1088#1077#1084#1077#1085#1080
             DataBinding.FieldName = 'WorkTimeKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -132,9 +139,9 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1058#1080#1087' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
-            Width = 83
+            Width = 93
           end
-          object Amount: TcxGridDBColumn [6]
+          object Amount: TcxGridDBColumn [7]
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1095#1072#1089#1086#1074
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -143,7 +150,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object Count_Personal: TcxGridDBColumn [7]
+          object Count_Personal: TcxGridDBColumn [8]
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086#1090#1088'.'
             DataBinding.FieldName = 'Count_Personal'
             HeaderAlignmentHorz = taCenter
@@ -152,7 +159,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
             Options.Editing = False
             Width = 55
           end
-          object UnitName_inf: TcxGridDBColumn [8]
+          object UnitName_inf: TcxGridDBColumn [9]
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'UnitName_inf'
             Visible = False
@@ -162,7 +169,7 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
             Options.Editing = False
             Width = 92
           end
-          object PositionName_inf: TcxGridDBColumn [9]
+          object PositionName_inf: TcxGridDBColumn [10]
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'PositionName_inf'
             Visible = False
@@ -172,12 +179,28 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
             Options.Editing = False
             Width = 100
           end
-          object Comment: TcxGridDBColumn [10]
+          object Comment: TcxGridDBColumn [11]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object DateOut: TcxGridDBColumn [12]
+            Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'DateOut'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object isMain: TcxGridDBColumn [13]
+            Caption = #1054#1089#1085#1086#1074'. '#1084#1077#1089#1090#1086' '#1088'.'
+            DataBinding.FieldName = 'isMain'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           inherited colIsErased: TcxGridDBColumn
             Width = 80
@@ -489,6 +512,13 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
           Component = MasterCDS
           ComponentItem = 'WorkTimeKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'WorkTimeKindCode'
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1136,10 +1166,10 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inWorkTimeKindId'
+        Name = 'inWorkTimeKindCode'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'WorkTimeKindId'
+        ComponentItem = 'WorkTimeKindCode'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1159,6 +1189,29 @@ inherited PersonalGroupMovementForm: TPersonalGroupMovementForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWorkTimeKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WorkTimeKindId'
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWorkTimeKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WorkTimeKindId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWorkTimeKindName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WorkTimeKindName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 160

@@ -37,9 +37,16 @@ $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbCurrencyDocumentId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Invoice());
+
+
+     -- проверка
+     IF COALESCE (inPaidKindId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлено значение <Форма оплаты>.';
+     END IF;
+
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;

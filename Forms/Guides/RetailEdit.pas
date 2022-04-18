@@ -47,6 +47,8 @@ type
     cxLabel9: TcxLabel;
     edClientKind: TcxButtonEdit;
     GuidesClientKind: TdsdGuides;
+    ceRoundWeight: TcxCurrencyEdit;
+    cxLabel10: TcxLabel;
   private
     { Private declarations }
   public

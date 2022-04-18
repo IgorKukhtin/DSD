@@ -1,6 +1,7 @@
 -- Function: gpGet_MovementItem_SheetWorkTime_byProtocol()
 
-DROP FUNCTION IF EXISTS gpGet_MovementItem_SheetWorkTime_byProtocol(INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_MovementItem_SheetWorkTime_byProtocol (Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MovementItem_SheetWorkTime_byProtocol (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MovementItem_SheetWorkTime_byProtocol(
     IN inMemberId            Integer   , -- Ключ физ. лицо
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_MovementItem_SheetWorkTime_byProtocol(
     IN inUnitId              Integer   , -- Подразделение
     IN inPersonalGroupId     Integer   , -- Группировка Сотрудника
     IN inStorageLineId       Integer   , -- линия произ-ва
+    IN inWorkTimeKindId      Integer   , -- 
     IN inOperDate            TDateTime , -- дата
    OUT outMovementId         Integer   , -- 
    OUT outMovementItemId     Integer   , 
@@ -52,12 +54,16 @@ BEGIN
                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_StorageLine
                                                                      ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id 
                                                                     AND MIObject_StorageLine.DescId = zc_MILinkObject_StorageLine() 
+                              LEFT JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
+                                                               ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id 
+                                                              AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
                           WHERE MI_SheetWorkTime.MovementId = outMovementId
                             AND MI_SheetWorkTime.ObjectId   = inMemberId
                             AND COALESCE (MIObject_Position.ObjectId, 0)      = COALESCE (inPositionId, 0)
                             AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inPositionLevelId, 0)
                             AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
                             AND COALESCE (MIObject_StorageLine.ObjectId, 0)   = COALESCE (inStorageLineId, 0)
+                            AND (COALESCE (MIObject_WorkTimeKind.ObjectId, 0)  = COALESCE (inWorkTimeKindId, 0) OR inWorkTimeKindId = 0)
                          );
     outOperDate := zfConvert_DateShortToString(inOperDate)::TVarChar;
 
@@ -73,4 +79,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_MovementItem_SheetWorkTime_byProtocol (inMemberId := 13117 , inPositionId := 12950 , inPositionLevelId := 0 , inUnitId := 8384 , inPersonalGroupId := 13551 , inStorageLineId := 0 , inOperDate := ('01.10.2017')::TDateTime, inSession:= '5')
+-- SELECT * FROM gpGet_MovementItem_SheetWorkTime_byProtocol (inMemberId := 13117 , inPositionId := 12950 , inPositionLevelId := 0 , inUnitId := 8384 , inPersonalGroupId := 13551 , inStorageLineId := 0 , inWorkTimeKindId:= 0, inOperDate := ('01.10.2017')::TDateTime, inSession:= '5')

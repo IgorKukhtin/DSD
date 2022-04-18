@@ -604,6 +604,28 @@ BEGIN
                    END AS NUMERIC (16, 3)) AS Price3
 
            , CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+                             THEN COALESCE (tmpPrice_10100.Price5, 0)
+                        WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                          OR tmpGoods_20900.GoodsId > 0
+                             THEN COALESCE (PriceListSale_gk.Price, PriceListSale.Price) * 1.2 * 0.85
+                                + COALESCE (tmpPrice_20900.Price5, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
+                        WHEN tmpResult.newSumm5 <> 0 AND tmpResult.OperCount_sale <> 0
+                             THEN tmpResult.newSumm5 / tmpResult.OperCount_sale
+                        ELSE tmpResult.Summ5 / tmpResult.Value_receipt
+                   END AS NUMERIC (16, 3)) AS Price5
+           , CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+                             THEN COALESCE (tmpPrice_10100.Price6, 0)
+                        WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                          OR tmpGoods_20900.GoodsId > 0
+                             THEN COALESCE (PriceListSale_gk.Price, PriceListSale.Price) * 1.2 * 0.85
+                                + COALESCE (tmpPrice_20900.Price6, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
+                        WHEN tmpResult.newSumm6 <> 0 AND tmpResult.OperCount_sale <> 0
+                             THEN tmpResult.newSumm6 / tmpResult.OperCount_sale
+                        ELSE tmpResult.Summ6 / tmpResult.Value_receipt
+                   END AS NUMERIC (16, 3)) AS Price6
+                   
+
+           , CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                              THEN COALESCE (tmpPrice_10100.Price1, 0)
 
                     /*WHEN (View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
@@ -651,15 +673,28 @@ BEGIN
                         ELSE tmpResult.Summ4_cost / tmpResult.Value_receipt
                    END AS NUMERIC (16, 3)) AS Price4_cost
            --
-           , CAST (CASE WHEN tmpResult.newSumm5_cost <> 0 AND tmpResult.OperCount_sale <> 0
+          /* , CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+                             THEN COALESCE (tmpPrice_10100.Price5, 0)
+                        WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                          OR tmpGoods_20900.GoodsId > 0
+                             THEN COALESCE (tmpPrice_20900.Price5, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
+                        WHEN tmpResult.newSumm5_cost <> 0 AND tmpResult.OperCount_sale <> 0
                              THEN tmpResult.newSumm5_cost / tmpResult.OperCount_sale
                         ELSE tmpResult.Summ5_cost / tmpResult.Value_receipt
                    END AS NUMERIC (16, 3)) AS Price5_cost
-           , CAST (CASE WHEN tmpResult.newSumm6_cost <> 0 AND tmpResult.OperCount_sale <> 0
+                   
+           , CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+                             THEN COALESCE (tmpPrice_10100.Price6, 0)
+                        WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                          OR tmpGoods_20900.GoodsId > 0
+                             THEN COALESCE (tmpPrice_20900.Price6, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
+                        WHEN tmpResult.newSumm6_cost <> 0 AND tmpResult.OperCount_sale <> 0
                              THEN tmpResult.newSumm6_cost / tmpResult.OperCount_sale
                         ELSE tmpResult.Summ6_cost / tmpResult.Value_receipt
                    END AS NUMERIC (16, 3)) AS Price6_cost
-
+             */
+           , (COALESCE (PriceList5_gk.Price, PriceList5.Price) * 1.2) :: TFloat AS Price5_cost
+           , (COALESCE (PriceList6_gk.Price, PriceList6.Price) * 1.2) :: TFloat AS Price6_cost
            , (COALESCE (PriceListSale_gk.Price, PriceListSale.Price) * 1.2) :: TFloat AS Price_sale -- !!!захардкодил временно!!!
 
            , CASE WHEN tmpResult.newSumm1 <> 0 AND tmpResult.OperCount_sale <> 0
@@ -712,7 +747,7 @@ BEGIN
                                                         THEN COALESCE (tmpPrice_10100.Price5, 0)
                                                    WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
                                                      OR tmpGoods_20900.GoodsId > 0
-                                                        THEN COALESCE (PriceListSale_gk.Price, PriceListSale.Price) * 1.2 * 0.85
+                                                        THEN COALESCE (PriceList5_gk.Price, PriceList5.Price) * 1.2 * 0.85
                                                            + COALESCE (tmpPrice_20900.Price5, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                                                    ELSE tmpResult.Summ5 / tmpResult.Value_receipt
                                               END AS NUMERIC (16, 3)) END AS SummPrice5_sale -- с/с реализ по план3
@@ -726,7 +761,7 @@ BEGIN
                                                         THEN COALESCE (tmpPrice_10100.Price6, 0)
                                                    WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
                                                      OR tmpGoods_20900.GoodsId > 0
-                                                        THEN COALESCE (PriceListSale_gk.Price, PriceListSale.Price) * 1.2 * 0.85
+                                                        THEN COALESCE (PriceList6_gk.Price, PriceList6.Price) * 1.2 * 0.85
                                                            + COALESCE (tmpPrice_20900.Price6, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                                                    ELSE tmpResult.Summ3 / tmpResult.Value_receipt
                                               END AS NUMERIC (16, 3)) END AS SummPrice6_sale -- с/с реализ по план3
@@ -907,7 +942,28 @@ BEGIN
                                                                        AND PriceListSale.GoodsId = tmpResult.GoodsId
                                                                        AND PriceListSale.GoodsKindId = 0
                                                                        AND inEndDate >= PriceListSale.StartDate AND inEndDate < PriceListSale.EndDate
-                                                                       AND PriceListSale_gk.GoodsId IS NULL
+                                                                       AND PriceListSale_gk.GoodsId IS NULL 
+
+            LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList5_gk ON PriceList5_gk.PriceListId = inPriceListId_5
+                                                                       AND PriceList5_gk.GoodsId = tmpResult.GoodsId
+                                                                       AND PriceList5_gk.GoodsKindId = tmpResult.GoodsKindId
+                                                                       AND inEndDate >= PriceList5_gk.StartDate AND inEndDate < PriceList5_gk.EndDate
+            LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList5 ON PriceList5.PriceListId = inPriceListId_5
+                                                                    AND PriceList5.GoodsId = tmpResult.GoodsId
+                                                                    AND PriceList5.GoodsKindId = 0
+                                                                    AND inEndDate >= PriceList5.StartDate AND inEndDate < PriceList5.EndDate
+                                                                    AND PriceList5_gk.GoodsId IS NULL
+
+            LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList6_gk ON PriceList6_gk.PriceListId = inPriceListId_6
+                                                                       AND PriceList6_gk.GoodsId = tmpResult.GoodsId
+                                                                       AND PriceList6_gk.GoodsKindId = tmpResult.GoodsKindId
+                                                                       AND inEndDate >= PriceList6_gk.StartDate AND inEndDate < PriceList6_gk.EndDate
+            LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList6 ON PriceList6.PriceListId = inPriceListId_6
+                                                                    AND PriceList6.GoodsId = tmpResult.GoodsId
+                                                                    AND PriceList6.GoodsKindId = 0
+                                                                    AND inEndDate >= PriceList6.StartDate AND inEndDate < PriceList6.EndDate
+                                                                    AND PriceList6_gk.GoodsId IS NULL
+
             LEFT JOIN Object AS Object_Receipt   ON Object_Receipt.Id   = tmpResult.ReceiptId
             LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpResult.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId

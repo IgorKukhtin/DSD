@@ -6,10 +6,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PriceListGoodsArticle_Load(
     IN inOperDate                   TDateTime,     -- дата документа
     IN inPartnerId                  Integer,
     IN inArticle                    TVarChar,      -- Article
-    IN inGoodsName                  TVarChar,      -- 
+    IN inGoodsName                  TVarChar,      --
     IN inGoodsArticle1              TVarChar,
-    IN inGoodsArticle2              TVarChar,      --   
-    IN inGoodsArticle3              TVarChar,      -- 
+    IN inGoodsArticle2              TVarChar,      --
+    IN inGoodsArticle3              TVarChar,      --
     IN inGoodsArticle4              TVarChar,
     IN inFeet                       TVarChar,
     IN inMetres                     TFloat  ,
@@ -47,43 +47,56 @@ BEGIN
                        );
 
 
-          -- Eсли не нашли создаем товар
-          IF COALESCE (vbGoodsId,0) = 0
+          -- Всегда создаем товар
+          IF COALESCE (vbGoodsId,0) = 0 OR 1=1
           THEN
+              --
+              /*IF inFeet <> ''
+              THEN
+                   RAISE EXCEPTION 'Ошибка.%    %'
+                   , (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbGoodsId)
+                   , TRIM (inGoodsName)
+                     || CASE WHEN inFeet   <> '' THEN ' ' || inFeet || '`'                             ELSE '' END
+                     || CASE WHEN inMetres <> 0  THEN ' ' || zfConvert_FloatToString (inMetres) || 'm' ELSE '' END
+                   ;
+              END IF;*/
+
              -- создаем
-             vbGoodsId := gpInsertUpdate_Object_Goods(ioId               := COALESCE (vbGoodsId,0)::  Integer
-                                                    , inCode             := lfGet_ObjectCode(0, zc_Object_Goods())    :: Integer
-                                                    , inName             := TRIM (inGoodsName)
-                                                    , inArticle          := TRIM (inArticle)
-                                                    , inArticleVergl     := Null     :: TVarChar
-                                                    , inEAN              := Null     :: TVarChar
-                                                    , inASIN             := Null     :: TVarChar
-                                                    , inMatchCode        := Null     :: TVarChar 
-                                                    , inFeeNumber        := Null     :: TVarChar
-                                                    , inComment          := Null     :: TVarChar
-                                                    , inIsArc            := FALSE    :: Boolean
-                                                    , inFeet             := CAST (replace (inFeet,'`' , ' ') AS TFloat) 
-                                                    , inMetres           := inMetres ::TFloat
-                                                    , inAmountMin        := 0             :: TFloat
-                                                    , inAmountRefer      := 0             :: TFloat
-                                                    , inEKPrice          := inAmount      :: TFloat
-                                                    , inEmpfPrice        := 0             :: TFloat
-                                                    , inGoodsGroupId     := 40422         :: Integer  --NEW
-                                                    , inMeasureId        := 0        :: Integer
-                                                    , inGoodsTagId       := 0        :: Integer
-                                                    , inGoodsTypeId      := 0        :: Integer
-                                                    , inGoodsSizeId      := 0        :: Integer
-                                                    , inProdColorId      := 0        :: Integer
-                                                    , inPartnerId        := inPartnerId      :: Integer
-                                                    , inUnitId           := 0                :: Integer
-                                                    , inDiscountPartnerId := 0               :: Integer
-                                                    , inTaxKindId        := 0                :: Integer
-                                                    , inEngineId         := NULL
-                                                    , inSession          := inSession        :: TVarChar
-                                                    );
-               
+             vbGoodsId := gpInsertUpdate_Object_Goods (ioId               := vbGoodsId
+                                                     , inCode             := lfGet_ObjectCode ((SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbGoodsId), zc_Object_Goods())
+                                                     , inName             := TRIM (inGoodsName)
+                                                                          || CASE WHEN inFeet   <> '' THEN ' ' || inFeet                                    ELSE '' END
+                                                                          || CASE WHEN inMetres <> 0  THEN ' ' || zfConvert_FloatToString (inMetres) || 'm' ELSE '' END
+                                                     , inArticle          := TRIM (inArticle)
+                                                     , inArticleVergl     := Null     :: TVarChar
+                                                     , inEAN              := Null     :: TVarChar
+                                                     , inASIN             := Null     :: TVarChar
+                                                     , inMatchCode        := Null     :: TVarChar
+                                                     , inFeeNumber        := Null     :: TVarChar
+                                                     , inComment          := Null     :: TVarChar
+                                                     , inIsArc            := FALSE    :: Boolean
+                                                     , inFeet             := CAST (replace (inFeet,'`' , ' ') AS TFloat)
+                                                     , inMetres           := inMetres ::TFloat
+                                                     , inAmountMin        := 0             :: TFloat
+                                                     , inAmountRefer      := 0             :: TFloat
+                                                     , inEKPrice          := inAmount      :: TFloat
+                                                     , inEmpfPrice        := 0             :: TFloat
+                                                     , inGoodsGroupId     := 40422         :: Integer  --NEW
+                                                     , inMeasureId        := 0        :: Integer
+                                                     , inGoodsTagId       := 0        :: Integer
+                                                     , inGoodsTypeId      := 0        :: Integer
+                                                     , inGoodsSizeId      := 0        :: Integer
+                                                     , inProdColorId      := 0        :: Integer
+                                                     , inPartnerId        := inPartnerId      :: Integer
+                                                     , inUnitId           := 0                :: Integer
+                                                     , inDiscountPartnerId := 0               :: Integer
+                                                     , inTaxKindId        := 0                :: Integer
+                                                     , inEngineId         := NULL
+                                                     , inSession          := inSession        :: TVarChar
+                                                      );
+
           END IF;
-          
+
           --заполняем справочник GoodsArticle
           IF COALESCE (TRIM (inGoodsArticle1),'') <> ''
             AND NOT EXISTS (SELECT 1
@@ -214,19 +227,19 @@ $BODY$
 --
 /*
 select * from gpInsertUpdate_Movement_PriceListUflex1_Load
-(inOperDate := ('02.03.2022')::TDateTime , 
-inPartnerId := 2842 , 
-inArticle := '64415T' , 
-inGoodsName := 'Total length 365 mm, stroke 142 mm, output force 10 kg' , 
-inGoodsName_fra := 'Lunghezza totale 365 mm, corsa 142 mm, spinta 10 kg' , 
-inBrandName := 'UFLEX®' , 
-inModelName := 'U140-10-b' , 
-inCategory1 := 'U SERIES' , 
-inCategory2 := '.' , 
-inAccess := '.' , 
-inCatalogueSection := 'Gas springs' , 
-inCatalogPage := '13' , 
-inAmount := 21.1 , 
-inAmount2 := 21.1 ,  
+(inOperDate := ('02.03.2022')::TDateTime ,
+inPartnerId := 2842 ,
+inArticle := '64415T' ,
+inGoodsName := 'Total length 365 mm, stroke 142 mm, output force 10 kg' ,
+inGoodsName_fra := 'Lunghezza totale 365 mm, corsa 142 mm, spinta 10 kg' ,
+inBrandName := 'UFLEX®' ,
+inModelName := 'U140-10-b' ,
+inCategory1 := 'U SERIES' ,
+inCategory2 := '.' ,
+inAccess := '.' ,
+inCatalogueSection := 'Gas springs' ,
+inCatalogPage := '13' ,
+inAmount := 21.1 ,
+inAmount2 := 21.1 ,
 inSession := '5');
 */

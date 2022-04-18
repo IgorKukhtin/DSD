@@ -1357,7 +1357,11 @@ uses
   Report_SaleReturnIn_RealExDialog in '..\..\Forms\Report\Report_SaleReturnIn_RealExDialog.pas' {Report_SaleReturnIn_RealExDialogForm: TParentForm},
   Report_SaleReturnIn_RealEx in '..\..\Forms\Report\Report_SaleReturnIn_RealEx.pas' {Report_SaleReturnIn_RealExForm: TParentForm},
   AmountDialog in '..\..\Forms\System\AmountDialog.pas' {AmountDialogForm: TParentForm},
-  Report_GoodsMI_byMovementAll in '..\..\Forms\Report\Report_GoodsMI_byMovementAll.pas' {Report_GoodsMI_byMovementAllForm: TParentForm};
+  Report_GoodsMI_byMovementAll in '..\..\Forms\Report\Report_GoodsMI_byMovementAll.pas' {Report_GoodsMI_byMovementAllForm: TParentForm},
+  UserByGroup in '..\..\Forms\Guides\UserByGroup.pas' {UserByGroupForm: TParentForm},
+  UserByGroupEdit in '..\..\Forms\Guides\UserByGroupEdit.pas' {UserByGroupEditForm: TParentForm},
+  UserByGroupListEdit in '..\..\Forms\Guides\UserByGroupListEdit.pas' {UserByGroupListEditForm: TParentForm},
+  UserByGroupListTree in '..\..\Forms\Guides\UserByGroupListTree.pas' {UserByGroupListTreeForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

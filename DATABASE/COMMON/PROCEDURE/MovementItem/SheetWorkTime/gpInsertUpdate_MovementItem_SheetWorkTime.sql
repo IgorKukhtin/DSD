@@ -1,10 +1,11 @@
 -- Function: gpInsertUpdate_MovementItem_SheetWorkTime()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
---DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(Integer, Integer, Integer, Integer, TDateTime, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTime(
     IN inMemberId            Integer   , -- Ключ физ. лицо
@@ -16,7 +17,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTime(
     IN inOperDate            TDateTime , -- дата
  INOUT ioValue               TVarChar  , -- часы
  INOUT ioTypeId              Integer   , 
-   OUT OutAmountHours        Tfloat    , 
+ INOUT ioWorkTimeKindId_key  Integer   ,
+   OUT OutAmountHours        TFloat    , 
     IN inIsPersonalGroup     Boolean   , -- вызов из док. список бригад
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -361,7 +363,7 @@ BEGIN
                                                                      ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id 
                                                                     AND MIObject_StorageLine.DescId = zc_MILinkObject_StorageLine() 
 
-                              --нужно учитывать тип Раб. времени только при вызове из док. список бригад
+                              -- нужно учитывать тип Раб. времени только при вызове из док. список бригад
                               LEFT JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
                                                                ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id
                                                               AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
@@ -373,8 +375,17 @@ BEGIN
                             AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
                             AND COALESCE (MIObject_StorageLine.ObjectId, 0)   = COALESCE (inStorageLineId, 0)
                             --
-                            AND (inIsPersonalGroup = FALSE OR (inIsPersonalGroup = TRUE AND MIObject_WorkTimeKind.ObjectId = vbTypeId ))
+                            AND MI_SheetWorkTime.isErased   = FALSE
+                            --
+                            AND (inIsPersonalGroup = FALSE OR (inIsPersonalGroup = TRUE AND MIObject_WorkTimeKind.ObjectId = ioWorkTimeKindId_key))
+                         LIMIT CASE WHEN inIsPersonalGroup = TRUE THEN 1 ELSE 100 END
                          );
+                         
+     -- замена 
+     IF inIsPersonalGroup = TRUE
+     THEN
+         ioWorkTimeKindId_key:= vbTypeId;
+     END IF;
 
 
      -- определяется признак Создание/Корректировка

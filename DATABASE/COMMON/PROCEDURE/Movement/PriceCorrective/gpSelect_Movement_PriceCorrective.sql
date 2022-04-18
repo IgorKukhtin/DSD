@@ -97,7 +97,7 @@ BEGIN
            
            , Object_TaxKind.Id                	        AS DocumentTaxKindId
            , Object_TaxKind.ValueData        	        AS DocumentTaxKindName
-
+           
            , MovementString_Comment.ValueData           AS Comment
            , Object_Branch.ValueData                    AS BranchName
 

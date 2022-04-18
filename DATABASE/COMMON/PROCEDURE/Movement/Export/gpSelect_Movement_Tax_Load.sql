@@ -13,8 +13,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Tax_Load(
     IN inInfoMoneyId          Integer   ,
     IN inPaidKindId           Integer   ,
     IN inIsTaxCorrectiveOnly  Boolean   ,
-    IN inIsRegisterOnly       Boolean   , --только зарегистрированные
-    IN inIsNotRegisterOnly    Boolean   , --только не зарегистрированные
+    IN inIsRegisterOnly       Boolean   , -- только зарегистрированные
+    IN inIsNotRegisterOnly    Boolean   , -- только не зарегистрированные
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (NPP TVarChar,  NUM TVarChar,   DATEV TDateTime, NAZP TVarChar, IPN TVarChar, 
@@ -210,16 +210,18 @@ BEGIN
                                          ON ObjectHistoryString_JuridicalDetails_INN.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
                                         AND ObjectHistoryString_JuridicalDetails_INN.DescId = zc_ObjectHistoryString_JuridicalDetails_INN()
 
-      WHERE ((MovementDate_DateRegistered.ValueData BETWEEN inStartDateReg AND inEndDateReg AND MovementString_InvNumberRegistered.ValueData <> '')
-          OR Movement.DescId = zc_Movement_Tax()
-          OR inStartDateReg > inEndDateReg
+      WHERE ((MovementDate_DateRegistered.ValueData BETWEEN inStartDateReg AND inEndDateReg AND MovementString_InvNumberRegistered.ValueData <> '' AND inIsRegisterOnly = TRUE)
+        --OR Movement.DescId = zc_Movement_Tax()
+        --OR inStartDateReg > inEndDateReg
+          OR (inIsRegisterOnly = FALSE AND inIsNotRegisterOnly = FALSE)
+          OR (COALESCE (MovementString_InvNumberRegistered.ValueData, '') = '' AND inIsNotRegisterOnly = TRUE)
             )
         AND MovementFloat_TotalSummPVAT.ValueData <> 0
         AND COALESCE (MovementString_InvNumberBranch.ValueData, '') <> '2'
-        AND ((MovementString_InvNumberRegistered.ValueData <> '' AND inIsRegisterOnly = FALSE AND inIsNotRegisterOnly = FALSE) 
-            OR (MovementString_InvNumberRegistered.ValueData <> '' AND inIsRegisterOnly = TRUE)
-            OR (COALESCE (MovementString_InvNumberRegistered.ValueData, '') = '' AND inIsNotRegisterOnly = TRUE)
-            )
+      /*AND ((inIsRegisterOnly = FALSE AND inIsNotRegisterOnly = FALSE) 
+          OR (MovementString_InvNumberRegistered.ValueData <> '' AND inIsRegisterOnly = TRUE)
+          OR (COALESCE (MovementString_InvNumberRegistered.ValueData, '') = '' AND inIsNotRegisterOnly = TRUE)
+            )*/
      ;
 
 END;

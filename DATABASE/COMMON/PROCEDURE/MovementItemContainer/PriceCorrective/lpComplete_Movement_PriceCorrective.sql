@@ -139,7 +139,11 @@ BEGIN
                                          )
         AND COALESCE (vbBranchId_To, 0) = 0
      THEN
-         vbBranchId_To:= zc_Branch_Basis();
+         vbBranchId_To:= COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Branch())
+                                 , zc_Branch_Basis());
+     ELSE
+         vbBranchId_To:= COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Branch())
+                                 , 0);
      END IF;
 
 
@@ -423,12 +427,17 @@ BEGIN
                                                        , inObjectId_4        := tmp.PaidKindId
                                                        , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
                                                        , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
-                                                       , inDescId_6          := NULL -- ...zc_ContainerLinkObject_Currency()
-                                                       , inObjectId_6        := NULL -- ...vbCurrencyPartnerId
+                                                       , inDescId_6          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.PartnerId > 0 THEN zc_ContainerLinkObject_Partner() ELSE NULL END
+                                                       , inObjectId_6        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.PartnerId > 0 THEN tmp.PartnerId                    ELSE NULL END
+                                                       , inDescId_7          := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.PartnerId > 0 THEN zc_ContainerLinkObject_Branch()  ELSE NULL END
+                                                       , inObjectId_7        := CASE WHEN tmp.PaidKindId = zc_Enum_PaidKind_SecondForm() AND tmp.PartnerId > 0 THEN vbBranchId_To                    ELSE NULL END
+                                                       , inDescId_8          := NULL -- ...zc_ContainerLinkObject_Currency()
+                                                       , inObjectId_8        := NULL -- ...vbCurrencyPartnerId
                                                         ) AS ContainerId
                 , tmp.BusinessId
            FROM (SELECT _tmpItem.AccountId_Partner    AS AccountId
                       , vbJuridicalId_From            AS JuridicalId
+                      , vbPartnerId_From              AS PartnerId
                       , vbContractId                  AS ContractId
                       , vbInfoMoneyId_From            AS InfoMoneyId
                       , vbPaidKindId                  AS PaidKindId

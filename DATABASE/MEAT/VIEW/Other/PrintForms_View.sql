@@ -881,8 +881,12 @@ AS
            , CAST ('PrintMovement_TTN_071021' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO NOT IN ('41201250', '42599711', '41200660', '42465240', '34465801', '42668161', '41360805', '43233918', '33259493')
+       AND OH_JuridicalDetails.OKPO NOT IN ('41201250', '42599711', '41200660', '42465240', '34465801', '42668161', '41360805', '43233918', '33259493'
+                                          , '44588869' -- Áóíàð
+                                          , '44608319' -- ÎË²Â²ß ÒÐÅÍÄ
+                                           )
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
+
       UNION
       -- Ïå÷àòü ÒÒÍ äëÿ ÎÊÏÎ
       SELECT
@@ -895,7 +899,10 @@ AS
            , CAST ('PrintMovement_TTN_43233918' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('41201250', '42599711', '41200660', '42465240', '34465801', '42668161', '41360805', '43233918', '33259493')
+       AND OH_JuridicalDetails.OKPO IN ('41201250', '42599711', '41200660', '42465240', '34465801', '42668161', '41360805', '43233918', '33259493'
+                                      , '44588869' -- Áóíàð
+                                      , '44608319' -- ÎË²Â²ß ÒÐÅÍÄ
+                                       )
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
 --   ORDER BY 1,2,4

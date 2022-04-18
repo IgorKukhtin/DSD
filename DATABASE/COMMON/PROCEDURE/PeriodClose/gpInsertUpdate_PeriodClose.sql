@@ -2,27 +2,31 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,  Integer, TDateTime, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,  Integer, TDateTime, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_PeriodClose(
- INOUT ioId	         Integer   ,     -- ключ объекта
-    IN inCode            Integer   ,     -- 
-    IN inName            TVarChar  ,     -- Описание
-    IN inRoleId          Integer   ,     -- Роль
-    IN inRoleCode        Integer   ,     -- Роль
-    IN inUserId_excl     Integer   ,     -- Пользователь - Исключение
-    IN inUserCode_excl   Integer   ,     -- Пользователь - Исключение
-    IN inDescId          Integer   ,     -- Вид Документа
-    IN inDescId_excl     Integer   ,     -- Вид Документа - Исключение
-    IN inBranchId        Integer   ,     -- 
-    IN inBranchCode      Integer   ,     -- 
-    IN inPaidKindId      Integer   ,     -- 
-    IN inPaidKindCode    Integer   ,     -- 
-    IN inPeriod          Integer   ,     -- Дни
-    IN inCloseDate       TDateTime ,     -- Закрытый период
-    IN inCloseDate_excl  TDateTime ,     -- Закрытый период - Исключение
-    IN inCloseDate_store TDateTime ,     -- Период закрыт до (для кол-во склад)
-    IN inSession         TVarChar        -- сессия пользователя
+ INOUT ioId	              Integer   ,     -- ключ объекта
+    IN inCode                 Integer   ,     -- 
+    IN inName                 TVarChar  ,     -- Описание
+    IN inRoleId               Integer   ,     -- Роль
+    IN inRoleCode             Integer   ,     -- Роль
+    IN inUserId_excl          Integer   ,     -- Пользователь - Исключение
+    IN inUserCode_excl        Integer   ,     -- Пользователь - Исключение     
+    IN inUserByGroupId_excl   Integer   ,     -- группировка пользователя - исключение
+    IN inUserByGroupCode_excl Integer   ,     -- группировка пользователя - исключение
+    IN inDescId               Integer   ,     -- Вид Документа
+    IN inDescId_excl          Integer   ,     -- Вид Документа - Исключение
+    IN inBranchId             Integer   ,     -- 
+    IN inBranchCode           Integer   ,     -- 
+    IN inPaidKindId           Integer   ,     -- 
+    IN inPaidKindCode         Integer   ,     -- 
+    IN inPeriod               Integer   ,     -- Дни
+    IN inCloseDate            TDateTime ,     -- Закрытый период
+    IN inCloseDate_excl       TDateTime ,     -- Закрытый период - Исключение
+    IN inCloseDate_store      TDateTime ,     -- Период закрыт до (для кол-во склад)
+    IN inSession              TVarChar        -- сессия пользователя
 )
   RETURNS Integer AS
 $BODY$
@@ -58,10 +62,11 @@ BEGIN
 
 
    -- замена
-   IF (inRoleCode      = 0) OR (inRoleId      = 0) THEN inRoleId     := NULL; END IF;
-   IF (inUserCode_excl = 0) OR (inUserId_excl = 0) THEN inUserId_excl:= NULL; END IF;
-   IF (inBranchCode    = 0) OR (inBranchId    = 0) THEN inBranchId   := NULL; END IF;
-   IF (inPaidKindCode  = 0) OR (inPaidKindId  = 0) THEN inPaidKindId := NULL; END IF;
+   IF (inRoleCode      = 0)        OR (inRoleId      = 0)        THEN inRoleId            := NULL; END IF;
+   IF (inUserCode_excl = 0)        OR (inUserId_excl = 0)        THEN inUserId_excl       := NULL; END IF;
+   IF (inBranchCode    = 0)        OR (inBranchId    = 0)        THEN inBranchId          := NULL; END IF;
+   IF (inPaidKindCode  = 0)        OR (inPaidKindId  = 0)        THEN inPaidKindId        := NULL; END IF;
+   IF (inUserByGroupCode_excl = 0) OR (inUserByGroupId_excl = 0) THEN inUserByGroupId_excl:= NULL; END IF;
 
 
    -- для Админа  - Все Права
@@ -104,12 +109,13 @@ BEGIN
                             , UserId_excl     = inUserId_excl
                             , CloseDate_excl  = inCloseDate_excl
                             , CloseDate_store = inCloseDate_store 
+                            , UserByGroupId_excl = inUserByGroupId_excl
        WHERE Id = ioId;
        -- если такой элемент не был найден
        IF NOT FOUND THEN
           -- добавили новый элемент справочника со значением <Ключ объекта>
-          INSERT INTO PeriodClose (OperDate, UserId, RoleId, Period, CloseDate, Code, Name, DescId, DescId_excl, BranchId, PaidKindId, UserId_excl, CloseDate_excl, CloseDate_store)
-                  VALUES (CURRENT_TIMESTAMP, vbUserId, inRoleId, vbInterval, inCloseDate, inCode, inName, inDescId, inDescId_excl, inBranchId, inPaidKindId, inUserId_excl, inCloseDate_excl, inCloseDate_store)
+          INSERT INTO PeriodClose (OperDate, UserId, RoleId, Period, CloseDate, Code, Name, DescId, DescId_excl, BranchId, PaidKindId, UserId_excl, CloseDate_excl, CloseDate_store, UserByGroupId_excl)
+                  VALUES (CURRENT_TIMESTAMP, vbUserId, inRoleId, vbInterval, inCloseDate, inCode, inName, inDescId, inDescId_excl, inBranchId, inPaidKindId, inUserId_excl, inCloseDate_excl, inCloseDate_store, inUserByGroupId_excl)
                   RETURNING Id INTO ioId;
        END IF; -- if NOT FOUND
 
@@ -129,6 +135,9 @@ BEGIN
           || '<Field FieldName = "Пользователь - Исключение" FieldValue = "'       || COALESCE (lfGet_Object_ValueData (inUserId_excl), '') || '"/>'
           || '<Field FieldName = "Пользователь - Исключение (код)" FieldValue = "' || COALESCE (inUserCode_excl :: TVarChar, '') || '"/>'
 
+          || '<Field FieldName = "Пользователь - Исключение" FieldValue = "'       || COALESCE (lfGet_Object_ValueData (inUserByGroupId_excl), '') || '"/>'
+          || '<Field FieldName = "Пользователь - Исключение (код)" FieldValue = "' || COALESCE (inUserByGroupCode_excl :: TVarChar, '') || '"/>'
+
 --          || '<Field FieldName = "Вид Документа" FieldValue = "' || COALESCE (inDescId :: TVarChar, '') || '"/>'
 --          || '<Field FieldName = "Вид Документа - Исключение" FieldValue = "' || COALESCE (inDescId_excl :: TVarChar, '') || '"/>'
 
@@ -140,7 +149,10 @@ BEGIN
 
           || '<Field FieldName = "Дни" FieldValue = "' || COALESCE (inPeriod :: TVarChar, '') || '"/>'
 
-          || '<Field FieldName = "Период закрыт до" FieldValue = "' || zfConvert_DateToString (inCloseDate) || '"/>'
+          || '<Field FieldName = "Период закрыт до" FieldValue = "' || zfConvert_DateToString (inCloseDate) || '"/>'       
+
+          || '<Field FieldName = "Группировка - Исключение" FieldValue = "'|| COALESCE (lfGet_Object_ValueData (inUserByGroupId_excl), '') || '"/>'
+          
           || CASE WHEN inCloseDate_excl  > zc_DateStart() THEN '<Field FieldName = "Период закрыт до - Исключение с" FieldValue = "' || zfConvert_DateToString (inCloseDate_excl) || '"/>' ELSE '' END
           || CASE WHEN inCloseDate_store > zc_DateStart() THEN '<Field FieldName = "Период закрыт до - для кол-во склад" FieldValue = "' || zfConvert_DateToString (inCloseDate_store) || '"/>' ELSE '' END
 
@@ -157,6 +169,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.04.22         * add inUserByGroupId_excl
  09.12.16         * add inCloseDate_store
  24.04.16                                        *
  25.05.14                                        *

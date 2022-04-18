@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Retail(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , OperDateOrder Boolean
-             , isOrderMin Boolean
+             , isOrderMin Boolean    
+             , RoundWeight TFloat
              , GLNCode TVarChar, GLNCodeCorporate TVarChar
              , OKPO TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
@@ -30,7 +31,8 @@ BEGIN
            , lfGet_ObjectCode(0, zc_Object_Retail()) AS Code
            , CAST ('' as TVarChar)   AS NAME
            , CAST (FALSE AS Boolean) AS OperDateOrder
-           , CAST (FALSE as Boolean) AS isOrderMin
+           , CAST (FALSE as Boolean) AS isOrderMin    
+           , CAST (0 as TFloat)      AS RoundWeight
            , CAST ('' as TVarChar)   AS GLNCode
            , CAST ('' as TVarChar)   AS GLNCodeCorporate
            , CAST ('' as TVarChar)   AS OKPO
@@ -55,6 +57,8 @@ BEGIN
 
            , COALESCE (ObjectBoolean_OperDateOrder.ValueData, CAST (False AS Boolean)) AS OperDateOrder
            , COALESCE (ObjectBoolean_isOrderMin.ValueData, False::Boolean)             AS isOrderMin
+
+           , ObjectFloat_RoundWeight.ValueData ::TFloat AS RoundWeight
  
            , GLNCode.ValueData               AS GLNCode
            , GLNCodeCorporate.ValueData      AS GLNCodeCorporate
@@ -88,6 +92,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isOrderMin
                                 ON ObjectBoolean_isOrderMin.ObjectId = Object_Retail.Id 
                                AND ObjectBoolean_isOrderMin.DescId = zc_ObjectBoolean_Retail_isOrderMin()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_RoundWeight
+                              ON ObjectFloat_RoundWeight.ObjectId = Object_Retail.Id
+                             AND ObjectFloat_RoundWeight.DescId = zc_ObjectFloat_Retail_RoundWeight()
 
         LEFT JOIN ObjectLink AS ObjectLink_Retail_GoodsProperty
                              ON ObjectLink_Retail_GoodsProperty.ObjectId = Object_Retail.Id 

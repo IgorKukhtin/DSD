@@ -47,6 +47,12 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор>.';
      END IF;
 
+     -- проверка
+     IF COALESCE (inPaidKindId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлено значение <Форма оплаты>.';
+     END IF;
+
      -- проверка - связанные документы Изменять нельзя
      PERFORM lfCheck_Movement_Parent (inMovementId:= ioId, inComment:= 'изменение');
 
@@ -96,14 +102,16 @@ BEGIN
                      FROM lfSelect_Movement_Currency_byDate (inOperDate       := inOperDatePartner
                                                            , inCurrencyFromId := zc_Enum_Currency_Basis()
                                                            , inCurrencyToId   := inCurrencyDocumentId
-                                                           , inPaidKindId     := inPaidKindId)            AS tmp;
+                                                           , inPaidKindId     := CASE WHEN inPaidKindId <> 0 THEN inPaidKindId ELSE zc_Enum_PaidKind_FirstForm() END
+                                                            )            AS tmp;
                  ELSE 
                      SELECT tmp.Amount, tmp.ParValue
                      INTO ioCurrencyValue, ioParValue
                      FROM lfSelect_Movement_Currency_byDate (inOperDate       := inOperDatePartner
                                                            , inCurrencyFromId := zc_Enum_Currency_Basis()
                                                            , inCurrencyToId   := inCurrencyPartnerId
-                                                           , inPaidKindId     := inPaidKindId)            AS tmp;
+                                                           , inPaidKindId     := CASE WHEN inPaidKindId <> 0 THEN inPaidKindId ELSE zc_Enum_PaidKind_FirstForm() END
+                                                            )            AS tmp;
                  END IF;    
              END IF;
          ELSE IF (inCurrencyDocumentId = inCurrencyPartnerId AND COALESCE (ioCurrencyValue, 0) = 0)
@@ -113,7 +121,8 @@ BEGIN
                   FROM lfSelect_Movement_Currency_byDate (inOperDate       := inOperDatePartner
                                                         , inCurrencyFromId := zc_Enum_Currency_Basis()
                                                         , inCurrencyToId   := inCurrencyDocumentId
-                                                        , inPaidKindId     := inPaidKindId)            AS tmp;
+                                                        , inPaidKindId     := CASE WHEN inPaidKindId <> 0 THEN inPaidKindId ELSE zc_Enum_PaidKind_FirstForm() END
+                                                         )            AS tmp;
               END IF;
          END IF;
      ELSE ioCurrencyValue := 1.00; ioParValue := 1.00;

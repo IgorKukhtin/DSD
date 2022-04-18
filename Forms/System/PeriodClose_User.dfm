@@ -8,6 +8,7 @@ inherited PeriodClose_UserForm: TPeriodClose_UserForm
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -70,69 +71,88 @@ inherited PeriodClose_UserForm: TPeriodClose_UserForm
     object actUserForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'actUserForm'
       FormName = 'TUserForm'
       FormNameParam.Value = 'TUserForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'UserId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'UserName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
     object actRoleForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'actRoleForm'
       FormName = 'TRoleForm'
       FormNameParam.Value = 'TRoleForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'RoleId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'RoleName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
     object actUnitForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'actUnitForm'
       FormName = 'TUnitForm'
       FormNameParam.Value = 'TUnitForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
     object UpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -160,6 +180,9 @@ inherited PeriodClose_UserForm: TPeriodClose_UserForm
       0
       26
       0)
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
+    end
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_PeriodClose'
@@ -168,41 +191,54 @@ inherited PeriodClose_UserForm: TPeriodClose_UserForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUserId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'UserId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRoleId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'RoleId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPeriod'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Period'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCloseDate'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'CloseDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 152
     Top = 112
   end

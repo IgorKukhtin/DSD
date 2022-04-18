@@ -371,8 +371,9 @@ BEGIN
              LEFT JOIN tmpGoodsArticle AS Object_GoodsArticle ON Object_GoodsArticle.GoodsId = Object_Goods.Id
        WHERE Object_Goods.DescId = zc_Object_Goods()
          AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE)
-       --  and Object_Goods.Id = 236863
-       LIMIT 10000;
+       -- and Object_Goods.Id = 236863
+       -- LIMIT 10000
+       ;
 
 END;
 $BODY$
