@@ -26,7 +26,6 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
-   --DECLARE vbBranchId Integer;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) 
@@ -46,8 +45,9 @@ BEGIN
      ELSE vbAccessKeyId:= (SELECT Movement.AccessKeyId FROM Movement WHERE Movement.Id = ioId);
      END IF;
 
+
      -- определяется филиал + проверка
-     --vbBranchId:= zfGet_Branch_AccessKey (vbAccessKeyId);
+     IF COALESCE (inBranchId, 0) = 0 THEN inBranchId:= zfGet_Branch_AccessKey (vbAccessKeyId); ELSE PERFORM zfGet_Branch_AccessKey (vbAccessKeyId); END IF;
 
 
      -- определяем признак Создание/Корректировка
