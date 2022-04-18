@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Cash(
     IN inSession     TVarChar        -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
+             , isLeaf Boolean
              , CurrencyId Integer, CurrencyName TVarChar
              , ParentId Integer, ParentName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -28,7 +29,8 @@ BEGIN
    SELECT Object_Cash.Id          AS Id 
         , Object_Cash.ObjectCode  AS Code
         , Object_Cash.ValueData   AS Name
-        , Object_Cash.isErased    AS isErased
+        , Object_Cash.isErased    AS isErased  
+        , COALESCE (ObjectBoolean_isLeaf.ValueData,TRUE)    ::Boolean AS isLeaf
         
         , Object_Currency.Id            AS CurrencyId
         , Object_Currency.ValueData     AS CurrencyName
@@ -72,6 +74,10 @@ BEGIN
                             AND ObjectLink_PaidKind.DescId = zc_ObjectLink_Cash_PaidKind()
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_PaidKind.ChildObjectId
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
+                                ON ObjectBoolean_isLeaf.ObjectId = Object_Cash.Id
+                               AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
+
         LEFT JOIN ObjectLink AS ObjectLink_Insert
                              ON ObjectLink_Insert.ObjectId = Object_Cash.Id
                             AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
@@ -104,4 +110,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Cash (zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Cash (true, zfCalc_UserAdmin())

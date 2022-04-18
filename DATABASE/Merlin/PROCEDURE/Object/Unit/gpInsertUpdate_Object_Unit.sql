@@ -16,7 +16,9 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
-   DECLARE vbGroupNameFull TVarChar;
+   DECLARE vbGroupNameFull TVarChar;     
+   DECLARE vbOldId Integer;
+   DECLARE vbOldParentId integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Unit());
@@ -30,6 +32,11 @@ BEGIN
 
    -- проверка прав уникальности для свойства <Наименование >
    --PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Unit(), inName, vbUserId);
+
+   -- сохранили
+   vbOldId:= ioId;
+   -- сохранили
+   vbOldParentId:= (SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Unit_Parent() AND ObjectId = ioId);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Unit(), ioCode, inName);
@@ -47,6 +54,23 @@ BEGIN
    -- сохранили связь с <Група>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_Parent(), ioId, inParentId);
 
+
+   -- Если добавляли подразделение
+   IF vbOldId <> ioId THEN
+      -- Установить свойство лист\папка у себя
+      PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_isLeaf(), ioId, TRUE);
+   END IF;
+
+   -- Точно теперь inParentId стал папкой
+   IF COALESCE (inParentId, 0) <> 0 THEN
+      PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_isLeaf(), inParentId, FALSE);
+   END IF;
+
+   IF COALESCE (vbOldParentId, 0) <> 0 THEN
+      PERFORM lpUpdate_isLeaf (vbOldParentId, zc_ObjectLink_Unit_Parent());
+   END IF;
+
+   
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
@@ -58,7 +82,7 @@ BEGIN
       -- сохранили свойство <Пользователь корр>
       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Update(), ioId, vbUserId);   
    END IF;
-
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    

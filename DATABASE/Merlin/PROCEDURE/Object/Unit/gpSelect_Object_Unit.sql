@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ParentId Integer, ParentName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
+             , isLeaf Boolean
              , isErased boolean)
 AS
 $BODY$
@@ -40,6 +41,7 @@ BEGIN
            , Object_Update.ValueData         AS UpdateName
            , ObjectDate_Update.ValueData     AS UpdateDate
            
+           , COALESCE (ObjectBoolean_isLeaf.ValueData,TRUE) ::Boolean  AS isLeaf
            , Object_Unit.isErased            AS isErased
 
        FROM Object AS Object_Unit
@@ -58,6 +60,10 @@ BEGIN
                                  ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
                                 AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
             LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
+                                   ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
+                                  AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
 
             LEFT JOIN ObjectLink AS ObjectLink_Insert
                                  ON ObjectLink_Insert.ObjectId = Object_Unit.Id
