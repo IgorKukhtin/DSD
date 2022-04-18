@@ -43,7 +43,7 @@ BEGIN
                                 INNER join Object ON Object.Id = ObjectFloat_MinPrice.ObjectId
                                                  AND Object.IsErased = FALSE
                            WHERE ObjectFloat_MinPrice.DescId = zc_ObjectFloat_MarginCategoryItem_MinPrice()
-                             AND ObjectFloat_MinPrice.ValueData <> 300
+                             AND ObjectFloat_MinPrice.ValueData IN (0, 100, 250, 350, 500, 1000, 2000)
                            ) AS tmp
                        )
 

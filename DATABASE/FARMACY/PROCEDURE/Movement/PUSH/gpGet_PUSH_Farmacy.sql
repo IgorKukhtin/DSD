@@ -914,8 +914,8 @@ BEGIN
    THEN
       SELECT string_agg(T1.Code||' - '||T1.Name, CHR(13)) FROM gpSelect_Object_HelsiUser (True, '3') AS T1
       INTO vbText
-      WHERE T1.KeyExpireDate >= CURRENT_DATE - INTERVAL '7 DAY'
-        AND T1.KeyExpireDate <= CURRENT_DATE
+      WHERE T1.KeyExpireDate >= date_trunc('month', CURRENT_DATE)
+        AND T1.KeyExpireDate <= date_trunc('month', CURRENT_DATE) + INTERVAL '1 MONTH'
         AND T1.isErased = FALSE;   
 
        IF COALESCE (vbText, '') <> ''

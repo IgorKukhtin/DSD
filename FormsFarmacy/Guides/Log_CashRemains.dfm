@@ -1,24 +1,24 @@
 inherited Log_CashRemainsForm: TLog_CashRemainsForm
   Caption = 'GUID '#1082#1072#1089#1089' '#1080' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
   ClientHeight = 463
-  ClientWidth = 734
+  ClientWidth = 1005
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 750
+  ExplicitWidth = 1021
   ExplicitHeight = 502
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 734
+    Width = 1005
     Height = 406
     ExplicitWidth = 734
     ExplicitHeight = 406
     ClientRectBottom = 406
-    ClientRectRight = 734
+    ClientRectRight = 1005
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 734
       ExplicitHeight = 406
       inherited cxGrid: TcxGrid
-        Width = 734
+        Width = 1005
         Height = 269
         ExplicitWidth = 734
         ExplicitHeight = 269
@@ -70,6 +70,14 @@ inherited Log_CashRemainsForm: TLog_CashRemainsForm
             HeaderAlignmentVert = vaCenter
             Width = 134
           end
+          object PositionName: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'PositionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
+          end
           object TimeLogIn: TcxGridDBColumn
             Caption = #1042#1088#1077#1084#1103' '#1074#1093#1086#1076#1072
             DataBinding.FieldName = 'TimeLogIn'
@@ -115,11 +123,12 @@ inherited Log_CashRemainsForm: TLog_CashRemainsForm
       object cxGridDouble: TcxGrid
         Left = 0
         Top = 277
-        Width = 734
+        Width = 1005
         Height = 129
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 734
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DoubleDS
@@ -182,15 +191,16 @@ inherited Log_CashRemainsForm: TLog_CashRemainsForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 269
-        Width = 734
+        Width = 1005
         Height = 8
         AlignSplitter = salBottom
         Control = cxGridDouble
+        ExplicitWidth = 734
       end
     end
   end
   inherited Panel: TPanel
-    Width = 734
+    Width = 1005
     ExplicitWidth = 734
     inherited deStart: TcxDateEdit
       EditValue = 43344d
@@ -256,7 +266,7 @@ inherited Log_CashRemainsForm: TLog_CashRemainsForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -332,7 +342,7 @@ inherited Log_CashRemainsForm: TLog_CashRemainsForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput

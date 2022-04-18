@@ -1,29 +1,31 @@
 inherited MarginCategoryItemForm: TMarginCategoryItemForm
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1086#1082
   ClientHeight = 341
-  ClientWidth = 800
+  ClientWidth = 858
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 816
+  ExplicitWidth = 874
   ExplicitHeight = 380
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 800
+    Width = 858
     Height = 315
-    ExplicitWidth = 800
+    ExplicitWidth = 858
     ExplicitHeight = 315
     ClientRectBottom = 315
-    ClientRectRight = 800
+    ClientRectRight = 858
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 800
+      ExplicitWidth = 858
       ExplicitHeight = 315
       inherited cxGrid: TcxGrid
-        Width = 800
+        Width = 858
         Height = 315
-        ExplicitWidth = 800
+        ExplicitWidth = 858
         ExplicitHeight = 315
         inherited cxGridDBTableView: TcxGridDBTableView
-          OptionsData.Inserting = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -36,6 +38,7 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 145
           end
           object colMarginPercent: TcxGridDBColumn
@@ -45,6 +48,7 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
             Properties.DisplayFormat = ',0.##'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object colisSite: TcxGridDBColumn
@@ -53,7 +57,7 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 100
+            Width = 119
           end
           object clInsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
@@ -61,7 +65,7 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 150
+            Width = 168
           end
           object clUpdateName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
@@ -112,7 +116,7 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
             Kind = bkEllipsis
           end>
         TabOrder = 2
-        Width = 209
+        Width = 369
       end
     end
   end
@@ -134,18 +138,6 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
       end>
   end
   inherited ActionList: TActionList
-    object actInsertUpdate: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate
-        end>
-      Caption = 'actInsertUpdate'
-      DataSource = MasterDS
-    end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
@@ -217,6 +209,80 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
         end>
       isShowModal = False
     end
+    object actInsert: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TMarginCategoryItemEditForm'
+      FormNameParam.Value = 'TMarginCategoryItemEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MarginCategoryId'
+          Value = Null
+          Component = MarginCategoryGuides
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MarginCategoryName'
+          Value = Null
+          Component = MarginCategoryGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TMarginCategoryItemEditForm'
+      FormNameParam.Value = 'TMarginCategoryItemEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MarginCategoryId'
+          Value = Null
+          Component = MarginCategoryGuides
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MarginCategoryName'
+          Value = Null
+          Component = MarginCategoryGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      ActionType = acUpdate
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 80
@@ -255,6 +321,14 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -354,56 +428,23 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
       Action = actMarginCategoryItemOpen
       Category = 0
     end
+    object dxBarButton1: TdxBarButton
+      Action = actInsert
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actUpdate
+      Category = 0
+    end
   end
-  object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_MarginCategoryItem'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
       item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
+        Action = ChoiceGuides
       end
       item
-        Name = 'inMinPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MinPrice'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMarginPercent'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MarginPercent'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMarginCategoryId'
-        Value = Null
-        Component = MarginCategoryGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Id'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        MultiSelectSeparator = ','
+        Action = actUpdate
       end>
-    PackSize = 1
-    Left = 296
-    Top = 88
   end
   object MarginCategoryGuides: TdsdGuides
     KeyField = 'Id'
@@ -479,5 +520,22 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
       end>
     Left = 472
     Top = 104
+  end
+  object dsdStoredProc1: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 624
+    Top = 184
   end
 end

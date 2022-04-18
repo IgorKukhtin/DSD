@@ -1176,7 +1176,9 @@ uses
   Report_Check_SP_Checking in '..\..\FormsFarmacy\Report\Report_Check_SP_Checking.pas' {Report_Check_SP_CheckingForm: TParentForm},
   GoodsSP_1303 in '..\..\FormsFarmacy\Document\GoodsSP_1303.pas' {GoodsSP_1303Form: TParentForm},
   GoodsSP_1303Journal in '..\..\FormsFarmacy\Document\GoodsSP_1303Journal.pas' {GoodsSP_1303JournalForm: TParentForm},
-  SendWayName in '..\..\FormsFarmacy\Guides\SendWayName.pas' {SendWayNameForm: TParentForm};
+  SendWayName in '..\..\FormsFarmacy\Guides\SendWayName.pas' {SendWayNameForm: TParentForm},
+  NewUser in '..\..\FormsFarmacy\Guides\NewUser.pas' {NewUserForm: TParentForm},
+  MarginCategoryItemEdit in '..\..\Forms\Guides\MarginCategoryItemEdit.pas' {MarginCategoryItemEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

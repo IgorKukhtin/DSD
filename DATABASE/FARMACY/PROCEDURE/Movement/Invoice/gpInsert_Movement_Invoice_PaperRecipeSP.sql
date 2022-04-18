@@ -51,11 +51,11 @@ BEGIN
              , Null
              , SUM (tmp.SummaComp)          AS SummaComp
              , SUM (tmp.CountSP)            AS CountSP
-       FROM (SELECT  tmp.Id                       AS MovementId
+       FROM (SELECT  tmp.Id                           AS MovementId
                    , tmp.JuridicalId
-                   , 0                            AS HospitalId
-                   , SUM (tmp.SummaSP)            AS SummaComp
-                   , SUM (tmp.CountSP)            AS CountSP
+                   , 0                                AS HospitalId
+                   , SUM (tmp.SummaSP)                AS SummaComp
+                   , COUNT (DISTINCT tmp.InvNumberSP) AS CountSP
              FROM gpReport_PaperRecipeSP(inStartDate:=inStartDate, inEndDate:=inEndDate, inJuridicalId:=inJuridicalId
                                        , inSession:=inSession) AS tmp
              GROUP BY tmp.Id

@@ -44,7 +44,7 @@ BEGIN
              , tmp.HospitalId
              , tmp.ContractId
              , SUM (tmp.SummaComp) AS SummaComp
-             , MAX (CountSP)       AS CountSP
+             , COUNT (DISTINCT tmp.InvNumberSP)       AS CountSP
        FROM gpReport_Sale_SP(inStartDate := inStartDate, inEndDate := inEndDate, inJuridicalId :=inJuridicalId, inUnitId := inUnitId, inHospitalId := inPartnerMedicalId
                            , inGroupMemberSPId := inGroupMemberSPId, inPercentSP := inPercentSP, inisGroupMemberSP := inisGroupMemberSP, inNDSKindId := inNDSKindId, inSession := inSession) AS tmp
        GROUP BY tmp.MovementId
@@ -162,6 +162,11 @@ BEGIN
                              AND tmpInvoice.PartnerMedicalId = tmpReport.PartnerMedicalId 
                              AND COALESCE (tmpInvoice.ContractId, 0) = COALESCE (tmpReport.ContractId, 0);
 
+    -- !!!ВРЕМЕННО для ТЕСТА!!!
+    IF inSession = zfCalc_UserAdmin()
+    THEN
+        RAISE EXCEPTION 'Тест прошел успешно для <%>', inSession;
+    END IF;
 
 END;
 $BODY$

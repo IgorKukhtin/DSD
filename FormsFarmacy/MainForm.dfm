@@ -5055,6 +5055,18 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actNewUser: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      MoveParams = <>
+      Caption = #1057#1086#1079#1076#1072#1085#1080#1077' '#1085#1086#1074#1086#1075#1086' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
+      Hint = #1057#1086#1079#1076#1072#1085#1080#1077' '#1085#1086#1074#1086#1075#1086' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
+      FormName = 'TNewUserForm'
+      FormNameParam.Value = 'TNewUserForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5419,6 +5431,9 @@
       end
       object N330: TMenuItem
         Action = actReport_TestingAttemptsUser
+      end
+      object N148: TMenuItem
+        Action = actNewUser
       end
       object N80: TMenuItem
         Caption = '-'

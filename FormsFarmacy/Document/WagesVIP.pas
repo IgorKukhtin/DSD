@@ -46,6 +46,15 @@ type
     cxLabel8: TcxLabel;
     actReport_CalcMonthForm: TdsdOpenForm;
     bbReport_CalcMonthForm: TdxBarButton;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    colName: TcxGridDBColumn;
+    colPercentPhone: TcxGridDBColumn;
+    colPercentOther: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    PayrollTypeVIPDS: TDataSource;
+    PayrollTypeVIPCDS: TClientDataSet;
+    spSelect_PayrollTypeVIP: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -24,7 +24,7 @@ BEGIN
                                                                   , inMovementId          := MovementItem.MovementId
                                                                   , inParentId            := MovementItem.ParentId 
                                                                   , inAmount              := MovementItem.Amount  
-                                                                  , inPayrollTypeVIPID    := CASE WHEN (date_part('HOURS', MIDate_End.ValueData) - date_part('HOURS', MIDate_Start.ValueData)) >= 10
+                                                                  , inPayrollTypeVIPID    := CASE WHEN MIDate_End.ValueData::Time - MIDate_Start.ValueData::Time > '10:00:00'
                                                                                                   THEN zc_Enum_PayrollTypeVIP_WorkCS()
                                                                                                   ELSE zc_Enum_PayrollTypeVIP_WorkAS() END
                                                                   , inDateStart           := MIDate_Start.ValueData

@@ -1,25 +1,25 @@
 inherited CheckForm: TCheckForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1081' '#1095#1077#1082
   ClientHeight = 600
-  ClientWidth = 809
-  ExplicitWidth = 825
+  ClientWidth = 892
+  ExplicitWidth = 908
   ExplicitHeight = 639
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 261
-    Width = 809
+    Width = 892
     Height = 219
     ExplicitTop = 261
     ExplicitWidth = 809
     ExplicitHeight = 219
     ClientRectBottom = 219
-    ClientRectRight = 809
+    ClientRectRight = 892
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 809
       ExplicitHeight = 195
       inherited cxGrid: TcxGrid
-        Width = 809
+        Width = 892
         Height = 195
         ExplicitWidth = 809
         ExplicitHeight = 195
@@ -286,7 +286,7 @@ inherited CheckForm: TCheckForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 809
+    Width = 892
     Height = 235
     ExplicitWidth = 809
     ExplicitHeight = 235
@@ -851,11 +851,12 @@ inherited CheckForm: TCheckForm
   object cxGrid1: TcxGrid [27]
     Left = 0
     Top = 488
-    Width = 809
+    Width = 892
     Height = 112
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 31
+    ExplicitWidth = 809
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DetailDS
@@ -978,11 +979,12 @@ inherited CheckForm: TCheckForm
   object cxSplitter1: TcxSplitter [28]
     Left = 0
     Top = 480
-    Width = 809
+    Width = 892
     Height = 8
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
     Control = cxGrid1
+    ExplicitWidth = 809
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 349
@@ -3582,7 +3584,7 @@ inherited CheckForm: TCheckForm
       end>
     PackSize = 1
     Left = 658
-    Top = 233
+    Top = 201
   end
   object spEditAmount: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementItem_Check_AmountAdmin'
@@ -3615,8 +3617,8 @@ inherited CheckForm: TCheckForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 738
-    Top = 233
+    Left = 754
+    Top = 217
   end
   object SPUpdate_NotMCS: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Check__NotMCS'

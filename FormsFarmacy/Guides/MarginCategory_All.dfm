@@ -1,24 +1,24 @@
 inherited MarginCategory_AllForm: TMarginCategory_AllForm
   Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1086#1082
   ClientHeight = 598
-  ClientWidth = 1227
+  ClientWidth = 1218
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1243
+  ExplicitWidth = 1234
   ExplicitHeight = 637
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1227
+    Width = 1218
     Height = 572
     ExplicitWidth = 1227
     ExplicitHeight = 572
     ClientRectBottom = 572
-    ClientRectRight = 1227
+    ClientRectRight = 1218
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1227
       ExplicitHeight = 572
       inherited cxGrid: TcxGrid
-        Width = 1064
+        Width = 1055
         Height = 572
         ExplicitWidth = 1064
         ExplicitHeight = 572
@@ -72,7 +72,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
             Width = 91
           end
           object Value_1: TcxGridDBColumn
-            Caption = '0-15'
+            Caption = '0-100'
             DataBinding.FieldName = 'Value_1'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -80,7 +80,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
             Width = 74
           end
           object Value_2: TcxGridDBColumn
-            Caption = '15-50'
+            Caption = '100-250'
             DataBinding.FieldName = 'Value_2'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -88,7 +88,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
             Width = 74
           end
           object Value_3: TcxGridDBColumn
-            Caption = '50-100'
+            Caption = '250-350'
             DataBinding.FieldName = 'Value_3'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -96,7 +96,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
             Width = 74
           end
           object Value_4: TcxGridDBColumn
-            Caption = '100-200'
+            Caption = '350-500'
             DataBinding.FieldName = 'Value_4'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -104,7 +104,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
             Width = 74
           end
           object Value_5: TcxGridDBColumn
-            Caption = '200-500'
+            Caption = '500-1000'
             DataBinding.FieldName = 'Value_5'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -112,7 +112,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
             Width = 74
           end
           object Value_6: TcxGridDBColumn
-            Caption = '500-1000'
+            Caption = '1000-2000'
             DataBinding.FieldName = 'Value_6'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -120,7 +120,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
             Width = 74
           end
           object Value_7: TcxGridDBColumn
-            Caption = '> 1000'
+            Caption = '> 2000'
             DataBinding.FieldName = 'Value_7'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -139,22 +139,24 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         end
       end
       object cxSplitter2: TcxSplitter
-        Left = 1064
+        Left = 1055
         Top = 0
         Width = 8
         Height = 572
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salRight
         Control = cxGrid2
+        ExplicitLeft = 1064
       end
       object cxGrid2: TcxGrid
-        Left = 1072
+        Left = 1063
         Top = 0
         Width = 155
         Height = 572
         Align = alRight
         PopupMenu = PopupMenu
         TabOrder = 2
+        ExplicitLeft = 1072
         object cxGridDBTableView_child: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS

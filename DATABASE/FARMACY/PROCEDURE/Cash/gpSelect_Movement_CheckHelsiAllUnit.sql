@@ -1,9 +1,11 @@
 -- Function: gpSelect_Movement_CheckHelsiAllUnit()
 
-  DROP FUNCTION IF EXISTS gpSelect_Movement_CheckHelsiAllUnit (TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_CheckHelsiAllUnit (TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_CheckHelsiAllUnit (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_CheckHelsiAllUnit(
     IN inStartDate     TDateTime , --
+    IN inEndDate       TDateTime , --
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
@@ -113,7 +115,31 @@ WITH -- Товары соц-проект
 
                           WHERE Movement.DescId = zc_Movement_GoodsSP()
                             AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
-                         )
+                         ),
+           tmpMovement AS (SELECT Movement.*
+                                , Object_Helsi_IdSP.ValueData                        AS SPKindName
+                            FROM Movement
+                           
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                                              ON MovementLinkObject_SPKind.MovementId = Movement.Id
+                                                             AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+
+                                INNER JOIN Object AS Object_Helsi_IdSP
+                                                  ON Object_Helsi_IdSP.DescId = zc_Object_SPKind()
+                                                 AND Object_Helsi_IdSP.ObjectCode  = 1
+                                                 AND Object_Helsi_IdSP.Id  = MovementLinkObject_SPKind.ObjectId
+
+                           WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate)
+                             AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
+                             AND Movement.DescId = zc_Movement_Check()
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                           ), 
+           tmpMovementLinkObject AS (SELECT * FROM MovementLinkObject 
+                                     WHERE MovementLinkObject.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)), 
+           tmpMovementString AS (SELECT * FROM MovementString
+                                 WHERE MovementString.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)), 
+           tmpMovementBoolean AS (SELECT * FROM MovementBoolean
+                                 WHERE MovementBoolean.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement))
 
       SELECT ROW_NUMBER() OVER (ORDER BY Object_Parent.ValueData, Object_Unit.ValueData, Movement.OperDate)::Integer AS Ord
            , Object_Parent.ValueData                            AS ParentName
@@ -129,7 +155,7 @@ WITH -- Товары соц-проект
            , MovementString_FiscalCheckNumber.ValueData         AS FiscalCheckNumber
            , MovementString_InvNumberSP.ValueData               AS InvNumberSP
            , MovementString_ConfirmationCodeSP.ValueData        AS ConfirmationCodeSP
-           , Object_Helsi_IdSP.ValueData                        AS SPKindName
+           , Movement.SPKindName                                AS SPKindName
 
            , MovementItem.Id                                    AS MovementItemId
            , MovementItem.ObjectId                              AS GoodsId
@@ -154,9 +180,9 @@ WITH -- Товары соц-проект
            , NULL::TVarChar                                         AS State
            , zc_Color_White()                                       AS Color_calc
 
-      FROM Movement
+      FROM tmpMovement AS Movement
 
-           INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+           INNER JOIN tmpMovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
            LEFT JOIN Object AS Object_Unit
@@ -167,21 +193,11 @@ WITH -- Товары соц-проект
                                AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
            LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
 
-
-           INNER JOIN MovementLinkObject AS MovementLinkObject_SPKind
-                                         ON MovementLinkObject_SPKind.MovementId = Movement.Id
-                                        AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
-
-           INNER JOIN Object AS Object_Helsi_IdSP
-                             ON Object_Helsi_IdSP.DescId = zc_Object_SPKind()
-                            AND Object_Helsi_IdSP.ObjectCode  = 1
-                            AND Object_Helsi_IdSP.Id  = MovementLinkObject_SPKind.ObjectId
-
-           LEFT JOIN MovementString AS MovementString_InvNumberSP
+           LEFT JOIN tmpMovementString AS MovementString_InvNumberSP
                                     ON MovementString_InvNumberSP.MovementId = Movement.Id
                                    AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
 
-           LEFT JOIN MovementString AS MovementString_ConfirmationCodeSP
+           LEFT JOIN tmpMovementString AS MovementString_ConfirmationCodeSP
                                     ON MovementString_ConfirmationCodeSP.MovementId = Movement.Id
                                    AND MovementString_ConfirmationCodeSP.DescId = zc_MovementString_ConfirmationCodeSP()
 
@@ -189,21 +205,21 @@ WITH -- Товары соц-проект
                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
-           LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
+           LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_CashRegister
                                         ON MovementLinkObject_CashRegister.MovementId = Movement.Id
                                        AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
            LEFT JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = MovementLinkObject_CashRegister.ObjectId
 
-           LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
+           LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_PaidType
                                         ON MovementLinkObject_PaidType.MovementId = Movement.Id
                                        AND MovementLinkObject_PaidType.DescId = zc_MovementLinkObject_PaidType()
            LEFT JOIN Object AS Object_PaidType ON Object_PaidType.Id = MovementLinkObject_PaidType.ObjectId
 
-           LEFT JOIN MovementString AS MovementString_FiscalCheckNumber
+           LEFT JOIN tmpMovementString AS MovementString_FiscalCheckNumber
                                     ON MovementString_FiscalCheckNumber.MovementId = Movement.Id
                                    AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
 
-           LEFT JOIN MovementBoolean AS MovementBoolean_PaperRecipeSP
+           LEFT JOIN tmpMovementBoolean AS MovementBoolean_PaperRecipeSP
                                      ON MovementBoolean_PaperRecipeSP.MovementId = Movement.Id
                                     AND MovementBoolean_PaperRecipeSP.DescId = zc_MovementBoolean_PaperRecipeSP()
 
@@ -217,13 +233,13 @@ WITH -- Товары соц-проект
            LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
                                        ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
                                       AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
-           LEFT JOIN MovementBoolean AS MB_RoundingTo10
+           LEFT JOIN tmpMovementBoolean AS MB_RoundingTo10
                                      ON MB_RoundingTo10.MovementId = MovementItem.MovementId
                                     AND MB_RoundingTo10.DescId = zc_MovementBoolean_RoundingTo10()
-           LEFT JOIN MovementBoolean AS MB_RoundingDown
+           LEFT JOIN tmpMovementBoolean AS MB_RoundingDown
                                      ON MB_RoundingDown.MovementId = MovementItem.MovementId
                                     AND MB_RoundingDown.DescId = zc_MovementBoolean_RoundingDown()
-           LEFT JOIN MovementBoolean AS MB_RoundingTo50
+           LEFT JOIN tmpMovementBoolean AS MB_RoundingTo50
                                      ON MB_RoundingTo50.MovementId = MovementItem.MovementId
                                     AND MB_RoundingTo50.DescId = zc_MovementBoolean_RoundingTo50()
 
@@ -239,11 +255,7 @@ WITH -- Товары соц-проект
                                AND tmpGoodsSP.Ord     = 1 -- № п/п - на всякий случай
            LEFT JOIN  Object AS Object_IntenalSP ON Object_IntenalSP.Id = tmpGoodsSP.IntenalSPId                        
 
-      WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate)
-        AND Movement.OperDate < DATE_TRUNC ('DAY', inStartDate) + INTERVAL '1 DAY'
-        AND Movement.DescId = zc_Movement_Check()
-        AND Movement.StatusId = zc_Enum_Status_Complete()
-        AND MovementItem.Amount > 0
+      WHERE MovementItem.Amount > 0
         AND MovementItem.IsErased = False
         AND COALESCE(MovementBoolean_PaperRecipeSP.ValueData, False) = False
       ORDER BY Object_Parent.ValueData, Object_Unit.ValueData, Movement.OperDate;
@@ -261,4 +273,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_CheckHelsiAllUnit (inStartDate:= '19.07.2021', inSession:= '3')
 
-select * from gpSelect_Movement_CheckHelsiAllUnit(inStartDate := ('05.04.2022')::TDateTime ,  inSession := '183242');
+select * from gpSelect_Movement_CheckHelsiAllUnit(inStartDate := ('01.04.2022')::TDateTime, inEndDate := ('30.04.2022')::TDateTime,  inSession := '183242');
