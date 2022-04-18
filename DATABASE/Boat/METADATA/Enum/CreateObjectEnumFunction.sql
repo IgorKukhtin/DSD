@@ -81,7 +81,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_ReceiptGoods() RETURNS Integer 
 -- !!! загрузка Прайса + GoodsArticle
 CREATE OR REPLACE FUNCTION zc_Enum_ImportType_PriceListGoodsArticle() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_PriceListGoodsArticle' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_PriceListGoodsArticle() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_PriceListGoodsArticle' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
+ 
 
 
 -- !!!
