@@ -25,7 +25,6 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
     Height = 65
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 1154
     object deStart: TcxDateEdit
       Left = 118
       Top = 5
@@ -99,7 +98,6 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
     DataSource = DataSource
     Groups = <>
     TabOrder = 1
-    ExplicitWidth = 1154
     object pvNPP: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 2
@@ -321,6 +319,14 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
           BeginGroup = True
           Visible = True
           ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -700,15 +706,15 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
           ToParam.MultiSelectSeparator = ','
         end>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' ('#1040#1082#1090#1080#1074'/'#1055#1072#1089#1089#1080#1074')'
-      Hint = #1055#1077#1095#1072#1090#1100' ('#1040#1082#1090#1080#1074'/'#1055#1072#1089#1089#1080#1074')'
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
           DataSet = ClientDataSet
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'RootName;AccountGroupName;AccountDirectionName;AccountName'
+          IndexFieldNames = 'ParentName_Cash;CashName'
         end>
       Params = <
         item
@@ -731,8 +737,8 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089
+      ReportName = 'PrintReport_CashBalance'
+      ReportNameParam.Value = 'PrintReport_CashBalance'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
