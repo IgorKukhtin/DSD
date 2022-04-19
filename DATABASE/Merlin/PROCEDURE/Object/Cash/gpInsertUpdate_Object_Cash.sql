@@ -17,7 +17,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Cash(
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
-   DECLARE vbGroupNameFull TVarChar;
+   DECLARE vbGroupNameFull TVarChar;    
+   DECLARE vbOldId Integer;
+   DECLARE vbOldParentId integer;
  BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Cash());
@@ -33,6 +35,11 @@ $BODY$
    --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Cash(), inCashName);
    -- проверка прав уникальности для свойства <Код Кассы>
    --PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Cash(), inCode);
+
+   -- сохранили
+   vbOldId:= ioId;
+   -- сохранили
+   vbOldParentId:= (SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Cash_Parent() AND ObjectId = ioId);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Cash(), inCode, inCashName);
@@ -53,6 +60,20 @@ $BODY$
    -- сохранили
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Cash_PaidKind(), ioId, inPaidKindId);
 
+   -- Если добавляли статью
+   IF vbOldId <> ioId THEN
+      -- Установить свойство лист\папка у себя
+      PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_isLeaf(), ioId, TRUE);
+   END IF;
+
+   -- Точно теперь inParentId стал папкой
+   IF COALESCE (inParentId, 0) <> 0 THEN
+      PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_isLeaf(), inParentId, FALSE);
+   END IF;
+
+   IF COALESCE (vbOldParentId, 0) <> 0 THEN
+      PERFORM lpUpdate_isLeaf (vbOldParentId, zc_ObjectLink_Cash_Parent());
+   END IF;
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>

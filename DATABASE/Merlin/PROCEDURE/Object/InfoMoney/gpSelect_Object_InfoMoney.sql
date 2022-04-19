@@ -10,7 +10,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
              , InfoMoneyKindId Integer, InfoMoneyKindName TVarChar
              , ParentId Integer, ParentName TVarChar
              , GroupNameFull TVarChar
-             , isUserAll Boolean, isService Boolean
+             , isUserAll Boolean, isService Boolean 
+             , isLeaf Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
 )
@@ -36,7 +37,9 @@ BEGIN
         
         , ObjectString_GroupNameFull.ValueData AS GroupNameFull
         , COALESCE (ObjectBoolean_UserAll.ValueData, FALSE) ::Boolean AS isUserAll
-        , COALESCE (ObjectBoolean_Service.ValueData, FALSE) ::Boolean AS isService
+        , COALESCE (ObjectBoolean_Service.ValueData, FALSE) ::Boolean AS isService  
+
+        , COALESCE (ObjectBoolean_isLeaf.ValueData,TRUE)    ::Boolean AS isLeaf
 
         , Object_Insert.ValueData         AS InsertName
         , ObjectDate_Insert.ValueData     AS InsertDate
@@ -63,6 +66,10 @@ BEGIN
                              ON ObjectLink_Parent.ObjectId = Object_InfoMoney.Id
                             AND ObjectLink_Parent.DescId = zc_ObjectLink_InfoMoney_Parent()
         LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Parent.ChildObjectId
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
+                                ON ObjectBoolean_isLeaf.ObjectId = Object_InfoMoney.Id
+                               AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
           
         LEFT JOIN ObjectLink AS ObjectLink_Insert
                              ON ObjectLink_Insert.ObjectId = Object_InfoMoney.Id

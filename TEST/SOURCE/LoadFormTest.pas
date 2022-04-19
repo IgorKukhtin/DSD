@@ -3050,7 +3050,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptSaleAnalyzeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptSaleAnalyzeForm');
   }
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptSaleAnalyzeRealçóêûùDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptSaleAnalyzeRealDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptSaleAnalyzeRealDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptSaleAnalyzeRealForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptSaleAnalyzeRealForm');

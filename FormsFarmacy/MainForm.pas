@@ -936,6 +936,8 @@ type
     actGoodsSP_1303: TdsdOpenForm;
     actGoodsSP13031: TMenuItem;
     N13032: TMenuItem;
+    actNewUser: TdsdOpenForm;
+    N148: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

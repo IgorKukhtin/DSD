@@ -1,28 +1,29 @@
 inherited WagesVIPForm: TWagesVIPForm
   Caption = #1047'/'#1055' VIP '#1084#1077#1085#1077#1076#1078#1077#1088#1086#1074
-  ClientHeight = 479
-  ClientWidth = 799
+  ClientHeight = 580
+  ClientWidth = 1185
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 815
-  ExplicitHeight = 518
+  ExplicitWidth = 1201
+  ExplicitHeight = 619
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 109
-    Width = 799
-    Height = 370
+    Top = 115
+    Width = 1185
+    Height = 465
     ExplicitTop = 109
     ExplicitWidth = 799
     ExplicitHeight = 370
-    ClientRectBottom = 370
-    ClientRectRight = 799
+    ClientRectBottom = 465
+    ClientRectRight = 1185
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 799
       ExplicitHeight = 346
       inherited cxGrid: TcxGrid
-        Width = 799
-        Height = 338
-        ExplicitWidth = 799
+        Width = 1185
+        Height = 433
+        ExplicitTop = 5
+        ExplicitWidth = 1052
         ExplicitHeight = 338
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -114,21 +115,23 @@ inherited WagesVIPForm: TWagesVIPForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 338
-        Width = 799
+        Top = 433
+        Width = 1185
         Height = 8
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
+        ExplicitTop = 338
+        ExplicitWidth = 799
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 799
-    Height = 83
+    Width = 1185
+    Height = 89
     TabOrder = 3
-    ExplicitWidth = 799
-    ExplicitHeight = 83
+    ExplicitWidth = 1304
+    ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Top = 20
@@ -250,6 +253,94 @@ inherited WagesVIPForm: TWagesVIPForm
       Top = 59
       Caption = #1041#1072#1079#1072' '#1088#1072#1089#1095#1077#1090#1072
     end
+    object cxGrid1: TcxGrid
+      Left = 808
+      Top = 0
+      Width = 361
+      Height = 89
+      PopupMenu = PopupMenu
+      TabOrder = 18
+      object cxGridDBTableView1: TcxGridDBTableView
+        Navigator.Buttons.CustomButtons = <>
+        DataController.DataSource = PayrollTypeVIPDS
+        DataController.Filter.Options = [fcoCaseInsensitive]
+        DataController.Summary.DefaultGroupSummaryItems = <
+          item
+            Format = ',0.####'
+            Column = colPercentOther
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end>
+        DataController.Summary.FooterSummaryItems = <
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = colPercentOther
+          end
+          item
+            Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+            Kind = skCount
+            Column = colName
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+          end>
+        DataController.Summary.SummaryGroups = <>
+        Images = dmMain.SortImageList
+        OptionsBehavior.GoToNextCellOnEnter = True
+        OptionsBehavior.IncSearch = True
+        OptionsBehavior.FocusCellOnCycle = True
+        OptionsCustomize.ColumnHiding = True
+        OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsCustomize.DataRowSizing = True
+        OptionsData.CancelOnExit = False
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
+        OptionsView.ColumnAutoWidth = True
+        OptionsView.GroupByBox = False
+        OptionsView.GroupSummaryLayout = gslAlignWithColumns
+        OptionsView.HeaderAutoHeight = True
+        Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+        object colName: TcxGridDBColumn
+          Caption = #1058#1080#1087' '#1088#1072#1089#1095#1077#1090#1072
+          DataBinding.FieldName = 'Name'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 147
+        end
+        object colPercentPhone: TcxGridDBColumn
+          Caption = #1058#1077#1083'. '#1088#1077#1078'.'
+          DataBinding.FieldName = 'PercentPhone'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.#### %'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 60
+        end
+        object colPercentOther: TcxGridDBColumn
+          Caption = #1054#1089#1090#1072#1083#1100#1085#1099#1077
+          DataBinding.FieldName = 'PercentOther'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.#### %'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 60
+        end
+      end
+      object cxGridLevel1: TcxGridLevel
+        GridView = cxGridDBTableView1
+      end
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 67
@@ -267,6 +358,7 @@ inherited WagesVIPForm: TWagesVIPForm
           StoredProc = spSelect
         end
         item
+          StoredProc = spSelect_PayrollTypeVIP
         end
         item
         end>
@@ -871,5 +963,29 @@ inherited WagesVIPForm: TWagesVIPForm
     NeedResetData = True
     Left = 552
     Top = 256
+  end
+  object PayrollTypeVIPDS: TDataSource
+    DataSet = PayrollTypeVIPCDS
+    Left = 896
+    Top = 32
+  end
+  object PayrollTypeVIPCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 848
+    Top = 32
+  end
+  object spSelect_PayrollTypeVIP: TdsdStoredProc
+    StoredProcName = 'gpSelect_WagesVIP_PayrollTypeVIP'
+    DataSet = PayrollTypeVIPCDS
+    DataSets = <
+      item
+        DataSet = PayrollTypeVIPCDS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 1024
+    Top = 32
   end
 end

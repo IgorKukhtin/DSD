@@ -2745,6 +2745,17 @@ var
       Inc(FLoadPUSH);
   end;
 
+  function isServiseOld : Boolean;
+  var LocalVersionInfo, BaseVersionInfo: TVersionInfo;
+      OldProgram, OldServise : Boolean;
+  begin
+    Result := False;
+    BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion('FarmacyCashServise.exe', GetBinaryPlatfotmSuffics(ExtractFileDir(ParamStr(0)) + '\FarmacyCashServise.exe', ''));
+    LocalVersionInfo := UnilWin.GetFileVersion(ExtractFileDir(ParamStr(0)) + '\FarmacyCashServise.exe');
+    if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
+       ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then Result := True;
+  end;
+
 begin
   TimerPUSH.Enabled := false;
   TimerPUSH.Interval := 60 * 1000;
@@ -2758,6 +2769,10 @@ begin
         '   Форс-Мажор РРО: звоним в любое время Татьяна (099-641-59-21), Юлия (0957767101)'#13#10
         + '2. Сделайте нулевой чек, проверьте дату и время.'#13#10 +
         '3. Сделайте внесение 100,00 грн.', cResult);
+
+      if isServiseOld then
+        ShowPUSHMessageCash('Не обновлена служба FCash Service.'#13#10#13#10'Обратитесь в IT отдел.', cResult);
+
       Load_PUSH(True);
     end
     else if UnitConfigCDS.Active and

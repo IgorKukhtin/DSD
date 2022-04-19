@@ -1,29 +1,30 @@
 inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1085#1072#1083#1080#1079' '#1088#1077#1094#1077#1087#1090#1091#1088' '#1080' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1060#1040#1050#1058'>'
   ClientHeight = 430
-  ClientWidth = 1418
+  ClientWidth = 1370
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1434
+  ExplicitLeft = -327
+  ExplicitWidth = 1386
   ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 1418
+    Width = 1370
     Height = 347
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 1418
+    ExplicitWidth = 1370
     ExplicitHeight = 347
     ClientRectBottom = 347
-    ClientRectRight = 1418
+    ClientRectRight = 1370
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1418
+      ExplicitWidth = 1370
       ExplicitHeight = 347
       inherited cxGrid: TcxGrid
-        Width = 1418
+        Width = 1370
         Height = 347
-        ExplicitWidth = 1418
+        ExplicitWidth = 1370
         ExplicitHeight = 347
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -583,28 +584,6 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           object SummPrice3_sale: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1055#1088#1072#1081#1089'3 '#1088#1077#1072#1083#1080#1079'. ('#1088#1072#1089#1095'.)'
             DataBinding.FieldName = 'SummPrice3_sale'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 75
-          end
-          object SummPrice5_sale: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1055#1088#1072#1081#1089'5 '#1088#1077#1072#1083#1080#1079'. ('#1088#1072#1089#1095'.)'
-            DataBinding.FieldName = 'SummPrice5_sale'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 75
-          end
-          object SummPrice6_sale: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1055#1088#1072#1081#1089'6 '#1088#1077#1072#1083#1080#1079'. ('#1088#1072#1089#1095'.)'
-            DataBinding.FieldName = 'SummPrice6_sale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -1363,9 +1342,9 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
     end
   end
   inherited Panel: TPanel
-    Width = 1418
+    Width = 1370
     Height = 57
-    ExplicitWidth = 1418
+    ExplicitWidth = 1370
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 118

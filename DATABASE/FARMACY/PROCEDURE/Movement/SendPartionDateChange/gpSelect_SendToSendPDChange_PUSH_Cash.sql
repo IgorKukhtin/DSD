@@ -53,6 +53,15 @@ BEGIN
                      AND COALESCE(MIFloat_MISendPDChangeId.ValueData, 0) = 0
                      AND MovementLinkObject_From.ObjectId = inUnitID
                      AND MovementDate_Insert.ValueData >= CURRENT_DATE - INTERVAL '30 DAY')
+       , tmpPresent AS (SELECT tmpMI.Id
+                             , Sum(Container.Amount) AS Amount
+                        FROM tmpMI
+                        
+                             INNER JOIN Container ON Container.ObjectId = tmpMI.ObjectId
+                                                 AND Container.WhereObjectId = inUnitID
+                                                 AND Container.Amount > 0
+                        GROUP BY tmpMI.Id
+                        )
        , tmpProtocolAll AS (SELECT  MovementItem.Id
                                   , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
                                   , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
@@ -75,6 +84,7 @@ BEGIN
                             , MovementItem.CommentSunName
                        FROM tmpMI AS MovementItem
                             INNER JOIN tmpProtocol ON tmpProtocol.ID = MovementItem.Id
+                            INNER JOIN tmpPresent ON tmpPresent.Id = MovementItem.Id
                        --WHERE COALESCE (tmpProtocol.AmountAuto, 0) - MovementItem.Amount > 0
                        )
         , tmpData AS (SELECT string_agg(MovementItem.Id::TVarChar, ';')       AS ID
@@ -111,4 +121,4 @@ $BODY$
 */
 
 -- 
-SELECT * FROM gpSelect_SendToSendPDChange_PUSH_Cash(1, 12607257  , '3');
+SELECT * FROM gpSelect_SendToSendPDChange_PUSH_Cash(1, 14422124, 3);

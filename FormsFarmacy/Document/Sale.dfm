@@ -1,26 +1,26 @@
 inherited SaleForm: TSaleForm
   Caption = #1055#1088#1086#1076#1072#1078#1072
   ClientHeight = 542
-  ClientWidth = 668
+  ClientWidth = 659
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 684
+  ExplicitWidth = 675
   ExplicitHeight = 581
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 250
-    Width = 668
+    Width = 659
     Height = 292
     ExplicitTop = 250
     ExplicitWidth = 668
     ExplicitHeight = 292
     ClientRectBottom = 292
-    ClientRectRight = 668
+    ClientRectRight = 659
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 668
       ExplicitHeight = 268
       inherited cxGrid: TcxGrid
-        Width = 668
+        Width = 659
         Height = 170
         ExplicitWidth = 668
         ExplicitHeight = 170
@@ -195,11 +195,12 @@ inherited SaleForm: TSaleForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 178
-        Width = 668
+        Width = 659
         Height = 90
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 668
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -373,16 +374,17 @@ inherited SaleForm: TSaleForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 170
-        Width = 668
+        Width = 659
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitWidth = 668
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 668
+    Width = 659
     Height = 224
     TabOrder = 3
     ExplicitWidth = 668
@@ -993,7 +995,8 @@ inherited SaleForm: TSaleForm
         item
           StoredProc = spUpdate_PriceSale
         end>
-      Caption = 'actExec_Update_PriceSale'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' '#1073#1072#1079' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1089#1090#1088#1086#1095#1082#1077
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' '#1073#1072#1079' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1089#1090#1088#1086#1095#1082#1077
       ImageIndex = 79
     end
     object actExecuteDialog_Update_PriceSale: TExecuteDialog
@@ -1525,6 +1528,7 @@ inherited SaleForm: TSaleForm
       end
       item
         Name = 'MedicSPId'
+        Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2677,8 +2681,8 @@ inherited SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 672
-    Top = 200
+    Left = 680
+    Top = 176
   end
   object SPKindGuides: TdsdGuides
     KeyField = 'Id'

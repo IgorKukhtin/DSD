@@ -869,10 +869,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryEditForm');
+}
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryItemEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryItemEditForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryItemForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryLinkForm'));
+ { TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryLinkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryLinkForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategory_CrossForm'));
@@ -3427,6 +3430,9 @@ end;
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TNewUserForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TNewUserForm');
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPickUpLogsAndDBFForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPickUpLogsAndDBFForm');
 
@@ -3447,10 +3453,10 @@ begin
  {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMethodsAssortmentForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMethodsAssortmentForm');
-}
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('THelsiUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('THelsiUserForm');
- {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TLog_CashRemainsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TLog_CashRemainsForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheck_CashRegisterForm'));

@@ -2,21 +2,22 @@ inherited CheckHelsiSignAllUnitForm: TCheckHelsiSignAllUnitForm
   BorderIcons = [biSystemMenu]
   Caption = #1057#1074#1077#1088#1082#1072' '#1095#1077#1082#1086#1074' '#1089' '#1088#1077#1094#1077#1087#1090#1072#1084' '#1087#1086' '#1057#1055' "'#1044#1086#1089#1090#1091#1087#1085#1110' '#1051#1110#1082#1080'"'
   ClientHeight = 518
-  ClientWidth = 921
+  ClientWidth = 1031
   OnCloseQuery = ParentFormCloseQuery
   OnCreate = ParentFormCreate
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 937
+  ExplicitWidth = 1047
   ExplicitHeight = 557
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel [0]
     Left = 0
     Top = 0
-    Width = 921
+    Width = 1031
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 921
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -30,16 +31,32 @@ inherited CheckHelsiSignAllUnitForm: TCheckHelsiSignAllUnitForm
     object cxLabel1: TcxLabel
       Left = 36
       Top = 6
-      Caption = #1063#1077#1082#1080' '#1079#1072':'
+      Caption = #1063#1077#1082#1080' '#1089':'
+    end
+    object deEnd: TcxDateEdit
+      Left = 237
+      Top = 5
+      EditValue = 43221d
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 2
+      Width = 85
+    end
+    object cxLabel2: TcxLabel
+      Left = 204
+      Top = 6
+      Caption = #1087#1086':'
     end
   end
   object cxCheckHelsiSignAllUnitGrid: TcxGrid [1]
     Left = 0
     Top = 59
-    Width = 921
+    Width = 1031
     Height = 459
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 921
     object cxCheckHelsiSignAllUnitGridDBBandedTableView1: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -69,6 +86,7 @@ inherited CheckHelsiSignAllUnitForm: TCheckHelsiSignAllUnitForm
       Bands = <
         item
           Caption = #1063#1077#1082
+          Width = 420
         end
         item
           Caption = #1056#1077#1094#1077#1087#1090
@@ -92,7 +110,7 @@ inherited CheckHelsiSignAllUnitForm: TCheckHelsiSignAllUnitForm
         Position.RowIndex = 0
       end
       object colParentName: TcxGridDBBandedColumn
-        Caption = #1043#1088#1082#1087#1087#1072
+        Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'ParentName'
         HeaderAlignmentHorz = taCenter
         Width = 81
@@ -107,6 +125,15 @@ inherited CheckHelsiSignAllUnitForm: TCheckHelsiSignAllUnitForm
         Width = 107
         Position.BandIndex = 0
         Position.ColIndex = 2
+        Position.RowIndex = 0
+      end
+      object colOperDate: TcxGridDBBandedColumn
+        Caption = #1044#1072#1090#1072
+        DataBinding.FieldName = 'OperDate'
+        HeaderAlignmentHorz = taCenter
+        Width = 66
+        Position.BandIndex = 0
+        Position.ColIndex = 4
         Position.RowIndex = 0
       end
       object colInvNumber: TcxGridDBBandedColumn
@@ -127,9 +154,9 @@ inherited CheckHelsiSignAllUnitForm: TCheckHelsiSignAllUnitForm
         Properties.DisplayFormat = ',0.00'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 54
+        Width = 60
         Position.BandIndex = 0
-        Position.ColIndex = 4
+        Position.ColIndex = 5
         Position.RowIndex = 0
       end
       object colInvNumberSP: TcxGridDBBandedColumn
@@ -277,17 +304,24 @@ inherited CheckHelsiSignAllUnitForm: TCheckHelsiSignAllUnitForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TDataDialogForm'
-      FormNameParam.Value = 'TDataDialogForm'
+      FormName = 'TReport_PeriodDialogForm'
+      FormNameParam.Value = 'TReport_PeriodDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'inOperDate'
+          Name = 'StartDate'
           Value = 43221d
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -474,6 +508,14 @@ inherited CheckHelsiSignAllUnitForm: TCheckHelsiSignAllUnitForm
         Name = 'inStartDate'
         Value = 43221d
         Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','

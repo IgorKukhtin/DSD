@@ -530,19 +530,15 @@ BEGIN
                           -- AND ( ( (COALESCE (ObjectFloat_PercentSP.ValueData,0) = inPercentSP OR COALESCE (inPercentSP,0) = 0) ) OR inEndDate > '01.01.2019')
                         )
   
- , tmpMovDetails AS (SELECT tmpSale.Id   AS MovementId
-                          , tmpSale.OperDate
-                          , tmpSale.UnitId
-                          , tmpSale.Address
-                          , tmpSale.JuridicalId
-                          , tmpSale.HospitalId
-                          , tmpSale.isListSP
-                          , tmpSale.InvNumberSP
-                          , tmpSale.MedicSP
-                          , tmpSale.AmbulantClinicSP
-                          , tmpSale.MemberSP
-                          , tmpSale.OperDateSP
-                          , tmpSale.GroupMemberSPId
+ , tmpSaleGroups AS (SELECT DISTINCT tmpSale.JuridicalId, ObjectLink_PartnerMedical_Juridical.ChildObjectId AS PartnerMedical_JuridicalId 
+                     FROM tmpSale
+
+                       LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Juridical
+                              ON ObjectLink_PartnerMedical_Juridical.ObjectId = tmpSale.HospitalId
+                             AND ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical())
+ , tmpMovDetailsAll AS (SELECT 
+                            tmpSaleGroups.JuridicalId                             AS JuridicalId
+                          , tmpSaleGroups.PartnerMedical_JuridicalId              AS PartnerMedical_JuridicalId 
 
                           , ObjectHistory_JuridicalDetails.FullName AS JuridicalFullName
                           , ObjectHistory_JuridicalDetails.JuridicalAddress
@@ -559,10 +555,6 @@ BEGIN
                           , ObjectHistory_JuridicalDetails.DecisionDate
                           , ObjectHistory_JuridicalDetails.License
 
-                          , tmpBankAccount.BankName ::TVarChar
-                          , tmpBankAccount.MFO      ::TVarChar
-
-                          , ObjectLink_PartnerMedical_Juridical.ChildObjectId     AS PartnerMedical_JuridicalId  --ObjectLink_PartnerMedical_Juridical.ChildObjectId     AS PartnerMedical_JuridicalId
                           , ObjectHistory_PartnerMedicalDetails.FullName          AS PartnerMedical_FullName
                           , ObjectHistory_PartnerMedicalDetails.JuridicalAddress  AS PartnerMedical_JuridicalAddress
                           , ObjectHistory_PartnerMedicalDetails.Phone             AS PartnerMedical_Phone
@@ -570,7 +562,56 @@ BEGIN
                           , ObjectHistory_PartnerMedicalDetails.AccounterName     AS PartnerMedical_AccounterName
                           , ObjectHistory_PartnerMedicalDetails.INN               AS PartnerMedical_INN
                           , ObjectHistory_PartnerMedicalDetails.NumberVAT         AS PartnerMedical_NumberVAT
-                          , COALESCE (Object_BankAccount.ValueData,ObjectHistory_PartnerMedicalDetails.BankAccount)     AS PartnerMedical_BankAccount
+                          , ObjectHistory_PartnerMedicalDetails.BankAccount       AS PartnerMedical_BankAccount
+
+                     FROM tmpSaleGroups
+
+                       LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := tmpSaleGroups.JuridicalId, inFullName := '', inOKPO := '', inSession := '3' /*inSession*/) AS ObjectHistory_JuridicalDetails ON 1=1
+                       LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := tmpSaleGroups.PartnerMedical_JuridicalId , inFullName := '', inOKPO := '', inSession := '3' /*inSession*/) AS ObjectHistory_PartnerMedicalDetails ON 1=1
+
+                    )
+                             
+ , tmpMovDetails AS (SELECT tmpSale.Id   AS MovementId
+                          , tmpSale.OperDate
+                          , tmpSale.UnitId
+                          , tmpSale.Address
+                          , tmpSale.JuridicalId
+                          , tmpSale.HospitalId
+                          , tmpSale.isListSP
+                          , tmpSale.InvNumberSP
+                          , tmpSale.MedicSP
+                          , tmpSale.AmbulantClinicSP
+                          , tmpSale.MemberSP
+                          , tmpSale.OperDateSP
+                          , tmpSale.GroupMemberSPId
+
+                          , tmpMovDetailsAll.JuridicalFullName
+                          , tmpMovDetailsAll.JuridicalAddress
+                          , tmpMovDetailsAll.OKPO
+                          , tmpMovDetailsAll.AccounterName
+                          , tmpMovDetailsAll.INN
+                          , tmpMovDetailsAll.NumberVAT
+                          , tmpMovDetailsAll.BankAccount
+                          , tmpMovDetailsAll.Phone
+
+                          , tmpMovDetailsAll.MainName
+                          , tmpMovDetailsAll.Reestr
+                          , tmpMovDetailsAll.Decision
+                          , tmpMovDetailsAll.DecisionDate
+                          , tmpMovDetailsAll.License
+
+                          , tmpBankAccount.BankName ::TVarChar
+                          , tmpBankAccount.MFO      ::TVarChar
+
+                          , ObjectLink_PartnerMedical_Juridical.ChildObjectId     AS PartnerMedical_JuridicalId  --ObjectLink_PartnerMedical_Juridical.ChildObjectId     AS PartnerMedical_JuridicalId
+                          , tmpMovDetailsAll.PartnerMedical_FullName
+                          , tmpMovDetailsAll.PartnerMedical_JuridicalAddress
+                          , tmpMovDetailsAll.PartnerMedical_Phone
+                          , tmpMovDetailsAll.PartnerMedical_OKPO
+                          , tmpMovDetailsAll.PartnerMedical_AccounterName
+                          , tmpMovDetailsAll.PartnerMedical_INN
+                          , tmpMovDetailsAll.PartnerMedical_NumberVAT
+                          , COALESCE (Object_BankAccount.ValueData, tmpMovDetailsAll.BankAccount)                       AS PartnerMedical_BankAccount
                           , COALESCE (Object_Bank.ValueData,tmpPartnerMedicalBankAccount.BankName)                      AS PartnerMedical_BankName
                           , COALESCE (ObjectString_MFO.ValueData,tmpPartnerMedicalBankAccount.MFO)                      AS PartnerMedical_MFO
                           , ObjectString_PartnerMedical_FIO.ValueData             AS MedicFIO
@@ -587,17 +628,17 @@ BEGIN
                        LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Juridical
                               ON ObjectLink_PartnerMedical_Juridical.ObjectId = tmpSale.HospitalId
                              AND ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
-
-                       LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := tmpSale.JuridicalId, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_JuridicalDetails ON 1=1
-                       LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := ObjectLink_PartnerMedical_Juridical.ChildObjectId , inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_PartnerMedicalDetails ON 1=1
+                             
+                       LEFT JOIN tmpMovDetailsAll ON tmpMovDetailsAll.JuridicalId = tmpSale.JuridicalId
+                                                 AND tmpMovDetailsAll.PartnerMedical_JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId
 
                        LEFT JOIN tmpBankAccount
                               ON tmpBankAccount.JuridicalId = tmpSale.JuridicalId
-                             AND tmpBankAccount.BankAccount = ObjectHistory_JuridicalDetails.BankAccount
+                             AND tmpBankAccount.BankAccount = tmpMovDetailsAll.BankAccount
 
                        LEFT JOIN tmpBankAccount AS tmpPartnerMedicalBankAccount
                               ON tmpPartnerMedicalBankAccount.JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId  --ObjectLink_PartnerMedical_Juridical.ChildObjectId
-                             AND tmpPartnerMedicalBankAccount.BankAccount = ObjectHistory_PartnerMedicalDetails.BankAccount
+                             AND tmpPartnerMedicalBankAccount.BankAccount = tmpMovDetailsAll.PartnerMedical_BankAccount
 
                        LEFT JOIN tmpContract ON tmpContract.PartnerMedicalId = tmpSale.HospitalId
                                             AND tmpContract.PartnerMedical_JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId
@@ -731,7 +772,9 @@ BEGIN
                                , tmpMIC_Info.JuridicalName_in
                                , tmpMIC_Info.NDS
                                , tmpMIC_Info.InvNumber_in
-                               , CASE WHEN tmpMIC_Info.Amount <> 0 AND COALESCE (tmpMIC_Info.SumWithVAT,0) <> 0 THEN (tmpPrice.Price - (tmpMIC_Info.SumWithVAT/tmpMIC_Info.Amount) ) *100 / (tmpMIC_Info.SumWithVAT/tmpMIC_Info.Amount) ELSE 0 END :: TFloat AS ChargePersent
+                               , CASE WHEN tmpMIC_Info.Amount <> 0 AND COALESCE (tmpMIC_Info.SumWithVAT,0) <> 0 
+                                      THEN (tmpPrice.Price - (tmpMIC_Info.SumWithVAT/tmpMIC_Info.Amount) ) *100 / (tmpMIC_Info.SumWithVAT/tmpMIC_Info.Amount) 
+                                      ELSE 0 END :: TFloat AS ChargePersent
                                , tmpMIC_Info.NDSKindId
                           FROM tmpMIC_Info
                                 JOIN tmpPrice ON tmpPrice.GoodsId = tmpMIC_Info.GoodsId
@@ -966,4 +1009,4 @@ $BODY$
 -- SELECT * FROM gpReport_Sale_SP (inStartDate:= '01.09.2019', inEndDate:= '05.09.2019', inJuridicalId:= 0, inUnitId:= 0, inHospitalId:= 0, inGroupMemberSPId:= 0, inPercentSP:= 0, inisGroupMemberSP:= TRUE, inSession:= zfCalc_UserAdmin());
 
 
-select * from gpReport_Sale_SP(inStartDate := ('01.04.2022')::TDateTime , inEndDate := ('30.04.2022')::TDateTime , inJuridicalId := 0 , inUnitId := 377605 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0 ,  inSession := '3');
+select * from gpReport_Sale_SP(inStartDate := ('01.04.2022')::TDateTime , inEndDate := ('30.04.2022')::TDateTime , inJuridicalId := 0 , inUnitId := 377605  , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0 ,  inSession := '3');

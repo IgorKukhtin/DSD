@@ -18,8 +18,6 @@ type
   TMarginCategoryItemForm = class(TAncestorEnumForm)
     colMinPice: TcxGridDBColumn;
     colMarginPercent: TcxGridDBColumn;
-    spInsertUpdate: TdsdStoredProc;
-    actInsertUpdate: TdsdUpdateDataSet;
     MarginCategoryGuides: TdsdGuides;
     cxLabel1: TcxLabel;
     bbLabel: TdxBarControlContainerItem;
@@ -36,6 +34,11 @@ type
     FormParams: TdsdFormParams;
     actMarginCategoryItemOpen: TdsdOpenForm;
     bbMarginCategoryItemOpen: TdxBarButton;
+    dsdStoredProc1: TdsdStoredProc;
+    actInsert: TdsdInsertUpdateAction;
+    actUpdate: TdsdInsertUpdateAction;
+    dxBarButton1: TdxBarButton;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

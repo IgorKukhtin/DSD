@@ -57,6 +57,9 @@ type
     colOrd: TcxGridDBBandedColumn;
     colParentName: TcxGridDBBandedColumn;
     colUnitName: TcxGridDBBandedColumn;
+    deEnd: TcxDateEdit;
+    cxLabel2: TcxLabel;
+    colOperDate: TcxGridDBBandedColumn;
     procedure ParentFormCreate(Sender: TObject);
     procedure ParentFormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure actLoadStateExecute(Sender: TObject);
@@ -71,7 +74,7 @@ implementation
 
 {$R *.dfm}
 
-uses Helsi, MainCash2, Math;
+uses Helsi, MainCash2, Math, SimpleGauge;
 
 
 
@@ -117,10 +120,19 @@ begin
   try
     ClientDataSet.DisableControls;
     ClientDataSet.First;
-    while not ClientDataSet.Eof do
+    with TGaugeFactory.GetGauge('Проверка статусов чеков', 0, ClientDataSet.RecordCount) do
     begin
-      actLoadStateCurrExecute(Sender);
-      ClientDataSet.Next;
+      Start;
+      try
+        while not ClientDataSet.Eof do
+        begin
+          actLoadStateCurrExecute(Sender);
+          ClientDataSet.Next;
+          IncProgress(1);
+        end;
+      finally
+        Finish;
+      end;
     end;
   finally
     ClientDataSet.First;
@@ -140,6 +152,7 @@ begin
   FormClassName := Self.ClassName;
   UserSettingsStorageAddOn.LoadUserSettings;
   deStart.Date := Date;
+  deEnd.Date := Date;
   FIniError := False;
   actOpen.Execute;
 end;

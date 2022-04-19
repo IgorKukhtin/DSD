@@ -46,6 +46,7 @@ BEGIN
          , to_char(MAX(EmployeeWorkLog.DateLogOut), 'HH24:MI:SS') AS TimeLogOut
          , tmpOldNew.OldProgram
          , tmpOldNew.OldServise
+         , Object_Position.ValueData  AS PositionName                   
          , CASE WHEN tmpOldNew.OldProgram = True OR tmpOldNew.OldServise = True
            THEN TRUE ELSE FALSE END AS isErased
     FROM EmployeeWorkLog
@@ -55,11 +56,22 @@ BEGIN
                                        AND tmpOldNew.UnitId = EmployeeWorkLog.UnitId
                                        AND tmpOldNew.UserId = EmployeeWorkLog.UserId
                                        AND tmpOldNew.Ord = 1
+ 
+         LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                              ON ObjectLink_User_Member.ObjectId = EmployeeWorkLog.UserId
+                             AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+
+         LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                              ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
+                             AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+         LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
+         
     WHERE EmployeeWorkLog.DateLogIn >= vbDateStart AND EmployeeWorkLog.DateLogIn < vbDateEnd
     GROUP BY EmployeeWorkLog.CashSessionId,
              OUnit.objectcode, OUnit.valuedata,
              OUser.objectcode, OUser.valuedata, 
-             tmpOldNew.OldProgram, tmpOldNew.OldServise
+             tmpOldNew.OldProgram, tmpOldNew.OldServise,
+             Object_Position.ValueData
              
              
              
@@ -104,4 +116,6 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Log_CashRemains(inStartDate := ('24.01.2019')::TDateTime ,  inSession := '3');
+-- 
+
+select * from gpSelect_Log_CashRemains(inStartDate := ('14.04.2022')::TDateTime ,  inSession := '3');

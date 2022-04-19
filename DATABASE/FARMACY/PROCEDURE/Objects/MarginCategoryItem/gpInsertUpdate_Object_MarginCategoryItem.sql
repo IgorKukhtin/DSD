@@ -1,15 +1,15 @@
 -- Function: gpInsertUpdate_Object_MarginCategory(Integer, Integer, TVarChar, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MarginCategoryItem (Integer, TFloat, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MarginCategoryItem (Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MarginCategoryItem(
-    IN inId               Integer,       -- Ключ объекта <Виды форм оплаты>
+ INOUT ioId               Integer,       -- Ключ объекта <Настройка категории наценок>
+    IN inMarginCategoryId Integer, 
     IN inMinPrice         TFloat, 
     IN inMarginPercent    TFloat, 
-    IN inMarginCategoryId Integer, 
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE(Id INTEGER) AS
+RETURNS INTEGER AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsUpdate Boolean; 
@@ -25,38 +25,38 @@ BEGIN
    END IF;
 
    -- определили <Признак новый или корректировка>
-   vbIsUpdate:= COALESCE (inId, 0) > 0;
+   vbIsUpdate:= COALESCE (ioId, 0) > 0;
 
-   IF COALESCE(inId, 0) <> 0 THEN
+   IF COALESCE(ioId, 0) <> 0 THEN
       vbMarginPercent := (SELECT ObjectFloat.ValueData 
                           FROM ObjectFloat 
-                          WHERE ObjectFloat.ObjectId = inId 
+                          WHERE ObjectFloat.ObjectId = ioId 
                             AND ObjectFloat.DescId = zc_ObjectFloat_MarginCategoryItem_MarginPercent()
                           );
    END IF;
 
 
-   IF COALESCE(inId, 0) = 0 THEN
+   IF COALESCE(ioId, 0) = 0 
+   THEN
       -- сохранили <Объект>
-      inId := lpInsertUpdate_Object (0, zc_Object_MarginCategoryItem(), 0, '');
+      ioId := lpInsertUpdate_Object (0, zc_Object_MarginCategoryItem(), 0, '');
    END IF;
 
-   -- сохранили свойство <Минимальная цена>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginCategoryItem_MinPrice(), inId, inMinPrice);
-   -- сохранили свойство <% наценки>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginCategoryItem_MarginPercent(), inId, inMarginPercent);
-
    -- сохранили связь с <Категорией наценки>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_MarginCategoryItem_MarginCategory(), inId, inMarginCategoryId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_MarginCategoryItem_MarginCategory(), ioId, inMarginCategoryId);
 
+   -- сохранили свойство <Минимальная цена>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginCategoryItem_MinPrice(), ioId, inMinPrice);
+   -- сохранили свойство <% наценки>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MarginCategoryItem_MarginPercent(), ioId, inMarginPercent);
 
    -- сохранили историю
-    IF ((COALESCE(inMarginPercent,0) <>0 ) AND (inMarginPercent <> COALESCE(vbMarginPercent,0))) 
+    IF ((COALESCE(inMarginPercent,0) <> 0 ) AND (inMarginPercent <> COALESCE(vbMarginPercent,0))) 
     THEN
         -- сохранили историю
         PERFORM gpInsertUpdate_ObjectHistory_MarginCategoryItem(
                 ioId                    := 0 :: Integer,    -- ключ объекта <Элемент истории>
-                inMarginCategoryItemId  := inId,            -- 
+                inMarginCategoryItemId  := ioId,            -- 
                 inPrice                 := inMinPrice,      -- Цена
                 inValue                 := inMarginPercent, -- % наценки
                 inSession  := inSession);
@@ -65,17 +65,13 @@ BEGIN
 
 
    -- сохранили протокол
-   --PERFORM lpInsert_ObjectProtocol (inId, UserId);
-   PERFORM lpInsert_ObjectProtocol (inObjectId:= inId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);
-
-
-   RETURN 
-      QUERY SELECT inId AS Id;
+   --PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);
 
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_MarginCategoryItem (Integer, TFloat, TFloat, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_MarginCategoryItem (Integer, Integer, TFloat, TFloat, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/

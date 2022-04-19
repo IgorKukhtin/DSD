@@ -39,6 +39,7 @@ type
     dxBarButton1: TdxBarButton;
     TimeLogOut: TcxGridDBColumn;
     TimeZReport: TcxGridDBColumn;
+    PositionName: TcxGridDBColumn;
   private
     { Private declarations }
   public

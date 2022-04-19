@@ -16,13 +16,6 @@ BEGIN
   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
   vbUserId := inSession;
 
-
-  IF 3 <> inSession::Integer AND 375661 <> inSession::Integer AND 4183126 <> inSession::Integer AND
-    8001630 <> inSession::Integer AND 9560329 <> inSession::Integer
-  THEN
-    RAISE EXCEPTION 'Изменение признака Не для НТЗ.> вам запрещено.';
-  END IF;
-      
   --Меняем признак Не для НТЗ
   Perform lpInsertUpdate_MovementBoolean(zc_MovementBoolean_NotMCS(), inMovementId, NOT inisNotMCS);
   
