@@ -28,7 +28,7 @@ implementation
 uses Authentication, FormStorage, CommonData, Storage, UtilConst;
 
 const
-  ReportPath = '..\Reports\Boat';
+  ReportPath = '..\Reports\Merlin';
 
 { TLoadReportTest }
 
@@ -59,7 +59,8 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-    LoadReportFromFile('PrintCash', ReportPath + '\PrintCash.fr3');
+    LoadReportFromFile('PrintMovement_Cash', ReportPath + '\PrintMovement_Cash.fr3');
+    //LoadReportFromFile('PrintCash', ReportPath + '\PrintCash.fr3');
 end;
 
 procedure TLoadReportTest.SetUp;

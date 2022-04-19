@@ -103,6 +103,8 @@ type
     actGetImportSetting: TdsdExecStoredProc;
     macStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
+    actPrintDetail: TdsdPrintAction;
+    bbPrintDetail: TdxBarButton;
   private
   public
   end;

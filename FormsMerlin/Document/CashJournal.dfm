@@ -72,6 +72,8 @@ object CashJournalForm: TCashJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = -48
+    ExplicitTop = 65
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -418,6 +420,18 @@ object CashJournalForm: TCashJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintDetail'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -500,6 +514,10 @@ object CashJournalForm: TCashJournalForm
       Action = macStartLoad
       Category = 0
     end
+    object bbPrintDetail: TdxBarButton
+      Action = actPrintDetail
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -528,6 +546,78 @@ object CashJournalForm: TCashJournalForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actPrintDetail: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1076#1077#1090#1072#1083#1100#1085#1086
+      Hint = #1055#1077#1095#1072#1090#1100' '#1076#1077#1090#1072#1083#1100#1085#1086
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+          IndexFieldNames = 'CashName;UnitName;InfoMoneyName;ServiceDate'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = 44562d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 44562d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKindName_text'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'inKindName_text'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDetail'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Cash'
+      ReportNameParam.Value = 'PrintMovement_Cash'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -554,10 +644,7 @@ object CashJournalForm: TCashJournalForm
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'CashName;UnitName;InfoMoneyName;ServiceDate'
         end>
       Params = <
         item
@@ -566,9 +653,37 @@ object CashJournalForm: TCashJournalForm
           Component = FormParams
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKindName_text'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKindName_text'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDetail'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Income'
-      ReportNameParam.Value = 'PrintMovement_Income'
+      ReportName = 'PrintMovement_Cash'
+      ReportNameParam.Value = 'PrintMovement_Cash'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1358,17 +1473,30 @@ object CashJournalForm: TCashJournalForm
     DataSets = <
       item
         DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
       end>
-    OutputType = otMultiDataSet
     Params = <
       item
-        Name = 'inMovementId'
+        Name = 'inStartDate'
         Value = 42005d
-        Component = ClientDataSet
-        ComponentItem = 'Id'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKindName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inKindName'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
