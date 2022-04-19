@@ -30,8 +30,8 @@ BEGIN
      -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
-                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
-                  UNION SELECT zc_Enum_Status_Erased()     AS StatusId --WHERE inIsErased = TRUE
+                  --UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
+                  --UNION SELECT zc_Enum_Status_Erased()     AS StatusId --WHERE inIsErased = TRUE
                        )
 
         , tmpMovement AS (SELECT Movement.*
