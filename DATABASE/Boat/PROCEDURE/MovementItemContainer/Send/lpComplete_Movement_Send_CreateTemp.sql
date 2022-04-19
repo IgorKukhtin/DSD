@@ -13,7 +13,7 @@ BEGIN
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem'))
      THEN
          DELETE FROM _tmpItem;
-         DELETE FROM документа;
+         DELETE FROM _tmpItem_Child;
          --
          DELETE FROM _tmpReserveDiff;
          DELETE FROM _tmpReserveRes;
