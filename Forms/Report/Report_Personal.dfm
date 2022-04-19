@@ -4,7 +4,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
   ClientWidth = 901
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 917
-  ExplicitHeight = 593
+  ExplicitHeight = 594
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2418,7 +2418,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         end
         item
           Name = 'inDateService'
-          Value = 'NULL'
+          Value = Null
           Component = deServiceDate
           DataType = ftDateTime
           ParamType = ptInput
@@ -3197,7 +3197,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         MultiSelectSeparator = ','
       end>
     Left = 120
-    Top = 61
+    Top = 37
   end
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'

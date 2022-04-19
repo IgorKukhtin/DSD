@@ -304,20 +304,16 @@ inherited ServiceJournalForm: TServiceJournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
+      StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
           IndexFieldNames = 'UnitName;InfoMoneyName;ServiceDate'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
@@ -363,19 +359,15 @@ inherited ServiceJournalForm: TServiceJournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
+      StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100' '#1076#1077#1090#1072#1083#1100#1085#1086
       Hint = #1055#1077#1095#1072#1090#1100' '#1076#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 16
       DataSets = <
         item
-          DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
           IndexFieldNames = 'UnitName;InfoMoneyName;ServiceDate'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item

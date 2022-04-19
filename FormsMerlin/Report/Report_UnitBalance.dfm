@@ -251,14 +251,14 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 120
-    Top = 208
+    Left = 88
+    Top = 320
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 80
-    Top = 208
+    Top = 256
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -341,6 +341,14 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
           BeginGroup = True
           Visible = True
           ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -738,15 +746,15 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
           ToParam.MultiSelectSeparator = ','
         end>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' ('#1040#1082#1090#1080#1074'/'#1055#1072#1089#1089#1080#1074')'
-      Hint = #1055#1077#1095#1072#1090#1100' ('#1040#1082#1090#1080#1074'/'#1055#1072#1089#1089#1080#1074')'
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
           DataSet = ClientDataSet
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'RootName;AccountGroupName;AccountDirectionName;AccountName'
+          IndexFieldNames = 'ParentName_Unit;UnitName;'
         end>
       Params = <
         item
@@ -769,8 +777,8 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089
+      ReportName = 'PrintReport_UnitBalance'
+      ReportNameParam.Value = 'PrintReport_UnitBalance'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','

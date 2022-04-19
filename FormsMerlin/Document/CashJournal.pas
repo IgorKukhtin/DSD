@@ -105,6 +105,7 @@ type
     bbStartLoad: TdxBarButton;
     actPrintDetail: TdsdPrintAction;
     bbPrintDetail: TdxBarButton;
+    bbPrint1: TdxBarButton;
   private
   public
   end;

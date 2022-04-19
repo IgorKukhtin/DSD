@@ -516,6 +516,14 @@ object CashJournalForm: TCashJournalForm
       Action = actPrintDetail
       Category = 0
     end
+    object bbPrint1: TdxBarButton
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Hint = #1055#1077#1095#1072#1090#1100
+      Visible = ivAlways
+      ImageIndex = 3
+      ShortCut = 16464
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -557,19 +565,15 @@ object CashJournalForm: TCashJournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
+      StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100' '#1076#1077#1090#1072#1083#1100#1085#1086
       Hint = #1055#1077#1095#1072#1090#1100' '#1076#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 16
       DataSets = <
         item
-          DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
           IndexFieldNames = 'CashName;UnitName;OperDate;InfoMoneyName;ServiceDate'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
@@ -629,20 +633,16 @@ object CashJournalForm: TCashJournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
+      StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
           IndexFieldNames = 'CashName;UnitName;InfoMoneyName;ServiceDate'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
