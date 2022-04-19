@@ -72,8 +72,6 @@ object CashJournalForm: TCashJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = -48
-    ExplicitTop = 65
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -571,7 +569,7 @@ object CashJournalForm: TCashJournalForm
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
-          IndexFieldNames = 'CashName;UnitName;InfoMoneyName;ServiceDate'
+          IndexFieldNames = 'CashName;UnitName;OperDate;InfoMoneyName;ServiceDate'
         end>
       Params = <
         item

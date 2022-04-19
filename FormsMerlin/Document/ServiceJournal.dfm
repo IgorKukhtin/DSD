@@ -5,7 +5,7 @@ inherited ServiceJournalForm: TServiceJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1044
-  ExplicitHeight = 369
+  ExplicitHeight = 370
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -309,15 +309,15 @@ inherited ServiceJournalForm: TServiceJournalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1054#1090#1095#1077#1090' - '#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084
-      Hint = #1054#1090#1095#1077#1090' - '#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDItems'
-          IndexFieldNames = 'AccountName;BankName;BankAccountName'
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+          IndexFieldNames = 'UnitName;InfoMoneyName;ServiceDate'
         end>
       Params = <
         item
@@ -333,9 +333,15 @@ inherited ServiceJournalForm: TServiceJournalForm
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDetail'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
-      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
+      ReportName = 'PrintMovement_Service'
+      ReportNameParam.Value = 'PrintMovement_Service'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -343,7 +349,7 @@ inherited ServiceJournalForm: TServiceJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint1: TdsdPrintAction
+    object actPrintDetail: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -357,15 +363,19 @@ inherited ServiceJournalForm: TServiceJournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProcList = <>
-      Caption = #1055#1083#1072#1090#1077#1078#1082#1072' '#1041#1072#1085#1082
-      Hint = #1055#1083#1072#1090#1077#1078#1082#1072' '#1041#1072#1085#1082
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1076#1077#1090#1072#1083#1100#1085#1086
+      Hint = #1055#1077#1095#1072#1090#1100' '#1076#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 16
-      ShortCut = 16464
       DataSets = <
         item
-          UserName = 'frxDBDItems'
-          GridView = cxGridDBTableView
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+          IndexFieldNames = 'UnitName;InfoMoneyName;ServiceDate'
         end>
       Params = <
         item
@@ -381,9 +391,15 @@ inherited ServiceJournalForm: TServiceJournalForm
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDetail'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
-      ReportName = #1055#1083#1072#1090#1077#1078#1082#1072' '#1041#1072#1085#1082
-      ReportNameParam.Value = #1055#1083#1072#1090#1077#1078#1082#1072' '#1041#1072#1085#1082
+      ReportName = 'PrintMovement_Service'
+      ReportNameParam.Value = 'PrintMovement_Service'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -619,6 +635,14 @@ inherited ServiceJournalForm: TServiceJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintDetail'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -649,10 +673,9 @@ inherited ServiceJournalForm: TServiceJournalForm
       Action = actPrint
       Category = 0
     end
-    object bbPrint1: TdxBarButton
-      Action = actPrint1
+    object bbPrintDetail: TdxBarButton
+      Action = actPrintDetail
       Category = 0
-      ShortCut = 16465
     end
     object bbisCopy: TdxBarButton
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074' '#1044#1072'/'#1053#1077#1090'"'
@@ -738,10 +761,11 @@ inherited ServiceJournalForm: TServiceJournalForm
     Top = 262
   end
   object spSelectPrint: TdsdStoredProc
-    DataSet = PrintItemsCDS
+    StoredProcName = 'gpSelect_Movement_Service_Print'
+    DataSet = PrintHeaderCDS
     DataSets = <
       item
-        DataSet = PrintItemsCDS
+        DataSet = PrintHeaderCDS
       end>
     Params = <
       item
@@ -757,37 +781,6 @@ inherited ServiceJournalForm: TServiceJournalForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalBasisId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAccountId'
-        Value = 0
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBankAccountId'
-        Value = 0
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCurrencyId'
-        Value = 0
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsDetail'
-        Value = False
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -826,5 +819,11 @@ inherited ServiceJournalForm: TServiceJournalForm
     PackSize = 1
     Left = 656
     Top = 152
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 572
+    Top = 209
   end
 end
