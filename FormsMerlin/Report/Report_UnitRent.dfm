@@ -131,6 +131,17 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = GuidesUnit
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = edServiceDate
+        Properties.Strings = (
+          'Date')
       end>
     Left = 48
   end
