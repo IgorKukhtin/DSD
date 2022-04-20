@@ -183,6 +183,14 @@ object CashJournalForm: TCashJournalForm
         Options.Editing = False
         Width = 121
       end
+      object UnitGroupNameFull: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' ('#1054#1090#1076#1077#1083')'
+        DataBinding.FieldName = 'UnitGroupNameFull'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 200
+      end
       object UnitCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
         DataBinding.FieldName = 'UnitCode'

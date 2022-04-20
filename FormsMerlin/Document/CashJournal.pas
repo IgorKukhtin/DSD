@@ -106,6 +106,7 @@ type
     actPrintDetail: TdsdPrintAction;
     bbPrintDetail: TdxBarButton;
     bbPrint1: TdxBarButton;
+    UnitGroupNameFull: TcxGridDBColumn;
   private
   public
   end;

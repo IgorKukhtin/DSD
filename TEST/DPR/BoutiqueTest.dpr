@@ -325,7 +325,15 @@ uses
   Report_Goods_RemainsCurrent_onDate in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrent_onDate.pas' {Report_Goods_RemainsCurrent_onDateForm: TParentForm},
   Report_Goods_RemainsCurrent_onDateDialog in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrent_onDateDialog.pas' {Report_Goods_RemainsCurrent_onDateDialogForm: TParentForm},
   dsdTranslator in '..\..\SOURCE\COMPONENT\dsdTranslator.pas',
-  DialogPswSms in '..\..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm};
+  DialogPswSms in '..\..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
+  Medoc_J1201112 in '..\..\SOURCE\MeDOC\Medoc_J1201112.pas',
+  Medoc_J1201212 in '..\..\SOURCE\MeDOC\Medoc_J1201212.pas',
+  Medoc_J1201012 in '..\..\SOURCE\MeDOC\Medoc_J1201012.pas',
+  Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas',
+  Medoc_J1201011 in '..\..\SOURCE\MeDOC\Medoc_J1201011.pas',
+  Medoc_J1201111 in '..\..\SOURCE\MeDOC\Medoc_J1201111.pas',
+  DOCUMENTINVOICE_PRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
+  DOCUMENTINVOICE_TN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

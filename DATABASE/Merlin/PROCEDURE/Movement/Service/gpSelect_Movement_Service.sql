@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , ServiceDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , Amount TFloat
-             , UnitId Integer, UnitCode Integer, UnitName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar, UnitGroupNameFull TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyCode Integer, CommentInfoMoneyName TVarChar       
              , isAuto Boolean
@@ -61,6 +61,7 @@ BEGIN
            , Object_Unit.Id                     AS UnitId
            , Object_Unit.ObjectCode             AS UnitCode
            , Object_Unit.ValueData              AS UnitName
+           , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
            , Object_InfoMoney.Id                AS InfoMoneyId
            , Object_InfoMoney.ObjectCode        AS InfoMoneyCode
            , Object_InfoMoney.ValueData         AS InfoMoneyName
@@ -83,6 +84,9 @@ BEGIN
             --
             LEFT JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.ObjectId
+            LEFT JOIN ObjectString AS ObjectString_Unit_GroupNameFull
+                                   ON ObjectString_Unit_GroupNameFull.ObjectId = Object_Unit.Id
+                                  AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull()
             
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
