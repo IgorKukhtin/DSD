@@ -488,6 +488,14 @@
 				<Form>Report_CashBalanceDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Document\CurrencyJournal.pas">
+				<Form>CurrencyJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Document\CurrencyMovement.pas">
+				<Form>CurrencyMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

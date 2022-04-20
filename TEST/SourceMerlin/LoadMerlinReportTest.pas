@@ -62,7 +62,7 @@ begin
     LoadReportFromFile('PrintMovement_Cash', ReportPath + '\PrintMovement_Cash.fr3');
     LoadReportFromFile('PrintMovement_Service', ReportPath + '\PrintMovement_Service.fr3');
     LoadReportFromFile('PrintReport_UnitBalance', ReportPath + '\PrintReport_UnitBalance.fr3');
-
+    LoadReportFromFile('PrintReport_CashBalance', ReportPath + '\PrintReport_CashBalance.fr3');
     //LoadReportFromFile('PrintCash', ReportPath + '\PrintCash.fr3');
 end;
 

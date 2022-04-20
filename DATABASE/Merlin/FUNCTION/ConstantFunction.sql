@@ -33,6 +33,12 @@ CREATE OR REPLACE FUNCTION zc_Color_Yelow() RETURNS Integer AS $BODY$BEGIN RETUR
 CREATE OR REPLACE FUNCTION zc_Color_Lime() RETURNS Integer AS $BODY$BEGIN RETURN (65280); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Color_Pink() RETURNS Integer AS $BODY$BEGIN RETURN (16440317); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+
+CREATE OR REPLACE FUNCTION zc_Currency_Basis() RETURNS Integer AS $BODY$BEGIN RETURN ((select Id from object where ValueData = 'грн' and DescId = zc_object_Currency())); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Currency_GRN() RETURNS Integer AS $BODY$BEGIN RETURN ((select Id from object where ValueData = 'грн' and DescId = zc_object_Currency())); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Currency_EUR() RETURNS Integer AS $BODY$BEGIN RETURN ((select Id from object where ValueData = 'евро' and DescId = zc_object_Currency())); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Currency_USD() RETURNS Integer AS $BODY$BEGIN RETURN ((select Id from object where ValueData = 'долар' and DescId = zc_object_Currency())); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 -- CREATE OR REPLACE FUNCTION zfCalc_UserAdmin() RETURNS .....;
 
 /*

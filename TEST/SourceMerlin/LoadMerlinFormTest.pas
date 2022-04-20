@@ -22,6 +22,7 @@ type
     procedure LoadCashSendMovementFormTest;
     procedure LoadCommentFormTest;
     procedure LoadCurrencyFormTest;
+    procedure LoadCurrencyMovementFormTest;
     procedure LoadInfoMoneyFormTest;
     procedure LoadInfoMoneyDetailFormTest;
     procedure LoadImportSettingsFormTest;
@@ -224,6 +225,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCurrency_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCurrencyEditForm');
+end;
+
+ procedure TLoadFormTest.LoadCurrencyMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrencyMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrencyJournalForm');
 end;
 
 procedure TLoadFormTest.LoadInfoMoneyFormTest;
