@@ -87,6 +87,9 @@ type
     miReport_UnitBalance: TMenuItem;
     actReport_CashBalance: TdsdOpenForm;
     N9: TMenuItem;
+    actCurrencyJournal: TdsdOpenForm;
+    miCurrencyJournal: TMenuItem;
+    N10: TMenuItem;
   private
     { Private declarations }
   public

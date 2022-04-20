@@ -93,6 +93,10 @@ type
     spUpdate_Closed: TdsdStoredProc;
     actUpdate_Closed: TdsdExecStoredProc;
     bbUpdate_Closed: TdxBarButton;
+    isClose: TcxGridDBColumn;
+    spUpdate_MI_Close: TdsdStoredProc;
+    actUpdateMI_Closed: TdsdExecStoredProc;
+    bbUpdateMI_Closed: TdxBarButton;
   private
     { Private declarations }
   public

@@ -169,7 +169,10 @@ uses
   Report_UnitBalance in '..\..\FormsMerlin\Report\Report_UnitBalance.pas' {Report_UnitBalanceForm: TParentForm},
   Report_UnitBalanceDialog in '..\..\FormsMerlin\Report\Report_UnitBalanceDialog.pas' {Report_UnitBalanceDialogForm: TParentForm},
   Report_CashBalance in '..\..\FormsMerlin\Report\Report_CashBalance.pas' {Report_CashBalanceForm: TParentForm},
-  Report_CashBalanceDialog in '..\..\FormsMerlin\Report\Report_CashBalanceDialog.pas' {Report_CashBalanceDialogForm: TParentForm};
+  Report_CashBalanceDialog in '..\..\FormsMerlin\Report\Report_CashBalanceDialog.pas' {Report_CashBalanceDialogForm: TParentForm},
+  CurrencyJournal in '..\..\FormsMerlin\Document\CurrencyJournal.pas' {CurrencyJournalForm: TParentForm},
+  CurrencyMovement in '..\..\FormsMerlin\Document\CurrencyMovement.pas' {CurrencyMovementForm: TParentForm},
+  Report_UnitRentDialog in '..\..\FormsMerlin\Report\Report_UnitRentDialog.pas' {Report_UnitRentDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

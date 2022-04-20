@@ -22,6 +22,7 @@ type
     procedure LoadCashSendMovementFormTest;
     procedure LoadCommentFormTest;
     procedure LoadCurrencyFormTest;
+    procedure LoadCurrencyMovementFormTest;
     procedure LoadInfoMoneyFormTest;
     procedure LoadInfoMoneyDetailFormTest;
     procedure LoadImportSettingsFormTest;
@@ -226,6 +227,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCurrencyEditForm');
 end;
 
+ procedure TLoadFormTest.LoadCurrencyMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrencyMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrencyJournalForm');
+end;
+
 procedure TLoadFormTest.LoadInfoMoneyFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyForm'));
@@ -274,6 +283,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UnitRentForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_UnitRentForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UnitRentDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_UnitRentDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UnitBalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_UnitBalanceDialogtForm');

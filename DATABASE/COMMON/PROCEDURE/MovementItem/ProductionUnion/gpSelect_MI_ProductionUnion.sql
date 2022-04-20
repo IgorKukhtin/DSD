@@ -62,7 +62,8 @@ BEGIN
             , Object_InfoMoney_View.InfoMoneyDestinationName
             , Object_InfoMoney_View.InfoMoneyName
             , Object_InfoMoney_View.InfoMoneyName_all
-            , FALSE                                 AS isAuto
+            , FALSE                                 AS isAuto  
+            , FALSE                                 AS isClose
             , FALSE                                 AS isErased
 
             , CAST (NULL AS Integer)                AS PersonalId_KVK
@@ -151,7 +152,8 @@ BEGIN
             , Object_InfoMoney_View.InfoMoneyDestinationName
             , Object_InfoMoney_View.InfoMoneyName
             , Object_InfoMoney_View.InfoMoneyName_all
-            , COALESCE(MIBoolean_isAuto.ValueData, FALSE)  AS isAuto
+            , COALESCE(MIBoolean_isAuto.ValueData, FALSE)  AS isAuto    
+            , COALESCE(MIBoolean_Close.ValueData, FALSE) ::Boolean AS isClose
 
             , MovementItem.isErased               AS isErased
 
@@ -238,6 +240,10 @@ BEGIN
                                            ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
                                           AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
 
+             LEFT JOIN MovementItemBoolean AS MIBoolean_Close
+                                           ON MIBoolean_Close.MovementItemId = MovementItem.Id
+                                          AND MIBoolean_Close.DescId = zc_MIBoolean_Close()
+
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -317,7 +323,8 @@ BEGIN
             , Object_InfoMoney_View.InfoMoneyDestinationName
             , Object_InfoMoney_View.InfoMoneyName
             , Object_InfoMoney_View.InfoMoneyName_all
-            , COALESCE(MIBoolean_isAuto.ValueData, FALSE)  AS isAuto
+            , COALESCE(MIBoolean_isAuto.ValueData, FALSE)  AS isAuto       
+            , COALESCE(MIBoolean_Close.ValueData, FALSE) ::Boolean AS isClose
 
             , MovementItem.isErased               AS isErased
 
@@ -404,6 +411,10 @@ BEGIN
                                            ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
                                           AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
 
+             LEFT JOIN MovementItemBoolean AS MIBoolean_Close
+                                           ON MIBoolean_Close.MovementItemId = MovementItem.Id
+                                          AND MIBoolean_Close.DescId = zc_MIBoolean_Close()
+
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -440,7 +451,7 @@ BEGIN
               MovementItem.Id					AS Id
             , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS  LineNum
             , Object_Goods.Id                   AS GoodsId
-            , case when vbUserId = 5 AND 1=0 then MovementItem. else Object_Goods.ObjectCode end :: Integer           AS GoodsCode
+            , case when vbUserId = 5 AND 1=0 then MovementItem.Id else Object_Goods.ObjectCode end :: Integer AS GoodsCode
             , Object_Goods.ValueData            AS GoodsName
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
   

@@ -27,8 +27,8 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    actPrint1: TdsdPrintAction;
-    bbPrint1: TdxBarButton;
+    actPrintDetail: TdsdPrintAction;
+    bbPrintDetail: TdxBarButton;
     bbisCopy: TdxBarButton;
     UnitCode: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
@@ -41,6 +41,7 @@ type
     actGetImportSetting: TdsdExecStoredProc;
     macStartLoad: TMultiAction;
     bbmacStartLoad: TdxBarButton;
+    PrintHeaderCDS: TClientDataSet;
   private
     { Private declarations }
   public

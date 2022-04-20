@@ -66,6 +66,9 @@ type
     actInsertUpdate_Object_Position_All: TdsdRunAction;
     bbInsertUpdate_Object_Position_All: TdxBarButton;
     actGet_Object_Unit_Start: TdsdStoredProc;
+    cxLabel1: TcxLabel;
+    edServiceDate: TcxDateEdit;
+    cbAllMonth: TcxCheckBox;
   private
   public
   end;

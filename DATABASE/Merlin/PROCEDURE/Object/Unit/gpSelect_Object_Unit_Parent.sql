@@ -49,7 +49,8 @@ BEGIN
                                                   AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
                               LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
 
-                         WHERE Object_Unit.DescId = zc_Object_Unit())
+                         WHERE Object_Unit.DescId = zc_Object_Unit()
+                         )
         , tmpUnitLast AS (SELECT tmpUnitAll.Id                  AS Id
                           FROM tmpUnitAll
                           WHERE tmpUnitAll.ID not in (SELECT tmpUnitAll.ParentId FROM tmpUnitAll))

@@ -2,6 +2,7 @@ inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
   ClientWidth = 1074
   ExplicitWidth = 1090
+  ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -10,17 +11,17 @@ inherited ProductionUnionForm: TProductionUnionForm
     Height = 552
     TabOrder = 2
     ExplicitTop = 122
-    ExplicitWidth = 1000
+    ExplicitWidth = 1074
     ExplicitHeight = 552
     ClientRectBottom = 552
     ClientRectRight = 1074
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1000
+      ExplicitWidth = 1074
       ExplicitHeight = 528
       inherited cxGrid: TcxGrid
         Width = 1074
         Height = 220
-        ExplicitWidth = 1000
+        ExplicitWidth = 1074
         ExplicitHeight = 220
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -220,7 +221,15 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 70
           end
-          object Count: TcxGridDBColumn [11]
+          object isClose: TcxGridDBColumn [11]
+            Caption = #1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1087#1077#1088#1077#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'isClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Count: TcxGridDBColumn [12]
             Caption = #1050#1086#1083'-'#1074#1086' '#1073#1072#1090#1086#1085#1086#1074
             DataBinding.FieldName = 'Count'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -231,7 +240,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object Amount: TcxGridDBColumn [12]
+          object Amount: TcxGridDBColumn [13]
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -241,7 +250,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object Amount_weight: TcxGridDBColumn [13]
+          object Amount_weight: TcxGridDBColumn [14]
             Caption = #1042#1077#1089' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'Amount_weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -252,7 +261,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 70
           end
-          object PartionGoodsDate: TcxGridDBColumn [14]
+          object PartionGoodsDate: TcxGridDBColumn [15]
             Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
             DataBinding.FieldName = 'PartionGoodsDate'
             PropertiesClassName = 'TcxDateEditProperties'
@@ -263,14 +272,14 @@ inherited ProductionUnionForm: TProductionUnionForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object PartionGoods: TcxGridDBColumn [15]
+          object PartionGoods: TcxGridDBColumn [16]
             Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
             DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object ReceiptCode: TcxGridDBColumn [16]
+          object ReceiptCode: TcxGridDBColumn [17]
             Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'.'
             DataBinding.FieldName = 'ReceiptCode'
             HeaderAlignmentHorz = taCenter
@@ -278,7 +287,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 80
           end
-          object ReceiptName: TcxGridDBColumn [17]
+          object ReceiptName: TcxGridDBColumn [18]
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
             DataBinding.FieldName = 'ReceiptName'
             HeaderAlignmentHorz = taCenter
@@ -286,7 +295,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 120
           end
-          object IsPartionClose: TcxGridDBColumn [18]
+          object IsPartionClose: TcxGridDBColumn [19]
             Caption = #1055#1072#1088#1090#1080#1103' '#1079#1072#1082#1088#1099#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isPartionClose'
             Visible = False
@@ -295,7 +304,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 60
           end
-          object Comment: TcxGridDBColumn [19]
+          object Comment: TcxGridDBColumn [20]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             Visible = False
@@ -304,7 +313,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 150
           end
-          object InfoMoneyCode: TcxGridDBColumn [20]
+          object InfoMoneyCode: TcxGridDBColumn [21]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -313,7 +322,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 45
           end
-          object InfoMoneyGroupName: TcxGridDBColumn [21]
+          object InfoMoneyGroupName: TcxGridDBColumn [22]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -322,7 +331,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyDestinationName: TcxGridDBColumn [22]
+          object InfoMoneyDestinationName: TcxGridDBColumn [23]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -331,7 +340,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyName: TcxGridDBColumn [23]
+          object InfoMoneyName: TcxGridDBColumn [24]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -340,7 +349,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 100
           end
-          object InfoMoneyName_all: TcxGridDBColumn [24]
+          object InfoMoneyName_all: TcxGridDBColumn [25]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             Visible = False
@@ -349,7 +358,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 90
           end
-          object isAuto: TcxGridDBColumn [25]
+          object isAuto: TcxGridDBColumn [26]
             Caption = #1040#1074#1090'.'
             DataBinding.FieldName = 'isAuto'
             HeaderAlignmentHorz = taCenter
@@ -409,7 +418,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Top = 225
         Width = 1074
         ExplicitTop = 225
-        ExplicitWidth = 1000
+        ExplicitWidth = 1074
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -580,14 +589,14 @@ inherited ProductionUnionForm: TProductionUnionForm
         Top = 220
         Width = 1074
         ExplicitTop = 220
-        ExplicitWidth = 1000
+        ExplicitWidth = 1074
       end
     end
   end
   inherited DataPanel: TPanel
     Width = 1074
     Height = 96
-    ExplicitWidth = 1000
+    ExplicitWidth = 1074
     ExplicitHeight = 96
     inherited ceStatus: TcxButtonEdit
       ExplicitWidth = 200
@@ -756,7 +765,23 @@ inherited ProductionUnionForm: TProductionUnionForm
       ReportName = 'PrintMovement_Send'
       ReportNameParam.Value = 'PrintMovement_Send'
     end
-    object actUpdate_Closed: TdsdExecStoredProc [10]
+    object actUpdateMI_Closed: TdsdExecStoredProc [10]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_Close
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_Close
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086' '#1090#1086#1074#1072#1088#1091' "'#1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1087#1077#1088#1077#1089#1095#1077#1090#1072'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086' '#1090#1086#1074#1072#1088#1091' "'#1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1087#1077#1088#1077#1089#1095#1077#1090#1072'"'
+      ImageIndex = 76
+    end
+    object actUpdate_Closed: TdsdExecStoredProc [11]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -767,11 +792,11 @@ inherited ProductionUnionForm: TProductionUnionForm
         end
         item
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1087#1077#1088#1077#1089#1095#1077#1090#1072'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1087#1077#1088#1077#1089#1095#1077#1090#1072'" ('#1076#1072'/'#1085#1077#1090')'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1083#1103' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' "'#1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1087#1077#1088#1077#1089#1095#1077#1090#1072'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1083#1103' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' "'#1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1087#1077#1088#1077#1089#1095#1077#1090#1072'" ('#1076#1072'/'#1085#1077#1090')'
       ImageIndex = 77
     end
-    object actUpdateChildDS: TdsdUpdateDataSet [11]
+    object actUpdateChildDS: TdsdUpdateDataSet [12]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -783,7 +808,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
     end
-    object actPrint1: TdsdPrintAction [16]
+    object actPrint1: TdsdPrintAction [17]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint1
@@ -821,7 +846,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actGoodsKindChoiceChild: TOpenChoiceForm [22]
+    object actGoodsKindChoiceChild: TOpenChoiceForm [23]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -848,7 +873,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         end>
       isShowModal = True
     end
-    object actPersonalChoiceForm: TOpenChoiceForm [23]
+    object actPersonalChoiceForm: TOpenChoiceForm [24]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -875,7 +900,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         end>
       isShowModal = True
     end
-    object actGoodsKindChoiceMaster: TOpenChoiceForm [24]
+    object actGoodsKindChoiceMaster: TOpenChoiceForm [25]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1078,6 +1103,10 @@ inherited ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateMI_Closed'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1157,6 +1186,10 @@ inherited ProductionUnionForm: TProductionUnionForm
     end
     object bbUpdate_Closed: TdxBarButton
       Action = actUpdate_Closed
+      Category = 0
+    end
+    object bbUpdateMI_Closed: TdxBarButton
+      Action = actUpdateMI_Closed
       Category = 0
     end
   end
@@ -1933,7 +1966,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 225
+    Left = 241
     Top = 280
   end
   object HeaderSaver3: THeaderSaver
@@ -2031,5 +2064,31 @@ inherited ProductionUnionForm: TProductionUnionForm
     PackSize = 1
     Left = 80
     Top = 420
+  end
+  object spUpdate_MI_Close: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovementItem_Close'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisClose'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isClose'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 177
+    Top = 272
   end
 end
