@@ -3,7 +3,7 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
   ClientHeight = 638
   ClientWidth = 1076
   ExplicitWidth = 1092
-  ExplicitHeight = 676
+  ExplicitHeight = 677
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -125,14 +125,13 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Caption = 'GoodsForm'
+                Action = actGoods_ObjectChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = False
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 182
           end
           object GoodsKindName: TcxGridDBColumn [4]
@@ -166,7 +165,6 @@ inherited ContractGoodsMovementForm: TContractGoodsMovementForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object Price_curr: TcxGridDBColumn [7]

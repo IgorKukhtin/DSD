@@ -828,6 +828,9 @@ BEGIN
              -- !!!стажеры!!!
            , COALESCE (ObjectFloat_WorkTimeKind_Tax.ValueData, 0) AS Tax_Trainee
 
+             -- 
+           , MIObject_WorkTimeKind.ObjectId AS WorkTimeKindId
+
            -- , SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS SUM_MemberHours
            -- , SUM (MI_SheetWorkTime.Amount) OVER (PARTITION BY Movement.OperDate, MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS AmountInDay
            -- , COUNT(*) OVER (PARTITION BY Movement.OperDate, MIObject_Position.ObjectId, MIObject_PositionLevel.ObjectId) AS Count_MemberInDay
@@ -865,6 +868,8 @@ BEGIN
 
         WHERE Movement.DescId = zc_Movement_SheetWorkTime()
           AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+-- and (ObjectFloat_WorkTimeKind_Tax.ValueData = 50 or vbUserId <> 5)
+-- and (MI_SheetWorkTime.ObjectId = 7867165 or vbUserId <> 5)
        )
          -- табель - кто в какие дни работал
        , MI_SheetWorkTime AS
@@ -876,6 +881,7 @@ BEGIN
            , MI_SheetWorkTime_all.PositionId
            , MI_SheetWorkTime_all.PositionLevelId
            , MI_SheetWorkTime_all.StorageLineId
+           , MI_SheetWorkTime_all.WorkTimeKindId
              -- !!!может измениться!!!
            , MI_SheetWorkTime_all.Amount
            , MI_SheetWorkTime_all.Amount_andTrainee
@@ -912,6 +918,7 @@ BEGIN
              , MI_SheetWorkTime.PositionId
              , MI_SheetWorkTime.PositionLevelId
              , MI_SheetWorkTime.StorageLineId
+             , MI_SheetWorkTime.WorkTimeKindId
              , MI_SheetWorkTime.Amount
              , MI_SheetWorkTime.Amount_andTrainee
              , MI_SheetWorkTime.Amount_Trainee
@@ -941,6 +948,7 @@ BEGIN
                    , MI_SheetWorkTime.PositionId
                    , MI_SheetWorkTime.PositionLevelId
                    , MI_SheetWorkTime.StorageLineId
+                   , MI_SheetWorkTime.WorkTimeKindId
                    , MI_SheetWorkTime.Amount
                    , MI_SheetWorkTime.Amount_andTrainee
                    , MI_SheetWorkTime.Amount_Trainee
@@ -954,6 +962,7 @@ BEGIN
                    , MI_SheetWorkTime.PositionId
                    , 0 AS PositionLevelId
                    , MI_SheetWorkTime.StorageLineId
+                   , MI_SheetWorkTime.WorkTimeKindId
                    , MI_SheetWorkTime.Amount
                    , MI_SheetWorkTime.Amount_andTrainee
                    , MI_SheetWorkTime.Amount_Trainee
@@ -1355,6 +1364,7 @@ BEGIN
                                        , Movement_Sheet.OperDate
                                        , COALESCE (Movement_Sheet.MemberId, 0)
                                        , Movement_Sheet.Tax_Trainee
+                                       , Movement_Sheet.WorkTimeKindId
                            ) :: Integer AS Ord_SheetWorkTime
 -- , 1 :: Integer AS Ord_SheetWorkTime
         --

@@ -25,10 +25,10 @@ BEGIN
       -- определяется
       vbValue_Receipt:= COALESCE ((SELECT ObjectFloat_Value.ValueData FROM ObjectFloat AS ObjectFloat_Value WHERE ObjectFloat_Value.ObjectId = inReceiptId AND ObjectFloat_Value.DescId = zc_ObjectFloat_Receipt_Value()), 0);
       -- определяется
-      vbGoodsId_master:= COALESCE ((SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.Id = inParentId AND MovementItem.ObjectId IN (7129, 2328, 6646)), 0); -- ЯЗЫК СВИН. ВАРЕН.
+      vbGoodsId_master:= COALESCE ((SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.Id = inParentId AND MovementItem.ObjectId IN (7129, 2328, 6646, 712542, 3150)), 0); -- ЯЗЫК СВИН. ВАРЕН. + ГОЛОВЫ СВИН.ВАР. + МЯСО ГОЛОВ СВ в шкуре варен. + Лук Пассерованный
+      
 
-
-       -- пересчет кол-во для zc_MI_Master
+        -- пересчет кол-во для zc_MI_Master
         outAmount_master = CASE -- для  Тушенка
                                WHEN EXISTS (SELECT 1 FROM MovementItem JOIN ObjectLink AS OL ON OL.ObjectId = MovementItem.ObjectId AND OL.ChildObjectId = zc_Enum_InfoMoney_30102() AND OL.DescId = zc_ObjectLink_Goods_InfoMoney() WHERE MovementItem.Id = inParentId)
                                     THEN (SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = inParentId)
