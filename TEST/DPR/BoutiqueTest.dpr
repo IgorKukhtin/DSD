@@ -218,7 +218,6 @@ uses
   InfoMoney in '..\..\FormsBoutique\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm},
   InfoMoney_Object in '..\..\FormsBoutique\Guides\InfoMoney_Object.pas' {InfoMoney_ObjectForm: TParentForm},
   InfoMoneyEdit in '..\..\FormsBoutique\Guides\InfoMoneyEdit.pas' {InfoMoneyEditForm: TParentForm},
-  FormsUnit in '..\..\FormsBoutique\Guides\FormsUnit.pas' {FormsUnit: TParentForm},
   ProfitLoss in '..\..\FormsBoutique\Guides\ProfitLoss.pas' {ProfitLoss: TParentForm},
   ProfitLoss_Object in '..\..\FormsBoutique\Guides\ProfitLoss_Object.pas' {ProfitLoss_Object: TParentForm},
   ProfitLossEdit in '..\..\FormsBoutique\Guides\ProfitLossEdit.pas' {ProfitLossEdit: TParentForm},
@@ -333,7 +332,8 @@ uses
   Medoc_J1201011 in '..\..\SOURCE\MeDOC\Medoc_J1201011.pas',
   Medoc_J1201111 in '..\..\SOURCE\MeDOC\Medoc_J1201111.pas',
   DOCUMENTINVOICE_PRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
-  DOCUMENTINVOICE_TN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas';
+  DOCUMENTINVOICE_TN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
+  FormsUnit in '..\..\FormsBoutique\System\FormsUnit.pas' {FormsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
