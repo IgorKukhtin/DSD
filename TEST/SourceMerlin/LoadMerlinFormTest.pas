@@ -283,6 +283,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UnitRentForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_UnitRentForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UnitRentDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_UnitRentDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UnitBalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_UnitBalanceDialogtForm');

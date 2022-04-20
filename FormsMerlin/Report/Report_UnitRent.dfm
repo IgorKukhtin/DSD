@@ -2,6 +2,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1072#1088#1077#1085#1076#1077
   ClientHeight = 431
   ClientWidth = 789
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 805
   ExplicitHeight = 470
@@ -227,6 +228,22 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ServiceDate'
+          Value = Null
+          Component = edServiceDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAllMonth'
+          Value = Null
+          Component = cbAllMonth
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -370,6 +387,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
       item
         Name = 'inServiceDate'
         Value = Null
+        Component = edServiceDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
