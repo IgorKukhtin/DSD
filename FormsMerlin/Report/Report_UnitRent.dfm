@@ -29,6 +29,28 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
       Top = 7
       Caption = #1044#1072#1090#1072' '#1089' :'
     end
+    object cxLabel1: TcxLabel
+      Left = 278
+      Top = 34
+      Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103':'
+    end
+    object edServiceDate: TcxDateEdit
+      Left = 380
+      Top = 33
+      EditValue = 44197d
+      Properties.DisplayFormat = 'mmmm yyyy'
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 3
+      Width = 89
+    end
+    object cbAllMonth: TcxCheckBox
+      Left = 167
+      Top = 33
+      Caption = #1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
+      TabOrder = 4
+      Width = 87
+    end
   end
   object deEnd: TcxDateEdit [1]
     Left = 58
@@ -40,16 +62,16 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
   end
   object cxLabel7: TcxLabel [2]
     Left = 4
-    Top = 33
+    Top = 34
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object cxLabel6: TcxLabel [3]
-    Left = 155
+    Left = 171
     Top = 7
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object edUnit: TcxButtonEdit [4]
-    Left = 251
+    Left = 260
     Top = 6
     Properties.Buttons = <
       item
@@ -279,8 +301,8 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 448
-    Top = 8
+    Left = 536
+    Top = 16
   end
   object PeriodChoice: TPeriodChoice [11]
     DateStart = edDateStart
@@ -322,7 +344,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
     Top = 159
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Unit_Parent'
+    StoredProcName = 'gpReport_UnitBalance_Map'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -330,7 +352,30 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
       end>
     Params = <
       item
-        Name = 'inParentId'
+        Name = 'inStartDate'
+        Value = Null
+        Component = edDateStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inServiceDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitGroupId'
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'Key'
@@ -338,8 +383,9 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsShowAll'
+        Name = 'inisAll'
         Value = False
+        Component = cbAllMonth
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

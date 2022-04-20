@@ -1,132 +1,169 @@
 -- Function: gpReport_UnitBalance()
 
-DROP FUNCTION IF EXISTS gpReport_UnitBalance_Map (TDateTime, TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_UnitBalance_Map (TDateTime, TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_UnitBalance_Map (TDateTime, TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_UnitBalance_Map(
     IN inStartDate    TDateTime , -- 
     IN inEndDate      TDateTime , -- месяц начислений
     IN inServiceDate  TDateTime , -- месяц начислений
     IN inUnitGroupId  Integer,
-    IN inInfoMoneyId  Integer,
-    IN inisAll        Boolean,
+    --IN inInfoMoneyId  Integer,
+	IN inisAll        Boolean,
     IN inSession      TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (ServiceDate TVarChar
-             , UnitCode Integer, UnitName TVarChar
-             , GroupNameFull_Unit TVarChar, ParentName_Unit TVarChar
-             , InfoMoneyCode Integer, InfoMoneyName TVarChar
-             , AccountCode Integer, AccountName TVarChar
-             , AmountDebetStart TFloat, AmountKreditStart TFloat
-             , AmountDebet TFloat, AmountKredit TFloat
-             , AmountDebetEnd TFloat, AmountKreditEnd TFloat
-              )    
-              
-              
+RETURNS TABLE (              
               Id Integer, Code Integer, Name TVarChar
-             , Phone TVarChar, GroupNameFull TVarChar
-             , Comment TVarChar
+             --, Phone TVarChar, GroupNameFull TVarChar
+             --, Comment TVarChar
              , ParentId Integer, ParentName TVarChar
-             , InsertName TVarChar, InsertDate TDateTime
-             , UpdateName TVarChar, UpdateDate TDateTime
+             --, InsertName TVarChar, InsertDate TDateTime
+             --, UpdateName TVarChar, UpdateDate TDateTime
              , isPositionFixed Boolean, Left Integer, Top Integer, Width Integer, Height Integer
-             , isRootTree Boolean, isLetterTree Boolean, Color Integer, Color_Text Integer 
-             , isErased boolean)
+             , isRootTree Boolean, isLetterTree Boolean
+	         , Color Integer, Color_Text Integer 
+             --, isErased boolean
+             )
 
 
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbServiceDateId Integer;
+   DECLARE vbUserId Integer; 
+   DECLARE vbId Integer;
+   DECLARE vbStartId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Balance());
      vbUserId:= lpGetUserBySession (inSession);
-
-     inServiceDate := DATE_TRUNC ('Month', inServiceDate);
-     vbServiceDateId := (SELECT lpInsertFind_Object_ServiceDate (inServiceDate));
      
+     vbStartId := (SELECT tmp.ID FROM gpGet_Object_Unit_Start (0, inSession) AS tmp);
 
+     IF EXISTS(SELECT * FROM ObjectLink AS ObjectLink_Unit_Parent
+               WHERE ObjectLink_Unit_Parent.ChildObjectId = inUnitGroupId
+                 AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent())
+     THEN
+       vbId := 0;
+     ELSE
+       vbId := inUnitGroupId;
+     END IF;
+  
+  
      -- Результат
      RETURN QUERY
-     WITH
-     tmpUnit AS (SELECT lfSelect_Object_Unit_byGroup.UnitId AS UnitId
-                 FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect_Object_Unit_byGroup
-                 WHERE inUnitGroupId <> 0
-                UNION
-                 SELECT Object.Id AS UnitId
-                 FROM Object
-                 WHERE Object.DescId = zc_Object_Unit()
-                   AND Object.isErased = False
-                   AND inUnitGroupId = 0
-                 )
-   , tmpMIContainer AS (SELECT Container.ObjectId       AS AccountId
-                             , Container.WhereObjectId  AS UnitId
-                             , CLO_ServiceDate.ObjectId AS ServiceDateId
-                             , CLO_InfoMoney.ObjectId   AS InfoMoneyId
-                             , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisAll = TRUE) THEN  MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
-                             , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisAll = TRUE) THEN -MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
-                             , Container.Amount - SUM (COALESCE (MIContainer.Amount, 0)) AS AmountRemainsStart
-                             , Container.Amount - SUM (CASE WHEN (MIContainer.OperDate > inEndDate AND inisAll = FALSE) THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS AmountRemainsEnd
-                        FROM Container
-                             LEFT JOIN MovementItemContainer AS MIContainer
-                                                             ON MIContainer.Containerid = Container.Id
-                                                            AND (MIContainer.OperDate >= inStartDate OR inisAll = TRUE)
-                             LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
-                                                           ON CLO_InfoMoney.ContainerId = MIContainer.ContainerId
-                                                          AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                                                          
-                             LEFT JOIN ContainerLinkObject AS CLO_ServiceDate
-                                                           ON CLO_ServiceDate.ContainerId = Container.Id
-                                                          AND CLO_ServiceDate.DescId = zc_ContainerLinkObject_ServiceDate()
+     WITH    
+     --все отделы
+     tmpUnitAll AS (SELECT Object_Unit.Id                  AS Id
+                         , COALESCE (Object_Parent.Id,0)   AS ParentId
+                    FROM Object AS Object_Unit
 
-                        WHERE Container.DescId = zc_Container_Summ()
-                          AND Container.WhereObjectId IN (SELECT DISTINCT tmpUnit.UnitId FROM tmpUnit)
-                          AND (CLO_InfoMoney.ObjectId = inInfoMoneyId OR inInfoMoneyId = 0)
-                          AND (( CLO_ServiceDate.ObjectId = vbServiceDateId AND inisAll = TRUE) OR inisAll = FALSE)
-                        GROUP BY Container.ObjectId
-                               , Container.Amount
-                               , Container.WhereObjectId
-                               , CLO_ServiceDate.ObjectId
-                               , CLO_InfoMoney.ObjectId 
-                        HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
-                            OR (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisAll = TRUE) THEN  MIContainer.Amount ELSE 0 END), 0) <> 0)
-                            OR (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisAll = TRUE) THEN -MIContainer.Amount ELSE 0 END), 0) <> 0)
-                            OR Container.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate AND inisAll = FALSE THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) <> 0
-                       )
+                         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
+                                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
+                                             AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
+                         LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
 
+                    WHERE Object_Unit.DescId = zc_Object_Unit()
+                    )
+     --отделы не группы
+   , tmpUnitLast AS (SELECT tmpUnitAll.Id                  AS Id
+                     FROM tmpUnitAll
+                     WHERE tmpUnitAll.ID not in (SELECT tmpUnitAll.ParentId FROM tmpUnitAll)
+                     )
+     --отделы нужного уровня и их свойства
+   , tmpUnitGroup AS (SELECT tmp.Id 
+                           , tmp.ParentId 
+                           , COALESCE(ObjectBoolean_PositionFixed.ValueData, FALSE) AS isPositionFixed
+                           , ObjectFloat_Left.ValueData::Integer   AS Left
+                           , ObjectFloat_Top.ValueData::Integer    AS Top
+                           , ObjectFloat_Width.ValueData::Integer  AS Width
+                           , ObjectFloat_Height.ValueData::Integer AS Height
+                      FROM (SELECT tmpUnitAll.Id 
+                                 , tmpUnitAll.ParentId
+                            FROM tmpUnitAll   
+                            WHERE (COALESCE (tmpUnitAll.ParentId, 0) = COALESCE (inUnitGroupId, 0) OR tmpUnitAll.Id = vbId)
+                            ) AS tmp
+                                   
+                          LEFT JOIN ObjectBoolean AS ObjectBoolean_PositionFixed
+                                                  ON ObjectBoolean_PositionFixed.ObjectId = tmp.Id
+                                                 AND ObjectBoolean_PositionFixed.DescId = zc_ObjectBoolean_Unit_PositionFixed()
+              
+                          LEFT JOIN ObjectFloat AS ObjectFloat_Left
+                                                ON ObjectFloat_Left.ObjectId = tmp.Id
+                                               AND ObjectFloat_Left.DescId = zc_ObjectFloat_Unit_Left()
+                          LEFT JOIN ObjectFloat AS ObjectFloat_Top
+                                                ON ObjectFloat_Top.ObjectId = tmp.Id
+                                               AND ObjectFloat_Top.DescId = zc_ObjectFloat_Unit_Top()
+                          LEFT JOIN ObjectFloat AS ObjectFloat_Width
+                                                ON ObjectFloat_Width.ObjectId = tmp.Id
+                                               AND ObjectFloat_Width.DescId = zc_ObjectFloat_Unit_Width() 
+                          LEFT JOIN ObjectFloat AS ObjectFloat_Height
+                                                ON ObjectFloat_Height.ObjectId = tmp.Id
+                                               AND ObjectFloat_Height.DescId = zc_ObjectFloat_Unit_Height()
+                      )
+     --данные отчета
+   , tmpReport AS (SELECT tmp.*
+                   FROM gpReport_UnitBalance ( inStartDate   := inStartDate   
+                                             , inEndDate     := inEndDate    
+                                             , inServiceDate := inServiceDate
+                                             , inUnitGroupId := inUnitGroupId
+                                             , inInfoMoneyId := 0
+                                             , inisAll       := inisAll
+                                             , inSession     := inSession) AS tmp   
+                   )    
+       
+     --определяем к какому отделу нужного уровня соответствует какой отдел, чтоб вывести данные по нужной группировке  
+   , tmpGroup AS (SELECT tmp.UnitId
+                       , tmp.UnitGroupId
+                  FROM (SELECT tmpReport.UnitId
+                             , CASE WHEN tmpReport.UnitId IN (SELECT tmp.UnitId 
+                                                              FROM lfSelect_Object_Unit_byGroup (tmpUnitGroup.Id) AS tmp) THEN tmpUnitGroup.Id END AS UnitGroupId
+                        FROM tmpReport 
+                             LEFT JOIN tmpUnitGroup ON 1=1  
+                        ) AS tmp
+	              WHERE tmp.UnitGroupId is not null
+                  )
 
-       SELECT Object_ServiceDate.ValueData ::TVarChar AS ServiceDate
-            , Object_Unit.ObjectCode AS UnitCode
-            , Object_Unit.ValueData  AS UnitName
-            , ObjectString_Unit_GroupNameFull.ValueData AS GroupNameFull_Unit
-            , Object_ParentUnit.ValueData               AS ParentName_Unit
-             
-            , Object_InfoMoney.ObjectCode AS InfoMoneyCode
-            , Object_InfoMoney.ValueData  AS InfoMoneyName
-            , Object_Account.ObjectCode   AS AccountCode
-            , Object_Account.ValueData    AS AccountName
+     --Результат
+     SELECT
+        Object_Unit.Id            AS Id
+      , Object_Unit. ObjectCode          AS Code
+      , (Object_Unit.ValueData||chr(13)||'Н: ' || SUM (COALESCE (tmpReport.AmountDebet,0))::TVarChar
+                              ||chr(13)||'О: ' || SUM (COALESCE (tmpReport.AmountKredit,0))::TVarChar
+                              ||chr(13)||'Д: ' || SUM (COALESCE (tmpReport.AmountDebetEnd,0) -COALESCE (tmpReport.AmountKreditEnd,0))
+		)::TVarChar AS Name  -- Н-начислено;  О - оплачено; Д-ДОЛГ
 
-            , CAST (CASE WHEN tmpMIContainer.AmountRemainsStart > 0 THEN tmpMIContainer.AmountRemainsStart ELSE 0 END AS TFloat)      AS AmountDebetStart
-            , CAST (CASE WHEN tmpMIContainer.AmountRemainsStart < 0 THEN -1 * tmpMIContainer.AmountRemainsStart ELSE 0 END AS TFloat) AS AmountKreditStart
-            , CAST (tmpMIContainer.AmountDebet AS TFloat)  AS AmountDebet
-            , CAST (tmpMIContainer.AmountKredit AS TFloat) AS AmountKredit
-            , CAST (CASE WHEN tmpMIContainer.AmountRemainsEnd > 0 THEN tmpMIContainer.AmountRemainsEnd ELSE 0 END AS TFloat)      AS AmountDebetEnd
-            , CAST (CASE WHEN tmpMIContainer.AmountRemainsEnd < 0 THEN -1 * tmpMIContainer.AmountRemainsEnd ELSE 0 END AS TFloat) AS AmountKreditEnd
+      , COALESCE (Object_Parent.Id,0)   AS ParentId
+      , Object_Parent.ValueData         AS ParentName
+          
+      , tmpUnitGroup.isPositionFixed
+      , tmpUnitGroup.Left
+      , tmpUnitGroup.Top
+      , tmpUnitGroup.Width
+      , tmpUnitGroup.Height
+      
+      , COALESCE (Object_Parent.Id,0) = vbStartId AS isRootTree 
+      , COALESCE (tmpUnitLast.Id, 0) > 0          AS isLetterTree 
 
-       FROM tmpMIContainer
-           LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = tmpMIContainer.InfoMoneyId
-           LEFT JOIN Object AS Object_Account ON Object_Account.Id = tmpMIContainer.AccountId
-           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMIContainer.UnitId
-           LEFT JOIN Object AS Object_ServiceDate ON Object_ServiceDate.Id = tmpMIContainer.ServiceDateId
+      , zc_Color_Yelow()                          AS Color       
+      , zc_Color_Blue()                           AS Color_Text 
+     FROM tmpUnitGroup
+            LEFT JOIN tmpGroup ON tmpGroup.UnitGroupId = tmpUnitGroup.Id
+            LEFT JOIN tmpReport ON tmpReport.UnitId = tmpGroup.UnitId
+            
+			LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnitGroup.Id
+                   
+            LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = tmpUnitGroup.ParentId
 
-           LEFT JOIN ObjectString AS ObjectString_Unit_GroupNameFull
-                                  ON ObjectString_Unit_GroupNameFull.ObjectId = Object_Unit.Id
-                                 AND ObjectString_Unit_GroupNameFull.DescId = zc_ObjectString_Unit_GroupNameFull()
-
-           LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
-                                ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
-                               AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
-           LEFT JOIN Object AS Object_ParentUnit ON Object_ParentUnit.Id = ObjectLink_Unit_Parent.ChildObjectId
+            LEFT JOIN tmpUnitLast ON tmpUnitLast.Id = Object_Unit.Id 
+     GROUP BY Object_Unit.Id
+            , Object_Unit. ObjectCode
+            , Object_Unit.ValueData
+            , COALESCE (Object_Parent.Id,0)
+            , Object_Parent.ValueData
+            , tmpUnitGroup.isPositionFixed
+            , tmpUnitGroup.Left
+            , tmpUnitGroup.Top
+            , tmpUnitGroup.Width
+            , tmpUnitGroup.Height
+            , COALESCE (tmpUnitLast.Id, 0)             
       ;
 
 END;
@@ -136,8 +173,12 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 23.02.22         *
+ 20.04.22         *
 */
 
 -- тест
--- SELECT * FROM gpReport_UnitBalance (inStartDate := '01.12.2021', inEndDate:= '01.02.2022', inServiceDate:= '01.12.2021', inUnitGroupId:= 0, inInfoMoneyId:= 0, inisAll:= true , inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_UnitBalance_Map (inStartDate := '01.12.2021', inEndDate:= '01.02.2022', inServiceDate:= '01.12.2021', inUnitGroupId:= 52460,inisAll:=true ,inSession:= zfCalc_UserAdmin())
+
+
+
+--SELECT * FROM gpSelect_Object_Unit_Parent (52460, FALSE, zfCalc_UserAdmin())

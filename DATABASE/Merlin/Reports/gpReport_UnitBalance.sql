@@ -23,7 +23,7 @@ CREATE OR REPLACE FUNCTION gpReport_UnitBalance(
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ServiceDate TVarChar
-             , UnitCode Integer, UnitName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , GroupNameFull_Unit TVarChar, ParentName_Unit TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
              , AccountCode Integer, AccountName TVarChar
@@ -94,6 +94,7 @@ BEGIN
 
 
        SELECT Object_ServiceDate.ValueData ::TVarChar AS ServiceDate
+            , Object_Unit.Id         AS UnitId
             , Object_Unit.ObjectCode AS UnitCode
             , Object_Unit.ValueData  AS UnitName
             , ObjectString_Unit_GroupNameFull.ValueData AS GroupNameFull_Unit
