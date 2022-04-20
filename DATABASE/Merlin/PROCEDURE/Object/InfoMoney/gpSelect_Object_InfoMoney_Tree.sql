@@ -13,6 +13,11 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_InfoMoney());
 
    RETURN QUERY 
+       WITH tmpGroup AS (SELECT DISTINCT ObjectLink_Parent.ChildObjectId AS GroupId
+                         FROM ObjectLink AS ObjectLink_Parent
+                         WHERE ObjectLink_Parent.DescId = zc_ObjectLink_InfoMoney_Parent()
+                           AND ObjectLink_Parent.ChildObjectId  > 0
+                        )
        SELECT
              Object_InfoMoney.Id                  AS Id
            , Object_InfoMoney.ObjectCode          AS Code
@@ -20,6 +25,7 @@ BEGIN
            , COALESCE (ObjectLink_InfoMoney_Parent.ChildObjectId, 0)   AS ParentId
            , Object_InfoMoney.isErased            AS isErased
        FROM Object AS Object_InfoMoney
+            INNER JOIN tmpGroup ON tmpGroup.GroupId = Object_InfoMoney.Id
             LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_Parent
                                  ON ObjectLink_InfoMoney_Parent.ObjectId = Object_InfoMoney.Id
                                 AND ObjectLink_InfoMoney_Parent.DescId = zc_ObjectLink_InfoMoney_Parent()
