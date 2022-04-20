@@ -73,7 +73,7 @@ BEGIN
      ioId:= lpInsertUpdate_Movement_Service (ioId                   := ioId
                                            , inInvNumber            := inInvNumber
                                            , inOperDate             := inOperDate
-                                           , inServiceDate          := inServiceDate
+                                           , inServiceDate          := DATE_TRUNC ('Month', inServiceDate) ::TDateTime   --inServiceDate
                                            , inAmount               := inAmount
                                            , inUnitId               := inUnitId
                                            , inInfoMoneyId          := vbInfoMoneyId

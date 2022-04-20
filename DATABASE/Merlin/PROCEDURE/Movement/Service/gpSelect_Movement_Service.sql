@@ -54,7 +54,7 @@ BEGIN
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
-           , MIDate_ServiceDate.ValueData       AS ServiceDate
+           , DATE_TRUNC ('Month', MIDate_ServiceDate.ValueData) ::TDateTime AS ServiceDate
            , Object_Status.ObjectCode           AS StatusCode
            , Object_Status.ValueData            AS StatusName
            , MovementItem.Amount  ::TFloat      AS Amount

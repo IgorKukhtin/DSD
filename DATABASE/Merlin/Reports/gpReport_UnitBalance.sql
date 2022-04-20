@@ -61,8 +61,8 @@ BEGIN
                              , Container.WhereObjectId  AS UnitId
                              , CLO_ServiceDate.ObjectId AS ServiceDateId
                              , CLO_InfoMoney.ObjectId   AS InfoMoneyId
-                             , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisAll = TRUE) THEN  MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
-                             , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisAll = TRUE) THEN -MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
+                             , COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisAll = TRUE) THEN MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
+                             , COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Cash() AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisAll = TRUE) THEN -MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
                              , Container.Amount - SUM (COALESCE (MIContainer.Amount, 0)) AS AmountRemainsStart
                              , Container.Amount - SUM (CASE WHEN (MIContainer.OperDate > inEndDate AND inisAll = FALSE) THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS AmountRemainsEnd
                         FROM Container
@@ -87,8 +87,8 @@ BEGIN
                                , CLO_ServiceDate.ObjectId
                                , CLO_InfoMoney.ObjectId 
                         HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
-                            OR (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisAll = TRUE) THEN  MIContainer.Amount ELSE 0 END), 0) <> 0)
-                            OR (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisAll = TRUE) THEN -MIContainer.Amount ELSE 0 END), 0) <> 0)
+                            OR (COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisAll = TRUE) THEN  MIContainer.Amount ELSE 0 END), 0) <> 0)
+                            OR (COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Cash() AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisAll = TRUE) THEN -MIContainer.Amount ELSE 0 END), 0) <> 0)
                             OR Container.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate AND inisAll = FALSE THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) <> 0
                        )
 

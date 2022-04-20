@@ -99,14 +99,19 @@ BEGIN
                                                AND ObjectFloat_Height.DescId = zc_ObjectFloat_Unit_Height()
                       )
      --данные отчета
-   , tmpReport AS (SELECT tmp.*
+   , tmpReport AS (SELECT tmp.UnitId
+                        , SUM (COALESCE (tmp.AmountDebet,0))     AS AmountDebet                                
+                        , SUM (COALESCE (tmp.AmountKredit,0))    AS AmountKredit                             
+                        , SUM (COALESCE (tmp.AmountDebetEnd,0))  AS AmountDebetEnd
+                        , SUM (COALESCE (tmp.AmountKreditEnd,0)) AS AmountKreditEnd                        
                    FROM gpReport_UnitBalance ( inStartDate   := inStartDate   
                                              , inEndDate     := inEndDate    
                                              , inServiceDate := inServiceDate
                                              , inUnitGroupId := inUnitGroupId
                                              , inInfoMoneyId := 0
                                              , inisAll       := inisAll
-                                             , inSession     := inSession) AS tmp   
+                                             , inSession     := inSession) AS tmp  
+                   GROUP BY tmp.UnitId 
                    )    
        
      --определяем к какому отделу нужного уровня соответствует какой отдел, чтоб вывести данные по нужной группировке  
