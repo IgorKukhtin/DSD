@@ -1,10 +1,13 @@
 -- Function: gpGet_Movement_Cash()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Service (Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Service (Integer, Integer, Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Service(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inMovementId_Value  Integer   ,
+    IN inMovementId_Value  Integer   ,    
+    IN inUnitId            Integer  , -- отдел
+    IN inInfoMoneyId       Integer  , -- статья
     IN inOperDate          TDateTime , -- 
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -33,19 +36,30 @@ BEGIN
        SELECT
              0 AS Id
            , CAST (NEXTVAL ('movement_Service_seq') AS TVarChar)  AS InvNumber
-           , CAST (CURRENT_DATE AS TDateTime)                  AS OperDate
+           , tmp.OperDate                     :: TDateTime     AS OperDate
            , DATE_TRUNC ('MONTH', inOperDate) :: TDateTime     AS ServiceDate
            
            , 0::TFloat                                         AS Amount
-           , 0                                                 AS UnitId
-           , CAST ('' as TVarChar)                             AS UnitName
-           , 0                                                 AS ParentId_InfoMoney
-           , CAST ('' as TVarChar)                             AS ParentName_InfoMoney
-           , 0                                                 AS InfoMoneyId
-           , CAST ('' as TVarChar)                             AS InfoMoneyName
+           , Object_Unit.Id                                    AS UnitId
+           , Object_Unit.ValueData            ::TVarChar       AS UnitName
+           , Object_Parent.Id                                  AS ParentId_InfoMoney
+           , Object_Parent.ValueData          ::TVarChar       AS ParentName_InfoMoney
+           , Object_InfoMoney.Id                               AS InfoMoneyId
+           , Object_InfoMoney.ValueData       ::TVarChar       AS InfoMoneyName
            , 0                                                 AS CommentInfoMoneyId
            , ''::TVarChar                                      AS CommentInfoMoneyName
-           , FALSE ::Boolean                                   AS isAuto
+           , FALSE ::Boolean                                   AS isAuto  
+       FROM (SELECT CAST (CURRENT_DATE AS TDateTime) AS OperDate) AS tmp
+           LEFT JOIN Object AS Object_Unit
+                            ON Object_Unit.DescId = zc_Object_Unit()
+                           AND Object_Unit.Id = inUnitId
+           LEFT JOIN Object AS Object_InfoMoney
+                            ON Object_InfoMoney.DescId = zc_Object_InfoMoney()
+                           AND Object_InfoMoney.Id = inInfoMoneyId    
+           LEFT JOIN ObjectLink AS ObjectLink_Parent
+                                ON ObjectLink_Parent.ObjectId = Object_InfoMoney.Id
+                               AND ObjectLink_Parent.DescId = zc_ObjectLink_InfoMoney_Parent()
+           LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Parent.ChildObjectId
       ;
      ELSE
      
@@ -103,6 +117,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.04.22         *
  14.01.22         *
  */
 

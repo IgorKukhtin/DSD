@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_ServiceItem(
 RETURNS TABLE (Id Integer, StartDate TDateTime, EndDate TDateTime
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyName TVarChar
-             , UnitId Integer, UnitCode Integer, UnitName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar , UnitGroupNameFull TVarChar
              , Value TFloat, Price TFloat, Area TFloat
              , isErased Boolean
              )
@@ -22,15 +22,27 @@ BEGIN
      -- Выбираем данные
      RETURN QUERY
        WITH 
-       tmpServiceItem AS (SELECT ObjectLink_Unit.ObjectId           AS ObjectId
+       tmpUnit AS (SELECT lfSelect_Object_Unit_byGroup.UnitId AS UnitId
+                   FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect_Object_Unit_byGroup
+                   WHERE inUnitId <> 0
+                  UNION
+                   SELECT Object.Id AS UnitId
+                   FROM Object
+                   WHERE Object.DescId = zc_Object_Unit()
+                     AND Object.isErased = False
+                     AND inUnitId = 0
+                   )
+
+     , tmpServiceItem AS (SELECT ObjectLink_Unit.ObjectId           AS ObjectId
                                , ObjectLink_Unit.ChildObjectId      AS UnitId
                                , ObjectLink_InfoMoney.ChildObjectId AS InfoMoneyId
                           FROM ObjectLink AS ObjectLink_Unit
+                               INNER JOIN tmpUnit ON tmpUnit.UnitId = COALESCE (ObjectLink_Unit.ChildObjectId,0)
                                LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
                                                     ON ObjectLink_InfoMoney.ObjectId = ObjectLink_Unit.ObjectId
                                                    AND ObjectLink_InfoMoney.DescId   = zc_ObjectLink_ServiceItem_InfoMoney()
                           WHERE ObjectLink_Unit.DescId = zc_ObjectLink_ServiceItem_Unit()
-                            AND (COALESCE (ObjectLink_Unit.ChildObjectId,0) = inUnitId OR inUnitId = 0)
+                            --AND (COALESCE (ObjectLink_Unit.ChildObjectId,0) = inUnitId OR inUnitId = 0)
                             AND (COALESCE (ObjectLink_InfoMoney.ChildObjectId,0) = inInfoMoneyId OR inInfoMoneyId = 0)
                           )
 
@@ -52,7 +64,8 @@ BEGIN
            
            , Object_Unit.Id                                                 AS UnitId
            , Object_Unit.ObjectCode                                         AS UnitCode
-           , Object_Unit.ValueData                                          AS UnitName
+           , Object_Unit.ValueData                                          AS UnitName 
+           , ObjectString_Unit_GroupNameFull.ValueData                      AS UnitGroupNameFull
 
            , ObjectHistoryFloat_ServiceItem_Value.ValueData                 AS Value
            , ObjectHistoryFloat_ServiceItem_Price.ValueData                 AS Price
@@ -83,6 +96,10 @@ BEGIN
             LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_ServiceItem_Area
                                          ON ObjectHistoryFloat_ServiceItem_Area.ObjectHistoryId = ObjectHistory_ServiceItem.Id
                                         AND ObjectHistoryFloat_ServiceItem_Area.DescId = zc_ObjectHistoryFloat_ServiceItem_Area()
+
+            LEFT JOIN ObjectString AS ObjectString_Unit_GroupNameFull
+                                   ON ObjectString_Unit_GroupNameFull.ObjectId = Object_Unit.Id
+                                  AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull()
 ;
 
 
@@ -100,4 +117,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_ObjectHistory_ServiceItem (1, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_ObjectHistory_ServiceItem (1, 0, zfCalc_UserAdmin())

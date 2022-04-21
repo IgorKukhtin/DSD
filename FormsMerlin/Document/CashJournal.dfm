@@ -745,6 +745,16 @@ object CashJournalForm: TCashJournalForm
           ComponentItem = 'inKindName_text'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = '0'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -803,6 +813,16 @@ object CashJournalForm: TCashJournalForm
           Component = FormParams
           ComponentItem = 'inKindName_text'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = '0'
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -897,6 +917,16 @@ object CashJournalForm: TCashJournalForm
           Component = FormParams
           ComponentItem = 'inKindName_text'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = '0'
           MultiSelectSeparator = ','
         end>
       isShowModal = False

@@ -305,6 +305,32 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
       Hint = #1053#1072' '#1091#1088#1086#1074#1077#1085#1100' '#1074#1099#1096#1077
       ImageIndex = 10
     end
+    object actGet_Service_Last: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Service_Last
+      StoredProcList = <
+        item
+          StoredProc = spGet_Service_Last
+        end>
+      Caption = 'actGet_Cash_Last'
+    end
+    object actInsert_Movement_Service: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_Movement_Service
+      StoredProcList = <
+        item
+          StoredProc = spInsert_Movement_Service
+        end>
+      Caption = #1057#1092#1086#1084#1080#1088#1086#1074#1072#1090#1100' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' - '#1087#1086' '#1074#1089#1077#1084' "'#1074#1099#1073#1088#1072#1085#1085#1099#1084'" '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1085#1080#1103#1084
+      Hint = #1057#1092#1086#1084#1080#1088#1086#1074#1072#1090#1100' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' - '#1087#1086' '#1074#1089#1077#1084' "'#1074#1099#1073#1088#1072#1085#1085#1099#1084'" '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1085#1080#1103#1084
+      ImageIndex = 27
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1084#1080#1088#1086#1074#1072#1090#1100' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' - '#1087#1086' '#1042#1089#1077#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1085#1080#1103#1084'?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
+    end
     object actGet_Cash_Last: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -461,6 +487,20 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object macUpdateService: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Service_Last
+        end
+        item
+          Action = actUpdateService
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1089#1083#1077#1076#1085#1102#1102' '#1086#1087#1083#1072#1090#1091
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1089#1083#1077#1076#1085#1102#1102' '#1086#1087#1083#1072#1090#1091
+      ImageIndex = 1
+    end
     object macUpdateCash: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -471,9 +511,105 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         item
           Action = actUpdateCash
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1089#1083#1077#1076#1085#1102#1102' '#1086#1087#1083#1072#1090#1091
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1089#1083#1077#1076#1085#1102#1102' '#1086#1087#1083#1072#1090#1091
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1089#1083#1077#1076#1085#1077#1077' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1089#1083#1077#1076#1085#1077#1077' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077
       ImageIndex = 1
+    end
+    object actInsertService: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077
+      ImageIndex = 0
+      FormName = 'TServiceMovementForm'
+      FormNameParam.Value = 'TServiceMovementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_Value'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 44562d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdateService: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TServiceMovementForm'
+      FormNameParam.Value = 'TServiceMovementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_Value'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 43831d
+          Component = edServiceDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
   end
   object GuidesUnit: TdsdGuides [10]
@@ -697,6 +833,30 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertService'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateService'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert_Movement_Service'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdate_Object_Position_All'
         end>
       OneOnRow = True
@@ -752,6 +912,18 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
     end
     object bbUpdateCash: TdxBarButton
       Action = macUpdateCash
+      Category = 0
+    end
+    object bbInsertService: TdxBarButton
+      Action = actInsertService
+      Category = 0
+    end
+    object bbUpdateService: TdxBarButton
+      Action = macUpdateService
+      Category = 0
+    end
+    object bbInsert_Movement_Service: TdxBarButton
+      Action = actInsert_Movement_Service
       Category = 0
     end
   end
@@ -1059,5 +1231,85 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
     PackSize = 1
     Left = 616
     Top = 151
+  end
+  object spGet_Service_Last: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Service_Last'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MovementId_cash'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMI_Id'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MI_Id_cash'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 616
+    Top = 207
+  end
+  object spInsert_Movement_Service: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_Service_byReport'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inServiceDate'
+        Value = Null
+        Component = edServiceDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 616
+    Top = 111
   end
 end

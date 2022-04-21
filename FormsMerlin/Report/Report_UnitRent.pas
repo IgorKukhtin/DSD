@@ -79,6 +79,16 @@ type
     bbUpdateCash: TdxBarButton;
     macUpdateCash: TMultiAction;
     actGet_Cash_Last: TdsdExecStoredProc;
+    actInsertService: TdsdInsertUpdateAction;
+    bbInsertService: TdxBarButton;
+    spGet_Service_Last: TdsdStoredProc;
+    macUpdateService: TMultiAction;
+    actUpdateService: TdsdInsertUpdateAction;
+    actGet_Service_Last: TdsdExecStoredProc;
+    bbUpdateService: TdxBarButton;
+    spInsert_Movement_Service: TdsdStoredProc;
+    actInsert_Movement_Service: TdsdExecStoredProc;
+    bbInsert_Movement_Service: TdxBarButton;
   private
   public
   end;

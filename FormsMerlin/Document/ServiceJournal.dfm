@@ -245,6 +245,16 @@ inherited ServiceJournalForm: TServiceJournalForm
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = '0'
+          MultiSelectSeparator = ','
         end>
     end
     inherited actInsertMask: TdsdInsertUpdateAction
@@ -268,6 +278,16 @@ inherited ServiceJournalForm: TServiceJournalForm
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = '0'
           MultiSelectSeparator = ','
         end>
     end
@@ -295,6 +315,16 @@ inherited ServiceJournalForm: TServiceJournalForm
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = '0'
           MultiSelectSeparator = ','
         end>
     end
