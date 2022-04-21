@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpReport_UnitBalance_Map(
     IN inServiceDate  TDateTime , -- месяц начислений
     IN inUnitGroupId  Integer,
     IN inInfoMoneyId  Integer,
-	IN inisAll        Boolean,
+    IN inIsAll        Boolean,
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (              
@@ -110,7 +110,7 @@ BEGIN
                                              , inServiceDate := inServiceDate
                                              , inUnitGroupId := inUnitGroupId
                                              , inInfoMoneyId := inInfoMoneyId
-                                             , inisAll       := inisAll
+                                             , inIsAll       := inIsAll
                                              , inSession     := inSession) AS tmp  
                    GROUP BY tmp.UnitId 
                    )    
@@ -154,11 +154,12 @@ BEGIN
             LEFT JOIN tmpGroup ON tmpGroup.UnitGroupId = tmpUnitGroup.Id
             LEFT JOIN tmpReport ON tmpReport.UnitId = tmpGroup.UnitId
             
-			LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnitGroup.Id
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnitGroup.Id
                    
             LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = tmpUnitGroup.ParentId
 
             LEFT JOIN tmpUnitLast ON tmpUnitLast.Id = Object_Unit.Id 
+
      GROUP BY Object_Unit.Id
             , Object_Unit. ObjectCode
             , Object_Unit.ValueData
@@ -170,6 +171,11 @@ BEGIN
             , tmpUnitGroup.Width
             , tmpUnitGroup.Height
             , COALESCE (tmpUnitLast.Id, 0)             
+
+     HAVING SUM (COALESCE (tmpReport.AmountDebet, 0))  <> 0
+         OR SUM (COALESCE (tmpReport.AmountKredit, 0)) <> 0
+         OR SUM (COALESCE (tmpReport.AmountDebetEnd, 0) - COALESCE (tmpReport.AmountKreditEnd, 0)) <> 0
+         OR Object_Unit.isErased = FALSE
       ;
 
 END;
@@ -183,8 +189,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_UnitBalance_Map (inStartDate := '01.12.2021', inEndDate:= '01.02.2022', inServiceDate:= '01.12.2021', inUnitGroupId:= 52460,inisAll:=true, inInfoMoneyId:=0 ,inSession:= zfCalc_UserAdmin())
-
-
-
---SELECT * FROM gpSelect_Object_Unit_Parent (52460, FALSE, zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_UnitBalance_Map (inStartDate := '01.12.2021', inEndDate:= '01.02.2022', inServiceDate:= '01.12.2021', inUnitGroupId:= 52460,inIsAll:=true, inInfoMoneyId:=0 ,inSession:= zfCalc_UserAdmin())
