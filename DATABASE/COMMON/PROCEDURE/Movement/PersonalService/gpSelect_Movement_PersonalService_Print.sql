@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Print (Integer, Boolea
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_Print(
     IN inMovementId    Integer  , -- ключ Документа
-    IN inisShowAll     Boolean  ,
+    IN inIsShowAll     Boolean  ,
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -262,12 +262,12 @@ BEGIN
                                     ,*/ tmpMIContainer_all.MemberId
                                     , SUM (tmpMIContainer_all.SummNalog)    :: TFloat AS SummNalog
                                     , SUM (tmpMIContainer_all.SummNalogRet) :: TFloat AS SummNalogRet
-                                    , CASE WHEN inisShowAll = TRUE THEN tmpMIContainer_all.PositionId ELSE 0 END AS PositionId
+                                    , CASE WHEN inIsShowAll = TRUE THEN tmpMIContainer_all.PositionId ELSE 0 END AS PositionId
                                FROM tmpMIContainer_all
                                GROUP BY /*tmpMIContainer_all.UnitId
                                       , tmpMIContainer_all.PositionId
                                       ,*/ tmpMIContainer_all.MemberId
-                                      , CASE WHEN inisShowAll = TRUE THEN tmpMIContainer_all.PositionId ELSE 0 END
+                                      , CASE WHEN inIsShowAll = TRUE THEN tmpMIContainer_all.PositionId ELSE 0 END
                               )
       , tmpMI_all AS (SELECT MovementItem.Id                            AS MovementItemId
                            , MovementItem.Amount
@@ -488,7 +488,7 @@ BEGIN
                       FROM tmpMI_all As tmpMI_all_find
                            LEFT JOIN tmpMI_all ON tmpMI_all.MemberId = tmpMI_all_find.MemberId
                            LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpMI_all.MovementItemId
-                      WHERE tmpMI_all_find.Ord = 1 AND inisShowAll = FALSE
+                      WHERE tmpMI_all_find.Ord = 1 AND inIsShowAll = FALSE
                       GROUP BY tmpMI_all_find.PersonalId
                              , tmpMI_all_find.UnitId
                              , tmpMI_all_find.PositionId
@@ -538,7 +538,7 @@ BEGIN
 
                       FROM tmpMI_all
                            LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpMI_all.MovementItemId
-                      WHERE inisShowAll = TRUE
+                      WHERE inIsShowAll = TRUE
                       GROUP BY tmpMI_all.PersonalId
                              , tmpMI_all.UnitId
                              , tmpMI_all.PositionId
@@ -576,7 +576,8 @@ BEGIN
        , tmpContainer_pay AS (SELECT DISTINCT
                                      CLO_ServiceDate.ContainerId
                                    , ObjectLink_Personal_Member.ChildObjectId AS MemberId
-                                   , CLO_Position.ObjectId AS PositionId
+                                   , CLO_Position.ObjectId                    AS PositionId
+                                   , CLO_Unit.ObjectId                        AS UnitId
                               FROM ContainerLinkObject AS CLO_PersonalServiceList
                                    INNER JOIN ContainerLinkObject AS CLO_ServiceDate
                                                                   ON CLO_ServiceDate.ObjectId    = vbServiceDateId
@@ -591,7 +592,10 @@ BEGIN
                                                         AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
                                    LEFT JOIN ContainerLinkObject AS CLO_Position
                                                                  ON CLO_Position.ContainerId = CLO_ServiceDate.ContainerId
-                                                                AND CLO_Position.DescId     = zc_ContainerLinkObject_Position()
+                                                                AND CLO_Position.DescId      = zc_ContainerLinkObject_Position()
+                                   LEFT JOIN ContainerLinkObject AS CLO_Unit
+                                                                 ON CLO_Unit.ContainerId = CLO_ServiceDate.ContainerId
+                                                                AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
                               WHERE CLO_PersonalServiceList.ObjectId = vbPersonalServiceListId
                                 AND CLO_PersonalServiceList.DescId   = zc_ContainerLinkObject_PersonalServiceList()
                              )
@@ -600,14 +604,16 @@ BEGIN
                                    , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()/*, zc_Enum_AnalyzerId_Cash_PersonalCardSecond()*/) AND MIContainer.Amount < 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance_ret
                                    , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService()) THEN MIContainer.Amount ELSE 0 END) AS Amount_service
                                    , tmpContainer_pay.MemberId
-                                   , CASE WHEN inisShowAll = TRUE THEN tmpContainer_pay.PositionId ELSE 0 END AS PositionId
+                                   , CASE WHEN inIsShowAll = TRUE THEN tmpContainer_pay.PositionId ELSE 0 END AS PositionId
+                                   , CASE WHEN inIsShowAll = TRUE THEN tmpContainer_pay.UnitId     ELSE 0 END AS UnitId
                               FROM tmpContainer_pay
                                    INNER JOIN MovementItemContainer AS MIContainer
                                                                     ON MIContainer.ContainerId    = tmpContainer_pay.ContainerId
                                                                    AND MIContainer.DescId         = zc_MIContainer_Summ()
                                                                    AND MIContainer.MovementDescId = zc_Movement_Cash()
                               GROUP BY tmpContainer_pay.MemberId
-                                     , CASE WHEN inisShowAll = TRUE THEN tmpContainer_pay.PositionId ELSE 0 END
+                                     , CASE WHEN inIsShowAll = TRUE THEN tmpContainer_pay.PositionId ELSE 0 END
+                                     , CASE WHEN inIsShowAll = TRUE THEN tmpContainer_pay.UnitId     ELSE 0 END
                              )
      , tmpMember_findPersonal AS (SELECT * FROM  lfSelect_Object_Member_findPersonal (inSession))
           , tmpAll AS (SELECT tmpMI.Amount, tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.MemberId , tmpMI.PersonalServiceListId
@@ -641,6 +647,9 @@ BEGIN
                             , tmpMI.SummPhone
                             , tmpMI.SummHouseAdd
                             , tmpMI.WorkTimeHoursOne_child
+
+                            , ROW_NUMBER() OVER (PARTITION BY tmpMI.MemberId ORDER BY tmpMI.SummToPay DESC) AS Ord
+
                        FROM tmpMI
                       UNION ALL
                        SELECT 0 AS Amount, tmpPersonal.PersonalId, tmpPersonal.UnitId, tmpPersonal.PositionId, tmpPersonal.MemberId, tmpPersonal.PersonalServiceListId
@@ -674,6 +683,9 @@ BEGIN
                             , 0 AS SummPhone
                             , 0 AS SummHouseAdd
                             , 0 AS WorkTimeHoursOne_child
+
+                            , 1 AS Ord
+
                         FROM tmpPersonal
                         WHERE tmpPersonal.Ord = 1
                       UNION ALL
@@ -710,6 +722,9 @@ BEGIN
                             , 0 AS SummPhone
                             , 0 AS SummHouseAdd
                             , 0 AS WorkTimeHoursOne_child
+
+                            , 1 AS Ord
+
                         FROM tmpMIContainer_pay
                              LEFT JOIN tmpMember_findPersonal ON tmpMember_findPersonal.MemberId = tmpMIContainer_pay.MemberId
                              LEFT JOIN tmpMI ON tmpMI.MemberId = tmpMIContainer_pay.MemberId
@@ -812,18 +827,21 @@ BEGIN
 
        FROM tmpAll
             LEFT JOIN tmpMIContainer ON tmpMIContainer.MemberId    = tmpAll.MemberId
+                                    AND tmpAll.Ord                 = 1
                                     AND (tmpMIContainer.PositionId = tmpAll.PositionId
-                                      OR inisShowAll = FALSE
+                                      OR inIsShowAll = FALSE
                                         )
             LEFT JOIN tmpMIContainer_find ON tmpMIContainer_find.MemberId = tmpAll.MemberId
                                         AND ((tmpMIContainer_find.Ord      = 1 -- !!!только 1-ый!!!
-                                              AND inisShowAll = FALSE)
+                                              AND inIsShowAll = FALSE)
                                           OR (tmpMIContainer_find.PositionId = tmpAll.PositionId
-                                              AND inisShowAll = TRUE)
+                                              AND inIsShowAll = TRUE)
                                             )
             LEFT JOIN tmpMIContainer_pay ON tmpMIContainer_pay.MemberId    = tmpAll.MemberId
-                                        AND (tmpMIContainer_pay.PositionId  = tmpAll.PositionId
-                                          OR inisShowAll = FALSE
+                                        AND ((tmpMIContainer_pay.PositionId  = tmpAll.PositionId
+                                          AND tmpMIContainer_pay.UnitId      = tmpAll.UnitId
+                                             )
+                                          OR inIsShowAll = FALSE
                                             )
 
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpAll.PersonalId
@@ -887,7 +905,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_PersonalService_Print (inMovementId := 1001606, inisShowAll:= FALSE, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpSelect_Movement_PersonalService_Print (inMovementId := 377284, inisShowAll:= FALSE, inSession:= zfCalc_UserAdmin());
---select * from gpSelect_Movement_PersonalService_Print(inMovementId := 16191486 , inisShowAll := 'FALSE' ,  inSession := '5');
---FETCH ALL "<unnamed portal 5>";
+-- SELECT * FROM gpSelect_Movement_PersonalService_Print (inMovementId := 1001606, inIsShowAll:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_PersonalService_Print (inMovementId := 377284, inIsShowAll:= FALSE, inSession:= zfCalc_UserAdmin()); --FETCH ALL "<unnamed portal 5>";

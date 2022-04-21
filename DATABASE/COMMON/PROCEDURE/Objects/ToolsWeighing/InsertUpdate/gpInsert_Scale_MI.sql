@@ -545,7 +545,8 @@ BEGIN
                                                                                                 THEN (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
                                                                                            WHEN inChangePercentAmount = 0
                                                                                                 THEN (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
-                                                                                           WHEN vbRetailId IN (341640, 310854, 310855) -- Ôîçç³ + Ôîç³ + Âàðóñ
+                                                                                         --WHEN vbRetailId IN (341640, 310854, 310855) -- Ôîçç³ + Ôîç³ + Âàðóñ
+                                                                                           WHEN 3 = COALESCE ((SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = vbRetailId AND OFl.DescId = zc_ObjectFloat_Retail_RoundWeight()), 0)
                                                                                                 THEN CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
                                                                                                          * (1 - inChangePercentAmount/100) AS NUMERIC (16, 3))
                                                                                            ELSE CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
@@ -689,7 +690,7 @@ BEGIN
 
 
          -- !!! ÂÐÅÌÅÍÍÎ !!!
-         IF vbUserId = 5 AND 1=1 AND inBranchCode < 1000 THEN
+         IF vbUserId = 5 AND 1=0 AND inBranchCode < 1000 THEN
              RAISE EXCEPTION 'Admin - Test = OK  Amount = <%> Price = <%> HeadCount = <%>'
                            , (SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = vbId)
                            , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = vbId AND MIF.DescId = zc_MIFloat_Price())

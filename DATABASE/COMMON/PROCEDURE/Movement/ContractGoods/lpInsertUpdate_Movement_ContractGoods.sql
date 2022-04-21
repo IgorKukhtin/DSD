@@ -26,6 +26,12 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
 
+     -- проверка
+     IF COALESCE (inContractId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлен <Договор>.';
+     END IF;
+
      -- находим предыдущий документ,ему устанавливаем дату окончания EndBeginDate  = inOperDate-1 день
      vbMovementId_old:= (SELECT Movement.Id
                          FROM Movement

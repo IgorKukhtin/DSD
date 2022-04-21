@@ -1139,8 +1139,9 @@ BEGIN
                                                         , inMovementId          := vbMovementId_begin
                                                         , inGoodsId             := tmp.GoodsId
                                                         , inAmount              := tmp.Amount
-                                                        , inAmountPartner       := CASE WHEN vbRetailId IN (310828) -- Метро
-                                                                                             THEN CAST (tmp.AmountPartner AS NUMERIC (16, 2))
+                                                        , inAmountPartner       := CASE COALESCE ((SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = vbRetailId AND OFl.DescId = zc_ObjectFloat_Retail_RoundWeight()), 0)
+                                                                                        WHEN 2 THEN CAST (tmp.AmountPartner AS NUMERIC (16, 2))
+                                                                                        WHEN 3 THEN CAST (tmp.AmountPartner AS NUMERIC (16, 3))
                                                                                         ELSE tmp.AmountPartner
                                                                                    END
                                                         , inAmountChangePercent := tmp.AmountChangePercent

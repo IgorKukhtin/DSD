@@ -838,8 +838,13 @@ BEGIN
           LEFT JOIN _tmpResult AS _tmpResult_movement ON _tmpResult_movement.MovementId     = _tmpResult.MovementId
                                                      AND _tmpResult_movement.isDelete       = TRUE
                                                      AND _tmpResult_movement.MovementItemId = 0 -- !!!важно MovementItemId = 0!!!
+          LEFT JOIN MovementItemBoolean AS MIB_Close ON MIB_Close.MovementItemId = _tmpResult.MovementItemId
+                                                    AND MIB_Close.DescId         = zc_MIBoolean_Close()
+                                                    AND MIB_Close.ValueData      = TRUE
      WHERE _tmpResult.isDelete = TRUE AND _tmpResult.MovementItemId <> 0
        AND _tmpResult_movement.MovementId IS NULL -- т.е. только те которые не попали в удаление документов
+       -- Закрыт для пересчета
+       AND MIB_Close.MovementItemId IS NULL
     ;
      -- удаляются элементы - Child
      PERFORM lpSetErased_MovementItem (inMovementItemId:= _tmpResult_child.MovementItemId
@@ -849,8 +854,14 @@ BEGIN
           LEFT JOIN _tmpResult AS _tmpResult_movement ON _tmpResult_movement.MovementId     = _tmpResult_child.MovementId
                                                      AND _tmpResult_movement.isDelete       = TRUE
                                                      AND _tmpResult_movement.MovementItemId = 0 -- !!!важно MovementItemId = 0!!!
+          LEFT JOIN MovementItem AS MI_Check ON MI_Check.Id = _tmpResult_child.MovementItemId
+          LEFT JOIN MovementItemBoolean AS MIB_Close ON MIB_Close.MovementItemId = MI_Check.ParentId
+                                                    AND MIB_Close.DescId         = zc_MIBoolean_Close()
+                                                    AND MIB_Close.ValueData      = TRUE
      WHERE _tmpResult_child.isDelete = TRUE -- AND _tmpResult_child.MovementItemId <> 0
        AND _tmpResult_movement.MovementId IS NULL -- т.е. только те которые не попали в удаление документов
+       -- Закрыт для пересчета
+       AND MIB_Close.MovementItemId IS NULL
     ;
 
      -- создаются документы - <Производство смешивание>
@@ -910,18 +921,23 @@ BEGIN
                                                  , inGoodsKindId_Complete   := NULL
                                                  , inUserId                 := inUserId
                                                   )
-     FROM (SELECT _tmpResult.ContainerId, CLO_GoodsKind.ObjectId AS GoodsKindId
+     FROM (SELECT DISTINCT _tmpResult.ContainerId, CLO_GoodsKind.ObjectId AS GoodsKindId, _tmpResult.MovementItemId
            FROM _tmpResult
                 LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                               ON CLO_GoodsKind.ContainerId = _tmpResult.ContainerId
                                              AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
            WHERE _tmpResult.DescId_mi   = zc_MI_Master()
              AND _tmpResult.isDelete    = FALSE
-           GROUP BY _tmpResult.ContainerId, CLO_GoodsKind.ObjectId
           ) AS tmp
+          LEFT JOIN MovementItemBoolean AS MIB_Close ON MIB_Close.MovementItemId = tmp.MovementItemId
+                                                    AND MIB_Close.DescId         = zc_MIBoolean_Close()
+                                                    AND MIB_Close.ValueData      = TRUE
      WHERE _tmpResult.ContainerId = tmp.ContainerId
        AND _tmpResult.DescId_mi   = zc_MI_Master()
-       AND _tmpResult.isDelete    = FALSE;
+       AND _tmpResult.isDelete    = FALSE
+       -- Закрыт для пересчета
+       AND MIB_Close.MovementItemId IS NULL
+      ;
 
 
      -- сохраняются элементы - Child из распределения
@@ -946,7 +962,13 @@ BEGIN
           LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                         ON CLO_GoodsKind.ContainerId = _tmpResult_child.ContainerId
                                        AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-     WHERE _tmpResult_child.isDelete    = FALSE;
+          LEFT JOIN MovementItemBoolean AS MIB_Close ON MIB_Close.MovementItemId = _tmpResult.MovementItemId
+                                                    AND MIB_Close.DescId         = zc_MIBoolean_Close()
+                                                    AND MIB_Close.ValueData      = TRUE
+     WHERE _tmpResult_child.isDelete    = FALSE
+       -- Закрыт для пересчета
+       AND MIB_Close.MovementItemId IS NULL
+    ;
 
      -- сохраняются элементы - Child из рецепта
      PERFORM lpInsertUpdate_MI_ProductionUnion_Child
@@ -991,8 +1013,15 @@ BEGIN
                                                                 OR inUnitId = 8451 -- Цех Упаковки
                                                                   )
                                                               AND Object_InfoMoney_View.InfoMoneyDestinationId  <> zc_Enum_InfoMoneyDestination_20900() -- Общефирменные  + Ирна
+                             LEFT JOIN MovementItemBoolean AS MIB_Close ON MIB_Close.MovementItemId = _tmpResult.MovementItemId
+                                                                       AND MIB_Close.DescId         = zc_MIBoolean_Close()
+                                                                       AND MIB_Close.ValueData      = TRUE
+
      WHERE _tmpResult.DescId_mi = zc_MI_Master()
-       AND _tmpResult.isDelete  = FALSE;
+       AND _tmpResult.isDelete  = FALSE
+       -- Закрыт для пересчета
+       AND MIB_Close.MovementItemId IS NULL
+      ;
 
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_ProductionUnion_CreateTemp();

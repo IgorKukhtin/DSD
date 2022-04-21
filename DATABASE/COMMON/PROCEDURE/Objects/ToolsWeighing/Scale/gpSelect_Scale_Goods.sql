@@ -515,7 +515,7 @@ BEGIN
                  , tmpMI.CountForPrice :: TFloat   AS CountForPrice
                  , 0 :: TFloat                     AS CountForPrice_Return
 
-                 , CASE WHEN vbUserId = 5 THEN 123 ELSE 0 END :: TFloat AS Price_Income
+                 , 0 :: TFloat                     AS Price_Income
                  , 1 :: TFloat                     AS CountForPrice_Income
 
                  , CASE WHEN (tmpMI.Amount_Order - tmpMI.Amount_Weighing) > 0
@@ -605,6 +605,154 @@ BEGIN
                    , Object_GoodsKind.ValueData
                    -- , ObjectString_Goods_GoodsGroupFull.ValueData
            ;
+
+   ELSEIF inOrderExternalId < 0 AND EXISTS (SELECT 1
+                                            FROM Movement
+                                                 INNER JOIN MovementLinkObject AS MLO_Contract
+                                                                               ON MLO_Contract.MovementId = Movement.Id
+                                                                              AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
+                                                                              AND MLO_Contract.ObjectId   = (-1 * inOrderExternalId) :: Integer
+                                            WHERE Movement.DescId    = zc_Movement_ContractGoods()
+                                              AND Movement.StatusId  = zc_Enum_Status_Complete()
+                                           )
+   THEN 
+
+        -- Результат - товары zc_Movement_ContractGoods
+        RETURN QUERY
+           WITH tmpContractGoods
+                     AS (SELECT tmp.GoodsId, tmp.GoodsKindId, tmp.ValuePrice
+                         FROM lpGet_MovementItem_ContractGoods (inOperDate:= inOperDate, inJuridicalId:=0, inPartnerId:= 0, inContractId:= -1 * inOrderExternalId, inGoodsId:= 0, inUserId:= vbUserId) AS tmp
+                        )
+
+              , tmpGoods 
+                     AS (SELECT Object_Goods.Id                                  AS GoodsId
+                              , Object_Goods.ObjectCode                          AS GoodsCode
+                              , Object_Goods.ValueData                           AS GoodsName
+                              , View_InfoMoney.InfoMoneyId
+                              , View_InfoMoney.InfoMoneyDestinationId
+                              , View_InfoMoney.InfoMoneyCode
+                              , View_InfoMoney.InfoMoneyGroupName
+                              , View_InfoMoney.InfoMoneyDestinationName
+                              , View_InfoMoney.InfoMoneyName
+                              , tmpContractGoods.ValuePrice
+                              , tmpContractGoods.GoodsKindId
+                         FROM tmpContractGoods
+                              LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpContractGoods.GoodsId
+                              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpContractGoods.GoodsKindId
+                              LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                   ON ObjectLink_Goods_InfoMoney.ObjectId = tmpContractGoods.GoodsId
+                                                  AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                        )
+                , tmpRemains AS (SELECT tmpContractGoods.GoodsId      AS GoodsId
+                                      , tmpContractGoods.GoodsKindId  AS GoodsKindId
+                                      , SUM (Container.Amount)        AS Amount
+                                 FROM tmpContractGoods
+                                      INNER JOIN Container ON Container.ObjectId = tmpContractGoods.GoodsId
+                                                          AND Container.DescId   = zc_Container_Count()
+                                                          AND Container.Amount   <> 0
+                                      INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                                     ON CLO_Unit.ContainerId = Container.Id
+                                                                    AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                                                    AND CLO_Unit.ObjectId IN (2961184 -- Склад спецодежда б/у
+                                                                                            , 8455    -- Склад специй
+                                                                                            , 3398383 -- Склад резины
+                                                                                            , 8456    -- Склад запчастей
+                                                                                             )
+                                      LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                                    ON CLO_GoodsKind.ContainerId = Container.Id
+                                                                   AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                                 WHERE tmpContractGoods.GoodsKindId = COALESCE (CLO_GoodsKind.ObjectId, 0)
+                                 GROUP BY tmpContractGoods.GoodsId
+                                        , tmpContractGoods.GoodsKindId
+                                )
+           -- Результат
+           SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+                , tmpGoods.GoodsId            AS GoodsId
+                , tmpGoods.GoodsCode          AS GoodsCode
+                , tmpGoods.GoodsName          AS GoodsName
+                , tmpGoods.GoodsKindId                   AS GoodsKindId
+                , Object_GoodsKind.ObjectCode            AS GoodsKindCode
+                , Object_GoodsKind.ValueData :: TVarChar AS GoodsKindName
+                , tmpGoods.GoodsKindId    :: TVarChar AS GoodsKindId_list
+                , tmpGoods.GoodsKindId    :: Integer  AS GoodsKindId_max
+                , Object_GoodsKind.ObjectCode         AS GoodsKindCode_max
+                , Object_GoodsKind.ValueData          AS GoodsKindName_max
+                , Object_Measure.Id           AS MeasureId
+                , Object_Measure.ValueData    AS MeasureName
+  
+                , 0 :: TFloat AS ChangePercentAmount
+
+                 , tmpRemains.Amount :: TFloat AS Amount_Remains
+
+                , 0 :: TFloat AS Amount_Order
+                , 0 :: TFloat AS Amount_OrderWeight
+                , 0 :: TFloat AS Amount_Weighing
+                , 0 :: TFloat AS Amount_WeighingWeight
+                , 0 :: TFloat AS Amount_diff
+                , 0 :: TFloat AS Amount_diffWeight
+                , FALSE :: Boolean AS isTax_diff
+                , tmpGoods.ValuePrice :: TFloat AS Price
+                , 0                   :: TFloat AS Price_Return
+                , 1 :: TFloat                 AS CountForPrice
+                , 1 :: TFloat                 AS CountForPrice_Return
+
+                , tmpGoods.ValuePrice :: TFloat AS Price_Income
+                , 1 :: TFloat                   AS CountForPrice_Income
+
+                , 0                           AS Color_calc -- clBlack
+                , 0                           AS MovementId_Promo
+                , FALSE                       AS isPromo
+                , FALSE                       AS isTare
+
+                  -- Оборотная тара
+                , CASE WHEN tmpGoods.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500()) THEN TRUE ELSE FALSE END :: Boolean AS isNotPriceIncome
+
+                  -- автоматом открыть справочник партий - шины, и т.п.
+                , CASE WHEN tmpGoods.InfoMoneyId IN (zc_Enum_InfoMoney_20103()/*, zc_Enum_InfoMoney_20202()*/) THEN TRUE ELSE FALSE END :: Boolean AS isPartionGoods_20103
+
+                , CURRENT_DATE :: TDateTime   AS tmpDate
+
+                , ObjectFloat_Weight.ValueData         AS Weight
+                , ObjectFloat_WeightTare.ValueData     AS WeightTare
+                , ObjectFloat_CountForWeight.ValueData AS CountForWeight
+
+                , tmpGoods.InfoMoneyCode
+                , tmpGoods.InfoMoneyGroupName
+                , tmpGoods.InfoMoneyDestinationName
+                , tmpGoods.InfoMoneyName
+                , tmpGoods.InfoMoneyId
+           FROM tmpGoods
+
+                LEFT JOIN tmpRemains ON tmpRemains.GoodsId     = tmpGoods.GoodsId
+                                    AND tmpRemains.GoodsKindId = tmpGoods.GoodsKindId
+
+                LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                      ON ObjectFloat_Weight.ObjectId = tmpGoods.GoodsId
+                                     AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+                LEFT JOIN ObjectFloat AS ObjectFloat_WeightTare
+                                      ON ObjectFloat_WeightTare.ObjectId = tmpGoods.GoodsId
+                                     AND ObjectFloat_WeightTare.DescId   = zc_ObjectFloat_Goods_WeightTare()
+                LEFT JOIN ObjectFloat AS ObjectFloat_CountForWeight
+                                      ON ObjectFloat_CountForWeight.ObjectId = tmpGoods.GoodsId
+                                     AND ObjectFloat_CountForWeight.DescId   = zc_ObjectFloat_Goods_CountForWeight()
+
+                LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                       ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
+                                      AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                     ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
+                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+                LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
+
+
+           ORDER BY tmpGoods.GoodsName
+                  -- , ObjectString_Goods_GoodsGroupFull.ValueData
+          ;
+
+
    ELSE
 
         --
@@ -1127,7 +1275,7 @@ BEGIN
                 , 1 :: TFloat                 AS CountForPrice
                 , 1 :: TFloat                 AS CountForPrice_Return
 
-                , CASE WHEN vbUserId = 5 THEN 123 ELSE 0 END :: TFloat AS Price_Income
+                , 0 :: TFloat                 AS Price_Income
                 , 1 :: TFloat                 AS CountForPrice_Income
 
                 , 0                           AS Color_calc -- clBlack
@@ -1217,4 +1365,4 @@ where (namefull  like '%ScaleCeh_201 Movement%'  or namefull  like '%Scale_201 M
 */
 
 -- тест
--- SELECT * FROM gpSelect_Scale_Goods (inIsGoodsComplete:= TRUE, inOperDate:= CURRENT_DATE, inMovementId:= -79137, inOrderExternalId:= 0, inPriceListId:=0, inGoodsCode:= 0, inGoodsName:= '', inDayPrior_PriceReturn:= 10, inBranchCode:= 1, inSession:=zfCalc_UserAdmin()) WHERE GoodsCode = 901
+-- SELECT * FROM gpSelect_Scale_Goods (inIsGoodsComplete:= TRUE, inOperDate:= CURRENT_DATE, inMovementId:= -79137, inOrderExternalId:= -992313, inPriceListId:=0, inGoodsCode:= 0, inGoodsName:= '', inDayPrior_PriceReturn:= 10, inBranchCode:= 1, inSession:=zfCalc_UserAdmin()) -- WHERE GoodsCode = 901

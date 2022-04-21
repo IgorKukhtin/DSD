@@ -73,6 +73,7 @@ BEGIN
                       WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
                         AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = inGoodsId
                         AND COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) = COALESCE (inGoodsKindId, 0)
+                        AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId > 0
                         AND ObjectLink_GoodsByGoodsKind_Goods.ObjectId = ioId)
        THEN 
            RAISE EXCEPTION 'Ошибка.Нет прав изменять значение <Вид упаковки>.';

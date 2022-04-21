@@ -41,13 +41,15 @@ RETURNS TABLE (MovementId            Integer
              , isEdiInvoice     Boolean
              , isEdiDesadv      Boolean
 
-             , isMovement    Boolean, CountMovement   TFloat   -- Накладная
-             , isAccount     Boolean, CountAccount    TFloat   -- Счет
-             , isTransport   Boolean, CountTransport  TFloat   -- ТТН
-             , isQuality     Boolean, CountQuality    TFloat   -- Качественное
-             , isPack        Boolean, CountPack       TFloat   -- Упаковочный
-             , isSpec        Boolean, CountSpec       TFloat   -- Спецификация
-             , isTax         Boolean, CountTax        TFloat   -- Налоговая
+             , isMovement      Boolean, CountMovement   TFloat   -- Накладная
+             , isAccount       Boolean, CountAccount    TFloat   -- Счет
+             , isTransport     Boolean, CountTransport  TFloat   -- ТТН
+             , isQuality       Boolean, CountQuality    TFloat   -- Качественное
+             , isPack          Boolean, CountPack       TFloat   -- Упаковочный
+             , isSpec          Boolean, CountSpec       TFloat   -- Спецификация
+             , isTax           Boolean, CountTax        TFloat   -- Налоговая
+
+             , isContractGoods Boolean
 
              , OrderExternalName_master TVarChar
               )
@@ -701,6 +703,16 @@ BEGIN
             , COALESCE (tmpJuridicalPrint.isPack,      FALSE) :: Boolean AS isPack     , COALESCE (tmpJuridicalPrint.CountPack, 0)      :: TFloat AS CountPack
             , COALESCE (tmpJuridicalPrint.isSpec,      FALSE) :: Boolean AS isSpec     , COALESCE (tmpJuridicalPrint.CountSpec, 0)      :: TFloat AS CountSpec
             , COALESCE (tmpJuridicalPrint.isTax,       FALSE) :: Boolean AS isTax      , COALESCE (tmpJuridicalPrint.CountTax, 0)       :: TFloat AS CountTax
+
+            , EXISTS (SELECT 1
+                      FROM Movement
+                           INNER JOIN MovementLinkObject AS MLO_Contract
+                                                         ON MLO_Contract.MovementId = Movement.Id
+                                                        AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
+                                                        AND MLO_Contract.ObjectId   = View_Contract_InvNumber.ContractId
+                      WHERE Movement.DescId    = zc_Movement_ContractGoods()
+                        AND Movement.StatusId  = zc_Enum_Status_Complete()
+                     ) :: Boolean AS isContractGoods
 
             , ('№ <' || tmpMovement.InvNumber || '>' || ' от <' || DATE (tmpMovement.OperDate) :: TVarChar || '>' || ' '|| COALESCE (Object_Personal.ValueData, '')) :: TVarChar AS OrderExternalName_master
 

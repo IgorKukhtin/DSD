@@ -278,7 +278,8 @@ BEGIN
           , tmpContainer_pay AS (SELECT DISTINCT
                                         CLO_ServiceDate.ContainerId
                                       , ObjectLink_Personal_Member.ChildObjectId AS MemberId
-                                      , CLO_Position.ObjectId AS PositionId
+                                      , CLO_Position.ObjectId                    AS PositionId
+                                      , CLO_Unit.ObjectId                        AS UnitId
                                  FROM ContainerLinkObject AS CLO_PersonalServiceList
                                       INNER JOIN ContainerLinkObject AS CLO_ServiceDate
                                                                      ON CLO_ServiceDate.ObjectId    = vbServiceDateId
@@ -293,7 +294,10 @@ BEGIN
                                                            AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
                                       LEFT JOIN ContainerLinkObject AS CLO_Position
                                                                     ON CLO_Position.ContainerId = CLO_ServiceDate.ContainerId
-                                                                   AND CLO_Position.DescId     = zc_ContainerLinkObject_Position()
+                                                                   AND CLO_Position.DescId      = zc_ContainerLinkObject_Position()
+                                      LEFT JOIN ContainerLinkObject AS CLO_Unit
+                                                                    ON CLO_Unit.ContainerId = CLO_ServiceDate.ContainerId
+                                                                   AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
                                  WHERE CLO_PersonalServiceList.ObjectId = vbPersonalServiceListId
                                    AND CLO_PersonalServiceList.DescId   = zc_ContainerLinkObject_PersonalServiceList()
                                 )
@@ -302,6 +306,7 @@ BEGIN
                                       --, SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService()) THEN MIContainer.Amount ELSE 0 END) AS Amount_service
                                       , tmpContainer_pay.MemberId
                                       , tmpContainer_pay.PositionId
+                                      , tmpContainer_pay.UnitId
                                  FROM tmpContainer_pay
                                       INNER JOIN MovementItemContainer AS MIContainer
                                                                        ON MIContainer.ContainerId    = tmpContainer_pay.ContainerId
@@ -309,6 +314,7 @@ BEGIN
                                                                       AND MIContainer.MovementDescId = zc_Movement_Cash()
                                  GROUP BY tmpContainer_pay.MemberId
                                         , tmpContainer_pay.PositionId
+                                        , tmpContainer_pay.UnitId
                                 )
 
 
@@ -661,6 +667,7 @@ BEGIN
 
             LEFT JOIN tmpMIContainer_pay ON tmpMIContainer_pay.MemberId    = tmpAll.MemberId_Personal
                                         AND tmpMIContainer_pay.PositionId  = tmpAll.PositionId
+                                        AND tmpMIContainer_pay.UnitId      = tmpAll.UnitId
       ;
 
 END;

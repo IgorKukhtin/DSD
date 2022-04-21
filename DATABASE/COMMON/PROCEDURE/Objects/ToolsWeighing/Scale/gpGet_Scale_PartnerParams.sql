@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpGet_Scale_PartnerParams(
 RETURNS TABLE (PartnerId       Integer, PartnerCode       Integer, PartnerName       TVarChar
              , PriceListId     Integer, PriceListCode     Integer, PriceListName     TVarChar
              , GoodsPropertyId Integer, GoodsPropertyCode Integer, GoodsPropertyName TVarChar
+             , isContractGoods Boolean
               )
 AS
 $BODY$
@@ -82,6 +83,16 @@ BEGIN
             , Object_GoodsProperty.Id              AS GoodsPropertyId
             , Object_GoodsProperty.ObjectCode      AS GoodsPropertyCode
             , Object_GoodsProperty.ValueData       AS GoodsPropertyName
+            
+            , EXISTS (SELECT 1
+                      FROM Movement
+                           INNER JOIN MovementLinkObject AS MLO_Contract
+                                                         ON MLO_Contract.MovementId = Movement.Id
+                                                        AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
+                                                        AND MLO_Contract.ObjectId   = inContractId
+                      WHERE Movement.DescId    = zc_Movement_ContractGoods()
+                        AND Movement.StatusId  = zc_Enum_Status_Complete()
+                     ) :: Boolean AS isContractGoods
 
        FROM tmpPartner
             LEFT JOIN Object AS Object_PriceList     ON Object_PriceList.Id     = tmpPartner.PriceListId
@@ -100,4 +111,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_PartnerParams ('01.01.2015', 1, 1, 1, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_PartnerParams ('01.01.2022', 1, 1, 1, zfCalc_UserAdmin())
