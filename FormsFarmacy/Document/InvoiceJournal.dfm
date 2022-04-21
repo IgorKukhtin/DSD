@@ -184,7 +184,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Width = 110
           end
           object DateAdoptedByNSZU: TcxGridDBColumn
-            Caption = #1055#1088#1080#1085#1103#1090#1086' '#1053#1057#1047#1059
+            Caption = #1055#1088#1080#1085#1103#1090#1086' '#1053#1057#1047#1059'/'#1052#1062
             DataBinding.FieldName = 'DateAdoptedByNSZU'
             PropertiesClassName = 'TcxDateEditProperties'
             HeaderAlignmentHorz = taCenter

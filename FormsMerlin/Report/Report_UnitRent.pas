@@ -69,6 +69,16 @@ type
     cxLabel1: TcxLabel;
     edServiceDate: TcxDateEdit;
     cbAllMonth: TcxCheckBox;
+    cxLabel5: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    GuidesInfoMoney: TdsdGuides;
+    actInsertCash: TdsdInsertUpdateAction;
+    bbInsertCash: TdxBarButton;
+    spGet_Cash_Last: TdsdStoredProc;
+    actUpdateCash: TdsdInsertUpdateAction;
+    bbUpdateCash: TdxBarButton;
+    macUpdateCash: TMultiAction;
+    actGet_Cash_Last: TdsdExecStoredProc;
   private
   public
   end;

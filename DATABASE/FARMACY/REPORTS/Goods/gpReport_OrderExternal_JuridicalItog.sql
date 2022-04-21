@@ -13,6 +13,8 @@ RETURNS TABLE (JuridicalMainId Integer, JuridicalMainCode Integer, JuridicalMain
              , Amount TFloat, Summ TFloat, SummWithNDS TFloat
              , AmountSF TFloat, SummSF TFloat, SummWithNDSSF TFloat
              , AmountLeft TFloat, SummLeft TFloat, SummWithNDSLeft TFloat
+             , SummWithNDSOIP TFloat, SummWithNDSAll TFloat
+             
 )
 AS
 $BODY$
@@ -164,7 +166,95 @@ BEGIN
 
                                      LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                                           ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods_Main.NDSKindId
-                               )                              
+                               ),                              
+        tmpOrderExternalData AS (SELECT tmpSupplierFailures.UnitId
+                                      , tmpSupplierFailures.JuridicalId
+                                      , tmpSupplierFailures.ContractId
+                                      
+                                      , SUM(tmpSupplierFailures.Amount)::TFloat  AS Amount
+                                      , SUM(tmpSupplierFailures.Summ)::TFloat    AS Summ
+                                      , SUM(tmpSupplierFailures.SummWithNDS)::TFloat    AS SummWithNDS
+                                  
+                                      , SUM(tmpSupplierFailures.AmountSF)::TFloat  AS AmountSF
+                                      , SUM(tmpSupplierFailures.SummSF)::TFloat    AS SummSF
+                                      , SUM(tmpSupplierFailures.SummWithNDSSF)::TFloat    AS SummWithNDSSF
+
+                                      , SUM(tmpSupplierFailures.AmountLeft)::TFloat  AS AmountLeft
+                                      , SUM(tmpSupplierFailures.SummLeft)::TFloat    AS SummLeft
+                                      , SUM(tmpSupplierFailures.SummWithNDSLeft)::TFloat    AS SummWithNDSLeft
+
+                                  FROM tmpOrderExternalSum AS tmpSupplierFailures
+                                                                                   
+                                  GROUP BY tmpSupplierFailures.UnitId
+                                         , tmpSupplierFailures.JuridicalId
+                                         , tmpSupplierFailures.ContractId),                                                          
+        tmpMovementOIP AS (SELECT Movement.Id
+                           FROM Movement
+                                LEFT JOIN MovementDate AS MovementDate_Sent
+                                                       ON MovementDate_Sent.MovementId = Movement.Id
+                                                      AND MovementDate_Sent.DescId = zc_MovementDate_Sent()
+                           WHERE Movement.DescId = zc_Movement_OrderInternalPromo()
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                             AND MovementDate_Sent.ValueData >= inDateStart
+                             AND MovementDate_Sent.ValueData <= inDateEnd
+                           ),
+
+        -- строки чайлд
+        tmpMI_Child AS (SELECT MovementItem.Id
+                             , MovementItem.ParentId
+                             , MovementItem.ObjectId                       
+                             , MovementItem.Amount              AS Amount
+                             , MIFloat_AmountManual.ValueData   AS AmountManual
+                        FROM tmpMovementOIP
+                        
+                             INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementOIP.Id
+                                                    AND MovementItem.DescId = zc_MI_Child()
+                                                    AND MovementItem.isErased = FALSE
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
+                                                         ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+
+                        ),
+        tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_NDSKind_NDS.valuedata FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                              WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                              ),
+        tmpMI_All AS (SELECT OIP_Child.ObjectId                                   AS UnitId
+                           , MILinkObject_Juridical.ObjectId                      AS JuridicalId
+                           , MILinkObject_Contract.ObjectId                       AS ContractId
+                           , SUM(ROUND(OIP_Child.Amount * MIFloat_Price.ValueData * (1.0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 7) / 100), 2))   AS Summa
+                      FROM tmpMovementOIP
+
+                           INNER JOIN MovementItem AS OIP_Master
+                                                   ON OIP_Master.MovementId = tmpMovementOIP.Id
+                                                  AND OIP_Master.DescId = zc_MI_Master()
+                                                  AND OIP_Master.isErased = FALSE
+                      
+                           INNER JOIN MovementItemLinkObject AS MILinkObject_Juridical
+                                                             ON MILinkObject_Juridical.MovementItemId = OIP_Master.Id
+                                                            AND MILinkObject_Juridical.DescId = zc_MILinkObject_Juridical()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                            ON MILinkObject_Contract.MovementItemId = OIP_Master.Id
+                                                           AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+
+                           LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                       ON MIFloat_Price.MovementItemId = OIP_Master.Id
+                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+                           INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = OIP_Master.ObjectId
+                           INNER JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId 
+
+                           LEFT JOIN tmpOF_NDSKind_NDS AS ObjectFloat_NDSKind_NDS
+                                                       ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods_Main.NDSKindId
+
+                           INNER JOIN tmpMI_Child AS OIP_Child 
+                                                  ON OIP_Child.ParentId = OIP_Master.Id
+                                      
+                      GROUP BY OIP_Child.ObjectId
+                             , MILinkObject_Juridical.ObjectId
+                             , MILinkObject_Contract.ObjectId   
+                      HAVING SUM(ROUND(OIP_Child.Amount * MIFloat_Price.ValueData, 2)) > 0
+                      )
 
     SELECT Object_JuridicalMain.Id               AS JuridicalMainId
          , Object_JuridicalMain.ObjectCode       AS JuridicalMainCode
@@ -190,16 +280,22 @@ BEGIN
          , SUM(tmpSupplierFailures.SummLeft)::TFloat    AS SummLeft
          , SUM(tmpSupplierFailures.SummWithNDSLeft)::TFloat    AS SummWithNDSLeft
 
-    FROM tmpOrderExternalSum AS tmpSupplierFailures
+         , SUM(tmpMI_All.Summa)::TFloat                 AS SummWithNDSOIP
+         , SUM(COALESCE(tmpSupplierFailures.SummWithNDSLeft, 0) + COALESCE(tmpMI_All.Summa, 0))::TFloat    AS SummWithNDSAll
 
-        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpSupplierFailures.UnitId
+    FROM tmpOrderExternalData AS tmpSupplierFailures
+    
+        FULL JOIN tmpMI_All ON tmpMI_All.UnitId      = tmpSupplierFailures.UnitId
+                           AND tmpMI_All.JuridicalId = tmpSupplierFailures.JuridicalId
+                           AND tmpMI_All.ContractId  = tmpSupplierFailures.ContractId
+    
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
-                             ON ObjectLink_Unit_Juridical.ObjectId = tmpSupplierFailures.UnitId
+                             ON ObjectLink_Unit_Juridical.ObjectId = COALESCE(tmpSupplierFailures.UnitId, tmpMI_All.UnitId)
                             AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
         LEFT JOIN Object AS Object_JuridicalMain ON Object_JuridicalMain.ID = ObjectLink_Unit_Juridical.ChildObjectId
         
-        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpSupplierFailures.JuridicalId
-        LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpSupplierFailures.ContractId
+        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE(tmpSupplierFailures.JuridicalId, tmpMI_All.JuridicalId)
+        LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = COALESCE(tmpSupplierFailures.ContractId, tmpMI_All.ContractId)
                                                  
     GROUP BY Object_JuridicalMain.Id
            , Object_JuridicalMain.ObjectCode
@@ -228,4 +324,5 @@ $BODY$
 -- тест
 -- 
 
-select * from gpReport_OrderExternal_JuridicalItog(inDateStart := ('07.03.2022')::TDateTime ,  inDateEnd := ('09.03.2022')::TDateTime ,  inSession := '3');
+select * from gpReport_OrderExternal_JuridicalItog(inDateStart := ('20.04.2022')::TDateTime , inDateEnd := ('20.04.2022')::TDateTime ,  inSession := '3');
+

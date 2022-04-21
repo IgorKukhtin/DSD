@@ -86,7 +86,7 @@ BEGIN
          , COALESCE (ObjectBoolean_NotSchedule.ValueData, False)  AS isNotSchedule
          , COALESCE (ObjectBoolean_ReleasedMarketingPlan.ValueData, False)  AS isReleasedMarketingPlan
 
-         , ObjectBoolean_Official.ValueData         AS isOfficial
+         , COALESCE (ObjectBoolean_Official.ValueData, False)     AS isOfficial
 
      FROM Object AS Object_Member
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
@@ -165,3 +165,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpGet_Object_Member (1, '2')
+
+select * from gpGet_Object_Member(inId := 19506592 ,  inSession := '3');

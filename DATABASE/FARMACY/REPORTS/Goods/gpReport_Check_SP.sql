@@ -40,6 +40,7 @@ RETURNS TABLE (MovementId     Integer
              , PaymentSP      TFloat
              , ColSP          TFloat
              , InsertDateSP   TDateTime
+             , IdSP           TVarChar
 
              , Amount         TFloat
              , PriceSale      TFloat
@@ -134,7 +135,7 @@ BEGIN
     RETURN QUERY
         -- результат
         SELECT tmp.*
-             , (tmp.SummaSP_pack - tmp.SummaSP)::TFloat   AS DSummaSP
+             , NULLIF(tmp.SummaSP_pack - tmp.SummaSP, 0)::TFloat   AS DSummaSP
              , CASE WHEN tmp.SummaSP_pack < tmp.SummaSP THEN zfCalc_Color(255, 182, 203)
                     WHEN tmp.SummaSP_pack > tmp.SummaSP THEN zfCalc_Color(152, 251, 152)
                     ELSE zc_Color_White() END::Integer Color_DSummaSP
@@ -153,7 +154,7 @@ BEGIN
     RETURN QUERY
         -- результат
         SELECT tmp.*
-             , (tmp.SummaSP_pack - tmp.SummaSP)::TFloat   AS DSummaSP
+             , NULLIF(tmp.SummaSP_pack - tmp.SummaSP, 0)::TFloat   AS DSummaSP
              , CASE WHEN tmp.SummaSP_pack < tmp.SummaSP THEN zfCalc_Color(255, 182, 203)
                     WHEN tmp.SummaSP_pack > tmp.SummaSP THEN zfCalc_Color(152, 251, 152)
                     ELSE zc_Color_White() END::Integer Color_DSummaSP
@@ -189,6 +190,5 @@ $BODY$
 --
 
 select * from gpReport_Check_SP(inStartDate := ('01.03.2022')::TDateTime , inEndDate := ('05.03.2022')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 0 , inMedicalProgramSPId := 0 , inGroupMedicalProgramSPId := 0, inSession := '3');
-
 
 

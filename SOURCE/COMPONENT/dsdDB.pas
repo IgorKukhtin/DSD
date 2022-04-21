@@ -1169,6 +1169,15 @@ begin
 
      if Component is TdsdProperties—hange then
         (Component as TdsdProperties—hange).IndexProperties := FValue;
+     if Component is TcxGridDBTableView then
+     begin
+       if UpperCase(Name) = UpperCase('GroupByBox') then
+       begin
+         TcxGridDBTableView(Component).OptionsView.GroupByBox := FValue;
+         if not TcxGridDBTableView(Component).OptionsView.GroupByBox then
+           TcxGridDBTableView(Component).DataController.Groups.ClearGrouping;
+       end;
+     end;
   end;
   if Assigned(FonChange) then
      FonChange(Self);

@@ -1178,7 +1178,8 @@ uses
   GoodsSP_1303Journal in '..\..\FormsFarmacy\Document\GoodsSP_1303Journal.pas' {GoodsSP_1303JournalForm: TParentForm},
   SendWayName in '..\..\FormsFarmacy\Guides\SendWayName.pas' {SendWayNameForm: TParentForm},
   NewUser in '..\..\FormsFarmacy\Guides\NewUser.pas' {NewUserForm: TParentForm},
-  MarginCategoryItemEdit in '..\..\Forms\Guides\MarginCategoryItemEdit.pas' {MarginCategoryItemEditForm: TParentForm};
+  MarginCategoryItemEdit in '..\..\Forms\Guides\MarginCategoryItemEdit.pas' {MarginCategoryItemEditForm: TParentForm},
+  Report_CheckUpdateNotMCS in '..\..\FormsFarmacy\Report\Report_CheckUpdateNotMCS.pas' {Report_CheckUpdateNotMCSForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

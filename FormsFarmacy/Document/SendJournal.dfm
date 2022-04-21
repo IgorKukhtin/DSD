@@ -589,6 +589,15 @@ inherited SendJournalForm: TSendJournalForm
       Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
       ImageIndex = 77
     end
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spGet_Options
+        end>
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSendForm'
     end
@@ -1672,7 +1681,7 @@ inherited SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'bbUpdate_AmountStorage'
         end
         item
           Visible = True
@@ -1767,7 +1776,7 @@ inherited SendJournalForm: TSendJournalForm
       Action = macPrintFilter
       Category = 0
     end
-    object dxBarButton1: TdxBarButton
+    object bbUpdate_AmountStorage: TdxBarButton
       Action = mactUpdate_AmountStorage
       Category = 0
     end
@@ -1927,6 +1936,13 @@ inherited SendJournalForm: TSendJournalForm
         Name = 'WayName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GroupByBox'
+        Value = Null
+        Component = cxGridDBTableView
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 400
@@ -2363,5 +2379,22 @@ inherited SendJournalForm: TSendJournalForm
     PackSize = 1
     Left = 824
     Top = 259
+  end
+  object spGet_Options: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Send_Options'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'GroupByBox'
+        Value = 42005d
+        Component = FormParams
+        ComponentItem = 'GroupByBox'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 728
+    Top = 155
   end
 end

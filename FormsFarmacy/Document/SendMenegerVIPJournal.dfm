@@ -133,6 +133,212 @@ inherited SendMenegerVIPJournalForm: TSendMenegerVIPJournalForm
         item
           DataSet = PrintItemsCDS
         end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport_find'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport1_ShowDialog'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ExportDirectory'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'FileDirectory'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FileNameExport'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PrefixFileNameExport'
+          Value = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' - '
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+    end
+    inherited actDataForTTNToXLS: TdsdExportToXLS
+      ColumnParams = <
+        item
+          Caption = #1053#1072#1087#1088#1077#1074#1083#1077#1085#1080#1077
+          FieldName = 'WayName'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1081' '#1090#1086#1074#1072#1088#1072
+          FieldName = 'GoodsCount'
+          DataType = ftInteger
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1048#1090#1086#1075#1086', '#1096#1090
+          FieldName = 'Amount'
+          DataType = ftCurrency
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1057#1088'. '#1094#1077#1085#1072', '#1075#1088#1085'.'
+          FieldName = 'Price'
+          DataType = ftCurrency
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1048#1090#1086#1075#1086', '#1075#1088#1085'.'
+          FieldName = 'Summ'
+          DataType = ftCurrency
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end>
+    end
+    inherited actSendWayNameChoice: TOpenChoiceForm
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'WayNameId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'WayName'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+    end
+    inherited actWayTTNToXLS: TdsdExportToXLS
+      FileNameParam.Value = ''
+      ColumnParams = <
+        item
+          Caption = #1050#1086#1076
+          FieldName = 'ObjectCode'
+          DataType = ftInteger
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+          FieldName = 'Name'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1048#1090#1086#1075#1086', '#1096#1090
+          FieldName = 'Amount'
+          DataType = ftCurrency
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1057#1088'. '#1094#1077#1085#1072', '#1075#1088#1085'.'
+          FieldName = 'Price'
+          DataType = ftCurrency
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1048#1090#1086#1075#1086', '#1075#1088#1085'.'
+          FieldName = 'Summ'
+          DataType = ftCurrency
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end>
     end
     object actPrintNew: TdsdPrintAction
       Category = 'DSDLib'
@@ -483,6 +689,13 @@ inherited SendMenegerVIPJournalForm: TSendMenegerVIPJournalForm
         Value = True
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GroupByBox'
+        Value = Null
+        Component = cxGridDBTableView
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
   end
   inherited spUpdate_Movement_DriverSun: TdsdStoredProc
@@ -501,6 +714,17 @@ inherited SendMenegerVIPJournalForm: TSendMenegerVIPJournalForm
         Component = FormParams
         ComponentItem = 'DriverSunId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited spGet_Options: TdsdStoredProc
+    Params = <
+      item
+        Name = 'GroupByBox'
+        Value = 42005d
+        Component = FormParams
+        ComponentItem = 'GroupByBox'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
   end

@@ -674,12 +674,24 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Properties.DisplayFormat = '0; -0; ;'
       Properties.ReadOnly = False
       TabOrder = 12
-      Width = 80
+      Width = 93
     end
     object cxLabel8: TcxLabel
       Left = 804
       Top = 47
       Caption = #1044#1085#1077#1081' '#1086#1090#1089#1088#1086#1095#1082#1080
+    end
+    object deDateSent: TcxDateEdit
+      Left = 804
+      Top = 23
+      EditValue = 43790d
+      TabOrder = 14
+      Width = 93
+    end
+    object cxLabel9: TcxLabel
+      Left = 804
+      Top = 6
+      Caption = #1044#1072#1090#1072' '#1086#1090#1087#1088#1072#1074#1082#1080
     end
   end
   object edStartSale: TcxDateEdit [2]
@@ -1991,6 +2003,12 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       ActionList = <
         item
           Action = mactSMTPSend
+        end
+        item
+          Action = actUpdate_Sent
+        end
+        item
+          Action = actCompleteMovement
         end>
       DataSource = ExportJuridicalDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1086#1090#1089#1099#1083#1082#1077' E-mail '#1087#1086' '#1074#1089#1077#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084'?'
@@ -2013,6 +2031,17 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       FileName.MultiSelectSeparator = ','
       StartColumns = 1
       Caption = 'actLoadListUnit'
+    end
+    object actUpdate_Sent: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Sent
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Sent
+        end>
+      Caption = 'actUpdate_Sent'
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -2532,6 +2561,13 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Name = 'DaysGrace'
         Value = Null
         Component = ceDaysGrace
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateSent'
+        Value = Null
+        Component = deDateSent
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 160
@@ -3822,5 +3858,23 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     PackSize = 1
     Left = 944
     Top = 264
+  end
+  object spUpdate_Sent: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderInternalPromo_Sent'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    Left = 576
+    Top = 144
   end
 end

@@ -31,13 +31,13 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
       Caption = #1044#1072#1090#1072' '#1089' :'
     end
     object cxLabel1: TcxLabel
-      Left = 278
-      Top = 34
+      Left = 157
+      Top = 7
       Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103':'
     end
     object edServiceDate: TcxDateEdit
-      Left = 380
-      Top = 33
+      Left = 259
+      Top = 6
       EditValue = 44197d
       Properties.DisplayFormat = 'mmmm yyyy'
       Properties.SaveTime = False
@@ -51,6 +51,23 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
       Caption = #1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
       TabOrder = 4
       Width = 87
+    end
+    object cxLabel5: TcxLabel
+      Left = 315
+      Top = 34
+      Caption = #1057#1090#1072#1090#1100#1103' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076':'
+    end
+    object ceInfoMoney: TcxButtonEdit
+      Left = 442
+      Top = 33
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = False
+      TabOrder = 6
+      Width = 257
     end
   end
   object deEnd: TcxDateEdit [1]
@@ -67,12 +84,12 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object cxLabel6: TcxLabel [3]
-    Left = 171
+    Left = 353
     Top = 7
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object edUnit: TcxButtonEdit [4]
-    Left = 260
+    Left = 442
     Top = 6
     Properties.Buttons = <
       item
@@ -81,7 +98,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
       end>
     Properties.ReadOnly = True
     TabOrder = 4
-    Width = 349
+    Width = 257
   end
   object ScrollBox: TScrollBox [5]
     Left = 0
@@ -228,14 +245,18 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'JuridicalOurId'
+          Name = 'InfoMoneyId'
           Value = ''
+          Component = GuidesInfoMoney
+          ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'JuridicalOurName'
+          Name = 'InfoMoneyName'
           Value = ''
+          Component = GuidesInfoMoney
+          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -284,6 +305,17 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
       Hint = #1053#1072' '#1091#1088#1086#1074#1077#1085#1100' '#1074#1099#1096#1077
       ImageIndex = 10
     end
+    object actGet_Cash_Last: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Cash_Last
+      StoredProcList = <
+        item
+          StoredProc = spGet_Cash_Last
+        end>
+      Caption = 'actGet_Cash_Last'
+    end
     object actInsertUpdate_Object_Position: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -301,6 +333,147 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1088#1072#1089#1087#1086#1083#1086#1078#1077#1085#1080#1077' '#1080' '#1088#1072#1079#1084#1077#1088' '#1077#1095#1077#1077#1082
       ImageIndex = 43
       QuestionBeforeExecute = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1088#1072#1089#1087#1086#1083#1086#1078#1077#1085#1080#1077' '#1080' '#1088#1072#1079#1084#1077#1088' '#1077#1095#1077#1077#1082'?'
+    end
+    object actInsertCash: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1054#1087#1083#1072#1090#1091
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1054#1087#1083#1072#1090#1091
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TCashMovementForm'
+      FormNameParam.Value = 'TCashMovementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_Value'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMI_Id'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 43831d
+          Component = edServiceDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKindName'
+          Value = 'zc_Enum_InfoMoney_In'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKindName_text'
+          Value = #1055#1056#1048#1061#1054#1044
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdateCash: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1089#1083#1077#1076#1085#1102#1102' '#1086#1087#1083#1072#1090#1091
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1089#1083#1077#1076#1085#1102#1102' '#1086#1087#1083#1072#1090#1091
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TCashMovementForm'
+      FormNameParam.Value = 'TCashMovementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MovementId_cash'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMI_Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MI_Id_cash'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 43831d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_Value'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MovementId_cash'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKindName'
+          Value = 'zc_Enum_InfoMoney_In'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKindName_text'
+          Value = #1055#1056#1048#1061#1054#1044
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object macUpdateCash: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Cash_Last
+        end
+        item
+          Action = actUpdateCash
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1089#1083#1077#1076#1085#1102#1102' '#1086#1087#1083#1072#1090#1091
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1089#1083#1077#1076#1085#1102#1102' '#1086#1087#1083#1072#1090#1091
+      ImageIndex = 1
     end
   end
   object GuidesUnit: TdsdGuides [10]
@@ -329,8 +502,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 536
-    Top = 16
+    Left = 488
   end
   object PeriodChoice: TPeriodChoice [11]
     DateStart = edDateStart
@@ -366,6 +538,13 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
       item
         Name = 'NewHeight'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKindName'
+        Value = 'zc_Enum_InfoMoney_In'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 182
@@ -407,6 +586,14 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         Name = 'inUnitGroupId'
         Value = ''
         Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -498,6 +685,18 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertCash'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateCash'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdate_Object_Position_All'
         end>
       OneOnRow = True
@@ -545,6 +744,14 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
     end
     object bbInsertUpdate_Object_Position_All: TdxBarButton
       Action = actInsertUpdate_Object_Position_All
+      Category = 0
+    end
+    object bbInsertCash: TdxBarButton
+      Action = actInsertCash
+      Category = 0
+    end
+    object bbUpdateCash: TdxBarButton
+      Action = macUpdateCash
       Category = 0
     end
   end
@@ -767,5 +974,90 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
     PackSize = 1
     Left = 56
     Top = 335
+  end
+  object GuidesInfoMoney: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoneyForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoneyForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'iniService'
+        Value = True
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParentId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParentName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 608
+    Top = 21
+  end
+  object spGet_Cash_Last: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Cash_Last'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMovementId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'MovementId_cash'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMI_Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MI_Id_cash'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 616
+    Top = 151
   end
 end

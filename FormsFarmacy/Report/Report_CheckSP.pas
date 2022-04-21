@@ -106,6 +106,7 @@ type
     mactCheckingChecks: TMultiAction;
     actCheckingChecks: TdsdOpenForm;
     dxBarButton2: TdxBarButton;
+    IdSP: TcxGridDBColumn;
   private
     { Private declarations }
   public

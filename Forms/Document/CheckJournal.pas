@@ -101,6 +101,7 @@ type
     isErrorRRO: TcxGridDBColumn;
     isAutoVIPforSales: TcxGridDBColumn;
     isPaperRecipeSP: TcxGridDBColumn;
+    ConfirmationCodeSP: TcxGridDBColumn;
   private
     { Private declarations }
   public

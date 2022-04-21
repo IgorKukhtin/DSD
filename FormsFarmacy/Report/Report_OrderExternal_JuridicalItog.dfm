@@ -1,27 +1,27 @@
 inherited Report_OrderExternal_JuridicalItogForm: TReport_OrderExternal_JuridicalItogForm
   Caption = #1054#1090#1095#1077#1090' <'#1048#1090#1086#1075#1080' '#1087#1086' '#1102#1088'. '#1083#1080#1094#1072#1084'>'
   ClientHeight = 480
-  ClientWidth = 1086
+  ClientWidth = 1250
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1102
+  ExplicitWidth = 1266
   ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 1086
+    Width = 1250
     Height = 421
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1086
     ExplicitHeight = 421
     ClientRectBottom = 421
-    ClientRectRight = 1086
+    ClientRectRight = 1250
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1086
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
-        Width = 1086
+        Width = 1250
         Height = 421
         ExplicitWidth = 1086
         ExplicitHeight = 421
@@ -245,6 +245,16 @@ inherited Report_OrderExternal_JuridicalItogForm: TReport_OrderExternal_Juridica
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = SummLeft
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummWithNDSOIP
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummWithNDSAll
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -375,12 +385,32 @@ inherited Report_OrderExternal_JuridicalItogForm: TReport_OrderExternal_Juridica
             Options.Editing = False
             Width = 70
           end
+          object SummWithNDSOIP: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082#1077#1090' '#1079#1072#1082#1072#1079' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'SummWithNDSOIP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 72
+          end
+          object SummWithNDSAll: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086'  '#1087#1086#1089#1090#1091#1087#1080#1083#1086'  + '#1052#1072#1088#1082#1077#1090' '#1079#1072#1082#1072#1079' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'SummWithNDSAll'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1086
+    Width = 1250
     Height = 33
     ExplicitWidth = 1086
     ExplicitHeight = 33

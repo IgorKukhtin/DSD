@@ -1,12 +1,15 @@
 -- Function: gpGet_Movement_Cash()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, Integer, TDateTime, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, Integer, Integer, TDateTime, TVarChar, TVarChar);
-
+--DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, Integer, Integer, TDateTime, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar, TVarChar);
+ 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Cash(
     IN inMovementId        Integer  , -- ключ Документа
     IN inMovementId_Value  Integer  ,
-    IN inMI_Id             Integer  , --Мастер
+    IN inMI_Id             Integer  , --Мастер 
+    IN inUnitId            Integer  , -- отдел
+    IN inInfoMoneyId       Integer  , -- статья
     IN inOperDate          TDateTime, -- дата Документа
     IN inKindName          TVarChar  , --
     IN inSession           TVarChar   -- сессия пользователя
@@ -37,24 +40,35 @@ BEGIN
      RETURN QUERY 
        SELECT
              0 AS Id
-           , CAST (NEXTVAL ('movement_Cash_seq') AS TVarChar)  AS InvNumber
-           , CAST (CURRENT_DATE AS TDateTime)                  AS OperDate
+           , CAST (NEXTVAL ('movement_cash_seq') AS TVarChar)  AS InvNumber
+           , tmp.OperDate                     :: TDateTime     AS OperDate
            , DATE_TRUNC ('MONTH', inOperDate) :: TDateTime     AS ServiceDate
            , FALSE :: Boolean                                  AS isSign
            , 0::TFloat                                         AS Amount
            , 0                                                 AS MI_Id
            , 0                                                 AS CashId
            , CAST ('' as TVarChar)                             AS CashName
-           , 0                                                 AS UnitId
-           , CAST ('' as TVarChar)                             AS UnitName
-           , 0                                                 AS ParentId_InfoMoney
-           , CAST ('' as TVarChar)                             AS ParentName_InfoMoney
-           , 0                                                 AS InfoMoneyId
-           , CAST ('' as TVarChar)                             AS InfoMoneyName
+           , Object_Unit.Id                                    AS UnitId
+           , Object_Unit.ValueData            ::TVarChar       AS UnitName
+           , Object_Parent.Id                                  AS ParentId_InfoMoney
+           , Object_Parent.ValueData          ::TVarChar       AS ParentName_InfoMoney
+           , Object_InfoMoney.Id                               AS InfoMoneyId
+           , Object_InfoMoney.ValueData       ::TVarChar       AS InfoMoneyName
            , 0                                                 AS InfoMoneyDetailId
            , CAST ('' as TVarChar)                             AS InfoMoneyDetailName
            , 0                                                 AS CommentInfoMoneyId
            , ''::TVarChar                                      AS CommentInfoMoneyName
+       FROM (SELECT CAST (CURRENT_DATE AS TDateTime) AS OperDate) AS tmp
+           LEFT JOIN Object AS Object_Unit
+                            ON Object_Unit.DescId = zc_Object_Unit()
+                           AND Object_Unit.Id = inUnitId
+           LEFT JOIN Object AS Object_InfoMoney
+                            ON Object_InfoMoney.DescId = zc_Object_InfoMoney()
+                           AND Object_InfoMoney.Id = inInfoMoneyId    
+           LEFT JOIN ObjectLink AS ObjectLink_Parent
+                                ON ObjectLink_Parent.ObjectId = Object_InfoMoney.Id
+                               AND ObjectLink_Parent.DescId = zc_ObjectLink_InfoMoney_Parent()
+           LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Parent.ChildObjectId       
       ;
      ELSE
      
@@ -79,7 +93,7 @@ BEGIN
            , Object_InfoMoneyDetail.ValueData   AS InfoMoneyDetailName
            , Object_CommentInfoMoney.Id         AS CommentInfoMoneyId
            , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
-       FROM Movement
+       FROM Movement                                                                                     0
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND MovementItem.Id = inMI_Id

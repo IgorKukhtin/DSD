@@ -69,6 +69,7 @@ uses
 begin
   dsdProject := prFarmacy;
   ConnectionPath := '..\INIT\farmacy_init.php';
+  gc_ProgramName := 'Farmacy.exe';
 
   if FindCmdLineSwitch('realfarmacy', true)
   then gc_AdminPassword := 'Админ1234'

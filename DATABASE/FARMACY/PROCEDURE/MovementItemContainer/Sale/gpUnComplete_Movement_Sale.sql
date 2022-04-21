@@ -36,7 +36,8 @@ BEGIN
                                          AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
         WHERE Movement.Id = inMovementId) = zc_Enum_SPKind_1303()                    -- Постановление 1303
     THEN
-      IF  (vbUserId <> 235009) AND (vbUserId <> 3)
+      IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) AND 
+         (vbUserId <> 235009) AND (vbUserId <> 3) AND (vbUserId <> 183242)
       THEN
         RAISE EXCEPTION 'Распроведение Продажи Постановление 1303 вам запрещено.';
       END IF;

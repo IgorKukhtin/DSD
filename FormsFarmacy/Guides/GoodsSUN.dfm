@@ -414,7 +414,7 @@ inherited GoodsSUNForm: TGoodsSUNForm
             Width = 79
           end
           object UnitSupplementSUN1OutName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1057#1059#1053' - 1'
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' 1 '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1057#1059#1053'1'
             DataBinding.FieldName = 'UnitSupplementSUN1OutName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -422,12 +422,12 @@ inherited GoodsSUNForm: TGoodsSUNForm
             Width = 135
           end
           object UnitSupplementSUN2OutName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1057#1059#1053' - 2'
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' 2 '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1057#1059#1053'1'
             DataBinding.FieldName = 'UnitSupplementSUN2OutName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 129
+            Width = 140
           end
           object isSupplementSmudge: TcxGridDBColumn
             Caption = #1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1 '#1088#1072#1079#1084#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088

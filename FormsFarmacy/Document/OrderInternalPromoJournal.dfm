@@ -222,6 +222,14 @@ inherited OrderInternalPromoJournalForm: TOrderInternalPromoJournalForm
             Options.Editing = False
             Width = 83
           end
+          object DateSent: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1090#1087#1088#1072#1074#1082#1080
+            DataBinding.FieldName = 'DateSent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 77
+          end
         end
       end
     end

@@ -242,6 +242,8 @@ begin
       if (ArrayList[i].UserName = UserName) and (System.Pos(AnsiUpperCase(JuridicalMail), AnsiUpperCase(ArrayList[i].JuridicalMail)) > 0)
          and (ArrayList[i].AreaId   = AreaId)
       then begin Result:=i;break;end;
+     // Добавили в лог
+    AddToLog('Поиск отправителя: <' + UserName + '> <' + JuridicalMail + '> <' + IntToStr(AreaId) + '> <' + IntToStr(Result) + '>');
     //
     // проверка - текущее время
     if Result >=0 then

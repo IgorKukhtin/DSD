@@ -239,6 +239,7 @@ type
     actGetImportSetting_Goods_inSupplementSUN2: TdsdExecStoredProc;
     spGetImportSetting_Goods_inSupplementSUN2: TdsdStoredProc;
     dxBarButton22: TdxBarButton;
+    cxGridDBColumn1: TcxGridDBColumn;
   private
     { Private declarations }
   public

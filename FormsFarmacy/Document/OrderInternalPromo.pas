@@ -201,6 +201,10 @@ type
     mactSMTPSendGroup: TMultiAction;
     actGetDocumentDataForEmailGroup: TdsdExecStoredProc;
     SMTPAction: TdsdSMTPAction;
+    spUpdate_Sent: TdsdStoredProc;
+    actUpdate_Sent: TdsdExecStoredProc;
+    deDateSent: TcxDateEdit;
+    cxLabel9: TcxLabel;
   private
     { Private declarations }
   public
