@@ -4,7 +4,7 @@
   ClientHeight = 427
   ClientWidth = 341
   ExplicitWidth = 357
-  ExplicitHeight = 465
+  ExplicitHeight = 466
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -373,6 +373,22 @@
         Value = Null
         Component = FormParams
         ComponentItem = 'inMI_Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

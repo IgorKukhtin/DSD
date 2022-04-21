@@ -3,7 +3,7 @@ object Report_UnitRentDialogForm: TReport_UnitRentDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1087#1086' '#1040#1088#1077#1085#1076#1077'>'
-  ClientHeight = 202
+  ClientHeight = 235
   ClientWidth = 353
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@ object Report_UnitRentDialogForm: TReport_UnitRentDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 26
-    Top = 149
+    Left = 55
+    Top = 197
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_UnitRentDialogForm: TReport_UnitRentDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 200
-    Top = 149
+    Left = 229
+    Top = 197
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -103,6 +103,23 @@ object Report_UnitRentDialogForm: TReport_UnitRentDialogForm
     Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
     Visible = False
   end
+  object cxLabel5: TcxLabel
+    Left = 26
+    Top = 138
+    Caption = #1057#1090#1072#1090#1100#1103' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
+  end
+  object ceInfoMoney: TcxButtonEdit
+    Left = 26
+    Top = 157
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = False
+    TabOrder = 12
+    Width = 287
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -175,6 +192,23 @@ object Report_UnitRentDialogForm: TReport_UnitRentDialogForm
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 311
     Top = 126
@@ -208,6 +242,7 @@ object Report_UnitRentDialogForm: TReport_UnitRentDialogForm
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
+    LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoneyForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -248,7 +283,7 @@ object Report_UnitRentDialogForm: TReport_UnitRentDialogForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 216
-    Top = 142
+    Left = 208
+    Top = 158
   end
 end

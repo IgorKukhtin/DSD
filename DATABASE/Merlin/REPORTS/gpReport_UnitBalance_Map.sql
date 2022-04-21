@@ -2,13 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpReport_UnitBalance_Map (TDateTime, TDateTime, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_UnitBalance_Map (TDateTime, TDateTime, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_UnitBalance_Map (TDateTime, TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_UnitBalance_Map(
     IN inStartDate    TDateTime , -- 
     IN inEndDate      TDateTime , -- мес€ц начислений
     IN inServiceDate  TDateTime , -- мес€ц начислений
     IN inUnitGroupId  Integer,
-    --IN inInfoMoneyId  Integer,
+    IN inInfoMoneyId  Integer,
 	IN inisAll        Boolean,
     IN inSession      TVarChar    -- сесси€ пользовател€
 )
@@ -108,7 +109,7 @@ BEGIN
                                              , inEndDate     := inEndDate    
                                              , inServiceDate := inServiceDate
                                              , inUnitGroupId := inUnitGroupId
-                                             , inInfoMoneyId := 0
+                                             , inInfoMoneyId := inInfoMoneyId
                                              , inisAll       := inisAll
                                              , inSession     := inSession) AS tmp  
                    GROUP BY tmp.UnitId 
@@ -182,7 +183,7 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_UnitBalance_Map (inStartDate := '01.12.2021', inEndDate:= '01.02.2022', inServiceDate:= '01.12.2021', inUnitGroupId:= 52460,inisAll:=true ,inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_UnitBalance_Map (inStartDate := '01.12.2021', inEndDate:= '01.02.2022', inServiceDate:= '01.12.2021', inUnitGroupId:= 52460,inisAll:=true, inInfoMoneyId:=0 ,inSession:= zfCalc_UserAdmin())
 
 
 
