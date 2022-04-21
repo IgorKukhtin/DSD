@@ -201,6 +201,8 @@ begin
          ParamByName('PriceListCode').AsInteger := DataSet.FieldByName('PriceListCode').asInteger;
          ParamByName('PriceListName').asString  := DataSet.FieldByName('PriceListName').asString;
 
+         ParamByName('isContractGoods').AsBoolean:= DataSet.FieldByName('isContractGoods').AsBoolean;
+
          ParamByName('TotalSumm').asFloat:= DataSet.FieldByName('TotalSumm').asFloat;
 
          ParamsReason.ParamByName('ReasonId').AsInteger:= DataSet.FieldByName('ReasonId').AsInteger;
@@ -1065,6 +1067,8 @@ begin
                ParamByName('PriceListId').AsInteger   := DataSet.FieldByName('PriceListId').asInteger;
                ParamByName('PriceListCode').AsInteger := DataSet.FieldByName('PriceListCode').asInteger;
                ParamByName('PriceListName').asString  := DataSet.FieldByName('PriceListName').asString;
+
+               ParamByName('isContractGoods').AsBoolean:= DataSet.FieldByName('isContractGoods').AsBoolean;
          end
          else ShowMessage('Ошибка.Параметры не определены.<gpGet_Scale_PartnerParams>');
 
@@ -1211,6 +1215,9 @@ begin
          ParamByName('PriceListId').AsInteger   := DataSet.FieldByName('PriceListId').asInteger;
          ParamByName('PriceListCode').AsInteger := DataSet.FieldByName('PriceListCode').asInteger;
          ParamByName('PriceListName').asString  := DataSet.FieldByName('PriceListName').asString;
+
+         ParamByName('isContractGoods').AsBoolean:= DataSet.FieldByName('isContractGoods').AsBoolean;
+
        end;
 
 

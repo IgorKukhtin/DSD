@@ -1334,8 +1334,8 @@ object GuideGoodsForm: TGuideGoodsForm
         Caption = #1042#1074#1086#1076' '#1050#1054#1051#1048#1063#1045#1057#1058#1042#1054
         TabOrder = 3
         object EditWeightValue: TcxCurrencyEdit
-          Left = 5
-          Top = 18
+          Left = 4
+          Top = 15
           Properties.Alignment.Horz = taRightJustify
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True

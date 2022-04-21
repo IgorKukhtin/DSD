@@ -258,6 +258,7 @@ begin
      ParamAdd(Params,'calcPartnerName',ftString);
      ParamAdd(Params,'ChangePercentAmount',ftFloat);
      ParamAdd(Params,'ChangePercent',ftFloat);
+     ParamAddValue(Params,'isContractGoods',ftBoolean, FALSE);//
 
      ParamAdd(Params,'isTransport_link',ftBoolean);
      ParamAdd(Params,'TransportId',ftInteger);

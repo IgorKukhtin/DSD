@@ -307,7 +307,9 @@ begin
      end
      else
      if (execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
-     and(SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 301)
+     and(((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 301))
+      or (execParamsMovement.ParamByName('isContractGoods').AsBoolean = TRUE)
+        )
    //and (1=0)
      then
      with spSelect do
@@ -832,6 +834,13 @@ begin
        //ПРОВЕРКА - Ввод ЦЕНА
        if gbPrice.Visible then
        begin
+            //
+            if ((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+              or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut))
+              and (CDS.FieldByName('Price_Income').AsFloat > 0)
+            then begin
+                  EditPrice.Text:= FloatToStr(CDS.FieldByName('Price_Income').AsFloat);
+            end;
             //!!!Криво - передаем цену через этот параметр!!!
             try ParamsMI.ParamByName('BoxCount').AsFloat:= StrToFloat(EditPrice.Text);
             except
@@ -1061,6 +1070,15 @@ begin if(Key='+')then Key:=#0;end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditWeightValueExit(Sender: TObject);
 begin
+     //
+     if ((ActiveControl=EditPrice)and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+       or(ActiveControl=EditPrice)and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut)
+        )
+       and (CDS.FieldByName('Price_Income').AsFloat > 0)
+     then begin
+           EditPrice.Text:= FloatToStr(CDS.FieldByName('Price_Income').AsFloat);
+     end;
+     //
      if ((CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Kg)
      and ((SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310))
         )
@@ -1068,14 +1086,9 @@ begin
       and(ParamsMI.ParamByName('RealWeight_Get').AsFloat > 0)
       and(CDS.FieldByName('Weight').AsFloat > 0)
       and(CDS.RecordCount = 1)
+      and(ActiveControl<>EditWeightValue)
         )
      then exit;
-     //
-      if (ActiveControl=EditPrice)and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
-        and (CDS.FieldByName('Price_Income').AsFloat > 0)
-      then begin
-            EditPrice.Text:= FloatToStr(CDS.FieldByName('Price_Income').AsFloat);
-      end;
      //
      if (trim(EditGoodsCode.Text) = '')
      and(trim(EditGoodsName.Text) = '')
