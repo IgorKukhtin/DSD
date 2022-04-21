@@ -50,8 +50,8 @@ BEGIN
            , CAST ('' as TVarChar)                             AS CashName
            , Object_Unit.Id                                    AS UnitId
            , Object_Unit.ValueData            ::TVarChar       AS UnitName
-           , 0                                                 AS ParentId_InfoMoney
-           , CAST ('' as TVarChar)                             AS ParentName_InfoMoney
+           , Object_Parent.Id                                  AS ParentId_InfoMoney
+           , Object_Parent.ValueData          ::TVarChar       AS ParentName_InfoMoney
            , Object_InfoMoney.Id                               AS InfoMoneyId
            , Object_InfoMoney.ValueData       ::TVarChar       AS InfoMoneyName
            , 0                                                 AS InfoMoneyDetailId
@@ -64,7 +64,11 @@ BEGIN
                            AND Object_Unit.Id = inUnitId
            LEFT JOIN Object AS Object_InfoMoney
                             ON Object_InfoMoney.DescId = zc_Object_InfoMoney()
-                           AND Object_InfoMoney.Id = inInfoMoneyId           
+                           AND Object_InfoMoney.Id = inInfoMoneyId    
+           LEFT JOIN ObjectLink AS ObjectLink_Parent
+                                ON ObjectLink_Parent.ObjectId = Object_InfoMoney.Id
+                               AND ObjectLink_Parent.DescId = zc_ObjectLink_InfoMoney_Parent()
+           LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Parent.ChildObjectId       
       ;
      ELSE
      
