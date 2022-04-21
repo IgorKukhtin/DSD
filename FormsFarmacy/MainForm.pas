@@ -938,6 +938,9 @@ type
     N13032: TMenuItem;
     actNewUser: TdsdOpenForm;
     N148: TMenuItem;
+    actReport_CheckUpdateNotMCS: TdsdOpenForm;
+    N347: TMenuItem;
+    N348: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

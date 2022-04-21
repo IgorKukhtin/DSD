@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer
              , RetailName TVarChar
              , Comment TVarChar
              , DaysGrace Integer
+             , DateSent TDateTime
              )
 AS
 $BODY$
@@ -45,6 +46,7 @@ BEGIN
           , NULL::TVarChar                                   AS RetailName
           , NULL::TVarChar                                   AS Comment
           , 0   :: Integer                                   AS DaysGrace
+          , NULL::TDateTime                                  AS DateSent
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
   
    ELSE
@@ -64,6 +66,7 @@ BEGIN
           , Object_Retail.ValueData                                        AS RetailName
           , MovementString_Comment.ValueData                               AS Comment
           , COALESCE (MovementFloat_DaysGrace.ValueData,0)      :: Integer AS DaysGrace
+          , MovementDate_Sent.ValueData                                    AS DateSent
      FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -90,6 +93,9 @@ BEGIN
         LEFT JOIN MovementDate AS MovementDate_StartSale
                                ON MovementDate_StartSale.MovementId = Movement.Id
                               AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+        LEFT JOIN MovementDate AS MovementDate_Sent
+                               ON MovementDate_Sent.MovementId = Movement.Id
+                              AND MovementDate_Sent.DescId = zc_MovementDate_Sent()
 
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Retail
                                      ON MovementLinkObject_Retail.MovementId = Movement.Id

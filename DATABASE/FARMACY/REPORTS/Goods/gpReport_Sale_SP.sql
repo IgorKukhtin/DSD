@@ -902,8 +902,8 @@ BEGIN
            , tmpMIGoodsSP_1303.PriceSale :: TFloat                                                            AS PriceOOC
            , ROUND(tmpMIGoodsSP_1303.PriceSale * tmpData.Amount * tmpData.ChangePercent / 100.0, 2) :: TFloat AS SumCompOOC
                    
-           , (ROUND(tmpMIGoodsSP_1303.PriceSale * tmpData.Amount * tmpData.ChangePercent / 100.0, 2) :: TFloat - 
-                   CAST ((tmpData.SummOriginal - tmpData.SummSale) AS NUMERIC (16,2))  :: TFloat )::TFloat   AS DSummaSP
+           , NULLIF(ROUND(tmpMIGoodsSP_1303.PriceSale * tmpData.Amount * tmpData.ChangePercent / 100.0, 2) :: TFloat - 
+                   CAST ((tmpData.SummOriginal - tmpData.SummSale) AS NUMERIC (16,2))  :: TFloat , 0)::TFloat   AS DSummaSP
            , CASE WHEN COALESCE(tmpMIGoodsSP_1303.PriceSale, 0)= 0  THEN zfCalc_Color(255, 165, 0)
                   WHEN tmpData.isUsePriceOOC = TRUE AND
                        ROUND(tmpMIGoodsSP_1303.PriceSale * tmpData.Amount * tmpData.ChangePercent / 100.0, 2) :: TFloat >=
@@ -1009,4 +1009,4 @@ $BODY$
 -- SELECT * FROM gpReport_Sale_SP (inStartDate:= '01.09.2019', inEndDate:= '05.09.2019', inJuridicalId:= 0, inUnitId:= 0, inHospitalId:= 0, inGroupMemberSPId:= 0, inPercentSP:= 0, inisGroupMemberSP:= TRUE, inSession:= zfCalc_UserAdmin());
 
 
-select * from gpReport_Sale_SP(inStartDate := ('01.04.2022')::TDateTime , inEndDate := ('30.04.2022')::TDateTime , inJuridicalId := 0 , inUnitId := 377605  , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0 ,  inSession := '3');
+select * from gpReport_Check_SP(inStartDate := ('01.04.2022')::TDateTime , inEndDate := ('15.04.2022')::TDateTime , inJuridicalId := 393038 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 0 , inMedicalProgramSPId := 0 , inGroupMedicalProgramSPId := 0 ,  inSession := '3');

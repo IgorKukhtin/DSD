@@ -949,6 +949,14 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Options.Editing = False
             VisibleForCustomization = False
           end
+          object IdSP: TcxGridDBColumn
+            Caption = 'ID '#1083#1110#1082#1072#1088'. '#1079#1072#1089#1086#1073#1091
+            DataBinding.FieldName = 'IdSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 111
+          end
         end
       end
       object cbisInsert: TcxCheckBox
@@ -1882,6 +1890,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
           Action = actCheckingChecks
         end>
       Caption = #1057#1074#1077#1088#1080#1090#1100' '#1095#1077#1082#1080' '#1089' '#1092#1072#1081#1083#1086#1084' '#1089' '#1089#1072#1081#1090#1072
+      Hint = #1057#1074#1077#1088#1080#1090#1100' '#1095#1077#1082#1080' '#1089' '#1092#1072#1081#1083#1086#1084' '#1089' '#1089#1072#1081#1090#1072
       ImageIndex = 30
     end
   end

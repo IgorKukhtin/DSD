@@ -35,6 +35,7 @@ type
     DaysGrace: TcxGridDBColumn;
     DatePayment: TcxGridDBColumn;
     DateInsert: TcxGridDBColumn;
+    DateSent: TcxGridDBColumn;
   private
     { Private declarations }
   public

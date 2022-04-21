@@ -114,7 +114,7 @@ type
     isSendLossFrom: TcxGridDBColumn;
     spUpdate_AmountStorage: TdsdStoredProc;
     actUpdate_AmountStorage: TdsdExecStoredProc;
-    dxBarButton1: TdxBarButton;
+    bbUpdate_AmountStorage: TdxBarButton;
     mactUpdate_AmountStorage: TMultiAction;
     actDataToJson: TdsdDataToJsonAction;
     actDataForTTNToXLS: TdsdExportToXLS;
@@ -129,6 +129,7 @@ type
     mactWayTTNToXLS: TMultiAction;
     spSelect_WayTTN: TdsdStoredProc;
     bbWayTTNToXLS: TdxBarButton;
+    spGet_Options: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -52,6 +52,8 @@ type
     AmountLeft: TcxGridDBColumn;
     SummLeft: TcxGridDBColumn;
     SummWithNDSLeft: TcxGridDBColumn;
+    SummWithNDSOIP: TcxGridDBColumn;
+    SummWithNDSAll: TcxGridDBColumn;
   private
     { Private declarations }
   public

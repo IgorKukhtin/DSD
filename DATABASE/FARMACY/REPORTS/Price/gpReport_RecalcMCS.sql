@@ -1,15 +1,21 @@
--- Function: gpRecalcMCS (Integer, Integer, Integer, TVarChar)
+-- Function: gpReport_RecalcMCS (Integer, Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpRecalcMCS (Integer, Integer, Integer, TVarChar, Boolean);
+DROP FUNCTION IF EXISTS gpReport_RecalcMCS (Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpRecalcMCS(
+CREATE OR REPLACE FUNCTION gpReport_RecalcMCS(
     IN inUnitId              Integer   , -- Подразделение
     IN inPeriod              Integer   , -- С какого дня
     IN inDay                 Integer   , -- Сколько дней брать в расчет
-    IN inSession             TVarChar  , -- сессия пользователя
-    IN inisSUN               Boolean  = FALSE  -- Расчет для СУН
+    IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Void
+RETURNS TABLE (Id Integer
+             , GoodsCode Integer
+             , GoodsName TVarChar
+             , MCSValue TFloat
+             , MaxSold TFloat
+             , SoldAVE TFloat
+             , SoldMax TFloat
+             )
 AS
 $BODY$
     DECLARE vbCounter integer;
@@ -156,6 +162,7 @@ BEGIN
         GoodsId integer not null,
         Period  Integer not null,
         Sold    TFloat  not null,
+        Ord     Integer not null,
         primary key(GoodsId,Period)
     ) ON COMMIT DROP;
         
@@ -189,11 +196,12 @@ BEGIN
         and 
         DST.NumberOfDay = SRC.DayCount;
     
-    INSERT INTO tmp_ResultSet(GoodsId,Period,Sold)
+    INSERT INTO tmp_ResultSet(GoodsId,Period,Sold,Ord)
     SELECT 
         S1.GoodsId, 
         S1.NumberOfDay, 
-        SUM(S2.SoldCount)
+        SUM(S2.SoldCount),
+        ROW_NUMBER() OVER (PARTITION BY S1.GoodsId ORDER BY SUM(S2.SoldCount) DESC) AS Ord
     FROM 
         tmp_SoldGoodsOneDay AS S1
         LEFT OUTER JOIN tmp_SoldGoodsOneDay AS S2
@@ -203,27 +211,16 @@ BEGIN
     GROUP BY 
         S1.GoodsId,
         S1.NumberOfDay;
-
-    PERFORM gpInsertUpdate_Object_Price(ioId           := 0,                    -- ключ объекта < Цена >
-                                        ioStartDate    := zc_dateEnd(),         -- 
-                                        inPrice        := NULL::TFloat,         -- цена
-                                        inMCSValue     := MAX(Sold)::TFloat,    -- Неснижаемый товарный запас
-                                        inMCSValueSun  := CASE WHEN COALESCE (inisSUN, FALSE) = TRUE THEN MAX(Sold) ELSE NULL END::TFloat, 
-                                        inMCSValue_min := Object_Price.MCSValue_min ::TFloat,     --
-                                        inMCSPeriod    := inPeriod::TFloat,     --
-                                        inMCSDay       := inDay::TFloat,        --
-                                        inPercentMarkup:= Object_Price.PercentMarkup, -- % наценки
-                                        inDays         := 0    ::TFloat,        -- дней для периода
-                                        inGoodsId      := tmp_ResultSet.GoodsId,-- Товар
-                                        inUnitId       := inUnitId,             -- подразделение
-                                        inMCSIsClose   := NULL::Boolean,        -- НТЗ закрыт
-                                        ioMCSNotRecalc := NULL::Boolean,        -- НТЗ не пересчитывается
-                                        inFix          := Object_Price.Fix,     -- фиксированная цена
-                                        inisTop        := Object_Price.isTop,   -- ТОП позиция
-                                        inisMCSAuto    := False,                -- НТЗ за период
-                                        inSession      := inSession)
-    FROM 
-        tmp_ResultSet
+        
+    RETURN QUERY
+    SELECT tmp_ResultSet.GoodsId
+         , Object_Goods_Main.ObjectCode
+         , Object_Goods_Main.Name
+         , Object_Price.MCSValue
+         , Max(tmp_ResultSet.Sold)::TFloat AS Sold
+         , Max(tmpAVE.SoldAVE)::TFloat     AS SoldAVE
+         , Max(tmpAVE.SoldMax)::TFloat     AS SoldMax
+    FROM tmp_ResultSet 
         INNER JOIN tmpPrice AS Object_Price
                             ON Object_Price.GoodsId = tmp_ResultSet.GoodsId
                            AND Object_Price.UnitId = inUnitId 
@@ -234,37 +231,31 @@ BEGIN
                     WHERE tmp_ResultSet.Sold <> 0
                     GROUP BY tmp_ResultSet.GoodsId) AS tmpAVE
                                                     ON tmpAVE.GoodsId = tmp_ResultSet.GoodsId
+        INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = tmp_ResultSet.GoodsId
+        INNER JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainID
     WHERE tmp_ResultSet.Sold <= (tmpAVE.SoldAVE * 2)::TFloat
-    GROUP BY
-        tmp_ResultSet.GoodsId,
-        Object_Price.MCSValue,
-        Object_Price.MCSValue_min,
-        Object_Price.isTop,
-        Object_Price.PercentMarkup,
-        Object_Price.Fix
-    HAVING  COALESCE(MAX(Sold),0)::TFloat <> COALESCE(Object_Price.MCSValue,0);
-
-    -- !!!ВРЕМЕННО для ТЕСТА!!!
-    /*IF inSession = zfCalc_UserAdmin()
-    THEN
-        RAISE EXCEPTION 'Тест прошел успешно для <%>', inSession;
-    END IF;*/
-            
+    GROUP BY tmp_ResultSet.GoodsId
+           , Object_Goods_Main.ObjectCode
+           , Object_Goods_Main.Name
+           , Object_Price.MCSValue
+    HAVING COALESCE(Max(tmp_ResultSet.Sold), 0) <> COALESCE(Object_Price.MCSValue,0)
+    ORDER BY Object_Goods_Main.ObjectCode;
+        
 END;
 $BODY$
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpRecalcMCS(Integer, Integer, Integer, TVarChar, Boolean) OWNER TO postgres;
+ALTER FUNCTION gpReport_RecalcMCS(Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 -------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
- 21.12.19                                                                      * НТЗ для СУН
- 11.09.19                                                                      * после 12 брать текущий день до 12
- 23.12.18                                                                      * 
- 03.12.18         * 
- 24.02.17         *
- 04.07.16         * add PercentMarkup
- 29.08.15                                                         *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 20.04.22                                                      *
  */
-----select * from gpRecalcMCS(inUnitId := 3457773 , inPeriod := 40 , inDay := 6 ,  inSession := '3')
+----
+select * from gpReport_RecalcMCS (inUnitId := 3457773 , inPeriod := 40 , inDay := 6 ,  inSession := '424351')
+
+/*(SELECT tmp_ResultSet.GoodsId
+               , (SUM(tmp_ResultSet.Sold) / COUNT(*))::TFloat AS SoldAVE
+          FROM tmp_ResultSet
+          GROUP BY tmp_ResultSet.GoodsId) AS  tmpAVE*/

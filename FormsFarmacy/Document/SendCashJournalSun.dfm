@@ -1,15 +1,11 @@
 inherited SendCashJournalSunForm: TSendCashJournalSunForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1057#1059#1053'>'
   AddOnFormData.ExecuteDialogAction = nil
-  ExplicitWidth = 857
-  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     TabOrder = 1
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 841
-      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
@@ -116,42 +112,26 @@ inherited SendCashJournalSunForm: TSendCashJournalSunForm
   inherited Panel: TPanel
     Visible = False
   end
-  inherited spMovementUnComplete: TdsdStoredProc [2]
+  inherited cxPropertiesStore: TcxPropertiesStore [2]
   end
-  inherited spMovementSetErased: TdsdStoredProc [3]
-  end
-  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [4]
-  end
-  inherited ActionList: TActionList [5]
-    inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TSendCashSUNForm'
-      FormNameParam.Value = 'TSendCashSUNForm'
-    end
-    inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TSendCashSUNForm'
-      FormNameParam.Value = 'TSendCashSUNForm'
-    end
-  end
-  inherited cxPropertiesStore: TcxPropertiesStore [6]
-  end
-  inherited BarManager: TdxBarManager [7]
+  inherited BarManager: TdxBarManager [3]
     DockControlHeights = (
       0
       0
       26
       0)
   end
-  inherited DBViewAddOn: TdsdDBViewAddOn [8]
+  inherited DBViewAddOn: TdsdDBViewAddOn [4]
   end
-  inherited MasterDS: TDataSource [9]
+  inherited MasterDS: TDataSource [5]
   end
-  inherited MasterCDS: TClientDataSet [10]
+  inherited MasterCDS: TClientDataSet [6]
   end
-  inherited PopupMenu: TPopupMenu [11]
+  inherited PopupMenu: TPopupMenu [7]
   end
-  inherited PeriodChoice: TPeriodChoice [12]
+  inherited PeriodChoice: TPeriodChoice [8]
   end
-  inherited spSelect: TdsdStoredProc [13]
+  inherited spSelect: TdsdStoredProc [9]
     Params = <
       item
         Name = 'instartdate'
@@ -213,7 +193,7 @@ inherited SendCashJournalSunForm: TSendCashJournalSunForm
         MultiSelectSeparator = ','
       end>
   end
-  inherited FormParams: TdsdFormParams [14]
+  inherited FormParams: TdsdFormParams [10]
     Params = <
       item
         Name = 'Id'
@@ -273,41 +253,50 @@ inherited SendCashJournalSunForm: TSendCashJournalSunForm
         Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GroupByBox'
+        Value = Null
+        Component = cxGridDBTableView
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
   end
-  inherited spMovementReComplete: TdsdStoredProc [15]
+  inherited spMovementReComplete: TdsdStoredProc [11]
   end
-  inherited PrintHeaderCDS: TClientDataSet [16]
+  inherited PrintHeaderCDS: TClientDataSet [12]
   end
-  inherited spSelectPrint: TdsdStoredProc [17]
+  inherited spSelectPrint: TdsdStoredProc [13]
   end
-  inherited PrintItemsSverkaCDS: TClientDataSet [18]
+  inherited PrintItemsSverkaCDS: TClientDataSet [14]
   end
-  inherited spUpdate_Movement_OperDate: TdsdStoredProc [19]
+  inherited spUpdate_Movement_OperDate: TdsdStoredProc [15]
   end
-  inherited spUpdate_isDeferred_No: TdsdStoredProc [21]
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [16]
   end
-  inherited spUpdate_isDeferred_Yes: TdsdStoredProc [22]
+  inherited spUpdate_isDeferred_No: TdsdStoredProc [17]
   end
-  inherited spUpdate_Movement_Received: TdsdStoredProc [23]
+  inherited spUpdate_isDeferred_Yes: TdsdStoredProc [18]
   end
-  inherited spUpdate_Movement_Sent: TdsdStoredProc [24]
+  inherited spUpdate_Movement_Received: TdsdStoredProc [19]
   end
-  inherited spUpdate_isDefSun: TdsdStoredProc [25]
+  inherited spUpdate_Movement_Sent: TdsdStoredProc [20]
   end
-  inherited spUpdate_isSun: TdsdStoredProc [26]
+  inherited spUpdate_isDefSun: TdsdStoredProc [21]
   end
-  inherited spUnCompleteView: TdsdStoredProc [27]
+  inherited spUpdate_isSun: TdsdStoredProc [22]
   end
-  inherited spUpdate_NotDisplaySUN_Yes: TdsdStoredProc [28]
+  inherited spUnCompleteView: TdsdStoredProc [23]
   end
-  inherited spComplete_Filter: TdsdStoredProc [29]
+  inherited spUpdate_NotDisplaySUN_Yes: TdsdStoredProc [24]
   end
-  inherited spSetErased_Filter: TdsdStoredProc [30]
+  inherited spComplete_Filter: TdsdStoredProc [25]
   end
-  inherited RefreshDispatcher: TRefreshDispatcher [31]
+  inherited spSetErased_Filter: TdsdStoredProc [26]
   end
-  inherited spMovementComplete: TdsdStoredProc [32]
+  inherited RefreshDispatcher: TRefreshDispatcher [27]
+  end
+  inherited spMovementComplete: TdsdStoredProc [28]
     Params = <
       item
         Name = 'inmovementid'
@@ -331,5 +320,30 @@ inherited SendCashJournalSunForm: TSendCashJournalSunForm
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
+  end
+  inherited PrintItemsCDS: TClientDataSet [29]
+  end
+  inherited spMovementUnComplete: TdsdStoredProc [30]
+  end
+  inherited spMovementSetErased: TdsdStoredProc [31]
+  end
+  inherited ActionList: TActionList [32]
+    inherited actInsert: TdsdInsertUpdateAction
+      FormName = 'TSendCashSUNForm'
+      FormNameParam.Value = 'TSendCashSUNForm'
+    end
+    inherited actUpdate: TdsdInsertUpdateAction
+      FormName = 'TSendCashSUNForm'
+      FormNameParam.Value = 'TSendCashSUNForm'
+    end
+    inherited actDirectoryDialog: TFileDialogAction
+      Param.Value = Null
+    end
+    inherited actDataToJson: TdsdDataToJsonAction
+      JsonParam.Value = Null
+    end
+    inherited actWayTTNToXLS: TdsdExportToXLS
+      FileNameParam.Value = ''
+    end
   end
 end

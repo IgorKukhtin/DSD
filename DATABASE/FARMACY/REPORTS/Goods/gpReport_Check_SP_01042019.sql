@@ -1,6 +1,7 @@
 -- Function:  gpReport_Check_SP()
 
-DROP FUNCTION IF EXISTS gpReport_Check_SP_01042019 (TDateTime, TDateTime, Integer,Integer,Integer,Integer,Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Check_SP_01042019 (TDateTime, TDateTime, Integer,Integer,Integer,Integer,Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpReport_Check_SP_01042019(
     IN inStartDate           TDateTime,  -- Дата начала
@@ -40,6 +41,7 @@ RETURNS TABLE (MovementId     Integer
              , PaymentSP      TFloat
              , ColSP          TFloat
              , InsertDateSP   TDateTime
+             , IdSP           TVarChar
 
              , Amount         TFloat
              , PriceSale      TFloat
@@ -170,6 +172,7 @@ BEGIN
                                 , COALESCE(Object_BrandSP.ValueData,'')      ::TVarChar AS BrandSPName
                                 , COALESCE(Object_KindOutSP.Id ,0)           ::Integer  AS KindOutSPId
                                 , COALESCE(Object_KindOutSP.ValueData,'')    ::TVarChar AS KindOutSPName
+                                , COALESCE (MIString_IdSP.ValueData, '')     ::TVarChar AS IdSP
                                 , MIFloat_PriceSP.ValueData                             AS PriceSP
                                 , MIFloat_CountSP.ValueData                             AS CountSP
                                 , MIFloat_GroupSP.ValueData                             AS GroupSP
@@ -227,6 +230,9 @@ BEGIN
                                 LEFT JOIN MovementItemString AS MIString_ReestrDateSP
                                                              ON MIString_ReestrDateSP.MovementItemId = MovementItem.Id
                                                             AND MIString_ReestrDateSP.DescId = zc_MIString_ReestrDateSP()
+                                LEFT JOIN MovementItemString AS MIString_IdSP
+                                                             ON MIString_IdSP.MovementItemId = MovementItem.Id
+                                                            AND MIString_IdSP.DescId = zc_MIString_IdSP()
                                 LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
                                                                  ON MI_IntenalSP.MovementItemId = MovementItem.Id
                                                                 AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
@@ -701,6 +707,7 @@ BEGIN
              , tmpGoodsSP.PaymentSP       :: TFloat
              , tmpGoodsSP.ColSP           :: TFloat
              , tmpGoodsSP.InsertDateSP    :: TDateTime
+             , tmpGoodsSP.IdSP            ::TVarChar
 
              , tmpData.Amount            :: TFloat 
              , CAST (tmpData.PriceSale AS NUMERIC(16,2))                        :: TFloat 

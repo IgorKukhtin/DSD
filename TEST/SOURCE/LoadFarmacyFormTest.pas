@@ -1065,7 +1065,10 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_NotPaySumIncomeForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckUpdateNotMCSForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckUpdateNotMCSForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_NotPaySumIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_NotPaySumIncomeForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_SupplierFailuresCashForm'));
@@ -1078,13 +1081,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_PaperRecipeSPInsulinForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaperRecipeSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PaperRecipeSPForm');
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainingInsulinsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainingInsulinsForm');
-
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_JuridicalItogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_JuridicalItogForm');
-
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_SupplierFailuresAllForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_SupplierFailuresAllForm');
 
@@ -3100,7 +3103,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashSUNForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashSUNForm');
-
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBanCommentSendEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBanCommentSendEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBanCommentSendForm'));
@@ -3109,7 +3112,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendWayNameForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendWayNameForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionDateGoodsListForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionDateGoodsListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionDateGoodsListForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentSendEditForm'));
@@ -3129,6 +3132,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerVIPJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerVIPJournalForm');
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TConfirmedDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TConfirmedDialogForm');

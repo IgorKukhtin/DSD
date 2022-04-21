@@ -28,8 +28,8 @@ BEGIN
                                           AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP() 
                                           AND MovementString_InvNumberSP.ValueData = inInvNumberSP
 
-            WHERE Movement.OperDate >= DATE_TRUNC ('YEAR', CURRENT_DATE) 
-              AND Movement.OperDate < DATE_TRUNC ('YEAR', CURRENT_DATE) + INTERVAL '1 YEAR'
+            WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '10 DAY'
+              AND Movement.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
               AND Movement.DescId = zc_Movement_Check()
               AND Movement.StatusId <> zc_Enum_Status_Erased()
             LIMIT 1)
@@ -54,4 +54,5 @@ ALTER FUNCTION gpGet_Movement_InvNumberSP (Integer, TVarChar, TVarChar) OWNER TO
 */
 
 -- тест
--- select * from gpGet_Movement_InvNumberSP(inSPKindId := 4823009 , inInvNumberSP := '0000-2M30-3K6P-481E' ,  inSession := '3');
+-- 
+select * from gpGet_Movement_InvNumberSP(inSPKindId := 4823009 , inInvNumberSP := '0000-E5HE-4A72-3X41' ,  inSession := '3');

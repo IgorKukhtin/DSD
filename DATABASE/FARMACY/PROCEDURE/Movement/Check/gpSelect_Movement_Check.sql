@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OperDateSP TDateTime
              , PartnerMedicalName TVarChar
              , InvNumberSP TVarChar
+             , ConfirmationCodeSP TVarChar
              , MedicSPName TVarChar
              , Ambulance TVarChar
              , SPKindName TVarChar
@@ -138,6 +139,7 @@ BEGIN
            , MovementDate_OperDateSP.ValueData                  AS OperDateSP
            , Object_PartnerMedical.ValueData                    AS PartnerMedicalName
            , Movement_Check.InvNumberSP                         AS InvNumberSP
+           , Movement_Check.ConfirmationCodeSP
            , COALESCE(Object_MedicKashtan.ValueData, MovementString_MedicSP.ValueData):: TVarChar AS MedicSPName
            , MovementString_Ambulance.ValueData                 AS Ambulance
            , Object_SPKind.ValueData                            AS SPKindName
@@ -186,6 +188,7 @@ BEGIN
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
                    , MovementString_CommentError.ValueData               AS CommentError
                    , MovementString_InvNumberSP.ValueData                AS InvNumberSP
+                   , MovementString_ConfirmationCodeSP.ValueData         AS ConfirmationCodeSP
                    , MovementLinkObject_CheckMember.ObjectId             AS MemberId
                    , MovementLinkObject_PartionDateKind.ObjectId         AS PartionDateKindId
                    , COALESCE(MovementBoolean_Deferred.ValueData, False) AS IsDeferred
@@ -198,6 +201,9 @@ BEGIN
                    LEFT JOIN MovementString AS MovementString_InvNumberSP
                                             ON MovementString_InvNumberSP.MovementId = Movement.Id
                                            AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP() 
+                   LEFT JOIN MovementString AS MovementString_ConfirmationCodeSP
+                                            ON MovementString_ConfirmationCodeSP.MovementId = Movement.Id
+                                           AND MovementString_ConfirmationCodeSP.DescId = zc_MovementString_ConfirmationCodeSP() 
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                 ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()    

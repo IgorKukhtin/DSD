@@ -593,6 +593,14 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 83
           end
+          object ConfirmationCodeSP: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1086#1076#1090#1074'. '#1057#1055
+            DataBinding.FieldName = 'ConfirmationCodeSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 64
+          end
         end
       end
     end
