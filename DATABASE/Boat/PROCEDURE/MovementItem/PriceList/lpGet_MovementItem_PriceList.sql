@@ -4,20 +4,20 @@ DROP FUNCTION IF EXISTS lpGet_MovementItem_PriceList (TDateTime, Integer, Intege
 
 CREATE OR REPLACE FUNCTION lpGet_MovementItem_PriceList(
     IN inOperDate           TDateTime , -- Дата действия
-    IN inGoodsId            Integer   , -- 
-    IN inUserId             Integer     -- 
-)                              
+    IN inGoodsId            Integer   , --
+    IN inUserId             Integer     --
+)
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , MovementItemId Integer, GoodsId Integer
              , ValuePrice TFloat
              , PartnerId Integer, PartnerName TVarChar
-             )
+              )
 AS
 $BODY$
 BEGIN
 
        -- Выбираем данные
-       RETURN QUERY 
+       RETURN QUERY
          WITH tmpData AS (SELECT Movement.Id            AS MovementId
                                , Movement.InvNumber     AS InvNumber
                                , Movement.OperDate      AS OperDate
@@ -27,16 +27,16 @@ BEGIN
                                , MLO_Partner.ObjectId   AS PartnerId
                                  -- № п/п
                                , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC, Movement.Id DESC) AS Ord
-                         FROM Movement
+                          FROM Movement
                                INNER JOIN MovementLinkObject AS MLO_Partner
                                                              ON MLO_Partner.MovementId = Movement.Id
                                                             AND MLO_Partner.DescId     = zc_MovementLinkObject_Partner()
                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                       AND MovementItem.DescId     = zc_MI_Master()
                                                       AND MovementItem.isErased   = FALSE
-                                                      AND MovementItem.ObjectId   = inGoodsId
-                    
-                          WHERE Movement.OperDate >= DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '6 MONTH')
+                                                      AND (MovementItem.ObjectId  = inGoodsId OR COALESCE (inGoodsId, 0) = 0)
+
+                          WHERE Movement.OperDate BETWEEN DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '12 MONTH') AND inOperDate
                             AND Movement.DescId    = zc_Movement_PriceList()
                             AND Movement.StatusId  = zc_Enum_Status_Complete()
                          )
