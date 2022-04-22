@@ -19,7 +19,7 @@ BEGIN
   -- проверка прав пользователя на вызов процедуры
   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Unit());
   
-  vbStartId := (SELECT tmp.ID FROM gpGet_Object_Unit_Start (0, inSession) AS tmp);  
+  vbStartId := 0; -- (SELECT tmp.ID FROM gpGet_Object_Unit_Start (0, inSession) AS tmp);  
 
   IF EXISTS(SELECT * FROM ObjectLink AS ObjectLink_Unit_Parent
             WHERE ObjectLink_Unit_Parent.ObjectId = inId
@@ -44,8 +44,8 @@ BEGIN
          , ObjectString_GroupNameFull.ValueData  AS GroupNameFull
          , ObjectString_Phone.ValueData    AS Phone
          , ObjectString_Comment.ValueData  AS Comment
-         , Object_Parent.Id                AS ParentId
-         , Object_Parent.ValueData         AS ParentName
+         , CASE WHEN Object_Unit.Id > 0 AND Object_Parent.Id IS NULL THEN 1   ELSE Object_Parent.Id        END :: Integer  AS ParentId
+         , CASE WHEN Object_Unit.Id > 0 AND Object_Parent.Id IS NULL THEN '1' ELSE Object_Parent.ValueData END :: TVarChar AS ParentName
      FROM Object AS Object_Unit
           LEFT JOIN ObjectString AS ObjectString_GroupNameFull
                                  ON ObjectString_GroupNameFull.ObjectId = Object_Unit.Id
@@ -67,14 +67,14 @@ BEGIN
 
      RETURN QUERY
      SELECT 
-           0                      AS Id
+           1                      AS Id
          , 0                      AS Code
-         , ''::TVarChar           AS Name
+         , 'ВСЕ'::TVarChar          AS Name
          , ''::TVarChar           AS GroupNameFull
          , ''::TVarChar           AS Phone
          , ''::TVarChar           AS Comment
-         , 0                      AS ParentId
-         , ''::TVarChar           AS ParentName
+         , 1                      AS ParentId
+         , 'ВСЕ-1'::TVarChar          AS ParentName
      ;
   END IF;
 
@@ -91,5 +91,4 @@ $BODY$
 */
 
 -- тест
--- 
-select * from gpGet_Object_Unit_Prior(inId := 52460 ,  inSession := '5');
+-- select * from gpGet_Object_Unit_Prior(inId := 52460 ,  inSession := '5');

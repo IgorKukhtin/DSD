@@ -24,8 +24,9 @@ BEGIN
                   AND Object_Unit.isErased = FALSE 
                   AND Object_Unit.Id = inId)
    THEN
-     inId := 52460;
+     inId := 0; -- 52460;
    END IF;
+
 
    RETURN QUERY
    SELECT 
@@ -35,8 +36,8 @@ BEGIN
        , ObjectString_GroupNameFull.ValueData  AS GroupNameFull
        , ObjectString_Phone.ValueData    AS Phone
        , ObjectString_Comment.ValueData  AS Comment
-       , Object_Parent.Id                AS ParentId
-       , Object_Parent.ValueData         AS ParentName
+       , CASE WHEN Object_Unit.Id > 0 AND Object_Parent.Id IS NULL THEN 1   ELSE Object_Parent.Id        END :: Integer  AS ParentId
+       , CASE WHEN Object_Unit.Id > 0 AND Object_Parent.Id IS NULL THEN '1' ELSE Object_Parent.ValueData END :: TVarChar AS ParentName
    FROM Object AS Object_Unit
         LEFT JOIN ObjectString AS ObjectString_GroupNameFull
                                ON ObjectString_GroupNameFull.ObjectId = Object_Unit.Id
@@ -52,7 +53,7 @@ BEGIN
                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
         LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
-  WHERE Object_Unit.Id = inId;
+  WHERE Object_Unit.Id = CASE WHEN inId = 1 THEN 2 ELSE inId END;
 
 
 END;
@@ -69,4 +70,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpGet_Object_Unit_Start(0,'2')
+-- SELECT * FROM gpGet_Object_Unit_Start(0,'2')

@@ -38,6 +38,8 @@ BEGIN
      
      vbStartId := (SELECT tmp.ID FROM gpGet_Object_Unit_Start (0, inSession) AS tmp);
 
+IF inUnitGroupId = 1 THEN inUnitGroupId:= 0; END IF;
+
      IF EXISTS(SELECT * FROM ObjectLink AS ObjectLink_Unit_Parent
                WHERE ObjectLink_Unit_Parent.ChildObjectId = inUnitGroupId
                  AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent())
