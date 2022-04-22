@@ -2307,6 +2307,9 @@ object InvoiceForm: TInvoiceForm
       end
       item
         Control = edTotalSumm_f2
+      end
+      item
+        Control = edParValue
       end>
     GetStoredProc = spGet
     Left = 264
