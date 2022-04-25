@@ -13,17 +13,17 @@ inherited Report_OrderExternal_JuridicalItogForm: TReport_OrderExternal_Juridica
     Height = 421
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 1086
+    ExplicitWidth = 1250
     ExplicitHeight = 421
     ClientRectBottom = 421
     ClientRectRight = 1250
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1086
+      ExplicitWidth = 1250
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
         Width = 1250
         Height = 421
-        ExplicitWidth = 1086
+        ExplicitWidth = 1250
         ExplicitHeight = 421
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -405,6 +405,30 @@ inherited Report_OrderExternal_JuridicalItogForm: TReport_OrderExternal_Juridica
             Options.Editing = False
             Width = 91
           end
+          object Deferment: TcxGridDBColumn
+            Caption = #1054#1090#1089#1088#1086#1095#1082#1072
+            DataBinding.FieldName = 'Deferment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
+          object isDefermentContract: TcxGridDBColumn
+            Caption = #1054#1090#1089#1088#1086#1095#1082#1091' '#1080#1079' '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'isDefermentContract'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object isPartialPay: TcxGridDBColumn
+            Caption = #1054#1087#1083#1072#1090#1072' '#1095#1072#1089#1090#1103#1084#1080
+            DataBinding.FieldName = 'isPartialPay'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 59
+          end
         end
       end
     end
@@ -412,7 +436,7 @@ inherited Report_OrderExternal_JuridicalItogForm: TReport_OrderExternal_Juridica
   inherited Panel: TPanel
     Width = 1250
     Height = 33
-    ExplicitWidth = 1086
+    ExplicitWidth = 1250
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 89

@@ -8,20 +8,18 @@ CREATE OR REPLACE FUNCTION gpReport_RecalcMCS(
     IN inDay                 Integer   , -- —колько дней брать в расчет
     IN inSession             TVarChar    -- сесси€ пользовател€
 )
-RETURNS TABLE (Id Integer
-             , GoodsCode Integer
-             , GoodsName TVarChar
-             , MCSValue TFloat
-             , MaxSold TFloat
-             , SoldAVE TFloat
-             , SoldMax TFloat
-             )
+RETURNS SETOF refcursor 
 AS
 $BODY$
     DECLARE vbCounter integer;
     DECLARE vbSold    TFloat;
     DECLARE vbObjectId Integer;
     DECLARE vbUserId Integer;
+    DECLARE cur1 refcursor; 
+    DECLARE cur2 refcursor; 
+    DECLARE curDate refcursor; 
+    DECLARE vbNumberDay Integer;
+    DECLARE vbQueryText TEXT;
 BEGIN
 
     IF COALESCE(inUnitId,0) = 0
@@ -162,7 +160,6 @@ BEGIN
         GoodsId integer not null,
         Period  Integer not null,
         Sold    TFloat  not null,
-        Ord     Integer not null,
         primary key(GoodsId,Period)
     ) ON COMMIT DROP;
         
@@ -196,12 +193,11 @@ BEGIN
         and 
         DST.NumberOfDay = SRC.DayCount;
     
-    INSERT INTO tmp_ResultSet(GoodsId,Period,Sold,Ord)
+    INSERT INTO tmp_ResultSet(GoodsId,Period,Sold)
     SELECT 
         S1.GoodsId, 
         S1.NumberOfDay, 
-        SUM(S2.SoldCount),
-        ROW_NUMBER() OVER (PARTITION BY S1.GoodsId ORDER BY SUM(S2.SoldCount) DESC) AS Ord
+        SUM(S2.SoldCount)
     FROM 
         tmp_SoldGoodsOneDay AS S1
         LEFT OUTER JOIN tmp_SoldGoodsOneDay AS S2
@@ -211,15 +207,22 @@ BEGIN
     GROUP BY 
         S1.GoodsId,
         S1.NumberOfDay;
-        
-    RETURN QUERY
+
+ CREATE TEMP TABLE tmpResult ON COMMIT DROP AS       
     SELECT tmp_ResultSet.GoodsId
-         , Object_Goods_Main.ObjectCode
-         , Object_Goods_Main.Name
+         , Object_Goods_Main.ObjectCode AS GoodsCode
+         , Object_Goods_Main.Name       AS GoodsName
          , Object_Price.MCSValue
          , Max(tmp_ResultSet.Sold)::TFloat AS Sold
          , Max(tmpAVE.SoldAVE)::TFloat     AS SoldAVE
          , Max(tmpAVE.SoldMax)::TFloat     AS SoldMax
+         
+         , COALESCE(Max(tmp_ResultSet.Sold), 0) <> COALESCE(Object_Price.MCSValue,0)  AS isOk
+         , CASE WHEN COALESCE(Max(tmp_ResultSet.Sold), 0) = COALESCE(Object_Price.MCSValue,0) 
+                THEN zfCalc_Color (0, 255, 0) -- Lime 
+                ELSE zfCalc_Color (255, 228, 225) -- MistyRose 
+           END  AS Calc_Color
+
     FROM tmp_ResultSet 
         INNER JOIN tmpPrice AS Object_Price
                             ON Object_Price.GoodsId = tmp_ResultSet.GoodsId
@@ -238,9 +241,48 @@ BEGIN
            , Object_Goods_Main.ObjectCode
            , Object_Goods_Main.Name
            , Object_Price.MCSValue
-    HAVING COALESCE(Max(tmp_ResultSet.Sold), 0) <> COALESCE(Object_Price.MCSValue,0)
-    ORDER BY Object_Goods_Main.ObjectCode;
+    --HAVING COALESCE(Max(tmp_ResultSet.Sold), 0) <> COALESCE(Object_Price.MCSValue,0)
+    ;
+    
+    -- ƒанные 
+    OPEN curDate FOR
+        SELECT tmp_AllDayCount.NumberDay AS ValueName
+        FROM tmp_AllDayCount
+        ORDER BY tmp_AllDayCount.NumberDay;
+                  
+     -- начало цикла по курсору1
+     LOOP
+        -- данные по курсору1
+        FETCH curDate INTO vbNumberDay;
+        -- если данные закончились, тогда выход
+        IF NOT FOUND THEN EXIT; END IF;
+
+        vbQueryText := 'ALTER TABLE tmpResult ADD COLUMN Value'||vbNumberDay::TVarChar || ' TFloat';
+        EXECUTE vbQueryText;
+
+        vbQueryText := 'UPDATE tmpResult SET Value'||vbNumberDay::Text||' = tmp_ResultSet.Sold
+           FROM tmp_ResultSet
+           WHERE tmpResult.GoodsId = tmp_ResultSet.GoodsId
+             AND tmp_ResultSet.Period = '||vbNumberDay::Text;
+             
+        EXECUTE vbQueryText;
         
+    END LOOP; -- финиш цикла по курсору1
+    CLOSE curDate; -- закрыли курсор1 
+    
+    -- –езультат
+    
+    OPEN cur1 FOR SELECT tmp_AllDayCount.NumberDay ::TVarChar AS ValueName
+                   FROM tmp_AllDayCount
+                   ORDER BY tmp_AllDayCount.NumberDay;
+
+    RETURN NEXT cur1;
+
+    OPEN cur2 FOR SELECT * FROM tmpResult
+                  ORDER BY tmpResult.GoodsName;  
+    RETURN NEXT cur2;     
+    
+     raise notice 'Value 05: %', (SELECT COUNT(*) FROM tmpResult);
 END;
 $BODY$
 LANGUAGE plpgsql VOLATILE;
@@ -253,9 +295,5 @@ ALTER FUNCTION gpReport_RecalcMCS(Integer, Integer, Integer, TVarChar) OWNER TO 
  20.04.22                                                      *
  */
 ----
-select * from gpReport_RecalcMCS (inUnitId := 3457773 , inPeriod := 40 , inDay := 6 ,  inSession := '424351')
-
-/*(SELECT tmp_ResultSet.GoodsId
-               , (SUM(tmp_ResultSet.Sold) / COUNT(*))::TFloat AS SoldAVE
-          FROM tmp_ResultSet
-          GROUP BY tmp_ResultSet.GoodsId) AS  tmpAVE*/
+--select * from gpReport_RecalcMCS (inUnitId := 3457773 , inPeriod := 40 , inDay := 6 ,  inSession := '424351')
+select * from gpReport_RecalcMCS(inUnitId := 18712420 , inPeriod := 30 , inDay := 6 ,  inSession := '3');

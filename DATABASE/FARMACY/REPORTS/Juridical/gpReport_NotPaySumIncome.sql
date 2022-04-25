@@ -11,6 +11,7 @@ RETURNS TABLE (JuridicalCode Integer
              , JuridicalName TVarChar
              , JuridicalFromCode Integer
              , JuridicalFromName TVarChar
+             , ContractName TVarChar
              , TotalSumm TFloat
              , TotalPaySumm TFloat
              , TotalPaySummDate TFloat
@@ -18,6 +19,9 @@ RETURNS TABLE (JuridicalCode Integer
              , AmountReturnOut TFloat
              , AmountOther TFloat
              , AmountPartialSale TFloat
+             , Deferment Integer
+             , isDefermentContract Boolean
+             , isPartialPay Boolean
               )
 
 AS
@@ -42,6 +46,7 @@ BEGIN
                                , MovementLinkObject_From.ObjectId           AS FromId
                                , MovementLinkObject_To.ObjectId             AS ToId
                                , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+                               , MovementLinkObject_Contract.ObjectId       AS ContractId
                                , tmpContainer.Amount                        AS PaySumm
                                , CASE WHEN MovementDate_Payment.ValueData <= inEndDate THEN tmpContainer.Amount END AS PaySummDate
                           FROM Movement AS Movement_Income
@@ -64,6 +69,10 @@ BEGIN
                                                       ON MovementDate_Payment.MovementId =  Movement_Income.Id
                                                      AND MovementDate_Payment.DescId = zc_MovementDate_Payment()                                                          
                                                                        
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                            ON MovementLinkObject_Contract.MovementId = Movement_Income.Id
+                                                           AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                                           
                           WHERE Movement_Income.DescId = zc_Movement_Income()
                             AND Movement_Income.OperDate BETWEEN inStartDate AND inEndDate
                             AND Movement_Income.StatusId = zc_Enum_Status_Complete()),
@@ -83,6 +92,7 @@ BEGIN
                           ),
              tmpData AS   
                          (SELECT Movement_Income.FromId
+                               , Movement_Income.ContractId
                                , ObjectLink_Unit_Juridical.ChildObjectId    AS JuridicalId
                                , SUM(Movement_Income.TotalSumm)::TFloat     AS TotalSumm
                                , SUM(Movement_Income.PaySumm)::TFloat       AS PaySumm
@@ -97,6 +107,7 @@ BEGIN
                                --LEFT JOIN tmpReturnOut AS ReturnOut ON ReturnOut.Id = Movement_Income.Id
 
                           GROUP BY Movement_Income.FromId
+                                 , Movement_Income.ContractId
                                  , ObjectLink_Unit_Juridical.ChildObjectId),
              tmpContainerBonus AS (SELECT CASE WHEN Container.ObjectId = zc_Enum_ChangeIncomePaymentKind_Bonus()       THEN Container.Amount ELSE 0 END ::TFloat AS ContainerAmountBonus
                                         , CASE WHEN Container.ObjectId = zc_Enum_ChangeIncomePaymentKind_ReturnOut()   THEN Container.Amount ELSE 0 END ::TFloat AS ContainerAmountReturnOut
@@ -128,6 +139,7 @@ BEGIN
          , Object_Juridical.ValueData                 AS JuridicalName
          , Movement_Income.FromId
          , Object_From.ValueData                      AS FromName
+         , Object_Contract.ValueData                  AS ContractName
          , Movement_Income.TotalSumm
          , Movement_Income.PaySumm
          , Movement_Income.PaySummDate
@@ -135,15 +147,29 @@ BEGIN
          , ContainerBonusSum.ContainerAmountReturnOut
          , ContainerBonusSum.ContainerAmountOther
          , ContainerBonusSum.ContainerAmountPartialSale
+         , ObjectFloat_Deferment.ValueData ::Integer                     AS Deferment
+         , COALESCE (ObjectBoolean_DefermentContract.ValueData, FALSE)   AS isDefermentContract
+         , COALESCE (ObjectBoolean_PartialPay.ValueData, FALSE)          AS isPartialPay
     FROM tmpData AS Movement_Income
                                                                          
          LEFT JOIN Object AS Object_From ON Object_From.Id = Movement_Income.FromId
 
          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Movement_Income.JuridicalId
+         LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = Movement_Income.ContractId
          
          LEFT JOIN tmpContainerBonusSum AS ContainerBonusSum ON ContainerBonusSum.JuridicalId = Movement_Income.JuridicalId
                                                             AND ContainerBonusSum.ObjectId = Movement_Income.FromId
          
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_PartialPay
+                                 ON ObjectBoolean_PartialPay.ObjectId = Movement_Income.ContractId
+                                AND ObjectBoolean_PartialPay.DescId = zc_ObjectBoolean_Contract_PartialPay()
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_DefermentContract
+                                 ON ObjectBoolean_DefermentContract.ObjectId = Movement_Income.ContractId
+                                AND ObjectBoolean_DefermentContract.DescId = zc_ObjectBoolean_Contract_DefermentContract()
+         LEFT JOIN ObjectFloat AS ObjectFloat_Deferment 
+                               ON ObjectFloat_Deferment.ObjectId = Movement_Income.ContractId
+                              AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
+
     ;
 
 END;

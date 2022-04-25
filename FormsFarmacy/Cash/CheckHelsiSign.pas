@@ -56,6 +56,8 @@ type
     dxBarButton4: TdxBarButton;
     actSign: TAction;
     colOrd: TcxGridDBBandedColumn;
+    dxBarButton5: TdxBarButton;
+    actGridToExcel: TdsdGridToExcel;
     procedure ParentFormCreate(Sender: TObject);
     procedure ParentFormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure actLoadStateExecute(Sender: TObject);
@@ -91,11 +93,11 @@ begin
   if cState = 'ACTIVE' then
   begin
     cState := 'Не погашен';
-    nColor := clRed;
+    nColor := $00DFBFFF;
   end else if cState = 'EXPIRED' then
   begin
     cState := 'Просрочен';
-    nColor := clRed;
+    nColor := $00DFBFFF;
   end else if cState = 'COMPLETED' then
   begin
     cState := 'Погашен';

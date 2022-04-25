@@ -2626,6 +2626,9 @@
   inherited ActionList: TActionList
     Left = 103
     Top = 287
+    inherited actGridToExcel: TdsdGridToExcel
+      Grid = cxGrid1
+    end
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>

@@ -93,6 +93,8 @@ type
     actExecSPUpdateactMain: TdsdExecStoredProc;
     spUpdateactMain: TdsdStoredProc;
     dxBarButton11: TdxBarButton;
+    actReport_RecalcMCS: TdsdOpenForm;
+    bbReport_RecalcMCS: TdxBarButton;
   private
     { Private declarations }
   public

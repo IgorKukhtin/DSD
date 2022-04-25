@@ -966,8 +966,8 @@
   object HeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 552
-    Top = 152
+    Left = 536
+    Top = 144
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null

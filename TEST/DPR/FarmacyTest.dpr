@@ -1179,7 +1179,9 @@ uses
   SendWayName in '..\..\FormsFarmacy\Guides\SendWayName.pas' {SendWayNameForm: TParentForm},
   NewUser in '..\..\FormsFarmacy\Guides\NewUser.pas' {NewUserForm: TParentForm},
   MarginCategoryItemEdit in '..\..\Forms\Guides\MarginCategoryItemEdit.pas' {MarginCategoryItemEditForm: TParentForm},
-  Report_CheckUpdateNotMCS in '..\..\FormsFarmacy\Report\Report_CheckUpdateNotMCS.pas' {Report_CheckUpdateNotMCSForm: TParentForm};
+  Report_CheckUpdateNotMCS in '..\..\FormsFarmacy\Report\Report_CheckUpdateNotMCS.pas' {Report_CheckUpdateNotMCSForm: TParentForm},
+  Report_RecalcMCSDialog in '..\..\FormsFarmacy\Report\Report_RecalcMCSDialog.pas' {Report_RecalcMCSDialogForm: TParentForm},
+  Report_RecalcMCS in '..\..\FormsFarmacy\Report\Report_RecalcMCS.pas' {Report_RecalcMCSForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

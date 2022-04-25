@@ -14,7 +14,7 @@ RETURNS TABLE (JuridicalMainId Integer, JuridicalMainCode Integer, JuridicalMain
              , AmountSF TFloat, SummSF TFloat, SummWithNDSSF TFloat
              , AmountLeft TFloat, SummLeft TFloat, SummWithNDSLeft TFloat
              , SummWithNDSOIP TFloat, SummWithNDSAll TFloat
-             
+             , Deferment Integer, isDefermentContract Boolean, isPartialPay Boolean             
 )
 AS
 $BODY$
@@ -283,6 +283,10 @@ BEGIN
          , SUM(tmpMI_All.Summa)::TFloat                 AS SummWithNDSOIP
          , SUM(COALESCE(tmpSupplierFailures.SummWithNDSLeft, 0) + COALESCE(tmpMI_All.Summa, 0))::TFloat    AS SummWithNDSAll
 
+         , ObjectFloat_Deferment.ValueData ::Integer                     AS Deferment
+         , COALESCE (ObjectBoolean_DefermentContract.ValueData, FALSE)   AS isDefermentContract
+         , COALESCE (ObjectBoolean_PartialPay.ValueData, FALSE)          AS isPartialPay
+
     FROM tmpOrderExternalData AS tmpSupplierFailures
     
         FULL JOIN tmpMI_All ON tmpMI_All.UnitId      = tmpSupplierFailures.UnitId
@@ -297,6 +301,17 @@ BEGIN
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE(tmpSupplierFailures.JuridicalId, tmpMI_All.JuridicalId)
         LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = COALESCE(tmpSupplierFailures.ContractId, tmpMI_All.ContractId)
                                                  
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_PartialPay
+                                ON ObjectBoolean_PartialPay.ObjectId = tmpSupplierFailures.ContractId
+                               AND ObjectBoolean_PartialPay.DescId = zc_ObjectBoolean_Contract_PartialPay()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_DefermentContract
+                                ON ObjectBoolean_DefermentContract.ObjectId = tmpSupplierFailures.ContractId
+                               AND ObjectBoolean_DefermentContract.DescId = zc_ObjectBoolean_Contract_DefermentContract()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_Deferment 
+                              ON ObjectFloat_Deferment.ObjectId = tmpSupplierFailures.ContractId
+                             AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
+
     GROUP BY Object_JuridicalMain.Id
            , Object_JuridicalMain.ObjectCode
            , Object_JuridicalMain.ValueData           
@@ -308,6 +323,10 @@ BEGIN
            , Object_Contract.Id
            , Object_Contract.ObjectCode
            , Object_Contract.ValueData        
+           
+           , ObjectFloat_Deferment.ValueData
+           , ObjectBoolean_DefermentContract.ValueData
+           , ObjectBoolean_PartialPay.ValueData
     ;
 
 
@@ -325,4 +344,3 @@ $BODY$
 -- 
 
 select * from gpReport_OrderExternal_JuridicalItog(inDateStart := ('20.04.2022')::TDateTime , inDateEnd := ('20.04.2022')::TDateTime ,  inSession := '3');
-

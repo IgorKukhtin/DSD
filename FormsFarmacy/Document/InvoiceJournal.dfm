@@ -1,6 +1,6 @@
 inherited InvoiceJournalForm: TInvoiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1057#1095#1077#1090#1086#1074
-  ClientHeight = 491
+  ClientHeight = 490
   ClientWidth = 745
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.AddOnFormRefresh.SelfList = 'Sale'
@@ -9,23 +9,23 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spUpdate
   ExplicitWidth = 761
-  ExplicitHeight = 530
+  ExplicitHeight = 529
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 745
-    Height = 434
+    Height = 433
     TabOrder = 3
     ExplicitWidth = 745
     ExplicitHeight = 434
-    ClientRectBottom = 434
+    ClientRectBottom = 433
     ClientRectRight = 745
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 745
       ExplicitHeight = 434
       inherited cxGrid: TcxGrid
         Width = 745
-        Height = 434
+        Height = 433
         ExplicitWidth = 745
         ExplicitHeight = 434
         inherited cxGridDBTableView: TcxGridDBTableView

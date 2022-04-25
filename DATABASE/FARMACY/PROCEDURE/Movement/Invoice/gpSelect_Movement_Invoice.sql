@@ -168,6 +168,7 @@ BEGIN
                              AND MovementDate.DescId IN ( zc_MovementDate_OperDateStart()
                                                         , zc_MovementDate_OperDateEnd()
                                                         , zc_MovementDate_DateRegistered()
+                                                        , zc_MovementDate_AdoptedByNSZU()
                                                          )
                            )
 

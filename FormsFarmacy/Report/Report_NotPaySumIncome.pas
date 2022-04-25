@@ -76,6 +76,10 @@ type
     AmountReturnOut: TcxGridDBColumn;
     AmountOther: TcxGridDBColumn;
     AmountPartialSale: TcxGridDBColumn;
+    Deferment: TcxGridDBColumn;
+    isDefermentContract: TcxGridDBColumn;
+    isPartialPay: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
   private
   public
   end;

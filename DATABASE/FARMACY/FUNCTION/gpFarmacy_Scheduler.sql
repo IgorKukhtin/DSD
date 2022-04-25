@@ -432,7 +432,7 @@ BEGIN
     END IF;    
 
     -- Удаление вчарашних заказов по нашему сайту
-    IF date_part('HOUR',  CURRENT_TIME)::Integer = 12 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 20
+    IF date_part('HOUR',  CURRENT_TIME)::Integer = 21 AND date_part('MINUTE',  CURRENT_TIME)::Integer >= 30
     THEN
 
       BEGIN

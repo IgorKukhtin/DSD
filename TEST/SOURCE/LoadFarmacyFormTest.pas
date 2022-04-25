@@ -601,11 +601,10 @@ procedure TLoadFormTest.LoadCreateOrderFromMCSFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCreateOrderFromMCSLayoutForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCreateOrderFromMCSLayoutForm');
-  Exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRecalcMCSShedulerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRecalcMCSShedulerForm');
-
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRecalcMCSShedulerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRecalcMCSShedulerEditForm');
 
@@ -618,7 +617,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TWeekForm');
   Exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCreateOrderFromMCSForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TCreateOrderFromMCSForm');
+  TdsdFormStorageFactory.GetStorage.Load('TCreateOrderFromMCSForm');}
 end;
 
 procedure TLoadFormTest.LoadCreditLimitDistributorFormTest;
@@ -1065,10 +1064,16 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RecalcMCSDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_RecalcMCSDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RecalcMCSForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_RecalcMCSForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckUpdateNotMCSForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckUpdateNotMCSForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_NotPaySumIncomeForm'));
+  {
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_NotPaySumIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_NotPaySumIncomeForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_SupplierFailuresCashForm'));
@@ -1084,10 +1089,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainingInsulinsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainingInsulinsForm');
-}
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_JuridicalItogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_JuridicalItogForm');
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderExternal_SupplierFailuresAllForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderExternal_SupplierFailuresAllForm');
 
