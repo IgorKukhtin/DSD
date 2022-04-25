@@ -29,7 +29,8 @@ $BODY$
   DECLARE vbOperSumm_PVAT_original TFloat;
   DECLARE vbOperSumm_VAT_2018      TFloat;
   DECLARE vbOperSumm_Inventory     TFloat;
-  DECLARE vbOperSumm_LossAsset     TFloat;
+  DECLARE vbOperSumm_LossAsset     TFloat; 
+  DECLARE vbOperSumm_Tare          TFloat; 
 
   DECLARE vbTotalSummToPay            TFloat;
   DECLARE vbTotalSummService          TFloat;
@@ -300,7 +301,10 @@ BEGIN
                        THEN CASE WHEN vbCurrencyPartnerId <> vbCurrencyDocumentId THEN CASE WHEN vbParPartnerValue = 0 THEN 0 ELSE vbCurrencyPartnerValue / vbParPartnerValue END ELSE CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN 0 ELSE 1 END END
                        ELSE 1
                   END
-            AS NUMERIC (16, 2)) AS OperSumm_Currency
+            AS NUMERIC (16, 2)) AS OperSumm_Currency  
+                 
+          --оборотная тара
+          , OperSumm_Tare 
 
 
             -- Количество по Заготовителю
@@ -359,6 +363,7 @@ BEGIN
             INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperCount_Second, vbOperCount_Tare, vbOperCount_Sh, vbOperCount_Kg, vbOperCount_ShFrom, vbOperCount_KgFrom
                , vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_PVAT_original, vbOperSumm_VAT_2018
                , vbOperSumm_Partner, vbOperSumm_PartnerFrom, vbOperSumm_Currency
+               , vbOperSumm_Tare
                , vbOperCount_Packer, vbOperSumm_Packer, vbOperSumm_Inventory, vbOperSumm_LossAsset
                , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummCardSecond, vbTotalSummNalog, vbTotalSummMinus, vbTotalSummAdd, vbTotalSummAuditAdd, vbTotalDayAudit, vbTotalSummHoliday
                , vbTotalSummCardRecalc, vbTotalSummCardSecondRecalc, vbTotalSummCardSecondCash, vbTotalSummNalogRecalc, vbTotalSummSocialIn, vbTotalSummSocialAdd
@@ -415,7 +420,8 @@ BEGIN
                                                                      )
                                       ELSE COALESCE (MIFloat_Price.ValueData, 0)
                                  END AS Price
-                               , COALESCE (MIFloat_Price.ValueData, 0) AS Price_original
+                               , COALESCE (MIFloat_Price.ValueData, 0)         AS Price_original  
+                               , COALESCE (MIFloat_PriceTare.ValueData, 0)     AS PriceTare
                                , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
 
                                , COALESCE (MIFloat_ChangePercent.ValueData, 0) AS ChangePercent
@@ -527,7 +533,13 @@ BEGIN
 
                                LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                            ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()     
+                               -- цена оборотной тары - zc_MovementFloat_TotalSummTare 
+                               LEFT JOIN MovementItemFloat AS MIFloat_PriceTare
+                                                           ON MIFloat_PriceTare.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_PriceTare.DescId = zc_MIFloat_PriceTare()
+                                                          AND COALESCE (MIFloat_Price.ValueData,0) = 0
+
                                LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                            ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                           AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
@@ -737,6 +749,7 @@ BEGIN
                                  , MIFloat_Price.ValueData
                                  , MIFloat_CountForPrice.ValueData
                                  , MIFloat_ChangePercent.ValueData
+						  , COALESCE (MIFloat_PriceTare.ValueData, 0)
                          )
            SELECT
                   -- Количество по факту (главные элементы)
@@ -897,6 +910,15 @@ BEGIN
                                END
                   END AS OperSumm_Packer
 
+                  -- Сумма оборотной тары с НДС
+                , CASE -- если цены с НДС
+                       WHEN vbPriceWithVAT OR vbVATPercent = 0
+                            THEN (OperSumm_Tare)
+                       -- если цены без НДС
+                       WHEN vbVATPercent > 0
+                            THEN CAST ( (1 + vbVATPercent / 100) * (OperSumm_Tare) AS NUMERIC (16, 2))
+                  END AS OperSumm_Tare
+
                   -- сумма ввода остатка
                 , OperSumm_Inventory AS OperSumm_Inventory
                   --
@@ -1045,12 +1067,17 @@ BEGIN
                                   ELSE CAST (tmpMI.OperCount_calc * (tmpMI.Price_Currency - vbChangePrice) AS NUMERIC (16, 2))
                              END) AS OperSumm_Partner_ChangePrice_Currency
 
-
                         -- сумма по Заготовителю - с округлением до 2-х знаков
                       , SUM (CASE WHEN tmpMI.CountForPrice <> 0
                                        THEN CAST (tmpMI.OperCount_Packer * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
                                   ELSE CAST (tmpMI.OperCount_Packer * tmpMI.Price AS NUMERIC (16, 2))
                              END) AS OperSumm_Packer
+
+                        -- сумма oборотной тары - с округлением до 2-х знаков
+                      , SUM (CASE WHEN tmpMI.CountForPrice <> 0
+                                       THEN CAST (tmpMI.OperCount_Tare * tmpMI.PriceTare / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                  ELSE CAST (tmpMI.OperCount_Tare * tmpMI.PriceTare AS NUMERIC (16, 2))
+                             END) AS OperSumm_Tare
 
                         -- сумма ввода остатка
                       , SUM (tmpMI.OperSumm_Inventory) AS OperSumm_Inventory
@@ -1120,6 +1147,11 @@ BEGIN
                                     ELSE 0
                                END AS Price_Currency
                              , tmpMI.CountForPrice
+                             , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
+                                         -- так переводится в валюту zc_Enum_Currency_Basis
+                                         THEN CAST (tmpMI.PriceTare * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END AS NUMERIC (16, 2))
+                                    ELSE tmpMI.PriceTare
+                               END AS PriceTare
 
                                -- очень важное кол-во, для него расчет сумм
                              , tmpMI.OperCount_calc
@@ -1264,6 +1296,7 @@ BEGIN
                                      END AS Price
 
                                    , tmpMI.Price_original
+                                   , tmpMI.PriceTare
                                    , tmpMI.CountForPrice
 
                                    , tmpMI.ChangePercent
@@ -1365,7 +1398,8 @@ BEGIN
                                           ELSE 1 * tmpMI.Price
                                      END AS Price
 
-                                   , tmpMI.Price_original
+                                   , tmpMI.Price_original 
+                                   , tmpMI.PriceTare
                                    , tmpMI.CountForPrice
 
                                    , tmpMI.ChangePercent
@@ -1493,7 +1527,8 @@ BEGIN
                                      -- !!! ТРЕТЬЯ Строка !!!
                                    , tmpMI.PriceTax_calc - tmpMI.Price AS Price
 
-                                   , tmpMI.Price_original
+                                   , tmpMI.Price_original  
+                                   , tmpMI.PriceTare
                                    , tmpMI.CountForPrice
 
                                    , tmpMI.ChangePercent
@@ -1758,6 +1793,9 @@ BEGIN
          -- Сохранили свойство <Итого кол-во голов приход>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalHeadCountChild(), inMovementId, vbTotalHeadCount_Child);
 
+         -- Сохранили свойство <Итого сумма по Оборотной таре>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummTare(), inMovementId, vbOperSumm_Tare);
+
      END IF;
      END IF;
 
@@ -1776,6 +1814,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.04.22         * zc_MovementFloat_TotalSummTare
  18.11.21         *
  25.03.20         *
  15.09.19         *
@@ -1807,4 +1846,4 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 -- select lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= id) from gpSelect_Movement_WeighingPartner (inStartDate := ('01.06.2014')::TDateTime , inEndDate := ('30.06.2014')::TDateTime ,  inSession := '5') as a
 -- тест
 -- SELECT lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= Movement.Id) from Movement where DescId = zc_Movement_Sale() and OperDate between ('01.11.2014')::TDateTime and  ('31.12.2014')::TDateTime
--- SELECT lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= Movement.Id) from Movement where Id = 8751077 -- 8796848
+-- SELECT lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= Movement.Id) from Movement where Id =22482106  -- 8796848
