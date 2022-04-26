@@ -52,7 +52,7 @@ BEGIN
              , CAST (20 as TFloat)                        AS VATPercent
              , CAST (0 as TFloat)                         AS ChangePercent
              , CAST (0 as TFloat)                         AS CurrencyValue
-             , CAST (0 as TFloat)                         AS ParValue
+             , CAST (1 as TFloat)                         AS ParValue
 
              , Object_CurrencyDocument.Id                 AS CurrencyDocumentId	-- грн
              , Object_CurrencyDocument.ValueData          AS CurrencyDocumentName

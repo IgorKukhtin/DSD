@@ -3,7 +3,7 @@ object Report_NotPaySumIncomeForm: TReport_NotPaySumIncomeForm
   Top = 0
   Caption = #1053#1077' '#1086#1087#1083#1072#1095#1077#1085#1085#1099#1077' '#1087#1088#1080#1093#1086#1076#1099' '#1080#1090#1086#1075#1080' '#1087#1086' '#1102#1088'. '#1083#1080#1094#1072#1084
   ClientHeight = 440
-  ClientWidth = 846
+  ClientWidth = 851
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,10 +21,11 @@ object Report_NotPaySumIncomeForm: TReport_NotPaySumIncomeForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 846
+    Width = 851
     Height = 31
     Align = alTop
     TabOrder = 0
+    ExplicitWidth = 846
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -57,10 +58,11 @@ object Report_NotPaySumIncomeForm: TReport_NotPaySumIncomeForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 846
+    Width = 851
     Height = 383
     Align = alClient
     TabOrder = 5
+    ExplicitWidth = 846
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -279,6 +281,14 @@ object Report_NotPaySumIncomeForm: TReport_NotPaySumIncomeForm
         Options.Editing = False
         Width = 171
       end
+      object ContractName: TcxGridDBColumn
+        Caption = #1044#1086#1075#1086#1074#1086#1088
+        DataBinding.FieldName = 'ContractName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 137
+      end
       object TotalSumm: TcxGridDBColumn
         Caption = #1048#1090#1086#1075#1086', '#1075#1088#1085
         DataBinding.FieldName = 'TotalSumm'
@@ -348,6 +358,30 @@ object Report_NotPaySumIncomeForm: TReport_NotPaySumIncomeForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 85
+      end
+      object Deferment: TcxGridDBColumn
+        Caption = #1054#1090#1089#1088#1086#1095#1082#1072
+        DataBinding.FieldName = 'Deferment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 67
+      end
+      object isDefermentContract: TcxGridDBColumn
+        Caption = #1054#1090#1089#1088#1086#1095#1082#1091' '#1080#1079' '#1076#1086#1075#1086#1074#1086#1088#1072
+        DataBinding.FieldName = 'isDefermentContract'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 68
+      end
+      object isPartialPay: TcxGridDBColumn
+        Caption = #1054#1087#1083#1072#1090#1072' '#1095#1072#1089#1090#1103#1084#1080
+        DataBinding.FieldName = 'isPartialPay'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 58
       end
     end
     object cxGridLevel: TcxGridLevel

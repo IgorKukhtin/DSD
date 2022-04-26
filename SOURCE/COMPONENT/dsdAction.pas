@@ -6024,9 +6024,7 @@ function TdsdDataToJsonAction.LocalExecute: Boolean;
                                TcxDBDataController(View.DataController).DataSource.DataSet.Fields.Fields[J].DataType);
             end;
             JsonArray.AddElement(JSONObject);
-            JSONObject := Nil;
             IncProgress(1);
-            Application.ProcessMessages;
           end;
         finally
           View.EndUpdate;
@@ -6039,51 +6037,42 @@ function TdsdDataToJsonAction.LocalExecute: Boolean;
       if Assigned(DataSource.DataSet) and DataSource.DataSet.Active and
         (DataSource.DataSet.RecordCount > 0) then
       begin
-        // DataSource.DataSet.DisableControls;
-        i:=DataSource.DataSet.RecordCount;//***12.07.2016
-        try
-          DataSource.DataSet.First;
-          with TGaugeFactory.GetGauge(Caption, 0,
-            DataSource.DataSet.RecordCount) do
-          begin
-            Start;
-            DataSource.DataSet.DisableControls;
-            try
-              while not DataSource.DataSet.Eof do
+        DataSource.DataSet.First;
+        with TGaugeFactory.GetGauge(Caption, 0,
+          DataSource.DataSet.RecordCount) do
+        begin
+          Start;
+          DataSource.DataSet.DisableControls;
+          try
+            while not DataSource.DataSet.Eof do
+            begin
+              JSONObject := TJSONObject.Create;
+              if FPairParams.Count > 0 then
               begin
-                JSONObject := TJSONObject.Create;
-                if FPairParams.Count > 0 then
-                begin
-                  for j := 0 to FPairParams.Count - 1 do
-                    if (TdsdPairParamsItem(FPairParams.Items[j]).PairName <> '') and (TdsdPairParamsItem(FPairParams.Items[j]).FieldName <> '') then
-                    begin
-                      if Assigned(DataSource.DataSet.FindField(TdsdPairParamsItem(FPairParams.Items[j]).FieldName)) then
-                        AddParamToJSON(TdsdPairParamsItem(FPairParams.Items[j]).PairName,
-                                       DataSource.DataSet.FieldByName(TdsdPairParamsItem(FPairParams.Items[j]).FieldName).Value,
-                                       DataSource.DataSet.FieldByName(TdsdPairParamsItem(FPairParams.Items[j]).FieldName).DataType)
-                      else AddParamToJSON(TdsdPairParamsItem(FPairParams.Items[j]).PairName, Null, ftString);
-                    end;
-                end else
-                begin
-                  for j := 0 to DataSource.DataSet.FieldCount - 1 do
-                    AddParamToJSON(DataSource.DataSet.Fields.Fields[J].DisplayText,
-                                   DataSource.DataSet.Fields.Fields[J].Value,
-                                   DataSource.DataSet.Fields.Fields[J].DataType);
-                end;
-                JsonArray.AddElement(JSONObject);
-                IncProgress(1);
-                JSONObject := Nil;
-                Application.ProcessMessages;
-                DataSource.DataSet.Next
+                for j := 0 to FPairParams.Count - 1 do
+                  if (TdsdPairParamsItem(FPairParams.Items[j]).PairName <> '') and (TdsdPairParamsItem(FPairParams.Items[j]).FieldName <> '') then
+                  begin
+                    if Assigned(DataSource.DataSet.FindField(TdsdPairParamsItem(FPairParams.Items[j]).FieldName)) then
+                      AddParamToJSON(TdsdPairParamsItem(FPairParams.Items[j]).PairName,
+                                     DataSource.DataSet.FieldByName(TdsdPairParamsItem(FPairParams.Items[j]).FieldName).Value,
+                                     DataSource.DataSet.FieldByName(TdsdPairParamsItem(FPairParams.Items[j]).FieldName).DataType)
+                    else AddParamToJSON(TdsdPairParamsItem(FPairParams.Items[j]).PairName, Null, ftString);
+                  end;
+              end else
+              begin
+                for j := 0 to DataSource.DataSet.FieldCount - 1 do
+                  AddParamToJSON(DataSource.DataSet.Fields.Fields[J].DisplayText,
+                                 DataSource.DataSet.Fields.Fields[J].Value,
+                                 DataSource.DataSet.Fields.Fields[J].DataType);
               end;
-            finally
-              DataSource.DataSet.EnableControls;
-              Finish;
+              JsonArray.AddElement(JSONObject);
+              IncProgress(1);
+              DataSource.DataSet.Next
             end;
+          finally
+            DataSource.DataSet.EnableControls;
+            Finish;
           end;
-        finally
-          Application.ProcessMessages;
-          // DataSource.DataSet.EnableControls;
         end;
       end;
     end;
@@ -6196,8 +6185,6 @@ function TdsdDataToJsonAction.LocalExecute: Boolean;
                   end;
                 JsonArray.AddElement(JSONObject);
                 IncProgress(1);
-                JSONObject := Nil;
-                Application.ProcessMessages;
               end
 
             end;

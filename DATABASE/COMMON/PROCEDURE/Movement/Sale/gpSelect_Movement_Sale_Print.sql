@@ -588,7 +588,9 @@ BEGIN
                                                                 , zc_MovementFloat_TotalCountSh()
                                                                 , zc_MovementFloat_TotalSummMVAT()
                                                                 , zc_MovementFloat_TotalSummPVAT()
-                                                                , zc_MovementFloat_TotalSumm()
+                                                                , zc_MovementFloat_TotalSumm()  
+                                                                , zc_MovementFloat_TotalSummTare() 
+                                                                , zc_MovementFloat_TotalCountTare()
                                                                  )
                                   )
 
@@ -637,11 +639,24 @@ BEGIN
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbTotalCountKg ELSE MovementFloat_TotalCountKg.ValueData END AS TotalCountKg
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbTotalCountSh ELSE MovementFloat_TotalCountSh.ValueData - COALESCE (vbTotalCountSh_Kg,0) END AS TotalCountSh
 
-           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_MVAT ELSE MovementFloat_TotalSummMVAT.ValueData END AS TotalSummMVAT
-           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSummPVAT.ValueData END AS TotalSummPVAT
-           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT - vbOperSumm_MVAT ELSE MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData END AS SummVAT
+           , COALESCE (CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_MVAT ELSE MovementFloat_TotalSummMVAT.ValueData END, 0)
+             + COALESCE (CAST (MovementFloat_TotalSummTare.ValueData - MovementFloat_TotalSummTare.ValueData * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 4)),0) AS TotalSummMVAT 
+           
+           , COALESCE (CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSummPVAT.ValueData END, 0)
+              + COALESCE (MovementFloat_TotalSummTare.ValueData,0) AS TotalSummPVAT
+
+           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT - vbOperSumm_MVAT
+                 ELSE MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData 
+                  + COALESCE (CAST ( MovementFloat_TotalSummTare.ValueData * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 4)),0) END AS SummVAT
+           
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSumm.ValueData END AS TotalSumm
-           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSumm.ValueData *(1 - (vbVATPercent / (vbVATPercent + 100))) END TotalSummMVAT_Info
+           , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSumm.ValueData *(1 - (vbVATPercent / (vbVATPercent + 100))) END TotalSummMVAT_Info                                                                                                                            
+           --Сумма оборотной тары
+           , MovementFloat_TotalSummTare.ValueData AS TotalSummPVAT_Tare -- c НДС
+           
+           , CAST (MovementFloat_TotalSummTare.ValueData - MovementFloat_TotalSummTare.ValueData * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 4)) AS TotalSummMVAT_Tare --  без НДС
+
+
            , Object_From.ValueData             		AS FromName
            , CASE WHEN vbIsKiev = TRUE THEN TRUE ELSE FALSE END AS isPrintPageBarCode
            , COALESCE (Object_Partner.ValueData, Object_To.ValueData) AS ToName
@@ -894,6 +909,14 @@ BEGIN
                                        ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                       AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummTare
+                                       ON MovementFloat_TotalSummTare.MovementId =  Movement.Id
+                                      AND MovementFloat_TotalSummTare.DescId = zc_MovementFloat_TotalSummTare()
+ /*           LEFT JOIN tmpMovementFloat AS MovementFloat_TotalCountTare
+                                       ON MovementFloat_TotalCountTare.MovementId =  Movement.Id
+                                      AND MovementFloat_TotalCountTare.DescId = zc_MovementFloat_TotalCountTare()     
+*/
+                                      
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()

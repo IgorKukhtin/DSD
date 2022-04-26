@@ -173,3 +173,19 @@
   {$define D16UP}
 {$endif}
 
+// Delphi 10.3 Rio
+{$ifdef VER340}
+  {$define D7UP}
+  {$define D10UP}
+  {$define D15UP}
+  {$define D16UP}
+{$endif}
+
+// Delphi 10.3 Rio
+{$ifdef VER350}
+  {$define D7UP}
+  {$define D10UP}
+  {$define D15UP}
+  {$define D16UP}
+{$endif}
+

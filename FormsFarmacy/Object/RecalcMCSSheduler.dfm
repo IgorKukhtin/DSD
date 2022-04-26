@@ -888,6 +888,30 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
         end>
       Caption = 'actExecSPUpdateactSun'
     end
+    object actReport_RecalcMCS: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1088#1086#1074#1077#1088#1082#1072' '#1088#1072#1089#1095#1077#1090#1072' '#1053#1058#1047
+      Hint = #1054#1090#1095#1077#1090' '#1087#1088#1086#1074#1077#1088#1082#1072' '#1088#1072#1089#1095#1077#1090#1072' '#1053#1058#1047
+      ImageIndex = 3
+      FormName = 'TReport_RecalcMCSForm'
+      FormNameParam.Value = 'TReport_RecalcMCSForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -992,6 +1016,14 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
         item
           Visible = True
           ItemName = 'dxBarButton10'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_RecalcMCS'
         end>
     end
     inherited dxBarStatic: TdxBarStatic
@@ -1091,6 +1123,10 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
     end
     object dxBarButton11: TdxBarButton
       Action = actUpdateMain
+      Category = 0
+    end
+    object bbReport_RecalcMCS: TdxBarButton
+      Action = actReport_RecalcMCS
       Category = 0
     end
   end

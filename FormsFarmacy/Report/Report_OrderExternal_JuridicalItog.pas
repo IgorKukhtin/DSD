@@ -54,6 +54,9 @@ type
     SummWithNDSLeft: TcxGridDBColumn;
     SummWithNDSOIP: TcxGridDBColumn;
     SummWithNDSAll: TcxGridDBColumn;
+    Deferment: TcxGridDBColumn;
+    isDefermentContract: TcxGridDBColumn;
+    isPartialPay: TcxGridDBColumn;
   private
     { Private declarations }
   public

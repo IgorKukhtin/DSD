@@ -39,6 +39,12 @@ inherited CheckHelsiSignForm: TCheckHelsiSignForm
     Width = 921
     Height = 459
     Align = alClient
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 0
     object cxCheckHelsiSignGridDBBandedTableView1: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
@@ -312,6 +318,15 @@ inherited CheckHelsiSignForm: TCheckHelsiSignForm
       ImageIndex = 12
       OnExecute = actSignExecute
     end
+    object actGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      MoveParams = <>
+      Grid = cxCheckHelsiSignGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
   end
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -381,6 +396,14 @@ inherited CheckHelsiSignForm: TCheckHelsiSignForm
         item
           Visible = True
           ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton5'
         end>
       OneOnRow = True
       Row = 0
@@ -434,6 +457,10 @@ inherited CheckHelsiSignForm: TCheckHelsiSignForm
     end
     object dxBarButton4: TdxBarButton
       Action = actSign
+      Category = 0
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actGridToExcel
       Category = 0
     end
   end
