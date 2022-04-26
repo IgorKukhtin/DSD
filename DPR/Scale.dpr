@@ -98,7 +98,7 @@ uses
   DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
   OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
-  GuideSubjectDoc in '..\Scale\GuideSubjectDoc.pas' {GuideSubjectDocForm},
+  GuideRetail in '..\Scale\GuideRetail.pas' {GuideRetailForm},
   GuideUnit in '..\Scale\GuideUnit.pas' {GuideUnitForm},
   dmMainScaleCeh in '..\Scale\Util\dmMainScaleCeh.pas',
   APScale_TLB in '..\Scale\Util\APScale_TLB.pas',
@@ -114,7 +114,8 @@ uses
   IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas',
   GuideReason in '..\Scale\GuideReason.pas' {GuideReasonForm},
   GuideAsset in '..\Scale\GuideAsset.pas' {GuideAssetForm},
-  GuideMovementTransport in '..\Scale\GuideMovementTransport.pas' {GuideMovementTransportForm};
+  GuideMovementTransport in '..\Scale\GuideMovementTransport.pas' {GuideMovementTransportForm},
+  GuideSubjectDoc in '..\Scale\GuideSubjectDoc.pas' {GuideSubjectDocForm};
 
 {$R *.res}
 
@@ -169,6 +170,7 @@ begin
          Application.CreateForm(TGuideGoodsRemainsForm, GuideGoodsRemainsForm);
          Application.CreateForm(TGuideReasonForm, GuideReasonForm);
          Application.CreateForm(TGuideAssetForm, GuideAssetForm);
+         Application.CreateForm(TGuideRetailForm, GuideRetailForm);
   end
   else
 
@@ -217,6 +219,7 @@ begin
          Application.CreateForm(TGuideGoodsRemainsForm, GuideGoodsRemainsForm);
          Application.CreateForm(TGuideReasonForm, GuideReasonForm);
          Application.CreateForm(TGuideAssetForm, GuideAssetForm);
+         Application.CreateForm(TGuideRetailForm, GuideRetailForm);
   end;
   //
   Application.Run;

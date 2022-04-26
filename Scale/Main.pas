@@ -335,6 +335,7 @@ type
     procedure myActiveControl;
     procedure pSetDriverReturn;
     procedure pSetSubjectDoc;
+    procedure pSetRetail;
     procedure pSetComment;
     procedure pSetReason;
     procedure pSetAsset;
@@ -1430,6 +1431,44 @@ begin
           DMMainScaleForm.gpInsertUpdate_Scale_Movement(ParamsMovement);
      end;
      //
+end;
+//---------------------------------------------------------------------------------------------
+procedure TMainForm.pSetRetail;
+var execParams:TParams;
+begin
+     if SettingMain.isSticker_Weight = FALSE then exit;
+     //
+     Create_ParamsGuide(execParams);
+     //
+     with execParams do
+     begin
+          ParamByName('GuideId').AsInteger:=ParamsMovement.ParamByName('ToId').AsInteger;
+          ParamByName('GuideCode').AsInteger:=ParamsMovement.ParamByName('ToCode').AsInteger;
+          ParamByName('GuideName').asString:=ParamsMovement.ParamByName('ToName').asString;
+     end;
+     if GuideSubjectDocForm.Execute(execParams)
+     then begin
+               ParamsMovement.ParamByName('ToId').AsInteger:=execParams.ParamByName('GuideId').AsInteger;
+               ParamsMovement.ParamByName('ToCode').AsInteger:=execParams.ParamByName('GuideCode').AsInteger;
+               ParamsMovement.ParamByName('ToName').AsString:=execParams.ParamByName('GuideName').AsString;
+               //
+               EditSubjectDoc.Text:=execParams.ParamByName('SubjectDocName').AsString;
+               //
+               with DialogStringValueForm do
+               begin
+                    LabelStringValue.Caption:='Ввод примечания для <'+execParams.ParamByName('SubjectDocName').AsString+'>';
+                    ActiveControl:=StringValueEdit;
+                    StringValueEdit.Text:=ParamsMovement.ParamByName('DocumentComment').AsString;
+                    if Execute (false, false)
+                    then ParamsMovement.ParamByName('DocumentComment').AsString:= StringValueEdit.Text;
+                    //
+                    EditSubjectDoc.Text:= EditSubjectDoc.Text + ' / ' + ParamsMovement.ParamByName('DocumentComment').AsString;
+               end;
+               //
+               DMMainScaleForm.gpInsertUpdate_Scale_Movement(ParamsMovement);
+     end;
+     //
+     execParams.Free;
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainForm.pSetSubjectDoc;

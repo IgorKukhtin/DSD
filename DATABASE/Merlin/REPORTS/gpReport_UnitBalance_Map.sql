@@ -38,7 +38,7 @@ BEGIN
      
      vbStartId := (SELECT tmp.ID FROM gpGet_Object_Unit_Start (0, inSession) AS tmp);
 
-IF inUnitGroupId = 1 THEN inUnitGroupId:= 0; END IF;
+IF inUnitGroupId = 2 THEN inUnitGroupId:= 0; END IF;
 
      IF EXISTS(SELECT * FROM ObjectLink AS ObjectLink_Unit_Parent
                WHERE ObjectLink_Unit_Parent.ChildObjectId = inUnitGroupId
@@ -131,11 +131,11 @@ IF inUnitGroupId = 1 THEN inUnitGroupId:= 0; END IF;
 
      --Результат
      SELECT
-        Object_Unit.Id            AS Id
+        Object_Unit.Id                   AS Id
       , Object_Unit. ObjectCode          AS Code
-      , (Object_Unit.ValueData||chr(13)||'Н: ' || SUM (COALESCE (tmpReport.AmountDebet,0))::TVarChar
-                              ||chr(13)||'О: ' || SUM (COALESCE (tmpReport.AmountKredit,0))::TVarChar
-                              ||chr(13)||'Д: ' || SUM (COALESCE (tmpReport.AmountDebetEnd,0) -COALESCE (tmpReport.AmountKreditEnd,0))
+      , (Object_Unit.ValueData||chr(13)||'Н: ' || zfConvert_FloatToString (SUM (COALESCE (tmpReport.AmountDebet, 0)))
+                              ||chr(13)||'О: ' || zfConvert_FloatToString (SUM (COALESCE (tmpReport.AmountKredit, 0)))
+                              ||chr(13)||'Д: ' || zfConvert_FloatToString (SUM (COALESCE (tmpReport.AmountDebetEnd, 0) - COALESCE (tmpReport.AmountKreditEnd, 0)))
 		)::TVarChar AS Name  -- Н-начислено;  О - оплачено; Д-ДОЛГ
 
       , COALESCE (Object_Parent.Id,0)   AS ParentId
@@ -161,7 +161,7 @@ IF inUnitGroupId = 1 THEN inUnitGroupId:= 0; END IF;
             LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = tmpUnitGroup.ParentId
 
             LEFT JOIN tmpUnitLast ON tmpUnitLast.Id = Object_Unit.Id 
-
+     WHERE (Object_Unit.Id = 52460 AND inUnitGroupId = 0) OR inUnitGroupId <> 0
      GROUP BY Object_Unit.Id
             , Object_Unit. ObjectCode
             , Object_Unit.ValueData

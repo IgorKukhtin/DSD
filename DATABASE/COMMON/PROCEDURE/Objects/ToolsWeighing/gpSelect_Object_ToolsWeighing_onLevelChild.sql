@@ -106,6 +106,7 @@ BEGIN
            UNION SELECT 'PrintCount'             AS Name
            UNION SELECT 'isPrintPreview'         AS Name
 
+           UNION SELECT 'isSticker_Weight'       AS Name WHERE vbIsSticker = TRUE
            UNION SELECT 'isBarCode'              AS Name WHERE inIsCeh = FALSE
            UNION SELECT 'isTareWeightEnter'      AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
            UNION SELECT 'isPersonalComplete'     AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE

@@ -1564,6 +1564,9 @@ begin
        SettingMain.isReReturnIn:=GetArrayList_Value_byName(Default_Array,'isReReturnIn') = AnsiUpperCase('TRUE');
        //
        SettingMain.isPartionGoods_20103:=GetArrayList_Value_byName(Default_Array,'isPartionGoods_20103') = AnsiUpperCase('TRUE');
+       //
+       if SettingMain.isSticker = TRUE
+       then SettingMain.isSticker_Weight:=GetArrayList_Value_byName(Default_Array,'isSticker_Weight') = AnsiUpperCase('TRUE');
   end;
   //
   Result:=true;

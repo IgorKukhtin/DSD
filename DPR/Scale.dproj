@@ -248,8 +248,8 @@
 			<DCCReference Include="..\SOURCE\EDI\DesadvFozzXML.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\IftminFozzXML.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\OrderSpFozzXML.pas"/>
-			<DCCReference Include="..\Scale\GuideSubjectDoc.pas">
-				<Form>GuideSubjectDocForm</Form>
+			<DCCReference Include="..\Scale\GuideRetail.pas">
+				<Form>GuideRetailForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\Scale\GuideUnit.pas">
 				<Form>GuideUnitForm</Form>
@@ -278,6 +278,9 @@
 			</DCCReference>
 			<DCCReference Include="..\Scale\GuideMovementTransport.pas">
 				<Form>GuideMovementTransportForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\Scale\GuideSubjectDoc.pas">
+				<Form>GuideSubjectDocForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

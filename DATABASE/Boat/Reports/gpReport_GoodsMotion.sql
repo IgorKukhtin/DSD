@@ -17,7 +17,7 @@ RETURNS TABLE  (LocationDescName TVarChar, LocationCode Integer, LocationName TV
               --, GoodsCode_parent Integer, GoodsName_parent TVarChar
               , PartnerName TVarChar
               , Article TVarChar
-              , PartNumber TVarChar
+              , PartNumber TBlob
               , GoodsGroupNameFull TVarChar
               , GoodsGroupName TVarChar
               , MeasureName TVarChar
@@ -27,19 +27,20 @@ RETURNS TABLE  (LocationDescName TVarChar, LocationCode Integer, LocationName TV
               , TaxKindName TVarChar
               , GoodsSizeId Integer
               , GoodsSizeName TVarChar
-              
+
               , Price TFloat, Price_end TFloat
               , AmountStart TFloat, AmountIn TFloat, AmountOut TFloat, AmountEnd TFloat, Amount TFloat
               , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat, Summ TFloat
-               
-              , OperPrice   TFloat           -- ÷ена вх
-              , OperPriceList  TFloat        -- ÷ена по прайсу
-              , OperPrice_cost TFloat
-              , CostPrice TFloat
-              , TotalSummEKPrice_in TFloat   -- —умма по входным ценам
-              , TotalSummPriceList_in TFloat -- —умма по прайсу - 
-              , Summ_Cost TFloat
+
+              , OperPrice              TFloat -- ÷ена вх
+              , OperPriceList          TFloat -- ÷ена по прайсу
+              , OperPrice_cost         TFloat
+              , CostPrice              TFloat
+              , TotalSummEKPrice_in    TFloat -- —умма по входным ценам
+              , TotalSummPriceList_in  TFloat -- —умма по прайсу -
+              , Summ_Cost              TFloat
               , TotalSummPrice_cost_in TFloat
+              , tmpDate TDateTime             -- надо вернуть дату, тогда в гриде не будет кривых данных
               )
 AS
 $BODY$
@@ -337,7 +338,7 @@ BEGIN
                     FROM MovementItemString AS MIString_PartNumber
                     WHERE MIString_PartNumber.MovementItemId IN (SELECT DISTINCT tmpMIContainer_group.PartionId FROM tmpMIContainer_group)
                       AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
-                    ) 
+                    )
 
    -- –≈«”Ћ№“ј“
   , tmpDataAll AS (SELECT tmpDataAll.LocationDescName
@@ -350,16 +351,16 @@ BEGIN
 
                         , AVG (tmpDataAll.Price)            ::TFloat AS Price
                         , AVG (tmpDataAll.Price_end)        ::TFloat AS Price_end
- 
-                        , SUM (tmpDataAll.AmountStart)      ::TFloat  AS AmountStart      
-                        , SUM (tmpDataAll.AmountIn)         ::TFloat  AS AmountIn         
-                        , SUM (tmpDataAll.AmountOut)        ::TFloat  AS AmountOut        
-                        , SUM (tmpDataAll.AmountEnd)        ::TFloat  AS AmountEnd        
-                        , SUM (tmpDataAll.Amount)           ::TFloat  AS Amount 
-                        , SUM (tmpDataAll.SummStart)        ::TFloat  AS SummStart        
-                        , SUM (tmpDataAll.SummIn)           ::TFloat  AS SummIn           
-                        , SUM (tmpDataAll.SummOut)          ::TFloat  AS SummOut          
-                        , SUM (tmpDataAll.SummEnd)          ::TFloat  AS SummEnd          
+
+                        , SUM (tmpDataAll.AmountStart)      ::TFloat  AS AmountStart
+                        , SUM (tmpDataAll.AmountIn)         ::TFloat  AS AmountIn
+                        , SUM (tmpDataAll.AmountOut)        ::TFloat  AS AmountOut
+                        , SUM (tmpDataAll.AmountEnd)        ::TFloat  AS AmountEnd
+                        , SUM (tmpDataAll.Amount)           ::TFloat  AS Amount
+                        , SUM (tmpDataAll.SummStart)        ::TFloat  AS SummStart
+                        , SUM (tmpDataAll.SummIn)           ::TFloat  AS SummIn
+                        , SUM (tmpDataAll.SummOut)          ::TFloat  AS SummOut
+                        , SUM (tmpDataAll.SummEnd)          ::TFloat  AS SummEnd
                         , SUM (tmpDataAll.Summ)             ::TFloat  AS Summ
 
                         --из партии
@@ -381,18 +382,18 @@ BEGIN
                         , SUM (zfCalc_SummPriceList (tmpDataAll.AmountIn, tmpDataAll.CostPrice))                         AS TotalSumm_cost_in
                         , SUM (zfCalc_SummPriceList (tmpDataAll.AmountIn, tmpDataAll.OperPrice_cost))                    AS TotalSummPrice_cost_in
 
-                        , STRING_AGG (MIString_PartNumber.ValueData, ' ;') ::TVarChar AS PartNumber
+                        , STRING_AGG (MIString_PartNumber.ValueData, '; ') AS PartNumber
 
                    FROM (SELECT ObjectDesc.ItemName            AS LocationDescName
                               , Object_Location.ObjectCode     AS LocationCode
                               , Object_Location.ValueData      AS LocationName
-                   
+
                               , Object_Goods.Id         AS GoodsId
                               , Object_Goods.ObjectCode AS GoodsCode
                               , Object_Goods.ValueData  AS GoodsName
                               , tmpMIContainer_group.PartionId
                               , ''::TVarChar AS GoodsKindName_parent
-                      
+
                               , CAST (CASE WHEN Movement.DescId = zc_Movement_Income() AND 1=0
                                                 THEN 0
                                            WHEN tmpMIContainer_group.AmountStart <> 0
@@ -403,12 +404,12 @@ BEGIN
                                                 THEN tmpMIContainer_group.SummOut / tmpMIContainer_group.AmountOut
                                            ELSE 0
                                       END AS TFloat) AS Price
-                      
+
                               , CAST (CASE WHEN tmpMIContainer_group.AmountEnd <> 0
                                                 THEN tmpMIContainer_group.SummEnd / tmpMIContainer_group.AmountEnd
                                            ELSE 0
                                       END AS TFloat) AS Price_end
-                      
+
                               , CAST (tmpMIContainer_group.AmountStart AS TFloat) AS AmountStart
                               , CAST (tmpMIContainer_group.AmountIn AS TFloat)    AS AmountIn
                               , CAST (tmpMIContainer_group.AmountOut AS TFloat)   AS AmountOut
@@ -416,7 +417,7 @@ BEGIN
                               , CAST ((tmpMIContainer_group.AmountIn - tmpMIContainer_group.AmountOut)
                                     * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_Loss()) THEN -1 ELSE 1 END
                                       AS TFloat) AS Amount
-                      
+
                               , CAST (tmpMIContainer_group.SummStart AS TFloat)   AS SummStart
                               , CAST (tmpMIContainer_group.SummIn AS TFloat)      AS SummIn
                               , CAST (tmpMIContainer_group.SummOut AS TFloat)     AS SummOut
@@ -424,7 +425,7 @@ BEGIN
                               , CAST ((tmpMIContainer_group.SummIn - tmpMIContainer_group.SummOut)
                                     * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_Loss()) THEN -1 ELSE 1 END
                                       AS TFloat) AS Summ
-      
+
                                -- из партии
                               , Object_PartionGoods.FromId AS PartnerId
                               , Object_PartionGoods.GoodsSizeId
@@ -445,17 +446,17 @@ BEGIN
                               , Object_PartionGoods.Amount     AS Amount_in
                                 --  є п/п - только дл€ = 1 возьмем Amount_in
                               , ROW_NUMBER() OVER (PARTITION BY tmpMIContainer_group.PartionId ORDER BY CASE WHEN tmpMIContainer_group.LocationId = Object_PartionGoods.UnitId THEN 0 ELSE 1 END ASC) AS Ord
-      
+
                          FROM tmpMIContainer_group
                               LEFT JOIN Movement ON Movement.Id = tmpMIContainer_group.MovementId
                               LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-                      
+
                               INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMIContainer_group.GoodsId
-                      
+
                               LEFT JOIN Object AS Object_Location_find ON Object_Location_find.Id = tmpMIContainer_group.LocationId
                               LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Location_find.DescId
                               LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmpMIContainer_group.LocationId
-      
+
                               LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMIContainer_group.PartionId
                                                            AND Object_PartionGoods.ObjectId       = tmpMIContainer_group.GoodsId
                                                            AND Object_PartionGoods.isErased       = FALSE
@@ -481,13 +482,13 @@ BEGIN
                           , tmpDataAll.TaxKindValue
                           , tmpDataAll.OperPriceList
                           , tmpDataAll.PartnerId
-                   HAVING SUM (tmpDataAll.AmountStart) <> 0      
-                       OR SUM (tmpDataAll.AmountIn)    <> 0      
-                       OR SUM (tmpDataAll.AmountOut)   <> 0      
-                       OR SUM (tmpDataAll.AmountEnd)   <> 0      
-                       OR SUM (tmpDataAll.SummStart)   <> 0      
-                       OR SUM (tmpDataAll.SummIn)      <> 0      
-                       OR SUM (tmpDataAll.SummOut)     <> 0      
+                   HAVING SUM (tmpDataAll.AmountStart) <> 0
+                       OR SUM (tmpDataAll.AmountIn)    <> 0
+                       OR SUM (tmpDataAll.AmountOut)   <> 0
+                       OR SUM (tmpDataAll.AmountEnd)   <> 0
+                       OR SUM (tmpDataAll.SummStart)   <> 0
+                       OR SUM (tmpDataAll.SummIn)      <> 0
+                       OR SUM (tmpDataAll.SummOut)     <> 0
                        OR SUM (tmpDataAll.SummEnd)     <> 0
                    )
 
@@ -500,49 +501,52 @@ BEGIN
         , tmpDataAll.GoodsCode
         , tmpDataAll.GoodsName
         , (Object_Partner.ValueData || ' (' || Object_Partner.Id :: TVarChar || ')') :: TVarChar AS PartnerName
-        , ObjectString_Article.ValueData AS Article
-        , tmpDataAll.PartNumber ::TVarChar
+        , ObjectString_Article.ValueData        AS Article
+        , tmpDataAll.PartNumber        :: TBlob AS PartNumber
         , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-        , Object_GoodsGroup.ValueData    AS GoodsGroupName
-        , Object_Measure.ValueData       AS MeasureName
-        , Object_GoodsTag.ValueData      AS GoodsTagName
-        , Object_GoodsType.ValueData     AS GoodsTypeName
-        , Object_ProdColor.ValueData     AS ProdColorName
-        , Object_TaxKind.ValueData       AS TaxKindName
-        , Object_GoodsSize.Id            AS GoodsSizeId
+        , Object_GoodsGroup.ValueData           AS GoodsGroupName
+        , Object_Measure.ValueData              AS MeasureName
+        , Object_GoodsTag.ValueData             AS GoodsTagName
+        , Object_GoodsType.ValueData            AS GoodsTypeName
+        , Object_ProdColor.ValueData            AS ProdColorName
+        , Object_TaxKind.ValueData              AS TaxKindName
+        , Object_GoodsSize.Id                   AS GoodsSizeId
         , Object_GoodsSize.ValueData ::TVarChar AS GoodsSizeName
 
         , tmpDataAll.Price            ::TFloat AS Price
         , tmpDataAll.Price_end        ::TFloat AS Price_end
 
-        , CAST (tmpDataAll.AmountStart AS NUMERIC (16,2)) ::TFloat  AS AmountStart      
-        , CAST (tmpDataAll.AmountIn AS NUMERIC (16,2))    ::TFloat  AS AmountIn         
-        , CAST (tmpDataAll.AmountOut AS NUMERIC (16,2))   ::TFloat  AS AmountOut        
-        , CAST (tmpDataAll.AmountEnd AS NUMERIC (16,2))   ::TFloat  AS AmountEnd        
-        , CAST (tmpDataAll.Amount AS NUMERIC (16,2))      ::TFloat  AS Amount 
-        , CAST (tmpDataAll.SummStart AS NUMERIC (16,2))   ::TFloat  AS SummStart        
-        , CAST (tmpDataAll.SummIn AS NUMERIC (16,2))      ::TFloat  AS SummIn           
-        , CAST (tmpDataAll.SummOut AS NUMERIC (16,2))     ::TFloat  AS SummOut          
-        , CAST (tmpDataAll.SummEnd AS NUMERIC (16,2))     ::TFloat  AS SummEnd          
+        , CAST (tmpDataAll.AmountStart AS NUMERIC (16,2)) ::TFloat  AS AmountStart
+        , CAST (tmpDataAll.AmountIn AS NUMERIC (16,2))    ::TFloat  AS AmountIn
+        , CAST (tmpDataAll.AmountOut AS NUMERIC (16,2))   ::TFloat  AS AmountOut
+        , CAST (tmpDataAll.AmountEnd AS NUMERIC (16,2))   ::TFloat  AS AmountEnd
+        , CAST (tmpDataAll.Amount AS NUMERIC (16,2))      ::TFloat  AS Amount
+        , CAST (tmpDataAll.SummStart AS NUMERIC (16,2))   ::TFloat  AS SummStart
+        , CAST (tmpDataAll.SummIn AS NUMERIC (16,2))      ::TFloat  AS SummIn
+        , CAST (tmpDataAll.SummOut AS NUMERIC (16,2))     ::TFloat  AS SummOut
+        , CAST (tmpDataAll.SummEnd AS NUMERIC (16,2))     ::TFloat  AS SummEnd
         , CAST (tmpDataAll.Summ AS NUMERIC (16,2))        ::TFloat  AS Summ
 
            -- ÷ена вх
-           , CASE WHEN tmpDataAll.Amountin  <> 0 THEN tmpDataAll.TotalSummEKPrice_in / tmpDataAll.Amountin ELSE 0 END :: TFloat AS OperPrice
-             -- ÷ена по прайсу
-           , tmpDataAll.OperPriceList :: TFloat
-           --, tmpData.OperPrice_cost   :: TFloat
-           , CASE WHEN tmpDataAll.Amountin  <> 0 THEN COALESCE (tmpDataAll.TotalSummEKPrice_in,0) + COALESCE (tmpDataAll.CostPrice_summ,0) / tmpDataAll.Amountin
-                  ELSE 0
-             END :: TFloat AS OperPrice_cost
-           , tmpDataAll.CostPrice_summ        :: TFloat AS CostPrice
+        , CASE WHEN tmpDataAll.Amountin  <> 0 THEN tmpDataAll.TotalSummEKPrice_in / tmpDataAll.Amountin ELSE 0 END :: TFloat AS OperPrice
+          -- ÷ена по прайсу
+        , tmpDataAll.OperPriceList            :: TFloat AS OperPriceList
+        --, tmpData.OperPrice_cost   :: TFloat
+        , CASE WHEN tmpDataAll.Amountin  <> 0 THEN COALESCE (tmpDataAll.TotalSummEKPrice_in,0) + COALESCE (tmpDataAll.CostPrice_summ,0) / tmpDataAll.Amountin
+               ELSE 0
+          END                                 :: TFloat AS OperPrice_cost
+        , tmpDataAll.CostPrice_summ           :: TFloat AS CostPrice
 
-             -- —умма по входным ценам
-           , tmpDataAll.TotalSummEKPrice_in      :: TFloat AS TotalSummEKPrice_in
-             -- —умма по прайсу - 
-           , tmpDataAll.TotalSummPriceList_in      :: TFloat AS TotalSummPriceList_in
-           
-           , tmpDataAll.TotalSumm_Cost_in   :: TFloat AS Summ_Cost
-           , tmpDataAll.TotalSummPrice_cost_in  :: TFloat AS TotalSummPrice_cost_in
+          -- —умма по входным ценам
+        , tmpDataAll.TotalSummEKPrice_in     :: TFloat AS TotalSummEKPrice_in
+          -- —умма по прайсу -
+        , tmpDataAll.TotalSummPriceList_in   :: TFloat AS TotalSummPriceList_in
+
+        , tmpDataAll.TotalSumm_Cost_in       :: TFloat AS Summ_Cost
+        , tmpDataAll.TotalSummPrice_cost_in  :: TFloat AS TotalSummPrice_cost_in
+ 
+          -- надо вернуть дату, тогда в гриде не будет кривых данных
+        , CURRENT_TIMESTAMP :: TDateTime   AS tmpDate
 
    FROM tmpDataAll
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpDataAll.PartnerId

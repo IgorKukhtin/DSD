@@ -13,7 +13,17 @@ uses
   cxClasses, cxGridCustomView, cxGrid, dsdAddOn, Vcl.ActnList, dsdAction
  ,UtilScale,DataModul, frxClass, frxPreview, frxDBSet, cxSplitter, Vcl.ComCtrls,
   dxCore, cxDateUtils, cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel,
-  cxCheckBox;
+  cxCheckBox, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TGuideGoodsStickerForm = class(TForm)
@@ -1206,6 +1216,9 @@ begin
   InitializeStickerPack(lStickerPackGroupId);
   //Принтеры
   InitializePrinterSticker;
+  //
+  gbGoodsWieghtValue.Visible:= SettingMain.isSticker_Weight;
+  //
 
   //вес тары (ручной режим)
   //***gbTareWeightEnter.Visible:=GetArrayList_Value_byName(Default_Array,'isTareWeightEnter')=AnsiUpperCase('TRUE');

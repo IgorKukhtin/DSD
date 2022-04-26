@@ -314,7 +314,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           TabOrder = 3
           object EditWeightValue: TcxCurrencyEdit
             Left = 5
-            Top = 18
+            Top = 17
             EditValue = 2.000000000000000000
             Properties.Alignment.Horz = taRightJustify
             Properties.Alignment.Vert = taVCenter
@@ -463,7 +463,8 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           Align = alTop
           Caption = #1042#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
           TabOrder = 2
-          Visible = False
+          ExplicitLeft = 5
+          ExplicitTop = 86
           object PanelGoodsWieghtValue: TPanel
             Left = 2
             Top = 16
@@ -643,10 +644,13 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 408
     Top = 392
   end
@@ -881,28 +885,28 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       end
       item
         Name = 'inIsStartEnd'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inIsTare'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPartion'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inIsGoodsName'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

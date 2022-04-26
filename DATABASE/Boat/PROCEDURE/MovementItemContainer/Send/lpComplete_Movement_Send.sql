@@ -460,7 +460,7 @@ BEGIN
                 WHERE COALESCE (_tmpItem.OperCount, 0) <> COALESCE (tmpReserveRes.Amount, 0)
                )
      THEN
-         RAISE EXCEPTION 'Ошибка.Кол-во в элементах не может отличаться от кол-ва в партиях <%> <%> <%>.'
+         RAISE EXCEPTION 'Ошибка.Кол-во в элементах = <%> не может отличаться от кол-ва в партиях = <%> <%>.'
                      , (SELECT _tmpItem.OperCount
                         FROM _tmpItem
                              FULL JOIN (SELECT _tmpReserveRes.ParentId, SUM (_tmpReserveRes.Amount) AS Amount
@@ -470,15 +470,15 @@ BEGIN
                         ORDER BY _tmpItem.MovementItemId
                         LIMIT 1
                        )
-                     , (SELECT tmpReserveRes.Amount
-                        FROM _tmpItem
-                             FULL JOIN (SELECT _tmpReserveRes.ParentId, SUM (_tmpReserveRes.Amount) AS Amount
-                                        FROM _tmpReserveRes GROUP BY _tmpReserveRes.ParentId
-                                       ) AS tmpReserveRes ON tmpReserveRes.ParentId = _tmpItem.MovementItemId
-                        WHERE COALESCE (_tmpItem.OperCount, 0) <> COALESCE (tmpReserveRes.Amount, 0)
-                        ORDER BY _tmpItem.MovementItemId
-                        LIMIT 1
-                       )
+                     , COALESCE ((SELECT tmpReserveRes.Amount
+                                  FROM _tmpItem
+                                       FULL JOIN (SELECT _tmpReserveRes.ParentId, SUM (_tmpReserveRes.Amount) AS Amount
+                                                  FROM _tmpReserveRes GROUP BY _tmpReserveRes.ParentId
+                                                 ) AS tmpReserveRes ON tmpReserveRes.ParentId = _tmpItem.MovementItemId
+                                  WHERE COALESCE (_tmpItem.OperCount, 0) <> COALESCE (tmpReserveRes.Amount, 0)
+                                  ORDER BY _tmpItem.MovementItemId
+                                  LIMIT 1
+                                 ), 0)
                      , (SELECT lfGet_Object_ValueData (_tmpItem.GoodsId)
                         FROM _tmpItem
                              FULL JOIN (SELECT _tmpReserveRes.ParentId, SUM (_tmpReserveRes.Amount) AS Amount

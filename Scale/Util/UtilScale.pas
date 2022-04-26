@@ -61,7 +61,10 @@ type
     isReason     :Boolean;  // Scale
     isReReturnIn :Boolean;  // Scale
     isAsset      :Boolean;  // Scale
-    isSticker:Boolean;      // Scale
+
+    isSticker:Boolean;        // Scale
+    isSticker_Weight:Boolean; // Scale
+
     isCeh:Boolean;          // ScaleCeh or Scale
     isGoodsComplete:Boolean;// ScaleCeh or Scale - склад ГП/производство/упаковка or обвалка
     isCalc_sht:Boolean;     // ScaleCeh - вес - из него получаем м. или шт.
@@ -134,6 +137,7 @@ type
   procedure Create_ParamsUnit_OrderInternal(var Params:TParams);
   procedure Create_ParamsAsset(var Params:TParams);
   procedure Create_ParamsReReturnIn(var Params:TParams);
+  procedure Create_ParamsGuide(var Params:TParams);
 
   // создает TParam с названием поля _Name и типом _DataType и добавляет к TParams
   procedure ParamAdd(var execParams:TParams;_Name:String;_DataType:TFieldType);
@@ -702,6 +706,14 @@ begin
      ParamAdd(Params,'SubjectDocId', ftInteger);   //
      ParamAdd(Params,'SubjectDocCode', ftInteger); //
      ParamAdd(Params,'SubjectDocName', ftString);  //
+end;
+{------------------------------------------------------------------------}
+procedure Create_ParamsGuide(var Params:TParams);
+begin
+     Params:=nil;
+     ParamAdd(Params,'GuideId', ftInteger);   //
+     ParamAdd(Params,'GuideCode', ftInteger); //
+     ParamAdd(Params,'GuideName', ftString);  //
 end;
 {------------------------------------------------------------------------}
 procedure Create_ParamsPersonalGroup(var Params:TParams);

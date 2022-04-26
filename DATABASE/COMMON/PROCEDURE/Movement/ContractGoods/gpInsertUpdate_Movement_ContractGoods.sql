@@ -22,7 +22,7 @@ BEGIN
      
      -- сохранили <Документ>
       SELECT tmp.ioId, tmp.ioInvNumber, tmp.outEndBeginDate
-    INTO ioId, ioInvNumber, outEndBeginDate
+             INTO ioId, ioInvNumber, outEndBeginDate
       FROM lpInsertUpdate_Movement_ContractGoods (ioId           := ioId
                                                 , ioInvNumber    := ioInvNumber
                                                 , inOperDate     := inOperDate
