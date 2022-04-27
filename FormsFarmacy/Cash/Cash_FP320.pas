@@ -19,7 +19,7 @@ type
     function PrinterException(ACreateException: Boolean = False): Boolean;
   protected
     function SoldCode(const GoodsCode: integer; const Amount: double; const Price: double = 0.00): boolean;
-    function SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
+    function SoldFromPC(const GoodsCode: integer; const GoodsName, UKTZED: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
     function ChangePrice(const GoodsCode: integer; const Price: double): boolean;
     function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
     function CloseReceipt: boolean;
@@ -315,7 +315,7 @@ begin
 end;
 
 function TCashFP320.SoldFromPC(const GoodsCode: integer;
-  const GoodsName: string; const Amount, Price, NDS: double): boolean;
+  const GoodsName, UKTZED: string; const Amount, Price, NDS: double): boolean;
 var
   NDSType: Integer;
   CashCode: integer;
@@ -324,14 +324,14 @@ begin
   result := True;
   if FAlwaysSold then exit;
 
-  Name75 := Copy(GoodsName,1,75);
+  Name75 := Copy(UKTZED + IfThen(UKTZED = '', '' , ' ') + GoodsName,1,75);
 
   if NDS = 20 then NDSType := 0
   else if NDS =  0 then NDSType := 2
   else NDSType := 1;
 
 	If FPrinter.PrinterState = 9 then
-		FPrinter.PrintNormal(2,GoodsName)
+		FPrinter.PrintNormal(2,UKTZED + IfThen(UKTZED = '', '' , ' ') + GoodsName)
 	else
   if (FPrinter.FiscalReceiptType = 4) or
      (FPrinter.FiscalReceiptType = 7) then

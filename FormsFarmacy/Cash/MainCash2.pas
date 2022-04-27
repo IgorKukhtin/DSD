@@ -1000,7 +1000,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog,
   PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog,
   GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions,
   PUSHMessageCash, PUSHMessage, Updater, HardwareDialog,
-  EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit,
+  EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignPUSH, CheckHelsiSignAllUnit,
   EmployeeScheduleCash, SelectionFromDirectory, ChoosingPairSun,
   EnterLoyaltyNumber, Report_ImplementationPlanEmployeeCash,
   EnterLoyaltySaveMoney, ChoosingPresent, ChoosingRelatedProduct,
@@ -2725,6 +2725,7 @@ procedure TMainCashForm2.TimerPUSHTimer(Sender: TObject);
 var
   cResult: string;
   LocalVersionInfo, BaseVersionInfo: TVersionInfo;
+  bHelsiPUSH : Boolean;
 
   procedure Load_PUSH(ARun: Boolean);
   begin
@@ -2759,9 +2760,11 @@ var
 begin
   TimerPUSH.Enabled := false;
   TimerPUSH.Interval := 60 * 1000;
+  bHelsiPUSH := False;
   if TimeOf(FPUSHEnd) > TimeOf(Now) then
     FPUSHEnd := Now;
   try
+
     if FPUSHStart then
     begin
       ShowPUSHMessageCash('Уважаемые коллеги!'#13#10 +
@@ -2801,6 +2804,7 @@ begin
       PUSHDS.First;
       try
         TimerPUSH.Interval := 1000;
+        bHelsiPUSH := bHelsiPUSH or (PUSHDS.FieldByName('Id').AsInteger = 22536449) or (PUSHDS.FieldByName('Id').AsInteger = 22536475);
         if PUSHDS.FieldByName('Id').AsInteger > 1000 then
         begin
           if PUSHDS.FieldByName('isFormOpen').AsBoolean then
@@ -2893,6 +2897,16 @@ begin
       UnitConfigCDS.Post;
       ShellExecute(0,'open','powershell.exe','Get-AppxPackage *skypeapp* | Remove-AppxPackage', nil, SW_HIDE);
     end;
+
+    // Проверим погашение чеков Хелси
+    if bHelsiPUSH and IsActiveHelsiApi then
+    begin
+      with TCheckHelsiSignPUSHForm.Create(Self) do
+      begin
+        if GetIsShow then Show else Free;
+      end;
+    end;
+
   finally
     FPUSHStart := false;
     TimerPUSH.Enabled := True;
@@ -8177,6 +8191,15 @@ begin
   if frac(Amount) = 0 then
     exit;
 
+  if Assigned(SourceClientDataSet.FindField('Remains')) then
+  begin
+    if frac(SourceClientDataSet.FindField('Remains').AsCurrency - Amount) = 0 then exit;
+  end else
+  begin
+    if frac(SourceClientDataSet.FindField('Amount').AsCurrency - Amount) = 0 then exit;
+  end;
+
+
   // Исключения по вхождению
   if UnitConfigCDS.FieldByName('ShareFromPriceName').AsString <> '' then
   begin
@@ -8634,10 +8657,10 @@ begin
       end;
     end;
 
-    if not CheckShareFromPrice(nAmount, SourceClientDataSet.FieldByName('Price')
-      .asCurrency, SourceClientDataSet.FieldByName('GoodsCode').AsInteger,
-      SourceClientDataSet.FieldByName('GoodsName').AsString) then
-      exit;
+    if not CheckShareFromPrice(nAmount,
+      SourceClientDataSet.FieldByName('Price').asCurrency,
+      SourceClientDataSet.FieldByName('GoodsCode').AsInteger,
+      SourceClientDataSet.FieldByName('GoodsName').AsString) then exit;
 
     // if (nAmount > 0) and (CheckCDS.RecordCount > 0) then
     // begin
@@ -10762,7 +10785,7 @@ var
   { ------------------------------------------------------------------------------ }
   function PutOneRecordToCash: Boolean; // Продажа одного наименования
   var
-    сAccommodationName, cUKTZED: string;
+    сAccommodationName: string;
     nDisc: Currency;
   begin
     // посылаем строку в кассу и если все OK, то ставим метку о продаже
@@ -10775,8 +10798,6 @@ var
           сAccommodationName := ''
         else
           сAccommodationName := ' ' + FieldByName('AccommodationName').Text;
-        cUKTZED := FieldByName('UKTZED').AsString;
-        if cUKTZED <> '' then cUKTZED := cUKTZED + ' ';
         if ((FormParams.ParamByName('LoyaltyChangeSumma').Value +
           FormParams.ParamByName('LoyaltySMSumma').Value) > 0) or
           (Self.FormParams.ParamByName('InvNumberSP').Value = '') and
@@ -10788,9 +10809,11 @@ var
           if CheckCDS.FieldByName('PricePartionDate').asCurrency > 0 then
           begin
             Result := Cash.SoldFromPC(FieldByName('GoodsCode').AsInteger,
-              cUKTZED + AnsiUpperCase(FieldByName('GoodsName').Text + сAccommodationName),
-              FieldByName('Amount').asCurrency, FieldByName('PricePartionDate')
-              .asCurrency, FieldByName('NDS').asCurrency);
+              AnsiUpperCase(FieldByName('GoodsName').Text + сAccommodationName),
+              FieldByName('UKTZED').AsString,
+              FieldByName('Amount').asCurrency,
+              FieldByName('PricePartionDate').asCurrency,
+              FieldByName('NDS').asCurrency);
             nDisc := FieldByName('Summ').asCurrency -
               GetSummFull(FieldByName('Amount').asCurrency,
               FieldByName('PricePartionDate').asCurrency);
@@ -10799,9 +10822,11 @@ var
           begin
 
             Result := Cash.SoldFromPC(FieldByName('GoodsCode').AsInteger,
-              cUKTZED + AnsiUpperCase(FieldByName('GoodsName').Text + сAccommodationName),
-              FieldByName('Amount').asCurrency, FieldByName('PriceSale')
-              .asCurrency, FieldByName('NDS').asCurrency);
+              AnsiUpperCase(FieldByName('GoodsName').Text + сAccommodationName),
+              FieldByName('UKTZED').AsString,
+              FieldByName('Amount').asCurrency,
+              FieldByName('PriceSale').asCurrency,
+              FieldByName('NDS').asCurrency);
             nDisc := FieldByName('Summ').asCurrency -
               GetSummFull(FieldByName('Amount').asCurrency,
               FieldByName('PriceSale').asCurrency);
@@ -10811,8 +10836,10 @@ var
         end
         else
           Result := Cash.SoldFromPC(FieldByName('GoodsCode').AsInteger,
-            cUKTZED + AnsiUpperCase(FieldByName('GoodsName').Text + сAccommodationName),
-            FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency,
+            AnsiUpperCase(FieldByName('GoodsName').Text + сAccommodationName),
+            FieldByName('UKTZED').AsString,
+            FieldByName('Amount').asCurrency,
+            FieldByName('Price').asCurrency,
             FieldByName('NDS').asCurrency);
       end
     else

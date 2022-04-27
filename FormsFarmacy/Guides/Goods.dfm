@@ -11,17 +11,17 @@ inherited GoodsForm: TGoodsForm
     Width = 1165
     Height = 518
     ExplicitWidth = 1165
-    ExplicitHeight = 417
+    ExplicitHeight = 518
     ClientRectBottom = 518
     ClientRectRight = 1165
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1165
-      ExplicitHeight = 417
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1165
         Height = 518
         ExplicitWidth = 1165
-        ExplicitHeight = 417
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -200,6 +200,14 @@ inherited GoodsForm: TGoodsForm
             HeaderHint = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090
             Options.Editing = False
             Width = 100
+          end
+          object MakerPromoName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074'. '#1084#1072#1088#1082'. '#1082#1086#1085#1090#1088'.'
+            DataBinding.FieldName = 'MakerPromoName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 108
           end
           object isMarketToday: TcxGridDBColumn
             Caption = #1045#1089#1090#1100' '#1085#1072' '#1088#1099#1085#1082#1077' '#1089#1077#1075#1086#1076#1085#1103

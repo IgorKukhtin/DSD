@@ -323,6 +323,7 @@ type
     bbUpdate_isSecond_Yes: TdxBarButton;
     bbUpdate_isFirst_No: TdxBarButton;
     bbUpdate_isSecond_No: TdxBarButton;
+    MakerPromoName: TcxGridDBColumn;
   private
     { Private declarations }
   public

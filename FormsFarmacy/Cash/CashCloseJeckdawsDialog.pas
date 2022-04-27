@@ -212,7 +212,7 @@ var
   { ------------------------------------------------------------------------------ }
   function PutOneRecordToCash: Boolean; // Продажа одного наименования
   var
-    сAccommodationName, cUKTZED: string;
+    сAccommodationName: string;
     nDisc: Currency;
   begin
     // посылаем строку в кассу и если все OK, то ставим метку о продаже
@@ -225,12 +225,12 @@ var
           сAccommodationName := ''
         else
           сAccommodationName := ' ' + FieldByName('AccommodationName').Text;
-        cUKTZED := FieldByName('UKTZED').AsString;
-        if cUKTZED <> '' then cUKTZED := cUKTZED + ' ';
 
         Result := Cash.SoldFromPC(FieldByName('GoodsCode').AsInteger,
-          cUKTZED + AnsiUpperCase(FieldByName('GoodsName').Text + сAccommodationName),
-          FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency,
+          AnsiUpperCase(FieldByName('GoodsName').Text + сAccommodationName),
+          FieldByName('UKTZED').AsString,
+          FieldByName('Amount').asCurrency,
+          FieldByName('Price').asCurrency,
           FieldByName('NDS').asCurrency);
       end
     else

@@ -6,6 +6,7 @@ function GetIniFile(out AIniFileName: String):boolean;
 
 function GetValue(const ASection,AParamName,ADefault: String): String;
 function GetValueInt(const ASection,AParamName: String; ADefault : Integer): Integer;
+function GetValueBool(const ASection,AParamName: String; ADefault : Boolean): Boolean;
 
 //возвраащет тип кассового аппарата;
 function iniCashType:String;
@@ -44,6 +45,16 @@ function iniPosType(ACode : integer):String;
 function iniPosPortNumber(ACode : integer):Integer;
 //возвращает скорость порта POS-терминала
 function iniPosPortSpeed(ACode : integer):Integer;
+
+// Для Вчасно-каса
+//возвраащет Режим True печать в пакетном режиме
+function iniVCBatchMode:Boolean;
+//возвраащет host - адрес компьютера, на котором установлен DeviceManager
+function iniVCURL:String;
+//возвраащет Ім'я пристрою *
+function iniVCDevice_Name:String;
+//возвраащет Token
+function iniVCAccess_Token:String;
 
 //логировать сообщения от РРО
 function iniLog_RRO : Boolean;
@@ -152,6 +163,22 @@ Begin
   Result := ini.ReadInteger(ASection,AParamName,ADefault);
   ini.Free;
 End;
+
+function GetValueBool(const ASection,AParamName: String; ADefault : Boolean): Boolean;
+var
+  ini: TiniFile;
+  IniFileName : String;
+Begin
+  if not GetIniFile(IniFileName) then
+  Begin
+    Result := False;
+    exit;
+  End;
+  ini := TiniFile.Create(IniFileName);
+  Result := ini.ReadBool(ASection,AParamName,ADefault);
+  ini.Free;
+End;
+
 
 function iniCashType:String;
 begin
@@ -356,6 +383,28 @@ begin
   S := GetValue('TSoldWithCompMainForm','PosPortSpeed' + IntToStr(ACode),'');
   if not tryStrToInt(S,Result) then
     Result := 0;
+end;
+
+// Для Вчасно-каса
+//возвраащет Режим True печать в пакетном режиме
+function iniVCBatchMode:Boolean;
+begin
+  Result := GetValueBool('TSoldWithCompMainForm','VCBatchMode', False);
+end;
+//возвраащет host - адрес компьютера, на котором установлен DeviceManager
+function iniVCURL:String;
+begin
+  Result := GetValue('TSoldWithCompMainForm','VCURL','');
+end;
+//возвраащет Ім'я пристрою *
+function iniVCDevice_Name:String;
+begin
+  Result := GetValue('TSoldWithCompMainForm','VCDevice_Name','');
+end;
+//возвраащет Token
+function iniVCAccess_Token:String;
+begin
+  Result := GetValue('TSoldWithCompMainForm','VCAccess_Token','');
 end;
 
 //логировать сообщения от РРО

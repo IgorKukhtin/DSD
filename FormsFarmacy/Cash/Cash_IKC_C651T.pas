@@ -17,7 +17,7 @@ type
     function GetAlwaysSold: boolean;
   protected
     function SoldCode(const GoodsCode: integer; const Amount: double; const Price: double = 0.00): boolean;
-    function SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
+    function SoldFromPC(const GoodsCode: integer; const GoodsName, UKTZED: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
     function ChangePrice(const GoodsCode: integer; const Price: double): boolean;
     function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
     function CloseReceipt: boolean;
@@ -156,7 +156,7 @@ begin
   ShowMessage('Ошибка. Комманда SoldCode не разрешена.');
 end;
 
-function TCashIKC_C651T.SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean;
+function TCashIKC_C651T.SoldFromPC(const GoodsCode: integer; const GoodsName, UKTZED: string; const Amount, Price, NDS: double): boolean;
 var NDSType: char;
     CashCode, nNDS: integer;
     I : Integer;
@@ -170,7 +170,7 @@ begin
   begin
 
     L := '';
-    Res := TRegEx.Split(GoodsName, ' ');
+    Res := TRegEx.Split(UKTZED + IfThen(UKTZED = '', '' , ' ') + GoodsName, ' ');
     for I := 0 to High(Res) do
     begin
       if L <> '' then L := L + ' ';
@@ -220,13 +220,13 @@ begin
   if FReturn then
   begin
     if Amount = 1 then
-      result := FPrinter.FPSaleItem(Round(Amount * 1000), 3, False, True, False, Round(Price * 100), nNDS, Copy(GoodsName, 1, 75), GoodsCode)
-    else result := FPrinter.FPSaleItem(Round(Amount * 1000), 3, False, False, False, Round(Price * 100), nNDS, Copy(GoodsName, 1, 75), GoodsCode);
+      result := FPrinter.FPSaleItem(Round(Amount * 1000), 3, False, True, False, Round(Price * 100), nNDS, Copy(UKTZED + IfThen(UKTZED = '', '' , ' ') + GoodsName, 1, 75), GoodsCode)
+    else result := FPrinter.FPSaleItem(Round(Amount * 1000), 3, False, False, False, Round(Price * 100), nNDS, Copy(UKTZED + IfThen(UKTZED = '', '' , ' ') + GoodsName, 1, 75), GoodsCode);
   end else
   begin
     if Amount = 1 then
-      result := FPrinter.FPRefundItem(Round(Amount * 1000), 3, False, True, False, Round(Price * 100), nNDS, Copy(GoodsName, 1, 75), GoodsCode)
-    else result := FPrinter.FPRefundItem(Round(Amount * 1000), 3, False, False, False, Round(Price * 100), nNDS, Copy(GoodsName, 1, 75), GoodsCode);
+      result := FPrinter.FPRefundItem(Round(Amount * 1000), 3, False, True, False, Round(Price * 100), nNDS, Copy(UKTZED + IfThen(UKTZED = '', '' , ' ') + GoodsName, 1, 75), GoodsCode)
+    else result := FPrinter.FPRefundItem(Round(Amount * 1000), 3, False, False, False, Round(Price * 100), nNDS, Copy(UKTZED + IfThen(UKTZED = '', '' , ' ') + GoodsName, 1, 75), GoodsCode);
   end;
 
   if not result then ShowError;

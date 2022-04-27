@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_Send_DataForTTN()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Send_DataForTTN(Text, Text, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Send_DataForTTN(Text, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Send_DataForTTN(
     IN inDataJson        Text      , -- json Данные    
@@ -10,7 +10,10 @@ RETURNS TABLE (WayName            TVarChar,
                GoodsCount         Integer,
                Amount             TFloat,
                Price		      TFloat,
-               Summ               TFloat
+               Summ               TFloat,
+               Driver             TVarChar,
+               Car                TVarChar,
+               CarNumber          TVarChar
               )
 AS
 $BODY$
@@ -109,6 +112,16 @@ BEGIN
         , sum(tmpMI.Amount)::TFloat                                                    AS Amount
         , ROUND(sum(tmpMI.Summ) / sum(tmpMI.Amount), 2)::TFloat                        AS Price
         , (ROUND(sum(tmpMI.Summ) / sum(tmpMI.Amount), 2) * sum(tmpMI.Amount))::TFloat  AS Summ
+        , CASE WHEN tmpMI.WayName NOT ILIKE '%кополь%'
+               THEN 'Гордієнко Дмитро Валерійович'
+               ELSE 'Барiлко Ростислав Володимирович' END::TVarChar AS Driver
+        , CASE WHEN tmpMI.WayName NOT ILIKE '%кополь%'
+               THEN 'Renault kangoo'
+               ELSE 'Renault kangoo' END::TVarChar AS Car
+        , CASE WHEN tmpMI.WayName NOT ILIKE '%кополь%'
+               THEN 'АE4670ТА'
+               ELSE 'АЕ0679РI' END::TVarChar AS CarNumber
+
    FROM tmpMI
    GROUP BY tmpMI.WayName
    ORDER BY tmpMI.WayName;

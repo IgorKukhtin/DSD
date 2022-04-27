@@ -28,6 +28,8 @@ type
 
     // Печататная форма
     FPF_Text : String;
+    // Последний Z отчет
+    FPF_LastZReport : String;
     // Текст ошибки
     FPF_Error : String;
     // код/идентификатор фискального документа
@@ -51,6 +53,17 @@ type
     // Сумма остатка в сейфе (фискальной кассе)
     FSafe : Currency;
 
+    // Название юрлица
+    FName : String;
+    // Название структурного подразделения (магазина)
+    FShopName : String;
+    // Адрес структурного подразделения (магазина)
+    DShopAd : String;
+    // Код плательщика НДС
+    FVat_Code : String;
+    // Код ЕДРПОУ
+    FFis_Code : String;
+
     // Возврат последних успешных номеров чеков ...
     FLast_Receipt_No : Integer;
     FLast_Back_No : Integer;
@@ -67,6 +80,7 @@ type
     FReturn : Boolean;
     // Содержимое чека
     FRows: TCollection;
+    // Массив оплат
     FSumPays: TCollection;
     // Сумма чека
     FSumma: Currency;
@@ -74,6 +88,19 @@ type
     FSummaPay: Currency;
     // Сумма оплаты в.ч. нал
     FSummaPayNal: Currency;
+    // Коммент внизу чека
+    FComment_Fown : String;
+
+
+    // Обороты продажа
+    FSummaCash : Currency;
+    // Обороты возвраты
+    FSummaCard  : Currency;
+    // Чеков продажа
+    FReceiptsSales : Integer;
+    // Чеков возвраты
+    FReceiptsReturn : Integer;
+
 
   protected
     function PostData(var jsonFiscal : TJSONObject; AType : Integer = 1) : boolean;
@@ -97,7 +124,7 @@ type
     function AlwaysSold : boolean;
 
       // Добавить строку
-    function SoldFrom(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double) : boolean;
+    function SoldFrom(const GoodsCode: integer; const GoodsName, ABarCode, AUKTZED, AComment: string; const Amount, Price, NDS: double) : boolean;
       // Добавить скидку в строку
     function DiscountGoods(ADisc : Currency) : boolean;
       // Добавить текст в фискальный чек
@@ -111,23 +138,49 @@ type
     function ServiceTakeaway(ASUM : Currency) : boolean;
 
       // 10 - X-отчет
-    function XReport : boolean;
+    function XReport(AShowReceipt : Boolean = True) : boolean;
       // 11 - Z-отчет
     function ZReport : boolean;
+      // 12 - Сводный Z-отчет по интервалу номеров Z-отчетов
+    function ZReportInterval(const AТ_From , AТ_Еo : Integer) : boolean;
 
       // 18 - Статус фискальника
     function GetStatus : boolean;
       // 20 - Возврат номера фискального аппарата
     function FiscalNumber : String;
       // 21 - Возврат последних успешных номеров продажного и возвратного чеков
-    function LastNumbers : String;
+    function LastNumbers : Boolean;
       // 22 - Повтор (распечатка) последнего успешного документа
     function RepeatReceipt : Boolean;
+
+    // Возврат номер последнего фискального чека
+    function GetLastNumbersReceipt : Integer;
+    // Возврат номер текущего Z отчета
+    function GetZReport : Integer;
+
+    // Обороты продажа
+    function GetSummaCash : Currency;
+    // Обороты возвраты
+    function GetSummaCard  : Currency;
+    // Чеков продажа
+    function GetReceiptsSales : Integer;
+    // Чеков возвраты
+    function GetReceiptsReturn : Integer;
+
+    // Название юрлица
+    function GetName : String;
+
+    // Последний Z отчет
+    function GetLastZReport : String;
 
     // Текст ошибки
     property PF_Error : String read FPF_Error;
     // Возврат текст для печати
     property PF_Text : String read FPF_Text;
+    // Сумма чека
+    property Summa: Currency read FSumma;
+    // Сумма оплаты
+    property SummaPay: Currency read FSummaPay;
   end;
 
 
@@ -142,8 +195,8 @@ type
   TRowsItem = class(TCollectionItem)
   private
     FCode : Integer;
-    FCode1 : Integer;
-    FCode2 : Integer;
+    FCode1 : String;
+    FCode2 : String;
     FName : String;
     FCnt : Currency;
     FPrice : Currency;
@@ -163,11 +216,6 @@ type
   published
   end;
 
-function DelDoubleQuote(AStr : string) : string;
-begin
-  Result := StringReplace(AStr, '"', '', [rfReplaceAll]);
-end;
-
   { TVchasnoKasaAPI }
 constructor TVchasnoKasaAPI.Create;
 begin
@@ -182,13 +230,22 @@ begin
   FVer := 6;
   FAccess_Token := '';
   FDevice_Name := '';
+  FShift_Status := -1;
   FPF_Text := '';
   FPF_Error := '';
+  FName := '';
+  FShopName := '';
+  DShopAd := '';
+  FVat_Code := '';
+  FFis_Code := '';
+  FPF_LastZReport := '';
+
   FOpen := False;
   FReturn := False;
   FSumma := 0;
   FSummaPay := 0;
   FSummaPayNal := 0;
+  FComment_Fown := '';
 end;
 
 destructor TVchasnoKasaAPI.Destroy;
@@ -211,9 +268,12 @@ var
   jsonData : TJSONObject;
   jValue : TJSONValue;
   jInfo : TJSONValue;
-  task : Integer;
+  jPair : TJSONValue;
+  jArray : TJSONArray;
+  task, I : Integer;
   S : String;
   FS: TFileStream;
+  nSum : Currency;
 begin
   Result := False;
   FPF_Text := '';
@@ -266,9 +326,9 @@ begin
   if FRESTResponse.StatusCode = 200 then
   begin
     jValue := FRESTResponse.JSONValue ;
-    if (jValue.FindValue('errortxt') <> Nil) and (DelDoubleQuote(jValue.FindValue('errortxt').ToString) <> '') then
+    if (jValue.FindValue('errortxt') <> Nil) and (jValue.FindValue('errortxt').Value <> '') then
     begin
-       SetPF_Error(DelDoubleQuote(jValue.FindValue('errortxt').ToString));
+       SetPF_Error(jValue.FindValue('errortxt').Value);
        Exit;
     end;
 
@@ -276,52 +336,111 @@ begin
     begin
       jInfo := jValue.FindValue('info');
 
-      if (jInfo.FindValue('fisid') <> Nil) then
-        FFisId := DelDoubleQuote(jInfo.FindValue('fisid').ToString);
+      if (jInfo.FindValue('fisid') <> Nil) then FFisId := jInfo.FindValue('fisid').Value;
       if (jInfo.FindValue('shift_link') <> Nil) then
-        if not TryStrToInt(DelDoubleQuote(jInfo.FindValue('shift_link').ToString), FShift_Link) then FShift_Link := 0;
-      if (jInfo.FindValue('doccode') <> Nil) then
-        FDocCode := DelDoubleQuote(jInfo.FindValue('doccode').ToString);
-      if (jInfo.FindValue('docno') <> Nil) then
-        FDocNo := DelDoubleQuote(jInfo.FindValue('docno').ToString);
+        if not TryStrToInt(jInfo.FindValue('shift_link').Value, FShift_Link) then FShift_Link := 0;
+      if (jInfo.FindValue('doccode') <> Nil) then FDocCode := jInfo.FindValue('doccode').Value;
+      if (jInfo.FindValue('docno') <> Nil) then FDocNo := jInfo.FindValue('docno').Value;
       if (jInfo.FindValue('shift_status') <> Nil) then
-        if not TryStrToInt(DelDoubleQuote(jInfo.FindValue('shift_status').ToString), FShift_Status) then FShift_Status := -1;
+        if not TryStrToInt(jInfo.FindValue('shift_status').Value, FShift_Status) then FShift_Status := -1;
 
       if (jInfo.FindValue('isFis') <> Nil) then
-        if not TryStrToInt(DelDoubleQuote(jInfo.FindValue('isFis').ToString), FisFis) then FisFis := -1;
+        if not TryStrToInt(jInfo.FindValue('isFis').Value, FisFis) then FisFis := -1;
       if (jInfo.FindValue('online_status') <> Nil) then
-        if not TryStrToInt(DelDoubleQuote(jInfo.FindValue('online_status').ToString), FOnline_Status) then FOnline_Status := -1;
+        if not TryStrToInt(jInfo.FindValue('online_status').Value, FOnline_Status) then FOnline_Status := -1;
       if (jInfo.FindValue('sign_status') <> Nil) then
-        if not TryStrToInt(DelDoubleQuote(jInfo.FindValue('sign_status').ToString), FSign_Status) then FSign_Status := -1;
+        if not TryStrToInt(jInfo.FindValue('sign_status').Value, FSign_Status) then FSign_Status := -1;
       if (jInfo.FindValue('safe') <> Nil) then
-        if not TryStrToCurr(DelDoubleQuote(jInfo.FindValue('safe').ToString), FSafe) then FSafe := -1;
+        if not TryStrToCurr(jInfo.FindValue('safe').Value, FSafe) then FSafe := -1;
 
       if (jInfo.FindValue('last_receipt_no') <> Nil) then
-        if not TryStrToInt(DelDoubleQuote(jInfo.FindValue('last_receipt_no').ToString), FLast_Receipt_No) then FLast_Receipt_No := 0;
+        if not TryStrToInt(jInfo.FindValue('last_receipt_no').Value, FLast_Receipt_No) then FLast_Receipt_No := 0;
       if (jInfo.FindValue('last_back_no') <> Nil) then
-        if not TryStrToInt(DelDoubleQuote(jInfo.FindValue('last_back_no').ToString), FLast_Back_No) then FLast_Back_No := 0;
+        if not TryStrToInt(jInfo.FindValue('last_back_no').Value, FLast_Back_No) then FLast_Back_No := 0;
       if (jInfo.FindValue('last_z_no') <> Nil) then
-        if not TryStrToInt(DelDoubleQuote(jInfo.FindValue('last_z_no').ToString), FLast_Z_No) then FLast_Z_No := 0;
+        if not TryStrToInt(jInfo.FindValue('last_z_no').Value, FLast_Z_No) then FLast_Z_No := 0;
       if (jInfo.FindValue('vacant_off_nums') <> Nil) then
-        if not TryStrToInt(DelDoubleQuote(jInfo.FindValue('vacant_off_nums').ToString), FVacant_Off_Nums) then FVacant_Off_Nums := 0;
+        if not TryStrToInt(jInfo.FindValue('vacant_off_nums').Value, FVacant_Off_Nums) then FVacant_Off_Nums := 0;
+
+      if (jInfo.FindValue('printheader') <> Nil) then
+      begin
+        jPair := jInfo.FindValue('printheader');
+
+        if (jPair.FindValue('name') <> Nil) then
+          FName := jPair.FindValue('name').Value;
+        if (jPair.FindValue('shopname') <> Nil) then
+          FShopName := jPair.FindValue('shopname').Value;
+        if (jPair.FindValue('shopad') <> Nil) then
+          DShopAd := jPair.FindValue('shopad').Value;
+        if (jPair.FindValue('vat_code') <> Nil) then
+          FVat_Code := jPair.FindValue('vat_code').Value;
+        if (jPair.FindValue('fis_code') <> Nil) then
+          FFis_Code := jPair.FindValue('fis_code').Value;
+      end;
+
+      if (jInfo.FindValue('receipt') <> Nil) then
+      begin
+        jPair := jInfo.FindValue('receipt');
+
+        if (jPair.FindValue('count_p') <> Nil) then
+          if not TryStrToInt(jPair.FindValue('count_p').Value, FReceiptsSales) then FReceiptsSales := 0;
+        if (jPair.FindValue('count_m') <> Nil) then
+          if not TryStrToInt(jPair.FindValue('count_m').Value, FReceiptsReturn) then FReceiptsReturn := 0;
+      end;
+
+      if (jInfo.FindValue('pays') <> Nil) then
+      begin
+        jArray := TJSONArray(jInfo.FindValue('pays'));
+        FSummaCash := 0;
+        FSummaCard := 0;
+
+        for I := 0 to jArray.Count - 1 do
+        begin
+          jPair := jArray.Items[I];
+          if (jPair.FindValue('type') <> Nil) then
+          begin
+            if jPair.FindValue('type').Value = '0' then
+            begin
+              if (jPair.FindValue('sum_p') <> Nil) then
+                if not TryStrToCurr(jPair.FindValue('sum_p').Value, nSum) then nSum := 0;
+              FSummaCash := FSummaCash + nSum;
+              if (jPair.FindValue('sum_m') <> Nil) then
+                if not TryStrToCurr(jPair.FindValue('sum_m').Value, nSum) then nSum := 0;
+              FSummaCash := FSummaCash - nSum;
+            end else if jPair.FindValue('type').Value = '2' then
+            begin
+              if (jPair.FindValue('sum_p') <> Nil) then
+                if not TryStrToCurr(jPair.FindValue('sum_p').Value, nSum) then nSum := 0;
+              FSummaCard := FSummaCard + nSum;
+              if (jPair.FindValue('sum_m') <> Nil) then
+                if not TryStrToCurr(jPair.FindValue('sum_m').Value, nSum) then nSum := 0;
+              FSummaCard := FSummaCard - nSum;
+            end;
+          end;
+        end;
+
+      end;
+
     end;
 
 
-    if (jValue.FindValue('pf_text') <> Nil) and (DelDoubleQuote(jValue.FindValue('pf_text').ToString) <> '') then
+    if (jValue.FindValue('pf_text') <> Nil) and (jValue.FindValue('pf_text').Value <> '') then
     begin
       try
-        S := DelDoubleQuote(jValue.FindValue('pf_text').ToString);
-        S := StringsReplace(COPY(S, POS('base64', S) + 7, Length(S)), ['\/'], ['/']);
+        S := jValue.FindValue('pf_text').Value;
+        S := COPY(S, POS('base64', S) + 7, Length(S));
         FPF_Text := TIdDecoderMIME.DecodeString(S, IndyTextEncoding('windows-1251'));
+
+        if task = 11 then FPF_LastZReport := FPF_Text;
       except
       end;
     end;
 
-    if (jValue.FindValue('pf_pdf') <> Nil) and (DelDoubleQuote(jValue.FindValue('pf_pdf').ToString) <> '') then
+    if (jValue.FindValue('pf_pdf') <> Nil) and (jValue.FindValue('pf_pdf').Value <> '') then
     begin
       try
-        S := DelDoubleQuote(jValue.FindValue('pf_pdf').ToString);
-        S := StringsReplace(COPY(S, POS('base64', S) + 7, Length(S)), ['\/'], ['/']);
+        S := jValue.FindValue('pf_pdf').Value;
+        S := COPY(S, POS('base64', S) + 7, Length(S));
         FS := TFileStream.Create('111.pdf', fmCreate);
         try
           TIdDecoderMIME.DecodeStream(S, FS);
@@ -333,11 +452,11 @@ begin
       end;
     end;
 
-    if (jValue.FindValue('pf_image') <> Nil) and (DelDoubleQuote(jValue.FindValue('pf_image').ToString) <> '') then
+    if (jValue.FindValue('pf_image') <> Nil) and (jValue.FindValue('pf_image').Value <> '') then
     begin
       try
-        S := DelDoubleQuote(jValue.FindValue('pf_image').ToString);
-        S := StringsReplace(COPY(S, POS('base64', S) + 7, Length(S)), ['\/'], ['/']);
+        S := jValue.FindValue('pf_image').Value;
+        S := COPY(S, POS('base64', S) + 7, Length(S));
         FS := TFileStream.Create('111.png', fmCreate);
         try
           TIdDecoderMIME.DecodeStream(S, FS);
@@ -355,9 +474,9 @@ begin
     if FRESTResponse.JSONValue <> Nil then
     begin
       jValue := FRESTResponse.JSONValue;
-      if (jValue.FindValue('errortxt') <> Nil) and (DelDoubleQuote(jValue.FindValue('errortxt').ToString) <> '') then
-         SetPF_Error(DelDoubleQuote(jValue.FindValue('errortxt').ToString))
-      else SetPF_Error(DelDoubleQuote(jValue.ToString));
+      if (jValue.FindValue('errortxt') <> Nil) and (jValue.FindValue('errortxt').Value <> '') then
+         SetPF_Error(jValue.FindValue('errortxt').Value)
+      else SetPF_Error(jValue.ToString);
     end else SetPF_Error(FRESTResponse.StatusText);
   end;
 end;
@@ -373,6 +492,8 @@ begin
   else FResource := 'execute';
   FDevice_Name := ADevice_Name;
   FAccess_Token := AAccess_Token;
+
+  if FShift_Status <> 1 then GetStatus;
 end;
 
 
@@ -393,12 +514,22 @@ begin
   jsonFiscal.AddPair('task', TJSONNumber.Create(0));
 
   Result := PostData(jsonFiscal);
+  GetStatus;
 end;
 
   // открытие чека
 function TVchasnoKasaAPI.OpenReceipt(const isReturn: boolean = False) : boolean;
 begin
   Result := False;
+
+  if FShift_Status <> 1 then
+  begin
+    if not OpenWorkShift or (FShift_Status <> 1) then
+    begin
+      SetPF_Error('Ошибка открытия рабочей смены.');
+      Exit;
+    end;
+  end;
 
   if FOpen then
   begin
@@ -412,6 +543,7 @@ begin
   FSumma := 0;
   FSummaPay := 0;
   FSummaPayNal := 0;
+  FComment_Fown := '';
 
   Result := True;
 end;
@@ -425,9 +557,10 @@ var
   jsonRowsItem: TJSONObject;
   jsonPays: TJSONArray;
   jsonPaysItem: TJSONObject;
-  I : Integer; nSum, nPay, nPayNal : Currency;
+  I : Integer; nSum, nPay, nPayNal, nChange : Currency;
 begin
   Result := False; nSum := 0; nPay := 0; nPayNal := 0;
+  nChange := FSummaPay - FSumma;
 
   if not FOpen then
   begin
@@ -457,9 +590,10 @@ begin
 
     jsonReceipt := TJSONObject.Create;
     jsonReceipt.AddPair('sum', TJSONNumber.Create(FSumma));
-    jsonReceipt.AddPair('round', TJSONNumber.Create(0));
-    jsonReceipt.AddPair('comment_up', TJSONString.Create(''));
-    jsonReceipt.AddPair('comment_down', TJSONString.Create(''));
+    //jsonReceipt.AddPair('round', TJSONNumber.Create(0));
+    //jsonReceipt.AddPair('comment_up', TJSONString.Create(''));
+    if FComment_Fown <> '' then
+      jsonReceipt.AddPair('comment_down', TJSONString.Create(FComment_Fown));
 
     jsonRows := TJSONArray.Create;
     for I := 0 to FRows.Count - 1 do
@@ -468,17 +602,20 @@ begin
       with TRowsItem(FRows.Items[I]) do
       begin
         jsonRowsItem.AddPair('code', TJSONNumber.Create(FCode));
-//        jsonRowsItem.AddPair('code1', TJSONNumber.Create(FCode1));
-//        jsonRowsItem.AddPair('code2', TJSONNumber.Create(FCode2));
+        if FCode1 <> '' then
+          jsonRowsItem.AddPair('code1', TJSONString.Create(FCode1));
+        if FCode2 <> '' then
+          jsonRowsItem.AddPair('code2', TJSONString.Create(FCode2));
         jsonRowsItem.AddPair('name', TJSONString.Create(FName));
         jsonRowsItem.AddPair('cnt', TJSONNumber.Create(FCnt));
         jsonRowsItem.AddPair('price', TJSONNumber.Create(FPrice));
-        jsonRowsItem.AddPair('disc', TJSONNumber.Create(FDisc));
+        jsonRowsItem.AddPair('disc', TJSONNumber.Create(-FDisc));
         jsonRowsItem.AddPair('cost', TJSONNumber.Create(FCost));
         jsonRowsItem.AddPair('taxgrp', TJSONNumber.Create(FTaxGrp));
-        jsonRowsItem.AddPair('comment', TJSONString.Create(FComment));
+        if FComment <> '' then
+          jsonRowsItem.AddPair('comment', TJSONString.Create(FComment));
 
-        nSum := nSum + FCost - FDisc;
+        nSum := nSum + FCost + FDisc;
       end;
       jsonRows.Add(jsonRowsItem);
     end;
@@ -492,6 +629,12 @@ begin
       begin
         jsonPaysItem.AddPair('type', TJSONNumber.Create(FType));
         jsonPaysItem.AddPair('sum', TJSONNumber.Create(FSum));
+        if (FType = 0) and (nChange <> 0) then
+        begin
+          jsonPaysItem.AddPair('sum', TJSONNumber.Create(FSum - nChange));
+          jsonPaysItem.AddPair('change', TJSONNumber.Create(nChange));
+        end else jsonPaysItem.AddPair('sum', TJSONNumber.Create(FSum));
+
         nPay := nPay + FSum;
         if FType = 0 then nPayNal := nPayNal + FSum;
       end;
@@ -510,6 +653,8 @@ begin
 
     Result := PostData(jsonFiscal);
     CheckId := FDocNo;
+    if FPF_Text <> '' then ShowMessage(FPF_Text);
+    GetStatus;
   finally
     FOpen := False;
     FReturn := False;
@@ -518,6 +663,7 @@ begin
     FSumma := 0;
     FSummaPay := 0;
     FSummaPayNal := 0;
+    FComment_Fown := '';
   end;
 end;
 
@@ -537,11 +683,14 @@ begin
   FRows.Clear;
   FSumPays.Clear;
   FSumma := 0;
+  FSummaPay := 0;
+  FSummaPayNal := 0;
+  FComment_Fown := '';
   Result := True;
 end;
 
   // Добавить строку
-function TVchasnoKasaAPI.SoldFrom(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double) : boolean;
+function TVchasnoKasaAPI.SoldFrom(const GoodsCode: integer; const GoodsName, ABarCode, AUKTZED, AComment : string; const Amount, Price, NDS: double) : boolean;
 begin
   Result := False;
 
@@ -554,8 +703,8 @@ begin
   with TRowsItem(FRows.Add) do
   begin
     FCode    := GoodsCode;
-    FCode1   := 0;
-    FCode2   := 0;
+    FCode1   := ABarCode;
+    FCode2   := AUKTZED;
     FName    := GoodsName;
     FCnt     := RoundTo(Amount, - 3);
     FPrice   := RoundTo(Price, - 2);
@@ -569,7 +718,7 @@ begin
       SetPF_Error('Неизвестная ставка НДС.');
       Exit;
     end;
-    FComment := '';
+    FComment := AComment;
 
    FSumma :=FSumma + FCost;
   end;
@@ -591,9 +740,9 @@ begin
   begin
     with TRowsItem(FRows.Items[FRows.Count - 1]) do
     begin
-      FSumma := FSumma + FDisc;
-      FDisc    := RoundTo(ADisc, - 2);
       FSumma := FSumma - FDisc;
+      FDisc    := RoundTo(ADisc, - 2);
+      FSumma := FSumma + FDisc;
     end;
 
     Result := True;
@@ -615,6 +764,10 @@ begin
     Exit;
   end;
 
+  if Trim(AText) = '' then Exit;
+
+  if FComment_Fown <> '' then  FComment_Fown := FComment_Fown + '\n';
+  FComment_Fown := FComment_Fown + Trim(AText);
 end;
 
   // Добавить оплату
@@ -628,19 +781,16 @@ begin
     Exit;
   end;
 
-  if  RoundTo(ASumPays, - 2) <> ASumPays then
-  begin
-    SetPF_Error('Сумма оплаты должна быть кратное копейке.');
-    Exit;
-  end;
+  ASumPays := RoundTo(ASumPays, - 2);
 
   with TSumPaysItem(FSumPays.Add) do
   begin
     FType := APaidType;
-    FSum := RoundTo(ASumPays, - 2);
+    FSum := ASumPays;
     FSummaPay := FSummaPay + FSum;
     if FType = 0 then FSummaPayNal := FSummaPayNal + FSum;
   end;
+  Result := True;
 end;
 
   // 3 - служебный внос денег
@@ -667,6 +817,8 @@ begin
   jsonFiscal.AddPair('cash', jsonCash);
 
   Result := PostData(jsonFiscal);
+  if FPF_Text <> '' then ShowMessage(FPF_Text);
+  GetStatus;
 end;
 
   // 4 - служебный вынос денег
@@ -693,10 +845,12 @@ begin
   jsonFiscal.AddPair('cash', jsonCash);
 
   Result := PostData(jsonFiscal);
+  if FPF_Text <> '' then ShowMessage(FPF_Text);
+  GetStatus;
 end;
 
   // 10 - X-отчет
-function TVchasnoKasaAPI.XReport : boolean;
+function TVchasnoKasaAPI.XReport(AShowReceipt : Boolean = True) : boolean;
 var
   jsonFiscal: TJSONObject;
 begin
@@ -712,6 +866,8 @@ begin
   jsonFiscal.AddPair('task', TJSONNumber.Create(10));
 
   Result := PostData(jsonFiscal);
+  if AShowReceipt and (FPF_Text <> '') then ShowMessage(FPF_Text);
+  GetStatus;
 end;
 
   // 11 - Z-отчет
@@ -731,7 +887,31 @@ begin
   jsonFiscal.AddPair('task', TJSONNumber.Create(11));
 
   Result := PostData(jsonFiscal);
+  if FPF_Text <> '' then ShowMessage(FPF_Text);
+  GetStatus;
 end;
+
+  // 12 - Сводный Z-отчет по интервалу номеров Z-отчетов
+function TVchasnoKasaAPI.ZReportInterval(const AТ_From , AТ_Еo : Integer) : boolean;
+var
+  jsonFiscal: TJSONObject;
+begin
+  Result := False;
+
+  if FOpen then
+  begin
+    SetPF_Error('Открыт фискальный чек. Выполнение операции запрещено.');
+    Exit;
+  end;
+
+  jsonFiscal := TJSONObject.Create;
+  jsonFiscal.AddPair('task', TJSONNumber.Create(12));
+  jsonFiscal.AddPair('n_from', TJSONNumber.Create(AТ_From));
+  jsonFiscal.AddPair('n_to', TJSONNumber.Create(AТ_Еo));
+
+  Result := PostData(jsonFiscal);
+end;
+
 
   // 18 - Статус фискальника
 function TVchasnoKasaAPI.GetStatus : boolean;
@@ -760,16 +940,14 @@ begin
 end;
 
   // 21 - Возврат последних успешных номеров продажного и возвратного чеков
-function TVchasnoKasaAPI.LastNumbers : String;
+function TVchasnoKasaAPI.LastNumbers : Boolean;
 var
   jsonFiscal: TJSONObject;
 begin
-  Result := '';
-
   jsonFiscal := TJSONObject.Create;
   jsonFiscal.AddPair('task', TJSONNumber.Create(21));
 
-  if PostData(jsonFiscal) then Result := FDocNo;
+  Result := PostData(jsonFiscal);
 end;
 
   // 22 - Повтор (распечатка) последнего успешного документа
@@ -785,5 +963,68 @@ begin
   Result := PostData(jsonFiscal);
 end;
 
+  // Возврат номер последнего фискального чека
+function TVchasnoKasaAPI.GetLastNumbersReceipt : Integer;
+begin
+  if LastNumbers and (FLast_Receipt_No > 0) then
+    Result := FLast_Receipt_No
+  else Result := -1;
+end;
+
+// Возврат номер текущего Z отчета
+function TVchasnoKasaAPI.GetZReport : Integer;
+begin
+  if LastNumbers and (FLast_Z_No > 0) then
+  begin
+    if FShift_Status = 1 then Result := FLast_Z_No + 1
+    else Result := FLast_Z_No;
+  end else Result := -1;
+end;
+
+
+// Обороты продажа
+function TVchasnoKasaAPI.GetSummaCash : Currency;
+begin
+  if XReport(False) then Result := FSummaCash
+  else Result := 0;
+end;
+
+// Обороты возвраты
+function TVchasnoKasaAPI.GetSummaCard  : Currency;
+begin
+  if XReport(False) then Result := FSummaCard
+  else Result := 0;
+end;
+
+
+// Чеков продажа
+function TVchasnoKasaAPI.GetReceiptsSales : Integer;
+begin
+  if XReport(False) then Result := FReceiptsSales
+  else Result := 0;
+end;
+
+// Чеков продажа
+function TVchasnoKasaAPI.GetReceiptsReturn : Integer;
+begin
+  if XReport(False) then Result := FReceiptsReturn
+  else Result := 0;
+end;
+
+// Название юрлица
+function TVchasnoKasaAPI.GetName : String;
+begin
+  if XReport(False) then Result := FName
+  else Result := '';
+end;
+
+// Последний Z отчет
+function TVchasnoKasaAPI.GetLastZReport : String;
+begin
+  if FShift_Status = 1 then
+  begin
+    if XReport(False) then Result := StringReplace(FPF_Text, 'X-ЗВІТ', 'Z-ЗВІТ', [rfIgnoreCase]);
+  end else Result := FPF_LastZReport;
+end;
 
 end.

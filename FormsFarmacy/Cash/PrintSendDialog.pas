@@ -9,7 +9,7 @@ uses
   Vcl.ExtCtrls, Vcl.StdCtrls, cxButtons, cxGroupBox, cxRadioGroup, cxLabel,
   cxTextEdit, cxCurrencyEdit, Vcl.ActnList, dsdAction, cxClasses,
   cxPropertiesStore, dsdAddOn, dsdDB, dxSkinsCore, CashInterface,
-  dxSkinsDefaultPainters, Data.DB, Datasnap.DBClient;
+  dxSkinsDefaultPainters, Data.DB, Datasnap.DBClient, System.Actions;
 
 type
   TPrintSendDialogForm = class(TParentForm)
@@ -84,7 +84,7 @@ var
     begin
 
       Result := Cash.SoldFromPC(FieldByName('GoodsCode').AsInteger,
-        FieldByName('GoodsCode').AsString + ' ' + FieldByName('GoodsName').Text,
+        FieldByName('GoodsCode').AsString + ' ' + FieldByName('GoodsName').Text, '',
         FieldByName('Amount').asCurrency, 0, 0);
       Cash.PrintFiscalText(FormatDateTime('DD.MM.YYYY', FieldByName('MinExpirationDate').AsDateTime) + '   ' +
         FieldByName('AccommodationName').AsString);
@@ -117,7 +117,7 @@ begin
         end;
       end;
 
-      Cash.SoldFromPC(0, 'Общее количество едениц:',
+      Cash.SoldFromPC(0, 'Общее количество едениц:', '',
         PrintHeaderCDS.FieldByName('TotalCount').asCurrency, 0, 0);
 
       Result := Cash.CloseReceiptEx(ACheckNumber); // Закрыли чек

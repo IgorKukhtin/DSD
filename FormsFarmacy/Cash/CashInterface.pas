@@ -9,7 +9,7 @@ type
      function GetAlwaysSold: boolean;
 
      function SoldCode(const GoodsCode: integer; const Amount: double; const Price: double = 0.00): boolean;
-     function SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
+     function SoldFromPC(const GoodsCode: integer; const GoodsName, UKTZED: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
      function ProgrammingGoods(const GoodsCode: integer; const GoodsName: string; const Price, NDS: double): boolean;
      function ChangePrice(const GoodsCode: integer; const Price: double): boolean;
      function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;

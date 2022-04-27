@@ -94,7 +94,7 @@ begin
   m_Cash:= Cash;
   m_DataSet:= DataSet;
   m_ZReportName:= ZReportName;
-  if (m_ZReportName <> '') and (Copy(m_ZReportName, Length(m_ZReportName) - 1, 1) <> ' ') then m_ZReportName := m_ZReportName + ' ';
+  if (m_ZReportName <> '') and (Copy(m_ZReportName, Length(m_ZReportName), 1) <> ' ') then m_ZReportName := m_ZReportName + ' ';
 end;
 
 procedure TCashWorkForm.Button1Click(Sender: TObject);
@@ -111,6 +111,9 @@ begin
 end;
 
 procedure TCashWorkForm.Button2Click(Sender: TObject);
+var cFiscalNumber, cSerialNumber, cJuridicalName : String;
+    cZReport : Integer; nSummaCash, nSummaCard : Currency;
+
 begin
 
   if not gc_User.Local then
@@ -137,22 +140,29 @@ begin
 
   if MessageDlg('Вы уверены в снятии Z-отчета?', mtInformation, mbOKCancel, 0) = mrOk then
   begin
+     cFiscalNumber := m_Cash.FiscalNumber;
+     cSerialNumber := m_Cash.SerialNumber;
+     cJuridicalName := m_Cash.JuridicalName;
+     cZReport := m_Cash.ZReport;
+     nSummaCash := m_Cash.SummaCash;
+     nSummaCard := m_Cash.SummaCard;
+
      if m_Cash.SensZReportBefore then
-       SaveZReport(StringReplace(m_Cash.JuridicalName, '"', '', [rfReplaceAll]) + ' ' +
+       SaveZReport(StringReplace(cJuridicalName, '"', '', [rfReplaceAll]) + ' ' +
                    m_ZReportName + FormatDateTime('DD.MM.YY', Date) + ' ФН' +
-                   m_Cash.FiscalNumber  + ' №' + IntToStr(m_Cash.ZReport), m_Cash.InfoZReport,
-                   m_Cash.FiscalNumber, m_Cash.ZReport, m_Cash.SummaCash, m_Cash.SummaCard);
+                   cFiscalNumber  + ' №' + IntToStr(cZReport), m_Cash.InfoZReport,
+                   cFiscalNumber, cZReport, nSummaCash, nSummaCard);
      m_Cash.ClosureFiscal;
      if not m_Cash.SensZReportBefore then
-       SaveZReport(StringReplace(m_Cash.JuridicalName, '"', '', [rfReplaceAll]) + ' ' +
+       SaveZReport(StringReplace(cJuridicalName, '"', '', [rfReplaceAll]) + ' ' +
                    m_ZReportName + FormatDateTime('DD.MM.YY', Date) + ' ФН' +
-                   m_Cash.FiscalNumber  + ' №' + IntToStr(m_Cash.ZReport), m_Cash.InfoZReport,
-                   m_Cash.FiscalNumber, m_Cash.ZReport, m_Cash.SummaCash, m_Cash.SummaCard);
+                   cFiscalNumber  + ' №' + IntToStr(cZReport), m_Cash.InfoZReport,
+                   cFiscalNumber, cZReport, nSummaCash, nSummaCard);
      EmployeeWorkLog_ZReport;
-     if not gc_User.Local then
+     if not gc_User.Local and (cSerialNumber <> '') then
      try
-       MainCashForm.spUpdate_CashSerialNumber.ParamByName('inFiscalNumber').Value := m_Cash.FiscalNumber;
-       MainCashForm.spUpdate_CashSerialNumber.ParamByName('inSerialNumber').Value := m_Cash.SerialNumber;
+       MainCashForm.spUpdate_CashSerialNumber.ParamByName('inFiscalNumber').Value := cFiscalNumber;
+       MainCashForm.spUpdate_CashSerialNumber.ParamByName('inSerialNumber').Value := cSerialNumber;
        MainCashForm.spUpdate_CashSerialNumber.Execute;
      except on E: Exception do Add_Log('Exception: ' + E.Message);
      end;
