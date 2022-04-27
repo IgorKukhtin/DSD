@@ -12,7 +12,18 @@ uses
   Vcl.ExtCtrls, Vcl.Forms, System.Classes, Datasnap.DBClient, Vcl.Menus,
   cxButtons, Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod, cxCalendar,
   dsdOLAP, cxRadioGroup, dsdDB, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, cxPropertiesStore;
+  dxSkinscxPCPainter, cxPropertiesStore, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdGuides,
+  Vcl.ActnList, dsdAction;
 
 type
   TOLAPSetupForm = class(TForm)
@@ -86,6 +97,10 @@ type
     cxButton3: TcxButton;
     cxButton4: TcxButton;
     cxPropertiesStore: TcxPropertiesStore;
+    cxLabel5: TcxLabel;
+    edBusiness: TcxButtonEdit;
+    GuidesBusiness: TdsdGuides;
+    spOlapSoldReportBusiness: TdsdStoredProc;
     procedure btnRunOlapClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure DimensionFieldsAfterScroll(DataSet: TDataSet);
@@ -131,6 +146,7 @@ begin
   FillOlapSaleReportOptionFromGrid;
   FOlapReportOption.FromDate := deStart.Date;;
   FOlapReportOption.ToDate := deEnd.Date;
+  FOlapReportOption.BusinessId := GuidesBusiness.Params.ParamByName('Key').AsInteger;
   FOlapReportOption.SummaryType := TSummaryType(cbHorizontalTotal.ItemIndex);
 
   {Проверяем на заполненность  }
@@ -198,9 +214,11 @@ begin
   end;
   DimensionFields.First;
   FPreparedSettingsList := TStringList.Create;
-//  FPreparedSettingsList.Text := TELListCube.LoadShema(SchemeName);
+  // FPreparedSettingsList.Text := TELListCube.LoadShema(SchemeName);
   for i := 0 to FPreparedSettingsList.Count - 1 do
-    cbPreparedSettings.Items.Add(FPreparedSettingsList.Names[i])
+    cbPreparedSettings.Items.Add(FPreparedSettingsList.Names[i]);
+  //
+  spOlapSoldReportBusiness.Execute;
 end;
 
 procedure TOLAPSetupForm.DimensionFieldsAfterScroll(

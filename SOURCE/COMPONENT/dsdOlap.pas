@@ -138,6 +138,7 @@ type
     function GetDoc_Date: string;
   public
     FromDate, ToDate: TDateTime;
+    BusinessId : Integer;
     isPeriodYear: Boolean;
     // Òèï ñóìì
     property SummaryType: TSummaryType read FSummaryType write FSummaryType;
@@ -241,6 +242,8 @@ var
   lSelectGroupSQL,lGroupBySQL,lJoinSQL : string;
 
   YearStart, YearEnd, Month, Day: Word;
+
+  BusinessId_str : String;
 begin
   if not CheckReportOption (OlapReportOption, LMessage) then
      raise Exception.Create(LMessage);
@@ -290,12 +293,15 @@ begin
   DecodeDate(OlapReportOption.FromDate, YearStart, Month, Day);
   DecodeDate(OlapReportOption.ToDate, YearEnd, Month, Day);
 
+  if OlapReportOption.BusinessId > 0 then BusinessId_str:= ' and BusinessId = ' + IntToStr(OlapReportOption.BusinessId);
+
   if OlapReportOption.isPeriodYear = TRUE
   then
       result := 'SELECT ' + SelectSQL + ' FROM ( SELECT ' + SelectGroupSQL
              + ' FROM SoldTable'
              + ' WHERE SoldTable.PeriodYear BETWEEN '
                        + IntToStr(YearStart) + ' AND ' + IntToStr(YearEnd)
+                       + BusinessId_str
                        + FilterSQL
              + ' GROUP BY ' + GroupBySQL + WhereCondition + ' ) OlapTable ' + JoinSQL
   else
@@ -303,7 +309,9 @@ begin
         ' FROM SoldTable' +
         ' WHERE ' + OlapReportOption.GetDoc_Date + ' BETWEEN ''' +
                    FormatDateTime('dd.mm.yyyy', OlapReportOption.FromDate) + ''' AND ''' +
-                   FormatDateTime('dd.mm.yyyy', OlapReportOption.ToDate) + '''' + FilterSQL +
+                   FormatDateTime('dd.mm.yyyy', OlapReportOption.ToDate) + ''''
+                  + BusinessId_str
+                  + FilterSQL +
         ' GROUP BY ' + GroupBySQL + WhereCondition + ' ) OlapTable ' + JoinSQL;
 
   if OlapReportOption.isOLAPonServer then begin

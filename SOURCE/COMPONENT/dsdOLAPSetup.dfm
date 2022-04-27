@@ -474,7 +474,7 @@ object OLAPSetupForm: TOLAPSetupForm
         object deStart: TcxDateEdit
           Left = 536
           Top = 3
-          EditValue = 43101d
+          EditValue = 44562d
           Properties.SaveTime = False
           Properties.ShowTime = False
           TabOrder = 15
@@ -488,7 +488,7 @@ object OLAPSetupForm: TOLAPSetupForm
         object deEnd: TcxDateEdit
           Left = 739
           Top = 3
-          EditValue = 43101d
+          EditValue = 44562d
           Properties.SaveTime = False
           Properties.ShowTime = False
           TabOrder = 17
@@ -520,6 +520,25 @@ object OLAPSetupForm: TOLAPSetupForm
           OptionsImage.Images = dmMain.ImageList
           TabOrder = 20
           OnClick = ELSavePreparedSettingsClick
+        end
+        object cxLabel5: TcxLabel
+          Left = 545
+          Top = 45
+          Caption = #1041#1080#1079#1085#1077#1089
+          Visible = False
+        end
+        object edBusiness: TcxButtonEdit
+          Left = 589
+          Top = 41
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          TabOrder = 22
+          Visible = False
+          Width = 97
         end
       end
     end
@@ -686,5 +705,59 @@ object OLAPSetupForm: TOLAPSetupForm
     StorageType = stStream
     Left = 320
     Top = 112
+  end
+  object GuidesBusiness: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBusiness
+    FormNameParam.Value = 'TBusiness_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBusiness_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBusiness
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBusiness
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 624
+    Top = 56
+  end
+  object spOlapSoldReportBusiness: TdsdStoredProc
+    StoredProcName = 'gpGet_OlapSoldReportBusiness'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'BusinessId'
+        Value = Null
+        Component = GuidesBusiness
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BusinessName'
+        Value = Null
+        Component = GuidesBusiness
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 320
+    Top = 256
   end
 end
