@@ -27,7 +27,7 @@ type
     function GetAlwaysSold: boolean;
   protected
     function SoldCode(const GoodsCode: integer; const Amount: double; const Price: double = 0.00): boolean;
-    function SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
+    function SoldFromPC(const GoodsCode: integer; const GoodsName, UKTZED: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
     function ChangePrice(const GoodsCode: integer; const Price: double): boolean;
     function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
     function CloseReceipt: boolean;
@@ -174,7 +174,7 @@ begin
   result := true;
 end;
 
-function TCashEmulation.SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean;
+function TCashEmulation.SoldFromPC(const GoodsCode: integer; const GoodsName, UKTZED: string; const Amount, Price, NDS: double): boolean;
 var NDSType: char;
     CashCode: integer;
     I : Integer;
@@ -189,7 +189,7 @@ begin
   begin
 
     L := '';
-    Res := TRegEx.Split(StringReplace(GoodsName, '%', 'проц.', [rfReplaceAll, rfIgnoreCase]), ' ');
+    Res := TRegEx.Split(StringReplace(UKTZED + IfThen(UKTZED = '', '' , ' ') + GoodsName, '%', 'проц.', [rfReplaceAll, rfIgnoreCase]), ' ');
     for I := 0 to High(Res) do
     begin
       if L <> '' then L := L + ' ';
@@ -229,7 +229,7 @@ begin
   end;
 
   if FAlwaysSold then exit;
-  ProgrammingGoods(GoodsCode, Copy(GoodsName, 1, 40) , Price, NDS);
+  ProgrammingGoods(GoodsCode, Copy(UKTZED + IfThen(UKTZED = '', '' , ' ') + GoodsName, 1, 40) , Price, NDS);
   result := SoldCode(GoodsCode, Amount, Price);
 end;
 

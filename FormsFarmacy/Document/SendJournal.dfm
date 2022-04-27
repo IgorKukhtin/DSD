@@ -1222,7 +1222,7 @@ inherited SendJournalForm: TSendJournalForm
       SignFont.Style = []
       ColumnParams = <
         item
-          Caption = #1053#1072#1087#1088#1077#1074#1083#1077#1085#1080#1077
+          Caption = #1053#1072#1087#1088#1103#1084#1086#1082
           FieldName = 'WayName'
           DecimalPlace = 0
           Font.Charset = DEFAULT_CHARSET
@@ -1230,12 +1230,12 @@ inherited SendJournalForm: TSendJournalForm
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
-          Width = 30
+          Width = 25
           CalcColumnLists = <>
           DetailedTexts = <>
         end
         item
-          Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1081' '#1090#1086#1074#1072#1088#1072
+          Caption = #1054#1076#1080#1085#1080#1094#1100' '#1090#1086#1074#1072#1088#1091
           FieldName = 'GoodsCount'
           DataType = ftInteger
           DecimalPlace = 0
@@ -1244,13 +1244,12 @@ inherited SendJournalForm: TSendJournalForm
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
-          Width = 20
           CalcColumnLists = <>
           DetailedTexts = <>
           Kind = skSumma
         end
         item
-          Caption = #1048#1090#1086#1075#1086', '#1096#1090
+          Caption = #1047#1072#1075#1072#1083#1100#1085#1072' '#1082#1110#1083#1100#1082#1110#1089#1090#1100', '#1096#1090
           FieldName = 'Amount'
           DataType = ftCurrency
           DecimalPlace = 2
@@ -1259,13 +1258,12 @@ inherited SendJournalForm: TSendJournalForm
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
-          Width = 20
           CalcColumnLists = <>
           DetailedTexts = <>
           Kind = skSumma
         end
         item
-          Caption = #1057#1088'. '#1094#1077#1085#1072', '#1075#1088#1085'.'
+          Caption = #1062#1110#1085#1072' '#1079#1072' '#1086#1076#1080#1085#1080#1094#1102', '#1075#1088#1085
           FieldName = 'Price'
           DataType = ftCurrency
           DecimalPlace = 2
@@ -1274,13 +1272,12 @@ inherited SendJournalForm: TSendJournalForm
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
-          Width = 20
           CalcColumnLists = <>
           DetailedTexts = <>
           Kind = skSumma
         end
         item
-          Caption = #1048#1090#1086#1075#1086', '#1075#1088#1085'.'
+          Caption = #1047#1072#1075#1072#1083#1100#1085#1072#1103' '#1089#1091#1084#1072', '#1075#1088#1085
           FieldName = 'Summ'
           DataType = ftCurrency
           DecimalPlace = 2
@@ -1289,10 +1286,46 @@ inherited SendJournalForm: TSendJournalForm
           Font.Height = -11
           Font.Name = 'Tahoma'
           Font.Style = []
-          Width = 20
           CalcColumnLists = <>
           DetailedTexts = <>
           Kind = skSumma
+        end
+        item
+          Caption = #1055#1030#1055' '#1074#1086#1076#1110#1103
+          FieldName = 'Driver'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 20
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1040#1074#1090#1086
+          FieldName = 'Car'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          DetailedTexts = <>
+        end
+        item
+          Caption = #1053#1086#1084#1077#1088' '#1072#1074#1090#1086
+          FieldName = 'CarNumber'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+          DetailedTexts = <>
         end>
       Caption = 'actDataForTTNToXLS'
     end

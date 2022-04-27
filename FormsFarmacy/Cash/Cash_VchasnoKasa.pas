@@ -1,25 +1,14 @@
 unit Cash_VchasnoKasa;
 
 interface
-uses Windows, CashInterface;
+uses Windows, VchasnoKasaAPI, CashInterface;
 type
-
-  TPrinterVchasnoKasa = class(TObject)
-    FFiscal : Boolean;
-    FReturn : Boolean;
-    FSummaCheck : Currency;
-
-    procedure Sale(AGoodsCode : Integer; AAmount, APrice : Currency);
-    procedure OpenFiscCheck(AReturn : Boolean);
-    procedure OpenCheck;
-    procedure Discount(ASum : Currency);
-  end;
 
   TCashVchasnoKasa = class(TInterfacedObject, ICash)
   private
     FAlwaysSold: boolean;
     FPrintSumma: boolean;
-    FPrinter: TPrinterVchasnoKasa;
+    FPrinter: TVchasnoKasaAPI;
     FisFiscal: boolean;
     FLengNoFiscalText : integer;
     FSumma : Currency;
@@ -27,7 +16,7 @@ type
     function GetAlwaysSold: boolean;
   protected
     function SoldCode(const GoodsCode: integer; const Amount: double; const Price: double = 0.00): boolean;
-    function SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
+    function SoldFromPC(const GoodsCode: integer; const GoodsName, UKTZED: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
     function ChangePrice(const GoodsCode: integer; const Price: double): boolean;
     function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
     function CloseReceipt: boolean;
@@ -73,34 +62,9 @@ type
 
 
 implementation
-uses Forms, SysUtils, Dialogs, Math, Variants, StrUtils, RegularExpressions, Log;
+uses Forms, SysUtils, Dialogs, Math, Variants, StrUtils, IniUtils,
+     RegularExpressions, Log;
 
-{ TPrinterVchasnoKasa }
-procedure TPrinterVchasnoKasa.Sale(AGoodsCode : Integer; AAmount, APrice : Currency);
-begin
-  if FReturn then FSummaCheck := FSummaCheck - RoundTo(AAmount * APrice, - 2)
-  else FSummaCheck := FSummaCheck + RoundTo(AAmount * APrice, - 2);
-end;
-
-procedure TPrinterVchasnoKasa.OpenFiscCheck(AReturn : Boolean);
-begin
-  FSummaCheck := 0;
-  FFiscal := True;
-  FReturn := AReturn;
-end;
-
-procedure TPrinterVchasnoKasa.OpenCheck;
-begin
-  FSummaCheck := 0;
-  FFiscal := False;
-  FReturn := False;
-end;
-
-procedure TPrinterVchasnoKasa.Discount(ASum : Currency);
-begin
-  if FReturn then FSummaCheck := FSummaCheck - ASum
-  else FSummaCheck := FSummaCheck + ASum;
-end;
 
 { TCashVchasnoKasa }
 constructor TCashVchasnoKasa.Create;
@@ -109,8 +73,8 @@ begin
   FAlwaysSold:=false;
   FPrintSumma:=False;
   FLengNoFiscalText := 35;
-  FPrinter := TPrinterVchasnoKasa.Create;
-//  FPrinter.SETCOMPORT[StrToInt(iniPortNumber), StrToInt(iniPortSpeed)];
+  FPrinter := TVchasnoKasaAPI.Create;
+  FPrinter.Init(6, iniVCBatchMode, iniVCURL, iniVCDevice_Name, iniVCAccess_Token);
 end;
 
 destructor TCashVchasnoKasa.Destroy;
@@ -119,23 +83,19 @@ begin
 end;
 
 function TCashVchasnoKasa.CloseReceipt: boolean;
+  var CheckId: String;
 begin
-  result := True;
-  FPrinter.FSummaCheck := 0;
-
-//  FPrinter.CLOSECHECK[1, Password];
+  result := FPrinter.CloseReceip(CheckId);
 end;
 
 function TCashVchasnoKasa.CloseReceiptEx(out CheckId: String): boolean;
 begin
-  result := True;
-  FPrinter.FSummaCheck := 0;
-//  CheckId := FPrinter.CLOSEFISKCHECK[1, Password];
+  result := FPrinter.CloseReceip(CheckId);
 end;
 
 function TCashVchasnoKasa.GetLastCheckId: Integer;
 begin
-  Result := 0;
+  Result := FPrinter.GetLastNumbersReceipt;
 end;
 
 function TCashVchasnoKasa.GetAlwaysSold: boolean;
@@ -145,14 +105,14 @@ end;
 
 function TCashVchasnoKasa.OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
 begin
+  Result:= False;
   FisFiscal := isFiscal;
   FPrintSumma := isPrintSumma;
   FSumma := 0;
   if FisFiscal then
-     FPrinter.OpenFiscCheck(isReturn)
+     Result:= FPrinter.OpenReceipt(isReturn)
   else
-     FPrinter.OpenCheck;
-  result:= True;
+     ShowMessage('Печать нефискальных чеков запрещена...');
 end;
 
 procedure TCashVchasnoKasa.SetAlwaysSold(Value: boolean);
@@ -162,19 +122,16 @@ end;
 
 procedure TCashVchasnoKasa.SetTime;
 begin
-//  FPrinter.SETDT[FormatDateTime('DDMMYYHHNN', Now), Password];
+  //  На сервере;
 end;
 
 function TCashVchasnoKasa.SoldCode(const GoodsCode: integer;
   const Amount: double; const Price: double = 0.00): boolean;
 begin
-  Logger.AddToLog(' SALE (GoodsCode := ' + IntToStr(GoodsCode) + ', Amount := ' + ReplaceStr(FormatFloat('0.000', Amount), FormatSettings.DecimalSeparator, '.') +
-      ', Price := ' + ReplaceStr(FormatFloat('0.00', Price), FormatSettings.DecimalSeparator, '.'));
-  FPrinter.Sale(GoodsCode, RoundTo(Amount, - 3), RoundTo(Price, -2 ));
-  result := true;
+  result := False;
 end;
 
-function TCashVchasnoKasa.SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean;
+function TCashVchasnoKasa.SoldFromPC(const GoodsCode: integer; const GoodsName, UKTZED: string; const Amount, Price, NDS: double): boolean;
 var NDSType: char;
     CashCode: integer;
     I : Integer;
@@ -182,14 +139,13 @@ var NDSType: char;
     N : string;
     Res: TArray<string>;
 begin
-  result := true;
 
     // печать нефискального чека
   if not FisFiscal then
   begin
 
     L := '';
-    Res := TRegEx.Split(StringReplace(GoodsName, '%', 'проц.', [rfReplaceAll, rfIgnoreCase]), ' ');
+    Res := TRegEx.Split(StringReplace(UKTZED + IfThen(UKTZED = '', '' , ' ') + GoodsName, '%', 'проц.', [rfReplaceAll, rfIgnoreCase]), ' ');
     for I := 0 to High(Res) do
     begin
       if L <> '' then L := L + ' ';
@@ -225,40 +181,32 @@ begin
       end;
     end;
 
+    result := true;
     Exit;
   end;
 
   if FAlwaysSold then exit;
-  ProgrammingGoods(GoodsCode, Copy(GoodsName, 1, 40) , Price, NDS);
-  result := SoldCode(GoodsCode, Amount, Price);
+  Logger.AddToLog(' SALE (GoodsCode := ' + IntToStr(GoodsCode) + ', Amount := ' + ReplaceStr(FormatFloat('0.000', Amount), FormatSettings.DecimalSeparator, '.') +
+      ', Price := ' + ReplaceStr(FormatFloat('0.00', Price), FormatSettings.DecimalSeparator, '.'));
+  result := FPrinter.SoldFrom(GoodsCode, GoodsName, '', UKTZED, '', Amount, Price, NDS);
 end;
 
 function TCashVchasnoKasa.ProgrammingGoods(const GoodsCode: integer;
   const GoodsName: string; const Price, NDS: double): boolean;
-var NDSType: Integer;
-begin//  if NDS = 0 then NDSType := 1 .033.+else NDSType := 0;
-
-  if NDS = 20 then NDSType := 0
-  else if NDS =  0 then NDSType := 2
-  else NDSType := 1;
-
-  // программирование артикула
-  Logger.AddToLog(' WRITEARTICLE (GoodsCode := ' + IntToStr(GoodsCode) +
-                 ', GoodsName := ' + GoodsName +
-                 ', NDSType := ' + IntToStr(NDSType));
-//  FPrinter.WRITEARTICLE[GoodsCode, GoodsName, NDSType, 1, 1, '.', Password];
-
+begin
+  Result := True;
 end;
 
 procedure TCashVchasnoKasa.Anulirovt;
 begin
-  FPrinter.FSummaCheck := 0;
-//  FPrinter.ANULIROVT[0, Password];
+  FPrinter.AlwaysSold;
 end;
 
 function TCashVchasnoKasa.CashInputOutput(const Summa: double): boolean;
 begin
-//  FPrinter.MONEY[1, ReplaceStr(FormatFloat('0.00', Summa), FormatSettings.DecimalSeparator, '.'), Password];
+  if Summa > 0 then Result := FPrinter.ServiceFee(Summa)
+  else if Summa < 0 then Result := FPrinter.ServiceTakeaway(Abs(Summa))
+  else Result := False;
 end;
 
 function TCashVchasnoKasa.TotalSumm(Summ, SummAdd: double; PaidType: TPaidType): boolean;
@@ -266,16 +214,15 @@ function TCashVchasnoKasa.TotalSumm(Summ, SummAdd: double; PaidType: TPaidType):
 begin
   if FisFiscal then
   begin
-//    if PaidType=ptMoney then
-//      FPrinter.PAYMENT[0, ReplaceStr(FormatFloat('0.00', Summ), FormatSettings.DecimalSeparator, '.'), Password]
-//    else FPrinter.PAYMENT[1, ReplaceStr(FormatFloat('0.00', Summ), FormatSettings.DecimalSeparator, '.'), Password];
-//
-//    if result and (PaidType=ptCardAdd) and (SummAdd <> 0) then
-//    begin
-//      FPrinter.PAYMENT[0, ReplaceStr(FormatFloat('0.00', SummAdd), FormatSettings.DecimalSeparator, '.'), Password];
-//    end;
+    if PaidType=ptMoney then
+      result := FPrinter.TotalSumm(Summ, 0)
+    else result := FPrinter.TotalSumm(Summ, 2);
 
-    result := True;
+    if result and (PaidType=ptCardAdd) and (SummAdd <> 0) then
+    begin
+      result := FPrinter.TotalSumm(SummAdd, 0);
+    end;
+
   end else
   begin
     if not FisFiscal and FPrintSumma then
@@ -294,7 +241,7 @@ function TCashVchasnoKasa.DiscountGoods(Summ: double): boolean;
 begin
   if FisFiscal then
   begin
-    FPrinter.Discount(RoundTo(Summ, - 2));
+    result := FPrinter.DiscountGoods(Summ);
   end else
   begin
     if Summ > 0 then
@@ -308,7 +255,7 @@ end;
 
 function TCashVchasnoKasa.ClosureFiscal: boolean;
 begin
-//  FPrinter.ZREPORT[Password];
+  result := FPrinter.ZReport;
 end;
 
 function TCashVchasnoKasa.DeleteArticules(const GoodsCode: integer): boolean;
@@ -317,17 +264,17 @@ end;
 
 function TCashVchasnoKasa.FiscalNumber: String;
 begin
-  Result := '3000403707';
+  Result := FPrinter.FiscalNumber;
 end;
 
 function TCashVchasnoKasa.SerialNumber:String;
 begin
-//  Result := FPrinter.ZNUM[Password];
+  Result := '';
 end;
 
 function TCashVchasnoKasa.XReport: boolean;
 begin
-//  FPrinter.XREPORT[Password];
+  FPrinter.XReport;
 end;
 
 function TCashVchasnoKasa.ChangePrice(const GoodsCode: integer;
@@ -349,7 +296,7 @@ end;
 function TCashVchasnoKasa.PrintNotFiscalText(
   const PrintText: WideString): boolean;
 begin
-//  FPrinter.PRNCHECK[PrintText, Password];
+  FPrinter.PrintFiscalText(PrintText);
 end;
 
 function TCashVchasnoKasa.PrintFiscalText(
@@ -389,16 +336,7 @@ end;
 function TCashVchasnoKasa.SubTotal(isPrint, isDisplay: WordBool; Percent,
   Disc: Double): boolean;
 begin
-  if FisFiscal then
-  begin
-//    FPrinter.PRNTOTAL[1, Password];
-
-    if result and (Disc <> 0) then
-    begin
-//      FPrinter.DISCOUNTTOTAL[ReplaceStr(FormatFloat('0.00', Disc), FormatSettings.DecimalSeparator, '.'), Password];
-    end;
-    result := True;
-  end else result := True;
+  result := True;
 end;
 
 
@@ -439,209 +377,53 @@ begin
 end;
 
 function TCashVchasnoKasa.InfoZReport : string;
-  var I : integer; S : String;
-      nSum : array [0..5] of Currency;
-      nTotal : Currency;
-
-  function Centr(AStr : string) : String;
-  begin
-    if Length(AStr) > 40 then
-      Result := Copy(AStr, 1, 40) + #13#10 + Centr(Copy(AStr, 41, Length(AStr)))
-    else if Length(AStr) = 40 then Result := AStr
-    else Result := StringOfChar(' ', (40 - Length(AStr)) div 2) + AStr;
-  end;
-
-  function Str(ACur : Currency; AL : integer) : String;
-  begin
-    Result := FormatCurr('0.00', ACur);
-    if AL > Length(Result) then Result := StringOfChar(' ', AL - Length(Result)) + Result;
-    Result := StringReplace(Result, FormatSettings.DecimalSeparator, '.', [rfReplaceAll])
-  end;
-
 begin
-  Result := '';
-
-//  for I := 0 to 9 do
-//  begin
-//    S := Trim(FPrinter.READPROGCHECK[I, 1, Password]);
-//    if Trim(S) <> ';0' then Result := Result + Centr(S) + #13#10;
-//  end;
-//
-//  S := 'ЗН ' + FPrinter. ZNUM[Password];
-//  S := S + '  ФН ' + FPrinter.FNUM[Password] + #13#10;
-//  Result := Result + Centr(S) + #13#10;
-//
-//  S := '           Z-звіт N ' + IntToStr(FPrinter.COUNTERSDAY[0, Password]);
-//  Result := Result + S + #13#10;
-//
-//  Result := Result + '              ЗАГАЛОМ' + #13#10;
-//  Result := Result + '  ------      Повернення    Продаж' + #13#10;
-//
-//  S := FPrinter.SUMDAY[2, 0, 0, 1, Password];
-//  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[0]) then nSum[0] := 0;
-//
-//  S := FPrinter.SUMDAY[2, 1, 0, 1, Password];
-//  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[1]) then nSum[1] := 0;
-//
-//  S := FPrinter.SUMDAY[2, 0, 0, 2, Password];
-//  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[2]) then nSum[2] := 0;
-//
-//  S := FPrinter.SUMDAY[2, 1, 0, 2, Password];
-//  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[3]) then nSum[3] := 0;
-//
-//  Result := Result + '  Готівка  ' + Str(nSum[2], 13) + Str(nSum[0], 13) + #13#10;
-//  Result := Result + '  Картка   ' + Str(nSum[3], 13) + Str(nSum[1], 13) + #13#10;
-//  Result := Result + '  ВСЬОГО   ' + Str(nSum[2] + nSum[3], 13) + Str(nSum[0] + nSum[1], 13) + #13#10;
-//
-//  nTotal := nSum[0] + nSum[1];
-//
-//  S := FPrinter.SUMDAY[3, 1, 0, 2, Password];
-//  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[0]) then nSum[0] := 0;
-//
-//  S := FPrinter.SUMDAY[3, 1, 0, 1, Password];
-//  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[1]) then nSum[1] := 0;
-//
-//  S := FPrinter.SUMDAY[3, 0, 0, 1, Password];
-//  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[2]) then nSum[2] := 0;
-//
-//  Result := Result + '  ------         Видача     Внесок'#13#10;
-//  Result := Result + '  Готівка  ' + Str(-nSum[0], 13) + Str(nSum[1], 13) + #13#10;
-//  Result := Result + '  Готівка в касі        ' + Str(nSum[2], 13) + #13#10;
-//
-//  for I := 1 to 10 do
-//  begin
-//
-//    S := FPrinter.SUMDAY[0, 0, 0, 1, Password];
-//    if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[0]) then nSum[0] := 0;
-//
-//    S := FPrinter.SUMDAY[0, 1 , 0, 1, Password];
-//    if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[1]) then nSum[1] := 0;
-//
-//    S := FPrinter.SUMDAY[0, 2 , 0, 1, Password];
-//    if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[2]) then nSum[2] := 0;
-//
-//    S := FPrinter.SUMDAY[1, 0, 0, 1, Password];
-//    if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[3]) then nSum[3] := 0;
-//
-//    S := FPrinter.SUMDAY[1, 1 , 0, 1, Password];
-//    if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[4]) then nSum[4] := 0;
-//
-//    S := FPrinter.SUMDAY[1, 2 , 0, 1, Password];
-//    if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[5]) then nSum[5] := 0;
-//
-//    if nTotal = (nSum[0] + nSum[1] + nSum[2]) then Break;
-//  end;
-//
-//  Result := Result + '  ------        Податок       Обіг' + #13#10;
-//  Result := Result + '  ДОД. А   ' + Str(nSum[3], 13) + Str(nSum[0], 13) + #13#10;
-//  Result := Result + '  ДОД. Б   ' + Str(nSum[4], 13) + Str(nSum[1], 13) + #13#10;
-//  Result := Result + '  ДОД. В   ' + Str(nSum[5], 13) + Str(nSum[2], 13) + #13#10;
-//  Result := Result + '  Чеків продажу ' + IntToStr(FPrinter.COUNTERSDAY[1, Password]) + #13#10;
-//
-//  S := FPrinter.SUMDAY[0, 0, 0, 2, Password];
-//  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[0]) then nSum[0] := 0;
-//
-//  S := FPrinter.SUMDAY[0, 1 , 0, 2, Password];
-//  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[1]) then nSum[1] := 0;
-//
-//  S := FPrinter.SUMDAY[0, 3 , 0, 2, Password];
-//  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[2]) then nSum[2] := 0;
-//
-//  S := FPrinter.SUMDAY[1, 0, 0, 2, Password];
-//  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[3]) then nSum[3] := 0;
-//
-//  S := FPrinter.SUMDAY[1, 1, 0, 2, Password];
-//  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[4]) then nSum[4] := 0;
-//
-//  S := FPrinter.SUMDAY[1, 3, 0, 2, Password];
-//  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[5]) then nSum[5] := 0;
-//
-//  Result := Result + '  ВІД. A   ' + Str(nSum[3], 13) + Str(nSum[0], 13) + #13#10;
-//  Result := Result + '  ВІД. Б   ' + Str(nSum[4], 13) + Str(nSum[1], 13) + #13#10;
-//  Result := Result + '  ВІД. В   ' + Str(nSum[5], 13) + Str(nSum[2], 13) + #13#10;
-//  Result := Result + '  Чеків повернення ' + IntToStr(FPrinter.COUNTERSDAY[2, Password]) + #13#10;
-//
-//  S := FPrinter.READTAXRATE[0, 2, Password];
-//  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[0]) then nSum[0] := 0;
-//
-//  S := FPrinter.READTAXRATE[1, 2, Password];
-//  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[1]) then nSum[1] := 0;
-//
-//  S := FPrinter.READTAXRATE[2, 2, Password];
-//  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[2]) then nSum[2] := 0;
-//
-//  Result := Result + '  Податок     від        10.10.2017' + #13#10;
-//  Result := Result + '            ПДВ_A (Вкл) A =    ' + Str(nSum[0], 6) + '%' + #13#10;
-//  Result := Result + '            ПДВ_Б (Вкл) Б =    ' + Str(nSum[1], 6) + '%' + #13#10;
-//  Result := Result + '            ПДВ_В (Вкл) В =    ' + Str(nSum[2], 6) + '%' + #13#10;
-//
-//  S := FPrinter.RETDT[1, Password];
-//  S := S + '  ' + FPrinter.RETDT[0, Password];
-//  S := COPY(S, 1, 2) + '.' + COPY(S, 3, 2) +  '.20' + COPY(S, 5, 6) +  ':' + COPY(S, 11, 2);
-
-  Result := Result + '                    ' + S  + #13#10;
-  Result := Result + '         ФІСКАЛЬНИЙ ЧЕК' + #13#10;
-  Result := Result + '  --------------------------------------' + #13#10;
-  Result := Result + '  --------------------------------------' + #13#10;
-
+  Result := FPrinter.GetLastZReport;
 end;
 
 function TCashVchasnoKasa.JuridicalName : string;
 begin
-//  Result := Trim(FPrinter.READPROGCHECK[0, 1, Password]);
+  Result := FPrinter.GetName;
 end;
 
 function TCashVchasnoKasa.ZReport : Integer;
 begin
-  Result := 22;
+  Result := FPrinter.GetZReport;
 end;
 
 function TCashVchasnoKasa.SummaReceipt : Currency;
 begin
-  Result := FPrinter.FSummaCheck;
+  Result := FPrinter.Summa;
 end;
 
 function TCashVchasnoKasa.GetTaxRate : string;
-  var I : Integer; S : string; C : Currency;
-  const TaxName : String = 'АБВГ';
 begin
-  Result := '';
-
-  for I := 0 to 3 do
-  begin
-//    S := FPrinter.READTAXRATE[I, 2, Password];
-    if TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), C) then
-    begin
-      if Result <> '' then Result := Result + '; ';
-      Result := Result + TaxName[I + 1] + ' ' + FormatCurr('0.00', C) + '%';
-    end;
-  end;
-
+  Result := '1 - 20%; 2 - Без ПДВ; 3 - 20% + 5%; 4 - 7%; 5 - 0%; 6 - Без ПДВ + 5%; 7 - Не є об`єктом ПДВ; 8 - 20% + 7,5%; 9 - 14%';
 end;
 
 function TCashVchasnoKasa.SensZReportBefore : boolean;
 begin
-  Result := True;
+  Result := False;
 end;
 
 function TCashVchasnoKasa.SummaCash : Currency;
 begin
-  Result := 49343;
+  Result := FPrinter.GetSummaCash;
 end;
 
 function TCashVchasnoKasa.SummaCard : Currency;
 begin
-  Result := 20567;
+  Result := FPrinter.GetSummaCard;
 end;
 
 function TCashVchasnoKasa.ReceiptsSales : Integer;
 begin
-  Result := 20;
+  Result := FPrinter.GetReceiptsSales;
 end;
 
 function TCashVchasnoKasa.ReceiptsReturn : Integer;
 begin
-  Result := 1;
+  Result := FPrinter.GetReceiptsReturn;
 end;
 
 end.

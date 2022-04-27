@@ -2362,6 +2362,7 @@ var str_log_xml : String;   Disc: Currency;
          with CheckCDS do begin
             result := Cash.SoldFromPC(FieldByName('GoodsCode').asInteger,
                                       AnsiUpperCase(FieldByName('GoodsName').Text),
+                                      '',
                                       FieldByName('Amount').asCurrency,
                                       FieldByName('Price').asCurrency,
                                       FieldByName('NDS').asCurrency)

@@ -135,6 +135,8 @@ function GetKey_expireDate(var AUserId : integer; var AKey_expireDate : TDateTim
 
 function GetKey_User_expireDate(ABase64Key, AKeyPassword : String; var AKey_expireDate : TDateTime) : boolean;
 
+function IsActiveHelsiApi : boolean;
+
 implementation
 
 uses MainCash2, RegularExpressions, System.Generics.Collections, Soap.EncdDecd,
@@ -1507,6 +1509,12 @@ begin
   end;
 
   Result := HelsiApi.IntegrationClientGetKeyInfo(ABase64Key, AKeyPassword, AKey_expireDate);
+end;
+
+
+function IsActiveHelsiApi : boolean;
+begin
+  Result := Assigned(HelsiApi);
 end;
 
 initialization

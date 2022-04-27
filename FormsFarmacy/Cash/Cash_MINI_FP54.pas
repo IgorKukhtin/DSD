@@ -21,7 +21,7 @@ type
     function GetAlwaysSold: boolean;
   protected
     function SoldCode(const GoodsCode: integer; const Amount: double; const Price: double = 0.00): boolean;
-    function SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
+    function SoldFromPC(const GoodsCode: integer; const GoodsName, UKTZED: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
     function ChangePrice(const GoodsCode: integer; const Price: double): boolean;
     function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false; const isReturn: boolean = False): boolean;
     function CloseReceipt: boolean;
@@ -322,7 +322,7 @@ begin
   ShowMessage('Ошибка. Комманда SoldCode не разрешена.');
 end;
 
-function TCashMINI_FP54.SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean;
+function TCashMINI_FP54.SoldFromPC(const GoodsCode: integer; const GoodsName, UKTZED: string; const Amount, Price, NDS: double): boolean;
 var NDSType: char;
     CashCode, nNDS: integer;
     I : Integer;
@@ -336,7 +336,7 @@ begin
   begin
 
     L := '';
-    Res := TRegEx.Split(GoodsName, ' ');
+    Res := TRegEx.Split(UKTZED + IfThen(UKTZED = '', '' , ' ') + GoodsName, ' ');
     for I := 0 to High(Res) do
     begin
       if L <> '' then L := L + ' ';
@@ -386,7 +386,7 @@ begin
   else nNDS := 2;
 
   result := SendCommand('add_plu;' + IntToStr(GoodsCode) + ';' + IntToStr(nNDS) + ';1;0;0;0;1;0.0;0;' +
-    Copy(StringReplace(GoodsName, ';', '\;', [rfReplaceAll, rfIgnoreCase]), 1, 48) + ';' + AmountToStrPoint(Ceil(Amount)) + ';');
+    Copy(StringReplace(UKTZED + IfThen(UKTZED = '', '' , ' ') + GoodsName, ';', '\;', [rfReplaceAll, rfIgnoreCase]), 1, 48) + ';' + AmountToStrPoint(Ceil(Amount)) + ';');
   if not result then Exit;
 
   // Продажа

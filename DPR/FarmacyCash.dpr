@@ -149,7 +149,10 @@ uses
   dsdXMLTransform in '..\SOURCE\COMPONENT\dsdXMLTransform.pas',
   PrintSendDialog in '..\FormsFarmacy\Cash\PrintSendDialog.pas' {PrintSendDialogForm: TParentForm},
   UnitGetCash in '..\FormsFarmacy\Cash\UnitGetCash.pas',
-  ChoiceMedicalProgramSP in '..\FormsFarmacy\Cash\ChoiceMedicalProgramSP.pas' {ChoiceMedicalProgramSPForm: TParentForm};
+  ChoiceMedicalProgramSP in '..\FormsFarmacy\Cash\ChoiceMedicalProgramSP.pas' {ChoiceMedicalProgramSPForm: TParentForm},
+  VchasnoKasaAPI in '..\FormsFarmacy\Cash\VchasnoKasaAPI.pas',
+  Cash_VchasnoKasa in '..\FormsFarmacy\Cash\Cash_VchasnoKasa.pas',
+  CheckHelsiSignPUSH in '..\FormsFarmacy\Cash\CheckHelsiSignPUSH.pas' {CheckHelsiSignPUSHForm: TParentForm};
 
 {$R *.res}
 

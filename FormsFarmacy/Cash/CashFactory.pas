@@ -9,7 +9,8 @@ type
 
 implementation
 
-uses Cash_FP3530T, Cash_FP3530T_NEW, Cash_FP320, Cash_IKC_E810T, Cash_IKC_C651T, Cash_MINI_FP54, Cash_Emulation, SysUtils;
+uses Cash_FP3530T, Cash_FP3530T_NEW, Cash_FP320, Cash_IKC_E810T, Cash_IKC_C651T,
+     Cash_MINI_FP54, Cash_Emulation, Cash_VchasnoKasa, SysUtils;
 { TCashFactory }
 class function TCashFactory.GetCash(CashType: string): ICash;
 begin
@@ -27,6 +28,8 @@ begin
      result := TCashMINI_FP54.Create;
   if CashType = 'Emulation' then
      result := TCashEmulation.Create;
+  if CashType = 'VchasnoKasa' then
+     result := TCashVchasnoKasa.Create;
   if not Assigned(Result) then
      raise Exception.Create('Не правильно указан тип кассы в Ini файле');
 (*CashSamsung:=TCashSamsung.Create(GetDefaultValue_fromFile(ifDefaults,Self.ClassName,'ComPort','COM2:'));
