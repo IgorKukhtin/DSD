@@ -1,4 +1,4 @@
--- Function: gpSelect_Object_GoodsByGoodsKind1CLink (TVarChar)
+-- Function: gpGet_OlapSoldReportOption (TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_OlapSoldReportOption (TVarChar);
 

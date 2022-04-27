@@ -34,8 +34,13 @@ BEGIN
                                ))
     THEN
         vbMemberId:= 0;
-    /*ELSE
+    ELSE
         vbMemberId:= (SELECT ObjectLink_User_Member.ChildObjectId
+                      FROM ObjectLink AS ObjectLink_User_Member
+                      WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                        AND ObjectLink_User_Member.ObjectId = vbUserId
+                     );
+                   /*(SELECT ObjectLink_User_Member.ChildObjectId
                       FROM ObjectLink AS ObjectLink_User_Member
                       WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                         AND ObjectLink_User_Member.ObjectId = vbUserId
@@ -60,7 +65,8 @@ BEGIN
                                        , 439923 -- Васильева Л.Я.
                                        , 439925 -- Новиков Д.В.
                                         )
-                     );*/
+                     )*/
+                      ;
     END IF;
 
     RETURN QUERY
@@ -83,7 +89,7 @@ BEGIN
                                                AND Object.isErased = FALSE
                          WHERE ObjectLink.DescId        = zc_ObjectLink_MemberSheetWorkTime_Member()
                            AND (ObjectLink.ChildObjectId = vbMemberId
-                                OR vbMemberId = 0)
+                             OR vbMemberId = 0)
                         )
         SELECT
             Object_Unit.Id                     AS UnitId

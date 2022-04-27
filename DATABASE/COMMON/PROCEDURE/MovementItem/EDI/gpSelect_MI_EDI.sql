@@ -92,6 +92,7 @@ BEGIN
                          WHERE MovementItem.MovementId = vbMovementId_Order
                            AND MovementItem.DescId = zc_MI_Master()
                            AND MovementItem.isErased = FALSE
+                           AND MovementItem.ObjectId > 0
                          GROUP BY MovementItem.ObjectId
                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                 , COALESCE (MIFloat_Price.ValueData, 0)

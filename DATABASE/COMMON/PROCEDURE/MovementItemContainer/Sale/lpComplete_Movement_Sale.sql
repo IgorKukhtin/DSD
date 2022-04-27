@@ -461,7 +461,7 @@ END IF;*/
      SELECT lfGet.PriceWithVAT, lfGet.VATPercent INTO vbPriceWithVAT_PriceListJur, vbVATPercent_PriceListJur FROM lfGet_Object_PriceList (vbPriceListId_Jur) AS lfGet;
 
      -- !!! Коротких О.Л. - Касян С.А.
-     vbIsPriceList_begin_recalc:= inUserId IN (/*zfCalc_UserMain(),*/ 7015095, /*2030723,*/ 5) AND vbOperDate >= '01.04.2021'
+     vbIsPriceList_begin_recalc:= inUserId IN (/*zfCalc_UserMain(),*/ 7015095 /*, 2030723, 5*/) AND vbOperDate >= '01.04.2021'
                             --AND EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
                                  ;
 
@@ -1370,6 +1370,44 @@ END IF;*/
                                                 , inUserId     := inUserId
                                                  );
      END IF;
+
+
+     -- !!!Пересчет цен - ТАРА!!!!
+     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.isTareReturning = TRUE) -- Оборотная тара
+     THEN
+         -- Сохранили Цены
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceTare(), tmp.MovementItemId, tmp.OperPrice)
+         FROM (WITH tmpPrice AS (SELECT tmpGoods.GoodsId
+                                      , COALESCE (ObjectLink_PriceListItem_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                                      , COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) AS OperPrice
+                                 FROM (SELECT DISTINCT _tmpItem.GoodsId
+                                       FROM _tmpItem
+                                       WHERE _tmpItem.isTareReturning = TRUE
+                                      ) AS tmpGoods
+                                      INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                                                            ON ObjectLink_PriceListItem_Goods.ChildObjectId = tmpGoods.GoodsId
+                                                           AND ObjectLink_PriceListItem_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
+                                      INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                                            ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                                           AND ObjectLink_PriceListItem_PriceList.ChildObjectId = zc_PriceList_Basis()
+                                                           AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                                      LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                                           ON ObjectLink_PriceListItem_GoodsKind.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                                          AND ObjectLink_PriceListItem_GoodsKind.DescId        = zc_ObjectLink_PriceListItem_GoodsKind()
+                                      LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                              ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
+                                                             AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
+                                                             AND vbOperDate >= ObjectHistory_PriceListItem.StartDate AND vbOperDate < ObjectHistory_PriceListItem.EndDate
+                                      LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                                   ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                                  AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                                )
+               SELECT _tmpItem.MovementItemId, tmpPrice.OperPrice
+               FROM _tmpItem
+                    INNER JOIN tmpPrice ON tmpPrice.GoodsId = _tmpItem.GoodsId
+              ) AS tmp;
+     END IF;
+
 
 
      -- !!!
@@ -3617,7 +3655,7 @@ END IF;*/
      END IF;
 
 
-     if inUserId = 5 AND 1=1 then RAISE EXCEPTION 'Нет Прав и нет Проверки - что б ничего не делать'; end if;
+     if inUserId = 5 AND 1=0 then RAISE EXCEPTION 'Нет Прав и нет Проверки - что б ничего не делать'; end if;
 
 
 END;

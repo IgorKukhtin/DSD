@@ -93,7 +93,7 @@ BEGIN
              , Movement_Parent.Id                AS MovementId_parent
              , Movement_Parent.OperDate          AS OperDate_parent
 
-             , zfCalc_InvNumber_isErased_sh ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
+             , zfCalc_InvNumber_isErased_sh (Movement_Parent.InvNumber, Movement_Parent.StatusId) AS InvNumber_parent
 
              , Movement_TransportGoods.Id            AS MovementId_TransportGoods
              , Movement_TransportGoods.InvNumber     AS InvNumber_TransportGoods
@@ -479,4 +479,4 @@ where Movement.Id = tmp.Id
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_WeighingPartner (inStartDate:= '01.06.2019', inEndDate:= '01.06.2019', inJuridicalBasisId:= zc_Juridical_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_WeighingPartner (inStartDate:= '01.06.2022', inEndDate:= '01.06.2022', inJuridicalBasisId:= zc_Juridical_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

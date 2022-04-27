@@ -144,7 +144,7 @@ BEGIN
              , Movement_Parent.Id                AS MovementId_parent
              , Movement_Parent.OperDate          AS OperDate_parent
 
-             , zfCalc_InvNumber_isErased_sh ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
+             , zfCalc_InvNumber_isErased_sh (Movement_Parent.InvNumber, Movement_Parent.StatusId) AS InvNumber_parent
 
              , Movement_TransportGoods.Id            AS MovementId_TransportGoods
              , Movement_TransportGoods.InvNumber     AS InvNumber_TransportGoods
@@ -695,4 +695,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_WeighingPartner_Item (inStartDate:= '01.08.2019', inEndDate:= '01.08.2019', inGoodsGroupId:= 0, inGoodsId:= 0, inJuridicalBasisId:= zc_Juridical_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
 
---SELECT * FROM gpSelect_Movement_WeighingPartner_Item (inStartDate:= '05.11.2019', inEndDate:= '05.11.2019', inGoodsGroupId:= 0, inGoodsId:= 0, inJuridicalBasisId:= zc_Juridical_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+--SELECT * FROM gpSelect_Movement_WeighingPartner_Item (inStartDate:= '05.11.2022', inEndDate:= '05.11.2022', inGoodsGroupId:= 0, inGoodsId:= 0, inJuridicalBasisId:= zc_Juridical_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
