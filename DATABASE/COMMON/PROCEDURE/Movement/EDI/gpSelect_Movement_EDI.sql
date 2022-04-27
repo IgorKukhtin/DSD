@@ -119,7 +119,7 @@ BEGIN
 
            , COALESCE (MovementLinkMovement_Sale.MovementId, MovementLinkMovement_MasterEDI.MovementId) :: Integer AS MovementId_Sale
            , MovementDate_OperDatePartner_Sale.ValueData    AS OperDatePartner_Sale
-           , Movement_Sale.InvNumber                        AS InvNumber_Sale
+           , zfCalc_InvNumber_isErased_sh (Movement_Sale.InvNumber, Movement_Sale.StatusId) AS InvNumber_Sale
            , Object_From_Sale.ValueData                     AS FromName_Sale
            , Object_To_Sale.ValueData                       AS ToName_Sale
            , MovementFloat_TotalCountPartner_Sale.ValueData AS TotalCountPartner_Sale
@@ -135,7 +135,7 @@ BEGIN
 
            , MovementLinkMovement_Order.MovementId          AS MovementId_Order
            , Movement_Order.OperDate                        AS OperDate_Order
-           , Movement_Order.InvNumber                       AS InvNumber_Order
+           , zfCalc_InvNumber_isErased_sh (Movement_Order.InvNumber, Movement_Order.StatusId) AS InvNumber_Order
 
            , MovementDesc.ItemName AS DescName
            , MovementString_FileName.ValueData              AS FileName
@@ -312,7 +312,7 @@ BEGIN
                                            ON MovementLinkMovement_Order.MovementChildId = Movement.Id 
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementId
-                                                AND Movement_Order.StatusId = zc_Enum_Status_Complete()
+                                              --AND Movement_Order.StatusId = zc_Enum_Status_Complete()
 
             LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalSigning
                                  ON ObjectLink_Contract_PersonalSigning.ObjectId = View_Contract_InvNumber.ContractId
