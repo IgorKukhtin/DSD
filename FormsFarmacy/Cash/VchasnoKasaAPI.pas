@@ -19,6 +19,7 @@ type
     FURL : String;
     // В каком режиме работать
     FResource : String;
+    FBatchMode : Boolean;
     // Токены доступа
     FAccess_Token : String;
     //Версия схемы
@@ -28,8 +29,6 @@ type
 
     // Печататная форма
     FPF_Text : String;
-    // Последний Z отчет
-    FPF_LastZReport : String;
     // Текст ошибки
     FPF_Error : String;
     // код/идентификатор фискального документа
@@ -138,7 +137,7 @@ type
     function ServiceTakeaway(ASUM : Currency) : boolean;
 
       // 10 - X-отчет
-    function XReport(AShowReceipt : Boolean = True) : boolean;
+    function XReport : boolean;
       // 11 - Z-отчет
     function ZReport : boolean;
       // 12 - Сводный Z-отчет по интервалу номеров Z-отчетов
@@ -173,6 +172,8 @@ type
     // Последний Z отчет
     function GetLastZReport : String;
 
+    // Пакетный режим
+    property BatchMode : boolean read FBatchMode;
     // Текст ошибки
     property PF_Error : String read FPF_Error;
     // Возврат текст для печати
@@ -238,7 +239,6 @@ begin
   DShopAd := '';
   FVat_Code := '';
   FFis_Code := '';
-  FPF_LastZReport := '';
 
   FOpen := False;
   FReturn := False;
@@ -276,7 +276,6 @@ var
   nSum : Currency;
 begin
   Result := False;
-  FPF_Text := '';
   FPF_Error := '';
   if not TryStrToInt(jsonFiscal.FindValue('task').ToString, task) then
   begin
@@ -430,8 +429,6 @@ begin
         S := jValue.FindValue('pf_text').Value;
         S := COPY(S, POS('base64', S) + 7, Length(S));
         FPF_Text := TIdDecoderMIME.DecodeString(S, IndyTextEncoding('windows-1251'));
-
-        if task = 11 then FPF_LastZReport := FPF_Text;
       except
       end;
     end;
@@ -488,6 +485,7 @@ begin
 
   FVer := AVer;
   FURL := AURL;
+  FBatchMode := ABatchMode;
   if ABatchMode then FResource := 'execute-pkg'
   else FResource := 'execute';
   FDevice_Name := ADevice_Name;
@@ -653,7 +651,6 @@ begin
 
     Result := PostData(jsonFiscal);
     CheckId := FDocNo;
-    if FPF_Text <> '' then ShowMessage(FPF_Text);
     GetStatus;
   finally
     FOpen := False;
@@ -817,7 +814,6 @@ begin
   jsonFiscal.AddPair('cash', jsonCash);
 
   Result := PostData(jsonFiscal);
-  if FPF_Text <> '' then ShowMessage(FPF_Text);
   GetStatus;
 end;
 
@@ -845,12 +841,11 @@ begin
   jsonFiscal.AddPair('cash', jsonCash);
 
   Result := PostData(jsonFiscal);
-  if FPF_Text <> '' then ShowMessage(FPF_Text);
   GetStatus;
 end;
 
   // 10 - X-отчет
-function TVchasnoKasaAPI.XReport(AShowReceipt : Boolean = True) : boolean;
+function TVchasnoKasaAPI.XReport : boolean;
 var
   jsonFiscal: TJSONObject;
 begin
@@ -866,7 +861,6 @@ begin
   jsonFiscal.AddPair('task', TJSONNumber.Create(10));
 
   Result := PostData(jsonFiscal);
-  if AShowReceipt and (FPF_Text <> '') then ShowMessage(FPF_Text);
   GetStatus;
 end;
 
@@ -887,7 +881,6 @@ begin
   jsonFiscal.AddPair('task', TJSONNumber.Create(11));
 
   Result := PostData(jsonFiscal);
-  if FPF_Text <> '' then ShowMessage(FPF_Text);
   GetStatus;
 end;
 
@@ -985,14 +978,14 @@ end;
 // Обороты продажа
 function TVchasnoKasaAPI.GetSummaCash : Currency;
 begin
-  if XReport(False) then Result := FSummaCash
+  if XReport then Result := FSummaCash
   else Result := 0;
 end;
 
 // Обороты возвраты
 function TVchasnoKasaAPI.GetSummaCard  : Currency;
 begin
-  if XReport(False) then Result := FSummaCard
+  if XReport then Result := FSummaCard
   else Result := 0;
 end;
 
@@ -1000,21 +993,21 @@ end;
 // Чеков продажа
 function TVchasnoKasaAPI.GetReceiptsSales : Integer;
 begin
-  if XReport(False) then Result := FReceiptsSales
+  if XReport then Result := FReceiptsSales
   else Result := 0;
 end;
 
 // Чеков продажа
 function TVchasnoKasaAPI.GetReceiptsReturn : Integer;
 begin
-  if XReport(False) then Result := FReceiptsReturn
+  if XReport then Result := FReceiptsReturn
   else Result := 0;
 end;
 
 // Название юрлица
 function TVchasnoKasaAPI.GetName : String;
 begin
-  if XReport(False) then Result := FName
+  if XReport then Result := FName
   else Result := '';
 end;
 
@@ -1023,8 +1016,8 @@ function TVchasnoKasaAPI.GetLastZReport : String;
 begin
   if FShift_Status = 1 then
   begin
-    if XReport(False) then Result := StringReplace(FPF_Text, 'X-ЗВІТ', 'Z-ЗВІТ', [rfIgnoreCase]);
-  end else Result := FPF_LastZReport;
+    if XReport then Result := StringReplace(FPF_Text, 'X-ЗВІТ', 'Z-ЗВІТ', [rfIgnoreCase]);
+  end else Result := FPF_Text;
 end;
 
 end.

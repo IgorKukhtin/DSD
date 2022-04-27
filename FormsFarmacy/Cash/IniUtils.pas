@@ -56,6 +56,13 @@ function iniVCDevice_Name:String;
 //возвраащет Token
 function iniVCAccess_Token:String;
 
+//возвраащет тип принтера аппарата;
+function iniPrinterType:String;
+//возвращает порт принтера
+function iniPrinterPortNumber:String;
+//возвращает скорость порта принтера
+function iniPrinterPortSpeed:String;
+
 //логировать сообщения от РРО
 function iniLog_RRO : Boolean;
 
@@ -414,6 +421,24 @@ function iniLog_RRO: Boolean;
 begin
   S := GetValue('TSoldWithCompMainForm','Log_RRO', 'False');
   if not TryStrToBool(S, Result) then Result := False;
+end;
+
+//возвраащет тип принтера аппарата;
+function iniPrinterType:String;
+begin
+  Result := GetValue('TSoldWithCompMainForm','PrinterType','');
+end;
+
+//возвращает порт принтера
+function iniPrinterPortNumber:String;
+begin
+  Result := GetValue('TSoldWithCompMainForm','PrinterPortNumber','');
+end;
+
+//возвращает скорость порта принтера
+function iniPrinterPortSpeed:String;
+begin
+  Result := GetValue('TSoldWithCompMainForm','PrinterPortSpeed','');
 end;
 
 function iniLocalCashRegisterGet: string;

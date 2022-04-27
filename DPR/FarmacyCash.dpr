@@ -152,7 +152,11 @@ uses
   ChoiceMedicalProgramSP in '..\FormsFarmacy\Cash\ChoiceMedicalProgramSP.pas' {ChoiceMedicalProgramSPForm: TParentForm},
   VchasnoKasaAPI in '..\FormsFarmacy\Cash\VchasnoKasaAPI.pas',
   Cash_VchasnoKasa in '..\FormsFarmacy\Cash\Cash_VchasnoKasa.pas',
-  CheckHelsiSignPUSH in '..\FormsFarmacy\Cash\CheckHelsiSignPUSH.pas' {CheckHelsiSignPUSHForm: TParentForm};
+  CheckHelsiSignPUSH in '..\FormsFarmacy\Cash\CheckHelsiSignPUSH.pas' {CheckHelsiSignPUSHForm: TParentForm},
+  PrinterInterface in '..\FormsFarmacy\Cash\PrinterInterface.pas',
+  PrinterFactory in '..\FormsFarmacy\Cash\PrinterFactory.pas',
+  Printer_FP3530T_NEW in '..\FormsFarmacy\Cash\Printer_FP3530T_NEW.pas',
+  Printer_Emulation in '..\FormsFarmacy\Cash\Printer_Emulation.pas';
 
 {$R *.res}
 

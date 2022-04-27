@@ -1,7 +1,7 @@
 unit Cash_VchasnoKasa;
 
 interface
-uses Windows, VchasnoKasaAPI, CashInterface;
+uses Windows, VchasnoKasaAPI, CashInterface, PrinterInterface;
 type
 
   TCashVchasnoKasa = class(TInterfacedObject, ICash)
@@ -12,6 +12,8 @@ type
     FisFiscal: boolean;
     FLengNoFiscalText : integer;
     FSumma : Currency;
+    FLocalPrinter: IPrinter;
+    FNotFiscalText : String;
     procedure SetAlwaysSold(Value: boolean);
     function GetAlwaysSold: boolean;
   protected
@@ -63,7 +65,7 @@ type
 
 implementation
 uses Forms, SysUtils, Dialogs, Math, Variants, StrUtils, IniUtils,
-     RegularExpressions, Log;
+     RegularExpressions, PrinterFactory, Log;
 
 
 { TCashVchasnoKasa }
@@ -73,8 +75,14 @@ begin
   FAlwaysSold:=false;
   FPrintSumma:=False;
   FLengNoFiscalText := 35;
+  FisFiscal := False;
+  FNotFiscalText := '';
   FPrinter := TVchasnoKasaAPI.Create;
   FPrinter.Init(6, iniVCBatchMode, iniVCURL, iniVCDevice_Name, iniVCAccess_Token);
+  try
+    FLocalPrinter := TPrinterFactory.GetPrinter(iniPrinterType);
+  except on E: Exception do ShowMessage(E.Message);
+  end;
 end;
 
 destructor TCashVchasnoKasa.Destroy;
@@ -85,12 +93,40 @@ end;
 function TCashVchasnoKasa.CloseReceipt: boolean;
   var CheckId: String;
 begin
-  result := FPrinter.CloseReceip(CheckId);
+  if FisFiscal then
+  begin
+     Result := FPrinter.CloseReceip(CheckId);
+
+     if Result and not FPrinter.BatchMode and (FPrinter.PF_Text <> '')  then
+     begin
+       if Assigned(FLocalPrinter) then FLocalPrinter.PrintText(FPrinter.PF_Text)
+       else ShowMessage(FPrinter.PF_Text);
+     end;
+  end else if FNotFiscalText <> '' then
+  begin
+    if Assigned(FLocalPrinter) then FLocalPrinter.PrintText(FNotFiscalText)
+    else ShowMessage(FNotFiscalText);
+    FNotFiscalText := '';
+  end;
 end;
 
 function TCashVchasnoKasa.CloseReceiptEx(out CheckId: String): boolean;
 begin
-  result := FPrinter.CloseReceip(CheckId);
+  if FisFiscal then
+  begin
+    Result := FPrinter.CloseReceip(CheckId);
+
+    if Result and not FPrinter.BatchMode and (FPrinter.PF_Text <> '') then
+    begin
+      if Assigned(FLocalPrinter) then FLocalPrinter.PrintText(FPrinter.PF_Text)
+      else ShowMessage(FPrinter.PF_Text);
+    end;
+  end else if FNotFiscalText <> '' then
+  begin
+    if Assigned(FLocalPrinter) then FLocalPrinter.PrintText(FNotFiscalText)
+    else ShowMessage(FNotFiscalText);
+    FNotFiscalText := '';
+  end;
 end;
 
 function TCashVchasnoKasa.GetLastCheckId: Integer;
@@ -109,10 +145,10 @@ begin
   FisFiscal := isFiscal;
   FPrintSumma := isPrintSumma;
   FSumma := 0;
+  FNotFiscalText := '';
   if FisFiscal then
      Result:= FPrinter.OpenReceipt(isReturn)
-  else
-     ShowMessage('Печать нефискальных чеков запрещена...');
+  else Result:= True;
 end;
 
 procedure TCashVchasnoKasa.SetAlwaysSold(Value: boolean);
@@ -199,7 +235,7 @@ end;
 
 procedure TCashVchasnoKasa.Anulirovt;
 begin
-  FPrinter.AlwaysSold;
+  if FisFiscal then FPrinter.AlwaysSold;
 end;
 
 function TCashVchasnoKasa.CashInputOutput(const Summa: double): boolean;
@@ -207,6 +243,12 @@ begin
   if Summa > 0 then Result := FPrinter.ServiceFee(Summa)
   else if Summa < 0 then Result := FPrinter.ServiceTakeaway(Abs(Summa))
   else Result := False;
+
+  if Result and not FPrinter.BatchMode and (FPrinter.PF_Text <> '')  then
+  begin
+    if Assigned(FLocalPrinter) then FLocalPrinter.PrintText(FPrinter.PF_Text)
+    else ShowMessage(FPrinter.PF_Text);
+  end;
 end;
 
 function TCashVchasnoKasa.TotalSumm(Summ, SummAdd: double; PaidType: TPaidType): boolean;
@@ -256,6 +298,11 @@ end;
 function TCashVchasnoKasa.ClosureFiscal: boolean;
 begin
   result := FPrinter.ZReport;
+  if Result and not  FPrinter.BatchMode and (FPrinter.PF_Text <> '')  then
+  begin
+    if Assigned(FLocalPrinter) then FLocalPrinter.PrintText(FPrinter.PF_Text)
+    else ShowMessage(FPrinter.PF_Text);
+  end;
 end;
 
 function TCashVchasnoKasa.DeleteArticules(const GoodsCode: integer): boolean;
@@ -269,12 +316,18 @@ end;
 
 function TCashVchasnoKasa.SerialNumber:String;
 begin
-  Result := '';
+  if Assigned(FLocalPrinter) then Result := FLocalPrinter.SerialNumber
+  else Result := '';
 end;
 
 function TCashVchasnoKasa.XReport: boolean;
 begin
-  FPrinter.XReport;
+  Result := FPrinter.XReport;
+  if Result and not FPrinter.BatchMode and (FPrinter.PF_Text <> '')  then
+  begin
+    if Assigned(FLocalPrinter) then FLocalPrinter.PrintText(FPrinter.PF_Text)
+    else ShowMessage(FPrinter.PF_Text);
+  end;
 end;
 
 function TCashVchasnoKasa.ChangePrice(const GoodsCode: integer;
@@ -296,7 +349,13 @@ end;
 function TCashVchasnoKasa.PrintNotFiscalText(
   const PrintText: WideString): boolean;
 begin
-  FPrinter.PrintFiscalText(PrintText);
+  if not FisFiscal then
+  begin
+    if FNotFiscalText <> '' then
+      FNotFiscalText := FNotFiscalText + #13#10 + PrintText
+    else FNotFiscalText := PrintText;
+    Result := True;
+  end else Result := FPrinter.PrintFiscalText(PrintText);
 end;
 
 function TCashVchasnoKasa.PrintFiscalText(
@@ -362,8 +421,6 @@ end;
 function TCashVchasnoKasa.PrintZeroReceipt: boolean;
 begin
   OpenReceipt;
-  SubTotal(true, true, 0, 0);
-  TotalSumm(0, 0, ptMoney);
   CloseReceipt;
 end;
 
