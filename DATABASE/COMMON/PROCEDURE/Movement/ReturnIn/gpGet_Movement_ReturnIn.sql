@@ -35,7 +35,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , isPromo Boolean
              , isList Boolean
              , isPrinted Boolean
-             , isWeighing_inf Boolean
+             , isWeighing_inf Boolean  
+             , MovementId_OrderReturnTare Integer
+             , InvNumber_OrderReturnTare  TVarChar
              )
 AS
 $BODY$
@@ -117,7 +119,9 @@ BEGIN
              , CAST (FALSE AS Boolean)                  AS isPromo 
              , CAST (FALSE AS Boolean)                  AS isList
              , CAST (FALSE AS Boolean)                  AS isPrinted
-             , CAST (FALSE AS Boolean)                  AS isWeighing_inf
+             , CAST (FALSE AS Boolean)                  AS isWeighing_inf  
+             ,  0                                       AS MovementId_OrderReturnTare
+             , '' :: TVarChar                           AS InvNumber_OrderReturnTare
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
                LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
@@ -263,6 +267,8 @@ BEGIN
            , COALESCE (MovementBoolean_Print.ValueData, False):: Boolean AS isPrinted
            , CASE WHEN tmpWeighingPartner.ParentId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isWeighing_inf
 
+           , Movement_OrderReturnTare.Id                                                                                                    AS MovementId_OrderReturnTare
+           , ('№ ' || Movement_OrderReturnTare.InvNumber || ' от ' || Movement_OrderReturnTare.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_OrderReturnTare
        FROM Movement
             LEFT JOIN tmpMI ON 1 = 1
             LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = tmpMI.MovementId
@@ -426,6 +432,11 @@ BEGIN
             LEFT JOIN Object AS Object_MemberInsert ON Object_MemberInsert.Id = ObjectLink_User_Member.ChildObjectId
 
             LEFT JOIN tmpWeighingPartner ON tmpWeighingPartner.ParentId = Movement.Id
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_OrderReturnTare
+                                           ON MovementLinkMovement_OrderReturnTare.MovementId = Movement.Id
+                                          AND MovementLinkMovement_OrderReturnTare.DescId = zc_MovementLinkMovement_OrderReturnTare()
+            LEFT JOIN Movement AS Movement_OrderReturnTare ON Movement_OrderReturnTare.Id = MovementLinkMovement_OrderReturnTare.MovementChildId
  
          WHERE Movement.Id     =  inMovementId
            AND Movement.DescId = zc_Movement_ReturnIn();

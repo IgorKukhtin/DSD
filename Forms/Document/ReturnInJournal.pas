@@ -143,6 +143,7 @@ type
     actPrintAkt: TdsdPrintAction;
     bbPrintAkt: TdxBarButton;
     ReasonName: TcxGridDBColumn;
+    InvNumber_OrderReturnTare: TcxGridDBColumn;
   private
     { Private declarations }
   public

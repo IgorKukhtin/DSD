@@ -67,14 +67,15 @@ BEGIN
                         )
 
          -- Данные из док. возврата 
-         , tmpMIReturnIn AS (SELECT Movement.ParentId
+         , tmpMIReturnIn AS (SELECT MovementLinkMovement_OrderReturnTare.MovementChildId AS ParentId
                                   , MovementItem.ObjectId            AS GoodsId
                                   , MovementLinkObject_From.ObjectId AS PartnerId
                                   , SUM (MovementItem.Amount)        AS Amount
                            FROM Movement  
-                                INNER JOIN Movement AS Movement_Parent
-                                                    ON Movement_Parent.Id = Movement.ParentId
-                                                   AND Movement_Parent.DescId = zc_Movement_OrderReturnTare()
+                                INNER JOIN MovementLinkMovement AS MovementLinkMovement_OrderReturnTare
+                                                                ON MovementLinkMovement_OrderReturnTare.MovementId = Movement.Id
+                                                               AND MovementLinkMovement_OrderReturnTare.DescId = zc_MovementLinkMovement_OrderReturnTare()
+
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId = zc_MI_Master()
                                                        AND MovementItem.isErased = FALSE

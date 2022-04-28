@@ -76,7 +76,9 @@ BEGIN
                          UNION SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId WHERE vbIsXleb = TRUE
                               )
         --документы Заявка на возврат тары
-        , tmpOrderReturnTare AS (SELECT DISTINCT Movement.Id
+       /*  --не должно здесь біть
+       
+       , tmpOrderReturnTare AS (SELECT DISTINCT Movement.Id
                                  FROM tmpStatus
                                       JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND Movement.DescId = zc_Movement_OrderReturnTare()
@@ -89,9 +91,9 @@ BEGIN
                                       INNER JOIN MovementItemLinkObject AS MILinkObject_Partner
                                                                        ON MILinkObject_Partner.MovementItemId = MovementItem.Id
                                                                       AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
-                                                                      AND (MILinkObject_Partner.ObjectId = inPartnerId OR inPartnerId = 0)
+                                                                      AND (MILinkObject_Partner.ObjectId = inPartnerId OR inPartnerId = 0) 
                                  )
-
+       */
 
      SELECT
              Movement.Id                                    AS Id
@@ -204,11 +206,12 @@ BEGIN
              WHERE inIsPartnerDate = TRUE
                AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-            UNION ALL
+            /*UNION ALL
             --Заявка на возврат тары
              SELECT tmpOrderReturnTare.Id
                   , inPartnerId AS ToId
-             FROM tmpOrderReturnTare
+             FROM tmpOrderReturnTare  
+             */
             ) AS tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.Id

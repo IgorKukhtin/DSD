@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (integer, tvarchar, tvarchar, tvarchar, tdatetime, tdatetime, boolean, boolean, tfloat, tfloat, integer, integer, integer, integer, integer, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (integer, tvarchar, tvarchar, tvarchar, integer, tdatetime, tdatetime, boolean, boolean, tfloat, tfloat, integer, integer, integer, integer, integer, integer, TVarChar, tvarchar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (integer, tvarchar, tvarchar, tvarchar, integer, tdatetime, tdatetime, boolean, boolean, boolean, tfloat, tfloat, integer, integer, integer, integer, integer, integer, TVarChar, tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (integer, tvarchar, tvarchar, tvarchar, integer, tdatetime, tdatetime, boolean, boolean, boolean, boolean, tfloat, tfloat, integer, integer, integer, integer, integer, integer, TVarChar, tvarchar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (integer, tvarchar, tvarchar, tvarchar, integer, tdatetime, tdatetime, boolean, boolean, boolean, boolean, tfloat, tfloat, integer, integer, integer, integer, integer, integer, TVarChar, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (integer, tvarchar, tvarchar, tvarchar, integer, tdatetime, tdatetime, boolean, boolean, boolean, boolean, tfloat, tfloat, integer, integer, integer, integer, integer, integer, integer, TVarChar, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат покупателя>
@@ -24,8 +25,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnIn(
     IN inPaidKindId          Integer   , -- Виды форм оплаты
     IN inContractId          Integer   , -- Договора
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
-    IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
-   OUT outCurrencyValue      TFloat    , -- курс валюты
+    IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента) 
+   OUT outCurrencyValue      TFloat    , -- курс валюты 
+    IN inMovementId_OrderReturnTare    Integer   , --
     In inComment             TVarChar  , -- примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -90,7 +92,8 @@ BEGIN
                                       , inContractId       := inContractId
                                       , inCurrencyDocumentId := inCurrencyDocumentId
                                       , inCurrencyPartnerId  := inCurrencyPartnerId
-                                      , inCurrencyValue    := outCurrencyValue
+                                      , inCurrencyValue    := outCurrencyValue 
+                                      , inMovementId_OrderReturnTare := inMovementId_OrderReturnTare
                                       , inComment          := inComment
                                       , inUserId           := vbUserId
                                        )AS tmp;
@@ -103,6 +106,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.04.22         * inMovementId_OrderReturnTare
  14.05.16         *
  21.08.15         * ADD inIsPartner
  26.06.15         * add
