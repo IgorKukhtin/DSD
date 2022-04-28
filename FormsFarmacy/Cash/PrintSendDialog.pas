@@ -9,7 +9,7 @@ uses
   Vcl.ExtCtrls, Vcl.StdCtrls, cxButtons, cxGroupBox, cxRadioGroup, cxLabel,
   cxTextEdit, cxCurrencyEdit, Vcl.ActnList, dsdAction, cxClasses,
   cxPropertiesStore, dsdAddOn, dsdDB, dxSkinsCore, CashInterface,
-  dxSkinsDefaultPainters, Data.DB, Datasnap.DBClient, System.Actions;
+  dxSkinsDefaultPainters, Data.DB, Datasnap.DBClient;
 
 type
   TPrintSendDialogForm = class(TParentForm)

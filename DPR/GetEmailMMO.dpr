@@ -2,6 +2,7 @@ program GetEmailMMO;
 
 
 uses
+  MidasLib,
   Vcl.Forms,
   SysUtils,
   Authentication in '..\SOURCE\Authentication.pas',

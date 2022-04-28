@@ -743,8 +743,7 @@ var i: integer;
 begin
   bJSON := AImportSettings.JSONParamName <> '';
   Result := nil;
-  if bJSON then
-    JSONObject := TJSONObject.Create;
+  JSONObject := TJSONObject.Create;
   with AImportSettings do begin
     for i := 0 to Count - 1 do begin
         if TImportSettingsItems(Items[i]).ItemName = '%OBJECT%' then
@@ -829,9 +828,8 @@ begin
           end;
     end;
     if not bJSON then
-      StoredProc.Execute
-    else
-      Result := JSONObject;
+      StoredProc.Execute;
+    Result := JSONObject;
   end;
 end;
 
