@@ -116,6 +116,13 @@ type
     ExecuteDialog_Name_BUH: TExecuteDialog;
     bbUpdate_Name_BUH: TdxBarButton;
     isNameOrig: TcxGridDBColumn;
+    BasisCode: TcxGridDBColumn;
+    spUpdate_BasisCode: TdsdStoredProc;
+    spInsertUpdate_BasisCode: TdsdStoredProc;
+    actInsertUpdate_BasisCode: TdsdExecStoredProc;
+    macInsertUpdate_BasisCode: TMultiAction;
+    macInsertUpdate_BasisCode_list: TMultiAction;
+    bbInsertUpdate_BasisCode: TdxBarButton;
   private
     { Private declarations }
   public

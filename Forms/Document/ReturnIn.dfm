@@ -3,7 +3,7 @@ inherited ReturnInForm: TReturnInForm
   ClientHeight = 648
   ClientWidth = 1304
   ExplicitWidth = 1320
-  ExplicitHeight = 686
+  ExplicitHeight = 687
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1113,8 +1113,6 @@ inherited ReturnInForm: TReturnInForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitLeft = 80
-        ExplicitTop = -6
         object cxGridDBTableViewDetail: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS_Reason
@@ -1945,7 +1943,7 @@ inherited ReturnInForm: TReturnInForm
     object cxLabel19: TcxLabel
       Left = 320
       Top = 85
-      Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#8470' ('#1087#1088#1086#1076#1072#1078#1072')'
+      Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#8470
     end
     object edInvNumberSale: TcxButtonEdit
       Left = 320
@@ -6914,10 +6912,10 @@ inherited ReturnInForm: TReturnInForm
     KeyField = 'Id'
     LookupControl = edInvNumberSale
     Key = '0'
-    FormNameParam.Value = 'TSaleJournalChoiceForm'
+    FormNameParam.Value = 'TOrderReturnTareJournalForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TSaleJournalChoiceForm'
+    FormName = 'TOrderReturnTareJournalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -6953,8 +6951,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 380
-    Top = 80
+    Left = 420
+    Top = 96
   end
   object GuidesParentChoice: TdsdGuides
     KeyField = 'Id'

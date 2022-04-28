@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_RUS TVarChar
              , Name_BUH TVarChar, Date_BUH TDateTime
+             , BasisCode Integer
              , GoodsCode_basis Integer, GoodsName_basis TVarChar
              , GoodsCode_main Integer, GoodsName_main TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -53,6 +54,7 @@ BEGIN
             , COALESCE (zfCalc_Text_replace (ObjectString_Goods_BUH.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_BUH
             , ObjectDate_BUH.ValueData       :: TDateTime AS Date_BUH
 
+            , ObjectFloat_ObjectCode_Basis.ValueData ::Integer AS BasisCode
             , Object_Goods_basis.ObjectCode     AS GoodsCode_basis
             , Object_Goods_basis.ValueData      AS GoodsName_basis
             , Object_Goods_main.ObjectCode      AS GoodsCode_main
@@ -209,6 +211,9 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceIn
                                    ON ObjectFloat_Goods_PriceIn.ObjectId = Object_Goods.Id
                                   AND ObjectFloat_Goods_PriceIn.DescId   = zc_ObjectFloat_Goods_PriceIn()
+             LEFT JOIN ObjectFloat AS ObjectFloat_ObjectCode_Basis
+                                   ON ObjectFloat_ObjectCode_Basis.ObjectId = Object_Goods.Id
+                                  AND ObjectFloat_ObjectCode_Basis.DescId   = zc_ObjectFloat_ObjectCode_Basis()
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_PartnerIn
                                   ON ObjectLink_Goods_PartnerIn.ObjectId = Object_Goods.Id
@@ -241,6 +246,7 @@ BEGIN
             , ''                  :: TVarChar AS Name_BUH
             , NULL                :: TDateTime AS Date_BUH
 
+            , 0                   :: Integer  AS BasisCode
             , 0                   :: Integer  AS GoodsCode_basis
             , ''                  :: TVarChar AS GoodsName_basis
             , 0                   :: Integer  AS GoodsCode_main

@@ -67,10 +67,14 @@ BEGIN
                         )
 
          -- Данные из док. возврата 
-         , tmpMIReturnIn AS (SELECT MovementItem.ObjectId            AS GoodsId
+         , tmpMIReturnIn AS (SELECT Movement.ParentId
+                                  , MovementItem.ObjectId            AS GoodsId
                                   , MovementLinkObject_From.ObjectId AS PartnerId
                                   , SUM (MovementItem.Amount)        AS Amount
-                           FROM Movement
+                           FROM Movement  
+                                INNER JOIN Movement AS Movement_Parent
+                                                    ON Movement_Parent.Id = Movement.ParentId
+                                                   AND Movement_Parent.DescId = zc_Movement_OrderReturnTare()
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId = zc_MI_Master()
                                                        AND MovementItem.isErased = FALSE
@@ -85,6 +89,7 @@ BEGIN
                              AND Movement.DescId = zc_Movement_ReturnIn()
                            GROUP BY MovementItem.ObjectId
                                   , MovementLinkObject_From.ObjectId
+                                  , Movement.ParentId
                            )
            --
            SELECT CASE WHEN inisDetail = TRUE THEN tmpMovement.Id ELSE 0 END                       AS MovementId
@@ -105,7 +110,7 @@ BEGIN
                 , SUM (MovementItem.Amount)  ::TFloat AS Amount
                 , SUM (tmpMIReturnIn.Amount) ::TFloat AS Amount_in
            FROM tmpMovement
-                LEFT JOIN MovementDesc ON MovementDesc.Id = tmpMovement.Id
+                LEFT JOIN MovementDesc ON MovementDesc.Id = tmpMovement.DescId
                 LEFT JOIN tmpMovementLinkMovement AS MovementLinkMovement_Transport
                                                   ON MovementLinkMovement_Transport.MovementId = tmpMovement.Id
                 LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
@@ -129,6 +134,7 @@ BEGIN
                                       AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
                 LEFT JOIN tmpMIReturnIn ON tmpMIReturnIn.GoodsId = MovementItem.ObjectId
                                        AND tmpMIReturnIn.PartnerId = MILinkObject_Partner.ObjectId
+                                       AND tmpMIReturnIn.ParentId = tmpMovement.Id
                 
            GROUP BY CASE WHEN inisDetail = TRUE THEN tmpMovement.Id ELSE 0 END
                   , CASE WHEN inisDetail = TRUE THEN tmpMovement.OperDate ELSE NULL END
@@ -142,7 +148,7 @@ BEGIN
                   , Object_Goods.ValueData
                   , Object_GoodsGroup.ValueData
                   , ObjectString_Goods_GoodsGroupFull.ValueData
-                  , CASE WHEN inisDetail = TRUE THEN zfCalc_PartionMovementName (Movement_Transport.DescId, MovementDesc.ItemName, Movement_Transport.InvNumber, Movement_Transport.OperDate) ELSE '' END
+                  , CASE WHEN inisDetail = TRUE THEN zfCalc_PartionMovementName (Movement_Transport.DescId, MovementDesc_transport.ItemName, Movement_Transport.InvNumber, Movement_Transport.OperDate) ELSE '' END
 
            ;
 END;

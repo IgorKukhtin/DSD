@@ -47,6 +47,14 @@ object PartnerForm: TPartnerForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object BasisCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1040#1051#1040#1053
+        DataBinding.FieldName = 'BasisCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 75
+      end
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
@@ -946,6 +954,14 @@ object PartnerForm: TPartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertUpdate_BasisCode'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
@@ -1102,6 +1118,10 @@ object PartnerForm: TPartnerForm
     object bbUpdate_UnitMobile: TdxBarButton
       Action = macUpdate_UnitMobile
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1086#1090#1075#1088#1091#1079#1082#1080' ('#1079#1072#1103#1074#1082#1080' '#1089' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086')>'
+      Category = 0
+    end
+    object bbInsertUpdate_BasisCode: TdxBarButton
+      Action = macInsertUpdate_BasisCode
       Category = 0
     end
   end
@@ -1852,6 +1872,18 @@ object PartnerForm: TPartnerForm
           StoredProc = spCheck
         end>
     end
+    object macInsertUpdate_BasisCode_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdate_BasisCode
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1050#1086#1076' '#1040#1083#1072#1085' = '#1050#1086#1076
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1050#1086#1076' '#1040#1083#1072#1085' = '#1050#1086#1076
+      ImageIndex = 39
+    end
     object actDoLoad: TExecuteImportSettingsAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -1928,6 +1960,35 @@ object PartnerForm: TPartnerForm
       InfoAfterExecute = #1055#1072#1088#1072#1084#1077#1090#1088' <'#1055#1086#1076#1088#1072#1079#1076'.('#1079#1072#1103#1074#1082#1080' '#1084#1086#1073'.)> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085
       Caption = 'macUpdate_UnitMobile'
       ImageIndex = 76
+    end
+    object actInsertUpdate_BasisCode: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_BasisCode
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_BasisCode
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1050#1086#1076' '#1040#1083#1072#1085' = '#1050#1086#1076
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1050#1086#1076' '#1040#1083#1072#1085' = '#1050#1086#1076
+      ImageIndex = 39
+    end
+    object macInsertUpdate_BasisCode: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macInsertUpdate_BasisCode_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1057#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1101#1083#1077#1084#1077#1085#1090#1086#1074' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1043#1083#1072#1074#1085#1099#1081' '#1082#1086#1076
+      InfoAfterExecute = #1050#1086#1087#1080#1088#1086#1074#1072#1085#1080#1077' '#1074#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1057#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1043#1083#1072#1074#1085#1099#1081' '#1082#1086#1076
+      Hint = #1057#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1043#1083#1072#1074#1085#1099#1081' '#1082#1086#1076
+      ImageIndex = 39
     end
   end
   object spSelect: TdsdStoredProc
@@ -2112,6 +2173,14 @@ object PartnerForm: TPartnerForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inBasisCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BasisCode'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPrepareDayCount'
         Value = Null
         Component = MasterCDS
@@ -2130,8 +2199,8 @@ object PartnerForm: TPartnerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 88
-    Top = 344
+    Left = 160
+    Top = 320
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -2521,5 +2590,30 @@ object PartnerForm: TPartnerForm
     PackSize = 1
     Left = 872
     Top = 264
+  end
+  object spInsertUpdate_BasisCode: TdsdStoredProc
+    StoredProcName = 'gpUpdate_ObjectCode_Basis'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioBasisCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Code'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 360
+    Top = 336
   end
 end

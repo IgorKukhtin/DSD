@@ -75,6 +75,13 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 155
       end
+      object INN: TcxGridDBColumn
+        Caption = #1048#1053#1053
+        DataBinding.FieldName = 'INN'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 89
+      end
       object PositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'PositionName'
