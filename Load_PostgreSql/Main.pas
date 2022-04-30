@@ -2523,6 +2523,19 @@ begin
              else MyDelay(4 * 1000);
              //
              //
+             toStoredProc_two.Params.ParamByName('inStartDate').Value:=FieldByName('StartDate').AsDateTime;
+             toStoredProc_two.Params.ParamByName('inEndDate').Value:=FieldByName('StartDate').AsDateTime;
+             toStoredProc_two.Params.ParamByName('inUnitId').Value:=8006902;//ЦЕХ упаковки Тушенки
+             if not myExecToStoredProc_two then ;//exit;
+             //
+             if cb100MSec.Checked
+             then begin
+                  try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=0 then MSec_complete:=100;except MSec_complete:=100;end;
+                  if cb100MSec.Checked then begin SessionIdEdit.Text:=IntToStr(MSec_complete); MyDelay(MSec_complete);end;
+             end
+             else MyDelay(4 * 1000);
+             //
+             //
              //
              Next;
              Application.ProcessMessages;
