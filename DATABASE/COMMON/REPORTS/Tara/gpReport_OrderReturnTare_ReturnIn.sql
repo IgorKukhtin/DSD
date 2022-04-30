@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpReport_OrderReturnTare_ReturnIn(
     IN inSession        TVarChar   -- сессия пользователя
 )
 RETURNS TABLE(MovementId Integer, OperDate TDateTime, InvNumber TVarChar
+            , InvNumber_OrderReturnTare TVarChar
             , FromId Integer, FromCode Integer, FromName TVarChar
             , ToId Integer, ToName TVarChar
 			, Amount TFloat
@@ -126,7 +127,8 @@ BEGIN
            --
            SELECT Movement.Id                      AS MovementId
                 , Movement.OperDate   ::TDateTime  AS OperDate
-                , Movement.InvNumber  ::TVarChar   AS InvNumber
+                , Movement.InvNumber  ::TVarChar   AS InvNumber 
+                , ('№ ' || Movement_OrderReturnTare.InvNumber || ' от ' || Movement_OrderReturnTare.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_OrderReturnTare
                 , Object_From.Id                      AS FromId
                 , Object_From.ObjectCode              AS FromCode
                 , Object_From.ValueData               AS FromName
