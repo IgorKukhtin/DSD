@@ -66,6 +66,12 @@ type
     actInsertUpdate_MI_byTransport: TdsdExecStoredProc;
     actReport_OrderReturnTare_SaleByTransport: TdsdOpenForm;
     bb: TdxBarButton;
+    cxLabel6: TcxLabel;
+    edManager: TcxButtonEdit;
+    edSecurity: TcxButtonEdit;
+    cxLabel9: TcxLabel;
+    GuidesManager: TdsdGuides;
+    GuidesSecurity: TdsdGuides;
   private
     { Private declarations }
   public

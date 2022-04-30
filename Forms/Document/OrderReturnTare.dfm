@@ -1,25 +1,25 @@
 inherited OrderReturnTareForm: TOrderReturnTareForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 564
-  ClientWidth = 854
-  ExplicitWidth = 870
-  ExplicitHeight = 602
+  ClientWidth = 890
+  ExplicitWidth = 906
+  ExplicitHeight = 603
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 854
+    Width = 890
     Height = 438
     ExplicitTop = 126
     ExplicitWidth = 854
     ExplicitHeight = 438
     ClientRectBottom = 438
-    ClientRectRight = 854
+    ClientRectRight = 890
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 854
       ExplicitHeight = 414
       inherited cxGrid: TcxGrid
-        Width = 854
+        Width = 890
         Height = 414
         ExplicitWidth = 854
         ExplicitHeight = 414
@@ -149,7 +149,7 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 248
+            Width = 222
           end
           object Amount: TcxGridDBColumn [3]
             Caption = #1050#1086#1083'-'#1074#1086
@@ -183,7 +183,7 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 315
+            Width = 309
           end
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
@@ -194,7 +194,7 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 854
+    Width = 890
     Height = 100
     TabOrder = 3
     ExplicitWidth = 854
@@ -260,12 +260,12 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
       Width = 302
     end
     object cxLabel8: TcxLabel
-      Left = 521
+      Left = 647
       Top = 4
       Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
     end
     object edInsertDate: TcxDateEdit
-      Left = 521
+      Left = 647
       Top = 23
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -273,15 +273,15 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 146
+      Width = 114
     end
     object cxLabel7: TcxLabel
-      Left = 521
+      Left = 647
       Top = 45
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
     end
     object edInsertName: TcxButtonEdit
-      Left = 521
+      Left = 647
       Top = 63
       Properties.Buttons = <
         item
@@ -291,11 +291,11 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
         end>
       Properties.ReadOnly = True
       TabOrder = 13
-      Width = 146
+      Width = 114
     end
   end
   object edUpdateName: TcxButtonEdit [2]
-    Left = 681
+    Left = 770
     Top = 63
     Properties.Buttons = <
       item
@@ -305,15 +305,15 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 146
+    Width = 115
   end
   object cxLabel4: TcxLabel [3]
-    Left = 681
+    Left = 770
     Top = 45
     Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
   end
   object edUpdateDate: TcxDateEdit [4]
-    Left = 681
+    Left = 770
     Top = 23
     EditValue = 42132d
     Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -321,12 +321,46 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
     Properties.Kind = ckDateTime
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 146
+    Width = 115
   end
   object cxLabel5: TcxLabel [5]
-    Left = 681
+    Left = 770
     Top = 4
     Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.)'
+  end
+  object cxLabel6: TcxLabel [6]
+    Left = 490
+    Top = 5
+    Caption = #1047#1072#1084'. '#1085#1072#1095#1072#1083#1100#1085#1080#1082#1072' '#1091#1095#1072#1089#1090#1082#1072
+  end
+  object edManager: TcxButtonEdit [7]
+    Left = 490
+    Top = 23
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 148
+  end
+  object edSecurity: TcxButtonEdit [8]
+    Left = 490
+    Top = 63
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 12
+    Width = 148
+  end
+  object cxLabel9: TcxLabel [9]
+    Left = 490
+    Top = 45
+    Caption = #1054#1090#1076'. '#1041#1077#1079#1086#1087#1072#1089#1085#1086#1089#1090#1080
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 187
@@ -864,6 +898,36 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
         Component = edUpdateName
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ManagerId'
+        Value = Null
+        Component = GuidesManager
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ManagerName'
+        Value = Null
+        Component = GuidesManager
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SecurityId'
+        Value = Null
+        Component = GuidesSecurity
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SecurityName'
+        Value = Null
+        Component = GuidesSecurity
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -904,6 +968,22 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inManagerId'
+        Value = Null
+        Component = GuidesManager
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSecurityId'
+        Value = Null
+        Component = GuidesSecurity
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = 'False'
         Component = ceComment
@@ -936,8 +1016,10 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
         Control = ceComment
       end
       item
+        Control = edManager
       end
       item
+        Control = edSecurity
       end
       item
       end
@@ -1204,5 +1286,62 @@ inherited OrderReturnTareForm: TOrderReturnTareForm
     Action = actInsertUpdate_MI_byTransport
     Left = 640
     Top = 184
+  end
+  object GuidesManager: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edManager
+    FormNameParam.Value = 'TMember_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesManager
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesManager
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 520
+  end
+  object GuidesSecurity: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edSecurity
+    FormNameParam.Value = 'TMember_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesSecurity
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesSecurity
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 536
+    Top = 56
   end
 end

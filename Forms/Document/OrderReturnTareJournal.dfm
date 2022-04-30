@@ -5,7 +5,7 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 892
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -195,6 +195,22 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 160
+          end
+          object ManagerName: TcxGridDBColumn
+            Caption = #1047#1072#1084'. '#1085#1072#1095'.'#1091#1095'.'
+            DataBinding.FieldName = 'ManagerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1084#1077#1089#1090#1080#1090#1077#1083#1100' '#1085#1072#1095#1072#1083#1100#1085#1080#1082#1072' '#1091#1095#1072#1089#1090#1082#1072
+            Width = 70
+          end
+          object SecurityName: TcxGridDBColumn
+            Caption = #1054#1090#1076'. '#1041#1077#1079#1086#1087'.'
+            DataBinding.FieldName = 'SecurityName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1076#1077#1083' '#1073#1077#1079#1086#1087#1072#1089#1085#1086#1089#1090#1080
+            Width = 70
           end
           object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103

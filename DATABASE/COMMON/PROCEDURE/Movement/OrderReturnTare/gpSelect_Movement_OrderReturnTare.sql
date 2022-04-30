@@ -12,7 +12,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderReturnTare(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime, InvNumber_Transport_Full TVarChar
-             , CarName TVarChar, CarModelName TVarChar, PersonalDriverName TVarChar
+             , CarName TVarChar, CarModelName TVarChar, PersonalDriverName TVarChar  
+             , ManagerId Integer, ManagerName TVarChar
+             , SecurityId Integer, SecurityName TVarChar
              , TotalCountTare TFloat
              , Comment TVarChar
              , InsertName TVarChar
@@ -53,8 +55,13 @@ BEGIN
            
            , Object_Car.ValueData             AS CarName
            , Object_CarModel.ValueData        AS CarModelName
-           , View_PersonalDriver.PersonalName AS PersonalDriverName
+           , View_PersonalDriver.PersonalName AS PersonalDriverName 
            
+           , Object_Manager.Id                AS ManagerId
+           , Object_Manager.ValueData         AS ManagerName
+           , Object_Security.Id               AS SecurityId
+           , Object_Security.ValueData        AS SecurityName
+
            , MovementFloat_TotalCountTare.ValueData  ::TFloat AS TotalCountTare
            , MovementString_Comment.ValueData AS Comment
 
@@ -85,6 +92,16 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_Update
                                    ON MovementDate_Update.MovementId = Movement.Id
                                   AND MovementDate_Update.DescId = zc_MovementDate_Update()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Manager
+                                         ON MovementLinkObject_Manager.MovementId = Movement.Id
+                                        AND MovementLinkObject_Manager.DescId = zc_MovementLinkObject_Manager()
+            LEFT JOIN Object AS Object_Manager ON Object_Manager.Id = MovementLinkObject_Manager.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Security
+                                         ON MovementLinkObject_Security.MovementId = Movement.Id
+                                        AND MovementLinkObject_Security.DescId = zc_MovementLinkObject_Security()
+            LEFT JOIN Object AS Object_Security ON Object_Security.Id = MovementLinkObject_Security.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
                                          ON MovementLinkObject_Insert.MovementId = Movement.Id
@@ -125,6 +142,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.04.22         *
  06.01.2          *
 */
 

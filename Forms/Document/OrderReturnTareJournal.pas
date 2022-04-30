@@ -53,6 +53,8 @@ type
     macInsertUpdate_MI_byTransport: TMultiAction;
     OpenChoiceTransportForm: TOpenChoiceForm;
     bbInsertUpdate_MI_byTransport: TdxBarButton;
+    ManagerName: TcxGridDBColumn;
+    SecurityName: TcxGridDBColumn;
   private
     { Private declarations }
   public

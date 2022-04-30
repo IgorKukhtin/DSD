@@ -14,7 +14,7 @@ uses
   cxLabel, cxCurrencyEdit, cxButtonEdit, Vcl.DBActns, cxMaskEdit, Vcl.ExtCtrls,
   Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod, cxDropDownEdit, cxCalendar,
   dsdGuides, dxBarBuiltInMenu, cxNavigator, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox;
 
 type
   TReport_OrderReturnTare_ReturnInForm = class(TAncestorReportForm)
@@ -27,6 +27,18 @@ type
     InvNumber: TcxGridDBColumn;
     OperDatePartner: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
+    cxLabel4: TcxLabel;
+    GuidesTransport: TdsdGuides;
+    edTransport: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    edPartner: TcxButtonEdit;
+    GuidesPartner: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edGoods: TcxButtonEdit;
+    GuidesGoods: TdsdGuides;
+    cbAll: TcxCheckBox;
+    actRefresh1: TdsdDataSetRefresh;
+    Amount: TcxGridDBColumn;
   private
     { Private declarations }
   public

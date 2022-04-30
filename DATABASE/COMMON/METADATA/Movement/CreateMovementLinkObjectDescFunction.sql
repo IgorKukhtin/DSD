@@ -346,6 +346,14 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_BonusKind', 'Вид бонуса' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_BonusKind');
 
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Manager() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Manager'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_Manager', 'Физические лица (Начальник участка)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Manager');
+
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Security() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Security'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_Security', 'Физические лица (Отдел безопасности)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Security');
+
 
 --!!!!!!!!!!!  Аптека
 CREATE OR REPLACE FUNCTION zc_MovementLinkObject_CheckMember() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_CheckMember'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -548,14 +556,14 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_UserReferals', 'По рекомендации сотрудника' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_UserReferals');
 
 
-
-
 /*-------------------------------------------------------------------------------
 
                   РАСПОЛАГАЙТЕ ДЕСКИ ПО АЛФАВИТУ  !!!!!!!!!!!!!!!!!!!
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 29.04.22         * zc_MovementLinkObject_Manager
+                    zc_MovementLinkObject_Security
  21.02.22                                                                                     * zc_MovementLinkObject_UserReferals 
  26.01.22         * zc_MovementLinkObject_PriceListIn
  27.10.21                                                                                     * zc_MovementLink_Category1303 

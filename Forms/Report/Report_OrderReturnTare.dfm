@@ -394,6 +394,51 @@ inherited Report_OrderReturnTareForm: TReport_OrderReturnTareForm
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_Transport'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Transport'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
