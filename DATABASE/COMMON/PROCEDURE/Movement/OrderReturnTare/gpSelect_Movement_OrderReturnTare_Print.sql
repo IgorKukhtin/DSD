@@ -62,7 +62,11 @@ BEGIN
            
            , Object_Car.ValueData             AS CarName
            , Object_CarModel.ValueData        AS CarModelName
-           , View_PersonalDriver.PersonalName AS PersonalDriverName
+           , Object_PersonalDriver.ValueData  AS PersonalDriverName  
+
+           , Object_Manager.ValueData         AS ManagerName
+           , Object_Security.ValueData        AS SecurityName
+
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                            ON MovementLinkMovement_Transport.MovementId = Movement.Id
@@ -82,7 +86,17 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement_Transport.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-            LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
+            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Manager
+                                         ON MovementLinkObject_Manager.MovementId = Movement.Id
+                                        AND MovementLinkObject_Manager.DescId = zc_MovementLinkObject_Manager()
+            LEFT JOIN Object AS Object_Manager ON Object_Manager.Id = MovementLinkObject_Manager.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Security
+                                         ON MovementLinkObject_Security.MovementId = Movement.Id
+                                        AND MovementLinkObject_Security.DescId = zc_MovementLinkObject_Security()
+            LEFT JOIN Object AS Object_Security ON Object_Security.Id = MovementLinkObject_Security.ObjectId
 
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_OrderReturnTare()

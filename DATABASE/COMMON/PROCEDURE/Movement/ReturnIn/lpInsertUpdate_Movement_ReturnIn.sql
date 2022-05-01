@@ -1,7 +1,9 @@
 -- Function: lpInsertUpdate_Movement_ReturnIn()
 
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnIn (Integer, TVarChar, TVarChar, TVarChar, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnIn (Integer, TVarChar, TVarChar, TVarChar, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnIn (Integer, TVarChar, TVarChar, TVarChar, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnIn (Integer, TVarChar, TVarChar, TVarChar, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат покупателя>
@@ -23,7 +25,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnIn(
     IN inContractId          Integer   , -- Договора
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
-    IN inCurrencyValue       TFloat    , -- курс валюты
+    IN inCurrencyValue       TFloat    , -- курс валюты 
+    IN inMovementId_OrderReturnTare Integer , --
     In inComment             TVarChar  , -- примечание
     IN inUserId              Integer     -- Пользователь
 )
@@ -154,6 +157,8 @@ BEGIN
      -- сохранили свойство <Курс для перевода в валюту баланса>
      PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_CurrencyValue(), ioId, inCurrencyValue);   
 
+     -- сохранили связь с <заявка на возврат тары>
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_OrderReturnTare(), ioId, inMovementId_OrderReturnTare);
 
      IF inOperDatePartner < '01.08.2016' OR inPaidKindId = zc_Enum_PaidKind_SecondForm()
         OR NOT EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = ioId AND MI.DescId = zc_MI_Child() AND MI.isErased = FALSE)
@@ -207,6 +212,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.04.22         *
  14.05.16         *
  21.08.15         * ADD inIsPartner
  26.06.15         * add Comment, ParentId

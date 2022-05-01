@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Personal(
     IN inIsShowAll   Boolean,    --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar
+RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, INN TVarChar
              , Code1C TVarChar
              , DriverCertificate TVarChar, Card TVarChar, CardSecond TVarChar, BankName TVarChar, BankSecondName TVarChar
              , PositionId Integer, PositionCode Integer, PositionName TVarChar
@@ -107,7 +107,8 @@ BEGIN
      SELECT
            Object_Personal_View.PersonalId   AS Id
          , Object_Personal_View.PersonalCode AS MemberCode
-         , Object_Personal_View.PersonalName AS MemberName
+         , Object_Personal_View.PersonalName AS MemberName  
+         , ObjectString_INN.ValueData               AS INN
          , ObjectString_Code1C.ValueData ::TVarChar AS Code1C
 
          , ObjectString_DriverCertificate.ValueData AS DriverCertificate
@@ -252,7 +253,10 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_ScalePSW
                                 ON ObjectFloat_ScalePSW.ObjectId = Object_Personal_View.MemberId
                                AND ObjectFloat_ScalePSW.DescId   = zc_ObjectFloat_Member_ScalePSW()
-          
+
+          LEFT JOIN ObjectString AS ObjectString_INN
+                                 ON ObjectString_INN.ObjectId = Object_Personal_View.MemberId
+                                AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
      WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL
          OR vbAccessKeyAll = TRUE
          OR Object_Personal_View.BranchId = vbObjectId_Constraint
@@ -285,7 +289,8 @@ BEGIN
         SELECT
            0   AS Id
          , 0 AS MemberCode
-         , CAST ('УДАЛИТЬ' as TVarChar)  AS MemberName  
+         , CAST ('УДАЛИТЬ' as TVarChar)  AS MemberName   
+         , CAST ('' as TVarChar) AS INN
          , CAST ('' as TVarChar) AS Code1C
          , CAST ('' as TVarChar) AS DriverCertificate
          , CAST ('' as TVarChar) AS Card
@@ -352,6 +357,7 @@ ALTER FUNCTION gpSelect_Object_Personal (TDateTime, TDateTime, Boolean, Boolean,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.04.22         *
  22.10.17         *
  13.07.17         * add PersonalServiceListCardSecond
  16.11.16         * add SheetWorkTime

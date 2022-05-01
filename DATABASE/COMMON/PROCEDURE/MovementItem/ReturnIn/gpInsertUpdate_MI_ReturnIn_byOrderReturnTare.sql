@@ -59,7 +59,7 @@ BEGIN
                                                 AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
                                                 AND MILinkObject_Partner.ObjectId = vbPartnerId
            WHERE MovementItem.MovementId = inMovementId_Order
-             AND MovementItem.MovementItem.DescId = zc_MI_Master()
+             AND MovementItem.DescId = zc_MI_Master()
              AND MovementItem.isErased = FALSE
            ) AS tmp;
 

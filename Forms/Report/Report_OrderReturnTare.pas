@@ -37,20 +37,21 @@ type
     GoodsGroupName: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
-    Amount_in: TcxGridDBColumn;
+    Amount_return: TcxGridDBColumn;
     mactOpenDocument: TMultiAction;
     actOpenForm: TdsdOpenForm;
     actMovementForm: TdsdExecStoredProc;
     spGet_Movement_Form: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
     GoodsGroupNameFull: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
+    Amount_order: TcxGridDBColumn;
     cbMovement: TcxCheckBox;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actReport_OrderReturnTare_ReturnIn: TdsdOpenForm;
     bbReport_OrderReturnTare_ReturnIn: TdxBarButton;
     actRefresh1: TdsdDataSetRefresh;
+    Amount_sale: TcxGridDBColumn;
   private
     { Private declarations }
   public

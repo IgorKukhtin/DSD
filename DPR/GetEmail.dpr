@@ -1,6 +1,7 @@
 program GetEmail;
 
 uses
+  MidasLib,
   Vcl.Forms,
   SysUtils,
   Main in '..\FormsFarmacy\MainUnitService\GetEmail\Main.pas' {MainForm},

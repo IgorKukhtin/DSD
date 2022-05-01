@@ -1,20 +1,18 @@
 -- Function: gpSelect_Movement_OrderReturnTare()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderReturnTare (TDateTime, TDateTime, Boolean, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderReturnTare (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderReturnTare_Choice (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderReturnTare(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderReturnTare_Choice(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
-    IN inJuridicalBasisId  Integer ,
+    IN inPartnerId         Integer ,
     IN inIsErased          Boolean ,
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Full TVarChar
+             , OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime, InvNumber_Transport_Full TVarChar
-             , CarName TVarChar, CarModelName TVarChar, PersonalDriverName TVarChar  
-             , ManagerId Integer, ManagerName TVarChar
-             , SecurityId Integer, SecurityName TVarChar
+             , CarName TVarChar, CarModelName TVarChar, PersonalDriverName TVarChar
              , TotalCountTare TFloat
              , Comment TVarChar
              , InsertName TVarChar
@@ -25,9 +23,6 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 AS
 $BODY$
    DECLARE vbUserId Integer;
-
-   DECLARE vbIsUserOrder  Boolean;
-   DECLARE vbIsUserOrder_basis Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderReturnTare());
@@ -38,11 +33,26 @@ BEGIN
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
-                       )
+                       )    
+        , tmpMovementAll AS (SELECT Movement.*
+                             FROM tmpStatus
+                                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                               AND Movement.DescId = zc_Movement_OrderReturnTare()
+                                               AND Movement.StatusId = tmpStatus.StatusId
+                            ) 
+         --Выбираем только документы где есть выбранный контрагент
+        , tmpMovement AS (SELECT DISTINCT MovementItem.MovementId
+                          FROM MovementItem
+                          WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovementAll.Id FROM tmpMovementAll)
+                            AND MovementItem.DescId = zc_MI_Master()
+                            AND MovementItem.isErased = FALSE
+                            AND (MovementItem.ObjectId = inPartnerId OR inPartnerId = 0)
+                          )
        -- 
        SELECT
              Movement.Id                      AS Id
-           , Movement.InvNumber               AS InvNumber
+           , Movement.InvNumber               AS InvNumber 
+           , ('№ ' || Movement.InvNumber || ' от ' || Movement.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Full
            , Movement.OperDate                AS OperDate
            , Object_Status.ObjectCode         AS StatusCode
            , Object_Status.ValueData          AS StatusName
@@ -55,13 +65,8 @@ BEGIN
            
            , Object_Car.ValueData             AS CarName
            , Object_CarModel.ValueData        AS CarModelName
-           , View_PersonalDriver.PersonalName AS PersonalDriverName 
+           , View_PersonalDriver.PersonalName AS PersonalDriverName
            
-           , Object_Manager.Id                AS ManagerId
-           , Object_Manager.ValueData         AS ManagerName
-           , Object_Security.Id               AS SecurityId
-           , Object_Security.ValueData        AS SecurityName
-
            , MovementFloat_TotalCountTare.ValueData  ::TFloat AS TotalCountTare
            , MovementString_Comment.ValueData AS Comment
 
@@ -70,11 +75,8 @@ BEGIN
            , Object_Update.ValueData          AS UpdateName
            , MovementDate_Update.ValueData    AS UpdateDate
 
-       FROM (SELECT Movement.*
-             FROM tmpStatus
-                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
-                               AND Movement.DescId = zc_Movement_OrderReturnTare() AND Movement.StatusId = tmpStatus.StatusId
-            ) AS Movement
+       FROM tmpMovement
+            LEFT JOIN Movement ON Movement.Id = tmpMovement.MovementId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -92,16 +94,6 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_Update
                                    ON MovementDate_Update.MovementId = Movement.Id
                                   AND MovementDate_Update.DescId = zc_MovementDate_Update()
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Manager
-                                         ON MovementLinkObject_Manager.MovementId = Movement.Id
-                                        AND MovementLinkObject_Manager.DescId = zc_MovementLinkObject_Manager()
-            LEFT JOIN Object AS Object_Manager ON Object_Manager.Id = MovementLinkObject_Manager.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Security
-                                         ON MovementLinkObject_Security.MovementId = Movement.Id
-                                        AND MovementLinkObject_Security.DescId = zc_MovementLinkObject_Security()
-            LEFT JOIN Object AS Object_Security ON Object_Security.Id = MovementLinkObject_Security.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
                                          ON MovementLinkObject_Insert.MovementId = Movement.Id
@@ -142,9 +134,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 29.04.22         *
- 06.01.2          *
+ 28.04.22          *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderReturnTare(instartdate := ('20.04.2020')::TDateTime , inenddate := ('22.04.2020')::TDateTime , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_OrderReturnTare_Choice(instartdate := ('20.04.2020')::TDateTime , inenddate := ('22.04.2020')::TDateTime , inIsErased := 'False' , inPartnerId := 0 ,  inSession := '5');

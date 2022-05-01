@@ -9,6 +9,8 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderReturnTare(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , MovementId_Transport Integer, InvNumber_Transport_Full TVarChar
+             , ManagerId Integer, ManagerName TVarChar
+             , SecurityId Integer, SecurityName TVarChar
              , Comment TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -38,7 +40,12 @@ BEGIN
              , 0                                              AS MovementId_Transport
              , CAST ('' AS TVarChar)                          AS InvNumber_Transport_Full
 
-             , CAST ('' as TVarChar) 		              AS Comment
+             , 0                                              AS ManagerId
+             , CAST ('' AS TVarChar)                          AS ManagerName
+             , 0                                              AS SecurityId
+             , CAST ('' AS TVarChar)                          AS SecurityName
+
+             , CAST ('' as TVarChar) 		                  AS Comment
 
              , Object_Insert.ValueData                        AS InsertName
              , CURRENT_TIMESTAMP ::TDateTime                  AS InsertDate
@@ -62,6 +69,11 @@ BEGIN
            , Movement_Transport.Id            AS MovementId_Transport
            --, ('π ' || Movement_Transport.InvNumber || ' ÓÚ ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Full
            , zfCalc_PartionMovementName (Movement_Transport.DescId, MovementDesc.ItemName, Movement_Transport.InvNumber, Movement_Transport.OperDate) AS InvNumber_Transport_Full
+
+           , Object_Manager.Id                AS ManagerId
+           , Object_Manager.ValueData         AS ManagerName
+           , Object_Security.Id               AS SecurityId
+           , Object_Security.ValueData        AS SecurityName
            
            , MovementString_Comment.ValueData AS Comment
 
@@ -76,6 +88,16 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Manager
+                                         ON MovementLinkObject_Manager.MovementId = Movement.Id
+                                        AND MovementLinkObject_Manager.DescId = zc_MovementLinkObject_Manager()
+            LEFT JOIN Object AS Object_Manager ON Object_Manager.Id = MovementLinkObject_Manager.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Security
+                                         ON MovementLinkObject_Security.MovementId = Movement.Id
+                                        AND MovementLinkObject_Security.DescId = zc_MovementLinkObject_Security()
+            LEFT JOIN Object AS Object_Security ON Object_Security.Id = MovementLinkObject_Security.ObjectId
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
@@ -112,6 +134,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.04.22         *
  06.01.22         *
 */
 

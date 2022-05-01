@@ -47,6 +47,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , isWeighing_inf Boolean
              , MovementPromo TVarChar
 
+             , MovementId_OrderReturnTare Integer
+             , InvNumber_OrderReturnTare  TVarChar
+
              , InsertName TVarChar
              , InsertDate TDateTime
              , InsertMobileDate TDateTime
@@ -239,6 +242,8 @@ BEGIN
            , CASE WHEN tmpWeighingPartner.ParentId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isWeighing_inf
 
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndReturn.ValueData) AS MovementPromo
+           , Movement_OrderReturnTare.Id                                                                                                    AS MovementId_OrderReturnTare
+           , ('π ' || Movement_OrderReturnTare.InvNumber || ' ÓÚ ' || Movement_OrderReturnTare.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_OrderReturnTare
 
            , Object_User.ValueData                  AS InsertName
            , MovementDate_Insert.ValueData          AS InsertDate
@@ -430,7 +435,13 @@ BEGIN
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Promo
                                            ON MovementLinkMovement_Promo.MovementId = Movement.Id
                                           AND MovementLinkMovement_Promo.DescId = zc_MovementLinkMovement_Promo()
-            LEFT JOIN Movement AS Movement_Promo ON Movement_Promo.Id = MovementLinkMovement_Promo.MovementChildId
+            LEFT JOIN Movement AS Movement_Promo ON Movement_Promo.Id = MovementLinkMovement_Promo.MovementChildId 
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_OrderReturnTare
+                                           ON MovementLinkMovement_OrderReturnTare.MovementId = Movement.Id
+                                          AND MovementLinkMovement_OrderReturnTare.DescId = zc_MovementLinkMovement_OrderReturnTare()
+            LEFT JOIN Movement AS Movement_OrderReturnTare ON Movement_OrderReturnTare.Id = MovementLinkMovement_OrderReturnTare.MovementChildId
+
             LEFT JOIN MovementDate AS MD_StartSale
                                    ON MD_StartSale.MovementId = Movement_Promo.Id
                                   AND MD_StartSale.DescId = zc_MovementDate_StartSale()
@@ -476,6 +487,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 28.04.22         * add  OrderReturnTare
  14.03.22         * PriceListIn
  12.05.18         *
  22.04.17         *

@@ -5,7 +5,7 @@ inherited Report_OrderReturnTareForm: TReport_OrderReturnTareForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 778
-  ExplicitHeight = 420
+  ExplicitHeight = 421
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -14,24 +14,24 @@ inherited Report_OrderReturnTareForm: TReport_OrderReturnTareForm
     Height = 323
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 925
-    ExplicitHeight = 481
+    ExplicitWidth = 762
+    ExplicitHeight = 323
     ClientRectBottom = 323
     ClientRectRight = 762
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 925
-      ExplicitHeight = 481
+      ExplicitWidth = 762
+      ExplicitHeight = 323
       inherited cxGrid: TcxGrid
         Width = 762
         Height = 323
-        ExplicitWidth = 925
-        ExplicitHeight = 481
+        ExplicitWidth = 762
+        ExplicitHeight = 323
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = Amount_in
+              Column = Amount_return
             end
             item
               Format = ',0.####;-,0.####; ;'
@@ -48,13 +48,23 @@ inherited Report_OrderReturnTareForm: TReport_OrderReturnTareForm
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = Amount
+              Column = Amount_order
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = Amount_sale
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = Amount_fact
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = Amount_in
+              Column = Amount_return
             end
             item
               Format = ',0.####;-,0.####; ;'
@@ -71,12 +81,22 @@ inherited Report_OrderReturnTareForm: TReport_OrderReturnTareForm
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = Amount
+              Column = Amount_order
             end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = Amount_sale
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = Amount_fact
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -108,15 +128,6 @@ inherited Report_OrderReturnTareForm: TReport_OrderReturnTareForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 46
-          end
-          object InvNumber_Transport_Full: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1055#1051
-            DataBinding.FieldName = 'InvNumber_Transport_Full'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1076#1086#1082'. '#1087#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
-            Options.Editing = False
-            Width = 102
           end
           object PartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088'.'
@@ -164,26 +175,48 @@ inherited Report_OrderReturnTareForm: TReport_OrderReturnTareForm
             HeaderAlignmentVert = vaCenter
             Width = 199
           end
-          object Amount: TcxGridDBColumn
+          object Amount_sale: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'Amount_sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1086#1076#1072#1078#1072')'
+            Width = 100
+          end
+          object Amount_order: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1079#1072#1103#1074#1082#1072')'
-            DataBinding.FieldName = 'Amount'
+            DataBinding.FieldName = 'Amount_order'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 82
+            Width = 93
           end
-          object Amount_in: TcxGridDBColumn
+          object Amount_return: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1074#1086#1079#1074#1088#1072#1090')'
-            DataBinding.FieldName = 'Amount_in'
+            DataBinding.FieldName = 'Amount_return'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 113
+            Width = 96
+          end
+          object Amount_fact: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1074#1086#1079#1074#1088#1072#1090' '#1092#1072#1082#1090')'
+            DataBinding.FieldName = 'Amount_fact'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' ('#1074#1086#1079#1074#1088#1072#1090' '#1092#1072#1082#1090') '#1087#1086' '#1079#1072#1103#1074#1082#1072#1084' '#1080' '#1073#1077#1079
+            Width = 96
           end
         end
       end
@@ -192,7 +225,7 @@ inherited Report_OrderReturnTareForm: TReport_OrderReturnTareForm
   inherited Panel: TPanel
     Width = 762
     Height = 33
-    ExplicitWidth = 925
+    ExplicitWidth = 762
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 118
@@ -229,6 +262,7 @@ inherited Report_OrderReturnTareForm: TReport_OrderReturnTareForm
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object mactOpenDocument: TMultiAction
@@ -359,6 +393,51 @@ inherited Report_OrderReturnTareForm: TReport_OrderReturnTareForm
           Value = 42132d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_Transport'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Transport'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False

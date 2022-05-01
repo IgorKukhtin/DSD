@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
     IN inShowAll        Boolean,
     IN inSession        TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                DayTaxSummary TFloat,
                SummOrderFinance TFloat,
                SummOrderMin TFloat,
@@ -140,7 +140,8 @@ BEGIN
    SELECT
          Object_Juridical.Id             AS Id
        , Object_Juridical.ObjectCode     AS Code
-       , Object_Juridical.ValueData      AS Name
+       , Object_Juridical.ValueData      AS Name   
+       , ObjectFloat_ObjectCode_Basis.ValueData ::Integer AS BasisCode
 
        , COALESCE (ObjectFloat_DayTaxSummary.ValueData, CAST(0 as TFloat))    AS DayTaxSummary
        , COALESCE (ObjectFloat_SummOrderFinance.ValueData, CAST(0 as TFloat)) AS SummOrderFinance
@@ -265,6 +266,10 @@ BEGIN
         LEFT JOIN tmpObjectFloat AS ObjectFloat_SummOrderMin
                                  ON ObjectFloat_SummOrderMin.ObjectId = Object_Juridical.Id
                                 AND ObjectFloat_SummOrderMin.DescId = zc_ObjectFloat_Juridical_SummOrderMin()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_ObjectCode_Basis
+                              ON ObjectFloat_ObjectCode_Basis.ObjectId = Object_Juridical.Id
+                             AND ObjectFloat_ObjectCode_Basis.DescId   = zc_ObjectFloat_ObjectCode_Basis()
 
         LEFT JOIN tmpObjectString AS ObjectString_GUID
                                   ON ObjectString_GUID.ObjectId = Object_Juridical.Id

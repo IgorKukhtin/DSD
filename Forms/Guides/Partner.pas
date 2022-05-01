@@ -167,6 +167,11 @@ type
     macUpdate_UnitMobile: TMultiAction;
     bbUpdate_UnitMobile: TdxBarButton;
     ShortName: TcxGridDBColumn;
+    spInsertUpdate_BasisCode: TdsdStoredProc;
+    actInsertUpdate_BasisCode: TdsdExecStoredProc;
+    macInsertUpdate_BasisCode_list: TMultiAction;
+    macInsertUpdate_BasisCode: TMultiAction;
+    bbInsertUpdate_BasisCode: TdxBarButton;
   private
     { Private declarations }
   public

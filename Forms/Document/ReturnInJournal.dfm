@@ -576,6 +576,15 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object InvNumber_OrderReturnTare: TcxGridDBColumn
+            Caption = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099
+            DataBinding.FieldName = 'InvNumber_OrderReturnTare'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099
+            Options.Editing = False
+            Width = 70
+          end
           object isList: TcxGridDBColumn
             Caption = #1082' '#1054#1089#1085#1086#1074#1072#1085#1080#1102' '#8470' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isList'

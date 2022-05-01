@@ -3,25 +3,26 @@ inherited Report_OrderReturnTare_ReturnInForm: TReport_OrderReturnTare_ReturnInF
   ClientWidth = 807
   AddOnFormData.Params = FormParams
   ExplicitWidth = 823
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 61
+    Top = 91
     Width = 807
-    Height = 247
-    ExplicitTop = 70
-    ExplicitWidth = 927
-    ExplicitHeight = 238
-    ClientRectBottom = 247
+    Height = 217
+    ExplicitTop = 91
+    ExplicitWidth = 807
+    ExplicitHeight = 217
+    ClientRectBottom = 217
     ClientRectRight = 807
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 927
-      ExplicitHeight = 238
+      ExplicitWidth = 807
+      ExplicitHeight = 217
       inherited cxGrid: TcxGrid
         Width = 807
-        Height = 247
-        ExplicitWidth = 927
-        ExplicitHeight = 238
+        Height = 217
+        ExplicitWidth = 807
+        ExplicitHeight = 217
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -63,6 +64,11 @@ inherited Report_OrderReturnTare_ReturnInForm: TReport_OrderReturnTare_ReturnInF
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = Amount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -108,6 +114,11 @@ inherited Report_OrderReturnTare_ReturnInForm: TReport_OrderReturnTare_ReturnInF
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = Amount
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -138,6 +149,15 @@ inherited Report_OrderReturnTare_ReturnInForm: TReport_OrderReturnTare_ReturnInF
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
+          object InvNumber_OrderReturnTare: TcxGridDBColumn
+            Caption = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099
+            DataBinding.FieldName = 'InvNumber_OrderReturnTare'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099
+            Options.Editing = False
+            Width = 135
+          end
           object FromCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1086#1090' '#1082#1086#1075#1086')'
             DataBinding.FieldName = 'FromCode'
@@ -158,7 +178,16 @@ inherited Report_OrderReturnTare_ReturnInForm: TReport_OrderReturnTare_ReturnInF
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 266
+            Width = 230
+          end
+          object Amount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
       end
@@ -166,41 +195,100 @@ inherited Report_OrderReturnTare_ReturnInForm: TReport_OrderReturnTare_ReturnInF
   end
   inherited Panel: TPanel
     Width = 807
-    Height = 35
-    ExplicitWidth = 927
-    ExplicitHeight = 35
+    Height = 65
+    ExplicitWidth = 807
+    ExplicitHeight = 65
     inherited deStart: TcxDateEdit
-      Left = 102
+      Left = 122
       Top = 8
       EditValue = 44562d
       TabOrder = 1
-      ExplicitLeft = 102
+      ExplicitLeft = 122
       ExplicitTop = 8
       ExplicitWidth = 84
       Width = 84
     end
     inherited deEnd: TcxDateEdit
-      Left = 314
-      Top = 8
+      Left = 122
+      Top = 35
       EditValue = 44562d
       TabOrder = 0
-      ExplicitLeft = 314
-      ExplicitTop = 8
+      ExplicitLeft = 122
+      ExplicitTop = 35
       ExplicitWidth = 84
       Width = 84
     end
     inherited cxLabel1: TcxLabel
-      Left = 8
+      Left = 28
       Top = 9
-      ExplicitLeft = 8
+      ExplicitLeft = 28
       ExplicitTop = 9
     end
     inherited cxLabel2: TcxLabel
-      Left = 201
-      Top = 9
-      ExplicitLeft = 201
-      ExplicitTop = 9
+      Left = 9
+      Top = 36
+      ExplicitLeft = 9
+      ExplicitTop = 36
     end
+    object cxLabel4: TcxLabel
+      Left = 242
+      Top = 9
+      Caption = #1055#1091#1090#1077#1074#1086#1081':'
+    end
+    object edTransport: TcxButtonEdit
+      Left = 293
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 5
+      Width = 190
+    end
+    object cbAll: TcxCheckBox
+      Left = 516
+      Top = 35
+      Action = actRefresh1
+      Properties.ReadOnly = False
+      TabOrder = 6
+      Width = 100
+    end
+  end
+  object cxLabel3: TcxLabel [2]
+    Left = 225
+    Top = 36
+    Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090':'
+  end
+  object edPartner: TcxButtonEdit [3]
+    Left = 293
+    Top = 35
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 190
+  end
+  object cxLabel5: TcxLabel [4]
+    Left = 486
+    Top = 9
+    Caption = #1058#1072#1088#1072':'
+  end
+  object edGoods: TcxButtonEdit [5]
+    Left = 519
+    Top = 8
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 202
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 51
@@ -213,6 +301,20 @@ inherited Report_OrderReturnTare_ReturnInForm: TReport_OrderReturnTare_ReturnInF
   inherited ActionList: TActionList
     Left = 87
     Top = 191
+    object actRefresh1: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1042#1089#1077' '#1074#1086#1079#1074#1088#1072#1090#1099
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actRefreshSearch: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -290,6 +392,38 @@ inherited Report_OrderReturnTare_ReturnInForm: TReport_OrderReturnTare_ReturnInF
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = GuidesTransport
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAll'
+        Value = Null
+        Component = cbAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 128
   end
@@ -349,14 +483,16 @@ inherited Report_OrderReturnTare_ReturnInForm: TReport_OrderReturnTare_ReturnInF
     OnDblClickActionList = <
       item
       end>
+    Left = 504
+    Top = 216
   end
   inherited PopupMenu: TPopupMenu
     Left = 128
     Top = 216
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 424
-    Top = 8
+    Left = 104
+    Top = 16
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -416,8 +552,152 @@ inherited Report_OrderReturnTare_ReturnInForm: TReport_OrderReturnTare_ReturnInF
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Transport'
+        Value = Null
+        Component = GuidesTransport
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Invnumber_Transport'
+        Value = Null
+        Component = GuidesTransport
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 392
-    Top = 144
+    Left = 504
+    Top = 168
+  end
+  object GuidesTransport: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edTransport
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TTransportJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TTransportJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesTransport
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesTransport
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 361
+    Top = 6
+  end
+  object GuidesPartner: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartner
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartner_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 313
+    Top = 30
+  end
+  object GuidesGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoods
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TGoods_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoods_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 569
+    Top = 65531
   end
 end

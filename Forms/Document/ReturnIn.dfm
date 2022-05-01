@@ -3,7 +3,7 @@ inherited ReturnInForm: TReturnInForm
   ClientHeight = 648
   ClientWidth = 1304
   ExplicitWidth = 1320
-  ExplicitHeight = 686
+  ExplicitHeight = 687
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -21,6 +21,8 @@ inherited ReturnInForm: TReturnInForm
       inherited cxGrid: TcxGrid
         Width = 1304
         Height = 291
+        ExplicitLeft = 40
+        ExplicitTop = 2
         ExplicitWidth = 1304
         ExplicitHeight = 291
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1113,8 +1115,6 @@ inherited ReturnInForm: TReturnInForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitLeft = 80
-        ExplicitTop = -6
         object cxGridDBTableViewDetail: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS_Reason
@@ -2283,6 +2283,23 @@ inherited ReturnInForm: TReturnInForm
     Properties.ReadOnly = True
     TabOrder = 24
     Width = 142
+  end
+  object cxLabel31: TcxLabel [21]
+    Left = 8
+    Top = 127
+    Caption = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099
+  end
+  object edInvnumberOrderReturnTare: TcxButtonEdit [22]
+    Left = 8
+    Top = 145
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 26
+    Width = 199
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 187
@@ -5489,6 +5506,21 @@ inherited ReturnInForm: TReturnInForm
         Component = cbisWeighing_inf
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_OrderReturnTare'
+        Value = Null
+        Component = GuidesOrderReturnTare
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_OrderReturnTare'
+        Value = Null
+        Component = GuidesOrderReturnTare
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 264
@@ -5649,6 +5681,14 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_OrderReturnTare'
+        Value = Null
+        Component = GuidesOrderReturnTare
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -5737,6 +5777,9 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Control = cbList
+      end
+      item
+        Control = edInvnumberOrderReturnTare
       end>
     Left = 376
     Top = 305
@@ -6953,8 +6996,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 380
-    Top = 80
+    Left = 388
+    Top = 96
   end
   object GuidesParentChoice: TdsdGuides
     KeyField = 'Id'
@@ -8127,6 +8170,52 @@ inherited ReturnInForm: TReturnInForm
       end>
     PackSize = 1
     Left = 98
-    Top = 328
+    Top = 368
+  end
+  object GuidesOrderReturnTare: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvnumberOrderReturnTare
+    Key = '0'
+    FormNameParam.Value = 'TOrderReturnTareJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderReturnTareJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesOrderReturnTare
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesOrderReturnTare
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 100
+    Top = 136
   end
 end

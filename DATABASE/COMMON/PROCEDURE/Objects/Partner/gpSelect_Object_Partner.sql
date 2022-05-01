@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Partner(
     IN inShowAll           Boolean  ,
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                ShortName TVarChar, GLNCode TVarChar,
                GLNCodeJuridical_property TVarChar, GLNCodeRetail_property TVarChar, GLNCodeCorporate_property TVarChar,
                GLNCodeJuridical TVarChar, GLNCodeRetail TVarChar, GLNCodeCorporate TVarChar,
@@ -91,7 +91,8 @@ BEGIN
      SELECT
            Object_Partner.Id               AS Id
          , Object_Partner.ObjectCode       AS Code
-         , Object_Partner.ValueData        AS Name
+         , Object_Partner.ValueData        AS Name 
+         , ObjectFloat_ObjectCode_Basis.ValueData ::Integer AS BasisCode
 
          , ObjectString_ShortName.ValueData   AS ShortName
          , ObjectString_GLNCode.ValueData     AS GLNCode
@@ -296,6 +297,10 @@ BEGIN
          LEFT JOIN ObjectFloat AS ObjectFloat_Category
                                ON ObjectFloat_Category.ObjectId = Object_Partner.Id
                               AND ObjectFloat_Category.DescId = zc_ObjectFloat_Partner_Category()
+
+         LEFT JOIN ObjectFloat AS ObjectFloat_ObjectCode_Basis
+                               ON ObjectFloat_ObjectCode_Basis.ObjectId = Object_Partner.Id
+                              AND ObjectFloat_ObjectCode_Basis.DescId   = zc_ObjectFloat_ObjectCode_Basis()
 
          LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiOrdspr
                                  ON ObjectBoolean_EdiOrdspr.ObjectId = Object_Partner.Id

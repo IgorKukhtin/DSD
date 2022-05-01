@@ -77,7 +77,7 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <Debugger_RunParams> /RealFarmacy</Debugger_RunParams>
+        <Debugger_RunParams> /realfarmacy /skipcheckconnect</Debugger_RunParams>
         <DCC_UnitSearchPath>..\GetEmail\;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_ExeOutput>..\BIN\</DCC_ExeOutput>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>

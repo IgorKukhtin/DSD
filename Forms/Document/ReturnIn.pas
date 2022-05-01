@@ -308,6 +308,9 @@ type
     actUpdateMovementSubjectDoc: TdsdExecStoredProc;
     bbUpdateMovementSubjectDoc: TdxBarButton;
     cbisWeighing_inf: TcxCheckBox;
+    cxLabel31: TcxLabel;
+    edInvnumberOrderReturnTare: TcxButtonEdit;
+    GuidesOrderReturnTare: TdsdGuides;
   private
     { Private declarations }
   public

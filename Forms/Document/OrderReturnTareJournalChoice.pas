@@ -1,4 +1,4 @@
- unit OrderReturnTareJournal;
+ unit OrderReturnTareJournalChoice;
 
 interface
 
@@ -28,7 +28,7 @@ uses
   ExternalLoad;
 
 type
-  TOrderReturnTareJournalForm = class(TAncestorJournalForm)
+  TOrderReturnTareJournalChoiceForm = class(TAncestorJournalForm)
     TotalCountTare: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
@@ -36,10 +36,7 @@ type
     bbPrint: TdxBarButton;
     actPrint: TdsdPrintAction;
     ExecuteDialog: TExecuteDialog;
-    cxLabel27: TcxLabel;
-    edJuridicalBasis: TcxButtonEdit;
     JuridicalBasisGuides: TdsdGuides;
-    spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     actPrintGroup: TdsdPrintAction;
     actPrintSaleOrder: TdsdPrintAction;
@@ -53,8 +50,11 @@ type
     macInsertUpdate_MI_byTransport: TMultiAction;
     OpenChoiceTransportForm: TOpenChoiceForm;
     bbInsertUpdate_MI_byTransport: TdxBarButton;
-    ManagerName: TcxGridDBColumn;
-    SecurityName: TcxGridDBColumn;
+    edPartner: TcxButtonEdit;
+    cxLabel6: TcxLabel;
+    GuidesPartner: TdsdGuides;
+    actChoiceGuides: TdsdChoiceGuides;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
@@ -65,5 +65,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TOrderReturnTareJournalForm);
+  RegisterClass(TOrderReturnTareJournalChoiceForm);
 end.

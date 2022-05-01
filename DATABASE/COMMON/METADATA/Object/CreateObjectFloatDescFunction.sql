@@ -1178,9 +1178,13 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_JuridicalDefermentPayment_Amount() RET
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_JuridicalDefermentPayment_Amount', zc_Object_JuridicalDefermentPayment(), 'Сумма последней оплаты' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_JuridicalDefermentPayment_Amount');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ObjectCode_Basis() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ObjectCode_Basis'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_ObjectCode_Basis', zc_Object_Goods(), 'Код АЛАН' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ObjectCode_Basis');
 
 
-
+     
+ 
 --!!! АПТЕКА
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Contract_Deferment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Contract_Deferment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -2254,6 +2258,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 27.04.22         * zc_ObjectFloat_ObjectCode_Basis
  08.04.22                                                                                      * zc_ObjectFloat_CashSettings_DeySupplOutSUN2, zc_ObjectFloat_CashSettings_DeySupplInSUN2 
  15.03.22                                                                                      * zc_ObjectFloat_CashSettings_TurnoverMoreSUN2 
  24.02.22                                                                                      * zc_ObjectFloat_ExchangeRates_Exchange 

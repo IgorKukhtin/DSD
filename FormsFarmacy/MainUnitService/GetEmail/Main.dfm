@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = #1040#1074#1090#1086'-'#1079#1072#1075#1088#1091#1079#1082#1072' '#1087#1086#1095#1090#1099
-  ClientHeight = 413
+  ClientHeight = 442
   ClientWidth = 984
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -16,7 +16,7 @@ object MainForm: TMainForm
   TextHeight = 13
   object BtnStart: TBitBtn
     Left = 258
-    Top = 381
+    Top = 409
     Width = 75
     Height = 25
     Caption = 'Start !!!'
@@ -25,7 +25,7 @@ object MainForm: TMainForm
   end
   object PanelHost: TPanel
     Left = 0
-    Top = 24
+    Top = 48
     Width = 984
     Height = 70
     Align = alTop
@@ -45,7 +45,7 @@ object MainForm: TMainForm
   end
   object PanelMailFrom: TPanel
     Left = 0
-    Top = 94
+    Top = 118
     Width = 984
     Height = 70
     Align = alTop
@@ -65,7 +65,7 @@ object MainForm: TMainForm
   end
   object PanelParts: TPanel
     Left = 0
-    Top = 164
+    Top = 188
     Width = 984
     Height = 70
     Align = alTop
@@ -85,7 +85,7 @@ object MainForm: TMainForm
   end
   object PanelLoadXLS: TPanel
     Left = 0
-    Top = 234
+    Top = 258
     Width = 984
     Height = 70
     Align = alTop
@@ -105,7 +105,7 @@ object MainForm: TMainForm
   end
   object PanelMove: TPanel
     Left = 0
-    Top = 304
+    Top = 328
     Width = 984
     Height = 70
     Align = alTop
@@ -125,7 +125,7 @@ object MainForm: TMainForm
   end
   object cbTimer: TCheckBox
     Left = 352
-    Top = 385
+    Top = 413
     Width = 400
     Height = 17
     Caption = 'Timer ON '
@@ -134,7 +134,7 @@ object MainForm: TMainForm
   end
   object cbBeginMove: TCheckBox
     Left = 24
-    Top = 386
+    Top = 413
     Width = 217
     Height = 17
     Caption = 'Move '#1087#1088#1072#1081#1089' '#1074' '#1072#1082#1090#1091#1072#1083#1100#1085#1099#1077' '#1094#1077#1085#1099
@@ -153,6 +153,20 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 8
+  end
+  object PanelInfo: TPanel
+    Left = 0
+    Top = 24
+    Width = 984
+    Height = 24
+    Align = alTop
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 9
   end
   object IdMessage: TIdMessage
     AttachmentEncoding = 'UUE'

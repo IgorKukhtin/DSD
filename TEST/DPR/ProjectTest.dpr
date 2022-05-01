@@ -1361,7 +1361,8 @@ uses
   UserByGroup in '..\..\Forms\Guides\UserByGroup.pas' {UserByGroupForm: TParentForm},
   UserByGroupEdit in '..\..\Forms\Guides\UserByGroupEdit.pas' {UserByGroupEditForm: TParentForm},
   UserByGroupListEdit in '..\..\Forms\Guides\UserByGroupListEdit.pas' {UserByGroupListEditForm: TParentForm},
-  UserByGroupListTree in '..\..\Forms\Guides\UserByGroupListTree.pas' {UserByGroupListTreeForm: TParentForm};
+  UserByGroupListTree in '..\..\Forms\Guides\UserByGroupListTree.pas' {UserByGroupListTreeForm: TParentForm},
+  OrderReturnTareJournalChoice in '..\..\Forms\Document\OrderReturnTareJournalChoice.pas' {OrderReturnTareJournalChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

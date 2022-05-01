@@ -2899,7 +2899,7 @@ begin
     end;
 
     // Проверим погашение чеков Хелси
-    if bHelsiPUSH and IsActiveHelsiApi then
+    if bHelsiPUSH then
     begin
       with TCheckHelsiSignPUSHForm.Create(Self) do
       begin

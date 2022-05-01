@@ -1,13 +1,16 @@
 -- Function: lpInsertUpdate_Movement_OrderReturnTare()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderReturnTare (Integer, TVarChar, TDateTime, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderReturnTare (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderReturnTare (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderReturnTare (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderReturnTare(
  INOUT ioId                    Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber             TVarChar  , -- Номер документа
     IN inOperDate              TDateTime , -- Дата документа
-    IN inMovementId_Transport  Integer   , -- Путевой лист
+    IN inMovementId_Transport  Integer   , -- Путевой лист 
+    IN inManagerId             Integer   , -- земеститель нач.отдела
+    IN inSecurityId            Integer   , -- отдел безопасности
     IN inComment               TVarChar  , --
     IN inUserId                Integer     -- пользователь
 )
@@ -26,6 +29,11 @@ BEGIN
 
      -- сохранили связь с документом <Транспорт>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Transport(), ioId, inMovementId_Transport);
+     -- сохранили связь с документом <>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Manager(), ioId, inManagerId);
+     -- сохранили связь с документом <>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Security(), ioId, inSecurityId);
+
 
       -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);

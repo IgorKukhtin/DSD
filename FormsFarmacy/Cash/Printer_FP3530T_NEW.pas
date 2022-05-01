@@ -208,7 +208,7 @@ function TPrinterFP3530T_NEW.CloseReceipt: boolean;
 begin
   result := false;
 
-  FPrinter.CLOSEFISKCHECK[1, Password];
+  FPrinter.CLOSECHECK[1, Password];
   result := СообщениеКА(FPrinter.GETERROR)
 end;
 
@@ -254,7 +254,8 @@ begin
   Res := TRegEx.Split(AText, #$D#$A);
   for I := 0 to High(Res) do
   begin
-    if not PrintLine(Res[I]) then Exit;
+//    if not PrintLine(Res[I]) then Exit;
+    if not PrintNotFiscalText(Res[I]) then Exit;
   end;
   CloseReceipt;
   Result := True;

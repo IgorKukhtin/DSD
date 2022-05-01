@@ -82,11 +82,15 @@ INSERT INTO MovementLinkMovementDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_MovementLinkMovement_ReturnIn() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkMovementDesc WHERE Code = 'zc_MovementLinkMovement_ReturnIn'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementLinkMovementDesc (Code, ItemName)
   SELECT 'zc_MovementLinkMovement_ReturnIn', 'На основании № возврат' WHERE NOT EXISTS (SELECT * FROM MovementLinkMovementDesc WHERE Code = 'zc_MovementLinkMovement_ReturnIn');
-
+      
+CREATE OR REPLACE FUNCTION zc_MovementLinkMovement_OrderReturnTare() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkMovementDesc WHERE Code = 'zc_MovementLinkMovement_OrderReturnTare'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkMovementDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkMovement_OrderReturnTare', 'Заявка на возврат тары' WHERE NOT EXISTS (SELECT * FROM MovementLinkMovementDesc WHERE Code = 'zc_MovementLinkMovement_OrderReturnTare');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А. Шаблий О.В.
+ 28.04.22         * zc_MovementLinkMovement_OrderReturnTare
  21.03.22         * zc_MovementLinkMovement_ReturnIn
  29.12.21                                                                   * zc_MovementLinkMovement_Loss
  14.12.21                                                                   * zc_MovementLinkMovement_Pretension

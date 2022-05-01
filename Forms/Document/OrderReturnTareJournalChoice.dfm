@@ -1,9 +1,10 @@
-inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
+inherited OrderReturnTareJournalChoiceForm: TOrderReturnTareJournalChoiceForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 535
   ClientWidth = 876
   AddOnFormData.RefreshAction = actRefreshStart
-  AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.ChoiceAction = actChoiceGuides
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 892
   ExplicitHeight = 574
   PixelsPerInch = 96
@@ -196,22 +197,6 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
             Options.Editing = False
             Width = 160
           end
-          object ManagerName: TcxGridDBColumn
-            Caption = #1047#1072#1084'. '#1085#1072#1095'.'#1091#1095'.'
-            DataBinding.FieldName = 'ManagerName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1084#1077#1089#1090#1080#1090#1077#1083#1100' '#1085#1072#1095#1072#1083#1100#1085#1080#1082#1072' '#1091#1095#1072#1089#1090#1082#1072
-            Width = 70
-          end
-          object SecurityName: TcxGridDBColumn
-            Caption = #1054#1090#1076'. '#1041#1077#1079#1086#1087'.'
-            DataBinding.FieldName = 'SecurityName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1076#1077#1083' '#1073#1077#1079#1086#1087#1072#1089#1085#1086#1089#1090#1080
-            Width = 70
-          end
           object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
             DataBinding.FieldName = 'InsertDate'
@@ -253,23 +238,23 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
     inherited deEnd: TcxDateEdit
       EditValue = 42370d
     end
-  end
-  object cxLabel27: TcxLabel [2]
-    Left = 640
-    Top = 6
-    Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
-  end
-  object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 718
-    Top = 5
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 7
-    Width = 150
+    object edPartner: TcxButtonEdit
+      Left = 523
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 4
+      Width = 245
+    end
+    object cxLabel6: TcxLabel
+      Left = 453
+      Top = 6
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090':'
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -284,10 +269,8 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
     object actRefreshStart: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_UserJuridicalBasis
       StoredProcList = <
         item
-          StoredProc = spGet_UserJuridicalBasis
         end
         item
           StoredProc = spSelect
@@ -605,6 +588,47 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1047#1072#1103#1074#1082#1091' '#1087#1086' '#1055#1091#1090#1077#1074#1086#1084#1091' '#1083#1080#1089#1090#1091
       ImageIndex = 50
     end
+    object actChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Full'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_Full'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      ImageIndex = 7
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -614,7 +638,7 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderReturnTare'
+    StoredProcName = 'gpSelect_Movement_OrderReturnTare_Choice'
     Params = <
       item
         Name = 'instartdate'
@@ -633,9 +657,9 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inJuridicalBasisId'
+        Name = 'inPartnerId'
         Value = 'False'
-        Component = JuridicalBasisGuides
+        Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -663,32 +687,6 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -709,7 +707,11 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertUpdate_MI_byTransport'
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -722,10 +724,6 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -756,6 +754,10 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
       Action = macInsertUpdate_MI_byTransport
       Category = 0
     end
+    object bb: TdxBarButton
+      Action = actChoiceGuides
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -775,7 +777,7 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
         Component = PeriodChoice
       end
       item
-        Component = JuridicalBasisGuides
+        Component = GuidesPartner
       end>
     Left = 408
     Top = 344
@@ -834,6 +836,35 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
         Name = 'ImportSettingId'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -881,8 +912,6 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
   end
   object JuridicalBasisGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edJuridicalBasis
-    Key = '0'
     FormNameParam.Value = 'TJuridical_BasisForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -908,30 +937,6 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
       end>
     Left = 625
     Top = 35
-  end
-  object spGet_UserJuridicalBasis: TdsdStoredProc
-    StoredProcName = 'gpGet_User_JuridicalBasis'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'JuridicalBasisId'
-        Value = '0'
-        Component = JuridicalBasisGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'JuridicalBasisName'
-        Value = ''
-        Component = JuridicalBasisGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 784
-    Top = 40
   end
   object spGetImportSettingId: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -1025,5 +1030,34 @@ inherited OrderReturnTareJournalForm: TOrderReturnTareJournalForm
     PackSize = 1
     Left = 602
     Top = 320
+  end
+  object GuidesPartner: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartner
+    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartner_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 568
+    Top = 8
   end
 end
