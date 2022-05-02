@@ -497,8 +497,8 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         item
           Action = actUpdateService
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1089#1083#1077#1076#1085#1102#1102' '#1086#1087#1083#1072#1090#1091
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1089#1083#1077#1076#1085#1102#1102' '#1086#1087#1083#1072#1090#1091
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1089#1083#1077#1076#1085#1077#1077' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1089#1083#1077#1076#1085#1077#1077' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077
       ImageIndex = 1
     end
     object macUpdateCash: TMultiAction
@@ -511,8 +511,8 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         item
           Action = actUpdateCash
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1089#1083#1077#1076#1085#1077#1077' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1089#1083#1077#1076#1085#1077#1077' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1089#1083#1077#1076#1085#1102#1102' '#1086#1087#1083#1072#1090#1091
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1089#1083#1077#1076#1085#1102#1102' '#1086#1087#1083#1072#1090#1091
       ImageIndex = 1
     end
     object actInsertService: TdsdInsertUpdateAction
@@ -539,6 +539,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         item
           Name = 'inOperDate'
           Value = 44562d
+          Component = edServiceDate
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
@@ -576,16 +577,16 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         item
           Name = 'Id'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
+          Component = FormParams
+          ComponentItem = 'MovementId_servise'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'inMovementId_Value'
           Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
+          Component = FormParams
+          ComponentItem = 'MovementId_servise'
           MultiSelectSeparator = ','
         end
         item
@@ -1257,14 +1258,14 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
         Name = 'outMovementId'
         Value = '0'
         Component = FormParams
-        ComponentItem = 'MovementId_cash'
+        ComponentItem = 'MovementId_servise'
         MultiSelectSeparator = ','
       end
       item
         Name = 'outMI_Id'
         Value = '0'
         Component = FormParams
-        ComponentItem = 'MI_Id_cash'
+        ComponentItem = 'MI_Id_servise'
         MultiSelectSeparator = ','
       end>
     PackSize = 1
