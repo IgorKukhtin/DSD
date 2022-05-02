@@ -77,6 +77,11 @@ BEGIN
                             , MovementItem.ObjectId AS GoodsId
                             , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция
                                         THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+
+                                   WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_30102()) -- Тушенка
+                                    AND MILinkObject_GoodsKind.ObjectId <> zc_GoodsKind_Basis()
+                                        THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+
                                    WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                                         THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                    ELSE 0

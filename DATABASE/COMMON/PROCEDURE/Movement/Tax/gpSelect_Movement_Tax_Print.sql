@@ -909,7 +909,7 @@ order by 4*/
            , CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() AND vbInfoMoneyId <> zc_Enum_InfoMoney_30201() AND vbOperDate_begin >= '01.12.2018' AND COALESCE (vbMeasureCode_DocumentTaxKind, '') <> ''
                   THEN vbMeasureCode_DocumentTaxKind
                   ELSE CASE WHEN Object_Measure.ObjectCode=1 THEN '0301'
-                            WHEN Object_Measure.ObjectCode=2 THEN '2009'
+                            WHEN Object_Measure.ObjectCode IN (2, 102) THEN '2009'
                             ELSE ''     
                        END 
              END                             AS MeasureCode

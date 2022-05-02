@@ -289,6 +289,11 @@ BEGIN
                    , MovementItem.ObjectId AS GoodsId
                    , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция
                                THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+
+                          WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_30102()) -- Тушенка
+                           AND MILinkObject_GoodsKind.ObjectId <> zc_GoodsKind_Basis()
+                               THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+
                           WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                            AND vbIsPartionGoodsKind_Unit_To = TRUE
                            AND _tmpList_Goods_1942.GoodsId IS NULL
@@ -395,12 +400,18 @@ BEGIN
                    , MovementItem.ObjectId AS GoodsId
                    , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция
                                THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+
+                          WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_30102()) -- Тушенка
+                           AND MILinkObject_GoodsKind.ObjectId <> zc_GoodsKind_Basis()
+                               THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+
                           WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                            AND vbIsPartionGoodsKind_Unit_From = TRUE
                            AND _tmpList_Goods_1942.GoodsId IS NULL
                                THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                           ELSE 0
                      END AS GoodsKindId
+
                    , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция
                                THEN COALESCE (MILinkObject_GoodsKindComplete.ObjectId, CASE WHEN _tmpItem_pr.GoodsKindId <> zc_GoodsKind_WorkProgress() THEN _tmpItem_pr.GoodsKindId ELSE 0 END)
                           WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
@@ -409,6 +420,7 @@ BEGIN
                                THEN COALESCE (MILinkObject_GoodsKindComplete.ObjectId, CASE WHEN _tmpItem_pr.GoodsKindId <> zc_GoodsKind_WorkProgress() THEN _tmpItem_pr.GoodsKindId ELSE 0 END)
                           ELSE 0
                      END AS GoodsKindId_complete
+
                    , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
                    , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
                    , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate

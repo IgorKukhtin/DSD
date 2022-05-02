@@ -40,6 +40,7 @@ $BODY$
    DECLARE vbAmountOut TFloat;
    DECLARE vbAmountCurrency TFloat;
    DECLARE vbSummPay_invoice TFloat;
+   DECLARE vbSummPay_invoice_curr TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
@@ -119,7 +120,7 @@ BEGIN
      -- итого сумма всех оплат по счету
      IF inMovementId_Invoice > 0
      THEN
-         vbSummPay_invoice:= inAmountOut
+         vbSummPay_invoice:= CASE WHEN inCurrencyId = zc_Enum_Currency_Basis() THEN inAmountOut ELSE 0 END
                            + COALESCE ((SELECT -1 * SUM (MovementItem.Amount)
                                         FROM MovementLinkMovement AS MLM_Invoice
                                              INNER JOIN Movement ON Movement.Id = MLM_Invoice.MovementId
@@ -132,16 +133,42 @@ BEGIN
                                         WHERE MLM_Invoice.MovementChildId = inMovementId_Invoice
                                           AND MLM_Invoice.DescId          = zc_MovementLinkMovement_Invoice()   
                                        ), 0);
+         vbSummPay_invoice_curr:= CASE WHEN inCurrencyId <> zc_Enum_Currency_Basis() THEN inAmountOut ELSE 0 END
+                                + COALESCE ((SELECT -1 * SUM (MF_AmountCurrency.ValueData)
+                                             FROM MovementLinkMovement AS MLM_Invoice
+                                                  INNER JOIN Movement ON Movement.Id = MLM_Invoice.MovementId
+                                                                     AND Movement.DescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+                                                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                                     AND Movement.Id <> ioId
+                                                  LEFT JOIN MovementFloat AS MF_AmountCurrency
+                                                                          ON MF_AmountCurrency.MovementId = Movement.Id
+                                                                         AND MF_AmountCurrency.DescId     = zc_MovementFloat_AmountCurrency()
+                                                  LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                                        AND MovementItem.DescId = zc_MI_Master()
+                                                  INNER JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                                                                    ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                                                                                   AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
+                                                                                   AND MILinkObject_Currency.ObjectId       <> zc_Enum_Currency_Basis()
+                                             WHERE MLM_Invoice.MovementChildId = inMovementId_Invoice
+                                               AND MLM_Invoice.DescId          = zc_MovementLinkMovement_Invoice()   
+                                            ), 0);
      END IF;
 
      -- проверка что сумма по счету должна быть >= чем итого сумма всех оплат
-     IF COALESCE (inMovementId_Invoice, 0) <> 0 AND vbSummPay_invoice > COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId_Invoice AND MF.DescId = zc_MovementFloat_TotalSumm()), 0)
+     IF COALESCE (inMovementId_Invoice, 0) <> 0
+        AND (CASE WHEN vbSummPay_invoice_curr <> 0 THEN vbSummPay_invoice_curr ELSE vbSummPay_invoice END
+           > CASE WHEN vbSummPay_invoice_curr <> 0 THEN COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId_Invoice AND MF.DescId = zc_MovementFloat_AmountCurrency()), 0)
+                                                   ELSE COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId_Invoice AND MF.DescId = zc_MovementFloat_TotalSumm()), 0)
+             END
+            )
      THEN
         RAISE EXCEPTION 'Ошибка.В счете № <%> от <%> сумма = <%>, меньше чем Итого сумма оплат = <%>.'
                        , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId_Invoice)
                        , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId_Invoice))
-                       , zfConvert_FloatToString ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId_Invoice AND MF.DescId = zc_MovementFloat_TotalSumm()))
-                       , zfConvert_FloatToString (vbSummPay_invoice)
+                       , zfConvert_FloatToString (CASE WHEN vbSummPay_invoice_curr <> 0 THEN (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId_Invoice AND MF.DescId = zc_MovementFloat_AmountCurrency())
+                                                                                        ELSE (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId_Invoice AND MF.DescId = zc_MovementFloat_TotalSumm())
+                                                  END)
+                       , zfConvert_FloatToString (CASE WHEN vbSummPay_invoice_curr <> 0 THEN vbSummPay_invoice_curr ELSE vbSummPay_invoice END)
                         ;
      END IF;
      

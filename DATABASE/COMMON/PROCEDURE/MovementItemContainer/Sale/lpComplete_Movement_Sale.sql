@@ -1125,6 +1125,11 @@ END IF;*/
                   , tmpMI.GoodsId
                   , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье
                               THEN tmpMI.GoodsKindId
+
+                         WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_30102()) -- Тушенка
+                          AND tmpMI.GoodsKindId <> zc_GoodsKind_Basis()
+                              THEN tmpMI.GoodsKindId
+
                          WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                               THEN tmpMI.GoodsKindId
                          ELSE 0

@@ -43,6 +43,9 @@ BEGIN
                              UNION
                               -- Участок мясного сырья
                               SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8439) AS lfSelect WHERE inUnitId = 951601 -- ЦЕХ упаковки мясо
+                             UNION
+                              -- ЦЕХ Тушенка
+                              SELECT Object.Id AS UnitId FROM Object WHERE Object.Id = 2790412 AND inUnitId = 8006902 -- ЦЕХ упаковки Тушенки
                              )
               , tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
                              FROM Object_InfoMoney_View AS View_InfoMoney
@@ -1129,6 +1132,7 @@ END;$BODY$
 -- тест
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '10.03.2019', inEndDate:= '10.03.2019', inUnitId:= 8451,   inUserId:= zc_Enum_Process_Auto_Pack()) -- Цех Упаковки
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '10.03.2019', inEndDate:= '10.03.2019', inUnitId:= 951601, inUserId:= zc_Enum_Process_Auto_Pack()) -- ЦЕХ упаковки мясо
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '27.04.2022', inEndDate:= '27.04.2022', inUnitId:= 8006902,inUserId:= zc_Enum_Process_Auto_Pack()) -- ЦЕХ упаковки Тушенки
 
 -- where ContainerId = 568111
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '11.08.2016', inEndDate:= '11.08.2016', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- Цех Упаковки
