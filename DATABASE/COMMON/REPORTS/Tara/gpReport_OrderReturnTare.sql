@@ -79,58 +79,54 @@ BEGIN
                                                             AND MovementItem.MovementId IN (SELECT DISTINCT tmpMI_MovementItemId.MovementId_Sale FROM tmpMI_MovementItemId)
                                                             AND MovementItem.DescId = zc_MI_Master()
                                                             AND MovementItem.isErased = FALSE
-                                     INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                     INNER JOIN Movement ON Movement.Id     = MovementItem.MovementId
                                                         AND Movement.DescId = zc_Movement_Sale()
                                )
- 
                  -- собираем все данные продаж из реестра
-                 SELECT /*tmpMI_Reestr.MovementId       AS MovementId_Reestr
-                      , tmpMI_MovementItemId.MovementId_Sale
-                      , */MovementLinkMovement_Transport.MovementChildId AS MovementId_Transport
+                 SELECT COALESCE (MovementLinkMovement_Transport.MovementChildId, tmpMI_Reestr.MovementId) AS MovementId_Transport
                       , MovementLinkObject_To.ObjectId AS PartnerId 
-                      , tmpMI_sale.ObjectId            AS GoodsId
-                      , SUM (tmpMI_sale.Amount)        AS Amount
+                      , tmpMI_Sale.ObjectId            AS GoodsId
+                      , SUM (tmpMI_Sale.Amount)        AS Amount
                  FROM tmpMI_Reestr
                       INNER JOIN tmpMI_MovementItemId ON tmpMI_MovementItemId.MovementItemId_reestr = tmpMI_Reestr.Id
-                      INNER JOIN tmpMI_sale ON tmpMI_sale.MovementId = tmpMI_MovementItemId.MovementId_Sale
+                      INNER JOIN tmpMI_Sale ON tmpMI_Sale.MovementId = tmpMI_MovementItemId.MovementId_Sale
                       LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                                      ON MovementLinkMovement_Transport.MovementId = tmpMI_Reestr.MovementId
                                                     AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport() 
   
                       LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                    ON MovementLinkObject_To.MovementId = tmpMI_MovementItemId.MovementId_Sale
-                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                 GROUP BY MovementLinkMovement_Transport.MovementChildId
+                                                  AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                 GROUP BY COALESCE (MovementLinkMovement_Transport.MovementChildId, tmpMI_Reestr.MovementId)
                         , MovementLinkObject_To.ObjectId
-                        , tmpMI_sale.ObjectId
-                 )
-      --данные заявок на возврат
-    , tmpOrderReturnTare AS (WITH
-                             -- находим сколько заявок сформировано
-                             tmpMovementOrderReturnTare AS (SELECT Movement.*
-                                                            FROM Movement
-                                                            WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-                                                              AND Movement.DescId = zc_Movement_OrderReturnTare()
-                                                              AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                            )
-                             -- путевые
-                           , tmpMovementLinkMovement AS (SELECT MovementLinkMovement.*
-                                                         FROM MovementLinkMovement
-                                                         WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Transport()
-                                                           AND MovementLinkMovement.MovementId IN (SELECT DISTINCT tmpMovementOrderReturnTare.Id FROM tmpMovementOrderReturnTare)
-                                                         )
-                            -- строки заявок
-                           , tmpMI AS (SELECT MovementItem.*
-                                       FROM MovementItem
-                                       WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovementOrderReturnTare.Id FROM tmpMovementOrderReturnTare)
-                                         AND MovementItem.DescId = zc_MI_Master()
-                                         AND MovementItem.isErased = FALSE
-                                       )
-                           , tmpMILO_Partner AS (SELECT MovementItemLinkObject.*
-                                                 FROM MovementItemLinkObject
-                                                 WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
-                                                    AND MovementItemLinkObject.DescId = zc_MILinkObject_Partner()
-                                                 )
+                        , tmpMI_Sale.ObjectId
+                )
+      -- данные заявок на возврат
+    , tmpOrderReturnTare AS (WITH -- находим сколько заявок сформировано
+                                  tmpMovementOrderReturnTare AS (SELECT Movement.*
+                                                                 FROM Movement
+                                                                 WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                                                   AND Movement.DescId = zc_Movement_OrderReturnTare()
+                                                                   AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                                 )
+                                  -- путевые
+                                , tmpMovementLinkMovement AS (SELECT MovementLinkMovement.*
+                                                              FROM MovementLinkMovement
+                                                              WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Transport()
+                                                                AND MovementLinkMovement.MovementId IN (SELECT DISTINCT tmpMovementOrderReturnTare.Id FROM tmpMovementOrderReturnTare)
+                                                              )
+                                  -- строки заявок
+                                , tmpMI AS (SELECT MovementItem.*
+                                            FROM MovementItem
+                                            WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovementOrderReturnTare.Id FROM tmpMovementOrderReturnTare)
+                                              AND MovementItem.DescId     = zc_MI_Master()
+                                              AND MovementItem.isErased   = FALSE
+                                           )
+                                , tmpMILO_Partner AS (SELECT MovementItemLinkObject.*
+                                                      FROM MovementItemLinkObject
+                                                      WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                                         AND MovementItemLinkObject.DescId = zc_MILinkObject_Partner()
+                                                     )
                              -- собираем все данные заявок на возврат
                              SELECT tmpMI.MovementId            AS MovementId_order
                                   , MovementLinkMovement_Transport.MovementChildId AS MovementId_Transport
@@ -175,7 +171,7 @@ BEGIN
                                              , MovementLinkMovement_OrderReturnTare.MovementId
                                              , MovementLinkObject_From.ObjectId
                                              , MovementItem.ObjectId
-                                      ) 
+                                     ) 
 
                   , tmpMI_ReestrRet AS (SELECT DISTINCT MovementFloat_MovementItemId.MovementId AS MovementId_Return
                                              , MovementFloat_MovementItemId.ValueData ::integer AS MovementItemId_reestr
@@ -198,9 +194,7 @@ BEGIN
                                      AND MovementLinkMovement_Transport.MovementId IN (SELECT DISTINCT tmpOrderReturnTare.MovementId_order FROM tmpOrderReturnTare)
                                    )
                     --собираем все данные по возвтратам
-                    SELECT /*tmpMIReturnIn.MovementId_order
-                         , tmpMIReturnIn.MovementId_Return   
-                         , */tmpMLM_ret.MovementId_Transport
+                    SELECT tmpMLM_ret.MovementId_Transport
                          , tmpMIReturnIn.PartnerId
                          , tmpMIReturnIn.GoodsId
                          , SUM (tmpMIReturnIn.Amount) AS Amount
@@ -234,7 +228,7 @@ BEGIN
                                , Movement.ParentId
                         )
 
-   --обьїединяем все 3 віборки ключ TransportId + PartnerId  + GoodsId  
+     -- объединяем все 3 выборки ключ TransportId + PartnerId  + GoodsId  
    , tmpData AS (SELECT CASE WHEN inisDetail = TRUE THEN tmp.MovementId_Transport ELSE 0 END MovementId_Transport
                       , tmp.PartnerId
                       , tmp.GoodsId
@@ -251,7 +245,7 @@ BEGIN
                             , 0          AS Amount_return 
                             , 0          AS Amount_fact
                        FROM tmpSale AS tmp
-                      UNION 
+                      UNION ALL
                        SELECT tmp.MovementId_Transport
                             , tmp.PartnerId
                             , tmp.GoodsId
@@ -260,7 +254,7 @@ BEGIN
                             , 0          AS Amount_return
                             , 0          AS Amount_fact
                        FROM tmpOrderReturnTare AS tmp
-                      UNION
+                      UNION ALL
                        SELECT tmp.MovementId_Transport
                             , tmp.PartnerId
                             , tmp.GoodsId
@@ -269,7 +263,7 @@ BEGIN
                             , tmp.Amount AS Amount_return
                             , 0          AS Amount_fact
                        FROM tmpReturn AS tmp       
-                      UNION
+                      UNION ALL
                        SELECT 0 AS MovementId_Transport
                             , tmp.PartnerId
                             , tmp.GoodsId
