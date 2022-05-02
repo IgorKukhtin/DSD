@@ -70,13 +70,13 @@ BEGIN
            , CASE WHEN inMovementId = 0 THEN CAST (CURRENT_DATE AS TDateTime) ELSE Movement.OperDate END ::TDateTime AS OperDate
            , CASE WHEN inMovementId = 0 THEN DATE_TRUNC ('MONTH', inOperDate - INTERVAL '1 MONTH') ELSE MIDate_ServiceDate.ValueData END ::TDateTime AS ServiceDate
            , MovementItem.Amount  ::TFloat      AS Amount
-           , Object_Unit.Id                     AS UnitId
+           , CASE WHEN TRIM (Object_Unit.ValueData) <> '' THEN Object_Unit.Id ELSE 0 END :: Integer AS UnitId
            , Object_Unit.ValueData              AS UnitName
            , Object_Parent.Id                   AS ParentId_InfoMoney
            , Object_Parent.ValueData            AS ParentName_InfoMoney
            , Object_InfoMoney.Id                AS InfoMoneyId
            , Object_InfoMoney.ValueData         AS InfoMoneyName
-           , Object_CommentInfoMoney.Id         AS CommentInfoMoneyId
+           , CASE WHEN TRIM (Object_CommentInfoMoney.ValueData) <> '' THEN Object_CommentInfoMoney.Id ELSE 0 END :: Integer AS CommentInfoMoneyId
            , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
            , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) ::Boolean AS isAuto
        FROM Movement

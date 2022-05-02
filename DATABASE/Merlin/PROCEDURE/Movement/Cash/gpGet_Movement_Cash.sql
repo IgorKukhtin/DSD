@@ -3,11 +3,11 @@
 DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, Integer, TDateTime, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, Integer, Integer, TDateTime, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar, TVarChar);
- 
+
 CREATE OR REPLACE FUNCTION gpGet_Movement_Cash(
     IN inMovementId        Integer  , -- ключ Документа
     IN inMovementId_Value  Integer  ,
-    IN inMI_Id             Integer  , --Мастер 
+    IN inMI_Id             Integer  , --Мастер
     IN inUnitId            Integer  , -- отдел
     IN inInfoMoneyId       Integer  , -- статья
     IN inOperDate          TDateTime, -- дата Документа
@@ -37,7 +37,7 @@ BEGIN
      IF COALESCE (inMovementId_Value, 0) = 0
      THEN
 
-     RETURN QUERY 
+     RETURN QUERY
        SELECT
              0 AS Id
            , CAST (NEXTVAL ('movement_cash_seq') AS TVarChar)  AS InvNumber
@@ -64,15 +64,15 @@ BEGIN
                            AND Object_Unit.Id = inUnitId
            LEFT JOIN Object AS Object_InfoMoney
                             ON Object_InfoMoney.DescId = zc_Object_InfoMoney()
-                           AND Object_InfoMoney.Id = inInfoMoneyId    
+                           AND Object_InfoMoney.Id = inInfoMoneyId
            LEFT JOIN ObjectLink AS ObjectLink_Parent
                                 ON ObjectLink_Parent.ObjectId = Object_InfoMoney.Id
                                AND ObjectLink_Parent.DescId = zc_ObjectLink_InfoMoney_Parent()
-           LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Parent.ChildObjectId       
+           LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Parent.ChildObjectId
       ;
      ELSE
-     
-     RETURN QUERY 
+
+     RETURN QUERY
        SELECT
              inMovementId AS Id
            , CASE WHEN inMovementId = 0 THEN CAST (NEXTVAL ('movement_service_seq') AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
@@ -83,17 +83,17 @@ BEGIN
            , CASE WHEN inMovementId = 0 THEN 0 ELSE MovementItem.Id END AS MI_Id
            , Object_Cash.Id                     AS CashId
            , Object_Cash.ValueData              AS CashName
-           , Object_Unit.Id                     AS UnitId
+           , CASE WHEN TRIM (Object_Unit.ValueData) <> '' THEN Object_Unit.Id ELSE 0 END :: Integer AS UnitId
            , Object_Unit.ValueData              AS UnitName
            , Object_Parent.Id                   AS ParentId_InfoMoney
            , Object_Parent.ValueData            AS ParentName_InfoMoney
            , Object_InfoMoney.Id                AS InfoMoneyId
            , Object_InfoMoney.ValueData         AS InfoMoneyName
-           , Object_InfoMoneyDetail.Id          AS InfoMoneyDetailId
+           , CASE WHEN TRIM (Object_InfoMoneyDetail.ValueData) <> '' THEN Object_InfoMoneyDetail.Id ELSE 0 END :: Integer AS InfoMoneyDetailId
            , Object_InfoMoneyDetail.ValueData   AS InfoMoneyDetailName
-           , Object_CommentInfoMoney.Id         AS CommentInfoMoneyId
+           , CASE WHEN TRIM (Object_CommentInfoMoney.ValueData) <> '' THEN Object_CommentInfoMoney.Id ELSE 0 END :: Integer AS CommentInfoMoneyId
            , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
-       FROM Movement                                                                                     0
+       FROM Movement
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND MovementItem.Id = inMI_Id
@@ -134,7 +134,7 @@ BEGIN
 
        WHERE Movement.Id = inMovementId_Value;
 
-   END IF; 
+   END IF;
 
 END;
 $BODY$
@@ -145,8 +145,8 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  19.01.22         * add inMI_Id
- 15.01.22         * 
+ 15.01.22         *
 */
 
 -- тест
---select * from gpGet_Movement_Cash(inMovementId := 608 , inMovementId_Value := 608 , inOperDate := ('31.01.2022')::TDateTime , inKindName := 'zc_Enum_InfoMoney_In' ,  inSession := '5');
+-- SELECT * FROM gpGet_Movement_Cash (inMovementId := 608 , inMovementId_Value := 608 , inOperDate := ('31.01.2022')::TDateTime , inKindName := 'zc_Enum_InfoMoney_In' ,  inSession := '5');
