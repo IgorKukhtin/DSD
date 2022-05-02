@@ -107,7 +107,7 @@ type
     actRefreshDoc: TdsdDataSetRefresh;
     Diff_M: TcxGridDBColumn;
     InvNumber_Order: TcxGridDBColumn;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    CountPrint_M: TcxGridDBColumn;
     bbPrintNew: TdxBarButton;
     TotalCount_Diff: TcxGridDBColumn;
     TotalWeight_Diff: TcxGridDBColumn;

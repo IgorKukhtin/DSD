@@ -31,59 +31,57 @@ BEGIN
     RETURN QUERY
     
     WITH
-    -- оборотная тара
-    tmpGoods AS (WITH
-                  tmpInfoMoneyDestination_20500 AS (SELECT Object_InfoMoney_View.*
-                                                    FROM Object_InfoMoney_View
-                                                    WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500()
-                                                    )
-                SELECT ObjectLink.ObjectId AS GoodsId
-                FROM ObjectLink
-                WHERE ObjectLink.DescId = zc_ObjectLink_Goods_InfoMoney()
-                  AND ObjectLink.ChildObjectId IN (SELECT DISTINCT tmpInfoMoneyDestination_20500.InfoMoneyId FROM tmpInfoMoneyDestination_20500)
-                 )
-    
-    --данные продаж из реестра         
+         -- оборотная тара
+         tmpGoods AS (WITH
+                       tmpInfoMoneyDestination_20500 AS (SELECT Object_InfoMoney_View.*
+                                                         FROM Object_InfoMoney_View
+                                                         WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500()
+                                                         )
+                      SELECT ObjectLink.ObjectId AS GoodsId
+                      FROM ObjectLink
+                      WHERE ObjectLink.DescId = zc_ObjectLink_Goods_InfoMoney()
+                        AND ObjectLink.ChildObjectId IN (SELECT DISTINCT tmpInfoMoneyDestination_20500.InfoMoneyId FROM tmpInfoMoneyDestination_20500)
+                     )
+      -- данные продаж из реестра         
     , tmpSale AS(WITH
-                 --документы реестра
+                 -- документы реестра
                  tmpMovementReestr AS (SELECT Movement.*
                                        FROM Movement
                                        WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                                          AND Movement.DescId = zc_Movement_Reestr()
                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                       )
+                                      )
+                 -- строчная часть реестра
                , tmpMI_Reestr AS (SELECT MovementItem.*
                                   FROM tmpMovementReestr AS Movement
-                                       -- строчная часть реестра
                                        LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                  )
-                 --док продаж
-               /*, tmpMI_MovementItemId AS (SELECT DISTINCT MovementFloat_MovementItemId.MovementId AS MovementId_Sale
-                                               , MovementFloat_MovementItemId.ValueData ::integer AS MI_Id_reestr
-                                          FROM MovementFloat AS MovementFloat_MovementItemId
-                                          WHERE MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
-                                          AND (MovementFloat_MovementItemId.ValueData) ::integer IN (SELECT DISTINCT tmpMI_Reestr.Id FROM tmpMI_Reestr)
-                                         )*/
-			   , tmpMF AS (SELECT MovementFloat.ValueData ::integer
-				                , MovementFloat.MovementId
-						   FROM MovementFloat
-						   WHERE MovementFloat.DescId = zc_MovementFloat_MovementItemId()
-			               )
-               , tmpMI_MovementItemId AS (SELECT DISTINCT MovementFloat_MovementItemId.MovementId AS MovementId_Sale
-                                               , MovementFloat_MovementItemId.ValueData ::integer AS MI_Id_reestr
+                                                             AND MovementItem.DescId     = zc_MI_Master()
+                                                             AND MovementItem.isErased   = FALSE
+                                 )
+                 -- док продаж
+               , tmpMF AS (SELECT MovementFloat.ValueData  :: Integer AS MovementItemId_reestr
+                                , MovementFloat.MovementId            AS MovementId_Sale
+                           FROM MovementFloat
+                           WHERE MovementFloat.DescId = zc_MovementFloat_MovementItemId()
+                             AND MovementFloat.ValueData IN (SELECT DISTINCT tmpMI_Reestr.Id :: TFloat FROM tmpMI_Reestr)
+                          )
+               , tmpMI_MovementItemId AS (SELECT DISTINCT
+                                                 MovementFloat_MovementItemId.MovementId_Sale
+                                               , MovementFloat_MovementItemId.MovementItemId_reestr
                                           FROM tmpMI_Reestr
-										       INNER JOIN tmpMF AS MovementFloat_MovementItemId
-										                        ON MovementFloat_MovementItemId.ValueData = tmpMI_Reestr.Id
-                                                                      -- AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
+                                               INNER JOIN tmpMF AS MovementFloat_MovementItemId
+                                                                ON MovementFloat_MovementItemId.MovementItemId_reestr = tmpMI_Reestr.Id
                                          )
-                 --строки док. продаж только оборотной тары
+                 -- строки док. продаж только оборотной тары
                , tmpMI_Sale AS (SELECT MovementItem.*
                                 FROM tmpGoods
-                                    INNER JOIN MovementItem ON tmpGoods.GoodsId = MovementItem.ObjectId
-                                                           AND MovementItem.MovementId IN (SELECT DISTINCT tmpMI_MovementItemId.MovementId_Sale FROM tmpMI_MovementItemId)
-                                                           AND MovementItem.DescId = zc_MI_Master()
-                                                           AND MovementItem.isErased = FALSE
-                                )
+                                     INNER JOIN MovementItem ON tmpGoods.GoodsId = MovementItem.ObjectId
+                                                            AND MovementItem.MovementId IN (SELECT DISTINCT tmpMI_MovementItemId.MovementId_Sale FROM tmpMI_MovementItemId)
+                                                            AND MovementItem.DescId = zc_MI_Master()
+                                                            AND MovementItem.isErased = FALSE
+                                     INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                                        AND Movement.DescId = zc_Movement_Sale()
+                               )
  
                  -- собираем все данные продаж из реестра
                  SELECT /*tmpMI_Reestr.MovementId       AS MovementId_Reestr
@@ -93,7 +91,7 @@ BEGIN
                       , tmpMI_sale.ObjectId            AS GoodsId
                       , SUM (tmpMI_sale.Amount)        AS Amount
                  FROM tmpMI_Reestr
-                      INNER JOIN tmpMI_MovementItemId ON tmpMI_MovementItemId.MI_Id_reestr = tmpMI_Reestr.Id
+                      INNER JOIN tmpMI_MovementItemId ON tmpMI_MovementItemId.MovementItemId_reestr = tmpMI_Reestr.Id
                       INNER JOIN tmpMI_sale ON tmpMI_sale.MovementId = tmpMI_MovementItemId.MovementId_Sale
                       LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                                      ON MovementLinkMovement_Transport.MovementId = tmpMI_Reestr.MovementId
@@ -180,7 +178,7 @@ BEGIN
                                       ) 
 
                   , tmpMI_ReestrRet AS (SELECT DISTINCT MovementFloat_MovementItemId.MovementId AS MovementId_Return
-                                             , MovementFloat_MovementItemId.ValueData ::integer AS MI_Id_reestr
+                                             , MovementFloat_MovementItemId.ValueData ::integer AS MovementItemId_reestr
                                         FROM MovementFloat AS MovementFloat_MovementItemId
                                         WHERE MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
                                           AND MovementFloat_MovementItemId.MovementId IN (SELECT DISTINCT tmpMIReturnIn.MovementId_Return FROM tmpMIReturnIn)
@@ -190,7 +188,7 @@ BEGIN
                   , tmpMLM_ret AS (SELECT MovementLinkMovement_Transport.MovementChildId AS MovementId_Transport
                                         , tmpMI_ReestrRet.MovementId_Return
                                    FROM tmpMI_ReestrRet
-                                       INNER JOIN MovementItem ON MovementItem.Id = tmpMI_ReestrRet.MI_Id_reestr
+                                       INNER JOIN MovementItem ON MovementItem.Id = tmpMI_ReestrRet.MovementItemId_reestr
                                                               AND MovementItem.isErased = FALSE
                                        --путевой из реестра
                                        LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
@@ -335,4 +333,4 @@ $BODY$
 */
 
 -- тест
---   SELECT * FROM gpReport_OrderReturnTare (inStartDate := '01.04.2022'::TDatetime,inEndDate:='01.04.2022'::TDatetime, inisDetail:= false, inSession:='5'::TVarChar);
+-- SELECT * FROM gpReport_OrderReturnTare (inStartDate := '01.04.2022'::TDatetime,inEndDate:='01.04.2022'::TDatetime, inisDetail:= false, inSession:='5'::TVarChar);

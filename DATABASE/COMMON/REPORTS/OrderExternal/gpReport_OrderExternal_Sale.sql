@@ -199,13 +199,14 @@ BEGIN
                                                            AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
 
                            WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                         --WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                              AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice()) ---= zc_Movement_Sale()
                              AND Movement.StatusId = zc_Enum_Status_Complete()
                              AND (COALESCE (MovementLinkObject_To.ObjectId,0) = CASE WHEN inToId <> 0 THEN inToId ELSE COALESCE (MovementLinkObject_To.ObjectId,0) END)
                              AND (COALESCE (MovementLinkObject_From.ObjectId,0) = CASE WHEN inFromId <> 0 THEN inFromId ELSE COALESCE (MovementLinkObject_From.ObjectId,0) END)
                              AND (COALESCE (MovementLinkObject_Route.ObjectId,0) = CASE WHEN inRouteId <> 0 THEN inRouteId ELSE COALESCE (MovementLinkObject_Route.ObjectId,0) END)
                            )
-    --- Заявки
+      -- Заявки
     , tmpMovementOrder AS (SELECT Movement.Id                                         AS MovementId_Order
                                 , CASE WHEN inIsByDoc = TRUE THEN Movement.InvNumber ELSE NULL END AS InvNumber_Order
                                 , Movement.OperDate                                   AS OperDate_Order
@@ -254,7 +255,7 @@ BEGIN
                               AND (COALESCE (MovementLinkObject_Route.ObjectId,0) = CASE WHEN inRouteId <> 0 THEN inRouteId ELSE COALESCE (MovementLinkObject_Route.ObjectId,0) END)
                               AND COALESCE (MovementLinkMovement_Order.MovementId, 0) = 0
                             )
-   -- все продажи и заявки
+      -- все продажи и заявки
     , tmpMovementAll AS (SELECT *, ROW_NUMBER() OVER (PARTITION BY tmpMovementAll.MovementId_Order ORDER BY tmpMovementAll.MovementId_Sale) AS Ord
                          FROM (
                                SELECT tmp.MovementId_Sale
@@ -291,7 +292,7 @@ BEGIN
                                ) AS tmpMovementAll
                         )
                    
-     -- данные по продажам
+      -- данные по продажам
     , tmpMI_Sale AS (SELECT     tmpSale.MovementId_Sale
                               , tmpSale.OperDate_Sale
                               , tmpSale.OperDatePartner_Sale
@@ -362,7 +363,7 @@ BEGIN
                              , MovementItem.ObjectId
                              , MIFloat_Price.ValueData
                      )
-    -- данные по всем заявкам
+      -- данные по всем заявкам
     , tmpMI_Order AS (SELECT tmpMovement2.MovementId_Sale
                            , tmpMovement2.OperDate_Sale
                            , tmpMovement2.OperDatePartner_Sale
@@ -507,7 +508,7 @@ BEGIN
                               , tmpMovement2.AmountSummTotal
                               , tmpMovement2.AmountSumm_Dozakaz 
                     )
-     -----
+      --
     , tmpDataUnion AS (SELECT tmpMovementOrder.MovementId_Sale
                             , tmpMovementOrder.OperDate_Sale
                             , tmpMovementOrder.OperDatePartner_Sale

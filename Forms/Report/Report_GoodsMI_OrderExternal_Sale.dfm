@@ -5,7 +5,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1108
-  ExplicitHeight = 425
+  ExplicitHeight = 426
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -54,10 +54,6 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
               Column = AmountSumm2
             end
             item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
               Format = ',0.###'
               Kind = skSum
               Column = Amount_Sh2
@@ -66,14 +62,6 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
               Format = ',0.###'
               Kind = skSum
               Column = Amount_Weight2
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.###'
@@ -158,7 +146,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxGridDBTableViewColumn1
+              Column = CountPrint_M
             end
             item
               Format = ',0.####'
@@ -209,10 +197,6 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = Amount_Sh1
             end
             item
@@ -228,24 +212,12 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = Amount_Sh2
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = Amount_Weight2
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -335,7 +307,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cxGridDBTableViewColumn1
+              Column = CountPrint_M
             end
             item
               Format = ',0.####'
@@ -733,17 +705,12 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object InfoMoneyName: TcxGridDBColumn
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
           object CountDiff_B: TcxGridDBColumn
             Caption = '> '#1079#1072#1103#1074#1082#1080' ('#1096#1090')'
             DataBinding.FieldName = 'CountDiff_B'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -754,6 +721,9 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
           object CountDiff_M: TcxGridDBColumn
             Caption = '< '#1079#1072#1103#1074#1082#1080' ('#1096#1090')'
             DataBinding.FieldName = 'CountDiff_M'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -764,6 +734,9 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
           object WeightDiff_B: TcxGridDBColumn
             Caption = '> '#1079#1072#1103#1074#1082#1080' ('#1082#1075')'
             DataBinding.FieldName = 'WeightDiff_B'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -773,6 +746,9 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
           object WeightDiff_M: TcxGridDBColumn
             Caption = '< '#1079#1072#1103#1074#1082#1080' ('#1082#1075')'
             DataBinding.FieldName = 'WeightDiff_M'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -782,6 +758,9 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
           object TotalCountDiff_B: TcxGridDBColumn
             Caption = '> '#1079#1072#1103#1074#1082#1080' ('#1096#1090') ('#1080#1090#1086#1075#1086')'
             DataBinding.FieldName = 'TotalCountDiff_B'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -792,6 +771,9 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
           object TotalCountDiff_M: TcxGridDBColumn
             Caption = '< '#1079#1072#1103#1074#1082#1080' ('#1096#1090') ('#1080#1090#1086#1075#1086')'
             DataBinding.FieldName = 'TotalCountDiff_M'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -802,6 +784,9 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
           object TotalWeightDiff_B: TcxGridDBColumn
             Caption = '> '#1079#1072#1103#1074#1082#1080' ('#1082#1075') ('#1080#1090#1086#1075#1086')'
             DataBinding.FieldName = 'TotalWeightDiff_B'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -812,6 +797,9 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
           object TotalWeightDiff_M: TcxGridDBColumn
             Caption = '< '#1079#1072#1103#1074#1082#1080' ('#1082#1075') ('#1080#1090#1086#1075#1086')'
             DataBinding.FieldName = 'TotalWeightDiff_M'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -821,12 +809,18 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
           end
           object Amount_Dozakaz: TcxGridDBColumn
             DataBinding.FieldName = 'Amount_Dozakaz'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             VisibleForCustomization = False
             Width = 60
           end
           object AmountSale: TcxGridDBColumn
             DataBinding.FieldName = 'AmountSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             VisibleForCustomization = False
             Width = 60
@@ -834,75 +828,116 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
           object AmountTax: TcxGridDBColumn
             Caption = '% '#1086#1090#1082#1083
             DataBinding.FieldName = 'AmountTax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             Width = 60
           end
           object DiffTax: TcxGridDBColumn
             DataBinding.FieldName = 'DiffTax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             VisibleForCustomization = False
-            Width = 60
-          end
-          object isPrint_M: TcxGridDBColumn
-            Caption = #1052#1077#1085#1100#1096#1077' '#1079#1072#1103#1074#1082#1080
-            DataBinding.FieldName = 'isPrint_M'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 60
           end
           object Diff_M: TcxGridDBColumn
             DataBinding.FieldName = 'Diff_M'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             VisibleForCustomization = False
             Width = 60
           end
-          object cxGridDBTableViewColumn1: TcxGridDBColumn
+          object CountPrint_M: TcxGridDBColumn
             DataBinding.FieldName = 'CountPrint_M'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             VisibleForCustomization = False
             Width = 20
           end
           object TotalCount_Diff: TcxGridDBColumn
             DataBinding.FieldName = 'TotalCount_Diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             VisibleForCustomization = False
             Width = 50
           end
           object TotalWeight_Diff: TcxGridDBColumn
             DataBinding.FieldName = 'TotalWeight_Diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             VisibleForCustomization = False
             Width = 50
           end
           object TotalAmountTax: TcxGridDBColumn
             DataBinding.FieldName = 'TotalAmountTax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             VisibleForCustomization = False
             Width = 50
           end
           object TotalWeightTax: TcxGridDBColumn
             DataBinding.FieldName = 'TotalWeightTax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             VisibleForCustomization = False
             Width = 50
           end
           object AmountSale_Weight_M: TcxGridDBColumn
             DataBinding.FieldName = 'AmountSale_Weight_M'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             VisibleForCustomization = False
             Width = 60
           end
           object Amount_Weight_M: TcxGridDBColumn
             DataBinding.FieldName = 'Amount_Weight_M'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             VisibleForCustomization = False
             Width = 50
           end
           object Amount_Weight_Dozakaz_M: TcxGridDBColumn
             DataBinding.FieldName = 'Amount_Weight_Dozakaz_M'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             VisibleForCustomization = False
             Width = 50
+          end
+          object isPrint_M: TcxGridDBColumn
+            Caption = #1052#1077#1085#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPrint_M'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object InfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
         end
       end
