@@ -29,7 +29,7 @@ BEGIN
     RETURN QUERY
     --данные продаж из реестра         
     WITH
-      --документы реестра
+      -- документы реестра
       tmpMovementReestr AS (SELECT Movement.*
                                  , MovementLinkMovement_Transport.MovementChildId AS MovementId_Transport
                             FROM Movement
@@ -40,43 +40,50 @@ BEGIN
                               AND Movement.DescId = zc_Movement_Reestr()
                               AND Movement.StatusId <> zc_Enum_Status_Erased()
 						      AND (MovementLinkMovement_Transport.MovementChildId = inMovementId OR inisAll = True)
-                            )
+                           )
+      -- строчная часть реестра
     , tmpMI_Reestr AS (SELECT MovementItem.*
                             , Movement.MovementId_Transport
                        FROM tmpMovementReestr AS Movement
                             -- строчная часть реестра
                             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.DescId     = zc_MI_Master()
+                                                  AND MovementItem.isErased   = FALSE
                        )
-    --док продаж
-    , tmpMF AS (SELECT MovementFloat.ValueData ::integer
-                   , MovementFloat.MovementId
+      -- док продаж
+    , tmpMF AS (SELECT MovementFloat.ValueData  :: Integer AS MovementItemId_reestr
+                     , MovementFloat.MovementId            AS MovementId_Sale
                 FROM MovementFloat
                 WHERE MovementFloat.DescId = zc_MovementFloat_MovementItemId()
-                 )
-    , tmpMovement_Sale AS (SELECT DISTINCT MovementFloat_MovementItemId.MovementId AS MovementId_Sale
+                  AND MovementFloat.ValueData IN (SELECT DISTINCT tmpMI_Reestr.Id :: TFloat FROM tmpMI_Reestr)
+               )
+    , tmpMovement_Sale AS (SELECT DISTINCT
+                                  MovementFloat_MovementItemId.MovementId_Sale
                                 , tmpMI_Reestr.MovementId_Transport
                                 , MovementLinkObject_To.ObjectId AS PartnerId
                            FROM tmpMI_Reestr
                                 INNER JOIN tmpMF AS MovementFloat_MovementItemId
-                                                 ON MovementFloat_MovementItemId.ValueData = tmpMI_Reestr.Id 
+                                                 ON MovementFloat_MovementItemId.MovementItemId_reestr = tmpMI_Reestr.Id 
                                 INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                              ON MovementLinkObject_To.MovementId =  MovementFloat_MovementItemId.MovementId
-                                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                             AND MovementLinkObject_To.ObjectId = inPartnerId 
-                                --путевой из реестра
+                                                              ON MovementLinkObject_To.MovementId = MovementFloat_MovementItemId.MovementId_Sale
+                                                             AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                             AND MovementLinkObject_To.ObjectId   = inPartnerId 
+                                -- путевой из реестра
                                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                                                ON MovementLinkMovement_Transport.MovementId = tmpMI_Reestr.MovementId
                                                               AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
-                           )
+                          )
     
    --строки док. продаж оборотной тары
    , tmpMI_Sale AS (SELECT MovementItem.*
-                  FROM MovementItem
-                  WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement_Sale.MovementId_Sale FROM tmpMovement_Sale)
-                    AND MovementItem.DescId = zc_MI_Master()
-                    AND MovementItem.isErased = FALSE 
-                    AND MovementItem.ObjectId = inGoodsId
-                  )
+                    FROM MovementItem
+                         INNER JOIN Movement ON Movement.Id     = MovementItem.MovementId
+                                            AND Movement.DescId = zc_Movement_Sale()
+                    WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement_Sale.MovementId_Sale FROM tmpMovement_Sale)
+                      AND MovementItem.DescId = zc_MI_Master()
+                      AND MovementItem.isErased = FALSE 
+                      AND MovementItem.ObjectId = inGoodsId
+                   )
  
     , tmpSale AS (SELECT tmpMovement_Sale.MovementId_Transport
                        , tmpMovement_Sale.MovementId_Sale
