@@ -117,14 +117,14 @@ object GuideRetailForm: TGuideRetailForm
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
         object GuideCode: TcxGridDBColumn
           Caption = #1050#1086#1076
-          DataBinding.FieldName = 'SubjectDocCode'
+          DataBinding.FieldName = 'GuideCode'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 35
         end
         object GuideName: TcxGridDBColumn
           Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-          DataBinding.FieldName = 'SubjectDocName'
+          DataBinding.FieldName = 'GuideName'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 150
@@ -159,8 +159,6 @@ object GuideRetailForm: TGuideRetailForm
       Align = alLeft
       Caption = #1050#1086#1076
       TabOrder = 0
-      ExplicitLeft = -1
-      ExplicitTop = -3
       object EditGuideCode: TEdit
         Left = 3
         Top = 16
@@ -182,8 +180,6 @@ object GuideRetailForm: TGuideRetailForm
       Align = alClient
       Caption = #1053#1072#1079#1074#1072#1085#1080#1077
       TabOrder = 1
-      ExplicitLeft = 134
-      ExplicitTop = -3
       object EditGuideName: TEdit
         Left = 5
         Top = 17
