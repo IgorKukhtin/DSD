@@ -1362,7 +1362,9 @@ uses
   UserByGroupEdit in '..\..\Forms\Guides\UserByGroupEdit.pas' {UserByGroupEditForm: TParentForm},
   UserByGroupListEdit in '..\..\Forms\Guides\UserByGroupListEdit.pas' {UserByGroupListEditForm: TParentForm},
   UserByGroupListTree in '..\..\Forms\Guides\UserByGroupListTree.pas' {UserByGroupListTreeForm: TParentForm},
-  OrderReturnTareJournalChoice in '..\..\Forms\Document\OrderReturnTareJournalChoice.pas' {OrderReturnTareJournalChoiceForm: TParentForm};
+  OrderReturnTareJournalChoice in '..\..\Forms\Document\OrderReturnTareJournalChoice.pas' {OrderReturnTareJournalChoiceForm: TParentForm},
+  Report_OrderReturnTare_Sale in '..\..\Forms\Report\Report_OrderReturnTare_Sale.pas' {Report_OrderReturnTare_SaleForm: TParentForm},
+  Report_OrderReturnTare_Order in '..\..\Forms\Report\Report_OrderReturnTare_Order.pas' {Report_OrderReturnTare_OrderForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

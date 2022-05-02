@@ -2859,6 +2859,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderReturnTare_ReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderReturnTare_ReturnInForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderReturnTare_SaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderReturnTare_SaleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderReturnTare_OrderForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderReturnTare_OrderForm');
   exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TaraForm'));

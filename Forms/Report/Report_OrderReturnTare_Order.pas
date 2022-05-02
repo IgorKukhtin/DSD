@@ -1,4 +1,4 @@
-unit Report_OrderReturnTare_ReturnIn;
+unit Report_OrderReturnTare_Order;
 
 interface
 
@@ -17,13 +17,13 @@ uses
   dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox;
 
 type
-  TReport_OrderReturnTare_ReturnInForm = class(TAncestorReportForm)
-    FromCode: TcxGridDBColumn;
+  TReport_OrderReturnTare_OrderForm = class(TAncestorReportForm)
+    PartnerCode: TcxGridDBColumn;
     actRefreshSearch: TdsdExecStoredProc;
     getMovementForm: TdsdStoredProc;
     FormParams: TdsdFormParams;
     bbExecuteDialog: TdxBarButton;
-    FromName: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
     cxLabel4: TcxLabel;
@@ -52,6 +52,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_OrderReturnTare_ReturnInForm);
+  RegisterClass(TReport_OrderReturnTare_OrderForm);
 
 end.
