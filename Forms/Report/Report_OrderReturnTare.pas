@@ -52,6 +52,10 @@ type
     bbReport_OrderReturnTare_ReturnIn: TdxBarButton;
     actRefresh1: TdsdDataSetRefresh;
     Amount_sale: TcxGridDBColumn;
+    actReport_OrderReturnTare_Order: TdsdOpenForm;
+    actReport_OrderReturnTare_Sale: TdsdOpenForm;
+    bbReport_OrderReturnTare_Order: TdxBarButton;
+    bbReport_OrderReturnTare_Sale: TdxBarButton;
   private
     { Private declarations }
   public

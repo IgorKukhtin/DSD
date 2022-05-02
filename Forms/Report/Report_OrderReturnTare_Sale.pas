@@ -1,4 +1,4 @@
-unit Report_OrderReturnTare_ReturnIn;
+unit Report_OrderReturnTare_Sale;
 
 interface
 
@@ -17,7 +17,7 @@ uses
   dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox;
 
 type
-  TReport_OrderReturnTare_ReturnInForm = class(TAncestorReportForm)
+  TReport_OrderReturnTare_SaleForm = class(TAncestorReportForm)
     FromCode: TcxGridDBColumn;
     actRefreshSearch: TdsdExecStoredProc;
     getMovementForm: TdsdStoredProc;
@@ -38,6 +38,7 @@ type
     cbAll: TcxCheckBox;
     actRefresh1: TdsdDataSetRefresh;
     Amount: TcxGridDBColumn;
+    bb: TdxBarButton;
     spGet_checkopen: TdsdStoredProc;
     actGet_checkopen: TdsdExecStoredProc;
     macOpenForm: TMultiAction;
@@ -52,6 +53,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_OrderReturnTare_ReturnInForm);
+  RegisterClass(TReport_OrderReturnTare_SaleForm);
 
 end.

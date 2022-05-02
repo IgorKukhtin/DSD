@@ -1,27 +1,27 @@
-inherited Report_OrderReturnTare_ReturnInForm: TReport_OrderReturnTare_ReturnInForm
-  Caption = #1057#1087#1080#1089#1086#1082' '#1074#1086#1079#1074#1088#1072#1090#1085#1099#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1087#1086' '#1074#1086#1079#1074#1088#1072#1090#1085#1086#1081' '#1090#1072#1088#1077
-  ClientWidth = 807
+inherited Report_OrderReturnTare_OrderForm: TReport_OrderReturnTare_OrderForm
+  Caption = #1057#1087#1080#1089#1086#1082' '#1079#1072#1103#1074#1086#1082' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099
+  ClientWidth = 749
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 823
+  ExplicitWidth = 765
   ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 91
-    Width = 807
+    Width = 749
     Height = 217
     ExplicitTop = 91
-    ExplicitWidth = 807
+    ExplicitWidth = 749
     ExplicitHeight = 217
     ClientRectBottom = 217
-    ClientRectRight = 807
+    ClientRectRight = 749
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 807
+      ExplicitWidth = 749
       ExplicitHeight = 217
       inherited cxGrid: TcxGrid
-        Width = 807
+        Width = 749
         Height = 217
-        ExplicitWidth = 807
+        ExplicitWidth = 749
         ExplicitHeight = 217
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -135,42 +135,35 @@ inherited Report_OrderReturnTare_ReturnInForm: TReport_OrderReturnTare_ReturnInF
             Width = 83
           end
           object InvNumber: TcxGridDBColumn
-            Caption = #8470' '#1085#1072#1082#1083'.'
+            Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
-          object InvNumber_OrderReturnTare: TcxGridDBColumn
-            Caption = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099
-            DataBinding.FieldName = 'InvNumber_OrderReturnTare'
+          object InvNumber_Transport: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1055#1091#1090#1077#1074#1086#1081
+            DataBinding.FieldName = 'InvNumber_Transport'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099
+            HeaderHint = #8470' '#1076#1086#1082'. '#1055#1091#1090#1077#1074#1086#1081
             Options.Editing = False
             Width = 135
           end
-          object FromCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' ('#1086#1090' '#1082#1086#1075#1086')'
-            DataBinding.FieldName = 'FromCode'
+          object PartnerCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1082#1086#1085#1090#1088'.)'
+            DataBinding.FieldName = 'PartnerCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
           end
-          object FromName: TcxGridDBColumn
-            Caption = #1054#1090' '#1082#1086#1075#1086
-            DataBinding.FieldName = 'FromName'
+          object PartnerName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+            DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 216
-          end
-          object ToName: TcxGridDBColumn
-            Caption = #1050#1086#1084#1091
-            DataBinding.FieldName = 'ToName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 230
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -186,9 +179,9 @@ inherited Report_OrderReturnTare_ReturnInForm: TReport_OrderReturnTare_ReturnInF
     end
   end
   inherited Panel: TPanel
-    Width = 807
+    Width = 749
     Height = 65
-    ExplicitWidth = 807
+    ExplicitWidth = 749
     ExplicitHeight = 65
     inherited deStart: TcxDateEdit
       Left = 122
@@ -243,10 +236,10 @@ inherited Report_OrderReturnTare_ReturnInForm: TReport_OrderReturnTare_ReturnInF
       Left = 516
       Top = 35
       Action = actRefresh1
-      Caption = #1042#1089#1077' '#1074#1086#1079#1074#1088#1072#1090#1099'  '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      Caption = #1042#1089#1077' '#1079#1072#1103#1074#1082#1080' '#1079#1072' '#1087#1077#1088#1080#1086#1076
       Properties.ReadOnly = False
       TabOrder = 6
-      Width = 157
+      Width = 149
     end
   end
   object cxLabel3: TcxLabel [2]
@@ -322,8 +315,8 @@ inherited Report_OrderReturnTare_ReturnInForm: TReport_OrderReturnTare_ReturnInF
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      FormName = 'TReturnInForm'
-      FormNameParam.Value = 'TReturnInForm'
+      FormName = 'TOrderReturnTareForm'
+      FormNameParam.Value = 'TOrderReturnTareForm'
       FormNameParam.Component = FormParams
       FormNameParam.ComponentItem = 'FormName'
       FormNameParam.DataType = ftString
@@ -396,7 +389,7 @@ inherited Report_OrderReturnTare_ReturnInForm: TReport_OrderReturnTare_ReturnInF
     Top = 168
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_OrderReturnTare_ReturnIn'
+    StoredProcName = 'gpReport_OrderReturnTare_Order'
     Params = <
       item
         Name = 'inStartDate'
@@ -553,7 +546,7 @@ inherited Report_OrderReturnTare_ReturnInForm: TReport_OrderReturnTare_ReturnInF
     Params = <
       item
         Name = 'FormName'
-        Value = 'TReturnInForm'
+        Value = 'TOrderReturnTareForm'
         DataType = ftString
         MultiSelectSeparator = ','
       end

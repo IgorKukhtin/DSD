@@ -370,6 +370,162 @@ inherited Report_OrderReturnTareForm: TReport_OrderReturnTareForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actReport_OrderReturnTare_Order: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1057#1087#1080#1089#1086#1082' '#1079#1072#1103#1074#1086#1082' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099
+      Hint = #1057#1087#1080#1089#1086#1082' '#1079#1072#1103#1074#1086#1082' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099
+      ImageIndex = 25
+      FormName = 'TReport_OrderReturnTare_OrderForm'
+      FormNameParam.Value = 'TReport_OrderReturnTare_OrderForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 44562d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 44562d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_Transport'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Transport'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actReport_OrderReturnTare_Sale: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1057#1087#1080#1089#1086#1082' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1055#1088#1086#1076#1072#1078' '#1087#1086' '#1074#1086#1079#1074#1088#1072#1090#1085#1086#1081' '#1090#1072#1088#1077
+      Hint = #1057#1087#1080#1089#1086#1082' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1055#1088#1086#1076#1072#1078' '#1087#1086' '#1074#1086#1079#1074#1088#1072#1090#1085#1086#1081' '#1090#1072#1088#1077
+      ImageIndex = 24
+      FormName = 'TReport_OrderReturnTare_SaleForm'
+      FormNameParam.Value = 'TReport_OrderReturnTare_SaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 44562d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 44562d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_Transport'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Transport'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actReport_OrderReturnTare_ReturnIn: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -438,6 +594,12 @@ inherited Report_OrderReturnTareForm: TReport_OrderReturnTareForm
           Component = MasterCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisAll'
+          Value = False
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -513,7 +675,31 @@ inherited Report_OrderReturnTareForm: TReport_OrderReturnTareForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_OrderReturnTare_Sale'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_OrderReturnTare_Order'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbReport_OrderReturnTare_ReturnIn'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -538,6 +724,14 @@ inherited Report_OrderReturnTareForm: TReport_OrderReturnTareForm
     end
     object bbReport_OrderReturnTare_ReturnIn: TdxBarButton
       Action = actReport_OrderReturnTare_ReturnIn
+      Category = 0
+    end
+    object bbReport_OrderReturnTare_Order: TdxBarButton
+      Action = actReport_OrderReturnTare_Order
+      Category = 0
+    end
+    object bbReport_OrderReturnTare_Sale: TdxBarButton
+      Action = actReport_OrderReturnTare_Sale
       Category = 0
     end
   end
