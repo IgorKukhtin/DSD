@@ -28,7 +28,8 @@ RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, OperDate TDateTime, OperDa
              , Amount_10500_Weight TFloat, Amount_10500_Sh TFloat
              , Amount_40200_Weight TFloat, Amount_40200_Sh TFloat
              , SummPartner_calc TFloat
-             , SummPartner TFloat, SummPartner_10200 TFloat, SummPartner_10250 TFloat, SummPartner_10300 TFloat
+             , SummPartner TFloat
+             , SummPartner_10100 TFloat, SummPartner_10200 TFloat, SummPartner_10250 TFloat, SummPartner_10300 TFloat
              , SummDiff TFloat
              , WeightTotal TFloat -- Вес в упаковке - GoodsByGoodsKind
              , ChangePercentAmount TFloat
@@ -122,6 +123,11 @@ BEGIN
                                     WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.DescId = zc_MIContainer_Summ() THEN -1 * MIContainer.Amount -- знак наоборот т.к. это проводка покупателя
                                     ELSE 0
                                END) AS SummPartner
+                            --  Сумма по оптовыми ценам
+                           , (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10100()     THEN  1 * MIContainer.Amount -- !!!
+                                   WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10700() THEN -1 * MIContainer.Amount -- !!!знак наоборот т.к. это проводка покупателя
+                                   ELSE 0
+                              END) AS SummPartner_10100
                              -- 5.3.2. Сумма у покупателя Разница с оптовыми ценами + Скидка Акция
                            , (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleSumm_10200()) THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
                                    WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10200() THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
@@ -281,6 +287,7 @@ BEGIN
                       , SUM (tmpListContainerSumm.Amount_40200_Sh)     AS Amount_40200_Sh
                       , SUM (tmpListContainerSumm.SummPartner)         AS SummPartner
                       , SUM (tmpListContainerSumm.SummPartner_calc)    AS SummPartner_calc
+                      , SUM (tmpListContainerSumm.SummPartner_10100)   AS SummPartner_10100
                       , SUM (tmpListContainerSumm.SummPartner_10200)   AS SummPartner_10200
                       , SUM (tmpListContainerSumm.SummPartner_10250)   AS SummPartner_10250
                       , SUM (tmpListContainerSumm.SummPartner_10300)   AS SummPartner_10300
@@ -296,6 +303,7 @@ BEGIN
                             , tmpListContainerSumm.Price
                             , COALESCE (MIBoolean_BarCode.ValueData,FALSE) AS isBarCode
                             , (tmpListContainerSumm.SummPartner)       AS SummPartner
+                            , (tmpListContainerSumm.SummPartner_10100) AS SummPartner_10100  
                             , (tmpListContainerSumm.SummPartner_10200) AS SummPartner_10200
                             , (tmpListContainerSumm.SummPartner_10250) AS SummPartner_10250
                             , (tmpListContainerSumm.SummPartner_10300) AS SummPartner_10300
@@ -367,6 +375,7 @@ BEGIN
                       , SUM (tmpListContainerSumm.Amount_40200)        AS Amount_40200
                       , SUM (tmpListContainerSumm.Amount_40200_Sh)     AS Amount_40200_Sh
                       , SUM (tmpListContainerSumm.SummPartner)         AS SummPartner
+                      , SUM (tmpListContainerSumm.SummPartner_10100)   AS SummPartner_10100
                       , SUM (tmpListContainerSumm.SummPartner_10200)   AS SummPartner_10200
                       , SUM (tmpListContainerSumm.SummPartner_10250)   AS SummPartner_10250
                       , SUM (tmpListContainerSumm.SummPartner_10300)   AS SummPartner_10300
@@ -439,6 +448,7 @@ BEGIN
 
          , tmpOperationGroup.SummPartner_calc :: TFloat   AS SummPartner_calc
          , tmpOperationGroup.SummPartner :: TFloat        AS SummPartner
+         , tmpOperationGroup.SummPartner_10100 :: TFloat  AS SummPartner_10100
          , tmpOperationGroup.SummPartner_10200 :: TFloat  AS SummPartner_10200
          , tmpOperationGroup.SummPartner_10250 :: TFloat  AS SummPartner_10250
          , tmpOperationGroup.SummPartner_10300 :: TFloat  AS SummPartner_10300
@@ -496,6 +506,7 @@ ALTER FUNCTION gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integ
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.05.22         * 10100
  15.12.14                                        * all
  12.11.14                                        * add inGoodsId
  18.05.14                                        * all
