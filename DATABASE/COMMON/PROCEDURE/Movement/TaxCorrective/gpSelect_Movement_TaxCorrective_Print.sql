@@ -363,8 +363,9 @@ BEGIN
     , tmpGoods AS (SELECT tmp.GoodsId                              AS GoodsId
                         , Object_Goods.ObjectCode                  AS GoodsCode
                         --, CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END :: TVarChar AS GoodsName
-                        , CASE WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
-                               WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
+                        , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate_begin >= ObjectDate_BUH.ValueData THEN ObjectString_Goods_BUH.ValueData
+                               WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
+                               ELSE Object_Goods.ValueData
                           END :: TVarChar AS GoodsName
                         , ObjectString_Goods_RUS.ValueData         AS GoodsName_RUS
                         , ObjectString_Goods_UKTZED.ValueData      AS Goods_UKTZED
@@ -380,7 +381,10 @@ BEGIN
                         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
                         LEFT JOIN ObjectString AS ObjectString_Goods_BUH
                                                ON ObjectString_Goods_BUH.ObjectId = tmp.GoodsId
-                                              AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+                                              AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()  
+                        LEFT JOIN ObjectDate AS ObjectDate_BUH
+                                             ON ObjectDate_BUH.ObjectId = tmp.GoodsId
+                                            AND ObjectDate_BUH.DescId = zc_ObjectDate_Goods_BUH()
                         LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                                ON ObjectString_Goods_UKTZED.ObjectId = tmp.GoodsId
                                               AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
@@ -2379,8 +2383,9 @@ BEGIN
             , CAST (tmpMovementTaxCorrectiveCount.CountTaxId AS Integer) AS CountTaxId
             , Object_Goods.ObjectCode         AS GoodsCode
             --, CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END :: TVarChar AS GoodsName
-            , CASE WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
-                   WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
+            , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate_begin >= ObjectDate_BUH.ValueData THEN ObjectString_Goods_BUH.ValueData
+                   WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
+                   ELSE Object_Goods.ValueData
               END :: TVarChar AS GoodsName
             , tmp.Price
             , tmp.ReturnInAmount
@@ -2429,6 +2434,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_BUH
                                    ON ObjectString_Goods_BUH.ObjectId = tmp.GoodsId
                                   AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+            LEFT JOIN ObjectDate AS ObjectDate_BUH
+                                 ON ObjectDate_BUH.ObjectId = tmp.GoodsId
+                                AND ObjectDate_BUH.DescId = zc_ObjectDate_Goods_BUH()
             LEFT JOIN tmpMovementTaxCorrectiveCount ON 1 = 1
 
             LEFT JOIN tmpName_new ON tmpName_new.GoodsId = Object_Goods.Id
