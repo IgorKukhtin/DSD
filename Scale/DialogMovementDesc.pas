@@ -91,7 +91,7 @@ uses dmMainScale,dmMainScaleCeh,GuidePartner,GuideUnit;
 function TDialogMovementDescForm.Execute(BarCode: String): Boolean; //Проверка корректного ввода в Edit
 begin
      // Для Sticker + сразу ВЫХОД
-     if ((SettingMain.isSticker = TRUE) and (BarCode = ''))
+     if ((SettingMain.isSticker = TRUE) and (BarCode = '') and (SettingMain.isSticker_Weight = false) )
      or (SettingMain.isModeSorting = TRUE)
      then
      begin

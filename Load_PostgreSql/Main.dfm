@@ -2240,8 +2240,8 @@ object MainForm: TMainForm
       OnClick = cbCompleteIncomeBNClick
     end
     object cbLastCost: TCheckBox
-      Left = 154
-      Top = 459
+      Left = 153
+      Top = 473
       Width = 72
       Height = 17
       Caption = '!!!LAST!!!'
@@ -2254,8 +2254,8 @@ object MainForm: TMainForm
       TabOrder = 43
     end
     object cb100MSec: TCheckBox
-      Left = 154
-      Top = 440
+      Left = 153
+      Top = 458
       Width = 76
       Height = 17
       Caption = '100MSec'
@@ -2344,6 +2344,20 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 49
       OnClick = cbCompleteIncomeBNClick
+    end
+    object cbOnlyTush: TCheckBox
+      Left = 97
+      Top = 439
+      Width = 128
+      Height = 17
+      Caption = #1058#1086#1083#1100#1082#1086' '#1058#1091#1096#1077#1085#1082#1072
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 50
     end
   end
   object LogPanel: TPanel

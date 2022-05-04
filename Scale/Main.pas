@@ -358,7 +358,7 @@ implementation
 uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc
     ,GuideGoods,GuideGoodsPartner,GuideGoodsSticker
     ,GuideGoodsMovement,GuideMovement,GuideMovementTransport, GuideMovementReturnIn, GuidePartner
-    ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal, GuideSubjectDoc, GuideReason, GuideAsset, DialogDateValue
+    ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal, GuideSubjectDoc, GuideReason, GuideAsset, GuideRetail, DialogDateValue
     ,IdIPWatch, LookAndFillSettings;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -1446,26 +1446,19 @@ begin
           ParamByName('GuideCode').AsInteger:=ParamsMovement.ParamByName('ToCode').AsInteger;
           ParamByName('GuideName').asString:=ParamsMovement.ParamByName('ToName').asString;
      end;
-     if GuideSubjectDocForm.Execute(execParams)
+     if GuideRetailForm.Execute(execParams)
      then begin
                ParamsMovement.ParamByName('ToId').AsInteger:=execParams.ParamByName('GuideId').AsInteger;
                ParamsMovement.ParamByName('ToCode').AsInteger:=execParams.ParamByName('GuideCode').AsInteger;
                ParamsMovement.ParamByName('ToName').AsString:=execParams.ParamByName('GuideName').AsString;
                //
-               EditSubjectDoc.Text:=execParams.ParamByName('SubjectDocName').AsString;
-               //
-               with DialogStringValueForm do
-               begin
-                    LabelStringValue.Caption:='Ввод примечания для <'+execParams.ParamByName('SubjectDocName').AsString+'>';
-                    ActiveControl:=StringValueEdit;
-                    StringValueEdit.Text:=ParamsMovement.ParamByName('DocumentComment').AsString;
-                    if Execute (false, false)
-                    then ParamsMovement.ParamByName('DocumentComment').AsString:= StringValueEdit.Text;
-                    //
-                    EditSubjectDoc.Text:= EditSubjectDoc.Text + ' / ' + ParamsMovement.ParamByName('DocumentComment').AsString;
-               end;
+               ParamsMovement.ParamByName('calcPartnerId').AsInteger:=execParams.ParamByName('GuideId').AsInteger;
+               ParamsMovement.ParamByName('calcPartnerCode').AsInteger:=execParams.ParamByName('GuideCode').AsInteger;
+               ParamsMovement.ParamByName('calcPartnerName').AsString:=execParams.ParamByName('GuideName').AsString;
                //
                DMMainScaleForm.gpInsertUpdate_Scale_Movement(ParamsMovement);
+               //
+               WriteParamsMovement;
      end;
      //
      execParams.Free;

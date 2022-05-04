@@ -2793,8 +2793,6 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitLeft = 5
-          ExplicitTop = 11
         end
       end
       object infoPanelPriceList: TPanel

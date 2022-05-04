@@ -235,6 +235,7 @@ type
     cbTransportList: TCheckBox;
     Timer_Auto_PrimeCost: TTimer;
     Button1: TButton;
+    cbOnlyTush: TCheckBox;
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
@@ -2497,36 +2498,41 @@ begin
              //
              //
              //
-             toStoredProc_two.Params.ParamByName('inStartDate').Value:=FieldByName('StartDate').AsDateTime;
-             toStoredProc_two.Params.ParamByName('inEndDate').Value:=FieldByName('StartDate').AsDateTime;
-             toStoredProc_two.Params.ParamByName('inUnitId').Value:=8451;//Цех Упаковки
-             if not myExecToStoredProc_two then ;//exit;
-             //
-             if cb100MSec.Checked
-             then begin
-                  try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=0 then MSec_complete:=100;except MSec_complete:=100;end;
-                  if cb100MSec.Checked then begin SessionIdEdit.Text:=IntToStr(MSec_complete); MyDelay(MSec_complete);end;
-             end
-             else MyDelay(8 * 1000);
-             //
-             //
-             toStoredProc_two.Params.ParamByName('inStartDate').Value:=FieldByName('StartDate').AsDateTime;
-             toStoredProc_two.Params.ParamByName('inEndDate').Value:=FieldByName('StartDate').AsDateTime;
-             toStoredProc_two.Params.ParamByName('inUnitId').Value:=951601;//ЦЕХ упаковки мясо
-             if not myExecToStoredProc_two then ;//exit;
-             //
-             if cb100MSec.Checked
-             then begin
-                  try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=0 then MSec_complete:=100;except MSec_complete:=100;end;
-                  if cb100MSec.Checked then begin SessionIdEdit.Text:=IntToStr(MSec_complete); MyDelay(MSec_complete);end;
-             end
-             else MyDelay(4 * 1000);
+             if cbOnlyTush.Checked = FALSE then
+             begin
+                 toStoredProc_two.Params.ParamByName('inStartDate').Value:=FieldByName('StartDate').AsDateTime;
+                 toStoredProc_two.Params.ParamByName('inEndDate').Value:=FieldByName('StartDate').AsDateTime;
+                 toStoredProc_two.Params.ParamByName('inUnitId').Value:=8451;//Цех Упаковки
+                 if not myExecToStoredProc_two then ;//exit;
+                 //
+                 if cb100MSec.Checked
+                 then begin
+                      try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=0 then MSec_complete:=100;except MSec_complete:=100;end;
+                      if cb100MSec.Checked then begin SessionIdEdit.Text:=IntToStr(MSec_complete); MyDelay(MSec_complete);end;
+                 end
+                 else MyDelay(8 * 1000);
+                 //
+                 //
+                 toStoredProc_two.Params.ParamByName('inStartDate').Value:=FieldByName('StartDate').AsDateTime;
+                 toStoredProc_two.Params.ParamByName('inEndDate').Value:=FieldByName('StartDate').AsDateTime;
+                 toStoredProc_two.Params.ParamByName('inUnitId').Value:=951601;//ЦЕХ упаковки мясо
+                 if not myExecToStoredProc_two then ;//exit;
+                 //
+                 if cb100MSec.Checked
+                 then begin
+                      try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=0 then MSec_complete:=100;except MSec_complete:=100;end;
+                      if cb100MSec.Checked then begin SessionIdEdit.Text:=IntToStr(MSec_complete); MyDelay(MSec_complete);end;
+                 end
+                 else MyDelay(4 * 1000);
+
+             end;
              //
              //
              toStoredProc_two.Params.ParamByName('inStartDate').Value:=FieldByName('StartDate').AsDateTime;
              toStoredProc_two.Params.ParamByName('inEndDate').Value:=FieldByName('StartDate').AsDateTime;
              toStoredProc_two.Params.ParamByName('inUnitId').Value:=8006902;//ЦЕХ упаковки Тушенки
              if not myExecToStoredProc_two then ;//exit;
+             //
              //
              if cb100MSec.Checked
              then begin
