@@ -14,13 +14,16 @@ type
 
     function OpenReceipt: boolean;
     function CloseReceipt: boolean;
-    function PrintNotFiscalText(const PrintText: String): boolean;
-    function PrintLine(const PrintText: String): boolean;
-    function PrintText(const AText : String): boolean;
+    function PrintNotFiscalText(const PrintText: WideString): boolean;
+    function PrintLine(const PrintText: WideString): boolean;
+    function PrintSplitLine(const PrintText: WideString): boolean;
+    function PrintText(const AText : WideString): boolean;
     function SerialNumber:String;
+    procedure Anulirovt;
 
   public
     constructor Create;
+    function LengNoFiscalText : integer;
   end;
 
 
@@ -208,20 +211,33 @@ function TPrinterFP3530T_NEW.CloseReceipt: boolean;
 begin
   result := false;
 
-  FPrinter.CLOSECHECK[1, Password];
+  FPrinter.CLOSEFISKCHECK[1, Password];
   result := СообщениеКА(FPrinter.GETERROR)
 end;
 
-function TPrinterFP3530T_NEW.PrintNotFiscalText(const PrintText: String): boolean;
+function TPrinterFP3530T_NEW.PrintNotFiscalText(const PrintText: WideString): boolean;
 begin
   FPrinter.PRNCHECK[PrintText, Password];
   result := СообщениеКА(FPrinter.GETERROR)
 end;
 
-function TPrinterFP3530T_NEW.PrintLine(const PrintText: String): boolean;
+function TPrinterFP3530T_NEW.PrintSplitLine(const PrintText: WideString): boolean;
 var I : Integer;
-    L : string;
-    N : string;
+begin
+  Result := False;
+  I := 1;
+  while COPY(PrintText, I, FLengNoFiscalText) <> '' do
+  begin
+    if not PrintNotFiscalText(COPY(PrintText, I, FLengNoFiscalText)) then Exit;
+    I := I + FLengNoFiscalText;
+  end;
+  Result := True;
+end;
+
+function TPrinterFP3530T_NEW.PrintLine(const PrintText: WideString): boolean;
+var I : Integer;
+    L : WideString;
+    N : WideString;
     Res: TArray<string>;
 begin
   Result := False;
@@ -229,41 +245,55 @@ begin
   Res := TRegEx.Split(PrintText, ' ');
   for I := 0 to High(Res) do
   begin
-    if L <> '' then L := L + ' ';
-    L := L + Res[i];
+    if (Res[i] = '') or (L <> '') then L := L + ' ';
+    if Res[i] <> '' then L := L + Res[i];
     if I < High(Res) then N := ' ' + Res[i + 1] else N := '';
     if Length(L + N) > FLengNoFiscalText then
     begin
-      if not PrintNotFiscalText(L) then Exit;
+      if not PrintSplitLine(L) then Exit;
       L := '';
     end;
   end;
-  if L <> '' then if not PrintNotFiscalText(L) then Exit;
+  if L <> '' then if not PrintSplitLine(L) then Exit;
   Result := True;
 end;
 
-function TPrinterFP3530T_NEW.PrintText(const AText : String): boolean;
+function TPrinterFP3530T_NEW.PrintText(const AText : WideString): boolean;
 var I : Integer;
-    L : string;
-    N : string;
     Res: TArray<string>;
 begin
   Result := False;
-  OpenReceipt;
-  L := '';
-  Res := TRegEx.Split(AText, #$D#$A);
-  for I := 0 to High(Res) do
-  begin
-//    if not PrintLine(Res[I]) then Exit;
-    if not PrintNotFiscalText(Res[I]) then Exit;
+  try
+    OpenReceipt;
+    Res := TRegEx.Split(AText, #$D#$A);
+    for I := 0 to High(Res) do
+    begin
+      if POS('https', Res[I]) = 0 then
+        if not PrintLine(Res[I]) then Exit;
+    end;
+    Result := True;
+  finally
+    if Result then CloseReceipt
+    else Anulirovt;
   end;
-  CloseReceipt;
-  Result := True;
 end;
 
 function TPrinterFP3530T_NEW.SerialNumber:String;
 begin
   Result := FPrinter.ZNUM[Password];
+end;
+
+procedure TPrinterFP3530T_NEW.Anulirovt;
+begin
+  try
+    FPrinter.ANULIROVT[0, Password];
+  except
+  end;
+end;
+
+function TPrinterFP3530T_NEW.LengNoFiscalText : integer;
+begin
+  Result := FLengNoFiscalText;
 end;
 
 end.

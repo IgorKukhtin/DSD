@@ -754,7 +754,7 @@ begin
         cdsUnitCategory.FieldByName('PremiumImplPlan').AsCurrency / 100;
     end;
 
-    if EncodeDate(2022, 04, 01) = StartOfTheMonth(deStart.Date) then
+    if (EncodeDate(2022, 04, 01) = StartOfTheMonth(deStart.Date)) or (EncodeDate(2022, 05, 01) = StartOfTheMonth(deStart.Date)) then
     begin
       if Dataset['Amount'] >= Dataset['AmountPlanAward' + FUnit.Strings[FUnitCalck]] then
         Dataset['BonusAmountTab'] := RoundTo(Dataset['AmountPlanAward' + FUnit.Strings[FUnitCalck]] * Dataset['Price' + FUnit.Strings[FUnitCalck]] * 0.03, -2)
