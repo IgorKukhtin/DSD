@@ -3,8 +3,9 @@ inherited SaleForm: TSaleForm
   ClientHeight = 645
   ClientWidth = 1362
   AddOnFormData.OnLoadAction = actSetDefaults
+  ExplicitLeft = -485
   ExplicitWidth = 1378
-  ExplicitHeight = 683
+  ExplicitHeight = 684
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -902,8 +903,8 @@ inherited SaleForm: TSaleForm
     Caption = #1050#1091#1088#1089
   end
   object edCurrencyPartnerValue: TcxCurrencyEdit [5]
-    Left = 1155
-    Top = 63
+    Left = 1156
+    Top = 62
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4

@@ -21,8 +21,6 @@ inherited ReturnInForm: TReturnInForm
       inherited cxGrid: TcxGrid
         Width = 1304
         Height = 291
-        ExplicitLeft = 40
-        ExplicitTop = 2
         ExplicitWidth = 1304
         ExplicitHeight = 291
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1722,6 +1720,7 @@ inherited ReturnInForm: TReturnInForm
     Width = 1304
     Height = 169
     TabOrder = 3
+    ExplicitTop = -3
     ExplicitWidth = 1304
     ExplicitHeight = 169
     inherited edInvNumber: TcxTextEdit
@@ -1968,7 +1967,7 @@ inherited ReturnInForm: TReturnInForm
       Left = 867
       Top = 103
       TabOrder = 33
-      Width = 245
+      Width = 97
     end
     object cxLabel21: TcxLabel
       Left = 8
@@ -2072,12 +2071,12 @@ inherited ReturnInForm: TReturnInForm
       Width = 144
     end
     object cxLabel29: TcxLabel
-      Left = 717
+      Left = 720
       Top = 127
       Caption = #1055#1088#1072#1081#1089' '#1074#1093'.'
     end
     object edPriceListIn: TcxButtonEdit
-      Left = 717
+      Left = 720
       Top = 145
       Properties.Buttons = <
         item
@@ -2117,6 +2116,21 @@ inherited ReturnInForm: TReturnInForm
       TabOrder = 49
       Width = 100
     end
+    object edParPartnerValue: TcxCurrencyEdit
+      Left = 1044
+      Top = 103
+      EditValue = 1.000000000000000000
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Properties.ReadOnly = False
+      TabOrder = 50
+      Width = 68
+    end
+    object cxLabel32: TcxLabel
+      Left = 1044
+      Top = 85
+      Caption = #1053#1086#1084#1080#1085#1072#1083
+    end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
     Left = 867
@@ -2136,12 +2150,12 @@ inherited ReturnInForm: TReturnInForm
     Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
   end
   object cxLabel14: TcxLabel [4]
-    Left = 1027
+    Left = 1044
     Top = 45
     Caption = #1042#1072#1083'.'#1094#1077#1085#1072
   end
   object edCurrencyDocument: TcxButtonEdit [5]
-    Left = 1027
+    Left = 1044
     Top = 63
     Hint = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
     ParentShowHint = False
@@ -2154,23 +2168,23 @@ inherited ReturnInForm: TReturnInForm
     Properties.ReadOnly = True
     ShowHint = True
     TabOrder = 9
-    Width = 55
+    Width = 68
   end
   object cxLabel16: TcxLabel [6]
-    Left = 1085
-    Top = 45
+    Left = 970
+    Top = 85
     Caption = #1050#1091#1088#1089
   end
-  object edCurrencyValue: TcxCurrencyEdit [7]
-    Left = 1085
-    Top = 63
+  object edCurrencyPartnerValue: TcxCurrencyEdit [7]
+    Left = 970
+    Top = 103
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####;-,0.####; ;'
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 11
-    Width = 27
+    Width = 68
   end
   object cxLabel17: TcxLabel [8]
     Left = 970
@@ -2190,7 +2204,7 @@ inherited ReturnInForm: TReturnInForm
     Properties.ReadOnly = True
     ShowHint = True
     TabOrder = 13
-    Width = 53
+    Width = 68
   end
   object cbCalcAmountPartner: TcxCheckBox [10]
     Left = 497
@@ -2289,7 +2303,7 @@ inherited ReturnInForm: TReturnInForm
     Top = 127
     Caption = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1074#1086#1079#1074#1088#1072#1090' '#1090#1072#1088#1099
   end
-  object edInvnumberOrderReturnTare: TcxButtonEdit [22]
+  object edInvNumberOrderReturnTare: TcxButtonEdit [22]
     Left = 8
     Top = 145
     Properties.Buttons = <
@@ -5186,9 +5200,16 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CurrencyValue'
+        Name = 'CurrencyPartnerValue'
         Value = 0.000000000000000000
-        Component = edCurrencyValue
+        Component = edCurrencyPartnerValue
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParPartnerValue'
+        Value = Null
+        Component = edParPartnerValue
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -5261,14 +5282,14 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'CurrencyDocumentId'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyDocumentName'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -5667,7 +5688,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inCurrencyDocumentId'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5678,6 +5699,22 @@ inherited ReturnInForm: TReturnInForm
         Component = GuidesCurrencyPartner
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioCurrencyPartnerValue'
+        Value = Null
+        Component = edCurrencyPartnerValue
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioParPartnerValue'
+        Value = Null
+        Component = edParPartnerValue
+        DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -5764,7 +5801,13 @@ inherited ReturnInForm: TReturnInForm
         Control = edCurrencyPartner
       end
       item
-        Control = edCurrencyValue
+        Control = edCurrencyPartnerValue
+      end
+      item
+        Control = edCurrencyPartnerValue
+      end
+      item
+        Control = edParPartnerValue
       end
       item
         Control = cbPartner
@@ -5779,7 +5822,7 @@ inherited ReturnInForm: TReturnInForm
         Control = cbList
       end
       item
-        Control = edInvnumberOrderReturnTare
+        Control = edInvNumberOrderReturnTare
       end>
     Left = 376
     Top = 305
@@ -6335,8 +6378,8 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 944
-    Top = 64
+    Left = 888
+    Top = 48
   end
   object PriceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -6371,6 +6414,7 @@ inherited ReturnInForm: TReturnInForm
         Value = Null
         Component = edPriceWithVAT
         DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -6378,6 +6422,24 @@ inherited ReturnInForm: TReturnInForm
         Value = Null
         Component = edVATPercent
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = GuidesCurrencyDocument
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = GuidesCurrencyDocument
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 788
@@ -6684,7 +6746,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 680
     Top = 20
   end
-  object CurrencyDocumentGuides: TdsdGuides
+  object GuidesCurrencyDocument: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCurrencyDocument
     FormNameParam.Value = 'TCurrency_ObjectForm'
@@ -6696,7 +6758,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'Key'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -6705,7 +6767,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -6741,8 +6803,8 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1008
-    Top = 88
+    Left = 944
+    Top = 128
   end
   object TaxCorrectiveCDS: TClientDataSet
     Aggregates = <>
@@ -7392,8 +7454,8 @@ inherited ReturnInForm: TReturnInForm
         Value = 81178
         MultiSelectSeparator = ','
       end>
-    Left = 1170
-    Top = 83
+    Left = 1178
+    Top = 35
   end
   object spUpdateMovementMember: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_ReturnIn_Member'
@@ -7482,8 +7544,8 @@ inherited ReturnInForm: TReturnInForm
         Value = 81178
         MultiSelectSeparator = ','
       end>
-    Left = 1022
-    Top = 27
+    Left = 1062
+    Top = 65531
   end
   object spSelectPrintAkt: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnIn_PrintAkt'
@@ -8174,7 +8236,7 @@ inherited ReturnInForm: TReturnInForm
   end
   object GuidesOrderReturnTare: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edInvnumberOrderReturnTare
+    LookupControl = edInvNumberOrderReturnTare
     Key = '0'
     FormNameParam.Value = 'TOrderReturnTareJournalChoiceForm'
     FormNameParam.DataType = ftString

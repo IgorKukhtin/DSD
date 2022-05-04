@@ -92,12 +92,12 @@ type
     bbPrint_Return_By_TaxCorrective: TdxBarButton;
     cxLabel14: TcxLabel;
     edCurrencyDocument: TcxButtonEdit;
-    CurrencyDocumentGuides: TdsdGuides;
+    GuidesCurrencyDocument: TdsdGuides;
     cxLabel16: TcxLabel;
-    edCurrencyValue: TcxCurrencyEdit;
+    edCurrencyPartnerValue: TcxCurrencyEdit;
     cxLabel17: TcxLabel;
     edCurrencyPartner: TcxButtonEdit;
-    CurrencyPartnerGuides: TdsdGuides;
+    GuidesCurrencyPartner: TdsdGuides;
     TaxCorrectiveCDS: TClientDataSet;
     TaxCorrectiveDS: TDataSource;
     gpUpdateTaxCorrective: TdsdStoredProc;
@@ -250,6 +250,8 @@ type
     edSubjectDoc: TcxButtonEdit;
     GuidesSubjectDoc: TdsdGuides;
     cbisWeighing_inf: TcxCheckBox;
+    edParPartnerValue: TcxCurrencyEdit;
+    cxLabel32: TcxLabel;
   private
     { Private declarations }
   public

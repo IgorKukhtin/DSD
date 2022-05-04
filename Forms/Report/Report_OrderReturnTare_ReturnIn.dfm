@@ -3,7 +3,6 @@ inherited Report_OrderReturnTare_ReturnInForm: TReport_OrderReturnTare_ReturnInF
   ClientWidth = 807
   AddOnFormData.Params = FormParams
   ExplicitWidth = 823
-  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

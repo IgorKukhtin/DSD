@@ -53,10 +53,10 @@
     Caption = #1044#1072#1090#1072' '#1076#1086' ('#1073#1091#1093#1075'.) :'
   end
   object edDate_BUH: TcxDateEdit
-    Left = 279
+    Left = 274
     Top = 75
     EditValue = 42005d
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 5
