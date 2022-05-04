@@ -71,6 +71,8 @@ type
     isUserAll: TcxGridDBColumn;
     InfoMoneyKindName: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

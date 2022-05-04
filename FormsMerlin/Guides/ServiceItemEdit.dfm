@@ -437,7 +437,6 @@
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'Key'
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -446,7 +445,6 @@
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1

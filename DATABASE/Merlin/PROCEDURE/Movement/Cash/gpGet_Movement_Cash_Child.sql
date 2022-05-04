@@ -45,7 +45,7 @@ BEGIN
            , Object_Cash.Id                     AS CashId
            , Object_Cash.ValueData              AS CashName
            , Object_Unit.Id                     AS UnitId
-           , Object_Unit.ValueData              AS UnitName
+           , TRIM (COALESCE (ObjectString_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitName
            , Object_Parent.Id                   AS ParentId_InfoMoney
            , Object_Parent.ValueData            AS ParentName_InfoMoney
            , Object_InfoMoney.Id                AS InfoMoneyId
@@ -70,6 +70,9 @@ BEGIN
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+            LEFT JOIN ObjectString AS ObjectString_GroupNameFull
+                                   ON ObjectString_GroupNameFull.ObjectId = Object_Unit.Id
+                                  AND ObjectString_GroupNameFull.DescId = zc_ObjectString_Unit_GroupNameFull()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
@@ -115,7 +118,7 @@ BEGIN
            , Object_Cash.Id                     AS CashId
            , Object_Cash.ValueData              AS CashName
            , Object_Unit.Id                     AS UnitId
-           , Object_Unit.ValueData              AS UnitName
+           , TRIM (COALESCE (ObjectString_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitName
            , Object_Parent.Id                   AS ParentId_InfoMoney
            , Object_Parent.ValueData            AS ParentName_InfoMoney
            , Object_InfoMoney.Id                AS InfoMoneyId
@@ -135,6 +138,9 @@ BEGIN
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+            LEFT JOIN ObjectString AS ObjectString_GroupNameFull
+                                   ON ObjectString_GroupNameFull.ObjectId = Object_Unit.Id
+                                  AND ObjectString_GroupNameFull.DescId = zc_ObjectString_Unit_GroupNameFull()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
@@ -180,4 +186,4 @@ $BODY$
 */
 
 -- тест
---select * from gpGet_Movement_Cash_Child(inMovementId := 608 , inMovementId_Value := 608 , inOperDate := ('31.01.2022')::TDateTime , inKindName := 'zc_Enum_InfoMoney_In' ,  inSession := '5');
+--select * from gpGet_Movement_Cash_Child(inMovementId := 608 , inMI_Id := 0 ,inMI_Id_child := 0, inOperDate := ('31.01.2022')::TDateTime , inKindName := 'zc_Enum_InfoMoney_In' ,  inSession := '5');

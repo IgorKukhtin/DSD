@@ -51,7 +51,7 @@ BEGIN
            , COALESCE(ObjectHistory_ServiceItem.EndDate, zc_DateEnd()) AS EndDate
 
            , Object_Unit.Id                                                 AS UnitId
-           , Object_Unit.ValueData                                          AS UnitName
+           , TRIM (COALESCE (ObjectString_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitName
 
            , Object_InfoMoney.Id                                            AS InfoMoneyId
            , Object_InfoMoney.ObjectCode                                    AS InfoMoneyCode
@@ -85,6 +85,10 @@ BEGIN
             LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_ServiceItem_Area
                                          ON ObjectHistoryFloat_ServiceItem_Area.ObjectHistoryId = ObjectHistory_ServiceItem.Id
                                         AND ObjectHistoryFloat_ServiceItem_Area.DescId = zc_ObjectHistoryFloat_ServiceItem_Area()
+
+            LEFT JOIN ObjectString AS ObjectString_GroupNameFull
+                                   ON ObjectString_GroupNameFull.ObjectId = Object_Unit.Id
+                                  AND ObjectString_GroupNameFull.DescId = zc_ObjectString_Unit_GroupNameFull()
 ;
 
 

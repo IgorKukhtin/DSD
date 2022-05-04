@@ -283,7 +283,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Name'
+          ComponentItem = 'NameFull'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

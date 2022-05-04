@@ -172,7 +172,8 @@ uses
   Report_CashBalanceDialog in '..\..\FormsMerlin\Report\Report_CashBalanceDialog.pas' {Report_CashBalanceDialogForm: TParentForm},
   CurrencyJournal in '..\..\FormsMerlin\Document\CurrencyJournal.pas' {CurrencyJournalForm: TParentForm},
   CurrencyMovement in '..\..\FormsMerlin\Document\CurrencyMovement.pas' {CurrencyMovementForm: TParentForm},
-  Report_UnitRentDialog in '..\..\FormsMerlin\Report\Report_UnitRentDialog.pas' {Report_UnitRentDialogForm: TParentForm};
+  Report_UnitRentDialog in '..\..\FormsMerlin\Report\Report_UnitRentDialog.pas' {Report_UnitRentDialogForm: TParentForm},
+  InfoMoney_Parent in '..\..\FormsMerlin\Guides\InfoMoney_Parent.pas' {InfoMoney_ParentForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_CommentInfoMoney()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_CommentInfoMoney (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_CommentInfoMoney (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_CommentInfoMoney(
+    IN inIsShowAll   Boolean ,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -60,6 +62,7 @@ $BODY$BEGIN
                              ON ObjectDate_Update.ObjectId = Object_CommentInfoMoney.Id
                             AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()
        WHERE Object_CommentInfoMoney.DescId = zc_Object_CommentInfoMoney()
+        AND (Object_CommentInfoMoney.isErased = FALSE OR inIsShowAll = TRUE)
    ;
   
 END;$BODY$
@@ -73,4 +76,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_CommentInfoMoney('2')
+-- SELECT * FROM gpSelect_Object_CommentInfoMoney(true, '2')

@@ -2,8 +2,8 @@
   BorderStyle = bsSizeable
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1089#1089#1072'>'
   ClientHeight = 427
-  ClientWidth = 341
-  ExplicitWidth = 357
+  ClientWidth = 337
+  ExplicitWidth = 353
   ExplicitHeight = 466
   PixelsPerInch = 96
   TextHeight = 13
@@ -666,10 +666,10 @@
   object GuidesParent_infomoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceParent_infomoney
-    FormNameParam.Value = 'TInfoMoneyTreeForm'
+    FormNameParam.Value = 'TInfoMoney_ParentForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TInfoMoneyTreeForm'
+    FormName = 'TInfoMoney_ParentForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
