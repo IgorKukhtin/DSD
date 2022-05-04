@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SheetWorkTime_byPersonalGroup(
 RETURNS VOID
 AS 
 $BODY$
+   DECLARE vbOperDate  TDateTime;
    DECLARE vbStartDate TDateTime;
    DECLARE vbEndDAte   TDateTime;
    DECLARE vbMemberId   Integer;
@@ -19,6 +20,11 @@ BEGIN
      -- автоматом проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind - при распроведении или удалении - в табеле удаляется WorkTimeKind
      -- vbWorkTimeKindId := (SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId_mh AND MovementLinkObject.DescId = zc_MovementLinkObject_WorkTimeKind());
 
+
+     --     
+     vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId_pg);
+
+     --
      PERFORM gpInsertUpdate_MovementItem_SheetWorkTime(tmp.MemberId           :: Integer    -- Ключ физ. лицо
                                                      , tmp.PositionId         :: Integer    -- Должность
                                                      , tmp.PositionLevelId    :: Integer    -- Разряд
@@ -32,7 +38,24 @@ BEGIN
                                                      , inSession              :: TVarChar
                                                      )
      FROM (WITH
-           tmpMI AS (SELECT Movement.OperDate
+           tmpMemberHoliday AS (SELECT MovementLinkObject_Member.ObjectId AS MemberId
+                                FROM MovementLinkObject AS MovementLinkObject_Member
+                                     INNER JOIN Movement AS Movement_MemberHoliday 
+                                                         ON Movement_MemberHoliday.Id = MovementLinkObject_Member.MovementId
+                                                        AND Movement_MemberHoliday.DescId = zc_Movement_MemberHoliday()
+                                                        AND Movement_MemberHoliday.StatusId = zc_Enum_Status_Complete()
+                 
+                                     INNER JOIN MovementDate AS MovementDate_BeginDateStart
+                                                             ON MovementDate_BeginDateStart.MovementId = MovementLinkObject_Member.MovementId
+                                                            AND MovementDate_BeginDateStart.DescId = zc_MovementDate_BeginDateStart()
+                                                            AND MovementDate_BeginDateStart.ValueData <= vbOperDate
+                                     INNER JOIN MovementDate AS MovementDate_BeginDateEnd
+                                                             ON MovementDate_BeginDateEnd.MovementId = MovementDate_BeginDateStart.MovementId
+                                                            AND MovementDate_BeginDateEnd.DescId = zc_MovementDate_BeginDateEnd()
+                                                            AND MovementDate_BeginDateEnd.ValueData >= vbOperDate
+                                WHERE MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+                               )
+         , tmpMI AS (SELECT Movement.OperDate
                           , MovementLinkObject_Unit.ObjectId          AS UnitId
                           , MovementLinkObject_PersonalGroup.ObjectId AS PersonalGroupId
                           , MovementLinkObject_PairDay.ObjectId       AS PairDayId
@@ -67,7 +90,8 @@ BEGIN
                           
                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                  AND MovementItem.DescId = zc_MI_Master()
-                                                 AND (MovementItem.isErased = FALSE OR inIsDel = TRUE)
+                                               --AND (MovementItem.isErased = FALSE OR inIsDel = TRUE)
+                                                 AND MovementItem.isErased = FALSE
                           
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
                                                            ON MILinkObject_Position.MovementItemId = MovementItem.Id
@@ -106,6 +130,8 @@ BEGIN
              INNER JOIN ObjectString AS ObjectString_ShortName
                                      ON ObjectString_ShortName.ObjectId = tmpMI.WorkTimeKindId
                                     AND ObjectString_ShortName.DescId = zc_objectString_WorkTimeKind_ShortName()
+             LEFT JOIN tmpMemberHoliday ON tmpMemberHoliday.MemberId = tmpMI.MemberId
+         WHERE tmpMemberHoliday.MemberId IS NULL
      ) AS tmp
      ;
 

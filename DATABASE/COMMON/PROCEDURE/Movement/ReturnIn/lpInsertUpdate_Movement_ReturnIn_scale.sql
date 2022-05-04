@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_Movement_ReturnIn_scale()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnIn_scale (Integer, TVarChar, TVarChar, TVarChar, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnIn_scale (Integer, TVarChar, TVarChar, TVarChar, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnIn_scale(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат покупателя>
@@ -24,6 +24,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnIn_scale(
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
     IN inCurrencyValue       TFloat    , -- курс валюты
+    IN inParValue            TFloat     , -- Номинал для перевода в валюту баланса
+    IN inCurrencyPartnerValue TFloat     , -- Курс для расчета суммы операции
+    IN inParPartnerValue      TFloat     , -- Номинал для расчета суммы операции
     In inComment             TVarChar  , -- примечание
     IN inUserId              Integer     -- Пользователь
 )
@@ -54,6 +57,10 @@ BEGIN
                                                   , inCurrencyDocumentId  := inCurrencyDocumentId
                                                   , inCurrencyPartnerId   := inCurrencyPartnerId
                                                   , inCurrencyValue       := inCurrencyValue
+                                                  , inParValue            := inCurrencyValue
+                                                  , inCurrencyPartnerValue:= inCurrencyPartnerValue
+                                                  , inParPartnerValue     := inParPartnerValue
+                                                  , inMovementId_OrderReturnTare:= NULL
                                                   , inComment             := inComment
                                                   , inUserId              := inUserId
                                                    ) AS tmp

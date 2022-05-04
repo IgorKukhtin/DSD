@@ -29,6 +29,12 @@ BEGIN
          PERFORM gpInsertUpdate_MI_SheetWorkTime_byPersonalGroup(inMovementId, TRUE, inSession);
      END IF;
 
+     --
+     IF vbUserId = 5 AND 1=1 THEN
+        RAISE EXCEPTION 'Admin = OK'
+       ;
+     END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

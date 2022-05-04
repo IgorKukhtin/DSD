@@ -160,7 +160,11 @@ BEGIN
                                                   , inContractId         := inContractId       -- Договора
                                                   , inCurrencyDocumentId := vbCurrencyId       -- Валюта (документа)
                                                   , inCurrencyPartnerId  := vbCurrencyId       -- Валюта (контрагента)
-                                                  , inCurrencyValue      := 1.0                -- курс валюты
+                                                  , inCurrencyValue      := NULL               -- курс валюты
+                                                  , inParValue           := NULL
+                                                  , inCurrencyPartnerValue:= NULL
+                                                  , inParPartnerValue     := NULL
+                                                  , inMovementId_OrderReturnTare:= NULL
                                                   , inComment            := inComment          -- примечание
                                                   , inUserId             := vbUserId           -- Пользователь
                                                    );

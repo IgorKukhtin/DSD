@@ -1209,17 +1209,19 @@ END IF;*/
                          , tmpMI.OperCount
                          , tmpMI.OperCount_ChangePercent
                          , tmpMI.OperCount_Partner
-                             , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
-                                         -- так переводится в валюту zc_Enum_Currency_Basis
-                                         THEN CAST (tmpMI.Price * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END AS NUMERIC (16, 2))
-                                    ELSE tmpMI.Price
-                               END AS Price
-                             , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
-                                         -- так переводится в валюту zc_Enum_Currency_Basis
-                                         THEN CAST (tmpMI.Price_original * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END AS NUMERIC (16, 2))
-                                    ELSE tmpMI.Price_original
-                               END AS Price_original
-                             , tmpMI.Price AS Price_Currency
+
+                         , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
+                                     -- так переводится в валюту zc_Enum_Currency_Basis
+                                     THEN CAST (tmpMI.Price * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END AS NUMERIC (16, 2))
+                                ELSE tmpMI.Price
+                           END AS Price
+                         , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
+                                     -- так переводится в валюту zc_Enum_Currency_Basis
+                                     THEN CAST (tmpMI.Price_original * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END AS NUMERIC (16, 2))
+                                ELSE tmpMI.Price_original
+                           END AS Price_original
+                         , tmpMI.Price AS Price_Currency
+
                          , tmpMI.CountForPrice
 
                            -- !!!или подбор партий!!!
@@ -1823,15 +1825,26 @@ END IF;*/
                                                                 , zc_Enum_InfoMoneyDestination_20900()  -- Ирна
                                                                 , zc_Enum_InfoMoneyDestination_30100()  -- Продукция
                                                                 , zc_Enum_InfoMoneyDestination_30200()) -- Мясное сырье
-                                  THEN CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis() THEN zc_Enum_AccountDirection_30150() ELSE zc_Enum_AccountDirection_30100() END -- покупатели ВЭД OR покупатели
+                                  THEN CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
+                                                 THEN zc_Enum_AccountDirection_30150() -- покупатели ВЭД
+                                            ELSE zc_Enum_AccountDirection_30100()      -- покупатели
+                                       END
+
                              WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100()  -- Мясное сырье
                                                                     , zc_Enum_InfoMoneyDestination_20700()  -- Товары
                                                                     , zc_Enum_InfoMoneyDestination_20900()  -- Ирна
                                                                     , zc_Enum_InfoMoneyDestination_30100()  -- Продукция
                                                                     , zc_Enum_InfoMoneyDestination_30200()) -- Мясное сырье
-                                  THEN CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis() THEN zc_Enum_AccountDirection_30150() ELSE zc_Enum_AccountDirection_30100() END -- покупатели ВЭД OR покупатели
+                                  THEN CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
+                                                 THEN zc_Enum_AccountDirection_30150() -- покупатели ВЭД
+                                            ELSE zc_Enum_AccountDirection_30100()      -- покупатели
+                                       END
+
                           -- ELSE zc_Enum_AccountDirection_30400() -- Прочие дебиторы
-                             ELSE CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis() THEN zc_Enum_AccountDirection_30150() ELSE zc_Enum_AccountDirection_30100() END -- покупатели ВЭД OR покупатели
+                             ELSE CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
+                                            THEN zc_Enum_AccountDirection_30150() -- покупатели ВЭД
+                                       ELSE zc_Enum_AccountDirection_30100()      -- покупатели
+                                  END
                         END AS AccountDirectionId
 
                       , CASE WHEN vbIsCorporate_To = TRUE

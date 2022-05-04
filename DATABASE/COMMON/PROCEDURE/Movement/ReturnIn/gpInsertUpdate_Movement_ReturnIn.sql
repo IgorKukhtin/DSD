@@ -1,17 +1,18 @@
 -- Function: gpInsertUpdate_Movement_ReturnIn()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (integer, tvarchar, tvarchar, tvarchar, tdatetime, tdatetime, boolean, boolean, tfloat, tfloat, integer, integer, integer, integer, integer, integer, tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (integer, tvarchar, tvarchar, tvarchar, integer, tdatetime, tdatetime, boolean, boolean, tfloat, tfloat, integer, integer, integer, integer, integer, integer, TVarChar, tvarchar);
--- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (integer, tvarchar, tvarchar, tvarchar, integer, tdatetime, tdatetime, boolean, boolean, boolean, tfloat, tfloat, integer, integer, integer, integer, integer, integer, TVarChar, tvarchar);
---DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (integer, tvarchar, tvarchar, tvarchar, integer, tdatetime, tdatetime, boolean, boolean, boolean, boolean, tfloat, tfloat, integer, integer, integer, integer, integer, integer, TVarChar, tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (integer, tvarchar, tvarchar, tvarchar, integer, tdatetime, tdatetime, boolean, boolean, boolean, boolean, tfloat, tfloat, integer, integer, integer, integer, integer, integer, integer, TVarChar, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (Integer, TVarChar, TVarChar, TVarChar, Integer, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (Integer, TVarChar, TVarChar, TVarChar, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (Integer, TVarChar, TVarChar, TVarChar, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (Integer, TVarChar, TVarChar, TVarChar, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (Integer, TVarChar, TVarChar, TVarChar, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат покупателя>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
     IN inInvNumberMark       TVarChar  , -- Номер "перекресленої зеленої марки зi складу"
-    IN inParentId            Integer   , -- 
+    IN inParentId            Integer   , --
     IN inOperDate            TDateTime , -- Дата документа
     IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
     IN inChecked             Boolean   , -- Проверен
@@ -25,10 +26,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnIn(
     IN inPaidKindId          Integer   , -- Виды форм оплаты
     IN inContractId          Integer   , -- Договора
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
-    IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента) 
-   OUT outCurrencyValue      TFloat    , -- курс валюты 
+    IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
+   OUT outCurrencyValue      TFloat    , -- Курс валюты
+   OUT outParValue           TFloat    , -- Номинал для перевода в валюту баланса
+ INOUT ioCurrencyPartnerValue TFloat   , -- Курс для расчета суммы операции
+ INOUT ioParPartnerValue      TFloat   , -- Номинал для расчета суммы операции
     IN inMovementId_OrderReturnTare    Integer   , --
-    In inComment             TVarChar  , -- примечание
+    IN inComment             TVarChar  , -- примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -40,63 +44,51 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnIn());
 
 
-     -- рассчитали и свойство <Курс для перевода в валюту баланса>
-     outCurrencyValue := 1.00;
-     IF inCurrencyDocumentId <> inCurrencyPartnerId -- AND inCurrencyDocumentId > 0 AND inCurrencyPartnerId > 0
-     THEN
-        outCurrencyValue := (SELECT MovementItem.Amount
-                             FROM (SELECT MAX (Movement.OperDate) AS maxOperDate
-                                   FROM Movement 
-                                       INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                              AND MovementItem.DescId = zc_MI_Master()
-                                                              AND MovementItem.ObjectId = inCurrencyDocumentId
-                                                              AND MovementItem.isErased = FALSE
-                                       INNER JOIN MovementItemLinkObject AS MILinkObject_CurrencyTo
-                                                                         ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
-                                                                        AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
-                                                                        AND MILinkObject_CurrencyTo.ObjectId = inCurrencyPartnerId
-                                   WHERE Movement.DescId = zc_Movement_Currency()
-                                     AND Movement.OperDate <= inOperDate
-                                     AND Movement.StatusId = zc_Enum_Status_Complete()
-                                   ) AS tmpCurrency
-                                   INNER JOIN Movement ON Movement.OperDate = tmpCurrency.maxOperDate
-                                                      AND Movement.DescId = zc_Movement_Currency()
-                                                      AND Movement.StatusId = zc_Enum_Status_Complete()
-                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                          AND MovementItem.DescId = zc_MI_Master()
-                                                          AND MovementItem.isErased = FALSE
-                            );
+     -- рассчет курса для баланса
+     IF inCurrencyPartnerId <> zc_Enum_Currency_Basis() AND COALESCE (ioCurrencyPartnerValue, 0) = 0
+     THEN SELECT Amount, ParValue INTO ioCurrencyPartnerValue, ioParPartnerValue
+          FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDatePartner, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= inCurrencyPartnerId, inPaidKindId:= inPaidKindId);
+
+     ELSEIF inCurrencyPartnerId IN (0, zc_Enum_Currency_Basis())
+     THEN outCurrencyValue:= 0;
+          outParValue:=0;
      END IF;
+
+     -- рассчет курса для баланса
+     outCurrencyValue:= ioCurrencyPartnerValue;
+     outParValue     := ioParPartnerValue;
 
 
      -- сохранили <Документ>
      SELECT tmp.ioId
             INTO ioId
-     FROM lpInsertUpdate_Movement_ReturnIn
-                                       (ioId               := ioId
-                                      , inInvNumber        := inInvNumber
-                                      , inInvNumberPartner := inInvNumberPartner
-                                      , inInvNumberMark    := inInvNumberMark
-                                      , inParentId         := inParentId
-                                      , inOperDate         := inOperDate
-                                      , inOperDatePartner  := CASE WHEN vbUserId = 5 AND ioId > 0 AND 1 = 0 THEN COALESCE ((SELECT ValueData FROM MovementDate WHERE MovementId = ioId AND DescId = zc_MovementDate_OperDatePartner()), inOperDatePartner) ELSE inOperDatePartner END
-                                      , inChecked          := CASE WHEN vbUserId = 5 AND ioId > 0 AND 1 = 0 THEN COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = ioId AND DescId = zc_MovementBoolean_Checked()), inChecked) ELSE inChecked END
-                                      , inIsPartner        := inIsPartner
-                                      , inPriceWithVAT     := inPriceWithVAT
-                                      , inisList           := inisList
-                                      , inVATPercent       := inVATPercent
-                                      , inChangePercent    := inChangePercent
-                                      , inFromId           := inFromId
-                                      , inToId             := inToId
-                                      , inPaidKindId       := inPaidKindId
-                                      , inContractId       := inContractId
-                                      , inCurrencyDocumentId := inCurrencyDocumentId
-                                      , inCurrencyPartnerId  := inCurrencyPartnerId
-                                      , inCurrencyValue    := outCurrencyValue 
-                                      , inMovementId_OrderReturnTare := inMovementId_OrderReturnTare
-                                      , inComment          := inComment
-                                      , inUserId           := vbUserId
-                                       )AS tmp;
+     FROM lpInsertUpdate_Movement_ReturnIn (ioId               := ioId
+                                          , inInvNumber        := inInvNumber
+                                          , inInvNumberPartner := inInvNumberPartner
+                                          , inInvNumberMark    := inInvNumberMark
+                                          , inParentId         := inParentId
+                                          , inOperDate         := inOperDate
+                                          , inOperDatePartner  := CASE WHEN vbUserId = 5 AND ioId > 0 AND 1 = 0 THEN COALESCE ((SELECT ValueData FROM MovementDate WHERE MovementId = ioId AND DescId = zc_MovementDate_OperDatePartner()), inOperDatePartner) ELSE inOperDatePartner END
+                                          , inChecked          := CASE WHEN vbUserId = 5 AND ioId > 0 AND 1 = 0 THEN COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = ioId AND DescId = zc_MovementBoolean_Checked()), inChecked) ELSE inChecked END
+                                          , inIsPartner        := inIsPartner
+                                          , inPriceWithVAT     := inPriceWithVAT
+                                          , inisList           := inisList
+                                          , inVATPercent       := inVATPercent
+                                          , inChangePercent    := inChangePercent
+                                          , inFromId           := inFromId
+                                          , inToId             := inToId
+                                          , inPaidKindId       := inPaidKindId
+                                          , inContractId       := inContractId
+                                          , inCurrencyDocumentId := inCurrencyDocumentId
+                                          , inCurrencyPartnerId  := inCurrencyPartnerId
+                                          , inCurrencyValue    := outCurrencyValue
+                                          , inParValue         := outParValue
+                                          , inCurrencyPartnerValue := ioCurrencyPartnerValue
+                                          , inParPartnerValue      := ioParPartnerValue
+                                          , inMovementId_OrderReturnTare:= inMovementId_OrderReturnTare
+                                          , inComment          := inComment
+                                          , inUserId           := vbUserId
+                                           ) AS tmp;
 
 
 END;

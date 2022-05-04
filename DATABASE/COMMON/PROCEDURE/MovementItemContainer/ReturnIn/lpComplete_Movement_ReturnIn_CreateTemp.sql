@@ -21,12 +21,13 @@ BEGIN
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
                                , ContainerId_Goods Integer, ContainerId_Goods_Alternative Integer, ContainerId_SummIn_60000 Integer, ContainerId_SummOut_60000 Integer, AccountId_SummIn_60000 Integer, AccountId_SummOut_60000 Integer, ContainerId_GoodsPartner Integer, ContainerId_GoodsTransit Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime, ChangePercent TFloat, isChangePrice Boolean
                                , OperCount TFloat, OperCount_Partner TFloat, tmpOperSumm_PriceList TFloat, OperSumm_PriceList TFloat, tmpOperSumm_PriceList_real TFloat, OperSumm_PriceList_real TFloat, tmpOperSumm_Partner TFloat, tmpOperSumm_Partner_original TFloat, OperSumm_Partner TFloat, OperSumm_Partner_ChangePercent TFloat, OperSumm_51201 TFloat
+                               , tmpOperSumm_Partner_Currency TFloat, OperSumm_Currency TFloat
                                , ContainerId_ProfitLoss_10700 Integer
-                               , ContainerId_Partner Integer, AccountId_Partner Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                               , ContainerId_Partner Integer, ContainerId_Currency Integer, AccountId_Partner Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId_To Integer
                                , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean
                                , PartionGoodsId Integer, PartionMovementId Integer
-                               , PriceListPrice TFloat, Price TFloat, Price_original TFloat, CountForPrice TFloat
+                               , PriceListPrice TFloat, Price TFloat, Price_original TFloat, Price_Currency TFloat, CountForPrice TFloat
                                , isErased Boolean -- используется только в lpCheck_Movement_ReturnIn_Auto
                                 ) ON COMMIT DROP;
 

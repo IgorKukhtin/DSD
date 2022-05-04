@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , OperDatePartner TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
-             , CurrencyValue TFloat
+             , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
@@ -72,7 +72,8 @@ BEGIN
              , CAST (0 as TFloat)                       AS TotalSummMVAT
              , CAST (0 as TFloat)                       AS TotalSummPVAT
              , CAST (0 as TFloat)                       AS TotalSumm
-             , CAST (0 as TFloat)                       AS CurrencyValue
+             , CAST (0 as TFloat)                       AS CurrencyPartnerValue
+             , CAST (0 as TFloat)                       AS ParPartnerValue
              , 0                                        AS FromId
              , CAST ('' as TVarChar)                    AS FromName
              , Object_To.Id                             AS ToId
@@ -213,7 +214,8 @@ BEGIN
            , MovementFloat_TotalSummMVAT.ValueData  AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData  AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData      AS TotalSumm
-           , MovementFloat_CurrencyValue.ValueData  AS CurrencyValue
+           , MovementFloat_CurrencyPartnerValue.ValueData  AS CurrencyPartnerValue
+           , MovementFloat_ParPartnerValue.ValueData       AS ParPartnerValue
            , Object_From.Id                    	    AS FromId
            , Object_From.ValueData             	    AS FromName
            , Object_To.Id                      	    AS ToId
@@ -342,9 +344,12 @@ BEGIN
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
             
-            LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
-                                    ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
-                                   AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
+                                    ON MovementFloat_CurrencyPartnerValue.MovementId =  Movement.Id
+                                   AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
+                                    ON MovementFloat_ParPartnerValue.MovementId =  Movement.Id
+                                   AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

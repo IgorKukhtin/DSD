@@ -778,6 +778,9 @@ BEGIN
                                                   , inCurrencyDocumentId    := NULL
                                                   , inCurrencyPartnerId     := NULL
                                                   , inCurrencyValue         := NULL
+                                                  , inParValue              := NULL
+                                                  , inCurrencyPartnerValue  := NULL
+                                                  , inParPartnerValue       := NULL
                                                   , inComment               := ''
                                                   , inUserId                := vbUserId
                                                    )

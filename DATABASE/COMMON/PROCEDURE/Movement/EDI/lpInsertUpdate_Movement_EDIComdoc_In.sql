@@ -115,6 +115,10 @@ BEGIN
                                       , inCurrencyDocumentId:= 14461 -- грн
                                       , inCurrencyPartnerId := NULL
                                       , inCurrencyValue     := NULL
+                                      , inParValue          := NULL
+                                      , inCurrencyPartnerValue:= NULL
+                                      , inParPartnerValue     := NULL
+                                      , inMovementId_OrderReturnTare:= NULL
                                       , inComment           = ''
                                       , inUserId            := inUserId
                                        ) INTO vbMovementId_ReturnIn
