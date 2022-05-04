@@ -504,10 +504,10 @@
   object GuidesParent_infomoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceParent_infomoney
-    FormNameParam.Value = 'TInfoMoneyTreeForm'
+    FormNameParam.Value = 'TInfoMoney_ParentForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TInfoMoneyTreeForm'
+    FormName = 'TInfoMoney_ParentForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -527,7 +527,7 @@
       end
       item
         Name = 'iniService'
-        Value = True
+        Value = False
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

@@ -129,8 +129,9 @@ BEGIN
                   ELSE ROW_NUMBER() OVER (ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                                                              THEN ObjectString_Goods_RUS.ValueData
                                                         ELSE /*CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END*/
-                                                             CASE WHEN MIBoolean_Goods_Name_new.ValueData = TRUE THEN Object_Goods.ValueData
-                                                                  WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                                                             CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate >= ObjectDate_BUH.ValueData THEN ObjectString_Goods_BUH.ValueData
+                                                                  WHEN MIBoolean_Goods_Name_new.ValueData = TRUE THEN Object_Goods.ValueData
+                                                                  ELSE Object_Goods.ValueData END
                                                    END
                                                  , Object_GoodsKind.ValueData
                                                  , MovementItem.Id
@@ -142,8 +143,10 @@ BEGIN
            , CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                        THEN ObjectString_Goods_RUS.ValueData
                   ELSE /*CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END*/
-                       CASE WHEN MIBoolean_Goods_Name_new.ValueData = TRUE THEN Object_Goods.ValueData
-                       WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                       CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate >= ObjectDate_BUH.ValueData THEN ObjectString_Goods_BUH.ValueData
+                            WHEN MIBoolean_Goods_Name_new.ValueData = TRUE THEN Object_Goods.ValueData
+                            ELSE Object_Goods.ValueData
+                       END
              END :: TVarChar                             AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
@@ -174,7 +177,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_BUH
                                    ON ObjectString_Goods_BUH.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
-                                  
+            LEFT JOIN ObjectDate AS ObjectDate_BUH
+                                 ON ObjectDate_BUH.ObjectId = Object_Goods.Id
+                                AND ObjectDate_BUH.DescId = zc_ObjectDate_Goods_BUH()                                  
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
@@ -217,8 +222,9 @@ BEGIN
                   ELSE -1 * ROW_NUMBER() OVER (ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                                                              THEN ObjectString_Goods_RUS.ValueData
                                                         ELSE /*CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END*/
-                                                             CASE WHEN COALESCE (MIBoolean_Goods_Name_new.ValueData, FALSE) = TRUE THEN Object_Goods.ValueData
-                                                                  WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                                                             CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate >= ObjectDate_BUH.ValueData THEN ObjectString_Goods_BUH.ValueData
+                                                                  WHEN COALESCE (MIBoolean_Goods_Name_new.ValueData, FALSE) = TRUE THEN Object_Goods.ValueData
+                                                                  ELSE Object_Goods.ValueData END
                                                    END
                                                  , Object_GoodsKind.ValueData
                                                  , MovementItem.Id
@@ -230,8 +236,9 @@ BEGIN
            , CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                        THEN ObjectString_Goods_RUS.ValueData
                   ELSE /*CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END*/
-                         CASE WHEN COALESCE (MIBoolean_Goods_Name_new.ValueData, FALSE) = TRUE THEN Object_Goods.ValueData
-                              WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                         CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate >= ObjectDate_BUH.ValueData THEN ObjectString_Goods_BUH.ValueData
+                              WHEN COALESCE (MIBoolean_Goods_Name_new.ValueData, FALSE) = TRUE THEN Object_Goods.ValueData
+                              ELSE Object_Goods.ValueData END
              END :: TVarChar                             AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
@@ -261,6 +268,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_BUH
                                    ON ObjectString_Goods_BUH.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+            LEFT JOIN ObjectDate AS ObjectDate_BUH
+                                 ON ObjectDate_BUH.ObjectId = Object_Goods.Id
+                                AND ObjectDate_BUH.DescId = zc_ObjectDate_Goods_BUH()
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()

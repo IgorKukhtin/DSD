@@ -308,7 +308,7 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
     Params = <
       item
         Name = 'inShowAll'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -340,10 +340,13 @@ object PriceList_ObjectForm: TPriceList_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 320
     Top = 208
   end

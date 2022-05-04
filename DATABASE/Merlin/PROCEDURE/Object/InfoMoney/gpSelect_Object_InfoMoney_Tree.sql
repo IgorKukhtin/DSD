@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_InfoMoney_Tree()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_InfoMoney_Tree(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_InfoMoney_Tree(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_InfoMoney_Tree(
+    IN inIsShowAll   Boolean,       -- признак показать удаленные да / нет
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, 
@@ -16,7 +18,7 @@ BEGIN
        WITH tmpGroup AS (SELECT DISTINCT ObjectLink_Parent.ChildObjectId AS GroupId
                          FROM ObjectLink AS ObjectLink_Parent
                          WHERE ObjectLink_Parent.DescId = zc_ObjectLink_InfoMoney_Parent()
-                           AND ObjectLink_Parent.ChildObjectId  > 0
+                           AND ObjectLink_Parent.ChildObjectId > 0
                         )
        SELECT
              Object_InfoMoney.Id                  AS Id
@@ -30,6 +32,7 @@ BEGIN
                                  ON ObjectLink_InfoMoney_Parent.ObjectId = Object_InfoMoney.Id
                                 AND ObjectLink_InfoMoney_Parent.DescId = zc_ObjectLink_InfoMoney_Parent()
        WHERE Object_InfoMoney.DescId = zc_Object_InfoMoney()
+         AND (Object_InfoMoney.isErased = FALSE OR inIsShowAll = TRUE)
        UNION SELECT
              0 AS Id,
              0 AS Code,
@@ -50,4 +53,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_InfoMoney_Tree ('2')
+-- SELECT * FROM gpSelect_Object_InfoMoney_Tree (true,'2')

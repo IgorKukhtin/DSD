@@ -49,7 +49,7 @@ BEGIN
            , 0                                                 AS CashId
            , CAST ('' as TVarChar)                             AS CashName
            , Object_Unit.Id                                    AS UnitId
-           , Object_Unit.ValueData            ::TVarChar       AS UnitName
+           , TRIM (COALESCE (ObjectString_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitName
            , Object_Parent.Id                                  AS ParentId_InfoMoney
            , Object_Parent.ValueData          ::TVarChar       AS ParentName_InfoMoney
            , Object_InfoMoney.Id                               AS InfoMoneyId
@@ -61,7 +61,10 @@ BEGIN
        FROM (SELECT CAST (CURRENT_DATE AS TDateTime) AS OperDate) AS tmp
            LEFT JOIN Object AS Object_Unit
                             ON Object_Unit.DescId = zc_Object_Unit()
-                           AND Object_Unit.Id = inUnitId
+                           AND Object_Unit.Id = inUnitId        
+           LEFT JOIN ObjectString AS ObjectString_GroupNameFull
+                                  ON ObjectString_GroupNameFull.ObjectId = Object_Unit.Id
+                                 AND ObjectString_GroupNameFull.DescId = zc_ObjectString_Unit_GroupNameFull()
            LEFT JOIN Object AS Object_InfoMoney
                             ON Object_InfoMoney.DescId = zc_Object_InfoMoney()
                            AND Object_InfoMoney.Id = inInfoMoneyId
@@ -84,7 +87,7 @@ BEGIN
            , Object_Cash.Id                     AS CashId
            , Object_Cash.ValueData              AS CashName
            , CASE WHEN TRIM (Object_Unit.ValueData) <> '' THEN Object_Unit.Id ELSE 0 END :: Integer AS UnitId
-           , Object_Unit.ValueData              AS UnitName
+           , TRIM (COALESCE (ObjectString_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitName
            , Object_Parent.Id                   AS ParentId_InfoMoney
            , Object_Parent.ValueData            AS ParentName_InfoMoney
            , Object_InfoMoney.Id                AS InfoMoneyId
@@ -103,6 +106,10 @@ BEGIN
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_GroupNameFull
+                                   ON ObjectString_GroupNameFull.ObjectId = Object_Unit.Id
+                                  AND ObjectString_GroupNameFull.DescId = zc_ObjectString_Unit_GroupNameFull()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id

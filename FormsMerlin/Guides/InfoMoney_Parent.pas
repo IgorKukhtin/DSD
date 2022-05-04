@@ -1,4 +1,4 @@
-unit CommentInfoMoney;
+unit InfoMoney_Parent;
 
 interface
 
@@ -21,10 +21,10 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dsdAddOn, dxBarExtItems, ExternalLoad;
+  dsdAddOn, dxBarExtItems;
 
 type
-  TCommentInfoMoneyForm = class(TParentForm)
+  TInfoMoney_ParentForm = class(TParentForm)
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
@@ -37,17 +37,9 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
-    bbInsert: TdxBarButton;
     spSelect: TdsdStoredProc;
-    actUpdate: TdsdInsertUpdateAction;
-    bbEdit: TdxBarButton;
     isErased: TcxGridDBColumn;
     Code: TcxGridDBColumn;
-    bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
     dxBarStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
@@ -58,23 +50,9 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     spErasedUnErased: TdsdStoredProc;
-    InfoMoneyKindName: TcxGridDBColumn;
-    spUpdate_IsUserAll_Yes: TdsdStoredProc;
-    spUpdate_isUserAll: TdsdStoredProc;
-    actUpdate_IsUserAll: TdsdExecStoredProc;
-    actUpdate_IsUserAll_Yes: TdsdExecStoredProc;
-    macUpdate_IsUserAll_list: TMultiAction;
-    macUpdate_IsUserAll_Yes: TMultiAction;
-    bbmacUpdate_IsUserAll_Yes: TdxBarButton;
-    bbUpdate_IsUserAll: TdxBarButton;
-    FormParams: TdsdFormParams;
-    spGetImportSettingId: TdsdStoredProc;
-    actDoLoad: TExecuteImportSettingsAction;
-    actGetImportSetting: TdsdExecStoredProc;
-    macStartLoad: TMultiAction;
-    bbStartLoad: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
-    bbactShowAll: TdxBarButton;
+    bbShowAll: TdxBarButton;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
@@ -86,6 +64,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TCommentInfoMoneyForm);
+  RegisterClass(TInfoMoney_ParentForm);
 
 end.

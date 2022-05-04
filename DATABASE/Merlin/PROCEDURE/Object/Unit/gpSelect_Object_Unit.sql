@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Unit(
     IN inIsShowAll   Boolean,       -- признак показать удаленные да / нет
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameFull TVarChar
              , Phone TVarChar, GroupNameFull TVarChar
              , Comment TVarChar
              , ParentId Integer, ParentName TVarChar
@@ -30,6 +30,7 @@ BEGIN
              Object_Unit.Id                  AS Id
            , Object_Unit.ObjectCode          AS Code
            , Object_Unit.ValueData           AS Name
+           , TRIM (COALESCE (ObjectString_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS NameFull
            , ObjectString_Phone.ValueData    AS Phone
            , ObjectString_GroupNameFull.ValueData AS GroupNameFull
            , ObjectString_Comment.ValueData  AS Comment
@@ -94,11 +95,9 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.05.22         *
  11.01.22         *
 */
 
 -- тест
 -- SELECT * FROM gpSelect_Object_Unit (TRUE, zfCalc_UserAdmin())
-
-
-

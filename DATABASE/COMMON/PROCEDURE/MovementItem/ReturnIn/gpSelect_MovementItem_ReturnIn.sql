@@ -284,7 +284,9 @@ BEGIN
                             )
    , tmpGoods1 AS (SELECT Object_Goods.Id           AS GoodsId
                         , Object_Goods.ObjectCode   AS GoodsCode
-                        , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END AS GoodsName
+                        , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND inOperDate >= ObjectDate_BUH.ValueData THEN ObjectString_Goods_BUH.ValueData
+                               ELSE Object_Goods.ValueData
+                          END AS GoodsName
                         , COALESCE (tmpGoodsByGoodsKind.GoodsKindId, 0)          AS GoodsKindId
                    FROM Object_InfoMoney_View
                         JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
@@ -295,6 +297,9 @@ BEGIN
                       LEFT JOIN ObjectString AS ObjectString_Goods_BUH
                                              ON ObjectString_Goods_BUH.ObjectId = Object_Goods.Id
                                             AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+                      LEFT JOIN ObjectDate AS ObjectDate_BUH
+                                           ON ObjectDate_BUH.ObjectId = Object_Goods.Id
+                                          AND ObjectDate_BUH.DescId = zc_ObjectDate_Goods_BUH()
                         LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = Object_Goods.Id
                    -- WHERE (tmpGoodsByGoodsKind.GoodsId > 0 AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()))
                    --    OR (vbIsB = TRUE AND Object_InfoMoney_View.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()))
@@ -565,9 +570,12 @@ BEGIN
                               AND (tmpPromo.MovementId  = tmpResult.MovementId_Promo OR COALESCE (tmpResult.MovementId_Promo, 0) = 0)
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsId
-                        LEFT JOIN ObjectString AS ObjectString_Goods_BUH
-                                               ON ObjectString_Goods_BUH.ObjectId = tmpResult.GoodsId
-                                              AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+                 /*LEFT JOIN ObjectString AS ObjectString_Goods_BUH
+                                        ON ObjectString_Goods_BUH.ObjectId = tmpResult.GoodsId
+                                       AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+                 LEFT JOIN ObjectDate AS ObjectDate_BUH
+                                      ON ObjectDate_BUH.ObjectId = tmpResult.GoodsId
+                                     AND ObjectDate_BUH.DescId = zc_ObjectDate_Goods_BUH()*/
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
@@ -852,8 +860,9 @@ BEGIN
            , Object_Goods.ObjectCode  		AS GoodsCode
            
            --, CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END :: TVarChar AS GoodsName
-           , CASE WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
-                  WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
+           , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND inOperDate >= ObjectDate_BUH.ValueData THEN ObjectString_Goods_BUH.ValueData
+                  WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
+                  ELSE Object_Goods.ValueData
              END :: TVarChar AS GoodsName
 
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
@@ -939,9 +948,12 @@ BEGIN
                               AND 1 = 0 -- !!!отключил!!!
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsId
-                        LEFT JOIN ObjectString AS ObjectString_Goods_BUH
-                                               ON ObjectString_Goods_BUH.ObjectId = tmpResult.GoodsId
-                                              AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+             LEFT JOIN ObjectString AS ObjectString_Goods_BUH
+                                    ON ObjectString_Goods_BUH.ObjectId = tmpResult.GoodsId
+                                   AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+             LEFT JOIN ObjectDate AS ObjectDate_BUH
+                                  ON ObjectDate_BUH.ObjectId = tmpResult.GoodsId
+                                 AND ObjectDate_BUH.DescId = zc_ObjectDate_Goods_BUH()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull

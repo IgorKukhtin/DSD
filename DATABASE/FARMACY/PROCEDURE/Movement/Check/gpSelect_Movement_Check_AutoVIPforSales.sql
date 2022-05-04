@@ -14,6 +14,11 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
      vbUserId:= lpGetUserBySession (inSession);
      
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpUnit'))
+    THEN
+      DROP TABLE tmpUnit;
+    END IF;
+    
     CREATE TEMP TABLE tmpUnit ON COMMIT DROP AS
     SELECT 13711869  AS UnitId;
     

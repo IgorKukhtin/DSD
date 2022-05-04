@@ -17,7 +17,7 @@ BEGIN
 
   vbTotal := 0;
 
-  IF  date_trunc('month', inOperDate) = '01.04.2022'
+  IF  date_trunc('month', inOperDate) >= '01.04.2022' and date_trunc('month', inOperDate) <= '01.05.2022'
   THEN
     vbTotal := inBonusAmountTab;
   ELSE

@@ -930,7 +930,7 @@ BEGIN
          AND _tmpRemains_all_Supplement.Need < ceil(COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) + _tmpRemains_all_Supplement.AmountRemains)
          AND _tmpRemains_all_Supplement.UnitId IN (SELECT _tmpUnit_SUN_Supplement.UnitId FROM _tmpUnit_SUN_Supplement WHERE _tmpUnit_SUN_Supplement.isSUN_Supplement_in = TRUE);
 
-        UPDATE _tmpRemains_all_Supplement SET Need = Need - T1.Amount
+        UPDATE _tmpRemains_all_Supplement SET Need = CASE WHEN Need - T1.Amount < 0 THEN 0 ELSE Need - T1.Amount END
         FROM (WITH tmpNeedSum AS (SELECT _tmpRemains_all_Supplement.GoodsId
                                        , SUM(_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains)  AS NeedSum
                                   FROM _tmpRemains_all_Supplement
@@ -958,7 +958,8 @@ BEGIN
                 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= (_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains) - ceil(tmpNeedSum.NeedSum / tmpNeedCount.CountNeed)
               ) AS T1
         WHERE _tmpRemains_all_Supplement.GoodsId = T1.GoodsId
-          AND _tmpRemains_all_Supplement.UnitId = T1.UnitId;
+          AND _tmpRemains_all_Supplement.UnitId = T1.UnitId
+          AND _tmpRemains_all_Supplement.Need > 0;
 
      END IF;
               
@@ -1281,4 +1282,4 @@ $BODY$
 
 -- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('16.11.2021')::TDateTime ,  inSession := '3');
 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '5 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3);

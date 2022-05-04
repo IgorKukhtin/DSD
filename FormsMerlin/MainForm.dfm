@@ -265,8 +265,8 @@ inherited MainForm: TMainForm
       Category = #1048#1089#1090#1086#1088#1080#1080
       MoveParams = <>
       Caption = #1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099
-      FormName = 'TServiceItemForm'
-      FormNameParam.Value = 'TServiceItemForm'
+      FormName = 'TServiceItemLastForm'
+      FormNameParam.Value = 'TServiceItemLastForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>

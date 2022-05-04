@@ -100,9 +100,32 @@ type
     // Чеков возвраты
     FReceiptsReturn : Integer;
 
+    // Oбщие настройки
+    FSupMail : String;
+    FLogDays : Integer;
+    FToken : String;
+    FAutoUpdate : Boolean;
+    FAutoUpdateTime : String;
+    FExtAccess : Boolean;
+    FPackDays : Integer;
+    FPF_CharCount : Integer;
+    FPF_CharWidth : Integer;
+    FPF_AsText : Boolean;
+    FPF_AsImage : Boolean;
+    FPF_AsPdf : Boolean;
+    FPF_Del_Custom : Boolean;
+    FPF_is_Custom : Boolean;
+    FUsr_UiAuth : Boolean;
+    FUsr_ChUser : Boolean;
+    FUsr_Login : String;
+    FUsr_Pass : String;
+    FUsr_ConfPass : String;
+
 
   protected
     function PostData(var jsonFiscal : TJSONObject; AType : Integer = 1) : boolean;
+    function GetSettings : boolean;
+    function PostSettings : boolean;
     procedure SetPF_Error(Value : String);
   public
     constructor Create; virtual;
@@ -172,6 +195,10 @@ type
     // Последний Z отчет
     function GetLastZReport : String;
 
+    // Установить Количество символов в строке для печатных форм
+    function SetCharCount(const ACharCount : Integer) : boolean;
+
+
     // Пакетный режим
     property BatchMode : boolean read FBatchMode;
     // Текст ошибки
@@ -189,7 +216,7 @@ type
 implementation
 
 uses RegularExpressions, System.Generics.Collections, System.NetEncoding,
-     DBClient, LocalWorkUnit, CommonData, IdGlobal, IdCoderMIME;
+     DBClient, IdGlobal, IdCoderMIME;
 
 type
 
@@ -294,7 +321,6 @@ begin
 
   jsonData := TJSONObject.Create;
   try
-    jsonData := TJSONObject.Create;
     jsonData.AddPair('ver', TJSONNumber.Create(FVer));
     jsonData.AddPair('token', TJSONString.Create(FAccess_Token));
     jsonData.AddPair('source', TJSONString.Create('ERP1'));
@@ -475,6 +501,134 @@ begin
          SetPF_Error(jValue.FindValue('errortxt').Value)
       else SetPF_Error(jValue.ToString);
     end else SetPF_Error(FRESTResponse.StatusText);
+  end;
+end;
+
+function TVchasnoKasaAPI.GetSettings : boolean;
+var
+  jValue : TJSONValue;
+begin
+  Result := False;
+  FPF_Error := '';
+
+  FRESTClient.BaseURL := FURL;
+  FRESTClient.ContentType := 'application/json';
+
+  FRESTRequest.ClearBody;
+  FRESTRequest.Params.Clear;
+  FRESTRequest.Method := TRESTRequestMethod.rmGET;
+  FRESTRequest.Resource := 'vchasno-kasa/api/v1/settings';
+
+  try
+    FRESTRequest.Execute;
+  except on E: Exception do
+         Begin
+           SetPF_Error('Ошибка обращения к серверу "Вчасно-касса":'#13#10 + E.Message);
+           Exit;
+         End;
+  end;
+
+  if FRESTResponse.StatusCode = 200 then
+  begin
+    jValue := FRESTResponse.JSONValue ;
+
+    if (jValue.FindValue('supmail') <> Nil) then FSupMail := jValue.FindValue('supmail').Value;
+    if (jValue.FindValue('logdays') <> Nil) then
+      if not TryStrToInt(jValue.FindValue('logdays').Value, FLogDays) then FLogDays := 7;
+    if (jValue.FindValue('token') <> Nil) then FToken := jValue.FindValue('token').Value;
+    if (jValue.FindValue('logdays') <> Nil) then
+      if not TryStrToBool(jValue.FindValue('logdays').Value, FAutoUpdate) then FAutoUpdate := False;
+    if (jValue.FindValue('autoupdatetime') <> Nil) then FAutoUpdateTime := jValue.FindValue('autoupdatetime').Value;
+    if (jValue.FindValue('extAccess') <> Nil) then
+      if not TryStrToBool(jValue.FindValue('extAccess').Value, FExtAccess) then FExtAccess := True;
+    if (jValue.FindValue('packdays') <> Nil) then
+      if not TryStrToInt(jValue.FindValue('packdays').Value, FPackDays) then FPackDays := 0;
+    if (jValue.FindValue('pf_charcount') <> Nil) then
+      if not TryStrToInt(jValue.FindValue('pf_charcount').Value, FPF_CharCount) then FPF_CharCount := 48;
+    if (jValue.FindValue('pf_charwidth') <> Nil) then
+      if not TryStrToInt(jValue.FindValue('pf_charwidth').Value, FPF_CharWidth) then FPF_CharWidth := 12;
+
+    if (jValue.FindValue('pf_astext') <> Nil) then
+      if not TryStrToBool(jValue.FindValue('pf_astext').Value, FPF_AsText) then FPF_AsText := False;
+    if (jValue.FindValue('pf_asimage') <> Nil) then
+      if not TryStrToBool(jValue.FindValue('pf_asimage').Value, FPF_AsImage) then FPF_AsImage := False;
+    if (jValue.FindValue('pf_aspdf') <> Nil) then
+      if not TryStrToBool(jValue.FindValue('pf_aspdf').Value, FPF_AsPdf) then FPF_AsPdf := False;
+    if (jValue.FindValue('pf_del_custom') <> Nil) then
+      if not TryStrToBool(jValue.FindValue('pf_del_custom').Value, FPF_Del_Custom) then FPF_Del_Custom := False;
+    if (jValue.FindValue('pf_is_custom') <> Nil) then
+      if not TryStrToBool(jValue.FindValue('pf_is_custom').Value, FPF_is_Custom) then FPF_is_Custom := False;
+    if (jValue.FindValue('usr_uiauth') <> Nil) then
+      if not TryStrToBool(jValue.FindValue('usr_uiauth').Value, FUsr_UiAuth) then FUsr_UiAuth := False;
+    if (jValue.FindValue('usr_chuser') <> Nil) then
+      if not TryStrToBool(jValue.FindValue('usr_chuser').Value, FUsr_ChUser) then FUsr_ChUser := False;
+
+    if (jValue.FindValue('usr_login') <> Nil) then FUsr_Login := jValue.FindValue('usr_login').Value;
+    if (jValue.FindValue('usr_pass') <> Nil) then FUsr_Pass := jValue.FindValue('usr_pass').Value;
+    if (jValue.FindValue('usr_confpass') <> Nil) then FUsr_ConfPass := jValue.FindValue('usr_confpass').Value;
+
+    Result := True;
+  end;
+end;
+
+// Сохранить Количество символов в строке для печатных форм
+function TVchasnoKasaAPI.PostSettings : boolean;
+var
+  jsonData : TJSONObject;
+  jValue : TJSONValue;
+begin
+  Result := False;
+  FPF_Error := '';
+
+  FRESTClient.BaseURL := FURL;
+  FRESTClient.ContentType := 'application/json';
+
+  FRESTRequest.ClearBody;
+  FRESTRequest.Params.Clear;
+  FRESTRequest.Method := TRESTRequestMethod.rmPOST;
+  FRESTRequest.Resource := 'vchasno-kasa/api/v1/settings';
+
+  jsonData := TJSONObject.Create;
+  try
+
+    jsonData.AddPair('supmail', TJSONString.Create(FSupMail));
+    jsonData.AddPair('extaccess', TJSONBool.Create(FExtAccess));
+    jsonData.AddPair('token', TJSONString.Create(FToken));
+    jsonData.AddPair('logdays', TJSONNumber.Create(FLogDays));
+    jsonData.AddPair('packdays', TJSONNumber.Create(FPackDays));
+    jsonData.AddPair('pf_del_custom', TJSONBool.Create(False));
+    jsonData.AddPair('pf_custom', TJSONString.Create(''));
+    jsonData.AddPair('pf_charcount', TJSONNumber.Create(FPF_CharCount));
+    jsonData.AddPair('pf_charwidth', TJSONNumber.Create(FPF_CharWidth));
+    jsonData.AddPair('pf_astext', TJSONBool.Create(FPF_AsText));
+    jsonData.AddPair('pf_asimage', TJSONBool.Create(FPF_AsImage));
+    jsonData.AddPair('pf_aspdf', TJSONBool.Create(FPF_AsPdf));
+
+    FRESTRequest.Body.Add(jsonData.ToString, TRESTContentType.ctAPPLICATION_JSON);
+  finally
+    jsonData.Destroy;
+  end;
+
+  try
+    FRESTRequest.Execute;
+  except on E: Exception do
+         Begin
+           SetPF_Error('Ошибка обращения к серверу "Вчасно-касса":'#13#10 + E.Message);
+           Exit;
+         End;
+  end;
+
+  if FRESTResponse.StatusCode = 200 then
+  begin
+    jValue := FRESTResponse.JSONValue ;
+
+    if (jValue.FindValue('errortxt') <> Nil) and (jValue.FindValue('errortxt').Value <> '') then
+    begin
+       SetPF_Error(jValue.FindValue('errortxt').Value);
+       Exit;
+    end;
+
+    Result := True;
   end;
 end;
 
@@ -765,6 +919,7 @@ begin
 
   if FComment_Fown <> '' then  FComment_Fown := FComment_Fown + '\n';
   FComment_Fown := FComment_Fown + Trim(AText);
+  Result := True;
 end;
 
   // Добавить оплату
@@ -1018,6 +1173,23 @@ begin
   begin
     if XReport then Result := StringReplace(FPF_Text, 'X-ЗВІТ', 'Z-ЗВІТ', [rfIgnoreCase]);
   end else Result := FPF_Text;
+end;
+
+// Установить Количество символов в строке для печатных форм
+function TVchasnoKasaAPI.SetCharCount(const ACharCount : Integer) : boolean;
+begin
+  Result := False;
+  if GetSettings then
+  try
+    if FPF_CharCount <> ACharCount then
+    begin
+      FPF_CharCount := ACharCount;
+      if not PostSettings then Exit;
+    end;
+    Result := True;
+  finally
+
+  end;
 end;
 
 end.

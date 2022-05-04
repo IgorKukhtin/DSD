@@ -41,7 +41,7 @@ BEGIN
            
            , 0::TFloat                                         AS Amount
            , Object_Unit.Id                                    AS UnitId
-           , Object_Unit.ValueData            ::TVarChar       AS UnitName
+           , TRIM (COALESCE (ObjectString_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitName
            , Object_Parent.Id                                  AS ParentId_InfoMoney
            , Object_Parent.ValueData          ::TVarChar       AS ParentName_InfoMoney
            , Object_InfoMoney.Id                               AS InfoMoneyId
@@ -53,6 +53,9 @@ BEGIN
            LEFT JOIN Object AS Object_Unit
                             ON Object_Unit.DescId = zc_Object_Unit()
                            AND Object_Unit.Id = inUnitId
+           LEFT JOIN ObjectString AS ObjectString_GroupNameFull
+                                  ON ObjectString_GroupNameFull.ObjectId = Object_Unit.Id
+                                 AND ObjectString_GroupNameFull.DescId = zc_ObjectString_Unit_GroupNameFull()
            LEFT JOIN Object AS Object_InfoMoney
                             ON Object_InfoMoney.DescId = zc_Object_InfoMoney()
                            AND Object_InfoMoney.Id = inInfoMoneyId    
@@ -71,7 +74,7 @@ BEGIN
            , CASE WHEN inMovementId = 0 THEN DATE_TRUNC ('MONTH', inOperDate - INTERVAL '1 MONTH') ELSE MIDate_ServiceDate.ValueData END ::TDateTime AS ServiceDate
            , MovementItem.Amount  ::TFloat      AS Amount
            , CASE WHEN TRIM (Object_Unit.ValueData) <> '' THEN Object_Unit.Id ELSE 0 END :: Integer AS UnitId
-           , Object_Unit.ValueData              AS UnitName
+           , TRIM (COALESCE (ObjectString_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitName
            , Object_Parent.Id                   AS ParentId_InfoMoney
            , Object_Parent.ValueData            AS ParentName_InfoMoney
            , Object_InfoMoney.Id                AS InfoMoneyId
@@ -86,6 +89,9 @@ BEGIN
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.ObjectId
+            LEFT JOIN ObjectString AS ObjectString_GroupNameFull
+                                   ON ObjectString_GroupNameFull.ObjectId = Object_Unit.Id
+                                  AND ObjectString_GroupNameFull.DescId = zc_ObjectString_Unit_GroupNameFull()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id

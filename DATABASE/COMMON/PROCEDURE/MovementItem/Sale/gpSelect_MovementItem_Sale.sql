@@ -435,8 +435,9 @@ BEGIN
                   , Object_Goods.ObjectCode                                AS GoodsCode
                   
                   --, CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END AS GoodsName
-                  , CASE WHEN COALESCE (tmpMI_Tax.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
-                         WHEN ObjectString_Goods_BUH.ValueData <> '' AND COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE) = FALSE THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
+                  , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND inOperDate >= ObjectDate_BUH.ValueData AND COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE) = FALSE THEN ObjectString_Goods_BUH.ValueData
+                         WHEN COALESCE (tmpMI_Tax.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
+                         ELSE Object_Goods.ValueData
                     END AS GoodsName
                   
                   , COALESCE (tmpGoodsByGoodsKind.GoodsKindId, 0)          AS GoodsKindId
@@ -459,6 +460,9 @@ BEGIN
                         LEFT JOIN ObjectString AS ObjectString_Goods_BUH
                                                ON ObjectString_Goods_BUH.ObjectId = Object_Goods.Id
                                               AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+                        LEFT JOIN ObjectDate AS ObjectDate_BUH
+                                             ON ObjectDate_BUH.ObjectId = Object_Goods.Id
+                                            AND ObjectDate_BUH.DescId = zc_ObjectDate_Goods_BUH()
                         ---если есть галка - показывать Name вместо ObjectString_Goods_BUH
                         LEFT JOIN ObjectBoolean AS ObjectBoolean_NameOrig
                                                 ON ObjectBoolean_NameOrig.ObjectId = Object_Goods.Id
@@ -523,8 +527,9 @@ BEGIN
            , Object_Goods.ObjectCode                AS GoodsCode
            
            --, CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END AS GoodsName
-           , CASE WHEN COALESCE (tmpMI_Tax.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
-                  WHEN ObjectString_Goods_BUH.ValueData <> '' AND COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE) = FALSE THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
+           , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND inOperDate >= ObjectDate_BUH.ValueData AND COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE) = FALSE THEN ObjectString_Goods_BUH.ValueData 
+                  WHEN COALESCE (tmpMI_Tax.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
+                  ELSE Object_Goods.ValueData
              END AS GoodsName
            
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
@@ -625,7 +630,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_BUH
                                    ON ObjectString_Goods_BUH.ObjectId = tmpMI_Goods.GoodsId
                                   AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
-
+            LEFT JOIN ObjectDate AS ObjectDate_BUH
+                                 ON ObjectDate_BUH.ObjectId = tmpMI_Goods.GoodsId
+                                AND ObjectDate_BUH.DescId = zc_ObjectDate_Goods_BUH()
             ---если есть галка - показывать Name вместо ObjectString_Goods_BUH
             LEFT JOIN ObjectBoolean AS ObjectBoolean_NameOrig
                                     ON ObjectBoolean_NameOrig.ObjectId = tmpMI_Goods.GoodsId
@@ -880,8 +887,9 @@ BEGIN
                               , Object_Goods.ObjectCode                AS GoodsCode
                               
                               --, CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END AS GoodsName
-                              , CASE WHEN COALESCE (tmpMI_Tax.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
-                                     WHEN ObjectString_Goods_BUH.ValueData <> '' AND COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE) = FALSE THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData
+                              , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND inOperDate >= ObjectDate_BUH.ValueData AND COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE) = FALSE THEN ObjectString_Goods_BUH.ValueData
+                                     WHEN COALESCE (tmpMI_Tax.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
+                                     ELSE Object_Goods.ValueData
                                 END AS GoodsName
                               
                               , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
@@ -984,6 +992,9 @@ BEGIN
                                LEFT JOIN ObjectString AS ObjectString_Goods_BUH
                                                       ON ObjectString_Goods_BUH.ObjectId = tmpMI_Goods.GoodsId
                                                      AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+                               LEFT JOIN ObjectDate AS ObjectDate_BUH
+                                                    ON ObjectDate_BUH.ObjectId = tmpMI_Goods.GoodsId
+                                                   AND ObjectDate_BUH.DescId = zc_ObjectDate_Goods_BUH()
                                ---если есть галка - показывать Name вместо ObjectString_Goods_BUH
                                LEFT JOIN ObjectBoolean AS ObjectBoolean_NameOrig
                                                        ON ObjectBoolean_NameOrig.ObjectId = tmpMI_Goods.GoodsId

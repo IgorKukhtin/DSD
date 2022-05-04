@@ -83,6 +83,7 @@ begin
     FLocalPrinter := TPrinterFactory.GetPrinter(iniPrinterType);
   except on E: Exception do ShowMessage(E.Message);
   end;
+  if Assigned(FLocalPrinter) and (FLocalPrinter.LengNoFiscalText > 0) then  FPrinter.SetCharCount(FLocalPrinter.LengNoFiscalText);
 end;
 
 destructor TCashVchasnoKasa.Destroy;

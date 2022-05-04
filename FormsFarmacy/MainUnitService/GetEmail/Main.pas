@@ -1136,6 +1136,7 @@ begin
 
            Next;
            //
+           GaugeLoadXLS.Progress:=GaugeLoadXLS.Progress + 1;
            Application.ProcessMessages;
         end;
      end;
@@ -1237,6 +1238,7 @@ begin
 
            Next;
            //
+           GaugeLoadXLS.Progress:=GaugeLoadXLS.Progress + 1;
            Application.ProcessMessages;
         end;
      end;

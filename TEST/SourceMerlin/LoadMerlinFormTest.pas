@@ -210,6 +210,9 @@ end;
 procedure TLoadFormTest.LoadObjectHistoryFormTest;
 begin
   //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemLastForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceItemLastForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TServiceItemForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemEditForm'));
@@ -243,6 +246,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoney_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoney_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoney_ParentForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoney_ParentForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyTreeForm');

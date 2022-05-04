@@ -53,6 +53,11 @@ BEGIN
     END IF;
         
     -- ѕроведенные чеки
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpMovement'))
+    THEN
+      DROP TABLE tmpMovement;
+    END IF;
+
     CREATE TEMP TABLE tmpMovement ON COMMIT DROP AS
      (WITH tmpMovement AS (SELECT Movement.*
                                 , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
@@ -159,6 +164,11 @@ BEGIN
 
 
     -- таблица
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpCalculation'))
+    THEN
+      DROP TABLE tmpCalculation;
+    END IF;
+    
     CREATE TEMP TABLE tmpCalculation ON COMMIT DROP AS
        (SELECT MovementItem.ObjectId                                                                                        AS UserId
              , DATE_TRUNC ('MONTH', vbOperDate) + (((MovementItemChild.Amount - 1)::Integer)::tvarchar||' DAY')::INTERVAL   AS OperDate
@@ -254,6 +264,11 @@ BEGIN
     
     
     -- таблица по новой почте с 01.01.2022
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpCalculationNP'))
+    THEN
+      DROP TABLE tmpCalculationNP;
+    END IF;
+
     CREATE TEMP TABLE tmpCalculationNP (UserID Integer, Summa TFloat)  ON COMMIT DROP;
 
     IF DATE_TRUNC ('MONTH', vbOperDate) >= '01.01.2022'
@@ -433,5 +448,4 @@ $BODY$
  21.08.19                                                        *
 */
 
--- 
-select * from gpInsertUpdate_Movement_WagesVIP_CalculationAllDay(inMovementId := 26769516,  inSession := '3');
+-- select * from gpInsertUpdate_Movement_WagesVIP_CalculationAllDay(inMovementId := 26769516,  inSession := '3');
