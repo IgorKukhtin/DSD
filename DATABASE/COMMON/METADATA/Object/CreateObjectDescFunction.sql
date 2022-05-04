@@ -1531,6 +1531,11 @@ CREATE OR REPLACE FUNCTION zc_Object_ExchangeRates() RETURNS Integer AS $BODY$BE
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ExchangeRates', 'Курсы валют' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ExchangeRates');
 
+CREATE OR REPLACE FUNCTION  zc_Object_Competitor() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Competitor'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_Competitor', 'Конкуренты' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Competitor');
+
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1551,6 +1556,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 04.05.22                                                                                        * zc_Object_Competitor  
  14.04.22         * zc_Object_UserByGroup
                     zc_Object_UserByGroupList
  24.02.22                                                                                        * zc_Object_ExchangeRates  
