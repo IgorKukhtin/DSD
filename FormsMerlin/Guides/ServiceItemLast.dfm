@@ -43,7 +43,6 @@ object ServiceItemLastForm: TServiceItemLastForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.Footer = True
@@ -169,7 +168,7 @@ object ServiceItemLastForm: TServiceItemLastForm
       Caption = #1054#1090#1076#1077#1083':'
     end
     object edUnit: TcxButtonEdit
-      Left = 71
+      Left = 66
       Top = 9
       Properties.Buttons = <
         item
@@ -178,15 +177,15 @@ object ServiceItemLastForm: TServiceItemLastForm
         end>
       Properties.ReadOnly = True
       TabOrder = 1
-      Width = 234
+      Width = 350
     end
     object cxLabel3: TcxLabel
-      Left = 639
+      Left = 711
       Top = 9
       Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1089':'
     end
     object edOperDate: TcxDateEdit
-      Left = 711
+      Left = 783
       Top = 9
       EditValue = 44713d
       Properties.SaveTime = False
@@ -196,12 +195,12 @@ object ServiceItemLastForm: TServiceItemLastForm
     end
   end
   object cxLabel2: TcxLabel
-    Left = 326
+    Left = 425
     Top = 35
     Caption = #1057#1090#1072#1090#1100#1103':'
   end
   object edInfoMoney: TcxButtonEdit
-    Left = 375
+    Left = 471
     Top = 35
     Properties.Buttons = <
       item
@@ -916,8 +915,8 @@ object ServiceItemLastForm: TServiceItemLastForm
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
-    Left = 464
-    Top = 32
+    Left = 520
+    Top = 40
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_ObjectHistory_ServiceItemLast'
