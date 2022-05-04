@@ -210,6 +210,9 @@ end;
 procedure TLoadFormTest.LoadObjectHistoryFormTest;
 begin
   //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemLastForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceItemLastForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TServiceItemForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemEditForm'));
