@@ -869,8 +869,9 @@ order by 4*/
                                   THEN tmpObject_GoodsPropertyValueGroup_basis.Name
                              ELSE CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> '' THEN ObjectString_Goods_RUS.ValueData 
                                   ELSE  /*CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END*/
-                                       CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate_begin >= ObjectDate_BUH.ValueData THEN ObjectString_Goods_BUH.ValueData
+                                       CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate_begin >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
                                             WHEN tmpMI.isName_new = TRUE THEN Object_Goods.ValueData
+                                            WHEN ObjectString_Goods_BUH.ValueData <>'' THEN ObjectString_Goods_BUH.ValueData
                                             ELSE Object_Goods.ValueData
                                        END
                                   END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN ''
@@ -893,8 +894,9 @@ order by 4*/
                                   THEN tmpObject_GoodsPropertyValueGroup_basis.Name
                              ELSE CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> '' THEN ObjectString_Goods_RUS.ValueData 
                                   ELSE /*CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END*/
-                                       CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate_begin >= ObjectDate_BUH.ValueData THEN ObjectString_Goods_BUH.ValueData
+                                       CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate_begin >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
                                             WHEN tmpMI.isName_new = TRUE THEN Object_Goods.ValueData
+                                            WHEN ObjectString_Goods_BUH.ValueData <>'' THEN ObjectString_Goods_BUH.ValueData
                                             ELSE Object_Goods.ValueData
                                        END
                                   END
