@@ -1,9 +1,9 @@
 object ServiceItemLastForm: TServiceItemLastForm
   Left = 0
   Top = 0
-  Caption = #1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099' - '#1055#1088#1086#1089#1084#1086#1090#1088' / '#1048#1079#1084#1077#1085#1077#1085#1080#1077
+  Caption = #1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099' - '#1055#1088#1086#1089#1084#1086#1090#1088' / '#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1055#1086'c'#1083#1077#1076#1085#1080#1093' '#1076#1072#1085#1085#1099#1093
   ClientHeight = 398
-  ClientWidth = 695
+  ClientWidth = 876
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,12 +19,13 @@ object ServiceItemLastForm: TServiceItemLastForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 63
-    Width = 695
+    Width = 876
     Height = 335
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 695
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -53,12 +54,14 @@ object ServiceItemLastForm: TServiceItemLastForm
         Caption = #1044#1072#1090#1072' '#1089
         DataBinding.FieldName = 'StartDate'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 58
       end
       object EndDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1086
         DataBinding.FieldName = 'EndDate'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 60
       end
       object Value: TcxGridDBColumn
@@ -97,6 +100,7 @@ object ServiceItemLastForm: TServiceItemLastForm
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 158
       end
       object CommentInfoMoneyName: TcxGridDBColumn
@@ -104,11 +108,13 @@ object ServiceItemLastForm: TServiceItemLastForm
         DataBinding.FieldName = 'CommentInfoMoneyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 174
       end
       object isErased: TcxGridDBColumn
         DataBinding.FieldName = 'isErased'
         Visible = False
+        Options.Editing = False
         VisibleForCustomization = False
         Width = 20
       end
@@ -125,6 +131,7 @@ object ServiceItemLastForm: TServiceItemLastForm
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 89
       end
       object UnitGroupNameFull: TcxGridDBColumn
@@ -150,11 +157,12 @@ object ServiceItemLastForm: TServiceItemLastForm
   object Panel: TPanel
     Left = 0
     Top = 26
-    Width = 695
+    Width = 876
     Height = 37
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 695
     object cxLabel1: TcxLabel
       Left = 25
       Top = 9
@@ -171,6 +179,20 @@ object ServiceItemLastForm: TServiceItemLastForm
       Properties.ReadOnly = True
       TabOrder = 1
       Width = 234
+    end
+    object cxLabel3: TcxLabel
+      Left = 639
+      Top = 9
+      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1089':'
+    end
+    object edOperDate: TcxDateEdit
+      Left = 711
+      Top = 9
+      EditValue = 44713d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 3
+      Width = 84
     end
   end
   object cxLabel2: TcxLabel
@@ -657,8 +679,17 @@ object ServiceItemLastForm: TServiceItemLastForm
         end>
       isShowModal = False
     end
-    object Action1: TAction
-      Caption = 'Action1'
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
     end
   end
   object spSelect: TdsdStoredProc
@@ -887,5 +918,104 @@ object ServiceItemLastForm: TServiceItemLastForm
       end>
     Left = 464
     Top = 32
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_ObjectHistory_ServiceItemLast'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'InfoMoneyId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCommentInfoMoneyId'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'CommentInfoMoneyId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42236d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStartDate'
+        Value = 42236d
+        Component = ClientDataSet
+        ComponentItem = 'StartDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEndDate'
+        Value = 42236d
+        Component = ClientDataSet
+        ComponentItem = 'EndDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inArea'
+        Value = 0.000000000000000000
+        Component = ClientDataSet
+        ComponentItem = 'Area'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Value = 0.000000000000000000
+        Component = ClientDataSet
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue'
+        Value = 0.000000000000000000
+        Component = ClientDataSet
+        ComponentItem = 'Value'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLast'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 707
+    Top = 150
   end
 end

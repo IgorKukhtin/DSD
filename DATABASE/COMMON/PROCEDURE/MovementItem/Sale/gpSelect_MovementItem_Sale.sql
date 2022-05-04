@@ -435,8 +435,9 @@ BEGIN
                   , Object_Goods.ObjectCode                                AS GoodsCode
                   
                   --, CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END AS GoodsName
-                  , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND inOperDate >= ObjectDate_BUH.ValueData AND COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE) = FALSE THEN ObjectString_Goods_BUH.ValueData
+                  , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND inOperDate >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
                          WHEN COALESCE (tmpMI_Tax.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
+                         WHEN ObjectString_Goods_BUH.ValueData <> '' AND COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE) = FALSE THEN ObjectString_Goods_BUH.ValueData
                          ELSE Object_Goods.ValueData
                     END AS GoodsName
                   
@@ -527,8 +528,9 @@ BEGIN
            , Object_Goods.ObjectCode                AS GoodsCode
            
            --, CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END AS GoodsName
-           , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND inOperDate >= ObjectDate_BUH.ValueData AND COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE) = FALSE THEN ObjectString_Goods_BUH.ValueData 
+           , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND inOperDate >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData 
                   WHEN COALESCE (tmpMI_Tax.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
+                  WHEN ObjectString_Goods_BUH.ValueData <> '' AND COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE) = FALSE THEN ObjectString_Goods_BUH.ValueData 
                   ELSE Object_Goods.ValueData
              END AS GoodsName
            
@@ -887,8 +889,9 @@ BEGIN
                               , Object_Goods.ObjectCode                AS GoodsCode
                               
                               --, CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END AS GoodsName
-                              , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND inOperDate >= ObjectDate_BUH.ValueData AND COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE) = FALSE THEN ObjectString_Goods_BUH.ValueData
+                              , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND inOperDate >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
                                      WHEN COALESCE (tmpMI_Tax.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
+                                     WHEN ObjectString_Goods_BUH.ValueData <> '' AND COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE) = FALSE THEN ObjectString_Goods_BUH.ValueData
                                      ELSE Object_Goods.ValueData
                                 END AS GoodsName
                               

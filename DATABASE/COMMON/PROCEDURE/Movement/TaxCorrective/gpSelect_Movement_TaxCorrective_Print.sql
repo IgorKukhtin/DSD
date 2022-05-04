@@ -363,8 +363,9 @@ BEGIN
     , tmpGoods AS (SELECT tmp.GoodsId                              AS GoodsId
                         , Object_Goods.ObjectCode                  AS GoodsCode
                         --, CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END :: TVarChar AS GoodsName
-                        , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate_begin >= ObjectDate_BUH.ValueData THEN ObjectString_Goods_BUH.ValueData
+                        , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate_begin >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
                                WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
+                               WHEN ObjectString_Goods_BUH.ValueData <> ''          THEN ObjectString_Goods_BUH.ValueData
                                ELSE Object_Goods.ValueData
                           END :: TVarChar AS GoodsName
                         , ObjectString_Goods_RUS.ValueData         AS GoodsName_RUS
@@ -2383,8 +2384,9 @@ BEGIN
             , CAST (tmpMovementTaxCorrectiveCount.CountTaxId AS Integer) AS CountTaxId
             , Object_Goods.ObjectCode         AS GoodsCode
             --, CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END :: TVarChar AS GoodsName
-            , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate_begin >= ObjectDate_BUH.ValueData THEN ObjectString_Goods_BUH.ValueData
+            , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate_begin >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
                    WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
+                   WHEN ObjectString_Goods_BUH.ValueData <> ''          THEN ObjectString_Goods_BUH.ValueData
                    ELSE Object_Goods.ValueData
               END :: TVarChar AS GoodsName
             , tmp.Price
