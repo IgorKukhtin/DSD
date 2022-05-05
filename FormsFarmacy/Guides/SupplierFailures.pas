@@ -55,6 +55,7 @@ type
     bbShowAll: TdxBarButton;
     actReport_OrderExternal_SupplierFailures: TdsdOpenForm;
     bbReport_OrderExternal_SupplierFailures: TdxBarButton;
+    DateStart: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , AreaId Integer, AreaCode Integer, AreaName TVarChar
              , isSupplierFailures   Boolean
+             , DateStart            TDateTime
              , DateUpdate           TDateTime
              , UserUpdate           TVarChar
              , OperDate             TDateTime
@@ -57,7 +58,19 @@ BEGIN
                                  , PriceList.OperDate
                             FROM tmpMovementAll AS PriceList
                             
-                            WHERE PriceList.Max_Date = PriceList.OperDate)
+                            WHERE PriceList.Max_Date = PriceList.OperDate),
+        tmpOrderExternal AS (SELECT Movement_OrderExternal_View.Id
+                                  , Movement_OrderExternal_View.OperDate
+                             FROM Movement_OrderExternal_View 
+     
+                             WHERE Movement_OrderExternal_View.OperDate = inOperDate
+                               AND COALESCE(Movement_OrderExternal_View.FromId, 0) = 0)/*,
+        tmpProtocolOE AS (SELECT tmpMovement.Id,
+                                 Min(MovementProtocol.OperDate) AS OperDate
+                          FROM tmpOrderExternal AS Movement
+                               INNER JOIN MovementProtocol ON Movement.Id = MovementProtocol.MovementId
+                          )*/
+                               
 
     SELECT MovementItem.Id                      AS Id 
          , MovementItem.ObjectId                AS GoodsJuridicalId 
@@ -82,6 +95,7 @@ BEGIN
 
          , COALESCE(MIBoolean_SupplierFailures.ValueData, False) AS isSupplierFailures
          
+         , MIDate_Start.ValueData               AS DateStart
          , MIDate_Update.ValueData              AS DateUpdate
          , Object_Update.ValueData              AS UserUpdate
 
@@ -100,6 +114,10 @@ BEGIN
                                       ON MIBoolean_SupplierFailures.MovementItemId = MovementItem.Id
                                      AND MIBoolean_SupplierFailures.DescId = zc_MIBoolean_SupplierFailures()
                                          
+        LEFT JOIN MovementItemDate AS MIDate_Start
+                                   ON MIDate_Start.MovementItemId =  MovementItem.Id
+                                  AND MIDate_Start.DescId = zc_MIDate_Start()
+
         LEFT JOIN MovementItemDate AS MIDate_Update
                                    ON MIDate_Update.MovementItemId =  MovementItem.Id
                                   AND MIDate_Update.DescId = zc_MIDate_Update()
@@ -135,19 +153,19 @@ BEGIN
 
          , False                                 AS isSupplierFailures
 
+         , inOperDate                            AS DateStart
+
          , NULL::TDateTime                       AS DateUpdate
          , NULL::TVarChar                        AS UserUpdate
          , NULL::TDateTime                       AS OperDate
          
-    FROM Movement_OrderExternal_View 
+    FROM tmpOrderExternal AS Movement_OrderExternal_View 
      
          INNER JOIN MovementItem ON MovementItem.MovementId =  Movement_OrderExternal_View.Id
 
          LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.ObjectId
          LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
          
-    WHERE Movement_OrderExternal_View.OperDate = inOperDate
-      AND COALESCE(Movement_OrderExternal_View.FromId, 0) = 0   
     GROUP BY Object_Goods_Main.ObjectCode
            , Object_Goods_Main.Name       
         ;

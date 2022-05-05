@@ -42,6 +42,7 @@ type
     procedure LoadContactPersonFormTest;
     procedure LoadClientsByBankFormTest;
     procedure LoadComputerAccessoriesFormTest;
+    procedure LoadCompetitorMarkupsFormTest;
     procedure LoadContractFormTest;
     procedure LoadCreditLimitDistributorFormTest;
     procedure LoadCurrencyFormTest;
@@ -579,6 +580,22 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TComputerAccessoriesRegisterJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TComputerAccessoriesRegisterJournalForm');
 end;
+
+procedure TLoadFormTest.LoadCompetitorMarkupsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCompetitorMarkupsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCompetitorMarkupsForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCompetitorMarkupsJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCompetitorMarkupsJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCompetitorForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCompetitorForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCompetitorEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCompetitorEditForm');
+end;
+
 
 procedure TLoadFormTest.LoadContractFormTest;
 begin

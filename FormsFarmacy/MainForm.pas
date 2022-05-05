@@ -941,6 +941,8 @@ type
     actReport_CheckUpdateNotMCS: TdsdOpenForm;
     N347: TMenuItem;
     N348: TMenuItem;
+    actCompetitorMarkups: TdsdOpenForm;
+    N349: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
