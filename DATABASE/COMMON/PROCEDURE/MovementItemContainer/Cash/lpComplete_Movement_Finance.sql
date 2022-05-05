@@ -307,6 +307,7 @@ end if;
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30400() -- Доходы + услуги предоставленные
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Доходы + Прочие доходы
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40600() -- Финансовая деятельность + Депозиты
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41300() -- Финансовая деятельность + Прочие доходы
                                                            THEN zc_Enum_ProfitLossDirection_70200() -- Дополнительная прибыль + Прочее
 
                                                       WHEN _tmpItem.MovementDescId = zc_Movement_BankAccount()
@@ -462,6 +463,9 @@ end if;
 
                                                         ELSE -1
                                                    END
+
+                                         WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41300() -- Финансовая деятельность + Прочие доходы
+                                              THEN zc_Enum_ProfitLoss_70202() -- Дополнительная прибыль + Прочее + Прочие доходы
 
                                          ELSE
                                     lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := CASE WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
