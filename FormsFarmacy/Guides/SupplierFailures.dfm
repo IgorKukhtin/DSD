@@ -58,7 +58,7 @@ inherited SupplierFailuresForm: TSupplierFailuresForm
             DataBinding.FieldName = 'DateStart'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 160
+            Width = 146
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072

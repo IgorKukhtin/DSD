@@ -64,12 +64,13 @@ BEGIN
                              FROM Movement_OrderExternal_View 
      
                              WHERE Movement_OrderExternal_View.OperDate = inOperDate
-                               AND COALESCE(Movement_OrderExternal_View.FromId, 0) = 0)/*,
-        tmpProtocolOE AS (SELECT tmpMovement.Id,
+                               AND COALESCE(Movement_OrderExternal_View.FromId, 0) = 0),
+        tmpProtocolOE AS (SELECT Movement.Id,
                                  Min(MovementProtocol.OperDate) AS OperDate
                           FROM tmpOrderExternal AS Movement
                                INNER JOIN MovementProtocol ON Movement.Id = MovementProtocol.MovementId
-                          )*/
+                          GROUP BY Movement.Id
+                          )
                                
 
     SELECT MovementItem.Id                      AS Id 
@@ -153,7 +154,7 @@ BEGIN
 
          , False                                 AS isSupplierFailures
 
-         , inOperDate                            AS DateStart
+         , COALESCE(MIN(tmpProtocolOE.OperDate), inOperdate)::TDateTime AS DateStart
 
          , NULL::TDateTime                       AS DateUpdate
          , NULL::TVarChar                        AS UserUpdate
@@ -165,6 +166,8 @@ BEGIN
 
          LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.ObjectId
          LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
+         
+         LEFT JOIN tmpProtocolOE ON tmpProtocolOE.Id = Movement_OrderExternal_View.Id
          
     GROUP BY Object_Goods_Main.ObjectCode
            , Object_Goods_Main.Name       

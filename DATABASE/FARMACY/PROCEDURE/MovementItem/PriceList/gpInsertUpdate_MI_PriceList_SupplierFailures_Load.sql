@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MI_PriceList_SupplierFailures_Load()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PriceList_SupplierFailures_Load(Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PriceList_SupplierFailures_Load(Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PriceList_SupplierFailures_Load(
     IN inMovementId     Integer   ,     -- Документ
@@ -17,6 +17,7 @@ $BODY$
    DECLARE vbJuridicalId Integer;
    DECLARE vbContractId  Integer;
    DECLARE vbAreaId      Integer;
+   DECLARE vbDateStart  TDateTime;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (inSession);
@@ -42,6 +43,12 @@ BEGIN
                             AND ObjectLinkUnitArea.DescId = zc_ObjectLink_Unit_Area()
    WHERE Movement.Id =inMovementId;
     
+   SELECT MIN(MovementProtocol.OperDate)
+   INTO vbDateStart
+   FROM MovementProtocol 
+   WHERE MovementProtocol.MovementId = inMovementId
+     AND MovementProtocol.ProtocolData ILIKE '%Статус" FieldValue = "Проведен%';   
+
    SELECT Object_Goods_Juridical.Id
    INTO vbGoodsId
    FROM Object_Goods_Juridical 
@@ -93,12 +100,13 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItem_PriceList_Child(ioId           := 0
                                                        , inMovementId   := vbPriceListId
                                                        , inGoodsId      := vbGoodsId
+                                                       , inDateStart    := vbDateStart
                                                        , inUserId       := vbUserId);
 
      -- !!!ВРЕМЕННО для ТЕСТА!!!
      IF inSession = zfCalc_UserAdmin()
      THEN
-       RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%> <%> <%>', vbGoodsId, vbUnitId, vbJuridicalId, vbContractId, vbPriceListId;
+       RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%> <%> <%> <%>', vbGoodsId, vbUnitId, vbJuridicalId, vbContractId, vbPriceListId, vbDateStart;
      END IF;
 
    ELSE
@@ -117,5 +125,4 @@ $BODY$
  03.03.22                                                       *
 */
 
--- 
-select * from gpInsertUpdate_MI_PriceList_SupplierFailures_Load(inMovementId := 27069713 , inGoodsCode := '413.0407' ,  inSession := '3');
+-- select * from gpInsertUpdate_MI_PriceList_SupplierFailures_Load(inMovementId := 27711415 , inGoodsCode := '7841' ,  inSession := '3');
