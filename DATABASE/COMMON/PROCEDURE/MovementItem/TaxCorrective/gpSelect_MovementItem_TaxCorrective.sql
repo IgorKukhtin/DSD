@@ -24,7 +24,8 @@ AS
 $BODY$
   DECLARE vbOperDate     TDateTime;
   DECLARE vbOperDate_rus TDateTime;
-   DECLARE vbDocumentTaxKindId     Integer; -- вид Корректировки
+  DECLARE vbOperDate_Tax TDateTime;
+  DECLARE vbDocumentTaxKindId     Integer; -- вид Корректировки
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_TaxCorrective());
@@ -43,24 +44,25 @@ BEGIN
      -- определили
      vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
      -- определили
-     vbOperDate_rus:= (SELECT CASE WHEN MovementString_InvNumberRegistered_Child.ValueData <> '' 
-                                        THEN COALESCE (MovementDate_DateRegistered_Child.ValueData, Movement_child.OperDate)
-                                   ELSE CURRENT_DATE
-                              END
-                       FROM MovementLinkMovement AS MLM
-                            INNER JOIN Movement AS Movement_child 
-                                                ON Movement_child.Id = MLM.MovementChildId
-                                               AND Movement_child.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
-    
-                            LEFT JOIN MovementDate AS MovementDate_DateRegistered_Child
-                                                   ON MovementDate_DateRegistered_Child.MovementId = Movement_child.Id
-                                                  AND MovementDate_DateRegistered_Child.DescId     = zc_MovementDate_DateRegistered()
-                            LEFT JOIN MovementString AS MovementString_InvNumberRegistered_Child
-                                                     ON MovementString_InvNumberRegistered_Child.MovementId = Movement_child.Id
-                                                    AND MovementString_InvNumberRegistered_Child.DescId     = zc_MovementString_InvNumberRegistered()
-                       WHERE MLM.MovementId = inMovementId 
-                         AND MLM.DescId     = zc_MovementLinkMovement_Child()
-                      );
+     SELECT CASE WHEN MovementString_InvNumberRegistered_Child.ValueData <> '' 
+                      THEN COALESCE (MovementDate_DateRegistered_Child.ValueData, Movement_child.OperDate)
+                 ELSE CURRENT_DATE
+            END
+          , Movement_child.OperDate AS OperDate_Tax
+    INTO vbOperDate_rus, vbOperDate_Tax
+     FROM MovementLinkMovement AS MLM
+          INNER JOIN Movement AS Movement_child 
+                              ON Movement_child.Id = MLM.MovementChildId
+                             AND Movement_child.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+ 
+          LEFT JOIN MovementDate AS MovementDate_DateRegistered_Child
+                                 ON MovementDate_DateRegistered_Child.MovementId = Movement_child.Id
+                                AND MovementDate_DateRegistered_Child.DescId     = zc_MovementDate_DateRegistered()
+          LEFT JOIN MovementString AS MovementString_InvNumberRegistered_Child
+                                   ON MovementString_InvNumberRegistered_Child.MovementId = Movement_child.Id
+                                  AND MovementString_InvNumberRegistered_Child.DescId     = zc_MovementString_InvNumberRegistered()
+     WHERE MLM.MovementId = inMovementId 
+       AND MLM.DescId     = zc_MovementLinkMovement_Child();
 
 
      -- Результат
@@ -186,7 +188,7 @@ BEGIN
            , CAST (ROW_NUMBER() OVER (ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                                                          THEN ObjectString_Goods_RUS.ValueData
                                                     ELSE --CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
-                                                         CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
+                                                         CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate_Tax >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
                                                               WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
                                                               WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData
                                                               ELSE Object_Goods.ValueData
@@ -215,7 +217,7 @@ BEGIN
            , CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                        THEN ObjectString_Goods_RUS.ValueData
                   ELSE --CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
-                       CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
+                       CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate_Tax >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
                             WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
                             WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData
                             ELSE Object_Goods.ValueData
@@ -367,7 +369,7 @@ BEGIN
            , CAST (ROW_NUMBER() OVER (ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                                                          THEN ObjectString_Goods_RUS.ValueData
                                                     ELSE --CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
-                                                         CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
+                                                         CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate_Tax >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
                                                               WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
                                                               WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData
                                                               ELSE Object_Goods.ValueData
@@ -391,7 +393,7 @@ BEGIN
            , CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
                        THEN ObjectString_Goods_RUS.ValueData
                   ELSE --CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
-                       CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
+                       CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate_Tax >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
                             WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
                             WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData
                             ELSE Object_Goods.ValueData

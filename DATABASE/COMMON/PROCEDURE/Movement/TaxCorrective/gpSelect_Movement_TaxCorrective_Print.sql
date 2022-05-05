@@ -30,6 +30,7 @@ $BODY$
     DECLARE vbIsNPP_calc Boolean;
     
     DECLARE vbMovementId_tax Integer;
+    DECLARE vbOperDate_Tax TDateTime;
 
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
@@ -110,9 +111,10 @@ BEGIN
           , MovementLinkObject_DocumentTaxKind.ObjectId  AS DocumentTaxKindId
           -- налоговая
           , MovementLinkMovement_Child.MovementChildId AS MovementId_tax
+          , Movement_Tax.OperDate AS OperDate_Tax
 
             INTO vbMovementId_TaxCorrective, vbStatusId_TaxCorrective, vbOperDate_begin, vbIsLongUKTZED, vbDocumentTaxKindId_tax, vbDocumentTaxKindId
-               , vbMovementId_tax
+               , vbMovementId_tax, vbOperDate_Tax
      FROM (SELECT CASE WHEN Movement.DescId = zc_Movement_TaxCorrective()
                             THEN inMovementId
                        ELSE MovementLinkMovement_Master.MovementChildId
@@ -143,6 +145,8 @@ BEGIN
           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
                                          ON MovementLinkMovement_Child.MovementId = tmpMovement.MovementId_TaxCorrective
                                         AND MovementLinkMovement_Child.DescId     = zc_MovementLinkMovement_Child()
+          LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement_Child.MovementChildId
+
           LEFT JOIN MovementLinkObject AS MLO_DocumentTaxKind_tax
                                        ON MLO_DocumentTaxKind_tax.MovementId = MovementLinkMovement_Child.MovementChildId
                                       AND MLO_DocumentTaxKind_tax.DescId     = zc_MovementLinkObject_DocumentTaxKind()
@@ -363,7 +367,7 @@ BEGIN
     , tmpGoods AS (SELECT tmp.GoodsId                              AS GoodsId
                         , Object_Goods.ObjectCode                  AS GoodsCode
                         --, CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END :: TVarChar AS GoodsName
-                        , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate_begin >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
+                        , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate_Tax >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
                                WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
                                WHEN ObjectString_Goods_BUH.ValueData <> ''          THEN ObjectString_Goods_BUH.ValueData
                                ELSE Object_Goods.ValueData
@@ -2384,7 +2388,7 @@ BEGIN
             , CAST (tmpMovementTaxCorrectiveCount.CountTaxId AS Integer) AS CountTaxId
             , Object_Goods.ObjectCode         AS GoodsCode
             --, CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END :: TVarChar AS GoodsName
-            , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate_begin >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
+            , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate_Tax >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
                    WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
                    WHEN ObjectString_Goods_BUH.ValueData <> ''          THEN ObjectString_Goods_BUH.ValueData
                    ELSE Object_Goods.ValueData

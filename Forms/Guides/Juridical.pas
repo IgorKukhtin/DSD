@@ -126,6 +126,11 @@ type
     macInsertUpdate_BasisCode_list: TMultiAction;
     macInsertUpdate_BasisCode: TMultiAction;
     bbInsertUpdate_BasisCode: TdxBarButton;
+    spUpdate_isIrna: TdsdStoredProc;
+    actUpdate_isIrna: TdsdExecStoredProc;
+    macUpdate_isIrna_list: TMultiAction;
+    macUpdate_isIrna: TMultiAction;
+    bbUpdate_isIrna: TdxBarButton;
   private
     { Private declarations }
   public

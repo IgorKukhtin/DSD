@@ -56,7 +56,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                Delivery1 Boolean, Delivery2 Boolean, Delivery3 Boolean, Delivery4 Boolean,
                Delivery5 Boolean, Delivery6 Boolean, Delivery7 Boolean,
 
-               GUID TVarChar, isGUID Boolean
+               GUID TVarChar, isGUID Boolean,
+               isIrna Boolean
               )
 AS
 $BODY$
@@ -231,6 +232,7 @@ BEGIN
 
          , ObjectString_GUID.ValueData AS GUID
          , CASE WHEN ObjectString_GUID.ValueData <> '' THEN TRUE ELSE FALSE END :: Boolean AS isGUID
+         , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
 
      FROM tmpIsErased
          INNER JOIN Object AS Object_Partner
@@ -442,6 +444,10 @@ BEGIN
                                  ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
                                 AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
 
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
+                                 ON ObjectBoolean_Guide_Irna.ObjectId = Object_Juridical.Id
+                                AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
+
    WHERE (inJuridicalId = 0 OR inJuridicalId = ObjectLink_Partner_Juridical.ChildObjectId)
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги
@@ -464,6 +470,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.05.22         *
  29.04.21         * Category
  19.06.17         * add PersonalMerch
  05.05.17         * add вх.парам-ры

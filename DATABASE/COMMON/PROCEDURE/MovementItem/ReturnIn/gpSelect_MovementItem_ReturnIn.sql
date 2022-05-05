@@ -772,21 +772,42 @@ BEGIN
                   FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect
                  )
 
+   , tmpMovementItem_child AS (SELECT MovementItem.*
+                               FROM MovementItem
+                               WHERE MovementItem.MovementId = inMovementId
+                                 AND MovementItem.DescId     = zc_MI_Child()
+                                 AND MovementItem.isErased   = FALSE
+                                 AND MovementItem.Amount     <> 0
+                               )
+
+   , tmpMIFloat_MovementId AS (SELECT MovementItemFloat.MovementItemId
+                                    , MovementItemFloat.ValueData :: Integer
+                                    , MovementItemFloat.DescId
+                               FROM MovementItemFloat
+                               WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMovementItem_child.Id FROM tmpMovementItem_child)
+                                 AND MovementItemFloat.DescId         = zc_MIFloat_MovementId()
+                               )
+    --мин дата продажи
+    , tmpOperDate_Sale AS (SELECT MovementItem.ParentId
+                                , MIN (Movement_Sale.OperDate) AS OperDate
+                           FROM tmpMovementItem_child AS MovementItem
+                                LEFT JOIN tmpMIFloat_MovementId AS MIFloat_MovementId
+                                                                ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MIFloat_MovementId.ValueData :: Integer
+                           GROUP BY MovementItem.ParentId 
+                           )
+
    , tmpMIChild AS (SELECT MovementItem.ParentId     AS MI_ParentId
                          , MIN (COALESCE (MIFloat_PromoMovement.ValueData, 0)) AS MovementId_promo_min
                          , MAX (COALESCE (MIFloat_PromoMovement.ValueData, 0)) AS MovementId_promo_max
                          , SUM (MovementItem.Amount) AS Amount
-                    FROM MovementItem
+                    FROM tmpMovementItem_child AS MovementItem
                          LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                      ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
                                                     AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
                          LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
                                                      ON MIFloat_PromoMovement.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
                                                     AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
-                    WHERE MovementItem.MovementId = inMovementId
-                      AND MovementItem.DescId     = zc_MI_Child()
-                      AND MovementItem.isErased   = FALSE
-                      AND MovementItem.Amount     <> 0
                     GROUP BY MovementItem.ParentId
                    )
 
@@ -836,8 +857,8 @@ BEGIN
                              FROM (SELECT DISTINCT tmpResult.MovementId_sale
                                    FROM tmpResult) AS tmpSale
                                   INNER JOIN MovementLinkMovement AS MLM_Master 
-                                                             ON MLM_Master.MovementId = tmpSale.MovementId_sale
-                                                            AND MLM_Master.DescId = zc_MovementLinkMovement_Master()
+                                                                  ON MLM_Master.MovementId = tmpSale.MovementId_sale
+                                                                 AND MLM_Master.DescId = zc_MovementLinkMovement_Master()
                                   INNER JOIN Movement ON Movement.Id = MLM_Master.MovementId
                                                      AND Movement.StatusId = zc_Enum_Status_Complete()
                              ) AS tmp
@@ -861,7 +882,7 @@ BEGIN
            , Object_Goods.ObjectCode  		AS GoodsCode
            
            --, CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END :: TVarChar AS GoodsName
-           , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND inOperDate >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
+           , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND COALESCE (tmpOperDate_Sale.OperDate, inOperDate) >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
                   WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
                   WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData
                   ELSE Object_Goods.ValueData
@@ -989,7 +1010,9 @@ BEGIN
                                         AND tmpStickerProperty.Ord         = 1
             LEFT JOIN tmpName_new ON tmpName_new.GoodsId = tmpResult.GoodsId
                                  AND COALESCE (tmpName_new.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId,0)
-                                 AND tmpName_new.MovementId_sale = tmpResult.MovementId_sale
+                                 AND tmpName_new.MovementId_sale = tmpResult.MovementId_sale 
+
+            LEFT JOIN tmpOperDate_Sale ON tmpOperDate_Sale.ParentId = tmpResult.MovementItemId
            ;
 
      END IF;

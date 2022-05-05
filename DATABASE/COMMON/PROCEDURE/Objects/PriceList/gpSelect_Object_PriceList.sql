@@ -7,7 +7,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PriceList(
     IN inShowAll        Boolean,   
     IN inSession        TVarChar         -- сессия пользователя
 )
-  RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, PriceWithVAT Boolean, VATPercent TFloat, CurrencyId Integer, CurrencyName TVarChar, isErased Boolean) AS
+  RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+               , PriceWithVAT Boolean, VATPercent TFloat
+               , CurrencyId Integer, CurrencyName TVarChar
+               , isIrna Boolean
+               , isErased Boolean) AS
 $BODY$
 BEGIN
 
@@ -25,12 +29,18 @@ BEGIN
            , ObjectFloat_VATPercent.ValueData     AS VATPercent
            , Object_Currency.Id                   AS CurrencyId
            , Object_Currency.ValueData            AS CurrencyName
+           , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
            , Object_PriceList.isErased            AS isErased
        FROM Object AS Object_PriceList
             JOIN tmpIsErased on tmpIsErased.isErased= Object_PriceList.isErased
             LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
                                     ON ObjectBoolean_PriceWithVAT.ObjectId = Object_PriceList.Id
                                    AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
+                                    ON ObjectBoolean_Guide_Irna.ObjectId = Object_PriceList.Id
+                                   AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
+
             LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
                                   ON ObjectFloat_VATPercent.ObjectId = Object_PriceList.Id
                                  AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
@@ -48,6 +58,7 @@ BEGIN
            , NULL :: TFloat AS VATPercent
            , 0 AS CurrencyId
            , '' :: TVarChar AS CurrencyName
+           , FALSE :: Boolean AS isIrna
            , FALSE  AS isErased
       ;
   
@@ -60,6 +71,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.05.22         *
  23.02.15         * add inShowAll
  16.11.14                                        * add Currency...
  07.09.13                                        * add PriceWithVAT and VATPercent

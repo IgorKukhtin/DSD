@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, INN TVarChar
              , MemberId Integer, ScalePSW TVarChar, ScalePSW_forPrint TFloat
              , isErased Boolean
              , isPastMain Boolean
+             , isIrna Boolean
              , Member_ReferId Integer
              , Member_ReferCode Integer
              , Member_ReferName TVarChar
@@ -176,6 +177,8 @@ BEGIN
                           ELSE FALSE
                      END
            END AS isPastMain
+           
+         , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
 
          , Object_Personal_View.Member_ReferId
          , Object_Personal_View.Member_ReferCode
@@ -256,7 +259,11 @@ BEGIN
 
           LEFT JOIN ObjectString AS ObjectString_INN
                                  ON ObjectString_INN.ObjectId = Object_Personal_View.MemberId
-                                AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
+                                AND ObjectString_INN.DescId = zc_ObjectString_Member_INN() 
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
+                                  ON ObjectBoolean_Guide_Irna.ObjectId = Object_Personal_View.PersonalId
+                                 AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
      WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL
          OR vbAccessKeyAll = TRUE
          OR Object_Personal_View.BranchId = vbObjectId_Constraint
@@ -334,7 +341,8 @@ BEGIN
          , CAST ('' as TVarChar)    AS ScalePSW
          , CAST (Null as TFloat)    AS ScalePSW_forPrint
          , FALSE                    AS isErased
-         , FALSE                    AS isPastMain
+         , FALSE                    AS isPastMain 
+         , FALSE         :: Boolean AS isIrna
 
          , 0                        AS Member_ReferId
          , 0                        AS Member_ReferCode
@@ -357,6 +365,7 @@ ALTER FUNCTION gpSelect_Object_Personal (TDateTime, TDateTime, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 04.05.22         *
  27.04.22         *
  22.10.17         *
  13.07.17         * add PersonalServiceListCardSecond
