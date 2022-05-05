@@ -284,7 +284,8 @@ BEGIN
                             )
    , tmpGoods1 AS (SELECT Object_Goods.Id           AS GoodsId
                         , Object_Goods.ObjectCode   AS GoodsCode
-                        , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND inOperDate >= ObjectDate_BUH.ValueData THEN ObjectString_Goods_BUH.ValueData
+                        , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND inOperDate >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
+                               WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData
                                ELSE Object_Goods.ValueData
                           END AS GoodsName
                         , COALESCE (tmpGoodsByGoodsKind.GoodsKindId, 0)          AS GoodsKindId
@@ -860,8 +861,9 @@ BEGIN
            , Object_Goods.ObjectCode  		AS GoodsCode
            
            --, CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END :: TVarChar AS GoodsName
-           , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND inOperDate >= ObjectDate_BUH.ValueData THEN ObjectString_Goods_BUH.ValueData
+           , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND inOperDate >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
                   WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
+                  WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData
                   ELSE Object_Goods.ValueData
              END :: TVarChar AS GoodsName
 

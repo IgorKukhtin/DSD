@@ -257,7 +257,7 @@ BEGIN
                                                     AND Object_MarginCategoryLink_unit.JuridicalId IS NULL
 
             LEFT JOIN MarginCondition ON MarginCondition.MarginCategoryId = COALESCE (Object_MarginCategoryLink_unit.MarginCategoryId, Object_MarginCategoryLink_all.MarginCategoryId)
-                                    AND (MIFloat_PriceSale.ValueData  * (100 + ObjectFloat_NDSKind_NDS.ValueData  )/100)::TFloat BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
+                                    AND (MIFloat_JuridicalPrice.ValueData  * (100 + ObjectFloat_NDSKind_NDS.ValueData  )/100)::TFloat BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
 
             LEFT JOIN MovementItemBoolean AS MIBoolean_ClippedReprice
                                           ON MIBoolean_ClippedReprice.MovementItemId = MovementItem.Id
@@ -295,4 +295,6 @@ ALTER FUNCTION gpSelect_MovementItem_Reprice (Integer, TVarChar) OWNER TO postgr
 
 -- реяр
 --
- select * from gpSelect_MovementItem_Reprice(inMovementId := 11512270 ,  inSession := '3') where GoodsCode = 23901;
+
+select * from gpSelect_MovementItem_Reprice(inMovementId := 27698376 ,  inSession := '3') where GoodsCode = 4065;
+ 

@@ -1224,9 +1224,15 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_SUN_NotSoldIn', 'Получать только товар "без продаж" для СУН-1' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_SUN_NotSoldIn');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Guide_Irna() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Guide_Irna'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Guide_Irna', 'Ирна' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Guide_Irna');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 04.05.22         * zc_ObjectBoolean_Guide_Irna
  09.04.22                                                                                                          * zc_ObjectBoolean_Unit_SUN_NotSoldIn
  15.03.22                                                                                                          * zc_ObjectBoolean_Contract_DefermentContract
  15.03.22                                                                                                          * zc_ObjectBoolean_Goods_SupplementSUN2

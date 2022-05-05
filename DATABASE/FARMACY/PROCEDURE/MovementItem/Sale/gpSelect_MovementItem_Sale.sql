@@ -160,7 +160,7 @@ BEGIN
                                              ON Price_Value.ObjectId = Object_PriceSite.Id
                                             AND Price_Value.DescId = zc_ObjectFloat_PriceSite_Value()
                                  WHERE Object_PriceSite.DescId = zc_Object_PriceSite()
-                                   AND vbRetailId = 4 
+                                   AND vbRetailId = 4 AND False
                                    AND (vbisNP = TRUE OR vbSPKindId = zc_Enum_SPKind_InsuranceCompanies())
                                  )
 

@@ -156,12 +156,12 @@ object ServiceItemForm: TServiceItemForm
     BevelOuter = bvNone
     TabOrder = 1
     object cxLabel1: TcxLabel
-      Left = 25
+      Left = 10
       Top = 9
       Caption = #1054#1090#1076#1077#1083':'
     end
     object edUnit: TcxButtonEdit
-      Left = 71
+      Left = 52
       Top = 9
       Properties.Buttons = <
         item
@@ -170,16 +170,16 @@ object ServiceItemForm: TServiceItemForm
         end>
       Properties.ReadOnly = True
       TabOrder = 1
-      Width = 234
+      Width = 344
     end
   end
   object cxLabel2: TcxLabel
-    Left = 326
+    Left = 409
     Top = 35
     Caption = #1057#1090#1072#1090#1100#1103':'
   end
   object edInfoMoney: TcxButtonEdit
-    Left = 375
+    Left = 454
     Top = 35
     Properties.Buttons = <
       item
@@ -835,7 +835,7 @@ object ServiceItemForm: TServiceItemForm
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
-    Left = 456
+    Left = 480
     Top = 16
   end
 end

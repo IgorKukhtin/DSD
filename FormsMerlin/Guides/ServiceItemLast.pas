@@ -77,7 +77,10 @@ type
     GuidesInfoMoney: TdsdGuides;
     actSeviceItemOpenForm: TdsdOpenForm;
     bbSeviceItemOpenForm: TdxBarButton;
-    Action1: TAction;
+    cxLabel3: TcxLabel;
+    edOperDate: TcxDateEdit;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
