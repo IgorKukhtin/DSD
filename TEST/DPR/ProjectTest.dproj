@@ -2775,10 +2775,6 @@
 				<Form>Sale_ReestrJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ReestrJournal.pas">
-				<Form>ReestrJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ReestrStartMovement.pas">
 				<Form>ReestrStartMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -3573,10 +3569,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ReceiptDialog.pas">
 				<Form>ReceiptDialogForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ReestrJournal_byReport.pas">
-				<Form>ReestrJournal_byReportForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsByGoodsKind_VMC.pas">
@@ -4732,6 +4724,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_OrderReturnTare_Order.pas">
 				<Form>Report_OrderReturnTare_OrderForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ReestrJournal.pas">
+				<Form>ReestrJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

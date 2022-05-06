@@ -91,6 +91,20 @@ BEGIN
        -- сохранили связь с <кто сформировал визу "Транзит возвращен">
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_TransferOut(), inId, Null);
     END IF;
+
+    IF inReestrKindId = zc_Enum_ReestrKind_Double() THEN 
+       -- сохранили <когда сформирована виза "Выведен дубликат">   
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Double(), inId, Null);
+       -- сохранили связь с <кто сформировал визу "Выведен дубликат">
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Double(), inId, Null);
+    END IF;
+
+    IF inReestrKindId = zc_Enum_ReestrKind_Scan() THEN 
+       -- сохранили <когда сформирована виза "В наличии скан">   
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Scan(), inId, Null);
+       -- сохранили связь с <кто сформировал визу "В наличии скан">
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Scan(), inId, Null);
+    END IF;
     
     -- Находим предыдущее значение <Состояние по реестру> документа продажи
     vbReestrKindId := (SELECT CASE WHEN tmp.DescId = zc_MIDate_Log()         THEN zc_Enum_ReestrKind_Log()
@@ -99,6 +113,8 @@ BEGIN
                                    WHEN tmp.DescId = zc_MIDate_RemakeBuh()   THEN zc_Enum_ReestrKind_RemakeBuh()
                                    WHEN tmp.DescId = zc_MIDate_Remake()      THEN zc_Enum_ReestrKind_Remake()
                                    WHEN tmp.DescId = zc_MIDate_Econom()      THEN zc_Enum_ReestrKind_Econom()
+                                   WHEN tmp.DescId = zc_MIDate_Double()      THEN zc_Enum_ReestrKind_Double()
+                                   WHEN tmp.DescId = zc_MIDate_Scan()        THEN zc_Enum_ReestrKind_Scan()
                                    WHEN tmp.DescId = zc_MIDate_Buh()         THEN zc_Enum_ReestrKind_Buh()
                                    WHEN tmp.DescId = zc_MIDate_TransferIn()  THEN zc_Enum_ReestrKind_TransferIn()
                                    WHEN tmp.DescId = zc_MIDate_TransferOut() THEN zc_Enum_ReestrKind_TransferOut()
@@ -107,7 +123,8 @@ BEGIN
                              FROM MovementItemDate AS MID
                              WHERE MID.MovementItemId = inId
                                AND MID.DescId IN (zc_MIDate_Log(), zc_MIDate_PartnerIn(), zc_MIDate_RemakeIn(), zc_MIDate_RemakeBuh(), zc_MIDate_Econom()
-                                                , zc_MIDate_Remake(), zc_MIDate_Buh(), zc_MIDate_TransferIn(), zc_MIDate_TransferOut())
+                                                , zc_MIDate_Remake(), zc_MIDate_Buh(), zc_MIDate_TransferIn(), zc_MIDate_TransferOut()
+                                                , zc_MIDate_Double(), zc_MIDate_Scan())
                                AND MID.ValueData IS NOT NULL
                        ) AS tmp
                        WHERE tmp.Num = 1);
@@ -126,6 +143,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 05.05.22         *
  17.11.20         * _Log
  20.07.17         *
  29.11.16         *

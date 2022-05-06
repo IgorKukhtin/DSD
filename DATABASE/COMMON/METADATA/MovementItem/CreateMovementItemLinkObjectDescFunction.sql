@@ -291,6 +291,14 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_EconomIn() RETURNS Integer AS $BODY$B
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_EconomIn', 'кто сформировал визу Экономисты (в работе)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_EconomIn');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_Double() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Double'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_Double', 'кто сформировал визу "Выведен дубликат"' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Double');
+
+CREATE OR REPLACE FUNCTION zc_MILinkObject_Scan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Scan'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_Scan', 'кто сформировал визу "В наличии скан"' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Scan');
+
 
 
 CREATE OR REPLACE FUNCTION zc_MILinkObject_StorageLine() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_StorageLine'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -390,6 +398,8 @@ INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 05.05.22         * zc_MILinkObject_Double
+                    zc_MILinkObject_Scan
  24.11.21                                                                    * zc_MILinkObject_JuridicalTwo, zc_MILinkObject_ContractTwo
  05.10.21         * zc_MILinkObject_CarTrailer
  06.07.21                                                                    * zc_MILinkObject_TopicsTestingTuning
