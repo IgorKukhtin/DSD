@@ -35,6 +35,18 @@ type
     actExecuteImportSettings_LoadGoods: TExecuteImportSettingsAction;
     spGetImportSetting_LoadGoods: TdsdStoredProc;
     dxBarButton4: TdxBarButton;
+    spInsertUpdateMIMasterAdd: TdsdStoredProc;
+    actOpenChoiceCompetitor: TOpenChoiceForm;
+    actExecuteSummaDialog: TExecuteDialog;
+    actInsertUpdateMIMasterAdd: TdsdExecStoredProc;
+    mactInsertUpdateMIMasterAdd: TMultiAction;
+    dxBarButton5: TdxBarButton;
+    MovementItemProtocolParentOpenForm: TdsdOpenForm;
+    dxBarButton6: TdxBarButton;
+    dxBarButton7: TdxBarButton;
+    dxBarButton8: TdxBarButton;
+    actOpenCompetitor: TdsdOpenForm;
+    actOpenPriceSubgroups: TdsdOpenForm;
   private
     { Private declarations }
   public

@@ -15,6 +15,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;
+   DECLARE vbId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
@@ -56,6 +57,36 @@ BEGIN
                                                                );
     END IF;
     
+    if COALESCE(inCompetitorId, 0 ) <> 0 
+    THEN
+        
+      IF EXISTS(SELECT MovementItem.Id 
+                FROM MovementItem
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.DescId = zc_MI_Child()
+                  AND MovementItem.ObjectId = inCompetitorId
+                  AND MovementItem.ParentId = ioId)
+      THEN
+        SELECT MovementItem.Id 
+        INTO vbId
+        FROM MovementItem
+        WHERE MovementItem.MovementId = inMovementId
+          AND MovementItem.DescId = zc_MI_Child()
+          AND MovementItem.ObjectId = inCompetitorId
+          AND MovementItem.ParentId = ioId;
+      ELSE
+        vbId := 0;  
+      END IF;
+
+      vbId := lpInsertUpdate_MovementItem_CompetitorMarkups_Child (ioId                  := vbId                  -- Ключ объекта <Элемент документа>
+                                                                 , inMovementId          := inMovementId          -- ключ Документа
+                                                                 , inParentId            := ioId                  -- элемент мастер
+                                                                 , inCompetitorId        := inCompetitorId        -- Конкурент
+                                                                 , inPrice               := inValue               -- Цена
+                                                                 , inUserId              := vbUserId              -- пользователь
+                                                                   );      
+                                                                   
+    END IF;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -68,4 +99,5 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_MovementItem_CompetitorMarkups(ioId := 0 , inMovementId := 27717912 , inGoodsID := 18922 , inCompetitorId := 0 , inValue := 0 ,  inSession := '3');
+-- 
+select * from gpInsertUpdate_MovementItem_CompetitorMarkups(ioId := 511838980 , inMovementId := 27717912 , inGoodsID := 346 , inCompetitorId := 19619582 , inValue := 31 ,  inSession := '3');

@@ -35,7 +35,7 @@ BEGIN
           , inOperDate::TDateTime                                             AS OperDate
           , Object_Status.Code               	                              AS StatusCode
           , Object_Status.Name                             	                  AS StatusName
-          , (vbOperDate + INTERVAL '1 MONTH' - INTERVAL '1 DAY')::TDateTime   AS OperDate
+          , (inOperDate + INTERVAL '1 MONTH' - INTERVAL '1 DAY')::TDateTime   AS OperDate
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
     ELSE

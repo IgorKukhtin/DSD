@@ -13,6 +13,10 @@ $BODY$
     DECLARE vbUserId   Integer;
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
+    DECLARE curCompetitor refcursor;
+    DECLARE vbQueryText Text;
+    DECLARE vbId Integer;
+    DECLARE vbCompetitorId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Sale());
@@ -25,7 +29,7 @@ BEGIN
                         FROM MovementItem 
                         WHERE MovementItem.MovementId = inMovementId
                           AND MovementItem.DescId     = zc_MI_Child()
-                          AND (MovementItem.isErased   = TRUE OR inIsErased = TRUE))
+                          AND (MovementItem.isErased  = false OR inIsErased = TRUE))
                           
       SELECT ROW_NUMBER() OVER(ORDER BY Object_Competitor.ValueData) as ID
            , tmpCompetitor.CompetitorId
@@ -122,6 +126,39 @@ BEGIN
             );
 
      END IF;
+     
+      -- Заполняем цены по конкурентам
+
+    OPEN curCompetitor FOR SELECT tmpCompetitor.Id
+                                , tmpCompetitor.CompetitorId
+                           FROM _tmpCompetitor AS tmpCompetitor
+                           ORDER BY tmpCompetitor.Id;
+       
+    LOOP
+        FETCH curCompetitor INTO vbID, vbCompetitorId;
+        IF NOT FOUND THEN EXIT; END IF;
+
+        vbQueryText := 'ALTER TABLE _tmpGoods ADD COLUMN Id' || COALESCE (vbID, 0)::Text || ' Integer ' ||
+                                          ' , ADD COLUMN TypeId' || COALESCE (vbID, 0)::Text || ' Integer NOT NULL DEFAULT ' || vbCompetitorId::Text ||
+                                          ' , ADD COLUMN Value' || COALESCE (vbID, 0)::Text || ' TFloat NOT NULL DEFAULT 0';
+        EXECUTE vbQueryText;
+
+        vbQueryText := 'UPDATE _tmpGoods set ID' || COALESCE (vbID, 0)::Text || ' = COALESCE (T1.Id, 0)' ||
+          ' , Value' || COALESCE (vbID, 0)::Text || ' = COALESCE (T1.Price, 0)' ||
+          ' FROM (SELECT MovementItem.Id 
+                       , MovementItem.ParentId 
+                       , MovementItem.Amount    AS Price 
+                  FROM MovementItem 
+                  WHERE MovementItem.MovementId = '|| inMovementId::Text ||'
+                    AND MovementItem.ObjectId = '|| vbCompetitorId::Text ||'
+                    AND MovementItem.DescId     = zc_MI_Child()
+                    AND (MovementItem.isErased  = false OR '|| inIsErased::Text ||' = TRUE)) AS T1
+           WHERE _tmpGoods.Id = T1.ParentId';
+        EXECUTE vbQueryText;
+
+    END LOOP;
+    CLOSE curCompetitor;        
+     
      
     OPEN Cursor1 FOR
        SELECT tmpCompetitor.Id

@@ -18,9 +18,9 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := inSession;
      
-     IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+     IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), zc_Enum_Role_PharmacyManager(), zc_Enum_Role_SeniorManager()))
      THEN
-        RAISE EXCEPTION 'Ошибка. Изменение <Факт кол-во точки-отправителя> разрешено только администратору.';
+        RAISE EXCEPTION 'Ошибка. Изменение <Факт кол-во точки-отправителя> разрешено только администратору и менеджерам.';
      END IF;
 
      SELECT Movement.StatusId

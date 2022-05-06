@@ -19,7 +19,7 @@ BEGIN
 
   -- Подготавливаем XML для записи в протокол
   WITH
-   tmpMovementItem AS (SELECT '<Field FieldName = "Ключ объекта" FieldValue = "' || MovementItem.ObjectId || '"/>'
+   tmpMovementItem AS (SELECT '<Field FieldName = "Ключ объекта" FieldValue = "' || COALESCE(MovementItem.ObjectId::TBlob, '') || '"/>'
                            || '<Field FieldName = "Объект" FieldValue = "' || zfStrToXmlText (COALESCE (Object.ValueData, 'NULL')) || '"/>'
                            || '<Field FieldName = "Значение" FieldValue = "' || MovementItem.Amount || '"/>'
                            || CASE WHEN MovementItem.ParentId <> 0 THEN '<Field FieldName = "ParentId" FieldValue = "' || MovementItem.ParentId || '"/>' ELSE '' END

@@ -89,7 +89,7 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             VisibleForCustomization = False
-            Width = 65
+            Width = 70
           end
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
@@ -222,26 +222,6 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
       ReportName = #1055#1088#1086#1076#1072#1078#1072
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072
     end
-    inherited MovementItemProtocolOpenForm: TdsdOpenForm
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MemberName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-    end
     inherited actAddMask: TdsdExecStoredProc
       StoredProc = spInsertUpdateMIMaster
       StoredProcList = <
@@ -298,6 +278,144 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
+    end
+    object actOpenChoiceCompetitor: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenChoiceCompetitor'
+      FormName = 'TCompetitorForm'
+      FormNameParam.Value = 'TCompetitorForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'CompetitorId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actExecuteSummaDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteSummaDialog'
+      FormName = 'TSummaDialogForm'
+      FormNameParam.Value = 'TSummaDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Summa'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1062#1077#1085#1072' '#1082#1086#1085#1082#1091#1088#1077#1085#1090#1072
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actInsertUpdateMIMasterAdd: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIMasterAdd
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMasterAdd
+        end>
+      Caption = 'actInsertUpdateMIMasterAdd'
+    end
+    object mactInsertUpdateMIMasterAdd: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenChoiceCompetitor
+        end
+        item
+          Action = actExecuteSummaDialog
+        end
+        item
+          Action = actInsertUpdateMIMasterAdd
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1094#1077#1085#1091' '#1085#1086#1074#1086#1075#1086' '#1082#1086#1085#1082#1091#1088#1077#1085#1090#1072' '#1087#1086' '#1089#1090#1088#1086#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1094#1077#1085#1091' '#1085#1086#1074#1086#1075#1086' '#1082#1086#1085#1082#1091#1088#1077#1085#1090#1072' '#1087#1086' '#1089#1090#1088#1086#1082#1077
+      ImageIndex = 75
+    end
+    object MovementItemProtocolParentOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = CrossDBViewAddOn
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenCompetitor: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1082#1086#1085#1082#1091#1088#1077#1085#1090#1086#1074
+      Hint = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1082#1086#1085#1082#1091#1088#1077#1085#1090#1086#1074
+      ImageIndex = 24
+      FormName = 'TCompetitorForm'
+      FormNameParam.Value = 'TCompetitorForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actOpenPriceSubgroups: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1080#1072#1087#1072#1079#1086#1085#1099' '#1094#1077#1085' '#1076#1083#1103' '#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1076#1075#1088#1091#1087#1087#1072#1084
+      Hint = #1044#1080#1072#1087#1072#1079#1086#1085#1099' '#1094#1077#1085' '#1076#1083#1103' '#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1076#1075#1088#1091#1087#1087#1072#1084
+      ImageIndex = 25
+      FormName = 'TPriceSubgroupsForm'
+      FormNameParam.Value = 'TPriceSubgroupsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -371,6 +489,26 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton7'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton8'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -379,15 +517,15 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end>
     end
     inherited bbMovementItemProtocol: TdxBarButton
@@ -429,6 +567,23 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
       Action = mactLoadGoods
       Category = 0
     end
+    object dxBarButton5: TdxBarButton
+      Action = mactInsertUpdateMIMasterAdd
+      Category = 0
+    end
+    object dxBarButton6: TdxBarButton
+      Action = MovementItemProtocolParentOpenForm
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1094#1077#1085'  '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Category = 0
+    end
+    object dxBarButton7: TdxBarButton
+      Action = actOpenCompetitor
+      Category = 0
+    end
+    object dxBarButton8: TdxBarButton
+      Action = actOpenPriceSubgroups
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     View = nil
@@ -467,13 +622,12 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TotalCount'
+        Name = 'CompetitorId'
         Value = Null
-        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TotalSumm'
+        Name = 'Price'
         Value = Null
         DataType = ftFloat
         MultiSelectSeparator = ','
@@ -827,5 +981,57 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
     PackSize = 1
     Left = 648
     Top = 328
+  end
+  object spInsertUpdateMIMasterAdd: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_CompetitorMarkups'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCompetitorId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CompetitorId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 648
+    Top = 392
   end
 end

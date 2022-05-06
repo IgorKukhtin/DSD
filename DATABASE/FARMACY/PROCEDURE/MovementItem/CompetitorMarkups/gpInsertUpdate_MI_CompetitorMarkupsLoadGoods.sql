@@ -1,10 +1,11 @@
 -- Function: gpInsertUpdate_MI_CompetitorMarkupsLoadGoods()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_CompetitorMarkupsLoadGoods(Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_CompetitorMarkupsLoadGoods(Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_CompetitorMarkupsLoadGoods(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsCode           Integer   , -- Товар
+    IN inPrice               TFloat    , -- Средняя цена
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -57,6 +58,7 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItem_CompetitorMarkups (ioId                  := 0                     -- Ключ объекта <Элемент документа>
                                                          , inMovementId          := inMovementId          -- ключ Документа
                                                          , inGoodsID             := vbGoodsID             -- товар
+                                                         , inPrice               := inPrice               -- Средняя цена  
                                                          , inUserId              := vbUserId              -- пользователь
                                                            );
     

@@ -585,15 +585,18 @@ procedure TLoadFormTest.LoadCompetitorMarkupsFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCompetitorMarkupsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCompetitorMarkupsForm');
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCompetitorMarkupsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCompetitorMarkupsJournalForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCompetitorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCompetitorForm');
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCompetitorEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCompetitorEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceSubgroupsEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceSubgroupsEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceSubgroupsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceSubgroupsForm');
 end;
 
 
