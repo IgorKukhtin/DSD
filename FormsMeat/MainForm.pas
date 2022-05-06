@@ -1367,6 +1367,10 @@ type
     miReport_GoodsMI_byMovementAllReturn: TMenuItem;
     actUserByGroupListTree: TdsdOpenForm;
     miUserByGroupListTree: TMenuItem;
+    actReestrScan: TdsdOpenForm;
+    actReestrDouble: TdsdOpenForm;
+    miReestrDouble: TMenuItem;
+    miReestrScan: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
