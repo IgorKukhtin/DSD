@@ -47,6 +47,8 @@ type
     dxBarButton8: TdxBarButton;
     actOpenCompetitor: TdsdOpenForm;
     actOpenPriceSubgroups: TdsdOpenForm;
+    Price: TcxGridDBColumn;
+    SubGroupsName: TcxGridDBColumn;
   private
     { Private declarations }
   public

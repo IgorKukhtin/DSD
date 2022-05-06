@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_CompetitorMarkups(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsID             Integer   , -- Товар
+    IN inPrice               TFloat    , -- Средняя цена
     IN inCompetitorId        Integer   , -- Конкурент
     IN inValue               TFloat    , -- Цена
     IN inSession             TVarChar    -- сессия пользователя
@@ -53,6 +54,7 @@ BEGIN
         ioId := lpInsertUpdate_MovementItem_CompetitorMarkups (ioId                  := ioId                  -- Ключ объекта <Элемент документа>
                                                              , inMovementId          := inMovementId          -- ключ Документа
                                                              , inGoodsID             := inGoodsID             -- товар
+                                                             , inPrice               := inPrice               -- Средняя цена
                                                              , inUserId              := vbUserId              -- пользователь
                                                                );
     END IF;
@@ -99,5 +101,5 @@ $BODY$
 */
 
 -- тест
--- 
-select * from gpInsertUpdate_MovementItem_CompetitorMarkups(ioId := 511838980 , inMovementId := 27717912 , inGoodsID := 346 , inCompetitorId := 19619582 , inValue := 31 ,  inSession := '3');
+-- select * from gpInsertUpdate_MovementItem_CompetitorMarkups(ioId := 511840792 , inMovementId := 27717912 , inGoodsID := 1561 , inPrice := 73.7691 , inCompetitorId := 19622533 , inValue := 0 ,  inSession := '3');
+

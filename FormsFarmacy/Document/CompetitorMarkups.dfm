@@ -65,7 +65,15 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
             Options.Editing = False
             Width = 122
           end
-          object GoodsCode: TcxGridDBColumn [1]
+          object SubGroupsName: TcxGridDBColumn [1]
+            Caption = #1055#1086#1076#1075#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'SubGroupsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 89
+          end
+          object GoodsCode: TcxGridDBColumn [2]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -73,7 +81,7 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
             Options.Editing = False
             Width = 67
           end
-          object GoodsName: TcxGridDBColumn [2]
+          object GoodsName: TcxGridDBColumn [3]
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -81,7 +89,17 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
             Options.Editing = False
             Width = 360
           end
-          object Value: TcxGridDBColumn [3]
+          object Price: TcxGridDBColumn [4]
+            Caption = #1057#1088#1077#1076#1085#1103#1103' '#1094#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 63
+          end
+          object Value: TcxGridDBColumn [5]
             DataBinding.FieldName = 'Value'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -842,6 +860,15 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inCompetitorId'
         Value = Null
         Component = CrossDBViewAddOn
@@ -1012,6 +1039,14 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inCompetitorId'
         Value = Null
         Component = FormParams
@@ -1020,7 +1055,7 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPrice'
+        Name = 'inValue'
         Value = Null
         Component = FormParams
         ComponentItem = 'Price'

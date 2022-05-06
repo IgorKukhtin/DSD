@@ -17,10 +17,14 @@ $BODY$
     DECLARE vbQueryText Text;
     DECLARE vbId Integer;
     DECLARE vbCompetitorId Integer;
+    DECLARE vbOperDate TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Sale());
     vbUserId:= lpGetUserBySession (inSession);
+    
+    
+    SELECT Movement.OperDate INTO vbOperDate FROM Movement WHERE Movement.ID = inMovementId;
 
     -- Перечень конкурентов
     CREATE TEMP TABLE _tmpCompetitor ON COMMIT DROP AS (
@@ -46,6 +50,15 @@ BEGIN
     IF inShowAll THEN
         -- Результат такой
         CREATE TEMP TABLE _tmpGoods ON COMMIT DROP AS (
+            WITH tmpPriceSubgroups AS (select * from gpSelect_MovementItem_PriceSubgroups(inMovementId := inMovementId , inIsErased := 'False' ,  inSession := inSession)),
+                 tmpPrice AS (SELECT AnalysisContainerItem.GoodsId
+                                   , (SUM(AnalysisContainerItem.AmountCheckSum) / SUM(AnalysisContainerItem.AmountCheck))::TFloat   AS Price
+                              FROM AnalysisContainerItem
+                              WHERE AnalysisContainerItem.OperDate > vbOperDate - INTERVAL '11 DAY'
+                                AND AnalysisContainerItem.OperDate <= vbOperDate
+                              GROUP BY AnalysisContainerItem.GoodsId
+                              HAVING SUM(AnalysisContainerItem.AmountCheck) > 0)
+
             SELECT MovementItem.Id                    AS Id
                  , MovementItem.ObjectId              AS GoodsID
 
@@ -53,6 +66,10 @@ BEGIN
                  , Object_Goods_Main.Name             AS GoodsName
 
                  , Object_Groups.ValueData            AS GroupsName
+                 , tmpPriceSubgroups.PriceMax         AS PriceMax
+                 , tmpPriceSubgroups.Name             AS SubGroupsName 
+                 
+                 , MIFloat_Price.ValueData            AS Price
 
                  , MovementItem.isErased              AS isErased
 
@@ -60,11 +77,18 @@ BEGIN
                  , 0::TFloat                          AS Value0
             FROM  MovementItem
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                              ON MIFloat_Price.MovementItemId =  MovementItem.Id
+                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
                   LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.ObjectId
                   LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
                   
                   LEFT JOIN Object AS Object_Groups ON Object_Groups.Id = Object_Goods_Main.GoodsGroupId
                                                   
+                  LEFT JOIN tmpPriceSubgroups ON tmpPriceSubgroups.PriceMin <= MIFloat_Price.ValueData
+                                             AND tmpPriceSubgroups.PriceMax > MIFloat_Price.ValueData
+
             WHERE MovementItem.MovementId = inMovementId
               AND MovementItem.DescId = zc_MI_Master()
             UNION ALL
@@ -75,6 +99,10 @@ BEGIN
                  , Object_Goods_Main.Name             AS GoodsName
 
                  , Object_Groups.ValueData            AS GroupsName
+                 , tmpPriceSubgroups.PriceMax         AS PriceMax
+                 , tmpPriceSubgroups.Name             AS SubGroupsName 
+
+                 , tmpPrice.Price                     AS Price
 
                  , False                              AS isErased
 
@@ -86,9 +114,15 @@ BEGIN
                                               ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
 
                  LEFT JOIN Object AS Object_Groups ON Object_Groups.Id = Object_Goods_Main.GoodsGroupId
+                 
+                 LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_Goods_Retail.Id 
+
+                 LEFT JOIN tmpPriceSubgroups ON tmpPriceSubgroups.PriceMin <= tmpPrice.Price
+                                            AND tmpPriceSubgroups.PriceMax > tmpPrice.Price
 
             WHERE Object_Goods_Retail.RetailId = 4
               AND Object_Goods_Retail.isErased = False
+              AND COALESCE (tmpPrice.Price, 0) > 0
               AND Object_Goods_Retail.Id NOT IN (SELECT MovementItem.ObjectId 
                                                  FROM MovementItem
                                                  WHERE MovementItem.MovementId = inMovementId
@@ -98,6 +132,8 @@ BEGIN
         -- Результат другой
 
         CREATE TEMP TABLE _tmpGoods ON COMMIT DROP AS (
+            WITH tmpPriceSubgroups AS (select * from gpSelect_MovementItem_PriceSubgroups(inMovementId := inMovementId , inIsErased := 'False' ,  inSession := inSession))
+          
             SELECT MovementItem.Id                    AS Id
                  , MovementItem.ObjectId              AS GoodsID
                  
@@ -105,6 +141,10 @@ BEGIN
                  , Object_Goods_Main.Name             AS GoodsName
                  
                  , Object_Groups.ValueData            AS GroupsName
+                 , tmpPriceSubgroups.PriceMax         AS PriceMax
+                 , tmpPriceSubgroups.Name             AS SubGroupsName 
+
+                 , MIFloat_Price.ValueData            AS Price
 
                  , MovementItem.isErased              AS isErased
                  
@@ -112,13 +152,18 @@ BEGIN
                  , 0::TFloat                          AS Value0
             FROM  MovementItem
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                              ON MIFloat_Price.MovementItemId =  MovementItem.Id
+                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
                   LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.ObjectId
                   LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
                   
                   LEFT JOIN Object AS Object_Groups ON Object_Groups.Id = Object_Goods_Main.GoodsGroupId
                   
-                                                  
+                  LEFT JOIN tmpPriceSubgroups ON tmpPriceSubgroups.PriceMin <= MIFloat_Price.ValueData
+                                             AND tmpPriceSubgroups.PriceMax > MIFloat_Price.ValueData
+                                                                    
             WHERE MovementItem.MovementId = inMovementId
               AND MovementItem.DescId = zc_MI_Master()
               AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
@@ -174,7 +219,7 @@ BEGIN
     OPEN Cursor2 FOR
        SELECT *            
        FROM _tmpGoods AS tmpGoods
-       ORDER BY tmpGoods.GoodsName;
+       ORDER BY tmpGoods.PriceMax, tmpGoods.GoodsName;
 
     RETURN NEXT Cursor2;
 

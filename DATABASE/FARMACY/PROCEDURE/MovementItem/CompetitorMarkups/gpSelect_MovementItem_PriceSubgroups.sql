@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PriceSubgroups(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , Price TFloat
+             , Price TFloat, PriceMin TFloat, PriceMax TFloat
              , isErased Boolean
               )
 AS              
@@ -39,6 +39,8 @@ BEGIN
                 THEN zfConvert_FloatToString (tmpPriceSubgroupsPrew.Price)||'-'||zfConvert_FloatToString (MovementItem.Amount)
                 END::TVarChar                   AS Name
          , MovementItem.Amount                  AS Price
+         , COALESCE (tmpPriceSubgroupsPrew.Price, 0)::TFloat AS PriceMin
+         , MovementItem.Amount                  AS PriceMax
          , MovementItem.isErased                AS isErased
      FROM MovementItem 
      
@@ -56,6 +58,8 @@ BEGIN
          , (MovementItem.Ord + 1)::Integer      AS Code
          , zfConvert_FloatToString (MovementItem.Price) AS Name
          , MovementItem.Price                   AS Price
+         , MovementItem.Price                   AS PriceMin
+         , 999999999::TFloat                    AS PriceMax
          , False                                AS isErased
      FROM tmpPriceSubgroups AS MovementItem
                

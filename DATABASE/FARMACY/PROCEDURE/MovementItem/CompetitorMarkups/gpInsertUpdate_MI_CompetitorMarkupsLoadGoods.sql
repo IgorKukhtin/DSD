@@ -14,6 +14,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;
    DECLARE vbGoodsID Integer;
+   DECLARE vbId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
@@ -51,11 +52,26 @@ BEGIN
                 AND MovementItem.DescId = zc_MI_Master()
                 AND MovementItem.ObjectId = vbGoodsID)
     THEN
-      RETURN;
+      SELECT MovementItem.Id 
+      INTO vbId
+      FROM MovementItem
+      WHERE MovementItem.MovementId = inMovementId
+        AND MovementItem.DescId = zc_MI_Master()
+        AND MovementItem.ObjectId = vbGoodsID;
+        
+      IF COALESCE ((SELECT MIFloat_Price.ValueData 
+                    FROM MovementItemFloat AS MIFloat_Price
+                    WHERE MIFloat_Price.MovementItemId = vbId
+                      AND MIFloat_Price.DescId = zc_MIFloat_Price()) , 0) = COALESCE ( inPrice, 0) 
+      THEN
+         RETURN;
+      END IF;
+    ELSE
+      vbId := 0;
     END IF;
 
     -- сохранили
-    PERFORM lpInsertUpdate_MovementItem_CompetitorMarkups (ioId                  := 0                     -- Ключ объекта <Элемент документа>
+    PERFORM lpInsertUpdate_MovementItem_CompetitorMarkups (ioId                  := vbId                  -- Ключ объекта <Элемент документа>
                                                          , inMovementId          := inMovementId          -- ключ Документа
                                                          , inGoodsID             := vbGoodsID             -- товар
                                                          , inPrice               := inPrice               -- Средняя цена  

@@ -38,6 +38,23 @@ BEGIN
              -- сохранили свойство <Пользователь (создание)>
              PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
          END IF;
+         
+         IF NOT EXISTS(SELECT MovementItem.Id
+                       FROM MovementItem
+                       WHERE MovementItem.MovementId = ioId
+                         AND MovementItem.DescId = zc_MI_Second()
+                         AND MovementItem.isErased = False)
+         THEN
+           PERFORM gpInsertUpdate_MovementItem_PriceSubgroups(ioId := 0, inMovementId := ioId, inPrice := MovementItem.Amount,  inSession := inUserId::TVarChar)
+           FROM MovementItem
+           WHERE MovementItem.MovementId = (SELECT MAX(Movement.Id)
+                                            FROM Movement
+                                            WHERE Movement.Id <> ioId
+                                              AND Movement.StatusId <> zc_Enum_Status_Erased() 
+                                              AND Movement.DescId = zc_Movement_CompetitorMarkups())
+             AND MovementItem.DescId = zc_MI_Second()
+             AND MovementItem.isErased = False;
+         END IF;
      END IF;
      
     -- сохранили протокол
