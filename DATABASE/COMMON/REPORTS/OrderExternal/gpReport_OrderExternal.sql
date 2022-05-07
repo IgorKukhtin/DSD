@@ -61,6 +61,10 @@ RETURNS TABLE (OperDate               TDateTime
              , Amount_Weight TFloat, AmountZakaz_Weight TFloat, Amount_Sh TFloat, AmountZakaz_Sh TFloat
 
              , Amount_WeightSK TFloat
+             
+             , AmountWeight_calc   TFloat, AmountWeight_calc1  TFloat, AmountWeight_calc2  TFloat, AmountWeight_calc3  TFloat
+             , DatePrint TDateTime, DatePrint1 TDateTime, DatePrint2 TDateTime
+
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyCode_goods Integer, InfoMoneyName_goods TVarChar, InfoMoneyName_goods_all TVarChar
              , Comment TVarChar
@@ -68,7 +72,10 @@ RETURNS TABLE (OperDate               TDateTime
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId Integer; 
+   DECLARE vbStartDate_1 TDateTime;
+   DECLARE vbStartDate_2 TDateTime;
+   DECLARE vbStartDate_3 TDateTime;
 BEGIN
 
     -- Ограничения по товарам
@@ -84,6 +91,11 @@ BEGIN
 
     --
     -- inIsByDoc:= (inStartDate = inEndDate);
+
+    --для разбивки по дням отгрузки
+    vbStartDate_1 := inStartDate + INTERVAL '1 DAY';
+    vbStartDate_2 := inStartDate + INTERVAL '2 DAY';
+    vbStartDate_3 := inStartDate + INTERVAL '3 DAY';
 
 
      RETURN QUERY
@@ -123,6 +135,13 @@ BEGIN
                              , SUM (CASE WHEN Movement.OperDate <> COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) THEN MovementItem.Amount ELSE 0 END) AS Amount2
                              , SUM (CASE WHEN Movement.OperDate =  COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) THEN COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountSecond1
                              , SUM (CASE WHEN Movement.OperDate <> COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) THEN COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountSecond2
+                             
+                             --
+                             , SUM (CASE WHEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) = inStartDate    THEN MovementItem.Amount ELSE 0 END) AS Amount_calc
+                             , SUM (CASE WHEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) = vbStartDate_1  THEN MovementItem.Amount ELSE 0 END) AS Amount_calc1
+                             , SUM (CASE WHEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) = vbStartDate_2  THEN MovementItem.Amount ELSE 0 END) AS Amount_calc2
+                             , SUM (CASE WHEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= vbStartDate_3 THEN MovementItem.Amount ELSE 0 END) AS Amount_calc3 
+                             --
                              , CASE WHEN MIFloat_CountForPrice.ValueData > 0
                                          THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
                                     ELSE COALESCE (MIFloat_Price.ValueData, 0)
@@ -299,7 +318,13 @@ BEGIN
                             , SUM (Amount1 * Price) AS Summ1
                             , SUM (Amount2 * Price) AS Summ2
                             , SUM (tmpMovement2.AmountSecond1 * Price) AS SummSecond1
-                            , SUM (tmpMovement2.AmountSecond2 * Price) AS SummSecond2
+                            , SUM (tmpMovement2.AmountSecond2 * Price) AS SummSecond2  
+                            
+                            --
+                            , SUM (tmpMovement2.Amount_calc  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight_calc
+                            , SUM (tmpMovement2.Amount_calc1 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight_calc1
+                            , SUM (tmpMovement2.Amount_calc2 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight_calc2
+                            , SUM (tmpMovement2.Amount_calc3 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight_calc3
                 
                        FROM tmpMovement2
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmpMovement2.GoodsId
@@ -468,6 +493,15 @@ BEGIN
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.Amount_Sh1 + tmpMovement.Amount_Sh2 + tmpMovement.AmountSecond_Sh1 + tmpMovement.AmountSecond_Sh2) ELSE 0 END                 :: TFloat AS Amount_Sh
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.Amount_Sh1 + tmpMovement.Amount_Sh2) ELSE 0 END                                                                               :: TFloat AS AmountZakaz_Sh      -- шт без дозаказа
            , 0 :: TFloat AS Amount_WeightSK
+
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountWeight_calc  ELSE 0 END  :: TFloat AS AmountWeight_calc
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountWeight_calc1 ELSE 0 END  :: TFloat AS AmountWeight_calc1
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountWeight_calc2 ELSE 0 END  :: TFloat AS AmountWeight_calc2
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountWeight_calc3 ELSE 0 END  :: TFloat AS AmountWeight_calc3  
+           
+           , inStartDate   ::TDateTime AS DatePrint
+           , vbStartDate_1 ::TDateTime AS DatePrint1
+           , vbStartDate_2 ::TDateTime AS DatePrint2
 
            , View_InfoMoney.InfoMoneyCode                         AS InfoMoneyCode
            , View_InfoMoney.InfoMoneyName                         AS InfoMoneyName

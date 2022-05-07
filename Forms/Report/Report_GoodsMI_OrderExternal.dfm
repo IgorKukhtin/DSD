@@ -5,7 +5,7 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1203
-  ExplicitHeight = 521
+  ExplicitHeight = 522
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -107,6 +107,26 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
               Format = ',0.###'
               Kind = skSum
               Column = AmountSumm_Dozakaz2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeight_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeight_calc1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeight_calc2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeight_calc3
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -188,6 +208,26 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSumm_Dozakaz2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeight_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeight_calc1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeight_calc2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountWeight_calc3
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -675,6 +715,54 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object AmountWeight_calc: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086', '#1074#1077#1089' ('#1044#1072#1090#1072' '#1085#1072#1095'. = '#1044#1072#1090#1072'.'#1091' '#1087#1086#1082#1091#1087')'
+            DataBinding.FieldName = 'AmountWeight_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086', '#1074#1077#1089' ('#1044#1072#1090#1072' '#1085#1072#1095'. = '#1044#1072#1090#1072'.'#1091' '#1087#1086#1082#1091#1087')'
+            Width = 70
+          end
+          object AmountWeight_calc1: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086', '#1074#1077#1089' ('#1044#1072#1090#1072' '#1085#1072#1095'.+1 = '#1044#1072#1090#1072'.'#1091' '#1087#1086#1082#1091#1087')'
+            DataBinding.FieldName = 'AmountWeight_calc1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086', '#1074#1077#1089' ('#1044#1072#1090#1072' '#1085#1072#1095'.+1= '#1044#1072#1090#1072'.'#1091' '#1087#1086#1082#1091#1087')'
+            Width = 70
+          end
+          object AmountWeight_calc2: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086', '#1074#1077#1089' ('#1044#1072#1090#1072' '#1085#1072#1095'.+2 = '#1044#1072#1090#1072'.'#1091' '#1087#1086#1082#1091#1087')'
+            DataBinding.FieldName = 'AmountWeight_calc2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086', '#1074#1077#1089' ('#1044#1072#1090#1072' '#1085#1072#1095'.+2 = '#1044#1072#1090#1072'.'#1091' '#1087#1086#1082#1091#1087')'
+            Width = 70
+          end
+          object AmountWeight_calc3: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086', '#1074#1077#1089' ('#1044#1072#1090#1072' '#1085#1072#1095'. +3<= '#1044#1072#1090#1072'.'#1091' '#1087#1086#1082#1091#1087')'
+            DataBinding.FieldName = 'AmountWeight_calc3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086', '#1074#1077#1089' ('#1044#1072#1090#1072' '#1085#1072#1095'. +3<= '#1044#1072#1090#1072'.'#1091' '#1087#1086#1082#1091#1087')'
             Width = 70
           end
           object InfoMoneyCode: TcxGridDBColumn
@@ -1213,6 +1301,42 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrint_byRouteGroup: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1052#1072#1088#1096#1088#1091#1090#1072#1084' '#1087#1086' '#1076#1085#1103#1084')'
+      Hint = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1052#1072#1088#1096#1088#1091#1090#1072#1084' '#1087#1086' '#1076#1085#1103#1084')'
+      ImageIndex = 23
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'InfoMoneyName;routename'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 43101d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43101d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1052#1072#1088#1096#1088#1091#1090#1072#1084' '#1087#1086' '#1076#1085#1103#1084')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' - '#1079#1072#1103#1074#1082#1080' ('#1087#1086' '#1052#1072#1088#1096#1088#1091#1090#1072#1084' '#1087#1086' '#1076#1085#1103#1084')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint_byRoute: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1697,6 +1821,14 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_byCross'
         end
         item
@@ -1752,6 +1884,10 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
       Action = actPrint_byType_Group
       Category = 0
       ImageIndex = 3
+    end
+    object bb: TdxBarButton
+      Action = actPrint_byRouteGroup
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
