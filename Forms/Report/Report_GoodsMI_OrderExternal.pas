@@ -105,6 +105,8 @@ type
     GuidesRetail: TdsdGuides;
     WeightTotal: TcxGridDBColumn;
     CodeSticker: TcxGridDBColumn;
+    actPrint_byRouteGroup: TdsdPrintAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
