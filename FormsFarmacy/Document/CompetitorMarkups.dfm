@@ -435,6 +435,87 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
         end>
       isShowModal = False
     end
+    object mactUpdate_PriceAverage: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecuteDataChoiceDialog
+        end
+        item
+          Action = actExecuteIntegerDialog
+        end
+        item
+          Action = actExecUpdate_PriceAverage
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1089#1088#1077#1076#1085#1102#1102' '#1094#1077#1085#1091
+      Hint = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1089#1088#1077#1076#1085#1102#1102' '#1094#1077#1085#1091
+      ImageIndex = 38
+    end
+    object actExecuteDataChoiceDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDataChoiceDialog'
+      FormName = 'TDataChoiceDialogForm'
+      FormNameParam.Value = 'TDataChoiceDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1041#1088#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1080' '#1076#1086' '#1076#1072#1090#1099' '#1074#1082#1083#1102#1095#1080#1090#1077#1083#1100#1085#1086
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actExecuteIntegerDialog: TExecuteDialog
+      MoveParams = <>
+      Caption = 'actExecuteIntegerDialog'
+      FormName = 'TIntegerDialogForm'
+      FormNameParam.Value = 'TIntegerDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Values'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Day'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1086#1076#1072#1078#1080
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actExecUpdate_PriceAverage: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PriceAverage
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PriceAverage
+        end>
+      Caption = 'actExecUpdate_PriceAverage'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_CompetitorMarkups'
@@ -531,6 +612,14 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_PriceAverage'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -602,6 +691,10 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
       Action = actOpenPriceSubgroups
       Category = 0
     end
+    object bbUpdate_PriceAverage: TdxBarButton
+      Action = mactUpdate_PriceAverage
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     View = nil
@@ -656,9 +749,15 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'OperDate'
         Value = Null
-        DataType = ftFloat
+        DataType = ftDateTime
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Day'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -825,7 +924,7 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
     Top = 376
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    Left = 438
+    Left = 414
     Top = 184
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
@@ -1044,6 +1143,7 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -1068,5 +1168,40 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
     ParamKeyField = 'inMovementId'
     Left = 648
     Top = 392
+  end
+  object spUpdate_PriceAverage: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_PriceAverage'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDay'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inDay'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    Left = 544
+    Top = 184
   end
 end

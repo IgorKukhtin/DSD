@@ -49,6 +49,12 @@ type
     actOpenPriceSubgroups: TdsdOpenForm;
     Price: TcxGridDBColumn;
     SubGroupsName: TcxGridDBColumn;
+    spUpdate_PriceAverage: TdsdStoredProc;
+    mactUpdate_PriceAverage: TMultiAction;
+    actExecuteDataChoiceDialog: TExecuteDialog;
+    actExecuteIntegerDialog: TExecuteDialog;
+    actExecUpdate_PriceAverage: TdsdExecStoredProc;
+    bbUpdate_PriceAverage: TdxBarButton;
   private
     { Private declarations }
   public
