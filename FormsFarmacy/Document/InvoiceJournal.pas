@@ -52,6 +52,7 @@ type
     SummCPMedical: TcxGridDBColumn;
     SummCPSpecial_0: TcxGridDBColumn;
     DateAdoptedByNSZU: TcxGridDBColumn;
+    ReportNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public

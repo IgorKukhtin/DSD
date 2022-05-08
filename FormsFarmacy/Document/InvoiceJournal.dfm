@@ -17,17 +17,17 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     Height = 433
     TabOrder = 3
     ExplicitWidth = 745
-    ExplicitHeight = 434
+    ExplicitHeight = 433
     ClientRectBottom = 433
     ClientRectRight = 745
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 745
-      ExplicitHeight = 434
+      ExplicitHeight = 433
       inherited cxGrid: TcxGrid
         Width = 745
         Height = 433
         ExplicitWidth = 745
-        ExplicitHeight = 434
+        ExplicitHeight = 433
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -422,6 +422,13 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
+          object ReportNumber: TcxGridDBColumn
+            Caption = #8470' '#1086#1090#1095#1077#1090#1072' '#1053#1062#1047#1059
+            DataBinding.FieldName = 'ReportNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 92
+          end
         end
       end
     end
@@ -795,6 +802,15 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         Component = MasterCDS
         ComponentItem = 'DateAdoptedByNSZU'
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReportNumber'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ReportNumber'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

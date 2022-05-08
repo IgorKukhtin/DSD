@@ -1,9 +1,6 @@
 -- Function: gpUpdate_Movement_Invoice()
 
-DROP FUNCTION IF EXISTS gpUpdate_Movement_Invoice (Integer, TDateTime, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Movement_Invoice (Integer, TDateTime, TVarChar, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Movement_Invoice (Integer, TDateTime, TVarChar, Boolean, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Movement_Invoice (Integer, TDateTime, TVarChar, Boolean, TFloat, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Invoice (Integer, TDateTime, TVarChar, Boolean, TFloat, TDateTime, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_Invoice(
     IN inId                    Integer,    -- 
@@ -12,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_Invoice(
     IN inisDocument            Boolean  ,  -- Есть наш экз.
     IN inTotalDiffSumm         TFloat   ,  -- Корректировочная Сумма
     IN inDateAdoptedByNSZU     TDateTime,  -- Принято НСЗУ
+    IN inReportNumber          TVarChar ,  -- № отчета НЦЗУ
    OUT outSumm_Diff            TFloat   ,  -- разница Сумма с НДС и Корректировочная Сумма
     IN inSession               TVarChar    -- сессия пользователя
 )
@@ -39,9 +37,12 @@ BEGIN
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_DateRegistered(), inId, inDateRegistered);    
 
-    -- Сохранили свойство <Итого Сумма>
+    -- Сохранили свойство <Номер платежки>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberRegistered(), inId, inInvNumberRegistered);
   
+    -- Сохранили свойство <№ отчета НЦЗУ>
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_ReportNumber(), inId, inReportNumber);
+
     -- Сохранили свойство <>
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Document(), inId, inisDocument);
 
