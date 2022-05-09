@@ -96,6 +96,8 @@ BEGIN
                                 , COALESCE (CLO_Currency.ObjectId, 0)     AS CurrencyId
                                 , Container.Amount                        AS Amount
                                 , COALESCE (Container_Currency.Amount, 0) AS Amount_Currency
+                                , CASE WHEN Container.DescId = zc_Container_SummAsset() THEN TRUE ELSE FALSE END AS isNotBalance
+
                            FROM ContainerLinkObject AS CLO_Juridical
                                 INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId
                                                     AND Container.DescId IN (zc_Container_Summ(), zc_Container_SummAsset())
@@ -144,6 +146,7 @@ BEGIN
 
                                       SUM (MIContainer.Amount) AS MovementSumm,
                                       0                        AS MovementSumm_Currency
+                                    , tmpContainer.isNotBalance
                                FROM tmpContainer
                                     INNER JOIN MovementItemContainer AS MIContainer
                                                                      ON MIContainer.ContainerId = tmpContainer.ContainerId
@@ -151,10 +154,11 @@ BEGIN
                                GROUP BY tmpContainer.AccountId, tmpContainer.InfoMoneyId, tmpContainer.ContractId, tmpContainer.PaidKindId, tmpContainer.PartionMovementId, tmpContainer.CurrencyId
                                       , MIContainer.MovementId, MIContainer.OperDate
                                       , tmpContainer.ContainerId
+                                      , tmpContainer.isNotBalance
 
                                HAVING SUM (MIContainer.Amount) <> 0
                               UNION ALL
-                               -- 1.2. сумма даижения в валюте операции - Currency
+                               -- 1.2. сумма движения в валюте операции - Currency
                                SELECT tmpContainer.ContainerId,
                                       tmpContainer.AccountId,
                                       tmpContainer.InfoMoneyId,
@@ -168,6 +172,7 @@ BEGIN
 
                                       0                        AS MovementSumm,
                                       SUM (MIContainer.Amount) AS MovementSumm_Currency
+                                    , tmpContainer.isNotBalance
                                FROM tmpContainer
                                     INNER JOIN MovementItemContainer AS MIContainer
                                                                      ON MIContainer.ContainerId = tmpContainer.ContainerId_Currency
@@ -176,6 +181,7 @@ BEGIN
                                GROUP BY tmpContainer.AccountId, tmpContainer.InfoMoneyId, tmpContainer.ContractId, tmpContainer.PaidKindId, tmpContainer.PartionMovementId, tmpContainer.CurrencyId
                                       , MIContainer.MovementId, MIContainer.OperDate
                                       , tmpContainer.ContainerId
+                                      , tmpContainer.isNotBalance
                                HAVING SUM (MIContainer.Amount) <> 0
                               )
         , tmpRemains AS (-- 2.1. остаток в валюте баланса
@@ -193,6 +199,7 @@ BEGIN
                                 tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndSumm,
                                 0 AS StartSumm_Currency,
                                 0 AS EndSumm_Currency
+                              , tmpContainer.isNotBalance
                          FROM tmpContainer
                               LEFT JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.ContainerId = tmpContainer.ContainerId
@@ -201,6 +208,7 @@ BEGIN
                                 , tmpContainer.ContainerId, tmpContainer.Amount
                                 , tmpContainer.ContractId_Key
                                 -- , tmpContainer.ContractId
+                                , tmpContainer.isNotBalance
                         UNION ALL
                          -- 2.2. остаток в валюте операции - Currency
                          SELECT tmpContainer.ContainerId,
@@ -217,6 +225,7 @@ BEGIN
                                 0 AS EndSumm,
                                 tmpContainer.Amount_Currency - COALESCE (SUM (MIContainer.Amount), 0)                                                            AS StartSumm_Currency,
                                 tmpContainer.Amount_Currency - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndSumm_Currency
+                              , tmpContainer.isNotBalance
                          FROM tmpContainer
                               LEFT JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.ContainerId = tmpContainer.ContainerId_Currency
@@ -226,6 +235,7 @@ BEGIN
                                 , tmpContainer.ContainerId, tmpContainer.ContainerId_Currency, tmpContainer.Amount_Currency
                                 , tmpContainer.ContractId_Key
                                 -- , tmpContainer.ContractId
+                                , tmpContainer.isNotBalance
                         )
         , Operation AS (SELECT -- tmpContainer.ContainerId,
                                0 AS ContainerId,
@@ -247,6 +257,7 @@ BEGIN
                                0 AS StartSumm_Currency,
                                0 AS EndSumm_Currency,
                                0 AS OperationSort
+                             , tmpContainer.isNotBalance
                         FROM tmpContainer_All AS tmpContainer
                         GROUP BY tmpContainer.AccountId,
                                  tmpContainer.InfoMoneyId,
@@ -258,6 +269,7 @@ BEGIN
                                  tmpContainer.OperDate,
                                  tmpContainer.MovementItemId
                                -- , tmpContainer.ContainerId
+                                , tmpContainer.isNotBalance
                        UNION ALL
                         SELECT -- tmpRemains.ContainerId,
                                0 AS ContainerId,
@@ -278,9 +290,11 @@ BEGIN
                                SUM (tmpRemains.StartSumm_Currency) AS StartSumm_Currency,
                                SUM (tmpRemains.EndSumm_Currency) AS EndSumm_Currency,
                                -1 AS OperationSort
+                             , tmpRemains.isNotBalance
                         FROM tmpRemains
                         GROUP BY tmpRemains.AccountId, tmpRemains.InfoMoneyId, tmpRemains.ContractId, tmpRemains.PaidKindId, tmpRemains.PartionMovementId, tmpRemains.CurrencyId
                                -- , tmpRemains.ContainerId
+                               , tmpRemains.isNotBalance
                         HAVING SUM (tmpRemains.StartSumm) <> 0 OR SUM (tmpRemains.EndSumm) <> 0
                        )
 
@@ -327,7 +341,7 @@ BEGIN
           MovementString_InvNumberPartner.ValueData AS InvNumberPartner,
           MIString_Comment.ValueData          AS MovementComment,
           Object_Account_View.AccountCode,
-          Object_Account_View.AccountName_all AS AccountName,
+          (CASE WHEN Operation.isNotBalance = TRUE THEN '*з* ' ELSE '' END || Object_Account_View.AccountName_all) :: TVarChar AS AccountName,
 
           View_Contract_InvNumber.ContractCode,
           View_Contract_InvNumber.InvNumber AS ContractName,
