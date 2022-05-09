@@ -301,7 +301,8 @@ uses
   DiscountPartnerEdit in '..\..\FormsBoat\Guides\DiscountPartnerEdit.pas' {DiscountPartnerEditForm: TParentForm},
   SendItemEdit in '..\..\FormsBoat\Document\SendItemEdit.pas' {SendItemEditForm: TParentForm},
   Report_GoodsMotion in '..\..\FormsBoat\Report\Report_GoodsMotion.pas' {Report_GoodsMotionForm: TParentForm},
-  Report_GoodsMotionDialog in '..\..\FormsBoat\Report\Report_GoodsMotionDialog.pas' {Report_GoodsMotionDialogForm: TParentForm};
+  Report_GoodsMotionDialog in '..\..\FormsBoat\Report\Report_GoodsMotionDialog.pas' {Report_GoodsMotionDialogForm: TParentForm},
+  InventoryItemEditNotPartNumber in '..\..\FormsBoat\Document\InventoryItemEditNotPartNumber.pas' {InventoryItemEditNotPartNumberForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -1,4 +1,4 @@
-object InventoryItemEditForm: TInventoryItemEditForm
+object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1058#1086#1074#1072#1088' '#1074' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1102
@@ -165,7 +165,9 @@ object InventoryItemEditForm: TInventoryItemEditForm
   object edPartNumber: TcxTextEdit
     Left = 288
     Top = 21
-    TabOrder = 1
+    Enabled = False
+    Properties.ReadOnly = True
+    TabOrder = 19
     Width = 111
   end
   object cxLabel7: TcxLabel
@@ -178,7 +180,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
     Top = 160
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 21
+    TabOrder = 1
     Width = 93
   end
   object ActionList: TActionList
@@ -691,9 +693,6 @@ object InventoryItemEditForm: TInventoryItemEditForm
       end
       item
         Control = ceTotalCountEnter
-      end
-      item
-        Control = edPartNumber
       end
       item
         Control = cxButtonOK

@@ -1332,8 +1332,8 @@ object InventoryForm: TInventoryForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
-      FormName = 'TInventoryItemEditForm'
-      FormNameParam.Value = 'TInventoryItemEditForm'
+      FormName = 'TInventoryItemEditNotPartNumberForm'
+      FormNameParam.Value = 'TInventoryItemEditNotPartNumberForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1452,8 +1452,8 @@ object InventoryForm: TInventoryForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
-      FormName = 'TInventoryItemEditForm'
-      FormNameParam.Value = 'TInventoryItemEditForm'
+      FormName = 'TInventoryItemEditNotPartNumberForm'
+      FormNameParam.Value = 'TInventoryItemEditNotPartNumberForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
