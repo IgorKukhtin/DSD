@@ -4,7 +4,7 @@ inherited ReestrJournal_byReportForm: TReestrJournal_byReportForm
   ClientWidth = 838
   AddOnFormData.Params = FormParams
   ExplicitWidth = 854
-  ExplicitHeight = 449
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -513,6 +513,34 @@ inherited ReestrJournal_byReportForm: TReestrJournal_byReportForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1056#1077#1077#1089#1090#1088#1072
+            Width = 120
+          end
+          object Date_Double: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1042#1099#1074#1077#1076#1077#1085' '#1076#1091#1073#1083#1080#1082#1072#1090')'
+            DataBinding.FieldName = 'Date_Double'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object Member_Double: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1042#1099#1074#1077#1076#1077#1085' '#1076#1091#1073#1083#1080#1082#1072#1090')'
+            DataBinding.FieldName = 'Member_Double'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object Date_Scan: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1042' '#1085#1072#1083#1080#1095#1080#1080' '#1089#1082#1072#1085')'
+            DataBinding.FieldName = 'Date_Scan'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object Member_Scan: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1042' '#1085#1072#1083#1080#1095#1080#1080' '#1089#1082#1072#1085')'
+            DataBinding.FieldName = 'Member_Scan'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 120
           end
           object Date_Buh: TcxGridDBColumn

@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar
              , FuelChildId Integer, FuelChildCode Integer, FuelChildName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , AssetId Integer, AssetCode Integer, AssetName TVarChar, AssetInvNumber TVarChar
+             , isIrna Boolean
              , isErased boolean
              ) AS
 $BODY$
@@ -89,6 +90,7 @@ BEGIN
            , Object_Asset.ValueData           AS AssetName    
            , ObjectString_InvNumber.ValueData AS AssetInvNumber
 
+           , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
            , Object_Car.isErased      AS isErased
            
        FROM tmpIsErased
@@ -170,9 +172,13 @@ BEGIN
                                 AND ObjectLink_Asset_Car.DescId = zc_ObjectLink_Asset_Car()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = ObjectLink_Asset_Car.ObjectId        
 
-          LEFT JOIN ObjectString AS ObjectString_InvNumber
-                                 ON ObjectString_InvNumber.ObjectId = Object_Asset.Id
-                                AND ObjectString_InvNumber.DescId = zc_ObjectString_Asset_InvNumber()
+            LEFT JOIN ObjectString AS ObjectString_InvNumber
+                                   ON ObjectString_InvNumber.ObjectId = Object_Asset.Id
+                                  AND ObjectString_InvNumber.DescId = zc_ObjectString_Asset_InvNumber()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
+                                    ON ObjectBoolean_Guide_Irna.ObjectId = Object_Car.Id
+                                   AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
 
      WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll = TRUE OR Object_Unit.Id = 8395 -- 21000 Транспорт - сбыт
          OR (vbAccessKey_Kiev = TRUE AND Object_Car.AccessKeyId IN (zc_Enum_Process_AccessKey_TrasportLviv(), zc_Enum_Process_AccessKey_GuideLviv()))
@@ -188,6 +194,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.05.22         *
  07.12.21         *
  02.11.21         *
  05.10.21         *

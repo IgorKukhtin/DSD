@@ -1422,10 +1422,6 @@
 				<Form>ArticleLossEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_OrderExternal.pas">
-				<Form>Report_GoodsMI_OrderExternalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsGroupStat.pas">
 				<Form>GoodsGroupStatForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -4732,6 +4728,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_OrderReturnTare_Order.pas">
 				<Form>Report_OrderReturnTare_OrderForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_OrderExternal.pas">
+				<Form>Report_GoodsMI_OrderExternalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

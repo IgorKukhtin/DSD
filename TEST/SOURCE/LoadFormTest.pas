@@ -420,7 +420,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
   { exit;
@@ -1947,19 +1947,19 @@ end;
 
 procedure TLoadFormTest.LoadReestrFormTest;
 begin
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrJournal_byReportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrJournal_byReportForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrJournalForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrStartMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrStartMovementForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrUpdateMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrUpdateMovementForm');
-    }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_ReestrJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_ReestrJournalForm');
    {
@@ -2164,16 +2164,16 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItem_SeparateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItem_SeparateForm');
   exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListEditForm'));
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListEditForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItemForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListGoodsItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListGoodsItemForm');
 
@@ -2182,10 +2182,10 @@ begin
     exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceList_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceList_ObjectForm');
- }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListTaxDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListTaxDialogForm');
-
+ }
 end;
 
 procedure TLoadFormTest.LoadQualityFormTest;
@@ -2581,13 +2581,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementAllForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementAllForm');
   exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementDifForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementDifForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementDifDialogForm'));
@@ -2700,13 +2700,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckContractInMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckContractInMovementForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_OrderExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_OrderExternalDialogForm');
   exit;
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternal_SaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_OrderExternal_SaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_OrderExternal_SaleDialogForm'));
@@ -3186,7 +3186,7 @@ procedure TLoadFormTest.LoadUnitFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitForm');
-
+    exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
 
@@ -3453,10 +3453,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAsset_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAsset_ObjectForm');
   //exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetEditForm'));
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetEditForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetTypeForm'));
@@ -3479,10 +3479,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMakerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMakerEditForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGoodsPlaceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetGoodsPlaceForm');
-  {
+
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetToPlaceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetToPlaceForm');
@@ -4110,6 +4110,7 @@ procedure TLoadFormTest.LoadCarFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCarForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCarEditForm');
 

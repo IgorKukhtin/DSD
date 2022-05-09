@@ -5078,6 +5078,28 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actCompetitorMarkups: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1085#1072#1094#1077#1085#1086#1082' '#1089' '#1082#1086#1085#1082#1091#1088#1077#1085#1090#1072#1084#1080
+      FormName = 'TCompetitorMarkupsJournalForm'
+      FormNameParam.Value = 'TCompetitorMarkupsJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5716,6 +5738,9 @@
       end
       object miReturnInJournal: TMenuItem
         Action = actReturnInJournal
+      end
+      object N349: TMenuItem
+        Action = actCompetitorMarkups
       end
       object N43: TMenuItem
         Action = actSendOnPrice

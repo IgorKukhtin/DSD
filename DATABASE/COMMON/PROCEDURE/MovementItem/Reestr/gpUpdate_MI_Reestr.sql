@@ -274,6 +274,24 @@ BEGIN
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_TransferOut(), vbId_mi, vbMemberId_user);
     END IF;
 
+    -- <Выведен дубликат>
+    IF inReestrKindId = zc_Enum_ReestrKind_Double()
+    THEN 
+       -- сохранили <когда сформирована виза>
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Double(), vbId_mi, CURRENT_TIMESTAMP);
+       -- сохранили связь с <кто сформировал визу>
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Double(), vbId_mi, vbMemberId_user);
+    END IF;
+
+    -- <В наличии скан>
+    IF inReestrKindId = zc_Enum_ReestrKind_Scan()
+    THEN 
+       -- сохранили <когда сформирована виза>
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Scan(), vbId_mi, CURRENT_TIMESTAMP);
+       -- сохранили связь с <кто сформировал визу>
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Scan(), vbId_mi, vbMemberId_user);
+    END IF;
+
     -- Установили "последнее" значение визы - <Состояние по реестру>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbMovementId_sale, inReestrKindId);
 
@@ -293,6 +311,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 05.05.22         *
  17.11.20         *
  22.07.20         *
  20.07.17         *

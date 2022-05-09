@@ -6,7 +6,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1023
-  ExplicitHeight = 438
+  ExplicitHeight = 439
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -590,6 +590,34 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1056#1077#1077#1089#1090#1088#1072
             Width = 120
           end
+          object Date_Double: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1042#1099#1074#1077#1076#1077#1085' '#1076#1091#1073#1083#1080#1082#1072#1090')'
+            DataBinding.FieldName = 'Date_Double'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object Member_Double: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1042#1099#1074#1077#1076#1077#1085' '#1076#1091#1073#1083#1080#1082#1072#1090')'
+            DataBinding.FieldName = 'Member_Double'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object Date_Scan: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1042' '#1085#1072#1083#1080#1095#1080#1080' '#1089#1082#1072#1085')'
+            DataBinding.FieldName = 'Date_Scan'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object Member_Scan: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1042' '#1085#1072#1083#1080#1095#1080#1080' '#1089#1082#1072#1085')'
+            DataBinding.FieldName = 'Member_Scan'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
           object Date_Buh: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103')'
             DataBinding.FieldName = 'Date_Buh'
@@ -1056,6 +1084,20 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object macPrintPeriodGroup: TMultiAction [5]
+      Category = 'Print'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDialog_Print
+        end
+        item
+          Action = actPrintPeriodGroup
+        end>
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1081' '#1074#1080#1079#1086#1081
+      Hint = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1081' '#1074#1080#1079#1086#1081
+      ImageIndex = 16
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSale_OrderForm'
       FormNameParam.Value = 'TSale_OrderForm'
@@ -1087,20 +1129,6 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end>
-    end
-    object macPrintPeriodGroup: TMultiAction [5]
-      Category = 'Print'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actDialog_Print
-        end
-        item
-          Action = actPrintPeriodGroup
-        end>
-      Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1081' '#1074#1080#1079#1086#1081
-      Hint = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1081' '#1074#1080#1079#1086#1081
-      ImageIndex = 16
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSale_OrderForm'
@@ -1294,14 +1322,14 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       Params = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1451,14 +1479,14 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         end
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1972,6 +2000,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <
@@ -1979,6 +2008,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         Column = BarCode
       end>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 472
     Top = 96
@@ -1990,14 +2020,14 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     Params = <
       item
         Name = 'StartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -2081,7 +2111,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -2089,7 +2119,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

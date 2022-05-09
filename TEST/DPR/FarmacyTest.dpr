@@ -1181,7 +1181,13 @@ uses
   MarginCategoryItemEdit in '..\..\Forms\Guides\MarginCategoryItemEdit.pas' {MarginCategoryItemEditForm: TParentForm},
   Report_CheckUpdateNotMCS in '..\..\FormsFarmacy\Report\Report_CheckUpdateNotMCS.pas' {Report_CheckUpdateNotMCSForm: TParentForm},
   Report_RecalcMCSDialog in '..\..\FormsFarmacy\Report\Report_RecalcMCSDialog.pas' {Report_RecalcMCSDialogForm: TParentForm},
-  Report_RecalcMCS in '..\..\FormsFarmacy\Report\Report_RecalcMCS.pas' {Report_RecalcMCSForm: TParentForm};
+  Report_RecalcMCS in '..\..\FormsFarmacy\Report\Report_RecalcMCS.pas' {Report_RecalcMCSForm: TParentForm},
+  CompetitorEdit in '..\..\FormsFarmacy\Guides\CompetitorEdit.pas' {CompetitorEditForm: TParentForm},
+  Competitor in '..\..\FormsFarmacy\Guides\Competitor.pas' {CompetitorForm: TParentForm},
+  CompetitorMarkups in '..\..\FormsFarmacy\Document\CompetitorMarkups.pas' {CompetitorMarkupsForm: TParentForm},
+  CompetitorMarkupsJournal in '..\..\FormsFarmacy\Document\CompetitorMarkupsJournal.pas' {CompetitorMarkupsJournalForm: TParentForm},
+  PriceSubgroupsEdit in '..\..\FormsFarmacy\Guides\PriceSubgroupsEdit.pas' {PriceSubgroupsEditForm: TParentForm},
+  PriceSubgroups in '..\..\FormsFarmacy\Guides\PriceSubgroups.pas' {PriceSubgroupsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

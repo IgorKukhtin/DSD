@@ -127,7 +127,7 @@ BEGIN
     -- таблица
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpGoodsMinPrice_List')
     THEN
-        CREATE TEMP TABLE _tmpGoodsMinPrice_List (GoodsId Integer, GoodsId_retail Integer, GoodsGroupId Integer, Multiplicity TFloat, isExpDateExcSite boolean) ON COMMIT DROP;
+        CREATE TEMP TABLE _tmpGoodsMinPrice_List (GoodsId Integer, GoodsId_retail Integer, GoodsGroupId Integer, Multiplicity TFloat, isExpDateExcSite boolean, isPublished boolean) ON COMMIT DROP;
     ELSE
         DELETE FROM _tmpGoodsMinPrice_List;
     END IF;
@@ -173,8 +173,8 @@ BEGIN
     -- парсим товары
     IF COALESCE(inGoodsId_list, '') <> ''
     THEN
-      vbQueryText := 'INSERT INTO _tmpGoodsMinPrice_List (GoodsId, GoodsId_retail, GoodsGroupId, Multiplicity, isExpDateExcSite)
-                      SELECT  Retail4.Id, RetailAll.Id, RetailMain.GoodsGroupId, RetailMain.Multiplicity, RetailMain.isExpDateExcSite
+      vbQueryText := 'INSERT INTO _tmpGoodsMinPrice_List (GoodsId, GoodsId_retail, GoodsGroupId, Multiplicity, isExpDateExcSite, isPublished)
+                      SELECT  Retail4.Id, RetailAll.Id, RetailMain.GoodsGroupId, RetailMain.Multiplicity, RetailMain.isExpDateExcSite, RetailMain.isPublished
                       FROM Object_Goods_Retail AS Retail4
                            INNER JOIN Object_Goods_Retail AS RetailAll ON RetailAll.GoodsMainId  = Retail4.GoodsMainId
                            INNER JOIN Object_Goods_Main AS RetailMain ON RetailMain.Id  = Retail4.GoodsMainId
@@ -191,7 +191,7 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM _tmpGoodsMinPrice_List WHERE GoodsId <> 0)
     THEN
          -- все остатки
-         INSERT INTO _tmpGoodsMinPrice_List (GoodsId, GoodsId_retail, GoodsGroupId, Multiplicity, isExpDateExcSite)
+         INSERT INTO _tmpGoodsMinPrice_List (GoodsId, GoodsId_retail, GoodsGroupId, Multiplicity, isExpDateExcSite, isPublished)
            -- SELECT DISTINCT Container.ObjectId -- здесь товар "сети"
            -- !!!временно захардкодил, будет всегда товар НеБолей!!!!
            SELECT DISTINCT
@@ -200,6 +200,7 @@ BEGIN
                 , ObjectLink_Goods_GoodsGroup.ChildObjectId
                 , ObjectFloat_Goods_Multiplicity.ValueData
                 , COALESCE (ObjectBoolean_Goods_ExpDateExcSite.ValueData, False) 
+                , COALESCE (ObjectBoolean_Goods_Published.ValueData, False) 
            FROM _tmpUnitMinPrice_List
                 INNER JOIN Container ON Container.WhereObjectId = _tmpUnitMinPrice_List.UnitId
                                     AND Container.DescId = zc_Container_Count()
@@ -227,6 +228,9 @@ BEGIN
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_ExpDateExcSite
                                         ON ObjectBoolean_Goods_ExpDateExcSite.ObjectId = ObjectLink_Main.ChildObjectId
                                        AND ObjectBoolean_Goods_ExpDateExcSite.DescId   = zc_ObjectBoolean_Goods_ExpDateExcSite()
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Published
+                                        ON ObjectBoolean_Goods_Published.ObjectId = Container.ObjectId
+                                       AND ObjectBoolean_Goods_Published.DescId = zc_ObjectBoolean_Goods_Published()
           ;
     END IF;
 
@@ -254,8 +258,7 @@ BEGIN
                                          AND Container.DescId   = zc_Container_Count()
                                          AND Container.Amount   <> 0
                                          AND Container.WhereObjectId IN (SELECT _tmpUnitMinPrice_List.UnitId FROM _tmpUnitMinPrice_List)
-
-
+                WHERE _tmpGoodsMinPrice_List.isPublished = True
                 GROUP BY Container.WhereObjectId
                        , _tmpGoodsMinPrice_List.GoodsId
                        , _tmpGoodsMinPrice_List.GoodsId_retail
@@ -357,7 +360,8 @@ BEGIN
 
                                        LEFT OUTER JOIN ReserveContainer ON ReserveContainer.ContainerID = Container.Id
                                   WHERE (Container.Amount - COALESCE(ReserveContainer.Amount, 0)) > 0
-                                    AND _tmpGoodsMinPrice_List.isExpDateExcSite = False)
+                                    AND _tmpGoodsMinPrice_List.isExpDateExcSite = False
+                                    AND _tmpGoodsMinPrice_List.isPublished = True)
           , tmpPDContainer AS (SELECT Container.Id,
                                       Container.WhereObjectId,
                                       Container.ObjectId,
@@ -507,7 +511,7 @@ BEGIN
             GoodsList_all AS
              (SELECT Distinct _tmpGoodsMinPrice_List.GoodsId  AS GoodsId
               FROM _tmpGoodsMinPrice_List
-             )
+              WHERE _tmpGoodsMinPrice_List.isPublished = True)
 
           SELECT
               MinPriceList.GoodsId,
@@ -528,7 +532,8 @@ BEGIN
               MinPriceList.isOneJuridical
           FROM GoodsList_all
                INNER JOIN MinPrice_ForSite AS MinPriceList
-                                           ON GoodsList_all.GoodsId = MinPriceList.GoodsId;
+                                           ON GoodsList_all.GoodsId = MinPriceList.GoodsId
+          ;
 
     -- запомнили время после lpSelectMinPrice_List
     vbOperDate_Begin3:= CLOCK_TIMESTAMP();
@@ -1102,7 +1107,7 @@ $BODY$
 
 
 SELECT OBJECT_Unit.valuedata, OBJECT_Goods.valuedata, p.* FROM gpselect_goodsonunit_forsite ('16240371,8156016,377610,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377594,377574,15212291,12812109,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089', 
-                                                                                             '6649,15889,19456'  /*16202529'  6649, 33004, 5925154, 5925280, 16290423'*/, TRUE, zfCalc_UserSite()) AS p
+                                                                                             '6649, 33004, 5925154, 5925280, 16290423', TRUE, zfCalc_UserSite()) AS p
  LEFT JOIN OBJECT AS OBJECT_Unit ON OBJECT_Unit.ID = p.UnitId
  LEFT JOIN OBJECT AS OBJECT_Goods ON OBJECT_Goods.ID = p.Id;
  

@@ -3,8 +3,9 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PriceList_SupplierFailures(Integer, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PriceList_SupplierFailures(
+    IN inMovementId     Integer   ,     -- Документ
     IN inGoodsId        Integer   ,     -- Товар
-    IN inOperdate       TDateTime    , -- на дату
+    IN inOperdate       TDateTime ,     -- на дату
     IN inJuridicalId    Integer   ,     -- Юр. лицо
     IN inContractId     Integer   ,     -- Договор
     IN inUnitId         Integer   ,     -- Аптека
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PriceList_SupplierFailures(
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPriceListId Integer;
+   DECLARE vbDateStart TDateTime;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (inSession);
@@ -47,6 +49,12 @@ BEGIN
    INTO vbPriceListId 
    FROM _tmpPriceList
    LIMIT 1;   
+   
+   SELECT MIN(MovementProtocol.OperDate)
+   INTO vbDateStart
+   FROM MovementProtocol 
+   WHERE MovementProtocol.MovementId = inMovementId
+     AND MovementProtocol.ProtocolData ILIKE '%Статус" FieldValue = "Проведен%';   
       
    IF NOT EXISTS(SELECT 1 
                  FROM MovementItem
@@ -63,12 +71,13 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItem_PriceList_Child(ioId           := 0
                                                        , inMovementId   := vbPriceListId
                                                        , inGoodsId      := inGoodsId
+                                                       , inDateStart    := vbDateStart
                                                        , inUserId       := vbUserId);
 
      -- !!!ВРЕМЕННО для ТЕСТА!!!
      IF inSession = zfCalc_UserAdmin()
      THEN
-       RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%> <%>', inGoodsId, inJuridicalId, inContractId, vbPriceListId;
+       RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%> <%> <%>', inGoodsId, inJuridicalId, inContractId, vbPriceListId, vbDateStart;
      END IF;
 
    ELSE
@@ -86,4 +95,4 @@ $BODY$
  22.02.22                                                       *
 */
 
--- select * from gpInsertUpdate_MI_PriceList_SupplierFailures(inGoodsId := 15402020 , inJuridicalId := 59610 , inContractId := 183257 , inUnitId := 5120968 ,  inSession := '3');
+-- select * from gpInsertUpdate_MI_PriceList_SupplierFailures(inMovementId := 27711415 , inGoodsId := 162481 , inOperdate := ('05.05.2022')::TDateTime , inJuridicalId := 59611 , inContractId := 183358 , inUnitId := 13311246 ,  inSession := '3');

@@ -1,12 +1,13 @@
 -- Function: lpInsertUpdate_MovementItem_PriceList_Child()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PriceList_Child (Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PriceList_Child (Integer, Integer, Integer, TDateTime, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PriceList_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
-    IN inUserId              Integer      -- сессия пользователя
+    IN inDateStart           TDateTime , -- Дата начала
+    IN inUserId              Integer     -- сессия пользователя
 
 )
 RETURNS Integer AS
@@ -45,6 +46,9 @@ BEGIN
 
      -- сохранили связь с <Дата/время корректировки>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Update(), ioId, inUserId);
+
+     -- сохранили свойство <Сотрудник>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Start(), ioId, inDateStart);
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);

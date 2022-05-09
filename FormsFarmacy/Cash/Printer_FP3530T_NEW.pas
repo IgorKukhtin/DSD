@@ -269,7 +269,7 @@ begin
     for I := 0 to High(Res) do
     begin
       if POS('https', Res[I]) = 0 then
-        if not PrintLine(Res[I]) then Exit;
+        if not PrintLine(TrimRight(Res[I])) then Exit;
     end;
     Result := True;
   finally

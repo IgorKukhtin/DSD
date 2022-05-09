@@ -569,7 +569,7 @@ BEGIN
                                         , tmpMI_2.GoodsId
                                         , tmpMI_2.GoodsKindId
                                  )
-/*               , tmpMI_child AS (SELECT MovementItem.ParentId       AS ParentId
+/*               , tmpMI_child AS (SELECT MovementItem.ParentId     AS ParentId
                                       , MAX (Movement_Tax.OperDate) AS OperDate_tax
                                  FROM MovementItem
                                       LEFT JOIN MovementItemFloat AS MIFloat_MovementId
@@ -585,24 +585,36 @@ BEGIN
                                    AND MovementItem.isErased   = FALSE
                                    AND MovementItem.Amount     <> 0
                                  GROUP BY MovementItem.ParentId
-                                 )*/
+                                 )*/  
+
+               , tmpMovementItem_child AS (SELECT MovementItem.*
+                                           FROM MovementItem
+                                           WHERE MovementItem.MovementId = inMovementId
+                                             AND MovementItem.DescId     = zc_MI_Child()
+                                             AND MovementItem.isErased   = FALSE
+                                             AND MovementItem.Amount     <> 0
+                                           )
+
+               , tmpMIFloat_MovementId AS (SELECT MovementItemFloat.MovementItemId
+                                                , MovementItemFloat.ValueData :: Integer
+                                                , MovementItemFloat.DescId
+                                           FROM MovementItemFloat
+                                           WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMovementItem_child.Id FROM tmpMovementItem_child)
+                                             AND MovementItemFloat.DescId         = zc_MIFloat_MovementId()
+                                           )
 
                , tmp_tax AS (SELECT MovementItem.ParentId   AS ParentId
                                   , Movement_Tax.Id         AS MovementId_tax
                                   , Movement_Tax.OperDate   AS OperDate_tax
-                              FROM MovementItem
-                                   LEFT JOIN MovementItemFloat AS MIFloat_MovementId
-                                                               ON MIFloat_MovementId.MovementItemId = MovementItem.Id
-                                                              AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                              FROM tmpMovementItem_child AS MovementItem
+                                   LEFT JOIN tmpMIFloat_MovementId AS MIFloat_MovementId
+                                                                   ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                                  AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
                                    LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MIFloat_MovementId.ValueData :: Integer
                                    LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
                                                                   ON MovementLinkMovement_Tax.MovementId = Movement_Sale.Id
                                                                  AND MovementLinkMovement_Tax.DescId     = zc_MovementLinkMovement_Master()
                                    LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement_Tax.MovementChildId
-                              WHERE MovementItem.MovementId = inMovementId
-                                AND MovementItem.DescId     = zc_MI_Child()
-                                AND MovementItem.isErased   = FALSE
-                                AND MovementItem.Amount     <> 0
                               )
 
              -- по продаже находим налоговую и данные по MIBoolean_Goods_Name_new
@@ -628,6 +640,17 @@ BEGIN
                                  FROM tmp_tax
                                  GROUP BY tmp_tax.ParentId
                                  )
+
+               --мин дата продажи
+               , tmpOperDate_Sale AS (SELECT MovementItem.ParentId
+                                           , MIN (Movement_Sale.OperDate) AS OperDate
+                                      FROM tmpMovementItem_child AS MovementItem
+                                           LEFT JOIN tmpMIFloat_MovementId AS MIFloat_MovementId
+                                                                           ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                                          AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                           LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MIFloat_MovementId.ValueData :: Integer
+                                      GROUP BY MovementItem.ParentId 
+                                      )
 
                 , tmpMI AS (SELECT MovementItem.ObjectId AS GoodsId
                                  , MovementItem.MovementId
@@ -659,6 +682,7 @@ BEGIN
                                                   ELSE MovementItem.Amount
                                     END) AS AmountPartner
                                  , (tmpMIPartionMovement.AmountPartner) AS AmountPartner_PartionMovement
+                                 , COALESCE (tmpOperDate_Sale.OperDate, vbOperDate) AS OperDate_sale
                             FROM MovementItem
                                  LEFT JOIN tmpMI_child ON tmpMI_child.ParentId = MovementItem.Id
                                  LEFT JOIN MovementItemFloat AS MIFloat_Price
@@ -686,17 +710,24 @@ BEGIN
                                                                AND tmpMIPartionMovement.GoodsId        = MovementItem.ObjectId
                                                                AND tmpMIPartionMovement.GoodsKindId    = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
 
+                                 -- продажа покупателю
+                                 LEFT JOIN tmpOperDate_Sale ON tmpOperDate_Sale.ParentId = MovementItem.Id
+                                 
                             WHERE MovementItem.MovementId = inMovementId
                               AND MovementItem.DescId     = zc_MI_Master()
                               AND MovementItem.isErased   = FALSE
-                           )
+                           ) 
+
+
+        
+       
        -- Результат
        SELECT
              Object_Goods.ObjectCode  			AS GoodsCode
            , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name
                    WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name
                    ELSE --CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
-                        CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
+                        CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND tmpMI.OperDate_sale >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
                              WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
                              WHEN ObjectString_Goods_BUH.ValueData <> ''          THEN ObjectString_Goods_BUH.ValueData
                              ELSE Object_Goods.ValueData
@@ -708,7 +739,7 @@ BEGIN
            , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name
                   WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name
                   ELSE --CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
-                       CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
+                       CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND tmpMI.OperDate_sale >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
                             WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
                             WHEN ObjectString_Goods_BUH.ValueData <> ''          THEN ObjectString_Goods_BUH.ValueData
                             ELSE Object_Goods.ValueData
@@ -798,7 +829,7 @@ BEGIN
 
        WHERE tmpMI.AmountPartner <> 0
        ORDER BY --CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END, Object_GoodsKind.ValueData
-                CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData 
+                CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND tmpMI.OperDate_sale >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData 
                      WHEN COALESCE (tmpName_new.isName_new, FALSE) = TRUE THEN Object_Goods.ValueData
                      WHEN ObjectString_Goods_BUH.ValueData <> ''          THEN ObjectString_Goods_BUH.ValueData
                      ELSE Object_Goods.ValueData

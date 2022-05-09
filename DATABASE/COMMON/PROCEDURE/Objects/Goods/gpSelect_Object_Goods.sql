@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_RUS TVarChar
              , isPartionCount Boolean, isPartionSumm Boolean
              , isCheck_basis Boolean, isCheck_main Boolean
              , isNameOrig Boolean
+             , isIrna Boolean
              , isErased Boolean
               )
 AS
@@ -103,7 +104,9 @@ BEGIN
             , CASE WHEN Object_Goods_basis.Id > 0 AND Object_Goods_basis.Id <> COALESCE (Object_Goods_main.Id, 0) THEN TRUE ELSE FALSE END :: Boolean AS isCheck_basis
             , CASE WHEN Object_Goods_main.Id  > 0 AND Object_Goods_main. Id <> COALESCE (Object_Goods.Id,      0) THEN TRUE ELSE FALSE END :: Boolean AS isCheck_main
 
-            ,  COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE)     :: Boolean AS isNameOrig
+            , COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE)     :: Boolean AS isNameOrig 
+            
+            , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
 
             , Object_Goods.isErased       AS isErased
 
@@ -197,6 +200,10 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_NameOrig
                                      ON ObjectBoolean_NameOrig.ObjectId = Object_Goods.Id
                                     AND ObjectBoolean_NameOrig.DescId = zc_ObjectBoolean_Goods_NameOrig()
+
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
+                                     ON ObjectBoolean_Guide_Irna.ObjectId = Object_Goods.Id
+                                    AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
 
              LEFT JOIN ObjectDate AS ObjectDate_BUH
                                   ON ObjectDate_BUH.ObjectId = Object_Goods.Id
@@ -296,6 +303,7 @@ BEGIN
             , FALSE                           AS isCheck_basis
             , FALSE                           AS isCheck_main
             , FALSE                           AS isNameOrig
+            , FALSE                           AS isIrna
             , FALSE                           AS isErased
       ;
 
@@ -308,6 +316,7 @@ ALTER FUNCTION gpSelect_Object_Goods (Boolean, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.05.22         *
  04.08.21         *
  23.10.19         * CountForWeight
  09.10.19         * add WeightTare

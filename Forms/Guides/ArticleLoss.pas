@@ -73,6 +73,12 @@ type
     bbProtocolOpen: TdxBarButton;
     BranchName: TcxGridDBColumn;
     BranchChoiceForm: TOpenChoiceForm;
+    spUpdate_isIrna: TdsdStoredProc;
+    actUpdate_isIrna: TdsdExecStoredProc;
+    bbUpdate_isIrna: TdxBarButton;
+    macUpdate_isIrna_list: TMultiAction;
+    macUpdate_isIrna: TMultiAction;
+    isIrna: TcxGridDBColumn;
   private
     { Private declarations }
   public

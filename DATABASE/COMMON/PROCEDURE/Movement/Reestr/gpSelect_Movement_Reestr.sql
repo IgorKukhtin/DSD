@@ -39,6 +39,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Date_Buh         TDateTime
              , Date_TransferIn  TDateTime
              , Date_TransferOut TDateTime
+             , Date_Double      TDateTime
+             , Date_Scan        TDateTime
 
              , Member_Insert        TVarChar
              , Member_Log           TVarChar
@@ -46,12 +48,14 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Member_PartnerInFrom TVarChar
              , Member_RemakeInTo    TVarChar
              , Member_RemakeInFrom  TVarChar
-             , Member_RemakeBuh     TVarChar
+             , Member_RemakeScan     TVarChar
              , Member_Remake        TVarChar
              , Member_Econom        TVarChar
-             , Member_Buh           TVarChar
+             , Member_Scan           TVarChar
              , Member_TransferIn    TVarChar
              , Member_TransferOut   TVarChar
+             , Member_Double        TVarChar
+             , Member_Scan          TVarChar
 
              , PersonalName            TVarChar
              , PersonalTradeName       TVarChar
@@ -140,6 +144,8 @@ BEGIN
            , MIDate_Buh.ValueData            AS Date_Buh
            , MIDate_TransferIn.ValueData     AS Date_TransferIn
            , MIDate_TransferOut.ValueData    AS Date_TransferOut
+           , MIDate_Double.ValueData         AS Date_Double
+           , MIDate_Scan.ValueData           AS Date_Scan
 
            , CASE WHEN MIDate_Insert.DescId IS NOT NULL THEN Object_ObjectMember.ValueData ELSE '' END :: TVarChar AS Member_Insert -- т.к. в "пустышках" - "криво" формируется это свойство
            , Object_Log.ValueData            AS Member_Log
@@ -153,6 +159,8 @@ BEGIN
            , Object_Buh.ValueData            AS Member_Buh
            , Object_TransferIn.ValueData     AS Member_TransferIn
            , Object_TransferOut.ValueData    AS Member_TransferOut
+           , Object_Double.ValueData         AS Member_Double
+           , Object_Scan.ValueData           AS Member_Scan
 
            , Object_Personal.ValueData                 AS PersonalName
            , Object_PersonalTrade.ValueData            AS PersonalTradeName
@@ -235,6 +243,13 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_Log
                                        ON MIDate_Log.MovementItemId = MovementItem.Id
                                       AND MIDate_Log.DescId = zc_MIDate_Log()
+
+            LEFT JOIN MovementItemDate AS MIDate_Double
+                                       ON MIDate_Double.MovementItemId = MovementItem.Id
+                                      AND MIDate_Double.DescId = zc_MIDate_Double()
+            LEFT JOIN MovementItemDate AS MIDate_Scan
+                                       ON MIDate_Scan.MovementItemId = MovementItem.Id
+                                      AND MIDate_Scan.DescId = zc_MIDate_Scan()
                                       
             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartnerInTo
                                              ON MILinkObject_PartnerInTo.MovementItemId = MovementItem.Id
@@ -290,6 +305,15 @@ BEGIN
                                              ON MILinkObject_Log.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Log.DescId = zc_MILinkObject_Log()
             LEFT JOIN Object AS Object_Log ON Object_Log.Id = MILinkObject_Log.ObjectId
+                                             
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Double
+                                             ON MILinkObject_Double.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Double.DescId = zc_MILinkObject_Double()
+            LEFT JOIN Object AS Object_Double ON Object_Double.Id = MILinkObject_Double.ObjectId
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Scan
+                                             ON MILinkObject_Scan.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Scan.DescId = zc_MILinkObject_Scan()
+            LEFT JOIN Object AS Object_Scan ON Object_Scan.Id = MILinkObject_Scan.ObjectId
             
             LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                     ON MovementFloat_MovementItemId.ValueData ::integer = MovementItem.Id -- tmpMI.MovementItemId
@@ -388,6 +412,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 05.05.22         *
  17.11.20         * Log
  22.07.20         *
  20.07.17         *

@@ -1014,6 +1014,9 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_EconomOut()  , inDescId:= zc_Object_ReestrKind(), inCode:= 12,inName:= 'Экономисты (для снабжения)' , inEnumName:= 'zc_Enum_ReestrKind_EconomOut');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_Snab()       , inDescId:= zc_Object_ReestrKind(), inCode:= 13,inName:= 'Снабжение (в работе)'       , inEnumName:= 'zc_Enum_ReestrKind_Snab');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_SnabRe()     , inDescId:= zc_Object_ReestrKind(), inCode:= 14,inName:= 'Снабжение (для переделки)'  , inEnumName:= 'zc_Enum_ReestrKind_SnabRe');
+
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_Double()     , inDescId:= zc_Object_ReestrKind(), inCode:= 15,inName:= 'Выведен дубликат'           , inEnumName:= 'zc_Enum_ReestrKind_Double');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_Scan()       , inDescId:= zc_Object_ReestrKind(), inCode:= 16,inName:= 'В наличии скан'             , inEnumName:= 'zc_Enum_ReestrKind_Scan');
 END $$;
 
 

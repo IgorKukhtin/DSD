@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BusinessId Integer, BusinessName TVarChar
              , BranchId Integer, BranchName TVarChar
              , Comment TVarChar
-
+             , isIrna Boolean
              , isErased boolean) AS
 $BODY$BEGIN
 
@@ -53,6 +53,7 @@ $BODY$BEGIN
         
         , ObjectString_Comment.ValueData  AS Comment       
 
+        , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
         , Object_ArticleLoss.isErased     AS isErased
    FROM Object AS Object_ArticleLoss
           
@@ -80,6 +81,10 @@ $BODY$BEGIN
                                ON ObjectString_Comment.ObjectId = Object_ArticleLoss.Id
                               AND ObjectString_Comment.DescId = zc_ObjectString_ArticleLoss_Comment() 
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
+                                ON ObjectBoolean_Guide_Irna.ObjectId = Object_ArticleLoss.Id
+                               AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
+
    WHERE Object_ArticleLoss.DescId = zc_Object_ArticleLoss()
      AND (Object_ArticleLoss.isErased = inShowAll OR inShowAll = TRUE);
 
@@ -91,6 +96,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
+ 04.05.22         *
  16.11.20         * add Branch
  27.07.17         * add Business
  05.07.17         *

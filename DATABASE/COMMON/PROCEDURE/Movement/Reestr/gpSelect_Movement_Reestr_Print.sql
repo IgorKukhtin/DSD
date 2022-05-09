@@ -219,7 +219,10 @@ BEGIN
                                                             , zc_MILinkObject_RemakeBuh()
                                                             , zc_MILinkObject_Remake()
                                                             , zc_MILinkObject_Buh()
-                                                            , zc_MILinkObject_Econom())
+                                                            , zc_MILinkObject_Econom()
+                                                            , zc_MILinkObject_Scan()
+                                                            , zc_MILinkObject_Double()
+                                                            )
                       )
 
         , tmpMIDate AS (SELECT MovementItemDate.*
@@ -231,7 +234,10 @@ BEGIN
                                                         , zc_MIDate_RemakeBuh()
                                                         , zc_MIDate_Remake()
                                                         , zc_MIDate_Buh()
-                                                        , zc_MIDate_Econom())
+                                                        , zc_MIDate_Econom()
+                                                        , zc_MIDate_Scan()
+                                                        , zc_MIDate_Double()
+                                                        )
                       )
                                       
 
@@ -268,6 +274,8 @@ BEGIN
            , COALESCE (MIDate_Remake.ValueData, NULL) ::TDateTime         AS Date_Remake
            , COALESCE (MIDate_Econom.ValueData, NULL) ::TDateTime         AS Date_Econom
            , COALESCE (MIDate_Buh.ValueData, NULL) ::TDateTime            AS Date_Buh
+           , COALESCE (MIDate_Double.ValueData, NULL) ::TDateTime         AS Date_Double
+           , COALESCE (MIDate_Scan.ValueData, NULL) ::TDateTime           AS Date_Scan
 
            , CASE WHEN MIDate_Insert.DescId IS NOT NULL THEN Object_ObjectMember.ValueData ELSE '' END :: TVarChar AS Member_Insert -- т.к. в "пустышках" - "криво" формируется это свойство
            , Object_Log.ValueData            AS Member_Log
@@ -278,7 +286,9 @@ BEGIN
            , Object_RemakeBuh.ValueData      AS Member_RemakeBuh
            , Object_Remake.ValueData         AS Member_Remake
            , Object_Econom.ValueData         AS Member_Econom
-           , Object_Buh.ValueData            AS Member_Buh
+           , Object_Buh.ValueData            AS Member_Buh 
+           , Object_Double.ValueData         AS Member_Double
+           , Object_Scan.ValueData           AS Member_Scan
            , tmpMI.GroupNum
            , MovementString_Comment.ValueData       AS Comment_Order
 
@@ -309,6 +319,13 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_Log
                                        ON MIDate_Log.MovementItemId = tmpMI.MovementItemId
                                       AND MIDate_Log.DescId = zc_MIDate_Log()
+
+            LEFT JOIN tmpMIDate AS MIDate_Double
+                                ON MIDate_Double.MovementItemId = tmpMI.MovementItemId
+                               AND MIDate_Double.DescId = zc_MIDate_Double()
+            LEFT JOIN tmpMIDate AS MIDate_Scan
+                                ON MIDate_Scan.MovementItemId = tmpMI.MovementItemId
+                               AND MIDate_Scan.DescId = zc_MIDate_Scan()
 
             LEFT JOIN tmpMILO AS MILinkObject_PartnerInTo
                               ON MILinkObject_PartnerInTo.MovementItemId = tmpMI.MovementItemId
@@ -355,6 +372,15 @@ BEGIN
                                             AND MILinkObject_Log.DescId = zc_MILinkObject_Log()
             LEFT JOIN Object AS Object_Log ON Object_Log.Id = MILinkObject_Log.ObjectId
 
+            LEFT JOIN tmpMILO AS MILinkObject_Double
+                              ON MILinkObject_Double.MovementItemId = tmpMI.MovementItemId
+                             AND MILinkObject_Double.DescId = zc_MILinkObject_Double()
+            LEFT JOIN Object AS Object_Double ON Object_Double.Id = MILinkObject_Double.ObjectId
+
+            LEFT JOIN tmpMILO AS MILinkObject_Scan
+                              ON MILinkObject_Scan.MovementItemId = tmpMI.MovementItemId
+                             AND MILinkObject_Scan.DescId = zc_MILinkObject_Scan()
+            LEFT JOIN Object AS Object_Scan ON Object_Scan.Id = MILinkObject_Scan.ObjectId
 
             --
             LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.id = tmpMI.MovementId_Sale
@@ -438,6 +464,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.05.22         *
  18.11.20         *
  22.07.20         *
  19.01.18         *

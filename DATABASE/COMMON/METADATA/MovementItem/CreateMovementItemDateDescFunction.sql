@@ -81,6 +81,16 @@ CREATE OR REPLACE FUNCTION zc_MIDate_TransferOut() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_TransferOut', 'когда сформирована виза "Транзит возвращен"' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_TransferOut');
 
+CREATE OR REPLACE FUNCTION zc_MIDate_Double() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Double'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_Double', 'когда сформирована виза "Выведен дубликат"' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Double');
+
+CREATE OR REPLACE FUNCTION zc_MIDate_Scan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Scan'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_Scan', 'когда сформирована виза "В наличии скан"' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Scan');
+
+--
+
 CREATE OR REPLACE FUNCTION zc_MIDate_UpdateMobile() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_UpdateMobile'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_UpdateMobile', 'когда торговый отметил заданиe' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_UpdateMobile');
@@ -158,7 +168,9 @@ INSERT INTO MovementItemDateDesc (Code, ItemName)
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.  Шаблий О.В.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.  Шаблий О.В. 
+ 05.05.22         * zc_MIDate_Double
+                    zc_MIDate_Scan
  24.11.21                                                                         * zc_MIDate_ExpirationDateTwo
  17.11.20         * zc_MIDate_BankOut
  10.09.20                                                                         * zc_MIDate_ExpirationDateIncome

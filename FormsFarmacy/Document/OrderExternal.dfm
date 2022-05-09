@@ -936,7 +936,8 @@ inherited OrderExternalForm: TOrderExternalForm
           Action = actRefresh
         end>
       QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074'?'
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1089#1090#1072#1090#1082#1080
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1090#1082#1072#1079#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
       ImageIndex = 41
     end
     object actGetImportSettingId: TdsdExecStoredProc
@@ -2241,6 +2242,14 @@ inherited OrderExternalForm: TOrderExternalForm
     DataSets = <>
     OutputType = otResult
     Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inGoodsId'
         Value = Null

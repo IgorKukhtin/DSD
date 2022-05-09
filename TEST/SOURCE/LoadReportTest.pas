@@ -140,10 +140,10 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-
+   {
   LoadReportFromFile('PrintMovement_OrderReturnTare', ReportPath + '\Товарный Учет\PrintMovement_OrderReturnTare.fr3');
   exit;
-  {
+
   LoadReportFromFile('Отчет Производство_потери КВК', ReportPath + '\Отчеты (производство)\Отчет Производство_потери КВК.fr3');
   exit;
 
@@ -389,11 +389,11 @@ begin
   LoadReportFromFile('Плановая Прибыль (цена себестоимость сравнение)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (цена себестоимость сравнение).fr3');
   LoadReportFromFile('Плановая Прибыль (сравнение цен)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (сравнение цен).fr3');
   LoadReportFromFile('Плановая Прибыль (сравнение цен себестоимости)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (сравнение цен себестоимости).fr3');
-  }
+
     LoadReportFromFile('Плановая Прибыль (цена себестоимость и расходы)прайс5', ReportPath + '\Отчеты (производство)\Плановая Прибыль (цена себестоимость и расходы)прайс5.fr3');
     LoadReportFromFile('Плановая Прибыль (цена себестоимость и расходы)прайс6', ReportPath + '\Отчеты (производство)\Плановая Прибыль (цена себестоимость и расходы)прайс6.fr3');
   exit;
-  {
+
 
   LoadReportFromFile('Плановая Прибыль (чистая прибыль)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (чистая прибыль).fr3');
   exit;
@@ -472,8 +472,10 @@ begin
   LoadReportFromFile('Отчет - заявки (по Маршрутам-детально)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (по Маршрутам-детально).fr3');
   LoadReportFromFile('Отчет - заявки (по Маршрутам-итого)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (по Маршрутам-итого).fr3');
   LoadReportFromFile('Отчет - заявки (кросс)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (кросс).fr3');
+  }
+  LoadReportFromFile('Отчет - заявки (по Маршрутам по дням)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (по Маршрутам по дням).fr3');
   exit;
-
+  {
   // Печатные формы накладных
 
    LoadReportFromFile('PrintMovement_ReestrIncome', ReportPath + '\Товарный Учет\PrintMovement_ReestrIncome.fr3');

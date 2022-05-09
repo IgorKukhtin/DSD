@@ -69,6 +69,7 @@ RETURNS TABLE (Id                  Integer
              , OKPO_PartnerMedical TVarChar
              , OKPO_Department     TVarChar
              
+             , ReportNumber        TVarChar
               )
 
 AS
@@ -175,7 +176,8 @@ BEGIN
      , tmpMovementString AS (SELECT MovementString.*
                              FROM MovementString
                              WHERE MovementString.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                               AND MovementString.DescId = zc_MovementString_InvNumberRegistered()
+                               AND MovementString.DescId IN ( zc_MovementString_InvNumberRegistered()
+                                                            , zc_MovementString_ReportNumber())
                            )
 
    
@@ -394,6 +396,8 @@ BEGIN
       , ObjectHistory_PartnerMedicalDetails.OKPO AS OKPO_PartnerMedical
       , ObjectHistory_DepartmentDetails.OKPO     AS OKPO_Department
       
+      , MovementString_ReportNumber.ValueData    AS ReportNumber
+      
     FROM tmpMovement AS Movement
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
         
@@ -434,6 +438,10 @@ BEGIN
         LEFT JOIN tmpMovementString AS MovementString_InvNumberRegistered
                                     ON MovementString_InvNumberRegistered.MovementId = Movement.Id
                                    AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
+
+        LEFT JOIN tmpMovementString AS MovementString_ReportNumber
+                                    ON MovementString_ReportNumber.MovementId = Movement.Id
+                                   AND MovementString_ReportNumber.DescId = zc_MovementString_ReportNumber()
 
         LEFT JOIN tmpMovementBoolean AS MovementBoolean_Document
                                      ON MovementBoolean_Document.MovementId = Movement.Id
