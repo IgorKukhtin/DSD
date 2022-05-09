@@ -14,19 +14,23 @@ BEGIN
      THEN
          DELETE FROM _tmpItem;
          DELETE FROM _tmpItem_Child;
+         DELETE FROM _tmpRemains;
      ELSE
          -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
          CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                                   , GoodsId Integer
-                                   , OperCount TFloat
+                                   , GoodsId Integer, PartNumber TVarChar
+                                   , OperCount TFloat, OperPrice TFloat
                                    , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                     ) ON COMMIT DROP;
          -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-         CREATE TEMP TABLE _tmpItem_Child (MovementItemId Integer, ParentId Integer
-                                         , GoodsId Integer, PartionId Integer
+         CREATE TEMP TABLE _tmpItem_Child (MovementItemId Integer, ContainerId Integer, ContainerId_summ Integer, AccountId Integer
+                                         , GoodsId Integer, PartionId Integer, PartNumber TVarChar
                                          , OperCount TFloat
-                                         , MovementId_order Integer
                                           ) ON COMMIT DROP;
+         -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+         CREATE TEMP TABLE _tmpRemains (ContainerId Integer, GoodsId Integer, PartionId Integer, PartNumber TVarChar, OperDate TDateTime
+                                      , Amount_container TFloat, Amount TFloat
+                                       ) ON COMMIT DROP;
 
      END IF;
 

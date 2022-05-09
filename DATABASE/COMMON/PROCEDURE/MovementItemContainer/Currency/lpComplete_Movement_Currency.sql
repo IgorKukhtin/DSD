@@ -107,10 +107,17 @@ BEGIN
                                                                        AND ContainerLinkObject_InfoMoney.DescId       = zc_ContainerLinkObject_InfoMoney()
                                                                        AND vbPaidKindId                               = zc_Enum_PaidKind_SecondForm()
                                           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ContainerLinkObject_InfoMoney.ObjectId
+
+                                          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney_two
+                                                                        ON ContainerLinkObject_InfoMoney_two.ContainerId  = ContainerLinkObject_Currency.ContainerId
+                                                                       AND ContainerLinkObject_InfoMoney_two.DescId       = zc_ContainerLinkObject_InfoMoney()
+                                          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_two ON View_InfoMoney_two.InfoMoneyId = ContainerLinkObject_InfoMoney_two.ObjectId
+
                                      WHERE ContainerLinkObject_Currency.ObjectId = vbCurrencyId
                                        AND ContainerLinkObject_Currency.DescId   = zc_ContainerLinkObject_Currency()
                                        AND 0 <> COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Partner.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, 0))))
                                        AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) <> zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
+                                       AND COALESCE (View_InfoMoney_two.InfoMoneyGroupId, 0)   <> zc_Enum_InfoMoneyGroup_70000()       -- Инвестиции
                                     ) AS tmpContainer
                                     LEFT JOIN MovementItemContainer AS MIContainer
                                                                     ON MIContainer.Containerid = tmpContainer.ContainerId_Currency
@@ -157,10 +164,17 @@ BEGIN
                                                                        AND ContainerLinkObject_InfoMoney.DescId       = zc_ContainerLinkObject_InfoMoney()
                                                                        AND vbPaidKindId                               = zc_Enum_PaidKind_SecondForm()
                                           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ContainerLinkObject_InfoMoney.ObjectId
+
+                                          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney_two
+                                                                        ON ContainerLinkObject_InfoMoney_two.ContainerId  = ContainerLinkObject_Currency.ContainerId
+                                                                       AND ContainerLinkObject_InfoMoney_two.DescId       = zc_ContainerLinkObject_InfoMoney()
+                                          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_two ON View_InfoMoney_two.InfoMoneyId = ContainerLinkObject_InfoMoney_two.ObjectId
+
                                      WHERE ContainerLinkObject_Currency.ObjectId = vbCurrencyId
                                        AND ContainerLinkObject_Currency.DescId  = zc_ContainerLinkObject_Currency()
                                        AND 0 <> COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Partner.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, 0))))
                                        AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) <> zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
+                                       AND COALESCE (View_InfoMoney_two.InfoMoneyGroupId, 0)   <> zc_Enum_InfoMoneyGroup_70000()       -- Инвестиции
                                     ) AS tmpContainer
                                     LEFT JOIN MovementItemContainer AS MIContainer
                                                                     ON MIContainer.Containerid = tmpContainer.ContainerId

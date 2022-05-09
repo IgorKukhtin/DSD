@@ -224,7 +224,7 @@ END IF;
               END AS OperCount_ChangePercent
               -- количество у контрагента
             , CASE WHEN _tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                        THEN _tmp.OperCount
+                        THEN _tmp.OperCount_Partner -- _tmp.OperCount
                    ELSE _tmp.OperCount_Partner
               END AS OperCount_Partner
 
@@ -764,7 +764,7 @@ END IF;
                                                                                 , inObjectExtId_Analyzer    := vbWhereObjectId_Analyzer_From     -- Подраделение "От кого"
                                                                                 , inContainerIntId_Analyzer := 0                                 -- Контейнер "товар"
                                                                                 , inAmount         := CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                                                                                                                THEN _tmpItem.OperCount -- !!!количество ушло!!!
+                                                                                                                THEN _tmpItem.OperCount_Partner -- _tmpItem.OperCount -- !!!количество ушло!!!
                                                                                                            ELSE _tmpItem.OperCount_Partner -- !!!количество пришло!!!
                                                                                                       END
                                                                                 , inOperDate       := vbOperDatePartner -- !!!по "Дате покупателя"!!!

@@ -272,7 +272,7 @@ BEGIN
     -- при вызове процедуры для док. Список бригады нужен для определения строки Тип. раб. времени 
     vbTypeId := ioTypeId;
     
-    IF (ioValue = '0' OR TRIM (ioValue) = '')
+    IF ((ioValue = '0' OR TRIM (ioValue) = '')) AND ioTypeId NOT IN (zc_Enum_WorkTimeKind_Holiday(), zc_Enum_WorkTimeKind_HolidayNoZp())
     THEN
          ioTypeId := 0;
          vbValue  := 0;
@@ -313,7 +313,9 @@ BEGIN
                              AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()
                           );
             ELSE
-               ioTypeId := CASE WHEN COALESCE (ioTypeId, 0) = 0 OR POSITION ('0' IN zfGet_ViewWorkHour ('0', ioTypeId)) = 0
+               ioTypeId := CASE WHEN ioTypeId IN (zc_Enum_WorkTimeKind_Holiday(), zc_Enum_WorkTimeKind_HolidayNoZp())
+                                     THEN ioTypeId
+                                WHEN COALESCE (ioTypeId, 0) = 0 OR POSITION ('0' IN zfGet_ViewWorkHour ('0', ioTypeId)) = 0
                                      THEN zc_Enum_WorkTimeKind_Work()
                                 ELSE ioTypeId
                            END;
@@ -463,10 +465,10 @@ BEGIN
         RAISE EXCEPTION 'Admin.<%> <%> <%> <%> <%>  -  <%>  <%>'
                           , zfConvert_DateToString (inOperDate)
                           , inUnitId
-                          , inMemberId
-                          , inPositionId
+                          , lfGet_Object_ValueData_sh (inPositionId)
+                          , lfGet_Object_ValueData_sh (ioTypeId)
                           , zfConvert_DateToString (vbEndDate)
-                          , (SELECT COUNT(*) FROM MovementItemProtocol WHERE MovementItemProtocol.MovementItemId = vbMovementItemId)
+                          , (SELECT lfGet_Object_ValueData_sh (MILO.ObjectId) FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMovementItemId AND MILO.DescId = zc_MILinkObject_WorkTimeKind())
                           , vbMovementItemId
                            ;
                            

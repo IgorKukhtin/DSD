@@ -73,7 +73,7 @@ BEGIN
                           );
 
      -- Проверка что ЗП не начислена
-     IF vbMovementId_check > 0
+     IF vbMovementId_check > 0 AND zfConvert_StringToNumber (inSession) <> -5
      THEN
          RAISE EXCEPTION 'Табель заблокирован.%Обратитесь к экономисту.%Найдена ведомость начисления <%>%№ <%> от <%>.'
                         , CHR (13)
@@ -88,18 +88,19 @@ BEGIN
 
 
      -- автоматом проставляем в zc_Movement_SheetWorkTime сотруднику за период соответсвующий WorkTimeKind - при распроведении или удалении - в табеле удаляется WorkTimeKind
-     PERFORM gpInsertUpdate_MovementItem_SheetWorkTime(tmp.MemberId           :: Integer    -- Ключ физ. лицо
-                                                     , tmp.PositionId         :: Integer    -- Должность
-                                                     , tmp.PositionLevelId    :: Integer    -- Разряд
-                                                     , tmp.UnitId             :: Integer    -- Подразделение
-                                                     , tmp.PersonalGroupId    :: Integer    -- Группировка Сотрудника
-                                                     , tmp.StorageLineId      :: Integer    -- линия произ-ва
-                                                     , tmp.OperDate           :: TDateTime  -- дата
-                                                     , COALESCE (tmp.Value,NULL)              :: TVarChar   -- часы
-                                                     , COALESCE (tmp.WorkTimeKindId,NULL)     :: Integer    
-                                                     , FALSE                  :: Boolean    -- используется при сохранении из списка бригад
-                                                     , inSession              :: TVarChar
-                                                     )
+     PERFORM gpInsertUpdate_MovementItem_SheetWorkTime(inMemberId            := tmp.MemberId           :: Integer    -- Ключ физ. лицо
+                                                     , inPositionId          := tmp.PositionId         :: Integer    -- Должность
+                                                     , inPositionLevelId     := tmp.PositionLevelId    :: Integer    -- Разряд
+                                                     , inUnitId              := tmp.UnitId             :: Integer    -- Подразделение
+                                                     , inPersonalGroupId     := tmp.PersonalGroupId    :: Integer    -- Группировка Сотрудника
+                                                     , inStorageLineId       := tmp.StorageLineId      :: Integer    -- линия произ-ва
+                                                     , inOperDate            := tmp.OperDate           :: TDateTime  -- дата
+                                                     , ioValue               := COALESCE (tmp.Value,NULL)              :: TVarChar   -- часы
+                                                     , ioTypeId              := COALESCE (tmp.WorkTimeKindId,NULL)     :: Integer    
+                                                     , ioWorkTimeKindId_key  := NULL
+                                                     , inIsPersonalGroup     := FALSE                  :: Boolean    -- используется при сохранении из списка бригад
+                                                     , inSession             := inSession              :: TVarChar
+                                                      )
      FROM (WITH
            tmpMember AS (SELECT lfSelect.MemberId
                               , lfSelect.PersonalId
@@ -139,7 +140,7 @@ BEGIN
               , Object_Personal_View.PersonalGroupId
               , Object_Personal_View.StorageLineId
               , tmpMember.UnitId
-              , CASE WHEN inisDel = FALSE THEN vbWorkTimeKindId ELSE 0 END ::Integer AS WorkTimeKindId
+              , CASE WHEN inisDel = FALSE OR zfConvert_StringToNumber (inSession) < 0 THEN vbWorkTimeKindId ELSE 0 END ::Integer AS WorkTimeKindId
               , zfCalc_ViewWorkHour (0, ObjectString_ShortName.ValueData) ::TVarChar AS Value
          FROM tmpOperDate
              LEFT JOIN tmpMember ON 1=1

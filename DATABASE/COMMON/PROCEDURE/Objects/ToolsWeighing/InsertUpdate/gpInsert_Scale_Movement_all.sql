@@ -799,7 +799,7 @@ BEGIN
                                                   , inRouteSortingId        := NULL
                                                   , inMovementId_Order      := MovementId_Order
                                                   , ioPriceListId           := NULL
-                                                  , inProcessId             := zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch()
+                                                  , inProcessId             := CASE WHEN vbUserId = 5 THEN zc_Enum_Process_InsertUpdate_Movement_SendOnPrice() ELSE zc_Enum_Process_InsertUpdate_Movement_SendOnPrice_Branch() END
                                                   , inUserId                := vbUserId
                                                    )
                                           WHEN vbMovementDescId = zc_Movement_Loss()
@@ -1865,7 +1865,7 @@ end if;*/
   , (SELECT  MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = vbMovementId_begin AND MLM.DescId = zc_MovementLinkMovement_Master())
   , (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = vbMovementId_begin AND MF.DescId = zc_MovementFloat_TotalCount())
   , (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = vbMovementId_begin AND MF.DescId = zc_MovementFloat_TotalCountPartner())
-  , (SELECT MIF.ValueData FROM MovementItem AS MI JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MI.Id AND MIF.DescId = zc_MIFloat_Price() WHERE MI.MovementId = vbMovementId_begin AND MI.DescId = zc_MI_Master() LIMIT 1)
+  , (SELECT MIF.ValueData FROM MovementItem AS MI JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MI.Id AND MIF.DescId = zc_MIFloat_AmountPartner() WHERE MI.MovementId = vbMovementId_begin AND MI.DescId = zc_MI_Master() LIMIT 1)
    ;
 END IF;
 

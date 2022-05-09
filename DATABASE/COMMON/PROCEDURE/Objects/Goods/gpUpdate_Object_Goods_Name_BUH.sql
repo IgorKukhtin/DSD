@@ -22,7 +22,7 @@ BEGIN
 
 
      -- проверка прав пользователя на вызов процедуры
-     IF NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_Update_Object_Goods_Name_BUH())
+     IF 1=1 AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_Update_Object_Goods_Name_BUH())
      THEN
          RAISE EXCEPTION 'Ошибка.Нет Прав на изменение <Название бухгалтерское>.';
      END IF;
@@ -36,7 +36,7 @@ BEGIN
      -- сохранили свойство <Название БУХГ>
      PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_BUH(), inId, inName_BUH);
      -- сохранили свойство <Дата до которой действует Название товара(бухг.)>
-     PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_BUH(), inId, CASE WHEN inDate_BUH = CURRENT_DATE THEN NULL ELSE inDate_BUH END);
+     PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_BUH(), inId, CASE WHEN 1=0 AND inDate_BUH = CURRENT_DATE THEN NULL ELSE inDate_BUH END);
 
      -- сохранили свойство
      PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_NameOrig(), inId, inisNameOrig);

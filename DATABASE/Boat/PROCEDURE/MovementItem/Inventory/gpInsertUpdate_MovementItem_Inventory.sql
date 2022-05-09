@@ -27,99 +27,21 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- замена
+--     IF ioAmount = 0 THEN ioAmount:= 1; END IF;
+
      -- определяются параметры из документа
-     SELECT MovementLinkObject_Unit.ObjectId
-            INTO  vbUnitId
-     FROM Movement
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-     WHERE Movement.Id = inMovementId;
-
-
-    /* -- данные из партии : OperPrice + CountForPrice + OperPriceList
-     SELECT Object_PartionGoods.CountForPrice
-          , Object_PartionGoods.OperPrice
-          , Object_PartionGoods.OperPriceList
-            INTO outCountForPrice, outOperPrice, outOperPriceList
-     FROM Object_PartionGoods
-     WHERE Object_PartionGoods.MovementItemId = inPartionId;
-*/
-
-     -- замена
-     IF ioAmount = 0 THEN ioAmount:= 1; END IF;
-     
-     -- замена
-     ioPrice:= (SELECT lpGet.ValuePrice FROM lpGet_MovementItem_PriceList ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId), inGoodsId, vbUserId) AS lpGet);
-     
-
-     -- нужен ПОИСК
-     IF ioId < 0
-     THEN
-         IF inPartionId > 0
-         THEN
-             -- Проверка
-             IF 1 < (SELECT COUNT(*) FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.PartionId = inPartionId AND MI.isErased = FALSE)
-             THEN
-                 RAISE EXCEPTION 'Ошибка.Найдено несколько строк с такой партией.%<%>.', CHR (13), inPartionId;
-             END IF;
-             -- нашли
-             ioId:= (SELECT MI.Id FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.PartionId = inPartionId AND MI.isErased = FALSE);
-         ELSE
-             -- Проверка
-             IF 1 < (SELECT COUNT(*) FROM MovementItem AS MI 
-                                 LEFT JOIN MovementItemString AS MIString_PartNumber
-                                                              ON MIString_PartNumber.MovementItemId = MI.Id
-                                                             AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
-                     WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE
-                       AND MI.ObjectId = inGoodsId
-                       AND MI.PartionId = inPartionId
-                       AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
-                     )
-             THEN
-                 RAISE EXCEPTION 'Ошибка.Найдено несколько строк с таким комплектующим.%<%>.', CHR (13), lfGet_Object_ValueData (inGoodsId);
-             END IF;
-             -- нашли
-             ioId:= (SELECT MI.Id FROM MovementItem AS MI
-                                 LEFT JOIN MovementItemString AS MIString_PartNumber
-                                                              ON MIString_PartNumber.MovementItemId = MI.Id
-                                                             AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
-                     WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE
-                       AND MI.ObjectId = inGoodsId
-                       AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
-                     );
-         END IF;
-         -- 
-         ioAmount:= ioAmount + COALESCE ((SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = ioId), 0);
-
-     END IF;
-
-
-     --
-          
-     -- определяется признак Создание/Корректировка
-     vbIsInsert:= COALESCE (ioId, 0) = 0;
-
-     -- сохранили <Элемент документа> -
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inPartionId, inMovementId, ioAmount, NULL, vbUserId);
-
-     -- сохранили свойство <Цена>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, ioPrice);
-
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, inPartNumber);
-     -- сохранили свойство <примечание>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
-
-
-     -- расчитали сумму по элементу, для грида
-     outAmountSumm := CAST(ioAmount * ioPrice AS NUMERIC (16, 2));
-
-    -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
+     SELECT tmp.ioId, tmp.ioAmount, tmp.ioPrice, tmp.outAmountSumm
+            INTO ioId, ioAmount, ioPrice, outAmountSumm
+     FROM lpInsertUpdate_MovementItem_Inventory (ioId              := ioId
+                                               , inMovementId      := inMovementId
+                                               , inGoodsId         := inGoodsId
+                                               , ioAmount          := ioAmount
+                                               , ioPrice           := ioPrice
+                                               , inPartNumber      := inPartNumber
+                                               , inComment         := inComment
+                                               , inUserId          := vbUserId
+                                                ) AS tmp;
 
 END;
 $BODY$
