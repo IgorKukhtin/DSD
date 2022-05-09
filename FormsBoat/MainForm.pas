@@ -249,6 +249,7 @@ type
     mactHelp: TMultiAction;
     miHelp: TMenuItem;
     FormParams: TdsdFormParams;
+    N20: TMenuItem;
   private
     { Private declarations }
   public
