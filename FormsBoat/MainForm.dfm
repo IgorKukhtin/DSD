@@ -1579,10 +1579,13 @@
       object N10: TMenuItem [14]
         Caption = '-'
       end
-      object miHelp: TMenuItem [15]
+      object N20: TMenuItem [15]
+        Action = actForms
+      end
+      object miHelp: TMenuItem [16]
         Action = mactHelp
       end
-      inherited miProtocolAll: TMenuItem [16]
+      inherited miProtocolAll: TMenuItem [17]
         inherited miProtocol: TMenuItem
           Enabled = False
           Visible = False
