@@ -42,4 +42,4 @@ ALTER FUNCTION gpSelect_Object_Form(TVarChar)
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Action('2')
+-- SELECT * FROM gpSelect_Object_Form('5')
