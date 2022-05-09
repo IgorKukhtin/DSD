@@ -7,12 +7,12 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Form_HelpFile(
    OUT outHelpFile   TVarChar,      -- Путь к файлу помощи
     IN inSession     TVarChar       -- текущий пользователь
 )
-RETURNS TVarChar AS
+RETURNS TVarChar
+AS
 $BODY$
 DECLARE
 BEGIN
-
-    --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
     SELECT 
         ObjectString_HelpFile.ValueData 
@@ -26,10 +26,8 @@ BEGIN
     WHERE 
         Object.ValueData = inFormName AND 
         Object.DescId = zc_Object_Form();
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION gpGet_Object_Form_HelpFile(TVarChar, TVarChar)
-  OWNER TO postgres;
 
--- SELECT * FROM gpGet_Object_Form_HelpFile('Form1', '')
+END;$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+-- SELECT * FROM gpUpdate_Object_Form_HelpFile ('TMainForm', 'https://docs.google.com/document/d/1PmZO5s2hUu_fg91CAeY7DNbiurcXv7KudU8a7QkNM9E/edit', '5')

@@ -243,6 +243,11 @@ type
     N21: TMenuItem;
     actReport_GoodsMotion: TdsdOpenForm;
     üøReport_GoodsMotion: TMenuItem;
+    spGet_Object_Form_HelpFile: TdsdStoredProc;
+    actHelp: TShellExecuteAction;
+    actGet_Object_Form_HelpFile: TdsdExecStoredProc;
+    mactHelp: TMultiAction;
+    miHelp: TMenuItem;
   private
     { Private declarations }
   public

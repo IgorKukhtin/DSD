@@ -4,7 +4,7 @@
   ClientWidth = 805
   KeyPreview = True
   ExplicitWidth = 821
-  ExplicitHeight = 226
+  ExplicitHeight = 227
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -1015,6 +1015,39 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actHelp: TShellExecuteAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Param.Value = Null
+      Param.ComponentItem = 'HelpFile'
+      Param.DataType = ftString
+      Param.MultiSelectSeparator = ','
+      Caption = #1055#1086#1084#1086#1097#1100
+    end
+    object actGet_Object_Form_HelpFile: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Object_Form_HelpFile
+      StoredProcList = <
+        item
+          StoredProc = spGet_Object_Form_HelpFile
+        end>
+      Caption = 'actGet_Object_Form_HelpFile'
+    end
+    object mactHelp: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Object_Form_HelpFile
+        end
+        item
+          Action = actHelp
+        end>
+      Caption = #1055#1086#1084#1086#1097#1100
+      ShortCut = 112
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 152
@@ -1545,7 +1578,10 @@
       object N10: TMenuItem [14]
         Caption = '-'
       end
-      inherited miProtocolAll: TMenuItem [15]
+      object miHelp: TMenuItem [15]
+        Action = mactHelp
+      end
+      inherited miProtocolAll: TMenuItem [16]
         inherited miProtocol: TMenuItem
           Enabled = False
           Visible = False
@@ -1560,5 +1596,28 @@
   inherited frxXLSExport: TfrxXLSExport
     Left = 152
     Top = 112
+  end
+  object spGet_Object_Form_HelpFile: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_Form_HelpFile'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inFormName'
+        Value = 'TMainForm'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outHelpFile'
+        Value = Null
+        ComponentItem = 'HelpFile'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 480
+    Top = 40
   end
 end
