@@ -46,8 +46,8 @@ BEGIN
                 , Object_GoodsGroup.ValueData                 AS GoodsGroupName
                 , Object_Partner.ObjectCode                   AS PartnerId
                 , Object_Partner.ValueData                    AS PartnerName
-                , 0                                :: TFloat  AS Price
-                , (COALESCE (inAmount,1) + COALESCE ((SELECT SUM (MI.Amount)
+                , (SELECT lpGet.ValuePrice FROM lpGet_MovementItem_PriceList ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId), inGoodsId, vbUserId) AS lpGet) :: TFloat  AS Price
+                , (/*COALESCE (inAmount,1)*/ + COALESCE ((SELECT SUM (MI.Amount)
                                                       FROM MovementItem AS MI
                                                            LEFT JOIN MovementItemString AS MIString_PartNumber
                                                                                         ON MIString_PartNumber.MovementItemId = MI.Id
