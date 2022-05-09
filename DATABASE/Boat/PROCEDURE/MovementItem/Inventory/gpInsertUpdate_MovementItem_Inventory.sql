@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
  INOUT ioId                                 Integer   , -- Ключ объекта <Элемент документа>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
     IN inGoodsId                            Integer   , -- Товары
     IN inPartionId                          Integer   , -- Партия
  INOUT ioAmount                             TFloat    , -- Количество 
+    IN inTotalCount                         TFloat    , -- Количество Итого
  INOUT ioPrice                              TFloat    , -- Цена
    OUT outAmountSumm                        TFloat    , -- Сумма расчетная
     IN inPartNumber                         TVarChar  , -- 
@@ -37,6 +39,7 @@ BEGIN
                                                , inMovementId      := inMovementId
                                                , inGoodsId         := inGoodsId
                                                , ioAmount          := ioAmount
+                                               , inTotalCount      := inTotalCount
                                                , ioPrice           := ioPrice
                                                , inPartNumber      := inPartNumber
                                                , inComment         := inComment

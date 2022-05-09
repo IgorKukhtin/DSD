@@ -2,12 +2,14 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Inventory(
  INOUT ioId                                 Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId                         Integer   , -- Ключ объекта <Документ>
     IN inGoodsId                            Integer   , -- Товары
  INOUT ioAmount                             TFloat    , -- Количество
+    IN inTotalCount                         TFloat    , -- Количество Итого
  INOUT ioPrice                              TFloat    , -- Цена
    OUT outAmountSumm                        TFloat    , -- Сумма расчетная
     IN inPartNumber                         TVarChar  , --
@@ -56,8 +58,15 @@ BEGIN
                    AND MI.isErased   = FALSE
                    AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
                 );
-         --
-         ioAmount:= ioAmount + COALESCE ((SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = ioId), 0);
+         -- 
+
+         --могут ввести Итого количество, тогда его сохраняем, иначе + к сохраненному количеству
+         IF COALESCE ((SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = ioId), 0) <> inTotalCount
+         THEN
+             ioAmount := inTotalCount;
+         ELSE 
+             ioAmount:= ioAmount + COALESCE ((SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = ioId), 0);
+         END IF;
 
      END IF;
 

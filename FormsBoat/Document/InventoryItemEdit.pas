@@ -60,6 +60,8 @@ type
     spGet_TotalCount: TdsdStoredProc;
     actGet_TotalCount: TdsdExecStoredProc;
     GuidesFiller: TGuidesFiller;
+    cxLabel7: TcxLabel;
+    ceTotalCountEnter: TcxCurrencyEdit;
   private
     { Private declarations }
   public
