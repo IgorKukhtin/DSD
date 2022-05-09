@@ -248,6 +248,7 @@ type
     actGet_Object_Form_HelpFile: TdsdExecStoredProc;
     mactHelp: TMultiAction;
     miHelp: TMenuItem;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

@@ -1019,6 +1019,7 @@
       Category = 'DSDLib'
       MoveParams = <>
       Param.Value = Null
+      Param.Component = FormParams
       Param.ComponentItem = 'HelpFile'
       Param.DataType = ftString
       Param.MultiSelectSeparator = ','
@@ -1612,6 +1613,7 @@
       item
         Name = 'outHelpFile'
         Value = Null
+        Component = FormParams
         ComponentItem = 'HelpFile'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1619,5 +1621,22 @@
     PackSize = 1
     Left = 480
     Top = 40
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'HelpFile'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IP_str'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 578
+    Top = 104
   end
 end
