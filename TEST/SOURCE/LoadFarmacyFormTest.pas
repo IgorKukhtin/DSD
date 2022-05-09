@@ -1084,7 +1084,10 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RecalcMCSDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CompetitorMarkupsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CompetitorMarkupsForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RecalcMCSDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RecalcMCSDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RecalcMCSForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RecalcMCSForm');
@@ -1092,7 +1095,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckUpdateNotMCSForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckUpdateNotMCSForm');
 
-  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_NotPaySumIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_NotPaySumIncomeForm');
 

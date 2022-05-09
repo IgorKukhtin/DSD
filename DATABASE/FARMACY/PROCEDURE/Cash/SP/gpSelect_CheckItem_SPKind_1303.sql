@@ -21,6 +21,7 @@ $BODY$
 
    DECLARE vbPriceCalc TFloat;
    DECLARE vbPersent   TFloat;
+   DECLARE vbPriceSale TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
@@ -107,7 +108,7 @@ BEGIN
                    IF vbPersent = 20 THEN  outError :=  'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 20 процентов'||Chr(13)||Chr(10)||'(для товара с приходной ценой от 100грн до 500грн)'; END IF;
                    IF vbPersent = 15 THEN  outError :=  'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 15 процентов'||Chr(13)||Chr(10)||'(для товара с приходной ценой от 500грн до 1000грн)'; END IF;
                    IF vbPersent = 10 THEN  outError :=  'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 10 процентов'||Chr(13)||Chr(10)||'(для товара с приходной ценой свыше 1000грн)'; END IF;
-                   outError2 :=  Chr(13)||Chr(10)||'Сделать PrintScreen экрана с ошибкой и отправить на Skype своему менеджеру для  исправления Цены реализации'||Chr(13)||Chr(10)||'(после исправления - препарат можно отпустить по рецепту)';
+                   outError2 :=  Chr(13)||Chr(10)||'Сделать PrintScreen экрана с ошибкой и отправить на Telegram своему менеджеру для  исправления Цены реализации'||Chr(13)||Chr(10)||'(после исправления - препарат можно отпустить по рецепту)';
             END IF;
             
             -- Предложение по цене
@@ -116,6 +117,72 @@ BEGIN
                    outPrice := trunc(vbPriceCalc * 10) / 10;
                    outSentence :=  'Применить максимально допустимую цену - '||to_char(outPrice, 'G999G999G999G999D99');
             END IF;
+            
+            IF EXISTS(WITH
+                       tmpMovGoodsSP_1303 AS (SELECT Movement.Id                           AS Id
+                                                   , Movement.OperDate                     AS OperDate
+                                                   , ROW_NUMBER() OVER (ORDER BY Movement.OperDate DESC) AS ord
+                                              FROM Movement 
+                                              WHERE Movement.DescId = zc_Movement_GoodsSP_1303()
+                                                AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                              )
+                     , tmpMIGoodsSP_1303 AS (SELECT Movement.OperDate                     AS OperDate
+                                                  , COALESCE (MovementNext.OperDate, zc_DateEnd()) AS DateEnd
+                                                  , MovementItem.ObjectId                 AS GoodsId
+                                                  , MovementItem.Amount                   AS PriceSale
+                                             FROM tmpMovGoodsSP_1303 AS Movement
+                                            
+                                                  INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Master()
+                                                                        AND MovementItem.MovementId = Movement.Id
+                                                                        AND MovementItem.isErased = False
+                                                                       
+                                                  LEFT JOIN tmpMovGoodsSP_1303 AS MovementNext
+                                                                               ON MovementNext.Ord =  Movement.Ord + 1
+                                             WHERE  MovementItem.ObjectId = (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inGoodsId))
+                                             
+                     SELECT tmpMIGoodsSP_1303 .PriceSale
+                     FROM tmpMIGoodsSP_1303 
+                     WHERE tmpMIGoodsSP_1303.OperDate <= CURRENT_DATE
+                       AND tmpMIGoodsSP_1303.DateEnd > CURRENT_DATE
+                     )
+            THEN
+                WITH
+                 tmpMovGoodsSP_1303 AS (SELECT Movement.Id                           AS Id
+                                             , Movement.OperDate                     AS OperDate
+                                             , ROW_NUMBER() OVER (ORDER BY Movement.OperDate DESC) AS ord
+                                        FROM Movement 
+                                        WHERE Movement.DescId = zc_Movement_GoodsSP_1303()
+                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                        )
+               , tmpMIGoodsSP_1303 AS (SELECT Movement.OperDate                     AS OperDate
+                                            , COALESCE (MovementNext.OperDate, zc_DateEnd()) AS DateEnd
+                                            , MovementItem.ObjectId                 AS GoodsId
+                                            , MovementItem.Amount                   AS PriceSale
+                                       FROM tmpMovGoodsSP_1303 AS Movement
+                                            
+                                            INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Master()
+                                                                  AND MovementItem.MovementId = Movement.Id
+                                                                  AND MovementItem.isErased = False
+                                                                       
+                                            LEFT JOIN tmpMovGoodsSP_1303 AS MovementNext
+                                                                         ON MovementNext.Ord =  Movement.Ord + 1
+                                       WHERE  MovementItem.ObjectId = (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inGoodsId))
+                                             
+               SELECT tmpMIGoodsSP_1303.PriceSale
+               INTO vbPriceSale
+               FROM tmpMIGoodsSP_1303 
+               WHERE tmpMIGoodsSP_1303.OperDate <= CURRENT_DATE
+                 AND tmpMIGoodsSP_1303.DateEnd > CURRENT_DATE;            
+                 
+                 
+               IF vbPriceSale < inPriceSale and COALESCE(outPrice, 0) = 0 OR vbPriceSale < outPrice and COALESCE(outPrice, 0) > 0
+               THEN
+                  outError :=  'Ошибка. Отпускная цена ниже чем по реесту товаров соц. проекта 1303.';
+                  outError2 :=  Chr(13)||Chr(10)||'Сделать PrintScreen экрана с ошибкой и отправить на Telegram своему менеджеру для  исправления Цены реализации'||Chr(13)||Chr(10)||'(после исправления - препарат можно отпустить по рецепту)';
+                  outSentence := '';
+                  outPrice := 0;               
+               END IF;
+            END IF;            
     END IF;
 
 
@@ -128,5 +195,6 @@ $BODY$
  26.01.20                                                                                      *
 */
 
--- 
-SELECT * FROM gpSelect_CheckItem_SPKind_1303(inSPKindId := zc_Enum_SPKind_1303(), inGoodsId := 36643, inPriceSale := 1000, inSession := '3');
+-- SELECT * FROM gpSelect_CheckItem_SPKind_1303(inSPKindId := zc_Enum_SPKind_1303(), inGoodsId := 36643, inPriceSale := 1000, inSession := '3');
+
+select * from gpSelect_CheckItem_SPKind_1303(inSPKindId := 4823010 , inGoodsId := 27658 , inPriceSale := 309 ,  inSession := '3');

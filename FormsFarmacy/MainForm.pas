@@ -943,6 +943,8 @@ type
     N348: TMenuItem;
     actCompetitorMarkups: TdsdOpenForm;
     N349: TMenuItem;
+    actReport_CompetitorMarkups: TdsdOpenForm;
+    N350: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

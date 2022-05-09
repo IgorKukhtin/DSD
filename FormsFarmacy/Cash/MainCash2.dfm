@@ -6401,6 +6401,10 @@ inherited MainCashForm2: TMainCashForm2
       GuiParams = <>
       isShowModal = False
     end
+    object actListGoodsKeyword: TAction
+      Caption = #1057#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1082#1083#1102#1095#1077#1074#1086#1084#1091' '#1089#1083#1086#1074#1091' '
+      OnExecute = actListGoodsKeywordExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -6638,6 +6642,9 @@ inherited MainCashForm2: TMainCashForm2
       end
       object N34: TMenuItem
         Action = actInventoryEveryMonth
+      end
+      object actListGoodsKeyword1: TMenuItem
+        Action = actListGoodsKeyword
       end
     end
     object N47: TMenuItem

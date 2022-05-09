@@ -5100,6 +5100,17 @@
         end>
       isShowModal = False
     end
+    object actReport_CompetitorMarkups: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1085#1072#1094#1077#1085#1086#1082' '#1089' '#1082#1086#1085#1082#1091#1088#1077#1085#1090#1072#1084#1080
+      FormName = 'TReport_CompetitorMarkupsForm'
+      FormNameParam.Value = 'TReport_CompetitorMarkupsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5917,6 +5928,9 @@
       end
       object N337: TMenuItem
         Action = actReport_CommodityStock
+      end
+      object N350: TMenuItem
+        Action = actReport_CompetitorMarkups
       end
     end
     object N36: TMenuItem [5]

@@ -23,7 +23,8 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
-  cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, dsdPivotGrid;
+  cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, dsdPivotGrid,
+  cxGridBandedTableView, cxGridDBBandedTableView;
 
 type
   TReport_CompetitorMarkupsForm = class(TParentForm)
@@ -60,19 +61,28 @@ type
     bbGroup: TdxBarControlContainerItem;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    GoodsName: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
+    GoodsName: TcxGridDBBandedColumn;
     cxGridLevel: TcxGridLevel;
     DBViewAddOn: TdsdDBViewAddOn;
-    GoodsCode: TcxGridDBColumn;
-    actUpdate: TdsdInsertUpdateAction;
+    GoodsCode: TcxGridDBBandedColumn;
     bbUpdate: TdxBarButton;
-    Amount_v1: TcxGridDBColumn;
-    Amount_v2: TcxGridDBColumn;
-    Amount_v3: TcxGridDBColumn;
-    Amount_v4: TcxGridDBColumn;
-    Amount_v1Supplement: TcxGridDBColumn;
-    Amount_v1UKTZED: TcxGridDBColumn;
+    CompetitorCDS: TClientDataSet;
+    CrossDBViewReportAddOn: TCrossDBViewReportAddOn;
+    GroupsName: TcxGridDBBandedColumn;
+    SubGroupsName: TcxGridDBBandedColumn;
+    PriceUnitMin: TcxGridDBBandedColumn;
+    Prece: TcxGridDBBandedColumn;
+    MarginPercentMin: TcxGridDBBandedColumn;
+    JuridicalPriceMin: TcxGridDBBandedColumn;
+    cxGridDBBandedTableView: TcxGridDBBandedTableView;
+    MarginPercentDeltaMin: TcxGridDBBandedColumn;
+    PriceUnitMax: TcxGridDBBandedColumn;
+    JuridicalPriceMax: TcxGridDBBandedColumn;
+    MarginPercentMax: TcxGridDBBandedColumn;
+    PreceNull: TcxGridDBBandedColumn;
+    MarginPercentDeltaMax: TcxGridDBBandedColumn;
+    ColorMin: TcxGridDBBandedColumn;
+    ColorMax: TcxGridDBBandedColumn;
   private
   public
   end;

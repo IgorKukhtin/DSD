@@ -75,11 +75,12 @@ BEGIN
                                  LEFT JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = PriceList.JuridicalId
                                                            AND tmpJuridicalArea.AreaId = PriceList.AreaId 
                             WHERE PriceList.Max_Date = PriceList.OperDate
-                              AND (COALESCE (inUnitId, 0) = 0 OR COALESCE(tmpJuridicalArea.AreaId, 0) <> 0)),
+                              AND (COALESCE (inUnitId, 0) = 0 OR COALESCE(tmpJuridicalArea.JuridicalId, 0) <> 0)),
         tmpMovementItem AS (SELECT DISTINCT
                                    LastMovement.JuridicalId
                                  , LastMovement.ContractId
-                                 , MovementItem.ObjectId                AS GoodsJuridicalId 
+                                 , MovementItem.ObjectId                                   AS GoodsJuridicalId 
+                                 , COALESCE(MIDate_Start.ValueData, LastMovement.OperDate) AS DateStart
                             FROM tmpLastMovement AS LastMovement
                             
                                  INNER JOIN MovementItem ON MovementItem.MovementId = LastMovement.MovementId
@@ -88,7 +89,28 @@ BEGIN
                                  INNER JOIN MovementItemBoolean AS MIBoolean_SupplierFailures
                                                                 ON MIBoolean_SupplierFailures.MovementItemId = MovementItem.Id
                                                                AND MIBoolean_SupplierFailures.DescId         = zc_MIBoolean_SupplierFailures()
-                                                               AND MIBoolean_SupplierFailures.ValueData      = True),
+                                                               AND MIBoolean_SupplierFailures.ValueData      = True
+                                 LEFT JOIN MovementItemDate AS MIDate_Start
+                                                            ON MIDate_Start.MovementItemId =  MovementItem.Id
+                                                           AND MIDate_Start.DescId = zc_MIDate_Start()                                 
+                                 ),
+        tmpOrderExternal AS (SELECT Movement_OrderExternal.Id
+                             FROM Movement AS Movement_OrderExternal
+                                  INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                ON MovementLinkObject_Unit.MovementId = Movement_OrderExternal.Id
+                                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To()
+                                                               AND MovementLinkObject_Unit.ObjectId = inUnitId
+                             WHERE Movement_OrderExternal.DescId = zc_Movement_OrderExternal()
+                               AND Movement_OrderExternal.StatusId = zc_Enum_Status_Complete()
+                               AND Movement_OrderExternal.OperDate = inOperdate
+                               ), 
+        tmpProtocolOE AS (SELECT Movement.Id,
+                                 MIN(MovementProtocol.OperDate) AS OperDate
+                          FROM tmpOrderExternal AS Movement
+                               INNER JOIN MovementProtocol ON Movement.Id = MovementProtocol.MovementId
+                                                          AND MovementProtocol.ProtocolData ILIKE '%Статус" FieldValue = "Проведен%' 
+                          GROUP BY Movement.Id
+                          ),
         tmpSupplierFailures AS (SELECT MILinkObject_Goods.ObjectId              AS GoodsId
                                      , MovementLinkObject_From.ObjectId         AS JuridicalId
                                      , MovementLinkObject_Contract.ObjectId     AS ContractId
@@ -98,6 +120,7 @@ BEGIN
                                                               ON MovementLinkObject_Unit.MovementId = Movement_OrderExternal.Id
                                                              AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To()
                                                              AND MovementLinkObject_Unit.ObjectId = inUnitId
+                                     INNER JOIN tmpProtocolOE ON tmpProtocolOE.ID = Movement_OrderExternal.Id
                                      INNER JOIN MovementItem AS MI_OrderExternal
                                                         ON MI_OrderExternal.MovementId = Movement_OrderExternal.Id
                                                        AND MI_OrderExternal.DescId = zc_MI_Master()
@@ -118,6 +141,7 @@ BEGIN
                                   AND Movement_OrderExternal.StatusId = zc_Enum_Status_Complete()
                                   AND Movement_OrderExternal.OperDate = inOperdate
                                   AND COALESCE (tmpMovementItem.GoodsJuridicalId, 0) <> 0
+                                  AND tmpMovementItem.DateStart > tmpProtocolOE.OperDate 
                                 GROUP BY MILinkObject_Goods.ObjectId
                                        , MovementLinkObject_From.ObjectId
                                        , MovementLinkObject_Contract.ObjectId
@@ -172,6 +196,13 @@ BEGIN
     WHERE tmpAllGroup.Amount > COALESCE (MIFloat_SupplierFailures.ValueData, 0)) AS T1
         ;
 
+    -- !!!ВРЕМЕННО для ТЕСТА!!!
+    IF inSession = zfCalc_UserAdmin()
+    THEN
+        RAISE EXCEPTION 'Тест прошел успешно для <%>', inSession;
+    END IF;
+
+
 
 END;
 $BODY$
@@ -186,4 +217,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpUpdate_MI_OrderInternal_SupplierFailures (inMovementId := 27318608, inUnitId := 183292, inOperDate := ('28.03.2022')::TDateTime, inSession := '3')
 
-select * from gpUpdate_MI_OrderInternal_SupplierFailures(inMovementId := 27030900 , inUnitId := 1529734 , inOperdate := ('28.03.2022')::TDateTime ,  inSession := '3');
+select * from gpUpdate_MI_OrderInternal_SupplierFailures(inMovementId := 27758827 , inUnitId := 16001195 , inOperdate := ('09.05.2022')::TDateTime ,  inSession := '3');

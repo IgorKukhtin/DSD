@@ -2323,8 +2323,8 @@ inherited OrderExternalForm: TOrderExternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 864
-    Top = 368
+    Left = 856
+    Top = 320
   end
   object spUpdate_SetSupplierFailures: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_OrderExternal_SupplierFailures'
@@ -2388,5 +2388,69 @@ inherited OrderExternalForm: TOrderExternalForm
     PackSize = 1
     Left = 1010
     Top = 384
+  end
+  object spGetImportSettingId_Badm: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TOrderExternalForm;zc_Object_ImportSetting_SupplierFailures'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 856
+    Top = 384
+  end
+  object spGetImportSettingId_Conex: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TOrderExternalForm;zc_Object_ImportSetting_SupplierFailures'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 856
+    Top = 448
   end
 end

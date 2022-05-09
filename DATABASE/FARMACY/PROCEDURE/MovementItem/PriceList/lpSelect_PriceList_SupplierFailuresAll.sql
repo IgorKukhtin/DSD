@@ -62,7 +62,7 @@ BEGIN
                              LEFT JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = PriceList.JuridicalId
                                                        AND tmpJuridicalArea.AreaId = PriceList.AreaId 
                             
-                        WHERE (COALESCE (inUnitId, 0) = 0 OR COALESCE(tmpJuridicalArea.AreaId, 0) <> 0))             
+                        WHERE (COALESCE (inUnitId, 0) = 0 OR COALESCE(tmpJuridicalArea.JuridicalId, 0) <> 0))             
 
     SELECT DISTINCT
            Movement.OperDate

@@ -165,6 +165,12 @@ BEGIN
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
+    -- !!!ВРЕМЕННО для ТЕСТА!!!
+    IF inSession = zfCalc_UserAdmin()
+    THEN
+        RAISE EXCEPTION 'Тест прошел успешно для <%>', inSession;
+    END IF;
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -177,4 +183,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_Check_Site (ioId := 0, inUnitId := 183292, inDate := NULL::TDateTime, inBayerId := 333, inBayer := 'Test Bayer'::TVarChar, inBayerPhone:= '11-22-33', inInvNumberOrder:= '12345', inManagerName:= '5', inisDelivery := False, inDeliveryPrice := 0::TFloat , inisCallOrder := False, inComment := '',  inSession := '3'::TVarChar--, inisMobileApp := TRUE, inUserReferals := 90); -- Аптека_1 пр_Правды_6
+-- SELECT * FROM gpInsertUpdate_Movement_Check_Site (0, 1, '2022-05-09 13:26:27'::TDateTime, 68870, 'Oleksii', '+38(050) 043-4130', '394725', '', False, 0 , False, '', TRUE, 123, '3'); 

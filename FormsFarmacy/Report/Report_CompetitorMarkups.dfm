@@ -1,9 +1,9 @@
-object Report_CompetitorMarkupsForm: TReport_CompetitorMarkupsForm
+﻿object Report_CompetitorMarkupsForm: TReport_CompetitorMarkupsForm
   Left = 0
   Top = 0
-  Caption = #1057#1084#1077#1078#1085#1099#1077' '#1082#1086#1076#1099' '#1057#1059#1053
-  ClientHeight = 440
-  ClientWidth = 879
+  Caption = #1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1085#1072#1094#1077#1085#1086#1082' '#1089' '#1082#1086#1085#1082#1091#1088#1077#1085#1090#1072#1084#1080
+  ClientHeight = 545
+  ClientWidth = 1124
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,12 +21,12 @@ object Report_CompetitorMarkupsForm: TReport_CompetitorMarkupsForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 879
+    Width = 1124
     Height = 31
     Align = alTop
     TabOrder = 0
     object deStart: TcxDateEdit
-      Left = 119
+      Left = 44
       Top = 5
       EditValue = 43466d
       Properties.SaveTime = False
@@ -47,7 +47,7 @@ object Report_CompetitorMarkupsForm: TReport_CompetitorMarkupsForm
     object cxLabel1: TcxLabel
       Left = 4
       Top = 6
-      Caption = #1044#1072#1090#1072' '#1074' '#1085#1077#1076#1077#1083#1077' '#1057#1059#1053':'
+      Caption = #1044#1072#1090#1072':'
     end
     object cxLabel2: TcxLabel
       Left = 218
@@ -59,19 +59,17 @@ object Report_CompetitorMarkupsForm: TReport_CompetitorMarkupsForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 879
-    Height = 383
+    Width = 1124
+    Height = 488
     Align = alClient
     TabOrder = 5
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Amount
         end
         item
           Format = ',0.00'
@@ -155,7 +153,6 @@ object Report_CompetitorMarkupsForm: TReport_CompetitorMarkupsForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Amount
         end
         item
           Format = ',0.00'
@@ -204,32 +201,30 @@ object Report_CompetitorMarkupsForm: TReport_CompetitorMarkupsForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Amount_v1
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Amount_v1Supplement
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Amount_v1UKTZED
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Amount_v2
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Amount_v3
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Amount_v4
+        end
+        item
+          Format = #1057#1090#1088#1086#1082' 0'
+          Kind = skCount
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -244,99 +239,228 @@ object Report_CompetitorMarkupsForm: TReport_CompetitorMarkupsForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
+      OptionsView.GroupByBox = False
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object GoodsCode: TcxGridDBColumn
+    end
+    object cxGridDBBandedTableView: TcxGridDBBandedTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = DataSource
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      OptionsView.GroupByBox = False
+      Styles.Content = dmMain.cxContentStyle
+      Styles.Inactive = dmMain.cxSelection
+      Styles.Footer = dmMain.cxFooterStyle
+      Styles.Header = dmMain.cxHeaderStyle
+      Styles.BandHeader = dmMain.cxHeaderStyle
+      Bands = <
+        item
+          Width = 498
+        end
+        item
+          Width = 278
+        end
+        item
+          Visible = False
+          VisibleForCustomization = False
+        end>
+      object GroupsName: TcxGridDBBandedColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GroupsName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 129
+        Position.BandIndex = 0
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object SubGroupsName: TcxGridDBBandedColumn
+        Caption = #1055#1086#1076#1075#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'SubGroupsName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 86
+        Position.BandIndex = 0
+        Position.ColIndex = 1
+        Position.RowIndex = 0
+      end
+      object GoodsCode: TcxGridDBBandedColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 62
+        Position.BandIndex = 0
+        Position.ColIndex = 2
+        Position.RowIndex = 0
       end
-      object GoodsName: TcxGridDBColumn
+      object GoodsName: TcxGridDBBandedColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 182
+        Width = 251
+        Position.BandIndex = 0
+        Position.ColIndex = 3
+        Position.RowIndex = 0
       end
-      object Amount_v1: TcxGridDBColumn
-        Caption = #1057#1059#1053' v.1'
-        DataBinding.FieldName = 'Amount_v1'
+      object PriceUnitMin: TcxGridDBBandedColumn
+        Caption = #1052#1080#1085'. '#1094#1077#1085#1072
+        DataBinding.FieldName = 'PriceUnitMin'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 85
+        Options.Editing = False
+        Width = 68
+        Position.BandIndex = 1
+        Position.ColIndex = 0
+        Position.RowIndex = 0
       end
-      object Amount_v1Supplement: TcxGridDBColumn
-        Caption = #1057#1059#1053' v.1 '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077
-        DataBinding.FieldName = 'Amount_v1Supplement'
+      object MarginPercentMin: TcxGridDBBandedColumn
+        Caption = #1055#1088#1086#1094#1077#1085#1090' '#1085#1072#1094#1077#1085#1082#1080
+        DataBinding.FieldName = 'MarginPercentMin'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DisplayFormat = ',0.00 %'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 85
+        Options.Editing = False
+        Width = 68
+        Position.BandIndex = 1
+        Position.ColIndex = 1
+        Position.RowIndex = 0
       end
-      object Amount_v1UKTZED: TcxGridDBColumn
-        Caption = #1057#1059#1053' v.1 '#1059#1050#1058#1042#1069#1044
-        DataBinding.FieldName = 'Amount_v1UKTZED'
+      object JuridicalPriceMin: TcxGridDBBandedColumn
+        Caption = #1062#1077#1085#1072' '#1087#1086#1089#1090'.'
+        DataBinding.FieldName = 'JuridicalPriceMin'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 85
+        Options.Editing = False
+        Width = 68
+        Position.BandIndex = 1
+        Position.ColIndex = 2
+        Position.RowIndex = 0
       end
-      object Amount_v2: TcxGridDBColumn
-        Caption = #1057#1059#1053' v.2'
-        DataBinding.FieldName = 'Amount_v2'
+      object PriceUnitMax: TcxGridDBBandedColumn
+        Caption = #1052#1072#1082#1089'. '#1094#1077#1085#1072
+        DataBinding.FieldName = 'PriceUnitMax'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 85
+        Options.Editing = False
+        Width = 68
+        Position.BandIndex = 1
+        Position.ColIndex = 0
+        Position.RowIndex = 1
       end
-      object Amount_v3: TcxGridDBColumn
-        Caption = #1069'-'#1057#1059#1053
-        DataBinding.FieldName = 'Amount_v3'
+      object JuridicalPriceMax: TcxGridDBBandedColumn
+        Caption = #1062#1077#1085#1072' '#1087#1086#1089#1090'.'
+        DataBinding.FieldName = 'JuridicalPriceMax'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 85
+        Options.Editing = False
+        Width = 68
+        Position.BandIndex = 1
+        Position.ColIndex = 2
+        Position.RowIndex = 1
       end
-      object Amount_v4: TcxGridDBColumn
-        Caption = #1057#1059#1053'2-'#1055#1048
-        DataBinding.FieldName = 'Amount_v4'
+      object MarginPercentMax: TcxGridDBBandedColumn
+        Caption = #1055#1088#1086#1094#1077#1085#1090' '#1085#1072#1094#1077#1085#1082#1080
+        DataBinding.FieldName = 'MarginPercentMax'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DisplayFormat = ',0.00 %'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 85
+        Options.Editing = False
+        Width = 68
+        Position.BandIndex = 1
+        Position.ColIndex = 1
+        Position.RowIndex = 1
       end
-      object Amount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086
-        DataBinding.FieldName = 'Amount'
+      object Prece: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'Prece'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 85
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 65
+        Position.BandIndex = 2
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object MarginPercentDeltaMin: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'MarginPercentDeltaMin'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = '+,0.00 %;-,0.00 %; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 65
+        Position.BandIndex = 2
+        Position.ColIndex = 1
+        Position.RowIndex = 0
+      end
+      object PreceNull: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'PreceNull'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 65
+        Position.BandIndex = 2
+        Position.ColIndex = 0
+        Position.RowIndex = 1
+      end
+      object MarginPercentDeltaMax: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'MarginPercentDeltaMax'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = '+,0.00 %;-,0.00 %; ;'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 65
+        Position.BandIndex = 2
+        Position.ColIndex = 1
+        Position.RowIndex = 1
+      end
+      object ColorMin: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'ColorMin'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Position.BandIndex = 2
+        Position.ColIndex = 2
+        Position.RowIndex = 0
+      end
+      object ColorMax: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'ColorMax'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Position.BandIndex = 2
+        Position.ColIndex = 3
+        Position.RowIndex = 0
       end
     end
     object cxGridLevel: TcxGridLevel
-      GridView = cxGridDBTableView
+      GridView = cxGridDBBandedTableView
     end
   end
   object DataSource: TDataSource
@@ -431,10 +555,6 @@ object Report_CompetitorMarkupsForm: TReport_CompetitorMarkupsForm
           BeginGroup = True
           Visible = True
           ItemName = 'bbStaticText'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate'
         end
         item
           Visible = True
@@ -540,8 +660,12 @@ object Report_CompetitorMarkupsForm: TReport_CompetitorMarkupsForm
       Visible = ivAlways
     end
     object bbUpdate: TdxBarButton
-      Action = actUpdate
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
       Category = 0
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+      Visible = ivAlways
+      ImageIndex = 1
+      ShortCut = 115
     end
   end
   object ActionList: TActionList
@@ -594,54 +718,18 @@ object Report_CompetitorMarkupsForm: TReport_CompetitorMarkupsForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    object actUpdate: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
-      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
-      ShortCut = 115
-      ImageIndex = 1
-      FormName = 'TSend_RelatedCodesSUNForm'
-      FormNameParam.Value = 'TSend_RelatedCodesSUNForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'OperDate'
-          Value = 43466d
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsID'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'GoodsID'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      ActionType = acUpdate
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'GoodsID'
-    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpReport_CompetitorMarkups'
-    DataSet = ClientDataSet
+    DataSet = CompetitorCDS
     DataSets = <
+      item
+        DataSet = CompetitorCDS
+      end
       item
         DataSet = ClientDataSet
       end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inOperDate'
@@ -662,7 +750,7 @@ object Report_CompetitorMarkupsForm: TReport_CompetitorMarkupsForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 400
+    Left = 352
     Top = 48
   end
   object RefreshDispatcher: TRefreshDispatcher
@@ -673,7 +761,7 @@ object Report_CompetitorMarkupsForm: TReport_CompetitorMarkupsForm
       item
         Component = PeriodChoice
       end>
-    Left = 488
+    Left = 440
     Top = 48
   end
   object spGetBalanceParam: TdsdStoredProc
@@ -857,10 +945,8 @@ object Report_CompetitorMarkupsForm: TReport_CompetitorMarkupsForm
   end
   object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = actUpdate
       end>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
@@ -874,5 +960,58 @@ object Report_CompetitorMarkupsForm: TReport_CompetitorMarkupsForm
     PropertiesCellList = <>
     Left = 392
     Top = 304
+  end
+  object CompetitorCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 304
+    Top = 304
+  end
+  object CrossDBViewReportAddOn: TCrossDBViewReportAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = MarginPercentDeltaMin
+        BackGroundValueColumn = ColorMin
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MarginPercentDeltaMax
+        BackGroundValueColumn = ColorMax
+        ColorValueList = <>
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    MultiplyColumnList = <>
+    TemplateColumnList = <
+      item
+        HeaderColumnName = 'PriceName'
+        TemplateColumn = Prece
+      end
+      item
+        HeaderColumnName = 'MarginPercentDeltaMinName'
+        TemplateColumn = MarginPercentDeltaMin
+      end
+      item
+        HeaderColumnName = 'PriceNilName'
+        TemplateColumn = PreceNull
+      end
+      item
+        HeaderColumnName = 'MarginPercentDeltaMaxName'
+        TemplateColumn = MarginPercentDeltaMax
+      end>
+    HeaderDataSet = CompetitorCDS
+    BаndColumnName = 'CompetitorName'
+    Left = 512
+    Top = 208
   end
 end

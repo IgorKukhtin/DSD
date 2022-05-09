@@ -611,6 +611,8 @@ type
     pmUser_expireDate: TMenuItem;
     actSupplierFailuresCash: TdsdOpenForm;
     N62: TMenuItem;
+    actListGoodsKeyword: TAction;
+    actListGoodsKeyword1: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -771,6 +773,7 @@ type
     procedure spLayoutFileFTPParamsAfterExecute(Sender: TObject);
     procedure actAddGoodsSupplementExecute(Sender: TObject);
     procedure actUser_expireDateExecute(Sender: TObject);
+    procedure actListGoodsKeywordExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -1006,7 +1009,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog,
   EnterLoyaltySaveMoney, ChoosingPresent, ChoosingRelatedProduct,
   LoyaltySMList, EnterLoyaltySMDiscount, GetSystemInfo, ListSelection,
   LikiDniproReceipt, EnterRecipeNumber1303, LikiDniproReceiptDialog, Clipbrd,
-  TestingUser, ChoiceMedicalProgramSP, SimpleGauge;
+  TestingUser, ChoiceMedicalProgramSP, SimpleGauge, ListGoodsKeyword;
 
 const
   StatusUnCompleteCode = 1;
@@ -2934,6 +2937,16 @@ begin
     ActiveControl := ceScaner
   else
     ActiveControl := lcName;
+end;
+
+procedure TMainCashForm2.actListGoodsKeywordExecute(Sender: TObject);
+begin
+  with TListGoodsKeywordForm.Create(nil) do
+    try
+      ShowModal;
+    finally
+      Free;
+    end;
 end;
 
 procedure TMainCashForm2.actBanCashExecute(Sender: TObject);
@@ -9882,7 +9895,7 @@ begin
         cFilterOld := RemainsCDS.Filter;
         RemainsCDS.DisableControls;
         RemainsCDS.Filtered := False;
-        RemainsCDS.Filter := 'Remains > 1 and Id = ' + IntToStr(nGoodsPairSunMainId);
+        RemainsCDS.Filter := 'Remains >= 1 and Id = ' + IntToStr(nGoodsPairSunMainId);
         RemainsCDS.Filtered := True;
         RemainsCDS.First;
         try

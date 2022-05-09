@@ -24,7 +24,7 @@ object StringDialogForm: TStringDialogForm
     Caption = 'Ok'
     Default = True
     ModalResult = 1
-    TabOrder = 0
+    TabOrder = 1
   end
   object cxButton2: TcxButton
     Left = 334
@@ -33,7 +33,7 @@ object StringDialogForm: TStringDialogForm
     Height = 28
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 2
-    TabOrder = 1
+    TabOrder = 2
   end
   object cxLabem: TcxMemo
     AlignWithMargins = True
@@ -50,14 +50,14 @@ object StringDialogForm: TStringDialogForm
     Style.Shadow = False
     StyleDisabled.BorderStyle = ebsNone
     StyleDisabled.TextColor = clWindowText
-    TabOrder = 2
+    TabOrder = 3
     Height = 47
     Width = 416
   end
   object cxTextEdit1: TcxTextEdit
     Left = 40
     Top = 80
-    TabOrder = 3
+    TabOrder = 0
     Width = 417
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

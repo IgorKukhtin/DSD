@@ -59,8 +59,9 @@ BEGIN
                             
                                  LEFT JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = PriceList.JuridicalId
                                                            AND tmpJuridicalArea.AreaId = PriceList.AreaId 
+                                                           
                             WHERE PriceList.Max_Date = PriceList.OperDate
-                              AND (COALESCE (inUnitId, 0) = 0 OR COALESCE(tmpJuridicalArea.AreaId, 0) <> 0)),
+                              AND (COALESCE (inUnitId, 0) = 0 OR COALESCE(tmpJuridicalArea.JuridicalId, 0) <> 0)),
         tmpMovementItem AS (SELECT DISTINCT
                                    LastMovement.JuridicalId
                                  , LastMovement.ContractId

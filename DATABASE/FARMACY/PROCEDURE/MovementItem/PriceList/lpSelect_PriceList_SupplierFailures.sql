@@ -51,10 +51,10 @@ BEGIN
                             FROM tmpMovementAll AS PriceList
                             
                                  LEFT JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = PriceList.JuridicalId
-                                                           AND tmpJuridicalArea.AreaId = PriceList.AreaId 
+                                                           AND tmpJuridicalArea.AreaId = PriceList.AreaId
                             
                             WHERE PriceList.Max_Date = PriceList.OperDate
-                              AND (COALESCE (inUnitId, 0) = 0 OR COALESCE(tmpJuridicalArea.AreaId, 0) <> 0))
+                              AND (COALESCE (inUnitId, 0) = 0 OR COALESCE(tmpJuridicalArea.JuridicalId, 0) <> 0))
 
     SELECT DISTINCT
            MovementItem.ObjectId               AS GoodsId 
@@ -86,4 +86,5 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM lpSelect_PriceList_SupplierFailures (inUnitId := 6309262 , inUserId := 3)
+-- SELECT * FROM lpSelect_PriceList_SupplierFailures (inUnitId := 16240371 , inUserId := 3)
+                                

@@ -156,7 +156,8 @@ uses
   PrinterInterface in '..\FormsFarmacy\Cash\PrinterInterface.pas',
   PrinterFactory in '..\FormsFarmacy\Cash\PrinterFactory.pas',
   Printer_FP3530T_NEW in '..\FormsFarmacy\Cash\Printer_FP3530T_NEW.pas',
-  Printer_Emulation in '..\FormsFarmacy\Cash\Printer_Emulation.pas';
+  Printer_Emulation in '..\FormsFarmacy\Cash\Printer_Emulation.pas',
+  ListGoodsKeyword in '..\FormsFarmacy\Cash\ListGoodsKeyword.pas' {ListGoodsKeywordForm: TParentForm};
 
 {$R *.res}
 

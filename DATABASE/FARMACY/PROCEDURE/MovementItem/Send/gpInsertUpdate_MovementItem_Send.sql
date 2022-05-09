@@ -304,7 +304,7 @@ BEGIN
     END IF;
     
 
-    IF vbisSUN = TRUE AND COALESCE (ioId, 0) <> 0 
+/*    IF vbisSUN = TRUE AND COALESCE (ioId, 0) <> 0 
        AND COALESCE (inCommentSendID, 0) = 14883299
        AND COALESCE (vbAmount, 0) <> COALESCE (inAmount, 0)
        AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
@@ -368,7 +368,7 @@ BEGIN
       THEN
         RAISE EXCEPTION 'Вы уже занулили с комментарием Продано до 20%% от общей суммы перемещений СУН от вас';
       END IF;
-    END IF;
+    END IF;*/
     
     
 /*    IF vbIsSUN = FALSE AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
