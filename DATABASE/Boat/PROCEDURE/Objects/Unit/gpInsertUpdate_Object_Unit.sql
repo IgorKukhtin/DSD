@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Подразделения> 
@@ -15,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inParentId                 Integer   ,    -- ключ объекта <Група> 
     IN inChildId                  Integer   ,    -- ключ объекта <Склад>
     IN inAccountDirectionId       Integer   ,    -- Аналитики счетов - направления
+    IN inProfitLossDirectionId    Integer   ,    -- Аналитики статей отчета - направления
     IN inSession                  TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -55,6 +57,9 @@ BEGIN
    -- сохранили связь с <Аналитики счетов - направления>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_AccountDirection(), ioId, inAccountDirectionId);
 
+   -- сохранили связь с <Аналитики статей отчета - направления>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_ProfitLossDirection(), ioId, inProfitLossDirectionId);
+
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
@@ -74,6 +79,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.05.22         *
  22.09.21         *
  22.10.20         *
 */
