@@ -15,7 +15,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
      
      IF vbUserId = 1058530 -- Няйко В.И.
-        OR 1=1
+        --OR vbUserId = 5
      THEN
          vbBusinessId:= 8371; -- Мясо
      END IF;
