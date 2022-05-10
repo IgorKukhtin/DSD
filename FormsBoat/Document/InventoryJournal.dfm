@@ -24,7 +24,6 @@ object InventoryJournalForm: TInventoryJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 911
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -65,7 +64,6 @@ object InventoryJournalForm: TInventoryJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 911
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -183,6 +181,15 @@ object InventoryJournalForm: TInventoryJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object isList: TcxGridDBColumn
+        Caption = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1074#1099#1073'.'
+        DataBinding.FieldName = 'isList'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093
+        Options.Editing = False
+        Width = 78
+      end
       object Status: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'

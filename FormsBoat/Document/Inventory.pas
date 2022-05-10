@@ -157,6 +157,7 @@ type
     actGoodsItemGet1: TdsdExecStoredProc;
     actGoodsItemGet3: TdsdExecStoredProc;
     actGoodsItemGet2: TdsdExecStoredProc;
+    cbList: TcxCheckBox;
   private
   public
   end;

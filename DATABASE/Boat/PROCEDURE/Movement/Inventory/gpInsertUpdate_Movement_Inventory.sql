@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_Inventory()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Inventory(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Inventory(
     IN inOperDate             TDateTime , -- Дата документа
     IN inUnitId               Integer   , -- Подразделения
     IN inComment              TVarChar  , -- Примечание
+    IN inisList               Boolean   , --Только для выбранных
     IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer
@@ -25,6 +27,7 @@ BEGIN
                                               , inOperDate          := inOperDate
                                               , inUnitId            := inUnitId
                                               , inComment           := inComment
+                                              , inisList            := inisList
                                               , inUserId            := vbUserId
                                                );
 
@@ -35,6 +38,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.05.22         *
  17.02.22         *
  */
 

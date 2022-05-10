@@ -12,7 +12,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat
              , UnitName TVarChar
-             , Comment TVarChar
+             , Comment TVarChar 
+             , isList Boolean
              )
 AS
 $BODY$
@@ -39,6 +40,7 @@ BEGIN
            , MovementFloat_TotalCount.ValueData                AS TotalCount
            , Object_Unit.ValueData                             AS UnitName
            , MovementString_Comment.ValueData                  AS Comment
+           , COALESCE (MovementBoolean_List.ValueData, FALSE) ::Boolean AS isList
        FROM tmpStatus
             JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
                          AND Movement.DescId = zc_Movement_Inventory()
@@ -49,6 +51,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_List 
+                                      ON MovementBoolean_List.MovementId = Movement.Id
+                                     AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId = Movement.Id
@@ -67,6 +73,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 10.05.22         *
  17.02.22         *
 */
 

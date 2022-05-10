@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_Inventory()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, TVarChar, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Inventory(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Inventory(
     IN inOperDate             TDateTime , -- Дата документа
     IN inUnitId               Integer   , -- Магазин
     IN inComment              TVarChar  , -- Примечание
+    IN inisList               Boolean   , --Только для выбранных
     IN inUserId               Integer     -- пользователь
 )
 RETURNS Integer
@@ -29,6 +31,8 @@ BEGIN
 
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+     -- 
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_List(), ioId, inisList);
 
      -- сохранили связь с <Подразделение>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
@@ -46,6 +50,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.05.22         *
  17.02.22         *
 */
 

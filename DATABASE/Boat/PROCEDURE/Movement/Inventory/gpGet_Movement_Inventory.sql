@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Inventory(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , UnitId Integer, UnitName TVarChar
-             , Comment TVarChar 
+             , Comment TVarChar
+             , isList Boolean 
                )
 AS
 $BODY$
@@ -34,6 +35,7 @@ BEGIN
              , CAST ('' as TVarChar) AS UnitName
 
              , CAST ('' as TVarChar) AS Comment
+             , FALSE   ::Boolean     AS isList
            
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
@@ -48,7 +50,8 @@ BEGIN
              , Object_Unit.Id            AS UnitId
              , Object_Unit.ValueData     AS UnitName
              
-             , MovementString_Comment.ValueData  AS Comment
+             , MovementString_Comment.ValueData  AS Comment 
+             , COALESCE (MovementBoolean_List.ValueData, FALSE) ::Boolean AS isList
           
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -56,6 +59,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_List 
+                                      ON MovementBoolean_List.MovementId = Movement.Id
+                                     AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -72,6 +79,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .». 
+ 10.05.22         *
  17.02.22         *
 */
 

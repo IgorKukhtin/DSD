@@ -355,15 +355,15 @@ object InventoryForm: TInventoryForm
       Width = 160
     end
     object cxLabel16: TcxLabel
-      Left = 9
-      Top = 89
+      Left = 175
+      Top = 90
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 9
+      Left = 175
       Top = 107
       TabOrder = 12
-      Width = 326
+      Width = 160
     end
     object Panel1: TPanel
       Left = 370
@@ -481,6 +481,14 @@ object InventoryForm: TInventoryForm
         Style.Font.Style = []
         Style.IsFontAssigned = True
       end
+    end
+    object cbList: TcxCheckBox
+      Left = 9
+      Top = 103
+      Hint = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093
+      Caption = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093
+      TabOrder = 13
+      Width = 152
     end
   end
   object FormParams: TdsdFormParams
@@ -1807,6 +1815,14 @@ object InventoryForm: TInventoryForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisList'
+        Value = Null
+        Component = cbList
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 362
@@ -1835,6 +1851,9 @@ object InventoryForm: TInventoryForm
       end
       item
         Control = ceComment
+      end
+      item
+        Control = cbList
       end>
     GetStoredProc = spGet
     Left = 320
@@ -1910,6 +1929,13 @@ object InventoryForm: TInventoryForm
         Value = Null
         Component = ceComment
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isList'
+        Value = Null
+        Component = cbList
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

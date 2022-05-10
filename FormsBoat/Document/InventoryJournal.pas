@@ -92,6 +92,7 @@ type
     N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
     actRefreshStart: TdsdDataSetRefresh;
+    isList: TcxGridDBColumn;
   private
   public
   end;
