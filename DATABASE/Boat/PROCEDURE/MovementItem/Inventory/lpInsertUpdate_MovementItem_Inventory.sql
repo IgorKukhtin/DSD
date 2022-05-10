@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Inventory(
  INOUT ioId                                 Integer   , -- Ключ объекта <Элемент документа>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Inventory(
     IN inGoodsId                            Integer   , -- Товары
  INOUT ioAmount                             TFloat    , -- Количество
     IN inTotalCount                         TFloat    , -- Количество Итого
+    IN inTotalCount_old                     TFloat    , -- Количество Итого
  INOUT ioPrice                              TFloat    , -- Цена
    OUT outAmountSumm                        TFloat    , -- Сумма расчетная
     IN inPartNumber                         TVarChar  , --
@@ -60,8 +62,8 @@ BEGIN
                 );
          -- 
 
-         --могут ввести Итого количество, тогда его сохраняем, иначе + к сохраненному количеству
-         IF COALESCE ((SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = ioId), 0) <> inTotalCount
+         -- могут ввести Итого количество, тогда его сохраняем, иначе + к сохраненному количеству
+         IF COALESCE (inTotalCount, 0) <> COALESCE (inTotalCount_old, 0)
          THEN
              ioAmount := inTotalCount;
          ELSE 
@@ -86,7 +88,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
      -- расчитали сумму по элементу, для грида
-     outAmountSumm := CAST(ioAmount * ioPrice AS NUMERIC (16, 2));
+     outAmountSumm := CAST (ioAmount * ioPrice AS NUMERIC (16, 2));
 
 
      -- Проверка

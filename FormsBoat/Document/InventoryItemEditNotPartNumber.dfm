@@ -1,9 +1,9 @@
 object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1058#1086#1074#1072#1088' '#1074' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1102
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1102
   ClientHeight = 252
-  ClientWidth = 408
+  ClientWidth = 424
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,7 +18,7 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButtonOK: TcxButton
-    Left = 88
+    Left = 113
     Top = 213
     Width = 75
     Height = 25
@@ -26,7 +26,7 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 232
+    Left = 258
     Top = 213
     Width = 75
     Height = 25
@@ -36,18 +36,18 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
     TabOrder = 4
   end
   object cxLabel3: TcxLabel
-    Left = 8
-    Top = 45
-    Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+    Left = 215
+    Top = 2
+    Caption = #1043#1088#1091#1087#1087#1072
   end
   object cxLabel5: TcxLabel
     Left = 8
-    Top = 3
+    Top = 2
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
   end
   object edGoods: TcxButtonEdit
-    Left = 86
-    Top = 108
+    Left = 8
+    Top = 122
     Properties.Buttons = <
       item
         Default = True
@@ -55,11 +55,11 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
       end>
     Properties.ReadOnly = True
     TabOrder = 3
-    Width = 313
+    Width = 200
   end
   object edGoodsGroup: TcxButtonEdit
-    Left = 8
-    Top = 64
+    Left = 215
+    Top = 22
     Properties.Buttons = <
       item
         Default = True
@@ -68,11 +68,11 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 269
+    Width = 200
   end
   object edPartner: TcxButtonEdit
     Left = 8
-    Top = 21
+    Top = 22
     Properties.Buttons = <
       item
         Default = True
@@ -81,107 +81,107 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
       end>
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 269
+    Width = 200
   end
   object cxLabel8: TcxLabel
-    Left = 288
-    Top = 141
+    Left = 214
+    Top = 102
     Caption = #1062#1077#1085#1072' '#1074#1093'.'
   end
   object ceOperPriceList: TcxCurrencyEdit
-    Left = 288
-    Top = 160
+    Left = 214
+    Top = 122
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     TabOrder = 10
-    Width = 111
+    Width = 95
   end
   object cxLabel13: TcxLabel
-    Left = 86
-    Top = 91
+    Left = 8
+    Top = 102
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object edGoodsCode: TcxCurrencyEdit
-    Left = 8
-    Top = 108
+    Left = 113
+    Top = 72
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
     TabOrder = 12
-    Width = 72
+    Width = 95
   end
   object ceOperCount: TcxCurrencyEdit
     Left = 8
-    Top = 160
+    Top = 176
     EditValue = 1.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 0
-    Width = 72
+    Width = 95
   end
   object cxLabel2: TcxLabel
     Left = 8
-    Top = 141
+    Top = 157
     Caption = #1050#1086#1083'-'#1074#1086
   end
   object cxLabel4: TcxLabel
-    Left = 185
-    Top = 141
+    Left = 320
+    Top = 157
     Caption = #1048#1058#1054#1043#1054' :'
   end
   object ceTotalCount: TcxCurrencyEdit
-    Left = 185
-    Top = 160
+    Left = 320
+    Top = 176
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     TabOrder = 15
-    Width = 92
+    Width = 95
   end
   object cxLabel6: TcxLabel
-    Left = 8
-    Top = 91
+    Left = 112
+    Top = 52
     Caption = 'Interne Nr'
   end
   object cxLabel18: TcxLabel
-    Left = 288
-    Top = 45
+    Left = 8
+    Top = 52
     Caption = 'Artikel Nr'
   end
   object edArticle: TcxTextEdit
-    Left = 288
-    Top = 64
+    Left = 8
+    Top = 72
     Properties.ReadOnly = True
     TabOrder = 18
-    Width = 111
+    Width = 95
   end
   object cxLabel1: TcxLabel
-    Left = 288
-    Top = 3
+    Left = 103
+    Top = 157
     Caption = 'S/N'
   end
   object edPartNumber: TcxTextEdit
-    Left = 288
-    Top = 21
+    Left = 112
+    Top = 176
     Enabled = False
     Properties.ReadOnly = True
     TabOrder = 19
-    Width = 111
+    Width = 96
   end
   object cxLabel7: TcxLabel
-    Left = 86
-    Top = 141
+    Left = 215
+    Top = 157
     Caption = #1048#1058#1054#1043#1054' ('#1074#1074#1086#1076'):'
   end
   object ceTotalCountEnter: TcxCurrencyEdit
-    Left = 86
-    Top = 160
+    Left = 215
+    Top = 176
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 1
-    Width = 93
+    Width = 95
   end
   object ActionList: TActionList
     Left = 352
@@ -291,6 +291,14 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inTotalCount_old'
+        Value = Null
+        Component = ceTotalCount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPrice'
         Value = 0.000000000000000000
         Component = ceOperPriceList
@@ -337,8 +345,8 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 251
-    Top = 96
+    Left = 291
+    Top = 56
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_MI_Inventory'
@@ -440,6 +448,13 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
       item
         Name = 'TotalCount'
         Value = Null
+        Component = ceTotalCountEnter
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalCount'
+        Value = Null
         Component = ceTotalCount
         DataType = ftFloat
         MultiSelectSeparator = ','
@@ -478,13 +493,6 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
         Component = edPartNumber
         DataType = ftString
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TotalCount'
-        Value = Null
-        Component = ceTotalCountEnter
-        DataType = ftFloat
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -502,12 +510,12 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 360
-    Top = 84
+    Left = 376
+    Top = 60
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 313
-    Top = 176
+    Top = 192
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -571,8 +579,8 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 164
-    Top = 96
+    Left = 132
+    Top = 104
   end
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
@@ -641,8 +649,8 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 217
-    Top = 47
+    Left = 281
+    Top = 7
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
@@ -682,17 +690,14 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 145
-    Top = 10
+    Left = 113
+    Top = 2
   end
   object EnterMoveNext: TEnterMoveNext
     EnterMoveNextList = <
       item
         Control = ceOperCount
         ExitAction = actGet_TotalCount
-      end
-      item
-        Control = ceTotalCountEnter
       end
       item
         Control = cxButtonOK
@@ -746,7 +751,7 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
       end>
     PackSize = 1
     Left = 64
-    Top = 192
+    Top = 208
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = '0'
@@ -760,7 +765,7 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
     ActionItemList = <
       item
       end>
-    Left = 96
-    Top = 64
+    Left = 232
+    Top = 56
   end
 end
