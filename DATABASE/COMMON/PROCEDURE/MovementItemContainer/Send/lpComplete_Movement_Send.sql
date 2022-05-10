@@ -1008,6 +1008,13 @@ BEGIN
                                                                                                                         -- Мясное сырье
                                                                                                                         AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                                                                                             THEN 0
+
+                                                                                                                       -- Тушенка
+                                                                                                                       WHEN _tmpItem.InfoMoneyId IN (zc_Enum_InfoMoney_30102())
+                                                                                                                        AND _tmpItem.OperDate >= '01.05.2022'
+                                                                                                                        AND _tmpItem.UnitId_From <> 8006902 -- ЦЕХ упаковки Тушенки
+                                                                                                                            THEN 0
+
                                                                                                                        ELSE _tmpItem.GoodsKindId
                                                                                                                   END
                                                                                     , inIsPartionCount         := _tmpItem.isPartionCount
@@ -1087,6 +1094,13 @@ BEGIN
                                                                                                                         -- Мясное сырье
                                                                                                                         AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                                                                                             THEN 0
+
+                                                                                                                       -- Тушенка
+                                                                                                                       WHEN _tmpItem.InfoMoneyId IN (zc_Enum_InfoMoney_30102())
+                                                                                                                        AND _tmpItem.OperDate >= '01.05.2022'
+                                                                                                                        AND _tmpItem.UnitId_To <> 8006902 -- ЦЕХ упаковки Тушенки
+                                                                                                                            THEN 0
+
                                                                                                                        ELSE _tmpItem.GoodsKindId
                                                                                                                   END
                                                                                     , inIsPartionCount         := _tmpItem.isPartionCount
