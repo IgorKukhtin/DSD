@@ -177,10 +177,20 @@ BEGIN
                  
                IF vbPriceSale < inPriceSale and COALESCE(outPrice, 0) = 0 OR vbPriceSale < outPrice and COALESCE(outPrice, 0) > 0
                THEN
-                  outError :=  'Ошибка. Отпускная цена ниже чем по реесту товаров соц. проекта 1303.';
-                  outError2 :=  Chr(13)||Chr(10)||'Сделать PrintScreen экрана с ошибкой и отправить на Telegram своему менеджеру для  исправления Цены реализации'||Chr(13)||Chr(10)||'(после исправления - препарат можно отпустить по рецепту)';
-                  outSentence := '';
-                  outPrice := 0;               
+                  outError :=  'БЛОК ОТПУСКА !'||Chr(13)||Chr(10)|| 
+                               'Отпускная цена выше чем по реестру товаров соц. проекта 1303'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||
+                               'Максимальная цена реализации должна быть - '||zfConvert_FloatToString(vbPriceSale)||'грн.'||Chr(13)||Chr(10)|| 
+                               'У нас миним. цена для отпуска по ПКМУ 1303 - '||zfConvert_FloatToString(CASE WHEN COALESCE(outPrice, 0) = 0 THEN inPriceSale ELSE outPrice END)||'грн.';
+                  outError2 :=  Chr(13)||Chr(10)||'% расхождения '||zfConvert_FloatToString(CASE WHEN COALESCE(outPrice, 0) = 0 THEN inPriceSale ELSE outPrice END/vbPriceSale*100 - 100)||
+                               Chr(13)||Chr(10)||Chr(13)||Chr(10)||'Сделать PrintScreen экрана с ошибкой и отправить на Telegram   в группу ПКМУ1303  (инфо для Пелиной Любови)';
+                  IF (CASE WHEN COALESCE(outPrice, 0) = 0 THEN inPriceSale ELSE outPrice END/vbPriceSale*100 - 100) <= 1.0
+                  THEN
+                    outPrice := vbPriceSale;
+                    outSentence :=  'Применить максимально допустимую цену - '||to_char(outPrice, 'G999G999G999G999D99');
+                  ELSE
+                    outSentence := '';
+                    outPrice := 0;               
+                  END IF;
                END IF;
             END IF;            
     END IF;
@@ -197,4 +207,4 @@ $BODY$
 
 -- SELECT * FROM gpSelect_CheckItem_SPKind_1303(inSPKindId := zc_Enum_SPKind_1303(), inGoodsId := 36643, inPriceSale := 1000, inSession := '3');
 
-select * from gpSelect_CheckItem_SPKind_1303(inSPKindId := 4823010 , inGoodsId := 27658 , inPriceSale := 309 ,  inSession := '3');
+select * from gpSelect_CheckItem_SPKind_1303(inSPKindId := 4823010 , inGoodsId := 18508 , inPriceSale := 164 ,  inSession := '3');

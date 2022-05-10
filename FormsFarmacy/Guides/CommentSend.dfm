@@ -14,6 +14,7 @@ object CommentSendForm: TCommentSendForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -446,6 +447,14 @@ object CommentSendForm: TCommentSendForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 144
@@ -493,6 +502,7 @@ object CommentSendForm: TCommentSendForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -521,5 +531,15 @@ object CommentSendForm: TCommentSendForm
     object N4: TMenuItem
       Action = dsdSetUnErased
     end
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'UnitId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    Left = 360
+    Top = 72
   end
 end

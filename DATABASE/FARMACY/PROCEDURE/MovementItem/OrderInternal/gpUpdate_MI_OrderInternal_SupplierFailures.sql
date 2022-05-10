@@ -115,7 +115,7 @@ BEGIN
                                      , MovementLinkObject_From.ObjectId         AS JuridicalId
                                      , MovementLinkObject_Contract.ObjectId     AS ContractId
                                      , SUM (MI_OrderExternal.Amount) ::TFloat   AS Amount
-                                FROM Movement AS Movement_OrderExternal
+                                FROM tmpOrderExternal AS Movement_OrderExternal
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                               ON MovementLinkObject_Unit.MovementId = Movement_OrderExternal.Id
                                                              AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To()
@@ -137,11 +137,8 @@ BEGIN
                                      LEFT JOIN tmpMovementItem ON tmpMovementItem.GoodsJuridicalId = MILinkObject_Goods.ObjectId
                                                               AND tmpMovementItem.JuridicalId      = MovementLinkObject_From.ObjectId
                                                               AND tmpMovementItem.ContractId       = MovementLinkObject_Contract.ObjectId
-                                WHERE Movement_OrderExternal.DescId = zc_Movement_OrderExternal()
-                                  AND Movement_OrderExternal.StatusId = zc_Enum_Status_Complete()
-                                  AND Movement_OrderExternal.OperDate = inOperdate
-                                  AND COALESCE (tmpMovementItem.GoodsJuridicalId, 0) <> 0
-                                  AND tmpMovementItem.DateStart > tmpProtocolOE.OperDate 
+                                WHERE COALESCE (tmpMovementItem.GoodsJuridicalId, 0) <> 0
+                                  AND tmpMovementItem.DateStart <= tmpProtocolOE.OperDate 
                                 GROUP BY MILinkObject_Goods.ObjectId
                                        , MovementLinkObject_From.ObjectId
                                        , MovementLinkObject_Contract.ObjectId

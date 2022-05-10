@@ -613,6 +613,8 @@ type
     N62: TMenuItem;
     actListGoodsKeyword: TAction;
     actListGoodsKeyword1: TMenuItem;
+    MainPriceSaleOOC1303: TcxGridDBColumn;
+    MainPriceSale1303: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -730,8 +732,6 @@ type
       var ADone: Boolean);
     procedure actWagesUserExecute(Sender: TObject);
     procedure actBanCashExecute(Sender: TObject);
-    procedure MainGridDBTableViewSelectionChanged
-      (Sender: TcxCustomGridTableView);
     procedure MainGridDBTableViewCanFocusRecord(Sender: TcxCustomGridTableView;
       ARecord: TcxCustomGridRecord; var AAllow: Boolean);
     procedure actNotTransferTimeExecute(Sender: TObject);
@@ -774,6 +774,9 @@ type
     procedure actAddGoodsSupplementExecute(Sender: TObject);
     procedure actUser_expireDateExecute(Sender: TObject);
     procedure actListGoodsKeywordExecute(Sender: TObject);
+    procedure MainGridDBTableViewStylesGetContentStyle(
+      Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
+      AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -7619,7 +7622,6 @@ procedure TMainCashForm2.CheckGridColNameStylesGetContentStyle(
   Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
   AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
 begin
-  FStyle.Assign(dmMain.cxContentStyle);
   if (ARecord.Values[CheckGridColSummChangePercent.Index] <> Null) and (ARecord.Values[CheckGridColSummChangePercent.Index] <> 0) then
     FStyle.Color := TColor($FFD784);
   AStyle := FStyle;
@@ -10262,6 +10264,15 @@ procedure TMainCashForm2.MainColNameCustomDrawCell(
 var
   AText: string;
 begin
+
+  if not AViewInfo.Focused then
+  begin
+    if (FormParams.ParamByName('SPKindId').Value = 4823010) and (AViewInfo.GridRecord.Values[MainPriceSaleOOC1303.Index] <> Null) and
+      (AViewInfo.GridRecord.Values[MainPriceSaleOOC1303.Index] < MIN(AViewInfo.GridRecord.Values[MainColPrice.Index], AViewInfo.GridRecord.Values[MainPriceSale1303.Index])) and
+      ((MIN(AViewInfo.GridRecord.Values[MainColPrice.Index], AViewInfo.GridRecord.Values[MainPriceSale1303.Index])/AViewInfo.GridRecord.Values[MainPriceSaleOOC1303.Index]*100.0 - 100) > 1.0) then
+      ACanvas.Brush.Color := TColor($D0C7FE);
+  end;
+
   if AViewInfo.Focused then
   begin
      ACanvas.Brush.Color := clHighlight;
@@ -10309,7 +10320,11 @@ procedure TMainCashForm2.MainFixPercentStylesGetContentStyle(
   Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
   AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
 begin
-  FStyle.Assign(dmMain.cxContentStyle);
+  if (FormParams.ParamByName('SPKindId').Value = 4823010) and (ARecord.Values[MainPriceSaleOOC1303.Index] <> Null) and
+     (ARecord.Values[MainPriceSaleOOC1303.Index] < MIN(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])) and
+     ((MIN(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])/ARecord.Values[MainPriceSaleOOC1303.Index]*100.0 - 100) > 1.0) then
+     FStyle.Color := TColor($D0C7FE);
+
   if (ARecord.Values[MainFixPercent.Index] <> Null) AND (ARecord.Values[MainFixPercent.Index] <> 0) OR
      (ARecord.Values[MainFixDiscount.Index] <> Null) AND (ARecord.Values[MainFixDiscount.Index] <> 0) OR
      (ARecord.Values[MainGridPriceChange.Index] <> Null) AND (ARecord.Values[MainGridPriceChange.Index] <> 0) then
@@ -10414,11 +10429,17 @@ begin
     Round((Cnt + 1) / 2);
 end;
 
-procedure TMainCashForm2.MainGridDBTableViewSelectionChanged
-  (Sender: TcxCustomGridTableView);
+procedure TMainCashForm2.MainGridDBTableViewStylesGetContentStyle(
+  Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
+  AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
 begin
-  inherited;
-
+  FStyle.Assign(MainGridDBTableView.Styles.Content);
+  if (FormParams.ParamByName('SPKindId').Value = 4823010) and (ARecord.Values[MainPriceSaleOOC1303.Index] <> Null) and
+    (ARecord.Values[MainPriceSaleOOC1303.Index] < MIN(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])) and
+    ((MIN(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])/ARecord.Values[MainPriceSaleOOC1303.Index]*100.0 - 100) > 1.0)
+     then
+    FStyle.Color := TColor($D0C7FE);
+  AStyle := FStyle;
 end;
 
 // процедура обновляет параметры для введения нового чека
