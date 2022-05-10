@@ -745,6 +745,13 @@ object InventoryItemEditForm: TInventoryItemEditForm
       end
       item
         Name = 'outTotalCount'
+        Value = Null
+        Component = ceTotalCountEnter
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalCount'
         Value = 0.000000000000000000
         Component = ceTotalCount
         DataType = ftFloat

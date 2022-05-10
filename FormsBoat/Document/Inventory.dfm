@@ -1307,6 +1307,9 @@ object InventoryForm: TInventoryForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actGoodsItemGet3
+        end
+        item
           Action = actGoodsItem3
         end>
       Caption = 'macGoodsItem3'
@@ -1697,6 +1700,20 @@ object InventoryForm: TInventoryForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTotalCount'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTotalCount_old'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -2092,14 +2109,13 @@ object InventoryForm: TInventoryForm
     Top = 208
   end
   object spInsertMaskMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Inventory'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
         Name = 'ioId'
         Value = 0
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -2128,6 +2144,22 @@ object InventoryForm: TInventoryForm
       end
       item
         Name = 'inAmount'
+        Value = 0.000000000000000000
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTotalCount'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTotalCount_old'
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput

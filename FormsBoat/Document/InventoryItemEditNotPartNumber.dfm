@@ -158,9 +158,10 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
     Width = 95
   end
   object cxLabel1: TcxLabel
-    Left = 103
+    Left = 114
     Top = 157
     Caption = 'S/N'
+    Enabled = False
   end
   object edPartNumber: TcxTextEdit
     Left = 112
@@ -740,6 +741,13 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
         Component = ceOperCount
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalCount'
+        Value = Null
+        Component = ceTotalCountEnter
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
