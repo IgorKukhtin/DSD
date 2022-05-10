@@ -1539,15 +1539,12 @@
         end
         object miProfitLossGroup: TMenuItem
           Action = actProfitLossGroup
-          Enabled = False
         end
         object miProfitLossDirection: TMenuItem
           Action = actProfitLossDirection
-          Enabled = False
         end
         object miProfitLoss: TMenuItem
           Action = actProfitLoss
-          Enabled = False
         end
       end
       object N1: TMenuItem [5]

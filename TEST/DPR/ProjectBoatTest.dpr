@@ -302,7 +302,16 @@ uses
   SendItemEdit in '..\..\FormsBoat\Document\SendItemEdit.pas' {SendItemEditForm: TParentForm},
   Report_GoodsMotion in '..\..\FormsBoat\Report\Report_GoodsMotion.pas' {Report_GoodsMotionForm: TParentForm},
   Report_GoodsMotionDialog in '..\..\FormsBoat\Report\Report_GoodsMotionDialog.pas' {Report_GoodsMotionDialogForm: TParentForm},
-  InventoryItemEditNotPartNumber in '..\..\FormsBoat\Document\InventoryItemEditNotPartNumber.pas' {InventoryItemEditNotPartNumberForm: TParentForm};
+  InventoryItemEditNotPartNumber in '..\..\FormsBoat\Document\InventoryItemEditNotPartNumber.pas' {InventoryItemEditNotPartNumberForm: TParentForm},
+  ProfitLossGroup in '..\..\FormsBoat\Guides\ProfitLossGroup.pas' {ProfitLossGroupForm: TParentForm},
+  ProfitLossGroup_Object in '..\..\FormsBoat\Guides\ProfitLossGroup_Object.pas' {ProfitLossGroup_ObjectForm: TParentForm},
+  ProfitLossGroupEdit in '..\..\FormsBoat\Guides\ProfitLossGroupEdit.pas' {ProfitLossGroupEditForm: TParentForm},
+  ProfitLossDirectionEdit in '..\..\FormsBoat\Guides\ProfitLossDirectionEdit.pas' {ProfitLossDirectionEditForm: TParentForm},
+  ProfitLossDirection_Object in '..\..\FormsBoat\Guides\ProfitLossDirection_Object.pas' {ProfitLossDirection_ObjectForm: TParentForm},
+  ProfitLossDirection in '..\..\FormsBoat\Guides\ProfitLossDirection.pas' {ProfitLossDirectionForm: TParentForm},
+  ProfitLoss in '..\..\FormsBoat\Guides\ProfitLoss.pas' {ProfitLossForm: TParentForm},
+  ProfitLoss_Object in '..\..\FormsBoat\Guides\ProfitLoss_Object.pas' {ProfitLoss_ObjectForm: TParentForm},
+  ProfitLossEdit in '..\..\FormsBoat\Guides\ProfitLossEdit.pas' {ProfitLossEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
