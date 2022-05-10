@@ -1,9 +1,11 @@
 -- Function: gpSelect_Object_CommentSend()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_CommentSend(boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_CommentSend(boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_CommentSend(boolean, integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_CommentSend(
     IN inisShowAll   boolean,
+    IN inUnitId      integer,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -40,7 +42,8 @@ BEGIN
         LEFT JOIN Object AS Object_CommentTR ON Object_CommentTR.Id = ObjectLink_CommentSend_CommentTR.ChildObjectId
 
    WHERE Object_CommentSend.DescId = zc_Object_CommentSend()
-     AND (Object_CommentSend.isErased = False OR inisShowAll = True);
+     AND (Object_CommentSend.isErased = False OR inisShowAll = True)
+     AND (COALESCE(inUnitId, 0) <> 377594 OR Object_CommentSend.Id <> 15180138);
   
   
 END;$BODY$
@@ -60,4 +63,4 @@ ALTER FUNCTION gpSelect_Object_CommentSend(boolean, TVarChar) OWNER TO postgres;
 -- тест
 -- 
 
-select * from gpSelect_Object_CommentSend(inisShowAll := 'True' ,  inSession := '3');
+select * from gpSelect_Object_CommentSend(inisShowAll := 'True' , inUnitId := 377594  , inSession := '3');

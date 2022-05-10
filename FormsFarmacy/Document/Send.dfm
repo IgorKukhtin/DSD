@@ -12,17 +12,17 @@ inherited SendForm: TSendForm
     Width = 1002
     Height = 462
     ExplicitTop = 155
-    ExplicitWidth = 992
+    ExplicitWidth = 1002
     ExplicitHeight = 462
     ClientRectBottom = 462
     ClientRectRight = 1002
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 992
+      ExplicitWidth = 1002
       ExplicitHeight = 438
       inherited cxGrid: TcxGrid
         Width = 1002
         Height = 318
-        ExplicitWidth = 992
+        ExplicitWidth = 1002
         ExplicitHeight = 318
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -551,7 +551,6 @@ inherited SendForm: TSendForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitWidth = 992
       end
       object cxGrid1: TcxGrid
         Left = 0
@@ -561,7 +560,6 @@ inherited SendForm: TSendForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 2
-        ExplicitWidth = 992
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -707,7 +705,7 @@ inherited SendForm: TSendForm
     Width = 1002
     Height = 129
     TabOrder = 3
-    ExplicitWidth = 992
+    ExplicitWidth = 1002
     ExplicitHeight = 129
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1756,6 +1754,13 @@ inherited SendForm: TSendForm
           Component = MasterCDS
           ComponentItem = 'CommentSendName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end>
       isShowModal = True

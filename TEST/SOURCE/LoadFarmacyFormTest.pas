@@ -3141,12 +3141,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionDateGoodsListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionDateGoodsListForm');
-
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentSendEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCommentSendEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCommentSendForm');
-
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalForm');
 

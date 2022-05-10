@@ -2840,6 +2840,78 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioDiscountTax'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DiscountTax'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioOperPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummIn'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummIn'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount_old'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount_old'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPrice_orig_old'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPrice_orig_old'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscountTax_old'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DiscountTax'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPrice_old'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummIn_old'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummIn'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inOperPriceList'
         Value = Null
         Component = MasterCDS
@@ -2876,8 +2948,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 150
-    Top = 287
+    Left = 198
+    Top = 295
   end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

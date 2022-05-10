@@ -1,7 +1,7 @@
 inherited MainCashForm2: TMainCashForm2
   ActiveControl = lcName
   Caption = #1055#1088#1086#1076#1072#1078#1072
-  ClientHeight = 653
+  ClientHeight = 672
   ClientWidth = 964
   PopupMenu = PopupMenu
   OnCloseQuery = ParentFormCloseQuery
@@ -12,17 +12,18 @@ inherited MainCashForm2: TMainCashForm2
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 980
-  ExplicitHeight = 692
+  ExplicitHeight = 711
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
     Left = 0
-    Top = 500
+    Top = 519
     Width = 964
     Height = 153
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitTop = 500
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
@@ -299,32 +300,34 @@ inherited MainCashForm2: TMainCashForm2
   end
   object cxSplitter2: TcxSplitter [1]
     Left = 0
-    Top = 497
+    Top = 516
     Width = 964
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
+    ExplicitTop = 497
   end
   object MainPanel: TPanel [2]
     Left = 0
     Top = 349
     Width = 964
-    Height = 148
+    Height = 167
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitHeight = 148
     object MainGrid: TcxGrid
       Left = 0
       Top = 21
       Width = 964
-      Height = 82
+      Height = 101
       Align = alClient
       TabOrder = 0
+      ExplicitHeight = 82
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnCanFocusRecord = MainGridDBTableViewCanFocusRecord
         OnFocusedRecordChanged = MainGridDBTableViewFocusedRecordChanged
-        OnSelectionChanged = MainGridDBTableViewSelectionChanged
         DataController.DataSource = RemainsDS
         DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.KeyFieldNames = 'Id;PartionDateKindId;NDSKindId;DivisionPartiesID;isPresent'
@@ -342,6 +345,7 @@ inherited MainCashForm2: TMainCashForm2
         OptionsView.GroupByBox = False
         OptionsView.HeaderAutoHeight = True
         OptionsView.Indicator = True
+        Styles.OnGetContentStyle = MainGridDBTableViewStylesGetContentStyle
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
         object MainColIsSP: TcxGridDBColumn
           Caption = #1057#1055
@@ -1117,6 +1121,24 @@ inherited MainCashForm2: TMainCashForm2
           Options.Editing = False
           Width = 117
         end
+        object MainPriceSaleOOC1303: TcxGridDBColumn
+          Caption = #1052#1072#1082#1089'. '#1088#1086#1079#1085' '#1094#1077#1085#1072'  '#1055#1050#1052#1059'1303'
+          DataBinding.FieldName = 'PriceSaleOOC1303'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 90
+        end
+        object MainPriceSale1303: TcxGridDBColumn
+          Caption = ' '#1052#1080#1085'. '#1088#1086#1079#1085'. '#1094#1077#1085#1072' '#1055#1050#1052#1059'1303'
+          DataBinding.FieldName = 'PriceSale1303'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 90
+        end
       end
       object MainGridLevel: TcxGridLevel
         GridView = MainGridDBTableView
@@ -1124,11 +1146,12 @@ inherited MainCashForm2: TMainCashForm2
     end
     object SearchPanel: TPanel
       Left = 0
-      Top = 103
+      Top = 122
       Width = 964
       Height = 45
       Align = alBottom
       TabOrder = 1
+      ExplicitTop = 103
       object ShapeState: TShape
         Left = 754
         Top = 25
@@ -1737,6 +1760,7 @@ inherited MainCashForm2: TMainCashForm2
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
       Properties.MaxLength = 13
+      Style.TextColor = 13682686
       TabOrder = 0
       OnKeyPress = ceScanerKeyPress
       Width = 146

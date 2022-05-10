@@ -49,11 +49,14 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                isMultiplicityError boolean,
                isStaticCode boolean,
                isVIPforSales boolean,
+               
+               PriceSaleOOC1303 TFloat, 
+               PriceSale1303 TFloat
 
-               PartionDateKindId_check   Integer,
+               /*PartionDateKindId_check   Integer,
                Price_check               TFloat,
                PriceWithVAT_check        TFloat,
-               PartionDateDiscount_check TFloat
+               PartionDateDiscount_check TFloat*/
               )
 AS
 $BODY$
@@ -75,6 +78,7 @@ $BODY$
 
    DECLARE vbDividePartionDate   boolean;
    DECLARE vbPromoForSale TVarChar;
+   DECLARE vbPartnerMedicalId  Integer;
 
    DECLARE vbPriceSamples TFloat;
    DECLARE vbSamples21 TFloat;
@@ -144,7 +148,8 @@ BEGIN
         ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
       , COALESCE (ObjectBoolean_DividePartionDate.ValueData, FALSE)  :: Boolean   AS DividePartionDate
       , ','||COALESCE(ObjectString_PromoForSale.ValueData, '')||','               AS PromoForSale
-    INTO  vbRetailId, vbDividePartionDate, vbPromoForSale
+      , COALESCE (ObjectLink_Unit_PartnerMedical.ChildObjectId, 0)::Integer       AS PartnerMedicalId
+    INTO  vbRetailId, vbDividePartionDate, vbPromoForSale, vbPartnerMedicalId
     FROM Object AS Object_Unit
 
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
@@ -160,6 +165,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_DividePartionDate
                                 ON ObjectBoolean_DividePartionDate.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_DividePartionDate.DescId = zc_ObjectBoolean_Unit_DividePartionDate()
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_PartnerMedical
+                             ON ObjectLink_Unit_PartnerMedical.ObjectId = Object_Unit.Id 
+                            AND ObjectLink_Unit_PartnerMedical.DescId = zc_ObjectLink_Unit_PartnerMedical()
 
     WHERE Object_Unit.Id = vbUnitId;
     
@@ -748,6 +756,75 @@ BEGIN
                                               AND ObjectLink_GoodsDivisionLock_Unit.ChildObjectId = vbUnitId
                                             )
                  , tmpGoodsAutoVIPforSalesCash AS (SELECT  T1.GoodsId FROM gpSelect_Goods_AutoVIPforSalesCash (inUnitId := vbUnitId , inSession:= inSession) AS T1)
+                 
+                 , tmpMovGoodsSP_1303 AS (SELECT Movement.Id                           AS Id
+                                               , Movement.OperDate                     AS OperDate
+                                               , ROW_NUMBER() OVER (ORDER BY Movement.OperDate DESC) AS ord
+                                          FROM Movement 
+                                          WHERE Movement.DescId = zc_Movement_GoodsSP_1303()
+                                            AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                            AND COALESCE (vbPartnerMedicalId, 0) <> 0
+                                          )
+                 , tmpMIGoodsSP_1303All AS (SELECT Movement.OperDate                     AS OperDate
+                                                 , COALESCE (MovementNext.OperDate, zc_DateEnd()) AS DateEnd
+                                                 , MovementItem.ObjectId                 AS GoodsId
+                                                 , MovementItem.Amount                   AS PriceSale
+                                            FROM tmpMovGoodsSP_1303 AS Movement
+                                          
+                                                 INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Master()
+                                                                       AND MovementItem.MovementId = Movement.Id
+                                                                       AND MovementItem.isErased = False
+                                                                     
+                                                 LEFT JOIN tmpMovGoodsSP_1303 AS MovementNext
+                                                                              ON MovementNext.Ord =  Movement.Ord + 1
+                                             )
+                 , tmpMIGoodsSP_1303 AS (SELECT MovementItem.GoodsId
+                                              , MovementItem.PriceSale
+                                              , ROW_NUMBER()OVER(PARTITION BY MovementItem.GoodsId ORDER BY MovementItem.DateEnd DESC) as ORD
+
+                                         FROM tmpMIGoodsSP_1303All AS MovementItem
+                                         WHERE MovementItem.OperDate <= CURRENT_DATE
+                                           AND MovementItem.DateEnd > CURRENT_DATE
+                                          )
+                 , tmpIncome_1303 AS (SELECT Container.ObjectId    AS GoodsId
+                                           , (CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE THEN MIFloat_Price.ValueData
+                                                  ELSE (MIFloat_Price.ValueData * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData,1)/100))::TFloat    -- в партии инвентаризации  цена с НДС, а параметра НДС нет
+                                             END * 1.1)::TFloat    AS PriceSale   -- цена отпускная 1303
+                                           , ROW_NUMBER() OVER (PARTITION BY Container.ObjectId ORDER BY MovementLinkObject_To.ObjectId <> vbUnitId, MI_Income.MovementId DESC) AS ord   -- Люба сказала смотреть по последней партии
+                                      FROM Container 
+                                         LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
+                                                                             ON CLI_MI.ContainerId = Container.Id
+                                                                            AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                         LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+
+                                         LEFT OUTER JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode :: Integer
+                                         LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                                     ON MIFloat_Price.MovementItemId = MI_Income.Id
+                                                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+                                         LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                                                   ON MovementBoolean_PriceWithVAT.MovementId =  MI_Income.MovementId
+                                                                  AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                                         LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                                      ON MovementLinkObject_NDSKind.MovementId = MI_Income.MovementId
+                                                                     AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                                         LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                      ON MovementLinkObject_To.MovementId = MI_Income.MovementId
+                                                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()   
+                                         LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                                               ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
+                                                              AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+
+                                      WHERE Container.ObjectId IN (SELECT DISTINCT Object_Goods_Retail.Id 
+                                                                   FROM tmpMIGoodsSP_1303 
+                                                                        INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = tmpMIGoodsSP_1303.GoodsId 
+                                                                                                      AND Object_Goods_Retail.RetailId = vbRetailId
+                                                                   )
+                                        AND Container.DescId = zc_Container_Count()
+                                        AND Container.WhereObjectId = vbUnitId
+                                        AND COALESCE (MIFloat_Price.ValueData ,0) > 0
+                                      )
+
  
 
         -- Результат
@@ -1144,13 +1221,17 @@ BEGIN
           , (COALESCE(Object_Goods_Retail.SummaWages, 0) <> 0 or 
              COALESCE(Object_Goods_Retail.PercentWages, 0) <> 0)::Boolean                     AS isStaticCode
           , COALESCE (tmpGoodsAutoVIPforSalesCash.GoodsId, 0) > 0                             AS isVIPforSales
+          
+          , tmpMIGoodsSP_1303.PriceSale                            AS PriceSaleOOC1303
+          , tmpIncome_1303.PriceSale                               AS PriceSale1303
 
-          , CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
+
+          /*, CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
           , zfCalc_PriceCash(CashSessionSnapShot.Price, 
                              CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)               AS Price_check
           , CashSessionSnapShot.PriceWithVAT        AS PriceWithVAT_check
-          , CashSessionSnapShot.PartionDateDiscount AS PartionDateDiscount_check
+          , CashSessionSnapShot.PartionDateDiscount AS PartionDateDiscount_check*/
           
          FROM
             CashSessionSnapShot
@@ -1245,6 +1326,13 @@ BEGIN
                                   AND ObjectBoolean_GoodsUKTZEDRRO.DescId = zc_ObjectBoolean_Unit_GoodsUKTZEDRRO()
                                   
            LEFT JOIN tmpGoodsAutoVIPforSalesCash ON tmpGoodsAutoVIPforSalesCash.GoodsId = CashSessionSnapShot.ObjectId
+           
+           LEFT JOIN tmpMIGoodsSP_1303 ON tmpMIGoodsSP_1303.GoodsId = Object_Goods_Retail.GoodsMainId
+                                      AND tmpMIGoodsSP_1303.ord = 1  
+           LEFT JOIN tmpIncome_1303 ON tmpIncome_1303.GoodsId = CashSessionSnapShot.ObjectId
+                                   AND tmpIncome_1303.ord = 1  
+                                   
+           
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId
         ORDER BY
@@ -1306,5 +1394,4 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 -- тест
 -- тест SELECT * FROM  gpDelete_CashSession ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3');
 --
-SELECT DeferredTR, PriceWithVAT_check, PricePartionDate, PartionDateKindName,  * FROM gpSelect_CashRemains_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3')  
-where GoodsCode = 4059 
+SELECT * FROM gpSelect_CashRemains_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3')  

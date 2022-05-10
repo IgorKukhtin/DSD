@@ -68,6 +68,7 @@ type
     CommentTRName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     dxBarButton1: TdxBarButton;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
