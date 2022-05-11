@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              , JuridicalName TVarChar, ParentName TVarChar, ChildName TVarChar
              , AccountDirectionId Integer, AccountDirectionCode Integer, AccountDirectionName TVarChar
+             , ProfitLossDirectionId Integer, ProfitLossDirectionCode Integer, ProfitLossDirectionName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
              , isErased boolean)
@@ -40,6 +41,10 @@ BEGIN
            , Object_AccountDirection.Id         AS AccountDirectionId
            , Object_AccountDirection.ObjectCode AS AccountDirectionCode
            , Object_AccountDirection.ValueData  AS AccountDirectionName
+
+           , Object_ProfitLossDirection.Id         AS ProfitLossDirectionId
+           , Object_ProfitLossDirection.ObjectCode AS ProfitLossDirectionCode
+           , Object_ProfitLossDirection.ValueData  AS ProfitLossDirectionName
 
            , Object_Insert.ValueData         AS InsertName
            , ObjectDate_Insert.ValueData     AS InsertDate
@@ -77,6 +82,11 @@ BEGIN
                                 AND ObjectLink_Unit_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
             LEFT JOIN Object AS Object_AccountDirection ON Object_AccountDirection.Id = ObjectLink_Unit_AccountDirection.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_ProfitLossDirection
+                                 ON ObjectLink_Unit_ProfitLossDirection.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_ProfitLossDirection.DescId = zc_ObjectLink_Unit_ProfitLossDirection()
+            LEFT JOIN Object AS Object_ProfitLossDirection ON Object_ProfitLossDirection.Id = ObjectLink_Unit_ProfitLossDirection.ChildObjectId
+
             LEFT JOIN ObjectLink AS ObjectLink_Insert
                                  ON ObjectLink_Insert.ObjectId = Object_Unit.Id
                                 AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
@@ -97,6 +107,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 10.05.22         *
  22.09.21         *
  22.10.20         *
 */

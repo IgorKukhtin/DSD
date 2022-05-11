@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ParentId Integer, ParentName TVarChar
              , ChildId Integer, ChildName  TVarChar
              , AccountDirectionId Integer, AccountDirectionName TVarChar
+             , ProfitLossDirectionId Integer, ProfitLossDirectionName TVarChar
  ) 
 AS
 $BODY$
@@ -39,6 +40,8 @@ BEGIN
            , '' :: TVarChar                         AS ChildName  
            , CAST (0 as Integer)    AS AccountDirectionId
            , CAST ('' as TVarChar)  AS AccountDirectionName      
+           , CAST (0 as Integer)    AS ProfitLossDirectionId
+           , CAST ('' as TVarChar)  AS ProfitLossDirectionName 
        ;
    ELSE
        RETURN QUERY
@@ -58,6 +61,10 @@ BEGIN
 
            , Object_AccountDirection.Id         AS AccountDirectionId
            , Object_AccountDirection.ValueData  AS AccountDirectionName
+
+           , Object_ProfitLossDirection.Id         AS ProfitLossDirectionId
+           , Object_ProfitLossDirection.ValueData  AS ProfitLossDirectionName
+
        FROM Object AS Object_Unit
             LEFT JOIN ObjectString AS ObjectString_Address
                                    ON ObjectString_Address.ObjectId = Object_Unit.Id
@@ -88,6 +95,11 @@ BEGIN
                                  ON ObjectLink_Unit_AccountDirection.ObjectId = Object_Unit.Id
                                 AND ObjectLink_Unit_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
             LEFT JOIN Object AS Object_AccountDirection ON Object_AccountDirection.Id = ObjectLink_Unit_AccountDirection.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_ProfitLossDirection
+                                 ON ObjectLink_Unit_ProfitLossDirection.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_ProfitLossDirection.DescId = zc_ObjectLink_Unit_ProfitLossDirection()
+            LEFT JOIN Object AS Object_ProfitLossDirection ON Object_ProfitLossDirection.Id = ObjectLink_Unit_ProfitLossDirection.ChildObjectId
 
       WHERE Object_Unit.Id = inId;
 

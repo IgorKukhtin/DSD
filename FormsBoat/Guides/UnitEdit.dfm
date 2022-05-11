@@ -2,8 +2,8 @@ object UnitEditForm: TUnitEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1082#1083#1072#1076'>'
-  ClientHeight = 450
-  ClientWidth = 302
+  ClientHeight = 495
+  ClientWidth = 300
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,8 +28,8 @@ object UnitEditForm: TUnitEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 35
-    Top = 416
+    Left = 36
+    Top = 460
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@ object UnitEditForm: TUnitEditForm
     TabOrder = 6
   end
   object cxButton2: TcxButton
-    Left = 184
-    Top = 416
+    Left = 185
+    Top = 460
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -135,13 +135,13 @@ object UnitEditForm: TUnitEditForm
     Width = 273
   end
   object cxLabel6: TcxLabel
-    Left = 10
-    Top = 356
+    Left = 11
+    Top = 400
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
-    Left = 10
-    Top = 374
+    Left = 11
+    Top = 418
     TabOrder = 17
     Width = 273
   end
@@ -161,6 +161,23 @@ object UnitEditForm: TUnitEditForm
     Left = 10
     Top = 305
     Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103' '
+  end
+  object cxLabel10: TcxLabel
+    Left = 10
+    Top = 353
+    Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077' '
+  end
+  object edProfitLossDirection: TcxButtonEdit
+    Left = 10
+    Top = 371
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 21
+    Width = 273
   end
   object ActionList: TActionList
     Left = 144
@@ -272,6 +289,14 @@ object UnitEditForm: TUnitEditForm
         Name = 'inAccountDirectionId'
         Value = Null
         Component = GuidesAccountDirection
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProfitLossDirectionId'
+        Value = Null
+        Component = GuidesProfitLossDirection
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -396,6 +421,21 @@ object UnitEditForm: TUnitEditForm
         Name = 'AccountDirectionName'
         Value = Null
         Component = GuidesAccountDirection
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProfitLossDirectionId'
+        Value = Null
+        Component = GuidesProfitLossDirection
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProfitLossDirectionName'
+        Value = Null
+        Component = GuidesProfitLossDirection
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -538,5 +578,34 @@ object UnitEditForm: TUnitEditForm
       end>
     Left = 237
     Top = 314
+  end
+  object GuidesProfitLossDirection: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edProfitLossDirection
+    FormNameParam.Value = 'TAccountDirectionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TAccountDirectionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesProfitLossDirection
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesProfitLossDirection
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 229
+    Top = 354
   end
 end

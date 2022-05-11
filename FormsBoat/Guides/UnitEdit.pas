@@ -56,6 +56,9 @@ type
     ceAccountDirection: TcxButtonEdit;
     GuidesAccountDirection: TdsdGuides;
     cxLabel9: TcxLabel;
+    cxLabel10: TcxLabel;
+    edProfitLossDirection: TcxButtonEdit;
+    GuidesProfitLossDirection: TdsdGuides;
   private
     { Private declarations }
   public

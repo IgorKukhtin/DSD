@@ -410,6 +410,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_AccountDirection() RETURNS Integer
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Unit_AccountDirection', 'Связь Подразделения с Аналитики счетов - направления', zc_Object_Unit(), zc_Object_AccountDirection() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_AccountDirection');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_ProfitLossDirection() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_ProfitLossDirection'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Unit_ProfitLossDirection', 'Связь Подразделения с Аналитики статей отчета о прибылях и убытках - направление', zc_Object_Unit(), zc_Object_AccountDirection() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_ProfitLossDirection');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Measure_MeasureCode() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Measure_MeasureCode'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Measure_MeasureCode', 'Сокращенный код ед. изм.', zc_Object_Measure(), zc_Object_MeasureCode() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Measure_MeasureCode');
@@ -429,6 +434,7 @@ SELECT 'zc_ObjectLink_GoodsArticle_Goods', 'Артикул Комплектующие', zc_Object_Go
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.05.22        * zc_ObjectLink_Unit_ProfitLossDirection
  17.02.22        * zc_ObjectLink_Measure_MeasureCode
                    zc_ObjectLink_TranslateObject_Object
                    zc_ObjectLink_TranslateObject_Language
