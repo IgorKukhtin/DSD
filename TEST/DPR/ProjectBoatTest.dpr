@@ -312,6 +312,8 @@ uses
   ProfitLoss_Object in '..\..\FormsBoat\Guides\ProfitLoss_Object.pas' {ProfitLoss_ObjectForm: TParentForm},
   ProfitLossEdit in '..\..\FormsBoat\Guides\ProfitLossEdit.pas' {ProfitLossEditForm: TParentForm},
   Report_GoodsMotion in '..\..\FormsBoat\Report\Report_GoodsMotion.pas' {Report_GoodsMotionForm: TParentForm};
+  Report_ProfitLoss in '..\..\FormsBoat\Report\Report_ProfitLoss.pas' {Report_ProfitLossForm: TParentForm},
+  Report_ProfitLossDialog in '..\..\FormsBoat\Report\Report_ProfitLossDialog.pas' {Report_ProfitLossDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

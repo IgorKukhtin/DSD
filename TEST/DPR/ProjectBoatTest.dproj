@@ -1054,6 +1054,12 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Report\Report_GoodsMotion.pas">
 				<Form>Report_GoodsMotionForm</Form>
+			<DCCReference Include="..\..\FormsBoat\Report\Report_ProfitLoss.pas">
+				<Form>Report_ProfitLossForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Report\Report_ProfitLossDialog.pas">
+				<Form>Report_ProfitLossDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
