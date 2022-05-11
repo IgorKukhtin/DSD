@@ -62,6 +62,10 @@ type
     GuidesFiller: TGuidesFiller;
     cxLabel7: TcxLabel;
     ceTotalCountEnter: TcxCurrencyEdit;
+    ceAmountDiff: TcxCurrencyEdit;
+    cxLabel10: TcxLabel;
+    cxLabel9: TcxLabel;
+    ceAmountRemains: TcxCurrencyEdit;
   private
     { Private declarations }
   public

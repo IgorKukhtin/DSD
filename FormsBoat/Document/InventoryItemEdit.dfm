@@ -84,13 +84,13 @@ object InventoryItemEditForm: TInventoryItemEditForm
     Width = 200
   end
   object cxLabel8: TcxLabel
-    Left = 215
-    Top = 102
+    Left = 320
+    Top = 52
     Caption = #1062#1077#1085#1072' '#1074#1093'.'
   end
   object ceOperPriceList: TcxCurrencyEdit
-    Left = 215
-    Top = 122
+    Left = 320
+    Top = 72
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
@@ -129,14 +129,28 @@ object InventoryItemEditForm: TInventoryItemEditForm
   object cxLabel4: TcxLabel
     Left = 320
     Top = 152
-    Caption = #1048#1058#1054#1043#1054' :'
+    Caption = #1048#1058#1054#1043#1054
+    ParentFont = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clWindowText
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
   end
   object ceTotalCount: TcxCurrencyEdit
     Left = 320
     Top = 172
+    ParentFont = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clWindowText
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
     TabOrder = 16
     Width = 95
   end
@@ -171,7 +185,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
   object cxLabel7: TcxLabel
     Left = 215
     Top = 152
-    Caption = #1048#1058#1054#1043#1054' ('#1074#1074#1086#1076'):'
+    Caption = #1048#1058#1054#1043#1054' ('#1074#1074#1086#1076')'
   end
   object ceTotalCountEnter: TcxCurrencyEdit
     Left = 215
@@ -179,6 +193,54 @@ object InventoryItemEditForm: TInventoryItemEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 2
+    Width = 95
+  end
+  object cxLabel9: TcxLabel
+    Left = 215
+    Top = 102
+    Caption = #1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1089#1095'.)'
+  end
+  object ceAmountRemains: TcxCurrencyEdit
+    Left = 215
+    Top = 122
+    ParentFont = False
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+    TabOrder = 23
+    Width = 95
+  end
+  object cxLabel10: TcxLabel
+    Left = 320
+    Top = 102
+    Caption = #1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1079#1085#1080#1094#1072')'
+    ParentFont = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlack
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = []
+    Style.IsFontAssigned = True
+  end
+  object ceAmountDiff: TcxCurrencyEdit
+    Left = 320
+    Top = 122
+    ParentFont = False
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.ReadOnly = True
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clRed
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+    TabOrder = 25
     Width = 95
   end
   object ActionList: TActionList
@@ -386,6 +448,20 @@ object InventoryItemEditForm: TInventoryItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PartionId'
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'GoodsId'
         Value = Null
         Component = GuidesGoods
@@ -403,6 +479,20 @@ object InventoryItemEditForm: TInventoryItemEditForm
         Value = ''
         Component = GuidesGoods
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Article'
+        Value = Null
+        Component = edArticle
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartNumber'
+        Value = Null
+        Component = edPartNumber
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -437,6 +527,13 @@ object InventoryItemEditForm: TInventoryItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Price'
+        Value = Null
+        Component = ceOperPriceList
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'OperCount'
         Value = Null
         Component = ceOperCount
@@ -458,38 +555,17 @@ object InventoryItemEditForm: TInventoryItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Price'
+        Name = 'AmountRemains'
         Value = Null
-        Component = ceOperPriceList
+        Component = ceAmountRemains
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PartionId'
+        Name = 'AmountDiff'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'PartionId'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Id'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Article'
-        Value = Null
-        Component = edArticle
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PartNumber'
-        Value = Null
-        Component = edPartNumber
-        DataType = ftString
+        Component = ceAmountDiff
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -754,6 +830,20 @@ object InventoryItemEditForm: TInventoryItemEditForm
         Name = 'outTotalCount'
         Value = 0.000000000000000000
         Component = ceTotalCount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountRemains'
+        Value = Null
+        Component = ceAmountRemains
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountDiff'
+        Value = Null
+        Component = ceAmountDiff
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
