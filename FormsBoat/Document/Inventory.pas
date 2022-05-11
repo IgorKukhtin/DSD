@@ -158,6 +158,8 @@ type
     actGoodsItemGet3: TdsdExecStoredProc;
     actGoodsItemGet2: TdsdExecStoredProc;
     cbList: TcxCheckBox;
+    AmountDiff: TcxGridDBColumn;
+    AmountRemains_curr: TcxGridDBColumn;
   private
   public
   end;

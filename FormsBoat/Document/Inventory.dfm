@@ -59,6 +59,16 @@ object InventoryForm: TInventoryForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains_curr
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -80,6 +90,16 @@ object InventoryForm: TInventoryForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains_curr
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -201,6 +221,40 @@ object InventoryForm: TInventoryForm
             HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1092#1072#1082#1090' '#1074' '#1084#1072#1075#1072#1079#1080#1085#1077' ('#1073#1077#1079' '#1076#1086#1083#1075#1086#1074')'
             Width = 71
           end
+          object AmountRemains: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095#1077#1090'. '#1086#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'AmountRemains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1088#1072#1089#1095#1077#1090#1085#1099#1081
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountDiff: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072
+            DataBinding.FieldName = 'AmountDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountRemains_curr: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1090#1077#1082#1091#1097#1080#1081
+            DataBinding.FieldName = 'AmountRemains_curr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1074#1093'.'
             DataBinding.FieldName = 'Price'
@@ -213,7 +267,7 @@ object InventoryForm: TInventoryForm
             Width = 55
           end
           object Summa: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' ('#1086#1089#1090'. '#1092#1072#1082#1090' '#1084#1072#1075'.)'
+            Caption = #1057#1091#1084#1084#1072' ('#1086#1089#1090'. '#1092#1072#1082#1090')'
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -222,18 +276,6 @@ object InventoryForm: TInventoryForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object AmountRemains: TcxGridDBColumn
-            Caption = #1056#1072#1089#1095#1077#1090'. '#1086#1089#1090#1072#1090#1086#1082
-            DataBinding.FieldName = 'AmountRemains'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1088#1072#1089#1095#1077#1090#1085#1099#1081
             Options.Editing = False
             Width = 80
           end
@@ -255,7 +297,6 @@ object InventoryForm: TInventoryForm
           end
           object PartionId: TcxGridDBColumn
             DataBinding.FieldName = 'PartionId'
-            Visible = False
             Options.Editing = False
             Width = 50
           end

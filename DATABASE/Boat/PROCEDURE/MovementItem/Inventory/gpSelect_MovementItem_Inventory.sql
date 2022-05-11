@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer
              , Article TVarChar, EAN TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupId Integer, GoodsGroupName TVarChar
              , MeasureName TVarChar
-             , Amount TFloat, AmountRemains TFloat
+             , Amount TFloat, AmountRemains TFloat, AmountDiff TFloat, AmountRemains_curr TFloat
              , Price TFloat
              , Summa TFloat
              , PartNumber TVarChar
@@ -23,23 +23,23 @@ RETURNS TABLE (Id Integer
               )
 AS
 $BODY$
-  DECLARE vbUserId Integer;
-  DECLARE vbUnitId Integer;
-  DECLARE vbOperDate_pr TDateTime;
+  DECLARE vbUserId   Integer;
+  DECLARE vbUnitId   Integer;
+  DECLARE vbStatusId Integer;
+  DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_Inventory());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- Результат такой
-     vbOperDate_pr:= (SELECT MIN (MovementProtocol.OperDate) FROM MovementProtocol WHERE MovementProtocol.MovementId = inMovementId);
-
-     -- из шапки берем подразделение для остатков
-     vbUnitId := (SELECT MovementLinkObject.ObjectId 
-                  FROM MovementLinkObject 
-                  WHERE MovementLinkObject.DescId = zc_MovementLinkObject_Unit()
-                    AND MovementLinkObject.MovementId = inMovementId
-                  );
+     -- Данные для остатков
+     SELECT Movement.OperDate, Movement.StatusId, MLO_Unit.ObjectId
+            INTO vbOperDate, vbStatusId, vbUnitId
+     FROM Movement
+          LEFT JOIN MovementLinkObject AS MLO_Unit
+                                       ON MLO_Unit.MovementId = inMovementId
+                                      AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
+     WHERE Movement.Id = inMovementId;
+     
 
      -- Результат такой
      RETURN QUERY
@@ -67,15 +67,41 @@ BEGIN
                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
                        )
 
-     , tmpRemains AS (SELECT Container.ObjectId AS GoodsId
-                           , CAST (SUM (COALESCE (Container.Amount,0)) AS NUMERIC (16,0)) AS Remains
+     , tmpRemains AS (SELECT Container.Id       AS ContainerId
+                           , Container.ObjectId AS GoodsId
+                           , Container.Amount
+                           , Container.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate = vbOperDate AND MIContainer.MovementDescId = zc_Movement_Inventory()
+                                                                         THEN COALESCE (MIContainer.Amount, 0)
+                                                                    WHEN MIContainer.OperDate > vbOperDate
+                                                                         THEN COALESCE (MIContainer.Amount, 0)
+                                                                    ELSE 0
+                                                               END)
+                                                        , 0) AS Remains
+                           , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
                       FROM Container
-                      WHERE Container.DescId = zc_Container_Count()
-                        AND Container.PartionId IN (SELECT DISTINCT tmpMI.PartionId FROM tmpMI)
-                        AND (Container.WhereObjectId = vbUnitId OR COALESCE (vbUnitId,0) = 0)
-                        AND COALESCE (Container.Amount,0) <> 0
-                      GROUP BY Container.ObjectId 
-                      )
+                           LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                        ON MIString_PartNumber.MovementItemId = Container.PartionId
+                                                       AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
+                           LEFT JOIN MovementItemContainer AS MIContainer
+                                                           ON MIContainer.ContainerId =  Container.Id
+                                                          AND MIContainer.OperDate    >= vbOperDate
+                                                          AND vbStatusId              =  zc_Enum_Status_Complete()
+                      WHERE Container.WhereObjectId = vbUnitId
+                        AND Container.DescId        = zc_Container_Count()
+                        AND Container.ObjectId IN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
+                      GROUP BY Container.Id
+                             , Container.ObjectId
+                             , Container.Amount
+                             , COALESCE (MIString_PartNumber.ValueData, '')
+                      HAVING Container.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate = vbOperDate AND MIContainer.MovementDescId = zc_Movement_Inventory()
+                                                                         THEN COALESCE (MIContainer.Amount, 0)
+                                                                    WHEN MIContainer.OperDate > vbOperDate
+                                                                         THEN COALESCE (MIContainer.Amount, 0)
+                                                                    ELSE 0
+                                                               END)
+                                                        , 0) <> 0
+                          OR Container.Amount <> 0
+                     )
 
        -- результат
        SELECT
@@ -92,12 +118,14 @@ BEGIN
            , Object_GoodsGroup.ValueData                 AS GoodsGroupName
            , Object_Measure.ValueData                    AS MeasureName
 
-           , tmpMI.Amount
-           , tmpRemains.Remains           ::TFloat AS AmountRemains
+           , tmpMI.Amount                                               AS Amount
+           , tmpRemains.Remains                                ::TFloat AS AmountRemains
+           , (tmpMI.Amount - COALESCE (tmpRemains.Remains, 0)) ::TFloat AS AmountDiff
+           , tmpRemains.Amount                                 ::TFloat AS AmountRemains_curr
            , tmpMI.Price                  ::TFloat
 
            , (tmpMI.Amount * tmpMI.Price) ::TFloat AS Summa
- 
+
            , tmpMI.PartNumber             ::TVarChar
            , tmpMI.Comment                ::TVarChar
            --, tmpProtocol.OperDate                  AS OperDate_pr
@@ -107,8 +135,7 @@ BEGIN
 
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
-           /* LEFT JOIN tmpProtocol ON tmpProtocol.MovementItemId = tmpMI.Id
-                                 AND tmpProtocol.Ord            = 1*/
+
             LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
 
             LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = Object_PartionGoods.GoodsGroupId
@@ -123,7 +150,11 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_EAN
                                    ON ObjectString_EAN.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_EAN.DescId = zc_ObjectString_EAN()
-            LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI.GoodsId
+            LEFT JOIN (SELECT tmpRemains.GoodsId, tmpRemains.PartNumber, SUM (tmpRemains.Amount) AS Amount, SUM (tmpRemains.Remains) AS Remains
+                       FROM tmpRemains
+                       GROUP BY tmpRemains.GoodsId, tmpRemains.PartNumber
+                     ) AS tmpRemains ON tmpRemains.GoodsId    = tmpMI.GoodsId
+                                    AND tmpRemains.PartNumber = tmpMI.PartNumber
        ;
 
 END;

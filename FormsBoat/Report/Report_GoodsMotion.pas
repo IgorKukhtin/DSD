@@ -42,7 +42,6 @@ type
     Price: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    Amount: TcxGridDBColumn;
     Price_end: TcxGridDBColumn;
     cxLabel5: TcxLabel;
     edPartion: TcxButtonEdit;

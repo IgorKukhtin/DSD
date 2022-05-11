@@ -151,7 +151,7 @@ BEGIN
                                          , COALESCE (Container.PartionId, 0)            AS PartionId
                                          , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
                                          , Container.Amount AS Amount_container
-                                         , Container.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0))) AS Amount
+                                         , Container.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount
                                     FROM Container
                                          LEFT JOIN MovementItemContainer AS MIContainer
                                                                          ON MIContainer.ContainerId = Container.Id
@@ -167,7 +167,7 @@ BEGIN
                                            , Container.ObjectId
                                            , Container.PartionId
                                            , MIString_PartNumber.ValueData
-                                    HAVING Container.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0))) <> 0
+                                    HAVING Container.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) <> 0
                                    )
              -- Ì‡¯ÎË Œƒ»Õ PartionId - MAX
            , tmpContainer_find AS (SELECT _tmpItem.GoodsId
