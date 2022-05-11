@@ -1,6 +1,7 @@
 -- Function: gpReport_GoodsMotion ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMotion (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMotion (TDateTime, TDateTime, Integer, Integer, Integer, Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMotion (
     IN inStartDate    TDateTime ,
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMotion (
     IN inUnitGroupId  Integer   ,
     IN inGoodsId      Integer   ,
     IN inPartionId    Integer   ,
+    IN inisPartNumber Boolean   ,
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE  (LocationDescName TVarChar, LocationCode Integer, LocationName TVarChar
@@ -482,6 +484,7 @@ BEGIN
                           , tmpDataAll.TaxKindValue
                           , tmpDataAll.OperPriceList
                           , tmpDataAll.PartnerId
+                          , CASE WHEN inisPartNumber = TRUE THEN MIString_PartNumber.ValueData ELSE '' END
                    HAVING SUM (tmpDataAll.AmountStart) <> 0
                        OR SUM (tmpDataAll.AmountIn)    <> 0
                        OR SUM (tmpDataAll.AmountOut)   <> 0
@@ -581,4 +584,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_GoodsMotion(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2022')::TDateTime , inUnitGroupId := 0 , inGoodsId := 5609 , inPartionId := 0, inSession := '5');
+-- select * from gpReport_GoodsMotion(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2022')::TDateTime , inUnitGroupId := 0 , inGoodsId := 5609 , inPartionId := 0, inisPartNumber:=False, inSession := '5');
