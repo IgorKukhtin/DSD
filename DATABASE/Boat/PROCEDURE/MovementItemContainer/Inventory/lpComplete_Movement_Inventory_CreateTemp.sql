@@ -23,9 +23,9 @@ BEGIN
                                    , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                     ) ON COMMIT DROP;
          -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-         CREATE TEMP TABLE _tmpItem_Child (MovementItemId Integer, ContainerId Integer, ContainerId_summ Integer, AccountId Integer
+         CREATE TEMP TABLE _tmpItem_Child (MovementItemId Integer, ContainerId Integer, ContainerId_summ Integer, ContainerId_ProfitLoss Integer, AccountId Integer
                                          , GoodsId Integer, PartionId Integer, PartNumber TVarChar
-                                         , OperCount TFloat
+                                         , OperCount TFloat, OperSumm TFloat
                                           ) ON COMMIT DROP;
          -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
          CREATE TEMP TABLE _tmpRemains (ContainerId Integer, GoodsId Integer, PartionId Integer, PartNumber TVarChar, OperDate TDateTime

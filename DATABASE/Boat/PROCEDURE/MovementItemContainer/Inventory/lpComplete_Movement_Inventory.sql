@@ -9,6 +9,7 @@ AS
 $BODY$
   DECLARE vbMovementDescId           Integer;
   DECLARE vbOperDate                 TDateTime;
+  DECLARE vbIsList                   Boolean;
   DECLARE vbUnitId                   Integer;
   DECLARE vbAccountDirectionId       Integer;
   DECLARE vbJuridicalId_Basis        Integer; -- значение пока НЕ определяется
@@ -38,21 +39,26 @@ BEGIN
 
 
      -- Параметры из документа
-     SELECT tmp.MovementDescId, tmp.OperDate, tmp.UnitId
+     SELECT tmp.MovementDescId, tmp.OperDate, tmp.isList, tmp.UnitId
           , tmp.AccountDirectionId
             INTO vbMovementDescId
                , vbOperDate
+               , vbIsList
                , vbUnitId
                , vbAccountDirectionId
 
      FROM (SELECT Movement.DescId AS MovementDescId
                 , Movement.OperDate
+                , COALESCE (MovementBoolean_List.Valuedata, FALSE) isList
                 , COALESCE (CASE WHEN Object_Unit.DescId = zc_Object_Unit() THEN Object_Unit.Id ELSE 0 END, 0) AS UnitId
 
                   -- Аналитики счетов - направления - !!!ВРЕМЕННО - zc_Enum_AccountDirection_10100!!! Запасы + Склады
                 , COALESCE (ObjectLink_Unit_AccountDirection.ChildObjectId, zc_Enum_AccountDirection_10100()) AS AccountDirectionId
 
            FROM Movement
+                LEFT JOIN MovementBoolean AS MovementBoolean_List
+                                          ON MovementBoolean_List.MovementId = Movement.Id
+                                         AND MovementBoolean_List.DescId     = zc_MovementBoolean_List()
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                              ON MovementLinkObject_Unit.MovementId = Movement.Id
                                             AND MovementLinkObject_Unit.DescId     = zc_MovementLinkObject_Unit()
@@ -155,6 +161,8 @@ BEGIN
                                                                      AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
                                     WHERE Container.WhereObjectId = vbUnitId
                                       AND Container.DescId        = zc_Container_Count()
+                                      AND (Container.ObjectId IN (SELECT DISTINCT _tmpItem.GoodsId FROM _tmpItem)
+                                           OR vbIsList = FALSE)
                                     GROUP BY Container.Id
                                            , Container.ObjectId
                                            , Container.PartionId
@@ -317,12 +325,14 @@ BEGIN
                                                              , inMovementId      := inMovementId
                                                              , inGoodsId         := tmp.GoodsId
                                                              , ioAmount          := 0
+                                                             , inTotalCount      := 0
+                                                             , inTotalCount_old  := 0
                                                              , ioPrice           := 0
                                                              , inPartNumber      := tmp.PartNumber
                                                              , inComment         := ''
                                                              , inUserId          := inUserId
                                                               ) AS tmp) AS MovementItemId
-                                                              
+
            FROM (SELECT DISTINCT _tmpItem_Child.GoodsId, _tmpItem_Child.PartNumber
                  FROM _tmpItem_Child
                  WHERE _tmpItem_Child.MovementItemId = 0
@@ -472,6 +482,18 @@ BEGIN
                                                                                               , inIsReserve              := FALSE
                                                                                                )
                                                   END
+
+                           , ContainerId_ProfitLoss = lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()      -- DescId Суммовой учет
+                                                                            , inParentId          := NULL                     -- Главный Container
+                                                                            , inObjectId          := zc_Enum_Account_90301()  -- Объект всегда Счет для Суммовой учет
+                                                                            , inPartionId         := NULL
+                                                                            , inIsReserve         := FALSE
+                                                                            , inJuridicalId_basis := vbJuridicalId_Basis      -- Главное юридическое лицо
+                                                                            , inBusinessId        := vbBusinessId             -- Бизнесы
+                                                                            , inDescId_1          := zc_ContainerLinkObject_ProfitLoss() -- DescId для 1-ой Аналитики
+                                                                            , inObjectId_1        := zc_Enum_Account_90301()  -- временно, надо будет потом использовать lpInsertFind_Object_ProfitLoss
+                                                                             )
+
                              , OperSumm = CASE WHEN -- если списали остаток
                                                     _tmpRemains.Amount_container = -1 * _tmpItem_Child_find.OperCount
                                                     THEN -- спишем сумму остатка
@@ -510,8 +532,8 @@ BEGIN
             , _tmpItem_Child.PartionId                AS PartionId              -- Партия
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Место учета
             , zc_Enum_Account_90301()                 AS AccountId_Analyzer     -- Счет - корреспондент - ПРИБЫЛЬ
-            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - 
-            , 0                                       AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - ПРИБЫЛЬ
+            , _tmpItem_Child.ContainerId_ProfitLoss   AS ContainerId_Analyzer   -- Контейнер - корреспондент - ПРИБЫЛЬ
+            , 0                                       AS ContainerExtId_Analyzer-- нет - Контейнер - Корреспондент
             , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник
             , 0                                       AS ObjectExtId_Analyzer   -- Аналитический справочник
             , 1 * _tmpItem_Child.OperCount            AS Amount
@@ -532,32 +554,53 @@ BEGIN
                                         )
        -- проводки - РАСХОД
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
-            , _tmpReserveRes.MovementItemId
-            , _tmpReserveRes.ContainerId_Summ
+            , _tmpItem_Child.MovementItemId
+            , _tmpItem_Child.ContainerId_Summ
             , 0                                       AS ParentId
-            , _tmpReserveRes.AccountId                AS AccountId              -- счет
+            , _tmpItem_Child.AccountId                AS AccountId              -- счет
             , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
-            , _tmpReserveRes.GoodsId                  AS ObjectId_Analyzer      -- Товар
-            , _tmpReserveRes.PartionId                AS PartionId              -- Партия
+            , _tmpItem_Child.GoodsId                  AS ObjectId_Analyzer      -- Товар
+            , _tmpItem_Child.PartionId                AS PartionId              -- Партия
             , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Место учета
             , zc_Enum_Account_90301()                 AS AccountId_Analyzer     -- Счет - корреспондент - ПРИБЫЛЬ
-            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - 
-            , _tmpReserveRes.ContainerId_SummTo       AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - ПРИБЫЛЬ
+            , _tmpItem_Child.ContainerId_ProfitLoss   AS ContainerId_Analyzer   -- Контейнер - корреспондент - ПРИБЫЛЬ
+            , 0                                       AS ContainerExtId_Analyzer-- нет - Контейнер - Корреспондент
             , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник
             , 0                                       AS ObjectExtId_Analyzer   -- Аналитический справочник
             , _tmpItem_Child.OperSumm                 AS Amount
             , vbOperDate                              AS OperDate
             , FALSE                                   AS isActive
        FROM _tmpItem_Child
-            LEFT JOIN _tmpRemains ON _tmpRemains.ContainerId = _tmpReserveRes.PartionId
-            JOIN Container AS Container_Count ON Container_Count.Id = _tmpReserveRes.ContainerId_GoodsFrom
-            JOIN Container AS Container_Summ  ON Container_Summ.Id  = _tmpReserveRes.ContainerId_SummFrom
+
+      UNION ALL
+       -- проводки - ОПиУ
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
+            , _tmpItem_Child.MovementItemId
+            , _tmpItem_Child.ContainerId_ProfitLoss
+            , 0                                       AS ParentId
+            , zc_Enum_Account_90301()                 AS AccountId              -- счет
+            , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
+            , _tmpItem_Child.GoodsId                  AS ObjectId_Analyzer      -- Товар
+            , _tmpItem_Child.PartionId                AS PartionId              -- Партия
+            , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Место учета
+            , 0                                       AS AccountId_Analyzer     -- в ОПиУ не нужен
+            , 0                                       AS ContainerId_Analyzer   -- в ОПиУ не нужен
+            , 0                                       AS ContainerExtId_Analyzer-- нет - Контейнер - Корреспондент
+            , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник
+            , 0                                       AS ObjectExtId_Analyzer   -- Аналитический справочник
+            , -1 * _tmpItem_Child.OperSumm            AS Amount
+            , vbOperDate                              AS OperDate
+            , FALSE                                   AS isActive
+       FROM _tmpItem_Child
       ;
 
 
-     -- 5.1. сохранили свойство <Цена>
+     -- 5.0. сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), _tmpItem.MovementItemId, COALESCE (_tmpItem.OperPrice, 0))
      FROM _tmpItem;
+
+     -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
+     PERFORM lpInsertUpdate_MovementItemContainer_byTable();
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
@@ -565,9 +608,11 @@ BEGIN
                                 , inUserId     := inUserId
                                  );
 
-     RAISE EXCEPTION 'Ошибка.<%>  <%>', (select sum(_tmpItem.OperCount) from _tmpItem)
-                                      , (select sum(_tmpItem_Child.OperCount) from _tmpItem_Child)
-                                       ;
+   /* RAISE EXCEPTION 'Ошибка. <%>  <%>  <%>  <%>', (select count() from _tmpItem  where _tmpItem.MovementItemId = 56225)
+                  , (select count() from _tmpItem_Child  where _tmpItem_Child.MovementItemId = 56225)
+                  , (select count() from _tmpRemains  where _tmpRemains.GoodsId = 14982)
+                  , (select count() from _tmpMIContainer_insert)
+                                       ;*/
 
 END;
 $BODY$
@@ -580,4 +625,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpUpdate_Status_Inventory(inMovementId := 604 , inStatusCode := 2 ,  inSession := '5');
+-- select * from lpComplete_Movement_Inventory (inMovementId:= 604, inUserId:= '5');
