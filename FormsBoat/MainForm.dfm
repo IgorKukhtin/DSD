@@ -1353,7 +1353,6 @@
       end
       object miReport_ProfitLoss: TMenuItem
         Action = actReport_ProfitLoss
-        Enabled = False
       end
       object miReport_ProfitLossPeriod: TMenuItem
         Action = actReport_ProfitLossPeriod

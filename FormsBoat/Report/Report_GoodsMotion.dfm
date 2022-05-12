@@ -4,6 +4,7 @@
   ClientWidth = 1071
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -28
   ExplicitWidth = 1087
   ExplicitHeight = 380
   PixelsPerInch = 96
@@ -502,14 +503,13 @@
       TabOrder = 9
       Width = 210
     end
-    object cbPapty: TcxCheckBox
-      Left = 1034
-      Top = 14
-      Caption = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
+    object cbPartNumber: TcxCheckBox
+      Left = 874
+      Top = 5
+      Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' S/N'
       Properties.ReadOnly = False
       TabOrder = 10
-      Visible = False
-      Width = 95
+      Width = 127
     end
     object Код: TcxLabel
       Left = 573
@@ -569,7 +569,7 @@
           'TextValue')
       end
       item
-        Component = cbPapty
+        Component = cbPartNumber
         Properties.Strings = (
           'Checked')
       end>
@@ -863,6 +863,14 @@
         Value = Null
         Component = GuidesPartion
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartNumber'
+        Value = Null
+        Component = cbPartNumber
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

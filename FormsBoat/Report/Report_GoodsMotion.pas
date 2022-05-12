@@ -58,7 +58,7 @@ type
     actOpenDocument: TMultiAction;
     bbOpenDocument: TdxBarButton;
     FormParams: TdsdFormParams;
-    cbPapty: TcxCheckBox;
+    cbPartNumber: TcxCheckBox;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
     edArticle: TcxTextEdit;
