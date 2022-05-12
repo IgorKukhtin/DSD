@@ -90,6 +90,7 @@ object GoodsForm: TGoodsForm
       object Article_all: TcxGridDBColumn
         Caption = '***Artikel Nr'
         DataBinding.FieldName = 'Article_all'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -508,18 +509,18 @@ object GoodsForm: TGoodsForm
     end
   end
   object edSearchArticle: TcxTextEdit
-    Left = 42
+    Left = 80
     Top = 322
     TabOrder = 0
     DesignSize = (
-      151
+      125
       21)
-    Width = 151
+    Width = 125
   end
-  object lbArticle: TcxLabel
+  object lbSearchArticle: TcxLabel
     Left = 80
     Top = 349
-    Caption = #1055#1086#1080#1089#1082' '#1079#1085#1072#1095#1077#1085#1080#1077'  :  '
+    Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
     ParentFont = False
     Style.Font.Charset = DEFAULT_CHARSET
     Style.Font.Color = clBlue
@@ -527,6 +528,48 @@ object GoodsForm: TGoodsForm
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
+  end
+  object lbSearchCode: TcxLabel
+    Left = 224
+    Top = 349
+    Caption = 'Interne Nr : '
+    ParentFont = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -13
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+  end
+  object lbSearchName: TcxLabel
+    Left = 372
+    Top = 349
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
+    ParentFont = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -13
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+  end
+  object edSearchCode: TcxTextEdit
+    Left = 224
+    Top = 322
+    TabOrder = 9
+    DesignSize = (
+      115
+      21)
+    Width = 115
+  end
+  object edSearchName: TcxTextEdit
+    Left = 345
+    Top = 322
+    TabOrder = 10
+    DesignSize = (
+      140
+      21)
+    Width = 140
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -596,11 +639,35 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbSearchName'
+          ItemName = 'bbSearchArticleLabel'
         end
         item
           Visible = True
           ItemName = 'bbSearchArticle'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSearchCodeLabel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSearchCode'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSearchNameLabel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSearchName'
         end
         item
           Visible = True
@@ -742,11 +809,35 @@ object GoodsForm: TGoodsForm
       Visible = ivAlways
       Control = edSearchArticle
     end
-    object bbSearchName: TdxBarControlContainerItem
-      Caption = 'bbSearchArticle'
+    object bbSearchArticleLabel: TdxBarControlContainerItem
+      Caption = 'bbSearchArticleLabel'
       Category = 0
       Visible = ivAlways
-      Control = lbArticle
+      Control = lbSearchArticle
+    end
+    object bbSearchCodeLabel: TdxBarControlContainerItem
+      Caption = 'bbSearchCodeLabel'
+      Category = 0
+      Visible = ivAlways
+      Control = lbSearchCode
+    end
+    object bbSearchCode: TdxBarControlContainerItem
+      Caption = 'bbSearchCode'
+      Category = 0
+      Visible = ivAlways
+      Control = edSearchCode
+    end
+    object bbSearchNameLabel: TdxBarControlContainerItem
+      Caption = 'bbSearchNameLabel'
+      Category = 0
+      Visible = ivAlways
+      Control = lbSearchName
+    end
+    object bbSearchName: TdxBarControlContainerItem
+      Caption = 'bbSearchName'
+      Category = 0
+      Visible = ivAlways
+      Control = edSearchName
     end
   end
   object ActionList: TActionList
@@ -1438,7 +1529,7 @@ object GoodsForm: TGoodsForm
     Left = 448
     Top = 136
   end
-  object FieldFilter: TdsdFieldFilter
+  object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edSearchArticle
     DataSet = ClientDataSet
     Column = Article_all
@@ -1446,5 +1537,23 @@ object GoodsForm: TGoodsForm
     CheckBoxList = <>
     Left = 352
     Top = 240
+  end
+  object FieldFilter_Code: TdsdFieldFilter
+    TextEdit = edSearchCode
+    DataSet = ClientDataSet
+    Column = Code
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 416
+    Top = 272
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = ClientDataSet
+    Column = Name
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 504
+    Top = 296
   end
 end

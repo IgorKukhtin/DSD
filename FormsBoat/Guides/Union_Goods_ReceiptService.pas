@@ -21,7 +21,8 @@ uses
   dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxButtonEdit,
-  cxCurrencyEdit, ExternalLoad, cxContainer, cxImage, Vcl.ExtCtrls;
+  cxCurrencyEdit, ExternalLoad, cxContainer, cxImage, Vcl.ExtCtrls, cxTextEdit,
+  cxLabel;
 
 type
   TUnion_Goods_ReceiptServiceForm = class(TParentForm)
@@ -94,6 +95,22 @@ type
     spUnErased: TdsdStoredProc;
     spErased: TdsdStoredProc;
     DescName: TcxGridDBColumn;
+    bbSearchArticleLabel: TdxBarControlContainerItem;
+    lbSearchArticle: TcxLabel;
+    bbSearchArticle: TdxBarControlContainerItem;
+    edSearchArticle: TcxTextEdit;
+    Article_all: TcxGridDBColumn;
+    FieldFilter_Article: TdsdFieldFilter;
+    bbSearchCodeLabel: TdxBarControlContainerItem;
+    bbSearchCode: TdxBarControlContainerItem;
+    bbSearchNameLabel: TdxBarControlContainerItem;
+    bbSearchName: TdxBarControlContainerItem;
+    lbSearchCode: TcxLabel;
+    edSearchCode: TcxTextEdit;
+    edSearchName: TcxTextEdit;
+    lbSearchName: TcxLabel;
+    FieldFilter_Code: TdsdFieldFilter;
+    FieldFilter_Name: TdsdFieldFilter;
   private
     { Private declarations }
   public

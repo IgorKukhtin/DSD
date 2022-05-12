@@ -94,9 +94,19 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
         Options.Editing = False
         Width = 55
       end
+      object Article_all: TcxGridDBColumn
+        Caption = '***Artikel Nr'
+        DataBinding.FieldName = 'Article_all'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object ArticleVergl: TcxGridDBColumn
         Caption = 'Vergl. Nr'
         DataBinding.FieldName = 'ArticleVergl'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1040#1088#1090#1080#1082#1091#1083' ('#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1081')'
@@ -397,6 +407,69 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
       GridView = cxGridDBTableView
     end
   end
+  object lbSearchArticle: TcxLabel
+    Left = 80
+    Top = 377
+    Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+    ParentFont = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -13
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+  end
+  object edSearchArticle: TcxTextEdit
+    Left = 80
+    Top = 350
+    TabOrder = 6
+    DesignSize = (
+      125
+      21)
+    Width = 125
+  end
+  object lbSearchCode: TcxLabel
+    Left = 224
+    Top = 377
+    Caption = 'Interne Nr : '
+    ParentFont = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -13
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+  end
+  object edSearchCode: TcxTextEdit
+    Left = 224
+    Top = 350
+    TabOrder = 8
+    DesignSize = (
+      115
+      21)
+    Width = 115
+  end
+  object edSearchName: TcxTextEdit
+    Left = 345
+    Top = 350
+    TabOrder = 9
+    DesignSize = (
+      140
+      21)
+    Width = 140
+  end
+  object lbSearchName: TcxLabel
+    Left = 372
+    Top = 377
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
+    ParentFont = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -13
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 40
@@ -459,6 +532,42 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
       FloatClientWidth = 0
       FloatClientHeight = 0
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSearchArticleLabel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSearchArticle'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSearchCodeLabel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSearchCode'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSearchNameLabel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSearchName'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic1'
@@ -551,6 +660,43 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
     object bbStartLoad: TdxBarButton
       Action = actStartLoad
       Category = 0
+    end
+    object bbSearchArticleLabel: TdxBarControlContainerItem
+      Caption = 'bbSearchArticleLabel'
+      Category = 0
+      Visible = ivAlways
+      Control = lbSearchArticle
+    end
+    object bbSearchArticle: TdxBarControlContainerItem
+      Caption = 'bbSearchArticle'
+      Category = 0
+      Visible = ivAlways
+      Control = edSearchArticle
+    end
+    object bbSearchCodeLabel: TdxBarControlContainerItem
+      Caption = 'bbSearchCodeLabel'
+      Category = 0
+      Visible = ivAlways
+      Control = lbSearchCode
+    end
+    object bbSearchCode: TdxBarControlContainerItem
+      Caption = 'bbSearchCode'
+      Category = 0
+      Visible = ivAlways
+      Control = edSearchCode
+    end
+    object bbSearchNameLabel: TdxBarControlContainerItem
+      Caption = 'bbSearchNameLabel'
+      Category = 0
+      Visible = ivAlways
+      Control = lbSearchName
+    end
+    object bbSearchName: TdxBarControlContainerItem
+      Caption = 'bbSearchName'
+      Category = 0
+      Hint = 'bbSearchName'
+      Visible = ivAlways
+      Control = edSearchName
     end
   end
   object ActionList: TActionList
@@ -1086,5 +1232,32 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
     PackSize = 1
     Left = 448
     Top = 136
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edSearchArticle
+    DataSet = ClientDataSet
+    Column = Article_all
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 352
+    Top = 240
+  end
+  object FieldFilter_Code: TdsdFieldFilter
+    TextEdit = edSearchCode
+    DataSet = ClientDataSet
+    Column = Code
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 416
+    Top = 272
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = ClientDataSet
+    Column = Name
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 504
+    Top = 296
   end
 end
