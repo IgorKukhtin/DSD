@@ -2439,7 +2439,7 @@ end if;
             , 0                                   AS ObjectExtId_Analyzer     -- !!!нет!!!
             , 0                                   AS ContainerIntId_Analyzer  -- !!!нет!!!
             , 0 AS ParentId
-            , _tmpItem_group.OperSumm
+            , -1 * _tmpItem_group.OperSumm
             , CASE WHEN vbAccountId_GoodsTransit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate -- т.е. по "определенной" Дате
             , TRUE AS isActive
        FROM (SELECT _tmpItem.ContainerId_Currency, _tmpItem.AccountId_Partner, SUM (_tmpItem.OperSumm_Currency) AS OperSumm FROM _tmpItem WHERE _tmpItem.ContainerId_Currency <> 0 GROUP BY _tmpItem.ContainerId_Currency, _tmpItem.AccountId_Partner

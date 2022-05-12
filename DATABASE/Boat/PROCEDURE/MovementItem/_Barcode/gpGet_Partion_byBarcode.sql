@@ -199,7 +199,7 @@ BEGIN
 
 
              -- если НЕ нашли
-             IF COALESCE (vbGoodsId, 0) = 0 AND zfConvert_StringToNumber (inBarCode) > 0 STRPOS (inBarCode, '00000') = 1
+             IF COALESCE (vbGoodsId, 0) = 0 AND zfConvert_StringToNumber (inBarCode) > 0 AND STRPOS (inBarCode, '00000') = 1
              THEN
                  -- Проверка - 4
                  IF 1 < (SELECT COUNT(*)
@@ -246,11 +246,11 @@ BEGIN
              END IF;
 
              -- если НЕ нашли
-             IF COALESCE (vbGoodsId, 0) = 0 AND zfConvert_StringToNumber (inBarCode) > 0 STRPOS (inBarCode, '00000') = 1
+             IF COALESCE (vbGoodsId, 0) = 0 AND zfConvert_StringToNumber (inBarCode) > 0 AND STRPOS (inBarCode, '00000') = 1
              THEN
                  RAISE EXCEPTION 'Ошибка.Interne Nr = <%> не найден.', zfConvert_StringToNumber (inBarCode) :: Integer;
 
-             IF COALESCE (vbGoodsId, 0) = 0 AND LENGTH (inBarCode) = 13
+             ELSEIF COALESCE (vbGoodsId, 0) = 0 AND LENGTH (inBarCode) = 13
              THEN
                  RAISE EXCEPTION 'Ошибка.Элемент с Штрих-кодом = <%> не найден.', inBarCode;
 

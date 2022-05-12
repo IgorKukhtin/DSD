@@ -1,13 +1,13 @@
 -- Function: gpSelect_Object_Goods_ReceiptService()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Goods_ReceiptService (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Goods_ReceiptService (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_ReceiptService(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , DescName TVarChar
-             , Article TVarChar, ArticleVergl TVarChar, EAN TVarChar, ASIN TVarChar, MatchCode TVarChar
+             , Article TVarChar, Article_all TVarChar, ArticleVergl TVarChar, EAN TVarChar, ASIN TVarChar, MatchCode TVarChar
              , FeeNumber TVarChar, GoodsGroupNameFull TVarChar, Comment TVarChar
              , PartnerDate TDateTime
              , isArc Boolean
@@ -59,6 +59,7 @@ BEGIN
             , Object_Goods.ValueData              AS Name
             , ObjectDesc.ItemName                 AS DescName
             , ObjectString_Article.ValueData      AS Article
+            , REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (ObjectString_Article.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '') :: TVarChar AS Article_all
             , ObjectString_ArticleVergl.ValueData AS ArticleVergl
             , ObjectString_EAN.ValueData          AS EAN
             , ObjectString_ASIN.ValueData         AS ASIN
@@ -244,6 +245,7 @@ BEGIN
             , Object_ReceiptService.ValueData        AS Name
             , ObjectDesc.ItemName                    AS DescName
             , ObjectString_Article.ValueData         AS Article
+            , ObjectString_Article.ValueData         AS Article_all
             
             , '' ::TVarChar AS ArticleVergl
             , '' ::TVarChar         AS EAN
@@ -310,11 +312,12 @@ BEGIN
          AND Object_ReceiptService.isErased = FALSE
       UNION
               -- Удалить
-       SELECT 0              AS Id
-            , 0       AS Code
+       SELECT 0                     AS Id
+            , 0                     AS Code
             , 'УДАЛИТЬ' ::TVarChar  AS Name
             , '' ::TVarChar         AS DescName
             , '' ::TVarChar         AS Article
+            , '' ::TVarChar         AS Article_all
             
             , '' ::TVarChar    AS ArticleVergl
             , '' ::TVarChar    AS EAN
