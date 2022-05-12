@@ -723,6 +723,12 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSUNForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsSUNForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsWagesForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TGoodsWagesForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSiteForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TGoodsSiteForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsCashForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TGoodsCashForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TSiteDiscontDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TSiteDiscontDialogForm');
@@ -3141,12 +3147,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionDateGoodsListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionDateGoodsListForm');
-}
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentSendEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCommentSendEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCommentSendForm');
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalForm');
 

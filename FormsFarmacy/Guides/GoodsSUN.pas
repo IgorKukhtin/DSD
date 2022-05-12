@@ -143,34 +143,14 @@ type
     dxBarSubItem3: TdxBarSubItem;
     dxBarSubItem4: TdxBarSubItem;
     bbUpdate_inPresent_Revert: TdxBarButton;
-    SummaWages: TcxGridDBColumn;
-    PercentWages: TcxGridDBColumn;
-    actExec_Update_SummaWages: TdsdExecStoredProc;
-    actExecuteDialog_Update_SummaWages: TExecuteDialog;
-    actExec_Update_PercentWages: TdsdExecStoredProc;
-    actExecuteDialogUpdate_PercentWages: TExecuteDialog;
-    actUpdate_SummaWages: TMultiAction;
-    actUpdate_PercentWages: TMultiAction;
     dxBarButton3: TdxBarButton;
     dxBarButton4: TdxBarButton;
-    spUpdate_SummaWages: TdsdStoredProc;
-    spUpdate_PercentWages: TdsdStoredProc;
     KoeffSUN_Supplementv1: TcxGridDBColumn;
     actGetImportSetting_Goods_inSupplementSUN1: TdsdExecStoredProc;
     actDoLoadinSupplementSUN1: TExecuteImportSettingsAction;
     macLoadinSupplementSUN1: TMultiAction;
     spGetImportSetting_Goods_inSupplementSUN1: TdsdStoredProc;
     dxBarButton5: TdxBarButton;
-    SummaWagesStore: TcxGridDBColumn;
-    PercentWagesStore: TcxGridDBColumn;
-    actUpdate_SummaWagesStore: TMultiAction;
-    actExec_Update_SummaWagesStore: TdsdExecStoredProc;
-    actExecuteDialog_Update_SummaWagesStore: TExecuteDialog;
-    actUpdate_PercentWagesStore: TMultiAction;
-    actExec_Update_PercentWagesStore: TdsdExecStoredProc;
-    actExecuteDialogUpdate_PercentWagesStore: TExecuteDialog;
-    spUpdate_PercentWagesStore: TdsdStoredProc;
-    spUpdate_SummaWagesStore: TdsdStoredProc;
     dxBarButton6: TdxBarButton;
     dxBarButton7: TdxBarButton;
     UnitSupplementSUN1OutName: TcxGridDBColumn;
@@ -239,7 +219,6 @@ type
     actGetImportSetting_Goods_inSupplementSUN2: TdsdExecStoredProc;
     spGetImportSetting_Goods_inSupplementSUN2: TdsdStoredProc;
     dxBarButton22: TdxBarButton;
-    cxGridDBColumn1: TcxGridDBColumn;
   private
     { Private declarations }
   public

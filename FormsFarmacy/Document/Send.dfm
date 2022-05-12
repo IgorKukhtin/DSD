@@ -2090,6 +2090,33 @@ inherited SendForm: TSendForm
       ImageIndex = 76
       QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103'"?'
     end
+    object actPrintSticker: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPrintSticker
+      StoredProcList = <
+        item
+          StoredProc = spPrintSticker
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1085#1072#1082#1083#1077#1077#1082' '#1076#1083#1103' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1087#1086' '#1057#1059#1053
+      Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072#1082#1083#1077#1077#1082' '#1076#1083#1103' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1087#1086' '#1057#1059#1053
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'FromName'
+        end>
+      Params = <>
+      ReportName = #1055#1077#1095#1072#1090#1100' '#1085#1072#1082#1083#1077#1077#1082' '#1076#1083#1103' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1087#1086' '#1057#1059#1053
+      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1085#1072#1082#1083#1077#1077#1082' '#1076#1083#1103' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1087#1086' '#1057#1059#1053
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Top = 424
@@ -2285,6 +2312,10 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintSticker'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2453,6 +2484,11 @@ inherited SendForm: TSendForm
     object dxBarButton14: TdxBarButton
       Action = actUpdate_ClearAmountManual
       Category = 0
+    end
+    object bbPrintSticker: TdxBarButton
+      Action = actPrintSticker
+      Category = 0
+      ImageIndex = 20
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -4529,5 +4565,25 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 526
     Top = 376
+  end
+  object spPrintSticker: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Send'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 328
+    Top = 216
   end
 end

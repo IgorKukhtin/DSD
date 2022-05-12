@@ -130,6 +130,8 @@ type
     spSelect_WayTTN: TdsdStoredProc;
     bbWayTTNToXLS: TdxBarButton;
     spGet_Options: TdsdStoredProc;
+    actPrintSticker: TdsdPrintAction;
+    bbPrintSticker: TdxBarButton;
   private
     { Private declarations }
   public

@@ -1,6 +1,5 @@
 -- Function: gpSelect_Object_OrderShedule()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_OrderShedule(Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_OrderShedule(Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_OrderShedule(
@@ -22,7 +21,8 @@ RETURNS TABLE (Id Integer, Code Integer,
                Inf_Text1 TVarChar, Inf_Text2 TVarChar,
                Color_Calc1 Integer, Color_Calc2 Integer, Color_Calc3 Integer, Color_Calc4 Integer,
                Color_Calc5 Integer, Color_Calc6 Integer, Color_Calc7 Integer,
-               OrderSumm TVarChar, OrderTime TVarChar, OrderSummComment TVarChar
+               OrderSumm TVarChar, OrderTime TVarChar, OrderSummComment TVarChar,
+               UpdateUserName TVarChar, UpdateDate TDateTime
                ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -100,6 +100,26 @@ BEGIN
                   AND ObjectLink_Unit_Parent.ChildObjectId is not  NULL
                   AND inisShowAll = True
                 )
+   , tmpProtocolAll AS (SELECT tmpObject.Id
+                             , ObjectProtocol.OperDate
+                             , ObjectProtocol.UserId
+                        FROM tmpObject
+                         
+                             INNER JOIN ObjectProtocol ON ObjectProtocol.ObjectId = tmpObject.Id
+                        UNION ALL
+                        SELECT tmpObject.Id
+                             , ObjectProtocol_arc.OperDate
+                             , ObjectProtocol_arc.UserId
+                        FROM tmpObject
+                         
+                             INNER JOIN ObjectProtocol_arc ON ObjectProtocol_arc.ObjectId = tmpObject.Id
+                        )
+   , tmpProtocol AS (SELECT tmpProtocolAll.Id
+                          , tmpProtocolAll.OperDate
+                          , tmpProtocolAll.UserId
+                          , ROW_NUMBER() OVER (PARTITION BY tmpProtocolAll.Id ORDER BY tmpProtocolAll.OperDate DESC) AS Ord
+                     FROM tmpProtocolAll
+                     )
 
        SELECT 
              Object_OrderShedule.Id
@@ -171,6 +191,9 @@ BEGIN
            , CAST (ObjectFloat_OrderSumm_Contract.ValueData AS NUMERIC (16, 2)) ::TVarChar AS OrderSumm
            , COALESCE (ObjectString_OrderTime_Contract.ValueData,'')            ::TVarChar AS OrderTime
            , COALESCE (ObjectString_OrderSumm_Contract.ValueData,'')            ::TVarChar AS OrderSummComment
+           
+           , Object_User.ValueData        AS UpdateUserName
+           , tmpProtocol.OperDate         AS UpdateDate
 
        FROM tmpObject AS Object_OrderShedule
            FULL JOIN tmpAll ON tmpAll.UnitId = Object_OrderShedule.UnitId
@@ -218,6 +241,10 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_OrderTime_Contract
                                   ON ObjectString_OrderTime_Contract.ObjectId = Object_Contract.Id
                                  AND ObjectString_OrderTime_Contract.DescId = zc_ObjectString_Contract_OrderTime()
+                                 
+           LEFT JOIN tmpProtocol ON tmpProtocol.ID = Object_OrderShedule.Id
+                                AND tmpProtocol.ord = 1
+           LEFT JOIN Object AS Object_User ON Object_User.Id = tmpProtocol.UserId
  ;
   
 END;
@@ -241,4 +268,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
---select * from  gpSelect_Object_OrderShedule(inUnitId := 0 , inJuridicalId := 0 , inShowErased:= 'True'::Boolean, inisShowAll := 'True'::Boolean ,  inSession := '3'::TVarChar);
+--
+select * from gpSelect_Object_OrderShedule(inUnitId := 0 , inJuridicalId := 0 , inShowErased := False , inisShowAll := False ,  inSession := '3');

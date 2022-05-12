@@ -398,21 +398,6 @@ inherited GoodsForm: TGoodsForm
             HeaderHint = #1053#1077' '#1074#1099#1075#1088#1091#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1072#1081#1090#1086#1074' ('#1074' '#1074#1099#1075#1088#1091#1079#1082#1072#1093' '#1076#1083#1103' '#1082#1086#1085#1090#1088' '#1072#1075#1077#1085#1090#1086#1074')'
             Width = 60
           end
-          object DoesNotShare: TcxGridDBColumn
-            Caption = #1053#1077' '#1076#1077#1083#1080#1090#1100' ('#1092#1072#1088#1084#1072#1094#1077#1074#1090#1099')'
-            DataBinding.FieldName = 'DoesNotShare'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1077' '#1076#1077#1083#1080#1090#1100' ('#1092#1072#1088#1084#1072#1094#1077#1074#1090#1099')'
-            Width = 60
-          end
-          object AllowDivision: TcxGridDBColumn
-            Caption = #1053#1077' '#1076#1077#1083#1080#1090#1100' '#1085#1072' '#1082#1072#1089#1089#1072#1093
-            DataBinding.FieldName = 'AllowDivision'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1077' '#1076#1077#1083#1080#1090#1100' '#1085#1072' '#1082#1072#1089#1089#1072#1093
-          end
           object GoodsAnalog: TcxGridDBColumn
             Caption = #1040#1085#1072#1083#1086#1075#1080' '#1087#1086' '#1076#1077#1081#1089#1090#1074#1091#1102#1097#1077#1084#1091' '#1074#1077#1097#1077#1089#1090#1074#1091
             DataBinding.FieldName = 'GoodsAnalog'
@@ -440,15 +425,6 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 81
-          end
-          object NotTransferTime: TcxGridDBColumn
-            Caption = #1053#1077' '#1087#1077#1088#1077#1074#1086#1076#1080#1090#1100' '#1074' '#1089#1088#1086#1082#1080
-            DataBinding.FieldName = 'NotTransferTime'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1077' '#1087#1077#1088#1077#1074#1086#1076#1080#1090#1100' '#1074' '#1089#1088#1086#1082#1080
-            Options.Editing = False
-            Width = 78
           end
           object isResolution_224: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224'
@@ -483,50 +459,6 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 61
           end
-          object SummaWages: TcxGridDBColumn
-            Caption = #1047#1072' 1 '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1047#1055' '#1076#1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072
-            DataBinding.FieldName = 'SummaWages'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091
-            Options.Editing = False
-            Width = 85
-          end
-          object PercentWages: TcxGridDBColumn
-            Caption = '% '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1047#1055' '#1076#1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072
-            DataBinding.FieldName = 'PercentWages'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091
-            Options.Editing = False
-            Width = 86
-          end
-          object SummaWagesStore: TcxGridDBColumn
-            Caption = #1047#1072' 1 '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1047#1055' '#1076#1083#1103' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072
-            DataBinding.FieldName = 'SummaWagesStore'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 79
-          end
-          object PercentWagesStore: TcxGridDBColumn
-            Caption = '% '#1086#1090' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1047#1055' '#1076#1083#1103' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072
-            DataBinding.FieldName = 'PercentWagesStore'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 86
-          end
           object isOnlySP: TcxGridDBColumn
             Caption = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1057#1055' "'#1044#1086#1089#1090#1091#1087#1085#1110' '#1083#1110#1082#1080'"'
             DataBinding.FieldName = 'isOnlySP'
@@ -534,25 +466,6 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 72
-          end
-          object Multiplicity: TcxGridDBColumn
-            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1080' ('#1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1076#1077#1083#1080#1090#1077#1083#1100')'
-            DataBinding.FieldName = 'Multiplicity'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.###; ; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 90
-          end
-          object isMultiplicityError: TcxGridDBColumn
-            Caption = #1055#1086#1075#1088#1077#1096#1085#1086#1089#1090#1100' '#1076#1083#1103' '#1082#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1080
-            DataBinding.FieldName = 'isMultiplicityError'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 88
           end
           object isUkrainianTranslation: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1074#1086#1076' '#1085#1072' '#1091#1082#1088' '#1103#1079#1099#1082
@@ -608,60 +521,6 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 74
           end
-          object isExpDateExcSite: TcxGridDBColumn
-            Caption = #1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1087#1086' '#1089#1088#1086#1082#1091' '#1075#1086#1076#1085#1086#1089#1090#1080' ('#1076#1083#1103' '#1089#1072#1081#1090#1072')'
-            DataBinding.FieldName = 'isExpDateExcSite'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 97
-          end
-          object isHideOnTheSite: TcxGridDBColumn
-            Caption = #1057#1082#1088#1099#1074#1072#1090#1100' '#1085#1072' '#1089#1072#1081#1090#1077' '#1085#1077#1090' '#1085#1072#1083#1080#1095#1080#1103' '#1080' '#1087#1086#1089#1090#1072#1074#1082#1080
-            DataBinding.FieldName = 'isHideOnTheSite'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1082#1088#1099#1074#1072#1090#1100' '#1085#1072' '#1089#1072#1081#1090#1077' '#1085#1077#1090' '#1074' '#1085#1072#1083#1080#1095#1080#1080' '#1080' '#1074' '#1087#1086#1089#1090#1072#1074#1082#1072#1093
-            Options.Editing = False
-            Width = 78
-          end
-          object DiscontSiteStart: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1086' '#1089#1082#1080#1076#1082#1080' '#1085#1072' '#1089#1072#1081#1090#1077
-            DataBinding.FieldName = 'DiscontSiteStart'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 79
-          end
-          object DiscontSiteEnd: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1089#1082#1080#1076#1082#1080' '#1085#1072' '#1089#1072#1081#1090#1077
-            DataBinding.FieldName = 'DiscontSiteEnd'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 75
-          end
-          object DiscontAmountSite: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1085#1072' '#1089#1072#1081#1090#1077
-            DataBinding.FieldName = 'DiscontAmountSite'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 74
-          end
-          object DiscontPercentSite: TcxGridDBColumn
-            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080' '#1085#1072' '#1089#1072#1081#1090#1077
-            DataBinding.FieldName = 'DiscontPercentSite'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 76
-          end
         end
       end
     end
@@ -684,295 +543,8 @@ inherited GoodsForm: TGoodsForm
   inherited ActionList: TActionList
     Left = 103
     Top = 255
-    object actUpdate_Goods_LimitSun: TdsdDataSetRefresh [0]
-      Category = 'LimitSum'
-      MoveParams = <>
-      StoredProc = spUpdate_Goods_LimitSun_T
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Goods_LimitSun_T
-        end>
-      Caption = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1084' '#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1057#1059#1053' v2, v2-'#1055#1048' '#1079#1085#1072#1095#1077#1085#1080#1103' ' +
-        #1058'1'
-      Hint = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1084' '#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1057#1059#1053' v2, v2-'#1055#1048' '#1079#1085#1072#1095#1077#1085#1080#1103' ' +
-        #1058'1'
-      ImageIndex = 26
-      ShortCut = 116
-      RefreshOnTabSetChanges = True
-    end
     inherited actRefresh: TdsdDataSetRefresh
       Category = 'Refresh'
-    end
-    object ExecuteDialogGoods_LimitSum: TExecuteDialog [2]
-      Category = 'LimitSum'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      Caption = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1084' '#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1057#1059#1053' v2, v2-'#1055#1048' '#1079#1085#1072#1095#1077#1085#1080#1103' ' +
-        #1058'1'
-      Hint = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1084' '#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1057#1059#1053' v2, v2-'#1055#1048' '#1079#1085#1072#1095#1077#1085#1080#1103' ' +
-        #1058'1'
-      ImageIndex = 26
-      FormName = 'TGoods_LimitSUN_T_EditForm'
-      FormNameParam.Value = 'TGoods_LimitSUN_T_EditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inLimitSUN_T1'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inLimitSUN_T1'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inis_v1'
-          Value = False
-          Component = FormParams
-          ComponentItem = 'inis_v1'
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object macUpdateGoods_LimitSUN_list: TMultiAction [4]
-      Category = 'LimitSum'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdate_Goods_LimitSun
-        end>
-      View = cxGridDBTableView
-      Caption = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1084' '#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1057#1059#1053' v2, v2-'#1055#1048' '#1079#1085#1072#1095#1077#1085#1080#1103' ' +
-        #1058'1'
-      Hint = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1084' '#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1057#1059#1053' v2, v2-'#1055#1048' '#1079#1085#1072#1095#1077#1085#1080#1103' ' +
-        #1058'1'
-      ImageIndex = 43
-    end
-    object macUpdate_isNot_Sun_v4_yes: TMultiAction [5]
-      Category = 'UpdateNot_v4'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSimpleUpdateNot_v4_yes
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = 
-        #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> =' +
-        ' '#1044#1040'? '
-      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
-      Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1044#1040
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1044#1040
-      ImageIndex = 7
-    end
-    object macUpdateGoods_LimitSUN: TMultiAction [6]
-      Category = 'LimitSum'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = ExecuteDialogGoods_LimitSum
-        end
-        item
-          Action = macUpdateGoods_LimitSUN_list
-        end
-        item
-          Action = actRefresh
-        end>
-      Caption = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1084' '#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1057#1059#1053' v2, v2-'#1055#1048' '#1079#1085#1072#1095#1077#1085#1080#1103' ' +
-        #1058'1'
-      Hint = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1084' '#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1057#1059#1053' v2, v2-'#1055#1048' '#1079#1085#1072#1095#1077#1085#1080#1103' ' +
-        #1058'1'
-      ImageIndex = 43
-    end
-    object actSimpleUpdateNot_v4_yes: TMultiAction [7]
-      Category = 'UpdateNot_v4'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdate_isNot_Sun_v4_Yes
-        end>
-      View = cxGridDBTableView
-      Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1044#1040
-      Hint = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1044#1040
-    end
-    object actUpdate_isNot_Sun_v4_Yes: TdsdExecStoredProc [8]
-      Category = 'UpdateNot_v4'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isNOT_v4_Yes
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_isNOT_v4_Yes
-        end>
-      Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1044#1040
-    end
-    object macUpdateNot_v2_Yes: TMultiAction [9]
-      Category = 'UpdateNot'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSimpleUpdateNot_v2_Yes
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = 
-        #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> = '#1044#1072 +
-        '? '
-      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
-      Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> = '#1044#1072
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> = '#1044#1072
-      ImageIndex = 7
-    end
-    object actSimpleUpdateNot_v2_Yes: TMultiAction [10]
-      Category = 'UpdateNot'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdate_isNOT_v2_Yes
-        end>
-      View = cxGridDBTableView
-      Caption = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2 '#1044#1072
-      Hint = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2 '#1044#1072
-    end
-    object actUpdate_isNOT_v2_Yes: TdsdExecStoredProc [11]
-      Category = 'UpdateNot'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isNOT_v2_Yes
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_isNOT_v2_Yes
-        end>
-      Caption = 'actUpdateHot_Yes'
-    end
-    object macUpdate_isNot_Sun_v4_No: TMultiAction [12]
-      Category = 'UpdateNot_v4'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSimpleUpdateNot_v4_No
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = 
-        #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> =' +
-        ' '#1053#1045#1058'? '
-      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
-      Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1053#1045#1058
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1053#1045#1058
-      ImageIndex = 77
-    end
-    object actSimpleUpdateNot_v4_No: TMultiAction [13]
-      Category = 'UpdateNot_v4'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdate_isNot_Sun_v4_No
-        end>
-      View = cxGridDBTableView
-      Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1053#1045#1058
-      Hint = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1053#1045#1058
-    end
-    object actUpdate_isNot_Sun_v4_No: TdsdExecStoredProc [14]
-      Category = 'UpdateNot_v4'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isNot_v4_No
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_isNot_v4_No
-        end>
-      Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1053#1045#1058
-    end
-    object macUpdate_isSun_v3_yes: TMultiAction [15]
-      Category = 'v3'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSimpleUpdate_isSUN_v3_yes
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053'> = '#1044#1040'? '
-      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' <'#1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053'> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
-      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' = '#1044#1040
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053'> = '#1044#1040
-      ImageIndex = 79
-    end
-    object actSimpleUpdate_isSUN_v3_yes: TMultiAction [16]
-      Category = 'v3'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdate_isSun_v3_yes
-        end>
-      View = cxGridDBTableView
-      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1044#1040
-      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1044#1040
-    end
-    object actUpdate_isSun_v3_yes: TdsdExecStoredProc [17]
-      Category = 'v3'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isSun_v3_yes
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_isSun_v3_yes
-        end>
-      Caption = 'actUpdateNot_No'
-    end
-    object macUpdate_isSun_v3_No: TMultiAction [18]
-      Category = 'v3'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSimpleUpdate_isSUN_v3_No
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053'> = '#1053#1045#1058'? '
-      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' <'#1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053'> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
-      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' = '#1053#1045#1058
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053'> = '#1053#1045#1058
-      ImageIndex = 58
-    end
-    object actSimpleUpdate_isSUN_v3_No: TMultiAction [19]
-      Category = 'v3'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdate_isSun_v3_No
-        end>
-      View = cxGridDBTableView
-      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1053#1045#1058
-      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1053#1045#1058
-    end
-    object actUpdate_isSun_v3_No: TdsdExecStoredProc [20]
-      Category = 'v3'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isSun_v3_No
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_isSun_v3_No
-        end>
-      Caption = 'actUpdateNot_No'
     end
     inherited actInsert: TInsertUpdateChoiceAction
       MoveParams = <
@@ -1001,53 +573,13 @@ inherited GoodsForm: TGoodsForm
       FormNameParam.Value = 'TGoodsEditForm'
       DataSetRefresh = spRefreshOneRecord
     end
-    object InsertRecord1: TInsertRecord [23]
+    object InsertRecord1: TInsertRecord [4]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Params = <>
       Caption = 'InsertRecord1'
-    end
-    object macUpdateNot_v2_No: TMultiAction [24]
-      Category = 'UpdateNot'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSimpleUpdateNot_v2_No
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = 
-        #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> = '#1053#1045 +
-        #1058'? '
-      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
-      Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> = '#1053#1045#1058
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> = '#1053#1045#1058
-      ImageIndex = 77
-    end
-    object actSimpleUpdateNot_v2_No: TMultiAction [25]
-      Category = 'UpdateNot'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdate_isSun_v2_No
-        end>
-      View = cxGridDBTableView
-      Caption = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1053#1045#1058
-      Hint = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1053#1045#1058
-    end
-    object actUpdate_isSun_v2_No: TdsdExecStoredProc [26]
-      Category = 'UpdateNot'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isNot_v2_No
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_isNot_v2_No
-        end>
-      Caption = 'actUpdateNot_No'
     end
     inherited dsdSetErased: TdsdUpdateErased
       QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1090#1086#1074#1072#1088'?'
@@ -1077,7 +609,7 @@ inherited GoodsForm: TGoodsForm
           MultiSelectSeparator = ','
         end>
     end
-    object macSimpleUpdateNDS: TMultiAction [30]
+    object macSimpleUpdateNDS: TMultiAction [8]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1088,7 +620,7 @@ inherited GoodsForm: TGoodsForm
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
     end
-    object mactAfterInsert: TMultiAction [31]
+    object mactAfterInsert: TMultiAction [9]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1103,7 +635,7 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'mactAfterInsert'
     end
-    object macUpdateNDS: TMultiAction [32]
+    object macUpdateNDS: TMultiAction [10]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1119,7 +651,7 @@ inherited GoodsForm: TGoodsForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
       ImageIndex = 76
     end
-    object actUpdateNDS: TdsdExecStoredProc [33]
+    object actUpdateNDS: TdsdExecStoredProc [11]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1129,33 +661,6 @@ inherited GoodsForm: TGoodsForm
           StoredProc = spUpdate_Goods_NDS
         end>
       Caption = 'actUpdateNDS'
-    end
-    object macUpdateNot_Yes: TMultiAction [34]
-      Category = 'UpdateNot'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSimpleUpdateNot_Yes
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> = '#1044#1072'? '
-      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
-      Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> = '#1044#1072
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> = '#1044#1072
-      ImageIndex = 79
-    end
-    object actSimpleUpdateNot_Yes: TMultiAction
-      Category = 'UpdateNot'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdateNot_Yes
-        end>
-      View = cxGridDBTableView
-      Caption = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1044#1072
-      Hint = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1044#1072
     end
     object spRefreshOneRecord: TdsdDataSetRefresh
       Category = 'Refresh'
@@ -1170,50 +675,12 @@ inherited GoodsForm: TGoodsForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actUpdateNot_Yes: TdsdExecStoredProc
-      Category = 'UpdateNot'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateNot_Yes
-      StoredProcList = <
-        item
-          StoredProc = spUpdateNot_Yes
-        end>
-      Caption = 'actUpdateNot_Yes'
-    end
-    object macUpdateNot_No: TMultiAction
-      Category = 'UpdateNot'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSimpleUpdateNot_No
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> = '#1053#1045#1058'? '
-      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
-      Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> = '#1053#1045#1058
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> = '#1053#1045#1058
-      ImageIndex = 52
-    end
     object DataSetInsert1: TDataSetInsert
       Category = 'Dataset'
       Caption = '&Insert'
       Hint = 'Insert'
       ImageIndex = 73
       DataSource = MasterDS
-    end
-    object actSimpleUpdateNot_No: TMultiAction
-      Category = 'UpdateNot'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdateNot_No
-        end>
-      View = cxGridDBTableView
-      Caption = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1053#1045#1058
-      Hint = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1053#1045#1058
     end
     object DataSetPost1: TDataSetPost
       Category = 'Dataset'
@@ -1233,17 +700,6 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'spRefreshOnInsert'
     end
-    object actUpdateNot_No: TdsdExecStoredProc
-      Category = 'UpdateNot'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateNot_No
-      StoredProcList = <
-        item
-          StoredProc = spUpdateNot_No
-        end>
-      Caption = 'actUpdateNot_No'
-    end
     object UpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -1260,10 +716,8 @@ inherited GoodsForm: TGoodsForm
           StoredProc = spUpdate_Goods_isNotUploadSites
         end
         item
-          StoredProc = spUpdate_Goods_DoesNotShare
         end
         item
-          StoredProc = spUpdate_Goods_AllowDivision
         end
         item
           StoredProc = spUpdate_Goods_Analog
@@ -1694,181 +1148,6 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'actUpdate_inResolution_224_No'
     end
-    object actUpdate_Goods_KoeffSUN: TdsdDataSetRefresh
-      Category = 'KoeffSUN'
-      MoveParams = <>
-      StoredProc = spUpdate_Goods_KoeffSUN
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Goods_KoeffSUN
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1086' '#1057#1059#1053' (v1, v2, v3)'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1086' '#1057#1059#1053' (v1, v2, v3)'
-      ImageIndex = 26
-      ShortCut = 116
-      RefreshOnTabSetChanges = True
-    end
-    object ExecuteDialogGoods_KoeffSUN: TExecuteDialog
-      Category = 'KoeffSUN'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1086' '#1057#1059#1053' (v1, v2, v3)'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1086' '#1057#1059#1053' (v1, v2, v3)'
-      ImageIndex = 26
-      FormName = 'TGoods_KoeffSUN_EditForm'
-      FormNameParam.Value = 'TGoods_KoeffSUN_EditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inKoeffSUN_v1'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inKoeffSUN_v1'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inKoeffSUN_v2'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inKoeffSUN_v2'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inKoeffSUN_v4'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inKoeffSUN_v4'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inKoeffSUN_Supplementv1'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inKoeffSUN_Supplementv1'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inis_v1'
-          Value = False
-          Component = FormParams
-          ComponentItem = 'inis_v1'
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inis_v2'
-          Value = False
-          Component = FormParams
-          ComponentItem = 'inis_v2'
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inis_v4'
-          Value = False
-          Component = FormParams
-          ComponentItem = 'inis_v4'
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inis_Supplementv1'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inis_Supplementv1'
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object macUpdateGoods_KoeffSUN_list: TMultiAction
-      Category = 'KoeffSUN'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdate_Goods_KoeffSUN
-        end>
-      View = cxGridDBTableView
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1086' '#1057#1059#1053' (v1, v2, v3)'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1086' '#1057#1059#1053' (v1, v2, v3)'
-      ImageIndex = 43
-    end
-    object macUpdateGoods_KoeffSUN: TMultiAction
-      Category = 'KoeffSUN'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = ExecuteDialogGoods_KoeffSUN
-        end
-        item
-          Action = macUpdateGoods_KoeffSUN_list
-        end
-        item
-          Action = actRefresh
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1086' '#1057#1059#1053' (v1, v2, v2-'#1055#1048')'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1086' '#1057#1059#1053' (v1, v2, v3)'
-      ImageIndex = 43
-    end
-    object actUpdateInvisibleSUN: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      ActionList = <
-        item
-          Action = ExecUpdate_isInvisibleSUN
-        end>
-      View = cxGridDBTableView
-      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077#1074#1080#1076#1080#1084#1082#1072' '#1076#1083#1103' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053'"?? '
-      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077#1074#1080#1076#1080#1084#1082#1072' '#1076#1083#1103' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077#1074#1080#1076#1080#1084#1082#1072' '#1076#1083#1103' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053'"'
-      ImageIndex = 79
-    end
-    object ExecUpdate_isInvisibleSUN: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isInvisibleSUN_Revert
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_isInvisibleSUN_Revert
-        end>
-      Caption = 'ExecUpdate_isInvisibleSUN'
-    end
-    object actUpdateisSupplementSUN1: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      ActionList = <
-        item
-          Action = execUpdate_SupplementSUN1
-        end>
-      View = cxGridDBTableView
-      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1"? '
-      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1"'
-      ImageIndex = 79
-    end
-    object execUpdate_SupplementSUN1: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isSupplementSUN1_Revert
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_isSupplementSUN1_Revert
-        end>
-      Caption = 'execUpdate_isSupplementSUN1'
-    end
     object actUpdateExceptionUKTZED: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1920,332 +1199,10 @@ inherited GoodsForm: TGoodsForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_inPresent_Revert
       StoredProcList = <
         item
-          StoredProc = spUpdate_inPresent_Revert
         end>
       Caption = 'execUpdate_inPresent_Revert'
-    end
-    object actUpdate_SummaWages: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      BeforeAction = actExecuteDialog_Update_SummaWages
-      ActionList = <
-        item
-          Action = actExec_Update_SummaWages
-        end>
-      View = cxGridDBTableView
-      Caption = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' "'#1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076 +
-        #1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072'"'
-      Hint = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' "'#1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076 +
-        #1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072'"'
-      ImageIndex = 43
-    end
-    object actExec_Update_SummaWages: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_SummaWages
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_SummaWages
-        end>
-      Caption = 'actExec_Update_SummaWages'
-    end
-    object actExecuteDialog_Update_SummaWages: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actExecuteDialog_Update_SummaWages'
-      FormName = 'TSummaDialogForm'
-      FormNameParam.Value = 'TSummaDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Summa'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'SummaWages'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Label'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'LabelSummaWages'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actUpdate_PercentWages: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      BeforeAction = actExecuteDialogUpdate_PercentWages
-      ActionList = <
-        item
-          Action = actExec_Update_PercentWages
-        end>
-      View = cxGridDBTableView
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "% '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076#1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "% '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076#1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072'"'
-      ImageIndex = 43
-    end
-    object actExec_Update_PercentWages: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <>
-      Caption = 'actExec_Update_PercentWages'
-    end
-    object actExecuteDialogUpdate_PercentWages: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actExecuteDialogUpdate_PercentWages'
-      FormName = 'TSummaDialogForm'
-      FormNameParam.Value = 'TSummaDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Summa'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'PercentWages'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Label'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'LabelPercentWages'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actGetImportSetting_Goods_inSupplementSUN1: TdsdExecStoredProc
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetImportSetting_Goods_inSupplementSUN1
-      StoredProcList = <
-        item
-          StoredProc = spGetImportSetting_Goods_inSupplementSUN1
-        end>
-      Caption = 'actGetImportSetting_Goods_Price'
-    end
-    object actDoLoadinSupplementSUN1: TExecuteImportSettingsAction
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      ImportSettingsId.Value = Null
-      ImportSettingsId.Component = FormParams
-      ImportSettingsId.ComponentItem = 'ImportSettingId'
-      ImportSettingsId.MultiSelectSeparator = ','
-      ExternalParams = <>
-    end
-    object macLoadinSupplementSUN1: TMultiAction
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGetImportSetting_Goods_inSupplementSUN1
-        end
-        item
-          Action = actDoLoadinSupplementSUN1
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1087#1088#1080#1079#1085#1072#1082#1086#1074' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1082' '#1057#1059#1053'1?'
-      InfoAfterExecute = #1055#1088#1080#1079#1085#1072#1082#1080' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1082' '#1057#1059#1053'1 '#1080#1079' '#1092#1072#1081#1083#1072' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1082' '#1057#1059#1053'1'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1082' '#1057#1059#1053'1'
-      ImageIndex = 66
-    end
-    object actUpdate_SummaWagesStore: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      BeforeAction = actExecuteDialog_Update_SummaWagesStore
-      ActionList = <
-        item
-          Action = actExec_Update_SummaWagesStore
-        end>
-      View = cxGridDBTableView
-      Caption = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' "'#1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1088#1087 +
-        #1083#1072#1090#1091' '#1076#1083#1103' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072'"'
-      Hint = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' "'#1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1088#1087 +
-        #1083#1072#1090#1091' '#1076#1083#1103' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072'"'
-      ImageIndex = 43
-    end
-    object actExec_Update_SummaWagesStore: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_SummaWagesStore
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_SummaWagesStore
-        end>
-      Caption = 'actExec_Update_SummaWagesStore'
-    end
-    object actExecuteDialog_Update_SummaWagesStore: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actExecuteDialog_Update_SummaWagesStore'
-      FormName = 'TSummaDialogForm'
-      FormNameParam.Value = 'TSummaDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Summa'
-          Value = 0.000000000000000000
-          Component = FormParams
-          ComponentItem = 'SummaWagesStore'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Label'
-          Value = #1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091
-          Component = FormParams
-          ComponentItem = 'LabelSummaWagesStore'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actUpdate_PercentWagesStore: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      BeforeAction = actExecuteDialogUpdate_PercentWagesStore
-      ActionList = <
-        item
-          Action = actExec_Update_PercentWagesStore
-        end>
-      View = cxGridDBTableView
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "% '#1086#1090' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076#1083#1103' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "% '#1086#1090' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076#1083#1103' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072'"'
-      ImageIndex = 43
-    end
-    object actExec_Update_PercentWagesStore: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_PercentWagesStore
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_PercentWagesStore
-        end>
-      Caption = 'actExec_Update_PercentWagesStore'
-    end
-    object actExecuteDialogUpdate_PercentWagesStore: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actExecuteDialogUpdate_PercentWagesStore'
-      FormName = 'TSummaDialogForm'
-      FormNameParam.Value = 'TSummaDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Summa'
-          Value = 0.000000000000000000
-          Component = FormParams
-          ComponentItem = 'PercentWagesStore'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Label'
-          Value = '% '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091
-          Component = FormParams
-          ComponentItem = 'LabelPercentWagesStore'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actSetUnitSupplementSUN1Out: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      BeforeAction = actChoiceUnitSupplementSUN1Out
-      ActionList = <
-        item
-          Action = actExecSetUnitSupplementSUN1Out
-        end>
-      View = cxGridDBTableView
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1057#1059#1053'1"'
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1057#1059#1053'1"'
-      ImageIndex = 79
-    end
-    object actChoiceUnitSupplementSUN1Out: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actChoiceUnitSupplementSUN1Out'
-      FormName = 'TUnitTreeForm'
-      FormNameParam.Value = 'TUnitTreeForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'UnitSupplementSUN1'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actExecSetUnitSupplementSUN1Out: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spSetUnitSupplementSUN1Out
-      StoredProcList = <
-        item
-          StoredProc = spSetUnitSupplementSUN1Out
-        end>
-      Caption = 'actExecSetUnitSupplementSUN1Out'
-    end
-    object actClearUnitSupplementSUN1Out: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      ActionList = <
-        item
-          Action = actExecClearUnitSupplementSUN1Out
-        end>
-      View = cxGridDBTableView
-      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1057#1059#1053'1"?'
-      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1057#1059#1053'1"'
-      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1057#1059#1053'1"'
-      ImageIndex = 76
-    end
-    object actExecClearUnitSupplementSUN1Out: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spClearUnitSupplementSUN1Out
-      StoredProcList = <
-        item
-          StoredProc = spClearUnitSupplementSUN1Out
-        end>
-      Caption = 'actExecClearUnitSupplementSUN1Out'
     end
     object maUpdate_isOnlySP: TMultiAction
       Category = 'DSDLib'
@@ -2270,87 +1227,7 @@ inherited GoodsForm: TGoodsForm
         item
           StoredProc = spUpdate_isOnlySP_Revert
         end>
-      Caption = 'actExecClearUnitSupplementSUN1Out'
-    end
-    object actUpdate_Multiplicity: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      BeforeAction = astExecuteDialogMultiplicity
-      ActionList = <
-        item
-          Action = actExecUpfdate_Multiplicity
-        end>
-      View = cxGridDBTableView
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1077'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1077'"'
-      ImageIndex = 43
-    end
-    object actExecUpfdate_Multiplicity: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Multiplicity
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Multiplicity
-        end>
-      Caption = 'actExecUpfdate_Multiplicity'
-    end
-    object astExecuteDialogMultiplicity: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actExecuteDialogUpdate_PercentWagesStore'
-      FormName = 'TAmountDialogForm'
-      FormNameParam.Value = 'TAmountDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Amount'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Multiplicity'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Label'
-          Value = 
-            #1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076#1083#1103' '#1082 +
-            #1083#1072#1076#1086#1074#1097#1080#1082#1072
-          Component = FormParams
-          ComponentItem = 'MultiplicityLabel'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object maUpdate_isMultiplicityError: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      ActionList = <
-        item
-          Action = actExecUpdate_isMultiplicityError
-        end>
-      View = cxGridDBTableView
-      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1075#1088#1077#1096#1085#1086#1089#1090#1100' '#1076#1083#1103' '#1082#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1080'"?'
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1075#1088#1077#1096#1085#1086#1089#1090#1100' '#1076#1083#1103' '#1082#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1080'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1075#1088#1077#1096#1085#1086#1089#1090#1100' '#1076#1083#1103' '#1082#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1080'"'
-      ImageIndex = 79
-    end
-    object actExecUpdate_isMultiplicityError: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isMultiplicityError_Revert
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_isMultiplicityError_Revert
-        end>
-      Caption = 'actExecUpdate_isMultiplicityError'
+      Caption = 'actExecUpdate_isOnlySP'
     end
     object actDialogPercentMarkup: TExecuteDialog
       Category = 'DSDLib'
@@ -2626,100 +1503,6 @@ inherited GoodsForm: TGoodsForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1058#1086#1074#1072#1088#1072'> '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
       ImageIndex = 43
     end
-    object mactUpdate_isExpDateExcSite: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      ActionList = <
-        item
-          Action = actExecUpdate_isExpDateExcSite
-        end>
-      View = cxGridDBTableView
-      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1087#1086' '#1089#1088#1086#1082#1091' '#1075#1086#1076#1085#1086#1089#1090#1080' ('#1076#1083#1103' '#1089#1072#1081#1090#1072')"?'
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1087#1086' '#1089#1088#1086#1082#1091' '#1075#1086#1076#1085#1086#1089#1090#1080' ('#1076#1083#1103' '#1089#1072#1081#1090#1072')"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1087#1086' '#1089#1088#1086#1082#1091' '#1075#1086#1076#1085#1086#1089#1090#1080' ('#1076#1083#1103' '#1089#1072#1081#1090#1072')"'
-      ImageIndex = 79
-    end
-    object actExecUpdate_isExpDateExcSite: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_inExpDateExcSite_Revert
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_inExpDateExcSite_Revert
-        end>
-      Caption = 'actExecUpdate_isExpDateExcSite'
-    end
-    object actSiteDiscontDialog: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actSiteDiscontDialog'
-      FormName = 'TSiteDiscontDialogForm'
-      FormNameParam.Value = 'TSiteDiscontDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'DiscontSiteStart'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'DiscontSiteStart'
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'DiscontSiteEnd'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'DiscontSiteEnd'
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'DiscontPercentSite'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'DiscontPercentSite'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'DiscontAmountSite'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'DiscontAmountSite'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actUpdate_SiteDiscont: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_SiteDiscont
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_SiteDiscont
-        end>
-      Caption = 'actUpdate_SiteDiscont'
-    end
-    object mactSiteDiscont: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      BeforeAction = actSiteDiscontDialog
-      ActionList = <
-        item
-          Action = actUpdate_SiteDiscont
-        end>
-      View = cxGridDBTableView
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091' '#1076#1083#1103' '#1089#1072#1081#1090#1072
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091' '#1076#1083#1103' '#1089#1072#1081#1090#1072
-      ImageIndex = 43
-    end
     object actUpdate_isFirst_Yes: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -2729,7 +1512,7 @@ inherited GoodsForm: TGoodsForm
         item
           StoredProc = spUpdate_isFirst_Yes
         end>
-      Caption = 'ExecUpdate_isInvisibleSUN'
+      Caption = 'actUpdate_isFirst_Yes'
     end
     object mactUpdate_isFirst_Yes: TMultiAction
       Category = 'DSDLib'
@@ -2755,7 +1538,7 @@ inherited GoodsForm: TGoodsForm
         item
           StoredProc = spUpdate_isFirst_No
         end>
-      Caption = 'ExecUpdate_isInvisibleSUN'
+      Caption = 'actUpdate_isFirst_No'
     end
     object mactUpdate_isFirst_No: TMultiAction
       Category = 'DSDLib'
@@ -2781,7 +1564,7 @@ inherited GoodsForm: TGoodsForm
         item
           StoredProc = spUpdate_isSecond_Yes
         end>
-      Caption = 'ExecUpdate_isInvisibleSUN'
+      Caption = 'actUpdate_isSecond_Yes'
     end
     object mactUpdate_isSecond_Yes: TMultiAction
       Category = 'DSDLib'
@@ -2807,7 +1590,7 @@ inherited GoodsForm: TGoodsForm
         item
           StoredProc = spUpdate_isSecond_No
         end>
-      Caption = 'ExecUpdate_isInvisibleSUN'
+      Caption = 'actUpdate_isSecond_No'
     end
     object mactUpdate_isSecond_No: TMultiAction
       Category = 'DSDLib'
@@ -3016,28 +1799,46 @@ inherited GoodsForm: TGoodsForm
       Category = 0
     end
     object bbUpdateNot_Yes: TdxBarButton
-      Action = macUpdateNot_Yes
+      Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> = '#1044#1072
       Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> = '#1044#1072
+      Visible = ivAlways
+      ImageIndex = 79
     end
     object bbUpdateNot_No: TdxBarButton
-      Action = macUpdateNot_No
+      Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> = '#1053#1045#1058
       Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082'> = '#1053#1045#1058
+      Visible = ivAlways
+      ImageIndex = 52
     end
     object bbUpdateNot_v2_Yes: TdxBarButton
-      Action = macUpdateNot_v2_Yes
+      Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> = '#1044#1072
       Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> = '#1044#1072
+      Visible = ivAlways
+      ImageIndex = 7
     end
     object bbUpdateNot_v2_No: TdxBarButton
-      Action = macUpdateNot_v2_No
+      Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> = '#1053#1045#1058
       Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> = '#1053#1045#1058
+      Visible = ivAlways
+      ImageIndex = 77
     end
     object bbUpdate_isSun_v3_yes: TdxBarButton
-      Action = macUpdate_isSun_v3_yes
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' = '#1044#1040
       Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053'> = '#1044#1040
+      Visible = ivAlways
+      ImageIndex = 79
     end
     object bbUpdate_isSun_v3_No: TdxBarButton
-      Action = macUpdate_isSun_v3_No
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' = '#1053#1045#1058
       Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053'> = '#1053#1045#1058
+      Visible = ivAlways
+      ImageIndex = 58
     end
     object bbSetClose: TdxBarButton
       Action = actSetClose
@@ -3064,20 +1865,36 @@ inherited GoodsForm: TGoodsForm
       Category = 0
     end
     object bbUpdate_isNot_Sun_v4_yes: TdxBarButton
-      Action = macUpdate_isNot_Sun_v4_yes
+      Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1044#1040
       Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1044#1040
+      Visible = ivAlways
+      ImageIndex = 7
     end
     object bbUpdate_isNot_Sun_v4_No: TdxBarButton
-      Action = macUpdate_isNot_Sun_v4_No
+      Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1053#1045#1058
       Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1053#1045#1058
+      Visible = ivAlways
+      ImageIndex = 77
     end
     object bbUpdateGoods_KoeffSUN: TdxBarButton
-      Action = macUpdateGoods_KoeffSUN
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1086' '#1057#1059#1053' (v1, v2, v2-'#1055#1048')'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1086' '#1057#1059#1053' (v1, v2, v3)'
+      Visible = ivAlways
+      ImageIndex = 43
     end
     object bbUpdateGoods_LimitSUN: TdxBarButton
-      Action = macUpdateGoods_LimitSUN
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1084' '#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1057#1059#1053' v2, v2-'#1055#1048' '#1079#1085#1072#1095#1077#1085#1080#1103' ' +
+        #1058'1'
       Category = 0
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1084' '#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1057#1059#1053' v2, v2-'#1055#1048' '#1079#1085#1072#1095#1077#1085#1080#1103' ' +
+        #1058'1'
+      Visible = ivAlways
+      ImageIndex = 43
     end
     object dxBarSubItem1: TdxBarSubItem
       Caption = 'New SubItem'
@@ -3086,8 +1903,11 @@ inherited GoodsForm: TGoodsForm
       ItemLinks = <>
     end
     object dxBarButton1: TdxBarButton
-      Action = actUpdateisSupplementSUN1
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1"'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1"'
+      Visible = ivAlways
+      ImageIndex = 79
     end
     object dxBarButton2: TdxBarButton
       Action = actUpdateExceptionUKTZED
@@ -3105,39 +1925,7 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdate_inPresent_Revert'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarButton10'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton12'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton16'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton3'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton4'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton6'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton7'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton11'
         end
         item
           Visible = True
@@ -3146,19 +1934,21 @@ inherited GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'dxBarButton15'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton17'
         end>
     end
     object bbUpdateInvisibleSUN: TdxBarButton
-      Action = actUpdateInvisibleSUN
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077#1074#1080#1076#1080#1084#1082#1072' '#1076#1083#1103' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053'"'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077#1074#1080#1076#1080#1084#1082#1072' '#1076#1083#1103' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053'"'
+      Visible = ivAlways
+      ImageIndex = 79
     end
     object bbUpdateisSupplementSUN1: TdxBarButton
-      Action = actUpdateisSupplementSUN1
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1"'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1"'
+      Visible = ivAlways
+      ImageIndex = 79
     end
     object bbUpdateExceptionUKTZED: TdxBarButton
       Action = actUpdateExceptionUKTZED
@@ -3236,44 +2026,79 @@ inherited GoodsForm: TGoodsForm
       Category = 0
     end
     object dxBarButton3: TdxBarButton
-      Action = actUpdate_SummaWages
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' "'#1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076 +
+        #1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072'"'
       Category = 0
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' "'#1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076 +
+        #1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072'"'
+      Visible = ivAlways
+      ImageIndex = 43
     end
     object dxBarButton4: TdxBarButton
-      Action = actUpdate_PercentWages
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "% '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076#1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072'"'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "% '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076#1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072'"'
+      Visible = ivAlways
+      ImageIndex = 43
     end
     object dxBarButton5: TdxBarButton
-      Action = macLoadinSupplementSUN1
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1082' '#1057#1059#1053'1'
       Category = 0
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1082' '#1057#1059#1053'1'
+      Visible = ivAlways
+      ImageIndex = 66
     end
     object dxBarButton6: TdxBarButton
-      Action = actUpdate_SummaWagesStore
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' "'#1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1088#1087 +
+        #1083#1072#1090#1091' '#1076#1083#1103' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072'"'
       Category = 0
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' "'#1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1088#1087 +
+        #1083#1072#1090#1091' '#1076#1083#1103' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072'"'
+      Visible = ivAlways
+      ImageIndex = 43
     end
     object dxBarButton7: TdxBarButton
-      Action = actUpdate_PercentWagesStore
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "% '#1086#1090' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076#1083#1103' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072'"'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "% '#1086#1090' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076#1083#1103' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072'"'
+      Visible = ivAlways
+      ImageIndex = 43
     end
     object dxBarButton8: TdxBarButton
-      Action = actSetUnitSupplementSUN1Out
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1057#1059#1053'1"'
       Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1057#1059#1053'1"'
+      Visible = ivAlways
+      ImageIndex = 79
     end
     object dxBarButton9: TdxBarButton
-      Action = actClearUnitSupplementSUN1Out
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1057#1059#1053'1"'
       Category = 0
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' "'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1087#1086' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1102' '#1057#1059#1053'1"'
+      Visible = ivAlways
+      ImageIndex = 76
     end
     object dxBarButton10: TdxBarButton
       Action = maUpdate_isOnlySP
       Category = 0
     end
     object dxBarButton11: TdxBarButton
-      Action = actUpdate_Multiplicity
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1077'"'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1077'"'
+      Visible = ivAlways
+      ImageIndex = 43
     end
     object dxBarButton12: TdxBarButton
-      Action = maUpdate_isMultiplicityError
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1075#1088#1077#1096#1085#1086#1089#1090#1100' '#1076#1083#1103' '#1082#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1080'"'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1075#1088#1077#1096#1085#1086#1089#1090#1100' '#1076#1083#1103' '#1082#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1080'"'
+      Visible = ivAlways
+      ImageIndex = 79
     end
     object dxBarButton13: TdxBarButton
       Action = macPercentMarkup
@@ -3292,12 +2117,18 @@ inherited GoodsForm: TGoodsForm
       Category = 0
     end
     object dxBarButton16: TdxBarButton
-      Action = mactUpdate_isExpDateExcSite
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1087#1086' '#1089#1088#1086#1082#1091' '#1075#1086#1076#1085#1086#1089#1090#1080' ('#1076#1083#1103' '#1089#1072#1081#1090#1072')"'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1087#1086' '#1089#1088#1086#1082#1091' '#1075#1086#1076#1085#1086#1089#1090#1080' ('#1076#1083#1103' '#1089#1072#1081#1090#1072')"'
+      Visible = ivAlways
+      ImageIndex = 79
     end
     object dxBarButton17: TdxBarButton
-      Action = mactSiteDiscont
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091' '#1076#1083#1103' '#1089#1072#1081#1090#1072
       Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091' '#1076#1083#1103' '#1089#1072#1081#1090#1072
+      Visible = ivAlways
+      ImageIndex = 43
     end
     object dxBarButton18: TdxBarButton
       Caption = 'New Button'
@@ -3715,37 +2546,6 @@ inherited GoodsForm: TGoodsForm
         Value = 
           #1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076#1083#1103' '#1082 +
           #1083#1072#1076#1086#1074#1097#1080#1082#1072
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PercentWagesStore'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'LabelPercentWagesStore'
-        Value = 
-          #1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076#1083#1103' '#1082 +
-          #1083#1072#1076#1086#1074#1097#1080#1082#1072
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitSupplementSUN1'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Multiplicity'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MultiplicityLabel'
-        Value = #1042#1074#1077#1076#1080#1090#1077' "'#1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1088#1080' '#1087#1088#1080#1076#1072#1078#1077'"'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -4196,41 +2996,7 @@ inherited GoodsForm: TGoodsForm
       end>
     PackSize = 1
     Left = 648
-    Top = 312
-  end
-  object spUpdate_Goods_DoesNotShare: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_DoesNotShare'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDoesNotShare'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DoesNotShare'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outDoesNotShare'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DoesNotShare'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 800
-    Top = 264
+    Top = 352
   end
   object spGetImportSetting_Goods_Price: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -4262,33 +3028,7 @@ inherited GoodsForm: TGoodsForm
       end>
     PackSize = 1
     Left = 360
-    Top = 144
-  end
-  object spUpdate_Goods_AllowDivision: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_AllowDivision'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioAllowDivision'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AllowDivision'
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 496
-    Top = 320
+    Top = 120
   end
   object spUpdate_Goods_Analog: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_Analog'
@@ -4331,8 +3071,8 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 336
-    Top = 336
+    Left = 344
+    Top = 360
   end
   object spUpdateNotMarion_Yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_NotMarion'
@@ -4398,184 +3138,6 @@ inherited GoodsForm: TGoodsForm
     Left = 624
     Top = 107
   end
-  object spUpdateNot_Yes: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_isNOT'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisNot'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 928
-    Top = 99
-  end
-  object spUpdateNot_No: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_isNot'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisNot'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 928
-    Top = 163
-  end
-  object spUpdate_Goods_isNot: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_isNot'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisNot'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isNot'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outisNot'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isNot'
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 864
-    Top = 227
-  end
-  object spUpdate_isNOT_v2_Yes: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_isNOT_Sun_v2'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisNot_SUN_v2'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 1024
-    Top = 83
-  end
-  object spUpdate_isNot_v2_No: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_isNot_Sun_v2'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisNot_SUN_v2'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 1024
-    Top = 131
-  end
-  object spUpdate_isSun_v3_No: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_isSun_v3'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisSUN_v3'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 992
-    Top = 291
-  end
-  object spUpdate_isSun_v3_yes: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_isSun_v3'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisSUN_v3'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 984
-    Top = 227
-  end
   object spUpdate_isClose_No: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_isClose'
     DataSets = <>
@@ -4597,7 +3159,7 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 904
+    Left = 928
     Top = 331
   end
   object spUpdate_isClose_Yes: TdsdStoredProc
@@ -4778,143 +3340,6 @@ inherited GoodsForm: TGoodsForm
     Left = 432
     Top = 192
   end
-  object spUpdate_isNot_v4_No: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_isNot_Sun_v4'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisNot_SUN_v4'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 1080
-    Top = 211
-  end
-  object spUpdate_isNOT_v4_Yes: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_isNOT_Sun_v4'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisNot_SUN_v4'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 1088
-    Top = 155
-  end
-  object spUpdate_Goods_KoeffSUN: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_KoeffSUN'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inis_v1'
-        Value = False
-        Component = FormParams
-        ComponentItem = 'inis_v1'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inis_v2'
-        Value = False
-        Component = FormParams
-        ComponentItem = 'inis_v2'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inis_v4'
-        Value = False
-        Component = FormParams
-        ComponentItem = 'inis_v4'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inis_Supplementv1'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'inis_Supplementv1'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inKoeffSUN_v1'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'inKoeffSUN_v1'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inKoeffSUN_v1'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'inKoeffSUN_v2'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inKoeffSUN_v4'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'inKoeffSUN_v4'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inKoeffSUN_Supplementv1'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'inKoeffSUN_Supplementv1'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 1080
-    Top = 315
-  end
   object spUpdate_isInvisibleSUN: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_inInvisibleSUN'
     DataSets = <>
@@ -4941,93 +3366,6 @@ inherited GoodsForm: TGoodsForm
     Left = 64
     Top = 360
   end
-  object spUpdate_isInvisibleSUN_Revert: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_inInvisibleSUN_Revert'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inGoodsMainId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsMainId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisInvisibleSUN'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isInvisibleSUN'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 216
-    Top = 344
-  end
-  object spUpdate_Goods_LimitSun_T: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_LimitSUN_T'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inis_v1'
-        Value = False
-        Component = FormParams
-        ComponentItem = 'inis_v1'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inLimitSUN_T1'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'inLimitSUN_T1'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 1096
-    Top = 267
-  end
-  object spUpdate_isSupplementSUN1_Revert: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_inSupplementSUN1_Revert'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inGoodsMainId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsMainId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisInvisibleSUN'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isSupplementSUN1'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 664
-    Top = 368
-  end
   object spUpdate_inExceptionUKTZED_Revert: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_inExceptionUKTZED_Revert'
     DataSets = <>
@@ -5051,218 +3389,8 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 792
-    Top = 376
-  end
-  object spUpdate_inPresent_Revert: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_inPresent_Revert'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inGoodsMainId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsMainId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisPresent'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isPresent'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 520
-    Top = 376
-  end
-  object spUpdate_SummaWages: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_SummaWages'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSummaWages'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'SummaWages'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 712
-    Top = 216
-  end
-  object spUpdate_PercentWages: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_PercentWages'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPercentWages'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PercentWages'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 712
-    Top = 264
-  end
-  object spGetImportSetting_Goods_inSupplementSUN1: TdsdStoredProc
-    StoredProcName = 'gpGet_DefaultValue'
-    DataSets = <
-      item
-      end>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inDefaultKey'
-        Value = 'TGoodsForm;zc_Object_ImportSetting_inSupplementSUN1'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUserKeyId'
-        Value = '0'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'gpGet_DefaultValue'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ImportSettingId'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 360
-    Top = 96
-  end
-  object spUpdate_PercentWagesStore: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_PercentWagesStore'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPercentWagesStore'
-        Value = 0.000000000000000000
-        Component = FormParams
-        ComponentItem = 'PercentWagesStore'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 736
-    Top = 352
-  end
-  object spUpdate_SummaWagesStore: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_SummaWagesStore'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSummaWagesStore'
-        Value = 0.000000000000000000
-        Component = FormParams
-        ComponentItem = 'SummaWagesStore'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 736
-    Top = 304
-  end
-  object spSetUnitSupplementSUN1Out: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_UnitSupplementSUN1Out'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inGoodsMainId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsMainId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitSupplementSUN1Out'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'UnitSupplementSUN1'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 216
-    Top = 376
-  end
-  object spClearUnitSupplementSUN1Out: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_UnitSupplementSUN1Out'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inGoodsMainId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsMainId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitSupplementSUN1'
-        Value = 0
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 344
-    Top = 376
+    Left = 872
+    Top = 384
   end
   object spUpdate_isOnlySP_Revert: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_isOnlySP_Revert'
@@ -5287,60 +3415,8 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 600
-    Top = 368
-  end
-  object spUpdate_Multiplicity: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_Multiplicity'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inGoodsMainId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsMainId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMultiplicity'
-        Value = 0.000000000000000000
-        Component = FormParams
-        ComponentItem = 'Multiplicity'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 624
-    Top = 144
-  end
-  object spUpdate_isMultiplicityError_Revert: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_isMultiplicityError_Revert'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inGoodsMainId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsMainId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisMultiplicityError'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isMultiplicityError'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 48
-    Top = 216
+    Left = 648
+    Top = 408
   end
   object spUpdatePercentMarkup: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_PercentMarkup'
@@ -5471,85 +3547,6 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 136
     Top = 200
-  end
-  object spUpdate_inExpDateExcSite_Revert: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_inExpDateExcSite_Revert'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inGoodsMainId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsMainId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisExpDateExcSite'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isExpDateExcSite'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 448
-    Top = 368
-  end
-  object spUpdate_SiteDiscont: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_SiteDiscont'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDiscontSiteStart'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'DiscontSiteStart'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDiscontSiteEnd'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'DiscontSiteEnd'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDiscontPercentSite'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'DiscontPercentSite'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDiscontAmountSite'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'DiscontAmountSite'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 112
-    Top = 376
   end
   object spUpdate_isFirst_No: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_isFirst'

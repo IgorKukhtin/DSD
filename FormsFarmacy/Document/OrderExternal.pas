@@ -130,8 +130,6 @@ type
     actUpdate_SetSupplierFailures: TdsdExecStoredProc;
     HeaderSaverSupplierFailures: THeaderSaver;
     spUpdate_isSupplierFailures: TdsdStoredProc;
-    spGetImportSettingId_Badm: TdsdStoredProc;
-    spGetImportSettingId_Conex: TdsdStoredProc;
   private
     { Private declarations }
   public
