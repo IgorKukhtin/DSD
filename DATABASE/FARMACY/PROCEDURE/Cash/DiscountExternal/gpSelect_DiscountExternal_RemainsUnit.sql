@@ -64,7 +64,8 @@ BEGIN
                            AND Object_BarCode.isErased = False),
           tmpContainer AS (SELECT tmpGoods.GoodsId,
                                   SUM(Container.Amount)   AS Amount,
-                                  SUM(CASE WHEN zfPermit_Juridical_Discount (tmpGoods.ObjectId, MovementLinkObject_From.ObjectId) > 0 THEN Container.Amount END) AS AmountProject
+                                  SUM(CASE WHEN zfPermit_Juridical_Discount (tmpGoods.ObjectId, MovementLinkObject_From.ObjectId) > 0 AND
+                                                COALESCE(MovementLinkObject_To.ObjectId, 0) = vbUnitId THEN Container.Amount END) AS AmountProject
                            FROM tmpGoods
                            
                                 LEFT JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId
@@ -83,16 +84,18 @@ BEGIN
                                 LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
                                 -- элемент прихода
                                 LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
-                                -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
-                                LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
-                                                            ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
-                                                           AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
-                                -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
-                                LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+
+                                LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id =  MI_Income.MovementId
+                                                                     AND Movement_Income.DescId = zc_Movement_Income()  
 
                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                             ON MovementLinkObject_From.MovementId = COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId)
+                                                             ON MovementLinkObject_From.MovementId = Movement_Income.Id
                                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                             ON MovementLinkObject_To.MovementId = Movement_Income.Id
+                                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                            
                            GROUP BY tmpGoods.GoodsId),
           tmpObject_Price AS (SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
                                      AND ObjectFloat_Goods_Price.ValueData > 0
@@ -157,4 +160,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- select * from gpSelect_DiscountExternal_RemainsUnit( inSession := '3');
+-- 
+select * from gpSelect_DiscountExternal_RemainsUnit( inSession := '3');

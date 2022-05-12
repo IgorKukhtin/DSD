@@ -37,6 +37,14 @@ type
     dxBarButton1: TdxBarButton;
     GoodsCode: TcxGridDBColumn;
     Priorities: TcxGridDBColumn;
+    dxBarButton2: TdxBarButton;
+    dxBarButton3: TdxBarButton;
+    mactSetErased: TMultiAction;
+    mactSetUnErased: TMultiAction;
+    spSetUnErased: TdsdStoredProc;
+    spSetErased: TdsdStoredProc;
+    actSetErased: TdsdExecStoredProc;
+    actSetUnErased: TdsdExecStoredProc;
   private
     { Private declarations }
   public

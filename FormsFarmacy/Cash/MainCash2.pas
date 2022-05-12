@@ -615,6 +615,8 @@ type
     actListGoodsKeyword1: TMenuItem;
     MainPriceSaleOOC1303: TcxGridDBColumn;
     MainPriceSale1303: TcxGridDBColumn;
+    RemainsUnitOneCDS: TClientDataSet;
+    spRemainsUnitOne: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -2332,6 +2334,29 @@ begin
     RemainsCDS.DisableControls;
     RemainsCDS.Filtered := false;
     try
+
+      if RemainsUnitOneCDS.Active then
+      begin
+        RemainsUnitOneCDS.First;
+        while not RemainsUnitOneCDS.Eof do
+        begin
+          if RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+                   VarArrayOf([RemainsUnitOneCDS.FieldByName('GoodsId').AsInteger,
+                               RemainsUnitOneCDS.FieldByName('PartionDateKindId').AsVariant,
+                               RemainsUnitOneCDS.FieldByName('NDSKindId').AsVariant,
+                               RemainsUnitOneCDS.FieldByName('DiscountExternalID').AsVariant,
+                               RemainsUnitOneCDS.FieldByName('DivisionPartiesID').AsVariant]), []) then
+          begin
+            RemainsCDS.Edit;
+            RemainsCDS.FieldByName('Remains').AsCurrency := RemainsUnitOneCDS.FieldByName('Remains').AsCurrency;
+            RemainsCDS.Post;
+          end;
+
+          RemainsUnitOneCDS.Next;
+        end;
+        RemainsUnitOneCDS.Close;
+      end;
+
       RemainsCDS.OnFilterRecord := Nil;
       RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0';
       pnlExpirationDateFilter.Visible := false;
@@ -6125,9 +6150,35 @@ begin
 
   if pnlDiscount.Visible then
   begin
+
+    spRemainsUnitOne.ParamByName('inDiscountExternalId').Value :=  DiscountExternalId;
+    spRemainsUnitOne.Execute;
+
     try
       RemainsCDS.DisableControls;
       RemainsCDS.Filtered := false;
+
+      if RemainsUnitOneCDS.Active then
+      begin
+        RemainsUnitOneCDS.First;
+        while not RemainsUnitOneCDS.Eof do
+        begin
+          if RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+                   VarArrayOf([RemainsUnitOneCDS.FieldByName('GoodsId').AsInteger,
+                               RemainsUnitOneCDS.FieldByName('PartionDateKindId').AsVariant,
+                               RemainsUnitOneCDS.FieldByName('NDSKindId').AsVariant,
+                               RemainsUnitOneCDS.FieldByName('DiscountExternalID').AsVariant,
+                               RemainsUnitOneCDS.FieldByName('DivisionPartiesID').AsVariant]), []) then
+          begin
+            RemainsCDS.Edit;
+            RemainsCDS.FieldByName('Remains').AsCurrency := RemainsUnitOneCDS.FieldByName('RemainsDiscount').AsCurrency;
+            RemainsCDS.Post;
+          end;
+
+          RemainsUnitOneCDS.Next;
+        end;
+      end;
+
       RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and GoodsDiscountID = ' + IntToStr(DiscountServiceForm.gDiscountExternalId)
     finally
       RemainsCDS.Filtered := true;

@@ -91,7 +91,7 @@ begin
     else if not FIniError and GetHelsiReceiptState(ClientDataSet.FieldByName('InvNumberSP').AsString, cState, FIniError) then
     else cState := 'Ош. получения';
   end else cState := 'Ош. получения';
-  nColor := clFuchsia;
+  nColor := clYellow;
 
   if cState = 'ACTIVE' then
   begin
