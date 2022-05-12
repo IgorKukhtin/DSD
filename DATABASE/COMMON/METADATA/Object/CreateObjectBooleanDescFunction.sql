@@ -1228,10 +1228,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Guide_Irna() RETURNS Integer AS $BOD
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Guide_Irna', 'Ирна' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Guide_Irna');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CheckoutTesting_ReloadCurrent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CheckoutTesting_ReloadCurrent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CheckoutTesting(), 'zc_ObjectBoolean_CheckoutTesting_ReloadCurrent', 'Перегрузить текущую версию кассы и сервиса' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CheckoutTesting_ReloadCurrent');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 12.05.22                                                                                                          * zc_ObjectBoolean_CheckoutTesting_ReloadCurrent
  04.05.22         * zc_ObjectBoolean_Guide_Irna
  09.04.22                                                                                                          * zc_ObjectBoolean_Unit_SUN_NotSoldIn
  15.03.22                                                                                                          * zc_ObjectBoolean_Contract_DefermentContract
