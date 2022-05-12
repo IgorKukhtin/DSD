@@ -10,7 +10,6 @@ CREATE OR REPLACE FUNCTION gpGet_MI_Send(
     IN inSession           TVarChar     -- сессия пользователя
 )
 RETURNS TABLE (Id                 Integer
-             , PartionId          Integer
              , GoodsId            Integer
              , GoodsCode          Integer
              , GoodsName          TVarChar
@@ -50,7 +49,7 @@ BEGIN
                             )
 
            SELECT -1                               :: Integer AS Id
-                , Object_PartionGoods.MovementItemId          AS PartionId
+                , 0                                :: Integer AS PartionId
                 , Object_Goods.Id                             AS GoodsId
                 , Object_Goods.ObjectCode                     AS GoodsCode
                 , Object_Goods.ValueData                      AS GoodsName
@@ -61,9 +60,9 @@ BEGIN
                 , Object_GoodsGroup.ValueData                 AS GoodsGroupName
                 , Object_Partner.ObjectCode                   AS PartnerId
                 , Object_Partner.ValueData                    AS PartnerName
-                , 1  :: TFloat   AS CountForPrice
-                , Object_PartionGoods.ekPrice                 AS Price
-                , (COALESCE (inAmount,1) + COALESCE ((SELECT SUM (MI.Amount)
+                , 1  :: TFloat                                AS CountForPrice
+                , 0  :: TFloat                                AS Price
+                , (/*COALESCE (inAmount,1) +*/ COALESCE ((SELECT SUM (MI.Amount)
                                                       FROM MovementItem AS MI
                                                            LEFT JOIN MovementItemString AS MIString_PartNumber
                                                                                         ON MIString_PartNumber.MovementItemId = MI.Id
@@ -104,7 +103,6 @@ BEGIN
               AND inGoodsId <> 0
           UNION
            SELECT -1         :: Integer AS Id
-                , 0                     AS PartionId
                 , 0                     AS GoodsId
                 , 0                     AS GoodsCode
                 , '' ::TVarChar         AS GoodsName

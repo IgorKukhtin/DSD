@@ -42,8 +42,6 @@ type
     GuidesGoodsGroup: TdsdGuides;
     edPartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
-    cxLabel8: TcxLabel;
-    ceOperPrice: TcxCurrencyEdit;
     actRefreshOperPriceList: TdsdDataSetRefresh;
     cxLabel13: TcxLabel;
     edGoodsCode: TcxCurrencyEdit;
@@ -59,8 +57,6 @@ type
     EnterMoveNext: TEnterMoveNext;
     spGet_TotalCount: TdsdStoredProc;
     actGet_TotalCount: TdsdExecStoredProc;
-    edCountForPrice: TcxCurrencyEdit;
-    cxLabel7: TcxLabel;
     edComment: TcxTextEdit;
     cxLabel9: TcxLabel;
     GuidesFiller: TGuidesFiller;

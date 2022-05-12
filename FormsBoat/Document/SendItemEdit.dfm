@@ -1,7 +1,7 @@
 object SendItemEditForm: TSendItemEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1058#1086#1074#1072#1088' '#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
   ClientHeight = 282
   ClientWidth = 408
   Color = clBtnFace
@@ -37,7 +37,7 @@ object SendItemEditForm: TSendItemEditForm
   object cxLabel3: TcxLabel
     Left = 8
     Top = 45
-    Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+    Caption = #1043#1088#1091#1087#1087#1072
   end
   object cxLabel5: TcxLabel
     Left = 8
@@ -82,20 +82,6 @@ object SendItemEditForm: TSendItemEditForm
     TabOrder = 8
     Width = 269
   end
-  object cxLabel8: TcxLabel
-    Left = 288
-    Top = 141
-    Caption = #1062#1077#1085#1072' '#1074#1093'.'
-  end
-  object ceOperPrice: TcxCurrencyEdit
-    Left = 288
-    Top = 160
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    Properties.ReadOnly = True
-    TabOrder = 10
-    Width = 111
-  end
   object cxLabel13: TcxLabel
     Left = 86
     Top = 91
@@ -128,13 +114,27 @@ object SendItemEditForm: TSendItemEditForm
     Left = 86
     Top = 141
     Caption = #1048#1058#1054#1043#1054' :'
+    ParentFont = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clWindowText
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
   end
   object ceTotalCount: TcxCurrencyEdit
     Left = 86
     Top = 160
+    ParentFont = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clWindowText
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
     TabOrder = 15
     Width = 93
   end
@@ -166,24 +166,10 @@ object SendItemEditForm: TSendItemEditForm
     TabOrder = 1
     Width = 111
   end
-  object edCountForPrice: TcxCurrencyEdit
-    Left = 192
-    Top = 160
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    Properties.ReadOnly = True
-    TabOrder = 20
-    Width = 85
-  end
-  object cxLabel7: TcxLabel
-    Left = 192
-    Top = 141
-    Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
-  end
   object edComment: TcxTextEdit
     Left = 8
     Top = 205
-    TabOrder = 22
+    TabOrder = 17
     Width = 391
   end
   object cxLabel9: TcxLabel
@@ -285,7 +271,6 @@ object SendItemEditForm: TSendItemEditForm
       item
         Name = 'inOperPrice'
         Value = 0.000000000000000000
-        Component = ceOperPrice
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -293,7 +278,6 @@ object SendItemEditForm: TSendItemEditForm
       item
         Name = 'inCountForPrice'
         Value = 1.000000000000000000
-        Component = edCountForPrice
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -330,6 +314,20 @@ object SendItemEditForm: TSendItemEditForm
       item
         Name = 'inMovementId'
         Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -388,6 +386,13 @@ object SendItemEditForm: TSendItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'GoodsId'
         Value = Null
         Component = GuidesGoods
@@ -405,6 +410,20 @@ object SendItemEditForm: TSendItemEditForm
         Value = ''
         Component = GuidesGoods
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Article'
+        Value = Null
+        Component = edArticle
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartNumber'
+        Value = Null
+        Component = edPartNumber
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -434,41 +453,6 @@ object SendItemEditForm: TSendItemEditForm
         Name = 'TotalCount'
         Value = Null
         Component = ceTotalCount
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperPrice'
-        Value = Null
-        Component = ceOperPrice
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Id'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Article'
-        Value = Null
-        Component = edArticle
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PartNumber'
-        Value = Null
-        Component = edPartNumber
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CountForPrice'
-        Value = Null
-        Component = edCountForPrice
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -553,7 +537,6 @@ object SendItemEditForm: TSendItemEditForm
       item
         Name = 'EKPrice'
         Value = Null
-        Component = ceOperPrice
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

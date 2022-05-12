@@ -36,7 +36,7 @@ BEGIN
      WHERE Movement.Id = inMovementId;
 
      -- проверка - с каким статусом можно печатать
-    IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
+    IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete() AND 1=0
     THEN
         IF vbStatusId = zc_Enum_Status_Erased()
         THEN
@@ -58,14 +58,13 @@ BEGIN
                         AND MovementItem.isErased   = FALSE
                         AND MovementItem.Amount     <> 0
                      )
-                     
        -- Результат
        SELECT
              tmpMI.Id
            , Object_Goods.Id                AS GoodsId
            , Object_Goods.ObjectCode        AS GoodsCode
            , Object_Goods.ValueData         AS GoodsName
-           , zfFormat_BarCode (zc_BarCodePref_Object(), Object_Goods.Id) AS IdBarCode
+           , zfFormat_BarCode ('0000' /*zc_BarCodePref_Object()*/, Object_Goods.ObjectCode) AS IdBarCode
            , ObjectString_Article.ValueData AS Article
            , MIString_PartNumber.ValueData  AS PartNumber
            , vbFromCode AS FromCode

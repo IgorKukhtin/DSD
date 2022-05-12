@@ -1398,16 +1398,9 @@ object InventoryForm: TInventoryForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inBarCode'
-          Value = ''
-          Component = edBarCode3
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'inPartNumber'
           Value = Null
+          Component = edPartNumber
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1458,14 +1451,6 @@ object InventoryForm: TInventoryForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inBarCode'
-          Value = Null
-          Component = edBarCode2
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'inPartNumber'
           Value = Null
           Component = edPartNumber
@@ -1476,6 +1461,7 @@ object InventoryForm: TInventoryForm
         item
           Name = 'inAmount'
           Value = 1.000000000000000000
+          Component = edAmount
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1518,17 +1504,9 @@ object InventoryForm: TInventoryForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'GoodsId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'GoodsId'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'inPartNumber'
           Value = Null
+          Component = edPartNumber
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1536,7 +1514,17 @@ object InventoryForm: TInventoryForm
         item
           Name = 'inAmount'
           Value = 1.000000000000000000
+          Component = edAmount
           DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsId'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -2341,65 +2329,8 @@ object InventoryForm: TInventoryForm
     Left = 752
     Top = 56
   end
-  object spGet_dop: TdsdStoredProc
-    StoredProcName = 'gpGet_byBarcode'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inBarCode'
-        Value = Null
-        Component = edBarCode2
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPartNumber'
-        Value = Null
-        Component = edPartNumber
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmount'
-        Value = 0.000000000000000000
-        Component = edAmount
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BarCode'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'inBarCode'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PartNumber'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'inPartNumber'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Amount'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'inAmount'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 392
-    Top = 456
-  end
   object spGet_dop1: TdsdStoredProc
-    StoredProcName = 'gpGet_MIInventory_byBarcode'
+    StoredProcName = 'gpGet_MI_byBarcode'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2445,7 +2376,7 @@ object InventoryForm: TInventoryForm
     Top = 456
   end
   object spGet_dop2: TdsdStoredProc
-    StoredProcName = 'gpGet_MIInventory_byBarcode'
+    StoredProcName = 'gpGet_MI_byBarcode'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2492,7 +2423,7 @@ object InventoryForm: TInventoryForm
     Top = 456
   end
   object spGet_dop3: TdsdStoredProc
-    StoredProcName = 'gpGet_MIInventory_byBarcode'
+    StoredProcName = 'gpGet_MI_byBarcode'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2590,6 +2521,13 @@ object InventoryForm: TInventoryForm
         Value = Null
         Component = edPartNumber
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount'
+        Value = Null
+        Component = edAmount
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

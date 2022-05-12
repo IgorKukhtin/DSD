@@ -10,7 +10,6 @@ CREATE OR REPLACE FUNCTION gpGet_MI_Inventory(
     IN inSession           TVarChar     -- сессия пользователя
 )
 RETURNS TABLE (Id                 Integer
-             , PartionId          Integer
              , GoodsId            Integer
              , GoodsCode          Integer
              , GoodsName          TVarChar
@@ -80,7 +79,6 @@ BEGIN
                              , COALESCE (MIString_PartNumber.ValueData, '')
                      )
            SELECT -1                               :: Integer AS Id
-                , 0                                :: Integer AS PartionId
                 , Object_Goods.Id                             AS GoodsId
                 , Object_Goods.ObjectCode                     AS GoodsCode
                 , Object_Goods.ValueData                      AS GoodsName
@@ -94,7 +92,7 @@ BEGIN
                 , (SELECT lpGet.ValuePrice FROM lpGet_MovementItem_PriceList (vbOperDate, inGoodsId, vbUserId) AS lpGet) :: TFloat  AS Price
 
                 , COALESCE (inAmount, 1)                                          :: TFloat AS OperCount
-                , (/*COALESCE (inAmount,1)*/ + COALESCE (tmpMI.Amount, 0))        :: TFloat AS TotalCount
+                , (/*COALESCE (inAmount,1) +*/ COALESCE (tmpMI.Amount, 0))        :: TFloat AS TotalCount
                 , COALESCE (tmpRemains.Remains, 0)                                :: TFloat AS AmountRemains
                 , (COALESCE (tmpMI.Amount, 0) - COALESCE (tmpRemains.Remains, 0)) :: TFloat AS AmountDiff
 
@@ -128,7 +126,6 @@ BEGIN
 
           UNION
            SELECT -1         :: Integer AS Id
-                , 0                     AS PartionId
                 , 0                     AS GoodsId
                 , 0                     AS GoodsCode
                 , '' ::TVarChar         AS GoodsName

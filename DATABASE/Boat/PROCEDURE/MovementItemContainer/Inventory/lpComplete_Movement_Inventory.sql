@@ -177,6 +177,7 @@ BEGIN
                                           -- № п/п
                                         , ROW_NUMBER() OVER (PARTITION BY _tmpItem.GoodsId, _tmpItem.PartNumber ORDER BY COALESCE (Container.Amount, 0) DESC, Object_PartionGoods.OperDate DESC) AS Ord
                                    FROM _tmpItem
+                                        -- на этом подразделение НЕТ остатка
                                         LEFT JOIN tmpContainer_Count ON tmpContainer_Count.GoodsId    = _tmpItem.GoodsId
                                                                     AND tmpContainer_Count.PartNumber = _tmpItem.PartNumber
                                         INNER JOIN Object_PartionGoods ON Object_PartionGoods.ObjectId = _tmpItem.GoodsId
@@ -184,8 +185,8 @@ BEGIN
                                                                      ON MIString_PartNumber.MovementItemId = Object_PartionGoods.MovementItemId
                                                                     AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
                                         -- если есть остаток на "другом" Подразделении
-                                        LEFT JOIN Container ON Container.PartionId = Object_PartionGoods.MovementItemId
-                                                           AND Container.Amount > 0
+                                        INNER JOIN Container ON Container.PartionId = Object_PartionGoods.MovementItemId
+                                                            AND Container.Amount > 0
                                    WHERE tmpContainer_Count.GoodsId IS NULL
                                      AND COALESCE (MIString_PartNumber.ValueData, '') = _tmpItem.PartNumber
                                      AND _tmpItem.OperCount > 0
@@ -608,10 +609,10 @@ BEGIN
                                 , inUserId     := inUserId
                                  );
 
-   /* RAISE EXCEPTION 'Ошибка. <%>  <%>  <%>  <%>', (select count() from _tmpItem  where _tmpItem.MovementItemId = 56225)
-                  , (select count() from _tmpItem_Child  where _tmpItem_Child.MovementItemId = 56225)
-                  , (select count() from _tmpRemains  where _tmpRemains.GoodsId = 14982)
-                  , (select count() from _tmpMIContainer_insert)
+   /* RAISE EXCEPTION 'Ошибка. <%>  <%>  <%>  <%>', (select count(*) from _tmpItem  where _tmpItem.MovementItemId = 56225)
+                  , (select count(*) from _tmpItem_Child  where _tmpItem_Child.MovementItemId = 56225)
+                  , (select count(*) from _tmpRemains  where _tmpRemains.GoodsId = 14982)
+                  , (select count(*) from _tmpMIContainer_insert)
                                        ;*/
 
 END;

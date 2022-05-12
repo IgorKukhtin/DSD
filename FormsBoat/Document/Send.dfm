@@ -2191,16 +2191,9 @@ object SendForm: TSendForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inBarCode'
-          Value = ''
-          Component = edBarCode1
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'inPartNumber'
           Value = Null
+          Component = edPartNumber
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2208,6 +2201,7 @@ object SendForm: TSendForm
         item
           Name = 'inAmount'
           Value = 1.000000000000000000
+          Component = edAmount
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2250,14 +2244,6 @@ object SendForm: TSendForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inBarCode'
-          Value = ''
-          Component = edBarCode2
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'inPartNumber'
           Value = ''
           Component = edPartNumber
@@ -2268,6 +2254,7 @@ object SendForm: TSendForm
         item
           Name = 'inAmount'
           Value = 1.000000000000000000
+          Component = edAmount
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2310,16 +2297,9 @@ object SendForm: TSendForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inBarCode'
-          Value = ''
-          Component = edBarCode3
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'inPartNumber'
           Value = Null
+          Component = edPartNumber
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -3376,13 +3356,20 @@ object SendForm: TSendForm
         Component = edPartNumber
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount'
+        Value = Null
+        Component = edAmount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 760
     Top = 320
   end
   object spGet_dop1: TdsdStoredProc
-    StoredProcName = 'gpGet_MI_Send_byBarcode'
+    StoredProcName = 'gpGet_MI_byBarcode'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -3428,7 +3415,7 @@ object SendForm: TSendForm
     Top = 232
   end
   object spGet_dop2: TdsdStoredProc
-    StoredProcName = 'gpGet_MI_Send_byBarcode'
+    StoredProcName = 'gpGet_MI_byBarcode'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -3475,7 +3462,7 @@ object SendForm: TSendForm
     Top = 232
   end
   object spGet_dop3: TdsdStoredProc
-    StoredProcName = 'gpGet_MI_Send_byBarcode'
+    StoredProcName = 'gpGet_MI_byBarcode'
     DataSets = <>
     OutputType = otResult
     Params = <

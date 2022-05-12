@@ -397,6 +397,20 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPartNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
@@ -455,13 +469,6 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PartionId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PartionId'
         MultiSelectSeparator = ','
       end
       item

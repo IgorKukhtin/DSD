@@ -129,7 +129,6 @@ type
     edAmount: TcxCurrencyEdit;
     cxLabel29: TcxLabel;
     EnterMoveNext2: TEnterMoveNext;
-    spGet_dop: TdsdStoredProc;
     actGoodsItem2: TdsdInsertUpdateAction;
     spGet_dop1: TdsdStoredProc;
     spGet_dop2: TdsdStoredProc;

@@ -44,6 +44,13 @@ BEGIN
      -- заменили
      IF COALESCE (inCountForPrice, 0) = 0 THEN inCountForPrice:= 1; END IF;
 
+     --
+     IF inEKPrice IS NULL
+     THEN
+         RAISE EXCEPTION 'Ошибка. inEKPrice  <%>  <%> ', inEKPrice , inMovementItemId;
+     END IF;
+
+
      -- нашли - Группа товара
      vbGoodsGroupId:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inObjectId AND OL.DescId = zc_ObjectLink_Goods_GoodsGroup());
      -- нашли - Категория
