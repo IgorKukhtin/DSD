@@ -3261,36 +3261,6 @@ object SendForm: TSendForm
     Left = 201
     Top = 472
   end
-  object spInsertUpdate_BarCode: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_Send_BarCode'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBarCode_Goods'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 918
-    Top = 311
-  end
   object EnterMoveNext1: TEnterMoveNext
     EnterMoveNextList = <
       item

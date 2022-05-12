@@ -181,7 +181,6 @@ type
     AmountSecond: TcxGridDBColumn;
     actPrint2: TdsdPrintAction;
     bbPrint2: TdxBarButton;
-    spInsertUpdate_BarCode: TdsdStoredProc;
     Panel2: TPanel;
     cxLabel6: TcxLabel;
     edBarCode1: TcxTextEdit;
