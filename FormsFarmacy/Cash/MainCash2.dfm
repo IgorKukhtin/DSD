@@ -23,7 +23,6 @@ inherited MainCashForm2: TMainCashForm2
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitTop = 500
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
@@ -305,7 +304,6 @@ inherited MainCashForm2: TMainCashForm2
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
-    ExplicitTop = 497
   end
   object MainPanel: TPanel [2]
     Left = 0
@@ -315,7 +313,6 @@ inherited MainCashForm2: TMainCashForm2
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitHeight = 148
     object MainGrid: TcxGrid
       Left = 0
       Top = 21
@@ -323,7 +320,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 101
       Align = alClient
       TabOrder = 0
-      ExplicitHeight = 82
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnCanFocusRecord = MainGridDBTableViewCanFocusRecord
@@ -1151,7 +1147,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 45
       Align = alBottom
       TabOrder = 1
-      ExplicitTop = 103
       object ShapeState: TShape
         Left = 754
         Top = 25
@@ -10275,5 +10270,32 @@ inherited MainCashForm2: TMainCashForm2
     AfterExecute = spLayoutFileFTPParamsAfterExecute
     Left = 48
     Top = 592
+  end
+  object RemainsUnitOneCDS: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <>
+    IndexDefs = <>
+    Params = <>
+    StoreDefs = True
+    Left = 792
+    Top = 216
+  end
+  object spRemainsUnitOne: TdsdStoredProc
+    StoredProcName = 'gpSelect_DiscountExternal_RemainsUnitOne'
+    DataSet = RemainsUnitOneCDS
+    DataSets = <
+      item
+        DataSet = RemainsUnitOneCDS
+      end>
+    Params = <
+      item
+        Name = 'inDiscountExternalId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 792
+    Top = 168
   end
 end

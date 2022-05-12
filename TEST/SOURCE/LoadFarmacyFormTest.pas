@@ -3481,10 +3481,10 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerCountForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerCountForm');
-
+}
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalPrioritiesForm'));
     TdsdFormStorageFactory.GetStorage.Load('TJuridicalPrioritiesForm');
-}
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashSettingsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TCashSettingsEditForm');
  {

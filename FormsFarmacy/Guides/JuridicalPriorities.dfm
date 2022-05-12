@@ -236,6 +236,58 @@ inherited JuridicalPrioritiesForm: TJuridicalPrioritiesForm
         end>
       isShowModal = False
     end
+    object mactSetErased: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSetErased
+        end
+        item
+          Action = actRefresh
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1074#1089#1077#1084' '#1089#1090#1088#1086#1095#1082#1072#1084
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1074#1089#1077#1084' '#1089#1090#1088#1086#1095#1082#1072#1084
+      ImageIndex = 7
+    end
+    object actSetErased: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSetErased
+      StoredProcList = <
+        item
+          StoredProc = spSetErased
+        end>
+      Caption = 'actSetErased'
+    end
+    object mactSetUnErased: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSetUnErased
+        end
+        item
+          Action = actRefresh
+        end>
+      View = cxGridDBTableView
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1074#1089#1077#1084' '#1089#1090#1088#1086#1095#1082#1072#1084
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1074#1089#1077#1084' '#1089#1090#1088#1086#1095#1082#1072#1084
+      ImageIndex = 79
+    end
+    object actSetUnErased: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSetUnErased
+      StoredProcList = <
+        item
+          StoredProc = spSetUnErased
+        end>
+      Caption = 'actSetUnErased'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -271,6 +323,14 @@ inherited JuridicalPrioritiesForm: TJuridicalPrioritiesForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
         end
         item
           Visible = True
@@ -344,6 +404,14 @@ inherited JuridicalPrioritiesForm: TJuridicalPrioritiesForm
       Action = dsdUnErased
       Category = 0
     end
+    object dxBarButton2: TdxBarButton
+      Action = mactSetErased
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = mactSetUnErased
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 280
@@ -415,5 +483,71 @@ inherited JuridicalPrioritiesForm: TJuridicalPrioritiesForm
     PackSize = 1
     Left = 192
     Top = 192
+  end
+  object spSetUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_JuridicalPriorities_IsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsSetErased'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 408
+    Top = 88
+  end
+  object spSetErased: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_JuridicalPriorities_IsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsSetErased'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 408
+    Top = 160
   end
 end

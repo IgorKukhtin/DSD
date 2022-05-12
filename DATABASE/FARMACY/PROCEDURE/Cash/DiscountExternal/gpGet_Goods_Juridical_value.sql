@@ -84,7 +84,7 @@ BEGIN
                                , MovementLinkObject_To.ObjectId                                  AS UnitID
                                , COALESCE(tmpSupplier.SupplierID, 0)::Integer                    AS CodeRazom
                                , MIN(Container.Id)                                               AS Id
-                               , MIN(COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId)) AS MIncomeId
+                               , MIN(MI_Income.MovementId)                                      AS MIncomeId
                           FROM tmpContainerAll AS Container
                                 LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
                                                               ON ContainerLinkObject_MovementItem.Containerid = Container.Id
@@ -92,20 +92,15 @@ BEGIN
                                 LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
                                 -- элемент прихода
                                 LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
-                                -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
-                                LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
-                                                            ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
-                                                           AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
-                                -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
-                                LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
-                                                                     -- AND 1=0
 
-                                LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId)
+                                LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = MI_Income.MovementId
+                                                                     AND Movement_Income.DescId = zc_Movement_Income()  
+                                
                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                             ON MovementLinkObject_From.MovementId = COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId)
+                                                             ON MovementLinkObject_From.MovementId = MI_Income.MovementId
                                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                             ON MovementLinkObject_To.MovementId = COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId)
+                                                             ON MovementLinkObject_To.MovementId = MI_Income.MovementId
                                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
 
                                 LEFT JOIN tmpSupplier ON tmpSupplier.JuridicalId = MovementLinkObject_From.ObjectId
@@ -114,6 +109,7 @@ BEGIN
 
                           WHERE COALESCE(tmpSupplier.SupplierID, 0) > 0
                             AND (inDiscountExternal <> 15645454 OR Movement_Income.OperDate < '01.05.2021')
+                            AND COALESCE(MovementLinkObject_To.ObjectId, 0) = vbUnitId
                           GROUP BY MovementLinkObject_From.ObjectId
                                  , MovementLinkObject_To.ObjectId
                                  , COALESCE(tmpSupplier.SupplierID, 0)
@@ -129,7 +125,7 @@ BEGIN
          LEFT JOIN tmpRemains ON 1 = 1
          LEFT JOIN tmpDiscountExternal ON 1 = 1
     WHERE tmpRemains.Remains >= inAmount
-    ORDER BY Container.UnitId <> vbUnitId, Movement.OperDate
+    ORDER BY Movement.OperDate
     LIMIT 1;
     
     SELECT COALESCE(ObjectFloat_DiscountProcent.ValueData, 0)
@@ -188,5 +184,4 @@ ALTER FUNCTION gpGet_Goods_Juridical_value (Integer, Integer, TFloat, TVarChar) 
 
 --select * from gpGet_Goods_Juridical_value_Ol(inDiscountExternal := 15466976 , inGoodsId := 2431326 , inAmount := 2 ,  inSession := '3');
 
-
-select * from gpGet_Goods_Juridical_value(inDiscountExternal := 2807930 , inGoodsId := 644105 , inAmount := 1 ,  inSession := '3');
+select * from gpGet_Goods_Juridical_value(inDiscountExternal := 4521216 , inGoodsId := 5925280 , inAmount := 1 ,  inSession := '3');
