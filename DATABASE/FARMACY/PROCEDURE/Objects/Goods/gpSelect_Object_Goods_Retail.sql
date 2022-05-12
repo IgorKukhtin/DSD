@@ -29,20 +29,14 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , ConditionsKeepName TVarChar
              , MorionCode Integer, BarCode TVarChar, isErrorBarCode Boolean, BarCode_Color  Integer --, OrdBar Integer
              , NDS_PriceList TFloat, isNDS_dif Boolean
-             , isNotUploadSites Boolean, DoesNotShare Boolean, AllowDivision Boolean
+             , isNotUploadSites Boolean
              , GoodsAnalog TVarChar, GoodsAnalogATC TVarChar, GoodsActiveSubstance TVarChar
-             , NotTransferTime boolean
              , isResolution_224  boolean
              , DateUpdateClose TDateTime
              , isExceptionUKTZED boolean
-             , isPresent boolean
              , isOnlySP boolean
-             , SummaWages TFloat, PercentWages TFloat, SummaWagesStore TFloat, PercentWagesStore TFloat
-             , Multiplicity TFloat, isMultiplicityError boolean
              , isUkrainianTranslation boolean
              , MakerName TVarChar, FormDispensingId Integer, FormDispensingName TVarChar, NumberPlates Integer, QtyPackage Integer, isRecipe boolean
-             , isExpDateExcSite boolean, isHideOnTheSite boolean
-             , DiscontSiteStart TDateTime, DiscontSiteEnd TDateTime, DiscontAmountSite TFloat, DiscontPercentSite TFloat
 
               ) AS
 $BODY$
@@ -318,24 +312,14 @@ BEGIN
            , CASE WHEN tmpPricelistItems.GoodsNDS IS NOT NULL AND inContractId <> 0 AND
              COALESCE (tmpPricelistItems.GoodsNDS, 0) <> tmpNDS.NDS THEN TRUE ELSE FALSE END AS isNDS_dif
            , Object_Goods_Main.isNotUploadSites
-           , Object_Goods_Main.isDoesNotShare                                    AS DoesNotShare
-           , Object_Goods_Main.isAllowDivision                                   AS AllowDivision
            , Object_Goods_Main.Analog                                            AS GoodsAnalog
            , Object_Goods_Main.AnalogATC                                         AS GoodsAnalogATC
            , Object_Goods_Main.ActiveSubstance                                   AS GoodsActiveSubstance
-           , Object_Goods_Main.isNotTransferTime                                 AS NotTransferTime
 
            , Object_Goods_Main.isResolution_224                                  AS isResolution_224
            , Object_Goods_Main.DateUpdateClose                                   AS DateUpdateClose
            , Object_Goods_Main.isExceptionUKTZED                                 AS isExceptionUKTZED
-           , Object_Goods_Main.isPresent                                         AS isPresent
            , Object_Goods_Main.isOnlySP                                          AS isOnlySP
-           , Object_Goods_Retail.SummaWages                                      AS SummaWages
-           , Object_Goods_Retail.PercentWages                                    AS PercentWages
-           , Object_Goods_Retail.SummaWagesStore                                 AS SummaWagesStore
-           , Object_Goods_Retail.PercentWagesStore                               AS PercentWagesStore
-           , Object_Goods_Main.Multiplicity
-           , Object_Goods_Main.isMultiplicityError
            , Trim(COALESCE(Object_Goods_Main.NameUkr, '')) <> ''                 AS isUkrainianTranslation
 
            , Object_Goods_Main.MakerName
@@ -344,12 +328,6 @@ BEGIN
            , Object_Goods_Main.NumberPlates
            , Object_Goods_Main.QtyPackage
            , Object_Goods_Main.isRecipe
-           , Object_Goods_Main.isExpDateExcSite
-           , Object_Goods_Main.isHideOnTheSite
-           , Object_Goods_Retail.DiscontSiteStart
-           , Object_Goods_Retail.DiscontSiteEnd
-           , Object_Goods_Retail.DiscontAmountSite
-           , Object_Goods_Retail.DiscontPercentSite
 
       FROM Object_Goods_Retail
 

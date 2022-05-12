@@ -82,6 +82,8 @@ type
     bbShowAll: TdxBarButton;
     ProvinceCityName: TcxGridDBColumn;
     OrderSummComment: TcxGridDBColumn;
+    UpdateUserName: TcxGridDBColumn;
+    UpdateDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

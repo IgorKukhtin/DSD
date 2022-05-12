@@ -945,6 +945,13 @@ type
     N349: TMenuItem;
     actReport_CompetitorMarkups: TdsdOpenForm;
     N350: TMenuItem;
+    N351: TMenuItem;
+    actGoodsWages: TdsdOpenForm;
+    N352: TMenuItem;
+    actGoodsSite: TdsdOpenForm;
+    N353: TMenuItem;
+    actGoodsCash: TdsdOpenForm;
+    N354: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

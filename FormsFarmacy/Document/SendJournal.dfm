@@ -1517,6 +1517,29 @@ inherited SendJournalForm: TSendJournalForm
       Hint = #1044#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1058#1058#1053
       ImageIndex = 19
     end
+    object actPrintSticker: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1085#1072#1082#1083#1077#1077#1082' '#1076#1083#1103' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1087#1086' '#1057#1059#1053
+      Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072#1082#1083#1077#1077#1082' '#1076#1083#1103' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1087#1086' '#1057#1059#1053
+      ImageIndex = 18
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'FromName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <>
+      ReportName = #1055#1077#1095#1072#1090#1100' '#1085#1072#1082#1083#1077#1077#1082' '#1076#1083#1103' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1087#1086' '#1057#1059#1053
+      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1085#1072#1082#1083#1077#1077#1082' '#1076#1083#1103' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1087#1086' '#1057#1059#1053
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1627,6 +1650,14 @@ inherited SendJournalForm: TSendJournalForm
         item
           Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintSticker'
         end
         item
           Visible = True
@@ -1820,6 +1851,11 @@ inherited SendJournalForm: TSendJournalForm
     object bbWayTTNToXLS: TdxBarButton
       Action = mactWayTTNToXLS
       Category = 0
+    end
+    object bbPrintSticker: TdxBarButton
+      Action = actPrintSticker
+      Category = 0
+      ImageIndex = 20
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

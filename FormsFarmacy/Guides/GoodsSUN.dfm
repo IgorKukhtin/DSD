@@ -473,50 +473,6 @@ inherited GoodsSUNForm: TGoodsSUNForm
             Options.Editing = False
             Width = 90
           end
-          object SummaWages: TcxGridDBColumn
-            Caption = #1047#1072' 1 '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1047#1055' '#1076#1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072
-            DataBinding.FieldName = 'SummaWages'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091
-            Options.Editing = False
-            Width = 85
-          end
-          object PercentWages: TcxGridDBColumn
-            Caption = '% '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1047#1055' '#1076#1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072
-            DataBinding.FieldName = 'PercentWages'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091
-            Options.Editing = False
-            Width = 86
-          end
-          object SummaWagesStore: TcxGridDBColumn
-            Caption = #1047#1072' 1 '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1047#1055' '#1076#1083#1103' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072
-            DataBinding.FieldName = 'SummaWagesStore'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 79
-          end
-          object PercentWagesStore: TcxGridDBColumn
-            Caption = '% '#1086#1090' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1047#1055' '#1076#1083#1103' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072
-            DataBinding.FieldName = 'PercentWagesStore'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 86
-          end
           object isOnlySP: TcxGridDBColumn
             Caption = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1057#1055' "'#1044#1086#1089#1090#1091#1087#1085#1110' '#1083#1110#1082#1080'"'
             DataBinding.FieldName = 'isOnlySP'
@@ -1331,110 +1287,6 @@ inherited GoodsSUNForm: TGoodsSUNForm
         end>
       Caption = 'execUpdate_isSupplementSUN1'
     end
-    object actUpdate_SummaWages: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      BeforeAction = actExecuteDialog_Update_SummaWages
-      ActionList = <
-        item
-          Action = actExec_Update_SummaWages
-        end>
-      View = cxGridDBTableView
-      Caption = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' "'#1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076 +
-        #1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072'"'
-      Hint = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' "'#1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076 +
-        #1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072'"'
-      ImageIndex = 43
-    end
-    object actExec_Update_SummaWages: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_SummaWages
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_SummaWages
-        end>
-      Caption = 'actExec_Update_SummaWages'
-    end
-    object actExecuteDialog_Update_SummaWages: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actExecuteDialog_Update_SummaWages'
-      FormName = 'TSummaDialogForm'
-      FormNameParam.Value = 'TSummaDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Summa'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'SummaWages'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Label'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'LabelSummaWages'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actUpdate_PercentWages: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      BeforeAction = actExecuteDialogUpdate_PercentWages
-      ActionList = <
-        item
-          Action = actExec_Update_PercentWages
-        end>
-      View = cxGridDBTableView
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "% '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076#1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "% '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076#1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072'"'
-      ImageIndex = 43
-    end
-    object actExec_Update_PercentWages: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <>
-      Caption = 'actExec_Update_PercentWages'
-    end
-    object actExecuteDialogUpdate_PercentWages: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actExecuteDialogUpdate_PercentWages'
-      FormName = 'TSummaDialogForm'
-      FormNameParam.Value = 'TSummaDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Summa'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'PercentWages'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Label'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'LabelPercentWages'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
     object actGetImportSetting_Goods_inSupplementSUN1: TdsdExecStoredProc
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -1473,114 +1325,6 @@ inherited GoodsSUNForm: TGoodsSUNForm
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1082' '#1057#1059#1053'1'
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1082' '#1057#1059#1053'1'
       ImageIndex = 66
-    end
-    object actUpdate_SummaWagesStore: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      BeforeAction = actExecuteDialog_Update_SummaWagesStore
-      ActionList = <
-        item
-          Action = actExec_Update_SummaWagesStore
-        end>
-      View = cxGridDBTableView
-      Caption = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' "'#1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1088#1087 +
-        #1083#1072#1090#1091' '#1076#1083#1103' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072'"'
-      Hint = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' "'#1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1088#1087 +
-        #1083#1072#1090#1091' '#1076#1083#1103' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072'"'
-      ImageIndex = 43
-    end
-    object actExec_Update_SummaWagesStore: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_SummaWagesStore
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_SummaWagesStore
-        end>
-      Caption = 'actExec_Update_SummaWagesStore'
-    end
-    object actExecuteDialog_Update_SummaWagesStore: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actExecuteDialog_Update_SummaWagesStore'
-      FormName = 'TSummaDialogForm'
-      FormNameParam.Value = 'TSummaDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Summa'
-          Value = 0.000000000000000000
-          Component = FormParams
-          ComponentItem = 'SummaWagesStore'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Label'
-          Value = #1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091
-          Component = FormParams
-          ComponentItem = 'LabelSummaWagesStore'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actUpdate_PercentWagesStore: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      BeforeAction = actExecuteDialogUpdate_PercentWagesStore
-      ActionList = <
-        item
-          Action = actExec_Update_PercentWagesStore
-        end>
-      View = cxGridDBTableView
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "% '#1086#1090' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076#1083#1103' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "% '#1086#1090' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076#1083#1103' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072'"'
-      ImageIndex = 43
-    end
-    object actExec_Update_PercentWagesStore: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_PercentWagesStore
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_PercentWagesStore
-        end>
-      Caption = 'actExec_Update_PercentWagesStore'
-    end
-    object actExecuteDialogUpdate_PercentWagesStore: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actExecuteDialogUpdate_PercentWagesStore'
-      FormName = 'TSummaDialogForm'
-      FormNameParam.Value = 'TSummaDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Summa'
-          Value = 0.000000000000000000
-          Component = FormParams
-          ComponentItem = 'PercentWagesStore'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Label'
-          Value = '% '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091
-          Component = FormParams
-          ComponentItem = 'LabelPercentWagesStore'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
     end
     object actSetUnitSupplementSUN1Out: TMultiAction
       Category = 'DSDLib'
@@ -2273,22 +2017,6 @@ inherited GoodsSUNForm: TGoodsSUNForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton3'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton4'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton6'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton7'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarButton17'
         end
         item
@@ -2393,24 +2121,44 @@ inherited GoodsSUNForm: TGoodsSUNForm
       ImageIndex = 79
     end
     object dxBarButton3: TdxBarButton
-      Action = actUpdate_SummaWages
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' "'#1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076 +
+        #1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072'"'
       Category = 0
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' "'#1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076 +
+        #1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072'"'
+      Visible = ivAlways
+      ImageIndex = 43
     end
     object dxBarButton4: TdxBarButton
-      Action = actUpdate_PercentWages
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "% '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076#1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072'"'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "% '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076#1083#1103' '#1087#1077#1088#1074#1086#1089#1090#1086#1083#1100#1085#1080#1082#1072'"'
+      Visible = ivAlways
+      ImageIndex = 43
     end
     object dxBarButton5: TdxBarButton
       Action = macLoadinSupplementSUN1
       Category = 0
     end
     object dxBarButton6: TdxBarButton
-      Action = actUpdate_SummaWagesStore
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' "'#1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1088#1087 +
+        #1083#1072#1090#1091' '#1076#1083#1103' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072'"'
       Category = 0
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' "'#1057#1090#1072#1090#1080#1095#1080#1089#1082#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1079#1072' 1 '#1077#1076#1080#1085#1080#1094#1091' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1088#1087 +
+        #1083#1072#1090#1091' '#1076#1083#1103' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072'"'
+      Visible = ivAlways
+      ImageIndex = 43
     end
     object dxBarButton7: TdxBarButton
-      Action = actUpdate_PercentWagesStore
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "% '#1086#1090' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076#1083#1103' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072'"'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "% '#1086#1090' '#1087#1088#1080#1077#1084#1072' '#1090#1086#1074#1072#1088#1072' '#1074' '#1079#1072#1088#1087#1083#1072#1090#1091' '#1076#1083#1103' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072'"'
+      Visible = ivAlways
+      ImageIndex = 43
     end
     object dxBarButton8: TdxBarButton
       Action = actSetUnitSupplementSUN1Out
@@ -3234,58 +2982,6 @@ inherited GoodsSUNForm: TGoodsSUNForm
     Left = 512
     Top = 320
   end
-  object spUpdate_SummaWages: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_SummaWages'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSummaWages'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'SummaWages'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 520
-    Top = 120
-  end
-  object spUpdate_PercentWages: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_PercentWages'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPercentWages'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PercentWages'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 512
-    Top = 168
-  end
   object spGetImportSetting_Goods_inSupplementSUN1: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
     DataSets = <
@@ -3317,58 +3013,6 @@ inherited GoodsSUNForm: TGoodsSUNForm
     PackSize = 1
     Left = 328
     Top = 112
-  end
-  object spUpdate_PercentWagesStore: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_PercentWagesStore'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPercentWagesStore'
-        Value = 0.000000000000000000
-        Component = FormParams
-        ComponentItem = 'PercentWagesStore'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 512
-    Top = 272
-  end
-  object spUpdate_SummaWagesStore: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_SummaWagesStore'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSummaWagesStore'
-        Value = 0.000000000000000000
-        Component = FormParams
-        ComponentItem = 'SummaWagesStore'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 512
-    Top = 224
   end
   object spSetUnitSupplementSUN1Out: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_UnitSupplementSUN1Out'

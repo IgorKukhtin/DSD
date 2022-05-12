@@ -1,11 +1,14 @@
 -- Function: gpUpdate_MI_CalculationSaleSP()
 
-DROP FUNCTION IF EXISTS gpUpdate_MI_CalculationSaleSP(Integer, Text, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_CalculationSaleSP(Integer, Integer, Integer, TFloat, Text, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_CalculationSaleSP(
-    IN inUnitId          Integer   , -- Подразделение
-    IN inDataJsonList    Text      , -- json Данные    
-    IN inSession         TVarChar    -- сессия пользователя
+    IN inJuridicalId       Integer   , -- Юр. лицо
+    IN inPartnerMedicalId  Integer   , -- Мед. учереждение
+    IN inNDSKind           Integer   , -- НДС
+    IN inPercentSP         TFloat    , -- % скидки
+    IN inDataJsonList      Text      , -- json Данные    
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS VOID
       /*TABLE (MovementItemId           Integer,
@@ -31,7 +34,8 @@ BEGIN
   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
   vbUserId := inSession;
 
-  IF COALESCE (inUnitId, 0) = 0
+  IF COALESCE (inJuridicalId, 0) = 0 OR COALESCE (inPartnerMedicalId, 0) = 0 OR
+     COALESCE (inNDSKind, 0) = 0 OR COALESCE (inPercentSP, 0) = 0
   THEN
     RAISE EXCEPTION 'Перераспределение сумм надо запускать по одному подразделению.';
   END IF;
@@ -57,10 +61,10 @@ BEGIN
   SELECT *
   FROM json_populate_recordset(null::tblDataJSON, replace(replace(replace(inDataJsonList, '&quot;', '\"'), CHR(9),''), CHR(10),'')::json);
     
-  IF EXISTS (SELECT 1 FROM tblDataJSON WHERE COALESCE (tblDataJSON.UnitId, 0) <> inUnitId)
+  /*IF EXISTS (SELECT 1 FROM tblDataJSON WHERE COALESCE (tblDataJSON.UnitId, 0) <> inUnitId)
   THEN
     RAISE EXCEPTION 'В данных обнаружены разные подразделения.';
-  END IF;
+  END IF;*/
   
   
   ALTER TABLE tblDataJSON ADD SumCompSale TFloat;
@@ -208,8 +212,8 @@ BEGIN
         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSP(), DataJSON.MovementItemId, DataJSON.PriceSP)
   FROM tblDataJSON AS DataJSON;
                                           
-/*  -- Результат
-  RETURN QUERY
+  -- Результат
+/*  RETURN QUERY
   SELECT DataJSON.MovementItemId
        , DataJSON.UnitId
        , DataJSON.SummOriginal
@@ -222,6 +226,13 @@ BEGIN
        , DataJSON.PriceSP
   FROM tblDataJSON AS DataJSON
   ;*/
+  
+    -- !!!ВРЕМЕННО для ТЕСТА!!!
+    IF inSession = zfCalc_UserAdmin()
+    THEN
+        RAISE EXCEPTION 'Тест прошел успешно для <%>', inSession;
+    END IF;
+
   
 END;
 $BODY$
@@ -237,7 +248,6 @@ LANGUAGE PLPGSQL VOLATILE;
 -- тест 
 
 
-select * from gpUpdate_MI_CalculationSaleSP(inUnitId := 377605 , inDataJsonList := '[{"movementitemid":506913770,"unitid":377605,"summoriginal":192.12,"summsale":null,"priceooc":155.94,"changepercent":100,"amount":1.2},{"movementitemid":506665686,"unitid":377605,"summoriginal":342.8,"summsale":null,"priceooc":172.67,"changepercent":100,"amount":2},{"movementitemid":506913030,"unitid":377605,"summoriginal":342.8,"summsale":null,"priceooc":172.67,"changepercent":100,"amount":2}]' ,  inSession := '3');
-
+select * from gpUpdate_MI_CalculationSaleSP(inJuridicalId := 1311462 , inPartnerMedicalId := 3751525 , inNDSKind := 9 , inPercentSP := 100 , inDataJsonList := '[{"movementitemid":512356992,"unitid":10779386,"summoriginal":434,"summsale":null,"priceooc":225.24,"changepercent":100,"amount":2},{"movementitemid":512928767,"unitid":10779386,"summoriginal":214.5,"summsale":null,"priceooc":225.24,"changepercent":100,"amount":1},{"movementitemid":511832412,"unitid":10779386,"summoriginal":195,"summsale":null,"priceooc":304.13,"changepercent":100,"amount":1},{"movementitemid":512310420,"unitid":10779386,"summoriginal":305.7,"summsale":null,"priceooc":338.54,"changepercent":100,"amount":1},{"movementitemid":511817668,"unitid":10779386,"summoriginal":154.15,"summsale":null,"priceooc":338.54,"changepercent":100,"amount":0.5},{"movementitemid":512627577,"unitid":10779386,"summoriginal":940.8,"summsale":null,"priceooc":1392.18,"changepercent":100,"amount":1},{"movementitemid":511097531,"unitid":10779386,"summoriginal":145,"summsale":null,"priceooc":118.65,"changepercent":100,"amount":1},{"movementitemid":511727343,"unitid":10779386,"summoriginal":331,"summsale":null,"priceooc":165.2,"changepercent":100,"amount":2},{"movementitemid":511779515,"unitid":10779386,"summoriginal":116.51,"summsale":null,"priceooc":319.47,"changepercent":100,"amount":0.375},{"movementitemid":512595704,"unitid":10779386,"summoriginal":299,"summsale":null,"priceooc":156.4,"changepercent":100,"amount":2},{"movementitemid":512837053,"unitid":10779386,"summoriginal":274.5,"summsale":null,"priceooc":136.07,"changepercent":100,"amount":2.5},{"movementitemid":512906149,"unitid":10779386,"summoriginal":294,"summsale":null,"priceooc":159.93,"changepercent":100,"amount":2},{"movementitemid":511832316,"unitid":10779386,"summoriginal":116.5,"summsale":null,"priceooc":152.77,"changepercent":100,"amount":1},{"movementitemid":511832380,"unitid":10779386,"summoriginal":132.6,"summsale":null,"priceooc":474.27,"changepercent":100,"amount":0.3},{"movementitemid":511097337,"unitid":10779386,"summoriginal":164.8,"summsale":null,"priceooc":172.47,"changepercent":100,"amount":1},{"movementitemid":511094237,"unitid":10779386,"summoriginal":358.5,"summsale":null,"priceooc":430.23,"changepercent":100,"amount":1}]' ,  inSession := '3');
 
 

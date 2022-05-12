@@ -107,13 +107,13 @@ BEGIN
      
      ---
      vbMessageText := '';
-     -- информация по товарам Цена которых менее 1,5 грн
+     -- информация по товарам Цена которых менее 3 грн
      vbMessageText := (SELECT STRING_AGG (Object_Goods.ObjectCode ||' '||Object_Goods.ValueData, Chr(13)||Chr(13) ORDER BY Object_Goods.ValueData)
                        FROM MovementItem 
                             INNER JOIN MovementItemFloat AS MIFloat_Price
                                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                                        AND MIFloat_Price.ValueData <= 2.5
+                                                        AND MIFloat_Price.ValueData <= 3
                             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.isErased   = FALSE
@@ -123,7 +123,7 @@ BEGIN
      IF COALESCE (vbMessageText, '') <> ''
      THEN 
          outText :=  outText || ' Проверить является ли этот товар СЭМПЛОВЫМ!!!'||Chr(13)||Chr(10)||
-                                ' Есть товары с Ценой без НДС меньше чем 2,5 грн. :'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||vbMessageText;
+                                ' Есть товары с Ценой без НДС меньше чем 3 грн. :'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||vbMessageText;
      END IF;
      
      outShowMessage := COALESCE (outText, '') <> '';

@@ -283,6 +283,22 @@ object OrderSheduleForm: TOrderSheduleForm
         Options.Editing = False
         Width = 142
       end
+      object UpdateUserName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+        DataBinding.FieldName = 'UpdateUserName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object UpdateDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072'  '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
+        DataBinding.FieldName = 'UpdateDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 123
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -890,6 +906,7 @@ object OrderSheduleForm: TOrderSheduleForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = Value1
@@ -929,6 +946,8 @@ object OrderSheduleForm: TOrderSheduleForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 304
     Top = 248
   end

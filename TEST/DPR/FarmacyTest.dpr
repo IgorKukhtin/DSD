@@ -1188,7 +1188,10 @@ uses
   CompetitorMarkupsJournal in '..\..\FormsFarmacy\Document\CompetitorMarkupsJournal.pas' {CompetitorMarkupsJournalForm: TParentForm},
   PriceSubgroupsEdit in '..\..\FormsFarmacy\Guides\PriceSubgroupsEdit.pas' {PriceSubgroupsEditForm: TParentForm},
   PriceSubgroups in '..\..\FormsFarmacy\Guides\PriceSubgroups.pas' {PriceSubgroupsForm: TParentForm},
-  Report_CompetitorMarkups in '..\..\FormsFarmacy\Report\Report_CompetitorMarkups.pas' {Report_CompetitorMarkupsForm: TParentForm};
+  Report_CompetitorMarkups in '..\..\FormsFarmacy\Report\Report_CompetitorMarkups.pas' {Report_CompetitorMarkupsForm: TParentForm},
+  GoodsWages in '..\..\FormsFarmacy\Guides\GoodsWages.pas' {GoodsWagesForm: TParentForm},
+  GoodsSite in '..\..\FormsFarmacy\Guides\GoodsSite.pas' {GoodsSiteForm: TParentForm},
+  GoodsCash in '..\..\FormsFarmacy\Guides\GoodsCash.pas' {GoodsCashForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

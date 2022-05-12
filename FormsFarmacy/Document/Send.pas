@@ -218,6 +218,9 @@ type
     spUpdate_ClearAmountManual: TdsdStoredProc;
     actUpdate_ClearAmountManual: TdsdExecStoredProc;
     dxBarButton14: TdxBarButton;
+    actPrintSticker: TdsdPrintAction;
+    bbPrintSticker: TdxBarButton;
+    spPrintSticker: TdsdStoredProc;
   private
     { Private declarations }
   public

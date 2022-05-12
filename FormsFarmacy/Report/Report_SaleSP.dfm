@@ -2477,10 +2477,33 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inUnitId'
+        Name = 'inJuridicalId'
         Value = Null
-        Component = UnitGuides
+        Component = JuridicalGuides
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerMedicalId'
+        Value = Null
+        Component = HospitalGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNDSKind'
+        Value = Null
+        Component = GuidesNDSKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercentSP'
+        Value = Null
+        Component = cePercentSP
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

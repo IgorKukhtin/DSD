@@ -4502,7 +4502,7 @@
     object actGoodsSUN: TdsdOpenForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
-      Caption = #1058#1086#1074#1072#1088#1099' '#1089#1077#1090#1080' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1057#1059#1053
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1057#1059#1053
       FormName = 'TGoodsSUNForm'
       FormNameParam.Value = 'TGoodsSUNForm'
       FormNameParam.DataType = ftString
@@ -5103,9 +5103,42 @@
     object actReport_CompetitorMarkups: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
-      Caption = #1057#1088#1072#1074#1085#1077#1085#1080#1077' '#1085#1072#1094#1077#1085#1086#1082' '#1089' '#1082#1086#1085#1082#1091#1088#1077#1085#1090#1072#1084#1080
+      Caption = #1057#1080#1089#1090#1077#1084#1072' '#1086#1087#1077#1088#1072#1090#1080#1074#1085#1086#1075#1086' '#1084#1086#1085#1080#1090#1086#1088#1080#1085#1075#1072' '#1082#1086#1085#1082#1091#1088#1077#1085#1090#1086#1074
       FormName = 'TReport_CompetitorMarkupsForm'
       FormNameParam.Value = 'TReport_CompetitorMarkupsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoodsWages: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1047#1055
+      FormName = 'TGoodsWagesForm'
+      FormNameParam.Value = 'TGoodsWagesForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoodsSite: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1076#1083#1103' '#1089#1072#1081#1090#1072
+      FormName = 'TGoodsSiteForm'
+      FormNameParam.Value = 'TGoodsSiteForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoodsCash: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1076#1083#1103' '#1082#1072#1089#1089
+      FormName = 'TGoodsCashForm'
+      FormNameParam.Value = 'TGoodsCashForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -6473,7 +6506,19 @@
           Action = actGoodsDivisionLock
         end
         object N307: TMenuItem
-          Action = actGoodsSUN
+          Caption = #1058#1086#1074#1072#1088#1099' '#1089#1077#1090#1080' '#1085#1072#1089#1090#1088#1086#1081#1082#1080
+          object N351: TMenuItem
+            Action = actGoodsSUN
+          end
+          object N352: TMenuItem
+            Action = actGoodsWages
+          end
+          object N353: TMenuItem
+            Action = actGoodsSite
+          end
+          object N354: TMenuItem
+            Action = actGoodsCash
+          end
         end
       end
       object mmServiceFunctions: TMenuItem [1]
