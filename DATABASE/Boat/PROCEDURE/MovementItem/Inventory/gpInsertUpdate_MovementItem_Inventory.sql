@@ -32,7 +32,7 @@ BEGIN
 
 
      -- замена
---     IF ioAmount = 0 THEN ioAmount:= 1; END IF;
+     -- IF ioAmount = 0 THEN ioAmount:= 1; END IF;
 
      -- определяются параметры из документа
      SELECT tmp.ioId, tmp.ioAmount, tmp.ioPrice, tmp.outAmountSumm

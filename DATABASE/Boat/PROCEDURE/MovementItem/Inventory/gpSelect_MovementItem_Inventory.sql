@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer
              , Summa TFloat
              , PartNumber TVarChar
              , Comment TVarChar
+             , OperDate_protocol TDateTime, UserName_protocol TVarChar
              , Ord Integer
              , isErased Boolean
               )
@@ -102,6 +103,12 @@ BEGIN
                                                         , 0) <> 0
                           OR Container.Amount <> 0
                      )
+        , tmpProtocol AS (SELECT MovementItemProtocol.*
+                                 -- № п/п
+                               , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.OperDate DESC) AS Ord
+                          FROM MovementItemProtocol
+                          WHERE MovementItemProtocol.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI)
+                         )
 
        -- результат
        SELECT
@@ -129,32 +136,44 @@ BEGIN
            , tmpMI.PartNumber             ::TVarChar
            , tmpMI.Comment                ::TVarChar
            --, tmpProtocol.OperDate                  AS OperDate_pr
+           
+           , tmpProtocol.OperDate  AS OperDate_protocol
+           , Object_User.ValueData AS UserName_protocol
 
            , ROW_NUMBER() OVER (ORDER BY tmpMI.Id ASC) :: Integer AS Ord
            , tmpMI.isErased
 
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
+            
+            LEFT JOIN tmpProtocol ON tmpProtocol.MovementItemId = tmpMI.Id
+                                 AND tmpProtocol.Ord            = 1
+            LEFT JOIN Object AS Object_User ON Object_User.Id = tmpProtocol.UserId
 
-            LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
+            LEFT JOIN ObjectLink AS OL_Goods_GoodsGroup
+                                 ON OL_Goods_GoodsGroup.ObjectId = tmpMI.GoodsId
+                                AND OL_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = OL_Goods_GoodsGroup.ChildObjectId
 
-            LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = Object_PartionGoods.GoodsGroupId
-            LEFT JOIN Object AS Object_Measure     ON Object_Measure.Id     = Object_PartionGoods.MeasureId
+            LEFT JOIN ObjectLink AS OL_Goods_Measure
+                                 ON OL_Goods_Measure.ObjectId = tmpMI.GoodsId
+                                AND OL_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = OL_Goods_Measure.ChildObjectId
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
             LEFT JOIN ObjectString AS ObjectString_Article
                                    ON ObjectString_Article.ObjectId = tmpMI.GoodsId
-                                  AND ObjectString_Article.DescId = zc_ObjectString_Article()
+                                  AND ObjectString_Article.DescId   = zc_ObjectString_Article()
             LEFT JOIN ObjectString AS ObjectString_EAN
                                    ON ObjectString_EAN.ObjectId = tmpMI.GoodsId
-                                  AND ObjectString_EAN.DescId = zc_ObjectString_EAN()
+                                  AND ObjectString_EAN.DescId   = zc_ObjectString_EAN()
             LEFT JOIN (SELECT tmpRemains.GoodsId, tmpRemains.PartNumber, SUM (tmpRemains.Amount) AS Amount, SUM (tmpRemains.Remains) AS Remains
                        FROM tmpRemains
                        GROUP BY tmpRemains.GoodsId, tmpRemains.PartNumber
-                     ) AS tmpRemains ON tmpRemains.GoodsId    = tmpMI.GoodsId
-                                    AND tmpRemains.PartNumber = tmpMI.PartNumber
+                      ) AS tmpRemains ON tmpRemains.GoodsId    = tmpMI.GoodsId
+                                     AND tmpRemains.PartNumber = tmpMI.PartNumber
        ;
 
 END;

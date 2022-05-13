@@ -159,6 +159,8 @@ type
     cbList: TcxCheckBox;
     AmountDiff: TcxGridDBColumn;
     AmountRemains_curr: TcxGridDBColumn;
+    OperDate_protocol: TcxGridDBColumn;
+    UserName_protocol: TcxGridDBColumn;
   private
   public
   end;
