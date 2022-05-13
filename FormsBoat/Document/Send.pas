@@ -218,6 +218,8 @@ type
     actGoodsItemGet2: TdsdExecStoredProc;
     actGoodsItemGet3: TdsdExecStoredProc;
     Ord: TcxGridDBColumn;
+    OperDate_protocol: TcxGridDBColumn;
+    UserName_protocol: TcxGridDBColumn;
   private
   public
   end;
