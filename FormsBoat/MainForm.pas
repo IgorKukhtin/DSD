@@ -250,6 +250,8 @@ type
     miHelp: TMenuItem;
     FormParams: TdsdFormParams;
     N20: TMenuItem;
+    actReport_Movement_PriceList: TdsdOpenForm;
+    miReport_Movement_PriceList: TMenuItem;
   private
     { Private declarations }
   public

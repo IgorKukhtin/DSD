@@ -796,6 +796,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_PriceListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_PriceListForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_PriceListDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_PriceListDialogForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMotionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMotionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMotionDialogForm'));

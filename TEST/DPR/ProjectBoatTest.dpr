@@ -314,7 +314,9 @@ uses
   Report_GoodsMotion in '..\..\FormsBoat\Report\Report_GoodsMotion.pas' {Report_GoodsMotionForm: TParentForm},
   Report_ProfitLoss in '..\..\FormsBoat\Report\Report_ProfitLoss.pas' {Report_ProfitLossForm: TParentForm},
   Report_ProfitLossDialog in '..\..\FormsBoat\Report\Report_ProfitLossDialog.pas' {Report_ProfitLossDialogForm: TParentForm},
-  SendItemEditNotPartNumber in '..\..\FormsBoat\Document\SendItemEditNotPartNumber.pas' {SendItemEditNotPartNumberForm: TParentForm};
+  SendItemEditNotPartNumber in '..\..\FormsBoat\Document\SendItemEditNotPartNumber.pas' {SendItemEditNotPartNumberForm: TParentForm},
+  Report_Movement_PriceList in '..\..\FormsBoat\Report\Report_Movement_PriceList.pas' {Report_Movement_PriceListForm: TParentForm},
+  Report_Movement_PriceListDialog in '..\..\FormsBoat\Report\Report_Movement_PriceListDialog.pas' {Report_Movement_PriceListDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
