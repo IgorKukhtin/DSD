@@ -220,6 +220,7 @@ type
     Ord: TcxGridDBColumn;
     OperDate_protocol: TcxGridDBColumn;
     UserName_protocol: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
   private
   public
   end;

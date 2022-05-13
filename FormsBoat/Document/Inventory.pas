@@ -161,6 +161,7 @@ type
     AmountRemains_curr: TcxGridDBColumn;
     OperDate_protocol: TcxGridDBColumn;
     UserName_protocol: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
   private
   public
   end;
