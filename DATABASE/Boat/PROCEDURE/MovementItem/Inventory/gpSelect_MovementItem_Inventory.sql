@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer
              , Summa TFloat
              , PartNumber TVarChar
              , Comment TVarChar
+             , PartnerName TVarChar
              , OperDate_protocol TDateTime, UserName_protocol TVarChar
              , Ord Integer
              , isErased Boolean
@@ -40,7 +41,7 @@ BEGIN
                                        ON MLO_Unit.MovementId = inMovementId
                                       AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
      WHERE Movement.Id = inMovementId;
-     
+
 
      -- Результат такой
      RETURN QUERY
@@ -103,14 +104,22 @@ BEGIN
                                                         , 0) <> 0
                           OR Container.Amount <> 0
                      )
+     , tmpMIContainer AS (SELECT MIContainer.MovementItemId
+                               , STRING_AGG (COALESCE (Object_Partner.ValueData, MIContainer.PartionId :: TVarChar, 'нет партии'), ';') AS PartnerName
+                          FROM MovementItemContainer AS MIContainer
+                               LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId  = MIContainer.PartionId
+                               LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = Object_PartionGoods.FromId
+                          WHERE MIContainer.MovementId = inMovementId
+                            AND MIContainer.DescId     = zc_MIContainer_Count()
+                          GROUP BY MIContainer.MovementItemId
+                         )
         , tmpProtocol AS (SELECT MovementItemProtocol.*
                                  -- № п/п
                                , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.OperDate DESC) AS Ord
                           FROM MovementItemProtocol
                           WHERE MovementItemProtocol.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI)
                          )
-
-       -- результат
+       -- Результат
        SELECT
              tmpMI.Id
            , tmpMI.PartionId
@@ -135,8 +144,9 @@ BEGIN
 
            , tmpMI.PartNumber             ::TVarChar
            , tmpMI.Comment                ::TVarChar
-           --, tmpProtocol.OperDate                  AS OperDate_pr
-           
+
+           , COALESCE (Object_Partner.ValueData, '***' || tmpMIContainer.PartnerName) :: TVarChar AS PartnerName
+
            , tmpProtocol.OperDate  AS OperDate_protocol
            , Object_User.ValueData AS UserName_protocol
 
@@ -145,7 +155,7 @@ BEGIN
 
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
-            
+
             LEFT JOIN tmpProtocol ON tmpProtocol.MovementItemId = tmpMI.Id
                                  AND tmpProtocol.Ord            = 1
             LEFT JOIN Object AS Object_User ON Object_User.Id = tmpProtocol.UserId
@@ -153,7 +163,7 @@ BEGIN
             LEFT JOIN ObjectLink AS OL_Goods_GoodsGroup
                                  ON OL_Goods_GoodsGroup.ObjectId = tmpMI.GoodsId
                                 AND OL_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
-            LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = OL_Goods_GoodsGroup.ChildObjectId
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id  = OL_Goods_GoodsGroup.ChildObjectId
 
             LEFT JOIN ObjectLink AS OL_Goods_Measure
                                  ON OL_Goods_Measure.ObjectId = tmpMI.GoodsId
@@ -174,6 +184,12 @@ BEGIN
                        GROUP BY tmpRemains.GoodsId, tmpRemains.PartNumber
                       ) AS tmpRemains ON tmpRemains.GoodsId    = tmpMI.GoodsId
                                      AND tmpRemains.PartNumber = tmpMI.PartNumber
+
+            LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId  = tmpMI.Id
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = Object_PartionGoods.FromId
+
+            LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = tmpMI.Id
+
        ;
 
 END;

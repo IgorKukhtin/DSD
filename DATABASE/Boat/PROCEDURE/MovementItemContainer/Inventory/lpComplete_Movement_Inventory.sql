@@ -87,14 +87,17 @@ BEGIN
      INSERT INTO _tmpItem (MovementItemId
                          , GoodsId, PartNumber
                          , OperCount, OperPrice
+                         , PartnerId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                           )
+        WITH tmpPriceList AS (SELECT lpGet.GoodsId, lpGet.ValuePrice, lpGet.PartnerId FROM lpGet_MovementItem_PriceList (inOperDate:= vbOperDate, inGoodsId:= 0, inUserId:= inUserId) AS lpGet)
         -- результат
         SELECT tmp.MovementItemId
              , tmp.GoodsId
              , tmp.PartNumber
              , tmp.OperCount
-             , (SELECT lpGet.ValuePrice FROM lpGet_MovementItem_PriceList (inOperDate:= vbOperDate, inGoodsId:= tmp.GoodsId, inUserId:= inUserId) AS lpGet) AS OperPrice
+             , COALESCE ((SELECT tmpPriceList.ValuePrice FROM tmpPriceList WHERE tmpPriceList.GoodsId = tmp.GoodsId), 0) AS OperPrice
+             , COALESCE ((SELECT tmpPriceList.PartnerId  FROM tmpPriceList WHERE tmpPriceList.GoodsId = tmp.GoodsId), 0) AS PartnerId
                -- УП
              , tmp.InfoMoneyGroupId
              , tmp.InfoMoneyDestinationId
@@ -181,6 +184,8 @@ BEGIN
                                         LEFT JOIN tmpContainer_Count ON tmpContainer_Count.GoodsId    = _tmpItem.GoodsId
                                                                     AND tmpContainer_Count.PartNumber = _tmpItem.PartNumber
                                         INNER JOIN Object_PartionGoods ON Object_PartionGoods.ObjectId = _tmpItem.GoodsId
+                                                                      -- Поставщик, по которому взяли цену
+                                                                      AND Object_PartionGoods.FromId   = _tmpItem.PartnerId
                                         LEFT JOIN MovementItemString AS MIString_PartNumber
                                                                      ON MIString_PartNumber.MovementItemId = Object_PartionGoods.MovementItemId
                                                                     AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
@@ -349,14 +354,17 @@ BEGIN
      INSERT INTO _tmpItem (MovementItemId
                          , GoodsId, PartNumber
                          , OperCount, OperPrice
+                         , PartnerId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                           )
+        WITH tmpPriceList AS (SELECT lpGet.GoodsId, lpGet.ValuePrice, lpGet.PartnerId FROM lpGet_MovementItem_PriceList (inOperDate:= vbOperDate, inGoodsId:= 0, inUserId:= inUserId) AS lpGet)
         -- результат
         SELECT tmp.MovementItemId
              , tmp.GoodsId
              , tmp.PartNumber
              , tmp.OperCount
-             , (SELECT lpGet.ValuePrice FROM lpGet_MovementItem_PriceList (inOperDate:= vbOperDate, inGoodsId:= tmp.GoodsId, inUserId:= inUserId) AS lpGet) AS OperPrice
+             , COALESCE ((SELECT tmpPriceList.ValuePrice FROM tmpPriceList WHERE tmpPriceList.GoodsId = tmp.GoodsId), 0) AS OperPrice
+             , COALESCE ((SELECT tmpPriceList.PartnerId  FROM tmpPriceList WHERE tmpPriceList.GoodsId = tmp.GoodsId), 0) AS PartnerId
                -- УП
              , tmp.InfoMoneyGroupId
              , tmp.InfoMoneyDestinationId
@@ -411,7 +419,7 @@ BEGIN
      -- Создали Партии - где надо
      PERFORM lpInsertUpdate_Object_PartionGoods (inMovementItemId    := _tmpItem_Child.MovementItemId        -- Ключ партии
                                                , inMovementId        := inMovementId                         -- Ключ Документа
-                                               , inFromId            := vbUnitId                             -- Поставщик или Подразделение (место сборки)
+                                               , inFromId            := _tmpItem.PartnerId                   -- Поставщик или Подразделение (место сборки)
                                                , inUnitId            := vbUnitId                             -- Подразделение(прихода)
                                                , inOperDate          := vbOperDate                           -- Дата прихода
                                                , inObjectId          := _tmpItem_Child.GoodsId               -- Комплектующие или Лодка

@@ -20,6 +20,7 @@ BEGIN
          CREATE TEMP TABLE _tmpItem (MovementItemId Integer
                                    , GoodsId Integer, PartNumber TVarChar
                                    , OperCount TFloat, OperPrice TFloat
+                                   , PartnerId Integer
                                    , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                     ) ON COMMIT DROP;
          -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
