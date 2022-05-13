@@ -1,4 +1,4 @@
-object SendItemEditForm: TSendItemEditForm
+object SendItemEditNotPartNumberForm: TSendItemEditNotPartNumberForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
@@ -70,7 +70,7 @@ object SendItemEditForm: TSendItemEditForm
     Width = 200
   end
   object edPartner: TcxButtonEdit
-    Left = 215
+    Left = 218
     Top = 22
     Properties.Buttons = <
       item
@@ -111,7 +111,7 @@ object SendItemEditForm: TSendItemEditForm
     Caption = #1050#1086#1083'-'#1074#1086
   end
   object cxLabel4: TcxLabel
-    Left = 290
+    Left = 292
     Top = 152
     Caption = #1048#1058#1054#1043#1054' :'
     ParentFont = False
@@ -123,7 +123,7 @@ object SendItemEditForm: TSendItemEditForm
     Style.IsFontAssigned = True
   end
   object ceTotalCount: TcxCurrencyEdit
-    Left = 290
+    Left = 292
     Top = 172
     ParentFont = False
     Properties.DecimalPlaces = 4
@@ -136,7 +136,7 @@ object SendItemEditForm: TSendItemEditForm
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
     TabOrder = 15
-    Width = 125
+    Width = 126
   end
   object cxLabel6: TcxLabel
     Left = 113
@@ -159,10 +159,12 @@ object SendItemEditForm: TSendItemEditForm
     Left = 113
     Top = 152
     Caption = 'S/N'
+    Enabled = False
   end
   object edPartNumber: TcxTextEdit
     Left = 113
     Top = 172
+    Enabled = False
     TabOrder = 1
     Width = 95
   end
@@ -170,7 +172,7 @@ object SendItemEditForm: TSendItemEditForm
     Left = 8
     Top = 222
     TabOrder = 16
-    Width = 407
+    Width = 410
   end
   object cxLabel9: TcxLabel
     Left = 8
@@ -178,7 +180,7 @@ object SendItemEditForm: TSendItemEditForm
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceAmountRemainsFrom: TcxCurrencyEdit
-    Left = 290
+    Left = 292
     Top = 122
     ParentFont = False
     Properties.DecimalPlaces = 4
@@ -190,10 +192,10 @@ object SendItemEditForm: TSendItemEditForm
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
     TabOrder = 20
-    Width = 125
+    Width = 126
   end
   object cxLabel7: TcxLabel
-    Left = 290
+    Left = 292
     Top = 102
     Caption = #1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1089#1095'.) '#1086#1090' '#1082#1086#1075#1086
   end
@@ -363,8 +365,8 @@ object SendItemEditForm: TSendItemEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 227
-    Top = 102
+    Left = 307
+    Top = 54
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_MI_Send'
@@ -729,9 +731,6 @@ object SendItemEditForm: TSendItemEditForm
       item
         Control = edAmount
         ExitAction = actGet_TotalCount
-      end
-      item
-        Control = edPartNumber
       end
       item
         Control = cxButtonOK

@@ -313,7 +313,9 @@ uses
   ProfitLossEdit in '..\..\FormsBoat\Guides\ProfitLossEdit.pas' {ProfitLossEditForm: TParentForm},
   Report_GoodsMotion in '..\..\FormsBoat\Report\Report_GoodsMotion.pas' {Report_GoodsMotionForm: TParentForm},
   Report_ProfitLoss in '..\..\FormsBoat\Report\Report_ProfitLoss.pas' {Report_ProfitLossForm: TParentForm},
-  Report_ProfitLossDialog in '..\..\FormsBoat\Report\Report_ProfitLossDialog.pas' {Report_ProfitLossDialogForm: TParentForm};
+  Report_ProfitLossDialog in '..\..\FormsBoat\Report\Report_ProfitLossDialog.pas' {Report_ProfitLossDialogForm: TParentForm},
+  SendItemEditNotPartNumber in '..\..\FormsBoat\Document\SendItemEditNotPartNumber.pas' {SendItemEditNotPartNumberForm: TParentForm};
+
 {$R *.res}
 {$R DevExpressRus.res}
 
