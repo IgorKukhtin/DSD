@@ -87,12 +87,12 @@ BEGIN
      
  
      CREATE TEMP TABLE tmpProduct ON COMMIT DROP AS (SELECT tmp.*
-                                                     FROM gpSelect_Object_Product (inIsShowAll:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
+                                                     FROM gpSelect_Object_Product (inIsShowAll:= TRUE, inIsSale:= FALSE, inSession:= inSession) AS tmp
                                                      WHERE tmp.Id = vbProductId
                                                        AND tmp.MovementId_OrderClient = inMovementId_OrderClient
                                                      );
      CREATE TEMP TABLE tmpProdColorItems ON COMMIT DROP AS (SELECT tmp.*
-                                                            FROM gpSelect_Object_ProdColorItems (inMovementId_OrderClient:= inMovementId_OrderClient, inIsShowAll:= FALSE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
+                                                            FROM gpSelect_Object_ProdColorItems (inMovementId_OrderClient:= inMovementId_OrderClient, inIsShowAll:= TRUE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
                                                             WHERE tmp.ProductId = vbProductId
                                                               AND tmp.MovementId_OrderClient = inMovementId_OrderClient
                                                             );

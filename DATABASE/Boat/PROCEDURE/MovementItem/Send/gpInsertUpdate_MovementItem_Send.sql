@@ -1,5 +1,9 @@
 -- Function: gpInsertUpdate_MovementItem_OrderClient()
 
+DROP FUNCTION IF EXISTS gpSelect_MI_Send_BarCode (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_BarCode_PartNumber(Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_BarCode_Amount(Integer, Integer, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_BarCode(Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, TVarChar);

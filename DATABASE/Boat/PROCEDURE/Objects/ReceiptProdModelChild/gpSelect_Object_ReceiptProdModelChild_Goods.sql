@@ -370,9 +370,20 @@ BEGIN
 
      -- Результат
      OPEN Cursor1 FOR
-
-     SELECT *
-     FROM tmpResult;
+     WITH tmpProtocol AS (SELECT ObjectProtocol.*
+                                 -- № п/п
+                               , ROW_NUMBER() OVER (PARTITION BY ObjectProtocol.ObjectId ORDER BY ObjectProtocol.OperDate DESC) AS Ord
+                          FROM ObjectProtocol
+                          WHERE ObjectProtocol.ObjectId IN (SELECT tmpResult.Id FROM tmpResult)
+                         )
+     SELECT tmpResult.*
+          , tmpProtocol.OperDate  AS OperDate_protocol
+          , Object_User.ValueData AS UserName_protocol
+     FROM tmpResult
+          LEFT JOIN tmpProtocol ON tmpProtocol.ObjectId = tmpResult.Id
+                               AND tmpProtocol.Ord      = 1
+          LEFT JOIN Object AS Object_User ON Object_User.Id = tmpProtocol.UserId
+     ;
      
      RETURN NEXT Cursor1;
 
