@@ -79,6 +79,9 @@ function UpdateTestProgram : Boolean;
 // Проверка и обновление программы
 procedure AutomaticUpdateProgram;
 
+// Проверка и обновление FarmacyCashServise
+procedure AutomaticUpdateFarmacyCashServise;
+
 // Проверка и обновление программы для теста
 procedure AutomaticUpdateProgramTest;
 
@@ -586,6 +589,26 @@ begin
        ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then
     begin
       if MessageDlg('Обнаружена новая версия программы! Обновить?', mtInformation, mbOKCancel, 0) = mrOk then
+        if UpdateOption then TUpdater.AutomaticUpdateProgramStart;
+    end;
+  except
+    on E: Exception do
+       ShowMessage('Не работает автоматическое обновление.'#13#10'Обратитесь к разработчику.'#13#10 + E.Message);
+  end;
+end;
+
+procedure AutomaticUpdateFarmacyCashServise;
+var LocalVersionInfo, BaseVersionInfo: TVersionInfo;
+begin
+  try
+    Application.ProcessMessages;
+    BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion('FarmacyCashServise.exe',
+                       GetBinaryPlatfotmSuffics(ExtractFileDir(ParamStr(0)) + '\FarmacyCashServise.exe', ''));
+    LocalVersionInfo := UnilWin.GetFileVersion(ExtractFileDir(ParamStr(0)) + '\FarmacyCashServise.exe');
+    if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
+       ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then
+    begin
+      if MessageDlg('Обнаружена новая версия FCash Service! Обновить?', mtInformation, mbOKCancel, 0) = mrOk then
         if UpdateOption then TUpdater.AutomaticUpdateProgramStart;
     end;
   except

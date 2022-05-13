@@ -221,6 +221,7 @@ begin
         InitCashSession(True);
         IniUtils.AutomaticUpdateProgramTest;
         IniUtils.AutomaticUpdateProgram;
+        IniUtils.AutomaticUpdateFarmacyCashServise;
         if not FindCmdLineSwitch('skipcheckconnect') then TUpdater.AutomaticCheckConnect;
       End
       else

@@ -284,9 +284,15 @@ BEGIN
                                          ON MovementLinkObject_NDSKind.MovementId = COALESCE (MI_Income_find.MovementId,MovementItem.MovementId)
                                         AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
 
+            LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = MovementItem.MovementId
+                                                 AND Movement_Income.DescId = zc_Movement_Income()  
+                                
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = COALESCE (MI_Income_find.MovementId,MovementItem.MovementId)
+                                         ON MovementLinkObject_From.MovementId = Movement_Income.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement_Income.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
 
             LEFT JOIN tmpSupplier ON tmpSupplier.JuridicalId = MovementLinkObject_From.ObjectId
             
@@ -303,7 +309,7 @@ BEGIN
                                                            AND COALESCE(ItemJuridical.DivisionPartiesId, 0) = COALESCE(ContainerLinkObject_DivisionParties.ObjectId, 0) 
 
        WHERE COALESCE (PDContainer.id, 0) = 0
-         AND (vbDiscountExternalId = 0 OR COALESCE(tmpSupplier.SupplierID, 0) <> 0 AND Container.Amount >= 1)
+         AND (vbDiscountExternalId = 0 OR COALESCE(tmpSupplier.SupplierID, 0) <> 0 AND COALESCE(MovementLinkObject_To.ObjectId, 0) = vbUnitId AND Container.Amount >= 1)
          AND (COALESCE (ItemJuridical.JuridicalId, 0) = 0 OR MovementLinkObject_From.ObjectId = COALESCE (ItemJuridical.JuridicalId, 0))
        ;
          
@@ -745,3 +751,5 @@ $BODY$
 -- select * from gpUpdate_Status_Check(inMovementId := 19907613 , ioStatusCode := 2 ,  inSession := '3');
 
 --  select * from gpUpdate_Status_Check(inMovementId := 22802944 , ioStatusCode := 2 ,  inSession := '3');
+
+select * from gpUpdate_Status_Check(inMovementId := 27809861 , ioStatusCode := 2 ,  inSession := '3');
