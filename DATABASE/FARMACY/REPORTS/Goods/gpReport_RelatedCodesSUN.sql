@@ -74,7 +74,6 @@ BEGIN
 
                                INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.MovementItemId
                                                               AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
-                                                              AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
                           )
      , tmpProtocol AS (SELECT tmpProtocolAll.MovementItemId
                             , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
