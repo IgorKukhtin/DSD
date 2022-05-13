@@ -31,6 +31,8 @@ RETURNS TABLE  (LocationDescName TVarChar, LocationCode Integer, LocationName TV
               , GoodsSizeName TVarChar
 
               , Price TFloat, Price_end TFloat
+              , Price_partner_start TFloat, Price_partner_end TFloat
+              
               , AmountStart TFloat, AmountIn TFloat, AmountOut TFloat, AmountEnd TFloat, Amount TFloat
               , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat, Summ TFloat
 
@@ -518,6 +520,9 @@ BEGIN
 
         , tmpDataAll.Price            ::TFloat AS Price
         , tmpDataAll.Price_end        ::TFloat AS Price_end
+
+        , (SELECT lpGet.ValuePrice FROM lpGet_MovementItem_PriceList (inStartDate, tmpDataAll.GoodsId, vbUserId) AS lpGet) :: TFloat  AS Price_partner_start
+        , (SELECT lpGet.ValuePrice FROM lpGet_MovementItem_PriceList (inEndDate, tmpDataAll.GoodsId, vbUserId) AS lpGet)   :: TFloat  AS Price_partner_end
 
         , CAST (tmpDataAll.AmountStart AS NUMERIC (16,2)) ::TFloat  AS AmountStart
         , CAST (tmpDataAll.AmountIn AS NUMERIC (16,2))    ::TFloat  AS AmountIn

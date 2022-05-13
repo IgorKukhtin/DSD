@@ -1,4 +1,6 @@
 inherited Report_Movement_PriceListForm: TReport_Movement_PriceListForm
+  Left = 8
+  Top = 8
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072#1084'>'
   ClientHeight = 341
   ClientWidth = 1071
@@ -48,19 +50,19 @@ inherited Report_Movement_PriceListForm: TReport_Movement_PriceListForm
           Styles.Footer = nil
           Styles.Header = nil
           object OperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+            HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090
             Width = 70
           end
           object InvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090
             Options.Editing = False
             Width = 70
           end

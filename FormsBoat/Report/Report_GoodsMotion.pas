@@ -64,6 +64,8 @@ type
     edArticle: TcxTextEdit;
     cxLabel18: TcxLabel;
     GoodsId: TcxGridDBColumn;
+    actPrintSum: TdsdPrintAction;
+    bbPrintSum: TdxBarButton;
   private
     { Private declarations }
   public

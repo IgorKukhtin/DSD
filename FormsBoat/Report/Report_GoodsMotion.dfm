@@ -4,7 +4,6 @@
   ClientWidth = 1071
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -28
   ExplicitWidth = 1087
   ExplicitHeight = 380
   PixelsPerInch = 96
@@ -154,7 +153,6 @@
           object PartnerName: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'PartnerName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -163,7 +161,6 @@
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -414,6 +411,30 @@
             Options.Editing = False
             Width = 70
           end
+          object Price_partner_start: TcxGridDBColumn
+            Caption = #1085#1072#1095'. '#1062#1077#1085#1072' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'Price_partner_start'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1085#1072' '#1085#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object Price_partner_end: TcxGridDBColumn
+            Caption = #1082#1086#1085#1077#1095'. '#1062#1077#1085#1072' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'Price_partner_end'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072
+            Options.Editing = False
+            Width = 70
+          end
           object GoodsId: TcxGridDBColumn
             DataBinding.FieldName = 'GoodsId'
             Visible = False
@@ -575,18 +596,70 @@
       end>
   end
   inherited ActionList: TActionList
+    object actPrintSum: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1074#1093'.'#1094#1077#1085#1072')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1074#1093'.'#1094#1077#1085#1072')'
+      ImageIndex = 16
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'PartnerName;GoodsGroupNameFull;Article;GoodsName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 44562d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 44562d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnitGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = ''
+          Component = GuidesGoods
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084' ('#1074#1093' '#1094#1077#1085#1072')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084' ('#1074#1093' '#1094#1077#1085#1072')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1082#1086#1083'-'#1074#1086')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1082#1086#1083'-'#1074#1086')'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'MovementDescName_order;OperDate;ObjectByName;InvNumber'
+          IndexFieldNames = 'PartnerName;GoodsGroupNameFull;Article;GoodsName'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -613,42 +686,15 @@
           MultiSelectSeparator = ','
         end
         item
-          Name = 'LocationName'
-          Value = ''
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsGroupId'
-          Value = Null
-          Component = GuidesPartion
-          ComponentItem = 'Key'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsGroupName'
-          Value = Null
-          Component = GuidesPartion
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'GoodsName'
           Value = ''
           Component = GuidesGoods
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isSumm_branch'
-          Value = Null
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
+      ReportName = #1054#1090#1095#1077#1090' '#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084' ('#1082#1086#1083'-'#1074#1086')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084' ('#1082#1086#1083'-'#1074#1086')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -909,11 +955,23 @@
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintSum'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
     end
     object bbPrint: TdxBarButton
@@ -932,6 +990,10 @@
     end
     object bbOpenDocument: TdxBarButton
       Action = actOpenDocument
+      Category = 0
+    end
+    object bbPrintSum: TdxBarButton
+      Action = actPrintSum
       Category = 0
     end
   end
@@ -1139,8 +1201,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
-    Top = 120
+    Left = 304
+    Top = 168
   end
   object TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
@@ -1162,8 +1224,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
-    Top = 120
+    Left = 264
+    Top = 168
   end
   object FormParams: TdsdFormParams
     Params = <
