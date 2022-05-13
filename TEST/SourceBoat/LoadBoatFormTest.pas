@@ -227,6 +227,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendItemEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendItemEditForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendItemEditNotPartNumberForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendItemEditNotPartNumberForm');
+
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalChoiceForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TSendJournalChoiceForm');
 end;

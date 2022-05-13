@@ -23,33 +23,62 @@ RETURNS TABLE (Id                 Integer
              , CountForPrice      TFloat
              , Price              TFloat
              , TotalCount         TFloat
-             , Amount          TFloat
+             , Amount             TFloat
+             , AmountRemainsFrom  TFloat
               )
 AS
 $BODY$
-   DECLARE vbUserId    Integer;
-   DECLARE vbPartionId Integer;
-   DECLARE vbGoodsId   Integer;
-   DECLARE vbPartNumber TVarChar;
+   DECLARE vbUserId   Integer;
+   DECLARE vbUnitId   Integer;
+   DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-              -- Результат
-         RETURN QUERY
-         WITH
-         tmpPartionGoods AS (SELECT Object_PartionGoods.*
-                                  , ROW_NUMBER () OVER (ORDER BY Object_PartionGoods.OperDate DESC, Object_PartionGoods.MovementItemId DESC) AS ORD
-                             FROM Object_PartionGoods
-                                  LEFT JOIN MovementItemString AS MIString_PartNumber
-                                                               ON MIString_PartNumber.MovementItemId = Object_PartionGoods.MovementItemId
-                                                              AND MIString_PartNumber.DescId    = zc_MIString_PartNumber()
-                             WHERE Object_PartionGoods.ObjectId = inGoodsId
-                               AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (TRIM (inPartNumber),'')
-                            )
+     -- Данные для остатков
+     SELECT Movement.OperDate, MLO_From.ObjectId
+            INTO vbOperDate, vbUnitId
+     FROM Movement
+          LEFT JOIN MovementLinkObject AS MLO_From
+                                       ON MLO_From.MovementId = inMovementId
+                                      AND MLO_From.DescId     = zc_MovementLinkObject_From()
+     WHERE Movement.Id = inMovementId;
+
+       -- Результат
+       RETURN QUERY
+       WITH
+       tmpRemains AS (SELECT Container.ObjectId                           AS GoodsId
+                           , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
+                           , SUM (Container.Amount)                       AS Remains
+                      FROM Container
+                           LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                        ON MIString_PartNumber.MovementItemId = Container.PartionId
+                                                       AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
+                      WHERE Container.WhereObjectId = vbUnitId
+                        AND Container.DescId        = zc_Container_Count()
+                        AND Container.ObjectId      = inGoodsId
+                        AND COALESCE (MIString_PartNumber.ValueData, '') = COALESCE (inPartNumber,'')
+                      GROUP BY Container.ObjectId
+                             , COALESCE (MIString_PartNumber.ValueData, '')
+                     )
+
+     , tmpMI AS (SELECT MI.ObjectId                                  AS GoodsId
+                      , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
+                      , SUM (MI.Amount)                              AS Amount
+                 FROM MovementItem AS MI
+                      LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                   ON MIString_PartNumber.MovementItemId = MI.Id
+                                                  AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
+                 WHERE MI.MovementId = inMovementId
+                   AND MI.DescId     = zc_MI_Master()
+                   AND MI.ObjectId   = inGoodsId
+                   AND MI.isErased   = FALSE
+                   AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
+                 GROUP BY MI.ObjectId
+                        , COALESCE (MIString_PartNumber.ValueData, '')
+                )
 
            SELECT -1                               :: Integer AS Id
-                , 0                                :: Integer AS PartionId
                 , Object_Goods.Id                             AS GoodsId
                 , Object_Goods.ObjectCode                     AS GoodsCode
                 , Object_Goods.ValueData                      AS GoodsName
@@ -62,24 +91,15 @@ BEGIN
                 , Object_Partner.ValueData                    AS PartnerName
                 , 1  :: TFloat                                AS CountForPrice
                 , 0  :: TFloat                                AS Price
-                , (/*COALESCE (inAmount,1) +*/ COALESCE ((SELECT SUM (MI.Amount)
-                                                      FROM MovementItem AS MI
-                                                           LEFT JOIN MovementItemString AS MIString_PartNumber
-                                                                                        ON MIString_PartNumber.MovementItemId = MI.Id
-                                                                                       AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
-                                                      WHERE MI.MovementId = inMovementId
-                                                        AND MI.DescId = zc_MI_Master()
-                                                        AND MI.ObjectId = inGoodsId
-                                                        AND MI.isErased = FALSE
-                                                        AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
-                                                        ), 0)
-                  )                                 :: TFloat AS TotalCount
+                , (/*COALESCE (inAmount,1) +*/ COALESCE (tmpMI.Amount, 0)) :: TFloat AS TotalCount
                 , COALESCE (inAmount,1)             :: TFloat AS Amount
-    
+
+                , COALESCE (tmpRemains.Remains, 0)                         :: TFloat AS AmountRemainsFrom
+  
            FROM Object AS Object_Goods
-     
-                LEFT JOIN tmpPartionGoods AS Object_PartionGoods ON Object_PartionGoods.ObjectId = Object_Goods.Id AND Object_PartionGoods.Ord = 1
-    
+                LEFT JOIN tmpMI ON tmpMI.GoodsId    = Object_Goods.Id
+                               AND tmpMI.PartNumber = COALESCE (inPartNumber,'')
+
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Partner
                                      ON ObjectLink_Goods_Partner.ObjectId = Object_Goods.Id
                                     AND ObjectLink_Goods_Partner.DescId = zc_ObjectLink_Goods_Partner()
@@ -88,8 +108,8 @@ BEGIN
                                       ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                      AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
     
-                LEFT JOIN Object AS Object_Partner     ON Object_Partner.Id     = COALESCE (Object_PartionGoods.FromId, ObjectLink_Goods_Partner.ChildObjectId)
-                LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = COALESCE (Object_PartionGoods.GoodsGroupId, ObjectLink_Goods_GoodsGroup.ChildObjectId)
+                LEFT JOIN Object AS Object_Partner     ON Object_Partner.Id     = ObjectLink_Goods_Partner.ChildObjectId
+                LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = ObjectLink_Goods_GoodsGroup.ChildObjectId
     
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -98,7 +118,10 @@ BEGIN
                 LEFT JOIN ObjectString AS ObjectString_Article
                                        ON ObjectString_Article.ObjectId = Object_Goods.Id
                                       AND ObjectString_Article.DescId = zc_ObjectString_Article()
-        
+
+                LEFT JOIN tmpRemains ON tmpRemains.GoodsId    = Object_Goods.Id
+                                    AND tmpRemains.PartNumber = COALESCE (inPartNumber,'')
+
            WHERE Object_Goods.Id = inGoodsId
               AND inGoodsId <> 0
           UNION
@@ -117,9 +140,9 @@ BEGIN
                 , 0  ::TFloat           AS Price
                 , 1  ::TFloat           AS TotalCount
                 , 1  :: TFloat          AS Amount
+                , 0  ::TFloat           AS AmountRemains
            WHERE inGoodsId = 0
           ;
-
 
 END;
 $BODY$
@@ -128,6 +151,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.05.22         *
  08.04.22         *
 */
 

@@ -1,4 +1,4 @@
-unit SendItemEdit;
+unit SendItemEditNotPartNumber;
 
 interface
 
@@ -22,7 +22,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TSendItemEditForm = class(TParentForm)
+  TSendItemEditNotPartNumberForm = class(TParentForm)
     cxButtonOK: TcxButton;
     cxButton2: TcxButton;
     ActionList: TActionList;
@@ -73,6 +73,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TSendItemEditForm);
+  RegisterClass(TSendItemEditNotPartNumberForm);
 
 end.

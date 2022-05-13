@@ -106,7 +106,7 @@ BEGIN
 
            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
 
-      WHERE View_ProfitLoss.ProfitLossCode <> 70101 -- Чистая прибыль
+      --WHERE View_ProfitLoss.ProfitLossCode <> 70101 -- Чистая прибыль
       ;
   
 END;
