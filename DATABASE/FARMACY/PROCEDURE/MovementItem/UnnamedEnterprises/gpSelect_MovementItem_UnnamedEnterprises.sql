@@ -196,7 +196,11 @@ BEGIN
                                                                          AND MarginCategory_all_next.ORD = MarginCategory_all.ORD + 1
                                        WHERE MarginCategory_all.MarginCategoryId = vbMarginCategoryId_site
                                        )
-              , tmpPrice AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat  AS Price
+              , tmpPrice AS (SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                              AND ObjectFloat_Goods_Price.ValueData > 0
+                                         THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                                         ELSE ROUND (Price_Value.ValueData, 2)
+                                         END :: TFloat  AS Price
                                   , Price_Goods.ChildObjectId               AS GoodsId
                              FROM ObjectLink AS ObjectLink_Price_Unit
                      
@@ -207,11 +211,24 @@ BEGIN
                                  LEFT JOIN ObjectFloat AS Price_Value
                                                        ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                       AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                                 -- Фикс цена для всей Сети
+                                 LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                                        ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
+                                                       AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+                                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                         ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
+                                                        AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
 
                               WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                                 AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
-                             )                                      
-
+                             )   
+              , tmpDansonPharma AS (SELECT DISTINCT Goods_Retail.Id  AS GoodsId
+                                    FROM gpSelect_MovementItem_Promo(inMovementId := 20813880 , inShowAll := False , inIsErased := False ,  inSession := '3') AS T1
+                                         LEFT JOIN Object_Goods_Retail AS Goods_4 ON Goods_4.Id  = T1.GoodsId
+                                         LEFT JOIN Object_Goods_Retail AS Goods_Retail ON Goods_Retail.GoodsMainId = Goods_4.GoodsMainId
+                                                                                             AND Goods_Retail.RetailId = vbObjectId
+                                    )
+                                    
             SELECT COALESCE(MovementItem_UnnamedEnterprises.Id,0)       AS Id
                  , Object_Goods_Retail.Id                               AS GoodsId
                  , Object_Goods_Main.ObjectCode                         AS GoodsCode
@@ -226,9 +243,12 @@ BEGIN
                  , MovementItem_UnnamedEnterprises.Amount               AS Amount
                  , tmpRemains.Amount::TFloat                            AS AmountRemains
                  , MovementItem_UnnamedEnterprises.AmountOrder::TFloat  AS AmountOrder
-                 , COALESCE(MovementItem_UnnamedEnterprises.Price,
-                   ROUND (tmpPrice.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) *
-                   (1 + COALESCE (MarginCategory_site.MarginPercent, 0) / 100), 1) :: TFloat)    AS Price
+                 , CASE WHEN COALESCE(tmpDansonPharma.GoodsId, 0) <> 0 AND COALESCE (Price_Unit.Price, 0) <> 0
+                        THEN COALESCE(MovementItem_UnnamedEnterprises.Price, Price_Unit.Price)
+                        ELSE COALESCE(MovementItem_UnnamedEnterprises.Price,
+                                      ROUND (tmpPrice.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) *
+                                      (1 + COALESCE (MarginCategory_site.MarginPercent, 0) / 100), 1)) 
+                        END:: TFloat    AS Price
                  , Price_Unit.Price                                     AS PriceUnit
                  , MovementItem_UnnamedEnterprises.Summ                 AS Summ
                  , MovementItem_UnnamedEnterprises.SummOrder            AS SummOrder
@@ -267,6 +287,8 @@ BEGIN
                 LEFT JOIN MarginCategory_site ON tmpPrice.Price >= MarginCategory_site.MinPrice AND tmpPrice.Price < MarginCategory_site.MaxPrice
 
                 LEFT JOIN tmpPrice AS Price_Unit ON Price_Unit.GoodsId = Object_Goods_Retail.Id 
+                
+                LEFT JOIN tmpDansonPharma ON tmpDansonPharma.GoodsId = COALESCE(tmpGoods.GoodsId, MovementItem_UnnamedEnterprises.GoodsId, tmpRemains.GoodsId)
 
             WHERE Object_Goods_Retail.isErased = FALSE
                OR MovementItem_UnnamedEnterprises.id is not null;
@@ -312,7 +334,11 @@ BEGIN
                                         AND MovementItem.DescId = zc_MI_Master()
                                         AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
                                       )
-              , tmpPrice AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat  AS Price
+              , tmpPrice AS (SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                              AND ObjectFloat_Goods_Price.ValueData > 0
+                                         THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                                         ELSE ROUND (Price_Value.ValueData, 2)
+                                         END :: TFloat  AS Price
                                   , Price_Goods.ChildObjectId               AS GoodsId
                              FROM ObjectLink AS ObjectLink_Price_Unit
 
@@ -324,6 +350,13 @@ BEGIN
                                                         ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                        AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
 
+                                  -- Фикс цена для всей Сети
+                                  LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                                         ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
+                                                        AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                          ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
+                                                         AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
                               WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                                 AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                              )                                      
@@ -387,4 +420,5 @@ $BODY$
  23.02.19         *
  30.09.18         *
 */
--- select * from gpSelect_MovementItem_UnnamedEnterprises(inMovementId := 18568494   , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+-- 
+select * from gpSelect_MovementItem_UnnamedEnterprises(inMovementId := 27813439 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');

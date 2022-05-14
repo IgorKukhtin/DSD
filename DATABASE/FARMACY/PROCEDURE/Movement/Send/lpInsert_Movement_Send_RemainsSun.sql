@@ -177,6 +177,8 @@ BEGIN
          -- "Пара товара в СУН"... если в одном из видов СУН перемещается товар X, то в обязательном порядке должен перемещаться товар Y в том же количестве
          DELETE FROM _tmpGoods_SUN_PairSun;
      END IF;
+     -- 2.4. Уже использовано в текущем СУН
+     DELETE FROM _tmpGoods_Sun_exception;
      -- 3.1. все остатки, СРОК
      DELETE FROM _tmpRemains_Partion_all;
      -- 3.2. остатки, СРОК - для распределения
@@ -1123,6 +1125,33 @@ BEGIN
         HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
        ;
 
+     -- Уже использовано в текущем СУН
+     WITH
+          tmpSUN AS (SELECT MovementLinkObject_From.ObjectId AS UnitId
+                          , MovementItem.ObjectId            AS GoodsId
+                          , SUM (MovementItem.Amount)        AS Amount
+                     FROM Movement
+                          INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                        ON MovementLinkObject_From.MovementId = Movement.Id
+                                                       AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                          INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                     ON MovementBoolean_SUN.MovementId = Movement.Id
+                                                    AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
+                                                    AND MovementBoolean_SUN.ValueData  = TRUE
+                          INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                 AND MovementItem.DescId     = zc_MI_Master()
+                                                 AND MovementItem.isErased   = FALSE
+                                                 AND MovementItem.Amount     > 0
+                     WHERE Movement.OperDate = inOperDate
+                       AND Movement.DescId   = zc_Movement_Send()
+                       AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+                     GROUP BY MovementLinkObject_From.ObjectId
+                            , MovementItem.ObjectId
+                    )
+     -- Результат-1
+     INSERT INTO _tmpGoods_Sun_exception (UnitId, GoodsId, Amount)
+        SELECT tmpSUN.UnitId, tmpSUN.GoodsId, tmpSUN.Amount
+        FROM tmpSUN;
 
      -- значения для разделения по срокам
      SELECT Date_6, Date_3, Date_1, Date_0
@@ -1769,6 +1798,8 @@ BEGIN
                        - COALESCE (_tmpRemains_all.AmountReserve, 0)
                          -- уменьшаем - Перемещение - расход (ожидается)
                        - COALESCE (_tmpRemains_all.AmountSend_out, 0)
+                         -- уменьшаем - сколько перемещено
+                       - COALESCE (_tmpGoods_Sun_exception.Amount, 0)
                           -- делим на кратность
                         ) / COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
                        ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
@@ -1792,6 +1823,8 @@ BEGIN
                        - COALESCE (_tmpRemains_all.AmountReserve, 0)
                          -- уменьшаем - Перемещение - расход (ожидается)
                        - COALESCE (_tmpRemains_all.AmountSend_out, 0)
+                         -- уменьшаем - сколько перемещено
+                       - COALESCE (_tmpGoods_Sun_exception.Amount, 0)
                           -- делим на кратность
                         ) / COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
                        ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
@@ -1845,6 +1878,9 @@ BEGIN
                LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun
                          ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = tmp.GoodsId
 
+               LEFT JOIN _tmpGoods_Sun_exception ON _tmpGoods_Sun_exception.UnitId  = tmp.UnitId
+                                                AND _tmpGoods_Sun_exception.GoodsId = tmp.GoodsId
+
 
           -- маленькое кол-во не распределяем
           WHERE FLOOR ((CASE -- отдаем ВСЕ - это парный
@@ -1860,6 +1896,8 @@ BEGIN
                       - COALESCE (_tmpRemains_all.AmountReserve, 0)
                         -- уменьшаем - Перемещение - расход (ожидается)
                       - COALESCE (_tmpRemains_all.AmountSend_out, 0)
+                        -- уменьшаем - сколько перемещено
+                      - COALESCE (_tmpGoods_Sun_exception.Amount, 0)
                          -- делим на кратность
                        ) / COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
                       ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)

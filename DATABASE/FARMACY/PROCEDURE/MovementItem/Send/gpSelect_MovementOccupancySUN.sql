@@ -32,7 +32,6 @@ BEGIN
                              FROM MovementItemProtocol
                              WHERE MovementItemProtocol.MovementItemId IN (SELECT MovementItem.ID FROM MovementItem WHERE MovementItem.MovementId = inMovementID)
                                    AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
-                                   AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
                              UNION ALL
                              SELECT MovementItemProtocol.Id
                                   , MovementItemProtocol.MovementItemId
@@ -40,7 +39,6 @@ BEGIN
                              FROM movementitemprotocol_arc AS MovementItemProtocol
                              WHERE MovementItemProtocol.MovementItemId  IN (SELECT MovementItem.ID FROM MovementItem WHERE MovementItem.MovementId = inMovementID)
                                    AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
-                                   AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
                             )
       , tmpProtocolAll AS (SELECT Movement.ID
                                , Movement.InvNumber

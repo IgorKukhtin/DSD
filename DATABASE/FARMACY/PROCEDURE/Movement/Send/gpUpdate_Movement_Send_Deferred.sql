@@ -217,7 +217,6 @@ BEGIN
                                             FROM MovementItemProtocol
                                             WHERE MovementItemProtocol.MovementItemId IN (SELECT MovementItem.ID FROM MovementItem WHERE MovementItem.MovementId = inMovementID)
                                                   AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
-                                                  AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
                                             UNION ALL
                                             SELECT MovementItemProtocol.Id
                                                  , MovementItemProtocol.MovementItemId
@@ -225,7 +224,6 @@ BEGIN
                                             FROM MovementItemProtocol_arc AS MovementItemProtocol
                                             WHERE MovementItemProtocol.MovementItemId  IN (SELECT MovementItem.ID FROM MovementItem WHERE MovementItem.MovementId = inMovementID)
                                                   AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
-                                                  AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
                                           )
                     , tmpProtocolAll AS (SELECT MovementItemProtocol.MovementItemId
                                               , MovementItemProtocol.ProtocolData
@@ -238,7 +236,6 @@ BEGIN
                                               INNER JOIN tmpProtocolUnion AS MovementItemProtocol 
                                                                           ON MovementItemProtocol.MovementItemId = MovementItem.Id
                                                                          AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
-                                                                         AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
                                          WHERE MovementItem.MovementId = inMovementId)
                     , tmpProtocol AS (SELECT tmpProtocolAll.MovementItemId
                                            , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
@@ -267,7 +264,6 @@ BEGIN
 
                                                      INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
                                                                                     AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
-                                                                                    AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
                                                 WHERE  MovementItem.MovementId = inMovementID
                                                 )
                            , tmpProtocol AS (SELECT tmpProtocolAll.Id
@@ -298,7 +294,6 @@ BEGIN
 
                                              INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
                                                                             AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
-                                                                            AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
                                         WHERE  MovementItem.MovementId = inMovementID
                                         )
                    , tmpProtocol AS (SELECT tmpProtocolAll.Id

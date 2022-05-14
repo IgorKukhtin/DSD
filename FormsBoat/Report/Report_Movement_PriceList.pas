@@ -1,4 +1,4 @@
-unit Report_GoodsMotion;
+unit Report_Movement_PriceList;
 
 interface
 
@@ -26,46 +26,29 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TReport_GoodsMotionForm = class(TAncestorReportForm)
+  TReport_Movement_PriceListForm = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
     edGoods: TcxButtonEdit;
     GuidesGoods: TdsdGuides;
-    LocationDescName: TcxGridDBColumn;
-    LocationName: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
-    SummStart: TcxGridDBColumn;
-    SummIn: TcxGridDBColumn;
-    SummOut: TcxGridDBColumn;
-    SummEnd: TcxGridDBColumn;
-    AmountStart: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    Price_end: TcxGridDBColumn;
-    cxLabel5: TcxLabel;
-    edPartion: TcxButtonEdit;
     cxLabel8: TcxLabel;
-    edUnitGroup: TcxButtonEdit;
-    GuidesUnitGroup: TdsdGuides;
-    GuidesPartion: TdsdGuides;
+    edPartner: TcxButtonEdit;
+    GuidesPartner: TdsdGuides;
     bbSumm_branch: TdxBarControlContainerItem;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     getMovementForm: TdsdStoredProc;
     actGetForm: TdsdExecStoredProc;
-    actOpenForm: TdsdOpenForm;
-    actOpenDocument: TMultiAction;
-    bbOpenDocument: TdxBarButton;
+    bbOpenFormClient: TdxBarButton;
     FormParams: TdsdFormParams;
-    cbPartNumber: TcxCheckBox;
-    Код: TcxLabel;
-    ceCode: TcxCurrencyEdit;
-    edArticle: TcxTextEdit;
-    cxLabel18: TcxLabel;
-    GoodsId: TcxGridDBColumn;
-    actPrintSum: TdsdPrintAction;
-    bbPrintSum: TdxBarButton;
+    actOpenFormPriceList: TdsdOpenForm;
+    bbOpenFormPartner: TdxBarButton;
+    actRefreshEmpty: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
@@ -76,6 +59,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TReport_GoodsMotionForm);
+  RegisterClass(TReport_Movement_PriceListForm);
 
 end.

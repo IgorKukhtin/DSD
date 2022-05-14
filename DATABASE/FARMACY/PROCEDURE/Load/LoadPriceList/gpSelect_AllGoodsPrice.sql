@@ -589,7 +589,7 @@ BEGIN
 
                       WHERE Object_JuridicalPriorities.DescId = zc_Object_JuridicalPriorities()
                         AND Object_JuridicalPriorities.isErased = False
-                        AND FALSE)
+                      )
 
     ----
     SELECT

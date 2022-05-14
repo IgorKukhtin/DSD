@@ -61,7 +61,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     Align = alClient
     DataSource = DataSource
     Groups = <>
-    TabOrder = 2
+    TabOrder = 1
     object clProfitLossGroupName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0
@@ -579,7 +579,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -590,7 +590,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','

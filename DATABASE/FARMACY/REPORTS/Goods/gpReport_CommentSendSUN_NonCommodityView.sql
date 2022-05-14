@@ -76,7 +76,6 @@ BEGIN
 
                                   INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.MovementItemId
                                                               AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
-                                                              AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
                              UNION ALL
                              SELECT MovementItemProtocol.Id
                                   , MovementItemProtocol.MovementItemId
@@ -86,7 +85,6 @@ BEGIN
                                   INNER JOIN MovementItemProtocol_arc AS MovementItemProtocol
                                                                       ON MovementItemProtocol.MovementItemId = MovementItem.MovementItemId
                                                                      AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
-                                                                     AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
                             )
       , tmpProtocolAll AS (SELECT MovementItemProtocol.MovementItemId
                                 , MovementItemProtocol.ProtocolData
