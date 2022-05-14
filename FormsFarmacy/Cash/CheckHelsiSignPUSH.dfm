@@ -23,8 +23,6 @@ inherited CheckHelsiSignPUSHForm: TCheckHelsiSignPUSHForm
     Font.Style = []
     ParentFont = False
     TabOrder = 0
-    ExplicitTop = 59
-    ExplicitHeight = 459
     object cxCheckHelsiSignPUSHGridDBBandedTableView1: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

@@ -87,7 +87,7 @@ begin
     else if not FIniError and GetHelsiReceiptState(ClientDataSet.FieldByName('InvNumberSP').AsString, cState, FIniError) then
     else cState := 'Ош. получения';
   end else cState := 'Ош. получения';
-  nColor := clFuchsia;
+  nColor := clWindow;
 
   if cState = 'ACTIVE' then
   begin
@@ -109,7 +109,7 @@ begin
   ClientDataSet.Edit;
   ClientDataSet.FieldByName('State').AsString := cState;
   ClientDataSet.FieldByName('Color_calc').AsInteger := nColor;
-  ClientDataSet.FieldByName('isState').AsBoolean := nColor = clWindow;
+  ClientDataSet.FieldByName('isState').AsBoolean := nColor <> clWindow;
   ClientDataSet.Post;
 end;
 

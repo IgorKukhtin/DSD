@@ -536,11 +536,16 @@ CREATE OR REPLACE FUNCTION zc_Movement_CompetitorMarkups() RETURNS Integer AS $B
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_CompetitorMarkups', 'Сравнение наценок с конкурентами' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_CompetitorMarkups');
 
+CREATE OR REPLACE FUNCTION zc_Movement_GoodsSPRegistry_1303() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_GoodsSPRegistry_1303'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_GoodsSPRegistry_1303', 'Реестр товаров Соц. проекта 1303' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_GoodsSPRegistry_1303');
+
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 14.05.22                                                                                     * zc_Movement_GoodsSPRegistry_1303
  04.05.22                                                                                     * zc_Movement_CompetitorMarkups
  07.04.22                                                                                     * zc_Movement_GoodsSP_1303
  04.02.22                                                                                     * zc_Movement_LayoutFile

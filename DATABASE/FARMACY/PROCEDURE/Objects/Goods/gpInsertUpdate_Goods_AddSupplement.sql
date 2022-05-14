@@ -11,6 +11,7 @@ $BODY$
    DECLARE vbUserId            Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
+   DECLARE vbDay Integer;
 BEGIN
 
    IF COALESCE(inGoodsId, 0) = 0 THEN
@@ -23,6 +24,8 @@ BEGIN
       vbUnitKey := '0';
    END IF;
    vbUnitId := vbUnitKey::Integer;
+   
+   vbDay := 90;
    
    IF COALESCE (vbUnitId, 0) = 0
    THEN
@@ -68,11 +71,11 @@ BEGIN
                      AND Container.Amount > 0 
                      AND Container.ObjectId = inGoodsId
                      AND Container.WhereObjectId = vbUnitId
-                     AND COALESCE (ObjectDate_ExpirationDate.ValueData, MIDate_ExpirationDate.ValueData, zc_DateEnd()) > CURRENT_DATE + INTERVAL '90 DAY'
+                     AND COALESCE (ObjectDate_ExpirationDate.ValueData, MIDate_ExpirationDate.ValueData, zc_DateEnd()) > CURRENT_DATE + (vbDay::TVarChar||' DAY')::INTERVAL
                    GROUP BY Container.ObjectId 
                    HAVING SUM(COALESCE(ContainerPD.Amount, Container.Amount)) >= 1)
    THEN
-     RAISE EXCEPTION 'Для добавления товара необходим остаток как минимум 1 уп. сроком более 90 дней.';          
+     RAISE EXCEPTION 'Для добавления товара необходим остаток как минимум 1 уп. сроком более % дней.', vbDay;          
    END IF;
 
    IF EXISTS(SELECT 1

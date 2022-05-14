@@ -492,8 +492,10 @@ end if;*/
                                                   , inObjectId_1        := vbUnitToId
                                                   , inDescId_2          := zc_ContainerLinkObject_PartionMovementItem() -- DescId для 2-ой Аналитики
                                                   , inObjectId_2        := lpInsertFind_Object_PartionMovementItem (tmpItem.PartionMovementItemId)
-                                                  , inDescId_3          := CASE WHEN vbDivisionParties = TRUE AND COALESCE (tmpContainerTo.FromId, 0) = 0 THEN zc_ContainerLinkObject_DivisionParties() ELSE NULL END -- DescId для 3-ой Аналитики
-                                                  , inObjectId_3        := CASE WHEN vbDivisionParties = TRUE AND COALESCE (tmpContainerTo.FromId, 0) = 0 THEN zc_Enum_DivisionParties_UKTVED() ELSE NULL END
+                                                  , inDescId_3          := CASE WHEN vbDivisionParties = TRUE AND COALESCE (tmpContainerTo.FromId, 0) = 0 
+                                                                                THEN NULL /*zc_ContainerLinkObject_DivisionParties()*/ ELSE NULL END::Integer -- DescId для 3-ой Аналитики
+                                                  , inObjectId_3        := CASE WHEN vbDivisionParties = TRUE AND COALESCE (tmpContainerTo.FromId, 0) = 0 
+                                                                                THEN NULL /*zc_Enum_DivisionParties_UKTVED()*/ ELSE NULL END::Integer
                                                    ) AS ContainerId_count
                            , Null
                            , tmpItem.MovementItemId  AS MovementItemId
@@ -769,8 +771,10 @@ end if;*/
                                                 , inObjectId_1        := vbUnitToId
                                                 , inDescId_2          := zc_ContainerLinkObject_PartionMovementItem() -- DescId для 2-ой Аналитики
                                                 , inObjectId_2        := lpInsertFind_Object_PartionMovementItem (tmpItem.PartionMovementItemId)
-                                                , inDescId_3          := CASE WHEN vbDivisionParties = TRUE AND COALESCE (tmpContainerTo.FromId, 0) = 0 THEN zc_ContainerLinkObject_DivisionParties() ELSE NULL END -- DescId для 3-ой Аналитики
-                                                , inObjectId_3        := CASE WHEN vbDivisionParties = TRUE AND COALESCE (tmpContainerTo.FromId, 0) = 0 THEN zc_Enum_DivisionParties_UKTVED() ELSE NULL END
+                                                , inDescId_3          := CASE WHEN vbDivisionParties = TRUE AND COALESCE (tmpContainerTo.FromId, 0) = 0 
+                                                                              THEN NULL /*zc_ContainerLinkObject_DivisionParties()*/ ELSE NULL END::Integer -- DescId для 3-ой Аналитики
+                                                , inObjectId_3        := CASE WHEN vbDivisionParties = TRUE AND COALESCE (tmpContainerTo.FromId, 0) = 0 
+                                                                              THEN NULL /*zc_Enum_DivisionParties_UKTVED()*/ ELSE NULL END::Integer
                                                  ) AS ContainerId_count
                          , tmpItem.MovementItemId  AS MovementItemId
                          , tmpItem.ObjectId_to     AS ObjectId
@@ -1078,8 +1082,10 @@ end if;*/
                                                 , inObjectId_1        := vbUnitToId
                                                 , inDescId_2          := zc_ContainerLinkObject_PartionMovementItem() -- DescId для 2-ой Аналитики
                                                 , inObjectId_2        := lpInsertFind_Object_PartionMovementItem (tmpItem.PartionMovementItemId)
-                                                , inDescId_3          := CASE WHEN vbDivisionParties = TRUE AND COALESCE (tmpContainerTo.FromId, 0) = 0 THEN zc_ContainerLinkObject_DivisionParties() ELSE NULL END -- DescId для 3-ой Аналитики
-                                                , inObjectId_3        := CASE WHEN vbDivisionParties = TRUE AND COALESCE (tmpContainerTo.FromId, 0) = 0 THEN zc_Enum_DivisionParties_UKTVED() ELSE NULL END
+                                                , inDescId_3          := CASE WHEN vbDivisionParties = TRUE AND COALESCE (tmpContainerTo.FromId, 0) = 0 
+                                                                              THEN NULL /*zc_ContainerLinkObject_DivisionParties()*/ ELSE NULL END::Integer -- DescId для 3-ой Аналитики
+                                                , inObjectId_3        := CASE WHEN vbDivisionParties = TRUE AND COALESCE (tmpContainerTo.FromId, 0) = 0 
+                                                                              THEN NULL /*zc_Enum_DivisionParties_UKTVED()*/ ELSE NULL END::Integer
                                                  ) AS ContainerId_count
                          , tmpItem.MovementItemId  AS MovementItemId
                          , tmpItem.ObjectId_to     AS ObjectId
@@ -1373,3 +1379,5 @@ $BODY$
 
 -- select * from gpUpdate_Movement_Send_Deferred(inMovementId := 15529825 , inisDeferred := 'True' ,  inSession := '3');-- SELECT * FROM lpComplete_Movement_Send (inMovementId:= 14931454, inUserId:= 3)
 -- select * from gpUpdate_Status_Send(inMovementId := 19877942  , inStatusCode := 2 ,  inSession := '3');
+
+select * from gpUpdate_Movement_Send_Deferred(inMovementId := 25917762 , inisDeferred := 'True' ,  inSession := '3');

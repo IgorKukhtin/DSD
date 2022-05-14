@@ -1,29 +1,29 @@
 ﻿inherited Report_Check_QuantityComparisonForm: TReport_Check_QuantityComparisonForm
   Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1095#1077#1082#1086#1074' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-  ClientHeight = 678
-  ClientWidth = 918
+  ClientHeight = 716
+  ClientWidth = 984
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 934
-  ExplicitHeight = 717
+  ExplicitWidth = 1000
+  ExplicitHeight = 755
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 918
-    Height = 595
+    Width = 984
+    Height = 633
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 918
     ExplicitHeight = 595
-    ClientRectBottom = 595
-    ClientRectRight = 918
+    ClientRectBottom = 633
+    ClientRectRight = 984
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 918
       ExplicitHeight = 595
       inherited cxGrid: TcxGrid
-        Width = 918
-        Height = 363
+        Width = 984
+        Height = 243
         ExplicitWidth = 918
         ExplicitHeight = 363
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -242,11 +242,13 @@
       end
       object grChart: TcxGrid
         Left = 0
-        Top = 371
-        Width = 918
-        Height = 224
+        Top = 251
+        Width = 984
+        Height = 187
         Align = alBottom
         TabOrder = 1
+        ExplicitTop = 240
+        ExplicitWidth = 918
         object grChartDBChartView1: TcxGridDBChartView
           DiagramLine.Active = True
           DiagramLine.Values.LineWidth = 3
@@ -259,17 +261,63 @@
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 363
-        Width = 918
+        Top = 243
+        Width = 984
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = grChart
+        ExplicitLeft = 3
+        ExplicitTop = 219
+        ExplicitWidth = 918
+      end
+      object grChartDay: TcxGrid
+        Left = 0
+        Top = 446
+        Width = 984
+        Height = 187
+        Align = alBottom
+        TabOrder = 3
+        ExplicitTop = 408
+        ExplicitWidth = 918
+        object grChartDBChartView2: TcxGridDBChartView
+          DataController.DataSource = ChartDayDS
+          DiagramLine.Active = True
+          DiagramLine.Values.LineWidth = 3
+          ToolBox.CustomizeButton = True
+          ToolBox.DiagramSelector = True
+          object grChartDBChartView2DataGroup1: TcxGridDBChartDataGroup
+            DataBinding.FieldName = 'OperDate'
+            DisplayText = #1044#1072#1090#1072
+          end
+          object grChartDBChartView2Series1: TcxGridDBChartSeries
+            DataBinding.FieldName = 'CountChecks'
+            DisplayText = #1058#1077#1082#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
+          end
+          object grChartDBChartView2Series2: TcxGridDBChartSeries
+            DataBinding.FieldName = 'CountChecksPrew'
+            DisplayText = #1055#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = grChartDBChartView2
+        end
+      end
+      object cxSplitter2: TcxSplitter
+        Left = 0
+        Top = 438
+        Width = 984
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = grChartDay
+        ExplicitTop = 427
+        ExplicitWidth = 918
       end
     end
   end
   inherited Panel: TPanel
-    Width = 918
+    Width = 984
     Height = 57
     ExplicitWidth = 918
     ExplicitHeight = 57
@@ -582,6 +630,9 @@
       end
       item
         DataSet = MasterCDS
+      end
+      item
+        DataSet = ChartDayCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -827,6 +878,18 @@
     OnDblClickActionList = <>
     ActionItemList = <>
     OnlyEditingCellOnEnter = False
+    ChartList = <
+      item
+        ChartView = grChartDBChartView1
+        DataGroupsFielddName = 'DateName'
+        HeaderName = #1052#1077#1089#1103#1094
+        HeaderFieldName = 'ValueChartName'
+        ChartDataSet = ChartCDS
+        SeriesName = 'SeriesName'
+        SeriesFieldName = 'FieldName'
+        DisplayedDataComboBox = cbChartData
+        NameDisplayedDataFieldName = 'DisplayedDataName'
+      end>
     ColorRuleList = <
       item
         ColorColumn = Count
@@ -858,18 +921,6 @@
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    ChartList = <
-      item
-        ChartView = grChartDBChartView1
-        DataGroupsFielddName = 'DateName'
-        HeaderName = #1052#1077#1089#1103#1094
-        HeaderFieldName = 'ValueChartName'
-        ChartDataSet = ChartCDS
-        SeriesName = 'SeriesName'
-        SeriesFieldName = 'FieldName'
-        DisplayedDataComboBox = cbChartData
-        NameDisplayedDataFieldName = 'DisplayedDataName'
-      end>
     MultiplyColumnList = <
       item
         FieldName = 'FieldNameCount'
@@ -945,7 +996,31 @@
       end>
     Params = <>
     StoreDefs = True
-    Left = 440
+    Left = 400
     Top = 328
+  end
+  object ChartDayCDS: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <>
+    IndexDefs = <
+      item
+        Name = 'DEFAULT_ORDER'
+      end
+      item
+        Name = 'CHANGEINDEX'
+      end>
+    IndexFieldNames = 'UnitId'
+    MasterFields = 'UnitId'
+    MasterSource = MasterDS
+    PacketRecords = 0
+    Params = <>
+    StoreDefs = True
+    Left = 440
+    Top = 384
+  end
+  object ChartDayDS: TDataSource
+    DataSet = ChartDayCDS
+    Left = 552
+    Top = 384
   end
 end

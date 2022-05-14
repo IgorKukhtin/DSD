@@ -18,6 +18,7 @@ $BODY$
    DECLARE cur2          refcursor;
    DECLARE cur3          refcursor;
    DECLARE cur4          refcursor;
+   DECLARE cur5          refcursor;
    DECLARE vbOperDate    TDateTime;
    DECLARE vbQueryText   Text;
    DECLARE vbIndex       Integer;
@@ -31,8 +32,8 @@ BEGIN
 
     CREATE TEMP TABLE tmpOperDate ON COMMIT DROP AS
       SELECT GENERATE_SERIES (DATE_TRUNC ('MONTH', inDateStart), DATE_TRUNC ('MONTH', inDateFinal), '1 MONTH' :: INTERVAL) AS OperDate;
-
-    CREATE TEMP TABLE tmpData ON COMMIT DROP AS
+      
+    CREATE TEMP TABLE tmpDataDay ON COMMIT DROP AS
        (WITH tmpUnit AS (SELECT Objectt_Unit.ID AS UnitId
                          FROM Object AS Objectt_Unit
 
@@ -48,7 +49,7 @@ BEGIN
                          WHERE Objectt_Unit.DescId = zc_Object_Unit()
                            AND (Objectt_Unit.ID = inUnitId OR inUnitId = 0)),
              tmpMovementAll AS (SELECT Movement.ID
-                                     , DATE_TRUNC ('MONTH', Movement.OperDate) AS OperDate
+                                     , DATE_TRUNC ('DAY', Movement.OperDate) AS OperDate
                                 FROM Movement
                                 WHERE Movement.OperDate >= DATE_TRUNC ('MONTH', inDateStart) - (inYearsAgo::TVArChar||' YEAR')::INTERVAL - INTERVAL '1 MONTH'
                                   AND Movement.OperDate <  DATE_TRUNC ('MONTH', inDateFinal) + INTERVAL '1 MONTH'
@@ -66,10 +67,10 @@ BEGIN
                                   INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId),
              tmpMovementSum AS (SELECT Movement.UnitId
                                      , Movement.OperDate
-                                     , Count(*)::Integer                                 AS CountChecks
-                                     , SUM(MovementFloat_TotalSumm.ValueData) / Count(*) AS AverageCheck
-                                     , SUM(CASE WHEN MovementLinkObject_PaidType.ObjectId = zc_Enum_PaidType_Cash() THEN 1 ELSE 0 END)  AS CountCash
-                                     , SUM(CASE WHEN MovementLinkObject_PaidType.ObjectId <> zc_Enum_PaidType_Cash() THEN 1 ELSE 0 END) AS CountCashLess
+                                     , Count(*)::Integer                                     AS CountChecks
+                                     , SUM(MovementFloat_TotalSumm.ValueData)                AS TotalSumm
+                                     , SUM(CASE WHEN MovementLinkObject_PaidType.ObjectId = zc_Enum_PaidType_Cash() THEN 1 ELSE 0 END)::Integer  AS CountCash
+                                     , SUM(CASE WHEN MovementLinkObject_PaidType.ObjectId <> zc_Enum_PaidType_Cash() THEN 1 ELSE 0 END)::Integer AS CountCashLess
                                 FROM tmpMovement as Movement
 
                                      LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
@@ -87,10 +88,22 @@ BEGIN
         SELECT Movement.UnitId
              , Movement.OperDate
              , Movement.CountChecks
-             , Movement.AverageCheck
+             , Movement.TotalSumm
              , Movement.CountCash
              , Movement.CountCashLess
         FROM tmpMovementSum as Movement);
+
+    CREATE TEMP TABLE tmpData ON COMMIT DROP AS
+    SELECT Movement.UnitId
+         , DATE_TRUNC ('MONTH', Movement.OperDate)                          AS OperDate
+         , SUM(Movement.CountChecks)                                        AS CountChecks
+         , (SUM(Movement.TotalSumm) / SUM(Movement.CountChecks))::TFloat    AS AverageCheck
+         , SUM(Movement.CountCash)::Integer                                 AS CountCash
+         , SUM(Movement.CountCashLess)::Integer                             AS CountCashLess
+    FROM tmpDataDay as Movement
+    GROUP BY Movement.UnitId
+           , DATE_TRUNC ('MONTH', Movement.OperDate);
+
 
     CREATE TEMP TABLE tmpResult (
             UnitId          Integer,
@@ -328,6 +341,19 @@ BEGIN
                   ORDER BY Sort, tmpResult.UnitName;
     RETURN NEXT cur4;
 
+    -- Строки для графика под дням
+    OPEN cur5 FOR SELECT tmpDataDay.UnitId
+                       , tmpDataDay.OperDate
+                       , tmpDataDay.CountChecks
+                       , tmpDataDayPrew.CountChecks  AS CountChecksPrew
+                  FROM tmpDataDay
+                       LEFT JOIN tmpDataDay AS tmpDataDayPrew  
+                                            ON tmpDataDayPrew.UnitId = tmpDataDay.UnitId
+                                           AND tmpDataDayPrew.OperDate = tmpDataDay.OperDate - (inYearsAgo::TVArChar||' YEAR')::INTERVAL
+                  WHERE tmpDataDay.OperDate >= DATE_TRUNC ('MONTH', inDateStart) 
+                    AND tmpDataDay.OperDate <  DATE_TRUNC ('MONTH', inDateFinal) + INTERVAL '1 MONTH'
+                  ORDER BY tmpDataDay.UnitId, tmpDataDay.OperDate;
+    RETURN NEXT cur5;
 
 END;
 $BODY$
@@ -341,4 +367,6 @@ $BODY$
 
 -- тест
 --
- select * from gpReport_Check_QuantityComparison(inDateStart := ('01.11.2020')::TDateTime , inDateFinal := ('31.12.2020')::TDateTime , inRetailId := 4 , inUnitId := 183292 , inYearsAgo := 1 ,  inSession := '3');
+ 
+select * from gpReport_Check_QuantityComparison(inDateStart := ('01.03.2022')::TDateTime , inDateFinal := ('13.05.2022')::TDateTime , inRetailId := 4 , inUnitId := 377605 , inYearsAgo := 1 ,  inSession := '3');
+
