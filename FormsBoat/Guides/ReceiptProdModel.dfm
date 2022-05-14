@@ -285,9 +285,9 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       ParentBackground = False
       TabOrder = 1
     end
-    object cxLabel6: TcxLabel
+    object lbReceiptLevel: TcxLabel
       Left = 338
-      Top = 24
+      Top = 23
       Hint = #1069#1090#1072#1087' '#1089#1073#1086#1088#1082#1080
       Caption = 'Level:'
       ParentShowHint = False
@@ -303,10 +303,10 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end>
       Properties.ReadOnly = True
       TabOrder = 3
-      Width = 178
+      Width = 140
     end
-    object cxLabel12: TcxLabel
-      Left = 668
+    object lbModel: TcxLabel
+      Left = 664
       Top = 23
       Caption = 'Model:'
     end
@@ -321,6 +321,27 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Properties.ReadOnly = True
       TabOrder = 5
       Width = 151
+    end
+    object lbSearchArticle: TcxLabel
+      Left = 203
+      Top = 93
+      Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchArticle: TcxTextEdit
+      Left = 200
+      Top = 119
+      TabOrder = 7
+      DesignSize = (
+        125
+        21)
+      Width = 125
     end
   end
   object PanelProdColorPattern: TPanel
@@ -708,6 +729,13 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         OptionsView.HeaderHeight = 40
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+        object isCheck_ch1: TcxGridDBColumn
+          Caption = #1055#1088#1086#1074#1077#1088#1077#1085
+          DataBinding.FieldName = 'isCheck'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
+        end
         object ReceiptLevelName_ch1: TcxGridDBColumn
           Caption = 'Level'
           DataBinding.FieldName = 'ReceiptLevelName'
@@ -763,6 +791,15 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 55
+        end
+        object Article_all_ch1: TcxGridDBColumn
+          Caption = '***Artikel Nr'
+          DataBinding.FieldName = 'Article_all'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
         end
         object GoodsGroupNameFull_ch1: TcxGridDBColumn
           Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
@@ -888,8 +925,26 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Options.Editing = False
           Width = 70
         end
+        object OperDate_protocol_ch1: TcxGridDBColumn
+          Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103
+          DataBinding.FieldName = 'OperDate_protocol'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1088#1086#1090#1086#1082#1086#1083')'
+          Options.Editing = False
+          Width = 80
+        end
+        object UserName_protocol_ch1: TcxGridDBColumn
+          Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1088#1086#1090#1086#1082#1086#1083')'
+          DataBinding.FieldName = 'UserName_protocol'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1088#1086#1090#1086#1082#1086#1083')'
+          Options.Editing = False
+          Width = 80
+        end
         object InsertDate_ch1: TcxGridDBColumn
-          Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
+          Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
           DataBinding.FieldName = 'InsertDate'
           Visible = False
           HeaderAlignmentHorz = taCenter
@@ -907,7 +962,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Width = 70
         end
         object UpdateDate_ch1: TcxGridDBColumn
-          Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
+          Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.)'
           DataBinding.FieldName = 'UpdateDate'
           Visible = False
           HeaderAlignmentHorz = taCenter
@@ -978,6 +1033,12 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Visible = False
           VisibleForCustomization = False
           Width = 60
+        end
+        object Color_isCheck_ch1: TcxGridDBColumn
+          DataBinding.FieldName = 'Color_isCheck'
+          Visible = False
+          VisibleForCustomization = False
+          Width = 55
         end
         object Bold_isReceiptGoods_ch1: TcxGridDBColumn
           DataBinding.FieldName = 'Bold_isReceiptGoods'
@@ -1284,6 +1345,18 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end
         item
           Visible = True
+          ItemName = 'bbSearchArticleLabel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSearchArticle'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'BarSubItemBoat'
         end
         item
@@ -1308,11 +1381,11 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end
         item
           Visible = True
-          ItemName = 'bbcxLabel12'
+          ItemName = 'bbModelLabel'
         end
         item
           Visible = True
-          ItemName = 'bbbedModel'
+          ItemName = 'bbModel'
         end
         item
           Visible = True
@@ -1320,11 +1393,11 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end
         item
           Visible = True
-          ItemName = 'dxBarControlContainerItem1'
+          ItemName = 'bbReceiptLevelLabel'
         end
         item
           Visible = True
-          ItemName = 'dxBarControlContainerItem2'
+          ItemName = 'bbReceiptLevel'
         end
         item
           Visible = True
@@ -1536,33 +1609,41 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Visible = ivAlways
       ImageIndex = 63
     end
-    object dxBarControlContainerItem1: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object bbReceiptLevelLabel: TdxBarControlContainerItem
+      Caption = 'bbReceiptLevelLabel'
       Category = 0
-      Hint = 'New Item'
       Visible = ivAlways
-      Control = cxLabel6
+      Control = lbReceiptLevel
     end
-    object dxBarControlContainerItem2: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object bbReceiptLevel: TdxBarControlContainerItem
+      Caption = 'bbReceiptLevel'
       Category = 0
-      Hint = 'New Item'
       Visible = ivAlways
       Control = edReceiptLevel
     end
-    object bbcxLabel12: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object bbModelLabel: TdxBarControlContainerItem
+      Caption = 'bbModelLabel'
       Category = 0
-      Hint = 'New Item'
       Visible = ivAlways
-      Control = cxLabel12
+      Control = lbModel
     end
-    object bbbedModel: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object bbModel: TdxBarControlContainerItem
+      Caption = 'bbModel'
       Category = 0
-      Hint = 'New Item'
       Visible = ivAlways
       Control = edModel
+    end
+    object bbSearchArticleLabel: TdxBarControlContainerItem
+      Caption = 'bbSearchArticleLabel'
+      Category = 0
+      Visible = ivAlways
+      Control = lbSearchArticle
+    end
+    object bbSearchArticle: TdxBarControlContainerItem
+      Caption = 'bbSearchArticle'
+      Category = 0
+      Visible = ivAlways
+      Control = edSearchArticle
     end
   end
   object ActionList: TActionList
@@ -2314,6 +2395,11 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         ColorColumn = Value_ch1
         BackGroundValueColumn = Color_value_ch1
         ColorValueList = <>
+      end
+      item
+        ColorColumn = isCheck_ch1
+        BackGroundValueColumn = Color_isCheck_ch1
+        ColorValueList = <>
       end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -2477,6 +2563,15 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         Component = GoodsCDS
         ComponentItem = 'ReceiptLevelName'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioIsCheck'
+        Value = Null
+        Component = GoodsCDS
+        ComponentItem = 'isCheck'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -2902,5 +2997,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       end>
     Left = 815
     Top = 50
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edSearchArticle
+    DataSet = GoodsCDS
+    Column = Article_all_ch1
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 352
+    Top = 240
   end
 end

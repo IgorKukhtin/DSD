@@ -155,24 +155,34 @@ type
     Panel3: TPanel;
     actChoiceFormReceiptLevel_ch1: TOpenChoiceForm;
     actChoiceFormReceiptLevel_ch2: TOpenChoiceForm;
-    cxLabel6: TcxLabel;
+    lbReceiptLevel: TcxLabel;
     edReceiptLevel: TcxButtonEdit;
     GuidesReceiptLevel: TdsdGuides;
-    dxBarControlContainerItem1: TdxBarControlContainerItem;
-    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    bbReceiptLevelLabel: TdxBarControlContainerItem;
+    bbReceiptLevel: TdxBarControlContainerItem;
     RefreshDispatcher: TRefreshDispatcher;
     Color_value_ch1: TcxGridDBColumn;
     Color_Level_ch1: TcxGridDBColumn;
     Bold_isReceiptGoods_ch1: TcxGridDBColumn;
-    cxLabel12: TcxLabel;
+    lbModel: TcxLabel;
     edModel: TcxButtonEdit;
     GuidesModel: TdsdGuides;
-    bbcxLabel12: TdxBarControlContainerItem;
-    bbbedModel: TdxBarControlContainerItem;
+    bbModelLabel: TdxBarControlContainerItem;
+    bbModel: TdxBarControlContainerItem;
     PartnerName_ch1: TcxGridDBColumn;
     UnitName_ch1: TcxGridDBColumn;
     PartnerName_ch3: TcxGridDBColumn;
     UnitName_ch3: TcxGridDBColumn;
+    Article_all_ch1: TcxGridDBColumn;
+    bbSearchArticleLabel: TdxBarControlContainerItem;
+    bbSearchArticle: TdxBarControlContainerItem;
+    lbSearchArticle: TcxLabel;
+    edSearchArticle: TcxTextEdit;
+    FieldFilter_Article: TdsdFieldFilter;
+    isCheck_ch1: TcxGridDBColumn;
+    OperDate_protocol_ch1: TcxGridDBColumn;
+    UserName_protocol_ch1: TcxGridDBColumn;
+    Color_isCheck_ch1: TcxGridDBColumn;
   private
     { Private declarations }
   public

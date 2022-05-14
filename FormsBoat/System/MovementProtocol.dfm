@@ -5,7 +5,7 @@ inherited MovementProtocolForm: TMovementProtocolForm
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   ExplicitWidth = 798
-  ExplicitHeight = 358
+  ExplicitHeight = 362
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -360,11 +360,11 @@ inherited MovementProtocolForm: TMovementProtocolForm
     Params = <>
     Left = 584
     Top = 119
-    object ProtocolDataCDSFieldName: TStringField
+    object ProtocolDataCDSFieldName: TWideStringField
       FieldName = 'FieldName'
       Size = 100
     end
-    object ProtocolDataCDSFieldValue: TStringField
+    object ProtocolDataCDSFieldValue: TWideStringField
       FieldName = 'FieldValue'
       Size = 255
     end

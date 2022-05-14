@@ -59,7 +59,7 @@ BEGIN
             , Object_Goods.ValueData              AS Name
             , ObjectDesc.ItemName                 AS DescName
             , ObjectString_Article.ValueData      AS Article
-            , REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (ObjectString_Article.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '') :: TVarChar AS Article_all
+            , zfCalc_Article_all (ObjectString_Article.ValueData) AS Article_all
             , ObjectString_ArticleVergl.ValueData AS ArticleVergl
             , ObjectString_EAN.ValueData          AS EAN
             , ObjectString_ASIN.ValueData         AS ASIN

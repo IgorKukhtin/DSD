@@ -40,8 +40,8 @@ type
     clUserName: TcxGridDBColumn;
     clMovementItemId: TcxGridDBColumn;
     ProtocolDataCDS: TClientDataSet;
-    ProtocolDataCDSFieldName: TStringField;
-    ProtocolDataCDSFieldValue: TStringField;
+    ProtocolDataCDSFieldName: TWideStringField;
+    ProtocolDataCDSFieldValue: TWideStringField;
     ProtocolDataDS: TDataSource;
     dsdXMLTransform: TdsdXMLTransform;
     cxGridProtocolData: TcxGrid;

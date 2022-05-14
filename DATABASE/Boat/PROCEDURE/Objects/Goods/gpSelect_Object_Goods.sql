@@ -113,7 +113,7 @@ BEGIN
             , Object_Goods.ObjectCode             AS Code
             , Object_Goods.ValueData              AS Name
             , ObjectString_Article.ValueData      AS Article
-            , REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (ObjectString_Article.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '') :: TVarChar AS Article_all
+            , zfCalc_Article_all (ObjectString_Article.ValueData) AS Article_all
             , ObjectString_ArticleVergl.ValueData AS ArticleVergl
             , Object_GoodsArticle.GoodsArticle ::TVarChar AS GoodsArticle
             , ObjectString_EAN.ValueData          AS EAN

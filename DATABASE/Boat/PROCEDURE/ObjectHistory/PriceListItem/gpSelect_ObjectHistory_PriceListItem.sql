@@ -399,7 +399,8 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                               AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
-          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_PriceListItem_Goods.ChildObjectId
+          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id       = ObjectLink_PriceListItem_Goods.ChildObjectId
+                                          AND Object_Goods.isErased = FALSE
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Goods.DescId
 
           LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
@@ -489,4 +490,3 @@ $BODY$
 -- тест
 -- select * from gpSelect_ObjectHistory_PriceListItem(inPriceListId := 2773 , inOperDate := ('20.11.2020')::TDateTime , inShowAll := 'False' ,  inSession := '5');
 --select * from gpSelect_ObjectHistory_PriceListItem(inPriceListId := 2773 , inOperDate := ('20.11.2020')::TDateTime , inShowAll := 'False' ,  inSession := '5');
-

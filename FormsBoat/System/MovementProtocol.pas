@@ -47,8 +47,8 @@ type
     cxGridLevelProtocolData: TcxGridLevel;
     cxSplitter: TcxSplitter;
     ProtocolDataCDS: TClientDataSet;
-    ProtocolDataCDSFieldName: TStringField;
-    ProtocolDataCDSFieldValue: TStringField;
+    ProtocolDataCDSFieldName: TWideStringField;
+    ProtocolDataCDSFieldValue: TWideStringField;
     ProtocolDataDS: TDataSource;
     colisInsert: TcxGridDBColumn;
   private

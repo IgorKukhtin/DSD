@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptProdModelChild (Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptProdModelChild(
  INOUT ioId                  Integer   ,    -- ключ объекта <>
@@ -12,13 +13,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptProdModelChild(
     IN inObjectId            Integer   ,
     IN inReceiptLevelId_top  Integer   ,
     IN inReceiptLevelId      Integer   ,
- INOUT ioValue               TFloat    , 
- INOUT ioValue_service       TFloat    , 
+ INOUT ioValue               TFloat    ,
+ INOUT ioValue_service       TFloat    ,
    OUT outEKPrice_summ       TFloat    ,
    OUT outEKPriceWVAT_summ   TFloat    ,
 --   OUT outBasis_summ         TFloat    ,
 --   OUT outBasisWVAT_summ     TFloat    ,
    OUT outReceiptLevelName   TVarChar  ,
+    IN ioIsCheck               Boolean  ,
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -32,6 +34,12 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ReceiptProdModelChild());
    vbUserId:= lpGetUserBySession (inSession);
 
+
+   -- замена
+   IF COALESCE (ioId, 0) = 0 OR ioValue <> COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_ReceiptProdModelChild_Value()), 0)
+   THEN
+       ioIsCheck:= TRUE;
+   END IF;
 
    -- замена
    IF ioValue = 0 AND EXISTS (SELECT FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
@@ -53,6 +61,56 @@ BEGIN
                                              , inUserId        := vbUserId
                                               );
    END IF;
+
+   -- Проверка
+   IF COALESCE (inObjectId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Элемент не установлен.';
+   END IF;
+
+
+   -- Проверка
+   IF EXISTS (SELECT 1
+              FROM ObjectLink AS ObjectLink_ReceiptProdModel
+                   INNER JOIN Object AS Object_ReceiptProdModelChild ON Object_ReceiptProdModelChild.Id = ObjectLink_ReceiptProdModel.ObjectId
+                                                                    AND Object_ReceiptProdModelChild.isErased = FALSE
+                                                                    AND Object_ReceiptProdModelChild.Id <> COALESCE (ioId, 0)
+
+                   INNER JOIN ObjectLink AS ObjectLink_Object
+                                         ON ObjectLink_Object.ObjectId = ObjectLink_ReceiptProdModel.ObjectId
+                                        AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptProdModelChild_Object()
+                                        AND ObjectLink_Object.ChildObjectId = inObjectId
+              WHERE ObjectLink_ReceiptProdModel.ChildObjectId = inReceiptProdModelId
+                AND ObjectLink_ReceiptProdModel.DescId       = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
+             )
+   THEN
+       RAISE EXCEPTION 'Ошибка.Элемент%<%> <%>% уже существует.%№п/п= %'
+                     , CHR (13)
+                     , lfGet_Object_Article (inObjectId)
+                     , lfGet_Object_ValueData (inObjectId)
+                     , CHR (13)
+                     , CHR (13)
+                     , (SELECT tmp.Ord
+                        FROM (SELECT ROW_NUMBER() OVER (ORDER BY Object_ReceiptProdModelChild.Id ASC) AS Ord
+                                   , Object_ReceiptProdModelChild.Id
+                                   , ObjectLink_Object.ChildObjectId AS ObjectId
+                               FROM ObjectLink AS ObjectLink_ReceiptProdModel
+                                    INNER JOIN Object AS Object_ReceiptProdModelChild ON Object_ReceiptProdModelChild.Id = ObjectLink_ReceiptProdModel.ObjectId
+                                                                                     AND Object_ReceiptProdModelChild.isErased = FALSE
+                                    INNER JOIN ObjectLink AS ObjectLink_Object
+                                                          ON ObjectLink_Object.ObjectId = ObjectLink_ReceiptProdModel.ObjectId
+                                                         AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptProdModelChild_Object()
+                               WHERE ObjectLink_ReceiptProdModel.ChildObjectId = inReceiptProdModelId
+                                 AND ObjectLink_ReceiptProdModel.DescId       = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
+                             ) AS tmp
+                        WHERE tmp.ObjectId = inObjectId
+                          AND tmp.Id <> COALESCE (ioId, 0)
+                        LIMIT 1
+                       )
+                      ;
+   END IF;
+
+
    -- Проверка
  /*  IF COALESCE (inObjectId, 0) = 0
    THEN
@@ -76,15 +134,17 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReceiptProdModelChild_Value(), ioId, ioValue);
-      
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel(), ioId, inReceiptProdModelId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptProdModelChild_Object(), ioId, inObjectId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel(), ioId, inReceiptLevelId);
-   
-   
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Check(), ioId, ioIsCheck);
+
+
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
@@ -114,7 +174,7 @@ BEGIN
         , (ioValue
              * CAST (COALESCE (ObjectFloat_EKPrice.ValueData, 0)
                     * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))) :: TFloat AS EKPriceWVAT_summ
-                    
+
        /* , (ioValue
             * CASE WHEN vbPriceWithVAT = FALSE
                    THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
@@ -124,7 +184,7 @@ BEGIN
         , (ioValue
             * CASE WHEN vbPriceWithVAT = FALSE
                     THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-                    ELSE COALESCE (tmpPriceBasis.ValuePrice, 0) 
+                    ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
                END) ::TFloat BasisWVAT_summ
                */
  INTO outEKPrice_summ, outEKPriceWVAT_summ     --, outBasis_summ, outBasisWVAT_summ
@@ -154,10 +214,11 @@ BEGIN
    WHERE Object.Id = inObjectId;
 
 
-   outReceiptLevelName :=  (SELECT Object.ValueData FROM Object WHERE Object.Id = inReceiptLevelId); 
+   outReceiptLevelName :=  (SELECT Object.ValueData FROM Object WHERE Object.Id = inReceiptLevelId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+
 
 END;
 $BODY$

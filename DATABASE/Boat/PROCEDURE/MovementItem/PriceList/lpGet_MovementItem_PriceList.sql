@@ -9,8 +9,15 @@ CREATE OR REPLACE FUNCTION lpGet_MovementItem_PriceList(
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , MovementItemId Integer, GoodsId Integer
-             , ValuePrice TFloat
-             , PartnerId Integer, PartnerName TVarChar
+             , ValuePrice  TFloat -- 
+             , ValuePrice_parent   TFloat --  Цена без ндс (упакови) 
+             , EmpfPrice           TFloat --  Цена без ндс (упакови) 
+             , EmpfPrice_parent    TFloat --  Цена без ндс (упакови) 
+             , MeasureMult         TFloat --  Вложенность
+             , MinCount            TFloat --  мин кол-во закупки
+             , MinCountMult        TFloat --  рекомендуемое кол-во закупки
+             , PartnerId   Integer
+             , PartnerName TVarChar
               )
 AS
 $BODY$

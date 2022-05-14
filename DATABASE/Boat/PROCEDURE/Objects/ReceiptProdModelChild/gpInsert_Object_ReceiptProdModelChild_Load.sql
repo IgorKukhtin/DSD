@@ -69,7 +69,8 @@ BEGIN
 
 
     --
-    PERFORM gpInsertUpdate_Object_ReceiptProdModelChild (ioId                 := vbId
+    vbId:= (SELECT tmp.ioId
+            FROM gpInsertUpdate_Object_ReceiptProdModelChild (ioId                 := vbId
                                                        , inComment            := inGoodsName           ::TVarChar
                                                        , inReceiptProdModelId := inReceiptProdModelId  ::Integer
                                                        , inObjectId           := vbGoodsId             ::Integer
@@ -77,9 +78,12 @@ BEGIN
                                                        , inReceiptLevelId     := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbId AND OL.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel())
                                                        , ioValue              := inAmount              ::TFloat
                                                        , ioValue_service      := 0                     ::TFloat
+                                                       , ioIsCheck            := FALSE
                                                        , inSession            := inSession             ::TVarChar
-                                                        );
-
+                                                        ) AS tmp);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Check(), vbId, FALSE);
+    
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

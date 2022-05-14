@@ -280,6 +280,7 @@ BEGIN
          , ObjectString_GoodsGroupFull.ValueData      AS GoodsGroupNameFull
          , Object_GoodsGroup.ValueData                AS GoodsGroupName
          , ObjectString_Article.ValueData             AS Article
+         , zfCalc_Article_all (ObjectString_Article.ValueData) AS Article_all
          , Object_ProdColor.ValueData                 AS ProdColorName
          , Object_Measure.ValueData                   AS MeasureName
 
@@ -375,14 +376,26 @@ BEGIN
                                , ROW_NUMBER() OVER (PARTITION BY ObjectProtocol.ObjectId ORDER BY ObjectProtocol.OperDate DESC) AS Ord
                           FROM ObjectProtocol
                           WHERE ObjectProtocol.ObjectId IN (SELECT tmpResult.Id FROM tmpResult)
+                            AND ObjectProtocol.UserId <> 5 -- 139 Maxim
                          )
      SELECT tmpResult.*
+          , CASE WHEN 1=0 AND tmpProtocol.UserId = 139 -- Maxim
+                      THEN TRUE
+                 ELSE COALESCE (ObjectBoolean_Check.ValueData, FALSE)
+            END :: Boolean AS isCheck
+          , CASE WHEN COALESCE (ObjectBoolean_Check.ValueData, FALSE) = TRUE
+                      THEN zc_Color_Blue()
+                 ELSE zc_Color_Yelow()
+            END AS Color_isCheck
           , tmpProtocol.OperDate  AS OperDate_protocol
           , Object_User.ValueData AS UserName_protocol
      FROM tmpResult
           LEFT JOIN tmpProtocol ON tmpProtocol.ObjectId = tmpResult.Id
                                AND tmpProtocol.Ord      = 1
           LEFT JOIN Object AS Object_User ON Object_User.Id = tmpProtocol.UserId
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Check
+                                  ON ObjectBoolean_Check.ObjectId = tmpResult.Id
+                                 AND ObjectBoolean_Check.DescId   = zc_ObjectBoolean_Check()
      ;
      
      RETURN NEXT Cursor1;
