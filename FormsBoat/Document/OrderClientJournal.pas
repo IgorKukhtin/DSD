@@ -115,6 +115,9 @@ type
     bbPrintBarcode: TdxBarButton;
     EngineNum: TcxGridDBColumn;
     EngineName: TcxGridDBColumn;
+    actPrintStructureGoods: TdsdPrintAction;
+    bbPrintStructureGoods: TdxBarButton;
+    spSelectPrintStructureGoods: TdsdStoredProc;
   private
   public
   end;

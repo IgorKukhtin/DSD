@@ -59,6 +59,7 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+    {
     LoadReportFromFile('Отчет Движение по комплектующим (кол-во)', ReportPath + '\Отчет Движение по комплектующим (кол-во).fr3');
     LoadReportFromFile('Отчет Движение по комплектующим (вх цена)', ReportPath + '\Отчет Движение по комплектующим (вх цена).fr3');
     exit;
@@ -75,7 +76,9 @@ begin
 
     LoadReportFromFile('PrintMovement_ProductionPersonal', ReportPath + '\PrintMovement_ProductionPersonal.fr3');
     exit;
-
+    }
+    LoadReportFromFile('PrintProduct_StructureGoods', ReportPath + '\PrintProduct_StructureGoods.fr3');
+    exit;
     LoadReportFromFile('PrintProduct_OrderConfirmation', ReportPath + '\PrintProduct_OrderConfirmation.fr3');
     LoadReportFromFile('PrintProduct_Structure', ReportPath + '\PrintProduct_Structure.fr3');
     LoadReportFromFile('PrintProduct_Offer', ReportPath + '\PrintProduct_Offer.fr3');

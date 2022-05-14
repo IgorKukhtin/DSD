@@ -649,6 +649,14 @@ object OrderClientJournalForm: TOrderClientJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintStructureGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -726,6 +734,10 @@ object OrderClientJournalForm: TOrderClientJournalForm
     end
     object bbPrintBarcode: TdxBarButton
       Action = actPrintBarcode
+      Category = 0
+    end
+    object bbPrintStructureGoods: TdxBarButton
+      Action = actPrintStructureGoods
       Category = 0
     end
   end
@@ -1328,6 +1340,56 @@ object OrderClientJournalForm: TOrderClientJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrintStructureGoods: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintStructureGoods
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintStructureGoods
+        end>
+      Caption = 'Print Structure'
+      Hint = 'PrintStructureGoods'
+      ImageIndex = 17
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'ReceiptLevelName;GoodsGroupNameFull;ObjectName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintProduct_StructureGoods'
+      ReportNameParam.Value = 'PrintProduct_StructureGoods'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PictureFields.Strings = (
+        'photo1')
+    end
     object actPrintStructure: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -1788,5 +1850,29 @@ object OrderClientJournalForm: TOrderClientJournalForm
     PackSize = 1
     Left = 736
     Top = 168
+  end
+  object spSelectPrintStructureGoods: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Product_StructureGoodsPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 768
+    Top = 264
   end
 end

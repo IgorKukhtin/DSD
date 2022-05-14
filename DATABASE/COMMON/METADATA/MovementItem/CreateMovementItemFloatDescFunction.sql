@@ -1541,9 +1541,26 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_SupplierFailures() RETURNS Integer AS $BOD
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_SupplierFailures', 'Кол-во отказов поставщиков' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SupplierFailures');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_ExchangeRate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ExchangeRate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_ExchangeRate', 'Офіційний курс,встановлений Національним банком України на дату подання декларації зміни оптово-відпускної ціни(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ExchangeRate');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_OrderNumberSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_OrderNumberSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_OrderNumberSP', '№ накау, в якому внесено ЛЗ(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_OrderNumberSP');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_ID_MED_FORM() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ID_MED_FORM'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_ID_MED_FORM', 'ID_MED_FORM(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ID_MED_FORM');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_MorionSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_MorionSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_MorionSP', 'Код мориона(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_MorionSP');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 14.05.22                                                                                                     * zc_MIFloat_ExchangeRate
  30.03.22         * zc_MIFloat_PriceTare
  28.03.22                                                                                                     * zc_MIFloat_SupplierFailures
  03.03.22                                                                                                     * zc_MIFloat_AmountSF

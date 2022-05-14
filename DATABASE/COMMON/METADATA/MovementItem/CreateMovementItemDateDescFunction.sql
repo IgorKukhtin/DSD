@@ -165,10 +165,23 @@ CREATE OR REPLACE FUNCTION zc_MIDate_ExpirationDateTwo() RETURNS Integer AS $BOD
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_ExpirationDateTwo', 'Срок годности' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_ExpirationDateTwo');
 
+CREATE OR REPLACE FUNCTION zc_MIDate_ReestrDateSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_ReestrDateSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_ReestrDateSP', 'Дата реєстрації (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_ReestrDateSP');
+
+CREATE OR REPLACE FUNCTION zc_MIDate_ValiditySP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_ValiditySP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_ValiditySP', 'Термін дії (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_ValiditySP');
+
+CREATE OR REPLACE FUNCTION zc_MIDate_OrderDateSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_OrderDateSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_OrderDateSP', 'Дата наказу, в якому внесено ЛЗ (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_OrderDateSP');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.  Шаблий О.В. 
+ 14.05.22                                                                         * zc_MIDate_ReestrDateSP
  05.05.22         * zc_MIDate_Double
                     zc_MIDate_Scan
  24.11.21                                                                         * zc_MIDate_ExpirationDateTwo

@@ -257,14 +257,12 @@ BEGIN
            , Object_Partner.Id                        AS PartnerId
            , Object_Partner.ValueData                 AS PartnerName
 
-           , _tmpItem.AmountBasis                            AS Amount_basis   -- Количество шаблон сборки
+           , _tmpItem.AmountBasis                     AS Amount_basis   -- Количество шаблон сборки
            --,  COALESCE (tmpSumm.Amount_unit, _tmpItem.Amount) AS Amount_unit    -- Количество резерв
            , CASE WHEN ObjectDesc_Object.Id = zc_Object_Goods()          THEN COALESCE (tmpSumm.Amount_unit, _tmpItem.Amount) ELSE 0 END ::TFloat   AS Amount_unit    -- Количество резерв
            , CASE WHEN ObjectDesc_Object.Id = zc_Object_ReceiptService() THEN COALESCE (tmpSumm.Amount_unit, _tmpItem.Amount) ELSE 0 END ::TFloat   AS Value_service  -- работы/услуги
            
-           
-           
-           , _tmpItem.AmountPartner                          AS Amount_partner -- Количество заказ поставщику
+           , _tmpItem.AmountPartner                   AS Amount_partner -- Количество заказ поставщику
 
            , _tmpItem.OperPrice                       AS OperPrice_basis   -- Цена вх без НДС
            , _tmpItem.OperPricePartner                AS OperPrice_partner -- Цена вх без НДС

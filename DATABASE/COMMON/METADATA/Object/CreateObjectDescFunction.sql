@@ -1535,6 +1535,26 @@ CREATE OR REPLACE FUNCTION  zc_Object_Competitor() RETURNS Integer AS $BODY$BEGI
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Competitor', 'Конкуренты' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Competitor');
 
+CREATE OR REPLACE FUNCTION zc_Object_KindOutSP_1303() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_KindOutSP_1303'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_KindOutSP_1303', 'Форма випуску (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_KindOutSP_1303');
+
+CREATE OR REPLACE FUNCTION zc_Object_Dosage_1303() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Dosage_1303'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_Dosage_1303', 'Дозування (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Dosage_1303');
+
+CREATE OR REPLACE FUNCTION zc_Object_CountSP_1303() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_CountSP_1303'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_CountSP_1303', 'Кількість таблеток в упаковці (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CountSP_1303');
+
+CREATE OR REPLACE FUNCTION zc_Object_MakerSP_1303() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_MakerSP_1303'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_MakerSP_1303', 'Назва виробника (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MakerSP_1303');
+
+CREATE OR REPLACE FUNCTION zc_MILinkObject_Country_1303() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_MILinkObject_Country_1303'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_Country_1303', 'Країна (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_MILinkObject_Country_1303');
+
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
@@ -1556,6 +1576,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 14.05.22                                                                                        * zc_Object_..._1303()  
  04.05.22                                                                                        * zc_Object_Competitor  
  14.04.22         * zc_Object_UserByGroup
                     zc_Object_UserByGroupList

@@ -58,6 +58,15 @@ type
     lblChartData: TcxLabel;
     cbChartData: TcxComboBox;
     PercentChange: TcxGridDBBandedColumn;
+    ChartDayCDS: TClientDataSet;
+    grChartDay: TcxGrid;
+    grChartDBChartView2: TcxGridDBChartView;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter2: TcxSplitter;
+    ChartDayDS: TDataSource;
+    grChartDBChartView2Series1: TcxGridDBChartSeries;
+    grChartDBChartView2DataGroup1: TcxGridDBChartDataGroup;
+    grChartDBChartView2Series2: TcxGridDBChartSeries;
   private
     { Private declarations }
   public
