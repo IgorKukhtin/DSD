@@ -42,6 +42,21 @@ BEGIN
     END IF;
 
     
+    IF COALESCE (vbGoodsId, 0) = 0
+    THEN
+       RETURN;
+       --
+       -- RAISE EXCEPTION 'Ошибка.Значение код товара = <%> не найден. <%>', inGoodsCode;
+       --
+       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Значение код товара = <%> не найден.<%> Артикул <%>' :: TVarChar
+                                             , inProcedureName := 'gpInsert_Object_ReceiptProdModelChild_Load' :: TVarChar
+                                             , inUserId        := vbUserId
+                                             , inParam1        := inGoodsCode :: TVarChar
+                                             , inParam2        := inGoodsName :: TVarChar
+                                             , inParam3        := inArticle   :: TVarChar
+                                              );
+    END IF;
+
     -- поиск ReceiptProdModelChild
     vbId:= (SELECT Object_ReceiptProdModelChild.Id
             FROM Object AS Object_ReceiptProdModelChild
@@ -54,33 +69,19 @@ BEGIN
            );
 
 
-
-    IF COALESCE (vbGoodsId, 0) = 0
-    THEN
-       -- RAISE EXCEPTION 'Ошибка.Значение код товара = <%> не найден. <%>', inGoodsCode;
-       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Значение код товара = <%> не найден.<%> Артикул <%>' :: TVarChar
-                                             , inProcedureName := 'gpInsert_Object_ReceiptProdModelChild_Load' :: TVarChar
-                                             , inUserId        := vbUserId
-                                             , inParam1        := inGoodsCode :: TVarChar
-                                             , inParam2        := inGoodsName :: TVarChar
-                                             , inParam3        := inArticle   :: TVarChar
-                                              );
-    END IF;
-
-
     --
     vbId:= (SELECT tmp.ioId
             FROM gpInsertUpdate_Object_ReceiptProdModelChild (ioId                 := vbId
-                                                       , inComment            := inGoodsName           ::TVarChar
-                                                       , inReceiptProdModelId := inReceiptProdModelId  ::Integer
-                                                       , inObjectId           := vbGoodsId             ::Integer
-                                                       , inReceiptLevelId_top := inReceiptLevelId_top
-                                                       , inReceiptLevelId     := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbId AND OL.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel())
-                                                       , ioValue              := inAmount              ::TFloat
-                                                       , ioValue_service      := 0                     ::TFloat
-                                                       , ioIsCheck            := FALSE
-                                                       , inSession            := inSession             ::TVarChar
-                                                        ) AS tmp);
+                                                            , inComment            := inGoodsName           ::TVarChar
+                                                            , inReceiptProdModelId := inReceiptProdModelId  ::Integer
+                                                            , inObjectId           := vbGoodsId             ::Integer
+                                                            , inReceiptLevelId_top := inReceiptLevelId_top
+                                                            , inReceiptLevelId     := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbId AND OL.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel())
+                                                            , ioValue              := inAmount              ::TFloat
+                                                            , ioValue_service      := 0                     ::TFloat
+                                                            , ioIsCheck            := FALSE
+                                                            , inSession            := inSession             ::TVarChar
+                                                             ) AS tmp);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Check(), vbId, FALSE);
     
