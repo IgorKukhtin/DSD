@@ -1,5 +1,5 @@
 inherited GoodsSPRegistry_1303JournalForm: TGoodsSPRegistry_1303JournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1058#1086#1074#1072#1088#1099' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1077#1077#1089#1090#1088' '#1090#1086#1074#1072#1088#1086#1074' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072' 1303>'
   ClientHeight = 535
   ClientWidth = 910
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -15,17 +15,17 @@ inherited GoodsSPRegistry_1303JournalForm: TGoodsSPRegistry_1303JournalForm
     Width = 910
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 821
+    ExplicitWidth = 910
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 910
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 821
+      ExplicitWidth = 910
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 910
         Height = 478
-        ExplicitWidth = 821
+        ExplicitWidth = 910
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -102,7 +102,7 @@ inherited GoodsSPRegistry_1303JournalForm: TGoodsSPRegistry_1303JournalForm
   end
   inherited Panel: TPanel
     Width = 910
-    ExplicitWidth = 821
+    ExplicitWidth = 910
     inherited deStart: TcxDateEdit
       EditValue = 43101d
     end
@@ -194,8 +194,8 @@ inherited GoodsSPRegistry_1303JournalForm: TGoodsSPRegistry_1303JournalForm
       ImageIndex = 54
     end
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TGoodsSPRegistry_1303_MovementForm'
-      FormNameParam.Value = 'TGoodsSPRegistry_1303_MovementForm'
+      FormName = 'TGoodsSPRegistry_1303Form'
+      FormNameParam.Value = 'TGoodsSPRegistry_1303Form'
       GuiParams = <
         item
           Name = 'Id'
@@ -249,8 +249,8 @@ inherited GoodsSPRegistry_1303JournalForm: TGoodsSPRegistry_1303JournalForm
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TGoodsSPRegistry_1303_MovementForm'
-      FormNameParam.Value = 'TGoodsSPRegistry_1303_MovementForm'
+      FormName = 'TGoodsSPRegistry_1303Form'
+      FormNameParam.Value = 'TGoodsSPRegistry_1303Form'
       GuiParams = <
         item
           Name = 'Id'

@@ -14,18 +14,22 @@
     Height = 633
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 918
-    ExplicitHeight = 595
+    ExplicitWidth = 984
+    ExplicitHeight = 633
     ClientRectBottom = 633
     ClientRectRight = 984
+    ClientRectTop = 24
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 918
-      ExplicitHeight = 595
+      Caption = #1044#1072#1085#1085#1099#1077' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+      TabVisible = True
+      ExplicitTop = 24
+      ExplicitWidth = 984
+      ExplicitHeight = 609
       inherited cxGrid: TcxGrid
         Width = 984
-        Height = 243
-        ExplicitWidth = 918
-        ExplicitHeight = 363
+        Height = 219
+        ExplicitWidth = 984
+        ExplicitHeight = 219
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.DataSource = nil
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -242,13 +246,11 @@
       end
       object grChart: TcxGrid
         Left = 0
-        Top = 251
+        Top = 227
         Width = 984
         Height = 187
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 240
-        ExplicitWidth = 918
         object grChartDBChartView1: TcxGridDBChartView
           DiagramLine.Active = True
           DiagramLine.Values.LineWidth = 3
@@ -261,25 +263,20 @@
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 243
+        Top = 219
         Width = 984
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = grChart
-        ExplicitLeft = 3
-        ExplicitTop = 219
-        ExplicitWidth = 918
       end
       object grChartDay: TcxGrid
         Left = 0
-        Top = 446
+        Top = 422
         Width = 984
         Height = 187
         Align = alBottom
         TabOrder = 3
-        ExplicitTop = 408
-        ExplicitWidth = 918
         object grChartDBChartView2: TcxGridDBChartView
           DataController.DataSource = ChartDayDS
           DiagramLine.Active = True
@@ -305,21 +302,175 @@
       end
       object cxSplitter2: TcxSplitter
         Left = 0
-        Top = 438
+        Top = 414
         Width = 984
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = grChartDay
-        ExplicitTop = 427
-        ExplicitWidth = 918
+      end
+    end
+    object tsDey: TcxTabSheet
+      Caption = #1044#1072#1085#1085#1099#1077' '#1087#1086' '#1076#1085#1103#1084
+      ImageIndex = 0
+      object cxGridDay: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 984
+        Height = 609
+        Align = alClient
+        PopupMenu = PopupMenu
+        TabOrder = 0
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0;-,0;'
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Format = ',0;-,0;'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0;-,0;'
+              Kind = skSum
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+        end
+        object cxGridDBBandedTableView2: TcxGridDBBandedTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = MasterDayDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Options = [dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoGroupsAlwaysExpanded]
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+              Column = DeyCount
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skAverage
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skAverage
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+            end>
+          DataController.Summary.SummaryGroups = <>
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.BandHiding = True
+          OptionsCustomize.BandsQuickCustomization = True
+          OptionsCustomize.ColumnVertSizing = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsSelection.InvertSelect = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridBandedTableViewStyleSheet
+          Styles.BandHeader = dmMain.cxHeaderStyle
+          Bands = <
+            item
+              Options.HoldOwnColumnsOnly = True
+              Options.Moving = False
+              Width = 262
+            end
+            item
+              Options.HoldOwnColumnsOnly = True
+              Options.Moving = False
+              Visible = False
+              VisibleForCustomization = False
+              Width = 69
+            end>
+          object DeyUnitName: TcxGridDBBandedColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Options.Moving = False
+            Width = 153
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object DeyCount: TcxGridDBBandedColumn
+            Caption = '1'
+            DataBinding.FieldName = 'Count'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0;-,0; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            MinWidth = 60
+            Options.Editing = False
+            Options.Moving = False
+            Options.VertSizing = False
+            VisibleForCustomization = False
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+        end
+        object cxGridLevel2: TcxGridLevel
+          GridView = cxGridDBBandedTableView2
+        end
       end
     end
   end
   inherited Panel: TPanel
     Width = 984
     Height = 57
-    ExplicitWidth = 918
+    ExplicitWidth = 984
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 66
@@ -632,7 +783,19 @@
         DataSet = MasterCDS
       end
       item
+        DataSet = ChartDayDataCDS
+      end
+      item
+        DataSet = HeaderDayCDS
+      end
+      item
+        DataSet = MultiplyDayCDS
+      end
+      item
         DataSet = ChartDayCDS
+      end
+      item
+        DataSet = MasterDayCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -996,10 +1159,10 @@
       end>
     Params = <>
     StoreDefs = True
-    Left = 400
+    Left = 440
     Top = 328
   end
-  object ChartDayCDS: TClientDataSet
+  object ChartDayDataCDS: TClientDataSet
     Aggregates = <>
     FieldDefs = <>
     IndexDefs = <
@@ -1016,11 +1179,83 @@
     Params = <>
     StoreDefs = True
     Left = 440
-    Top = 384
+    Top = 512
   end
   object ChartDayDS: TDataSource
-    DataSet = ChartDayCDS
+    DataSet = ChartDayDataCDS
     Left = 552
-    Top = 384
+    Top = 512
+  end
+  object MasterDayDS: TDataSource
+    DataSet = MasterDayCDS
+    Left = 552
+    Top = 440
+  end
+  object MasterDayCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 440
+    Top = 440
+  end
+  object MultiplyDayCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'Id'
+    Params = <>
+    Left = 336
+    Top = 512
+  end
+  object HeaderDayCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 336
+    Top = 440
+  end
+  object ChartDayCDS: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <>
+    IndexDefs = <
+      item
+        Name = 'DEFAULT_ORDER'
+      end
+      item
+        Name = 'CHANGEINDEX'
+      end>
+    Params = <>
+    StoreDefs = True
+    Left = 336
+    Top = 584
+  end
+  object CrossDBViewReportAddOnDay: TCrossDBViewReportAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableView2
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    MultiplyColumnList = <
+      item
+        FieldName = 'FieldNameCount'
+        HeaderFieldName = 'HeaderFieldNameCount'
+        Column = DeyCount
+      end>
+    MultiplyType = mtTop
+    TemplateColumnList = <
+      item
+        HeaderColumnName = 'ValueName1'
+        TemplateColumn = DeyCount
+      end>
+    HeaderDataSet = HeaderDayCDS
+    MultiplyDataSet = MultiplyDayCDS
+    BаndColumnName = 'ValueBandName'
+    NoCrossColorColumn = True
+    Left = 568
+    Top = 280
   end
 end

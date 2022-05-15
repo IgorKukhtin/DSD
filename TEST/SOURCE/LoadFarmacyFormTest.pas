@@ -2663,10 +2663,43 @@ end;
 
 procedure TLoadFormTest.LoadGoodsSP_1303FormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPRegistry_1303JournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSPRegistry_1303JournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPRegistry_1303Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSPRegistry_1303Form');
+
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP_1303Form'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_1303Form');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP_1303JournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_1303JournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountry_1303Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TCountry_1303Form');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountry_1303EditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCountry_1303EditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerSP_1303Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TMakerSP_1303Form');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerSP_1303EditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMakerSP_1303EditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountSP_1303Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TCountSP_1303Form');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountSP_1303EditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCountSP_1303EditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TKindOutSP_1303Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TKindOutSP_1303Form');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TKindOutSP_1303EditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TKindOutSP_1303EditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDosage_1303Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TDosage_1303Form');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDosage_1303EditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDosage_1303EditForm');    }
+
 end;
 
 procedure TLoadFormTest.LoadLossFormTest;

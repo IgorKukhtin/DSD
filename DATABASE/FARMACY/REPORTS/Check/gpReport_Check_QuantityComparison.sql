@@ -19,6 +19,10 @@ $BODY$
    DECLARE cur3          refcursor;
    DECLARE cur4          refcursor;
    DECLARE cur5          refcursor;
+   DECLARE cur6          refcursor;
+   DECLARE cur7          refcursor;
+   DECLARE cur8          refcursor;
+   DECLARE cur9          refcursor;
    DECLARE vbOperDate    TDateTime;
    DECLARE vbQueryText   Text;
    DECLARE vbIndex       Integer;
@@ -300,6 +304,124 @@ BEGIN
     END LOOP; -- финиш цикла по курсору1
     CLOSE curOperDate; -- закрыли курсор1
 
+    --  По дням
+
+    CREATE TEMP TABLE tmpResultDay (
+            UnitId          Integer,
+            UnitCode        Integer,
+            UnitName        TVarChar,
+            Color_calc      Integer,
+            Sort            TFloat    NOT NULL DEFAULT 0
+    ) ON COMMIT DROP;
+
+    INSERT INTO tmpResultDay
+    (WITH tmpUnit AS (SELECT DISTINCT tmpDataDay.UnitId FROM tmpDataDay WHERE tmpDataDay.OperDate >= DATE_TRUNC ('MONTH', inDateStart))
+
+     SELECT Objectt_Unit.Id
+          , Objectt_Unit.ObjectCode
+          , Objectt_Unit.ValueData
+          , zfCalc_Color(64, 224, 208)
+     FROM tmpUnit
+          INNER JOIN Object AS Objectt_Unit ON Objectt_Unit.ID = tmpUnit.UnitId
+
+    );
+
+    CREATE TEMP TABLE tmpMultiplyDay (
+            Id                                 Integer,
+            FieldNameCount                     TVarChar,
+            HeaderFieldNameCount               TVarChar,
+            BackGroundColumnNameCount          TVarChar
+    ) ON COMMIT DROP;
+
+
+    CREATE TEMP TABLE tmpChartDay (
+            Id                                Integer,
+            DisplayedDataName                 TVarChar,
+            SeriesName                        TVarChar,
+            FieldName                         TVarChar
+    ) ON COMMIT DROP;
+
+    INSERT INTO tmpChartDay
+    VALUES (1, 'Количество чеков', 'Количество чеков '||EXTRACT (YEAR FROM inDateStart)::TVarChar, 'Count');
+
+    -- Данные для размножения
+    vbInc := 1;
+    WHILE vbInc <= inYearsAgo LOOP
+
+        vbYear := EXTRACT (YEAR FROM (DATE_TRUNC ('MONTH', inDateStart) - (vbInc::TVArChar||' YEAR')::INTERVAL));
+
+        -- добавляем для размножения
+        INSERT INTO tmpMultiplyDay
+        SELECT vbInc
+             , 'Count'||vbYear::TVarChar
+             , CASE WHEN vbInc < inYearsAgo THEN 'ValueName1' ELSE 'ValueNameChecks' END
+             , 'Color_calc'||vbYear::TVarChar
+          ;
+
+        INSERT INTO tmpChartDay
+        VALUES (1 + vbInc, 'Количество чеков', 'Количество чеков '||EXTRACT (YEAR FROM (inDateStart - (vbInc::TVArChar||' YEAR')::INTERVAL))::TVarChar, 'Count'||vbYear::TVarChar);
+
+        -- теперь следуюющий год
+        vbInc := vbInc + 1;
+    END LOOP;
+
+    -- Заполняем данными
+    vbIndex := 1;
+    OPEN curOperDate FOR
+      SELECT DISTINCT  tmpDataDay.OperDate::TDateTime
+      FROM tmpDataDay 
+      WHERE tmpDataDay.OperDate >= DATE_TRUNC ('MONTH', inDateStart) 
+        AND tmpDataDay.OperDate <  DATE_TRUNC ('MONTH', inDateFinal) + INTERVAL '1 MONTH'
+      ORDER BY 1;
+
+
+     -- начало цикла по курсору1
+     LOOP
+        -- данные по курсору1
+        FETCH curOperDate INTO vbOperDate;
+        -- если данные закончились, тогда выход
+        IF NOT FOUND THEN EXIT; END IF;
+
+        vbQueryText := 'ALTER TABLE tmpResultDay ADD COLUMN Count' || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ';
+        EXECUTE vbQueryText;
+
+        vbQueryText := 'UPDATE tmpResultDay SET Count' || COALESCE (vbIndex, 0)::Text || ' = COALESCE (T1.CountChecks, 0) ' ||
+                       ' FROM (SELECT tmpDataDay.* FROM tmpDataDay WHERE tmpDataDay.OperDate = '''|| zfConvert_DateShortToString(vbOperDate) ||''') AS T1'||
+                       ' WHERE tmpResultDay.UnitId = T1.UnitId';
+        EXECUTE vbQueryText;
+
+
+        -- Данные для размножения
+        vbInc := 1;
+        WHILE vbInc <= inYearsAgo LOOP
+
+            vbYear := EXTRACT (YEAR FROM (DATE_TRUNC ('MONTH', inDateStart) - (vbInc::TVArChar||' YEAR')::INTERVAL));
+
+            IF vbIndex = 1
+            THEN
+              vbQueryText := 'ALTER TABLE tmpResultDay ADD COLUMN Color_calc'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' Integer';
+              EXECUTE vbQueryText;
+
+              vbQueryText := 'UPDATE tmpResultDay SET Color_calc'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' = '|| zfCalc_Color(64, 224, 208, 100 * vbInc / (inYearsAgo + 1))::Text;
+              EXECUTE vbQueryText;
+            END IF;
+
+            vbQueryText := 'ALTER TABLE tmpResultDay ADD COLUMN Count'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' Integer NOT NULL DEFAULT 0 ';
+            EXECUTE vbQueryText;
+
+            vbQueryText := 'UPDATE tmpResultDay SET Count'||vbYear::TVarChar || COALESCE (vbIndex, 0)::Text || ' = COALESCE (T1.CountChecks, 0) ' ||
+                           ' FROM (SELECT tmpDataDay.* FROM tmpDataDay WHERE tmpDataDay.OperDate = '''|| zfConvert_DateShortToString(vbOperDate - (vbInc::TVArChar||' YEAR')::INTERVAL ) ||''') AS T1'||
+                           ' WHERE tmpResultDay.UnitId = T1.UnitId';
+            EXECUTE vbQueryText;
+
+            -- теперь следуюющий год
+            vbInc := vbInc + 1;
+        END LOOP;
+
+        vbIndex := vbIndex + 1;
+    END LOOP; -- финиш цикла по курсору1
+    CLOSE curOperDate; -- закрыли курсор1
+
     -- Результаты
 
     -- возвращаем заголовки столбцов и даты
@@ -354,6 +476,43 @@ BEGIN
                     AND tmpDataDay.OperDate <  DATE_TRUNC ('MONTH', inDateFinal) + INTERVAL '1 MONTH'
                   ORDER BY tmpDataDay.UnitId, tmpDataDay.OperDate;
     RETURN NEXT cur5;
+  
+    -- Результаты по дням
+
+    -- возвращаем заголовки столбцов и даты
+    OPEN cur6 FOR SELECT tmpDataDay.OperDate::TDateTime          AS OperDate
+                       , EXTRACT (DAY FROM tmpDataDay.OperDate)::TVarChar || ' ' ||
+                         zfcalc_MonthName(tmpDataDay.OperDate) || ' ' ||
+                         EXTRACT (YEAR FROM (tmpDataDay.OperDate - (inYearsAgo::TVArChar||' YEAR')::INTERVAL))::TVarChar || ' ... ' ||
+                         EXTRACT (YEAR FROM tmpDataDay.OperDate)::TVarChar                                               AS ValueBandName
+                       , 'Чеков'     AS ValueNameChecks
+                       , CASE WHEN inYearsAgo <= 0 THEN 'Чеков'    ELSE '1' END      AS ValueName1
+                       , zfConvert_IntToString((row_number()OVER(ORDER BY tmpDataDay.OperDate))::Integer, 2) ||'. ' ||zfcalc_MonthName(tmpDataDay.OperDate) AS ValueChartName
+                  FROM (SELECT DISTINCT  tmpDataDay.OperDate::TDateTime
+                        FROM tmpDataDay 
+                        WHERE tmpDataDay.OperDate >= DATE_TRUNC ('MONTH', inDateStart) 
+                          AND tmpDataDay.OperDate <  DATE_TRUNC ('MONTH', inDateFinal) + INTERVAL '1 MONTH') AS tmpDataDay
+                  ORDER BY tmpDataDay.OperDate;
+    RETURN NEXT cur6;
+
+    -- Размножение колонок
+    OPEN cur7 FOR SELECT *
+                  FROM tmpMultiplyDay
+                  ORDER BY tmpMultiplyDay.Id;
+    RETURN NEXT cur7;
+
+
+    -- Строки для графика
+    OPEN cur8 FOR SELECT *
+                  FROM tmpChartDay
+                  ORDER BY tmpChartDay.Id;
+    RETURN NEXT cur8;
+
+    -- Результат
+    OPEN cur9 FOR SELECT *
+                  FROM tmpResultDay
+                  ORDER BY Sort, tmpResultDay.UnitName;
+    RETURN NEXT cur9;
 
 END;
 $BODY$
@@ -369,4 +528,3 @@ $BODY$
 --
  
 select * from gpReport_Check_QuantityComparison(inDateStart := ('01.03.2022')::TDateTime , inDateFinal := ('13.05.2022')::TDateTime , inRetailId := 4 , inUnitId := 377605 , inYearsAgo := 1 ,  inSession := '3');
-

@@ -1,7 +1,7 @@
 object CountSP_1303Form: TCountSP_1303Form
   Left = 0
   Top = 0
-  Caption = #1052#1110#1078#1085#1072#1088#1086#1076#1085#1072' '#1085#1077#1087#1072#1090#1077#1085#1090#1086#1074#1072#1085#1072' '#1085#1072#1079#1074#1072' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
+  Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1090#1072#1073#1083#1077#1090#1086#1082' '#1074' '#1091#1087#1072#1082#1086#1074#1094#1110' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
   ClientHeight = 282
   ClientWidth = 598
   Color = clBtnFace
@@ -448,10 +448,13 @@ object CountSP_1303Form: TCountSP_1303Form
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 128
     Top = 216
   end

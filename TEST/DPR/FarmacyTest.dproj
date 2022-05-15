@@ -4302,6 +4302,54 @@
 				<Form>GoodsCashForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Country_1303Edit.pas">
+				<Form>Country_1303EditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Country_1303.pas">
+				<Form>Country_1303Form</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MakerSP_1303.pas">
+				<Form>MakerSP_1303Form</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MakerSP_1303Edit.pas">
+				<Form>MakerSP_1303EditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\CountSP_1303Edit.pas">
+				<Form>CountSP_1303EditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\CountSP_1303.pas">
+				<Form>CountSP_1303Form</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Dosage_1303Edit.pas">
+				<Form>Dosage_1303EditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Dosage_1303.pas">
+				<Form>Dosage_1303Form</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\KindOutSP_1303Edit.pas">
+				<Form>KindOutSP_1303EditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\KindOutSP_1303.pas">
+				<Form>KindOutSP_1303Form</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\GoodsSPRegistry_1303Journal.pas">
+				<Form>GoodsSPRegistry_1303JournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\GoodsSPRegistry_1303.pas">
+				<Form>GoodsSPRegistry_1303Form</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

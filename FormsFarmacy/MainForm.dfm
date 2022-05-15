@@ -5144,6 +5144,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actGoodsSPRegistry_1303: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1056#1077#1077#1089#1090#1088' '#1090#1086#1074#1072#1088#1086#1074' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072' 1303 ('#1076#1086#1082#1091#1084#1077#1085#1090')'
+      FormName = 'TGoodsSPRegistry_1303JournalForm'
+      FormNameParam.Value = 'TGoodsSPRegistry_1303JournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5332,6 +5343,9 @@
         end
         object N13032: TMenuItem
           Action = actGoodsSP_1303
+        end
+        object N13033: TMenuItem
+          Action = actGoodsSPRegistry_1303
         end
       end
       object N103: TMenuItem

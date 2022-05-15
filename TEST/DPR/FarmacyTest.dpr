@@ -1191,7 +1191,19 @@ uses
   Report_CompetitorMarkups in '..\..\FormsFarmacy\Report\Report_CompetitorMarkups.pas' {Report_CompetitorMarkupsForm: TParentForm},
   GoodsWages in '..\..\FormsFarmacy\Guides\GoodsWages.pas' {GoodsWagesForm: TParentForm},
   GoodsSite in '..\..\FormsFarmacy\Guides\GoodsSite.pas' {GoodsSiteForm: TParentForm},
-  GoodsCash in '..\..\FormsFarmacy\Guides\GoodsCash.pas' {GoodsCashForm: TParentForm};
+  GoodsCash in '..\..\FormsFarmacy\Guides\GoodsCash.pas' {GoodsCashForm: TParentForm},
+  Country_1303Edit in '..\..\FormsFarmacy\Guides\Country_1303Edit.pas' {Country_1303EditForm: TParentForm},
+  Country_1303 in '..\..\FormsFarmacy\Guides\Country_1303.pas' {Country_1303Form: TParentForm},
+  MakerSP_1303 in '..\..\FormsFarmacy\Guides\MakerSP_1303.pas' {MakerSP_1303Form: TParentForm},
+  MakerSP_1303Edit in '..\..\FormsFarmacy\Guides\MakerSP_1303Edit.pas' {MakerSP_1303EditForm: TParentForm},
+  CountSP_1303Edit in '..\..\FormsFarmacy\Guides\CountSP_1303Edit.pas' {CountSP_1303EditForm: TParentForm},
+  CountSP_1303 in '..\..\FormsFarmacy\Guides\CountSP_1303.pas' {CountSP_1303Form: TParentForm},
+  Dosage_1303Edit in '..\..\FormsFarmacy\Guides\Dosage_1303Edit.pas' {Dosage_1303EditForm: TParentForm},
+  Dosage_1303 in '..\..\FormsFarmacy\Guides\Dosage_1303.pas' {Dosage_1303Form: TParentForm},
+  KindOutSP_1303Edit in '..\..\FormsFarmacy\Guides\KindOutSP_1303Edit.pas' {KindOutSP_1303EditForm: TParentForm},
+  KindOutSP_1303 in '..\..\FormsFarmacy\Guides\KindOutSP_1303.pas' {KindOutSP_1303Form: TParentForm},
+  GoodsSPRegistry_1303Journal in '..\..\FormsFarmacy\Document\GoodsSPRegistry_1303Journal.pas' {GoodsSPRegistry_1303JournalForm: TParentForm},
+  GoodsSPRegistry_1303 in '..\..\FormsFarmacy\Document\GoodsSPRegistry_1303.pas' {GoodsSPRegistry_1303Form: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

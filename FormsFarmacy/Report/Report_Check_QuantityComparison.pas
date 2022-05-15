@@ -58,7 +58,7 @@ type
     lblChartData: TcxLabel;
     cbChartData: TcxComboBox;
     PercentChange: TcxGridDBBandedColumn;
-    ChartDayCDS: TClientDataSet;
+    ChartDayDataCDS: TClientDataSet;
     grChartDay: TcxGrid;
     grChartDBChartView2: TcxGridDBChartView;
     cxGridLevel1: TcxGridLevel;
@@ -67,6 +67,19 @@ type
     grChartDBChartView2Series1: TcxGridDBChartSeries;
     grChartDBChartView2DataGroup1: TcxGridDBChartDataGroup;
     grChartDBChartView2Series2: TcxGridDBChartSeries;
+    tsDey: TcxTabSheet;
+    cxGridDay: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    cxGridDBBandedTableView2: TcxGridDBBandedTableView;
+    DeyUnitName: TcxGridDBBandedColumn;
+    DeyCount: TcxGridDBBandedColumn;
+    cxGridLevel2: TcxGridLevel;
+    MasterDayDS: TDataSource;
+    MasterDayCDS: TClientDataSet;
+    MultiplyDayCDS: TClientDataSet;
+    HeaderDayCDS: TClientDataSet;
+    ChartDayCDS: TClientDataSet;
+    CrossDBViewReportAddOnDay: TCrossDBViewReportAddOn;
   private
     { Private declarations }
   public

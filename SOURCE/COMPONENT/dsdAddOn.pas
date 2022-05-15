@@ -6705,7 +6705,7 @@ begin
            for J := 0 to MultiplyColumnList.Count - 1 do
            begin
              Column := View.CreateColumn;
-             Column.Name:= 'MultiplyAdd' + MultiplyDataSet.FieldByName(TMultiplyColumn(MultiplyColumnList.Items[J]).FieldName).AsString;
+             Column.Name:= Name + 'MultiplyAdd' + MultiplyDataSet.FieldByName(TMultiplyColumn(MultiplyColumnList.Items[J]).FieldName).AsString;
 
              FCreateColumnList.Add(Column);
              with Column do
