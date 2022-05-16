@@ -95,6 +95,8 @@ type
     mactStartLoad_Uflex3: TMultiAction;
     actGetImportSettingId_Uflex3: TdsdExecStoredProc;
     bbStartLoad_Uflex3: TdxBarButton;
+    InsertRecord: TInsertRecord;
+    bbInsertRecord: TdxBarButton;
   private
     { Private declarations }
   public

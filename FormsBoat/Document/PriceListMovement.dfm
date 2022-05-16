@@ -2,6 +2,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
   ClientHeight = 668
   ClientWidth = 1069
+  ExplicitTop = -148
   ExplicitWidth = 1085
   ExplicitHeight = 707
   PixelsPerInch = 96
@@ -106,6 +107,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object GoodsCode: TcxGridDBColumn [2]
@@ -120,6 +122,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 63
           end
           object GoodsName: TcxGridDBColumn [3]
@@ -150,6 +153,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 131
           end
           object DiscountPartnerName: TcxGridDBColumn [5]
@@ -166,23 +170,34 @@ inherited PriceListMovementForm: TPriceListMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1043#1088#1091#1087#1087#1072' '#1089#1082#1080#1076#1082#1080' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-            Options.Editing = False
             Width = 97
           end
           object MeasureName: TcxGridDBColumn [6]
             Caption = #1045#1076'.'#1080#1079#1084
             DataBinding.FieldName = 'MeasureName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actMeasureChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 60
           end
           object MeasureParentName: TcxGridDBColumn [7]
             Caption = #1045#1076'.'#1080#1079#1084' ('#1091#1087#1072#1082#1086#1074#1082#1080')'
             DataBinding.FieldName = 'MeasureParentName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actMeasureParentChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 78
           end
           object MeasureName_translate: TcxGridDBColumn [8]
@@ -206,7 +221,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
             DataBinding.FieldName = 'isOutlet'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 62
           end
           object Amount: TcxGridDBColumn [11]
@@ -216,7 +230,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 77
           end
           object PriceParent: TcxGridDBColumn [12]
@@ -227,7 +240,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1073#1077#1079' '#1085#1076#1089' ('#1091#1087#1072#1082#1086#1074#1082#1080')'
-            Options.Editing = False
             Width = 77
           end
           object MeasureMult: TcxGridDBColumn [13]
@@ -237,7 +249,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 57
           end
           object EmpfPriceParent: TcxGridDBColumn [14]
@@ -248,7 +259,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1077#1082#1086#1084#1077#1085#1076#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072' '#1073#1077#1079' '#1085#1076#1089' ('#1091#1087#1072#1082#1086#1074#1082#1080')'
-            Options.Editing = False
             Width = 57
           end
           object MinCount: TcxGridDBColumn [15]
@@ -259,7 +269,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1084#1080#1085' '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1091#1087#1082#1080
-            Options.Editing = False
             Width = 57
           end
           object MinCountMult: TcxGridDBColumn [16]
@@ -270,7 +279,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1077#1082#1086#1084#1077#1085#1076#1091#1077#1084#1086#1077' '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1091#1087#1082#1080
-            Options.Editing = False
             Width = 57
           end
           object WeightParent: TcxGridDBColumn [17]
@@ -279,14 +287,12 @@ inherited PriceListMovementForm: TPriceListMovementForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 57
           end
           object CatalogPage: TcxGridDBColumn [18]
             DataBinding.FieldName = 'CatalogPage'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 171
           end
           inherited colIsErased: TcxGridDBColumn
@@ -829,6 +835,29 @@ inherited PriceListMovementForm: TPriceListMovementForm
           ComponentItem = 'MeasureName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Article'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupNameFull'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupNameFull'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1008,6 +1037,17 @@ inherited PriceListMovementForm: TPriceListMovementForm
       ImageIndex = 41
       WithoutNext = True
     end
+    object InsertRecord: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView
+      Action = actGoodsChoice
+      Params = <>
+      Caption = 'InsertRecord'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1086#1074#1072#1088
+      ImageIndex = 0
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1100,6 +1140,10 @@ inherited PriceListMovementForm: TPriceListMovementForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecord'
         end
         item
           Visible = True
@@ -1256,6 +1300,10 @@ inherited PriceListMovementForm: TPriceListMovementForm
     end
     object bbStartLoad_Uflex3: TdxBarButton
       Action = mactStartLoad_Uflex3
+      Category = 0
+    end
+    object bbInsertRecord: TdxBarButton
+      Action = InsertRecord
       Category = 0
     end
   end
