@@ -22,7 +22,7 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
     vbUserId := lpGetUserBySession (inSession);
 
-    IF inSession::Integer NOT IN (3, 375661, 235009, 4183126, 8001630, 9560329, 8051421, 14080152 )
+    IF inSession::Integer NOT IN (3, 375661, 235009, 4183126, 8001630, 9560329, 8051421, 14080152, 183242 )
     THEN
       RAISE EXCEPTION 'Изменение <Цены> вам запрещено.';
     END IF;

@@ -64,13 +64,6 @@ inherited GoodsSPRegistry_1303JournalForm: TGoodsSPRegistry_1303JournalForm
             HeaderAlignmentHorz = taCenter
             Width = 90
           end
-          object MedicalProgramSPName: TcxGridDBColumn
-            Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1072#1103' '#1087#1088#1086#1075#1088#1072#1084#1084#1072
-            DataBinding.FieldName = 'MedicalProgramSPName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 256
-          end
           object OperDateStart: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1089#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072
             DataBinding.FieldName = 'OperDateStart'
@@ -84,17 +77,6 @@ inherited GoodsSPRegistry_1303JournalForm: TGoodsSPRegistry_1303JournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 153
-          end
-          object PercentMarkup: TcxGridDBColumn
-            Caption = '% '#1085#1072#1094#1077#1085#1082#1080
-            DataBinding.FieldName = 'PercentMarkup'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 72
           end
         end
       end

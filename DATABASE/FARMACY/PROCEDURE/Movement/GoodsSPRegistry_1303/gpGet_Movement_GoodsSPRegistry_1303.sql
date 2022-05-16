@@ -1,11 +1,9 @@
 -- Function: gpGet_Movement_GoodsSPRegistry_1303()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_GoodsSPRegistry_1303 (Integer, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_GoodsSPRegistry_1303 (Integer, Boolean, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_GoodsSPRegistry_1303(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inMask              Boolean  ,
     IN inOperDate          TDateTime, -- дата Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -13,8 +11,6 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , OperDateStart TDateTime
              , OperDateEnd TDateTime
-             , MedicalProgramSPId Integer, MedicalProgramSPCode Integer, MedicalProgramSPName TVarChar
-             , PercentMarkup TFloat
               )
 AS
 $BODY$
@@ -23,13 +19,6 @@ BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      vbUserId := inSession;
-
-     IF COALESCE (inMask, False) = True
-     THEN
-     inMovementId := gpInsert_Movement_GoodsSPRegistry_1303_Mask (ioId        := inMovementId
-                                                   , inOperDate  := inOperDate
-                                                   , inSession   := inSession); 
-     END IF;
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -41,10 +30,6 @@ BEGIN
               , Object_Status.Name           AS StatusName
               , CURRENT_DATE::TDateTime      AS OperDateStart
               , CURRENT_DATE::TDateTime      AS OperDateEnd
-              , 0                            AS MedicalProgramSPId
-              , 0                            AS MedicalProgramSPCode
-              , ''::TVarChar                 AS MedicalProgramSPName
-              , 0::TFloat                    AS PercentMarkup
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
      
@@ -56,11 +41,6 @@ BEGIN
               , Object_Status.ValueData                AS StatusName
               , MovementDate_OperDateStart.ValueData   AS OperDateStart
               , MovementDate_OperDateEnd.ValueData     AS OperDateEnd
-              , Object_MedicalProgramSP.Id            AS MedicalProgramSPId
-              , Object_MedicalProgramSP.ObjectCode    AS MedicalProgramSPCode
-              , Object_MedicalProgramSP.ValueData     AS MedicalProgramSPName
-              , MovementFloat_PercentMarkup.ValueData AS PercentMarkup
-  
          FROM Movement
                LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
    
@@ -72,15 +52,6 @@ BEGIN
                                       ON MovementDate_OperDateEnd.MovementId = Movement.Id
                                      AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
 
-               LEFT JOIN MovementLinkObject AS MLO_MedicalProgramSP
-                                            ON MLO_MedicalProgramSP.MovementId = Movement.Id
-                                           AND MLO_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
-               LEFT JOIN Object AS Object_MedicalProgramSP ON Object_MedicalProgramSP.Id = MLO_MedicalProgramSP.ObjectId  
-
-               LEFT JOIN MovementFloat AS MovementFloat_PercentMarkup
-                                       ON MovementFloat_PercentMarkup.MovementId = Movement.Id
-                                      AND MovementFloat_PercentMarkup.DescId = zc_MovementFloat_PercentMarkup()
-                                      
          WHERE Movement.Id = inMovementId
            AND Movement.DescId = zc_Movement_GoodsSPRegistry_1303();
 
@@ -92,8 +63,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 13.08.18         *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 16.05.22                                                       *
  */
 
 -- тест

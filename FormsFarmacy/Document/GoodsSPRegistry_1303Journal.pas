@@ -41,8 +41,6 @@ type
     actInsertMask1: TdsdInsertUpdateAction;
     actInsertMaskMulti: TMultiAction;
     ChoiceGuides: TdsdChoiceGuides;
-    MedicalProgramSPName: TcxGridDBColumn;
-    PercentMarkup: TcxGridDBColumn;
   private
     { Private declarations }
   public

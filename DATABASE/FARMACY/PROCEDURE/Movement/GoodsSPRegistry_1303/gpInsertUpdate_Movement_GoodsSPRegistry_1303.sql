@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_GoodsSPRegistry_1303()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_GoodsSPRegistry_1303 (Integer, TVarChar, TDateTime, TDateTime, TDateTime, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_GoodsSPRegistry_1303 (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_GoodsSPRegistry_1303(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Списания>
@@ -8,8 +8,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_GoodsSPRegistry_1303(
     IN inOperDate            TDateTime , -- Дата документа
     IN inOperDateStart       TDateTime , --
     IN inOperDateEnd         TDateTime , --
-    IN inMedicalProgramSPId  Integer   , --
-    IN inPercentMarkup       TFloat    , --
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -39,12 +37,6 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateEnd(), ioId, inOperDateEnd);
 
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLink_MedicalProgramSP(), ioId, inMedicalProgramSPId);
-
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_PercentMarkup(), ioId, inPercentMarkup);
-
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
@@ -54,8 +46,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 13.08.18         *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 16.05.22                                                       *
  */
 
 -- тест
