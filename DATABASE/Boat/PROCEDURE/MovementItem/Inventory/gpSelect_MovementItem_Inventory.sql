@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Inventory(
 RETURNS TABLE (Id Integer
              , PartionId Integer--, IdBarCode TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Article TVarChar, EAN TVarChar
+             , Article TVarChar, Article_all TVarChar , EAN TVarChar 
              , GoodsGroupNameFull TVarChar, GoodsGroupId Integer, GoodsGroupName TVarChar
              , MeasureName TVarChar
              , Amount TFloat, AmountRemains TFloat, AmountDiff TFloat, AmountRemains_curr TFloat
@@ -127,7 +127,8 @@ BEGIN
            , Object_Goods.Id                AS GoodsId
            , Object_Goods.ObjectCode        AS GoodsCode
            , Object_Goods.ValueData         AS GoodsName
-           , ObjectString_Article.ValueData      AS Article
+           , ObjectString_Article.ValueData      AS Article 
+           , zfCalc_Article_all (ObjectString_Article.ValueData) ::TVarChar AS Article_all
            , ObjectString_EAN.ValueData          AS EAN
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsGroup.Id                        AS GoodsGroupId

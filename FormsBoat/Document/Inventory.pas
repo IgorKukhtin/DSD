@@ -162,6 +162,13 @@ type
     OperDate_protocol: TcxGridDBColumn;
     UserName_protocol: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
+    lbSearchArticle: TcxLabel;
+    edSearchArticle: TcxTextEdit;
+    FieldFilter_Article: TdsdFieldFilter;
+    actChoiceGuides: TdsdChoiceGuides;
+    Article_all: TcxGridDBColumn;
+    bbedSearchArticle: TdxBarControlContainerItem;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
   private
   public
   end;
