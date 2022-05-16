@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceListItem(
 )
 RETURNS TABLE (Id Integer , ObjectId Integer
                 , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, DescName TVarChar
-                , Article TVarChar, ArticleVergl TVarChar, PartnerName   TVarChar
+                , Article TVarChar, Article_all TVarChar
+                , ArticleVergl TVarChar, PartnerName   TVarChar
                 , EKPrice TFloat, EKPriceWVAT TFloat
                 , EmpfPrice TFloat, EmpfPriceWVAT TFloat
                 , isErased Boolean, GoodsGroupNameFull TVarChar
@@ -168,7 +169,8 @@ BEGIN
            , Object_Goods.ObjectCode        AS GoodsCode
            , Object_Goods.ValueData         AS GoodsName
            , ObjectDesc.ItemName            AS DescName
-           , ObjectString_Article.ValueData      AS Article
+           , ObjectString_Article.ValueData      AS Article   
+           , zfCalc_Article_all (ObjectString_Article.ValueData) ::TVarChar AS Article_all
            , ObjectString_ArticleVergl.ValueData AS ArticleVergl
            , Object_Partner.ValueData            AS PartnerName
 
@@ -339,6 +341,7 @@ BEGIN
            , Object_Goods.ValueData              AS GoodsName
            , ObjectDesc.ItemName                 AS DescName
            , ObjectString_Article.ValueData      AS Article
+           , zfCalc_Article_all (ObjectString_Article.ValueData) ::TVarChar AS Article_all
            , ObjectString_ArticleVergl.ValueData AS ArticleVergl
            , Object_Partner.ValueData            AS PartnerName
 

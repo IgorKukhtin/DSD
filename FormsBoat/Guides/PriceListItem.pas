@@ -95,6 +95,12 @@ type
     TaxKindName: TcxGridDBColumn;
     TaxKind_Value: TcxGridDBColumn;
     DescName: TcxGridDBColumn;
+    lbSearchArticle: TcxLabel;
+    edSearchArticle: TcxTextEdit;
+    actChoiceGuides: TdsdChoiceGuides;
+    FieldFilter_Article: TdsdFieldFilter;
+    bbedSearchArticle: TdxBarControlContainerItem;
+    bblbSearchArticle: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

@@ -82,6 +82,12 @@ object PriceListItemForm: TPriceListItemForm
         Options.Editing = False
         Width = 80
       end
+      object Article_all: TcxGridDBColumn
+        Caption = '***Artikel Nr'
+        DataBinding.FieldName = 'Article_all'
+        Visible = False
+        Width = 70
+      end
       object ArticleVergl: TcxGridDBColumn
         Caption = 'Vergl. Nr'
         DataBinding.FieldName = 'ArticleVergl'
@@ -339,8 +345,29 @@ object PriceListItemForm: TPriceListItemForm
     EditValue = 43831d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 7
+    TabOrder = 6
     Width = 100
+  end
+  object lbSearchArticle: TcxLabel
+    Left = 155
+    Top = 221
+    Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+    ParentFont = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -13
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+  end
+  object edSearchArticle: TcxTextEdit
+    Left = 152
+    Top = 247
+    TabOrder = 9
+    DesignSize = (
+      125
+      21)
+    Width = 125
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -420,6 +447,14 @@ object PriceListItemForm: TPriceListItemForm
       FloatClientWidth = 51
       FloatClientHeight = 59
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bblbSearchArticle'
+        end
+        item
+          Visible = True
+          ItemName = 'bbedSearchArticle'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -554,6 +589,20 @@ object PriceListItemForm: TPriceListItemForm
     object bbStartLoad: TdxBarButton
       Action = actStartLoad
       Category = 0
+    end
+    object bbedSearchArticle: TdxBarControlContainerItem
+      Caption = 'edSearchArticle'
+      Category = 0
+      Hint = 'edSearchArticle'
+      Visible = ivAlways
+      Control = edSearchArticle
+    end
+    object bblbSearchArticle: TdxBarControlContainerItem
+      Caption = 'lbSearchArticle'
+      Category = 0
+      Hint = 'lbSearchArticle'
+      Visible = ivAlways
+      Control = lbSearchArticle
     end
   end
   object ActionList: TActionList
@@ -914,6 +963,28 @@ object PriceListItemForm: TPriceListItemForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
       ImageIndex = 41
     end
+    object actChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          ComponentItem = 'Id'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ImageIndex = 7
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_ObjectHistory_PriceListItem'
@@ -958,6 +1029,7 @@ object PriceListItemForm: TPriceListItemForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <
       item
@@ -1190,5 +1262,14 @@ object PriceListItemForm: TPriceListItemForm
     PackSize = 1
     Left = 520
     Top = 264
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edSearchArticle
+    DataSet = ClientDataSet
+    Column = Article_all
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 280
+    Top = 192
   end
 end

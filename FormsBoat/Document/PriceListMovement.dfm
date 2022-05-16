@@ -2,7 +2,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
   ClientHeight = 668
   ClientWidth = 1069
-  ExplicitTop = -148
   ExplicitWidth = 1085
   ExplicitHeight = 707
   PixelsPerInch = 96
@@ -301,6 +300,12 @@ inherited PriceListMovementForm: TPriceListMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
+          object Article_all: TcxGridDBColumn
+            Caption = '***Artikel Nr'
+            DataBinding.FieldName = 'Article_all'
+            Visible = False
+            Width = 70
+          end
         end
       end
     end
@@ -391,6 +396,27 @@ inherited PriceListMovementForm: TPriceListMovementForm
       TabOrder = 11
       Width = 179
     end
+  end
+  object lbSearchArticle: TcxLabel [2]
+    Left = 155
+    Top = 221
+    Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+    ParentFont = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -13
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+  end
+  object edSearchArticle: TcxTextEdit [3]
+    Left = 152
+    Top = 247
+    TabOrder = 7
+    DesignSize = (
+      125
+      21)
+    Width = 125
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1050,6 +1076,31 @@ inherited PriceListMovementForm: TPriceListMovementForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1086#1074#1072#1088
       ImageIndex = 0
     end
+    object actChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ImageIndex = 7
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1101,8 +1152,8 @@ inherited PriceListMovementForm: TPriceListMovementForm
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Left = 160
-    Top = 248
+    Left = 120
+    Top = 264
   end
   inherited BarManager: TdxBarManager
     Left = 80
@@ -1114,6 +1165,14 @@ inherited PriceListMovementForm: TPriceListMovementForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bblbSearchArticle'
+        end
+        item
+          Visible = True
+          ItemName = 'bbedSearchArticle'
+        end
         item
           Visible = True
           ItemName = 'bbStatic'
@@ -1307,6 +1366,20 @@ inherited PriceListMovementForm: TPriceListMovementForm
     object bbInsertRecord: TdxBarButton
       Action = InsertRecord
       Category = 0
+    end
+    object bblbSearchArticle: TdxBarControlContainerItem
+      Caption = 'lbSearchArticle'
+      Category = 0
+      Hint = 'lbSearchArticle'
+      Visible = ivAlways
+      Control = lbSearchArticle
+    end
+    object bbedSearchArticle: TdxBarControlContainerItem
+      Caption = 'edSearchArticle'
+      Category = 0
+      Hint = 'edSearchArticle'
+      Visible = ivAlways
+      Control = edSearchArticle
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1513,8 +1586,8 @@ inherited PriceListMovementForm: TPriceListMovementForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 208
-    Top = 256
+    Left = 200
+    Top = 272
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_PriceList'
@@ -2127,5 +2200,14 @@ inherited PriceListMovementForm: TPriceListMovementForm
     PackSize = 1
     Left = 936
     Top = 216
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edSearchArticle
+    DataSet = MasterCDS
+    Column = Article_all
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 288
+    Top = 336
   end
 end

@@ -231,6 +231,12 @@ type
     EKPrice_orig: TcxGridDBColumn;
     EKPrice_discount: TcxGridDBColumn;
     TotalSummIn: TcxGridDBColumn;
+    lbSearchArticle: TcxLabel;
+    edSearchArticle: TcxTextEdit;
+    actChoiceGuides: TdsdChoiceGuides;
+    FieldFilter_Article: TdsdFieldFilter;
+    bblbSearchArticle: TdxBarControlContainerItem;
+    bbedSearchArticle: TdxBarControlContainerItem;
   private
   public
   end;

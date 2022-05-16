@@ -97,6 +97,12 @@ type
     bbStartLoad_Uflex3: TdxBarButton;
     InsertRecord: TInsertRecord;
     bbInsertRecord: TdxBarButton;
+    lbSearchArticle: TcxLabel;
+    edSearchArticle: TcxTextEdit;
+    actChoiceGuides: TdsdChoiceGuides;
+    FieldFilter_Article: TdsdFieldFilter;
+    bblbSearchArticle: TdxBarControlContainerItem;
+    bbedSearchArticle: TdxBarControlContainerItem;
   private
     { Private declarations }
   public
