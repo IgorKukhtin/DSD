@@ -221,6 +221,13 @@ type
     OperDate_protocol: TcxGridDBColumn;
     UserName_protocol: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
+    actChoiceGuides: TdsdChoiceGuides;
+    Article_all: TcxGridDBColumn;
+    edSearchArticle: TcxTextEdit;
+    lbSearchArticle: TcxLabel;
+    FieldFilter_Article: TdsdFieldFilter;
+    bbedSearchArticle: TdxBarControlContainerItem;
+    bblbSearchArticle: TdxBarControlContainerItem;
   private
   public
   end;

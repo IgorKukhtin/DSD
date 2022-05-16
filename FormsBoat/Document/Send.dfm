@@ -495,6 +495,12 @@ object SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object Article_all: TcxGridDBColumn
+            Caption = '***Artikel Nr'
+            DataBinding.FieldName = 'Article_all'
+            Visible = False
+            Width = 70
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = 'Interne Nr'
             DataBinding.FieldName = 'GoodsCode'
@@ -969,6 +975,27 @@ object SendForm: TSendForm
       end
     end
   end
+  object edSearchArticle: TcxTextEdit
+    Left = 152
+    Top = 247
+    TabOrder = 6
+    DesignSize = (
+      125
+      21)
+    Width = 125
+  end
+  object lbSearchArticle: TcxLabel
+    Left = 155
+    Top = 221
+    Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+    ParentFont = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -13
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -1061,6 +1088,18 @@ object SendForm: TSendForm
       FloatClientWidth = 51
       FloatClientHeight = 71
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bblbSearchArticle'
+        end
+        item
+          Visible = True
+          ItemName = 'bbedSearchArticle'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
         item
           Visible = True
           ItemName = 'bbInsertUpdateMovement'
@@ -1373,6 +1412,20 @@ object SendForm: TSendForm
     object bbUpdateActionMovement: TdxBarButton
       Action = mactAdd
       Category = 0
+    end
+    object bbedSearchArticle: TdxBarControlContainerItem
+      Caption = 'edSearchArticle'
+      Category = 0
+      Hint = 'edSearchArticle'
+      Visible = ivAlways
+      Control = edSearchArticle
+    end
+    object bblbSearchArticle: TdxBarControlContainerItem
+      Caption = 'lbSearchArticle'
+      Category = 0
+      Hint = 'lbSearchArticle'
+      Visible = ivAlways
+      Control = lbSearchArticle
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -2497,6 +2550,31 @@ object SendForm: TSendForm
         end>
       Caption = 'macGoodsItem3'
     end
+    object actChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ImageIndex = 7
+      DataSource = MasterDS
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -3505,5 +3583,14 @@ object SendForm: TSendForm
     PackSize = 1
     Left = 992
     Top = 232
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edSearchArticle
+    DataSet = MasterCDS
+    Column = Article_all
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 280
+    Top = 192
   end
 end
