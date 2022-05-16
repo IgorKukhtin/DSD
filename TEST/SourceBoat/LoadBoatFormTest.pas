@@ -865,21 +865,22 @@ end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_TranslateObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnion_TranslateObjectForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_OrderJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnion_OrderJournalChoiceForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_Goods_ReceiptServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnion_Goods_ReceiptServiceForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_ClientPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnion_ClientPartnerForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMoneyPlace_ObjectForm');
-
+  }
 end;
 
 procedure TLoadFormTest.LoadImportSettingsFormTest;

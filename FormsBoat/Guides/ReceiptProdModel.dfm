@@ -3,7 +3,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1052#1086#1076#1077#1083#1080'>'
   ClientHeight = 443
-  ClientWidth = 1288
+  ClientWidth = 1293
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,22 +21,24 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   object PanelMaster: TPanel
     Left = 0
     Top = 26
-    Width = 1288
+    Width = 1293
     Height = 209
     Align = alTop
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 1288
     object cxGrid: TcxGrid
       Left = 0
       Top = 17
-      Width = 1288
+      Width = 1293
       Height = 192
       Align = alClient
       PopupMenu = PopupMenu
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitWidth = 1288
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -277,13 +279,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     object Panel3: TPanel
       Left = 0
       Top = 0
-      Width = 1288
+      Width = 1293
       Height = 17
       Align = alTop
       Caption = #1057#1073#1086#1088#1082#1072' '#1084#1086#1076#1077#1083#1080
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 1
+      ExplicitWidth = 1288
     end
     object lbReceiptLevel: TcxLabel
       Left = 338
@@ -345,7 +348,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     end
   end
   object PanelProdColorPattern: TPanel
-    Left = 776
+    Left = 781
     Top = 240
     Width = 512
     Height = 203
@@ -354,6 +357,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     BevelKind = bkTile
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitLeft = 776
     object cxGridProdColorPattern: TcxGrid
       Left = 0
       Top = 17
@@ -648,22 +652,24 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   object PanelGoods: TPanel
     Left = 0
     Top = 240
-    Width = 768
+    Width = 773
     Height = 203
     Align = alClient
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitWidth = 768
     object cxGridGoods: TcxGrid
       Left = 0
       Top = 17
-      Width = 768
+      Width = 773
       Height = 186
       Align = alClient
       PopupMenu = PopupMenuColor
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitWidth = 768
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = GoodsDS
@@ -1252,30 +1258,33 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     object Panel1: TPanel
       Left = 0
       Top = 0
-      Width = 768
+      Width = 773
       Height = 17
       Align = alTop
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
+      ExplicitWidth = 768
     end
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
     Top = 235
-    Width = 1288
+    Width = 1293
     Height = 5
     AlignSplitter = salTop
     Control = PanelMaster
+    ExplicitWidth = 1288
   end
   object cxRightSplitter: TcxSplitter
-    Left = 768
+    Left = 773
     Top = 240
     Width = 8
     Height = 203
     AlignSplitter = salRight
     Control = PanelProdColorPattern
+    ExplicitLeft = 768
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -1430,6 +1439,18 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         item
           Visible = True
           ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintStructure'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintStructureGoods'
         end
         item
           Visible = True
@@ -1644,6 +1665,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Category = 0
       Visible = ivAlways
       Control = edSearchArticle
+    end
+    object bbPrintStructureGoods: TdxBarButton
+      Action = actPrintStructureGoods
+      Category = 0
+    end
+    object bbPrintStructure: TdxBarButton
+      Action = actPrintStructure
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -2135,6 +2164,56 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Caption = 'actUpdateDataSetGoods'
       DataSource = GoodsDS
     end
+    object actPrintStructure: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintStructure
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintStructure
+        end>
+      Caption = 'Print Structure'
+      Hint = 'Print Structure'
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'NPP;GoodsGroupNameFull;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintReceiptProdModel_Structure'
+      ReportNameParam.Value = 'PrintReceiptProdModel_Structure'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PictureFields.Strings = (
+        'photo1')
+    end
     object actGetImportSetting: TdsdExecStoredProc
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -2189,6 +2268,56 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084' '#1080#1079' '#1092#1072#1081#1083#1072
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084' '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 41
+    end
+    object actPrintStructureGoods: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintStructureGoods
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintStructureGoods
+        end>
+      Caption = 'Print Structure Goods'
+      Hint = 'PrintStructure Goods'
+      ImageIndex = 17
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'NPP;GoodsGroupNameFull;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintReceiptProdModel_StructureGoods'
+      ReportNameParam.Value = 'PrintReceiptProdModel_StructureGoods'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PictureFields.Strings = (
+        'photo1')
     end
   end
   object spSelect: TdsdStoredProc
@@ -2732,7 +2861,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       end>
     PackSize = 1
     Left = 1000
-    Top = 240
+    Top = 256
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -3006,5 +3135,87 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     CheckBoxList = <>
     Left = 352
     Top = 240
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 1012
+    Top = 89
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 1012
+    Top = 142
+  end
+  object PrintItemsColorCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 1012
+    Top = 198
+  end
+  object spSelectPrintStructureGoods: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_ReceiptProdModel_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inReceiptProdModelId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceiptLevelId'
+        Value = Null
+        Component = GuidesReceiptLevel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1104
+    Top = 88
+  end
+  object spSelectPrintStructure: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_ReceiptProdModel_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inReceiptProdModelId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceiptLevelId'
+        Value = ''
+        Component = GuidesReceiptLevel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1136
+    Top = 136
   end
 end

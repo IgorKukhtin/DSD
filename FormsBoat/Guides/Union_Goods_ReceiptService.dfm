@@ -422,7 +422,7 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
   object edSearchArticle: TcxTextEdit
     Left = 80
     Top = 350
-    TabOrder = 6
+    TabOrder = 4
     DesignSize = (
       125
       21)
@@ -443,7 +443,7 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
   object edSearchCode: TcxTextEdit
     Left = 224
     Top = 350
-    TabOrder = 8
+    TabOrder = 7
     DesignSize = (
       115
       21)
@@ -582,6 +582,26 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoiceGuides'
         end
         item
@@ -615,19 +635,19 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
       Category = 0
     end
     object bbInsert: TdxBarButton
-      Action = actInsert
+      Action = macInsert
       Category = 0
     end
     object bbEdit: TdxBarButton
-      Action = actUpdate
+      Action = macUpdate
       Category = 0
     end
     object bbSetErased: TdxBarButton
-      Action = dsdSetErased
+      Action = macSetErased
       Category = 0
     end
     object bbSetUnErased: TdxBarButton
-      Action = dsdSetUnErased
+      Action = macSetUnErased
       Category = 0
     end
     object bbGridToExcel: TdxBarButton
@@ -725,8 +745,8 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
         item
           StoredProc = spErased
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -740,8 +760,8 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
         item
           StoredProc = spUnErased
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 8
       ShortCut = 32776
       ErasedFieldName = 'isErased'
@@ -927,8 +947,8 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TGoodsEditForm'
@@ -946,13 +966,15 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
         end>
       isShowModal = False
       ActionType = acUpdate
+      DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TGoodsEditForm'
@@ -1009,6 +1031,48 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
         end>
       Caption = 'actUpdateGoods_In'
       Hint = #1054#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1086#1089#1083'. '#1087#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097'.  '#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+    end
+    object macUpdate: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCheckDesc
+        end
+        item
+          Action = actUpdate
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      ImageIndex = 1
+    end
+    object macSetErased: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCheckDesc
+        end
+        item
+          Action = dsdSetErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      ImageIndex = 2
+    end
+    object macSetUnErased: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCheckDesc
+        end
+        item
+          Action = dsdSetUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      ImageIndex = 8
     end
     object macUpdateGoods_In: TMultiAction
       Category = 'Calc'
@@ -1072,6 +1136,31 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1040#1088#1090#1080#1082#1091#1083#1099
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1040#1088#1090#1080#1082#1091#1083#1099
       ImageIndex = 41
+    end
+    object actCheckDesc: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCheckDesc
+      StoredProcList = <
+        item
+          StoredProc = spCheckDesc
+        end>
+      Caption = 'actCheckDesc'
+    end
+    object macInsert: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCheckDesc
+        end
+        item
+          Action = actInsert
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      ImageIndex = 0
     end
   end
   object spSelect: TdsdStoredProc
@@ -1259,5 +1348,22 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
     CheckBoxList = <>
     Left = 504
     Top = 296
+  end
+  object spCheckDesc: TdsdStoredProc
+    StoredProcName = 'gpCheckDesc_Object_Goods'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 648
+    Top = 224
   end
 end

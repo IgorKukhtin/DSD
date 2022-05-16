@@ -183,6 +183,15 @@ type
     OperDate_protocol_ch1: TcxGridDBColumn;
     UserName_protocol_ch1: TcxGridDBColumn;
     Color_isCheck_ch1: TcxGridDBColumn;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    PrintItemsColorCDS: TClientDataSet;
+    spSelectPrintStructureGoods: TdsdStoredProc;
+    actPrintStructureGoods: TdsdPrintAction;
+    bbPrintStructureGoods: TdxBarButton;
+    spSelectPrintStructure: TdsdStoredProc;
+    actPrintStructure: TdsdPrintAction;
+    bbPrintStructure: TdxBarButton;
   private
     { Private declarations }
   public

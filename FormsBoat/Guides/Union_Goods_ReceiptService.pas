@@ -111,6 +111,12 @@ type
     lbSearchName: TcxLabel;
     FieldFilter_Code: TdsdFieldFilter;
     FieldFilter_Name: TdsdFieldFilter;
+    spCheckDesc: TdsdStoredProc;
+    actCheckDesc: TdsdExecStoredProc;
+    macInsert: TMultiAction;
+    macUpdate: TMultiAction;
+    macSetErased: TMultiAction;
+    macSetUnErased: TMultiAction;
   private
     { Private declarations }
   public

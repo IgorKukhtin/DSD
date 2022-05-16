@@ -1358,8 +1358,8 @@ object OrderClientJournalForm: TOrderClientJournalForm
         item
           StoredProc = spSelectPrintStructureGoods
         end>
-      Caption = 'Print Structure'
-      Hint = 'PrintStructureGoods'
+      Caption = 'Print Structure Goods'
+      Hint = 'PrintStructure Goods'
       ImageIndex = 17
       DataSets = <
         item
@@ -1872,7 +1872,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 768
-    Top = 264
+    Left = 808
+    Top = 272
   end
 end

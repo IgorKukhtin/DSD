@@ -382,6 +382,9 @@ type
     EngineNum: TcxGridDBColumn;
     EngineName: TcxGridDBColumn;
     cbChild_Recalc: TcxCheckBox;
+    spSelectPrintStructureGoods: TdsdStoredProc;
+    actPrintStructureGoods: TdsdPrintAction;
+    bb: TdxBarButton;
   private
   public
   end;
