@@ -916,7 +916,7 @@ BEGIN
            , tmpData.isUsePriceOOC
            
            , CASE WHEN tmpData.isUsePriceOOC = TRUE
-                  THEN tmpData.PriceRegistry
+                  THEN ROUND(tmpData.PriceRegistry * tmpData.ChangePercent / 100.0, 2)
                   ELSE CAST ( (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.SummOriginal - tmpData.SummSale)/tmpData.Amount ELSE 0 END)  AS NUMERIC (16,2) ) END  :: TFloat  AS PriceRegistry
            , ROUND(CASE WHEN tmpData.isUsePriceOOC = TRUE
                         THEN tmpData.PriceRegistry * tmpData.Amount * tmpData.ChangePercent / 100.0

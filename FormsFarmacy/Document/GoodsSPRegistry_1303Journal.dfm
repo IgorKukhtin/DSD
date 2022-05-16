@@ -44,7 +44,6 @@ inherited GoodsSPRegistry_1303JournalForm: TGoodsSPRegistry_1303JournalForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
-          OptionsView.GroupByBox = True
           OptionsView.HeaderHeight = 40
           Styles.Content = nil
           Styles.Inactive = nil

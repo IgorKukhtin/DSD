@@ -59,17 +59,18 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             Options.Editing = False
             Width = 253
           end
-          object ColSP: TcxGridDBColumn [2]
-            Caption = #8470' '#1079'/'#1087' (1)'
-            DataBinding.FieldName = 'ColSP'
+          object ID_MED_FORM: TcxGridDBColumn [2]
+            Caption = #1053#1086#1084#1077#1088' '#1074' '#1088#1077#1077#1089#1090#1088#1077
+            DataBinding.FieldName = 'ID_MED_FORM'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0;-,0; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 59
           end
           object IntenalSPName: TcxGridDBColumn [3]
-            Caption = #1052#1110#1078#1085#1072#1088#1086#1076#1085#1072' '#1085#1077#1087#1072#1090#1077#1085#1090#1086#1074#1072#1085#1072' '#1085#1072#1079#1074#1072' (2)'
+            Caption = #1052#1110#1078#1085#1072#1088#1086#1076#1085#1072' '#1085#1077#1087#1072#1090#1077#1085#1090#1086#1074#1072#1085#1072' '#1085#1072#1079#1074#1072' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
             DataBinding.FieldName = 'IntenalSPName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -84,7 +85,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             Width = 97
           end
           object BrandSPName: TcxGridDBColumn [4]
-            Caption = #1058#1086#1088#1075#1086#1074#1072' '#1085#1072#1079#1074#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091' (3)'
+            Caption = #1058#1086#1088#1075#1086#1074#1077#1083#1100#1085#1072' '#1085#1072#1079#1074#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
             DataBinding.FieldName = 'BrandSPName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -98,9 +99,9 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             HeaderAlignmentVert = vaCenter
             Width = 115
           end
-          object KindOutSPName: TcxGridDBColumn [5]
-            Caption = #1060#1086#1088#1084#1072' '#1074#1080#1087#1091#1089#1082#1091' (4)'
-            DataBinding.FieldName = 'KindOutSPName'
+          object KindOutSP_1303Name: TcxGridDBColumn [5]
+            Caption = #9#1060#1086#1088#1084#1072' '#1074#1080#1087#1091#1089#1082#1091' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
+            DataBinding.FieldName = 'KindOutSP_1303Name'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -111,7 +112,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 57
+            Width = 85
           end
           object Pack: TcxGridDBColumn [6]
             Caption = #1057#1080#1083#1072' '#1076#1110#1111' ('#1076#1086#1079#1091#1074#1072#1085#1085#1103') (5)'
@@ -338,36 +339,6 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
       Top = 5
       Caption = #1054#1082#1086#1085'. '#1089#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072
     end
-    object edMedicalProgramSP: TcxButtonEdit
-      Left = 592
-      Top = 23
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 8
-      Width = 296
-    end
-    object cxLabel5: TcxLabel
-      Left = 592
-      Top = 5
-      Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1072#1103' '#1087#1088#1086#1075#1088#1072#1084#1084#1072
-    end
-    object cxLabel6: TcxLabel
-      Left = 901
-      Top = 5
-      Caption = '% '#1085#1072#1094#1077#1085#1082#1080
-    end
-    object ctPercentMarkup: TcxCurrencyEdit
-      Left = 901
-      Top = 23
-      Properties.DecimalPlaces = 4
-      Properties.DisplayFormat = ',0.####;-,0.####; ;'
-      TabOrder = 11
-      Width = 60
-    end
   end
   object edOperDateStart: TcxDateEdit [2]
     Left = 373
@@ -394,24 +365,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
   inherited ActionList: TActionList
     Left = 55
     Top = 303
-    object actDoLoadDop: TExecuteImportSettingsAction [0]
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      ImportSettingsId.Value = Null
-      ImportSettingsId.Component = FormParams
-      ImportSettingsId.ComponentItem = 'ImportSettingDopId'
-      ImportSettingsId.MultiSelectSeparator = ','
-      ExternalParams = <
-        item
-          Name = 'inMovementId'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-    end
-    object actRefreshMI: TdsdDataSetRefresh [1]
+    object actRefreshMI: TdsdDataSetRefresh [0]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -426,62 +380,10 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object actGetImportSettingDop: TdsdExecStoredProc [2]
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetImportSettingDopId
-      StoredProcList = <
-        item
-          StoredProc = spGetImportSettingDopId
-        end>
-      Caption = 'actGetImportSetting'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091'  '#1080#1079' '#1092#1072#1081#1083#1072
-    end
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object macStartLoadDop: TMultiAction [5]
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGetImportSettingDop
-        end
-        item
-          Action = actDoLoadDop
-        end
-        item
-          Action = actRefreshMI
-        end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072'?'
-      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099'?'
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100'  '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072
-      ImageIndex = 48
-      WithoutNext = True
-    end
-    object macStartLoadHelsi: TMultiAction [7]
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGetImportSettingHelsi
-        end
-        item
-          Action = actDoLoadHelsi
-        end
-        item
-          Action = actRefreshMI
-        end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072' ('#1061#1077#1083#1089#1080')?'
-      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099'?'
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100'  '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072' ('#1061#1077#1083#1089#1080')'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072' ('#1061#1077#1083#1089#1080')'
-      ImageIndex = 30
-      WithoutNext = True
-    end
-    object actInsertMI: TdsdExecStoredProc [10]
+    object actInsertMI: TdsdExecStoredProc [6]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -536,7 +438,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
           StoredProc = spGet
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [19]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -770,35 +672,6 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
       ImageIndex = 41
       WithoutNext = True
     end
-    object actGetImportSettingHelsi: TdsdExecStoredProc
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetImportSettingHelsiId
-      StoredProcList = <
-        item
-          StoredProc = spGetImportSettingHelsiId
-        end>
-      Caption = 'actGetImportSetting'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091'  '#1080#1079' '#1092#1072#1081#1083#1072' ('#1061#1077#1083#1089#1080')'
-    end
-    object actDoLoadHelsi: TExecuteImportSettingsAction
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072
-      MoveParams = <>
-      ImportSettingsId.Value = Null
-      ImportSettingsId.Component = FormParams
-      ImportSettingsId.ComponentItem = 'ImportSettingHelsiId'
-      ImportSettingsId.MultiSelectSeparator = ','
-      ExternalParams = <
-        item
-          Name = 'inMovementId'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-    end
   end
   inherited MasterDS: TDataSource
     Left = 192
@@ -867,10 +740,6 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
         end
         item
           Visible = True
-          ItemName = 'bbInsertMI'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -903,15 +772,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
         end
         item
           Visible = True
-          ItemName = 'bbStartLoadDop'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStartLoadHelsi'
         end
         item
           Visible = True
@@ -949,12 +810,18 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
       Category = 0
     end
     object bbStartLoadDop: TdxBarButton
-      Action = macStartLoadDop
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100'  '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072
       Category = 0
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072
+      Visible = ivAlways
+      ImageIndex = 48
     end
     object bbStartLoadHelsi: TdxBarButton
-      Action = macStartLoadHelsi
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100'  '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072' ('#1061#1077#1083#1089#1080')'
       Category = 0
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072' ('#1061#1077#1083#1089#1080')'
+      Visible = ivAlways
+      ImageIndex = 30
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1141,22 +1008,17 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
       item
         Name = 'MedicalProgramSPId'
         Value = Null
-        Component = GuidesMedicalProgramSP
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MedicalProgramSPName'
         Value = Null
-        Component = GuidesMedicalProgramSP
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'PercentMarkup'
         Value = Null
-        Component = ctPercentMarkup
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -1209,15 +1071,12 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
       item
         Name = 'inMedicalProgramSPId'
         Value = Null
-        Component = GuidesMedicalProgramSP
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inPercentMarkup'
         Value = Null
-        Component = ctPercentMarkup
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1230,7 +1089,6 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
       item
-        Guides = GuidesMedicalProgramSP
       end
       item
       end
@@ -1254,10 +1112,8 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
         Control = edOperDateStart
       end
       item
-        Control = edMedicalProgramSP
       end
       item
-        Control = ctPercentMarkup
       end>
     Left = 232
     Top = 193
@@ -1815,8 +1671,8 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
     OutputType = otResult
     Params = <>
     PackSize = 1
-    Left = 939
-    Top = 398
+    Left = 835
+    Top = 374
   end
   object spGetImportSettingId: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -1849,101 +1705,5 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
     PackSize = 1
     Left = 912
     Top = 240
-  end
-  object spGetImportSettingDopId: TdsdStoredProc
-    StoredProcName = 'gpGet_DefaultValue'
-    DataSets = <
-      item
-      end>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inDefaultKey'
-        Value = 'TGoodsSPMovementForm;zc_Object_ImportSetting_GoodsSPDopMovement'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUserKeyId'
-        Value = '0'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'gpGet_DefaultValue'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ImportSettingDopId'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 912
-    Top = 296
-  end
-  object spGetImportSettingHelsiId: TdsdStoredProc
-    StoredProcName = 'gpGet_DefaultValue'
-    DataSets = <
-      item
-      end>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inDefaultKey'
-        Value = 
-          'TGoodsSPMovementForm;zc_Object_ImportSetting_GoodsSPMovementHels' +
-          'i'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUserKeyId'
-        Value = '0'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'gpGet_DefaultValue'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ImportSettingHelsiId'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 840
-    Top = 360
-  end
-  object GuidesMedicalProgramSP: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edMedicalProgramSP
-    FormNameParam.Value = 'TMedicalProgramSPForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMedicalProgramSPForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesMedicalProgramSP
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesMedicalProgramSP
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 777
-    Top = 11
   end
 end

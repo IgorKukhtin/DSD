@@ -1792,7 +1792,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
           PairName = 'SummOriginal'
         end
         item
-          FieldName = 'SummSale'
+          FieldName = 'SummaSP'
           PairName = 'SummSale'
         end
         item

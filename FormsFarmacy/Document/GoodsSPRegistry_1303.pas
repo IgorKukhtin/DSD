@@ -63,22 +63,9 @@ type
     bbStartLoad: TdxBarButton;
     spGetImportSettingId: TdsdStoredProc;
     IdSP: TcxGridDBColumn;
-    spGetImportSettingDopId: TdsdStoredProc;
-    actDoLoadDop: TExecuteImportSettingsAction;
-    actGetImportSettingDop: TdsdExecStoredProc;
-    macStartLoadDop: TMultiAction;
     bbStartLoadDop: TdxBarButton;
-    spGetImportSettingHelsiId: TdsdStoredProc;
-    macStartLoadHelsi: TMultiAction;
-    actGetImportSettingHelsi: TdsdExecStoredProc;
-    actDoLoadHelsi: TExecuteImportSettingsAction;
     bbStartLoadHelsi: TdxBarButton;
-    GuidesMedicalProgramSP: TdsdGuides;
-    edMedicalProgramSP: TcxButtonEdit;
-    cxLabel5: TcxLabel;
     CountSPMin: TcxGridDBColumn;
-    cxLabel6: TcxLabel;
-    ctPercentMarkup: TcxCurrencyEdit;
   private
     { Private declarations }
   public

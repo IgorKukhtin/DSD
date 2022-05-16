@@ -12,34 +12,37 @@ RETURNS TABLE (Id            Integer
              , GoodsId       Integer
              , GoodsCode     Integer
              , GoodsName     TVarChar
-             , ColSP         TFloat
-             , CountSPMin    TFloat
-             , CountSP       TFloat
+
              , PriceOptSP    TFloat
-             , PriceRetSP    TFloat
-             , DailyNormSP   TFloat
-             , DailyCompensationSP  TFloat
-             , PriceSP       TFloat
-             , PaymentSP     TFloat
-             , GroupSP       TFloat
-             , DenumeratorValueSP TFloat
-             , Pack          TVarChar
+             , ExchangeRate  TFloat
+             , OrderNumberSP Integer
+             , ID_MED_FORM   Integer
+             , MorionSP      Integer
+
              , CodeATX       TVarChar
-             , MakerSP       TVarChar
              , ReestrSP      TVarChar
-             , ReestrDateSP  TVarChar
-             , IdSP          TVarChar
-             , DosageIdSP    TVarChar
-             , ProgramIdSP       TVarChar
-             , NumeratorUnitSP   TVarChar
-             , DenumeratorUnitSP TVarChar
-             , DynamicsSP        TVarChar
+
+             , ReestrDateSP  TDateTime
+             , ValiditySP    TDateTime
+             , OrderDateSP   TDateTime
+
              , IntenalSPId   Integer 
              , IntenalSPName TVarChar
              , BrandSPId     Integer 
              , BrandSPName   TVarChar
-             , KindOutSPId   Integer 
-             , KindOutSPName TVarChar
+             , KindOutSP_1303Id   Integer 
+             , KindOutSP_1303Name TVarChar
+             , Dosage_1303Id   Integer 
+             , Dosage_1303Name TVarChar             
+             , CountSP_1303Id   Integer 
+             , CountSP_1303Name TVarChar             
+             , MakerSP_1303Id   Integer 
+             , MakerSP_1303Name TVarChar             
+             , Country_1303Id   Integer 
+             , Country_1303Name TVarChar             
+             , CurrencyId   Integer 
+             , CurrencyName TVarChar
+
              , isErased      Boolean
              )
 AS
@@ -67,39 +70,35 @@ BEGIN
              , Object_Goods.ObjectCode                    ::Integer  AS GoodsCode
              , Object_Goods.ValueData                                AS GoodsName
 
-             , MIFloat_ColSP.ValueData                               AS ColSP
-             , MIFloat_CountSPMin.ValueData                          AS CountSPMin
              , MIFloat_CountSP.ValueData                             AS CountSP
-             , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
-             , MIFloat_PriceRetSP.ValueData                          AS PriceRetSP
-             , MIFloat_DailyNormSP.ValueData                         AS DailyNormSP
-             , MIFloat_DailyCompensationSP.ValueData                 AS DailyCompensationSP
-             , MIFloat_PriceSP.ValueData                             AS PriceSP
-             , MIFloat_PaymentSP.ValueData                           AS PaymentSP
-             , MIFloat_GroupSP.ValueData                             AS GroupSP
-             , MIFloat_DenumeratorValueSP.ValueData                  AS DenumeratorValueSP
+             , MIFloat_ExchangeRate.ValueData                        AS ExchangeRate
+             , MIFloat_OrderNumberSP.ValueData::Integer              AS OrderNumberSP
+             , MIFloat_ID_MED_FORM.ValueData::Integer                AS ID_MED_FORM
+             , MIFloat_MorionSP.ValueData::Integer                   AS MorionSP
 
-             , MIString_Pack.ValueData                               AS Pack
              , MIString_CodeATX.ValueData                            AS CodeATX
-             , MIString_MakerSP.ValueData                            AS MakerSP
              , MIString_ReestrSP.ValueData                           AS ReestrSP
-             , MIString_ReestrDateSP.ValueData                       AS ReestrDateSP
-             , COALESCE (MIString_IdSP.ValueData, '')     ::TVarChar AS IdSP
-             , COALESCE (MIString_DosageIdSP.ValueData,'')::TVarChar AS DosageIdSP
              
-             , COALESCE (MIString_ProgramIdSP.ValueData, '')      ::TVarChar AS ProgramIdSP
-             , COALESCE (MIString_NumeratorUnitSP.ValueData, '')  ::TVarChar AS NumeratorUnitSP
-             , COALESCE (MIString_DenumeratorUnitSP.ValueData, '')::TVarChar AS DenumeratorUnitSP
-             , COALESCE (MIString_DynamicsSP.ValueData, '')       ::TVarChar AS DynamicsSP
+             , MIDate_ReestrDateSP.ValueData                         AS ReestrDateSP
+             , MIDate_ValiditySP.ValueData                           AS ValiditySP
+             , MIDate_OrderDateSP.ValueData                          AS OrderDateSP
 
              , COALESCE (Object_IntenalSP.Id ,0)          ::Integer  AS IntenalSPId
              , COALESCE (Object_IntenalSP.ValueData,'')   ::TVarChar AS IntenalSPName
-
              , COALESCE (Object_BrandSP.Id ,0)            ::Integer  AS BrandSPId
              , COALESCE (Object_BrandSP.ValueData,'')     ::TVarChar AS BrandSPName
-
-             , COALESCE (Object_KindOutSP.Id ,0)          ::Integer  AS KindOutSPId
-             , COALESCE (Object_KindOutSP.ValueData,'')   ::TVarChar AS KindOutSPName
+             , COALESCE (Object_KindOutSP_1303.Id ,0)          ::Integer  AS KindOutSP_1303Id
+             , COALESCE (Object_KindOutSP_1303.ValueData,'')   ::TVarChar AS KindOutSP_1303Name
+             , COALESCE (Object_Dosage_1303.Id ,0)          ::Integer  AS Dosage_1303Id
+             , COALESCE (Object_Dosage_1303.ValueData,'')   ::TVarChar AS Dosage_1303Name
+             , COALESCE (Object_CountSP_1303.Id ,0)          ::Integer  AS CountSP_1303Id
+             , COALESCE (Object_CountSP_1303.ValueData,'')   ::TVarChar AS CountSP_1303Name
+             , COALESCE (Object_MakerSP_1303.Id ,0)          ::Integer  AS MakerSP_1303Id
+             , COALESCE (Object_MakerSP_1303.ValueData,'')   ::TVarChar AS MakerSP_1303Name
+             , COALESCE (Object_Country_1303.Id ,0)          ::Integer  AS Country_1303Id
+             , COALESCE (Object_Country_1303.ValueData,'')   ::TVarChar AS Country_1303Name
+             , COALESCE (Object_Currency.Id ,0)          ::Integer  AS CurrencyId
+             , COALESCE (Object_Currency.ValueData,'')   ::TVarChar AS CurrencyName
 
              , COALESCE (MovementItem.isErased, FALSE)    ::Boolean  AS isErased
 
@@ -111,74 +110,38 @@ BEGIN
                                        
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoodsMain.Id
              
-             LEFT JOIN MovementItemFloat AS MIFloat_ColSP
-                                         ON MIFloat_ColSP.MovementItemId = MovementItem.Id
-                                        AND MIFloat_ColSP.DescId = zc_MIFloat_ColSP()
-             LEFT JOIN MovementItemFloat AS MIFloat_CountSPMin
-                                         ON MIFloat_CountSPMin.MovementItemId = MovementItem.Id
-                                        AND MIFloat_CountSPMin.DescId = zc_MIFloat_CountSPMin()
              LEFT JOIN MovementItemFloat AS MIFloat_CountSP
                                          ON MIFloat_CountSP.MovementItemId = MovementItem.Id
                                         AND MIFloat_CountSP.DescId = zc_MIFloat_CountSP()
-             LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
-                                         ON MIFloat_PriceOptSP.MovementItemId = MovementItem.Id
-                                        AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
-             LEFT JOIN MovementItemFloat AS MIFloat_PriceRetSP
-                                         ON MIFloat_PriceRetSP.MovementItemId = MovementItem.Id
-                                        AND MIFloat_PriceRetSP.DescId = zc_MIFloat_PriceRetSP()  
-             LEFT JOIN MovementItemFloat AS MIFloat_DailyNormSP
-                                         ON MIFloat_DailyNormSP.MovementItemId = MovementItem.Id
-                                        AND MIFloat_DailyNormSP.DescId = zc_MIFloat_DailyNormSP() 
-             LEFT JOIN MovementItemFloat AS MIFloat_DailyCompensationSP
-                                         ON MIFloat_DailyCompensationSP.MovementItemId = MovementItem.Id
-                                        AND MIFloat_DailyCompensationSP.DescId = zc_MIFloat_DailyCompensationSP() 
-             LEFT JOIN MovementItemFloat AS MIFloat_PriceSP
-                                         ON MIFloat_PriceSP.MovementItemId = MovementItem.Id
-                                        AND MIFloat_PriceSP.DescId = zc_MIFloat_PriceSP()
-             LEFT JOIN MovementItemFloat AS MIFloat_PaymentSP
-                                         ON MIFloat_PaymentSP.MovementItemId = MovementItem.Id
-                                        AND MIFloat_PaymentSP.DescId = zc_MIFloat_PaymentSP()
-             LEFT JOIN MovementItemFloat AS MIFloat_GroupSP
-                                         ON MIFloat_GroupSP.MovementItemId = MovementItem.Id
-                                        AND MIFloat_GroupSP.DescId = zc_MIFloat_GroupSP()
-             LEFT JOIN MovementItemFloat AS MIFloat_DenumeratorValueSP
-                                         ON MIFloat_DenumeratorValueSP.MovementItemId = MovementItem.Id
-                                        AND MIFloat_DenumeratorValueSP.DescId = zc_MIFloat_DenumeratorValueSP()
+             LEFT JOIN MovementItemFloat AS MIFloat_ExchangeRate
+                                         ON MIFloat_ExchangeRate.MovementItemId = MovementItem.Id
+                                        AND MIFloat_ExchangeRate.DescId = zc_MIFloat_ExchangeRate()
+             LEFT JOIN MovementItemFloat AS MIFloat_OrderNumberSP
+                                         ON MIFloat_OrderNumberSP.MovementItemId = MovementItem.Id
+                                        AND MIFloat_OrderNumberSP.DescId = zc_MIFloat_OrderNumberSP()  
+             LEFT JOIN MovementItemFloat AS MIFloat_ID_MED_FORM
+                                         ON MIFloat_ID_MED_FORM.MovementItemId = MovementItem.Id
+                                        AND MIFloat_ID_MED_FORM.DescId = zc_MIFloat_ID_MED_FORM() 
+             LEFT JOIN MovementItemFloat AS MIFloat_MorionSP
+                                         ON MIFloat_MorionSP.MovementItemId = MovementItem.Id
+                                        AND MIFloat_MorionSP.DescId = zc_MIFloat_MorionSP() 
 
-             LEFT JOIN MovementItemString AS MIString_Pack
-                                          ON MIString_Pack.MovementItemId = MovementItem.Id
-                                         AND MIString_Pack.DescId = zc_MIString_Pack()
              LEFT JOIN MovementItemString AS MIString_CodeATX
                                           ON MIString_CodeATX.MovementItemId = MovementItem.Id
                                          AND MIString_CodeATX.DescId = zc_MIString_CodeATX()
-             LEFT JOIN MovementItemString AS MIString_MakerSP
-                                          ON MIString_MakerSP.MovementItemId = MovementItem.Id
-                                         AND MIString_MakerSP.DescId = zc_MIString_MakerSP()
              LEFT JOIN MovementItemString AS MIString_ReestrSP
                                           ON MIString_ReestrSP.MovementItemId = MovementItem.Id
                                          AND MIString_ReestrSP.DescId = zc_MIString_ReestrSP()
-             LEFT JOIN MovementItemString AS MIString_ReestrDateSP
-                                          ON MIString_ReestrDateSP.MovementItemId = MovementItem.Id
-                                         AND MIString_ReestrDateSP.DescId = zc_MIString_ReestrDateSP()
-             LEFT JOIN MovementItemString AS MIString_IdSP
-                                          ON MIString_IdSP.MovementItemId = MovementItem.Id
-                                         AND MIString_IdSP.DescId = zc_MIString_IdSP()
-             LEFT JOIN MovementItemString AS MIString_DosageIdSP
-                                          ON MIString_DosageIdSP.MovementItemId = MovementItem.Id
-                                         AND MIString_DosageIdSP.DescId = zc_MIString_DosageIdSP()
 
-             LEFT JOIN MovementItemString AS MIString_DynamicsSP
-                                          ON MIString_DynamicsSP.MovementItemId = MovementItem.Id
-                                         AND MIString_DynamicsSP.DescId = zc_MIString_DynamicsSP()
-             LEFT JOIN MovementItemString AS MIString_DenumeratorUnitSP
-                                          ON MIString_DenumeratorUnitSP.MovementItemId = MovementItem.Id
-                                         AND MIString_DenumeratorUnitSP.DescId = zc_MIString_DenumeratorUnitSP()
-             LEFT JOIN MovementItemString AS MIString_ProgramIdSP
-                                          ON MIString_ProgramIdSP.MovementItemId = MovementItem.Id
-                                         AND MIString_ProgramIdSP.DescId = zc_MIString_ProgramIdSP()
-             LEFT JOIN MovementItemString AS MIString_NumeratorUnitSP
-                                          ON MIString_NumeratorUnitSP.MovementItemId = MovementItem.Id
-                                         AND MIString_NumeratorUnitSP.DescId = zc_MIString_NumeratorUnitSP()
+             LEFT JOIN MovementItemDate AS MIDate_ReestrDateSP
+                                        ON MIDate_ReestrDateSP.MovementItemId = MovementItem.Id
+                                       AND MIDate_ReestrDateSP.DescId = zc_MIDate_ReestrDateSP()
+             LEFT JOIN MovementItemDate AS MIDate_ValiditySP
+                                        ON MIDate_ValiditySP.MovementItemId = MovementItem.Id
+                                       AND MIDate_ValiditySP.DescId = zc_MIDate_ValiditySP()
+             LEFT JOIN MovementItemDate AS MIDate_OrderDateSP
+                                        ON MIDate_OrderDateSP.MovementItemId = MovementItem.Id
+                                       AND MIDate_OrderDateSP.DescId = zc_MIDate_OrderDateSP()
 
              LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
                                               ON MI_IntenalSP.MovementItemId = MovementItem.Id
@@ -190,10 +153,35 @@ BEGIN
                                              AND MI_BrandSP.DescId = zc_MILinkObject_BrandSP()
              LEFT JOIN Object AS Object_BrandSP ON Object_BrandSP.Id = MI_BrandSP.ObjectId 
 
-             LEFT JOIN MovementItemLinkObject AS MI_KindOutSP
-                                              ON MI_KindOutSP.MovementItemId = MovementItem.Id
-                                             AND MI_KindOutSP.DescId = zc_MILinkObject_KindOutSP()
-             LEFT JOIN Object AS Object_KindOutSP ON Object_KindOutSP.Id = MI_KindOutSP.ObjectId 
+             LEFT JOIN MovementItemLinkObject AS MI_KindOutSP_1303
+                                              ON MI_KindOutSP_1303.MovementItemId = MovementItem.Id
+                                             AND MI_KindOutSP_1303.DescId = zc_MILinkObject_KindOutSP_1303()
+             LEFT JOIN Object AS Object_KindOutSP_1303 ON Object_KindOutSP_1303.Id = MI_KindOutSP_1303.ObjectId 
+
+             LEFT JOIN MovementItemLinkObject AS MI_Dosage_1303
+                                              ON MI_Dosage_1303.MovementItemId = MovementItem.Id
+                                             AND MI_Dosage_1303.DescId = zc_MILinkObject_Dosage_1303()
+             LEFT JOIN Object AS Object_Dosage_1303 ON Object_Dosage_1303.Id = MI_Dosage_1303.ObjectId 
+
+             LEFT JOIN MovementItemLinkObject AS MI_CountSP_1303
+                                              ON MI_CountSP_1303.MovementItemId = MovementItem.Id
+                                             AND MI_CountSP_1303.DescId = zc_MILinkObject_CountSP_1303()
+             LEFT JOIN Object AS Object_CountSP_1303 ON Object_CountSP_1303.Id = MI_CountSP_1303.ObjectId 
+
+             LEFT JOIN MovementItemLinkObject AS MI_MakerSP_1303
+                                              ON MI_MakerSP_1303.MovementItemId = MovementItem.Id
+                                             AND MI_MakerSP_1303.DescId = zc_MILinkObject_MakerSP_1303()
+             LEFT JOIN Object AS Object_MakerSP_1303 ON Object_MakerSP_1303.Id = MI_MakerSP_1303.ObjectId 
+
+             LEFT JOIN MovementItemLinkObject AS MI_Country_1303
+                                              ON MI_Country_1303.MovementItemId = MovementItem.Id
+                                             AND MI_Country_1303.DescId = zc_MILinkObject_Country_1303()
+             LEFT JOIN Object AS Object_Country_1303 ON Object_Country_1303.Id = MI_Country_1303.ObjectId 
+
+             LEFT JOIN MovementItemLinkObject AS MI_Currency
+                                              ON MI_Currency.MovementItemId = MovementItem.Id
+                                             AND MI_Currency.DescId = zc_MILinkObject_Currency()
+             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MI_Currency.ObjectId 
             ;
 
     ELSE
@@ -205,127 +193,113 @@ BEGIN
              , Object_Goods.ObjectCode                    ::Integer  AS GoodsCode
              , Object_Goods.ValueData                                AS GoodsName
 
-             , MIFloat_ColSP.ValueData                               AS ColSP
-             , MIFloat_CountSPMin.ValueData                          AS CountSPMin
              , MIFloat_CountSP.ValueData                             AS CountSP
-             , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
-             , MIFloat_PriceRetSP.ValueData                          AS PriceRetSP
-             , MIFloat_DailyNormSP.ValueData                         AS DailyNormSP
-             , MIFloat_DailyCompensationSP.ValueData                 AS DailyCompensationSP
-             , MIFloat_PriceSP.ValueData                             AS PriceSP
-             , MIFloat_PaymentSP.ValueData                           AS PaymentSP
-             , MIFloat_GroupSP.ValueData                             AS GroupSP
-             , MIFloat_DenumeratorValueSP.ValueData                  AS DenumeratorValueSP
+             , MIFloat_ExchangeRate.ValueData                        AS ExchangeRate
+             , MIFloat_OrderNumberSP.ValueData::Integer              AS OrderNumberSP
+             , MIFloat_ID_MED_FORM.ValueData::Integer                AS ID_MED_FORM
+             , MIFloat_MorionSP.ValueData::Integer                   AS MorionSP
 
-             , MIString_Pack.ValueData                               AS Pack
              , MIString_CodeATX.ValueData                            AS CodeATX
-             , MIString_MakerSP.ValueData                            AS MakerSP
              , MIString_ReestrSP.ValueData                           AS ReestrSP
-             , MIString_ReestrDateSP.ValueData                       AS ReestrDateSP
-             , COALESCE (MIString_IdSP.ValueData, '')     ::TVarChar AS IdSP
-             , COALESCE (MIString_DosageIdSP.ValueData,'')::TVarChar AS DosageIdSP
 
-             , COALESCE (MIString_ProgramIdSP.ValueData, '')      ::TVarChar AS ProgramIdSP
-             , COALESCE (MIString_NumeratorUnitSP.ValueData, '')  ::TVarChar AS NumeratorUnitSP
-             , COALESCE (MIString_DenumeratorUnitSP.ValueData, '')::TVarChar AS DenumeratorUnitSP
-             , COALESCE (MIString_DynamicsSP.ValueData, '')       ::TVarChar AS DynamicsSP
+             , MIDate_ReestrDateSP.ValueData                         AS ReestrDateSP
+             , MIDate_ValiditySP.ValueData                           AS ValiditySP
+             , MIDate_OrderDateSP.ValueData                          AS OrderDateSP
 
-             , COALESCE(Object_IntenalSP.Id ,0)           ::Integer  AS IntenalSPId
-             , COALESCE(Object_IntenalSP.ValueData,'')    ::TVarChar AS IntenalSPName
-             , COALESCE(Object_BrandSP.Id ,0)             ::Integer  AS BrandSPId
-             , COALESCE(Object_BrandSP.ValueData,'')      ::TVarChar AS BrandSPName
-
-             , COALESCE(Object_KindOutSP.Id ,0)           ::Integer  AS KindOutSPId
-             , COALESCE(Object_KindOutSP.ValueData,'')    ::TVarChar AS KindOutSPName
+             , COALESCE (Object_IntenalSP.Id ,0)          ::Integer  AS IntenalSPId
+             , COALESCE (Object_IntenalSP.ValueData,'')   ::TVarChar AS IntenalSPName
+             , COALESCE (Object_BrandSP.Id ,0)            ::Integer  AS BrandSPId
+             , COALESCE (Object_BrandSP.ValueData,'')     ::TVarChar AS BrandSPName
+             , COALESCE (Object_KindOutSP_1303.Id ,0)          ::Integer  AS KindOutSP_1303Id
+             , COALESCE (Object_KindOutSP_1303.ValueData,'')   ::TVarChar AS KindOutSP_1303Name
+             , COALESCE (Object_Dosage_1303.Id ,0)          ::Integer  AS Dosage_1303Id
+             , COALESCE (Object_Dosage_1303.ValueData,'')   ::TVarChar AS Dosage_1303Name
+             , COALESCE (Object_CountSP_1303.Id ,0)          ::Integer  AS CountSP_1303Id
+             , COALESCE (Object_CountSP_1303.ValueData,'')   ::TVarChar AS CountSP_1303Name
+             , COALESCE (Object_MakerSP_1303.Id ,0)          ::Integer  AS MakerSP_1303Id
+             , COALESCE (Object_MakerSP_1303.ValueData,'')   ::TVarChar AS MakerSP_1303Name
+             , COALESCE (Object_Country_1303.Id ,0)          ::Integer  AS Country_1303Id
+             , COALESCE (Object_Country_1303.ValueData,'')   ::TVarChar AS Country_1303Name
+             , COALESCE (Object_Currency.Id ,0)          ::Integer  AS CurrencyId
+             , COALESCE (Object_Currency.ValueData,'')   ::TVarChar AS CurrencyName
 
              , COALESCE (MovementItem.isErased, FALSE)    ::Boolean  AS isErased
 
         FROM MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
             
-            LEFT JOIN MovementItemFloat AS MIFloat_ColSP
-                                        ON MIFloat_ColSP.MovementItemId = MovementItem.Id
-                                       AND MIFloat_ColSP.DescId = zc_MIFloat_ColSP()
-            LEFT JOIN MovementItemFloat AS MIFloat_CountSP
-                                        ON MIFloat_CountSP.MovementItemId = MovementItem.Id
-                                       AND MIFloat_CountSP.DescId = zc_MIFloat_CountSP()
-            LEFT JOIN MovementItemFloat AS MIFloat_CountSPMin
-                                        ON MIFloat_CountSPMin.MovementItemId = MovementItem.Id
-                                       AND MIFloat_CountSPMin.DescId = zc_MIFloat_CountSPMin()
-            LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
-                                        ON MIFloat_PriceOptSP.MovementItemId = MovementItem.Id
-                                       AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
-            LEFT JOIN MovementItemFloat AS MIFloat_PriceRetSP
-                                        ON MIFloat_PriceRetSP.MovementItemId = MovementItem.Id
-                                       AND MIFloat_PriceRetSP.DescId = zc_MIFloat_PriceRetSP()  
-            LEFT JOIN MovementItemFloat AS MIFloat_DailyNormSP
-                                        ON MIFloat_DailyNormSP.MovementItemId = MovementItem.Id
-                                       AND MIFloat_DailyNormSP.DescId = zc_MIFloat_DailyNormSP() 
-            LEFT JOIN MovementItemFloat AS MIFloat_DailyCompensationSP
-                                        ON MIFloat_DailyCompensationSP.MovementItemId = MovementItem.Id
-                                       AND MIFloat_DailyCompensationSP.DescId = zc_MIFloat_DailyCompensationSP() 
-            LEFT JOIN MovementItemFloat AS MIFloat_PriceSP
-                                        ON MIFloat_PriceSP.MovementItemId = MovementItem.Id
-                                       AND MIFloat_PriceSP.DescId = zc_MIFloat_PriceSP()
-            LEFT JOIN MovementItemFloat AS MIFloat_PaymentSP
-                                        ON MIFloat_PaymentSP.MovementItemId = MovementItem.Id
-                                       AND MIFloat_PaymentSP.DescId = zc_MIFloat_PaymentSP()
-            LEFT JOIN MovementItemFloat AS MIFloat_GroupSP
-                                        ON MIFloat_GroupSP.MovementItemId = MovementItem.Id
-                                       AND MIFloat_GroupSP.DescId = zc_MIFloat_GroupSP()
-             LEFT JOIN MovementItemFloat AS MIFloat_DenumeratorValueSP
-                                         ON MIFloat_DenumeratorValueSP.MovementItemId = MovementItem.Id
-                                        AND MIFloat_DenumeratorValueSP.DescId = zc_MIFloat_DenumeratorValueSP()
+             LEFT JOIN MovementItemFloat AS MIFloat_CountSP
+                                         ON MIFloat_CountSP.MovementItemId = MovementItem.Id
+                                        AND MIFloat_CountSP.DescId = zc_MIFloat_CountSP()
+             LEFT JOIN MovementItemFloat AS MIFloat_ExchangeRate
+                                         ON MIFloat_ExchangeRate.MovementItemId = MovementItem.Id
+                                        AND MIFloat_ExchangeRate.DescId = zc_MIFloat_ExchangeRate()
+             LEFT JOIN MovementItemFloat AS MIFloat_OrderNumberSP
+                                         ON MIFloat_OrderNumberSP.MovementItemId = MovementItem.Id
+                                        AND MIFloat_OrderNumberSP.DescId = zc_MIFloat_OrderNumberSP()  
+             LEFT JOIN MovementItemFloat AS MIFloat_ID_MED_FORM
+                                         ON MIFloat_ID_MED_FORM.MovementItemId = MovementItem.Id
+                                        AND MIFloat_ID_MED_FORM.DescId = zc_MIFloat_ID_MED_FORM() 
+             LEFT JOIN MovementItemFloat AS MIFloat_MorionSP
+                                         ON MIFloat_MorionSP.MovementItemId = MovementItem.Id
+                                        AND MIFloat_MorionSP.DescId = zc_MIFloat_MorionSP() 
 
-            LEFT JOIN MovementItemString AS MIString_Pack
-                                         ON MIString_Pack.MovementItemId = MovementItem.Id
-                                        AND MIString_Pack.DescId = zc_MIString_Pack()
-            LEFT JOIN MovementItemString AS MIString_CodeATX
-                                         ON MIString_CodeATX.MovementItemId = MovementItem.Id
-                                        AND MIString_CodeATX.DescId = zc_MIString_CodeATX()
-            LEFT JOIN MovementItemString AS MIString_MakerSP
-                                         ON MIString_MakerSP.MovementItemId = MovementItem.Id
-                                        AND MIString_MakerSP.DescId = zc_MIString_MakerSP()
-            LEFT JOIN MovementItemString AS MIString_ReestrSP
-                                         ON MIString_ReestrSP.MovementItemId = MovementItem.Id
-                                        AND MIString_ReestrSP.DescId = zc_MIString_ReestrSP()
-            LEFT JOIN MovementItemString AS MIString_ReestrDateSP
-                                         ON MIString_ReestrDateSP.MovementItemId = MovementItem.Id
-                                        AND MIString_ReestrDateSP.DescId = zc_MIString_ReestrDateSP()
-            LEFT JOIN MovementItemString AS MIString_IdSP
-                                         ON MIString_IdSP.MovementItemId = MovementItem.Id
-                                        AND MIString_IdSP.DescId = zc_MIString_IdSP()
-            LEFT JOIN MovementItemString AS MIString_DosageIdSP
-                                         ON MIString_DosageIdSP.MovementItemId = MovementItem.Id
-                                        AND MIString_DosageIdSP.DescId = zc_MIString_DosageIdSP()
+             LEFT JOIN MovementItemString AS MIString_CodeATX
+                                          ON MIString_CodeATX.MovementItemId = MovementItem.Id
+                                         AND MIString_CodeATX.DescId = zc_MIString_CodeATX()
+             LEFT JOIN MovementItemString AS MIString_ReestrSP
+                                          ON MIString_ReestrSP.MovementItemId = MovementItem.Id
+                                         AND MIString_ReestrSP.DescId = zc_MIString_ReestrSP()
 
-             LEFT JOIN MovementItemString AS MIString_DynamicsSP
-                                          ON MIString_DynamicsSP.MovementItemId = MovementItem.Id
-                                         AND MIString_DynamicsSP.DescId = zc_MIString_DynamicsSP()
-             LEFT JOIN MovementItemString AS MIString_DenumeratorUnitSP
-                                          ON MIString_DenumeratorUnitSP.MovementItemId = MovementItem.Id
-                                         AND MIString_DenumeratorUnitSP.DescId = zc_MIString_DenumeratorUnitSP()
-             LEFT JOIN MovementItemString AS MIString_ProgramIdSP
-                                          ON MIString_ProgramIdSP.MovementItemId = MovementItem.Id
-                                         AND MIString_ProgramIdSP.DescId = zc_MIString_ProgramIdSP()
-             LEFT JOIN MovementItemString AS MIString_NumeratorUnitSP
-                                          ON MIString_NumeratorUnitSP.MovementItemId = MovementItem.Id
-                                         AND MIString_NumeratorUnitSP.DescId = zc_MIString_NumeratorUnitSP()
+             LEFT JOIN MovementItemDate AS MIDate_ReestrDateSP
+                                        ON MIDate_ReestrDateSP.MovementItemId = MovementItem.Id
+                                       AND MIDate_ReestrDateSP.DescId = zc_MIDate_ReestrDateSP()
+             LEFT JOIN MovementItemDate AS MIDate_ValiditySP
+                                        ON MIDate_ValiditySP.MovementItemId = MovementItem.Id
+                                       AND MIDate_ValiditySP.DescId = zc_MIDate_ValiditySP()
+             LEFT JOIN MovementItemDate AS MIDate_OrderDateSP
+                                        ON MIDate_OrderDateSP.MovementItemId = MovementItem.Id
+                                       AND MIDate_OrderDateSP.DescId = zc_MIDate_OrderDateSP()
 
-            LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
-                                             ON MI_IntenalSP.MovementItemId = MovementItem.Id
-                                            AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
-            LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = MI_IntenalSP.ObjectId 
+             LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
+                                              ON MI_IntenalSP.MovementItemId = MovementItem.Id
+                                             AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
+             LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = MI_IntenalSP.ObjectId 
 
-            LEFT JOIN MovementItemLinkObject AS MI_BrandSP
-                                             ON MI_BrandSP.MovementItemId = MovementItem.Id
-                                            AND MI_BrandSP.DescId = zc_MILinkObject_BrandSP()
-            LEFT JOIN Object AS Object_BrandSP ON Object_BrandSP.Id = MI_BrandSP.ObjectId 
+             LEFT JOIN MovementItemLinkObject AS MI_BrandSP
+                                              ON MI_BrandSP.MovementItemId = MovementItem.Id
+                                             AND MI_BrandSP.DescId = zc_MILinkObject_BrandSP()
+             LEFT JOIN Object AS Object_BrandSP ON Object_BrandSP.Id = MI_BrandSP.ObjectId 
 
-            LEFT JOIN MovementItemLinkObject AS MI_KindOutSP
-                                             ON MI_KindOutSP.MovementItemId = MovementItem.Id
-                                            AND MI_KindOutSP.DescId = zc_MILinkObject_KindOutSP()
-            LEFT JOIN Object AS Object_KindOutSP ON Object_KindOutSP.Id = MI_KindOutSP.ObjectId 
+             LEFT JOIN MovementItemLinkObject AS MI_KindOutSP_1303
+                                              ON MI_KindOutSP_1303.MovementItemId = MovementItem.Id
+                                             AND MI_KindOutSP_1303.DescId = zc_MILinkObject_KindOutSP_1303()
+             LEFT JOIN Object AS Object_KindOutSP_1303 ON Object_KindOutSP_1303.Id = MI_KindOutSP_1303.ObjectId 
+
+             LEFT JOIN MovementItemLinkObject AS MI_Dosage_1303
+                                              ON MI_Dosage_1303.MovementItemId = MovementItem.Id
+                                             AND MI_Dosage_1303.DescId = zc_MILinkObject_Dosage_1303()
+             LEFT JOIN Object AS Object_Dosage_1303 ON Object_Dosage_1303.Id = MI_Dosage_1303.ObjectId 
+
+             LEFT JOIN MovementItemLinkObject AS MI_CountSP_1303
+                                              ON MI_CountSP_1303.MovementItemId = MovementItem.Id
+                                             AND MI_CountSP_1303.DescId = zc_MILinkObject_CountSP_1303()
+             LEFT JOIN Object AS Object_CountSP_1303 ON Object_CountSP_1303.Id = MI_CountSP_1303.ObjectId 
+
+             LEFT JOIN MovementItemLinkObject AS MI_MakerSP_1303
+                                              ON MI_MakerSP_1303.MovementItemId = MovementItem.Id
+                                             AND MI_MakerSP_1303.DescId = zc_MILinkObject_MakerSP_1303()
+             LEFT JOIN Object AS Object_MakerSP_1303 ON Object_MakerSP_1303.Id = MI_MakerSP_1303.ObjectId 
+
+             LEFT JOIN MovementItemLinkObject AS MI_Country_1303
+                                              ON MI_Country_1303.MovementItemId = MovementItem.Id
+                                             AND MI_Country_1303.DescId = zc_MILinkObject_Country_1303()
+             LEFT JOIN Object AS Object_Country_1303 ON Object_Country_1303.Id = MI_Country_1303.ObjectId 
+
+             LEFT JOIN MovementItemLinkObject AS MI_Currency
+                                              ON MI_Currency.MovementItemId = MovementItem.Id
+                                             AND MI_Currency.DescId = zc_MILinkObject_Currency()
+             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MI_Currency.ObjectId 
 
          WHERE MovementItem.DescId = zc_MI_Master()
            AND MovementItem.MovementId = inMovementId
@@ -344,4 +318,5 @@ $BODY$
 */
 
 --реяр
--- SELECT * FROM gpSelect_MovementItem_GoodsSPRegistry_1303 (inMovementId:= 0, inShowAll:= true, inIsErased:= FALSE, inSession:= '3')
+-- 
+SELECT * FROM gpSelect_MovementItem_GoodsSPRegistry_1303 (inMovementId:= 0, inShowAll:= true, inIsErased:= FALSE, inSession:= '3')

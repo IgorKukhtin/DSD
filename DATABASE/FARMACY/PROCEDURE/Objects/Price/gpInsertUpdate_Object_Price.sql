@@ -306,18 +306,17 @@ BEGIN
           INTO vbPriceMin
           FROM gpGet_GoodsPriceLastIncome(inUnitId := inUnitId , inGoodsId := inGoodsId ,  inSession := inSession) as tmp;
           
-          IF COALESCE (vbPriceMin, 0) = 0
+          IF COALESCE (vbPriceMin, 0) > 0
           THEN
-            RAISE EXCEPTION 'Ошибка. Не найдена цена последнего прихода.';          
-          END IF;
 
-          IF inPrice < COALESCE (vbPriceMin, 0)
-          THEN
-            RAISE EXCEPTION '%', 'ВНИМАНИЕ!!!!!!'||Chr(13)||Chr(13)||
-                                 'Если вас просит точка удешевить препарат, то разрешено делать'||Chr(13)||
-                                 'для позиций из списка Маркетинговый контракт - 3%  от последней приходной цены на эту точку'||Chr(13)||
-                                 'для позиций , которых нет в списках по маркетинговым контрактам  - 4,5% от последней приходной цены на эту точку'||Chr(13)||Chr(13)||
-                                 'НЕ МЕНЕЕ '||zfConvert_FloatToString(vbPriceMin)||' грн. !!!!!!!!!!!!';          
+            IF inPrice < COALESCE (vbPriceMin, 0)
+            THEN
+              RAISE EXCEPTION '%', 'ВНИМАНИЕ!!!!!!'||Chr(13)||Chr(13)||
+                                   'Если вас просит точка удешевить препарат, то разрешено делать'||Chr(13)||
+                                   'для позиций из списка Маркетинговый контракт - 3%  от последней приходной цены на эту точку'||Chr(13)||
+                                   'для позиций , которых нет в списках по маркетинговым контрактам  - 4,5% от последней приходной цены на эту точку'||Chr(13)||Chr(13)||
+                                   'НЕ МЕНЕЕ '||zfConvert_FloatToString(vbPriceMin)||' грн. !!!!!!!!!!!!';          
+            END IF;
           END IF;
 
         END IF;
