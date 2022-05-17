@@ -353,17 +353,18 @@ BEGIN
      -- заполняем-2 таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId
                          , GoodsId, PartNumber
-                         , OperCount, OperPrice
+                         , OperCount, OperPrice, EmpfPrice
                          , PartnerId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                           )
-        WITH tmpPriceList AS (SELECT lpGet.GoodsId, lpGet.ValuePrice, lpGet.PartnerId FROM lpGet_MovementItem_PriceList (inOperDate:= vbOperDate, inGoodsId:= 0, inUserId:= inUserId) AS lpGet)
+        WITH tmpPriceList AS (SELECT lpGet.GoodsId, lpGet.ValuePrice, lpGet.EmpfPrice, lpGet.PartnerId FROM lpGet_MovementItem_PriceList (inOperDate:= vbOperDate, inGoodsId:= 0, inUserId:= inUserId) AS lpGet)
         -- результат
         SELECT tmp.MovementItemId
              , tmp.GoodsId
              , tmp.PartNumber
              , tmp.OperCount
              , COALESCE ((SELECT tmpPriceList.ValuePrice FROM tmpPriceList WHERE tmpPriceList.GoodsId = tmp.GoodsId), 0) AS OperPrice
+             , COALESCE ((SELECT tmpPriceList.EmpfPrice  FROM tmpPriceList WHERE tmpPriceList.GoodsId = tmp.GoodsId), 0) AS EmpfPrice
              , COALESCE ((SELECT tmpPriceList.PartnerId  FROM tmpPriceList WHERE tmpPriceList.GoodsId = tmp.GoodsId), 0) AS PartnerId
                -- УП
              , tmp.InfoMoneyGroupId
@@ -426,8 +427,8 @@ BEGIN
                                                , inAmount            := _tmpItem_Child.OperCount             -- Кол-во приход
                                                , inEKPrice           := _tmpItem.OperPrice                   -- Цена вх. без НДС, !!!с учетом скидки!!!
                                                , inCountForPrice     := 1                                    -- Цена за количество
-                                               , inEmpfPrice         := 0                                    -- Цена рекоменд. без НДС
-                                               , inOperPriceList     := 0                                    -- Цена продажи
+                                               , inEmpfPrice         := _tmpItem.EmpfPrice                   -- Цена рекоменд. без НДС
+                                               , inOperPriceList     := _tmpItem.EmpfPrice                   -- Цена продажи
                                                , inOperPriceList_old := 0                                    -- Цена продажи, ДО изменения строки
                                                , inTaxKindId         := 0                                    -- Тип НДС (!информативно!)
                                                , inTaxKindValue      := 0                                    -- Значение НДС (!информативно!)

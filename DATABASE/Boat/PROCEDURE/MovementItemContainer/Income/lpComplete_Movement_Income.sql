@@ -723,7 +723,7 @@ BEGIN
                                    -- Цена вх. без НДС, с учетом скидки по элементу
                                   , EKPrice_orig       = _tmpItem.OperPrice_orig
                                     -- Цена вх. без НДС, с учетом ВСЕХ скидок + затраты + расходы: Почтовые + Упаковка + Страховка
-                                  , EKPrice            = CASE WHEN _tmpItem.OperCount > 0 THEN _tmpItem.OperSumm + _tmpItem.OperSumm_cost / _tmpItem.OperCount ELSE 0 END
+                                  , EKPrice            = CASE WHEN _tmpItem.OperCount > 0 THEN (_tmpItem.OperSumm + _tmpItem.OperSumm_cost) / _tmpItem.OperCount ELSE 0 END
                                     -- Цена вх. без НДС, с учетом ВСЕХ скидок (затрат здесь нет)
                                   , EKPrice_discount   = CASE WHEN _tmpItem.OperCount > 0 THEN _tmpItem.OperSumm      / _tmpItem.OperCount ELSE 0 END
                                     -- Цена затрат без НДС (затраты + расходы: Почтовые + Упаковка + Страховка)

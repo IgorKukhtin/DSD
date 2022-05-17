@@ -43,11 +43,18 @@ $BODY$
 BEGIN
      -- заменили
      IF COALESCE (inCountForPrice, 0) = 0 THEN inCountForPrice:= 1; END IF;
+     
+     -- заменили
+     IF COALESCE (inOperPriceList, 0) = 0
+     THEN
+         inOperPriceList:= COALESCE ((SELECT lpGet.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (inOperDate:= inOperDate, inPriceListId:= zc_PriceList_Basis(), inGoodsId:= inObjectId) AS lpGet), 0);
+     END IF;
+     
 
      --
      IF inEKPrice IS NULL
      THEN
-         RAISE EXCEPTION 'Ошибка. inEKPrice  <%>  <%> ', inEKPrice , inMovementItemId;
+         RAISE EXCEPTION 'Ошибка. EKPrice = <%>  <%> ', inEKPrice , inMovementItemId;
      END IF;
 
 
@@ -328,7 +335,10 @@ AND 1=0
                                        , TRUE, TRUE
                                         );
         -- сохранили партию
-        UPDATE MovementItem SET PartionId = inMovementItemId WHERE MovementItem.Id = inMovementItemId;
+        IF vbMovementDescId = zc_MovementDesc_Income()
+        THEN
+            UPDATE MovementItem SET PartionId = inMovementItemId WHERE MovementItem.Id = inMovementItemId;
+        END IF;
 
    --ELSE
          -- !!!не забыли - проверили что НЕТ движения, тогда инфу в партии можно менять!!!
@@ -359,7 +369,7 @@ AND 1=0
 
 
      -- cохранили Цену в истории
-     IF 1=1 -- vbPriceList_change = TRUE
+     IF 1=1 AND inOperPriceList <> COALESCE ((SELECT lpGet.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (inOperDate:= inOperDate, inPriceListId:= zc_PriceList_Basis(), inGoodsId:= inObjectId) AS lpGet), 0)
      THEN
          -- Здесь еще Update - Object_PartionGoods.OperPriceList
          PERFORM gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId         := NULL                  -- сам найдет нужный Id
