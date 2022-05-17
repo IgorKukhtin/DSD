@@ -240,6 +240,9 @@ type
     actPrintStickerOne: TdsdPrintAction;
     spSelectPrintStickerOne: TdsdStoredProc;
     bbPrintStickerOne: TdxBarButton;
+    ExecuteDialogPrint: TExecuteDialog;
+    macPrintStiker: TMultiAction;
+    macPrintStikerOne: TMultiAction;
   private
   public
   end;
