@@ -77,14 +77,27 @@ object PriceListItemForm: TPriceListItemForm
       object Article: TcxGridDBColumn
         Caption = 'Artikel Nr'
         DataBinding.FieldName = 'Article'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 80
       end
       object Article_all: TcxGridDBColumn
         Caption = '***Artikel Nr'
         DataBinding.FieldName = 'Article_all'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         Visible = False
         Width = 70
       end
@@ -345,7 +358,7 @@ object PriceListItemForm: TPriceListItemForm
     EditValue = 43831d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 6
+    TabOrder = 5
     Width = 100
   end
   object lbSearchArticle: TcxLabel
@@ -555,6 +568,7 @@ object PriceListItemForm: TPriceListItemForm
       Category = 0
       Hint = '       '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbPriceListGoodsItem: TdxBarButton
       Action = actPriceListGoods

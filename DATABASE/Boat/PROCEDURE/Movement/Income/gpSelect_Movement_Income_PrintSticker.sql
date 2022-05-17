@@ -1,9 +1,11 @@
 -- Function: gpSelect_Movement_Income_PrintSticker (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Income_PrintSticker (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Income_PrintSticker (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Income_PrintSticker(
     IN inMovementId        Integer   ,   -- ключ Документа
+    IN inMovementItemId    Integer   ,   -- ключ 
     IN inSession           TVarChar      -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -57,6 +59,7 @@ BEGIN
                         AND MovementItem.DescId     = zc_MI_Master()
                         AND MovementItem.isErased   = FALSE
                         AND MovementItem.Amount     <> 0
+                        AND (MovementItem.Id = inMovementItemId OR COALESCE (inMovementItemId, 0) = 0)
                      )
        -- Результат
        SELECT
@@ -94,4 +97,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Income_PrintSticker (inMovementId := 432692, inSession:= '5');
+-- SELECT * FROM gpSelect_Movement_Income_PrintSticker (inMovementId:= 432692, inMovementItemId:= 0, inSession:= '5');

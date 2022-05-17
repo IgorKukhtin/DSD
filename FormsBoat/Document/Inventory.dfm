@@ -174,6 +174,13 @@ object InventoryForm: TInventoryForm
           object Article_all: TcxGridDBColumn
             Caption = '***Artikel Nr'
             DataBinding.FieldName = 'Article_all'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             Visible = False
             Width = 70
           end
@@ -359,7 +366,7 @@ object InventoryForm: TInventoryForm
     Height = 137
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 4
+    TabOrder = 3
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -681,10 +688,6 @@ object InventoryForm: TInventoryForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarControlContainerItem1'
         end
         item
@@ -750,7 +753,7 @@ object InventoryForm: TInventoryForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbPrintStickerOne'
         end
         item
           Visible = True
@@ -858,6 +861,10 @@ object InventoryForm: TInventoryForm
       Hint = 'lbSearchArticle'
       Visible = ivAlways
       Control = lbSearchArticle
+    end
+    object bbPrintStickerOne: TdxBarButton
+      Action = actPrintStickerOne
+      Category = 0
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1029,6 +1036,39 @@ object InventoryForm: TInventoryForm
       ReportName = 'PrintMovement_Loss'
       ReportNameParam.Value = 'PrintMovement_Loss'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintStickerOne: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintStickerOne
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintStickerOne
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1086#1076#1085#1086#1081' '#1069#1090#1080#1082#1077#1090#1082#1080' '
+      Hint = #1055#1077#1095#1072#1090#1100' '#1086#1076#1085#1086#1081' '#1069#1090#1080#1082#1077#1090#1082#1080' ('#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1101#1083#1077#1084#1077#1085#1090#1072')'
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_IncomeSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_IncomeSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
@@ -2649,5 +2689,34 @@ object InventoryForm: TInventoryForm
     CheckBoxList = <>
     Left = 280
     Top = 192
+  end
+  object spSelectPrintStickerOne: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Income_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 647
+    Top = 320
   end
 end

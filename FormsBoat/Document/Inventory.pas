@@ -169,6 +169,9 @@ type
     Article_all: TcxGridDBColumn;
     bbedSearchArticle: TdxBarControlContainerItem;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
+    spSelectPrintStickerOne: TdsdStoredProc;
+    actPrintStickerOne: TdsdPrintAction;
+    bbPrintStickerOne: TdxBarButton;
   private
   public
   end;

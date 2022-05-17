@@ -285,7 +285,7 @@ object SendForm: TSendForm
     Width = 1053
     Height = 404
     Align = alClient
-    TabOrder = 5
+    TabOrder = 4
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 404
@@ -498,6 +498,13 @@ object SendForm: TSendForm
           object Article_all: TcxGridDBColumn
             Caption = '***Artikel Nr'
             DataBinding.FieldName = 'Article_all'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             Visible = False
             Width = 70
           end

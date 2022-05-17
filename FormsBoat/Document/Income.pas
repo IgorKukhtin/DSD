@@ -237,6 +237,9 @@ type
     FieldFilter_Article: TdsdFieldFilter;
     bblbSearchArticle: TdxBarControlContainerItem;
     bbedSearchArticle: TdxBarControlContainerItem;
+    actPrintStickerOne: TdsdPrintAction;
+    spSelectPrintStickerOne: TdsdStoredProc;
+    bbPrintStickerOne: TdxBarButton;
   private
   public
   end;
