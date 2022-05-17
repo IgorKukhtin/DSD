@@ -172,6 +172,8 @@ type
     spSelectPrintStickerOne: TdsdStoredProc;
     actPrintStickerOne: TdsdPrintAction;
     bbPrintStickerOne: TdxBarButton;
+    ExecuteDialogPrint: TExecuteDialog;
+    macPrintStikerOne: TMultiAction;
   private
   public
   end;
