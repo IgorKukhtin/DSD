@@ -56,40 +56,71 @@ object GoodsForm: TGoodsForm
       object GoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
         DataBinding.FieldName = 'GoodsGroupNameFull'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 150
       end
       object GoodsGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GoodsGroupName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 172
       end
       object Code: TcxGridDBColumn
         Caption = 'Interne Nr'
         DataBinding.FieldName = 'Code'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
-        Options.Editing = False
         Width = 63
       end
       object Article: TcxGridDBColumn
         Caption = 'Artikel Nr'
         DataBinding.FieldName = 'Article'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 70
       end
       object Article_all: TcxGridDBColumn
         Caption = '***Artikel Nr'
         DataBinding.FieldName = 'Article_all'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -98,28 +129,46 @@ object GoodsForm: TGoodsForm
       object ArticleVergl: TcxGridDBColumn
         Caption = 'Vergl. Nr'
         DataBinding.FieldName = 'ArticleVergl'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1040#1088#1090#1080#1082#1091#1083' ('#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1081')'
-        Options.Editing = False
         Width = 80
       end
       object GoodsArticle: TcxGridDBColumn
         Caption = 'Goods Article'
         DataBinding.FieldName = 'GoodsArticle'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = #1040#1088#1090#1080#1082#1091#1083' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-        Options.Editing = False
         Width = 80
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 206
       end
       object GoodsTagName: TcxGridDBColumn
@@ -283,6 +332,13 @@ object GoodsForm: TGoodsForm
       object PartnerName: TcxGridDBColumn
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
         DataBinding.FieldName = 'PartnerName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -310,6 +366,7 @@ object GoodsForm: TGoodsForm
       object TaxKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1053#1044#1057
         DataBinding.FieldName = 'TaxKindName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -318,6 +375,7 @@ object GoodsForm: TGoodsForm
       object TaxKind_Value: TcxGridDBColumn
         Caption = #1053#1044#1057
         DataBinding.FieldName = 'TaxKind_Value'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -365,6 +423,13 @@ object GoodsForm: TGoodsForm
       end
       object EAN: TcxGridDBColumn
         DataBinding.FieldName = 'EAN'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -372,6 +437,13 @@ object GoodsForm: TGoodsForm
       end
       object ASIN: TcxGridDBColumn
         DataBinding.FieldName = 'ASIN'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -380,6 +452,13 @@ object GoodsForm: TGoodsForm
       object MatchCode: TcxGridDBColumn
         Caption = 'Matchcode'
         DataBinding.FieldName = 'MatchCode'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1076' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1103
@@ -389,10 +468,16 @@ object GoodsForm: TGoodsForm
       object FeeNumber: TcxGridDBColumn
         Caption = 'Zolltarif Nr'
         DataBinding.FieldName = 'FeeNumber'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #8470' '#1090#1072#1084#1086#1078#1077#1085#1085#1086#1081' '#1087#1086#1096#1083#1080#1085#1099
-        Options.Editing = False
         Width = 55
       end
       object InfoMoneyCode: TcxGridDBColumn
@@ -556,7 +641,7 @@ object GoodsForm: TGoodsForm
   object edSearchCode: TcxTextEdit
     Left = 224
     Top = 322
-    TabOrder = 9
+    TabOrder = 8
     DesignSize = (
       115
       21)
