@@ -76,7 +76,7 @@ BEGIN
           IF COALESCE (vbGoodsId,0) = 0
           THEN 
              --проверяем группу для товара 
-             IF COALESCE (inGroupName1,'') <> 0
+             IF COALESCE (inGroupName1,'') <> ''
              THEN
                  -- пробуем найти группу Комплектующих
                  vbGroupId_1 := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsGroup() AND Object.ValueData = TRIM (inGroupName1));
@@ -101,13 +101,13 @@ BEGIN
                       vbGroupId_2 := (SELECT Object.Id 
                                       FROM Object
                                            INNER JOIN ObjectLink AS ObjectLink_GoodsGroup_Parent
-                                                                 ON ObjectLink_GoodsGroup_Parent.ObjectId = Object_GoodsGroup.Id
+                                                                 ON ObjectLink_GoodsGroup_Parent.ObjectId = Object.Id
                                                                 AND ObjectLink_GoodsGroup_Parent.DescId = zc_ObjectLink_GoodsGroup_Parent()
                                                                 AND ObjectLink_GoodsGroup_Parent.ChildObjectId = vbGroupId_1
                                       WHERE Object.DescId = zc_Object_GoodsGroup() AND Object.ValueData = TRIM (inGroupName2));
 
                       --если нет такой группы создаем
-                      IF COALESCE (vbGroupId_2,0) = ''
+                      IF COALESCE (vbGroupId_2,0) = 0
                       THEN
                            vbGroupId_2 := (SELECT tmp.ioId
                                            FROM gpInsertUpdate_Object_GoodsGroup (ioId              := 0         :: Integer
@@ -128,7 +128,7 @@ BEGIN
                       vbGroupId_3 := (SELECT Object.Id 
                                       FROM Object
                                            INNER JOIN ObjectLink AS ObjectLink_GoodsGroup_Parent
-                                                                 ON ObjectLink_GoodsGroup_Parent.ObjectId = Object_GoodsGroup.Id
+                                                                 ON ObjectLink_GoodsGroup_Parent.ObjectId = Object.Id
                                                                 AND ObjectLink_GoodsGroup_Parent.DescId = zc_ObjectLink_GoodsGroup_Parent()
                                                                 AND ObjectLink_GoodsGroup_Parent.ChildObjectId = vbGroupId_2
                                       WHERE Object.DescId = zc_Object_GoodsGroup() AND Object.ValueData = TRIM (inGroupName3));
@@ -154,7 +154,7 @@ BEGIN
                       vbGroupId_4 := (SELECT Object.Id 
                                       FROM Object
                                            INNER JOIN ObjectLink AS ObjectLink_GoodsGroup_Parent
-                                                                 ON ObjectLink_GoodsGroup_Parent.ObjectId = Object_GoodsGroup.Id
+                                                                 ON ObjectLink_GoodsGroup_Parent.ObjectId = Object.Id
                                                                 AND ObjectLink_GoodsGroup_Parent.DescId = zc_ObjectLink_GoodsGroup_Parent()
                                                                 AND ObjectLink_GoodsGroup_Parent.ChildObjectId = vbGroupId_3
                                       WHERE Object.DescId = zc_Object_GoodsGroup() AND Object.ValueData = TRIM (inGroupName4));
@@ -251,20 +251,22 @@ BEGIN
                                                                    , inComment    := 'auto'
                                                                    , inUserId     := vbUserId
                                                                    );
-              END IF;
+              END IF; 
+          ELSE  vbMovementId := inMovementId;
           END IF;
 
           -- поиск элемента с таким товаром, вдруг уже загрузили, тогда обновляем
           vbMovementItemId := (SELECT MovementItem.Id
                                FROM MovementItem
-                                 INNER JOIN MovementItemLinkObject AS MILO_Measure
+                                 /*INNER JOIN MovementItemLinkObject AS MILO_Measure
                                                                   ON MILO_Measure.MovementItemId = MovementItem.Id
                                                                  AND MILO_Measure.DescId = zc_MILinkObject_Measure()
-                                                                 AND MILO_Measure.ObjectId = vbMeasureId
+                                                                 AND MILO_Measure.ObjectId = vbMeasureId*/
                                WHERE MovementItem.MovementId = vbMovementId
                                  AND MovementItem.DescId     = zc_MI_Master()
                                  AND MovementItem.isErased   = FALSE
-                                 AND MovementItem.ObjectId   = vbGoodsId
+                                 AND MovementItem.ObjectId   = vbGoodsId  
+                               limit 1
                               );
 
 

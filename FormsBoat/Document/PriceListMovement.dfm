@@ -2,7 +2,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
   ClientHeight = 668
   ClientWidth = 1069
-  ExplicitLeft = -264
   ExplicitWidth = 1085
   ExplicitHeight = 706
   PixelsPerInch = 96
