@@ -47,7 +47,6 @@ object GoodsForm: TGoodsForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.HeaderHeight = 40
@@ -232,6 +231,7 @@ object GoodsForm: TGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
+        Options.Editing = False
         Width = 70
       end
       object EKPriceWVAT: TcxGridDBColumn
@@ -256,6 +256,7 @@ object GoodsForm: TGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1088#1077#1082#1086#1084#1077#1085#1076#1086#1074#1072#1085#1085#1072#1103' '#1073#1077#1079' '#1053#1044#1057
+        Options.Editing = False
         Width = 70
       end
       object EmpfPriceWVAT: TcxGridDBColumn
@@ -309,6 +310,7 @@ object GoodsForm: TGoodsForm
         DataBinding.FieldName = 'GoodsSizeName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object isDoc: TcxGridDBColumn
@@ -432,7 +434,6 @@ object GoodsForm: TGoodsForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 100
       end
       object ASIN: TcxGridDBColumn
@@ -446,7 +447,6 @@ object GoodsForm: TGoodsForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 55
       end
       object MatchCode: TcxGridDBColumn
@@ -462,7 +462,6 @@ object GoodsForm: TGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1076' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1103
-        Options.Editing = False
         Width = 120
       end
       object FeeNumber: TcxGridDBColumn
@@ -641,7 +640,7 @@ object GoodsForm: TGoodsForm
   object edSearchCode: TcxTextEdit
     Left = 224
     Top = 322
-    TabOrder = 8
+    TabOrder = 7
     DesignSize = (
       115
       21)

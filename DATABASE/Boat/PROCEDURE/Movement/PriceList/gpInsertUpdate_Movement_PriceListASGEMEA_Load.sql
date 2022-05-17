@@ -76,7 +76,7 @@ BEGIN
           IF COALESCE (vbGoodsId,0) = 0
           THEN 
              --проверяем группу для товара 
-             IF COALESCE (inGroupName1,'') <> ''
+           /*IF COALESCE (inGroupName1,'') <> ''
              THEN
                  -- пробуем найти группу Комплектующих
                  vbGroupId_1 := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsGroup() AND Object.ValueData = TRIM (inGroupName1));
@@ -175,7 +175,7 @@ BEGIN
                  END IF;
                  
                  
-             END IF;
+             END IF;*/
    
 
           IF COALESCE (inDiscountPartnerName,'')<> ''

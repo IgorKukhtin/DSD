@@ -64,6 +64,9 @@ BEGIN
                                   WHERE Movement.OperDate BETWEEN '01.01.2022' AND CURRENT_DATE
                                     AND Movement.DescId   = zc_Movement_PriceList()
                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                                  --AND vbUserId NOT IN (5, 236658)
+                                    AND vbUserId NOT IN (236658)
+
                                   ORDER BY MovementItem.ObjectId, Movement.Id
                                  )
           , tmpMovementPL AS (SELECT STRING_AGG (tmpMovementPL_all.InvNumber, ';')    AS InvNumber
@@ -372,7 +375,9 @@ BEGIN
        WHERE Object_Goods.DescId = zc_Object_Goods()
          AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE)
        -- and Object_Goods.Id = 236863
-       -- LIMIT 10000
+       ORDER BY Object_Goods.Id DESC
+     --LIMIT CASE WHEN vbUserId IN (5, 236658) THEN 100 ELSE 300000 END
+       LIMIT CASE WHEN vbUserId IN (236658) THEN 100 ELSE 350000 END
        ;
 
 END;

@@ -143,7 +143,7 @@ BEGIN
                                                                    , inDiscountPartnerId := 0                             ::Integer
                                                                    , inMeasureId         := vbMeasureId                   ::Integer
                                                                    , inMeasureParentId   := 0                             ::Integer
-                                                                   , inAmount            := inAmount       ::TFloat
+                                                                   , inAmount            := CAST (inAmount AS NUMERIC (16,2))
                                                                    , inMeasureMult       := 0              ::TFloat
                                                                    , inPriceParent       := 0              ::TFloat
                                                                    , inEmpfPriceParent   := 0              ::TFloat

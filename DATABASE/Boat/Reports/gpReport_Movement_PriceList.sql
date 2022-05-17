@@ -97,6 +97,13 @@ BEGIN
                                           AND MovementItem.isErased   = FALSE
                    INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
              )
+    -- только товары - если разные цены или разные поставщики
+  , tmpGoods_list AS (SELECT DISTINCT
+                             tmpMI.PartnerId
+                           , tmpMI.GoodsId
+                           , tmpMI.Amount
+                      FROM tmpMI
+                     )
 
     -- св-ва
   , tmpMIFloat AS (SELECT MovementItemFloat.*
@@ -279,6 +286,7 @@ BEGIN
 
   , tmpmyCount_pl AS (SELECT tmpData.GoodsId, COUNT(DISTINCT tmpData.MovementId) AS myCount
                       FROM tmpData
+                      WHERE tmpData.GoodsId IN (SELECT tmpGoods_list.GoodsId FROM tmpGoods_list GROUP BY tmpGoods_list.GoodsId HAVING COUNT(*) > 1)
                       GROUP BY tmpData.GoodsId
                       ) 
                       /*(SELECT tmpMovementPL_count.GoodsId, MAX (tmpMovementPL_count.myCount) AS myCount
@@ -332,7 +340,7 @@ BEGIN
               , tmpGoodsParams.EngineName
               , tmpGoodsParams.EKPrice             ::TFloat  
 
-              , tmpmyCount_pl.myCount :: Integer  AS myCount_pl
+              , COALESCE (tmpmyCount_pl.myCount, 1) :: Integer  AS myCount_pl
 
          FROM tmpData
               LEFT JOIN Object AS Object_Partner ON Object_Partner.Id   = tmpData.PartnerId
