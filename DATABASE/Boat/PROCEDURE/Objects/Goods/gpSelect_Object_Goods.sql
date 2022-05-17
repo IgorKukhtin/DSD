@@ -87,22 +87,22 @@ BEGIN
                          FROM Object AS Object_GoodsDocument
                                 JOIN ObjectLink AS ObjectLink_GoodsDocument_Goods
                                                 ON ObjectLink_GoodsDocument_Goods.ObjectId = Object_GoodsDocument.Id
-                                               AND ObjectLink_GoodsDocument_Goods.DescId   = zc_ObjectLink_GoodsPhoto_Goods()
+                                               AND ObjectLink_GoodsDocument_Goods.DescId   = zc_ObjectLink_GoodsDocument_Goods()
                           WHERE Object_GoodsDocument.DescId   = zc_Object_GoodsDocument()
                             AND Object_GoodsDocument.isErased = FALSE
-                        )
+                       )
            , tmpPriceBasis AS (SELECT tmp.GoodsId
                                     , tmp.ValuePrice
                                FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
                                                                         , inOperDate   := CURRENT_DATE) AS tmp
                               )
 
-           , tmpGoodsArticle AS (SELECT ObjectLink_GoodsArticle_Goods.ChildObjectId   AS GoodsId
+           , tmpGoodsArticle AS (SELECT ObjectLink_GoodsArticle_Goods.ChildObjectId    AS GoodsId
                                       , STRING_AGG (Object.ValueData, '; ') ::TVarChar AS GoodsArticle
                                  FROM Object
                                       INNER JOIN ObjectLink AS ObjectLink_GoodsArticle_Goods
                                                             ON ObjectLink_GoodsArticle_Goods.ObjectId = Object.Id
-                                                           AND ObjectLink_GoodsArticle_Goods.DescId = zc_ObjectLink_GoodsArticle_Goods()
+                                                           AND ObjectLink_GoodsArticle_Goods.DescId   = zc_ObjectLink_GoodsArticle_Goods()
                                  WHERE Object.DescId = zc_Object_GoodsArticle()
                                    AND Object.isErased = FALSE
                                  GROUP BY ObjectLink_GoodsArticle_Goods.ChildObjectId

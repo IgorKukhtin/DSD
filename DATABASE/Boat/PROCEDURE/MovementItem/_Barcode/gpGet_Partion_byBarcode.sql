@@ -41,7 +41,7 @@ BEGIN
                           INNER JOIN ObjectString AS ObjectString_EAN
                                                   ON ObjectString_EAN.ObjectId  = Object.Id
                                                  AND ObjectString_EAN.DescId    = zc_ObjectString_EAN()
-                                                 AND ObjectString_EAN.ValueData = TRIM (inBarCode)
+                                                 AND ObjectString_EAN.ValueData ILIKE TRIM (inBarCode)
                      WHERE Object.DescId = zc_Object_Goods()
                     )
              THEN
@@ -56,7 +56,7 @@ BEGIN
                                        INNER JOIN ObjectString AS ObjectString_EAN
                                                                ON ObjectString_EAN.ObjectId  = Object.Id
                                                               AND ObjectString_EAN.DescId    = zc_ObjectString_EAN()
-                                                              AND ObjectString_EAN.ValueData = TRIM (inBarCode)
+                                                              AND ObjectString_EAN.ValueData ILIKE TRIM (inBarCode)
                                        LEFT JOIN ObjectString AS ObjectString_Article
                                                               ON ObjectString_Article.ObjectId  = Object.Id
                                                              AND ObjectString_Article.DescId    = zc_ObjectString_Article()
@@ -71,7 +71,7 @@ BEGIN
                                        INNER JOIN ObjectString AS ObjectString_EAN
                                                                ON ObjectString_EAN.ObjectId  = Object.Id
                                                               AND ObjectString_EAN.DescId    = zc_ObjectString_EAN()
-                                                              AND ObjectString_EAN.ValueData = TRIM (inBarCode)
+                                                              AND ObjectString_EAN.ValueData ILIKE TRIM (inBarCode)
                                        LEFT JOIN ObjectString AS ObjectString_Article
                                                               ON ObjectString_Article.ObjectId  = Object.Id
                                                              AND ObjectString_Article.DescId    = zc_ObjectString_Article()
@@ -86,7 +86,7 @@ BEGIN
                               INNER JOIN ObjectString AS ObjectString_EAN
                                                       ON ObjectString_EAN.ObjectId  = Object.Id
                                                      AND ObjectString_EAN.DescId    = zc_ObjectString_EAN()
-                                                     AND ObjectString_EAN.ValueData = TRIM (inBarCode)
+                                                     AND ObjectString_EAN.ValueData ILIKE TRIM (inBarCode)
                           WHERE Object.DescId = zc_Object_Goods()
                          );
 
@@ -100,7 +100,7 @@ BEGIN
                               INNER JOIN ObjectString AS ObjectString_Article
                                                       ON ObjectString_Article.ObjectId  = Object.Id
                                                      AND ObjectString_Article.DescId    = zc_ObjectString_Article()
-                                                     AND ObjectString_Article.ValueData = TRIM (inBarCode)
+                                                     AND ObjectString_Article.ValueData ILIKE TRIM (inBarCode)
                          WHERE Object.DescId = zc_Object_Goods()
                         )
                  THEN
@@ -115,7 +115,7 @@ BEGIN
                                            INNER JOIN ObjectString AS ObjectString_Article
                                                                    ON ObjectString_Article.ObjectId  = Object.Id
                                                                   AND ObjectString_Article.DescId    = zc_ObjectString_Article()
-                                                                  AND ObjectString_Article.ValueData = TRIM (inBarCode)
+                                                                  AND ObjectString_Article.ValueData ILIKE TRIM (inBarCode)
                                       WHERE Object.DescId = zc_Object_Goods()
                                       ORDER BY Object.Id ASC LIMIT 1)
                                    , CHR (13)
@@ -127,7 +127,7 @@ BEGIN
                                            INNER JOIN ObjectString AS ObjectString_Article
                                                                    ON ObjectString_Article.ObjectId  = Object.Id
                                                                   AND ObjectString_Article.DescId    = zc_ObjectString_Article()
-                                                                  AND ObjectString_Article.ValueData = TRIM (inBarCode)
+                                                                  AND ObjectString_Article.ValueData ILIKE TRIM (inBarCode)
                                       WHERE Object.DescId = zc_Object_Goods()
                                       ORDER BY Object.Id DESC LIMIT 1)
                                     ;
@@ -139,7 +139,7 @@ BEGIN
                                   INNER JOIN ObjectString AS ObjectString_Article
                                                           ON ObjectString_Article.ObjectId  = Object.Id
                                                          AND ObjectString_Article.DescId    = zc_ObjectString_Article()
-                                                         AND ObjectString_Article.ValueData = TRIM (inBarCode)
+                                                         AND ObjectString_Article.ValueData ILIKE TRIM (inBarCode)
                               WHERE Object.DescId = zc_Object_Goods()
                              );
              END IF;
@@ -153,7 +153,7 @@ BEGIN
                               INNER JOIN ObjectString AS ObjectString_Article
                                                       ON ObjectString_Article.ObjectId  = Object.Id
                                                      AND ObjectString_Article.DescId    = zc_ObjectString_Article()
-                                                     AND REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (ObjectString_Article.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '') = TRIM (inBarCode)
+                                                     AND REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (ObjectString_Article.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '') ILIKE TRIM (inBarCode)
                          WHERE Object.DescId = zc_Object_Goods()
                         )
                  THEN
@@ -168,7 +168,7 @@ BEGIN
                                            INNER JOIN ObjectString AS ObjectString_Article
                                                                    ON ObjectString_Article.ObjectId  = Object.Id
                                                                   AND ObjectString_Article.DescId    = zc_ObjectString_Article()
-                                                                  AND REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (ObjectString_Article.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '') = TRIM (inBarCode)
+                                                                  AND REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (ObjectString_Article.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '') ILIKE TRIM (inBarCode)
                                       WHERE Object.DescId = zc_Object_Goods()
                                       ORDER BY Object.Id ASC LIMIT 1)
                                    , CHR (13)
@@ -180,7 +180,7 @@ BEGIN
                                            INNER JOIN ObjectString AS ObjectString_Article
                                                                    ON ObjectString_Article.ObjectId  = Object.Id
                                                                   AND ObjectString_Article.DescId    = zc_ObjectString_Article()
-                                                                  AND REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (ObjectString_Article.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '') = TRIM (inBarCode)
+                                                                  AND REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (ObjectString_Article.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '') ILIKE TRIM (inBarCode)
                                       WHERE Object.DescId = zc_Object_Goods()
                                       ORDER BY Object.Id DESC LIMIT 1)
                                     ;
@@ -192,7 +192,7 @@ BEGIN
                                   INNER JOIN ObjectString AS ObjectString_Article
                                                           ON ObjectString_Article.ObjectId  = Object.Id
                                                          AND ObjectString_Article.DescId    = zc_ObjectString_Article()
-                                                         AND REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (ObjectString_Article.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '') = TRIM (inBarCode)
+                                                         AND REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (ObjectString_Article.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '') ILIKE TRIM (inBarCode)
                               WHERE Object.DescId = zc_Object_Goods()
                              );
              END IF;
