@@ -2,10 +2,9 @@ inherited PriceListMovementForm: TPriceListMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
   ClientHeight = 668
   ClientWidth = 1069
-  ExplicitLeft = -193
-  ExplicitTop = -148
+  ExplicitLeft = -264
   ExplicitWidth = 1085
-  ExplicitHeight = 707
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,8 +22,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
       inherited cxGrid: TcxGrid
         Width = 1069
         Height = 561
-        ExplicitLeft = 72
-        ExplicitTop = 3
         ExplicitWidth = 1069
         ExplicitHeight = 561
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -597,8 +594,8 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end>
       QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090'ASG EMEA '#1080#1079' '#1092#1072#1081#1083#1072'?'
       InfoAfterExecute = #1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090' '#1079#1072#1075#1088#1091#1078#1077#1085
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090' ASG EMEA '#1080#1079' '#1092#1072#1081#1083#1072' ASGEMEA'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090' ASG EMEA '#1080#1079' '#1092#1072#1081#1083#1072' ASGEMEA'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090' ASG EMEA '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090' ASG EMEA '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 47
       WithoutNext = True
     end
@@ -694,6 +691,14 @@ inherited PriceListMovementForm: TPriceListMovementForm
           Value = 42132d
           Component = edOperDate
           DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
