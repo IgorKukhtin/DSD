@@ -277,14 +277,18 @@ BEGIN
                        )
 
 
-  , tmpmyCount_pl AS (SELECT tmpMovementPL_count.GoodsId, MAX (tmpMovementPL_count.myCount) AS myCount
+  , tmpmyCount_pl AS (SELECT tmpData.GoodsId, COUNT(DISTINCT tmpData.MovementId) AS myCount
+                      FROM tmpData
+                      GROUP BY tmpData.GoodsId
+                      ) 
+                      /*(SELECT tmpMovementPL_count.GoodsId, MAX (tmpMovementPL_count.myCount) AS myCount
                       FROM (SELECT tmpData.MovementId, tmpData.GoodsId, COUNT(*) AS myCount
                             FROM tmpData
                             GROUP BY tmpData.MovementId, tmpData.GoodsId
                             HAVING COUNT(*) > 1
                            ) AS tmpMovementPL_count
                       GROUP BY tmpMovementPL_count.GoodsId
-                      ) 
+                      ) */
 
          -- Результат
          SELECT tmpData.MovementId

@@ -168,6 +168,8 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     actGetImportSettingId: TdsdExecStoredProc;
     mactStartLoad: TMultiAction;
+    spSelectPrintStructureGoods: TdsdStoredProc;
+    actPrintStructureGoods: TdsdPrintAction;
   private
     { Private declarations }
   public

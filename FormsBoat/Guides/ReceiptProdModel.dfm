@@ -27,7 +27,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1288
     object cxGrid: TcxGrid
       Left = 0
       Top = 17
@@ -38,7 +37,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitWidth = 1288
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -286,7 +284,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 1288
     end
     object lbReceiptLevel: TcxLabel
       Left = 338
@@ -357,7 +354,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     BevelKind = bkTile
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitLeft = 776
     object cxGridProdColorPattern: TcxGrid
       Left = 0
       Top = 17
@@ -658,7 +654,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 768
     object cxGridGoods: TcxGrid
       Left = 0
       Top = 17
@@ -669,7 +664,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitWidth = 768
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = GoodsDS
@@ -1265,7 +1259,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 768
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -1275,7 +1268,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Height = 5
     AlignSplitter = salTop
     Control = PanelMaster
-    ExplicitWidth = 1288
   end
   object cxRightSplitter: TcxSplitter
     Left = 773
@@ -1284,7 +1276,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Height = 203
     AlignSplitter = salRight
     Control = PanelProdColorPattern
-    ExplicitLeft = 768
   end
   object DataSource: TDataSource
     DataSet = MasterCDS

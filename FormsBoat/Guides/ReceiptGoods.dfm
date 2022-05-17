@@ -2016,6 +2016,54 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       ImageIndex = 27
       WithoutNext = True
     end
+    object actPrintStructureGoods: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintStructureGoods
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintStructureGoods
+        end>
+      Caption = 'Print Structure Goods'
+      Hint = 'PrintStructure Goods'
+      ImageIndex = 17
+      DataSets = <
+        item
+          UserName = 'frxDBDHeader'
+        end
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'NPP;GoodsGroupNameFull;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintReceiptGoods_StructureGoods'
+      ReportNameParam.Value = 'PrintReceiptGoods_StructureGoods'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PictureFields.Strings = (
+        'photo1')
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReceiptGoods'
@@ -2651,5 +2699,24 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     PackSize = 1
     Left = 952
     Top = 152
+  end
+  object spSelectPrintStructureGoods: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_ReceiptGoods_Print'
+    DataSets = <
+      item
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inReceiptGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 656
+    Top = 176
   end
 end

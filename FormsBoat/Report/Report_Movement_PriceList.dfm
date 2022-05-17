@@ -284,7 +284,7 @@ inherited Report_Movement_PriceListForm: TReport_Movement_PriceListForm
             Width = 80
           end
           object myCount_pl: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1076#1086#1082'. '#1087#1088#1072#1081#1089
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1082'. '#1087#1088#1072#1081#1089
             DataBinding.FieldName = 'myCount_pl'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
