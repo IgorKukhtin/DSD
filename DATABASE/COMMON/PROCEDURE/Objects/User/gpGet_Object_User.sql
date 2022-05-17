@@ -57,7 +57,8 @@ BEGIN
           , ObjectString_UserKey.ValueData   AS UserKey
 
           , Object_Member.Id AS MemberId
-          , Object_Member.ValueData AS MemberName
+          , (CASE WHEN Object_Member.isErased = TRUE THEN '*удален* ' ELSE '' END
+             || '('|| Object_Member.ObjectCode || ') ' || Object_Member.ValueData) :: TVarChar AS MemberName
 
           , ObjectString_ProjectMobile.ValueData  AS ProjectMobile
           , COALESCE (ObjectBoolean_ProjectMobile.ValueData, FALSE) :: Boolean  AS isProjectMobile

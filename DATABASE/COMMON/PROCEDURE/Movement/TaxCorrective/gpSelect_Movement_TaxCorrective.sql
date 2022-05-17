@@ -205,7 +205,7 @@ BEGIN
                     OR COALESCE (Movement.AccessKeyId, 0) = 0
                     OR MovementLinkObject_Branch.ObjectId IS NULL
                    )
-               AND (vbUserId <> 5 OR COALESCE (Movement.AccessKeyId, 0) = 0)
+               AND (vbUserId <> 5 OR vbUserId <> 0 OR COALESCE (Movement.AccessKeyId, 0) = 0)
 
             UNION ALL
              SELECT MovementDate_DateRegistered.MovementId       AS Id

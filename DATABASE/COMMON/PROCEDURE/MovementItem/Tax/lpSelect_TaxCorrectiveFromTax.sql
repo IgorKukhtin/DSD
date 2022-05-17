@@ -16,6 +16,21 @@ $BODY$
 --  DECLARE vbOperDate_begin TDateTime;
 BEGIN
 
+    -- !!!Выход!!!
+    IF EXISTS (SELECT 1
+               FROM MovementLinkMovement AS MovementLinkMovement_Master
+                    INNER JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
+                                                  ON MovementLinkObject_CurrencyDocument.MovementId = MovementLinkMovement_Master.MovementChildId
+                                                 AND MovementLinkObject_CurrencyDocument.DescId     = zc_MovementLinkObject_CurrencyDocument()
+                                                 AND MovementLinkObject_CurrencyDocument.ObjectId   <> zc_Enum_Currency_Basis()
+               WHERE MovementLinkMovement_Master.MovementId = inMovementId
+                 AND MovementLinkMovement_Master.DescId     = zc_MovementLinkMovement_Master()
+              )
+    THEN
+        RETURN;
+    END IF;
+
+
     -- нашли налоговую
     vbMovementId_tax:= (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Child());
     -- определили дату, т.к. проверка нужна с 01.04.2016

@@ -42,6 +42,10 @@ $BODY$
    DECLARE vbDiscountPercent     TFloat;
    DECLARE vbExtraChargesPercent TFloat;
 
+   DECLARE vbCurrencyDocumentId Integer;
+   DECLARE vbCurrencyValue TFloat;
+   DECLARE vbParValue TFloat;
+
    DECLARE vbGoodsId     Integer;
    DECLARE vbGoodsKindId Integer;
    DECLARE vbAmount      TFloat;
@@ -94,9 +98,15 @@ BEGIN
                       THEN zc_Enum_DocumentTaxKind_CorrectivePrice() -- !!!всегда такая!!!
                  ELSE inDocumentTaxKindId -- !!!не меняется!!!
             END AS DocumentTaxKindId
+
+           , COALESCE (MovementLinkObject_CurrencyDocument.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyDocumentId
+           , COALESCE (MovementFloat_CurrencyValue.ValueData, 0)                               AS CurrencyValue
+           , COALESCE (MovementFloat_ParValue.ValueData, 0)                                    AS ParValue
+
             INTO vbStatusId, vbInvNumber
                , vbMovementDescId, vbOperDate, vbStartDate, vbEndDate, vbPriceWithVAT, vbVATPercent, vbFromId, vbToId, vbPartnerId, vbContractId, vbBranchId
                , vbDiscountPercent, vbExtraChargesPercent, inDocumentTaxKindId
+               , vbCurrencyDocumentId, vbCurrencyValue, vbParValue
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                        ON MovementLinkObject_Partner.MovementId = Movement.Id
@@ -137,6 +147,17 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
                                ON ObjectLink_Contract_JuridicalBasis.ObjectId = COALESCE (MovementLinkObject_ContractFrom.ObjectId, MovementLinkObject_Contract.ObjectId)
                               AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
+                                       ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
+                                      AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
+          LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+                                  ON MovementFloat_CurrencyValue.MovementId = Movement.Id
+                                 AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+          LEFT JOIN MovementFloat AS MovementFloat_ParValue
+                                  ON MovementFloat_ParValue.MovementId = Movement.Id
+                                 AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
+
      WHERE Movement.Id = inMovementId
     ;
      -- !!!замена!!!
@@ -154,12 +175,12 @@ BEGIN
      END IF;
 
      -- проверка - проведенные/удаленные документы Изменять нельзя
-     IF vbStatusId <> zc_Enum_Status_UnComplete() AND inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+     IF vbStatusId <> zc_Enum_Status_UnComplete() AND inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical() AND vbUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.Формирование <Корректировки к налоговой> на основании документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF;
      -- проверка - проведенные/удаленные документы Изменять нельзя
-     IF vbStatusId <> zc_Enum_Status_Complete() AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+     IF vbStatusId <> zc_Enum_Status_Complete() AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical() AND vbUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.Формирование <Корректировки к налоговой> на основании документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF;
@@ -235,8 +256,17 @@ BEGIN
                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                  , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
                              -- в "налоговом документе" всегда будут без НДС
-                             THEN CAST (COALESCE (MIFloat_Price.ValueData, 0) / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
-                        ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                             THEN CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND 1=0 -- это корректировка...
+                                       THEN       COALESCE (MIFloat_Price.ValueData, 0) * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                / (1 + vbVATPercent / 100)
+                                       ELSE CAST (COALESCE (MIFloat_Price.ValueData, 0)
+                                                / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
+                                  END
+                        ELSE CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND 1=0 -- это корректировка...
+                                       THEN COALESCE (MIFloat_Price.ValueData, 0) * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                       ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                             END
+                                  
                    END AS OperPrice
                  , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
                              -- в "налоговом документе" всегда будут без НДС
@@ -282,9 +312,33 @@ BEGIN
                        , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                        , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
                                    -- в "налоговом документе" всегда будут без НДС
-                                   THEN CAST (CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END
-                                            / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
-                              ELSE CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END
+                                   THEN CAST (CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0
+                                                   THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100)
+                                                             * COALESCE (MIFloat_Price.ValueData, 0) 
+                                                             AS NUMERIC (16, 2))
+                                                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                              END / (1 + vbVATPercent / 100)
+                                            * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
+                                                        THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                   ELSE 1
+                                              END
+                                              AS NUMERIC (16, 2))
+
+                              ELSE CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0
+                                        THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100)
+                                                  * COALESCE (MIFloat_Price.ValueData, 0)
+                                                  * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
+                                                              THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                         ELSE 1
+                                                    END
+                                                  AS NUMERIC (16, 2))
+                                        ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                           * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
+                                                       THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                  ELSE 1
+                                             END
+                                   END
+
                          END AS OperPrice
                        , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
                                    -- в "налоговом документе" всегда будут без НДС
@@ -375,6 +429,10 @@ BEGIN
                                                                                              inOperDate     := COALESCE (Movement_Tax_find.OperDate, vbOperDate)
                                                                                            , inChangePercent:= MIFloat_ChangePercent.ValueData
                                                                                            , inPrice        := MIFloat_Price.ValueData
+                                                                                                             * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MI_Master.MovementId = inMovementId
+                                                                                                                         THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                                                                                    ELSE 1
+                                                                                                               END
                                                                                            , inIsWithVAT    := vbPriceWithVAT
                                                                                             )
                                                              WHEN (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0) AND vbMovementDescId <> zc_Movement_ReturnIn()
@@ -382,9 +440,17 @@ BEGIN
                                                                                              inOperDate     := COALESCE (Movement_Tax_find.OperDate, vbOperDate)
                                                                                            , inChangePercent:= vbExtraChargesPercent - vbDiscountPercent
                                                                                            , inPrice        := MIFloat_Price.ValueData
+                                                                                                             * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MI_Master.MovementId = inMovementId
+                                                                                                                         THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                                                                                    ELSE 1
+                                                                                                               END
                                                                                            , inIsWithVAT    := vbPriceWithVAT
                                                                                             )
                                                              ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                                                * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MI_Master.MovementId = inMovementId
+                                                                            THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                                       ELSE 1
+                                                                  END
                                                         END
                                                       / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
                                         ELSE CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbMovementDescId = zc_Movement_ReturnIn()
@@ -392,6 +458,10 @@ BEGIN
                                                                                   inOperDate     := COALESCE (Movement_Tax_find.OperDate, vbOperDate)
                                                                                 , inChangePercent:= MIFloat_ChangePercent.ValueData
                                                                                 , inPrice        := MIFloat_Price.ValueData
+                                                                                                  * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MI_Master.MovementId = inMovementId
+                                                                                                              THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                                                                         ELSE 1
+                                                                                                    END
                                                                                 , inIsWithVAT    := vbPriceWithVAT
                                                                                  )
 
@@ -400,9 +470,17 @@ BEGIN
                                                                                   inOperDate     := COALESCE (Movement_Tax_find.OperDate, vbOperDate)
                                                                                 , inChangePercent:= vbExtraChargesPercent - vbDiscountPercent
                                                                                 , inPrice        := MIFloat_Price.ValueData
+                                                                                                  * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MI_Master.MovementId = inMovementId
+                                                                                                              THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                                                                         ELSE 1
+                                                                                                    END
                                                                                 , inIsWithVAT    := vbPriceWithVAT
                                                                                  )
                                                   ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                                     * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MI_Master.MovementId = inMovementId
+                                                                 THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                            ELSE 1
+                                                       END
                                              END
                                    END AS OperPrice
                                    -- OperPrice_original
@@ -487,6 +565,10 @@ BEGIN
                                                                                                inOperDate     := COALESCE (Movement_Tax_find.OperDate, vbOperDate)
                                                                                              , inChangePercent:= MIFloat_ChangePercent.ValueData
                                                                                              , inPrice        := MIFloat_Price.ValueData
+                                                                                                               * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MI_Master.MovementId = inMovementId
+                                                                                                                           THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                                                                                      ELSE 1
+                                                                                                                 END
                                                                                              , inIsWithVAT    := vbPriceWithVAT
                                                                                               )
                                                                WHEN (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0) AND vbMovementDescId <> zc_Movement_ReturnIn()
@@ -494,9 +576,17 @@ BEGIN
                                                                                                inOperDate     := COALESCE (Movement_Tax_find.OperDate, vbOperDate)
                                                                                              , inChangePercent:= vbExtraChargesPercent - vbDiscountPercent
                                                                                              , inPrice        := MIFloat_Price.ValueData
+                                                                                                               * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MI_Master.MovementId = inMovementId
+                                                                                                                           THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                                                                                      ELSE 1
+                                                                                                                 END
                                                                                              , inIsWithVAT    := vbPriceWithVAT
                                                                                               )
                                                                ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                                                  * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MI_Master.MovementId = inMovementId
+                                                                              THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                                         ELSE 1
+                                                                    END
                                                           END
                                                         / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
                                           ELSE CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbMovementDescId = zc_Movement_ReturnIn()
@@ -504,6 +594,10 @@ BEGIN
                                                                                     inOperDate     := COALESCE (Movement_Tax_find.OperDate, vbOperDate)
                                                                                   , inChangePercent:= MIFloat_ChangePercent.ValueData
                                                                                   , inPrice        := MIFloat_Price.ValueData
+                                                                                                    * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MI_Master.MovementId = inMovementId
+                                                                                                                THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                                                                           ELSE 1
+                                                                                                      END
                                                                                   , inIsWithVAT    := vbPriceWithVAT
                                                                                    )
   
@@ -512,9 +606,17 @@ BEGIN
                                                                                     inOperDate     := COALESCE (Movement_Tax_find.OperDate, vbOperDate)
                                                                                   , inChangePercent:= vbExtraChargesPercent - vbDiscountPercent
                                                                                   , inPrice        := MIFloat_Price.ValueData
+                                                                                                    * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MI_Master.MovementId = inMovementId
+                                                                                                                THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                                                                           ELSE 1
+                                                                                                      END
                                                                                   , inIsWithVAT    := vbPriceWithVAT
                                                                                    )
                                                     ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                                       * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MI_Master.MovementId = inMovementId
+                                                                   THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                              ELSE 1
+                                                         END
                                                END
                                      END
                                      -- OperPrice_original
@@ -1028,3 +1130,4 @@ $BODY$
 -- SELECT * FROM gpInsertUpdate_Movement_TaxCorrective_From_Kind (inMovementId:= 3409416, inDocumentTaxKindId:= 0, inDocumentTaxKindId_inf:= 0, inIsTaxLink:= TRUE, inSession := '5');
 -- SELECT * FROM gpInsertUpdate_Movement_TaxCorrective_From_Kind (inMovementId:= 3449385, inDocumentTaxKindId:= 0, inDocumentTaxKindId_inf:= 0, inIsTaxLink:= TRUE, inSession := '5');
 -- select * from gpInsertUpdate_Movement_TaxCorrective_From_Kind(inMovementId := 16691011 , inDocumentTaxKindId := 566452 , inDocumentTaxKindId_inf := 566452 , inStartDateTax := NULL , inIsTaxLink := 'True' ,  inSession := '5');
+select * from gpInsertUpdate_Movement_TaxCorrective_From_Kind(inMovementId := 22528897 , inDocumentTaxKindId := 0 , inDocumentTaxKindId_inf := 0 , inStartDateTax := ('01.12.2021')::TDateTime , inIsTaxLink := 'True' ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');

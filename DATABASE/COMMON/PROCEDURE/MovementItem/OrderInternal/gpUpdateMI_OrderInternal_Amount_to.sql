@@ -93,7 +93,8 @@ BEGIN
         -- проверка
         IF NOT EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.DescId = zc_MI_Master() AND MI.Id = inId AND MI.ObjectId > 0)
         THEN
-            RAISE EXCEPTION 'Ошибка.Не определено значение <Товар>.';
+            RETURN;
+            --RAISE EXCEPTION 'Ошибка.Не определено значение <Товар>.';
         END IF;
         -- проверка
         IF NOT EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.DescId = zc_MILinkObject_GoodsKind() AND MILO.MovementItemId = inId AND MILO.ObjectId > 0)
