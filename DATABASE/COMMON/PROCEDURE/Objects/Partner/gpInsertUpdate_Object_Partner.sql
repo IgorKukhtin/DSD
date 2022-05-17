@@ -143,6 +143,12 @@ BEGIN
        -- Обнулим, что б потом переопределить
        inCode:= 0;
    END IF;
+   -- !!!надо так криво обработать когда добавляют несколько пользователей!!!)
+   IF inCode > 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.DescId = zc_Object_Partner() AND Object.ObjectCode = inCode)
+   THEN 
+       -- Обнулим, что б потом переопределить
+       inCode:= 0;
+   END IF;
 
    -- !!! Если код не установлен, определяем его как последний+1
    vbCode:= lfGet_ObjectCode (inCode, zc_Object_Partner());
