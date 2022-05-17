@@ -103,6 +103,11 @@ type
     FieldFilter_Article: TdsdFieldFilter;
     bblbSearchArticle: TdxBarControlContainerItem;
     bbedSearchArticle: TdxBarControlContainerItem;
+    spGetImportSettingId_ASG_EMEA: TdsdStoredProc;
+    actDoLoad_ASGEMEA: TExecuteImportSettingsAction;
+    actGetImportSettingId_ASGEMEA: TdsdExecStoredProc;
+    mactStartLoad_ASGEMEA: TMultiAction;
+    bbtStartLoad_ASGEMEA: TdxBarButton;
   private
     { Private declarations }
   public
