@@ -80,6 +80,10 @@ type
     ceCode: TcxCurrencyEdit;
     edArticle: TcxTextEdit;
     cxLabel18: TcxLabel;
+    actChoiceGuides: TdsdChoiceGuides;
+    lbSearchArticle: TcxLabel;
+    edSearchArticle: TcxTextEdit;
+    FieldFilter_Article: TdsdFieldFilter;
   private
     { Private declarations }
   public

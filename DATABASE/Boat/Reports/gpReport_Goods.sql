@@ -19,7 +19,7 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, PartionId Integer
               , GoodsCode_parent Integer, GoodsName_parent TVarChar
               , PartnerName TVarChar
-              , Article TVarChar
+              , Article TVarChar, Article_all TVarChar
               , PartNumber TVarChar
               , GoodsGroupNameFull TVarChar
               , GoodsGroupName TVarChar
@@ -711,6 +711,7 @@ BEGIN
 
         , Object_Partner.ValueData       AS PartnerName
         , ObjectString_Article.ValueData AS Article
+        , zfCalc_Article_all (ObjectString_Article.ValueData)::TVarChar AS Article_all
         , tmpDataAll.PartNumber ::TVarChar
         , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
         , Object_GoodsGroup.ValueData    AS GoodsGroupName
@@ -786,5 +787,4 @@ $BODY$
 */
 
 -- тест
--- 
-select * from gpReport_Goods(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2021')::TDateTime , inUnitGroupId := 0 , inGoodsId := 3780 , inPartionId := 28494, inSession := '5');
+--select * from gpReport_Goods(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2021')::TDateTime , inUnitGroupId := 0 , inGoodsId := 3780 , inPartionId := 28494, inSession := '5');

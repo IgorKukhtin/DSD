@@ -7,7 +7,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1147
-  ExplicitHeight = 601
+  ExplicitHeight = 602
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -286,6 +286,13 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object Article_all: TcxGridDBColumn
+            Caption = '***Artikel Nr'
+            DataBinding.FieldName = 'Article_all'
+            Visible = False
+            Options.Editing = False
+            Width = 70
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -601,6 +608,27 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     Left = 215
     Top = 39
     Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
+  end
+  object lbSearchArticle: TcxLabel [5]
+    Left = 155
+    Top = 221
+    Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+    ParentFont = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -13
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+  end
+  object edSearchArticle: TcxTextEdit [6]
+    Left = 152
+    Top = 247
+    TabOrder = 10
+    DesignSize = (
+      125
+      21)
+    Width = 125
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1668,6 +1696,31 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       ToAddress.DataType = ftString
       ToAddress.MultiSelectSeparator = ','
     end
+    object actChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ImageIndex = 7
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1749,6 +1802,14 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bblbSearchArticle'
+        end
+        item
+          Visible = True
+          ItemName = 'bbedSearchArticle'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -1867,14 +1928,28 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       Action = actPrint_Curr
       Category = 0
     end
+    object bblbSearchArticle: TdxBarControlContainerItem
+      Caption = 'lbSearchArticle'
+      Category = 0
+      Hint = 'lbSearchArticle'
+      Visible = ivAlways
+      Control = lbSearchArticle
+    end
+    object bbedSearchArticle: TdxBarControlContainerItem
+      Caption = 'edSearchArticle'
+      Category = 0
+      Hint = 'edSearchArticle'
+      Visible = ivAlways
+      Control = edSearchArticle
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 280
     Top = 168
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 96
-    Top = 72
+    Left = 72
+    Top = 16
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -2415,5 +2490,14 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       end>
     Left = 198
     Top = 22
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edSearchArticle
+    DataSet = MasterCDS
+    Column = Article_all
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 280
+    Top = 192
   end
 end

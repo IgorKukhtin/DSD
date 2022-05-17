@@ -24,7 +24,7 @@ RETURNS TABLE (PartionId            Integer
              , PartnerName          TVarChar
              --, BrandName            TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Article TVarChar
+             , Article TVarChar , Article_all TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar, MeasureName TVarChar
 
              , GoodsTagName         TVarChar
@@ -403,6 +403,7 @@ BEGIN
            , Object_Goods.ObjectCode        AS GoodsCode
            , Object_Goods.ValueData         AS GoodsName
            , ObjectString_Article.ValueData AS Article
+           , zfCalc_Article_all (ObjectString_Article.ValueData)::TVarChar AS Article_all
            , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsGroup.ValueData    AS GoodsGroupName
            , Object_Measure.ValueData       AS MeasureName

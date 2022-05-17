@@ -182,6 +182,7 @@ object InventoryForm: TInventoryForm
               end>
             Properties.ReadOnly = True
             Visible = False
+            Options.Editing = False
             Width = 70
           end
           object GoodsCode: TcxGridDBColumn

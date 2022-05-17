@@ -144,6 +144,10 @@ type
     cbPartNumber: TcxCheckBox;
     actOpenOrderClient_reserve: TdsdOpenForm;
     bbOpenOrderClient_reserve: TdxBarButton;
+    actChoiceGuides: TdsdChoiceGuides;
+    lbSearchArticle: TcxLabel;
+    edSearchArticle: TcxTextEdit;
+    FieldFilter_Article: TdsdFieldFilter;
   private
     { Private declarations }
   public

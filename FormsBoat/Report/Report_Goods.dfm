@@ -4,9 +4,8 @@
   ClientWidth = 1071
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -281
   ExplicitWidth = 1087
-  ExplicitHeight = 376
+  ExplicitHeight = 380
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -649,6 +648,13 @@
             Options.Editing = False
             Width = 55
           end
+          object Article_all: TcxGridDBColumn
+            Caption = '***Artikel Nr'
+            DataBinding.FieldName = 'Article_all'
+            Visible = False
+            Options.Editing = False
+            Width = 70
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = 'Interne Nr'
             DataBinding.FieldName = 'GoodsCode'
@@ -883,6 +889,27 @@
       Top = 31
       Caption = 'Artikel Nr'
     end
+  end
+  object lbSearchArticle: TcxLabel [2]
+    Left = 155
+    Top = 221
+    Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+    ParentFont = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -13
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+  end
+  object edSearchArticle: TcxTextEdit [3]
+    Left = 152
+    Top = 247
+    TabOrder = 7
+    DesignSize = (
+      125
+      21)
+    Width = 125
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1159,6 +1186,31 @@
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 28
+    end
+    object actChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ImageIndex = 7
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource
@@ -1587,5 +1639,14 @@
       end>
     Left = 296
     Top = 200
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edSearchArticle
+    DataSet = MasterCDS
+    Column = Article_all
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 280
+    Top = 192
   end
 end
