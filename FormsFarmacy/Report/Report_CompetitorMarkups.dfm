@@ -266,6 +266,11 @@
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <>
           DataController.Summary.SummaryGroups = <>
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
           OptionsView.GroupByBox = False
           Styles.Content = dmMain.cxContentStyle
           Styles.Inactive = dmMain.cxSelection
@@ -342,7 +347,7 @@
           end
           object MarginPercentMin: TcxGridDBBandedColumn
             Caption = #1055#1088#1086#1094#1077#1085#1090' '#1085#1072#1094#1077#1085#1082#1080
-            DataBinding.FieldName = 'MarginPercentMin'
+            DataBinding.FieldName = 'MarginPercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00 %'
             HeaderAlignmentHorz = taCenter
@@ -353,14 +358,16 @@
             Position.ColIndex = 1
             Position.RowIndex = 0
           end
-          object JuridicalPriceMin: TcxGridDBBandedColumn
+          object JuridicalPriceMin0000: TcxGridDBBandedColumn
             Caption = #1062#1077#1085#1072' '#1087#1086#1089#1090'.'
             DataBinding.FieldName = 'JuridicalPriceMin'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 68
             Position.BandIndex = 1
             Position.ColIndex = 2
@@ -379,22 +386,22 @@
             Position.ColIndex = 0
             Position.RowIndex = 1
           end
-          object JuridicalPriceMax: TcxGridDBBandedColumn
+          object JuridicalPriceMax0000: TcxGridDBBandedColumn
             Caption = #1062#1077#1085#1072' '#1087#1086#1089#1090'.'
             DataBinding.FieldName = 'JuridicalPriceMax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 68
             Position.BandIndex = 1
             Position.ColIndex = 2
             Position.RowIndex = 1
           end
           object MarginPercentMax: TcxGridDBBandedColumn
-            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1085#1072#1094#1077#1085#1082#1080
-            DataBinding.FieldName = 'MarginPercentMax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00 %'
             HeaderAlignmentHorz = taCenter
@@ -404,6 +411,7 @@
             Position.BandIndex = 1
             Position.ColIndex = 1
             Position.RowIndex = 1
+            IsCaptionAssigned = True
           end
           object JuridicalPrice: TcxGridDBBandedColumn
             Caption = #1052#1080#1085'. '#1094#1077#1085#1072' '#1087#1086#1089#1090'.'
@@ -581,26 +589,51 @@
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object chSubGroupsName: TcxGridDBColumn
+        end
+        object cxGrid1DBBandedTableView1: TcxGridDBBandedTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ClientDataSetGroupDS
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.GroupByBox = False
+          Bands = <
+            item
+              Width = 221
+            end
+            item
+              Visible = False
+              VisibleForCustomization = False
+              Width = 188
+            end>
+          object chSubGroupsName: TcxGridDBBandedColumn
             Caption = #1055#1086#1076#1075#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'SubGroupsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 136
+            Width = 120
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 0
           end
-          object chMarginPercentMin: TcxGridDBColumn
-            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1089#1077#1090#1080
-            DataBinding.FieldName = 'MarginPercentMin'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00 %'
+          object chMarginPercent: TcxGridDBBandedColumn
+            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1085#1072#1094#1077#1085#1082#1080
+            DataBinding.FieldName = 'MarginPercent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 123
+            Width = 127
+            Position.BandIndex = 0
+            Position.ColIndex = 1
+            Position.RowIndex = 0
           end
-          object chMarginPercentSGR: TcxGridDBColumn
+          object chMarginPercentSGR: TcxGridDBBandedColumn
             DataBinding.FieldName = 'MarginPercentSGR'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00 %'
@@ -609,11 +642,55 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             VisibleForCustomization = False
-            Width = 117
+            Width = 85
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object chDMarginPercentCode: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'DMarginPercentCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                ImageIndex = 81
+                Value = 1
+              end
+              item
+                ImageIndex = 82
+                Value = 2
+              end
+              item
+                ImageIndex = 83
+                Value = '3'
+              end>
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 26
+            Position.BandIndex = 1
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object chDMarginPercent: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'DMarginPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '+,0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 87
+            Position.BandIndex = 1
+            Position.ColIndex = 2
+            Position.RowIndex = 0
           end
         end
         object cxGridLevel1: TcxGridLevel
-          GridView = cxGridDBTableView1
+          GridView = cxGrid1DBBandedTableView1
         end
       end
     end
@@ -648,6 +725,11 @@
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = actShowPrev
+        Properties.Strings = (
+          'Value')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -714,6 +796,10 @@
         item
           Visible = True
           ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
@@ -822,6 +908,10 @@
       ImageIndex = 1
       ShortCut = 115
     end
+    object dxBarButton1: TdxBarButton
+      Action = actShowPrev
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -872,6 +962,25 @@
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actShowPrev: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = dsdStoredProc
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1088#1072#1074#1085#1077#1085#1080#1077' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1080#1084' '#1084#1077#1089#1103#1094#1077#1084
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1088#1072#1074#1085#1077#1085#1080#1077' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1080#1084' '#1084#1077#1089#1103#1094#1077#1084
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1057#1082#1088#1099#1090#1100' '#1089#1088#1072#1074#1085#1077#1085#1080#1077' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1080#1084' '#1084#1077#1089#1103#1094#1077#1084
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1088#1072#1074#1085#1077#1085#1080#1077' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1080#1084' '#1084#1077#1089#1103#1094#1077#1084
+      CaptionTrue = #1057#1082#1088#1099#1090#1100' '#1089#1088#1072#1074#1085#1077#1085#1080#1077' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1080#1084' '#1084#1077#1089#1103#1094#1077#1084
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1088#1072#1074#1085#1077#1085#1080#1077' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1080#1084' '#1084#1077#1089#1103#1094#1077#1084
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -1157,26 +1266,44 @@
       item
         HeaderColumnName = 'PriceName'
         TemplateColumn = Price
+        IsCross.Value = True
+        IsCross.DataType = ftBoolean
+        IsCross.MultiSelectSeparator = ','
       end
       item
         HeaderColumnName = 'MarginPercentDeltaMinName'
         TemplateColumn = MarginPercentDeltaMin
+        IsCross.Value = True
+        IsCross.DataType = ftBoolean
+        IsCross.MultiSelectSeparator = ','
       end
       item
         HeaderColumnName = 'MarginPercentName'
         TemplateColumn = MarginPercent
+        IsCross.Value = True
+        IsCross.DataType = ftBoolean
+        IsCross.MultiSelectSeparator = ','
       end
       item
         HeaderColumnName = 'DPriceName'
         TemplateColumn = DPrice
+        IsCross.Value = True
+        IsCross.DataType = ftBoolean
+        IsCross.MultiSelectSeparator = ','
       end
       item
         HeaderColumnName = 'MarginPercentDeltaMaxName'
         TemplateColumn = MarginPercentDeltaMax
+        IsCross.Value = True
+        IsCross.DataType = ftBoolean
+        IsCross.MultiSelectSeparator = ','
       end
       item
         HeaderColumnName = 'MarginPercentSGRName'
         TemplateColumn = MarginPercentSGR
+        IsCross.Value = True
+        IsCross.DataType = ftBoolean
+        IsCross.MultiSelectSeparator = ','
       end>
     HeaderDataSet = CompetitorCDS
     BаndColumnName = 'CompetitorName'
@@ -1201,9 +1328,9 @@
     Left = 336
     Top = 416
   end
-  object CrossDBViewAddOn: TCrossDBViewAddOn
+  object CrossDBViewReportAddOnItog: TCrossDBViewReportAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView1
+    View = cxGrid1DBBandedTableView1
     OnDblClickActionList = <>
     ActionItemList = <>
     OnlyEditingCellOnEnter = False
@@ -1214,10 +1341,34 @@
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
+    MultiplyColumnList = <>
+    TemplateColumnList = <
+      item
+        HeaderColumnName = 'MarginPercentSGRName'
+        TemplateColumn = chMarginPercentSGR
+        IsCross.Value = True
+        IsCross.DataType = ftBoolean
+        IsCross.MultiSelectSeparator = ','
+      end
+      item
+        HeaderColumnName = 'DMarginPercentCodeName'
+        TemplateColumn = chDMarginPercentCode
+        IsCross.Value = True
+        IsCross.Component = actShowPrev
+        IsCross.DataType = ftBoolean
+        IsCross.MultiSelectSeparator = ','
+      end
+      item
+        HeaderColumnName = 'DMarginPercent'
+        TemplateColumn = chDMarginPercent
+        IsCross.Value = True
+        IsCross.Component = actShowPrev
+        IsCross.DataType = ftBoolean
+        IsCross.MultiSelectSeparator = ','
+      end>
     HeaderDataSet = CompetitorGroupCDS
-    HeaderColumnName = 'CompetitorName'
-    TemplateColumn = chMarginPercentSGR
+    BаndColumnName = 'CompetitorName'
     Left = 512
-    Top = 296
+    Top = 304
   end
 end

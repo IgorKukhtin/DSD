@@ -467,6 +467,11 @@ type
     mactUpdate_SUN_NotSoldIn: TMultiAction;
     actUpdate_SUN_NotSoldIn: TdsdExecStoredProc;
     dxBarButton33: TdxBarButton;
+    isSupplementAdd30Cash: TcxGridDBColumn;
+    spUpdate_SupplementAdd30Cash: TdsdStoredProc;
+    mactUpdate_SupplementAdd30Cash: TMultiAction;
+    actUpdate_SupplementAdd30Cash: TdsdExecStoredProc;
+    dxBarButton34: TdxBarButton;
   private
     { Private declarations }
   public

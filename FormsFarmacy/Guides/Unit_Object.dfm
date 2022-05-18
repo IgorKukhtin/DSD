@@ -1056,6 +1056,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 105
           end
+          object isSupplementAdd30Cash: TcxGridDBColumn
+            Caption = 
+              #1044#1086#1073#1072#1074#1083#1103#1090#1100' '#1090#1086#1074#1072#1088#1072' '#1089#1086' '#1089#1088#1086#1082#1086#1084' '#1086#1090' 30 '#1076#1085#1077#1081' '#1074' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053' 1 '#1080#1079' '#1082#1072#1089#1089 +
+              #1099
+            DataBinding.FieldName = 'isSupplementAdd30Cash'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 114
+          end
           object isSUN_NotSoldIn: TcxGridDBColumn
             Caption = #1055#1086#1083#1091#1095#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1090#1086#1074#1072#1088' "'#1073#1077#1079' '#1087#1088#1086#1076#1072#1078'" '#1076#1083#1103' '#1057#1059#1053'-1'
             DataBinding.FieldName = 'isSUN_NotSoldIn'
@@ -4075,6 +4084,37 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       Caption = 'actUpdate_SUN_NotSoldIn'
     end
+    object mactUpdate_SupplementAdd30Cash: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_SupplementAdd30Cash
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1073#1072#1074#1083#1103#1090#1100' '#1090#1086#1074#1072#1088#1072' '#1089#1086' '#1089#1088#1086#1082#1086#1084' '#1086#1090' 30 '#1076#1085#1077#1081' '#1074' '#1076#1086#1087#1086#1083#1085 +
+        #1077#1085#1080#1077' '#1057#1059#1053' 1 '#1080#1079' '#1082#1072#1089#1089#1099'"?'
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1073#1072#1074#1083#1103#1090#1100' '#1090#1086#1074#1072#1088#1072' '#1089#1086' '#1089#1088#1086#1082#1086#1084' '#1086#1090' 30 '#1076#1085#1077#1081' '#1074' '#1076#1086#1087#1086#1083#1085 +
+        #1077#1085#1080#1077' '#1057#1059#1053' 1 '#1080#1079' '#1082#1072#1089#1089#1099'"'
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1073#1072#1074#1083#1103#1090#1100' '#1090#1086#1074#1072#1088#1072' '#1089#1086' '#1089#1088#1086#1082#1086#1084' '#1086#1090' 30 '#1076#1085#1077#1081' '#1074' '#1076#1086#1087#1086#1083#1085 +
+        #1077#1085#1080#1077' '#1057#1059#1053' 1 '#1080#1079' '#1082#1072#1089#1089#1099'"'
+      ImageIndex = 79
+    end
+    object actUpdate_SupplementAdd30Cash: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SupplementAdd30Cash
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SupplementAdd30Cash
+        end>
+      Caption = 'actUpdate_SupplementAdd30Cash'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -4838,6 +4878,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton34'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton33'
         end
         item
@@ -4989,6 +5033,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton33: TdxBarButton
       Action = mactUpdate_SUN_NotSoldIn
+      Category = 0
+    end
+    object dxBarButton34: TdxBarButton
+      Action = mactUpdate_SupplementAdd30Cash
       Category = 0
     end
   end
@@ -8129,5 +8177,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 586
     Top = 464
+  end
+  object spUpdate_SupplementAdd30Cash: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_SupplementAdd30Cash'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSupplementAdd30Cash'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSupplementAdd30Cash'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 442
+    Top = 528
   end
 end
