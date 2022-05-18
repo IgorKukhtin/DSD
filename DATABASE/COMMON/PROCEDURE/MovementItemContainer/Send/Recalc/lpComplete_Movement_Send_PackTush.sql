@@ -20,6 +20,10 @@ BEGIN
      -- Временно захардкодил - !!!только для этого склада!!!
      IF -- ЦЕХ упаковки Тушенки
         8006902 = (SELECT DISTINCT _tmpItem.UnitId_From FROM _tmpItem)
+        OR  (8451 = (SELECT DISTINCT _tmpItem.UnitId_From FROM _tmpItem) -- ЦЕХ упаковки
+         AND 8459 = (SELECT DISTINCT _tmpItem.UnitId_To   FROM _tmpItem) -- Розподільчий комплекс
+             AND EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_30102()) -- Тушенка
+            )
      THEN
          -- таблица
          IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItemProduction_master'))
@@ -83,6 +87,8 @@ BEGIN
                                          AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_Receipt_Main()
                                          AND ObjectBoolean_Main.ValueData = TRUE
             WHERE COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) = _tmpItem.GoodsKindId
+              -- Тушенка
+              AND _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_30102()
             GROUP BY _tmpItem.GoodsId
                    , _tmpItem.GoodsKindId
                     ;

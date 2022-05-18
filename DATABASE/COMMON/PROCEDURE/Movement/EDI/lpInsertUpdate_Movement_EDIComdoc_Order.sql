@@ -329,6 +329,55 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлено ОКПО у юридического лица <%>.', lfGet_Object_ValueData (vbJuridicalId);
      END IF;
+     -- Проверка
+     IF EXISTS (SELECT 1
+                FROM MovementItem
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.DescId     =  zc_MI_Master()
+                  AND MovementItem.isErased   = FALSE
+                  AND COALESCE (MovementItem.ObjectId, 0) = 0
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не определен Товар для%Код GLN = <%>%Товар (EDI) = <%>.%Классификатор = <%>'
+                       , CHR (13)
+                       , (SELECT MIS_GLNCode.ValueData
+                          FROM MovementItem
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                               LEFT JOIN MovementItemString AS MIS_GLNCode
+                                                            ON MIS_GLNCode.MovementItemId = MovementItem.Id
+                                                           AND MIS_GLNCode.DescId         = zc_MIString_GLNCode()
+                          WHERE MovementItem.MovementId = inMovementId
+                            AND MovementItem.DescId     =  zc_MI_Master()
+                            AND MovementItem.isErased   = FALSE
+                            AND COALESCE (MovementItem.ObjectId, 0) = 0
+                          ORDER BY MovementItem.Id
+                          LIMIT 1
+                         )
+                       , CHR (13)
+                       , (SELECT MIS_GoodsName.ValueData
+                          FROM MovementItem
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                               LEFT JOIN MovementItemString AS MIS_GoodsName
+                                                            ON MIS_GoodsName.MovementItemId = MovementItem.Id
+                                                           AND MIS_GoodsName.DescId         = zc_MIString_GoodsName()
+                          WHERE MovementItem.MovementId = inMovementId
+                            AND MovementItem.DescId     =  zc_MI_Master()
+                            AND MovementItem.isErased   = FALSE
+                            AND COALESCE (MovementItem.ObjectId, 0) = 0
+                          ORDER BY MovementItem.Id
+                          LIMIT 1
+                         )
+                       , CHR (13)
+                       , lfGet_Object_ValueData (vbGoodsPropertyId)
+                        ;
+     END IF;
 
 
      -- эти параметры всегда из Прайс-листа !!!на дату vbOperDate!!!

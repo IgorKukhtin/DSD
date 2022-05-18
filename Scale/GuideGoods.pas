@@ -152,6 +152,8 @@ type
     gbPartionGoods_20103: TGroupBox;
     EditPartionGoods_20103: TcxCurrencyEdit;
     Price_Income: TcxGridDBColumn;
+    gbPriceIncome: TGroupBox;
+    EditPriceIncome: TcxCurrencyEdit;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -278,6 +280,9 @@ begin
      gbPrice.Visible:=(GetArrayList_Value_byName(Default_Array,'isEnterPrice') = AnsiUpperCase('TRUE'))
                   and (execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income);
      if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310) then EditWeightValue.Properties.DecimalPlaces:= 4;
+     //
+     gbPriceIncome.Visible:= gbPrice.Visible;
+     EditPriceIncome.Text:='0';
 
      CancelCxFilter;
      fStartWrite:=true;
@@ -839,7 +844,7 @@ begin
               or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut))
               and (CDS.FieldByName('Price_Income').AsFloat > 0)
             then begin
-                  EditPrice.Text:= FloatToStr(CDS.FieldByName('Price_Income').AsFloat);
+                  //EditPrice.Text:= FloatToStr(CDS.FieldByName('Price_Income').AsFloat);
             end;
             //!!!Криво - передаем цену через этот параметр!!!
             try ParamsMI.ParamByName('BoxCount').AsFloat:= StrToFloat(EditPrice.Text);
@@ -849,6 +854,16 @@ begin
             if (ParamsMI.ParamByName('BoxCount').AsFloat <=0) and (CDS.FieldByName('isNotPriceIncome').AsBoolean = FALSE)
             then begin
                      ShowMessage('Ошибка.ЦЕНА не может быть <= 0.');
+                     exit;
+            end;
+            //
+            if ((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+              or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut))
+              and (CDS.FieldByName('Price_Income').AsFloat > 0)
+              and (CDS.FieldByName('Price_Income').AsFloat <> ParamsMI.ParamByName('BoxCount').AsFloat)
+            then begin
+                     Result:= false;
+                     ShowMessage('Ошибка.ЦЕНА не соответствует цене в спецификации = <'+FloatToStr(CDS.FieldByName('Price_Income').AsFloat)+'>.');
                      exit;
             end;
        end;
@@ -1076,7 +1091,7 @@ begin
         )
        and (CDS.FieldByName('Price_Income').AsFloat > 0)
      then begin
-           EditPrice.Text:= FloatToStr(CDS.FieldByName('Price_Income').AsFloat);
+           //EditPrice.Text:= FloatToStr(CDS.FieldByName('Price_Income').AsFloat);
      end;
      //
      if ((CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Kg)
@@ -1372,7 +1387,7 @@ begin
       if (ActiveControl=EditPrice)and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
         and (CDS.FieldByName('Price_Income').AsFloat > 0)
       then begin
-            EditPrice.Text:= FloatToStr(CDS.FieldByName('Price_Income').AsFloat);
+            //EditPrice.Text:= FloatToStr(CDS.FieldByName('Price_Income').AsFloat);
       end;
       //
       if (ActiveControl=EditGoodsKindCode)or(ActiveControl=EditTareCount)
@@ -1677,6 +1692,13 @@ begin
         else
             ParamByName('RealWeight').AsFloat:=0;
      end;
+     //
+            if ((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+              or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut))
+              and (CDS.FieldByName('Price_Income').AsFloat > 0)
+            then begin
+                  EditPriceIncome.Text:= FloatToStr(CDS.FieldByName('Price_Income').AsFloat);
+            end;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.DBGridDrawColumnCell(Sender: TObject;const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);

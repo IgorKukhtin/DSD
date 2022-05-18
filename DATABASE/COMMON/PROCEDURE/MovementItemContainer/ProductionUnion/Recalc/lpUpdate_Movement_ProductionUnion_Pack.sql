@@ -56,6 +56,7 @@ BEGIN
                                                                            , zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
                                                                            , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                                             )
+                               AND View_InfoMoney.InfoMoneyId <> zc_Enum_InfoMoney_30102() -- Тушенка
                              )
                 , tmpMI AS (-- получаем:
                             SELECT tmp.ContainerId

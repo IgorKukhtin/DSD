@@ -521,7 +521,12 @@ BEGIN
      -- кроме Админа - для Упак.тушенки
      IF vbMovementDescId = zc_Movement_Send() AND 1=1 -- AND inUserId = zfCalc_UserAdmin() :: Integer
         -- ЦЕХ упаковки Тушенки
-        AND 8006902 = (SELECT DISTINCT _tmpItem.UnitId_From FROM _tmpItem)
+        AND (8006902 = (SELECT DISTINCT _tmpItem.UnitId_From FROM _tmpItem)
+        -- 
+        OR  (8451 = (SELECT DISTINCT _tmpItem.UnitId_From FROM _tmpItem) -- ЦЕХ упаковки
+         AND 8459 = (SELECT DISTINCT _tmpItem.UnitId_To   FROM _tmpItem) -- Розподільчий комплекс
+         AND EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_30102()) -- Тушенка
+            ))
      THEN
          -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Перемещения" - !!!важно - здесь очищается _tmpMIContainer_insert, поэтому делаем ДО проводок!!!, но после заполнения _tmpItem
          PERFORM lpComplete_Movement_Send_PackTush (inMovementId := inMovementId

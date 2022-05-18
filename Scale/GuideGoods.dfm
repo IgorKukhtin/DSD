@@ -315,12 +315,12 @@ object GuideGoodsForm: TGuideGoodsForm
           Width = 50
         end
         object Price_Income: TcxGridDBColumn
-          Caption = #1062#1077#1085#1072' ('#1087#1088#1080#1093#1086#1076')'
+          Caption = #1062#1077#1085#1072' ('#1089#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')'
           DataBinding.FieldName = 'Price_Income'
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1062#1077#1085#1072' ('#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
+          HeaderHint = #1062#1077#1085#1072' ('#1089#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103')'
           Options.Editing = False
           Width = 55
         end
@@ -1355,6 +1355,8 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1042#1074#1086#1076' '#1062#1045#1053#1040
         TabOrder = 4
+        ExplicitLeft = -2
+        ExplicitTop = 125
         object EditPrice: TcxCurrencyEdit
           Left = 4
           Top = 16
@@ -1402,7 +1404,7 @@ object GuideGoodsForm: TGuideGoodsForm
         Left = 0
         Top = 41
         Width = 367
-        Height = 215
+        Height = 82
         Align = alClient
         Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
         Color = clBtnFace
@@ -1416,6 +1418,9 @@ object GuideGoodsForm: TGuideGoodsForm
         ParentFont = False
         TabOrder = 1
         OnClick = rgGoodsKindClick
+        ExplicitLeft = -1
+        ExplicitTop = 38
+        ExplicitHeight = 215
       end
       object gbGoodsKindCode: TGroupBox
         Left = 0
@@ -1436,6 +1441,30 @@ object GuideGoodsForm: TGuideGoodsForm
           OnEnter = EditTareCountEnter
           OnExit = EditGoodsKindCodeExit
           OnKeyPress = EditGoodsKindCodeKeyPress
+        end
+      end
+      object gbPriceIncome: TGroupBox
+        Left = 0
+        Top = 123
+        Width = 367
+        Height = 133
+        Align = alBottom
+        Caption = #1062#1045#1053#1040' '#1089#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103
+        TabOrder = 2
+        ExplicitLeft = -1
+        ExplicitTop = 125
+        object EditPriceIncome: TcxCurrencyEdit
+          Left = 5
+          Top = 16
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.AssignedValues.DisplayFormat = True
+          Properties.DecimalPlaces = 4
+          TabOrder = 0
+          OnEnter = EditTareCountEnter
+          OnExit = EditWeightValueExit
+          OnKeyDown = EditPriceKeyDown
+          Width = 125
         end
       end
     end
