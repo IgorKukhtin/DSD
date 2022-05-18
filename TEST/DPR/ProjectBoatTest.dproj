@@ -651,8 +651,8 @@
 				<Form>ReceiptServiceEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Union_Goods_ReceiptService.pas">
-				<Form>Union_Goods_ReceiptServiceForm</Form>
+			<DCCReference Include="..\..\FormsBoat\Guides\Union_Goods_ReceiptService_limit.pas">
+				<Form>Union_Goods_ReceiptService_limitForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\ReceiptProdModel.pas">
@@ -1078,6 +1078,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\System\CheckBooleanDialog.pas">
 				<Form>CheckBooleanDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\Union_Goods_ReceiptService.pas">
+				<Form>Union_Goods_ReceiptServiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

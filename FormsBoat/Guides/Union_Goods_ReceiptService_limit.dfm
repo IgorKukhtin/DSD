@@ -1,7 +1,7 @@
-object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
+object Union_Goods_ReceiptService_limitForm: TUnion_Goods_ReceiptService_limitForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080'>'
   ClientHeight = 506
   ClientWidth = 1145
   Color = clBtnFace
@@ -452,7 +452,7 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
   object edSearchCode: TcxTextEdit
     Left = 224
     Top = 350
-    TabOrder = 5
+    TabOrder = 6
     DesignSize = (
       115
       21)
@@ -1182,7 +1182,7 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
     Params = <
       item
         Name = 'inIsLimit_100'
-        Value = False
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

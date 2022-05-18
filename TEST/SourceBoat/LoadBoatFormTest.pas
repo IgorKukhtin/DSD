@@ -877,6 +877,9 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_Goods_ReceiptServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnion_Goods_ReceiptServiceForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_Goods_ReceiptService_limitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnion_Goods_ReceiptService_limitForm');
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_ClientPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnion_ClientPartnerForm');

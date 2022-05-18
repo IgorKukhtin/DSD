@@ -206,7 +206,7 @@ uses
   ReceiptLevelEdit in '..\..\FormsBoat\Guides\ReceiptLevelEdit.pas' {ReceiptLevelEditForm: TParentForm},
   ReceiptService in '..\..\FormsBoat\Guides\ReceiptService.pas' {ReceiptServiceForm: TParentForm},
   ReceiptServiceEdit in '..\..\FormsBoat\Guides\ReceiptServiceEdit.pas' {ReceiptServiceEditForm: TParentForm},
-  Union_Goods_ReceiptService in '..\..\FormsBoat\Guides\Union_Goods_ReceiptService.pas' {Union_Goods_ReceiptServiceForm: TParentForm},
+  Union_Goods_ReceiptService_limit in '..\..\FormsBoat\Guides\Union_Goods_ReceiptService_limit.pas' {Union_Goods_ReceiptService_limitForm: TParentForm},
   ReceiptProdModel in '..\..\FormsBoat\Guides\ReceiptProdModel.pas' {ReceiptProdModelForm: TParentForm},
   TranslateMessage in '..\..\FormsBoat\Guides\TranslateMessage.pas' {TranslateMessageForm: TParentForm},
   ProdColor in '..\..\FormsBoat\Guides\ProdColor.pas' {ProdColorForm: TParentForm},
@@ -317,7 +317,8 @@ uses
   SendItemEditNotPartNumber in '..\..\FormsBoat\Document\SendItemEditNotPartNumber.pas' {SendItemEditNotPartNumberForm: TParentForm},
   Report_Movement_PriceList in '..\..\FormsBoat\Report\Report_Movement_PriceList.pas' {Report_Movement_PriceListForm: TParentForm},
   Report_Movement_PriceListDialog in '..\..\FormsBoat\Report\Report_Movement_PriceListDialog.pas' {Report_Movement_PriceListDialogForm: TParentForm},
-  CheckBooleanDialog in '..\..\FormsBoat\System\CheckBooleanDialog.pas' {CheckBooleanDialogForm: TParentForm};
+  CheckBooleanDialog in '..\..\FormsBoat\System\CheckBooleanDialog.pas' {CheckBooleanDialogForm: TParentForm},
+  Union_Goods_ReceiptService in '..\..\FormsBoat\Guides\Union_Goods_ReceiptService.pas' {Union_Goods_ReceiptServiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

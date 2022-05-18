@@ -424,7 +424,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
-              Action = actChoiceFormProdColorPattern
+              Caption = 'actChoiceFormProdColorPattern'
               Default = True
               Kind = bkEllipsis
             end>
@@ -440,7 +440,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
-              Action = actChoiceFormProdColorPattern
+              Caption = 'actChoiceFormProdColorPattern'
               Default = True
               Kind = bkEllipsis
             end>
@@ -1514,12 +1514,16 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Category = 0
     end
     object bbInsertRecordProdColorItems: TdxBarButton
-      Action = InsertRecordGoods
+      Action = actInsertRecordGoods
       Category = 0
     end
     object bbInsertRecordProdOptItems: TdxBarButton
-      Action = InsertRecordProdColorPattern
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Category = 0
+      Enabled = False
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      Visible = ivAlways
+      ImageIndex = 0
     end
     object bbSetErasedColor: TdxBarButton
       Action = actSetErasedGoods
@@ -1530,12 +1534,20 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Category = 0
     end
     object bbSetErasedOpt: TdxBarButton
-      Action = actSetErasedProdColorPattern
+      Caption = #1059#1076#1072#1083#1080#1090#1100
       Category = 0
+      Hint = #1059#1076#1072#1083#1080#1090#1100
+      Visible = ivAlways
+      ImageIndex = 2
+      ShortCut = 16430
     end
     object bbSetUnErasedOpt: TdxBarButton
-      Action = actSetUnErasedProdColorPattern
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Category = 0
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Visible = ivAlways
+      ImageIndex = 8
+      ShortCut = 16430
     end
     object bbStartLoad: TdxBarButton
       Action = actStartLoad
@@ -1594,6 +1606,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         item
           Visible = True
           ItemName = 'bbSetUnErasedColor'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordGoods_limit'
         end>
     end
     object BarSubItemOption: TdxBarSubItem
@@ -1663,6 +1683,15 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     end
     object bbPrintStructure: TdxBarButton
       Action = actPrintStructure
+      Category = 0
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Category = 0
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbInsertRecordGoods_limit: TdxBarButton
+      Action = actInsertRecordGoods_limit
       Category = 0
     end
   end
@@ -1736,36 +1765,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object actSetErasedGoods: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedGoods
-      StoredProcList = <
-        item
-          StoredProc = spErasedGoods
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100
-      ImageIndex = 2
-      ShortCut = 8238
-      ErasedFieldName = 'isErased'
-      DataSource = GoodsDS
-    end
-    object actSetErasedProdColorPattern: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedProdColorPattern
-      StoredProcList = <
-        item
-          StoredProc = spErasedProdColorPattern
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100
-      ImageIndex = 2
-      ShortCut = 16430
-      ErasedFieldName = 'isErased'
-      DataSource = ProdColorPatternDS
-    end
     object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
@@ -1780,38 +1779,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
-    end
-    object actSetUnErasedProdColorPattern: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spUnErasedProdColorPattern
-      StoredProcList = <
-        item
-          StoredProc = spUnErasedProdColorPattern
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 16430
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = ProdColorPatternDS
-    end
-    object actSetUnErasedGoods: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spUnErasedGoods
-      StoredProcList = <
-        item
-          StoredProc = spUnErasedGoods
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 8238
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = GoodsDS
     end
     object actSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -1928,19 +1895,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
-    object InsertRecordProdColorPattern: TInsertRecord
-      Category = 'DSDLib'
-      MoveParams = <>
-      Enabled = False
-      PostDataSetBeforeExecute = False
-      View = cxGridDBTableViewProdColorPattern
-      Action = actChoiceFormProdColorPattern
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
-      ImageIndex = 0
-    end
-    object InsertRecordGoods: TInsertRecord
+    object actInsertRecordGoods: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1951,32 +1906,65 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ImageIndex = 0
     end
-    object actChoiceFormReceiptLevel_ch1: TOpenChoiceForm
+    object actInsertRecordGoods_limit: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'actChoiceFormGoods'
-      FormName = 'TReceiptLevelForm'
-      FormNameParam.Value = 'TReceiptLevelForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
+      View = cxGridDBTableViewGoods
+      Action = actChoiceFormGoods_limit
+      Params = <>
+      Caption = '***'#1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = '***'#1044#1086#1073#1072#1074#1080#1090#1100
+      ImageIndex = 0
+    end
+    object actUpdateDataSetGoods: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_Goods
+      StoredProcList = <
         item
-          Name = 'Key'
-          Value = Null
-          Component = GoodsCDS
-          ComponentItem = 'ReceiptLevelId'
-          MultiSelectSeparator = ','
+          StoredProc = spInsertUpdate_Goods
         end
         item
-          Name = 'TextValue'
-          Value = Null
-          Component = GoodsCDS
-          ComponentItem = 'ReceiptLevelName'
-          DataType = ftString
-          MultiSelectSeparator = ','
+          StoredProc = spSelect_Goods
+        end
+        item
+          StoredProc = spSelect_ProdColorPattern
         end>
-      isShowModal = False
+      Caption = 'actUpdateDataSetGoods'
+      DataSource = GoodsDS
+    end
+    object actSetErasedGoods: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedGoods
+      StoredProcList = <
+        item
+          StoredProc = spErasedGoods
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100
+      ImageIndex = 2
+      ShortCut = 8238
+      ErasedFieldName = 'isErased'
+      DataSource = GoodsDS
+    end
+    object actSetUnErasedGoods: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUnErasedGoods
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedGoods
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 8238
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = GoodsDS
     end
     object actChoiceFormGoods: TOpenChoiceForm
       Category = 'DSDLib'
@@ -2068,11 +2056,101 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end>
       isShowModal = False
     end
-    object actChoiceFormReceiptLevel_ch2: TOpenChoiceForm
+    object actChoiceFormGoods_limit: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'actChoiceFormProdColorPattern'
+      Caption = 'actChoiceFormGoods'
+      FormName = 'TUnion_Goods_ReceiptService_limitForm'
+      FormNameParam.Value = 'TUnion_Goods_ReceiptService_limitForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'ObjectId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'ObjectName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'ObjectCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'Article'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupNameFull'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'GoodsGroupNameFull'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'GoodsGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdColorName'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'ProdColorName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureName'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'MeasureName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EKPrice'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'EKPrice'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EKPriceWVAT'
+          Value = Null
+          Component = GoodsCDS
+          ComponentItem = 'EKPriceWVAT'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actChoiceFormReceiptLevel_ch1: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormReceiptLevel_ch1'
       FormName = 'TReceiptLevelForm'
       FormNameParam.Value = 'TReceiptLevelForm'
       FormNameParam.DataType = ftString
@@ -2081,79 +2159,19 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         item
           Name = 'Key'
           Value = Null
-          Component = ProdColorPatternCDS
+          Component = GoodsCDS
           ComponentItem = 'ReceiptLevelId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ProdColorPatternCDS
+          Component = GoodsCDS
           ComponentItem = 'ReceiptLevelName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False
-    end
-    object actChoiceFormProdColorPattern: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actChoiceFormProdColorPattern'
-      FormName = 'TProdColorPatternForm'
-      FormNameParam.Value = 'TProdColorPatternForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ProdColorPatternCDS
-          ComponentItem = 'ObjectId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ProdColorPatternCDS
-          ComponentItem = 'ObjectName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actUpdateDataSetProdColorPattern: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate_ProdColorPattern
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate_ProdColorPattern
-        end
-        item
-          StoredProc = spSelect_ProdColorPattern
-        end>
-      Caption = 'actUpdateDataSetProdColorPattern'
-      DataSource = ProdColorPatternDS
-    end
-    object actUpdateDataSetGoods: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate_Goods
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate_Goods
-        end
-        item
-          StoredProc = spSelect_Goods
-        end
-        item
-          StoredProc = spSelect_ProdColorPattern
-        end>
-      Caption = 'actUpdateDataSetGoods'
-      DataSource = GoodsDS
     end
     object actPrintStructure: TdsdPrintAction
       Category = 'DSDLib'
@@ -2939,7 +2957,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Left = 440
     Top = 184
     object MenuItem2: TMenuItem
-      Action = InsertRecordGoods
+      Action = actInsertRecordGoods
     end
     object MenuItem3: TMenuItem
       Action = actSetErasedGoods
@@ -2953,13 +2971,22 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Left = 496
     Top = 208
     object MenuItem1: TMenuItem
-      Action = InsertRecordProdColorPattern
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Enabled = False
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      ImageIndex = 0
     end
     object MenuItem5: TMenuItem
-      Action = actSetErasedProdColorPattern
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100
+      ImageIndex = 2
+      ShortCut = 16430
     end
     object MenuItem6: TMenuItem
-      Action = actSetUnErasedProdColorPattern
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 16430
     end
   end
   object ChildViewAddOn: TdsdDBViewAddOn

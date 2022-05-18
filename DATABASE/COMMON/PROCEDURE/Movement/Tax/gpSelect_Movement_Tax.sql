@@ -276,7 +276,9 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_To.Id
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS ObjectHistory_JuridicalDetails_View
+                                                                ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_To.Id
+                                                               AND Movement.OperDate >= ObjectHistory_JuridicalDetails_View.StartDate AND Movement.OperDate < ObjectHistory_JuridicalDetails_View.EndDate
 
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                  ON ObjectLink_Juridical_Retail.ObjectId = ObjectHistory_JuridicalDetails_View.JuridicalId
@@ -390,4 +392,4 @@ ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Integer, Boolean, Bo
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Tax (inStartDate:= '01.01.2022', inEndDate:= '31.01.2022', inJuridicalBasisId:= 0, inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Tax (inStartDate:= '31.01.2022', inEndDate:= '31.01.2022', inJuridicalBasisId:= 0, inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())

@@ -96,21 +96,17 @@ type
     dsdDBViewAddOnGoods: TdsdDBViewAddOn;
     spSelect_Goods: TdsdStoredProc;
     spSelect_ProdColorPattern: TdsdStoredProc;
-    InsertRecordGoods: TInsertRecord;
+    actInsertRecordGoods: TInsertRecord;
     bbInsertRecordProdColorItems: TdxBarButton;
     actUpdateDataSetGoods: TdsdUpdateDataSet;
     spInsertUpdate_Goods: TdsdStoredProc;
-    actUpdateDataSetProdColorPattern: TdsdUpdateDataSet;
     spInsertUpdate_ProdColorPattern: TdsdStoredProc;
-    InsertRecordProdColorPattern: TInsertRecord;
     bbInsertRecordProdOptItems: TdxBarButton;
     spErasedGoods: TdsdStoredProc;
     spUnErasedGoods: TdsdStoredProc;
     spErasedProdColorPattern: TdsdStoredProc;
     spUnErasedProdColorPattern: TdsdStoredProc;
     actSetErasedGoods: TdsdUpdateErased;
-    actSetErasedProdColorPattern: TdsdUpdateErased;
-    actSetUnErasedProdColorPattern: TdsdUpdateErased;
     actSetUnErasedGoods: TdsdUpdateErased;
     bbSetErasedColor: TdxBarButton;
     bbSetUnErasedColor: TdxBarButton;
@@ -131,7 +127,6 @@ type
     BarSubItemOption: TdxBarSubItem;
     bbShowAllBoatSale: TdxBarButton;
     isMain: TcxGridDBColumn;
-    actChoiceFormProdColorPattern: TOpenChoiceForm;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
     N2: TMenuItem;
@@ -154,7 +149,6 @@ type
     Panel2: TPanel;
     Panel3: TPanel;
     actChoiceFormReceiptLevel_ch1: TOpenChoiceForm;
-    actChoiceFormReceiptLevel_ch2: TOpenChoiceForm;
     lbReceiptLevel: TcxLabel;
     edReceiptLevel: TcxButtonEdit;
     GuidesReceiptLevel: TdsdGuides;
@@ -192,6 +186,10 @@ type
     spSelectPrintStructure: TdsdStoredProc;
     actPrintStructure: TdsdPrintAction;
     bbPrintStructure: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
+    actInsertRecordGoods_limit: TInsertRecord;
+    actChoiceFormGoods_limit: TOpenChoiceForm;
+    bbInsertRecordGoods_limit: TdxBarButton;
   private
     { Private declarations }
   public
