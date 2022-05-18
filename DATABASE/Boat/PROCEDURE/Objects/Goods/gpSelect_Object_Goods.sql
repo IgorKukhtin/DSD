@@ -64,8 +64,8 @@ BEGIN
                                   WHERE Movement.OperDate BETWEEN '01.01.2022' AND CURRENT_DATE
                                     AND Movement.DescId   = zc_Movement_PriceList()
                                     AND Movement.StatusId = zc_Enum_Status_Complete()
-                                  --AND vbUserId NOT IN (5, 236658)
-                                    AND vbUserId NOT IN (236658)
+                                    AND vbUserId NOT IN (5, 236658)
+                                  --AND vbUserId NOT IN (236658)
 
                                   ORDER BY MovementItem.ObjectId, Movement.Id
                                  )
@@ -376,8 +376,8 @@ BEGIN
          AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE)
        -- and Object_Goods.Id = 236863
        ORDER BY Object_Goods.Id DESC
-     --LIMIT CASE WHEN vbUserId IN (5, 236658) THEN 100 ELSE 300000 END
-       LIMIT CASE WHEN vbUserId IN (236658) THEN 100 ELSE 350000 END
+       LIMIT CASE WHEN vbUserId IN (5, 236658) THEN 100 ELSE 300000 END
+     --LIMIT CASE WHEN vbUserId IN (236658) THEN 100 ELSE 350000 END
        ;
 
 END;

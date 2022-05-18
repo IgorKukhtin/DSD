@@ -32,7 +32,7 @@ BEGIN
                  ;
 
      ELSE
-        -- Если это Штрихкод
+        -- 1.1. Если это Штрихкод - EAN
         IF COALESCE (inBarCode, '') <> ''
         THEN
              -- Проверка - 1
@@ -80,7 +80,7 @@ BEGIN
                                 ;
              END IF;
 
-             -- Поиск - 1
+             -- 1.2. Поиск - EAN
              vbGoodsId:= (SELECT Object.Id
                           FROM Object
                               INNER JOIN ObjectString AS ObjectString_EAN
@@ -91,7 +91,7 @@ BEGIN
                          );
 
 
-             -- если НЕ нашли
+             -- 2.1. Если это Article-1
              IF COALESCE (vbGoodsId, 0) = 0
              THEN
                  -- Проверка - 2
@@ -133,7 +133,7 @@ BEGIN
                                     ;
                  END IF;
 
-                 -- Поиск - 2
+                 -- 2.2. Поиск - Article-1
                  vbGoodsId:= (SELECT Object.Id
                               FROM Object
                                   INNER JOIN ObjectString AS ObjectString_Article
@@ -144,7 +144,7 @@ BEGIN
                              );
              END IF;
 
-             -- если НЕ нашли
+             -- 3.1. Если это Article-2
              IF COALESCE (vbGoodsId, 0) = 0
              THEN
                  -- Проверка - 3
@@ -186,7 +186,7 @@ BEGIN
                                     ;
                  END IF;
 
-                 -- Поиск - 3
+                 -- 3.2. Поиск - Article-2
                  vbGoodsId:= (SELECT Object.Id
                               FROM Object
                                   INNER JOIN ObjectString AS ObjectString_Article
@@ -198,14 +198,14 @@ BEGIN
              END IF;
 
 
-             -- если НЕ нашли
+             -- 4.1. Если это ObjectCode
              IF COALESCE (vbGoodsId, 0) = 0 AND zfConvert_StringToNumber (inBarCode) > 0 AND STRPOS (inBarCode, '00000') = 1
              THEN
                  -- Проверка - 4
                  IF 1 < (SELECT COUNT(*)
                          FROM Object
                          WHERE Object.DescId     = zc_Object_Goods()
-                           AND Object.ObjectCode = zfConvert_StringToNumber (inBarCode) :: Integer
+                           AND Object.ObjectCode = CASE WHEN LENGTH (inBarCode) = 13 THEN zfConvert_StringToNumber (SUBSTRING (inBarCode FROM 1 FOR 12)) ELSE zfConvert_StringToNumber (inBarCode) END :: Integer
                         )
                  THEN
                      RAISE EXCEPTION 'Ошибка.Interne Nr <%> найден у разных Комплектующих.%<%>%и <%>'
@@ -219,8 +219,8 @@ BEGIN
                                            INNER JOIN ObjectString AS ObjectString_Article
                                                                    ON ObjectString_Article.ObjectId  = Object.Id
                                                                   AND ObjectString_Article.DescId    = zc_ObjectString_Article()
-                                      WHERE Object.DescId = zc_Object_Goods()
-                                        AND Object.ObjectCode = zfConvert_StringToNumber (inBarCode) :: Integer
+                                      WHERE Object.DescId     = zc_Object_Goods()
+                                        AND Object.ObjectCode = CASE WHEN LENGTH (inBarCode) = 13 THEN zfConvert_StringToNumber (SUBSTRING (inBarCode FROM 1 FOR 12)) ELSE zfConvert_StringToNumber (inBarCode) END :: Integer
                                       ORDER BY Object.Id ASC LIMIT 1)
                                    , CHR (13)
                                    , (SELECT CASE WHEN ObjectString_Article.ValueData <> ''
@@ -231,19 +231,20 @@ BEGIN
                                            INNER JOIN ObjectString AS ObjectString_Article
                                                                    ON ObjectString_Article.ObjectId  = Object.Id
                                                                   AND ObjectString_Article.DescId    = zc_ObjectString_Article()
-                                      WHERE Object.DescId = zc_Object_Goods()
-                                        AND Object.ObjectCode = zfConvert_StringToNumber (inBarCode) :: Integer
+                                      WHERE Object.DescId     = zc_Object_Goods()
+                                        AND Object.ObjectCode = CASE WHEN LENGTH (inBarCode) = 13 THEN zfConvert_StringToNumber (SUBSTRING (inBarCode FROM 1 FOR 12)) ELSE zfConvert_StringToNumber (inBarCode) END :: Integer
                                       ORDER BY Object.Id DESC LIMIT 1)
                                     ;
                  END IF;
 
-                 -- Поиск - 4
+                 -- 4.2. Поиск - ObjectCode
                  vbGoodsId:= (SELECT Object.Id
                               FROM Object
-                              WHERE Object.DescId = zc_Object_Goods()
-                                AND Object.ObjectCode = zfConvert_StringToNumber (inBarCode) :: Integer
+                              WHERE Object.DescId     = zc_Object_Goods()
+                                AND Object.ObjectCode = CASE WHEN LENGTH (inBarCode) = 13 THEN zfConvert_StringToNumber (SUBSTRING (inBarCode FROM 1 FOR 12)) ELSE zfConvert_StringToNumber (inBarCode) END :: Integer
                              );
              END IF;
+
 
              -- если НЕ нашли
              IF COALESCE (vbGoodsId, 0) = 0 AND zfConvert_StringToNumber (inBarCode) > 0 AND STRPOS (inBarCode, '00000') = 1
