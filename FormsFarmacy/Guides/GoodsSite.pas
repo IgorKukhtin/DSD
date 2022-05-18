@@ -144,6 +144,10 @@ type
     mactUpdateGoodsAdditional: TMultiAction;
     MakerName: TcxGridDBColumn;
     FormDispensingName: TcxGridDBColumn;
+    spUpdate_Published_Revert: TdsdStoredProc;
+    mactUpdate_Published_Revert: TMultiAction;
+    actUpdate_Published_Revert: TdsdExecStoredProc;
+    dxBarButton19: TdxBarButton;
   private
     { Private declarations }
   public

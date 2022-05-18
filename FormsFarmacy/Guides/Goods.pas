@@ -216,6 +216,10 @@ type
     bbUpdate_isFirst_No: TdxBarButton;
     bbUpdate_isSecond_No: TdxBarButton;
     MakerPromoName: TcxGridDBColumn;
+    mactUpdate_Published_Revert: TMultiAction;
+    actUpdate_Published_Revert: TdsdExecStoredProc;
+    spUpdate_Published_Revert: TdsdStoredProc;
+    dxBarButton19: TdxBarButton;
   private
     { Private declarations }
   public

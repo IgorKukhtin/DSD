@@ -1232,10 +1232,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CheckoutTesting_ReloadCurrent() RETU
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_CheckoutTesting(), 'zc_ObjectBoolean_CheckoutTesting_ReloadCurrent', 'Перегрузить текущую версию кассы и сервиса' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CheckoutTesting_ReloadCurrent');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_SUN_SupplementAdd30Cash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_SUN_SupplementAdd30Cash'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_SUN_SupplementAdd30Cash', 'Добавлять товара со сроком от 30 дней в дополнение СУН 1 из кассы' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_SUN_SupplementAdd30Cash');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 18.05.22                                                                                                          * zc_ObjectBoolean_Unit_SUN_SupplementAdd30Cash
  12.05.22                                                                                                          * zc_ObjectBoolean_CheckoutTesting_ReloadCurrent
  04.05.22         * zc_ObjectBoolean_Guide_Irna
  09.04.22                                                                                                          * zc_ObjectBoolean_Unit_SUN_NotSoldIn

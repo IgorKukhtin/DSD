@@ -47,7 +47,7 @@ type
     edOperDateEnd: TcxDateEdit;
     cxLabel4: TcxLabel;
     actIntenalSPChoice: TOpenChoiceForm;
-    actKindOutSPChoice: TOpenChoiceForm;
+    actKindOutSP_1303Choice: TOpenChoiceForm;
     actBrandSPChoice: TOpenChoiceForm;
     actChoiceMovGoodsSP: TOpenChoiceForm;
     spInsertMI: TdsdStoredProc;
@@ -62,10 +62,15 @@ type
     macStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
     spGetImportSettingId: TdsdStoredProc;
-    IdSP: TcxGridDBColumn;
     bbStartLoadDop: TdxBarButton;
     bbStartLoadHelsi: TdxBarButton;
-    CountSPMin: TcxGridDBColumn;
+    ExchangeRate: TcxGridDBColumn;
+    actDosage_1303Choice: TOpenChoiceForm;
+    actCountSP_1303Choice: TOpenChoiceForm;
+    actMakerSP_1303Choice: TOpenChoiceForm;
+    actCountry_1303Choice: TOpenChoiceForm;
+    actCurrencyChoice: TOpenChoiceForm;
+    Dosage_1303Name: TcxGridDBColumn;
   private
     { Private declarations }
   public

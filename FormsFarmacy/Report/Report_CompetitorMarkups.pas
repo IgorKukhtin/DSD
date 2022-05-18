@@ -24,7 +24,8 @@ uses
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
   cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, dsdPivotGrid,
-  cxGridBandedTableView, cxGridDBBandedTableView;
+  cxGridBandedTableView, cxGridDBBandedTableView, cxSplitter,
+  cxPCdxBarPopupMenu, cxPC;
 
 type
   TReport_CompetitorMarkupsForm = class(TParentForm)
@@ -71,7 +72,7 @@ type
     GroupsName: TcxGridDBBandedColumn;
     SubGroupsName: TcxGridDBBandedColumn;
     PriceUnitMin: TcxGridDBBandedColumn;
-    Prece: TcxGridDBBandedColumn;
+    Price: TcxGridDBBandedColumn;
     MarginPercentMin: TcxGridDBBandedColumn;
     JuridicalPriceMin: TcxGridDBBandedColumn;
     cxGridDBBandedTableView: TcxGridDBBandedTableView;
@@ -79,10 +80,28 @@ type
     PriceUnitMax: TcxGridDBBandedColumn;
     JuridicalPriceMax: TcxGridDBBandedColumn;
     MarginPercentMax: TcxGridDBBandedColumn;
-    PreceNull: TcxGridDBBandedColumn;
+    DPrice: TcxGridDBBandedColumn;
     MarginPercentDeltaMax: TcxGridDBBandedColumn;
     ColorMin: TcxGridDBBandedColumn;
     ColorMax: TcxGridDBBandedColumn;
+    JuridicalPrice: TcxGridDBBandedColumn;
+    MarginPercent: TcxGridDBBandedColumn;
+    MarginPercentSGR: TcxGridDBBandedColumn;
+    ColorDPriceUnit: TcxGridDBBandedColumn;
+    cxGridDBBandedTableViewColumn1: TcxGridDBBandedColumn;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    chSubGroupsName: TcxGridDBColumn;
+    chMarginPercentMin: TcxGridDBColumn;
+    chMarginPercentSGR: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    ClientDataSetGroupDS: TDataSource;
+    ClientDataSetGroupCDS: TClientDataSet;
+    CompetitorGroupCDS: TClientDataSet;
+    cxPageControl1: TcxPageControl;
+    cxTabSheet1: TcxTabSheet;
+    cxTabSheet2: TcxTabSheet;
+    CrossDBViewAddOn: TCrossDBViewAddOn;
   private
   public
   end;

@@ -1607,6 +1607,32 @@ inherited GoodsForm: TGoodsForm
       Hint = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088'"'
       ImageIndex = 77
     end
+    object mactUpdate_Published_Revert: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_Published_Revert
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1077'"? '
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1077'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1077'"'
+      ImageIndex = 79
+    end
+    object actUpdate_Published_Revert: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Published_Revert
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Published_Revert
+        end>
+      Caption = 'actUpdate_Published_Revert'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -1929,6 +1955,10 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton19'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton13'
         end
         item
@@ -2150,6 +2180,10 @@ inherited GoodsForm: TGoodsForm
     end
     object bbUpdate_isSecond_No: TdxBarButton
       Action = mactUpdate_isSecond_No
+      Category = 0
+    end
+    object dxBarButton19: TdxBarButton
+      Action = mactUpdate_Published_Revert
       Category = 0
     end
   end
@@ -3643,5 +3677,31 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 288
     Top = 435
+  end
+  object spUpdate_Published_Revert: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_Published_Revert'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ininIsPublished'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IsPublished'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 920
+    Top = 232
   end
 end
