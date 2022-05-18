@@ -108,7 +108,7 @@ type
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
     spUpdate_MI_Inventory_AmountRemains: TdsdStoredProc;
-    bb: TdxBarButton;
+    bbbbb: TdxBarButton;
     Comment: TcxGridDBColumn;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
@@ -174,6 +174,9 @@ type
     bbPrintStickerOne: TdxBarButton;
     ExecuteDialogPrint: TExecuteDialog;
     macPrintStikerOne: TMultiAction;
+    actAdd_limit: TdsdInsertUpdateAction;
+    mactAdd_limit: TMultiAction;
+    bbAdd_limit: TdxBarButton;
   private
   public
   end;

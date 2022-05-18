@@ -365,6 +365,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryItemEditNotPartNumberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInventoryItemEditNotPartNumberForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryItemEdit_limitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInventoryItemEdit_limitForm');
 end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;
@@ -456,6 +459,9 @@ begin
 end;
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_limitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoods_limitForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));

@@ -1,7 +1,7 @@
-object GoodsForm: TGoodsForm
+object Goods_limitForm: TGoods_limitForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'> ('#1083#1080#1084#1080#1090')'
   ClientHeight = 506
   ClientWidth = 982
   Color = clBtnFace
@@ -640,7 +640,7 @@ object GoodsForm: TGoodsForm
   object edSearchCode: TcxTextEdit
     Left = 224
     Top = 322
-    TabOrder = 6
+    TabOrder = 5
     DesignSize = (
       115
       21)
@@ -1469,7 +1469,7 @@ object GoodsForm: TGoodsForm
       end
       item
         Name = 'inIsLimit_100'
-        Value = False
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
