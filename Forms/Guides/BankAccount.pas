@@ -67,6 +67,11 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     AccountName: TcxGridDBColumn;
+    spUpdate_isIrna: TdsdStoredProc;
+    actUpdate_isIrna: TdsdExecStoredProc;
+    macUpdate_isIrna_list: TMultiAction;
+    macUpdate_isIrna: TMultiAction;
+    bbUpdate_isIrna: TdxBarButton;
   private
     { Private declarations }
   public

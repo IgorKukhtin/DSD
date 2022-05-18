@@ -196,6 +196,11 @@ type
     cxLabel2: TcxLabel;
     edReceiptLevel: TcxButtonEdit;
     GuidesReceiptLevel: TdsdGuides;
+    spUpdate_isIrna: TdsdStoredProc;
+    actUpdate_isIrna: TdsdExecStoredProc;
+    macUpdate_isIrna_list: TMultiAction;
+    macUpdate_isIrna: TMultiAction;
+    bbUpdate_isIrna: TdxBarButton;
   private
     { Private declarations }
   public

@@ -11,7 +11,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                AccountId Integer, AccountName TVarChar,
                CorrespondentBankId Integer, CorrespondentBankName TVarChar,
                BeneficiarysBankId Integer, BeneficiarysBankName TVarChar,
-               CorrespondentAccount TVarChar, BeneficiarysBankAccount TVarChar, BeneficiarysAccount TVarChar
+               CorrespondentAccount TVarChar, BeneficiarysBankAccount TVarChar, BeneficiarysAccount TVarChar, 
+               isIrna Boolean
                ) AS
 $BODY$BEGIN
 
@@ -37,7 +38,8 @@ $BODY$BEGIN
            , Object_BeneficiarysBank.ValueData                  AS BeneficiarysBankName
            , OS_BankAccount_CorrespondentAccount.ValueData      AS CorrespondentAccount
            , OS_BankAccount_BeneficiarysBankAccount.ValueData   AS BeneficiarysBankAccount
-           , OS_BankAccount_BeneficiarysAccount.ValueData       AS BeneficiarysAccount
+           , OS_BankAccount_BeneficiarysAccount.ValueData       AS BeneficiarysAccount 
+           , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
 
      FROM Object_BankAccount_View
      -- ѕокажем счета только по внутренним фирмам
@@ -68,6 +70,10 @@ $BODY$BEGIN
         LEFT JOIN ObjectString AS OS_BankAccount_BeneficiarysAccount
                                ON OS_BankAccount_BeneficiarysAccount.ObjectId = Object_BankAccount_View.Id
                               AND OS_BankAccount_BeneficiarysAccount.DescId = zc_ObjectString_BankAccount_BeneficiarysAccount()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
+                                ON ObjectBoolean_Guide_Irna.ObjectId = Object_BankAccount_View.Id
+                               AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
 
 ;
 
