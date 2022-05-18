@@ -182,6 +182,7 @@ object InventoryForm: TInventoryForm
               end>
             Properties.ReadOnly = True
             Visible = False
+            Options.Editing = False
             Width = 70
           end
           object GoodsCode: TcxGridDBColumn
@@ -366,7 +367,7 @@ object InventoryForm: TInventoryForm
     Height = 137
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 3
+    TabOrder = 2
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -617,6 +618,13 @@ object InventoryForm: TInventoryForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsPrice'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 246
     Top = 351
@@ -863,7 +871,7 @@ object InventoryForm: TInventoryForm
       Control = lbSearchArticle
     end
     object bbPrintStickerOne: TdxBarButton
-      Action = actPrintStickerOne
+      Action = macPrintStikerOne
       Category = 0
     end
   end
@@ -1781,6 +1789,54 @@ object InventoryForm: TInventoryForm
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
       DataSource = DataSource
+    end
+    object ExecuteDialogPrint: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'ExecuteDialogPrint'
+      FormName = 'TCheckBooleanDialogForm'
+      FormNameParam.Value = 'TCheckBooleanDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Label'
+          Value = #1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' ('#1044#1072'/ '#1053#1077#1090')'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPrice'
+          Value = False
+          Component = FormParams
+          ComponentItem = 'isPrice'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPrice'
+          Value = False
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macPrintStikerOne: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogPrint
+        end
+        item
+          Action = actPrintStickerOne
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1086#1076#1085#1086#1081' '#1069#1090#1080#1082#1077#1090#1082#1080' ('#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1101#1083#1077#1084#1077#1085#1090#1072')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1086#1076#1085#1086#1081' '#1069#1090#1080#1082#1077#1090#1082#1080' ('#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1101#1083#1077#1084#1077#1085#1090#1072')'
+      ImageIndex = 18
     end
   end
   object MasterDS: TDataSource
@@ -2712,6 +2768,15 @@ object InventoryForm: TInventoryForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPrice'
+        Value = False
+        Component = FormParams
+        ComponentItem = 'IsPrice'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

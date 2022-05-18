@@ -80,6 +80,7 @@ RETURNS TABLE  (
               , GoodsCode Integer
               , GoodsName TVarChar
               , Article TVarChar
+              , Article_all TVarChar
               , GoodsGroupName TVarChar
               , GoodsGroupNameFull TVarChar
               , MeasureName TVarChar
@@ -523,6 +524,7 @@ BEGIN
            , tmpGoodsParams.GoodsCode
            , tmpGoodsParams.GoodsName
            , tmpGoodsParams.Article
+           , zfCalc_Article_all (tmpGoodsParams.Article) ::TVarChar AS Article_all
            , tmpGoodsParams.GoodsGroupName
            , tmpGoodsParams.GoodsGroupNameFull
            , tmpGoodsParams.MeasureName

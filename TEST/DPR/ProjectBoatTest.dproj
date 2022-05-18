@@ -1076,6 +1076,10 @@
 				<Form>Report_Movement_PriceListDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\System\CheckBooleanDialog.pas">
+				<Form>CheckBooleanDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

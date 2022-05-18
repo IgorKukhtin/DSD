@@ -161,6 +161,9 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckBooleanDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckBooleanDialogForm');
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFormsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFormsForm');

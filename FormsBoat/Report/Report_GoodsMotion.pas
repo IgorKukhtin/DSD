@@ -66,6 +66,12 @@ type
     GoodsId: TcxGridDBColumn;
     actPrintSum: TdsdPrintAction;
     bbPrintSum: TdxBarButton;
+    actChoiceGuides: TdsdChoiceGuides;
+    lbSearchArticle: TcxLabel;
+    edSearchArticle: TcxTextEdit;
+    FieldFilter_Article: TdsdFieldFilter;
+    bblbSearchArticle: TdxBarControlContainerItem;
+    bbedSearchArticle: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

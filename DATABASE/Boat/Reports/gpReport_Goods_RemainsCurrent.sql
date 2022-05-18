@@ -27,7 +27,7 @@ RETURNS TABLE (MovementItemId       Integer
              , UnitName_in          TVarChar
              , PartnerName          TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Article TVarChar, PartNumber TVarChar
+             , Article TVarChar, Article_all TVarChar, PartNumber TVarChar
              , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar, MeasureName TVarChar
 
              , GoodsTagName         TVarChar
@@ -423,6 +423,7 @@ BEGIN
            , Object_Goods.ObjectCode        AS GoodsCode
            , Object_Goods.ValueData         AS GoodsName
            , ObjectString_Article.ValueData AS Article
+           , zfCalc_Article_all (ObjectString_Article.ValueData)::TVarChar AS Article_all
            , tmpData.PartNumber ::TVarChar
            , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsGroup.ValueData    AS GoodsGroupName

@@ -1,11 +1,13 @@
 -- Function: gpSelect_Movement_Income_PrintSticker (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Income_PrintSticker (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_Income_PrintSticker (Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_Income_PrintSticker (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Income_PrintSticker (Integer, Integer, BooLean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Income_PrintSticker(
     IN inMovementId        Integer   ,   -- ключ Документа
-    IN inMovementItemId    Integer   ,   -- ключ 
+    IN inMovementItemId    Integer   ,   -- ключ    
+    IN inisPrice           BooLean   ,   -- печатать цену или нет из прайса - zc_PriceList_Basis()
     IN inSession           TVarChar      -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -60,7 +62,16 @@ BEGIN
                         AND MovementItem.isErased   = FALSE
                         AND MovementItem.Amount     <> 0
                         AND (MovementItem.Id = inMovementItemId OR COALESCE (inMovementItemId, 0) = 0)
-                     )
+                     )  
+           , tmpPriceBasis AS (SELECT tmp.GoodsId
+                                    , tmp.ValuePrice
+                               FROM tmpMI
+                                    INNER JOIN (SELECT tmp.GoodsId, tmp.ValuePrice
+                                                FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
+                                                                                         , inOperDate   := vbOperDate) AS tmp
+                                                ) AS tmp ON tmp.GoodsId = tmpMI.GoodsId
+                               WHERE inisPrice = TRUE
+                              )
        -- Результат
        SELECT
              tmpMI.Id
@@ -71,7 +82,8 @@ BEGIN
            , ObjectString_Article.ValueData AS Article
            , MIString_PartNumber.ValueData  AS PartNumber
            , vbFromCode AS FromCode
-           , vbFromName AS FromName
+           , vbFromName AS FromName 
+           , COALESCE (MIFloat_OperPriceList.ValueData, tmpPriceBasis.ValuePrice, 0) :: TFloat  AS OperPriceList 
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
 
@@ -80,7 +92,11 @@ BEGIN
                                   AND ObjectString_Article.DescId = zc_ObjectString_Article()
             LEFT JOIN MovementItemString AS MIString_PartNumber
                                          ON MIString_PartNumber.MovementItemId = tmpMI.Id
-                                        AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                                        AND MIString_PartNumber.DescId = zc_MIString_PartNumber()  
+            LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                        ON MIFloat_OperPriceList.MovementItemId = tmpMI.Id
+                                       AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
+            LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = tmpMI.GoodsId 
        ORDER BY Object_Goods.ValueData
        ;
 
@@ -97,4 +113,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Income_PrintSticker (inMovementId:= 432692, inMovementItemId:= 0, inSession:= '5');
+-- SELECT * FROM gpSelect_Movement_Income_PrintSticker (inMovementId:= 432692, inMovementItemId:= 0, inisPrice:=False inSession:= '5');

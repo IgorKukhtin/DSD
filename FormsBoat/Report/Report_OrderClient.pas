@@ -65,6 +65,12 @@ type
     ProdOptionsName: TcxGridDBColumn;
     EngineNum: TcxGridDBColumn;
     EngineName_boat: TcxGridDBColumn;
+    actChoiceGuides: TdsdChoiceGuides;
+    lbSearchArticle: TcxLabel;
+    edSearchArticle: TcxTextEdit;
+    FieldFilter_Article: TdsdFieldFilter;
+    bbedSearchArticle: TdxBarControlContainerItem;
+    bblbSearchArticle: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

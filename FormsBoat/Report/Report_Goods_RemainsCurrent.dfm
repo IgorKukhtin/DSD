@@ -7,7 +7,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1147
-  ExplicitHeight = 562
+  ExplicitHeight = 563
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -348,6 +348,13 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
+          end
+          object Article_all: TcxGridDBColumn
+            Caption = '***Artikel Nr'
+            DataBinding.FieldName = 'Article_all'
+            Visible = False
+            Options.Editing = False
+            Width = 70
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -725,6 +732,27 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     Left = 52
     Top = 33
     Caption = #1043#1088#1091#1087#1087#1072':'
+  end
+  object lbSearchArticle: TcxLabel [5]
+    Left = 155
+    Top = 221
+    Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+    ParentFont = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -13
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+  end
+  object edSearchArticle: TcxTextEdit [6]
+    Left = 152
+    Top = 247
+    TabOrder = 10
+    DesignSize = (
+      125
+      21)
+    Width = 125
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1865,6 +1893,31 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end>
       isShowModal = False
     end
+    object actChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ImageIndex = 7
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -2830,5 +2883,14 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       end>
     Left = 198
     Top = 22
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edSearchArticle
+    DataSet = MasterCDS
+    Column = Article_all
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 280
+    Top = 192
   end
 end

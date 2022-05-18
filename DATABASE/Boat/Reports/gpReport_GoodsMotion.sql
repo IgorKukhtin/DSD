@@ -18,7 +18,7 @@ RETURNS TABLE  (LocationDescName TVarChar, LocationCode Integer, LocationName TV
               --, PartionId Integer
               --, GoodsCode_parent Integer, GoodsName_parent TVarChar
               , PartnerName TVarChar
-              , Article TVarChar
+              , Article TVarChar, Article_all TVarChar
               , PartNumber TBlob
               , GoodsGroupNameFull TVarChar
               , GoodsGroupName TVarChar
@@ -506,7 +506,8 @@ BEGIN
         , tmpDataAll.GoodsCode
         , tmpDataAll.GoodsName
         , (Object_Partner.ValueData || ' (' || Object_Partner.Id :: TVarChar || ')') :: TVarChar AS PartnerName
-        , ObjectString_Article.ValueData        AS Article
+        , ObjectString_Article.ValueData        AS Article 
+        , zfCalc_Article_all (ObjectString_Article.ValueData)::TVarChar AS Article_all
         , tmpDataAll.PartNumber        :: TBlob AS PartNumber
         , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
         , Object_GoodsGroup.ValueData           AS GoodsGroupName
