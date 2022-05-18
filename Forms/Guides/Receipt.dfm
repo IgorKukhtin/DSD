@@ -45,6 +45,15 @@ object ReceiptForm: TReceiptForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object isIrna: TcxGridDBColumn
+        Caption = #1048#1088#1085#1072
+        DataBinding.FieldName = 'isIrna'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1088#1085#1072' ('#1044#1072'/'#1053#1077#1090')'
+        Options.Editing = False
+        Width = 45
+      end
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090
         DataBinding.FieldName = 'Code'
@@ -886,7 +895,7 @@ object ReceiptForm: TReceiptForm
     Width = 1065
     Height = 35
     Align = alTop
-    TabOrder = 5
+    TabOrder = 4
     object cxLabel3: TcxLabel
       Left = 15
       Top = 9
@@ -1091,6 +1100,14 @@ object ReceiptForm: TReceiptForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_isIrna'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolChild'
         end
         item
@@ -1261,6 +1278,10 @@ object ReceiptForm: TReceiptForm
     end
     object bbUpdateDisabled_no: TdxBarButton
       Action = actUpdateDisabled_no
+      Category = 0
+    end
+    object bbUpdate_isIrna: TdxBarButton
+      Action = macUpdate_isIrna
       Category = 0
     end
   end
@@ -1772,6 +1793,35 @@ object ReceiptForm: TReceiptForm
       ErasedFieldName = 'isErased'
       DataSource = ChildDS
     end
+    object macUpdate_isIrna_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_isIrna
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdate_isIrna_list'
+      ImageIndex = 66
+    end
+    object macUpdate_isIrna: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_isIrna_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1083#1103' '#1042#1099#1073#1088#1072#1085#1085#1099#1093' '#1101#1083#1077#1084#1077#1085#1090#1086#1074' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1048#1088#1085#1072'> '#1085#1072' '#1087#1088#1086#1090#1080#1074#1086#1087#1086#1083#1086#1078 +
+        #1085#1086#1077'?'
+      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' '#1080#1079#1084#1077#1085#1077#1085#1086
+      Caption = 'macUpdate_isIrna'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1048#1088#1085#1072'> '#1044#1072'/'#1053#1077#1090
+      ImageIndex = 66
+    end
     object dsdSetUnErasedReceiptChild: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
@@ -1835,6 +1885,18 @@ object ReceiptForm: TReceiptForm
         end>
       isShowModal = True
       OpenBeforeShow = True
+    end
+    object actUpdate_isIrna: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isIrna
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isIrna
+        end>
+      Caption = 'actUpdate_isIrna'
+      ImageIndex = 66
     end
   end
   object spSelect: TdsdStoredProc
@@ -2582,5 +2644,31 @@ object ReceiptForm: TReceiptForm
       end>
     Left = 976
     Top = 3
+  end
+  object spUpdate_isIrna: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Guide_Irna'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisIrna'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isIrna'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 640
+    Top = 224
   end
 end

@@ -365,6 +365,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryItemEditNotPartNumberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInventoryItemEditNotPartNumberForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryItemEdit_limitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInventoryItemEdit_limitForm');
 end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;
@@ -456,6 +459,9 @@ begin
 end;
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_limitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoods_limitForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
@@ -799,17 +805,17 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_PriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_PriceListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_PriceListDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_PriceListDialogForm');
-
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMotionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMotionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMotionDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMotionDialogForm');
-  exit;
+  {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionPersonalForm');
@@ -820,7 +826,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceDialogForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderClientForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderClientForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderClientDialogForm'));

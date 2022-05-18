@@ -731,7 +731,14 @@ object InventoryForm: TInventoryForm
           ItemName = 'bbUnErased'
         end
         item
-          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAdd_limit'
+        end
+        item
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -841,7 +848,7 @@ object InventoryForm: TInventoryForm
       Action = actInsertRecord_partion
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbbbb: TdxBarButton
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' "'#1054#1089#1090#1072#1090#1086#1082' '#1088#1072#1089#1095#1077#1090#1085#1099#1081'" + "'#1044#1086#1083#1075#1080'"'
       Category = 0
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' "'#1054#1089#1090#1072#1090#1086#1082' '#1088#1072#1089#1095#1077#1090#1085#1099#1081'" + "'#1044#1086#1083#1075#1080'"'
@@ -872,6 +879,10 @@ object InventoryForm: TInventoryForm
     end
     object bbPrintStickerOne: TdxBarButton
       Action = macPrintStikerOne
+      Category = 0
+    end
+    object bbAdd_limit: TdxBarButton
+      Action = mactAdd_limit
       Category = 0
     end
   end
@@ -1669,6 +1680,21 @@ object InventoryForm: TInventoryForm
       DataSetRefresh = actRefreshMI
       IdFieldName = 'Id'
     end
+    object mactAdd_limit: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actAdd_limit
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'> ('#1083#1080#1084#1080#1090')'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'> ('#1083#1080#1084#1080#1090')'
+      ImageIndex = 0
+      WithoutNext = True
+    end
     object mactAdd: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1684,6 +1710,53 @@ object InventoryForm: TInventoryForm
       ImageIndex = 0
       ShortCut = 113
       WithoutNext = True
+    end
+    object actAdd_limit: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'> ('#1083#1080#1084#1080#1090')'
+      ImageIndex = 0
+      FormName = 'TInventoryItemEdit_limitForm'
+      FormNameParam.Value = 'TInventoryItemEdit_limitForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartNumber'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inAmount'
+          Value = 1.000000000000000000
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = '-1'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      DataSource = MasterDS
+      IdFieldName = 'Id'
     end
     object actAdd: TdsdInsertUpdateAction
       Category = 'DSDLib'

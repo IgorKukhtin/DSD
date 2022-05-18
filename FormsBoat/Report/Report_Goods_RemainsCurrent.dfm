@@ -2001,6 +2001,14 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bblbSearchArticle'
+        end
+        item
+          Visible = True
+          ItemName = 'bbedSearchArticle'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2136,6 +2144,20 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     object bbOpenOrderClient_reserve: TdxBarButton
       Action = actOpenOrderClient_reserve
       Category = 0
+    end
+    object bblbSearchArticle: TdxBarControlContainerItem
+      Caption = 'lbSearchArticle'
+      Category = 0
+      Hint = 'lbSearchArticle'
+      Visible = ivAlways
+      Control = lbSearchArticle
+    end
+    object bbedSearchArticle: TdxBarControlContainerItem
+      Caption = 'edSearchArticle'
+      Category = 0
+      Hint = 'edSearchArticle'
+      Visible = ivAlways
+      Control = edSearchArticle
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

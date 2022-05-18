@@ -84,6 +84,8 @@ type
     lbSearchArticle: TcxLabel;
     edSearchArticle: TcxTextEdit;
     FieldFilter_Article: TdsdFieldFilter;
+    bbedSearchArticle: TdxBarControlContainerItem;
+    bblbSearchArticle: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

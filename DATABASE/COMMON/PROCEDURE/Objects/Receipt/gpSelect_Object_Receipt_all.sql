@@ -31,6 +31,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Co
              , Check_Weight TFloat, Check_PartionValue TFloat, Check_TaxExit TFloat
              , isParentMulti Boolean
              , isDisabled Boolean, Color_Disabled Integer
+             , isIrna Boolean
              , isErased Boolean
               )
 AS
@@ -146,6 +147,7 @@ BEGIN
          , COALESCE (ObjectBoolean_Disabled.ValueData, FALSE)    :: Boolean AS isDisabled
          , CASE WHEN COALESCE (ObjectBoolean_Disabled.ValueData, FALSE) = TRUE THEN zc_Color_Red() ELSE 0 END :: Integer AS Color_Disabled
 
+         , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
          , Object_Receipt.isErased AS isErased
 
      FROM Object AS Object_Receipt
@@ -326,6 +328,9 @@ BEGIN
                             AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
           LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId   
 
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
+                                  ON ObjectBoolean_Guide_Irna.ObjectId = Object_Receipt.Id
+                                 AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
      WHERE Object_Receipt.DescId = zc_Object_Receipt()
        AND (Object_Receipt.Id = inReceiptId OR inReceiptId = 0)
        AND (ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)

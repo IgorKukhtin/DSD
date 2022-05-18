@@ -318,7 +318,9 @@ uses
   Report_Movement_PriceList in '..\..\FormsBoat\Report\Report_Movement_PriceList.pas' {Report_Movement_PriceListForm: TParentForm},
   Report_Movement_PriceListDialog in '..\..\FormsBoat\Report\Report_Movement_PriceListDialog.pas' {Report_Movement_PriceListDialogForm: TParentForm},
   CheckBooleanDialog in '..\..\FormsBoat\System\CheckBooleanDialog.pas' {CheckBooleanDialogForm: TParentForm},
-  Union_Goods_ReceiptService in '..\..\FormsBoat\Guides\Union_Goods_ReceiptService.pas' {Union_Goods_ReceiptServiceForm: TParentForm};
+  Union_Goods_ReceiptService in '..\..\FormsBoat\Guides\Union_Goods_ReceiptService.pas' {Union_Goods_ReceiptServiceForm: TParentForm},
+  Goods_limit in '..\..\FormsBoat\Guides\Goods_limit.pas' {Goods_limitForm: TParentForm},
+  InventoryItemEdit_limit in '..\..\FormsBoat\Document\InventoryItemEdit_limit.pas' {InventoryItemEdit_limitForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

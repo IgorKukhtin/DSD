@@ -56,7 +56,7 @@ object PriceListForm: TPriceListForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1048#1088#1085#1072' ('#1044#1072'/'#1053#1077#1090')'
         Options.Editing = False
-        Width = 45
+        Width = 47
       end
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
@@ -64,7 +64,7 @@ object PriceListForm: TPriceListForm
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 51
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -72,14 +72,14 @@ object PriceListForm: TPriceListForm
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 200
+        Width = 207
       end
       object CurrencyName: TcxGridDBColumn
         Caption = #1042#1072#1083#1102#1090#1072
         DataBinding.FieldName = 'CurrencyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 57
       end
       object PriceWithVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
@@ -87,7 +87,7 @@ object PriceListForm: TPriceListForm
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 80
       end
       object VATPercent: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
@@ -95,7 +95,7 @@ object PriceListForm: TPriceListForm
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 44
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

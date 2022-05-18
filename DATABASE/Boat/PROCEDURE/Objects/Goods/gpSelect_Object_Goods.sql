@@ -1,9 +1,11 @@
 -- Function: gpSelect_Object_Goods()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Goods (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Goods (Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
     IN inShowAll     Boolean,
+    IN inIsLimit_100 Boolean,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -376,9 +378,10 @@ BEGIN
          AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE)
        -- and Object_Goods.Id = 236863
        ORDER BY Object_Goods.Id DESC
-       LIMIT CASE WHEN vbUserId IN (5, 236658) THEN 100 ELSE 300000 END
+     --LIMIT CASE WHEN vbUserId IN (5, 236658) THEN 100 ELSE 300000 END
      --LIMIT CASE WHEN vbUserId IN (236658) THEN 100 ELSE 350000 END
-       ;
+       LIMIT CASE WHEN inIsLimit_100 = TRUE THEN 100 ELSE 350000 END
+      ;
 
 END;
 $BODY$
@@ -388,6 +391,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.05.22         * add inIsLimit_100
  10.04.22         *
  11.11.20         *
 */

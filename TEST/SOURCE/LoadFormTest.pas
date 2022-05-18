@@ -265,6 +265,7 @@ procedure TLoadFormTest.LoadBankAccountFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccount_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccount_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountEditForm'));
@@ -4293,12 +4294,13 @@ end;
 
 procedure TLoadFormTest.LoadReceiptFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptLevelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptLevelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptLevelEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptLevelEditForm');
   //exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptMainGoods_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptMainGoods_ObjectForm');
 
@@ -4325,10 +4327,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptGoods_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptGoods_ObjectForm');
-  }
+
   // составл€ющие рецептур
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptComponentsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptComponentsForm');
+  }
 
 end;
 

@@ -1279,6 +1279,14 @@
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bblbSearchArticle'
+        end
+        item
+          Visible = True
+          ItemName = 'bbedSearchArticle'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1331,6 +1339,20 @@
     object bbOpenDocument: TdxBarButton
       Action = actOpenDocument
       Category = 0
+    end
+    object bbedSearchArticle: TdxBarControlContainerItem
+      Caption = 'edSearchArticle'
+      Category = 0
+      Hint = 'edSearchArticle'
+      Visible = ivAlways
+      Control = edSearchArticle
+    end
+    object bblbSearchArticle: TdxBarControlContainerItem
+      Caption = 'lbSearchArticle'
+      Category = 0
+      Hint = 'lbSearchArticle'
+      Visible = ivAlways
+      Control = lbSearchArticle
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1646,7 +1668,7 @@
     Column = Article_all
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 280
-    Top = 192
+    Left = 248
+    Top = 152
   end
 end
