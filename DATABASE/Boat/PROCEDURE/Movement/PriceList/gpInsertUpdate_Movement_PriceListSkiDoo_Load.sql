@@ -31,8 +31,13 @@ BEGIN
 
      -- RAISE EXCEPTION 'Ошибка. inArticle = <%>  Не найден.', inArticle;
 
+    -- Eсли нет цены - выход
+    IF COALESCE (inAmount, 0) = 0
+    THEN
+        RETURN;
+    END IF;
 
-    -- Eсли не нашли пропускаем
+    -- Проверка - Eсли не нашли
     IF COALESCE (inPartnerId,0) = 0
     THEN
          RAISE EXCEPTION 'Ошибка.Не выбран Поставщик';

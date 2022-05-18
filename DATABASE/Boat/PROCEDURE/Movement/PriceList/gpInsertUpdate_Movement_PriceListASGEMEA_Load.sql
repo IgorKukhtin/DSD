@@ -33,6 +33,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+
+    -- Eсли нет цены - выход
+    IF COALESCE (inAmount, 0) = 0
+    THEN
+        RETURN;
+    END IF;
+
     -- Проверка - Eсли не нашли
     IF COALESCE (inPartnerId,0) = 0
     THEN
