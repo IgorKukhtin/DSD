@@ -70,7 +70,7 @@ BEGIN
              , Object_Goods.ObjectCode                    ::Integer  AS GoodsCode
              , Object_Goods.ValueData                                AS GoodsName
 
-             , MIFloat_CountSP.ValueData                             AS CountSP
+             , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
              , MIFloat_ExchangeRate.ValueData                        AS ExchangeRate
              , MIFloat_OrderNumberSP.ValueData::Integer              AS OrderNumberSP
              , MIFloat_ID_MED_FORM.ValueData::Integer                AS ID_MED_FORM
@@ -110,9 +110,9 @@ BEGIN
                                        
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoodsMain.Id
              
-             LEFT JOIN MovementItemFloat AS MIFloat_CountSP
-                                         ON MIFloat_CountSP.MovementItemId = MovementItem.Id
-                                        AND MIFloat_CountSP.DescId = zc_MIFloat_CountSP()
+             LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
+                                         ON MIFloat_PriceOptSP.MovementItemId = MovementItem.Id
+                                        AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
              LEFT JOIN MovementItemFloat AS MIFloat_ExchangeRate
                                          ON MIFloat_ExchangeRate.MovementItemId = MovementItem.Id
                                         AND MIFloat_ExchangeRate.DescId = zc_MIFloat_ExchangeRate()
@@ -193,7 +193,7 @@ BEGIN
              , Object_Goods.ObjectCode                    ::Integer  AS GoodsCode
              , Object_Goods.ValueData                                AS GoodsName
 
-             , MIFloat_CountSP.ValueData                             AS CountSP
+             , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
              , MIFloat_ExchangeRate.ValueData                        AS ExchangeRate
              , MIFloat_OrderNumberSP.ValueData::Integer              AS OrderNumberSP
              , MIFloat_ID_MED_FORM.ValueData::Integer                AS ID_MED_FORM
@@ -228,9 +228,9 @@ BEGIN
         FROM MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
             
-             LEFT JOIN MovementItemFloat AS MIFloat_CountSP
-                                         ON MIFloat_CountSP.MovementItemId = MovementItem.Id
-                                        AND MIFloat_CountSP.DescId = zc_MIFloat_CountSP()
+             LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
+                                         ON MIFloat_PriceOptSP.MovementItemId = MovementItem.Id
+                                        AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
              LEFT JOIN MovementItemFloat AS MIFloat_ExchangeRate
                                          ON MIFloat_ExchangeRate.MovementItemId = MovementItem.Id
                                         AND MIFloat_ExchangeRate.DescId = zc_MIFloat_ExchangeRate()
@@ -319,4 +319,4 @@ $BODY$
 
 --реяр
 -- 
-SELECT * FROM gpSelect_MovementItem_GoodsSPRegistry_1303 (inMovementId:= 0, inShowAll:= true, inIsErased:= FALSE, inSession:= '3')
+SELECT * FROM gpSelect_MovementItem_GoodsSPRegistry_1303 (inMovementId:= 27854839, inShowAll:= False, inIsErased:= FALSE, inSession:= '3')

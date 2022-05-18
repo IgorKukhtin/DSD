@@ -59,15 +59,15 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             Options.Editing = False
             Width = 253
           end
-          object ID_MED_FORM: TcxGridDBColumn [2]
-            Caption = #1053#1086#1084#1077#1088' '#1074' '#1088#1077#1077#1089#1090#1088#1077
-            DataBinding.FieldName = 'ID_MED_FORM'
+          object MorionSP: TcxGridDBColumn [2]
+            Caption = #1050#1086#1076' '#1084#1086#1088#1080#1086#1085#1072
+            DataBinding.FieldName = 'MorionSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
             Properties.DisplayFormat = ',0;-,0; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 59
+            Width = 80
           end
           object IntenalSPName: TcxGridDBColumn [3]
             Caption = #1052#1110#1078#1085#1072#1088#1086#1076#1085#1072' '#1085#1077#1087#1072#1090#1077#1085#1090#1086#1074#1072#1085#1072' '#1085#1072#1079#1074#1072' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
@@ -105,7 +105,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actKindOutSPChoice
+                Action = actKindOutSP_1303Choice
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -114,73 +114,98 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             HeaderAlignmentVert = vaCenter
             Width = 85
           end
-          object Pack: TcxGridDBColumn [6]
-            Caption = #1057#1080#1083#1072' '#1076#1110#1111' ('#1076#1086#1079#1091#1074#1072#1085#1085#1103') (5)'
-            DataBinding.FieldName = 'Pack'
+          object Dosage_1303Name: TcxGridDBColumn [6]
+            Caption = #1044#1086#1079#1091#1074#1072#1085#1085#1103' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
+            DataBinding.FieldName = 'Dosage_1303Name'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actDosage_1303Choice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 82
+          end
+          object CountSP_1303Name: TcxGridDBColumn [7]
+            Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1090#1072#1073#1083#1077#1090#1086#1082' '#1074' '#1091#1087#1072#1082#1086#1074#1094#1110' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
+            DataBinding.FieldName = 'CountSP_1303Name'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actCountSP_1303Choice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 105
           end
-          object CountSPMin: TcxGridDBColumn [7]
-            Caption = #1052#1110#1085#1110#1084#1072#1083#1100#1085#1072' '#1082#1110#1083#1100#1082#1110#1089#1090#1100' '#1092#1086#1088#1084' '#1074#1080#1087#1091#1089#1082#1091' '#1076#1086' '#1087#1088#1086#1076#1072#1078#1091
-            DataBinding.FieldName = 'CountSPMin'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 83
-          end
-          object CountSP: TcxGridDBColumn [8]
-            Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1086#1076#1080#1085#1080#1094#1100' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091' '#1091' '#1089#1087#1086#1078#1080#1074#1095#1110#1081' '#1091#1087#1072#1082#1086#1074#1094#1110' (6)'
-            DataBinding.FieldName = 'CountSP'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object GroupSP: TcxGridDBColumn [9]
-            Caption = #1043#1088#1091#1087#1080' '#1074#1110#1076#1096#1082#1086#1076#1091'-'#1074#1072#1085#1085#1103' '#8211' '#1030' '#1072#1073#1086' '#1030#1030
-            DataBinding.FieldName = 'GroupSP'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##; ; '
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 88
-          end
-          object CodeATX: TcxGridDBColumn [10]
-            Caption = #1050#1086#1076' '#1040#1058#1061' (7)'
-            DataBinding.FieldName = 'CodeATX'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 56
-          end
-          object MakerSP: TcxGridDBColumn [11]
-            Caption = #1053#1072#1081#1084#1077#1085#1091#1074#1072#1085#1085#1103' '#1074#1080#1088#1086#1073#1085#1080#1082#1072', '#1082#1088#1072#1111#1085#1072' (8)'
-            DataBinding.FieldName = 'MakerSP'
+          object MakerSP_1303Name: TcxGridDBColumn [8]
+            Caption = #1053#1072#1079#1074#1072' '#1074#1080#1088#1086#1073#1085#1080#1082#1072' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
+            DataBinding.FieldName = 'MakerSP_1303Name'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actMakerSP_1303Choice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 97
           end
-          object ReestrSP: TcxGridDBColumn [12]
-            Caption = #1053#1086#1084#1077#1088' '#1088#1077#1108#1089#1090#1088#1072#1094#1110#1081#1085#1086#1075#1086' '#1087#1086#1089#1074#1110#1076#1095#1077#1085#1085#1103' '#1085#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1080#1081' '#1079#1072#1089#1110#1073' (9)'
+          object Country_1303Name: TcxGridDBColumn [9]
+            Caption = #1050#1088#1072#1111#1085#1072' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
+            DataBinding.FieldName = 'Country_1303Name'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actCountry_1303Choice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 135
+          end
+          object CodeATX: TcxGridDBColumn [10]
+            Caption = #1050#1086#1076' '#1040#1058#1061
+            DataBinding.FieldName = 'CodeATX'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+          end
+          object ReestrSP: TcxGridDBColumn [11]
+            Caption = #8470' '#1088#1077#1108#1089#1090#1088#1072#1094#1110#1081#1085#1086#1075#1086' '#1087#1086#1089#1074#1110#1076#1095#1077#1085#1085#1103
             DataBinding.FieldName = 'ReestrSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 116
           end
-          object ReestrDateSP: TcxGridDBColumn [13]
-            Caption = 
-              #1044#1072#1090#1072' '#1079#1072#1082#1110#1085#1095#1077#1085#1085#1103' '#1089#1090#1088#1086#1082#1091' '#1076#1110#1111' '#1088#1077#1108#1089#1090#1088#1072#1094#1110#1081#1085#1086#1075#1086' '#1087#1086#1089#1074#1110#1076#1095#1077#1085#1085#1103' '#1085#1072' '#1083#1110#1082#1072#1088#1089#1100 +
-              #1082#1080#1081' '#1079#1072#1089#1110#1073' (10)'
+          object ReestrDateSP: TcxGridDBColumn [12]
+            Caption = #1044#1072#1090#1072' '#1088#1077#1108#1089#1090#1088#1072#1094#1110#1111
             DataBinding.FieldName = 'ReestrDateSP'
+            PropertiesClassName = 'TcxDateEditProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 121
           end
+          object ValiditySP: TcxGridDBColumn [13]
+            Caption = #1058#1077#1088#1084#1110#1085' '#1076#1110#1111
+            DataBinding.FieldName = 'ValiditySP'
+            PropertiesClassName = 'TcxDateEditProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 89
+          end
           object PriceOptSP: TcxGridDBColumn [14]
-            Caption = #1054#1087#1090#1086#1074#1086'- '#1074#1110#1076#1087#1091#1089#1082#1085#1072' '#1094#1110#1085#1072' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091', '#1075#1088#1085' (11)'
+            Caption = #1047#1072#1076#1077#1082#1083#1072#1088#1086#1074#1072#1085#1072' '#1086#1087#1090#1086#1074#1086'-'#1074#1110#1076#1087#1091#1089#1082#1085#1072' '#1094#1110#1085#1072
             DataBinding.FieldName = 'PriceOptSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -188,106 +213,66 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             HeaderAlignmentVert = vaCenter
             Width = 91
           end
-          object PriceRetSP: TcxGridDBColumn [15]
-            Caption = #1056#1086#1079#1076#1088#1110#1073#1085#1072' '#1094#1110#1085#1072' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091', '#1075#1088#1085' (12)'
-            DataBinding.FieldName = 'PriceRetSP'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 68
-          end
-          object DailyNormSP: TcxGridDBColumn [16]
-            Caption = #1044#1086#1073#1086#1074#1072' '#1076#1086#1079#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091', '#1088#1077#1082#1086#1084#1077#1085#1076#1086#1074#1072#1085#1072' '#1042#1054#1054#1047' (13)'
-            DataBinding.FieldName = 'DailyNormSP'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 135
-          end
-          object DailyCompensationSP: TcxGridDBColumn [17]
-            Caption = #1056#1086#1079#1084#1110#1088' '#1074#1110#1076#1096#1082#1086#1076#1091#1074#1072#1085#1085#1103' '#1076#1086#1073#1086#1074#1086#1111' '#1076#1086#1079#1080' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091', '#1075#1088#1085' (14)'
-            DataBinding.FieldName = 'DailyCompensationSP'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 111
-          end
-          object PriceSP: TcxGridDBColumn [18]
-            Caption = #1056#1086#1079#1084#1110#1088' '#1074#1110#1076#1096#1082#1086#1076#1091#1074#1072#1085#1085#1103' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091', '#1075#1088#1085' (15)'
-            DataBinding.FieldName = 'PriceSP'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####; ; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 103
-          end
-          object PaymentSP: TcxGridDBColumn [19]
-            Caption = #1057#1091#1084#1072' '#1076#1086#1087#1083#1072#1090#1080' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091', '#1075#1088#1085' (16)'
-            DataBinding.FieldName = 'PaymentSP'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####; ; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 89
-          end
-          object IdSP: TcxGridDBColumn [20]
-            Caption = 'ID '#1083#1110#1082#1072#1088'. '#1079#1072#1089#1086#1073#1091
-            DataBinding.FieldName = 'IdSP'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = 'ID '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091
-            Width = 60
-          end
-          object DosageIdSP: TcxGridDBColumn [21]
-            Caption = 'DosageID '#1083#1110#1082#1072#1088'. '#1079#1072#1089#1086#1073#1091
-            DataBinding.FieldName = 'DosageIdSP'
+          object Currency: TcxGridDBColumn [15]
+            Caption = #1042#1072#1083#1102#1090#1072
+            DataBinding.FieldName = 'CurrencyName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actCurrencyChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = 'DosageID '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091
             Width = 63
           end
-          object NumeratorUnitSP: TcxGridDBColumn [22]
-            Caption = #1054#1076#1080#1085#1080#1094#1103' '#1074#1080#1084#1110#1088#1091' '#1089#1080#1083#1080' '#1076#1110#1111
-            DataBinding.FieldName = 'NumeratorUnitSP'
+          object ExchangeRate: TcxGridDBColumn [16]
+            Caption = #1054#1092#1110#1094#1110#1081#1085#1080#1081' '#1082#1091#1088#1089
+            DataBinding.FieldName = 'ExchangeRate'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 
+              #9#1054#1092#1110#1094#1110#1081#1085#1080#1081' '#1082#1091#1088#1089','#1074#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1081' '#1053#1072#1094#1110#1086#1085#1072#1083#1100#1085#1080#1084' '#1073#1072#1085#1082#1086#1084' '#1059#1082#1088#1072#1111#1085#1080' '#1085#1072' '#1076#1072#1090#1091 +
+              ' '#1087#1086#1076#1072#1085#1085#1103' '#1076#1077#1082#1083#1072#1088#1072#1094#1110#1111' '#1079#1084#1110#1085#1080' '#1086#1087#1090#1086#1074#1086'-'#1074#1110#1076#1087#1091#1089#1082#1085#1086#1111' '#1094#1110#1085#1080
+            Width = 83
+          end
+          object OrderNumberSP: TcxGridDBColumn [17]
+            Caption = #8470' '#1085#1072#1082#1072#1091', '#1074' '#1103#1082#1086#1084#1091' '#1074#1085#1077#1089#1077#1085#1086' '#1051#1047
+            DataBinding.FieldName = 'OrderNumberSP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0;-,0; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1076#1080#1085#1080#1094#1103' '#1074#1080#1084#1110#1088#1091' '#1089#1080#1083#1080' '#1076#1110#1111
-            Width = 60
+            Width = 66
           end
-          object DenumeratorValueSP: TcxGridDBColumn [23]
-            Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1089#1091#1090#1085#1086#1089#1090#1110
-            DataBinding.FieldName = 'DenumeratorValueSP'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+          object OrderDateSP: TcxGridDBColumn [18]
+            Caption = #1044#1072#1090#1072' '#1085#1072#1082#1072#1079#1091', '#1074' '#1103#1082#1086#1084#1091' '#1074#1085#1077#1089#1077#1085#1086' '#1051#1047
+            DataBinding.FieldName = 'OrderDateSP'
+            PropertiesClassName = 'TcxDateEditProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 76
           end
-          object DenumeratorUnitSP: TcxGridDBColumn [24]
-            Caption = #1054#1076#1080#1085#1080#1094#1103' '#1074#1080#1084#1110#1088#1091' '#1089#1091#1090#1085#1086#1089#1090#1110
-            DataBinding.FieldName = 'DenumeratorUnitSP'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1076#1080#1085#1080#1094#1103' '#1074#1080#1084#1110#1088#1091' '#1089#1091#1090#1085#1086#1089#1090#1110
-            Width = 60
-          end
-          object ProgramIdSP: TcxGridDBColumn [25]
-            Caption = 'ID '#1091#1095#1072#1089#1085#1080#1082#1072' '#1087#1088#1086#1075#1088#1072#1084#1080
-            DataBinding.FieldName = 'ProgramIdSP'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = 'ID '#1091#1095#1072#1089#1085#1080#1082#1072' '#1087#1088#1086#1075#1088#1072#1084#1080
-            Width = 65
-          end
           inherited colIsErased: TcxGridDBColumn
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
+          end
+          object ID_MED_FORM: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088' '#1074' '#1088#1077#1077#1089#1090#1088#1077
+            DataBinding.FieldName = 'ID_MED_FORM'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0;-,0; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 59
           end
         end
       end
@@ -494,6 +479,25 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084
       ImageIndex = 12
     end
+    object actChoiceMovGoodsSP: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TBrandSPForm'
+      FormName = 'TGoodsSPJournalChoiceForm'
+      FormNameParam.Value = 'TGoodsSPJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MovementId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actIntenalSPChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -516,33 +520,6 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
           Value = Null
           Component = MasterCDS
           ComponentItem = 'IntenalSPName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actKindOutSPChoice: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'TKindOutSPForm'
-      FormName = 'TKindOutSPForm'
-      FormNameParam.Value = 'TKindOutSPForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'KindOutSPId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'KindOutSPName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -575,21 +552,29 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
         end>
       isShowModal = True
     end
-    object actChoiceMovGoodsSP: TOpenChoiceForm
+    object actKindOutSP_1303Choice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'TBrandSPForm'
-      FormName = 'TGoodsSPJournalChoiceForm'
-      FormNameParam.Value = 'TGoodsSPJournalChoiceForm'
+      Caption = 'actKindOutSP_1303Choice'
+      FormName = 'TKindOutSP_1303Form'
+      FormNameParam.Value = 'TKindOutSP_1303Form'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
-          Component = FormParams
-          ComponentItem = 'MovementId'
+          Component = MasterCDS
+          ComponentItem = 'KindOutSP_1303Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'KindOutSP_1303Name'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -672,6 +657,141 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
       ImageIndex = 41
       WithoutNext = True
     end
+    object actDosage_1303Choice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actDosage_1303Choice'
+      FormName = 'TDosage_1303Form'
+      FormNameParam.Value = 'TDosage_1303Form'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Dosage_1303Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Dosage_1303Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actCountSP_1303Choice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actCountSP_1303Choice'
+      FormName = 'TCountSP_1303Form'
+      FormNameParam.Value = 'TCountSP_1303Form'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CountSP_1303Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CountSP_1303Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actMakerSP_1303Choice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actMakerSP_1303Choice'
+      FormName = 'TMakerSP_1303Form'
+      FormNameParam.Value = 'TMakerSP_1303Form'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MakerSP_1303Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MakerSP_1303Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actCountry_1303Choice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actCountry_1303Choice'
+      FormName = 'TCountry_1303Form'
+      FormNameParam.Value = 'TCountry_1303Form'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Country_1303Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Country_1303Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actCurrencyChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actCurrencyChoice'
+      FormName = 'TCurrencyForm'
+      FormNameParam.Value = 'TCurrencyForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CurrencyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CurrencyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 192
@@ -682,7 +802,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
     Top = 432
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_GoodsSP'
+    StoredProcName = 'gpSelect_MovementItem_GoodsSPRegistry_1303'
     Params = <
       item
         Name = 'inMovementId'
@@ -934,7 +1054,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
     Top = 16
   end
   inherited spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_GoodsSP'
+    StoredProcName = 'gpGet_Movement_GoodsSPRegistry_1303'
     Params = <
       item
         Name = 'inMovementId'
@@ -1004,29 +1124,12 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
         Component = edOperDateEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MedicalProgramSPId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MedicalProgramSPName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PercentMarkup'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_GoodsSP'
+    StoredProcName = 'gpInsertUpdate_Movement_GoodsSPRegistry_1303'
     Params = <
       item
         Name = 'ioId'
@@ -1065,19 +1168,6 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
         Value = Null
         Component = edOperDateEnd
         DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMedicalProgramSPId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPercentMarkup'
-        Value = Null
-        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1133,7 +1223,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
     Top = 464
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_GoodsSP'
+    StoredProcName = 'gpInsertUpdate_MovementItem_GoodsSPRegistry_1303'
     Params = <
       item
         Name = 'ioId'
@@ -1168,126 +1258,42 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inBrandSPId'
+        Name = 'inKindOutSP_1303Id'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'BrandSPId'
+        ComponentItem = 'KindOutSP_1303Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inKindOutSPId'
+        Name = 'inDosage_1303Id'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'KindOutSPId'
+        ComponentItem = 'Dosage_1303Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inColSP'
+        Name = 'inCountSP_1303Id'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'ColSP'
-        DataType = ftFloat
+        ComponentItem = 'CountSP_1303Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCountSPMin'
+        Name = 'inMakerSP_1303Id'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'CountSPMin'
-        DataType = ftFloat
+        ComponentItem = 'MakerSP_1303Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCountSP'
+        Name = 'inCountry_1303Id'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'CountSP'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPriceOptSP'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PriceOptSP'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPriceRetSP'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PriceRetSP'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDailyNormSP'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DailyNormSP'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDailyCompensationSP'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DailyCompensationSP'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPriceSP'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PriceSP'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPaymentSP'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PaymentSP'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGroupSP'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GroupSP'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDenumeratorValueSP'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DenumeratorValueSP'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPack'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Pack'
-        DataType = ftString
+        ComponentItem = 'Country_1303Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1296,15 +1302,6 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CodeATX'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMakerSP'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MakerSP'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1323,52 +1320,84 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ReestrDateSP'
-        DataType = ftString
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIdSP'
+        Name = 'inValiditySP'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'IdSP'
-        DataType = ftString
+        ComponentItem = 'ValiditySP'
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDosageIdSP'
+        Name = 'inPriceOptSP'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'DosageIdSP'
-        DataType = ftString
+        ComponentItem = 'PriceOptSP'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inProgramIdSP'
+        Name = 'inPriceSP'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'ProgramIdSP'
-        DataType = ftString
+        ComponentItem = 'PriceSP'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inNumeratorUnitSP'
+        Name = 'inCurrencyId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'NumeratorUnitSP'
-        DataType = ftString
+        ComponentItem = 'CurrencyId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDenumeratorUnitSP'
+        Name = 'inExchangeRate'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'DenumeratorUnitSP'
-        DataType = ftString
+        ComponentItem = 'ExchangeRate'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOrderNumberSP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OrderNumberSP'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOrderDateSP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OrderDateSP'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inID_MED_FORM'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ID_MED_FORM'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMorionSP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MorionSP'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1376,12 +1405,14 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
     Top = 368
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_GoodsSP'
+    StoredProcName = 'gpInsertUpdate_MovementItem_GoodsSPRegistry_1303'
     Params = <
       item
         Name = 'ioId'
-        Value = '0'
-        ParamType = ptInput
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -1409,108 +1440,42 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inBrandSPId'
+        Name = 'inKindOutSP_1303Id'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'BrandSPId'
+        ComponentItem = 'KindOutSP_1303Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inKindOutSPId'
+        Name = 'inDosage_1303Id'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'KindOutSPId'
+        ComponentItem = 'inDosage_1303Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inColSP'
+        Name = 'inCountSP_1303Id'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'ColSP'
-        DataType = ftFloat
+        ComponentItem = 'CountSP_1303Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCountSP'
+        Name = 'inMakerSP_1303Id'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'CountSP'
-        DataType = ftFloat
+        ComponentItem = 'MakerSP_1303Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPriceOptSP'
+        Name = 'inCountry_1303Id'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PriceOptSP'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPriceRetSP'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PriceRetSP'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDailyNormSP'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DailyNormSP'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDailyCompensationSP'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DailyCompensationSP'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPriceSP'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PriceSP'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPaymentSP'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PaymentSP'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGroupSP'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GroupSP'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPack'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Pack'
-        DataType = ftString
+        ComponentItem = 'Country_1303Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1519,15 +1484,6 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CodeATX'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMakerSP'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MakerSP'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1546,7 +1502,84 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ReestrDateSP'
-        DataType = ftString
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValiditySP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ValiditySP'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceOptSP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceOptSP'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceSP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceSP'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CurrencyId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inExchangeRate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ExchangeRate'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOrderNumberSP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OrderNumberSP'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOrderDateSP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OrderDateSP'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inID_MED_FORM'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ID_MED_FORM'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMorionSP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MorionSP'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1683,7 +1716,9 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
     Params = <
       item
         Name = 'inDefaultKey'
-        Value = 'TGoodsSPMovementForm;zc_Object_ImportSetting_GoodsSPMovement'
+        Value = 
+          'TGoodsSPRegistry_1303Form;zc_Object_ImportSetting_GoodsSPRegistr' +
+          'y_1303'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

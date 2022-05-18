@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1057#1080#1089#1090#1077#1084#1072' '#1086#1087#1077#1088#1072#1090#1080#1074#1085#1086#1075#1086' '#1084#1086#1085#1080#1090#1086#1088#1080#1085#1075#1072' '#1082#1086#1085#1082#1091#1088#1077#1085#1090#1086#1074
-  ClientHeight = 545
+  ClientHeight = 641
   ClientWidth = 1124
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -56,411 +56,566 @@
       Visible = False
     end
   end
-  object cxGrid: TcxGrid
+  object cxPageControl1: TcxPageControl
     Left = 0
     Top = 57
     Width = 1124
-    Height = 488
+    Height = 584
     Align = alClient
     TabOrder = 5
-    object cxGridDBTableView: TcxGridDBTableView
-      Navigator.Buttons.CustomButtons = <>
-      DataController.Filter.Options = [fcoCaseInsensitive]
-      DataController.Summary.DefaultGroupSummaryItems = <
-        item
-          Format = ',0.####'
-          Kind = skSum
+    Properties.ActivePage = cxTabSheet1
+    Properties.CustomButtons.Buttons = <>
+    ClientRectBottom = 584
+    ClientRectRight = 1124
+    ClientRectTop = 24
+    object cxTabSheet1: TcxTabSheet
+      Caption = #1054#1090#1095#1077#1090
+      ImageIndex = 0
+      object cxGrid: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1124
+        Height = 560
+        Align = alClient
+        TabOrder = 0
+        object cxGridDBTableView: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = #1057#1090#1088#1086#1082' 0'
+              Kind = skCount
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
         end
-        item
-          Format = ',0.00'
-          Kind = skSum
+        object cxGridDBBandedTableView: TcxGridDBBandedTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = DataSource
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          OptionsView.GroupByBox = False
+          Styles.Content = dmMain.cxContentStyle
+          Styles.Inactive = dmMain.cxSelection
+          Styles.Footer = dmMain.cxFooterStyle
+          Styles.Header = dmMain.cxHeaderStyle
+          Styles.BandHeader = dmMain.cxHeaderStyle
+          Bands = <
+            item
+              Width = 498
+            end
+            item
+              Width = 277
+            end
+            item
+              Visible = False
+              VisibleForCustomization = False
+            end>
+          object GroupsName: TcxGridDBBandedColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GroupsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 129
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object SubGroupsName: TcxGridDBBandedColumn
+            Caption = #1055#1086#1076#1075#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'SubGroupsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 86
+            Position.BandIndex = 0
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object GoodsCode: TcxGridDBBandedColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 62
+            Position.BandIndex = 0
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object GoodsName: TcxGridDBBandedColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 251
+            Position.BandIndex = 0
+            Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object PriceUnitMin: TcxGridDBBandedColumn
+            Caption = #1052#1080#1085'. '#1094#1077#1085#1072
+            DataBinding.FieldName = 'PriceUnitMin'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object MarginPercentMin: TcxGridDBBandedColumn
+            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1085#1072#1094#1077#1085#1082#1080
+            DataBinding.FieldName = 'MarginPercentMin'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00 %'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+            Position.BandIndex = 1
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object JuridicalPriceMin: TcxGridDBBandedColumn
+            Caption = #1062#1077#1085#1072' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'JuridicalPriceMin'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+            Position.BandIndex = 1
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object PriceUnitMax: TcxGridDBBandedColumn
+            Caption = #1052#1072#1082#1089'. '#1094#1077#1085#1072
+            DataBinding.FieldName = 'PriceUnitMax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.RowIndex = 1
+          end
+          object JuridicalPriceMax: TcxGridDBBandedColumn
+            Caption = #1062#1077#1085#1072' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'JuridicalPriceMax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+            Position.BandIndex = 1
+            Position.ColIndex = 2
+            Position.RowIndex = 1
+          end
+          object MarginPercentMax: TcxGridDBBandedColumn
+            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1085#1072#1094#1077#1085#1082#1080
+            DataBinding.FieldName = 'MarginPercentMax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00 %'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+            Position.BandIndex = 1
+            Position.ColIndex = 1
+            Position.RowIndex = 1
+          end
+          object JuridicalPrice: TcxGridDBBandedColumn
+            Caption = #1052#1080#1085'. '#1094#1077#1085#1072' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'JuridicalPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object Price: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 65
+            Position.BandIndex = 2
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object MarginPercentDeltaMin: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'MarginPercentDeltaMin'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '+,0.00 %;-,0.00 %; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 65
+            Position.BandIndex = 2
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object MarginPercent: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'MarginPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Position.BandIndex = 2
+            Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
+          object DPrice: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'DPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 65
+            Position.BandIndex = 2
+            Position.ColIndex = 0
+            Position.RowIndex = 1
+          end
+          object MarginPercentDeltaMax: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'MarginPercentDeltaMax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '+,0.00 %;-,0.00 %; ;'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 65
+            Position.BandIndex = 2
+            Position.ColIndex = 1
+            Position.RowIndex = 1
+          end
+          object MarginPercentSGR: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'MarginPercentSGR'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Position.BandIndex = 2
+            Position.ColIndex = 2
+            Position.RowIndex = 1
+          end
+          object ColorMin: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ColorMin'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Position.BandIndex = 2
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object ColorMax: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ColorMax'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Position.BandIndex = 2
+            Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object ColorDPriceUnit: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ColorDPriceUnit'
+            Visible = False
+            VisibleForCustomization = False
+            Position.BandIndex = 0
+            Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
+          object cxGridDBBandedTableViewColumn1: TcxGridDBBandedColumn
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 3
+            Position.RowIndex = 1
+          end
         end
-        item
-          Format = ',0.00'
-          Kind = skSum
+        object cxGridLevel: TcxGridLevel
+          GridView = cxGridDBBandedTableView
         end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00;-,0.00; ;'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00;-,0.00; ;'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00;-,0.00; ;'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00;-,0.00; ;'
-          Kind = skSum
-        end>
-      DataController.Summary.FooterSummaryItems = <
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
-          Kind = skCount
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
-          Kind = skCount
-        end
-        item
-          Format = ',0.00;-,0.00; ;'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00;-,0.00; ;'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = #1057#1090#1088#1086#1082' 0'
-          Kind = skCount
-        end>
-      DataController.Summary.SummaryGroups = <>
-      Images = dmMain.SortImageList
-      OptionsBehavior.GoToNextCellOnEnter = True
-      OptionsBehavior.FocusCellOnCycle = True
-      OptionsCustomize.ColumnHiding = True
-      OptionsCustomize.ColumnsQuickCustomization = True
-      OptionsCustomize.DataRowSizing = True
-      OptionsData.CancelOnExit = False
-      OptionsData.Deleting = False
-      OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
-      OptionsData.Inserting = False
-      OptionsView.Footer = True
-      OptionsView.GroupByBox = False
-      OptionsView.GroupSummaryLayout = gslAlignWithColumns
-      OptionsView.HeaderAutoHeight = True
-      OptionsView.Indicator = True
-      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      end
     end
-    object cxGridDBBandedTableView: TcxGridDBBandedTableView
-      Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = DataSource
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
-      DataController.Summary.SummaryGroups = <>
-      OptionsView.GroupByBox = False
-      Styles.Content = dmMain.cxContentStyle
-      Styles.Inactive = dmMain.cxSelection
-      Styles.Footer = dmMain.cxFooterStyle
-      Styles.Header = dmMain.cxHeaderStyle
-      Styles.BandHeader = dmMain.cxHeaderStyle
-      Bands = <
-        item
-          Width = 498
+    object cxTabSheet2: TcxTabSheet
+      Caption = #1048#1090#1086#1075#1080' '#1087#1086' '#1087#1086#1076#1075#1088#1091#1087#1087#1072#1084
+      ImageIndex = 1
+      object cxGrid1: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1124
+        Height = 560
+        Align = alClient
+        TabOrder = 0
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ClientDataSetGroupDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.IncSearch = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object chSubGroupsName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1075#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'SubGroupsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 136
+          end
+          object chMarginPercentMin: TcxGridDBColumn
+            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'MarginPercentMin'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00 %'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 123
+          end
+          object chMarginPercentSGR: TcxGridDBColumn
+            DataBinding.FieldName = 'MarginPercentSGR'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00 %'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 117
+          end
         end
-        item
-          Width = 278
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableView1
         end
-        item
-          Visible = False
-          VisibleForCustomization = False
-        end>
-      object GroupsName: TcxGridDBBandedColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GroupsName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 129
-        Position.BandIndex = 0
-        Position.ColIndex = 0
-        Position.RowIndex = 0
       end
-      object SubGroupsName: TcxGridDBBandedColumn
-        Caption = #1055#1086#1076#1075#1088#1091#1087#1087#1072
-        DataBinding.FieldName = 'SubGroupsName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 86
-        Position.BandIndex = 0
-        Position.ColIndex = 1
-        Position.RowIndex = 0
-      end
-      object GoodsCode: TcxGridDBBandedColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'GoodsCode'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 62
-        Position.BandIndex = 0
-        Position.ColIndex = 2
-        Position.RowIndex = 0
-      end
-      object GoodsName: TcxGridDBBandedColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 251
-        Position.BandIndex = 0
-        Position.ColIndex = 3
-        Position.RowIndex = 0
-      end
-      object PriceUnitMin: TcxGridDBBandedColumn
-        Caption = #1052#1080#1085'. '#1094#1077#1085#1072
-        DataBinding.FieldName = 'PriceUnitMin'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 68
-        Position.BandIndex = 1
-        Position.ColIndex = 0
-        Position.RowIndex = 0
-      end
-      object MarginPercentMin: TcxGridDBBandedColumn
-        Caption = #1055#1088#1086#1094#1077#1085#1090' '#1085#1072#1094#1077#1085#1082#1080
-        DataBinding.FieldName = 'MarginPercentMin'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00 %'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 68
-        Position.BandIndex = 1
-        Position.ColIndex = 1
-        Position.RowIndex = 0
-      end
-      object JuridicalPriceMin: TcxGridDBBandedColumn
-        Caption = #1062#1077#1085#1072' '#1087#1086#1089#1090'.'
-        DataBinding.FieldName = 'JuridicalPriceMin'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 68
-        Position.BandIndex = 1
-        Position.ColIndex = 2
-        Position.RowIndex = 0
-      end
-      object PriceUnitMax: TcxGridDBBandedColumn
-        Caption = #1052#1072#1082#1089'. '#1094#1077#1085#1072
-        DataBinding.FieldName = 'PriceUnitMax'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 68
-        Position.BandIndex = 1
-        Position.ColIndex = 0
-        Position.RowIndex = 1
-      end
-      object JuridicalPriceMax: TcxGridDBBandedColumn
-        Caption = #1062#1077#1085#1072' '#1087#1086#1089#1090'.'
-        DataBinding.FieldName = 'JuridicalPriceMax'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 68
-        Position.BandIndex = 1
-        Position.ColIndex = 2
-        Position.RowIndex = 1
-      end
-      object MarginPercentMax: TcxGridDBBandedColumn
-        Caption = #1055#1088#1086#1094#1077#1085#1090' '#1085#1072#1094#1077#1085#1082#1080
-        DataBinding.FieldName = 'MarginPercentMax'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00 %'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 68
-        Position.BandIndex = 1
-        Position.ColIndex = 1
-        Position.RowIndex = 1
-      end
-      object Prece: TcxGridDBBandedColumn
-        DataBinding.FieldName = 'Prece'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        VisibleForCustomization = False
-        Width = 65
-        Position.BandIndex = 2
-        Position.ColIndex = 0
-        Position.RowIndex = 0
-      end
-      object MarginPercentDeltaMin: TcxGridDBBandedColumn
-        DataBinding.FieldName = 'MarginPercentDeltaMin'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = '+,0.00 %;-,0.00 %; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        VisibleForCustomization = False
-        Width = 65
-        Position.BandIndex = 2
-        Position.ColIndex = 1
-        Position.RowIndex = 0
-      end
-      object PreceNull: TcxGridDBBandedColumn
-        DataBinding.FieldName = 'PreceNull'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00; ;'
-        Visible = False
-        VisibleForCustomization = False
-        Width = 65
-        Position.BandIndex = 2
-        Position.ColIndex = 0
-        Position.RowIndex = 1
-      end
-      object MarginPercentDeltaMax: TcxGridDBBandedColumn
-        DataBinding.FieldName = 'MarginPercentDeltaMax'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = '+,0.00 %;-,0.00 %; ;'
-        Visible = False
-        VisibleForCustomization = False
-        Width = 65
-        Position.BandIndex = 2
-        Position.ColIndex = 1
-        Position.RowIndex = 1
-      end
-      object ColorMin: TcxGridDBBandedColumn
-        DataBinding.FieldName = 'ColorMin'
-        Visible = False
-        Options.Editing = False
-        VisibleForCustomization = False
-        Position.BandIndex = 2
-        Position.ColIndex = 2
-        Position.RowIndex = 0
-      end
-      object ColorMax: TcxGridDBBandedColumn
-        DataBinding.FieldName = 'ColorMax'
-        Visible = False
-        Options.Editing = False
-        VisibleForCustomization = False
-        Position.BandIndex = 2
-        Position.ColIndex = 3
-        Position.RowIndex = 0
-      end
-    end
-    object cxGridLevel: TcxGridLevel
-      GridView = cxGridDBBandedTableView
     end
   end
   object DataSource: TDataSource
@@ -728,6 +883,12 @@
       end
       item
         DataSet = ClientDataSet
+      end
+      item
+        DataSet = CompetitorGroupCDS
+      end
+      item
+        DataSet = ClientDataSetGroupCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -995,23 +1156,68 @@
     TemplateColumnList = <
       item
         HeaderColumnName = 'PriceName'
-        TemplateColumn = Prece
+        TemplateColumn = Price
       end
       item
         HeaderColumnName = 'MarginPercentDeltaMinName'
         TemplateColumn = MarginPercentDeltaMin
       end
       item
-        HeaderColumnName = 'PriceNilName'
-        TemplateColumn = PreceNull
+        HeaderColumnName = 'MarginPercentName'
+        TemplateColumn = MarginPercent
+      end
+      item
+        HeaderColumnName = 'DPriceName'
+        TemplateColumn = DPrice
       end
       item
         HeaderColumnName = 'MarginPercentDeltaMaxName'
         TemplateColumn = MarginPercentDeltaMax
+      end
+      item
+        HeaderColumnName = 'MarginPercentSGRName'
+        TemplateColumn = MarginPercentSGR
       end>
     HeaderDataSet = CompetitorCDS
     BаndColumnName = 'CompetitorName'
     Left = 512
     Top = 208
+  end
+  object ClientDataSetGroupDS: TDataSource
+    DataSet = ClientDataSetGroupCDS
+    Left = 200
+    Top = 416
+  end
+  object ClientDataSetGroupCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 40
+    Top = 416
+  end
+  object CompetitorGroupCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 336
+    Top = 416
+  end
+  object CrossDBViewAddOn: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    HeaderDataSet = CompetitorGroupCDS
+    HeaderColumnName = 'CompetitorName'
+    TemplateColumn = chMarginPercentSGR
+    Left = 512
+    Top = 296
   end
 end
