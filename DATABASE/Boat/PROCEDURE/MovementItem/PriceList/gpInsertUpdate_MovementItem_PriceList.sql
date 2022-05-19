@@ -30,7 +30,7 @@ BEGIN
      vbUserId := inSession;
 
      -- 
-     PERFORM lpInsertUpdate_MovementItem_PriceList (ioId, inMovementId, inGoodsId
+     ioId := lpInsertUpdate_MovementItem_PriceList (ioId, inMovementId, inGoodsId
                                                   , inDiscountPartnerId
                                                   , inMeasureId, inMeasureParentId
                                                   , inAmount
