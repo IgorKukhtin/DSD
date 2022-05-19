@@ -28,6 +28,7 @@ BEGIN
     IF COALESCE (TRIM (inGoodsKindName), '') <> ''
     THEN 
          -- Проверка
+         IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_GoodsKind() AND Object.ValueData ILIKE TRIM (inGoodsKindName))
          THEN
              RAISE EXCEPTION 'Ошибка.Значение вид товара = <%> найден несколько раз.', inGoodsKindName;
          END IF;
