@@ -25,7 +25,16 @@ BEGIN
    END IF;
    vbUnitId := vbUnitKey::Integer;
    
-   vbDay := 90;
+   IF EXISTS(SELECT 1
+             FROM ObjectBoolean AS ObjectBoolean_SUN_v1_SupplementAdd30Cash
+             WHERE ObjectBoolean_SUN_v1_SupplementAdd30Cash.ObjectId = vbUnitId
+               AND ObjectBoolean_SUN_v1_SupplementAdd30Cash.DescId = zc_ObjectBoolean_Unit_SUN_SupplementAdd30Cash()
+               AND ObjectBoolean_SUN_v1_SupplementAdd30Cash.ValueData = True)
+   THEN
+     vbDay := 30;
+   ELSE 
+     vbDay := 90;
+   END IF;
    
    IF COALESCE (vbUnitId, 0) = 0
    THEN

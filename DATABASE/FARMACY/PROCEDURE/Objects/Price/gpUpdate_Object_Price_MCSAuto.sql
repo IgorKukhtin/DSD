@@ -33,8 +33,14 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
-
  
+    IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+              WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = 308121) -- Для роли "Кассир аптеки"
+       AND COALESCE (inDays, 0) > 7
+    THEN
+      RAISE EXCEPTION 'Ошибка. Кол-во дней для периода должно быть не более 7.';     
+    END IF;         
+
     -- проверили 
     IF inMCSValue is not null AND (inMCSValue<0)
     THEN
@@ -56,6 +62,13 @@ BEGIN
     -- нашли UnitId
     vbUnitId:= COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '0') :: Integer;
 
+    IF EXISTS (SELECT 1 FROM ObjectBoolean AS ObjectBoolean_NotCashMCS
+               WHERE ObjectBoolean_NotCashMCS.ObjectId = vbUnitId
+                 AND ObjectBoolean_NotCashMCS.DescId = zc_ObjectBoolean_Unit_NotCashMCS()
+                 AND ObjectBoolean_NotCashMCS.ValueData = TRUE)
+    THEN
+        RAISE EXCEPTION 'Ошибка.Изменение НТЗ по подразделению запрещено.';
+    END IF;   
     
     -- нашли элемент Цены
     vbPriceId:= (SELECT ObjectLink_Price_Unit.ObjectId AS Id
@@ -238,5 +251,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpUpdate_Object_Price_MCSAuto()
 --select * from gpUpdate_Object_Price_MCSAuto(inMCSValue := 4 ::TFloat , inGoodsId := 652, inDays := 3 ::TFloat,  inSession := '3'::TVarChar);
-
 

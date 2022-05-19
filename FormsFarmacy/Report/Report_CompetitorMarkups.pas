@@ -25,7 +25,7 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
   cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, dsdPivotGrid,
   cxGridBandedTableView, cxGridDBBandedTableView, cxSplitter,
-  cxPCdxBarPopupMenu, cxPC;
+  cxPCdxBarPopupMenu, cxPC, cxImageComboBox;
 
 type
   TReport_CompetitorMarkupsForm = class(TParentForm)
@@ -74,11 +74,11 @@ type
     PriceUnitMin: TcxGridDBBandedColumn;
     Price: TcxGridDBBandedColumn;
     MarginPercentMin: TcxGridDBBandedColumn;
-    JuridicalPriceMin: TcxGridDBBandedColumn;
+    JuridicalPriceMin0000: TcxGridDBBandedColumn;
     cxGridDBBandedTableView: TcxGridDBBandedTableView;
     MarginPercentDeltaMin: TcxGridDBBandedColumn;
     PriceUnitMax: TcxGridDBBandedColumn;
-    JuridicalPriceMax: TcxGridDBBandedColumn;
+    JuridicalPriceMax0000: TcxGridDBBandedColumn;
     MarginPercentMax: TcxGridDBBandedColumn;
     DPrice: TcxGridDBBandedColumn;
     MarginPercentDeltaMax: TcxGridDBBandedColumn;
@@ -91,9 +91,6 @@ type
     cxGridDBBandedTableViewColumn1: TcxGridDBBandedColumn;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
-    chSubGroupsName: TcxGridDBColumn;
-    chMarginPercentMin: TcxGridDBColumn;
-    chMarginPercentSGR: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     ClientDataSetGroupDS: TDataSource;
     ClientDataSetGroupCDS: TClientDataSet;
@@ -101,7 +98,15 @@ type
     cxPageControl1: TcxPageControl;
     cxTabSheet1: TcxTabSheet;
     cxTabSheet2: TcxTabSheet;
-    CrossDBViewAddOn: TCrossDBViewAddOn;
+    cxGrid1DBBandedTableView1: TcxGridDBBandedTableView;
+    chSubGroupsName: TcxGridDBBandedColumn;
+    chMarginPercent: TcxGridDBBandedColumn;
+    chMarginPercentSGR: TcxGridDBBandedColumn;
+    chDMarginPercentCode: TcxGridDBBandedColumn;
+    chDMarginPercent: TcxGridDBBandedColumn;
+    CrossDBViewReportAddOnItog: TCrossDBViewReportAddOn;
+    actShowPrev: TBooleanStoredProcAction;
+    dxBarButton1: TdxBarButton;
   private
   public
   end;

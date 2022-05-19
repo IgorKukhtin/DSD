@@ -10,6 +10,7 @@ RETURNS SETOF refcursor AS
 $BODY$
     DECLARE vbUserId Integer;
     DECLARE vbMovementId Integer;
+    DECLARE vbMovementPrevId Integer;
     DECLARE vbOperDate TDateTime;
     DECLARE vbInvNumber TVarChar;
     DECLARE Cursor1 refcursor;
@@ -38,6 +39,23 @@ BEGIN
     
     SELECT Movement.Id, Movement.InvNumber, Movement.OperDate 
     INTO vbMovementId, vbInvNumber, vbOperDate 
+    FROM tmpMovement AS Movement 
+    WHERE Movement.Ord = 1;
+
+    WITH
+      tmpMovement AS (SELECT Movement.Id                              AS ID
+                           , Movement.InvNumber                       AS InvNumber
+                           , Movement.OperDate                        AS OperDate
+                           , ROW_NUMBER() OVER (ORDER BY Movement.OperDate DESC, Movement.Id DESC) AS Ord
+                      FROM Movement
+                      WHERE Movement.OperDate <= inOperDate
+                        AND Movement.DescId = zc_Movement_CompetitorMarkups()
+                        AND Movement.StatusId = zc_Enum_Status_Complete()
+                        AND Movement.Id <> vbMovementId
+                      )
+    
+    SELECT Movement.Id
+    INTO vbMovementPrevId
     FROM tmpMovement AS Movement 
     WHERE Movement.Ord = 1;
 
@@ -75,8 +93,8 @@ BEGIN
                                         ),
                  tmpMarginCondition AS (SELECT D1.MarginCategoryId,
                                                D1.MarginPercent,
-                                               D1.MinPrice * (100 + D1.MarginPercent) / 100 AS MinPrice,
-                                               COALESCE(D2.MinPrice, 1000000) * (100 + D1.MarginPercent) / 100 AS MaxPrice
+                                               D1.MinPrice                     AS MinPrice,
+                                               COALESCE(D2.MinPrice, 1000000)  AS MaxPrice
                                         FROM tmpMarginCategoryItem AS D1
                                              LEFT OUTER JOIN tmpMarginCategoryItem AS D2 ON D1.MarginCategoryId = D2.MarginCategoryId AND D1.ORD = D2.ORD-1
                                         ),
@@ -166,9 +184,49 @@ BEGIN
                                           WHERE COALESCE(MIFloat_Price.ValueData, 0) > 0
                                             AND COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) > CURRENT_DATE + INTERVAL '200 DAY'  
                                           GROUP BY Object_Goods.Id
-                                          )
+                                          ),
+                 tmpLastPriceList3 AS (SELECT *
+                                       FROM LastPriceList_View
+                                       WHERE LastPriceList_View.ContractId IN (183257, 183378, 183358)
+                                         AND AreaId in (5803492, 5959067)
+                                       ),
+                 tmpLastPriceListItem3 AS (SELECT Object_Goods.Id  AS GoodsId
+                                                , MIN(MIFloat_Price.ValueData * (100 + ObjectFloat_NDSKind_NDS.ValueData) / 100)::TFloat  AS Price
+                                           FROM tmpLastPriceList3 AS tmpLastPriceList
+
+                                                INNER JOIN MovementItem AS PriceList
+                                                                        ON PriceList.MovementId = tmpLastPriceList.MovementId
+                                                                       AND PriceList.DescId     = zc_MI_Master()
+                                                                       AND PriceList.isErased = False
+                                                INNER JOIN Object_Goods_Main AS Object_Goods_Main
+                                                                             ON Object_Goods_Main.Id = PriceList.ObjectId
+                                                INNER JOIN Object_Goods_Retail AS Object_Goods
+                                                                               ON Object_Goods.GoodsMainId = PriceList.ObjectId
+                                                                              AND Object_Goods.RetailId = 4
+                                                LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                                            ON MIFloat_Price.MovementItemId =  PriceList.Id
+                                                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                                                           ON MIDate_PartionGoods.MovementItemId =  PriceList.Id
+                                                                          AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                                LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                                                      ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods_Main.NDSKindId
+                                                                     AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                                           WHERE COALESCE(MIFloat_Price.ValueData, 0) > 0
+                                             AND COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) > CURRENT_DATE + INTERVAL '200 DAY'
+                                           GROUP BY Object_Goods.Id
+                                           ),
+                 tmpMovementItemPrev AS (SELECT MovementItem.Id
+                                              , MovementItem.ObjectId
+                                              , MovementItem.isErased 
+                                         FROM  MovementItem
+                                         WHERE MovementItem.MovementId = vbMovementPrevId
+                                           AND MovementItem.DescId = zc_MI_Master()
+                                           AND MovementItem.isErased = FALSE
+                                         )
                                                 
             SELECT MovementItem.Id                    AS Id
+                 , tmpMovementItemPrev.Id             AS PrevId
                  , MovementItem.ObjectId              AS GoodsID
                  
                  , Object_Goods_Main.ObjectCode       AS GoodsCode
@@ -192,20 +250,22 @@ BEGIN
                         THEN zc_Color_Yelow()
                         ELSE zc_Color_White() END     AS ColorDPriceUnit
                                   
-                 , MarginConditionMin.MarginPercent   AS MarginPercentMin
-                 , ROUND(tmpPrice.PriceMin * 100 / (100 + MarginConditionMin.MarginPercent), 2)::TFloat AS JuridicalPriceMin
-                 
-                 , MarginConditionMax.MarginPercent   AS MarginPercentMax
-                 , ROUND(tmpPrice.PriceMax * 100 / (100 + MarginConditionMax.MarginPercent), 2)::TFloat AS JuridicalPriceMax
-                 
-                 , tmpLastPriceListItem.Price         AS JuridicalPrice
+                 , MarginCondition.MarginPercent      AS MarginPercent
 
+                 , ROUND(tmpPrice.PriceMin * 100 / (100 + MarginCondition.MarginPercent), 2)::TFloat AS JuridicalPriceMin
+                 
+                 , ROUND(tmpPrice.PriceMax * 100 / (100 + MarginCondition.MarginPercent), 2)::TFloat AS JuridicalPriceMax
+                 
+                 , COALESCE(tmpLastPriceListItem.Price, tmpLastPriceListItem3.Price)::TFloat         AS JuridicalPrice
+                 
                  , MovementItem.isErased              AS isErased
                  
                  , 0::Integer                         AS TypeId0
                  , 0::TFloat                          AS Value0
                                   
             FROM  tmpMovementItem AS MovementItem
+            
+                  LEFT JOIN tmpMovementItemPrev ON tmpMovementItemPrev.ObjectId = MovementItem.ObjectId
 
                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                               ON MIFloat_Price.MovementItemId =  MovementItem.Id
@@ -221,24 +281,21 @@ BEGIN
                   LEFT JOIN tmpPriceSubgroups ON tmpPriceSubgroups.PriceMin <= MIFloat_Price.ValueData
                                              AND tmpPriceSubgroups.PriceMax > MIFloat_Price.ValueData
                                                                     
-                  LEFT JOIN tmpMarginCondition AS MarginConditionMin
-                                               ON MarginConditionMin.MinPrice <= tmpPrice.PriceMin
-                                              AND MarginConditionMin.MaxPrice > tmpPrice.PriceMin
-              
-                  LEFT JOIN tmpMarginCondition AS MarginConditionMax
-                                               ON MarginConditionMax.MinPrice <= tmpPrice.PriceMax
-                                              AND MarginConditionMax.MaxPrice > tmpPrice.PriceMax
-                                              
+                  LEFT JOIN tmpMarginCondition AS MarginCondition
+                                               ON MarginCondition.MinPrice <= MIFloat_Price.ValueData
+                                              AND MarginCondition.MaxPrice > MIFloat_Price.ValueData
+
                   LEFT JOIN tmpLastPriceListItem ON tmpLastPriceListItem.GoodsId = MovementItem.ObjectId
+                  LEFT JOIN tmpLastPriceListItem3 ON tmpLastPriceListItem3.GoodsId = MovementItem.ObjectId
             );
             
     -- Данные по диапазонам
     CREATE TEMP TABLE _tmpSubGroups ON COMMIT DROP AS
     SELECT _tmpGoods.SubGroupsName
          , _tmpGoods.SubGroupsPriceMax
-         , SUM(_tmpGoods.MarginPercentMin) / COUNT(*)  AS MarginPercentMin
+         , _tmpGoods.MarginPercent  AS MarginPercent
     FROM _tmpGoods
-    GROUP BY _tmpGoods.SubGroupsPriceMax, _tmpGoods.SubGroupsName;
+    GROUP BY _tmpGoods.SubGroupsPriceMax, _tmpGoods.SubGroupsName, _tmpGoods.MarginPercent;
 
      
       -- Заполняем цены по конкурентам
@@ -257,34 +314,36 @@ BEGIN
                                           ' , ADD COLUMN Price' || COALESCE (vbID, 0)::Text || ' TFloat NOT NULL DEFAULT 0'||
                                           ' , ADD COLUMN MarginPercentDeltaMin' || COALESCE (vbID, 0)::Text || ' TFloat NOT NULL DEFAULT 0'||
                                           ' , ADD COLUMN MarginPercent' || COALESCE (vbID, 0)::Text || ' TFloat NOT NULL DEFAULT 0'||
+                                          ' , ADD COLUMN MarginPercentPrev' || COALESCE (vbID, 0)::Text || ' TFloat NOT NULL DEFAULT 0'||
                                           ' , ADD COLUMN DPrice' || COALESCE (vbID, 0)::Text || ' TFloat NOT NULL DEFAULT 0'||
                                           ' , ADD COLUMN MarginPercentSGR' || COALESCE (vbID, 0)::Text || ' TFloat NOT NULL DEFAULT 0'||
                                           ' , ADD COLUMN MarginPercentDeltaMax' || COALESCE (vbID, 0)::Text || ' TFloat NOT NULL DEFAULT 0' ||
+                                          ' , ADD COLUMN PrevId' || COALESCE (vbID, 0)::Text || ' Integer NOT NULL DEFAULT 0' ||
                                           ' , ADD COLUMN ColorMin' || COALESCE (vbID, 0)::Text || ' Integer NOT NULL DEFAULT ' || zc_Color_White()::Text ||
                                           ' , ADD COLUMN ColorMax' || COALESCE (vbID, 0)::Text || ' Integer NOT NULL DEFAULT ' || zc_Color_White()::Text;
         EXECUTE vbQueryText;
 
         vbQueryText := 'UPDATE _tmpGoods set ID' || COALESCE (vbID, 0)::Text || ' = COALESCE (T1.Id, 0)' ||
           ' , Price' || COALESCE (vbID, 0)::Text || ' = COALESCE (T1.Price, 0)' ||
-          ' , MarginPercentDeltaMin' || COALESCE (vbID, 0)::Text || ' = COALESCE (T1.Price  / _tmpGoods.JuridicalPriceMin * 100 - 100 - _tmpGoods.MarginPercentMin, 0)' ||
+          ' , MarginPercentDeltaMin' || COALESCE (vbID, 0)::Text || ' = COALESCE (T1.Price  / _tmpGoods.JuridicalPriceMin * 100 - 100 - _tmpGoods.MarginPercent, 0)' ||
           ' , MarginPercent' || COALESCE (vbID, 0)::Text || ' = CASE WHEN COALESCE (_tmpGoods.JuridicalPrice, 0) > 0 THEN COALESCE (T1.Price  / _tmpGoods.JuridicalPrice * 100 - 100, 0) ELSE 0 END' ||
-          ' , MarginPercentDeltaMax' || COALESCE (vbID, 0)::Text || ' = COALESCE (T1.Price  / _tmpGoods.JuridicalPriceMax * 100 - 100 - _tmpGoods.MarginPercentMax, 0)' ||
-          ' , ColorMin' || COALESCE (vbID, 0)::Text || ' = CASE WHEN COALESCE (T1.Price  / _tmpGoods.JuridicalPriceMin * 100 - 100 - _tmpGoods.MarginPercentMin, 0) > 0
+          ' , MarginPercentDeltaMax' || COALESCE (vbID, 0)::Text || ' = COALESCE (T1.Price  / _tmpGoods.JuridicalPriceMax * 100 - 100 - _tmpGoods.MarginPercent, 0)' ||
+          ' , ColorMin' || COALESCE (vbID, 0)::Text || ' = CASE WHEN COALESCE (T1.Price  / _tmpGoods.JuridicalPriceMin * 100 - 100 - _tmpGoods.MarginPercent, 0) > 0
                                                                 THEN zfCalc_Color (173, 255, 47)
-                                                                WHEN COALESCE (T1.Price  / _tmpGoods.JuridicalPriceMin * 100 - 100 - _tmpGoods.MarginPercentMin, 0) < 0
+                                                                WHEN COALESCE (T1.Price  / _tmpGoods.JuridicalPriceMin * 100 - 100 - _tmpGoods.MarginPercent, 0) < 0
                                                                 THEN zc_Color_Yelow()
                                                                 ELSE zc_Color_White() END
                                                                   ' ||
-          ' , ColorMax' || COALESCE (vbID, 0)::Text || ' = CASE WHEN COALESCE (T1.Price  / _tmpGoods.JuridicalPriceMax * 100 - 100 - _tmpGoods.MarginPercentMax, 0) > 0
+          ' , ColorMax' || COALESCE (vbID, 0)::Text || ' = CASE WHEN COALESCE (T1.Price  / _tmpGoods.JuridicalPriceMax * 100 - 100 - _tmpGoods.MarginPercent, 0) > 0
                                                                 THEN zfCalc_Color (173, 255, 47)
-                                                                WHEN COALESCE (T1.Price  / _tmpGoods.JuridicalPriceMax * 100 - 100 - _tmpGoods.MarginPercentMax, 0) < 0
+                                                                WHEN COALESCE (T1.Price  / _tmpGoods.JuridicalPriceMax * 100 - 100 - _tmpGoods.MarginPercent, 0) < 0
                                                                 THEN zc_Color_Yelow()
                                                                 ELSE zc_Color_White() END' ||
           ' , DPrice' || COALESCE (vbID, 0)::Text || ' = CASE WHEN COALESCE (_tmpGoods.Price, 0) <> 0
                                                               THEN COALESCE (T1.Price  / _tmpGoods.PriceUnitMin * 100 - 100, 0) ELSE 0 END' ||
           ' FROM (SELECT MovementItem.Id 
                        , MovementItem.ParentId 
-                       , MovementItem.Amount    AS Price 
+                       , MovementItem.Amount        AS Price 
                   FROM MovementItem 
                   WHERE MovementItem.MovementId = '|| vbMovementId::Text ||'
                     AND MovementItem.ObjectId = '|| vbCompetitorId::Text ||'
@@ -293,29 +352,79 @@ BEGIN
            WHERE _tmpGoods.Id = T1.ParentId';
         EXECUTE vbQueryText;
         
+        IF COALESCE (vbMovementPrevId, 0) > 0
+        THEN
+          vbQueryText := 'UPDATE _tmpGoods set MarginPercentPrev' || COALESCE (vbID, 0)::Text || ' = CASE WHEN COALESCE (_tmpGoods.JuridicalPrice, 0) > 0 THEN COALESCE (T1.Price  / _tmpGoods.JuridicalPrice * 100 - 100, 0) ELSE 0 END' ||
+                                             ' , PrevId' || COALESCE (vbID, 0)::Text || ' = T1.Id'||
+            ' FROM (SELECT MovementItem.Id 
+                         , MovementItem.ParentId 
+                         , MovementItem.Amount        AS Price 
+                    FROM MovementItem 
+                    WHERE MovementItem.MovementId = '|| vbMovementPrevId::Text ||'
+                      AND MovementItem.ObjectId = '|| vbCompetitorId::Text ||'
+                      AND MovementItem.DescId     = zc_MI_Child()
+                      AND MovementItem.isErased  = false) AS T1
+             WHERE _tmpGoods.PrevId = T1.ParentId';
+          EXECUTE vbQueryText;        
+        END IF;
+            
+        
         vbQueryText := 'UPDATE _tmpGoods set MarginPercentSGR' || COALESCE (vbID, 0)::Text || ' = T1.MarginPercent
                         FROM (SELECT _tmpGoods.SubGroupsName
-                                   , SUM(_tmpGoods.MarginPercent' || COALESCE (vbID, 0)::Text || ')/ COUNT(*) AS MarginPercent
+                                   , (SUM(_tmpGoods.MarginPercent' || COALESCE (vbID, 0)::Text || ')/ COUNT(*)) :: TFloat AS MarginPercent
                               FROM _tmpGoods
+                              WHERE COALESCE (_tmpGoods.JuridicalPrice, 0) > 0
                               GROUP BY _tmpGoods.SubGroupsName) AS T1 
                         WHERE _tmpGoods.SubGroupsName =  T1.SubGroupsName';
         EXECUTE vbQueryText;
 
         vbQueryText := 'ALTER TABLE _tmpSubGroups ADD COLUMN Id' || COALESCE (vbID, 0)::Text || ' Integer ' ||
-                                              ' , ADD COLUMN MarginPercentSGR' || COALESCE (vbID, 0)::Text || ' TFloat NOT NULL DEFAULT 0';
+                                              ' , ADD COLUMN MarginPercentSGR' || COALESCE (vbID, 0)::Text || ' TFloat NOT NULL DEFAULT 0' ||
+                                              ' , ADD COLUMN MarginPercentSGRPrev' || COALESCE (vbID, 0)::Text || ' TFloat NOT NULL DEFAULT 0' ||
+                                              ' , ADD COLUMN DMarginPercent' || COALESCE (vbID, 0)::Text || ' TFloat NOT NULL DEFAULT 0' ||
+                                              ' , ADD COLUMN DMarginPercentCode' || COALESCE (vbID, 0)::Text || ' Integer NOT NULL DEFAULT 0';
         EXECUTE vbQueryText;
 
         vbQueryText := 'UPDATE _tmpSubGroups set MarginPercentSGR' || COALESCE (vbID, 0)::Text || ' = T1.MarginPercent
                         FROM (SELECT _tmpGoods.SubGroupsName
-                                   , SUM(_tmpGoods.MarginPercent' || COALESCE (vbID, 0)::Text || ')/ COUNT(*) AS MarginPercent
+                                   , (SUM(_tmpGoods.MarginPercent' || COALESCE (vbID, 0)::Text || ')/ COUNT(*)) :: TFloat AS MarginPercent
                               FROM _tmpGoods
+                              WHERE COALESCE (_tmpGoods.JuridicalPrice, 0) > 0
                               GROUP BY _tmpGoods.SubGroupsName) AS T1 
                         WHERE _tmpSubGroups.SubGroupsName =  T1.SubGroupsName';
         EXECUTE vbQueryText;
-
+        
+        IF COALESCE (vbMovementPrevId, 0) > 0
+        THEN
+          vbQueryText := 'UPDATE _tmpSubGroups set MarginPercentSGRPrev' || COALESCE (vbID, 0)::Text || ' = T1.MarginPercentPrev
+                                                 , DMarginPercent' || COALESCE (vbID, 0)::Text || ' = MarginPercentSGR' || COALESCE (vbID, 0)::Text || ' - T1.MarginPercentPrev
+                                                 , DMarginPercentCode' || COALESCE (vbID, 0)::Text || ' = CASE WHEN MarginPercentSGR' || COALESCE (vbID, 0)::Text || ' > T1.MarginPercentPrev
+                                                                                                               THEN 1
+                                                                                                               WHEN MarginPercentSGR' || COALESCE (vbID, 0)::Text || ' < T1.MarginPercentPrev 
+                                                                                                               THEN 2
+                                                                                                               WHEN MarginPercentSGR' || COALESCE (vbID, 0)::Text || ' = T1.MarginPercentPrev AND T1.MarginPercentPrev > 0
+                                                                                                               THEN 3
+                                                                                                               ELSE 0 
+                                                                                                               END
+                          FROM (SELECT _tmpGoods.SubGroupsName
+                                     , (SUM(_tmpGoods.MarginPercentPrev' || COALESCE (vbID, 0)::Text || ')/ COUNT(*)) :: TFloat AS MarginPercentPrev
+                                FROM _tmpGoods
+                                WHERE /*COALESCE (_tmpGoods.PrevId' || COALESCE (vbID, 0)::Text || ', 0) <> 0
+                                  AND */ COALESCE (_tmpGoods.JuridicalPrice, 0) > 0
+                                GROUP BY _tmpGoods.SubGroupsName) AS T1 
+                          WHERE _tmpSubGroups.SubGroupsName =  T1.SubGroupsName';
+          EXECUTE vbQueryText;
+        END IF;
+        
     END LOOP;
     CLOSE curCompetitor;      
     
+   /*raise notice 'Value 05: % %', 
+    (SELECT SUM(_tmpGoods.MarginPercent3)
+     FROM _tmpGoods),            
+    (SELECT SUM(_tmpGoods.MarginPercentPrev3)
+     FROM _tmpGoods
+     WHERE COALESCE (_tmpGoods.PrevId3, 0) <> 0);*/
      
     OPEN Cursor1 FOR
        SELECT tmpCompetitor.Id
@@ -346,7 +455,10 @@ BEGIN
        SELECT tmpCompetitor.Id
             , tmpCompetitor.CompetitorId
             , tmpCompetitor.CompetitorCode
-            , (tmpCompetitor.CompetitorName||chr(13)||chr(10)||'(ср. наценка)')::TVarChar    AS CompetitorName
+            , tmpCompetitor.CompetitorName::TVarChar    AS CompetitorName
+            , '(ср. наценка)'::TVarChar                 AS MarginPercentSGRName
+            , ' '::TVarChar                             AS DMarginPercentCodeName
+            , 'Разн. с пред. периодом'::TVarChar        AS DMarginPercent
              
        FROM _tmpCompetitor AS tmpCompetitor
        ORDER BY tmpCompetitor.Id;

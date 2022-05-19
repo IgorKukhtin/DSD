@@ -512,7 +512,10 @@ type
     FHeaderColumnName: String;
     FColIndex : Integer;
     FRowIndex : Integer;
+    FIsCrossParam: TdsdParam;
   public
+    constructor Create(Collection: TCollection); override;
+    destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
   published
     function GetDisplayName: string; override;
@@ -520,6 +523,8 @@ type
     property HeaderColumnName: String read FHeaderColumnName write FHeaderColumnName;
     // Шаблон для Cross колонок
     property TemplateColumn: TcxGridColumn read FTemplateColumn write FTemplateColumn;
+    // Кросит столбик
+    property IsCross: TdsdParam read FIsCrossParam write FIsCrossParam;
   end;
 
   // Размножение колонок перед кросом
@@ -6144,6 +6149,21 @@ end;
 
 { TTemplateColumn }
 
+constructor TTemplateColumn.Create(Collection: TCollection);
+begin
+  inherited Create(Collection);
+  FIsCrossParam := TdsdParam.Create;
+  FIsCrossParam.DataType := ftBoolean;
+  FIsCrossParam.Value := True;
+end;
+
+destructor TTemplateColumn.Destroy;
+begin
+  FreeAndNil(FIsCrossParam);
+  inherited;
+end;
+
+
 procedure TTemplateColumn.Assign(Source: TPersistent);
 begin
   if Source is TTemplateColumn then
@@ -6807,6 +6827,9 @@ begin
          Band := Nil;
          for J := 0 to TemplateColumnList.Count - 1 do
          begin
+
+           if not TTemplateColumn(TemplateColumnList.Items[J]).FIsCrossParam.Value then Continue;
+
 
            if not Assigned(HeaderDataSet.Fields.FindField(TTemplateColumn(TemplateColumnList.Items[J]).HeaderColumnName)) then Continue;
            if not Assigned(TTemplateColumn(TemplateColumnList.Items[J]).TemplateColumn) then Continue;
