@@ -340,6 +340,7 @@ BEGIN
                   AND MovementItem.isErased   = FALSE
                   AND COALESCE (MovementItem.ObjectId, 0) = 0
                )
+        AND vbUnitId NOT IN (8459, 133049) -- Розподільчий комплекс + Склад реализации мясо
      THEN
          RAISE EXCEPTION 'Ошибка.Не определен Товар для%Код GLN = <%>%Товар (EDI) = <%>.%Классификатор = <%>'
                        , CHR (13)

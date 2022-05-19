@@ -1,4 +1,4 @@
-program Scale;
+program Scale ;
 
 uses
   Vcl.Forms,

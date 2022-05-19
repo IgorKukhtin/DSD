@@ -68,10 +68,134 @@ inherited GuideGoodsMovementForm: TGuideGoodsMovementForm
     inherited infoPanelTare: TPanel
       Left = 483
       ExplicitLeft = 483
+      inherited infoPanelTareFix: TPanel
+        inherited infoPanelTare1: TPanel
+          inherited PanelTare1: TPanel
+            inherited LabelTare1: TLabel
+              Width = 120
+            end
+            inherited EditTare1: TcxCurrencyEdit
+              ExplicitHeight = 22
+            end
+          end
+          inherited infoPanelWeightTare1: TPanel
+            inherited LabelWeightTare1: TLabel
+              Width = 108
+            end
+          end
+        end
+        inherited infoPanelTare0: TPanel
+          inherited PanelTare0: TPanel
+            inherited LabelTare0: TLabel
+              Width = 120
+            end
+            inherited EditTare0: TcxCurrencyEdit
+              ExplicitHeight = 22
+            end
+          end
+          inherited infoPanelWeightTare0: TPanel
+            inherited LabelWeightTare0: TLabel
+              Width = 108
+            end
+          end
+        end
+        inherited infoPanelTare2: TPanel
+          inherited PanelTare2: TPanel
+            inherited LabelTare2: TLabel
+              Width = 120
+            end
+            inherited EditTare2: TcxCurrencyEdit
+              ExplicitHeight = 22
+            end
+          end
+          inherited infoPanelWeightTare2: TPanel
+            inherited LabelWeightTare2: TLabel
+              Width = 108
+            end
+          end
+        end
+        inherited infoPanelTare5: TPanel
+          inherited PanelTare5: TPanel
+            inherited LabelTare5: TLabel
+              Width = 120
+            end
+            inherited EditTare5: TcxCurrencyEdit
+              ExplicitHeight = 22
+            end
+          end
+          inherited infoPanelWeightTare5: TPanel
+            inherited LabelWeightTare5: TLabel
+              Width = 108
+            end
+          end
+        end
+        inherited infoPanelTare4: TPanel
+          inherited PanelTare4: TPanel
+            inherited LabelTare4: TLabel
+              Width = 120
+            end
+            inherited EditTare4: TcxCurrencyEdit
+              ExplicitHeight = 22
+            end
+          end
+          inherited infoPanelWeightTare4: TPanel
+            inherited LabelWeightTare4: TLabel
+              Width = 108
+            end
+          end
+        end
+        inherited infoPanelTare3: TPanel
+          inherited PanelTare3: TPanel
+            inherited LabelTare3: TLabel
+              Width = 120
+            end
+            inherited EditTare3: TcxCurrencyEdit
+              ExplicitHeight = 22
+            end
+          end
+          inherited infoPanelWeightTare3: TPanel
+            inherited LabelWeightTare3: TLabel
+              Width = 108
+            end
+          end
+        end
+        inherited infoPanelTare6: TPanel
+          inherited PanelTare6: TPanel
+            inherited LabelTare6: TLabel
+              Width = 120
+            end
+            inherited EditTare6: TcxCurrencyEdit
+              ExplicitHeight = 22
+            end
+          end
+          inherited infoPanelWeightTare6: TPanel
+            inherited LabelWeightTare6: TLabel
+              Width = 108
+            end
+          end
+        end
+      end
     end
     inherited infoPanelPriceList: TPanel
       Left = 713
       ExplicitLeft = 713
+    end
+    inherited infoPanelGoods: TPanel
+      inherited gbWeightValue: TGroupBox
+        inherited EditWeightValue: TcxCurrencyEdit
+          ExplicitHeight = 22
+        end
+      end
+      inherited gbPrice: TGroupBox
+        inherited EditPrice: TcxCurrencyEdit
+          ExplicitHeight = 22
+        end
+      end
+      inherited gbPartionGoods_20103: TGroupBox
+        inherited EditPartionGoods_20103: TcxCurrencyEdit
+          ExplicitHeight = 22
+        end
+      end
     end
     inherited infoPanelGoodsKind: TPanel
       Width = 348
@@ -83,6 +207,13 @@ inherited GuideGoodsMovementForm: TGuideGoodsMovementForm
       inherited gbGoodsKindCode: TGroupBox
         Width = 348
         ExplicitWidth = 348
+      end
+      inherited gbPriceIncome: TGroupBox
+        Width = 348
+        ExplicitWidth = 348
+        inherited EditPriceIncome: TcxCurrencyEdit
+          ExplicitHeight = 22
+        end
       end
     end
   end

@@ -290,6 +290,9 @@ begin
      if execParamsMovement.ParamByName('OrderExternalId').AsInteger<>0 then
      with spSelect do
      begin
+       oldParam1:=-1;
+       oldParam2:=-1;
+       //
        Self.Caption:='Параметры продукции на основании '+execParamsMovement.ParamByName('OrderExternalName_master').asString;
        if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ: ' + Self.Caption;
        Params.ParamByName('inOrderExternalId').Value:= execParamsMovement.ParamByName('OrderExternalId').AsInteger;
@@ -302,6 +305,9 @@ begin
      if execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn then
      with spSelect do
      begin
+       oldParam1:=-1;
+       oldParam2:=-1;
+       //
        Self.Caption:='Параметры продукции для покупателя <('+execParamsMovement.ParamByName('FromCode').asString + ')' + execParamsMovement.ParamByName('FromName').asString + '>';
        if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ' + Self.Caption;
        Params.ParamByName('inOrderExternalId').Value:= -1 * execParamsMovement.ParamByName('ContractId').AsInteger;
@@ -341,6 +347,9 @@ begin
      then
      with spSelect do
      begin
+       oldParam1:=-1;
+       oldParam2:=-1;
+       //
        Self.Caption:='Параметры продукции по заявке на <('+execParamsMovement.ParamByName('FromCode').asString + ')' + execParamsMovement.ParamByName('FromName').asString + '>';
        if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ' + Self.Caption;
        Params.ParamByName('inOrderExternalId').Value:= 0;
@@ -349,8 +358,13 @@ begin
        Params.ParamByName('inGoodsName').Value      := '';
        Execute;
      end
-     else if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ - Параметры продукции'
-     else Self.Caption:= 'Параметры продукции';
+     else begin
+           oldParam1:=-1;
+           oldParam2:=-1;
+           //
+           if isModeSave = FALSE then Self.Caption:= 'БЕЗ СОХРАНЕНИЯ - Параметры продукции'
+           else Self.Caption:= 'Параметры продукции';
+     end;
      ;
 
   // Показали вес с весов - получили его перед открытием
@@ -536,6 +550,8 @@ begin
       then begin
                 spSelect.Params.ParamByName('inGoodsCode').Value:= 0;
                 spSelect.Params.ParamByName('inGoodsName').Value:= trim(EditGoodsName.Text);
+                spSelect.Params.ParamByName('inOrderExternalId').Value:= 0;
+                spSelect.Params.ParamByName('inMovementId').Value     := 0;
                 actRefreshExecute(Self);
       end;
 
@@ -966,6 +982,8 @@ begin
       and(Code_begin>0)
      then begin spSelect.Params.ParamByName('inGoodsCode').Value:=Code_begin;
                 spSelect.Params.ParamByName('inGoodsName').Value:='';
+                spSelect.Params.ParamByName('inOrderExternalId').Value:= 0;
+                spSelect.Params.ParamByName('inMovementId').Value     := 0;
                 actRefreshExecute(Self);
                 fEnterGoodsCode:=true;CDS.Filtered:=False;CDS.Filtered:=True;
      end;

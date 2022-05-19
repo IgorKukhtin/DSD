@@ -2,7 +2,7 @@ object CheckBooleanDialogForm: TCheckBooleanDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1042#1074#1086#1076' '#1079#1085#1072#1095#1077#1085#1080#1103
+  Caption = #1042#1099#1073#1086#1088' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074
   ClientHeight = 130
   ClientWidth = 303
   Color = clBtnFace
@@ -36,31 +36,13 @@ object CheckBooleanDialogForm: TCheckBooleanDialogForm
     ModalResult = 2
     TabOrder = 1
   end
-  object cxMemo1: TcxMemo
-    AlignWithMargins = True
-    Left = 33
-    Top = 27
-    TabStop = False
-    Enabled = False
-    Lines.Strings = (
-      #1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' ('#1044#1072'/ '#1053#1077#1090')')
-    Properties.ReadOnly = True
-    Style.BorderStyle = ebsNone
-    Style.Color = clBtnFace
-    Style.Edges = [bLeft, bTop, bRight, bBottom]
-    Style.Shadow = False
-    StyleDisabled.BorderStyle = ebsNone
-    StyleDisabled.TextColor = clWindowText
-    TabOrder = 2
-    Height = 18
-    Width = 144
-  end
   object cbPrice: TcxCheckBox
-    Left = 183
+    Left = 64
     Top = 27
-    Hint = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093
-    TabOrder = 3
-    Width = 32
+    Hint = '1. '#1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' ('#1044#1072'/ '#1053#1077#1090')'
+    Caption = '1. '#1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' ('#1044#1072'/ '#1053#1077#1090')'
+    TabOrder = 2
+    Width = 169
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 158
@@ -86,14 +68,7 @@ object CheckBooleanDialogForm: TCheckBooleanDialogForm
         Value = True
         Component = cbPrice
         DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Label'
-        Value = #1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' ('#1044#1072'/ '#1053#1077#1090')'
-        Component = cxMemo1
-        DataType = ftString
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     Left = 150

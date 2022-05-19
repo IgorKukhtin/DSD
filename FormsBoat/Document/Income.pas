@@ -243,6 +243,7 @@ type
     ExecuteDialogPrint: TExecuteDialog;
     macPrintStiker: TMultiAction;
     macPrintStikerOne: TMultiAction;
+    cbPrice: TcxCheckBox;
   private
   public
   end;

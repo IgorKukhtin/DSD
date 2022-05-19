@@ -381,6 +381,15 @@ object IncomeForm: TIncomeForm
       TabOrder = 42
       Width = 70
     end
+    object cbPrice: TcxCheckBox
+      Left = 641
+      Top = 90
+      Hint = '1. '#1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' ('#1044#1072'/ '#1053#1077#1090')'
+      Caption = '1. '#1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' ('#1044#1072'/ '#1053#1077#1090')'
+      TabOrder = 43
+      Visible = False
+      Width = 169
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
@@ -1398,13 +1407,6 @@ object IncomeForm: TIncomeForm
         DataType = ftBoolean
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isPrice'
-        Value = 'false'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     Left = 246
     Top = 343
@@ -1838,6 +1840,11 @@ object IncomeForm: TIncomeForm
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = cbPrice
+        Properties.Strings = (
+          'Checked')
+      end
       item
         Component = Owner
         Properties.Strings = (
@@ -2795,13 +2802,7 @@ object IncomeForm: TIncomeForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDItems'
         end>
-      Params = <
-        item
-          Name = 'isPrintTermo'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
+      Params = <>
       ReportName = 'PrintMovement_IncomeSticker'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
       ReportNameParam.Value = 'PrintMovement_IncomeSticker'
@@ -2828,13 +2829,7 @@ object IncomeForm: TIncomeForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDItems'
         end>
-      Params = <
-        item
-          Name = 'isPrintTermo'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
+      Params = <>
       ReportName = 'PrintMovement_IncomeSticker'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
       ReportNameParam.Value = 'PrintMovement_IncomeSticker'
@@ -2894,25 +2889,11 @@ object IncomeForm: TIncomeForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Label'
-          Value = #1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' ('#1044#1072'/ '#1053#1077#1090')'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'isPrice'
           Value = False
-          Component = FormParams
-          ComponentItem = 'isPrice'
+          Component = cbPrice
           DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPrice'
-          Value = False
-          DataType = ftBoolean
-          ParamType = ptInput
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -4300,10 +4281,9 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPrice'
+        Name = 'inIsPrice'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'isPrice'
+        Component = cbPrice
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4379,10 +4359,9 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPrice'
+        Name = 'inIsPrice'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'isPrice'
+        Component = cbPrice
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

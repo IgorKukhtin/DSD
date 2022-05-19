@@ -230,7 +230,9 @@ begin
 //     isEditPartnerCodeExit:= TRUE;
 
      if BarCode<>'' then begin isEditBarCode:=true;EditBarCodeExit(EditBarCode);Result:=true;end
-     else begin Result:=(ShowModal=mrOk);end;
+     else begin
+               Result:=(ShowModal=mrOk);
+          end;
 end;
 {------------------------------------------------------------------------}
 function TDialogMovementDescForm.Get_isSendOnPriceIn(MovementDescNumber:Integer): boolean;
@@ -465,6 +467,11 @@ begin
                     ParamByName('InfoMoneyCode').AsInteger:= CDS.FieldByName('InfoMoneyCode').asInteger;
                     ParamByName('InfoMoneyName').asString := CDS.FieldByName('InfoMoneyName').asString;
                     //
+                    if (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Send)
+                     or(CDS.FieldByName('MovementDescId').asInteger = zc_Movement_Loss)
+                    then
+                        ParamByName('isContractGoods').AsBoolean:= FALSE;
+                    //
                     if (CDS.FieldByName('MovementDescId').asInteger <> zc_Movement_Sale)
                     then ParamByName('ChangePercentAmount').asFloat:= 0;
                     //
@@ -506,6 +513,7 @@ begin
                     ParamByName('PriceListId').AsInteger      := CDS.FieldByName('PriceListId').asInteger;
                     ParamByName('PriceListCode').AsInteger    := CDS.FieldByName('PriceListCode').asInteger;
                     ParamByName('PriceListName').asString     := CDS.FieldByName('PriceListName').asString;
+                    ParamByName('isContractGoods').AsBoolean  := FALSE;
 
                     ParamByName('PaidKindId').AsInteger       := 0;
                     ParamByName('PaidKindName').asString      := '';
@@ -553,6 +561,7 @@ begin
                     ParamByName('GoodsPropertyId').AsInteger  := 0;
                     ParamByName('GoodsPropertyCode').AsInteger:= 0;
                     ParamByName('GoodsPropertyName').asString := '';
+                    ParamByName('isContractGoods').AsBoolean  := FALSE;
 
                     if {(SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310)
                     or} (CDS.FieldByName('MovementDescId').asInteger <> zc_Movement_Send)

@@ -177,6 +177,7 @@ type
     actAdd_limit: TdsdInsertUpdateAction;
     mactAdd_limit: TMultiAction;
     bbAdd_limit: TdxBarButton;
+    cbPrice: TcxCheckBox;
   private
   public
   end;

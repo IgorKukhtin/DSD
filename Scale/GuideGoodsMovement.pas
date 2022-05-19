@@ -27,6 +27,7 @@ uses
 
 type
   TGuideGoodsMovementForm = class(TGuideGoodsForm)
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -40,4 +41,13 @@ implementation
 
 {$R *.dfm}
 
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsMovementForm.FormCreate(Sender: TObject);
+begin
+  // Временно захардкодил
+  Self.Tag:=-123;
+  //
+  inherited;
+end;
+{------------------------------------------------------------------------------}
 end.

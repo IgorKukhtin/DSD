@@ -56,11 +56,10 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
         object ScaleLabel: TLabel
           Left = 1
           Top = 1
-          Width = 196
+          Width = 190
           Height = 16
           Align = alTop
           Caption = '  '#1050#1086#1076' '#1086#1087#1077#1088#1072#1094#1080#1080' / '#1064'/'#1050'/'#8470' '#1079#1072#1103#1074#1082#1080
-          ExplicitWidth = 190
         end
         object EditBarCode: TEdit
           Left = 8
@@ -96,11 +95,10 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
         object Label2: TLabel
           Left = 1
           Top = 1
-          Width = 113
+          Width = 105
           Height = 16
           Align = alTop
           Caption = '  '#1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-          ExplicitWidth = 105
         end
         object EditPartnerCode: TcxButtonEdit
           Left = 6
@@ -132,11 +130,10 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
         object Label3: TLabel
           Left = 1
           Top = 1
-          Width = 352
+          Width = 64
           Height = 16
           Align = alTop
           Caption = '  '#1053#1072#1079#1074#1072#1085#1080#1077
-          ExplicitWidth = 64
         end
         object PanelPartnerName: TPanel
           Left = 1

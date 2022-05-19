@@ -186,8 +186,12 @@ BEGIN
                       ) AS tmpRemains ON tmpRemains.GoodsId    = tmpMI.GoodsId
                                      AND tmpRemains.PartNumber = tmpMI.PartNumber
 
+            LEFT JOIN ObjectLink AS OL_Goods_Partner
+                                 ON OL_Goods_Partner.ObjectId = tmpMI.GoodsId
+                                AND OL_Goods_Partner.DescId   = zc_ObjectLink_Goods_Partner()
+
             LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId  = tmpMI.Id
-            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = Object_PartionGoods.FromId
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = COALESCE (Object_PartionGoods.FromId, OL_Goods_Partner.ChildObjectId)
 
             LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = tmpMI.Id
 

@@ -315,6 +315,7 @@ object InventoryForm: TInventoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1086#1087#1077#1088#1072#1094#1080#1080' ('#1055#1088#1086#1090#1086#1082#1086#1083')'
+            Options.Editing = False
             Width = 100
           end
           object UserName_protocol: TcxGridDBColumn
@@ -324,6 +325,7 @@ object InventoryForm: TInventoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1086#1087#1077#1088#1072#1094#1080#1080' ('#1055#1088#1086#1090#1086#1082#1086#1083')'
+            Options.Editing = False
             Width = 100
           end
           object PartionId: TcxGridDBColumn
@@ -567,12 +569,21 @@ object InventoryForm: TInventoryForm
       end
     end
     object cbList: TcxCheckBox
-      Left = 9
+      Left = 17
       Top = 103
       Hint = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093
       Caption = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093
       TabOrder = 13
       Width = 152
+    end
+    object cbPrice: TcxCheckBox
+      Left = 17
+      Top = 117
+      Hint = '1. '#1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' ('#1044#1072'/ '#1053#1077#1090')'
+      Caption = '1. '#1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' ('#1044#1072'/ '#1053#1077#1090')'
+      TabOrder = 14
+      Visible = False
+      Width = 169
     end
   end
   object lbSearchArticle: TcxLabel
@@ -615,13 +626,6 @@ object InventoryForm: TInventoryForm
       item
         Name = 'inAmount'
         Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'IsPrice'
-        Value = 'false'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -893,6 +897,11 @@ object InventoryForm: TInventoryForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = cbPrice
+        Properties.Strings = (
+          'Checked')
+      end
+      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -1080,13 +1089,7 @@ object InventoryForm: TInventoryForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDItems'
         end>
-      Params = <
-        item
-          Name = 'isPrintTermo'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
+      Params = <>
       ReportName = 'PrintMovement_IncomeSticker'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
       ReportNameParam.Value = 'PrintMovement_IncomeSticker'
@@ -1121,6 +1124,7 @@ object InventoryForm: TInventoryForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -1138,6 +1142,7 @@ object InventoryForm: TInventoryForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -1874,25 +1879,11 @@ object InventoryForm: TInventoryForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Label'
-          Value = #1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' ('#1044#1072'/ '#1053#1077#1090')'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'isPrice'
           Value = False
-          Component = FormParams
-          ComponentItem = 'isPrice'
+          Component = cbPrice
           DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPrice'
-          Value = False
-          DataType = ftBoolean
-          ParamType = ptInput
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -2848,8 +2839,7 @@ object InventoryForm: TInventoryForm
       item
         Name = 'inIsPrice'
         Value = False
-        Component = FormParams
-        ComponentItem = 'IsPrice'
+        Component = cbPrice
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
