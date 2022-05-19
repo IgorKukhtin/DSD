@@ -199,6 +199,7 @@ BEGIN
          , ObjectFloat_Power.ValueData               ::TFloat   AS EnginePower
          , ObjectFloat_Volume.ValueData              ::TFloat   AS EngineVolume
 
+         , '' ::TVarChar AS Text2
          , '' ::TVarChar AS Text3
 
          , '' ::TVarChar AS TaxNumber
