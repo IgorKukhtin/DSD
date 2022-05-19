@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_Goods()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Goods (Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Object_Goods (Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Goods (Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
@@ -66,8 +66,9 @@ BEGIN
                                   WHERE Movement.OperDate BETWEEN '01.01.2022' AND CURRENT_DATE
                                     AND Movement.DescId   = zc_Movement_PriceList()
                                     AND Movement.StatusId = zc_Enum_Status_Complete()
-                                    AND vbUserId NOT IN (5, 236658)
+                                  --AND vbUserId NOT IN (5, 236658)
                                   --AND vbUserId NOT IN (236658)
+                                    AND inIsLimit_100 = FALSE
 
                                   ORDER BY MovementItem.ObjectId, Movement.Id
                                  )

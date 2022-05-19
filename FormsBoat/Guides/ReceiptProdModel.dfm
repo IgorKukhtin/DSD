@@ -1915,7 +1915,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Params = <>
       Caption = '***'#1044#1086#1073#1072#1074#1080#1090#1100
       Hint = '***'#1044#1086#1073#1072#1074#1080#1090#1100
-      ImageIndex = 0
+      ImageIndex = 54
     end
     object actUpdateDataSetGoods: TdsdUpdateDataSet
       Category = 'DSDLib'

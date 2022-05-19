@@ -1,7 +1,7 @@
 object Goods_limitForm: TGoods_limitForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'> ('#1083#1080#1084#1080#1090')'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
   ClientHeight = 506
   ClientWidth = 982
   Color = clBtnFace
@@ -12,7 +12,6 @@ object Goods_limitForm: TGoods_limitForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
