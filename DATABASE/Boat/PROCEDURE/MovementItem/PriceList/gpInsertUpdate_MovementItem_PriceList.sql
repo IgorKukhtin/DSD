@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PriceList(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
-    IN inDiscountPartnerId    Integer   , -- 
+    IN inDiscountPartnerId   Integer   , -- 
     IN inMeasureId           Integer   , -- 
     IN inMeasureParentId     Integer   , -- 
     IN inAmount              TFloat    , -- 
@@ -30,7 +30,7 @@ BEGIN
      vbUserId := inSession;
 
      -- 
-     PERFORM lpInsertUpdate_MovementItem_PriceList (ioId, inMovementId, inGoodsId
+     ioId := lpInsertUpdate_MovementItem_PriceList (ioId, inMovementId, inGoodsId
                                                   , inDiscountPartnerId
                                                   , inMeasureId, inMeasureParentId
                                                   , inAmount

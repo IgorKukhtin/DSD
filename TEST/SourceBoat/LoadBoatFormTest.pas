@@ -762,6 +762,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPriceListJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListMovementForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListItemEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemEdit_limitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListItemEdit_limitForm');
 end;
 
 procedure TLoadFormTest.LoadReceiptProdModelFormTest;

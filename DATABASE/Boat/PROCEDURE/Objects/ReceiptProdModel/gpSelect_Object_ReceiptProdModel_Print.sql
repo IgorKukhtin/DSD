@@ -199,6 +199,7 @@ BEGIN
          , ObjectFloat_Power.ValueData               ::TFloat   AS EnginePower
          , ObjectFloat_Volume.ValueData              ::TFloat   AS EngineVolume
 
+         , '' ::TVarChar AS Text2
          , '' ::TVarChar AS Text3
 
          , '' ::TVarChar AS TaxNumber
@@ -323,7 +324,19 @@ BEGIN
                                        LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                              ON ObjectFloat_Value.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
                                                             AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptGoodsChild_Value()
-                                 )
+                                 )  
+       , tmpPhoto AS (SELECT ObjectLink_GoodsPhoto_Goods.ChildObjectId AS GoodsId
+                           , Object_GoodsPhoto.Id                      AS PhotoId
+                           , Object_GoodsPhoto.ValueData               AS FileName
+                           , ROW_NUMBER() OVER (PARTITION BY ObjectLink_GoodsPhoto_Goods.ChildObjectId ORDER BY Object_GoodsPhoto.Id) AS Ord
+                      FROM Object AS Object_GoodsPhoto
+                             JOIN ObjectLink AS ObjectLink_GoodsPhoto_Goods
+                                             ON ObjectLink_GoodsPhoto_Goods.ObjectId = Object_GoodsPhoto.Id
+                                            AND ObjectLink_GoodsPhoto_Goods.DescId   = zc_ObjectLink_GoodsPhoto_Goods()
+                                            AND ObjectLink_GoodsPhoto_Goods.ChildObjectId IN (SELECT DISTINCT tmpProdColorPattern.ObjectId FROM tmpProdColorPattern)
+                       WHERE Object_GoodsPhoto.DescId   = zc_Object_GoodsPhoto()
+                         AND Object_GoodsPhoto.isErased = FALSE
+                     )
 
      -- Результат
      SELECT tmpProdColorPattern.ReceiptGoodsChildId       AS Id
@@ -343,6 +356,7 @@ BEGIN
           , Object_Goods.Id                    ::Integer  AS GoodsId
           , Object_Goods.ObjectCode            ::Integer  AS GoodsCode
           , Object_Goods.ValueData             ::TVarChar AS GoodsName
+          , ObjectString_EAN.ValueData          AS EAN
 
           , ObjectString_GoodsGroupFull.ValueData      AS GoodsGroupNameFull
           , Object_GoodsGroup.ValueData                AS GoodsGroupName
@@ -351,6 +365,9 @@ BEGIN
           , CASE WHEN ObjectLink_Goods.ChildObjectId IS NULL THEN ObjectString_Comment.ValueData ELSE Object_ProdColor.ValueData END :: TVarChar AS ProdColorName
           , Object_Measure.ValueData                   AS MeasureName
 
+            , ObjectBlob_GoodsPhoto_Data1.ValueData AS Photo1
+            , tmpPhoto1.FileName AS FileName1
+            
      FROM tmpProdColorPattern
           LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = tmpProdColorPattern.ProdColorPatternId
 
@@ -397,6 +414,15 @@ BEGIN
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+          LEFT JOIN ObjectString AS ObjectString_EAN
+                                 ON ObjectString_EAN.ObjectId = Object_Goods.Id
+                                AND ObjectString_EAN.DescId = zc_ObjectString_EAN()
+
+          LEFT JOIN tmpPhoto AS tmpPhoto1
+                             ON tmpPhoto1.GoodsId = Object_Goods.Id
+                            AND tmpPhoto1.Ord = 1
+          LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data1
+                               ON ObjectBlob_GoodsPhoto_Data1.ObjectId = tmpPhoto1.PhotoId
      ;
 
      RETURN NEXT Cursor2;
