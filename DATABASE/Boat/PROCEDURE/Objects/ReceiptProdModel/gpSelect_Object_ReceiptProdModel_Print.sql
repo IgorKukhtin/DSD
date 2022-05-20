@@ -356,6 +356,7 @@ BEGIN
           , Object_Goods.Id                    ::Integer  AS GoodsId
           , Object_Goods.ObjectCode            ::Integer  AS GoodsCode
           , Object_Goods.ValueData             ::TVarChar AS GoodsName
+          , ObjectString_EAN.ValueData          AS EAN
 
           , ObjectString_GoodsGroupFull.ValueData      AS GoodsGroupNameFull
           , Object_GoodsGroup.ValueData                AS GoodsGroupName
@@ -413,11 +414,15 @@ BEGIN
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-            LEFT JOIN tmpPhoto AS tmpPhoto1
-                               ON tmpPhoto1.GoodsId = Object_Goods.Id
-                              AND tmpPhoto1.Ord = 1
-            LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data1
-                                 ON ObjectBlob_GoodsPhoto_Data1.ObjectId = tmpPhoto1.PhotoId
+          LEFT JOIN ObjectString AS ObjectString_EAN
+                                 ON ObjectString_EAN.ObjectId = Object_Goods.Id
+                                AND ObjectString_EAN.DescId = zc_ObjectString_EAN()
+
+          LEFT JOIN tmpPhoto AS tmpPhoto1
+                             ON tmpPhoto1.GoodsId = Object_Goods.Id
+                            AND tmpPhoto1.Ord = 1
+          LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data1
+                               ON ObjectBlob_GoodsPhoto_Data1.ObjectId = tmpPhoto1.PhotoId
      ;
 
      RETURN NEXT Cursor2;
