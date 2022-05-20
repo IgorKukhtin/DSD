@@ -53,10 +53,17 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
           object GoodsName: TcxGridDBColumn [1]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsMain
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 253
           end
           object MorionSP: TcxGridDBColumn [2]
@@ -67,9 +74,18 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             Properties.DisplayFormat = ',0;-,0; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
-          object IntenalSPName: TcxGridDBColumn [3]
+          object isSale: TcxGridDBColumn [3]
+            Caption = #1054#1090#1087#1091#1097#1077#1085#1086'  '#1079#1072' '#1087#1077#1088#1080#1086#1076'  '#1076#1077#1089#1090#1074#1080#1103' '#1056#1054#1054#1062
+            DataBinding.FieldName = 'isSale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object IntenalSPName: TcxGridDBColumn [4]
             Caption = #1052#1110#1078#1085#1072#1088#1086#1076#1085#1072' '#1085#1077#1087#1072#1090#1077#1085#1090#1086#1074#1072#1085#1072' '#1085#1072#1079#1074#1072' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
             DataBinding.FieldName = 'IntenalSPName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -84,7 +100,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             HeaderAlignmentVert = vaCenter
             Width = 97
           end
-          object BrandSPName: TcxGridDBColumn [4]
+          object BrandSPName: TcxGridDBColumn [5]
             Caption = #1058#1086#1088#1075#1086#1074#1077#1083#1100#1085#1072' '#1085#1072#1079#1074#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
             DataBinding.FieldName = 'BrandSPName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -99,7 +115,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             HeaderAlignmentVert = vaCenter
             Width = 115
           end
-          object KindOutSP_1303Name: TcxGridDBColumn [5]
+          object KindOutSP_1303Name: TcxGridDBColumn [6]
             Caption = #9#1060#1086#1088#1084#1072' '#1074#1080#1087#1091#1089#1082#1091' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
             DataBinding.FieldName = 'KindOutSP_1303Name'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -114,7 +130,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             HeaderAlignmentVert = vaCenter
             Width = 85
           end
-          object Dosage_1303Name: TcxGridDBColumn [6]
+          object Dosage_1303Name: TcxGridDBColumn [7]
             Caption = #1044#1086#1079#1091#1074#1072#1085#1085#1103' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
             DataBinding.FieldName = 'Dosage_1303Name'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -129,7 +145,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             HeaderAlignmentVert = vaCenter
             Width = 82
           end
-          object CountSP_1303Name: TcxGridDBColumn [7]
+          object CountSP_1303Name: TcxGridDBColumn [8]
             Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1090#1072#1073#1083#1077#1090#1086#1082' '#1074' '#1091#1087#1072#1082#1086#1074#1094#1110' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
             DataBinding.FieldName = 'CountSP_1303Name'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -144,7 +160,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             HeaderAlignmentVert = vaCenter
             Width = 105
           end
-          object MakerSP_1303Name: TcxGridDBColumn [8]
+          object MakerSP_1303Name: TcxGridDBColumn [9]
             Caption = #1053#1072#1079#1074#1072' '#1074#1080#1088#1086#1073#1085#1080#1082#1072' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
             DataBinding.FieldName = 'MakerSP_1303Name'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -159,7 +175,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             HeaderAlignmentVert = vaCenter
             Width = 97
           end
-          object Country_1303Name: TcxGridDBColumn [9]
+          object Country_1303Name: TcxGridDBColumn [10]
             Caption = #1050#1088#1072#1111#1085#1072' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
             DataBinding.FieldName = 'Country_1303Name'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -174,21 +190,21 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             HeaderAlignmentVert = vaCenter
             Width = 135
           end
-          object CodeATX: TcxGridDBColumn [10]
+          object CodeATX: TcxGridDBColumn [11]
             Caption = #1050#1086#1076' '#1040#1058#1061
             DataBinding.FieldName = 'CodeATX'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 65
           end
-          object ReestrSP: TcxGridDBColumn [11]
+          object ReestrSP: TcxGridDBColumn [12]
             Caption = #8470' '#1088#1077#1108#1089#1090#1088#1072#1094#1110#1081#1085#1086#1075#1086' '#1087#1086#1089#1074#1110#1076#1095#1077#1085#1085#1103
             DataBinding.FieldName = 'ReestrSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 116
           end
-          object ReestrDateSP: TcxGridDBColumn [12]
+          object ReestrDateSP: TcxGridDBColumn [13]
             Caption = #1044#1072#1090#1072' '#1088#1077#1108#1089#1090#1088#1072#1094#1110#1111
             DataBinding.FieldName = 'ReestrDateSP'
             PropertiesClassName = 'TcxDateEditProperties'
@@ -196,7 +212,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             HeaderAlignmentVert = vaCenter
             Width = 121
           end
-          object ValiditySP: TcxGridDBColumn [13]
+          object ValiditySP: TcxGridDBColumn [14]
             Caption = #1058#1077#1088#1084#1110#1085' '#1076#1110#1111
             DataBinding.FieldName = 'ValiditySP'
             PropertiesClassName = 'TcxDateEditProperties'
@@ -204,7 +220,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             HeaderAlignmentVert = vaCenter
             Width = 89
           end
-          object PriceOptSP: TcxGridDBColumn [14]
+          object PriceOptSP: TcxGridDBColumn [15]
             Caption = #1047#1072#1076#1077#1082#1083#1072#1088#1086#1074#1072#1085#1072' '#1086#1087#1090#1086#1074#1086'-'#1074#1110#1076#1087#1091#1089#1082#1085#1072' '#1094#1110#1085#1072
             DataBinding.FieldName = 'PriceOptSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -213,7 +229,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             HeaderAlignmentVert = vaCenter
             Width = 91
           end
-          object Currency: TcxGridDBColumn [15]
+          object Currency: TcxGridDBColumn [16]
             Caption = #1042#1072#1083#1102#1090#1072
             DataBinding.FieldName = 'CurrencyName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -228,7 +244,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             HeaderHint = 'DosageID '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091
             Width = 63
           end
-          object ExchangeRate: TcxGridDBColumn [16]
+          object ExchangeRate: TcxGridDBColumn [17]
             Caption = #1054#1092#1110#1094#1110#1081#1085#1080#1081' '#1082#1091#1088#1089
             DataBinding.FieldName = 'ExchangeRate'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -241,7 +257,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
               ' '#1087#1086#1076#1072#1085#1085#1103' '#1076#1077#1082#1083#1072#1088#1072#1094#1110#1111' '#1079#1084#1110#1085#1080' '#1086#1087#1090#1086#1074#1086'-'#1074#1110#1076#1087#1091#1089#1082#1085#1086#1111' '#1094#1110#1085#1080
             Width = 83
           end
-          object OrderNumberSP: TcxGridDBColumn [17]
+          object OrderNumberSP: TcxGridDBColumn [18]
             Caption = #8470' '#1085#1072#1082#1072#1091', '#1074' '#1103#1082#1086#1084#1091' '#1074#1085#1077#1089#1077#1085#1086' '#1051#1047
             DataBinding.FieldName = 'OrderNumberSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -252,7 +268,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             HeaderHint = #1054#1076#1080#1085#1080#1094#1103' '#1074#1080#1084#1110#1088#1091' '#1089#1080#1083#1080' '#1076#1110#1111
             Width = 66
           end
-          object OrderDateSP: TcxGridDBColumn [18]
+          object OrderDateSP: TcxGridDBColumn [19]
             Caption = #1044#1072#1090#1072' '#1085#1072#1082#1072#1079#1091', '#1074' '#1103#1082#1086#1084#1091' '#1074#1085#1077#1089#1077#1085#1086' '#1051#1047
             DataBinding.FieldName = 'OrderDateSP'
             PropertiesClassName = 'TcxDateEditProperties'
@@ -272,6 +288,7 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             Properties.DisplayFormat = ',0;-,0; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 59
           end
         end
@@ -792,6 +809,55 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
         end>
       isShowModal = True
     end
+    object actGoodsMain: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TIntenalSPForm'
+      FormName = 'TGoodsMainForm'
+      FormNameParam.Value = 'TGoodsMainForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actClearGoods: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spClearGoods
+      StoredProcList = <
+        item
+          StoredProc = spClearGoods
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100' '#1089' '#1090#1086#1074#1072#1088#1086#1084
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100' '#1089' '#1090#1086#1074#1072#1088#1086#1084
+      ImageIndex = 52
+      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100' '#1089' '#1090#1086#1074#1072#1088#1086#1084'?'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 192
@@ -896,6 +962,10 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -942,6 +1012,10 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072' ('#1061#1077#1083#1089#1080')'
       Visible = ivAlways
       ImageIndex = 30
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actClearGoods
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1258,6 +1332,14 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inBrandSPId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BrandSPId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inKindOutSP_1303Id'
         Value = Null
         Component = MasterCDS
@@ -1338,15 +1420,6 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PriceOptSP'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPriceSP'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PriceSP'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1440,6 +1513,14 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inBrandSPId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BrandSPId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inKindOutSP_1303Id'
         Value = Null
         Component = MasterCDS
@@ -1520,15 +1601,6 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PriceOptSP'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPriceSP'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PriceSP'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1740,5 +1812,34 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
     PackSize = 1
     Left = 912
     Top = 240
+  end
+  object spClearGoods: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_GoodsSPRegistry_1303_ClearGoods'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = 
+          'TGoodsSPRegistry_1303Form;zc_Object_ImportSetting_GoodsSPRegistr' +
+          'y_1303'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 904
+    Top = 312
   end
 end

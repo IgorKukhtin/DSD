@@ -12,6 +12,8 @@ RETURNS TABLE (Id            Integer
              , GoodsId       Integer
              , GoodsCode     Integer
              , GoodsName     TVarChar
+             
+             , isSale        Boolean
 
              , PriceOptSP    TFloat
              , ExchangeRate  TFloat
@@ -64,11 +66,38 @@ BEGIN
                                                AND (Object_Goods.isErased = inIsErased OR inIsErased = TRUE)
                          WHERE ObjectBoolean_Goods_isMain.DescId = zc_ObjectBoolean_Goods_isMain()
                          )
+       -- выбираем продажи по товарам соц.проекта
+      , tmpSaleAll AS (SELECT Movement_Sale.Id
+                   FROM Movement AS Movement_Sale
+
+                        INNER JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                                      ON MovementLinkObject_SPKind.MovementId = Movement_Sale.Id
+                                                     AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+                                                     AND MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303()
+
+
+                   WHERE Movement_Sale.DescId in (zc_Movement_Sale(), zc_Movement_Check())
+                     AND Movement_Sale.OperDate >= '15.02.2022'
+                     AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
+                  )
+      -- выбираем продажи по товарам соц.проекта
+      , tmpMI_Sale AS (SELECT DISTINCT Object_Goods.GoodsMainId     AS GoodsId
+                        FROM tmpSaleAll AS Movement_Sale
+                             INNER JOIN MovementItem AS MI_Sale
+                                                     ON MI_Sale.MovementId = Movement_Sale.Id
+                                                    AND MI_Sale.DescId = zc_MI_Master()
+                                                    AND MI_Sale.isErased = FALSE
+                                                    AND MI_Sale.Amount > 0
+                             LEFT JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.Id = MI_Sale.ObjectId
+                       )
+                         
 
         SELECT COALESCE (MovementItem.Id, 0)                         AS Id
              , Object_Goods.      Id                                 AS GoodsId
              , Object_Goods.ObjectCode                    ::Integer  AS GoodsCode
              , Object_Goods.ValueData                                AS GoodsName
+             
+             , COALESCE (tmpMI_Sale.GoodsId, 0) > 0                  AS isSale       
 
              , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
              , MIFloat_ExchangeRate.ValueData                        AS ExchangeRate
@@ -109,6 +138,8 @@ BEGIN
                                    AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
                                        
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoodsMain.Id
+             
+             LEFT JOIN tmpMI_Sale ON tmpMI_Sale.GoodsId = tmpGoodsMain.Id
              
              LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
                                          ON MIFloat_PriceOptSP.MovementItemId = MovementItem.Id
@@ -187,11 +218,38 @@ BEGIN
     ELSE
     
     RETURN QUERY
+    WITH 
+       -- выбираем продажи по товарам соц.проекта
+        tmpSaleAll AS (SELECT Movement_Sale.Id
+                   FROM Movement AS Movement_Sale
+
+                        INNER JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                                      ON MovementLinkObject_SPKind.MovementId = Movement_Sale.Id
+                                                     AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+                                                     AND MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303()
+
+
+                   WHERE Movement_Sale.DescId in (zc_Movement_Sale(), zc_Movement_Check())
+                     AND Movement_Sale.OperDate >= '15.02.2022'
+                     AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
+                  )
+      -- выбираем продажи по товарам соц.проекта
+      , tmpMI_Sale AS (SELECT DISTINCT Object_Goods.GoodsMainId     AS GoodsId
+                        FROM tmpSaleAll AS Movement_Sale
+                             INNER JOIN MovementItem AS MI_Sale
+                                                     ON MI_Sale.MovementId = Movement_Sale.Id
+                                                    AND MI_Sale.DescId = zc_MI_Master()
+                                                    AND MI_Sale.isErased = FALSE
+                                                    AND MI_Sale.Amount > 0
+                             LEFT JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.Id = MI_Sale.ObjectId
+                       )
 
         SELECT MovementItem.Id                                       AS Id
              , MovementItem.ObjectId                                 AS GoodsId
              , Object_Goods.ObjectCode                    ::Integer  AS GoodsCode
              , Object_Goods.ValueData                                AS GoodsName
+
+             , COALESCE (tmpMI_Sale.GoodsId, 0) > 0                  AS isSale       
 
              , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
              , MIFloat_ExchangeRate.ValueData                        AS ExchangeRate
@@ -226,8 +284,11 @@ BEGIN
              , COALESCE (MovementItem.isErased, FALSE)    ::Boolean  AS isErased
 
         FROM MovementItem
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+ 
+             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
             
+             LEFT JOIN tmpMI_Sale ON tmpMI_Sale.GoodsId = MovementItem.ObjectId
+
              LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
                                          ON MIFloat_PriceOptSP.MovementItemId = MovementItem.Id
                                         AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()

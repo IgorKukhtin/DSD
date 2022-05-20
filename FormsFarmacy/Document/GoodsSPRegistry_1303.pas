@@ -71,6 +71,11 @@ type
     actCountry_1303Choice: TOpenChoiceForm;
     actCurrencyChoice: TOpenChoiceForm;
     Dosage_1303Name: TcxGridDBColumn;
+    actGoodsMain: TOpenChoiceForm;
+    spClearGoods: TdsdStoredProc;
+    actClearGoods: TdsdExecStoredProc;
+    dxBarButton1: TdxBarButton;
+    isSale: TcxGridDBColumn;
   private
     { Private declarations }
   public

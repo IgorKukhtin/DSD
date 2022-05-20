@@ -107,6 +107,8 @@ type
     CrossDBViewReportAddOnItog: TCrossDBViewReportAddOn;
     actShowPrev: TBooleanStoredProcAction;
     dxBarButton1: TdxBarButton;
+    actShowPUSHInfo: TdsdShowPUSHMessage;
+    spPUSH: TdsdStoredProc;
   private
   public
   end;

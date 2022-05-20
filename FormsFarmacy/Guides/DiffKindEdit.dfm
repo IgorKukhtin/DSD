@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1042#1080#1076' '#1086#1090#1082#1072#1079#1072
-  ClientHeight = 293
-  ClientWidth = 344
+  ClientHeight = 312
+  ClientWidth = 583
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -150,7 +150,115 @@
     Top = 193
     Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091#1087#1072#1082#1086#1074#1086#1082
   end
+  object Panel1: TPanel
+    Left = 327
+    Top = 0
+    Width = 256
+    Height = 312
+    Align = alRight
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    Caption = 'Panel1'
+    ShowCaption = False
+    TabOrder = 18
+    ExplicitLeft = 342
+    ExplicitWidth = 285
+    ExplicitHeight = 293
+    object cxGrid: TcxGrid
+      Left = 1
+      Top = 36
+      Width = 254
+      Height = 275
+      Align = alClient
+      TabOrder = 0
+      LookAndFeel.Kind = lfStandard
+      LookAndFeel.NativeStyle = False
+      LookAndFeel.SkinName = ''
+      ExplicitLeft = 0
+      ExplicitTop = 26
+      ExplicitWidth = 653
+      ExplicitHeight = 256
+      object cxGridDBTableView: TcxGridDBTableView
+        Navigator.Buttons.CustomButtons = <>
+        DataController.DataSource = DataSource
+        DataController.Filter.Options = [fcoCaseInsensitive]
+        DataController.Filter.Active = True
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        Images = dmMain.SortImageList
+        OptionsBehavior.IncSearch = True
+        OptionsCustomize.ColumnHiding = True
+        OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsSelection.InvertSelect = False
+        OptionsView.ColumnAutoWidth = True
+        OptionsView.GroupByBox = False
+        OptionsView.HeaderAutoHeight = True
+        OptionsView.Indicator = True
+        Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+        object isErased: TcxGridDBColumn
+          DataBinding.FieldName = 'isErased'
+          PropertiesClassName = 'TcxCheckBoxProperties'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          VisibleForCustomization = False
+          Width = 49
+        end
+        object Price: TcxGridDBColumn
+          Caption = #1044#1086' '#1094#1077#1085#1099
+          DataBinding.FieldName = 'Price'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 56
+        end
+        object Amount: TcxGridDBColumn
+          Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091#1087#1072#1082#1086#1074#1086#1082
+          DataBinding.FieldName = 'Amount'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 57
+        end
+      end
+      object cxGridLevel: TcxGridLevel
+        GridView = cxGridDBTableView
+      end
+    end
+    object Panel2: TPanel
+      Left = 1
+      Top = 1
+      Width = 254
+      Height = 35
+      Align = alTop
+      Caption = 'Panel2'
+      ShowCaption = False
+      TabOrder = 1
+      object cxButton3: TcxButton
+        Left = 8
+        Top = 4
+        Width = 25
+        Height = 25
+        Action = dsdSetErased
+        PaintStyle = bpsGlyph
+        TabOrder = 0
+        TabStop = False
+      end
+      object cxButton4: TcxButton
+        Left = 39
+        Top = 4
+        Width = 26
+        Height = 25
+        Action = dsdSetUnErased
+        PaintStyle = bpsGlyph
+        TabOrder = 1
+        TabStop = False
+      end
+    end
+  end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 120
     Top = 159
     object dsdDataSetRefresh: TdsdDataSetRefresh
@@ -160,6 +268,9 @@
       StoredProcList = <
         item
           StoredProc = spGet
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -181,6 +292,49 @@
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+    end
+    object dsdUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_DiffKindPrice
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_DiffKindPrice
+        end>
+      Caption = 'dsdUpdateDataSet'
+      DataSource = DataSource
+    end
+    object dsdSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = DataSource
+    end
+    object dsdSetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 32776
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DataSource
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -392,5 +546,140 @@
     StorageType = stStream
     Left = 40
     Top = 147
+  end
+  object DataSource: TDataSource
+    DataSet = ClientDataSet
+    Left = 360
+    Top = 32
+  end
+  object ClientDataSet: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 360
+    Top = 88
+  end
+  object spSelect: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_DiffKindPrice'
+    DataSet = ClientDataSet
+    DataSets = <
+      item
+        DataSet = ClientDataSet
+      end>
+    Params = <
+      item
+        Name = 'inDiffKindId'
+        Value = Null
+        Component = dsdFormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 360
+    Top = 144
+  end
+  object spInsertUpdate_DiffKindPrice: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_DiffKindPrice'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCode'
+        Value = 0.000000000000000000
+        Component = ClientDataSet
+        ComponentItem = 'Code'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiffKindId'
+        Value = Null
+        Component = dsdFormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Value = 0.000000000000000000
+        Component = ClientDataSet
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = 0.000000000000000000
+        Component = ClientDataSet
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 480
+    Top = 35
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView
+    OnDblClickActionList = <
+      item
+      end
+      item
+      end>
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 480
+    Top = 104
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 480
+    Top = 168
   end
 end

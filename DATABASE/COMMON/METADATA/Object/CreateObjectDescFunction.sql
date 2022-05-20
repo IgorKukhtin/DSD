@@ -539,7 +539,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_Object_MakerReport() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_MakerReport'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_MakerReport', 'Исключения в отправке Маркет-отчетов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MakerReport');
-  
+
 -- CREATE OR REPLACE FUNCTION zc_Object_Document() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Document'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 -- INSERT INTO ObjectDesc (Code, ItemName)
 --  SELECT 'zc_Object_Document', 'Справочник Документы' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Document');
@@ -707,7 +707,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_Object_ConditionPromo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ConditionPromo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ConditionPromo', 'Условия участия в акции' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ConditionPromo');
-  
+
 CREATE OR REPLACE FUNCTION zc_Object_ContractTermKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ContractTermKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ContractTermKind', 'Типы пролонгаций договоров' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ContractTermKind');
@@ -769,15 +769,15 @@ INSERT INTO ObjectDesc(Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_Object_DayKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_DayKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_DayKind', 'Типы дней' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DayKind');
-     
+
 CREATE OR REPLACE FUNCTION zc_Object_SheetWorkTime() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_SheetWorkTime'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_SheetWorkTime', 'Режим работы (Шаблон табеля рабочего времени)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_SheetWorkTime');
-     
+
 CREATE OR REPLACE FUNCTION zc_Object_ReportCollation() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ReportCollation'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ReportCollation', 'Акт сверки' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ReportCollation');
-     
+
 CREATE OR REPLACE FUNCTION zc_Object_PhotoMobile() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PhotoMobile'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_PhotoMobile', 'Фотографии с мобильного устройства' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PhotoMobile');
@@ -1103,7 +1103,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_Object_BarCode() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_BarCode'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_BarCode', 'Штрих-коды товаров' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_BarCode');
-  
+
 CREATE OR REPLACE FUNCTION zc_Object_DiscountExternal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_DiscountExternal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_DiscountExternal', 'Проекты (дисконтные карты)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DiscountExternal');
@@ -1135,19 +1135,19 @@ INSERT INTO ObjectDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_Object_BrandSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_BrandSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_BrandSP', 'Торговельна назва лікарського засобу (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_BrandSP');
-  
+
 CREATE OR REPLACE FUNCTION zc_Object_IntenalSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_IntenalSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_IntenalSP', 'Міжнародна непатентована назва (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_IntenalSP');
-  
+
 CREATE OR REPLACE FUNCTION zc_Object_KindOutSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_KindOutSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_KindOutSP', 'Форма випуску (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_KindOutSP');
-  
+
 CREATE OR REPLACE FUNCTION zc_Object_PartnerMedical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PartnerMedical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_PartnerMedical', 'Медицинское учреждение' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PartnerMedical');
-  
+
 CREATE OR REPLACE FUNCTION zc_Object_ConditionsKeep() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ConditionsKeep'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ConditionsKeep', 'Условия хранения' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ConditionsKeep');
@@ -1356,29 +1356,29 @@ INSERT INTO ObjectDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_Object_SeasonalityCoefficient() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_SeasonalityCoefficient'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_SeasonalityCoefficient', 'Коэффициента сезонности' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_SeasonalityCoefficient');
- 
+
 CREATE OR REPLACE FUNCTION zc_Object_SunExclusion() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_SunExclusion'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_SunExclusion', 'Исключения для СУН' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_SunExclusion');
-   
+
 CREATE OR REPLACE FUNCTION zc_Object_Hardware() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Hardware'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Hardware', 'Аппаратная часть' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Hardware');
-   
-   
+
+
 CREATE OR REPLACE FUNCTION zc_Object_CheckSourceKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_CheckSourceKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_CheckSourceKind', 'Источник чека' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CheckSourceKind');
-   
+
 
 CREATE OR REPLACE FUNCTION zc_Object_CashFlow() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_CashFlow'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_CashFlow', 'Статьи отчета ДДС' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CashFlow');
-   
+
 CREATE OR REPLACE FUNCTION zc_Object_HouseholdInventory() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_HouseholdInventory'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_HouseholdInventory', 'Хозяйственный инвентарь' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_HouseholdInventory');
-   
+
 CREATE OR REPLACE FUNCTION zc_Object_PartionHouseholdInventory() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PartionHouseholdInventory'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_PartionHouseholdInventory', 'Партии хозяйственного инвентаря' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PartionHouseholdInventory');
@@ -1555,6 +1555,18 @@ CREATE OR REPLACE FUNCTION zc_Object_Country_1303() RETURNS Integer AS $BODY$BEG
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Country_1303', 'Країна (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Country_1303');
 
+CREATE OR REPLACE FUNCTION zc_Object_DiffKindPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_DiffKindPrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_DiffKindPrice', 'Вид отказов ограничения от цены' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DiffKindPrice');
+
+CREATE OR REPLACE FUNCTION zc_Object_MCRequest() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_MCRequest'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_MCRequest', 'Запрос на изменение категории наценки' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MCRequest');
+
+CREATE OR REPLACE FUNCTION zc_Object_MCRequestList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_MCRequestList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_MCRequestList', 'Элемент запроса на изменение категории наценки' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MCRequestList');
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1575,18 +1587,19 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
- 14.05.22                                                                                        * zc_Object_..._1303()  
- 04.05.22                                                                                        * zc_Object_Competitor  
+ 20.05.22                                                                                        * zc_Object_DiffKindPrice, zc_Object_MCRequest, zc_Object_MCRequestList
+ 14.05.22                                                                                        * zc_Object_..._1303()
+ 04.05.22                                                                                        * zc_Object_Competitor
  14.04.22         * zc_Object_UserByGroup
                     zc_Object_UserByGroupList
- 24.02.22                                                                                        * zc_Object_ExchangeRates  
- 09.02.22                                                                                        * zc_Object_SupplierFailures  
- 20.01.22                                                                                        * zc_Object_PickUpLogsAndDBF  
- 25.11.21                                                                                        * zc_Object_SurchargeWages  
+ 24.02.22                                                                                        * zc_Object_ExchangeRates
+ 09.02.22                                                                                        * zc_Object_SupplierFailures
+ 20.01.22                                                                                        * zc_Object_PickUpLogsAndDBF
+ 25.11.21                                                                                        * zc_Object_SurchargeWages
  22.11.21         * zc_Object_PairDay
- 03.11.21                                                                                        * zc_Object_GroupMedicalProgramSP  
- 27.10.21                                                                                        * zc_Object_Category1303  
- 06.10.21                                                                                        * zc_Object_BanCommentSend  
+ 03.11.21                                                                                        * zc_Object_GroupMedicalProgramSP
+ 27.10.21                                                                                        * zc_Object_Category1303
+ 06.10.21                                                                                        * zc_Object_BanCommentSend
  01.10.21                                                                                        * zc_Object_MedicalProgramSP, zc_Object_MedicalProgramSPLink
  29.09.21                                                                                        * zc_Object_FormDispensing
  24.09.21                                                                                        * zc_Object_CorrectWagesPercentage
@@ -1602,7 +1615,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
  27.04.21                                                                                        * zc_Object_PriceSite
  08.06.21         * zc_Object_OrderPeriodKind
  31.05.21                                                                                        * zc_Object_MethodsAssortment
- 27.05.21         * zc_Object_ContractPriceList  
+ 27.05.21         * zc_Object_ContractPriceList
  17.05.21                                                                                        * zc_Object_GoodsDivisionLock
  28.04.21         * zc_Object_FineSubject
  20.04.21                                                                                        * zc_Object_BuyerForSite
@@ -1666,16 +1679,16 @@ INSERT INTO ObjectDesc (Code, ItemName)
  11.02.19         * zc_Object_GoodsCategory
  28.01.19         * zc_Object_SettingsService
                     zc_Object_SettingsServiceItem
-                    
+
  13.01.19         * zc_Object_JuridicalSettingsItem
  11.01.19         * zc_Object_MakerReport
  21.12.18                                                                                        * zc_Object_RecalcMCSSheduler
  11.12.18         * zc_Object_DiffKind
  22.10.18                                                                                        * zc_Object_RepriceUnitSheduler
  07.10.18         * zc_Object_GoodsSeparate
- 28.09.18                                                                                        * zc_Object_Exchange, zc_Object_ClientsByBank  
- 27.08.18                                                                                        * zc_Object_Overdraft  
- 17.08.18                                                                                        * zc_Object_Accommodation  
+ 28.09.18                                                                                        * zc_Object_Exchange, zc_Object_ClientsByBank
+ 27.08.18                                                                                        * zc_Object_Overdraft
+ 17.08.18                                                                                        * zc_Object_Accommodation
  16.08.18         * zc_Object_PriceChange
  24.06.18         * zc_Object_GoodsPropertyBox
  20.06.18         * zc_Object_ReplMovement
@@ -1708,8 +1721,8 @@ INSERT INTO ObjectDesc (Code, ItemName)
  03.08.16         *
  19.07.16         * zc_Object_OverSettings
  23.03.16         *
- 03.03.16         * add zc_Object_EmailTools, 
-                        zc_Object_EmailKind, 
+ 03.03.16         * add zc_Object_EmailTools,
+                        zc_Object_EmailKind,
                         zc_Object_EmailSettings
  22.01.16         * add zc_Object_Education (аптека)
  16.01.16         * add zc_Object_RouteMember

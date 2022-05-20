@@ -22,6 +22,8 @@ type
     bbmacPrint: TdxBarButton;
     OperDate: TcxGridDBColumn;
     actDataDialog: TExecuteDialog;
+    actMCRequestAllDialog: TExecuteDialog;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

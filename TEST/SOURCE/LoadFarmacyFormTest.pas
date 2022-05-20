@@ -597,6 +597,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPriceSubgroupsEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceSubgroupsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceSubgroupsForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMCRequestAllDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMCRequestAllDialogForm');
 end;
 
 

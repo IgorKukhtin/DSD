@@ -2249,15 +2249,31 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_DeySupplOutSUN2() RETURNS
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_DeySupplOutSUN2', 'Продажи дней для аптек откуда' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_DeySupplOutSUN2');
 
-
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_DeySupplInSUN2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_DeySupplInSUN2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_DeySupplInSUN2', 'Продажи дней для аптек куда' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_DeySupplInSUN2');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_DiffKindPrice_Price() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_DiffKindPrice_Price'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_DiffKindPrice(), 'zc_ObjectFloat_DiffKindPrice_Price', 'До цены' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_DiffKindPrice_Price');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_DiffKindPrice_Amount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_DiffKindPrice_Amount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_DiffKindPrice(), 'zc_ObjectFloat_DiffKindPrice_Amount', 'Количество упаковок заказа' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_DiffKindPrice_Amount');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_MCRequestItem_MinPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MCRequestItem_MinPrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_MCRequestList(), 'zc_ObjectFloat_MCRequestItem_MinPrice', 'Минимальная цена' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MCRequestItem_MinPrice');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_MCRequestItem_MarginPercent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MCRequestItem_MarginPercent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_MCRequestList(), 'zc_ObjectFloat_MCRequestItem_MarginPercent', '% наценки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MCRequestItem_MarginPercent');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 20.05.22                                                                                      * zc_ObjectFloat_DiffKindPrice_Price, zc_ObjectFloat_DiffKindPrice_Amount, zc_ObjectFloat_MCRequestItem_MinPrice, zc_ObjectFloat_MCRequestItem_MarginPercent
  27.04.22         * zc_ObjectFloat_ObjectCode_Basis
  08.04.22                                                                                      * zc_ObjectFloat_CashSettings_DeySupplOutSUN2, zc_ObjectFloat_CashSettings_DeySupplInSUN2 
  15.03.22                                                                                      * zc_ObjectFloat_CashSettings_TurnoverMoreSUN2 

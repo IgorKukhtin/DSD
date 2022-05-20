@@ -16,6 +16,7 @@
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  AddOnFormData.PUSHMessage = actShowPUSHInfo
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -799,10 +800,6 @@
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
           ItemName = 'bbStaticText'
         end
         item
@@ -981,6 +978,16 @@
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1088#1072#1074#1085#1077#1085#1080#1077' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1080#1084' '#1084#1077#1089#1103#1094#1077#1084
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actShowPUSHInfo: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSH
+      StoredProcList = <
+        item
+          StoredProc = spPUSH
+        end>
+      Caption = 'actShowPUSHInfo'
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -1354,7 +1361,6 @@
         HeaderColumnName = 'DMarginPercentCodeName'
         TemplateColumn = chDMarginPercentCode
         IsCross.Value = True
-        IsCross.Component = actShowPrev
         IsCross.DataType = ftBoolean
         IsCross.MultiSelectSeparator = ','
       end
@@ -1362,7 +1368,6 @@
         HeaderColumnName = 'DMarginPercent'
         TemplateColumn = chDMarginPercent
         IsCross.Value = True
-        IsCross.Component = actShowPrev
         IsCross.DataType = ftBoolean
         IsCross.MultiSelectSeparator = ','
       end>
@@ -1370,5 +1375,39 @@
     BаndColumnName = 'CompetitorName'
     Left = 512
     Top = 304
+  end
+  object spPUSH: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_ReportCompetitorMarkups'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 506
+    Top = 416
   end
 end

@@ -633,10 +633,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_User_KeyExpireDate() RETURNS Integer AS
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_User(), 'zc_ObjectDate_User_KeyExpireDate', 'Дата истечения срока действия файлового ключа' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_KeyExpireDate');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_MCRequest_DateUpdate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_MCRequest_DateUpdate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_MCRequest(), 'zc_ObjectDate_MCRequest_DateUpdate', 'Дата последнего изменения' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_MCRequest_DateUpdate');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_MCRequest_DateDone() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_MCRequest_DateDone'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_MCRequest(), 'zc_ObjectDate_MCRequest_DateDone', 'Дата выполнения' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_MCRequest_DateDone');
+
 
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 20.05.22                                                                                     * zc_ObjectDate_MCRequest_DateUpdate, zc_ObjectDate_MCRequest_DateDone
  17.03.22                                                                                     * zc_ObjectDate_User_KeyExpireDate
  24.02.22                                                                                     * zc_ObjectDate_ExchangeRates_OperDate
  15.02.22                                                                                     * zc_ObjectDate_PriceSite_DiscontStart, zc_ObjectDate_PriceSite_DiscontEnd
