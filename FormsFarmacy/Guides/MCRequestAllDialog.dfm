@@ -25,10 +25,6 @@ object MCRequestAllDialogForm: TMCRequestAllDialogForm
     Align = alClient
     ShowCaption = False
     TabOrder = 0
-    ExplicitLeft = 168
-    ExplicitTop = 24
-    ExplicitWidth = 185
-    ExplicitHeight = 41
     object cxGrid: TcxGrid
       Left = 1
       Top = 1
@@ -39,10 +35,6 @@ object MCRequestAllDialogForm: TMCRequestAllDialogForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitLeft = 0
-      ExplicitTop = 26
-      ExplicitWidth = 653
-      ExplicitHeight = 256
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -75,7 +67,7 @@ object MCRequestAllDialogForm: TMCRequestAllDialogForm
           Width = 136
         end
         object MarginPercentCurr: TcxGridDBColumn
-          Caption = '% '#1085#1072#1094#1077#1085#1082#1080
+          Caption = #1058#1077#1082#1091#1097#1080#1081' % '#1085#1072#1094#1077#1085#1082#1080' '
           DataBinding.FieldName = 'MarginPercentCurr'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = ',0.00;-,0.00'
@@ -85,13 +77,12 @@ object MCRequestAllDialogForm: TMCRequestAllDialogForm
           Width = 179
         end
         object MarginPercent: TcxGridDBColumn
-          Caption = '% '#1085#1072#1094#1077#1085#1082#1080
+          Caption = #1053#1086#1074#1099#1081' % '#1085#1072#1094#1077#1085#1082#1080
           DataBinding.FieldName = 'MarginPercent'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = ',0.00;-,0.00'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Options.Editing = False
           Width = 176
         end
       end
@@ -108,15 +99,12 @@ object MCRequestAllDialogForm: TMCRequestAllDialogForm
     Align = alBottom
     ShowCaption = False
     TabOrder = 1
-    ExplicitLeft = 176
-    ExplicitTop = 32
-    ExplicitWidth = 185
     object cxButton1: TcxButton
       Left = 150
       Top = 8
       Width = 75
       Height = 25
-      Caption = 'Ok'
+      Action = dsdInsertUpdateGuides
       Default = True
       ModalResult = 1
       TabOrder = 0
@@ -186,7 +174,64 @@ object MCRequestAllDialogForm: TMCRequestAllDialogForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = dsdDataToJson
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'Ok'
+    end
+    object dsdDataToJson: TdsdDataToJsonAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      DataSource = DataSource
+      JsonParam.Value = Null
+      JsonParam.Component = FormParams
+      JsonParam.ComponentItem = 'Json'
+      JsonParam.DataType = ftWideString
+      JsonParam.MultiSelectSeparator = ','
+      PairParams = <>
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      Caption = 'dsdDataToJson'
+    end
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_MCRequestAll'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inJson'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Json'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 152
+    Top = 155
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Json'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    Left = 152
+    Top = 96
   end
 end

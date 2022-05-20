@@ -6061,7 +6061,7 @@ function TdsdDataToJsonAction.LocalExecute: Boolean;
               end else
               begin
                 for j := 0 to DataSource.DataSet.FieldCount - 1 do
-                  AddParamToJSON(DataSource.DataSet.Fields.Fields[J].DisplayText,
+                  AddParamToJSON(DataSource.DataSet.Fields.Fields[J].FieldName,
                                  DataSource.DataSet.Fields.Fields[J].Value,
                                  DataSource.DataSet.Fields.Fields[J].DataType);
               end;

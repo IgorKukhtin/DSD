@@ -44,6 +44,10 @@ type
     cxGridLevel: TcxGridLevel;
     ActionList1: TActionList;
     actRefresh: TdsdDataSetRefresh;
+    spInsertUpdate: TdsdStoredProc;
+    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    dsdDataToJson: TdsdDataToJsonAction;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
