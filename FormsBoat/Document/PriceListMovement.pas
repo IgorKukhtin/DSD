@@ -108,6 +108,21 @@ type
     actGetImportSettingId_ASGEMEA: TdsdExecStoredProc;
     mactStartLoad_ASGEMEA: TMultiAction;
     bbtStartLoad_ASGEMEA: TdxBarButton;
+    Panel1: TPanel;
+    cxLabel6: TcxLabel;
+    edBarCode1: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    EnterMoveNext1: TEnterMoveNext;
+    actGoodsItem1: TdsdInsertUpdateAction;
+    macGoodsItem1: TMultiAction;
+    actGoodsItemGet1: TdsdExecStoredProc;
+    spGet_dop1: TdsdStoredProc;
+    actAdd: TdsdInsertUpdateAction;
+    mactAdd: TMultiAction;
+    actRefreshMI: TdsdDataSetRefresh;
+    actAdd_limit: TdsdInsertUpdateAction;
+    mactAdd_limit: TMultiAction;
+    bbAdd_limit: TdxBarButton;
   private
     { Private declarations }
   public
