@@ -109,6 +109,8 @@ type
     dxBarButton1: TdxBarButton;
     actShowPUSHInfo: TdsdShowPUSHMessage;
     spPUSH: TdsdStoredProc;
+    actMCRequestAllDialog: TExecuteDialog;
+    dxBarButton2: TdxBarButton;
   private
   public
   end;

@@ -812,6 +812,10 @@
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
           ItemName = 'bbStaticText'
         end
         item
@@ -909,6 +913,10 @@
       Action = actShowPrev
       Category = 0
     end
+    object dxBarButton2: TdxBarButton
+      Action = actMCRequestAllDialog
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -988,6 +996,20 @@
           StoredProc = spPUSH
         end>
       Caption = 'actShowPUSHInfo'
+    end
+    object actMCRequestAllDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1087#1088#1072#1074#1082#1072' '#1079#1072#1087#1088#1086#1089#1072' '#1085#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1082#1080
+      Hint = #1054#1090#1087#1088#1072#1074#1082#1072' '#1079#1072#1087#1088#1086#1089#1072' '#1085#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1082#1080
+      ImageIndex = 27
+      FormName = 'TMCRequestAllDialogForm'
+      FormNameParam.Value = 'TMCRequestAllDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = True
+      OpenBeforeShow = True
     end
   end
   object dsdStoredProc: TdsdStoredProc

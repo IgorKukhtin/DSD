@@ -925,6 +925,17 @@ BEGIN
        END IF;
    END IF;
 
+   IF (inNumberPUSH = 1 OR inNumberPUSH % 8 = 0) AND vbUserId IN (3)
+   THEN
+       IF EXISTS (SELECT 1 FROM gpSelect_Object_MCRequestShowPUSH(inSession)
+                  WHERE DateDone IS NULL
+                    AND COALESCE (DMarginPercent, 0) <> 0)
+       THEN         
+         INSERT INTO _PUSH (Id, Text, FormName)
+         VALUES (24, '', 'TMCRequestShowPUSHForm');
+       END IF;
+   END IF;
+
    RETURN QUERY
      SELECT _PUSH.Id                     AS Id
           , _PUSH.Text                   AS Text

@@ -600,6 +600,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMCRequestAllDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMCRequestAllDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMCRequestShowPUSHForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMCRequestShowPUSHForm');
 end;
 
 
