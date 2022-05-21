@@ -170,6 +170,12 @@ type
     mactStartLoad: TMultiAction;
     spSelectPrintStructureGoods: TdsdStoredProc;
     actPrintStructureGoods: TdsdPrintAction;
+    PrintItemsCDS: TClientDataSet;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsColorCDS: TClientDataSet;
+    spSelectPrintStructure: TdsdStoredProc;
+    actPrintStructure: TdsdPrintAction;
+    bbPrintStructure: TdxBarButton;
   private
     { Private declarations }
   public

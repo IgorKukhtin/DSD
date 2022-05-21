@@ -2194,7 +2194,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'NPP;GoodsGroupNameFull;GoodsName'
+          IndexFieldNames = 'NPP;GoodsGroupNameFull;ObjectName'
         end>
       Params = <
         item

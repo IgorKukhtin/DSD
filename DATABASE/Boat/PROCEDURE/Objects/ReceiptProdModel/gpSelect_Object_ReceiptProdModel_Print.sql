@@ -255,9 +255,9 @@ BEGIN
          --, tmpResult.ReceiptLevelId
          --, tmpResult.ReceiptLevelName
 
-         , tmpResult.ObjectCode  AS GoodsCode
-         , tmpResult.ObjectName  AS GoodsName
-         , ObjectString_EAN.ValueData          AS EAN
+         , tmpResult.ObjectCode
+         , tmpResult.ObjectName 
+         , ObjectString_EAN.ValueData  AS EAN
 
          --
          , tmpResult.GoodsGroupNameFull
@@ -284,17 +284,8 @@ BEGIN
           , tmpProdColorPattern.Value         :: TFloat   AS Value
           , 0  AS Value_service
 
-         /* , Object_ProdColorPattern.Id              AS ProdColorPatternId
-          , Object_ProdColorPattern.ObjectCode      AS ProdColorPatternCode
-          , Object_ProdColorPattern.ValueData       AS ProdColorPatternName
-
-          , Object_ProdColorGroup.Id           ::Integer  AS ProdColorGroupId
-          , Object_ProdColorGroup.ValueData    ::TVarChar AS ProdColorGroupName
-          , Object_ColorPattern.Id             ::Integer  AS ColorPatternId
-          , Object_ColorPattern.ValueData      ::TVarChar AS ColorPatternName
-         */
-          , Object_Goods.ObjectCode            ::Integer  AS GoodsCode
-          , Object_Goods.ValueData             ::TVarChar AS GoodsName
+          , Object_Goods.ObjectCode            ::Integer
+          , Object_Goods.ValueData             ::TVarChar
           , ObjectString_EAN.ValueData          AS EAN
 
           , ObjectString_GoodsGroupFull.ValueData      AS GoodsGroupNameFull
