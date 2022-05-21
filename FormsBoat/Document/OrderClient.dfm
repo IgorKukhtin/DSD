@@ -3715,7 +3715,6 @@ object OrderClientForm: TOrderClientForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'NPP;ProdColorGroupName'
         end>
       Params = <
         item

@@ -269,7 +269,7 @@ BEGIN
                              LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = ObjectLink_ReceiptProdModelChild_ReceiptLevel.ChildObjectId
                          )
 
-
+                 
        -- Результат
       SELECT Object_Object.Id                         AS ObjectId
            , Object_Object.ObjectCode                 AS ObjectCode
@@ -301,7 +301,8 @@ BEGIN
            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
 
            , tmpSumm.PartNumber :: TVarChar AS PartNumber
-           , tmpReceiptLevel.ReceiptLevelName :: TVarChar AS ReceiptLevelName
+           , tmpReceiptLevel.ReceiptLevelName :: TVarChar AS ReceiptLevelName                                     
+           , ROW_NUMBER() OVER (ORDER BY Object_Object.ValueData) :: Integer AS NPP
        FROM tmpItem
             LEFT JOIN tmpSumm      ON tmpSumm.ParentId     = tmpItem.MovementItemId
 

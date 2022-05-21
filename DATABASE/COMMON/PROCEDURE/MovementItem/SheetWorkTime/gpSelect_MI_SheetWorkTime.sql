@@ -610,7 +610,7 @@ BEGIN
                , Object_StorageLine.ValueData        AS StorageLineName
                , Object_WorkTimeKind_key.Id          AS WorkTimeKindId_key
                , Object_WorkTimeKind_key.ValueData   AS WorkTimeKindName_key
-               , tmpListOut.DateOut                  AS DateOut
+               , CASE WHEN COALESCE (tmpListOut.DateOut, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE tmpListOut.DateOut END AS DateOut
 
                , CASE WHEN tmp.isErased = 0 THEN TRUE ELSE FALSE END AS isErased
 
