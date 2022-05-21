@@ -198,7 +198,19 @@ object MCRequestAllDialogForm: TMCRequestAllDialogForm
       JsonParam.ComponentItem = 'Json'
       JsonParam.DataType = ftWideString
       JsonParam.MultiSelectSeparator = ','
-      PairParams = <>
+      PairParams = <
+        item
+          FieldName = 'MinPrice'
+          PairName = 'MinPrice'
+        end
+        item
+          FieldName = 'MarginPercentCurr'
+          PairName = 'MarginPercentCurr'
+        end
+        item
+          FieldName = 'MarginPercent'
+          PairName = 'MarginPercent'
+        end>
       FileNameParam.Value = ''
       FileNameParam.DataType = ftString
       FileNameParam.MultiSelectSeparator = ','

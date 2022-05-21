@@ -50,7 +50,7 @@ BEGIN
                                                        ON ObjectFloat_MarginPercent.ObjectId = ObjectLink_MCRequest.ObjectId
                                                       AND ObjectFloat_MarginPercent.DescId = zc_ObjectFloat_MCRequestItem_MarginPercent()
 
-                            WHERE Object_MCReques.DescId = zc_Object_MCRequestList()
+                            WHERE Object_MCReques.DescId = zc_Object_MCRequest()
                               AND Object_MCReques.ObjectCode = 1
                               AND ObjectDate_DateDone.ValueData IS NULL
                             )

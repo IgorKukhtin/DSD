@@ -2269,11 +2269,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_MCRequestItem_MarginPercent() RETURNS 
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_MCRequestList(), 'zc_ObjectFloat_MCRequestItem_MarginPercent', '% наценки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MCRequestItem_MarginPercent');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_MCRequestItem_MarginPercentOld() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MCRequestItem_MarginPercentOld'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_MCRequestList(), 'zc_ObjectFloat_MCRequestItem_MarginPercentOld', '% наценки старый' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MCRequestItem_MarginPercentOld');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
- 20.05.22                                                                                      * zc_ObjectFloat_DiffKindPrice_Price, zc_ObjectFloat_DiffKindPrice_Amount, zc_ObjectFloat_MCRequestItem_MinPrice, zc_ObjectFloat_MCRequestItem_MarginPercent
+ 20.05.22                                                                                      * zc_ObjectFloat_DiffKindPrice_Price, zc_ObjectFloat_DiffKindPrice_Amount, zc_ObjectFloat_MCRequestItem_MinPrice, zc_ObjectFloat_MCRequestItem_MarginPercent, zc_ObjectFloat_MCRequestItem_MarginPercentOld
  27.04.22         * zc_ObjectFloat_ObjectCode_Basis
  08.04.22                                                                                      * zc_ObjectFloat_CashSettings_DeySupplOutSUN2, zc_ObjectFloat_CashSettings_DeySupplInSUN2 
  15.03.22                                                                                      * zc_ObjectFloat_CashSettings_TurnoverMoreSUN2 

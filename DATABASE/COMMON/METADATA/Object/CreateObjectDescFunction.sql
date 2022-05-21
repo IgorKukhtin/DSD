@@ -1563,10 +1563,10 @@ CREATE OR REPLACE FUNCTION zc_Object_MCRequest() RETURNS Integer AS $BODY$BEGIN 
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_MCRequest', 'Запрос на изменение категории наценки' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MCRequest');
 
-CREATE OR REPLACE FUNCTION zc_Object_MCRequestList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_MCRequestList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Object_MCRequestItem() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_MCRequestItem'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
-  SELECT 'zc_Object_MCRequestList', 'Элемент запроса на изменение категории наценки' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MCRequestList');
-
+  SELECT 'zc_Object_MCRequestItem', 'Элемент запроса на изменение категории наценки' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MCRequestItem');
+    
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1587,7 +1587,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
- 20.05.22                                                                                        * zc_Object_DiffKindPrice, zc_Object_MCRequest, zc_Object_MCRequestList
+ 20.05.22                                                                                        * zc_Object_DiffKindPrice, zc_Object_MCRequest, zc_Object_MCRequestItem
  14.05.22                                                                                        * zc_Object_..._1303()
  04.05.22                                                                                        * zc_Object_Competitor
  14.04.22         * zc_Object_UserByGroup

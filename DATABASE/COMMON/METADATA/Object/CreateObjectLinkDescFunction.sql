@@ -2792,7 +2792,7 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_MCRequestItem_MCRequest() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MCRequestItem_MCRequest'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
- SELECT 'zc_ObjectLink_MCRequestItem_MCRequest', '«апрос на изменение категории наценки', zc_Object_MCRequestList(), zc_Object_MCRequest() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MCRequestItem_MCRequest');
+ SELECT 'zc_ObjectLink_MCRequestItem_MCRequest', '«апрос на изменение категории наценки', zc_Object_MCRequestItem(), zc_Object_MCRequest() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MCRequestItem_MCRequest');
 
 
 /*-------------------------------------------------------------------------------
