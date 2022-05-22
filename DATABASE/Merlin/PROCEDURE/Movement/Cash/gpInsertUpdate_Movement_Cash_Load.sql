@@ -39,11 +39,12 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (inSession);
 
-   vbUserProtocolId := CASE WHEN inUserId = 1 THEN 5
-                            WHEN inUserId = 6 THEN 139  -- zfCalc_UserMain_1()
-                            WHEN inUserId = 7 THEN 2020 -- zfCalc_UserMain_2()
-                            WHEN inUserId = 10 THEN 40561
-                            WHEN inUserId = 11 THEN 40562
+   vbUserProtocolId := CASE WHEN inUserId = 1  THEN 5
+                            WHEN inUserId = 6  THEN 139   -- zfCalc_UserMain_1() - Evg
+                            WHEN inUserId = 7  THEN 2020  -- zfCalc_UserMain_2() - Tim
+                            WHEN inUserId = 8  THEN 104840-- zfCalc_UserMain_3() - El
+                            WHEN inUserId = 10 THEN 40561 -- Bushenko
+                            WHEN inUserId = 11 THEN 40562 -- Filippova
                        END;
 
    IF COALESCE (inInvNumber,'') <> '' AND NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.InvNumber = TRIM (inInvNumber) AND Movement.DescId = zc_Movement_Cash() AND Movement.StatusId <> zc_Enum_Status_Erased())
