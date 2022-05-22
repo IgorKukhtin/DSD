@@ -38,11 +38,11 @@ BEGIN
                                                         
          , Object_From.Id          AS FromId
          , Object_From.ObjectCode  AS FromCode
-         , CASE WHEN Object_From.DescId = zc_Object_Goods() THEN /*'(' || Object_From.ObjectCode :: TvarChar || ') ' ||*/ Object_From.ValueData ELSE Object_From.ValueData END :: TVarChar AS FromName
+         , CASE WHEN Object_From.DescId = zc_Object_Goods() THEN /*'(' || Object_From.ObjectCode :: TvarChar || ') ' ||*/ Object_From.ValueData ELSE COALESCE (Object_GoodsGroup_Parent_from.ValueData || ' * ', '') || Object_From.ValueData END :: TVarChar AS FromName
 
          , Object_To.Id         AS ToId
          , Object_To.ObjectCode AS ToCode
-         , CASE WHEN Object_From.DescId = zc_Object_Goods() THEN /*'(' || Object_To.ObjectCode :: TvarChar || ') ' ||*/ Object_To.ValueData ELSE Object_To.ValueData END :: TVarChar AS ToName
+         , CASE WHEN Object_From.DescId = zc_Object_Goods() THEN /*'(' || Object_To.ObjectCode :: TvarChar || ') ' ||*/ Object_To.ValueData ELSE COALESCE (Object_GoodsGroup_Parent_to.ValueData || ' * ', '') || Object_To.ValueData END :: TVarChar AS ToName
 
          , Object_FromGoodsKind.Id          AS FromGoodsKindId
          , Object_FromGoodsKind.ValueData   AS FromGoodsKindName
@@ -109,6 +109,16 @@ BEGIN
                                ON ObjectLink_ModelServiceItemChild_ToStorageLine.ObjectId = Object_ModelServiceItemChild.Id
                               AND ObjectLink_ModelServiceItemChild_ToStorageLine.DescId = zc_ObjectLink_ModelServiceItemChild_ToStorageLine()
           LEFT JOIN Object AS Object_ToStorageLine ON Object_ToStorageLine.Id = ObjectLink_ModelServiceItemChild_ToStorageLine.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_Parent_from
+                               ON ObjectLink_GoodsGroup_Parent_from.ObjectId = Object_From.Id
+                              AND ObjectLink_GoodsGroup_Parent_from.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+          LEFT JOIN Object AS Object_GoodsGroup_Parent_from ON Object_GoodsGroup_Parent_from.Id = ObjectLink_GoodsGroup_Parent_from.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_Parent_to
+                               ON ObjectLink_GoodsGroup_Parent_to.ObjectId = Object_To.Id
+                              AND ObjectLink_GoodsGroup_Parent_to.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+          LEFT JOIN Object AS Object_GoodsGroup_Parent_to ON Object_GoodsGroup_Parent_to.Id = ObjectLink_GoodsGroup_Parent_to.ChildObjectId
 
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ModelServiceItemChild.Id 
