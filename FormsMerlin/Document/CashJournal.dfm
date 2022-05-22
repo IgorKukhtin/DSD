@@ -140,6 +140,13 @@ object CashJournalForm: TCashJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 54
       end
+      object InvNumber_corr: TcxGridDBColumn
+        Caption = #8470' '#1082#1086#1088#1088'.'
+        DataBinding.FieldName = 'InvNumber_corr'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
@@ -148,12 +155,12 @@ object CashJournalForm: TCashJournalForm
         Width = 89
       end
       object isSign: TcxGridDBColumn
-        Caption = #1050#1086#1088#1088#1077#1082#1090'. '#1087#1086#1076#1090#1074'.'
+        Caption = #1050#1086#1088#1088'. '#1087#1088#1086#1074#1077#1076#1077#1085#1072
         DataBinding.FieldName = 'isSign'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1072
-        Width = 70
+        HeaderHint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1087#1088#1086#1074#1077#1076#1077#1085#1072' ('#1076#1072'/'#1085#1077#1090')'
+        Width = 80
       end
       object ServiceDate: TcxGridDBColumn
         Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
@@ -184,12 +191,12 @@ object CashJournalForm: TCashJournalForm
         Width = 121
       end
       object UnitGroupNameFull: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' ('#1054#1090#1076#1077#1083')'
+        Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'UnitGroupNameFull'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 200
+        Width = 100
       end
       object UnitCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
@@ -206,7 +213,7 @@ object CashJournalForm: TCashJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 149
+        Width = 100
       end
       object Amount: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072
@@ -229,7 +236,7 @@ object CashJournalForm: TCashJournalForm
         Width = 33
       end
       object InfoMoneyName: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1103' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
+        Caption = #1057#1090#1072#1090#1100#1103
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -237,7 +244,7 @@ object CashJournalForm: TCashJournalForm
         Width = 197
       end
       object InfoMoneyDetailName: TcxGridDBColumn
-        Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076' '
+        Caption = #1044#1077#1090#1072#1083#1100#1085#1086
         DataBinding.FieldName = 'InfoMoneyDetailName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -245,7 +252,7 @@ object CashJournalForm: TCashJournalForm
         Width = 197
       end
       object CommentInfoMoneyName: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'CommentInfoMoneyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
