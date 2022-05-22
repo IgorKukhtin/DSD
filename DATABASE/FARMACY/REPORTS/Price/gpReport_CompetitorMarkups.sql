@@ -397,12 +397,12 @@ BEGIN
         IF COALESCE (vbMovementPrevId, 0) > 0
         THEN
           vbQueryText := 'UPDATE _tmpSubGroups set MarginPercentSGRPrev' || COALESCE (vbID, 0)::Text || ' = T1.MarginPercentPrev
-                                                 , DMarginPercent' || COALESCE (vbID, 0)::Text || ' = MarginPercentSGR' || COALESCE (vbID, 0)::Text || ' - T1.MarginPercentPrev
-                                                 , DMarginPercentCode' || COALESCE (vbID, 0)::Text || ' = CASE WHEN MarginPercentSGR' || COALESCE (vbID, 0)::Text || ' > T1.MarginPercentPrev
+                                                 , DMarginPercent' || COALESCE (vbID, 0)::Text || ' = ROUND(MarginPercentSGR' || COALESCE (vbID, 0)::Text || ' - T1.MarginPercentPrev, 2)
+                                                 , DMarginPercentCode' || COALESCE (vbID, 0)::Text || ' = CASE WHEN ROUND(MarginPercentSGR' || COALESCE (vbID, 0)::Text || ' - T1.MarginPercentPrev, 2)::TFloat > 0
                                                                                                                THEN 1
-                                                                                                               WHEN MarginPercentSGR' || COALESCE (vbID, 0)::Text || ' < T1.MarginPercentPrev 
+                                                                                                               WHEN ROUND(MarginPercentSGR' || COALESCE (vbID, 0)::Text || ' - T1.MarginPercentPrev, 2)::TFloat < 0
                                                                                                                THEN 2
-                                                                                                               WHEN MarginPercentSGR' || COALESCE (vbID, 0)::Text || ' = T1.MarginPercentPrev AND T1.MarginPercentPrev > 0
+                                                                                                               WHEN ROUND(MarginPercentSGR' || COALESCE (vbID, 0)::Text || ' - T1.MarginPercentPrev, 2)::TFloat = 0 AND T1.MarginPercentPrev > 0
                                                                                                                THEN 3
                                                                                                                ELSE 0 
                                                                                                                END

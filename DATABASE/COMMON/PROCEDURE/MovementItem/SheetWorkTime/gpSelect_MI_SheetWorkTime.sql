@@ -43,8 +43,21 @@ BEGIN
          LEFT JOIN gpSelect_Object_Calendar (vbStartDate, vbEndDate, inSession) AS tmpCalendar ON tmpCalendar.Value = tt.OperDate
         ;
 
+     -- уволенные сотрудники в период табеля
+     CREATE TEMP TABLE tmpListOut ON COMMIT DROP AS 
+        SELECT Object_Personal_View.MemberId
+             , Object_Personal_View.PersonalId
+             , Object_Personal_View.PositionId
+             , Object_Personal_View.DateIn
+             , Object_Personal_View.DateOut
+        FROM Object_Personal_View
+        WHERE ((Object_Personal_View.DateOut >= vbStartDate AND Object_Personal_View.DateOut <= vbEndDate)
+            OR (Object_Personal_View.DateIn >= vbStartDate AND Object_Personal_View.DateIn <= vbEndDate))
+          AND Object_Personal_View.UnitId = inUnitId;
+
+
      CREATE TEMP TABLE tmpDateOut_All ON COMMIT DROP AS
-        WITH
+       /* WITH
         -- сотрудники дата приема , увольнения
         tmpList AS (SELECT Object_Personal_View.MemberId
                          , Object_Personal_View.PersonalId
@@ -56,7 +69,7 @@ BEGIN
                         OR (Object_Personal_View.DateIn >= vbStartDate AND Object_Personal_View.DateIn <= vbEndDate))
                       AND Object_Personal_View.UnitId = inUnitId
              -- and MemberId IN (3119489, 4507324)
-                   )
+                   )   */
         --
         SELECT tmpList.MemberId
              , tmpList.PersonalId
@@ -65,8 +78,9 @@ BEGIN
              , 12918                                         AS WorkTimeKindId 
              , ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
         FROM tmpOperDate
-             LEFT JOIN tmpList ON tmpList.DateOut < tmpOperDate.OperDate
-                               OR tmpList.DateIn > tmpOperDate.OperDate
+             LEFT JOIN tmpListOut AS tmpList
+                                  ON tmpList.DateOut < tmpOperDate.OperDate
+                                  OR tmpList.DateIn > tmpOperDate.OperDate
              LEFT JOIN ObjectString AS ObjectString_WorkTimeKind_ShortName
                                     ON ObjectString_WorkTimeKind_ShortName.ObjectId = 12918 --  уволен  Х
                                    AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()
@@ -596,6 +610,7 @@ BEGIN
                , Object_StorageLine.ValueData        AS StorageLineName
                , Object_WorkTimeKind_key.Id          AS WorkTimeKindId_key
                , Object_WorkTimeKind_key.ValueData   AS WorkTimeKindName_key
+               , CASE WHEN COALESCE (tmpListOut.DateOut, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE tmpListOut.DateOut END AS DateOut
 
                , CASE WHEN tmp.isErased = 0 THEN TRUE ELSE FALSE END AS isErased
 
@@ -732,7 +747,11 @@ BEGIN
                                  AND COALESCE(tmpTotal.PositionLevelId, 0)    = D.Key[3]
                                  AND COALESCE(tmpTotal.PersonalGroupId, 0)    = D.Key[4]
                                  AND COALESCE(tmpTotal.StorageLineId, 0)      = D.Key[5]
-                                 AND COALESCE(tmpTotal.WorkTimeKindId_key, 0) = D.Key[6]
+                                 AND COALESCE(tmpTotal.WorkTimeKindId_key, 0) = D.Key[6]   
+         --возьмем отсюда дату увольнения
+         LEFT JOIN tmpListOut ON COALESCE(tmpListOut.PositionId, 0)         = D.Key[2]
+                             AND COALESCE(tmpListOut.MemberId, 0)           = D.Key[1]
+
         '
       /*ORDER BY Object_Member.ValueData
                , Object_Position.ValueData
@@ -771,7 +790,7 @@ BEGIN
            UNION SELECT 4 AS Id, ''4.Кол-во БЛ''       AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 4) :: TFloat AS TotalAmount
            UNION SELECT 5 AS Id, ''5.Кол-во отпуска''  AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 5) :: TFloat AS TotalAmount
            UNION SELECT 6 AS Id, ''6.Кол-во прогулов'' AS ValueData, (SELECT SUM (tmpTotal.Amount) FROM tmpTotal WHERE tmpTotal.ObjectId = 6) :: TFloat AS TotalAmount
-                 )AS tmp ON tmp.Id = D.Key[1]
+                 )AS tmp ON tmp.Id = D.Key[1]  
      ORDER BY tmp.Id
          ';
      OPEN cur2 FOR EXECUTE vbQueryText;

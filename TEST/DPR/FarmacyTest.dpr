@@ -1203,7 +1203,8 @@ uses
   KindOutSP_1303Edit in '..\..\FormsFarmacy\Guides\KindOutSP_1303Edit.pas' {KindOutSP_1303EditForm: TParentForm},
   KindOutSP_1303 in '..\..\FormsFarmacy\Guides\KindOutSP_1303.pas' {KindOutSP_1303Form: TParentForm},
   GoodsSPRegistry_1303Journal in '..\..\FormsFarmacy\Document\GoodsSPRegistry_1303Journal.pas' {GoodsSPRegistry_1303JournalForm: TParentForm},
-  GoodsSPRegistry_1303 in '..\..\FormsFarmacy\Document\GoodsSPRegistry_1303.pas' {GoodsSPRegistry_1303Form: TParentForm};
+  GoodsSPRegistry_1303 in '..\..\FormsFarmacy\Document\GoodsSPRegistry_1303.pas' {GoodsSPRegistry_1303Form: TParentForm},
+  MCRequestAllDialog in '..\..\FormsFarmacy\Guides\MCRequestAllDialog.pas' {MCRequestAllDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

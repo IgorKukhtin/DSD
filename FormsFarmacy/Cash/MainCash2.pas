@@ -10321,7 +10321,7 @@ begin
     if (FormParams.ParamByName('SPKindId').Value = 4823010) and (AViewInfo.GridRecord.Values[MainPriceSaleOOC1303.Index] <> Null) and
       (AViewInfo.GridRecord.Values[MainPriceSaleOOC1303.Index] < MIN(AViewInfo.GridRecord.Values[MainColPrice.Index], AViewInfo.GridRecord.Values[MainPriceSale1303.Index])) and
       ((MIN(AViewInfo.GridRecord.Values[MainColPrice.Index], AViewInfo.GridRecord.Values[MainPriceSale1303.Index])/AViewInfo.GridRecord.Values[MainPriceSaleOOC1303.Index]*100.0 - 100) > 1.0) then
-      ACanvas.Brush.Color := TColor($D0C7FE);
+      ACanvas.Brush.Color := TColor($0083D3FA);
   end;
 
   if AViewInfo.Focused then
@@ -10374,7 +10374,7 @@ begin
   if (FormParams.ParamByName('SPKindId').Value = 4823010) and (ARecord.Values[MainPriceSaleOOC1303.Index] <> Null) and
      (ARecord.Values[MainPriceSaleOOC1303.Index] < MIN(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])) and
      ((MIN(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])/ARecord.Values[MainPriceSaleOOC1303.Index]*100.0 - 100) > 1.0) then
-     FStyle.Color := TColor($D0C7FE);
+     FStyle.Color := TColor($0083D3FA);
 
   if (ARecord.Values[MainFixPercent.Index] <> Null) AND (ARecord.Values[MainFixPercent.Index] <> 0) OR
      (ARecord.Values[MainFixDiscount.Index] <> Null) AND (ARecord.Values[MainFixDiscount.Index] <> 0) OR
@@ -10485,11 +10485,12 @@ procedure TMainCashForm2.MainGridDBTableViewStylesGetContentStyle(
   AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
 begin
   FStyle.Assign(MainGridDBTableView.Styles.Content);
-  if (FormParams.ParamByName('SPKindId').Value = 4823010) and (ARecord.Values[MainPriceSaleOOC1303.Index] <> Null) and
+  if ((FormParams.ParamByName('SPKindId').Value = 4823010) or (AItem.Index = MainPriceSaleOOC1303.Index) or (AItem.Index = MainPriceSale1303.Index)) and
+    (ARecord.Values[MainPriceSaleOOC1303.Index] <> Null) and
     (ARecord.Values[MainPriceSaleOOC1303.Index] < MIN(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])) and
     ((MIN(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])/ARecord.Values[MainPriceSaleOOC1303.Index]*100.0 - 100) > 1.0)
      then
-    FStyle.Color := TColor($D0C7FE);
+    FStyle.Color := TColor($0083D3FA);
   AStyle := FStyle;
 end;
 

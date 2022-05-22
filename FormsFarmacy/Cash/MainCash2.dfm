@@ -1118,7 +1118,7 @@ inherited MainCashForm2: TMainCashForm2
           Width = 117
         end
         object MainPriceSaleOOC1303: TcxGridDBColumn
-          Caption = #1052#1072#1082#1089'. '#1088#1086#1079#1085' '#1094#1077#1085#1072'  '#1055#1050#1052#1059'1303'
+          Caption = #1052#1072#1082#1089'. '#1088#1086#1079#1085' '#1094#1077#1085#1072' '#1056#1054#1054#1062'  ('#1055#1050#1052#1059'1303)'
           DataBinding.FieldName = 'PriceSaleOOC1303'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -1127,7 +1127,7 @@ inherited MainCashForm2: TMainCashForm2
           Width = 90
         end
         object MainPriceSale1303: TcxGridDBColumn
-          Caption = ' '#1052#1080#1085'. '#1088#1086#1079#1085'. '#1094#1077#1085#1072' '#1055#1050#1052#1059'1303'
+          Caption = #1052#1080#1085'. '#1088#1086#1079#1085' '#1094#1077#1085#1072' ('#1055#1050#1052#1059'1303)'
           DataBinding.FieldName = 'PriceSale1303'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -1752,10 +1752,17 @@ inherited MainCashForm2: TMainCashForm2
     object ceScaner: TcxCurrencyEdit
       Left = 7
       Top = 0
+      ParentFont = False
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
       Properties.MaxLength = 13
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = []
       Style.TextColor = 13682686
+      Style.IsFontAssigned = True
       TabOrder = 0
       OnKeyPress = ceScanerKeyPress
       Width = 146

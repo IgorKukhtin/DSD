@@ -3715,7 +3715,6 @@ object OrderClientForm: TOrderClientForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'NPP;ProdColorGroupName'
         end>
       Params = <
         item
@@ -5535,8 +5534,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1072
-    Top = 208
+    Left = 1040
+    Top = 184
   end
   object spSelectPrintOrderConfirmation: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Product_OrderConfirmationPrint'

@@ -1409,10 +1409,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1438,10 +1434,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         item
           Visible = True
           ItemName = 'bbPrintStructure'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintStructureGoods'
         end
         item
           Visible = True
@@ -2202,7 +2194,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'NPP;GoodsGroupNameFull;GoodsName'
+          IndexFieldNames = 'NPP;GoodsGroupNameFull;ObjectName'
         end>
       Params = <
         item

@@ -2786,10 +2786,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_PriceChange_PartionDateKind() RETURNS I
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
  SELECT 'zc_ObjectLink_PriceChange_PartionDateKind', 'Типы срок/не срок', zc_Object_PriceChange(), zc_Object_PartionDateKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PriceChange_PartionDateKind');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_DiffKindPrice_DiffKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_DiffKindPrice_DiffKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+ SELECT 'zc_ObjectLink_DiffKindPrice_DiffKind', 'Вид отказа', zc_Object_DiffKind(), zc_Object_DiffKindPrice() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_DiffKindPrice_DiffKind');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MCRequestItem_MCRequest() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MCRequestItem_MCRequest'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+ SELECT 'zc_ObjectLink_MCRequestItem_MCRequest', 'Запрос на изменение категории наценки', zc_Object_MCRequestItem(), zc_Object_MCRequest() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MCRequestItem_MCRequest');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 20.05.22                                                                                      * zc_ObjectLink_DiffKindPrice_DiffKind, zc_ObjectLink_MCRequestItem_MCRequest
  09.03.22         * zc_ObjectLink_PersonalServiceList_PersonalHead
  09.02.22                                                                                      * zc_ObjectLink_SupplierFailures_...
  15.12.21         * zc_ObjectLink_Unit_PersonalHead

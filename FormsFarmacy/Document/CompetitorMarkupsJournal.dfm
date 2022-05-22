@@ -230,6 +230,20 @@ inherited CompetitorMarkupsJournalForm: TCompetitorMarkupsJournalForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actMCRequestAllDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1087#1088#1072#1074#1082#1072' '#1079#1072#1087#1088#1086#1089#1072' '#1085#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1082#1080
+      Hint = #1054#1090#1087#1088#1072#1074#1082#1072' '#1079#1072#1087#1088#1086#1089#1072' '#1085#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1082#1080
+      ImageIndex = 27
+      FormName = 'TMCRequestAllDialogForm'
+      FormNameParam.Value = 'TMCRequestAllDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_CompetitorMarkups'
@@ -290,6 +304,10 @@ inherited CompetitorMarkupsJournalForm: TCompetitorMarkupsJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -315,6 +333,10 @@ inherited CompetitorMarkupsJournalForm: TCompetitorMarkupsJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       Visible = ivAlways
       ImageIndex = 15
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actMCRequestAllDialog
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

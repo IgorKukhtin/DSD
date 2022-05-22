@@ -11,7 +11,10 @@ uses
   cxDBLookupComboBox, cxPropertiesStore, dsdAddOn, dsdDB, dsdAction,
   Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
   cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar,
-  dxSkinsDefaultPainters, cxCheckBox;
+  dxSkinsDefaultPainters, cxCheckBox, Vcl.ExtCtrls, cxStyles,
+  dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxDBData,
+  cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
+  cxClasses, cxGridCustomView, cxGrid;
 
 type
   TDiffKindEditForm = class(TParentForm)
@@ -42,6 +45,25 @@ type
     cbFindLeftovers: TcxCheckBox;
     cePackages: TcxCurrencyEdit;
     cxLabel5: TcxLabel;
+    Panel1: TPanel;
+    DataSource: TDataSource;
+    ClientDataSet: TClientDataSet;
+    spSelect: TdsdStoredProc;
+    cxGrid: TcxGrid;
+    cxGridDBTableView: TcxGridDBTableView;
+    isErased: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    cxGridLevel: TcxGridLevel;
+    dsdUpdateDataSet: TdsdUpdateDataSet;
+    spInsertUpdate_DiffKindPrice: TdsdStoredProc;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    spErasedUnErased: TdsdStoredProc;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
+    Panel2: TPanel;
+    cxButton3: TcxButton;
+    cxButton4: TcxButton;
   private
     { Private declarations }
   public

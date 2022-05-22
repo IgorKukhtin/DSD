@@ -69,6 +69,26 @@ BEGIN
        vbMainId:= (SELECT Object_Goods_Main.Id
                    FROM Object_Goods_Main 
                    WHERE Object_Goods_Main.MorionCode = inMorionSP);
+                   
+       IF COALESCE (vbMainId, 0) <> 0
+       THEN
+                   
+        vbMainId:= (SELECT ObjectLink_Main_Morion.ChildObjectId          AS GoodsMainId
+                    FROM ObjectLink AS ObjectLink_Main_Morion
+                         JOIN ObjectLink AS ObjectLink_Child_Morion
+                                         ON ObjectLink_Child_Morion.ObjectId = ObjectLink_Main_Morion.ObjectId
+                                        AND ObjectLink_Child_Morion.DescId = zc_ObjectLink_LinkGoods_Goods()
+                         JOIN ObjectLink AS ObjectLink_Goods_Object_Morion
+                                         ON ObjectLink_Goods_Object_Morion.ObjectId = ObjectLink_Child_Morion.ChildObjectId
+                                        AND ObjectLink_Goods_Object_Morion.DescId = zc_ObjectLink_Goods_Object()
+                                        AND ObjectLink_Goods_Object_Morion.ChildObjectId = zc_Enum_GlobalConst_Marion()
+                         LEFT JOIN Object AS Object_Goods_Morion ON Object_Goods_Morion.Id = ObjectLink_Goods_Object_Morion.ObjectId
+                    WHERE ObjectLink_Main_Morion.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                      AND ObjectLink_Main_Morion.ChildObjectId > 0
+                      AND Object_Goods_Morion.ObjectCode = inMorionSP
+                    LIMIT 1
+                    );               
+       END IF;
      END IF;
         
      -- пытаемся найти "Міжнародна непатентована назва (Соц. проект)(2)" 
@@ -76,7 +96,7 @@ BEGIN
      IF inIntenalSPName <> ''
      THEN
        vbIntenalSPName := (TRIM (inIntenalSPName)||', '||TRIM (inIntenalSPName_Lat))::TVarChar; --сливаем Укр и лат. названия через зпт.
-       vbIntenalSPId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_IntenalSP() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(vbIntenalSPName)) );
+       vbIntenalSPId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_IntenalSP() AND UPPER (TRIM(Object.ValueData)) ILIKE UPPER (TRIM(vbIntenalSPName)) LIMIT 1);
        IF COALESCE (vbIntenalSPId, 0) = 0 AND COALESCE (vbIntenalSPName, '') <> '' THEN
           -- записываем новый элемент
           vbIntenalSPId := gpInsertUpdate_Object_IntenalSP (ioId     := 0
@@ -89,7 +109,7 @@ BEGIN
 
      -- пытаемся найти "Торговельна назва лікарського засобу (Соц. проект)(4)"
      -- если не находим записывае новый элемент в справочник
-     vbBrandSPId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_BrandSP() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inBrandSPName)) LIMIT 1);
+     vbBrandSPId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_BrandSP() AND UPPER (TRIM(Object.ValueData)) = UPPER (TRIM(inBrandSPName)) LIMIT 1);
      IF COALESCE (vbBrandSPId, 0) = 0 AND COALESCE (inBrandSPName, '') <> '' THEN
         -- записываем новый элемент
         vbBrandSPId := gpInsertUpdate_Object_BrandSP (ioId     := 0
@@ -102,7 +122,7 @@ BEGIN
      -- пытаемся найти "Форма випуску (Соц. проект)(5)"
      -- если не находим записывае новый элемент в справочник
      WHILE POSITION('  ' IN inKindOutSP_1303Name) > 0 LOOP inKindOutSP_1303Name := REPLACE (inKindOutSP_1303Name, '  ', ' '); END LOOP;     
-     vbKindOutSP_1303Id := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_KindOutSP_1303() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inKindOutSP_1303Name)) LIMIT 1);
+     vbKindOutSP_1303Id := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_KindOutSP_1303() AND UPPER (TRIM(Object.ValueData)) = UPPER (TRIM(inKindOutSP_1303Name)) LIMIT 1);
      IF COALESCE (vbKindOutSP_1303Id, 0) = 0 AND COALESCE (inKindOutSP_1303Name, '') <> '' THEN
         -- записываем новый элемент
         vbKindOutSP_1303Id := gpInsertUpdate_Object_KindOutSP_1303 (ioId     := 0
@@ -115,7 +135,7 @@ BEGIN
      -- пытаемся найти "Дозування (Соц. проект)(6)"
      -- если не находим записывае новый элемент в справочник
      WHILE POSITION('  ' IN inDosage_1303Name) > 0 LOOP inDosage_1303Name := REPLACE (inDosage_1303Name, '  ', ' '); END LOOP;     
-     vbDosage_1303Id := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Dosage_1303() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inDosage_1303Name)) LIMIT 1);
+     vbDosage_1303Id := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Dosage_1303() AND UPPER (TRIM(Object.ValueData)) = UPPER (TRIM(inDosage_1303Name)) LIMIT 1);
      IF COALESCE (vbDosage_1303Id, 0) = 0 AND COALESCE (inDosage_1303Name, '') <> '' THEN
         -- записываем новый элемент
         vbDosage_1303Id := gpInsertUpdate_Object_Dosage_1303 (ioId     := 0
@@ -128,7 +148,7 @@ BEGIN
      -- пытаемся найти "Кількість таблеток в упаковці (Соц. проект)(7)"
      -- если не находим записывае новый элемент в справочник
      WHILE POSITION('  ' IN inCountSP_1303Name) > 0 LOOP inCountSP_1303Name := REPLACE (inCountSP_1303Name, '  ', ' '); END LOOP;     
-     vbCountSP_1303Id := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_CountSP_1303() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inCountSP_1303Name)) LIMIT 1);
+     vbCountSP_1303Id := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_CountSP_1303() AND UPPER (TRIM(Object.ValueData)) = UPPER (TRIM(inCountSP_1303Name)) LIMIT 1);
      IF COALESCE (vbCountSP_1303Id, 0) = 0 AND COALESCE (inCountSP_1303Name, '') <> '' THEN
         -- записываем новый элемент
         vbCountSP_1303Id := gpInsertUpdate_Object_CountSP_1303 (ioId     := 0
@@ -141,7 +161,7 @@ BEGIN
      -- пытаемся найти "Назва виробника (Соц. проект)(8)"
      -- если не находим записывае новый элемент в справочник
      WHILE POSITION('  ' IN inMakerSP_1303Name) > 0 LOOP inMakerSP_1303Name := REPLACE (inMakerSP_1303Name, '  ', ' '); END LOOP;     
-     vbMakerSP_1303Id := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_MakerSP_1303() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inMakerSP_1303Name)) LIMIT 1);
+     vbMakerSP_1303Id := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_MakerSP_1303() AND UPPER (TRIM(Object.ValueData)) = UPPER (TRIM(inMakerSP_1303Name)) LIMIT 1);
      IF COALESCE (vbMakerSP_1303Id, 0) = 0 AND COALESCE (inMakerSP_1303Name, '') <> '' THEN
         -- записываем новый элемент
         vbMakerSP_1303Id := gpInsertUpdate_Object_MakerSP_1303 (ioId     := 0
@@ -154,7 +174,7 @@ BEGIN
      -- пытаемся найти "Країна (Соц. проект)(9)"
      -- если не находим записывае новый элемент в справочник
      WHILE POSITION('  ' IN inCountry_1303Name) > 0 LOOP inCountry_1303Name := REPLACE (inCountry_1303Name, '  ', ' '); END LOOP;     
-     vbCountry_1303Id := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Country_1303() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inCountry_1303Name)) LIMIT 1);
+     vbCountry_1303Id := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Country_1303() AND UPPER (TRIM(Object.ValueData)) = UPPER (TRIM(inCountry_1303Name)) LIMIT 1);
      IF COALESCE (vbCountry_1303Id, 0) = 0 AND COALESCE (inCountry_1303Name, '') <> '' THEN
         -- записываем новый элемент
         vbCountry_1303Id := gpInsertUpdate_Object_Country_1303 (ioId     := 0
@@ -204,7 +224,12 @@ BEGIN
                 AND MIFloat_OrderNumberSP.ValueData = inOrderNumberSP
               Limit 1 -- на всякий случай
               );
-
+              
+    /* IF COALESCE (vbId, 0) <> 0
+     THEN
+       PERFORM lpLog_Run_Schedule_Function('gpInsertUpdate_MI_GoodsSPRegistry_1303_From_Excel', False, (inID_MED_FORM::tvarchar||'  '||inMorionSP::tvarchar)::TVarChar, vbUserId);
+     END IF;*/
+       
      -- ищем строку с таким товаром, если есть перезаписываем
      IF COALESCE (vbMainId, 0) <> 0
      THEN
@@ -261,3 +286,4 @@ $BODY$
 -- тест
 
 -- select * from gpInsertUpdate_MI_GoodsSPRegistry_1303_From_Excel(inMovementId := 27854839 , inIntenalSPName_Lat := '' , inIntenalSPName := '' , inBrandSPName := 'ІМІФОРС' , inKindOutSP_1303Name := 'порошок для розчину для інфузій, 500 мг/500 мг у флаконі в коробці' , inDosage_1303Name := '500 мг/500 м' , inCountSP_1303Name := '1' , inMakerSP_1303Name := 'Венус Ремедіс Лімітед' , inCountry_1303Name := 'Індія' , inCodeATX := 'J01DH51' , inReestrSP := 'UA/17305/01/01' , inReestrDateSP := ('21.03.2019')::TDateTime , inValiditySP := ('21.03.2024')::TDateTime , inPriceOptSP := 265.66 , inCurrencyName := 'доларСША' , inExchangeRate := 28.1126 , inOrderNumberSP := 764 , inOrderDateSP := 43923 , inID_MED_FORM := 306241 , inMorionSP := 525129 ,  inSession := '3');
+

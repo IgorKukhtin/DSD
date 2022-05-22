@@ -10,7 +10,7 @@ RETURNS TABLE (OperDate TDateTime
              , CountTabletki Integer
              , CountLiki24 Integer
              , CountAll Integer
-             
+             , StartDate TDateTime
               )
 AS
 $BODY$
@@ -22,7 +22,8 @@ BEGIN
      
      -- Результат
      RETURN QUERY
-      SELECT * 
+      SELECT *
+           , '09.06.2021'::TDateTime  AS StartDate
       FROM gpReport_Movement_DynamicsOrdersEIC(inStartDate := '09.06.2021', inEndDate := CURRENT_DATE - INTERVAL '1 DAY', inSession := inSession);
 
 END;
