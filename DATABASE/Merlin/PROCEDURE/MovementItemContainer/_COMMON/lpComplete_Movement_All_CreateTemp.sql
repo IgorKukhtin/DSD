@@ -30,6 +30,7 @@ BEGIN
 
                                                  , ContainerId_Analyzer    Integer -- Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
                                                  , ContainerIntId_Analyzer Integer -- Контейнер - Корреспондент
+                                                 , ContainerExtId_Analyzer Integer -- Контейнер - Корреспондент
 
                                                  , ObjectIntId_Analyzer    Integer -- Аналитический справочник (Размер, УП статья или что-то особенное - т.е. все то что не вписалось в аналитики выше)
                                                  , ObjectExtId_Analyzer    Integer -- Аналитический справочник (Подразделение - корреспондент, Подразделение ЗП, ФИО, Контрагент и т.д. - т.е. все то что не вписалось в аналитики выше)
@@ -41,7 +42,8 @@ BEGIN
      END IF;
 
 
-END;$BODY$
+END;
+$BODY$
   LANGUAGE plpgsql VOLATILE;
 
 

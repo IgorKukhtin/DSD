@@ -7,13 +7,13 @@ CREATE OR REPLACE FUNCTION lpUnComplete_Movement(
     IN inMovementId        Integer  , -- ключ объекта <Документ>
     IN inUserId            Integer    -- Пользователь
 )                              
-  RETURNS VOID
+RETURNS VOID
 AS
 $BODY$
-  DECLARE vbOperDate TDateTime;
-  DECLARE vbDescId Integer;
-  DECLARE vbAccessKeyId Integer;
   DECLARE vbStatusId_old Integer;
+  DECLARE vbOperDate     TDateTime;
+  DECLARE vbDescId       Integer;
+  DECLARE vbAccessKeyId  Integer;
 BEGIN
 
   -- 0. Проверка
@@ -32,69 +32,17 @@ BEGIN
   UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete() WHERE Id = inMovementId
   RETURNING OperDate, DescId, AccessKeyId INTO vbOperDate, vbDescId, vbAccessKeyId;
 
-  -- 1.3. !!!НОВАЯ СХЕМА ПРОВЕРКИ - Закрытый период!!!
-/*
+  -- 1.3. ПРОВЕРКА - Закрытый период + проверка пользователя
   IF vbStatusId_old = zc_Enum_Status_Complete()
-  THEN PERFORM lpCheckPeriodClose (inOperDate      := vbOperDate
+  THEN 
+       PERFORM lpCheckPeriodClose (inOperDate      := vbOperDate
                                  , inMovementId    := inMovementId
                                  , inMovementDescId:= vbDescId
                                  , inAccessKeyId   := vbAccessKeyId
                                  , inUserId        := inUserId
                                   );
   END IF;
-*/
-/*
-  -- для Админа  - Все Права
-  IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
-  THEN 
-  -- проверка прав для <AccessKey>
-  IF vbDescId = zc_Movement_Sale()
-  THEN 
-      IF lpGetAccessKey (inUserId, COALESCE ((SELECT MAX (ProcessId)FROM Object_Process_User_View WHERE UserId = inUserId AND ProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Sale(), zc_Enum_Process_InsertUpdate_Movement_Sale_Partner())), zc_Enum_Process_InsertUpdate_Movement_Sale()))
-         <> vbAccessKeyId AND COALESCE (vbAccessKeyId, 0) <> 0
-         AND inUserId <> 128491 -- Хохлова Е.Ю. !!!временно!!!
-         AND inUserId <> 12120 -- Нагорнова Т.С. !!!временно!!!
-         AND inUserId <> 131160 -- Удовик Е.Е. !!!временно!!!
-         -- AND inUserId <> 81241 -- Марухно А.В. !!!временно!!!
-      THEN
-          RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на распроведение документа № <%> от <%> филиал <%>.', lfGet_Object_ValueData (inUserId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_Branch()));
-      END IF;
-  ELSE
-  IF vbDescId = zc_Movement_ReturnIn()
-  THEN 
-      IF lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_ReturnIn()) -- (SELECT ProcessId FROM Object_Process_User_View WHERE UserId = inUserId AND ProcessId IN (zc_Enum_Process_InsertUpdate_Movement_ReturnIn())))
-         <> vbAccessKeyId AND COALESCE (vbAccessKeyId, 0) <> 0
-         AND inUserId <> 128491 -- Хохлова Е.Ю. !!!временно!!!
-         AND inUserId <> 12120 -- Нагорнова Т.С. !!!временно!!!
-         AND inUserId <> 131160 -- Удовик Е.Е. !!!временно!!!
-         -- AND inUserId <> 81241 -- Марухно А.В. !!!временно!!!
-      THEN
-          RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на распроведение документа № <%> от <%> филиал <%>.', lfGet_Object_ValueData (inUserId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_Branch()));
-      END IF;
-  ELSE
- IF vbDescId = zc_Movement_Tax()
-  THEN 
-      IF lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Tax()) -- (SELECT ProcessId FROM Object_Process_User_View WHERE UserId = inUserId AND ProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Tax())))
-         <> vbAccessKeyId AND COALESCE (vbAccessKeyId, 0) <> 0
-     AND inUserId <> 12120 -- Нагорнова Т.С. !!!временно!!!
-      THEN
-          RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на распроведение документа <%> № <%> от <%> филиал <%>.', lfGet_Object_ValueData (inUserId), (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_Branch()));
-      END IF;
-  ELSE
-  IF vbDescId = zc_Movement_TaxCorrective()
-  THEN 
-      IF lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()) -- (SELECT ProcessId FROM Object_Process_User_View WHERE UserId = inUserId AND ProcessId IN (zc_Enum_Process_InsertUpdate_Movement_TaxCorrective())))
-         <> vbAccessKeyId AND COALESCE (vbAccessKeyId, 0) <> 0
-     AND inUserId <> 12120 -- Нагорнова Т.С. !!!временно!!!
-      THEN
-          RAISE EXCEPTION 'Ошибка.У Пользователя <%> нет прав на распроведение документа <%> № <%> от <%> филиал <%>.', lfGet_Object_ValueData (inUserId), (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE (vbOperDate), lfGet_Object_ValueData ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_Branch()));
-      END IF;
-  END IF;
-  END IF;
-  END IF;
-  END IF;
-  END IF;
-*/
+
 
   -- 3.1. Удаляем все проводки
   PERFORM lpDelete_MovementItemContainer (inMovementId);

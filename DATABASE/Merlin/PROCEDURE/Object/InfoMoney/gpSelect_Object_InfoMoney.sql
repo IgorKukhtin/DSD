@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
              , GroupNameFull TVarChar
              , isUserAll Boolean, isService Boolean 
              , isLeaf Boolean
+             , NPP Integer
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
 )
@@ -40,6 +41,9 @@ BEGIN
         , COALESCE (ObjectBoolean_Service.ValueData, FALSE) ::Boolean AS isService  
 
         , COALESCE (ObjectBoolean_isLeaf.ValueData,TRUE)    ::Boolean AS isLeaf
+
+          -- ¹ ï/ï
+        , ROW_NUMBER() OVER (ORDER BY CASE WHEN ObjectBoolean_Service.ValueData = TRUE THEN 0 ELSE  1 END ASC, Object_InfoMoney.ValueData ASC) :: Integer AS NPP
 
         , Object_Insert.ValueData         AS InsertName
         , ObjectDate_Insert.ValueData     AS InsertDate

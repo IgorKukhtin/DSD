@@ -10,67 +10,75 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Cash_Sign_isErased(
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbMI_Id Integer;
+   DECLARE vbId_mi Integer;
 BEGIN
-  -- проверка прав пользователя на вызов процедуры
-  --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
-  vbUserId:= lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
+     vbUserId:= lpGetUserBySession (inSession);
 
-  --пробуем найти строку если пользователь уже подписывал корректировку
-  vbMI_Id := (SELECT MovementItem.Id
-              FROM MovementItem
-              WHERE MovementItem.MovementId = inMovementId
-                AND MovementItem.DescId = zc_MI_Sign()
-                AND MovementItem.ObjectId = vbUserId
-                AND MovementItem.isErased = FALSE
-              );
+     -- найти строку если пользователь уже Разрешил корректировку
+     vbId_mi := (SELECT MovementItem.Id
+                 FROM MovementItem
+                 WHERE MovementItem.MovementId = inMovementId
+                   AND MovementItem.DescId     = zc_MI_Sign()
+                   AND MovementItem.ObjectId   = vbUserId
+                   AND MovementItem.isErased   = FALSE
+                );
 
-  IF COALESCE (vbMI_Id,0) <> 0
-  THEN
-      -- устанавливаем новое значение
-      --PERFORM lpSetErased_MovementItem (inMovementItemId:= vbMI_Id, inUserId:= vbUserId);
-      UPDATE MovementItem SET isErased = TRUE
-      WHERE MovementItem.MovementId = inMovementId AND MovementItem.Id = vbMI_Id;
-  END IF;
-
-       -- проверка , если корректировка не полностью подписана переносим ее в обратно мастер  в чайлд а яайлд в мастер
-     IF (SELECT COUNT(*) FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Sign() AND MI.isErased = FALSE)
-         <> 
-        (SELECT COUNT(*) 
-         FROM Object
-              INNER JOIN ObjectBoolean AS ObjectBoolean_Sign
-                                       ON ObjectBoolean_Sign.DescId = zc_ObjectBoolean_User_Sign() 
-                                      AND ObjectBoolean_Sign.ObjectId = Object.Id
-                                      AND COALESCE (ObjectBoolean_Sign.ValueData,FALSE) = TRUE
-         WHERE Object.DescId = zc_Object_User()
-         )
-         AND (SELECT MovementBoolean_Sign.ValueData 
-              FROM MovementBoolean AS MovementBoolean_Sign
-              WHERE MovementBoolean_Sign.MovementId = inMovementId
-                AND MovementBoolean_Sign.DescId = zc_MovementBoolean_Sign()
-              ) = TRUE
+     -- Проверка
+     IF COALESCE (vbId_mi, 0) = 0
      THEN
-         UPDATE MovementItem SET DescId = CASE WHEN DescId = zc_MI_Master() THEN zc_MI_Child() ELSE zc_MI_Master() END
-         WHERE MovementItem.MovementId = inMovementId AND DescId IN (zc_MI_Master(), zc_MI_Child());
-
-         -- т.е. фиксируем что раньше это был Child или Master
-         -- фиксируем , т.к. потом можно вернуть все обратно, и будет как было первоначально
-         PERFORM lpInsertUpdate_MovementItemBoolean (CASE WHEN MovementItem.DescId = zc_MI_Master() THEN zc_MIBoolean_Child() ELSE zc_MIBoolean_Child() END, MovementItem.Id, FALSE)
-         FROM MovementItem
-         WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId IN (zc_MI_Master(), zc_MI_Child());
-         
-         --
-         PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Sign(), inMovementId, FALSE);
-         
-         /*
-         UPDATE zc_MIBoolean_Child SET ValueData = TRUE
-         WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() --  т.е. фиксируем что раньше это был Child
-         
-         -- 
-         UPDATE zc_MIBoolean_Master SET ValueData = TRUE
-         WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() --  т.е. фиксируем что раньше это был Master
-         */     
+        RAISE EXCEPTION 'Ошибка.Нельзя отменить <Разрешение корректировки>.Элемент не найден.';
      END IF;
+
+
+     -- Если Корректировка подтверждена
+     IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Sign() AND MB.ValueData = TRUE)
+     THEN
+         -- Удаляем ВСЕ подписи
+         PERFORM lpSetErased_MovementItem (inMovementItemId:= MovementItem.Id, inUserId:= vbUserId)
+         FROM MovementItem
+         WHERE MovementItem.MovementId = inMovementId
+           AND MovementItem.DescId     = zc_MI_Sign()
+           AND MovementItem.isErased   = FALSE
+          ;
+
+         -- сначала отменяем что <корректировка прошла, данные перенесены из ....>
+         PERFORM lpInsertUpdate_MovementItemBoolean (CASE WHEN MovementItem.DescId = zc_MI_Master() THEN zc_MIBoolean_Child() ELSE zc_MIBoolean_Master() END, MovementItem.Id, FALSE)
+         FROM MovementItem
+         WHERE MovementItem.MovementId = inMovementId
+           AND MovementItem.DescId IN (zc_MI_Master(), zc_MI_Child())
+           AND MovementItem.isErased = FALSE
+           ;
+
+         -- Возвращаем обратно Child <-> Master
+         UPDATE MovementItem SET DescId = CASE WHEN MovementItem.DescId = zc_MI_Master() THEN zc_MI_Child() ELSE zc_MI_Master() END
+         WHERE MovementItem.MovementId = inMovementId
+           AND MovementItem.DescId IN (zc_MI_Master(), zc_MI_Child())
+           AND MovementItem.isErased = FALSE
+           ;
+
+         -- Корректировка НЕ подтверждена
+         PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Sign(), inMovementId, FALSE);
+
+
+         -- если документ проведен
+         IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
+         THEN
+             -- Распроводим Документ
+             PERFORM lpUnComplete_Movement (inMovementId:= inMovementId, inUserId:= vbUserId);
+         END IF;
+
+         -- Проводим
+         PERFORM lpComplete_Movement_Cash (inMovementId:= inMovementId, inUserId:= vbUserId);
+
+     ELSE
+         -- Удаляем ОДНУ подпись
+         PERFORM lpSetErased_MovementItem (inMovementItemId:= vbId_mi, inUserId:= vbUserId);
+     END IF;
+
+     -- сохранили свойство < Дата/время подписания>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), vbId_mi, CURRENT_TIMESTAMP);
 
 
 END;

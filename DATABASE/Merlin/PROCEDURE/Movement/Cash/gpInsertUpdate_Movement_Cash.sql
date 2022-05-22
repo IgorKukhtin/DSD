@@ -47,8 +47,8 @@ BEGIN
              vbInfoMoneyId := gpInsertUpdate_Object_InfoMoney (ioId   := 0
                                                              , inCode := 0
                                                              , inName := TRIM (inInfoMoney)::TVarChar
-                                                             , inisService := TRUE
-                                                             , inisUserAll := COALESCE ( (SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = inParent_InfoMoneyId AND OB.DescId = zc_ObjectBoolean_InfoMoney_UserAll()), FALSE)
+                                                             , inIsService := FALSE
+                                                             , inIsUserAll := NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbUserId AND OB.DescId = zc_ObjectBoolean_User_Sign() AND OB.ValueData = TRUE)
                                                              , inInfoMoneyKindId := CASE WHEN inKindName = 'zc_Enum_InfoMoney_In' THEN zc_Enum_InfoMoney_In() ELSE zc_Enum_InfoMoney_Out() END
                                                              , inParentId := inParent_InfoMoneyId
                                                              , inSession := inSession
@@ -104,13 +104,12 @@ BEGIN
                                                 
 
 
-     -- 5.3. проводим Документ
-     /*IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash())
-     THEN
-          PERFORM lpComplete_Movement_Cash (inMovementId := ioId
-                                             , inUserId     := vbUserId);
-     END IF;
-*/
+     -- проводим Документ
+     PERFORM lpComplete_Movement_Cash (inMovementId := ioId
+                                     , inUserId     := vbUserId
+                                      );
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

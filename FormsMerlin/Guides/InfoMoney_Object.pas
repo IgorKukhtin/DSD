@@ -45,7 +45,7 @@ type
     bbChoiceGuides: TdxBarButton;
     bbGridToExcel: TdxBarButton;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
@@ -53,6 +53,11 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     FormParams: TdsdFormParams;
+    NPP: TcxGridDBColumn;
+    InsertName: TcxGridDBColumn;
+    UpdateName: TcxGridDBColumn;
+    InsertDate: TcxGridDBColumn;
+    UpdateDate: TcxGridDBColumn;
   private
     { Private declarations }
   public
