@@ -4,7 +4,7 @@
   ClientHeight = 427
   ClientWidth = 341
   ExplicitWidth = 357
-  ExplicitHeight = 465
+  ExplicitHeight = 466
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -145,7 +145,7 @@
   object cbSign: TcxCheckBox [18]
     Left = 8
     Top = 353
-    Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1072
+    Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1087#1088#1086#1074#1077#1076#1077#1085#1072
     Properties.ReadOnly = True
     TabOrder = 18
     Width = 183
