@@ -32,6 +32,15 @@ BEGIN
      --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- Проверка - Если Корректировка подтверждена
+     IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = ioId AND MB.DescId = zc_MovementBoolean_Sign() AND MB.ValueData = TRUE)
+     THEN
+        RAISE EXCEPTION 'Ошибка.Корректировка подтверждена.Изменения невозможны.';
+     END IF;
+
+
+
      IF COALESCE (inInfoMoney,'') <> ''
      THEN
          --пробуем найти
@@ -113,6 +122,7 @@ BEGIN
      --RAISE EXCEPTION 'Ошибка. <%>  -  <%> .', vbAmount_master, vbAmount;
      
      IF vbAmount_master <> 0 AND vbAmount = vbAmount_master
+        AND EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbUserId AND OB.DescId = zc_ObjectBoolean_User_Sign() AND OB.ValueData = TRUE)
      THEN
      
          PERFORM gpInsertUpdate_MI_Cash_Sign (inMovementId := ioId

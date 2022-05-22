@@ -22,17 +22,23 @@ $BODY$
    DECLARE vbMovementItemId Integer;
 BEGIN
 
-    -- проверка
+     -- проверка
      IF COALESCE (inInfoMoneyId, 0) = 0
      THEN
         RAISE EXCEPTION 'Ошибка.<Статья> не выбрана.';
+     END IF;
+
+     -- проверка
+     IF COALESCE (ioId, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.MovementId = 0.';
      END IF;
 
      -- расчет - 1-ое число месяца
      inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Cash(), inInvNumber, inOperDate, Null, inUserId);
+     -- ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Cash(), inInvNumber, inOperDate, Null, inUserId);
 
      -- определяем <Элемент документа>
      --SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Child();
