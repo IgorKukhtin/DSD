@@ -132,7 +132,7 @@
   end
   object ceParent_infomoney: TcxButtonEdit [17]
     Left = 8
-    Top = 167
+    Top = 166
     Properties.Buttons = <
       item
         Default = True
@@ -314,7 +314,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ininfomoney'
+        Name = 'inInfoMoneyName'
         Value = ''
         Component = ceInfoMoney
         DataType = ftString
@@ -322,7 +322,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inInfoMoneyDetail'
+        Name = 'inInfoMoneyDetailName'
         Value = Null
         Component = edInfoMoneyDetail
         DataType = ftString
@@ -346,8 +346,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 320
-    Top = 216
+    Left = 272
+    Top = 232
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Cash'
@@ -454,14 +454,14 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'infomoneyid'
+        Name = 'InfoMoneyId'
         Value = ''
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'infomoneyname'
+        Name = 'InfoMoneyName'
         Value = ''
         Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
@@ -542,8 +542,8 @@
         ComponentItem = 'inMI_Id'
         MultiSelectSeparator = ','
       end>
-    Left = 312
-    Top = 152
+    Left = 232
+    Top = 96
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'

@@ -13,10 +13,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
     IN inCashId               Integer   , -- касса 
     IN inUnitId               Integer   , -- отдел 
     IN inParent_InfoMoneyId   Integer   , -- Статьи  группа
-    IN inInfoMoney            TVarChar   , -- Статьи 
-    IN inInfoMoneyDetail      TVarChar   , -- Детали 
-    IN inCommentInfoMoney     TVarChar   , -- Примечание
-    IN inKindName             TVarChar   , --призрак приход / расход
+    IN inInfoMoneyName        TVarChar  , -- Статьи 
+    IN inInfoMoneyDetailName  TVarChar  , -- Детали 
+    IN inCommentInfoMoney     TVarChar  , -- Примечание
+    IN inKindName             TVarChar  , -- признак приход / расход
     IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -30,7 +30,7 @@ BEGIN
      --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
      vbUserId:= lpGetUserBySession (inSession);
 
-     IF COALESCE (inInfoMoney,'') <> ''
+     IF COALESCE (inInfoMoneyName,'') <> ''
      THEN
          --пробуем найти
          vbInfoMoneyId := (SELECT Object.Id 
@@ -38,7 +38,7 @@ BEGIN
                                 LEFT JOIN ObjectLink AS ObjectLink_Parent
                                                      ON ObjectLink_Parent.ObjectId = Object.Id
                                                     AND ObjectLink_Parent.DescId   = zc_ObjectLink_InfoMoney_Parent()
-                           WHERE Object.ValueData = TRIM (inInfoMoney)
+                           WHERE Object.ValueData = TRIM (inInfoMoneyName)
                              AND Object.DescId    = zc_Object_InfoMoney()
                              AND (COALESCE (ObjectLink_Parent.ChildObjectId, 0) = COALESCE (inParent_InfoMoneyId, 0))
                           );
@@ -47,7 +47,7 @@ BEGIN
          THEN
              vbInfoMoneyId := gpInsertUpdate_Object_InfoMoney (ioId             := 0
                                                              , inCode           := 0
-                                                             , inName           := TRIM (inInfoMoney)::TVarChar
+                                                             , inName           := TRIM (inInfoMoneyName)::TVarChar
                                                              , inIsService      := FALSE
                                                              , inIsUserAll      := NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbUserId AND OB.DescId = zc_ObjectBoolean_User_Sign() AND OB.ValueData = TRUE)
                                                              , inInfoMoneyKindId:= CASE WHEN inKindName = 'zc_Enum_InfoMoney_In' THEN zc_Enum_InfoMoney_In() ELSE zc_Enum_InfoMoney_Out() END
@@ -62,15 +62,15 @@ BEGIN
          END IF;
      END IF;
 
-     IF COALESCE (inInfoMoneyDetail,'') <> ''
+     IF COALESCE (inInfoMoneyDetailName,'') <> ''
      THEN
          -- пробуем найти InfoMoneyDetailId
-         vbInfoMoneyDetailId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inInfoMoneyDetail) AND Object.DescId = zc_Object_InfoMoneyDetail());
+         vbInfoMoneyDetailId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inInfoMoneyDetailName) AND Object.DescId = zc_Object_InfoMoneyDetail());
          IF COALESCE (vbInfoMoneyDetailId,0) = 0
          THEN
              vbInfoMoneyDetailId := gpInsertUpdate_Object_InfoMoneyDetail (ioId   := 0
                                                                          , inCode := 0
-                                                                         , inName := TRIM (inInfoMoneyDetail)::TVarChar
+                                                                         , inName := TRIM (inInfoMoneyDetailName)::TVarChar
                                                                          , inInfoMoneyKindId := CASE WHEN inKindName = 'zc_Enum_InfoMoney_In' THEN zc_Enum_InfoMoney_In() ELSE zc_Enum_InfoMoney_Out() END
                                                                          , inSession := inSession
                                                                           );
@@ -110,7 +110,7 @@ BEGIN
                                         , inCashId               := inCashId
                                         , inUnitId               := inUnitId
                                         , inInfoMoneyId          := vbInfoMoneyId
-                                        , inInfoMoneyDetailId    := vbInfoMoneyDetailId
+                                        , inInfoMoneyDetailNameId    := vbInfoMoneyDetailId
                                         , inCommentInfoMoneyId   := vbCommentInfoMoneyId
                                         , inUserId               := vbUserId
                                          );
