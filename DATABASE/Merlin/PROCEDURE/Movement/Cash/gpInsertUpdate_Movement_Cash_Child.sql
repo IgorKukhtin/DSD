@@ -34,7 +34,7 @@ BEGIN
 
 
      -- Проверка - Если Корректировка подтверждена
-     IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = ioId AND MB.DescId = zc_MovementBoolean_Sign() AND MB.ValueData = TRUE)
+     IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = ioId AND MI.DescId = zc_MI_Sign() AND MI.isErased = FALSE)
      THEN
         RAISE EXCEPTION 'Ошибка.Корректировка подтверждена.Изменения невозможны.';
      END IF;

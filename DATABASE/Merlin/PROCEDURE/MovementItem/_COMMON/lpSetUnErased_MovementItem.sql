@@ -12,30 +12,37 @@ AS
 $BODY$
    DECLARE vbMovementId Integer;
    DECLARE vbStatusId Integer;
+   DECLARE vbDescId     Integer;
 BEGIN
-  -- устанавливаем новое значение
-  outIsErased := FALSE;
-
-  -- Обязательно меняем 
-  UPDATE MovementItem SET isErased = FALSE WHERE Id = inMovementItemId
-         RETURNING MovementId INTO vbMovementId;
-
-  -- проверка - связанные документы Изменять нельзя
-  -- PERFORM lfCheck_Movement_Parent (inMovementId:= vbMovementId, inComment:= 'изменение');
-
-  -- определяем <Статус>
-  vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
-  -- проверка - проведенные/удаленные документы Изменять нельзя
-  IF vbStatusId <> zc_Enum_Status_UnComplete()
-  THEN
-      RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
+   -- устанавливаем новое значение
+   outIsErased := FALSE;
+ 
+   -- Обязательно меняем 
+   UPDATE MovementItem SET isErased = FALSE WHERE Id = inMovementItemId
+          RETURNING MovementId, DescId INTO vbMovementId, vbDescId;
+ 
+   -- проверка - связанные документы Изменять нельзя
+   -- PERFORM lfCheck_Movement_Parent (inMovementId:= vbMovementId, inComment:= 'изменение');
+ 
+   -- определяем <Статус>
+   vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
+ 
+   -- проверка - проведенные/удаленные документы Изменять нельзя
+   IF vbStatusId <> zc_Enum_Status_UnComplete() AND vbDescId <> zc_MI_Sign()
+   THEN
+       RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
   END IF;
 
-  -- пересчитали Итоговые суммы по накладной
-  PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
+   -- 
+   /*IF vbDescId <> zc_MI_Sign()
+   THEN
+       -- пересчитали Итоговые суммы по накладной
+       PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
+   END IF;*/
 
-  -- сохранили протокол
-  PERFORM lpInsert_MovementItemProtocol (inMovementItemId:= inMovementItemId, inUserId:= inUserId, inIsInsert:= FALSE, inIsErased:= FALSE);
+
+   -- сохранили протокол
+   PERFORM lpInsert_MovementItemProtocol (inMovementItemId:= inMovementItemId, inUserId:= inUserId, inIsInsert:= FALSE, inIsErased:= FALSE);
 
 
 END;

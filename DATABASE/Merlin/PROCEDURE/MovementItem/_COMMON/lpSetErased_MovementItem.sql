@@ -35,11 +35,11 @@
    END IF;
  
    -- 
-   IF vbDescId <> zc_MI_Sign()
+   /*IF vbDescId <> zc_MI_Sign()
    THEN
        -- пересчитали Итоговые суммы по накладной
        PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
-   END IF;
+   END IF;*/
  
    -- сохранили протокол
    PERFORM lpInsert_MovementItemProtocol (inMovementItemId:= inMovementItemId, inUserId:= inUserId, inIsInsert:= FALSE, inIsErased:= TRUE);

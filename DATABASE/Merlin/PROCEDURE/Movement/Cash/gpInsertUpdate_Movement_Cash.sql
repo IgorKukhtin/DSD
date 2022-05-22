@@ -30,6 +30,15 @@ BEGIN
      --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- Проверка - Если Корректировка подтверждена
+     IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = ioId AND MI.DescId = zc_MI_Sign() AND MI.isErased = FALSE)
+     THEN
+        RAISE EXCEPTION 'Ошибка.Корректировка подтверждена.Изменения невозможны.';
+     END IF;
+
+
+
      IF COALESCE (inInfoMoneyName,'') <> ''
      THEN
          --пробуем найти

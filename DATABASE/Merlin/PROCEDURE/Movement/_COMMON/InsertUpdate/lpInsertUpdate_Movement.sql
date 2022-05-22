@@ -1,5 +1,6 @@
 -- Function: lpInsertUpdate_Movement (Integer, Integer, TVarChar, TDateTime, Integer)
 
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementFloat_TotalSumm (Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement (Integer, Integer, TVarChar, TDateTime, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement (Integer, Integer, TVarChar, TDateTime, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement (Integer, Integer, TVarChar, TDateTime, Integer, Integer);

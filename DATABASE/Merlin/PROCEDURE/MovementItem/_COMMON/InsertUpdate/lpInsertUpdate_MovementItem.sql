@@ -45,6 +45,7 @@ BEGIN
 
      -- проверка - проведенные/удаленные документы Изменять нельзя + !!!временно для SYBASE -1 * zc_User_Sybase() !!!
      IF vbStatusId <> zc_Enum_Status_UnComplete()  AND (vbMovementDescId <> zc_Movement_Cash() OR inDescId <> zc_MI_Child())
+        AND inDescId <> zc_MI_Sign()
      THEN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData_sh (vbStatusId);
      END IF;

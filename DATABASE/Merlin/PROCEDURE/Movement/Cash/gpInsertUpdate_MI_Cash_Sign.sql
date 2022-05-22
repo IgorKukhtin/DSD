@@ -59,6 +59,13 @@ BEGIN
      END IF;
 
 
+     -- если Удален
+     IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = vbId_mi AND MovementItem.isErased = TRUE)
+     THEN
+         -- Восстановили
+         PERFORM lpSetUnErased_MovementItem (inMovementItemId:= vbId_mi, inUserId:= vbUserId);
+     END IF;
+
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (vbId_mi, 0) = 0;
 
@@ -70,7 +77,7 @@ BEGIN
 
 
      -- если корректировка полностью подписана, делаем замену Master <-> Child
-     IF (SELECT COUNT(DISTINCT MovementItem.ObjectId) FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Sign() AND MI.isErased = FALSE)
+     IF (SELECT COUNT(DISTINCT MI.ObjectId) FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Sign() AND MI.isErased = FALSE)
          =
         (SELECT COUNT(*)
          FROM Object

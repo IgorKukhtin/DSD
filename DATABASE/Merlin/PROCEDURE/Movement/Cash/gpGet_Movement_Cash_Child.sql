@@ -33,7 +33,7 @@ BEGIN
      IF COALESCE (inMI_Id_child, 0) = 0
      THEN
 
-     RETURN QUERY 
+     RETURN QUERY
        SELECT
              Movement.Id                        AS Id
            , Movement.InvNumber                 AS InvNumber
@@ -105,8 +105,8 @@ BEGIN
        WHERE Movement.Id = inMovementId;
 
      ELSE
-     
-     RETURN QUERY 
+
+     RETURN QUERY
        SELECT
              Movement.Id                        AS Id
            , Movement.InvNumber                 AS InvNumber
@@ -123,8 +123,8 @@ BEGIN
            , Object_Parent.ValueData            AS ParentName_InfoMoney
            , Object_InfoMoney.Id                AS InfoMoneyId
            , Object_InfoMoney.ValueData         AS InfoMoneyName
-           , Object_InfoMoney.Id                AS InfoMoneyDetailId
-           , Object_InfoMoney.ValueData         AS InfoMoneyDetailName
+           , Object_InfoMoneyDetail.Id          AS InfoMoneyDetailId
+           , Object_InfoMoneyDetail.ValueData   AS InfoMoneyDetailName
            , Object_CommentInfoMoney.Id         AS CommentInfoMoneyId
            , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
        FROM Movement
@@ -172,18 +172,17 @@ BEGIN
 
        WHERE Movement.Id = inMovementId;
 
-   END IF; 
+   END IF;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
-
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 15.01.22         * 
+ 15.01.22         *
 */
 
 -- ÚÂÒÚ
---select * from gpGet_Movement_Cash_Child(inMovementId := 608 , inMI_Id := 0 ,inMI_Id_child := 0, inOperDate := ('31.01.2022')::TDateTime , inKindName := 'zc_Enum_InfoMoney_In' ,  inSession := '5');
+-- select * from gpGet_Movement_Cash_Child(inMovementId := 608 , inMI_Id := 0 ,inMI_Id_child := 0, inOperDate := ('31.01.2022')::TDateTime , inKindName := 'zc_Enum_InfoMoney_In' ,  inSession := '5');
