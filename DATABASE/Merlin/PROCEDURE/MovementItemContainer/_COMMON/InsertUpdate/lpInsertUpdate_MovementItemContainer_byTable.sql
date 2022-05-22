@@ -1,5 +1,6 @@
 -- Function: lpInsertUpdate_MovementItemContainer_byTable ()
 
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemContainer (BigInt, Integer, Integer, Integer, Integer, Integer, BigInt, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime, Boolean);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemContainer_byTable ();
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemContainer_byTable ()
