@@ -37,22 +37,28 @@ BEGIN
                            FROM Object
                                 LEFT JOIN ObjectLink AS ObjectLink_Parent
                                                      ON ObjectLink_Parent.ObjectId = Object.Id
-                                                    AND ObjectLink_Parent.DescId = zc_ObjectLink_InfoMoney_Parent()
-                           WHERE Object.ValueData = TRIM (inInfoMoney) AND Object.DescId = zc_Object_InfoMoney()
-                             AND (ObjectLink_Parent.ChildObjectId = inParent_InfoMoneyId OR inParent_InfoMoneyId = 0)
-                           );
+                                                    AND ObjectLink_Parent.DescId   = zc_ObjectLink_InfoMoney_Parent()
+                           WHERE Object.ValueData = TRIM (inInfoMoney)
+                             AND Object.DescId    = zc_Object_InfoMoney()
+                             AND (COALESCE (ObjectLink_Parent.ChildObjectId, 0) = COALESCE (inParent_InfoMoneyId, 0))
+                          );
 
          IF COALESCE (vbInfoMoneyId,0) = 0
          THEN
-             vbInfoMoneyId := gpInsertUpdate_Object_InfoMoney (ioId   := 0
-                                                             , inCode := 0
-                                                             , inName := TRIM (inInfoMoney)::TVarChar
-                                                             , inIsService := FALSE
-                                                             , inIsUserAll := NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbUserId AND OB.DescId = zc_ObjectBoolean_User_Sign() AND OB.ValueData = TRUE)
-                                                             , inInfoMoneyKindId := CASE WHEN inKindName = 'zc_Enum_InfoMoney_In' THEN zc_Enum_InfoMoney_In() ELSE zc_Enum_InfoMoney_Out() END
-                                                             , inParentId := inParent_InfoMoneyId
-                                                             , inSession := inSession
+             vbInfoMoneyId := gpInsertUpdate_Object_InfoMoney (ioId             := 0
+                                                             , inCode           := 0
+                                                             , inName           := TRIM (inInfoMoney)::TVarChar
+                                                             , inIsService      := FALSE
+                                                             , inIsUserAll      := NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbUserId AND OB.DescId = zc_ObjectBoolean_User_Sign() AND OB.ValueData = TRUE)
+                                                             , inInfoMoneyKindId:= CASE WHEN inKindName = 'zc_Enum_InfoMoney_In' THEN zc_Enum_InfoMoney_In() ELSE zc_Enum_InfoMoney_Out() END
+                                                             , inParentId       := inParent_InfoMoneyId
+                                                             , inSession        := inSession
                                                              );
+             -- сохранили
+             PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_Service(), vbInfoMoneyId, FALSE);
+             -- сохранили
+             PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_UserAll(), vbInfoMoneyId, NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbUserId AND OB.DescId = zc_ObjectBoolean_User_Sign() AND OB.ValueData = TRUE));
+
          END IF;
      END IF;
 
@@ -67,8 +73,12 @@ BEGIN
                                                                          , inName := TRIM (inInfoMoneyDetail)::TVarChar
                                                                          , inInfoMoneyKindId := CASE WHEN inKindName = 'zc_Enum_InfoMoney_In' THEN zc_Enum_InfoMoney_In() ELSE zc_Enum_InfoMoney_Out() END
                                                                          , inSession := inSession
-                                                                         );
+                                                                          );
+             -- сохранили
+             PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoneyDetail_UserAll(), vbInfoMoneyDetailId, NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbUserId AND OB.DescId = zc_ObjectBoolean_User_Sign() AND OB.ValueData = TRUE));
+
          END IF;
+
      END IF;
      
      IF COALESCE (inCommentInfoMoney,'') <> ''
@@ -77,12 +87,15 @@ BEGIN
          vbCommentInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inCommentInfoMoney) AND Object.DescId = zc_Object_CommentInfoMoney());
          IF COALESCE (vbCommentInfoMoneyId,0) = 0
          THEN
-             vbCommentInfoMoneyId := gpInsertUpdate_Object_CommentInfoMoney (ioId   := 0
-                                                                           , inCode := 0
-                                                                           , inName := TRIM (inCommentInfoMoney)::TVarChar
-                                                                           , inInfoMoneyKindId := 0
-                                                                           , inSession := inSession
+             vbCommentInfoMoneyId := gpInsertUpdate_Object_CommentInfoMoney (ioId             := 0
+                                                                           , inCode           := 0
+                                                                           , inName           := TRIM (inCommentInfoMoney)::TVarChar
+                                                                           , inInfoMoneyKindId:= CASE WHEN inKindName = 'zc_Enum_InfoMoney_In' THEN zc_Enum_InfoMoney_In() ELSE zc_Enum_InfoMoney_Out() END
+                                                                           , inSession        := inSession
                                                                            );
+             -- сохранили
+             PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CommentInfoMoney_UserAll(), vbCommentInfoMoneyId, NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbUserId AND OB.DescId = zc_ObjectBoolean_User_Sign() AND OB.ValueData = TRUE));
+
          END IF;
      END IF;
                                                           
@@ -93,7 +106,7 @@ BEGIN
                                         , inInvNumber            := inInvNumber
                                         , inOperDate             := inOperDate
                                         , inServiceDate          := inServiceDate
-                                        , inAmount               := CASE WHEN inKindName = 'zc_Enum_InfoMoney_In' THEN inAmount ELSE inAmount * (-1) END ::TFloat
+                                        , inAmount               := CASE WHEN inKindName = 'zc_Enum_InfoMoney_In' THEN inAmount ELSE -1 * inAmount END ::TFloat
                                         , inCashId               := inCashId
                                         , inUnitId               := inUnitId
                                         , inInfoMoneyId          := vbInfoMoneyId
