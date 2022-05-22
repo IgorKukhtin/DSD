@@ -85,6 +85,8 @@ BEGIN
                                                                            , inInfoMoneyKindId := 0
                                                                            , inSession := inSession
                                                                            );
+             -- сохранили
+             PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CommentInfoMoney_UserAll(), vbCommentInfoMoneyId, NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbUserId AND OB.DescId = zc_ObjectBoolean_User_Sign() AND OB.ValueData = TRUE));
          END IF;
      END IF;
                                                           
