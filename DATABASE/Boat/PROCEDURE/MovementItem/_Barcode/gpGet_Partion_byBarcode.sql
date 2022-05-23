@@ -49,7 +49,7 @@ BEGIN
                                , inBarCode
                                , CHR (13)
                                , (SELECT CASE WHEN ObjectString_Article.ValueData <> ''
-                                              THEN '(' || ObjectString_Article.ValueData || ') '
+                                              THEN '(' || ObjectString_Article.ValueData || ') ' || '{' || Object.ObjectCode :: TVarChar  || '} '
                                               ELSE '{' || Object.ObjectCode :: TVarChar  || '} '
                                          END || Object.ValueData
                                   FROM Object
@@ -64,7 +64,7 @@ BEGIN
                                   ORDER BY Object.Id ASC LIMIT 1)
                                , CHR (13)
                                , (SELECT CASE WHEN ObjectString_Article.ValueData <> ''
-                                              THEN '(' || ObjectString_Article.ValueData || ') '
+                                              THEN '(' || ObjectString_Article.ValueData || ') ' || '{' || Object.ObjectCode :: TVarChar  || '} '
                                               ELSE '{' || Object.ObjectCode :: TVarChar  || '} '
                                          END || Object.ValueData
                                   FROM Object
@@ -108,7 +108,7 @@ BEGIN
                                    , inBarCode
                                    , CHR (13)
                                    , (SELECT CASE WHEN ObjectString_Article.ValueData <> ''
-                                                  THEN '(' || ObjectString_Article.ValueData || ') '
+                                                  THEN '(' || ObjectString_Article.ValueData || ') ' || '{' || Object.ObjectCode :: TVarChar  || '} '
                                                   ELSE '{' || Object.ObjectCode :: TVarChar  || '} '
                                              END || Object.ValueData
                                       FROM Object
@@ -120,7 +120,7 @@ BEGIN
                                       ORDER BY Object.Id ASC LIMIT 1)
                                    , CHR (13)
                                    , (SELECT CASE WHEN ObjectString_Article.ValueData <> ''
-                                                  THEN '(' || ObjectString_Article.ValueData || ') '
+                                                  THEN '(' || ObjectString_Article.ValueData || ') ' || '{' || Object.ObjectCode :: TVarChar  || '} '
                                                   ELSE '{' || Object.ObjectCode :: TVarChar  || '} '
                                              END || Object.ValueData
                                       FROM Object
@@ -161,7 +161,7 @@ BEGIN
                                    , inBarCode
                                    , CHR (13)
                                    , (SELECT CASE WHEN ObjectString_Article.ValueData <> ''
-                                                  THEN '(' || ObjectString_Article.ValueData || ') '
+                                                  THEN '(' || ObjectString_Article.ValueData || ') ' || '{' || Object.ObjectCode :: TVarChar  || '} '
                                                   ELSE '{' || Object.ObjectCode :: TVarChar  || '} '
                                              END || Object.ValueData
                                       FROM Object
@@ -173,7 +173,7 @@ BEGIN
                                       ORDER BY Object.Id ASC LIMIT 1)
                                    , CHR (13)
                                    , (SELECT CASE WHEN ObjectString_Article.ValueData <> ''
-                                                  THEN '(' || ObjectString_Article.ValueData || ') '
+                                                  THEN '(' || ObjectString_Article.ValueData || ') ' || '{' || Object.ObjectCode :: TVarChar  || '} '
                                                   ELSE '{' || Object.ObjectCode :: TVarChar  || '} '
                                              END || Object.ValueData
                                       FROM Object
@@ -212,7 +212,7 @@ BEGIN
                                    , inBarCode
                                    , CHR (13)
                                    , (SELECT CASE WHEN ObjectString_Article.ValueData <> ''
-                                                  THEN '(' || ObjectString_Article.ValueData || ') '
+                                                  THEN '(' || ObjectString_Article.ValueData || ') ' || '{' || Object.ObjectCode :: TVarChar  || '} '
                                                   ELSE '{' || Object.ObjectCode :: TVarChar  || '} '
                                              END || Object.ValueData
                                       FROM Object
@@ -224,7 +224,7 @@ BEGIN
                                       ORDER BY Object.Id ASC LIMIT 1)
                                    , CHR (13)
                                    , (SELECT CASE WHEN ObjectString_Article.ValueData <> ''
-                                                  THEN '(' || ObjectString_Article.ValueData || ') '
+                                                  THEN '(' || ObjectString_Article.ValueData || ') ' || '{' || Object.ObjectCode :: TVarChar  || '} '
                                                   ELSE '{' || Object.ObjectCode :: TVarChar  || '} '
                                              END || Object.ValueData
                                       FROM Object
