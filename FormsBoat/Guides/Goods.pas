@@ -125,6 +125,16 @@ type
     FieldFilter_Code: TdsdFieldFilter;
     FieldFilter_Name: TdsdFieldFilter;
     Panel2: TPanel;
+    Len_1: TcxGridDBColumn;
+    Len_2: TcxGridDBColumn;
+    Len_3: TcxGridDBColumn;
+    Len_4: TcxGridDBColumn;
+    Len_5: TcxGridDBColumn;
+    Len_6: TcxGridDBColumn;
+    Len_7: TcxGridDBColumn;
+    Len_8: TcxGridDBColumn;
+    Len_9: TcxGridDBColumn;
+    Len_10: TcxGridDBColumn;
   private
     { Private declarations }
   public

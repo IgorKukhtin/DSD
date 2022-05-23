@@ -569,9 +569,81 @@ object GoodsForm: TGoodsForm
         Options.Editing = False
         Width = 55
       end
-      object IsArc: TcxGridDBColumn
-        Caption = #1040#1088#1093#1080#1074
-        DataBinding.FieldName = 'isArc'
+      object Len_1: TcxGridDBColumn
+        DataBinding.FieldName = 'Len_1'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object Len_2: TcxGridDBColumn
+        DataBinding.FieldName = 'Len_2'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object Len_3: TcxGridDBColumn
+        DataBinding.FieldName = 'Len_3'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object Len_4: TcxGridDBColumn
+        DataBinding.FieldName = 'Len_4'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object Len_5: TcxGridDBColumn
+        DataBinding.FieldName = 'Len_5'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object Len_6: TcxGridDBColumn
+        DataBinding.FieldName = 'Len_6'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object Len_7: TcxGridDBColumn
+        DataBinding.FieldName = 'Len_7'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object Len_8: TcxGridDBColumn
+        DataBinding.FieldName = 'Len_8'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object Len_9: TcxGridDBColumn
+        DataBinding.FieldName = 'Len_9'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object Len_10: TcxGridDBColumn
+        DataBinding.FieldName = 'Len_10'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -586,6 +658,14 @@ object GoodsForm: TGoodsForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 40
+      end
+      object IsArc: TcxGridDBColumn
+        Caption = #1040#1088#1093#1080#1074
+        DataBinding.FieldName = 'isArc'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -730,7 +810,6 @@ object GoodsForm: TGoodsForm
           ItemName = 'dxBarStatic1'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbInsert'
         end
