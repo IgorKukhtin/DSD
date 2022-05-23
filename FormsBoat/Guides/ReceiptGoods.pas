@@ -76,7 +76,7 @@ type
     Child1DS: TDataSource;
     dsdDBViewAddOnGoods: TdsdDBViewAddOn;
     spSelect_child2: TdsdStoredProc;
-    InsertRecordGoods: TInsertRecord;
+    actInsertRecordGoods: TInsertRecord;
     bbInsertRecordProdColorItems: TdxBarButton;
     actUpdateDataSet_Child1: TdsdUpdateDataSet;
     spInsertUpdate_Child1: TdsdStoredProc;
@@ -180,7 +180,7 @@ type
     lbSearchArticle: TcxLabel;
     edSearchArticle: TcxTextEdit;
     FieldFilter_Article: TdsdFieldFilter;
-    actInsertRecordGood: TInsertRecord;
+    actInsertRecordGoods_limit: TInsertRecord;
     actChoiceFormGoods_limit: TOpenChoiceForm;
     bbInsertRecordGood: TdxBarButton;
     bbBarSeparetor: TdxBarSeparator;

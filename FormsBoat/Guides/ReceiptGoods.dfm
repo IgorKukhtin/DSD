@@ -767,7 +767,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     Height = 269
     Align = alClient
     Caption = 'Panel2'
-    TabOrder = 7
+    TabOrder = 6
     object cxGridCh2: TcxGrid
       Left = 1
       Top = 18
@@ -1294,7 +1294,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Category = 0
     end
     object bbInsertRecordProdColorItems: TdxBarButton
-      Action = InsertRecordGoods
+      Action = actInsertRecordGoods
       Category = 0
     end
     object bbInsertRecordProdOptItems: TdxBarButton
@@ -1458,7 +1458,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Category = 0
     end
     object bbInsertRecordGood: TdxBarButton
-      Action = actInsertRecordGood
+      Action = actInsertRecordGoods_limit
       Category = 0
     end
     object bbBarSeparetor: TdxBarSeparator
@@ -1743,7 +1743,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ImageIndex = 0
     end
-    object InsertRecordGoods: TInsertRecord
+    object actInsertRecordGoods: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2183,7 +2183,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       PictureFields.Strings = (
         'photo1')
     end
-    object actInsertRecordGood: TInsertRecord
+    object actInsertRecordGoods_limit: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2643,7 +2643,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     Left = 440
     Top = 208
     object MenuItem2: TMenuItem
-      Action = InsertRecordGoods
+      Action = actInsertRecordGoods
     end
     object MenuItem3: TMenuItem
       Action = actSetErasedGoods
