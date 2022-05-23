@@ -23,7 +23,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxCurrencyEdit, cxSplitter, cxButtonEdit, ExternalLoad, Vcl.Menus,
-  Vcl.ExtCtrls;
+  Vcl.ExtCtrls, cxContainer, cxTextEdit, cxLabel;
 
 type
   TReceiptGoodsForm = class(TParentForm)
@@ -176,6 +176,14 @@ type
     spSelectPrintStructure: TdsdStoredProc;
     actPrintStructure: TdsdPrintAction;
     bbPrintStructure: TdxBarButton;
+    Panel5: TPanel;
+    lbSearchArticle: TcxLabel;
+    edSearchArticle: TcxTextEdit;
+    FieldFilter_Article: TdsdFieldFilter;
+    actInsertRecordGood: TInsertRecord;
+    actChoiceFormGoods_limit: TOpenChoiceForm;
+    bbInsertRecordGood: TdxBarButton;
+    bbBarSeparetor: TdxBarSeparator;
   private
     { Private declarations }
   public

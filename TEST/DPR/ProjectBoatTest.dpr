@@ -185,7 +185,6 @@ uses
   GoodsTagEdit in '..\..\FormsBoat\Guides\GoodsTagEdit.pas' {GoodsTagEditForm: TParentForm},
   GoodsSize in '..\..\FormsBoat\Guides\GoodsSize.pas' {GoodsSizeForm: TParentForm},
   GoodsSizeEdit in '..\..\FormsBoat\Guides\GoodsSizeEdit.pas' {GoodsSizeEditForm: TParentForm},
-  Goods in '..\..\FormsBoat\Guides\Goods.pas' {GoodsForm: TParentForm},
   GoodsEdit in '..\..\FormsBoat\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
   GoodsTree in '..\..\FormsBoat\Guides\GoodsTree.pas' {GoodsTreeForm: TParentForm},
   PriceList in '..\..\FormsBoat\Guides\PriceList.pas' {PriceListForm: TParentForm},
@@ -322,7 +321,8 @@ uses
   Goods_limit in '..\..\FormsBoat\Guides\Goods_limit.pas' {Goods_limitForm: TParentForm},
   InventoryItemEdit_limit in '..\..\FormsBoat\Document\InventoryItemEdit_limit.pas' {InventoryItemEdit_limitForm: TParentForm},
   PriceListItemEdit in '..\..\FormsBoat\Document\PriceListItemEdit.pas' {PriceListItemEditForm: TParentForm},
-  PriceListItemEdit_limit in '..\..\FormsBoat\Document\PriceListItemEdit_limit.pas' {PriceListItemEdit_limitForm: TParentForm};
+  PriceListItemEdit_limit in '..\..\FormsBoat\Document\PriceListItemEdit_limit.pas' {PriceListItemEdit_limitForm: TParentForm},
+  Goods in '..\..\FormsBoat\Guides\Goods.pas' {GoodsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

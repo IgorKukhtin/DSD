@@ -190,6 +190,7 @@ type
     actInsertRecordGoods_limit: TInsertRecord;
     actChoiceFormGoods_limit: TOpenChoiceForm;
     bbInsertRecordGoods_limit: TdxBarButton;
+    Panel4: TPanel;
   private
     { Private declarations }
   public

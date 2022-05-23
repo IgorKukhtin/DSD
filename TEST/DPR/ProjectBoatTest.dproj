@@ -570,10 +570,6 @@
 				<Form>GoodsSizeEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Goods.pas">
-				<Form>GoodsForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\GoodsEdit.pas">
 				<Form>GoodsEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1098,6 +1094,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Document\PriceListItemEdit_limit.pas">
 				<Form>PriceListItemEdit_limitForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\Goods.pas">
+				<Form>GoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

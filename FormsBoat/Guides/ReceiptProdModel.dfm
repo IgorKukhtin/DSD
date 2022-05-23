@@ -20,7 +20,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   TextHeight = 13
   object PanelMaster: TPanel
     Left = 0
-    Top = 26
+    Top = 59
     Width = 1293
     Height = 209
     Align = alTop
@@ -322,33 +322,12 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       TabOrder = 5
       Width = 151
     end
-    object lbSearchArticle: TcxLabel
-      Left = 203
-      Top = 93
-      Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
-      ParentFont = False
-      Style.Font.Charset = DEFAULT_CHARSET
-      Style.Font.Color = clBlue
-      Style.Font.Height = -13
-      Style.Font.Name = 'Tahoma'
-      Style.Font.Style = [fsBold]
-      Style.IsFontAssigned = True
-    end
-    object edSearchArticle: TcxTextEdit
-      Left = 200
-      Top = 119
-      TabOrder = 7
-      DesignSize = (
-        125
-        21)
-      Width = 125
-    end
   end
   object PanelProdColorPattern: TPanel
     Left = 781
-    Top = 240
+    Top = 273
     Width = 512
-    Height = 203
+    Height = 170
     Align = alRight
     BevelEdges = [beLeft]
     BevelKind = bkTile
@@ -358,7 +337,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Left = 0
       Top = 17
       Width = 510
-      Height = 186
+      Height = 153
       Align = alClient
       PopupMenu = PopupMenuOption
       TabOrder = 0
@@ -647,9 +626,9 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   end
   object PanelGoods: TPanel
     Left = 0
-    Top = 240
+    Top = 273
     Width = 773
-    Height = 203
+    Height = 170
     Align = alClient
     BevelEdges = [beLeft]
     BevelOuter = bvNone
@@ -658,7 +637,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Left = 0
       Top = 17
       Width = 773
-      Height = 186
+      Height = 153
       Align = alClient
       PopupMenu = PopupMenuColor
       TabOrder = 0
@@ -1263,7 +1242,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
-    Top = 235
+    Top = 268
     Width = 1293
     Height = 5
     AlignSplitter = salTop
@@ -1271,11 +1250,40 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   end
   object cxRightSplitter: TcxSplitter
     Left = 773
-    Top = 240
+    Top = 273
     Width = 8
-    Height = 203
+    Height = 170
     AlignSplitter = salRight
     Control = PanelProdColorPattern
+  end
+  object Panel4: TPanel
+    Left = 0
+    Top = 0
+    Width = 1293
+    Height = 33
+    Align = alTop
+    TabOrder = 9
+    object lbSearchArticle: TcxLabel
+      Left = 22
+      Top = 6
+      Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchArticle: TcxTextEdit
+      Left = 147
+      Top = 7
+      TabOrder = 1
+      DesignSize = (
+        125
+        21)
+      Width = 125
+    end
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -1339,18 +1347,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       FloatClientWidth = 0
       FloatClientHeight = 0
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSearchArticleLabel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSearchArticle'
-        end
         item
           Visible = True
           ItemName = 'dxBarStatic'

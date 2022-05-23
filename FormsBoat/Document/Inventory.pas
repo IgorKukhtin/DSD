@@ -178,6 +178,7 @@ type
     mactAdd_limit: TMultiAction;
     bbAdd_limit: TdxBarButton;
     cbPrice: TcxCheckBox;
+    Panel4: TPanel;
   private
   public
   end;
