@@ -22,7 +22,7 @@ object SendForm: TSendForm
     Left = 0
     Top = 0
     Width = 1053
-    Height = 137
+    Height = 169
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -278,17 +278,45 @@ object SendForm: TSendForm
         Style.IsFontAssigned = True
       end
     end
+    object Panel1: TPanel
+      Left = 9
+      Top = 133
+      Width = 320
+      Height = 32
+      TabOrder = 19
+      object edSearchArticle: TcxTextEdit
+        Left = 177
+        Top = 6
+        TabOrder = 0
+        DesignSize = (
+          134
+          21)
+        Width = 134
+      end
+      object lbSearchArticle: TcxLabel
+        Left = 27
+        Top = 6
+        Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -13
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
+      end
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 163
+    Top = 195
     Width = 1053
-    Height = 404
+    Height = 372
     Align = alClient
-    TabOrder = 4
+    TabOrder = 3
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 404
+    ClientRectBottom = 372
     ClientRectRight = 1053
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -298,7 +326,7 @@ object SendForm: TSendForm
         Left = 0
         Top = 0
         Width = 1053
-        Height = 248
+        Height = 216
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -684,7 +712,7 @@ object SendForm: TSendForm
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 256
+        Top = 224
         Width = 1053
         Height = 124
         Align = alBottom
@@ -973,7 +1001,7 @@ object SendForm: TSendForm
       end
       object cxTopSplitter: TcxSplitter
         Left = 0
-        Top = 248
+        Top = 216
         Width = 1053
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
@@ -981,27 +1009,6 @@ object SendForm: TSendForm
         Control = cxGridChild
       end
     end
-  end
-  object edSearchArticle: TcxTextEdit
-    Left = 152
-    Top = 247
-    TabOrder = 6
-    DesignSize = (
-      125
-      21)
-    Width = 125
-  end
-  object lbSearchArticle: TcxLabel
-    Left = 155
-    Top = 221
-    Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
-    ParentFont = False
-    Style.Font.Charset = DEFAULT_CHARSET
-    Style.Font.Color = clBlue
-    Style.Font.Height = -13
-    Style.Font.Name = 'Tahoma'
-    Style.Font.Style = [fsBold]
-    Style.IsFontAssigned = True
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1095,14 +1102,6 @@ object SendForm: TSendForm
       FloatClientWidth = 51
       FloatClientHeight = 71
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bblbSearchArticle'
-        end
-        item
-          Visible = True
-          ItemName = 'bbedSearchArticle'
-        end
         item
           Visible = True
           ItemName = 'bbStatic'

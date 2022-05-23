@@ -58,12 +58,11 @@ BEGIN
            , MIFloat_ParValue.ValueData   AS ParValue
            , MIString_Comment.ValueData   AS Comment
 
-           , Object_CurrencyFrom.Id           AS CurrencyFromId
-           , Object_CurrencyFrom.ValueData    AS CurrencyFromName
+           , CASE WHEN TRIM (Object_CurrencyFrom.ValueData) <> '' THEN Object_CurrencyFrom.Id ELSE 0 END :: Integer AS CurrencyFromId
+           , Object_CurrencyFrom.ValueData                                                                          AS CurrencyFromName
 
-
-           , Object_CurrencyTo.Id         AS CurrencyToId
-           , Object_CurrencyTo.ValueData  AS CurrencyToName
+           , CASE WHEN TRIM (Object_CurrencyTo.ValueData) <> '' THEN Object_CurrencyTo.Id ELSE 0 END :: Integer AS CurrencyToId
+           , Object_CurrencyTo.ValueData                                                                        AS CurrencyToName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END

@@ -21,11 +21,11 @@ object GoodsForm: TGoodsForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 59
     Width = 982
-    Height = 480
+    Height = 447
     Align = alClient
-    TabOrder = 1
+    TabOrder = 0
     LookAndFeel.NativeStyle = False
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
@@ -592,68 +592,76 @@ object GoodsForm: TGoodsForm
       GridView = cxGridDBTableView
     end
   end
-  object edSearchArticle: TcxTextEdit
-    Left = 80
-    Top = 322
-    TabOrder = 0
-    DesignSize = (
-      125
-      21)
-    Width = 125
-  end
-  object lbSearchArticle: TcxLabel
-    Left = 80
-    Top = 349
-    Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
-    ParentFont = False
-    Style.Font.Charset = DEFAULT_CHARSET
-    Style.Font.Color = clBlue
-    Style.Font.Height = -13
-    Style.Font.Name = 'Tahoma'
-    Style.Font.Style = [fsBold]
-    Style.IsFontAssigned = True
-  end
-  object lbSearchCode: TcxLabel
-    Left = 224
-    Top = 349
-    Caption = 'Interne Nr : '
-    ParentFont = False
-    Style.Font.Charset = DEFAULT_CHARSET
-    Style.Font.Color = clBlue
-    Style.Font.Height = -13
-    Style.Font.Name = 'Tahoma'
-    Style.Font.Style = [fsBold]
-    Style.IsFontAssigned = True
-  end
-  object lbSearchName: TcxLabel
-    Left = 372
-    Top = 349
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
-    ParentFont = False
-    Style.Font.Charset = DEFAULT_CHARSET
-    Style.Font.Color = clBlue
-    Style.Font.Height = -13
-    Style.Font.Name = 'Tahoma'
-    Style.Font.Style = [fsBold]
-    Style.IsFontAssigned = True
-  end
-  object edSearchCode: TcxTextEdit
-    Left = 224
-    Top = 322
-    TabOrder = 6
-    DesignSize = (
-      115
-      21)
-    Width = 115
-  end
-  object edSearchName: TcxTextEdit
-    Left = 345
-    Top = 322
-    TabOrder = 10
-    DesignSize = (
-      140
-      21)
-    Width = 140
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 982
+    Height = 33
+    Align = alTop
+    TabOrder = 1
+    object edSearchArticle: TcxTextEdit
+      Left = 131
+      Top = 6
+      TabOrder = 0
+      DesignSize = (
+        125
+        21)
+      Width = 125
+    end
+    object lbSearchArticle: TcxLabel
+      Left = 8
+      Top = 6
+      Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object lbSearchCode: TcxLabel
+      Left = 268
+      Top = 6
+      Caption = 'Interne Nr : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object lbSearchName: TcxLabel
+      Left = 478
+      Top = 6
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchCode: TcxTextEdit
+      Left = 353
+      Top = 6
+      TabOrder = 5
+      DesignSize = (
+        115
+        21)
+      Width = 115
+    end
+    object edSearchName: TcxTextEdit
+      Left = 560
+      Top = 6
+      TabOrder = 4
+      DesignSize = (
+        140
+        21)
+      Width = 140
+    end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -722,42 +730,7 @@ object GoodsForm: TGoodsForm
           ItemName = 'dxBarStatic1'
         end
         item
-          Visible = True
-          ItemName = 'bbSearchArticleLabel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSearchArticle'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSearchCodeLabel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSearchCode'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSearchNameLabel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSearchName'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbInsert'
         end
@@ -886,42 +859,6 @@ object GoodsForm: TGoodsForm
     object bbStartLoad: TdxBarButton
       Action = actStartLoad
       Category = 0
-    end
-    object bbSearchArticle: TdxBarControlContainerItem
-      Caption = 'bbSearchArticle'
-      Category = 0
-      Visible = ivAlways
-      Control = edSearchArticle
-    end
-    object bbSearchArticleLabel: TdxBarControlContainerItem
-      Caption = 'bbSearchArticleLabel'
-      Category = 0
-      Visible = ivAlways
-      Control = lbSearchArticle
-    end
-    object bbSearchCodeLabel: TdxBarControlContainerItem
-      Caption = 'bbSearchCodeLabel'
-      Category = 0
-      Visible = ivAlways
-      Control = lbSearchCode
-    end
-    object bbSearchCode: TdxBarControlContainerItem
-      Caption = 'bbSearchCode'
-      Category = 0
-      Visible = ivAlways
-      Control = edSearchCode
-    end
-    object bbSearchNameLabel: TdxBarControlContainerItem
-      Caption = 'bbSearchNameLabel'
-      Category = 0
-      Visible = ivAlways
-      Control = lbSearchName
-    end
-    object bbSearchName: TdxBarControlContainerItem
-      Caption = 'bbSearchName'
-      Category = 0
-      Visible = ivAlways
-      Control = edSearchName
     end
   end
   object ActionList: TActionList

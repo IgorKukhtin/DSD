@@ -97,7 +97,7 @@ BEGIN
         --AND (ObjectLink_ReceiptLevel.ChildObjectId = inReceiptLevelId OR inReceiptLevelId = 0)
        );
 
-     -- раскладываем ReceiptProdModelChild
+     -- раскладываем ReceiptProdModelChild                                                                                Article_all
      CREATE TEMP TABLE tmpReceiptGoodsChild ON COMMIT DROP AS
        (SELECT tmpReceiptProdModelChild.ReceiptProdModelChildId
              , Object_Goods.Id                       AS GoodsId

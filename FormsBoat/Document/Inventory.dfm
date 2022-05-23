@@ -20,14 +20,14 @@ object InventoryForm: TInventoryForm
   TextHeight = 13
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 163
+    Top = 206
     Width = 808
-    Height = 416
+    Height = 373
     Align = alClient
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 416
+    ClientRectBottom = 373
     ClientRectRight = 808
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -37,7 +37,7 @@ object InventoryForm: TInventoryForm
         Left = 0
         Top = 8
         Width = 808
-        Height = 384
+        Height = 341
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -366,7 +366,7 @@ object InventoryForm: TInventoryForm
     Left = 0
     Top = 0
     Width = 808
-    Height = 137
+    Height = 180
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
@@ -441,15 +441,15 @@ object InventoryForm: TInventoryForm
       Width = 160
     end
     object cxLabel16: TcxLabel
-      Left = 175
-      Top = 90
+      Left = 370
+      Top = 139
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 175
-      Top = 107
+      Left = 370
+      Top = 156
       TabOrder = 12
-      Width = 160
+      Width = 380
     end
     object Panel1: TPanel
       Left = 370
@@ -569,43 +569,50 @@ object InventoryForm: TInventoryForm
       end
     end
     object cbList: TcxCheckBox
-      Left = 17
+      Left = 8
       Top = 103
       Hint = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093
       Caption = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093
       TabOrder = 13
-      Width = 152
+      Width = 146
     end
     object cbPrice: TcxCheckBox
-      Left = 17
-      Top = 117
+      Left = 166
+      Top = 103
       Hint = '1. '#1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' ('#1044#1072'/ '#1053#1077#1090')'
       Caption = '1. '#1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' ('#1044#1072'/ '#1053#1077#1090')'
       TabOrder = 14
       Visible = False
       Width = 169
     end
-  end
-  object lbSearchArticle: TcxLabel
-    Left = 155
-    Top = 221
-    Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
-    ParentFont = False
-    Style.Font.Charset = DEFAULT_CHARSET
-    Style.Font.Color = clBlue
-    Style.Font.Height = -13
-    Style.Font.Name = 'Tahoma'
-    Style.Font.Style = [fsBold]
-    Style.IsFontAssigned = True
-  end
-  object edSearchArticle: TcxTextEdit
-    Left = 152
-    Top = 247
-    TabOrder = 7
-    DesignSize = (
-      125
-      21)
-    Width = 125
+    object Panel4: TPanel
+      Left = 9
+      Top = 144
+      Width = 326
+      Height = 33
+      TabOrder = 15
+      object lbSearchArticle: TcxLabel
+        Left = 25
+        Top = 6
+        Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -13
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
+      end
+      object edSearchArticle: TcxTextEdit
+        Left = 149
+        Top = 5
+        TabOrder = 1
+        DesignSize = (
+          125
+          21)
+        Width = 125
+      end
+    end
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -698,14 +705,6 @@ object InventoryForm: TInventoryForm
       FloatClientWidth = 51
       FloatClientHeight = 71
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'dxBarControlContainerItem1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbedSearchArticle'
-        end
         item
           Visible = True
           ItemName = 'bbStatic'

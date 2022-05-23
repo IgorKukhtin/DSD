@@ -117,6 +117,7 @@ type
     macUpdate: TMultiAction;
     macSetErased: TMultiAction;
     macSetUnErased: TMultiAction;
+    Panel1: TPanel;
   private
     { Private declarations }
   public

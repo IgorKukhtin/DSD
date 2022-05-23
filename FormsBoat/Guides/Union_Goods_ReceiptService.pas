@@ -95,16 +95,10 @@ type
     spUnErased: TdsdStoredProc;
     spErased: TdsdStoredProc;
     DescName: TcxGridDBColumn;
-    bbSearchArticleLabel: TdxBarControlContainerItem;
     lbSearchArticle: TcxLabel;
-    bbSearchArticle: TdxBarControlContainerItem;
     edSearchArticle: TcxTextEdit;
     Article_all: TcxGridDBColumn;
     FieldFilter_Article: TdsdFieldFilter;
-    bbSearchCodeLabel: TdxBarControlContainerItem;
-    bbSearchCode: TdxBarControlContainerItem;
-    bbSearchNameLabel: TdxBarControlContainerItem;
-    bbSearchName: TdxBarControlContainerItem;
     lbSearchCode: TcxLabel;
     edSearchCode: TcxTextEdit;
     edSearchName: TcxTextEdit;
@@ -117,6 +111,7 @@ type
     macUpdate: TMultiAction;
     macSetErased: TMultiAction;
     macSetUnErased: TMultiAction;
+    Panel1: TPanel;
   private
     { Private declarations }
   public

@@ -40,12 +40,12 @@ BEGIN
            , DATE_TRUNC ('MONTH', inOperDate) :: TDateTime     AS ServiceDate
            
            , 0::TFloat                                         AS Amount
-           , Object_Unit.Id                                    AS UnitId
+           , CASE WHEN TRIM (Object_Unit.ValueData) <> '' THEN Object_Unit.Id ELSE 0 END           :: Integer AS UnitId
            , TRIM (COALESCE (ObjectString_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitName
-           , Object_Parent.Id                                  AS ParentId_InfoMoney
-           , Object_Parent.ValueData          ::TVarChar       AS ParentName_InfoMoney
-           , Object_InfoMoney.Id                               AS InfoMoneyId
-           , Object_InfoMoney.ValueData       ::TVarChar       AS InfoMoneyName
+           , CASE WHEN TRIM (Object_Parent.ValueData) <> '' THEN Object_Parent.Id ELSE 0 END :: Integer AS ParentId_InfoMoney
+           , Object_Parent.ValueData                                                   ::TVarChar       AS ParentName_InfoMoney
+           , CASE WHEN TRIM (Object_InfoMoney.ValueData) <> '' THEN Object_InfoMoney.Id ELSE 0 END :: Integer AS InfoMoneyId
+           , Object_InfoMoney.ValueData                                                            ::TVarChar AS InfoMoneyName
            , 0                                                 AS CommentInfoMoneyId
            , ''::TVarChar                                      AS CommentInfoMoneyName
            , FALSE ::Boolean                                   AS isAuto  
@@ -75,12 +75,12 @@ BEGIN
            , MovementItem.Amount  ::TFloat      AS Amount
            , CASE WHEN TRIM (Object_Unit.ValueData) <> '' THEN Object_Unit.Id ELSE 0 END :: Integer AS UnitId
            , TRIM (COALESCE (ObjectString_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitName
-           , Object_Parent.Id                   AS ParentId_InfoMoney
-           , Object_Parent.ValueData            AS ParentName_InfoMoney
-           , Object_InfoMoney.Id                AS InfoMoneyId
-           , Object_InfoMoney.ValueData         AS InfoMoneyName
+           , CASE WHEN TRIM (Object_Parent.ValueData) <> '' THEN Object_Parent.Id ELSE 0 END :: Integer AS ParentId_InfoMoney
+           , Object_Parent.ValueData                                                                    AS ParentName_InfoMoney
+           , CASE WHEN TRIM (Object_InfoMoney.ValueData) <> '' THEN Object_InfoMoney.Id ELSE 0 END :: Integer AS InfoMoneyId
+           , Object_InfoMoney.ValueData                                                                       AS InfoMoneyName
            , CASE WHEN TRIM (Object_CommentInfoMoney.ValueData) <> '' THEN Object_CommentInfoMoney.Id ELSE 0 END :: Integer AS CommentInfoMoneyId
-           , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
+           , Object_CommentInfoMoney.ValueData                                                                              AS CommentInfoMoneyName
            , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) ::Boolean AS isAuto
        FROM Movement
             LEFT JOIN MovementBoolean AS MovementBoolean_isAuto

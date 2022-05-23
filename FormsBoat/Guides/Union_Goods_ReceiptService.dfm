@@ -20,13 +20,12 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 59
     Width = 1145
-    Height = 480
+    Height = 447
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 982
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -416,68 +415,76 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
       GridView = cxGridDBTableView
     end
   end
-  object lbSearchArticle: TcxLabel
-    Left = 80
-    Top = 377
-    Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
-    ParentFont = False
-    Style.Font.Charset = DEFAULT_CHARSET
-    Style.Font.Color = clBlue
-    Style.Font.Height = -13
-    Style.Font.Name = 'Tahoma'
-    Style.Font.Style = [fsBold]
-    Style.IsFontAssigned = True
-  end
-  object edSearchArticle: TcxTextEdit
-    Left = 80
-    Top = 350
-    TabOrder = 3
-    DesignSize = (
-      125
-      21)
-    Width = 125
-  end
-  object lbSearchCode: TcxLabel
-    Left = 224
-    Top = 377
-    Caption = 'Interne Nr : '
-    ParentFont = False
-    Style.Font.Charset = DEFAULT_CHARSET
-    Style.Font.Color = clBlue
-    Style.Font.Height = -13
-    Style.Font.Name = 'Tahoma'
-    Style.Font.Style = [fsBold]
-    Style.IsFontAssigned = True
-  end
-  object edSearchCode: TcxTextEdit
-    Left = 224
-    Top = 350
-    TabOrder = 5
-    DesignSize = (
-      115
-      21)
-    Width = 115
-  end
-  object edSearchName: TcxTextEdit
-    Left = 345
-    Top = 350
-    TabOrder = 9
-    DesignSize = (
-      140
-      21)
-    Width = 140
-  end
-  object lbSearchName: TcxLabel
-    Left = 372
-    Top = 377
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
-    ParentFont = False
-    Style.Font.Charset = DEFAULT_CHARSET
-    Style.Font.Color = clBlue
-    Style.Font.Height = -13
-    Style.Font.Name = 'Tahoma'
-    Style.Font.Style = [fsBold]
-    Style.IsFontAssigned = True
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 1145
+    Height = 33
+    Align = alTop
+    TabOrder = 1
+    object lbSearchArticle: TcxLabel
+      Left = 8
+      Top = 6
+      Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchArticle: TcxTextEdit
+      Left = 131
+      Top = 6
+      TabOrder = 2
+      DesignSize = (
+        125
+        21)
+      Width = 125
+    end
+    object lbSearchCode: TcxLabel
+      Left = 265
+      Top = 6
+      Caption = 'Interne Nr : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchCode: TcxTextEdit
+      Left = 351
+      Top = 6
+      TabOrder = 4
+      DesignSize = (
+        115
+        21)
+      Width = 115
+    end
+    object edSearchName: TcxTextEdit
+      Left = 559
+      Top = 6
+      TabOrder = 3
+      DesignSize = (
+        140
+        21)
+      Width = 140
+    end
+    object lbSearchName: TcxLabel
+      Left = 478
+      Top = 6
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -541,42 +548,6 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
       FloatClientWidth = 0
       FloatClientHeight = 0
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSearchArticleLabel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSearchArticle'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSearchCodeLabel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSearchCode'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSearchNameLabel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSearchName'
-        end
         item
           Visible = True
           ItemName = 'dxBarStatic1'
@@ -689,43 +660,6 @@ object Union_Goods_ReceiptServiceForm: TUnion_Goods_ReceiptServiceForm
     object bbStartLoad: TdxBarButton
       Action = actStartLoad
       Category = 0
-    end
-    object bbSearchArticleLabel: TdxBarControlContainerItem
-      Caption = 'bbSearchArticleLabel'
-      Category = 0
-      Visible = ivAlways
-      Control = lbSearchArticle
-    end
-    object bbSearchArticle: TdxBarControlContainerItem
-      Caption = 'bbSearchArticle'
-      Category = 0
-      Visible = ivAlways
-      Control = edSearchArticle
-    end
-    object bbSearchCodeLabel: TdxBarControlContainerItem
-      Caption = 'bbSearchCodeLabel'
-      Category = 0
-      Visible = ivAlways
-      Control = lbSearchCode
-    end
-    object bbSearchCode: TdxBarControlContainerItem
-      Caption = 'bbSearchCode'
-      Category = 0
-      Visible = ivAlways
-      Control = edSearchCode
-    end
-    object bbSearchNameLabel: TdxBarControlContainerItem
-      Caption = 'bbSearchNameLabel'
-      Category = 0
-      Visible = ivAlways
-      Control = lbSearchName
-    end
-    object bbSearchName: TdxBarControlContainerItem
-      Caption = 'bbSearchName'
-      Category = 0
-      Hint = 'bbSearchName'
-      Visible = ivAlways
-      Control = edSearchName
     end
   end
   object ActionList: TActionList
