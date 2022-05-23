@@ -1,5 +1,6 @@
 --
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InfoMoney_Load (Integer, Integer, TVarChar, TVarChar, Integer, Integer, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InfoMoney_Load (Integer, Integer, TVarChar, TVarChar, Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InfoMoney_Load (Integer, Integer, TVarChar, TVarChar, Integer, Integer, TDateTime, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InfoMoney_Load(
     IN inCode                Integer,       -- код статьи
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InfoMoney_Load(
     IN inUserId              Integer,       -- Id пользователя
     IN inisErased            Integer,       -- удален
     IN inProtocolDate        TDateTime,     -- дата протокола
+    IN inUserAll             TVarChar ,     -- Доступ всем
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS VOID
@@ -63,7 +65,10 @@ BEGIN
            -- сохранили
            --PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_Service(), vbInfoMoneyId, inisService);
            -- сохранили
-           --PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_UserAll(), vbInfoMoneyId, inisUserAll);
+           PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_UserAll(), vbInfoMoneyId, CASE WHEN TRIM (inUserAll) = 'Нет' THEN FALSE
+                                                                                                           WHEN TRIM (inUserAll) = 'Да'  THEN TRUE
+                                                                                                           ELSE NULL
+                                                                                                      END :: Boolean);
            -- сохранили
            PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_InfoMoney_InfoMoneyKind(), vbInfoMoneyId, CASE WHEN TRIM (inInfoMoneyKindName) = 'Приход' THEN zc_Enum_InfoMoney_In()
                                                                                                            WHEN TRIM (inInfoMoneyKindName) = 'расход' THEN zc_Enum_InfoMoney_Out()

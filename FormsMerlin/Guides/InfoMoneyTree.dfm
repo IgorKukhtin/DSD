@@ -334,7 +334,7 @@ object InfoMoneyTreeForm: TInfoMoneyTreeForm
     end
     object bbUnitChoiceForm: TdxBarButton
       Action = dsdOpenUnitForm
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1050#1072#1089#1089
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1057#1090#1072#1090#1100#1080
       Category = 0
       ImageIndex = 28
     end
