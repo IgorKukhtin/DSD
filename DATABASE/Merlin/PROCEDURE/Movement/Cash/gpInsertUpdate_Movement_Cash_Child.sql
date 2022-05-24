@@ -1,9 +1,10 @@
 -- Function: gpInsertUpdate_Movement_Cash()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash_Child(Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash_Child(Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash_Child(Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash_Child(
- INOUT ioId                   Integer   , -- Ключ объекта <Документ>+
+    IN inMovementId           Integer   , -- Ключ объекта <Документ>+
     IN inMI_Id                Integer   , -- идентификатор строки
     IN inInvNumber            TVarChar  , -- Номер документа
     IN inOperDate             TDateTime , -- Дата документа
@@ -12,17 +13,17 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash_Child(
     IN inCashId               Integer   , -- касса 
     IN inUnitId               Integer   , -- отдел 
     IN inParent_InfoMoneyId   Integer   , -- Статьи  группа
-    IN inInfoMoney            TVarChar   , -- Статьи 
-    IN inInfoMoneyDetail      TVarChar   , -- Детали 
+    IN inInfoMoneyId          Integer   , -- Статьи 
+    IN inInfoMoneyDetailId    Integer   , -- Детали 
     IN inCommentInfoMoney     TVarChar   , -- Примечание
     IN inKindName             TVarChar   , --призрак приход / расход
     IN inSession              TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer AS
+RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbInfoMoneyId Integer;
-   DECLARE vbInfoMoneyDetailId Integer;
+   --DECLARE vbInfoMoneyId Integer;
+   --DECLARE vbInfoMoneyDetailId Integer;
    DECLARE vbCommentInfoMoneyId Integer;
    
    DECLARE vbAmount TFloat;
@@ -34,14 +35,14 @@ BEGIN
 
 
      -- Проверка - Если Корректировка подтверждена
-     IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = ioId AND MI.DescId = zc_MI_Sign() AND MI.isErased = FALSE)
+     IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Sign() AND MI.isErased = FALSE)
      THEN
         RAISE EXCEPTION 'Ошибка.Корректировка подтверждена.Изменения невозможны.';
      END IF;
 
 
 
-     IF COALESCE (inInfoMoney,'') <> ''
+     /*IF COALESCE (inInfoMoney,'') <> ''
      THEN
          --пробуем найти
          vbInfoMoneyId := (SELECT Object.Id 
@@ -81,7 +82,9 @@ BEGIN
                                                                          );
          END IF;
      END IF;
-     
+     */
+
+
      IF COALESCE (inCommentInfoMoney,'') <> ''
      THEN
          -- пробуем найти CommentInfoMoneyId
@@ -101,23 +104,23 @@ BEGIN
                                                           
      
      -- сохранили <Документ>
-     ioId:= lpInsertUpdate_Movement_Cash_Child (ioId                   := ioId
-                                              , inMI_Id                := inMI_Id
-                                              , inInvNumber            := inInvNumber
-                                              , inOperDate             := inOperDate
-                                              , inServiceDate          := inServiceDate
-                                              , inAmount               := CASE WHEN inKindName = 'zc_Enum_InfoMoney_In' THEN inAmount ELSE inAmount * (-1) END ::TFloat
-                                              , inCashId               := inCashId
-                                              , inUnitId               := inUnitId
-                                              , inInfoMoneyId          := vbInfoMoneyId
-                                              , inInfoMoneyDetailId    := vbInfoMoneyDetailId
-                                              , inCommentInfoMoneyId   := vbCommentInfoMoneyId
-                                              , inUserId               := vbUserId
-                                               );
+     inMovementId:= lpInsertUpdate_Movement_Cash_Child (ioId                   := inMovementId
+                                                      , inMI_Id                := inMI_Id
+                                                      , inInvNumber            := inInvNumber
+                                                      , inOperDate             := inOperDate
+                                                      , inServiceDate          := inServiceDate
+                                                      , inAmount               := CASE WHEN inKindName = 'zc_Enum_InfoMoney_In' THEN inAmount ELSE inAmount * (-1) END ::TFloat
+                                                      , inCashId               := inCashId
+                                                      , inUnitId               := inUnitId
+                                                      , inInfoMoneyId          := inInfoMoneyId
+                                                      , inInfoMoneyDetailId    := inInfoMoneyDetailId
+                                                      , inCommentInfoMoneyId   := vbCommentInfoMoneyId
+                                                      , inUserId               := vbUserId
+                                                       );
                                                 
      -- проверка распределен ли весь документ
-     vbAmount_master := (SELECT SUM (CASE WHEN MovementItem.Amount < 0 THEN -1 ELSE 1 END * MovementItem.Amount) FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE);
-     vbAmount        := (SELECT SUM (CASE WHEN MovementItem.Amount < 0 THEN -1 ELSE 1 END * MovementItem.Amount) FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE);
+     vbAmount_master := (SELECT SUM (CASE WHEN MovementItem.Amount < 0 THEN -1 ELSE 1 END * MovementItem.Amount) FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE);
+     vbAmount        := (SELECT SUM (CASE WHEN MovementItem.Amount < 0 THEN -1 ELSE 1 END * MovementItem.Amount) FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE);
      
      --RAISE EXCEPTION 'Ошибка. <%>  -  <%> .', vbAmount_master, vbAmount;
      
@@ -125,7 +128,7 @@ BEGIN
         AND EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbUserId AND OB.DescId = zc_ObjectBoolean_User_Sign() AND OB.ValueData = TRUE)
      THEN
      
-         PERFORM gpInsertUpdate_MI_Cash_Sign (inMovementId := ioId
+         PERFORM gpInsertUpdate_MI_Cash_Sign (inMovementId := inMovementId
                                             , inAmount     := vbAmount_master
                                             , inSession    := inSession
                                              );
@@ -136,7 +139,7 @@ BEGIN
      -- 5.3. проводим Документ
      /*IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash())
      THEN
-          PERFORM lpComplete_Movement_Cash (inMovementId := ioId
+          PERFORM lpComplete_Movement_Cash (inMovementId := inMovementId
                                              , inUserId     := vbUserId);
      END IF;
 */

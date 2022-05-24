@@ -76,6 +76,10 @@ type
     actClearGoods: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
     isSale: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
+    PriceSale: TcxGridDBColumn;
+    PriceSaleOOC: TcxGridDBColumn;
+    Color_Count: TcxGridDBColumn;
   private
     { Private declarations }
   public

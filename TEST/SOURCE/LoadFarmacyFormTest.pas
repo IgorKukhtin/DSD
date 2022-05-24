@@ -600,6 +600,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMCRequestAllDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMCRequestAllDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMCRequestShowPUSHForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMCRequestShowPUSHForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMCRequestInfoPUSHForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMCRequestInfoPUSHForm');
 end;
 
 
@@ -2672,12 +2677,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPRegistry_1303Form'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSPRegistry_1303Form');
 
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP_1303Form'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_1303Form');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP_1303JournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_1303JournalForm');
 
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountry_1303Form'));
   TdsdFormStorageFactory.GetStorage.Load('TCountry_1303Form');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountry_1303EditForm'));

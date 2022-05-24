@@ -767,7 +767,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     Height = 269
     Align = alClient
     Caption = 'Panel2'
-    TabOrder = 6
+    TabOrder = 5
     object cxGridCh2: TcxGrid
       Left = 1
       Top = 18
@@ -2187,6 +2187,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      View = cxGridDBTableViewCh1
       Action = actChoiceFormGoods_limit
       Params = <>
       Caption = '***'#1044#1086#1073#1072#1074#1080#1090#1100

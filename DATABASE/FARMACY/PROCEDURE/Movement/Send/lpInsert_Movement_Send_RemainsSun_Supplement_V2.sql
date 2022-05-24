@@ -128,7 +128,7 @@ BEGIN
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpRemains_all_Supplement_V2'))
      THEN
-       CREATE TEMP TABLE _tmpRemains_all_Supplement_V2   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountRemains TFloat, AmountNotSend TFloat, 
+       CREATE TEMP TABLE _tmpRemains_all_Supplement_V2   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, Layout TFloat, AmountRemains TFloat, AmountNotSend TFloat, 
                                                        AmountSalesDay TFloat, Need TFloat, Give TFloat, AmountUse TFloat, 
                                                        MinExpirationDate TDateTime, isCloseMCS boolean) ON COMMIT DROP;
      END IF;
@@ -617,12 +617,14 @@ BEGIN
                                  OR COALESCE (tmpPrice.Price, 0) <> 0
                              )
      -- 1. Результат: все остатки, НТЗ => получаем кол-ва автозаказа: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
-     INSERT INTO  _tmpRemains_all_Supplement_V2 (UnitId, GoodsId, Price, MCS, AmountRemains, AmountNotSend, AmountSalesDay, 
+     INSERT INTO  _tmpRemains_all_Supplement_V2 (UnitId, GoodsId, Price, MCS, Layout, AmountRemains, AmountNotSend, AmountSalesDay, 
                                                  MinExpirationDate, isCloseMCS, AmountUse)
         SELECT tmpObject_Price.UnitId
              , tmpObject_Price.GoodsId
              , tmpObject_Price.Price
              , tmpObject_Price.MCSValue
+             
+             , _tmpGoodsLayout_SUN_Supplement_V2.Layout
 
                -- остаток
              , CASE WHEN COALESCE (tmpRemains.Amount, 0) - COALESCE (_tmpGoods_Sun_exception_Supplement_V2.Amount, 0) > 0
@@ -647,23 +649,25 @@ BEGIN
                                               AND _tmpGoods_Sun_exception_Supplement_V2.GoodsId = COALESCE(tmpRemains.GoodsId, tmpSalesDay.GoodsId)
                                               
 
+             LEFT JOIN _tmpGoodsLayout_SUN_Supplement_V2 ON _tmpGoodsLayout_SUN_Supplement_V2.GoodsID = COALESCE(tmpRemains.GoodsId, tmpSalesDay.GoodsId)
+                                                        AND _tmpGoodsLayout_SUN_Supplement_V2.UnitId = COALESCE(tmpRemains.UnitId, tmpSalesDay.UnitId)
        ;
        
      -- Что отдаем
      UPDATE _tmpRemains_all_Supplement_V2 SET Give = floor(_tmpRemains_all_Supplement_V2.AmountRemains - COALESCE(_tmpRemains_all_Supplement_V2.AmountNotSend, 0) -
-                                                                           CASE WHEN COALESCE(_tmpRemains_all_Supplement_V2.MCS, 0) < 1 AND 1 > COALESCE(_tmpRemains_all_Supplement_V2.AmountSalesDay, 0) 
+                                                                           CASE WHEN (COALESCE(_tmpRemains_all_Supplement_V2.MCS, 0) + COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0)) < 1 AND 1 > COALESCE(_tmpRemains_all_Supplement_V2.AmountSalesDay, 0) 
                                                                                 THEN 1 
-                                                                                WHEN COALESCE(_tmpRemains_all_Supplement_V2.MCS, 0) > COALESCE(_tmpRemains_all_Supplement_V2.AmountSalesDay, 0) 
-                                                                                THEN COALESCE(_tmpRemains_all_Supplement_V2.MCS, 0) 
+                                                                                WHEN (COALESCE(_tmpRemains_all_Supplement_V2.MCS, 0) + COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0))  > COALESCE(_tmpRemains_all_Supplement_V2.AmountSalesDay, 0) 
+                                                                                THEN (COALESCE(_tmpRemains_all_Supplement_V2.MCS, 0) + COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0))  
                                                                                 ELSE COALESCE(_tmpRemains_all_Supplement_V2.AmountSalesDay, 0) END)
      WHERE _tmpRemains_all_Supplement_V2.UnitId IN (SELECT _tmpUnit_SUN_Supplement_V2.UnitId 
                                                     FROM _tmpUnit_SUN_Supplement_V2 
                                                     WHERE _tmpUnit_SUN_Supplement_V2.isSUN_Supplement_V2_out = TRUE)
        AND floor(_tmpRemains_all_Supplement_V2.AmountRemains - COALESCE(_tmpRemains_all_Supplement_V2.AmountNotSend, 0) -
-                                                               CASE WHEN COALESCE(_tmpRemains_all_Supplement_V2.MCS, 0) < 1 AND 1 > COALESCE(_tmpRemains_all_Supplement_V2.AmountSalesDay, 0) 
+                                                               CASE WHEN (COALESCE(_tmpRemains_all_Supplement_V2.MCS, 0) + COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0))  < 1 AND 1 > COALESCE(_tmpRemains_all_Supplement_V2.AmountSalesDay, 0) 
                                                                     THEN 1 
-                                                                    WHEN COALESCE(_tmpRemains_all_Supplement_V2.MCS, 0) > COALESCE(_tmpRemains_all_Supplement_V2.AmountSalesDay, 0) 
-                                                                    THEN COALESCE(_tmpRemains_all_Supplement_V2.MCS, 0) 
+                                                                    WHEN (COALESCE(_tmpRemains_all_Supplement_V2.MCS, 0) + COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0))  > COALESCE(_tmpRemains_all_Supplement_V2.AmountSalesDay, 0) 
+                                                                    THEN (COALESCE(_tmpRemains_all_Supplement_V2.MCS, 0) + COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0))  
                                                                     ELSE COALESCE(_tmpRemains_all_Supplement_V2.AmountSalesDay, 0) END) > 0;
      
      -- Что можно получить
@@ -708,8 +712,8 @@ BEGIN
          OPEN curResult_next FOR
              SELECT _tmpRemains_all_Supplement_v2.UnitId
                   , CASE WHEN COALESCE (vbKoeffSUN, 0) = 0 
-                         THEN FLOOR(_tmpRemains_all_Supplement_v2.MCS - _tmpRemains_all_Supplement_v2.AmountRemains - _tmpRemains_all_Supplement_v2.AmountUse)
-                         ELSE FLOOR (FLOOR(_tmpRemains_all_Supplement_v2.MCS - _tmpRemains_all_Supplement_v2.AmountRemains - _tmpRemains_all_Supplement_v2.AmountUse) / vbKoeffSUN) * vbKoeffSUN END
+                         THEN FLOOR((COALESCE(_tmpRemains_all_Supplement_v2.MCS, 0)  + COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0))  - _tmpRemains_all_Supplement_v2.AmountRemains - _tmpRemains_all_Supplement_v2.AmountUse)
+                         ELSE FLOOR (FLOOR((COALESCE(_tmpRemains_all_Supplement_v2.MCS, 0)  + COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0)) - _tmpRemains_all_Supplement_v2.AmountRemains - _tmpRemains_all_Supplement_v2.AmountUse) / vbKoeffSUN) * vbKoeffSUN END
              FROM _tmpRemains_all_Supplement_v2
 
                   INNER JOIN _tmpUnit_SUN_Supplement_V2 ON _tmpUnit_SUN_Supplement_V2.UnitId = _tmpRemains_all_Supplement_V2.UnitId
@@ -720,12 +724,12 @@ BEGIN
                                                                AND _tmpUnit_SunExclusion_Supplement_v2.UnitId_to   = _tmpRemains_all_Supplement_v2.UnitId
 
              WHERE CASE WHEN COALESCE (vbKoeffSUN, 0) = 0 
-                        THEN FLOOR(_tmpRemains_all_Supplement_v2.MCS - _tmpRemains_all_Supplement_v2.AmountRemains - _tmpRemains_all_Supplement_v2.AmountUse)
-                        ELSE FLOOR (FLOOR(_tmpRemains_all_Supplement_v2.MCS - _tmpRemains_all_Supplement_v2.AmountRemains - _tmpRemains_all_Supplement_v2.AmountUse) / vbKoeffSUN) * vbKoeffSUN END > 0
+                        THEN FLOOR((COALESCE(_tmpRemains_all_Supplement_v2.MCS, 0)  + COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0)) - _tmpRemains_all_Supplement_v2.AmountRemains - _tmpRemains_all_Supplement_v2.AmountUse)
+                        ELSE FLOOR (FLOOR((COALESCE(_tmpRemains_all_Supplement_v2.MCS, 0)  + COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0)) - _tmpRemains_all_Supplement_v2.AmountRemains - _tmpRemains_all_Supplement_v2.AmountUse) / vbKoeffSUN) * vbKoeffSUN END > 0
                AND _tmpRemains_all_Supplement_v2.UnitId <> vbUnitId_from
                AND _tmpRemains_all_Supplement_v2.GoodsId = vbGoodsId
                AND _tmpUnit_SunExclusion_Supplement_v2.UnitId_to IS NULL
-             ORDER BY FLOOR(_tmpRemains_all_Supplement_v2.MCS - _tmpRemains_all_Supplement_v2.AmountRemains - _tmpRemains_all_Supplement_v2.AmountUse) DESC
+             ORDER BY FLOOR((COALESCE(_tmpRemains_all_Supplement_v2.MCS, 0)  + COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0)) - _tmpRemains_all_Supplement_v2.AmountRemains - _tmpRemains_all_Supplement_v2.AmountUse) DESC
                     , _tmpRemains_all_Supplement_v2.UnitId
                     , _tmpRemains_all_Supplement_v2.GoodsId;
          -- начало цикла по курсору2 - остаток сроковых - под него надо найти Автозаказ
@@ -866,7 +870,7 @@ raise notice 'Value 05: %', (select Count(*) from _tmpResult_Supplement_V2);
             , Object_Unit_To.Id                          AS UnitId_To
             , Object_Unit_To.ValueData                   AS UnitName_To 
 
-            , _tmpResult_Supplement_V2.Amount               AS Amount
+            , _tmpResult_Supplement_V2.Amount            AS Amount
 
             , tmpRemains_all_From.MinExpirationDate
 

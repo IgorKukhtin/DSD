@@ -295,6 +295,42 @@ object CashJournalForm: TCashJournalForm
         Options.Editing = False
         Width = 78
       end
+      object InsertName_mi: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)('#1089#1090'.)'
+        DataBinding.FieldName = 'InsertName_mi'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077')('#1089#1090'.)'
+        Options.Editing = False
+        Width = 101
+      end
+      object InsertDate_mi: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)('#1089#1090'.)'
+        DataBinding.FieldName = 'InsertDate_mi'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077')('#1089#1090'.)'
+        Options.Editing = False
+        Width = 78
+      end
+      object UpdateName_mi: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)('#1089#1090'.)'
+        DataBinding.FieldName = 'UpdateName_mi'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')('#1089#1090'.)'
+        Options.Editing = False
+        Width = 101
+      end
+      object UpdateDate_mi: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)('#1089#1090'.)'
+        DataBinding.FieldName = 'UpdateDate_mi'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')('#1089#1090'.)'
+        Options.Editing = False
+        Width = 78
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

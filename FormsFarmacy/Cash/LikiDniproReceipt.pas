@@ -217,12 +217,15 @@ var
 begin
   cError := '';
   jValue := FRESTResponse.JSONValue ;
-  if jValue.FindValue('errors') <> Nil then
+  if jValue <> Nil then
   begin
-    cError := DelDoubleQuote(jValue.FindValue('errors').ToString);
-  end else if jValue.FindValue('message') <> Nil then
-  begin
-    cError := DelDoubleQuote(jValue.FindValue('message').ToString);
+    if jValue.FindValue('errors') <> Nil then
+    begin
+      cError := DelDoubleQuote(jValue.FindValue('errors').ToString);
+    end else if jValue.FindValue('message') <> Nil then
+    begin
+      cError := DelDoubleQuote(jValue.FindValue('message').ToString);
+    end else cError := DelDoubleQuote(jValue.ToString);
   end;
 
   if cError = '' then cError := IntToStr(FRESTResponse.StatusCode) + ' - ' + FRESTResponse.StatusText;

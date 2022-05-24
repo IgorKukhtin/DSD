@@ -1109,7 +1109,7 @@ begin
       PUSHDS.First;
       try
         TimerPUSH.Interval := 1000;
-        if (Trim(PUSHDS.FieldByName('Text').AsString) <> '') then
+        if (Trim(PUSHDS.FieldByName('Text').AsString) <> '') OR (Trim(PUSHDS.FieldByName('FormName').AsString) <> '') then
         begin
           ShowPUSHMessageFarmacy(PUSHDS.FieldByName('Text').AsString,
                                  PUSHDS.FieldByName('FormName').AsString,

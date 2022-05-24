@@ -109,6 +109,29 @@ type
     dxBarButton1: TdxBarButton;
     actShowPUSHInfo: TdsdShowPUSHMessage;
     spPUSH: TdsdStoredProc;
+    actMCRequestAllDialog: TExecuteDialog;
+    dxBarButton2: TdxBarButton;
+    tsMarginCategory_All: TcxTabSheet;
+    spSelect: TdsdStoredProc;
+    MasterDS: TDataSource;
+    MasterCDS: TClientDataSet;
+    cxGrid2: TcxGrid;
+    cxGridDBTableView2: TcxGridDBTableView;
+    MarginCategoryName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    ProvinceCityName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
+    Value_1: TcxGridDBColumn;
+    Value_2: TcxGridDBColumn;
+    Value_3: TcxGridDBColumn;
+    Value_4: TcxGridDBColumn;
+    Value_5: TcxGridDBColumn;
+    Value_6: TcxGridDBColumn;
+    Value_7: TcxGridDBColumn;
+    avgPercent: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    DBViewAddOnAll: TdsdDBViewAddOn;
   private
   public
   end;

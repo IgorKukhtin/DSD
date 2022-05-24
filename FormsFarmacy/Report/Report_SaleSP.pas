@@ -117,6 +117,8 @@ type
     cxTextEdit3: TcxTextEdit;
     actPrintCalculation: TdsdPrintAction;
     dxBarButton2: TdxBarButton;
+    PriceRegistryFull: TcxGridDBColumn;
+    SummaRegistryFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

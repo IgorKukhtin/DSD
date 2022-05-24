@@ -1,26 +1,26 @@
 inherited GoodsSP_1303Form: TGoodsSP_1303Form
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1086#1074#1072#1088#1099' '#1057#1086#1094'.  '#1087#1088#1086#1077#1082#1090#1072'  '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303>'
   ClientHeight = 554
-  ClientWidth = 866
+  ClientWidth = 1061
   AddOnFormData.AddOnFormRefresh.ParentList = 'Loss'
-  ExplicitWidth = 882
+  ExplicitWidth = 1077
   ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 866
+    Width = 1061
     Height = 468
-    ExplicitWidth = 650
+    ExplicitWidth = 866
     ExplicitHeight = 468
     ClientRectBottom = 468
-    ClientRectRight = 866
+    ClientRectRight = 1061
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 650
+      ExplicitWidth = 866
       ExplicitHeight = 444
       inherited cxGrid: TcxGrid
-        Width = 866
+        Width = 1061
         Height = 444
-        ExplicitWidth = 650
+        ExplicitWidth = 866
         ExplicitHeight = 444
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -76,7 +76,7 @@ inherited GoodsSP_1303Form: TGoodsSP_1303Form
             Width = 59
           end
           object PriceOptSP: TcxGridDBColumn [4]
-            Caption = #1062#1077#1085#1072' '#1080#1079' '#1088#1077#1077#1089#1090#1088#1072' '#1054#1054#1062
+            Caption = #1062#1077#1085#1072' '#1080#1079' '#1088#1077#1077#1089#1090#1088#1072' '#1054#1054#1062' '#1074#1074#1077#1076#1077#1085#1085#1072#1103
             DataBinding.FieldName = 'PriceOptSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -92,7 +92,28 @@ inherited GoodsSP_1303Form: TGoodsSP_1303Form
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 68
+            Width = 95
+          end
+          object PriceOptSPRegistry: TcxGridDBColumn [6]
+            Caption = #1062#1077#1085#1072' '#1054#1054#1062' '#1080#1079' '#1088#1077#1077#1089#1090#1088#1072
+            DataBinding.FieldName = 'PriceOptSPRegistry'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1076#1077#1082#1083#1072#1088#1086#1074#1072#1085#1072' '#1086#1087#1090#1086#1074#1086'-'#1074#1110#1076#1087#1091#1089#1082#1085#1072' '#1094#1110#1085#1072
+            Options.Editing = False
+            Width = 77
+          end
+          object PriceSaleRegistry: TcxGridDBColumn [7]
+            Caption = #1056#1086#1079#1085'. '#1094#1077#1085#1072' '#1080#1079' '#1088#1077#1077#1089#1090#1088#1072
+            DataBinding.FieldName = 'PriceSaleRegistry'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
           end
           inherited colIsErased: TcxGridDBColumn
             GroupSummaryAlignment = taCenter
@@ -103,9 +124,9 @@ inherited GoodsSP_1303Form: TGoodsSP_1303Form
     end
   end
   inherited DataPanel: TPanel
-    Width = 866
+    Width = 1061
     TabOrder = 3
-    ExplicitWidth = 650
+    ExplicitWidth = 866
     inherited edInvNumber: TcxTextEdit
       Left = 182
       ExplicitLeft = 182

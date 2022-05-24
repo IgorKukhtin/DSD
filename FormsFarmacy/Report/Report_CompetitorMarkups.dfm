@@ -695,6 +695,152 @@
         end
       end
     end
+    object tsMarginCategory_All: TcxTabSheet
+      Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1086#1082' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      ImageIndex = 2
+      object cxGrid2: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1124
+        Height = 560
+        Align = alClient
+        TabOrder = 0
+        ExplicitWidth = 1055
+        ExplicitHeight = 572
+        object cxGridDBTableView2: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = MasterDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object MarginCategoryName: TcxGridDBColumn
+            Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1082#1080
+            DataBinding.FieldName = 'MarginCategoryName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 213
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object ProvinceCityName: TcxGridDBColumn
+            Caption = #1056#1072#1081#1086#1085
+            DataBinding.FieldName = 'ProvinceCityName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object Value_1: TcxGridDBColumn
+            Caption = '0-100'
+            DataBinding.FieldName = 'Value_1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object Value_2: TcxGridDBColumn
+            Caption = '100-250'
+            DataBinding.FieldName = 'Value_2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object Value_3: TcxGridDBColumn
+            Caption = '250-350'
+            DataBinding.FieldName = 'Value_3'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object Value_4: TcxGridDBColumn
+            Caption = '350-500'
+            DataBinding.FieldName = 'Value_4'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object Value_5: TcxGridDBColumn
+            Caption = '500-1000'
+            DataBinding.FieldName = 'Value_5'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object Value_6: TcxGridDBColumn
+            Caption = '1000-2000'
+            DataBinding.FieldName = 'Value_6'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object Value_7: TcxGridDBColumn
+            Caption = '> 2000'
+            DataBinding.FieldName = 'Value_7'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object avgPercent: TcxGridDBColumn
+            Caption = #1057#1088'. '#1085#1072#1094'. '#1087#1086' '#1090#1086#1095#1082#1077
+            DataBinding.FieldName = 'avgPercent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1088#1077#1076#1085#1103#1103' '#1085#1072#1094#1077#1085#1082#1072' '#1087#1086' '#1090#1086#1095#1082#1077
+            Options.Editing = False
+            Width = 100
+          end
+        end
+        object cxGridLevel2: TcxGridLevel
+          GridView = cxGridDBTableView2
+        end
+      end
+    end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -812,6 +958,10 @@
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
           ItemName = 'bbStaticText'
         end
         item
@@ -909,6 +1059,10 @@
       Action = actShowPrev
       Category = 0
     end
+    object dxBarButton2: TdxBarButton
+      Action = actMCRequestAllDialog
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -921,6 +1075,9 @@
       StoredProcList = <
         item
           StoredProc = dsdStoredProc
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -988,6 +1145,20 @@
           StoredProc = spPUSH
         end>
       Caption = 'actShowPUSHInfo'
+    end
+    object actMCRequestAllDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1087#1088#1072#1074#1082#1072' '#1079#1072#1087#1088#1086#1089#1072' '#1085#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1082#1080
+      Hint = #1054#1090#1087#1088#1072#1074#1082#1072' '#1079#1072#1087#1088#1086#1089#1072' '#1085#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1082#1080
+      ImageIndex = 27
+      FormName = 'TMCRequestAllDialogForm'
+      FormNameParam.Value = 'TMCRequestAllDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = True
+      OpenBeforeShow = True
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -1409,5 +1580,59 @@
     PackSize = 1
     Left = 506
     Top = 416
+  end
+  object spSelect: TdsdStoredProc
+    StoredProcName = 'gpSelect_MarginCategory_All'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 856
+    Top = 208
+  end
+  object MasterDS: TDataSource
+    DataSet = MasterCDS
+    Left = 800
+    Top = 208
+  end
+  object MasterCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 744
+    Top = 208
+  end
+  object DBViewAddOnAll: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView
+    OnDblClickActionList = <
+      item
+      end>
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 736
+    Top = 288
   end
 end
