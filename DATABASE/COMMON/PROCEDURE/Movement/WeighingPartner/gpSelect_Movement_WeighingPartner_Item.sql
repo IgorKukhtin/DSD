@@ -52,7 +52,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , StartBegin TDateTime, EndBegin TDateTime, diffBegin_sec TFloat                            -- для строк
              , GoodsCode Integer, GoodsName TVarChar, GoodsGroupNameFull TVarChar
              , MIAmount TFloat,  AmountPartner TFloat
-             , RealWeight TFloat,CountTare TFloat, WeightTare TFloat
+             , MIAmount_Weight TFloat, AmountPartner_Weight TFloat
+             , RealWeight TFloat, RealWeight_Weight TFloat, CountTare TFloat, WeightTare TFloat
              , CountTare1   TFloat, CountTare2   TFloat, CountTare3   TFloat, CountTare4   TFloat, CountTare5   TFloat, CountTare6   TFloat
              , WeightTare1  TFloat, WeightTare2  TFloat, WeightTare3  TFloat, WeightTare4  TFloat, WeightTare5  TFloat, WeightTare6  TFloat
              , HeadCount TFloat, BoxCount TFloat, BoxNumber TFloat
@@ -250,10 +251,14 @@ BEGIN
              , Object_Goods.ValueData           AS GoodsName
              , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
-             , MovementItem.Amount as MIAmount
+             , MovementItem.Amount AS MIAmount
              , COALESCE (MIFloat_AmountPartner.ValueData, 0)::TFloat AS AmountPartner
+             , (MovementItem.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS MIAmount_Weight
+             , (COALESCE (MIFloat_AmountPartner.ValueData, 0) * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS AmountPartner_Weight
 
              , COALESCE (MIFloat_RealWeight.ValueData, 0)   ::TFloat       AS RealWeight
+             , (COALESCE (MIFloat_RealWeight.ValueData, 0) * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS RealWeight_Weight
+             
              , COALESCE (MIFloat_CountTare.ValueData, 0)    ::TFloat       AS CountTare
              , (COALESCE (MIFloat_CountTare.ValueData, 0) * COALESCE (MIFloat_WeightTare.ValueData, 0)) ::TFloat    AS WeightTare
 
@@ -661,6 +666,10 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                            ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                           AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = MovementItem.ObjectId

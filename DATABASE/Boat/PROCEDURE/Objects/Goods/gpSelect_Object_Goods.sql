@@ -114,6 +114,16 @@ BEGIN
                                    AND Object.isErased = FALSE
                                  GROUP BY ObjectLink_GoodsArticle_Goods.ChildObjectId
                                  )
+           , tmpGoods_err AS (SELECT ObjectString_Article.ValueData AS Article
+                              FROM Object AS Object_Goods
+                                   JOIN ObjectString AS ObjectString_Article
+                                                     ON ObjectString_Article.ObjectId = Object_Goods.Id
+                                                    AND ObjectString_Article.DescId   = zc_ObjectString_Article()
+                                                    AND ObjectString_Article.ValueData <> ''
+                              WHERE Object_Goods.descId = zc_Object_Goods()
+                              GROUP BY ObjectString_Article.ValueData      
+                              HAVING COUNT (*) > 1
+                             )
 
        -- Результат
        SELECT Object_Goods.Id                     AS Id
@@ -121,7 +131,7 @@ BEGIN
             , SUBSTRING (Object_Goods.ValueData, 1, 128) :: TVarChar AS Name
             , ObjectString_Article.ValueData      AS Article
             , zfCalc_Article_all (ObjectString_Article.ValueData) AS Article_all
-            , ObjectString_ArticleVergl.ValueData AS ArticleVergl
+            , (CASE WHEN tmpGoods_err.Article <> '' THEN '***' ELSE '' END || COALESCE (ObjectString_ArticleVergl.ValueData, '')) :: TVarChar AS ArticleVergl
             , Object_GoodsArticle.GoodsArticle ::TVarChar AS GoodsArticle
             , ObjectString_EAN.ValueData          AS EAN
             , ObjectString_ASIN.ValueData         AS ASIN
@@ -387,6 +397,9 @@ BEGIN
              LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
 
              LEFT JOIN tmpGoodsArticle AS Object_GoodsArticle ON Object_GoodsArticle.GoodsId = Object_Goods.Id
+
+             LEFT JOIN tmpGoods_err ON tmpGoods_err.Article = ObjectString_Article.ValueData
+
 
        WHERE Object_Goods.DescId = zc_Object_Goods()
        --AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE)

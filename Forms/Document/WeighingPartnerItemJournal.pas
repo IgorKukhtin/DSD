@@ -121,6 +121,9 @@ type
     diffBegin_sec: TcxGridDBColumn;
     Count_Doc: TcxGridDBColumn;
     Count_Item: TcxGridDBColumn;
+    MIAmount_Weight: TcxGridDBColumn;
+    AmountPartner_Weight: TcxGridDBColumn;
+    RealWeight_Weight: TcxGridDBColumn;
   private
   public
   end;

@@ -80,7 +80,10 @@ BEGIN
    IF inCode <> 0 THEN PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), inCode, vbUserId); END IF;
 
    -- !!! проверка уникальности <ArticleNr>
-   PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Article(), inArticle, vbUserId);
+   IF inArticle <> '' 
+   THEN
+       PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Article(), inArticle, vbUserId);
+   END IF;
 
 
    -- проверка <inName>

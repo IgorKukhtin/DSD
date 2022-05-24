@@ -134,6 +134,21 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = diffBegin_sec_movement
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = MIAmount_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountPartner_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = RealWeight_Weight
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -200,6 +215,21 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = diffBegin_sec_movement
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = MIAmount_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountPartner_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = RealWeight_Weight
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -638,12 +668,20 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 70
+      end
+      object RealWeight_Weight: TcxGridDBColumn
+        Caption = #1042#1077#1089' '#1087#1088#1080' '#1074#1079#1074#1077#1096'.'
+        DataBinding.FieldName = 'RealWeight_Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
       end
       object CountTare: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099
@@ -840,6 +878,26 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 70
+      end
+      object MIAmount_Weight: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' ('#1074#1077#1089')'
+        DataBinding.FieldName = 'MIAmount_Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+      end
+      object AmountPartner_Weight: TcxGridDBColumn
+        Caption = #1042#1077#1089' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+        DataBinding.FieldName = 'AmountPartner_Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
       end
       object Count: TcxGridDBColumn
         Caption = #1050#1086#1083'. '#1073#1072#1090#1086#1085#1086#1074
