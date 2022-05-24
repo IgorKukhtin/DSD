@@ -98,6 +98,7 @@ type
     cxDBMemo1: TcxDBMemo;
     isErrorRRO: TcxGridDBColumn;
     isAutoVIPforSales: TcxGridDBColumn;
+    isMobileApplication: TcxGridDBColumn;
   private
     { Private declarations }
   public

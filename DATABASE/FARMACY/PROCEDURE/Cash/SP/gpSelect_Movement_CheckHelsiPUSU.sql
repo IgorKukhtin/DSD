@@ -19,7 +19,7 @@ RETURNS TABLE (Ord Integer
              , Summ TFloat
              , PriceSale TFloat
              , SummSale TFloat
-             , CountSP TFloat, IdSP TVarChar, ProgramIdSP TVarChar, DosageIdSP TVarChar, PriceRetSP TFloat, PaymentSP TFloat
+             , MedicalProgramId TVarChar, CountSP TFloat, IdSP TVarChar, ProgramIdSP TVarChar, DosageIdSP TVarChar, PriceRetSP TFloat, PaymentSP TFloat
              , State TVarChar
              , isState Boolean
              , Color_calc Integer
@@ -54,6 +54,7 @@ WITH -- Товары соц-проект
                                , MIString_IdSP.ValueData       AS IdSP
                                , COALESCE (MIString_ProgramIdSP.ValueData, '')::TVarChar AS ProgramIdSP
                                , MIString_DosageIdSP.ValueData AS DosageIdSP
+                               , ObjectString_ProgramId.ValueData                        AS MedicalProgramId
                                                                 -- № п/п - на всякий случай
                                , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
                           FROM Movement
@@ -66,6 +67,14 @@ WITH -- Товары соц-проект
                                                        ON MovementDate_OperDateEnd.MovementId = Movement.Id
                                                       AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
                                                       AND MovementDate_OperDateEnd.ValueData  >= CURRENT_DATE
+
+                               LEFT JOIN MovementLinkObject AS MLO_MedicalProgramSP
+                                                            ON MLO_MedicalProgramSP.MovementId = Movement.Id
+                                                           AND MLO_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
+                               LEFT JOIN ObjectString AS ObjectString_ProgramId 	
+                                                      ON ObjectString_ProgramId.ObjectId = MLO_MedicalProgramSP.ObjectId
+                                                     AND ObjectString_ProgramId.DescId = zc_ObjectString_MedicalProgramSP_ProgramId()
+
                                LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                      AND MovementItem.DescId     = zc_MI_Master()
                                                      AND MovementItem.isErased   = FALSE
@@ -131,6 +140,7 @@ WITH -- Товары соц-проект
            , MIFloat_PriceSale.ValueData                                   AS PriceSale
            , (MIFloat_PriceSale.ValueData * MovementItem.Amount) :: TFloat AS SummSale
 
+           , tmpGoodsSP.MedicalProgramId                            AS MedicalProgramId
            , tmpGoodsSP.CountSP                                     AS CountSP
            , tmpGoodsSP.IdSP                                        AS IdSP
            , tmpGoodsSP.ProgramIdSP                                 AS ProgramIdSP

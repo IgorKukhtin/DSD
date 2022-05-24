@@ -85,6 +85,7 @@ type
     CommentCustomer: TcxGridDBColumn;
     isErrorRRO: TcxGridDBColumn;
     isAutoVIPforSales: TcxGridDBColumn;
+    isMobileApplication: TcxGridDBColumn;
   private
     { Private declarations }
   public

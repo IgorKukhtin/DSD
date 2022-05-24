@@ -514,15 +514,6 @@ inherited CheckHelsiSignAllUnitForm: TCheckHelsiSignAllUnitForm
     DataSets = <
       item
         DataSet = ClientDataSet
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-        DataSet = ClientDataSet
       end>
     Params = <
       item
@@ -564,5 +555,33 @@ inherited CheckHelsiSignAllUnitForm: TCheckHelsiSignAllUnitForm
     PropertiesCellList = <>
     Left = 600
     Top = 320
+  end
+  object spGet_MedicalProgram: TdsdStoredProc
+    StoredProcName = 'gpGet_Goods_MedicalProgramHelsi'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMedicalProgramId'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outProgramIdSP'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 208
   end
 end

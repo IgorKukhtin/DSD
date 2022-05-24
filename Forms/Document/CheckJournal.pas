@@ -102,6 +102,7 @@ type
     isAutoVIPforSales: TcxGridDBColumn;
     isPaperRecipeSP: TcxGridDBColumn;
     ConfirmationCodeSP: TcxGridDBColumn;
+    isMobileApplication: TcxGridDBColumn;
   private
     { Private declarations }
   public

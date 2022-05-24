@@ -226,6 +226,14 @@ inherited CheckDeferredForm: TCheckDeferredForm
             Options.Editing = False
             Width = 71
           end
+          object isMobileApplication: TcxGridDBColumn
+            Caption = #1052#1086#1073'. '#1087#1088#1080#1083'.'
+            DataBinding.FieldName = 'isMobileApplication'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 53
+          end
           object Color_CalcDoc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_CalcDoc'
             Visible = False

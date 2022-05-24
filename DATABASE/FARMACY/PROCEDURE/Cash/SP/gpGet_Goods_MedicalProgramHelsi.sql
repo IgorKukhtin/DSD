@@ -5,7 +5,7 @@
 CREATE OR REPLACE FUNCTION gpGet_Goods_MedicalProgramHelsi(
     IN inGoodsId           Integer  ,  --
     IN inMedicalProgramId  TVarChar ,  --
-   OUT outIdSP             TVarChar ,  --
+   OUT outProgramIdSP      TVarChar ,  --
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TVarChar
@@ -27,8 +27,8 @@ BEGIN
     vbUnitId := vbUnitKey::Integer;
 
 
-    SELECT  MIString_IdSP.ValueData       AS IdSP
-    INTO outIdSP
+    SELECT  MIString_ProgramIdSP.ValueData       AS IdSP
+    INTO outProgramIdSP
     FROM Movement
          INNER JOIN MovementDate AS MovementDate_OperDateStart
                                  ON MovementDate_OperDateStart.MovementId = Movement.Id
@@ -46,20 +46,19 @@ BEGIN
          INNER JOIN ObjectString AS ObjectString_ProgramId 	
                                  ON ObjectString_ProgramId.ObjectId = MLO_MedicalProgramSP.ObjectId
                                 AND ObjectString_ProgramId.DescId = zc_ObjectString_MedicalProgramSP_ProgramId()
+                                AND ObjectString_ProgramId.ValueData = inMedicalProgramId 
                                
          INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                 AND MovementItem.DescId     = zc_MI_Master()
                                 AND MovementItem.isErased   = FALSE
                                 AND MovementItem.ObjectId   = (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.ID = inGoodsId)
 
-         -- ID лікарського засобу
-         LEFT JOIN MovementItemString AS MIString_IdSP
-                                      ON MIString_IdSP.MovementItemId = MovementItem.Id
-                                     AND MIString_IdSP.DescId = zc_MIString_IdSP()
+         LEFT JOIN MovementItemString AS MIString_ProgramIdSP
+                                      ON MIString_ProgramIdSP.MovementItemId = MovementItem.Id
+                                     AND MIString_ProgramIdSP.DescId = zc_MIString_ProgramIdSP()
 
     WHERE Movement.DescId = zc_Movement_GoodsSP()
       AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
-      AND ObjectString_ProgramId.ValueData = inMedicalProgramId
     ORDER BY Movement.OperDate DESC
     LIMIT 1;
                             

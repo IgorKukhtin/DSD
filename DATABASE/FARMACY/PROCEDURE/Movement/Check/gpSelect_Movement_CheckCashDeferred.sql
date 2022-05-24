@@ -201,6 +201,8 @@ BEGIN
             , MovementString_CommentCustomer.ValueData                     AS CommentCustomer
             , COALESCE(MovementBoolean_ErrorRRO.ValueData, False)          AS isErrorRRO
             , COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False)   AS isAutoVIPforSales
+            , COALESCE(MovementBoolean_MobileApplication.ValueData, False)::Boolean   AS isMobileApplication
+
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id
@@ -379,6 +381,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_DiscountCommit
                                       ON MovementBoolean_DiscountCommit.MovementId = Movement.Id
                                      AND MovementBoolean_DiscountCommit.DescId = zc_MovementBoolean_DiscountCommit()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_MobileApplication
+                                      ON MovementBoolean_MobileApplication.MovementId = Movement.Id
+                                     AND MovementBoolean_MobileApplication.DescId = zc_MovementBoolean_MobileApplication()
 
             LEFT JOIN MovementString AS MovementString_CommentCustomer
                                      ON MovementString_CommentCustomer.MovementId = Movement.Id

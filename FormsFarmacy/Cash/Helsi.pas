@@ -112,7 +112,7 @@ type
 function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName : string;
   var AQty : currency; var ADate : TDateTime; var AProgramId, AProgramName : String) : boolean;
 
-function GetHelsiReceiptState(const AReceipt : String; var AState : string; var AIniError : boolean) : boolean;
+function GetHelsiReceiptState(const AReceipt : String; var AState, AProgramMedicationId  : string; var AIniError : boolean) : boolean;
 
 function CreateNewDispense(AIDSP, AProgramIdSP : string; AQty, APrice, ASell_amount, ADiscount_amount : currency;
   ACode : string) : boolean;  overload;
@@ -1278,7 +1278,7 @@ begin
   end;
 end;
 
-function GetHelsiReceiptState(const AReceipt : String; var AState : string; var AIniError : boolean) : boolean;
+function GetHelsiReceiptState(const AReceipt : String; var AState, AProgramMedicationId : string; var AIniError : boolean) : boolean;
   var I : integer;
 begin
   Result := False;
@@ -1327,6 +1327,7 @@ begin
   end;
 
   AState := HelsiApi.FStatus;
+  AProgramMedicationId := HelsiApi.FMedical_program_id;
   Result := True;
 end;
 

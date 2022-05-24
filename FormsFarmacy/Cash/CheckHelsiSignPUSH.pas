@@ -54,6 +54,7 @@ type
     dxBarButton5: TdxBarButton;
     actGridToExcel: TdsdGridToExcel;
     dxBarButton6: TdxBarButton;
+    spGet_MedicalProgram: TdsdStoredProc;
     procedure ParentFormCreate(Sender: TObject);
     procedure ParentFormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure actLoadStateExecute(Sender: TObject);
@@ -77,14 +78,14 @@ uses Helsi, MainCash2, Math;
 
 
 procedure TCheckHelsiSignPUSHForm.actLoadStateCurrExecute(Sender: TObject);
-  var cState : string; nColor : Integer;
+  var cState, cMedicalProgramId, cProgramIdSP : string; nColor : Integer;
 begin
   if ClientDataSet.IsEmpty then Exit;
 
   if not FIniError then
   begin
-    if GetHelsiReceiptState(ClientDataSet.FieldByName('InvNumberSP').AsString, cState, FIniError) then
-    else if not FIniError and GetHelsiReceiptState(ClientDataSet.FieldByName('InvNumberSP').AsString, cState, FIniError) then
+    if GetHelsiReceiptState(ClientDataSet.FieldByName('InvNumberSP').AsString, cState, cMedicalProgramId, FIniError) then
+    else if not FIniError and GetHelsiReceiptState(ClientDataSet.FieldByName('InvNumberSP').AsString, cState, cMedicalProgramId, FIniError) then
     else cState := 'Ош. получения';
   end else cState := 'Ош. получения';
   nColor := clWindow;
@@ -106,7 +107,22 @@ begin
     cState := 'Неизв. статус';
   end;
 
+  cProgramIdSP := ClientDataSet.FieldByName('IdSP').AsString;
+  if ClientDataSet.FieldByName('MedicalProgramId').AsString <> cMedicalProgramId then
+  begin
+    try
+      spGet_MedicalProgram.ParamByName('inGoodsId').Value := ClientDataSet.FieldByName('GoodsId').AsInteger;
+      spGet_MedicalProgram.ParamByName('inMedicalProgramId').Value := cMedicalProgramId;
+      spGet_MedicalProgram.ParamByName('outProgramIdSP').Value := '';
+      spGet_MedicalProgram.Execute;
+      cProgramIdSP := spGet_MedicalProgram.ParamByName('outProgramIdSP').Value;
+    except
+    end;
+  end;
+
   ClientDataSet.Edit;
+  ClientDataSet.FieldByName('MedicalProgramId').AsString := cMedicalProgramId;
+  ClientDataSet.FieldByName('ProgramIdSP').AsString := cProgramIdSP;
   ClientDataSet.FieldByName('State').AsString := cState;
   ClientDataSet.FieldByName('Color_calc').AsInteger := nColor;
   ClientDataSet.FieldByName('isState').AsBoolean := nColor <> clWindow;

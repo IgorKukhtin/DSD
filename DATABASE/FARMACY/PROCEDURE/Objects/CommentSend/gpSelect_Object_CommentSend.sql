@@ -43,7 +43,7 @@ BEGIN
 
    WHERE Object_CommentSend.DescId = zc_Object_CommentSend()
      AND (Object_CommentSend.isErased = False OR inisShowAll = True)
-     AND (COALESCE(inUnitId, 0) <> 377594 OR Object_CommentSend.Id <> 15180138);
+     AND (COALESCE(inUnitId, 0) <> 377594 OR Object_CommentSend.Id NOT IN (15180138, 14883297));
   
   
 END;$BODY$
