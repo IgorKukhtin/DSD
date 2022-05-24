@@ -120,7 +120,8 @@ BEGIN
                                                      ON ObjectString_Article.ObjectId = Object_Goods.Id
                                                     AND ObjectString_Article.DescId   = zc_ObjectString_Article()
                                                     AND ObjectString_Article.ValueData <> ''
-                              WHERE Object_Goods.descId = zc_Object_Goods()
+                              WHERE Object_Goods.DescId   = zc_Object_Goods()
+                                AND Object_Goods.isErased = FALSE
                               GROUP BY ObjectString_Article.ValueData      
                               HAVING COUNT (*) > 1
                              )

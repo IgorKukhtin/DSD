@@ -101,7 +101,8 @@ BEGIN
                                                       ON ObjectString_Article.ObjectId  = Object.Id
                                                      AND ObjectString_Article.DescId    = zc_ObjectString_Article()
                                                      AND ObjectString_Article.ValueData ILIKE TRIM (inBarCode)
-                         WHERE Object.DescId = zc_Object_Goods()
+                         WHERE Object.DescId   = zc_Object_Goods()
+                           AND Object.isErased = FALSE
                         )
                  THEN
                      RAISE EXCEPTION 'Ошибка.Artikel Nr <%> найден у разных Комплектующих.%<%>%и <%>'
@@ -117,6 +118,7 @@ BEGIN
                                                                   AND ObjectString_Article.DescId    = zc_ObjectString_Article()
                                                                   AND ObjectString_Article.ValueData ILIKE TRIM (inBarCode)
                                       WHERE Object.DescId = zc_Object_Goods()
+                                        AND Object.isErased = FALSE
                                       ORDER BY Object.Id ASC LIMIT 1)
                                    , CHR (13)
                                    , (SELECT CASE WHEN ObjectString_Article.ValueData <> ''
@@ -129,6 +131,7 @@ BEGIN
                                                                   AND ObjectString_Article.DescId    = zc_ObjectString_Article()
                                                                   AND ObjectString_Article.ValueData ILIKE TRIM (inBarCode)
                                       WHERE Object.DescId = zc_Object_Goods()
+                                        AND Object.isErased = FALSE
                                       ORDER BY Object.Id DESC LIMIT 1)
                                     ;
                  END IF;
@@ -141,6 +144,8 @@ BEGIN
                                                          AND ObjectString_Article.DescId    = zc_ObjectString_Article()
                                                          AND ObjectString_Article.ValueData ILIKE TRIM (inBarCode)
                               WHERE Object.DescId = zc_Object_Goods()
+                              ORDER BY CASE WHEN Object.isErased = FALSE THEN 0 ELSE 1 END, Object.Id
+                              LIMIT 1
                              );
              END IF;
 
@@ -155,6 +160,7 @@ BEGIN
                                                      AND ObjectString_Article.DescId    = zc_ObjectString_Article()
                                                      AND REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (ObjectString_Article.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '') ILIKE TRIM (inBarCode)
                          WHERE Object.DescId = zc_Object_Goods()
+                           AND Object.isErased = FALSE
                         )
                  THEN
                      RAISE EXCEPTION 'Ошибка.Artikel Nr all <%> найден у разных Комплектующих.%<%>%и <%>'
@@ -170,6 +176,7 @@ BEGIN
                                                                   AND ObjectString_Article.DescId    = zc_ObjectString_Article()
                                                                   AND REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (ObjectString_Article.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '') ILIKE TRIM (inBarCode)
                                       WHERE Object.DescId = zc_Object_Goods()
+                                        AND Object.isErased = FALSE
                                       ORDER BY Object.Id ASC LIMIT 1)
                                    , CHR (13)
                                    , (SELECT CASE WHEN ObjectString_Article.ValueData <> ''
@@ -182,6 +189,7 @@ BEGIN
                                                                   AND ObjectString_Article.DescId    = zc_ObjectString_Article()
                                                                   AND REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (ObjectString_Article.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '') ILIKE TRIM (inBarCode)
                                       WHERE Object.DescId = zc_Object_Goods()
+                                        AND Object.isErased = FALSE
                                       ORDER BY Object.Id DESC LIMIT 1)
                                     ;
                  END IF;
@@ -194,6 +202,8 @@ BEGIN
                                                          AND ObjectString_Article.DescId    = zc_ObjectString_Article()
                                                          AND REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (ObjectString_Article.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '') ILIKE TRIM (inBarCode)
                               WHERE Object.DescId = zc_Object_Goods()
+                              ORDER BY CASE WHEN Object.isErased = FALSE THEN 0 ELSE 1 END, Object.Id
+                              LIMIT 1
                              );
              END IF;
 
