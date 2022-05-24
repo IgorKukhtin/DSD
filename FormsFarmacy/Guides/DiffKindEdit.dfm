@@ -160,9 +160,6 @@
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 18
-    ExplicitLeft = 342
-    ExplicitWidth = 285
-    ExplicitHeight = 293
     object cxGrid: TcxGrid
       Left = 1
       Top = 36
@@ -173,10 +170,6 @@
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitLeft = 0
-      ExplicitTop = 26
-      ExplicitWidth = 653
-      ExplicitHeight = 256
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -207,9 +200,11 @@
           VisibleForCustomization = False
           Width = 49
         end
-        object Price: TcxGridDBColumn
-          Caption = #1044#1086' '#1094#1077#1085#1099
-          DataBinding.FieldName = 'Price'
+        object MinPrice: TcxGridDBColumn
+          Caption = #1052#1080#1085'. '#1094#1077#1085#1072
+          DataBinding.FieldName = 'MinPrice'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.00;-,0.00'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 56
@@ -217,9 +212,21 @@
         object Amount: TcxGridDBColumn
           Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091#1087#1072#1082#1086#1074#1086#1082
           DataBinding.FieldName = 'Amount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 3
+          Properties.DisplayFormat = ',0.###;-,0.###; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 57
+          Width = 56
+        end
+        object Summa: TcxGridDBColumn
+          Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072#9
+          DataBinding.FieldName = 'Summa'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.##;-,0.##; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 56
         end
       end
       object cxGridLevel: TcxGridLevel
@@ -550,13 +557,13 @@
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 360
-    Top = 32
+    Top = 72
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 360
-    Top = 88
+    Top = 128
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_DiffKindPrice'
@@ -576,7 +583,7 @@
       end>
     PackSize = 1
     Left = 360
-    Top = 144
+    Top = 184
   end
   object spInsertUpdate_DiffKindPrice: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_DiffKindPrice'
@@ -617,10 +624,10 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPrice'
+        Name = 'inMinPrice'
         Value = 0.000000000000000000
         Component = ClientDataSet
-        ComponentItem = 'Price'
+        ComponentItem = 'MinPrice'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -633,10 +640,19 @@
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSumma'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Summa'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 480
-    Top = 35
+    Top = 67
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -663,7 +679,7 @@
     ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 480
-    Top = 104
+    Top = 120
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -680,6 +696,6 @@
       end>
     PackSize = 1
     Left = 480
-    Top = 168
+    Top = 184
   end
 end

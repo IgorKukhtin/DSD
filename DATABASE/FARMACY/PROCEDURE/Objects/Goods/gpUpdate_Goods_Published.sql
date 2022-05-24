@@ -1,6 +1,5 @@
 -- Function: gpUpdate_Object_Goods_Published()
 
-DROP FUNCTION IF EXISTS gpUpdate_Goods_Published(Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Goods_Published(Integer, TVarChar);
 
 
@@ -28,6 +27,7 @@ BEGIN
     -- Сохранили в плоскую таблицй
     BEGIN
       UPDATE Object_Goods_Main SET isPublished = False
+                                 , DateUpdateSite = CURRENT_TIMESTAMP
       WHERE Object_Goods_Main.ID = (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inId);  
     EXCEPTION
        WHEN others THEN 

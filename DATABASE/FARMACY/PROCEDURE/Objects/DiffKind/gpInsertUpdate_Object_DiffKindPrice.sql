@@ -1,14 +1,15 @@
 -- Function: gpInsertUpdate_Object_DiffKindPrice()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiffKindPrice (Integer, Integer, TVarChar, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiffKindPrice (Integer, Integer, TVarChar, Integer, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_DiffKindPrice(
  INOUT ioId	                  Integer   ,    -- ключ объекта <> 
     IN inCode                 Integer   ,    -- код объекта 
     IN inName                 TVarChar  ,    -- Название объекта <>
     IN inDiffKindId           Integer   ,    -- Вид отказа
-    IN inPrice                TFloat    ,    -- До цены
+    IN inPrice                TFloat    ,    -- Минимальная цена
     IN inAmount               TFloat    ,    -- Количество упаковок
+    IN inSumma                TFloat    ,    -- Максимальная сумма заказа
     IN inSession              TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -37,9 +38,11 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_DiffKindPrice_DiffKind(), ioId, inDiffKindId);
 
    -- сохранили
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_DiffKindPrice_Price(), ioId, inPrice);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_DiffKindPrice_MinPrice(), ioId, inPrice);
    -- сохранили
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_DiffKindPrice_Amount(), ioId, inAmount);
+   -- сохранили
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_DiffKindPrice_Summa(), ioId, inSumma);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

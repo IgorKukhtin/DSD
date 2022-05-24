@@ -26,6 +26,7 @@ BEGIN
     -- Сохранили в плоскую таблицй
    BEGIN
      UPDATE Object_Goods_Main SET isHideOnTheSite = inisHideOnTheSite
+                                , DateUpdateSite = CURRENT_TIMESTAMP
      WHERE Object_Goods_Main.Id = inGoodsMainId;  
    EXCEPTION
       WHEN others THEN 
