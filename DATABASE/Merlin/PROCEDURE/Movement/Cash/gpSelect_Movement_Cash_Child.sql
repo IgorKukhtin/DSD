@@ -22,6 +22,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyCode Integer, CommentInfoMoneyName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
+             , InsertName_mi TVarChar, InsertDate_mi TDateTime
+             , UpdateName_mi TVarChar, UpdateDate_mi TDateTime
                )
 
 AS
@@ -103,10 +105,15 @@ BEGIN
            , Object_CommentInfoMoney.ObjectCode AS CommentInfoMoneyCode
            , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
            
-           , Object_Insert.ValueData              AS InsertName
-           , MovementDate_Insert.ValueData        AS InsertDate
-           , Object_Update.ValueData              AS UpdateName
-           , MovementDate_Update.ValueData        AS UpdateDate
+           , Object_Insert.ValueData            AS InsertName
+           , MovementDate_Insert.ValueData      AS InsertDate
+           , Object_Update.ValueData            AS UpdateName
+           , MovementDate_Update.ValueData      AS UpdateDate
+
+           , Object_Insert_mi.ValueData         AS InsertName_mi
+           , MIDate_Insert_mi.ValueData         AS InsertDate_mi
+           , Object_Update_mi.ValueData         AS UpdateName_mi
+           , MIDate_Update_mi.ValueData         AS UpdateDate_mi
        FROM tmpData
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpData.StatusId
 
@@ -161,7 +168,22 @@ BEGIN
                                          AND MIBoolean_Child.DescId = zc_MIBoolean_Child()
                                          */
             
-
+            LEFT JOIN MovementItemDate AS MIDate_Insert_mi
+                                       ON MIDate_Insert_mi.MovementItemId = tmpData.MI_Id
+                                      AND MIDate_Insert_mi.DescId = zc_MIDate_Insert()
+            LEFT JOIN MovementItemDate AS MIDate_Update_mi
+                                       ON MIDate_Update_mi.MovementItemId = tmpData.MI_Id
+                                      AND MIDate_Update_mi.DescId = zc_MIDate_Update()
+ 
+            LEFT JOIN MovementItemLinkObject AS MILO_Insert_mi
+                                             ON MILO_Insert_mi.MovementItemId = tmpData.MI_Id
+                                            AND MILO_Insert_mi.DescId = zc_MILinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert_mi ON Object_Insert_mi.Id = MILO_Insert_mi.ObjectId
+ 
+            LEFT JOIN MovementItemLinkObject AS MILO_Update_mi
+                                             ON MILO_Update_mi.MovementItemId = tmpData.MI_Id
+                                            AND MILO_Update_mi.DescId = zc_MILinkObject_Update()
+            LEFT JOIN Object AS Object_Update_mi ON Object_Update_mi.Id = MILO_Update_mi.ObjectId
 
        --
        
@@ -174,6 +196,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 23.05.22         *
  17.01.22         *
 */
 

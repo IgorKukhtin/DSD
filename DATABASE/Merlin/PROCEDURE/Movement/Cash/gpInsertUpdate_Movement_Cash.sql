@@ -119,13 +119,11 @@ BEGIN
                                         , inCashId               := inCashId
                                         , inUnitId               := inUnitId
                                         , inInfoMoneyId          := vbInfoMoneyId
-                                        , inInfoMoneyDetailNameId    := vbInfoMoneyDetailId
+                                        , inInfoMoneyDetailId    := vbInfoMoneyDetailId
                                         , inCommentInfoMoneyId   := vbCommentInfoMoneyId
                                         , inUserId               := vbUserId
                                          );
                                                 
-
-
      -- проводим Документ
      PERFORM lpComplete_Movement_Cash (inMovementId := ioId
                                      , inUserId     := vbUserId

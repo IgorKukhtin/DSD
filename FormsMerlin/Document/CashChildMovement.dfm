@@ -64,7 +64,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    Properties.ReadOnly = False
+    Properties.ReadOnly = True
     TabOrder = 5
     Width = 313
   end
@@ -163,7 +163,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    Properties.ReadOnly = False
+    Properties.ReadOnly = True
     TabOrder = 20
     Width = 313
   end
@@ -254,11 +254,11 @@
     StoredProcName = 'gpInsertUpdate_Movement_Cash_Child'
     Params = <
       item
-        Name = 'ioid'
+        Name = 'inMovementId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -326,18 +326,18 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ininfomoney'
+        Name = 'inInfomoneyId'
         Value = ''
-        Component = ceInfoMoney
-        DataType = ftString
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inInfoMoneyDetail'
+        Name = 'inInfoMoneyDetailId'
         Value = Null
-        Component = edInfoMoneyDetail
-        DataType = ftString
+        Component = GuidesInfoMoneyDetail
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

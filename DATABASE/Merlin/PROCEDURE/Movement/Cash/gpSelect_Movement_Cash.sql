@@ -23,6 +23,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_corr TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyCode Integer, CommentInfoMoneyName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
+             , InsertName_mi TVarChar, InsertDate_mi TDateTime
+             , UpdateName_mi TVarChar, UpdateDate_mi TDateTime
              , UserId_1 Integer, isSign_User1 Boolean, OperDate_User1 TDateTime
              , UserId_2 Integer, isSign_User2 Boolean, OperDate_User2 TDateTime
              , UserId_3 Integer, isSign_User3 Boolean, OperDate_User3 TDateTime
@@ -115,11 +117,16 @@ BEGIN
            , Object_CommentInfoMoney.ObjectCode AS CommentInfoMoneyCode
            , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
            
-           , Object_Insert.ValueData              AS InsertName
-           , MovementDate_Insert.ValueData        AS InsertDate
-           , Object_Update.ValueData              AS UpdateName
-           , MovementDate_Update.ValueData        AS UpdateDate
-           
+           , Object_Insert.ValueData            AS InsertName
+           , MovementDate_Insert.ValueData      AS InsertDate
+           , Object_Update.ValueData            AS UpdateName
+           , MovementDate_Update.ValueData      AS UpdateDate
+
+           , Object_Insert_mi.ValueData         AS InsertName_mi
+           , MIDate_Insert_mi.ValueData         AS InsertDate_mi
+           , Object_Update_mi.ValueData         AS UpdateName_mi
+           , MIDate_Update_mi.ValueData         AS UpdateDate_mi
+
            , tmpMI_Sign.UserId_1   ::Integer
            , CASE WHEN tmpMI_Sign.UserId_1 > 0 THEN TRUE ELSE FALSE END ::Boolean
            , MID_Sign_User1.ValueData
@@ -182,6 +189,24 @@ BEGIN
                                        ON MIDate_ServiceDate.MovementItemId = tmpData.MI_Id
                                       AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
 
+            LEFT JOIN MovementItemDate AS MIDate_Insert_mi
+                                       ON MIDate_Insert_mi.MovementItemId = tmpData.MI_Id
+                                      AND MIDate_Insert_mi.DescId = zc_MIDate_Insert()
+            LEFT JOIN MovementItemDate AS MIDate_Update_mi
+                                       ON MIDate_Update_mi.MovementItemId = tmpData.MI_Id
+                                      AND MIDate_Update_mi.DescId = zc_MIDate_Update()
+ 
+            LEFT JOIN MovementItemLinkObject AS MILO_Insert_mi
+                                             ON MILO_Insert_mi.MovementItemId = tmpData.MI_Id
+                                            AND MILO_Insert_mi.DescId = zc_MILinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert_mi ON Object_Insert_mi.Id = MILO_Insert_mi.ObjectId
+ 
+            LEFT JOIN MovementItemLinkObject AS MILO_Update_mi
+                                             ON MILO_Update_mi.MovementItemId = tmpData.MI_Id
+                                            AND MILO_Update_mi.DescId = zc_MILinkObject_Update()
+            LEFT JOIN Object AS Object_Update_mi ON Object_Update_mi.Id = MILO_Update_mi.ObjectId
+
+
             LEFT JOIN tmpMI_Sign ON tmpMI_Sign.MovementId = tmpData.MovementId
             
             LEFT JOIN MovementItemDate AS MID_Sign_User1
@@ -202,6 +227,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 23.05.2          *
  15.01.22         *
 */
 

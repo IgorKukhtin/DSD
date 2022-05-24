@@ -20,6 +20,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Cash(
 RETURNS Integer AS
 $BODY$
    DECLARE vbIsInsert Boolean;
+   DECLARE vbIsInsert_mi Boolean;
    DECLARE vbMovementItemId Integer;
 BEGIN
 
@@ -32,14 +33,17 @@ BEGIN
      -- расчет - 1-ое число месяца
      inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
 
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Cash(), inInvNumber, inOperDate, Null, inUserId);
 
      -- определяем <Элемент документа>
      --SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
 
+
      -- определяется признак Создание/Корректировка
-     vbIsInsert:= COALESCE (inMI_Id, 0) = 0;
+     vbIsInsert_mi:= COALESCE (inMI_Id, 0) = 0;
 
      -- сохранили <Элемент документа>
      inMI_Id := lpInsertUpdate_MovementItem (inMI_Id, zc_MI_Master(), inCashId, ioId, inAmount, NULL);
@@ -71,6 +75,23 @@ BEGIN
              PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
              -- сохранили свойство <Пользователь (создание)>
              PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
+         END IF;
+     END IF;
+
+      -- !!!протокол строк через свойства конкретного объекта!!!
+     IF vbIsInsert_mi = FALSE
+     THEN
+         -- сохранили свойство <Дата корректировки>
+         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), inMI_Id, CURRENT_TIMESTAMP);
+         -- сохранили свойство <Пользователь (корректировка)>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Update(), inMI_Id, inUserId);
+     ELSE
+         IF vbIsInsert_mi = TRUE
+         THEN
+             -- сохранили свойство <Дата создания>
+             PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), inMI_Id, CURRENT_TIMESTAMP);
+             -- сохранили свойство <Пользователь (создание)>
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Insert(), inMI_Id, inUserId);
          END IF;
      END IF;
      
