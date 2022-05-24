@@ -61,6 +61,8 @@ type
     actDoLoadHelsi: TExecuteImportSettingsAction;
     bbStartLoadHelsi: TdxBarButton;
     GoodsNameUkr: TcxGridDBColumn;
+    PriceSaleRegistry: TcxGridDBColumn;
+    PriceOptSPRegistry: TcxGridDBColumn;
   private
     { Private declarations }
   public

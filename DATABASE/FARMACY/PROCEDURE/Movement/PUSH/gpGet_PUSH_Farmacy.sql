@@ -20,6 +20,11 @@ $BODY$
    DECLARE vbText Text;
    DECLARE vbCount Integer;
    DECLARE vbDatePUSH TDateTime;
+   -- Для ПУШ по изменению наценки 
+   DECLARE vbDataUpdate TDateTime;
+   DECLARE vbDateDone TDateTime;
+   DECLARE vbisMCRequesInfo Boolean;
+   DECLARE vbisMCRequesShow Boolean; 
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -67,6 +72,51 @@ BEGIN
                   WHERE ObjectDate.ObjectId = vbUserId
                     AND ObjectDate.DescId = zc_ObjectDate_User_PUSH());
 
+   -- Подготовка ПУША по заявкам на изменение наценок
+   vbisMCRequesInfo := False;
+   vbisMCRequesShow := False;    
+   IF EXISTS (SELECT 1
+              FROM Object AS Object_MCReques
+
+                   LEFT JOIN ObjectDate AS ObjectDate_DateUpdate
+                                        ON ObjectDate_DateUpdate.ObjectId = Object_MCReques.Id
+                                       AND ObjectDate_DateUpdate.DescId = zc_ObjectDate_MCRequest_DateUpdate()
+                   LEFT JOIN ObjectDate AS ObjectDate_DateDone
+                                        ON ObjectDate_DateDone.ObjectId = Object_MCReques.Id
+                                       AND ObjectDate_DateDone.DescId = zc_ObjectDate_MCRequest_DateDone()
+
+              WHERE Object_MCReques.DescId = zc_Object_MCRequest()
+                AND Object_MCReques.ObjectCode = 1
+                AND (ObjectDate_DateDone.ValueData IS NULL OR ObjectDate_DateDone.ValueData > vbDatePUSH AND ObjectDate_DateDone.ValueData > '23.05.2022'))
+   THEN   
+      SELECT ObjectDate_DateUpdate.ValueData          AS DataUpdate
+           , ObjectDate_DateDone.ValueData            AS DateDone
+      INTO vbDataUpdate, vbDateDone
+      FROM Object AS Object_MCReques
+
+           LEFT JOIN ObjectDate AS ObjectDate_DateUpdate
+                                ON ObjectDate_DateUpdate.ObjectId = Object_MCReques.Id
+                               AND ObjectDate_DateUpdate.DescId = zc_ObjectDate_MCRequest_DateUpdate()
+           LEFT JOIN ObjectDate AS ObjectDate_DateDone
+                                ON ObjectDate_DateDone.ObjectId = Object_MCReques.Id
+                               AND ObjectDate_DateDone.DescId = zc_ObjectDate_MCRequest_DateDone()
+
+      WHERE Object_MCReques.DescId = zc_Object_MCRequest()
+        AND Object_MCReques.ObjectCode = 1;
+        
+      IF vbDateDone is NULL 
+      THEN
+        IF lpUpdate_Object_MCReques_DateDone(vbUserId) 
+        THEN
+          vbisMCRequesInfo := True;        
+        ELSE
+          vbisMCRequesShow := True;                
+        END IF;
+      ELSE
+        vbisMCRequesInfo := True;
+      END IF;   
+   END IF;
+   
    -- сохранили дату
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_User_PUSH(), vbUserId, CURRENT_TIMESTAMP);
 
@@ -925,15 +975,17 @@ BEGIN
        END IF;
    END IF;
 
-   IF (inNumberPUSH = 1 OR inNumberPUSH % 8 = 0) AND vbUserId IN (3)
+   IF vbisMCRequesShow AND (inNumberPUSH = 1 OR vbDataUpdate > vbDatePUSH OR inNumberPUSH % 8 = 0) AND vbUserId IN (3, 4183126, 183242)
    THEN
-       IF EXISTS (SELECT 1 FROM gpSelect_Object_MCRequestShowPUSH(inSession)
-                  WHERE DateDone IS NULL
-                    AND COALESCE (DMarginPercent, 0) <> 0)
-       THEN         
-         INSERT INTO _PUSH (Id, Text, FormName)
-         VALUES (24, '', 'TMCRequestShowPUSHForm');
-       END IF;
+       INSERT INTO _PUSH (Id, Text, FormName)
+       VALUES (24, '', 'TMCRequestShowPUSHForm');
+   END IF;
+
+   IF vbisMCRequesInfo AND (vbUserId IN (3, 4183126 ) OR
+      EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (12084491, 393039, zc_Enum_Role_PharmacyManager())))
+   THEN
+       INSERT INTO _PUSH (Id, Text, FormName)
+       VALUES (25, '', 'TMCRequestInfoPUSHForm');
    END IF;
 
    RETURN QUERY

@@ -2253,13 +2253,17 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_DeySupplInSUN2() RETURNS 
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_DeySupplInSUN2', 'Продажи дней для аптек куда' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_DeySupplInSUN2');
 
-CREATE OR REPLACE FUNCTION zc_ObjectFloat_DiffKindPrice_Price() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_DiffKindPrice_Price'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_DiffKindPrice_MinPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_DiffKindPrice_MinPrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
-  SELECT zc_Object_DiffKindPrice(), 'zc_ObjectFloat_DiffKindPrice_Price', 'До цены' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_DiffKindPrice_Price');
-
+  SELECT zc_Object_DiffKindPrice(), 'zc_ObjectFloat_DiffKindPrice_MinPrice', 'Минимальная цена' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_DiffKindPrice_MinPrice');
+  
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_DiffKindPrice_Amount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_DiffKindPrice_Amount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_DiffKindPrice(), 'zc_ObjectFloat_DiffKindPrice_Amount', 'Количество упаковок заказа' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_DiffKindPrice_Amount');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_DiffKindPrice_Summa() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_DiffKindPrice_Summa'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_DiffKindPrice(), 'zc_ObjectFloat_DiffKindPrice_Summa', 'Максимальная сумма заказа' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_DiffKindPrice_Summa');
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_MCRequestItem_MinPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MCRequestItem_MinPrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)

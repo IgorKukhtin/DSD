@@ -93,6 +93,14 @@ BEGIN
                                                , inUnitID        := inUnitId
                                                , inSession       := inSession);
                                                
+   if inPositionId = (SELECT Object_Position.Id  FROM Object AS Object_Position
+                      WHERE Object_Position.DescId = zc_Object_Position()
+                        AND Object_Position.ObjectCode = 1)
+   THEN
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_Education(), vbMember, 1658917);   
+   END IF;
+                                               
    ioId := gpInsertUpdate_Object_User_Lite(ioId          := 0
                                          , inUserName    := inLogin
                                          , inPassword    := inPassword

@@ -4419,7 +4419,8 @@ begin
                        end;
             pmtInformation : ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value, mtInformation, ASpecialLighting, ATextColor, AColor, ABold);
             pmtConfirmation : if not ShowPUSHMessage(StoredProcList[i].StoredProc.Params.ParamByName('outText').Value +
-                                #13#10#13#10'Продолжить изменение ?...', mtConfirmation, ASpecialLighting, ATextColor, AColor, ABold) then
+                                IfThen(Pos('?', StoredProcList[i].StoredProc.Params.ParamByName('outText').Value) > 0, #13#10#13#10'Продолжить изменение ?...', ''),
+                                mtConfirmation, ASpecialLighting, ATextColor, AColor, ABold) then
                               begin
                                 raise Exception.Create('Выполнение операции прервано...');
                                 Result := False;

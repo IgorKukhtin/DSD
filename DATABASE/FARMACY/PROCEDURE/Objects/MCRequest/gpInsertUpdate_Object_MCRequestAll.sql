@@ -54,11 +54,12 @@ BEGIN
       AND Object_MCReques.ObjectCode = 1;
   END IF;
   
-  PERFORM gpInsertUpdate_Object_MCRequestItem(ioId             := T1.MCRequestItemId
-                                            , inMCRequestId    := vbMCRequesId
-                                            , inMinPrice       := T1.MinPrice
-                                            , inMarginPercent  := T1.MarginPercent
-                                            , inSession        := inSession)
+  PERFORM gpInsertUpdate_Object_MCRequestItem(ioId                := T1.MCRequestItemId
+                                            , inMCRequestId       := vbMCRequesId
+                                            , inMinPrice          := T1.MinPrice
+                                            , inMarginPercentOld  := T1.MarginPercentCurr
+                                            , inMarginPercent     := T1.MarginPercent
+                                            , inSession           := inSession)
   FROM (
       WITH tmpData AS (SELECT tblDataJSON.MinPrice
                             , tblDataJSON.MarginPercentCurr 
@@ -85,12 +86,13 @@ BEGIN
                            WHERE Object_MCReques.DescId = zc_Object_MCRequest()
                              AND Object_MCReques.Id = vbMCRequesId)
                            
-        SELECT COALESCE (tmpMCRequest.MCRequestItemId, 0) AS MCRequestItemId
-             , tmpData.MinPrice
-             , tmpData.MarginPercent
+        SELECT COALESCE (tmpMCRequest.MCRequestItemId, 0)         AS MCRequestItemId
+             , COALESCE (tmpData.MarginPercentCurr, 0)            AS MarginPercentCurr
+             , COALESCE (tmpData.MinPrice, tmpMCRequest.MinPrice) AS MinPrice
+             , COALESCE (tmpData.MarginPercent, 0)                AS MarginPercent
         FROM tmpData 
         
-             LEFT JOIN tmpMCRequest ON tmpMCRequest.Ord = tmpData.Ord
+             FULL JOIN tmpMCRequest ON tmpMCRequest.Ord = tmpData.Ord
              
         ) AS T1;
 

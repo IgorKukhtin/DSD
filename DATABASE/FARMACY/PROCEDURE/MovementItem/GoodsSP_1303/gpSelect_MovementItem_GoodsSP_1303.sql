@@ -16,6 +16,8 @@ RETURNS TABLE (Id            Integer
              , NDS           TFloat
              , PriceOptSP    TFloat
              , PriceSale     TFloat
+             , PriceOptSPRegistry TFloat
+             , PriceSaleRegistry TFloat
              , isErased      Boolean
              )
 AS
@@ -47,6 +49,46 @@ BEGIN
                             , ObjectFloat_NDSKind_NDS.ValueData
                        FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
                        WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS())
+      , tmpGoodsSPRegistry_1303 AS (SELECT MovementItem.ObjectId         AS GoodsId
+                                         , COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0)::TFloat       AS NDS
+                                         , MIFloat_PriceOptSP.ValueData                                 AS PriceOptSP
+                                         , ROUND(MIFloat_PriceOptSP.ValueData  *  1.1 * 1.1 * (1.0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2)::TFloat AS PriceSale
+
+                                                                          -- № п/п - на всякий случай
+                                         , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC, MIDate_OrderDateSP.ValueData DESC) AS Ord
+                                    FROM Movement
+                                         INNER JOIN MovementDate AS MovementDate_OperDateStart
+                                                                 ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                                                AND MovementDate_OperDateStart.DescId     = zc_MovementDate_OperDateStart()
+                                                                AND MovementDate_OperDateStart.ValueData  <= CURRENT_DATE
+
+                                         INNER JOIN MovementDate AS MovementDate_OperDateEnd
+                                                                 ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                                                AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
+                                                                AND MovementDate_OperDateEnd.ValueData  >= CURRENT_DATE
+
+                                         LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                               AND MovementItem.DescId     = zc_MI_Master()
+                                                               AND MovementItem.isErased   = FALSE
+                                                               AND COALESCE (MovementItem.ObjectId, 0) <> 0
+
+                                         LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
+                                                                     ON MIFloat_PriceOptSP.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
+                                         LEFT JOIN MovementItemFloat AS MIFloat_OrderNumberSP
+                                                                     ON MIFloat_OrderNumberSP.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_OrderNumberSP.DescId = zc_MIFloat_OrderNumberSP()  
+                                         LEFT JOIN MovementItemDate AS MIDate_OrderDateSP
+                                                                    ON MIDate_OrderDateSP.MovementItemId = MovementItem.Id
+                                                                   AND MIDate_OrderDateSP.DescId = zc_MIDate_OrderDateSP()
+
+                                         LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId 
+                                         LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
+                                                              ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods.NDSKindId
+
+                                    WHERE Movement.DescId = zc_Movement_GoodsSPRegistry_1303()
+                                      AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                                   )
 
 
         SELECT COALESCE (MovementItem.Id, 0)                         AS Id
@@ -58,6 +100,8 @@ BEGIN
 
              , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
              , MovementItem.Amount                                   AS PriceSale
+             , tmpGoodsSPRegistry_1303.PriceOptSP                    AS PriceOptSPRegistry 
+             , tmpGoodsSPRegistry_1303.PriceSale                     AS PriceSaleRegistry 
 
              , COALESCE (MovementItem.isErased, FALSE)    ::Boolean  AS isErased
 
@@ -74,6 +118,9 @@ BEGIN
 
              LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                   ON ObjectFloat_NDSKind_NDS.ObjectId = tmpGoodsMain.NDSKindId
+                                  
+             LEFT JOIN tmpGoodsSPRegistry_1303 ON tmpGoodsSPRegistry_1303.GoodsId = tmpGoodsMain.Id
+                                              AND tmpGoodsSPRegistry_1303.Ord = 1 
             ;
 
     ELSE
@@ -118,6 +165,46 @@ BEGIN
                             , ObjectFloat_NDSKind_NDS.ValueData
                        FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
                        WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS())
+      , tmpGoodsSPRegistry_1303 AS (SELECT MovementItem.ObjectId         AS GoodsId
+                                         , COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0)::TFloat       AS NDS
+                                         , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
+                                         , ROUND(MIFloat_PriceOptSP.ValueData  *  1.1 * 1.1 * (1.0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2)::TFloat AS PriceSale
+
+                                                                          -- № п/п - на всякий случай
+                                         , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC, MIDate_OrderDateSP.ValueData DESC) AS Ord
+                                    FROM Movement
+                                         INNER JOIN MovementDate AS MovementDate_OperDateStart
+                                                                 ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                                                AND MovementDate_OperDateStart.DescId     = zc_MovementDate_OperDateStart()
+                                                                AND MovementDate_OperDateStart.ValueData  <= CURRENT_DATE
+
+                                         INNER JOIN MovementDate AS MovementDate_OperDateEnd
+                                                                 ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                                                AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
+                                                                AND MovementDate_OperDateEnd.ValueData  >= CURRENT_DATE
+
+                                         LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                               AND MovementItem.DescId     = zc_MI_Master()
+                                                               AND MovementItem.isErased   = FALSE
+                                                               AND COALESCE (MovementItem.ObjectId, 0) <> 0
+
+                                         LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
+                                                                     ON MIFloat_PriceOptSP.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
+                                         LEFT JOIN MovementItemFloat AS MIFloat_OrderNumberSP
+                                                                     ON MIFloat_OrderNumberSP.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_OrderNumberSP.DescId = zc_MIFloat_OrderNumberSP()  
+                                         LEFT JOIN MovementItemDate AS MIDate_OrderDateSP
+                                                                    ON MIDate_OrderDateSP.MovementItemId = MovementItem.Id
+                                                                   AND MIDate_OrderDateSP.DescId = zc_MIDate_OrderDateSP()
+
+                                         LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId 
+                                         LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
+                                                              ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods.NDSKindId
+
+                                    WHERE Movement.DescId = zc_Movement_GoodsSPRegistry_1303()
+                                      AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                                   )
 
         SELECT MovementItem.Id                                       AS Id
              , COALESCE(MovementItem.GoodsId, tmpMI_Sale.GoodsId)    AS GoodsId
@@ -128,6 +215,8 @@ BEGIN
 
              , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
              , MovementItem.Amount                                   AS PriceSale
+             , tmpGoodsSPRegistry_1303.PriceOptSP                    AS PriceOptSPRegistry 
+             , tmpGoodsSPRegistry_1303.PriceSale                     AS PriceSaleRegistry 
 
              , COALESCE (MovementItem.isErased, FALSE)    ::Boolean  AS isErased
 
@@ -145,6 +234,8 @@ BEGIN
                                          ON MIFloat_PriceOptSP.MovementItemId = MovementItem.Id
                                         AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
 
+             LEFT JOIN tmpGoodsSPRegistry_1303 ON tmpGoodsSPRegistry_1303.GoodsId = MovementItem.GoodsId
+                                              AND tmpGoodsSPRegistry_1303.Ord = 1 
          ;
     END IF;            
 

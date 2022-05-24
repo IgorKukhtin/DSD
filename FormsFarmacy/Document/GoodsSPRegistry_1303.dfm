@@ -291,6 +291,42 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             Options.Editing = False
             Width = 59
           end
+          object NDS: TcxGridDBColumn
+            Caption = #1053#1044#1057
+            DataBinding.FieldName = 'NDS'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00 %'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 53
+          end
+          object PriceSale: TcxGridDBColumn
+            Caption = #1056#1086#1079#1085'. '#1094#1077#1085#1072
+            DataBinding.FieldName = 'PriceSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object PriceSaleOOC: TcxGridDBColumn
+            Caption = #1056#1086#1079#1085'. '#1094#1077#1085#1072' '#1080#1079' '#1088#1077#1077#1089#1090#1088#1072' '#1054#1054#1062
+            DataBinding.FieldName = 'PriceSaleOOC'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object Color_Count: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Count'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+          end
         end
       end
     end
@@ -1019,6 +1055,11 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_Count
+        ColorValueList = <>
+      end>
     SummaryItemList = <
       item
         Param.Value = Null

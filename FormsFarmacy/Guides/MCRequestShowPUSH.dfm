@@ -26,8 +26,6 @@ object MCRequestShowPUSHForm: TMCRequestShowPUSHForm
     Align = alClient
     ShowCaption = False
     TabOrder = 0
-    ExplicitTop = 0
-    ExplicitHeight = 241
     object cxGrid: TcxGrid
       Left = 1
       Top = 1
@@ -38,7 +36,6 @@ object MCRequestShowPUSHForm: TMCRequestShowPUSHForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitHeight = 239
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -93,6 +90,7 @@ object MCRequestShowPUSHForm: TMCRequestShowPUSHForm
           Width = 125
         end
         object DMarginPercent: TcxGridDBColumn
+          Caption = #1056#1072#1079#1085#1080#1094#1072
           DataBinding.FieldName = 'DMarginPercent'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -113,7 +111,6 @@ object MCRequestShowPUSHForm: TMCRequestShowPUSHForm
     Align = alBottom
     ShowCaption = False
     TabOrder = 1
-    ExplicitTop = 241
     object cxButton1: TcxButton
       Left = 70
       Top = 5
@@ -165,10 +162,6 @@ object MCRequestShowPUSHForm: TMCRequestShowPUSHForm
       Style.IsFontAssigned = True
       StyleDisabled.TextColor = clRed
       TabOrder = 0
-      ExplicitLeft = 88
-      ExplicitTop = 16
-      ExplicitWidth = 185
-      ExplicitHeight = 89
       Height = 71
       Width = 507
     end

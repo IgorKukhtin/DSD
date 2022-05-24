@@ -112,6 +112,8 @@ RETURNS TABLE (MovementId     Integer
              , DSummaSP TFloat
              , Color_DSummaSP Integer
              , isUsePriceOOC Boolean
+             , PriceRegistryFull TFloat
+             , SummaRegistryFull TFloat
              , PriceRegistry TFloat
              , SummaRegistry TFloat
              )
@@ -916,6 +918,13 @@ BEGIN
            , tmpData.isUsePriceOOC
            
            , CASE WHEN tmpData.isUsePriceOOC = TRUE
+                  THEN ROUND(tmpData.PriceRegistry, 2)
+                  ELSE CAST ( (CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummOriginal/tmpData.Amount ELSE 0 END)  AS NUMERIC (16,2) ) END  :: TFloat  AS PriceRegistryFull
+           , ROUND(CASE WHEN tmpData.isUsePriceOOC = TRUE
+                        THEN tmpData.PriceRegistry * tmpData.Amount 
+                        ELSE CAST ((tmpData.SummOriginal) AS NUMERIC (16,2)) END, 2)  :: TFloat  AS SummaRegistryFull
+
+           , CASE WHEN tmpData.isUsePriceOOC = TRUE
                   THEN ROUND(tmpData.PriceRegistry * tmpData.ChangePercent / 100.0, 2)
                   ELSE CAST ( (CASE WHEN tmpData.Amount <> 0 THEN (tmpData.SummOriginal - tmpData.SummSale)/tmpData.Amount ELSE 0 END)  AS NUMERIC (16,2) ) END  :: TFloat  AS PriceRegistry
            , ROUND(CASE WHEN tmpData.isUsePriceOOC = TRUE
@@ -1006,7 +1015,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Sale_SP (inStartDate:= '01.09.2019', inEndDate:= '05.09.2019', inJuridicalId:= 0, inUnitId:= 0, inHospitalId:= 0, inGroupMemberSPId:= 0, inPercentSP:= 0, inisGroupMemberSP:= TRUE, inSession:= zfCalc_UserAdmin());
 
-
-select * from gpReport_Check_SP(inStartDate := ('01.04.2022')::TDateTime , inEndDate := ('15.04.2022')::TDateTime , inJuridicalId := 393038 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 0 , inMedicalProgramSPId := 0 , inGroupMedicalProgramSPId := 0 ,  inSession := '3');
+SELECT * FROM gpReport_Sale_SP (inStartDate:= '01.05.2022', inEndDate:= '05.05.2022', inJuridicalId:= 0, inUnitId:= 0, inHospitalId:= 0, inGroupMemberSPId:= 0, inPercentSP:= 0, inisGroupMemberSP:= TRUE, inSession:= zfCalc_UserAdmin());

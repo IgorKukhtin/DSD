@@ -1,11 +1,12 @@
 -- Function: gpInsertUpdate_Object_MCRequestItem(Integer, Integer, TVarChar, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MCRequestItem (Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MCRequestItem (Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MCRequestItem(
  INOUT ioId               Integer,       -- Ключ объекта <Настройка категории наценок>
     IN inMCRequestId      Integer, 
     IN inMinPrice         TFloat, 
+    IN inMarginPercentOld TFloat, 
     IN inMarginPercent    TFloat, 
     IN inSession          TVarChar       -- сессия пользователя
 )
@@ -37,6 +38,8 @@ BEGIN
 
    -- сохранили свойство <Минимальная цена>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MCRequestItem_MinPrice(), ioId, inMinPrice);
+   -- сохранили свойство <% наценки старый>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MCRequestItem_MarginPercentOld(), ioId, inMarginPercentOld);
    -- сохранили свойство <% наценки>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_MCRequestItem_MarginPercent(), ioId, inMarginPercent);
 
@@ -46,7 +49,7 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_MCRequestItem (Integer, Integer, TFloat, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_MCRequestItem (Integer, Integer, TFloat, TFloat, TFloat, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
