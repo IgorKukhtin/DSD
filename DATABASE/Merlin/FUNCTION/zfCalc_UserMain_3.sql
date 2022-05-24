@@ -8,14 +8,15 @@ AS
 $BODY$
 BEGIN
      
-     RETURN (SELECT MIN (Object.Id)
+     RETURN (104840
+           /*SELECT MIN (Object.Id)
              FROM Object
                   JOIN ObjectBoolean AS OB_User_Sign
                                      ON OB_User_Sign.ObjectId  = Object.Id
                                     AND OB_User_Sign.DescId    = zc_ObjectBoolean_User_Sign()
                                     AND OB_User_Sign.ValueData = TRUE
              WHERE Object.DescId = zc_Object_User()
-               AND Object.Id > zfCalc_UserMain_2()
+               AND Object.Id > zfCalc_UserMain_2()*/
             );
 
 END;

@@ -550,8 +550,8 @@ begin
       then begin
                 spSelect.Params.ParamByName('inGoodsCode').Value:= 0;
                 spSelect.Params.ParamByName('inGoodsName').Value:= trim(EditGoodsName.Text);
-                spSelect.Params.ParamByName('inOrderExternalId').Value:= 0;
-                spSelect.Params.ParamByName('inMovementId').Value     := 0;
+                spSelect.Params.ParamByName('inOrderExternalId').Value:= ParamsMovement.ParamByName('OrderExternalId').AsInteger;
+                spSelect.Params.ParamByName('inMovementId').Value     := ParamsMovement.ParamByName('MovementId').AsInteger;
                 actRefreshExecute(Self);
       end;
 
@@ -982,8 +982,8 @@ begin
       and(Code_begin>0)
      then begin spSelect.Params.ParamByName('inGoodsCode').Value:=Code_begin;
                 spSelect.Params.ParamByName('inGoodsName').Value:='';
-                spSelect.Params.ParamByName('inOrderExternalId').Value:= 0;
-                spSelect.Params.ParamByName('inMovementId').Value     := 0;
+                spSelect.Params.ParamByName('inOrderExternalId').Value:= ParamsMovement.ParamByName('OrderExternalId').AsInteger;
+                spSelect.Params.ParamByName('inMovementId').Value     := ParamsMovement.ParamByName('MovementId').AsInteger;
                 actRefreshExecute(Self);
                 fEnterGoodsCode:=true;CDS.Filtered:=False;CDS.Filtered:=True;
      end;

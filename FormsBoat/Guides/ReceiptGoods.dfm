@@ -20,7 +20,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
   TextHeight = 13
   object PanelMaster: TPanel
     Left = 0
-    Top = 26
+    Top = 59
     Width = 1272
     Height = 225
     Align = alTop
@@ -403,9 +403,9 @@ object ReceiptGoodsForm: TReceiptGoodsForm
   end
   object PanelGoods: TPanel
     Left = 0
-    Top = 256
+    Top = 289
     Width = 567
-    Height = 302
+    Height = 269
     Align = alLeft
     BevelEdges = [beLeft]
     BevelOuter = bvNone
@@ -414,7 +414,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Left = 0
       Top = 17
       Width = 567
-      Height = 285
+      Height = 252
       Align = alClient
       PopupMenu = PopupMenuColor
       TabOrder = 0
@@ -544,6 +544,15 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 55
+        end
+        object Article_all_ch1: TcxGridDBColumn
+          Caption = '***Artikel Nr'
+          DataBinding.FieldName = 'Article_all'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
         end
         object ObjectName_ch1: TcxGridDBColumn
           Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
@@ -738,7 +747,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
-    Top = 251
+    Top = 284
     Width = 1272
     Height = 5
     AlignSplitter = salTop
@@ -746,24 +755,24 @@ object ReceiptGoodsForm: TReceiptGoodsForm
   end
   object cxRightSplitter: TcxSplitter
     Left = 1264
-    Top = 256
+    Top = 289
     Width = 8
-    Height = 302
+    Height = 269
     AlignSplitter = salRight
   end
   object Panel2: TPanel
     Left = 575
-    Top = 256
+    Top = 289
     Width = 689
-    Height = 302
+    Height = 269
     Align = alClient
     Caption = 'Panel2'
-    TabOrder = 8
+    TabOrder = 5
     object cxGridCh2: TcxGrid
       Left = 1
       Top = 18
       Width = 687
-      Height = 283
+      Height = 250
       Align = alClient
       PopupMenu = PopupMenuColor
       TabOrder = 0
@@ -1042,10 +1051,39 @@ object ReceiptGoodsForm: TReceiptGoodsForm
   end
   object cxSplitter1: TcxSplitter
     Left = 567
-    Top = 256
+    Top = 289
     Width = 8
-    Height = 302
+    Height = 269
     Control = PanelGoods
+  end
+  object Panel5: TPanel
+    Left = 0
+    Top = 0
+    Width = 1272
+    Height = 33
+    Align = alTop
+    TabOrder = 10
+    object lbSearchArticle: TcxLabel
+      Left = 22
+      Top = 6
+      Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchArticle: TcxTextEdit
+      Left = 147
+      Top = 7
+      TabOrder = 1
+      DesignSize = (
+        125
+        21)
+      Width = 125
+    end
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -1256,7 +1294,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Category = 0
     end
     object bbInsertRecordProdColorItems: TdxBarButton
-      Action = InsertRecordGoods
+      Action = actInsertRecordGoods
       Category = 0
     end
     object bbInsertRecordProdOptItems: TdxBarButton
@@ -1346,6 +1384,14 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         item
           Visible = True
           ItemName = 'bbSetUnErasedColor'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBarSeparetor'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordGood'
         end>
     end
     object BarSubItemOption: TdxBarSubItem
@@ -1410,6 +1456,17 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     object bbPrintStructure: TdxBarButton
       Action = actPrintStructure
       Category = 0
+    end
+    object bbInsertRecordGood: TdxBarButton
+      Action = actInsertRecordGoods_limit
+      Category = 0
+    end
+    object bbBarSeparetor: TdxBarSeparator
+      Caption = 'New Separator'
+      Category = 0
+      Hint = 'New Separator'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   object ActionList: TActionList
@@ -1686,7 +1743,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ImageIndex = 0
     end
-    object InsertRecordGoods: TInsertRecord
+    object actInsertRecordGoods: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2126,6 +2183,91 @@ object ReceiptGoodsForm: TReceiptGoodsForm
       PictureFields.Strings = (
         'photo1')
     end
+    object actInsertRecordGoods_limit: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableViewCh1
+      Action = actChoiceFormGoods_limit
+      Params = <>
+      Caption = '***'#1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = '***'#1044#1086#1073#1072#1074#1080#1090#1100
+      ImageIndex = 54
+    end
+    object actChoiceFormGoods_limit: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormGoods'
+      FormName = 'TUnion_Goods_ReceiptService_limitForm'
+      FormNameParam.Value = 'TUnion_Goods_ReceiptService_limitForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = Child1CDS
+          ComponentItem = 'ObjectId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = Child1CDS
+          ComponentItem = 'ObjectName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = Child1CDS
+          ComponentItem = 'ObjectCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = Child1CDS
+          ComponentItem = 'Article'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupNameFull'
+          Value = Null
+          Component = Child1CDS
+          ComponentItem = 'GoodsGroupNameFull'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = Child1CDS
+          ComponentItem = 'GoodsGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProdColorName'
+          Value = Null
+          Component = Child1CDS
+          ComponentItem = 'ProdColorName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureName'
+          Value = Null
+          Component = Child1CDS
+          ComponentItem = 'MeasureName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReceiptGoods'
@@ -2502,7 +2644,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     Left = 440
     Top = 208
     object MenuItem2: TMenuItem
-      Action = InsertRecordGoods
+      Action = actInsertRecordGoods
     end
     object MenuItem3: TMenuItem
       Action = actSetErasedGoods
@@ -2822,5 +2964,14 @@ object ReceiptGoodsForm: TReceiptGoodsForm
     PackSize = 1
     Left = 880
     Top = 136
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edSearchArticle
+    DataSet = Child1CDS
+    Column = Article_all_ch1
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 256
+    Top = 152
   end
 end

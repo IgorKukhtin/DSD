@@ -244,7 +244,7 @@ BEGIN
        -- Комплектующие
        SELECT tmpGoods.Id
             , tmpGoods.Code
-            , tmpGoods.Name
+            , SUBSTRING (tmpGoods.Name, 1, 128) :: TVarChar AS Name
             , tmpGoods.DescName
             , tmpGoods.Article
             , tmpGoods.Article_all
@@ -254,7 +254,7 @@ BEGIN
             , tmpGoods.MatchCode
             , tmpGoods.FeeNumber
             , tmpGoods.GoodsGroupNameFull
-            , tmpGoods.Comment
+            , SUBSTRING (tmpGoods.Comment, 1, 128) :: TVarChar AS Comment
 
             , tmpGoods.PartnerDate
             , tmpGoods.isArc

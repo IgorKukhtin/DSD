@@ -3,7 +3,7 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1090#1072#1090#1100#1080' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientHeight = 375
-  ClientWidth = 631
+  ClientWidth = 724
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 631
+    Width = 724
     Height = 349
     Align = alClient
     TabOrder = 0
@@ -41,15 +41,42 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object NPP: TcxGridDBColumn
+        Caption = #8470' '#1087'/'#1087
+        DataBinding.FieldName = 'NPP'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object GroupNameFull: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'GroupNameFull'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
+        Options.Editing = False
+        Width = 121
+      end
+      object ParentName: TcxGridDBColumn
+        Caption = '***'#1043#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'ParentName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 116
+      end
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 42
@@ -60,24 +87,6 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 215
-      end
-      object GroupNameFull: TcxGridDBColumn
-        Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
-        DataBinding.FieldName = 'GroupNameFull'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 121
-      end
-      object ParentName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072
-        DataBinding.FieldName = 'ParentName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 116
       end
       object isUserAll: TcxGridDBColumn
         Caption = #1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084
@@ -104,6 +113,38 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 87
+      end
+      object InsertName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+        DataBinding.FieldName = 'InsertName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object UpdateName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
+        DataBinding.FieldName = 'UpdateName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object InsertDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
+        DataBinding.FieldName = 'InsertDate'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object UpdateDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
+        DataBinding.FieldName = 'UpdateDate'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -244,6 +285,7 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
@@ -476,7 +518,7 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
     Left = 56
     Top = 240
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 136
     Top = 288
   end

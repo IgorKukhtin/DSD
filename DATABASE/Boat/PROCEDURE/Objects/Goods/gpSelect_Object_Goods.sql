@@ -37,6 +37,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InvNumber_pl TVarChar
              , Comment_pl TVarChar
              , myCount_pl Integer
+             , Len_1 Integer, Len_2 Integer, Len_3 Integer, Len_4 Integer, Len_5 Integer, Len_6 Integer, Len_7 Integer, Len_8 Integer, Len_9 Integer, Len_10 Integer
              , isErased Boolean
               )
 AS
@@ -117,7 +118,7 @@ BEGIN
        -- Результат
        SELECT Object_Goods.Id                     AS Id
             , Object_Goods.ObjectCode             AS Code
-            , Object_Goods.ValueData              AS Name
+            , SUBSTRING (Object_Goods.ValueData, 1, 128) :: TVarChar AS Name
             , ObjectString_Article.ValueData      AS Article
             , zfCalc_Article_all (ObjectString_Article.ValueData) AS Article_all
             , ObjectString_ArticleVergl.ValueData AS ArticleVergl
@@ -127,11 +128,11 @@ BEGIN
             , ObjectString_MatchCode.ValueData    AS MatchCode
             , ObjectString_FeeNumber.ValueData    AS FeeNumber
             , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-            , ObjectString_Comment.ValueData      AS Comment
+            , SUBSTRING (ObjectString_Comment.ValueData, 1, 128) :: TVarChar AS Comment
 
             , ObjectDate_PartnerDate.ValueData  :: TDateTime AS PartnerDate
             , COALESCE (ObjectBoolean_Arc.ValueData, FALSE) :: Boolean AS isArc
-            
+
             , ObjectFloat_Feet.ValueData    ::TFloat AS Feet
             , ObjectFloat_Metres.ValueData  ::TFloat AS Metres
 
@@ -183,7 +184,7 @@ BEGIN
             , Object_TaxKind.Id                  AS TaxKindId
             , Object_TaxKind.ValueData           AS TaxKindName
             , ObjectFloat_TaxKind_Value.ValueData AS TaxKind_Value
-            
+
             , Object_Engine.Id                   AS EngineId
             , Object_Engine.ValueData            AS EngineName
 
@@ -200,10 +201,21 @@ BEGIN
 
             , CASE WHEN tmpDoc.GoodsId    > 0 THEN TRUE ELSE FALSE END :: Boolean AS isDoc
             , CASE WHEN tmpPhoto1.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPhoto
-            
+
             , tmpMovementPL.InvNumber     :: TVarChar AS InvNumber_pl
             , tmpMovementPL.Comment       :: TVarChar AS Comment_pl
             , tmpMovementPL_count.myCount :: Integer  AS myCount_pl
+
+            , LENGTH (Object_Goods.ValueData)                :: Integer AS Len_1
+            , LENGTH (ObjectString_Article.ValueData)        :: Integer AS Len_2
+            , LENGTH (Object_GoodsArticle.GoodsArticle)      :: Integer AS Len_3
+            , LENGTH (ObjectString_EAN.ValueData)            :: Integer AS Len_4
+            , LENGTH (ObjectString_GoodsGroupFull.ValueData) :: Integer AS Len_5
+            , LENGTH (ObjectString_Comment.ValueData)        :: Integer AS Len_6
+            , 0                                              :: Integer AS Len_7
+            , 0                                              :: Integer AS Len_8
+            , 0                                              :: Integer AS Len_9
+            , 0                                              :: Integer AS Len_10
 
             , Object_Goods.isErased              AS isErased
 
@@ -375,13 +387,14 @@ BEGIN
              LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
 
              LEFT JOIN tmpGoodsArticle AS Object_GoodsArticle ON Object_GoodsArticle.GoodsId = Object_Goods.Id
+
        WHERE Object_Goods.DescId = zc_Object_Goods()
-         AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE)
+       --AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE)
        -- and Object_Goods.Id = 236863
        ORDER BY Object_Goods.Id DESC
      --LIMIT CASE WHEN vbUserId IN (5, 236658) THEN 100 ELSE 300000 END
      --LIMIT CASE WHEN vbUserId IN (236658) THEN 100 ELSE 350000 END
-       LIMIT CASE WHEN inIsLimit_100 = TRUE THEN 100 ELSE 350000 END
+       LIMIT CASE WHEN vbUserId = 5 AND 1=0 THEN 50000 WHEN inIsLimit_100 = TRUE THEN 100 ELSE 350000 END
       ;
 
 END;
@@ -398,4 +411,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Goods (FALSE, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Goods (inShowAll:= FALSE, inIsLimit_100:= TRUE, inSession := zfCalc_UserAdmin())

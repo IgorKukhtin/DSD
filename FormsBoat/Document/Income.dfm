@@ -390,6 +390,34 @@ object IncomeForm: TIncomeForm
       Visible = False
       Width = 169
     end
+    object Panel1: TPanel
+      Left = 641
+      Top = 127
+      Width = 288
+      Height = 36
+      TabOrder = 44
+      object lbSearchArticle: TcxLabel
+        Left = 17
+        Top = 8
+        Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -13
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
+      end
+      object edSearchArticle: TcxTextEdit
+        Left = 148
+        Top = 8
+        TabOrder = 1
+        DesignSize = (
+          125
+          21)
+        Width = 125
+      end
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
@@ -1371,27 +1399,6 @@ object IncomeForm: TIncomeForm
       end
     end
   end
-  object lbSearchArticle: TcxLabel
-    Left = 155
-    Top = 221
-    Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
-    ParentFont = False
-    Style.Font.Charset = DEFAULT_CHARSET
-    Style.Font.Color = clBlue
-    Style.Font.Height = -13
-    Style.Font.Name = 'Tahoma'
-    Style.Font.Style = [fsBold]
-    Style.IsFontAssigned = True
-  end
-  object edSearchArticle: TcxTextEdit
-    Left = 152
-    Top = 247
-    TabOrder = 7
-    DesignSize = (
-      125
-      21)
-    Width = 125
-  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -1485,14 +1492,6 @@ object IncomeForm: TIncomeForm
       FloatClientWidth = 51
       FloatClientHeight = 71
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bblbSearchArticle'
-        end
-        item
-          Visible = True
-          ItemName = 'bbedSearchArticle'
-        end
         item
           Visible = True
           ItemName = 'bbStatic'
@@ -1818,20 +1817,6 @@ object IncomeForm: TIncomeForm
     object bbUpdateActionMovement: TdxBarButton
       Action = mactUpdateActionMovement
       Category = 0
-    end
-    object bblbSearchArticle: TdxBarControlContainerItem
-      Caption = 'lbSearchArticle'
-      Category = 0
-      Hint = 'lbSearchArticle'
-      Visible = ivAlways
-      Control = lbSearchArticle
-    end
-    object bbedSearchArticle: TdxBarControlContainerItem
-      Caption = 'edSearchArticle'
-      Category = 0
-      Hint = 'edSearchArticle'
-      Visible = ivAlways
-      Control = edSearchArticle
     end
     object bbPrintStickerOne: TdxBarButton
       Action = macPrintStikerOne
@@ -4321,8 +4306,8 @@ object IncomeForm: TIncomeForm
       item
         Control = ceTotalSummTaxMVAT
       end>
-    Left = 648
-    Top = 112
+    Left = 672
+    Top = 40
   end
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edSearchArticle

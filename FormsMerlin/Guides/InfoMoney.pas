@@ -52,8 +52,8 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
     Name: TcxGridDBColumn;
-    Erased: TcxGridDBColumn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    isErased: TcxGridDBColumn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     actChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     actProtocol: TdsdOpenForm;
@@ -76,6 +76,7 @@ type
     macUpdate_IsUserAll_Yes: TMultiAction;
     bbmacUpdate_IsUserAll_Yes: TdxBarButton;
     bbUpdate_IsUserAll: TdxBarButton;
+    NPP: TcxGridDBColumn;
   private
     { Private declarations }
   public

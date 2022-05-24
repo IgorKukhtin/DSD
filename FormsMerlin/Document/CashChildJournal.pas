@@ -126,12 +126,17 @@ type
     actInsertUpdate_Sign: TdsdExecStoredProc;
     bbInsertUpdate_Sign: TdxBarButton;
     bbUpdate_Sign_isErased: TdxBarButton;
-    UserName_1: TcxGridDBColumn;
+    isSign_User1: TcxGridDBColumn;
     spGetImportSettingId: TdsdStoredProc;
     actDoLoad: TExecuteImportSettingsAction;
     actGetImportSetting: TdsdExecStoredProc;
     macStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
+    OperDate_User1: TcxGridDBColumn;
+    OperDate_User2: TcxGridDBColumn;
+    OperDate_User3: TcxGridDBColumn;
+    UnitGroupNameFull: TcxGridDBColumn;
+    InvNumber_corr: TcxGridDBColumn;
   private
   public
   end;

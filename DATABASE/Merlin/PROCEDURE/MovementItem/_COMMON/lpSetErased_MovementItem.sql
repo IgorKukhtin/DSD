@@ -28,21 +28,18 @@
    -- определяем <Статус>
    SELECT StatusId, DescId INTO vbStatusId, vbMovementDescId FROM Movement WHERE Id = vbMovementId;
    -- проверка - проведенные/удаленные документы Изменять нельзя
-   IF vbStatusId           <> zc_Enum_Status_UnComplete()
+   IF vbStatusId <> zc_Enum_Status_UnComplete() AND vbDescId <> zc_MI_Sign()
    THEN
-       /*IF AND vbStatusId = zc_Enum_Status_Erased() 
-       THEN
-          IF NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
-          THEN RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
-          END IF;
-       ELSE RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
-       END IF;*/
- 
+
        RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
    END IF;
  
-   -- пересчитали Итоговые суммы по накладной
-   PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
+   -- 
+   /*IF vbDescId <> zc_MI_Sign()
+   THEN
+       -- пересчитали Итоговые суммы по накладной
+       PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
+   END IF;*/
  
    -- сохранили протокол
    PERFORM lpInsert_MovementItemProtocol (inMovementItemId:= inMovementItemId, inUserId:= inUserId, inIsInsert:= FALSE, inIsErased:= TRUE);

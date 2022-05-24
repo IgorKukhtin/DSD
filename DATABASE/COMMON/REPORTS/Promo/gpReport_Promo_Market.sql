@@ -85,7 +85,7 @@ BEGIN
     RETURN QUERY
      WITH
         -- 1) берем док акция у которой период отгрузки с .. по ...  который попадает в период отчет
-          tmpMovement AS (SELECT Movement_Promo.*
+      tmpMovement_all AS (SELECT Movement_Promo.*
                                , MovementDate_StartSale.ValueData            AS StartSale          --Дата начала отгрузки по акционной цене
                                , MovementDate_EndSale.ValueData              AS EndSale            --Дата окончания отгрузки по акционной цене
                                , MovementLinkObject_Unit.ObjectId            AS UnitId
@@ -113,9 +113,8 @@ BEGIN
 
                           WHERE Movement_Promo.DescId = zc_Movement_Promo()
                            AND (MovementDate_StartSale.ValueData BETWEEN inStartDate AND inEndDate
-                           OR
-                                 inStartDate BETWEEN MovementDate_StartSale.ValueData AND MovementDate_EndSale.ValueData
-                                )
+                             OR inStartDate BETWEEN MovementDate_StartSale.ValueData AND MovementDate_EndSale.ValueData
+                               )
                            AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0)
                            AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
                            AND (  (COALESCE (MovementBoolean_Promo.ValueData, FALSE) = TRUE AND inIsPromo = TRUE)
@@ -123,6 +122,20 @@ BEGIN
                                OR (inIsPromo = FALSE AND inIsTender = FALSE)
                                )
                             )
+          -- компенсация в счет маркетингового бюджета
+        , tmpPromoCondition AS (SELECT MovementItem.MovementId
+                                FROM MovementItem
+                                WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement_all.Id FROM tmpMovement_all) 
+                                  AND MovementItem.DescId     = zc_MI_Child()
+                                  AND MovementItem.isErased   = FALSE
+                                  AND MovementItem.ObjectId   = zc_Enum_ConditionPromo_Budget()
+                                  AND MovementItem.Amount     > 0
+                               )
+          -- 
+        , tmpMovement AS (SELECT tmpMovement_all.*
+                          FROM tmpMovement_all
+                          WHERE tmpMovement_all.Id IN (SELECT DISTINCT tmpPromoCondition.MovementId FROM tmpPromoCondition) 
+                         )
 
         , tmpMovement_Promo AS (SELECT
                                 Movement_Promo.Id                                                 --Идентификатор

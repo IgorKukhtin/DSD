@@ -11,13 +11,19 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
-    --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_Cash());
-    vbUserId:= lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_Cash());
+     vbUserId:= lpGetUserBySession (inSession);
 
-    -- Распроводим Документ
-    PERFORM lpUnComplete_Movement (inMovementId := inMovementId
-                                 , inUserId     := vbUserId);
+     -- Проверка - Если Корректировка подтверждена
+     IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Sign() AND MI.isErased = FALSE)
+     THEN
+        RAISE EXCEPTION 'Ошибка.Корректировка подтверждена.Изменения невозможны.';
+     END IF;
+
+     -- Распроводим Документ
+     PERFORM lpUnComplete_Movement (inMovementId := inMovementId
+                                  , inUserId     := vbUserId);
 
 END;
 $BODY$

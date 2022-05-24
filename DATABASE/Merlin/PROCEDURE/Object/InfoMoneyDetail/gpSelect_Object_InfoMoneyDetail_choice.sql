@@ -33,10 +33,10 @@ BEGIN
         , tmp.InfoMoneyKindName
 
    FROM gpSelect_Object_InfoMoneyDetail (inIsShowAll, inSession) AS tmp
-   WHERE ((inKindName = 'zc_Enum_InfoMoney_In' AND (tmp.InfoMoneyKindId = zc_Enum_InfoMoney_In() OR COALESCE (tmp.InfoMoneyKindId,0)=0) ) 
+   /*WHERE ((inKindName = 'zc_Enum_InfoMoney_In' AND (tmp.InfoMoneyKindId = zc_Enum_InfoMoney_In() OR COALESCE (tmp.InfoMoneyKindId,0)=0) ) 
       OR (inKindName = 'zc_Enum_InfoMoney_Out' AND (tmp.InfoMoneyKindId = zc_Enum_InfoMoney_Out() OR COALESCE (tmp.InfoMoneyKindId,0)=0) )
       OR COALESCE (inKindName,'') = ''  
-        )
+        )*/
   ;
   
 END;$BODY$

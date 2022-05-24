@@ -52,12 +52,12 @@ BEGIN
            , MovementFloat_CurrencyValue.ValueData ::TFloat AS CurrencyValue
            , MovementFloat_ParValue.ValueData      ::TFloat AS ParValue
            , MovementItem.Amount                   ::TFloat AS Amount
-           , Object_Cash_from.Id                AS CashId_from
-           , Object_Cash_from.ValueData         AS CashName_from
-           , Object_Cash_to.Id                  AS CashId_to
-           , Object_Cash_to.ValueData           AS CashName_to
-           , Object_CommentMoveMoney.Id         AS CommentMoveMoneyId
-           , Object_CommentMoveMoney.ValueData  AS CommentMoveMoneyName
+           , CASE WHEN TRIM (Object_Cash_from.ValueData) <> '' THEN Object_Cash_from.Id ELSE 0 END :: Integer AS CashId_from
+           , Object_Cash_from.ValueData                                                                       AS CashName_from
+           , CASE WHEN TRIM (Object_Cash_to.ValueData) <> '' THEN Object_Cash_to.Id ELSE 0 END :: Integer AS CashId_to
+           , Object_Cash_to.ValueData                                                                     AS CashName_to
+           , CASE WHEN TRIM (Object_CommentMoveMoney.ValueData) <> '' THEN Object_CommentMoveMoney.Id ELSE 0 END :: Integer AS CommentMoveMoneyId
+           , Object_CommentMoveMoney.ValueData                                                                              AS CommentMoveMoneyName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 

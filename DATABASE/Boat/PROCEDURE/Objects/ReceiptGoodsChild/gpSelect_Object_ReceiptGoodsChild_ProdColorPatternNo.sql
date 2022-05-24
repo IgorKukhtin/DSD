@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
              , isErased Boolean
              , GoodsGroupNameFull TVarChar
              , GoodsGroupName TVarChar
-             , Article TVarChar
+             , Article TVarChar , Article_all TVarChar
              , ProdColorName TVarChar
              , MeasureName TVarChar
                -- Цена вх. без НДС - Товар/Услуги
@@ -72,7 +72,8 @@ BEGIN
 
          , ObjectString_GoodsGroupFull.ValueData ::TVarChar  AS GoodsGroupNameFull
          , Object_GoodsGroup.ValueData           ::TVarChar  AS GoodsGroupName
-         , ObjectString_Article.ValueData        ::TVarChar  AS Article
+         , ObjectString_Article.ValueData        ::TVarChar  AS Article 
+         , zfCalc_Article_all (ObjectString_Article.ValueData) ::TVarChar AS Article_all
          , Object_ProdColor.ValueData            :: TVarChar AS ProdColorName
          , Object_Measure.ValueData              ::TVarChar  AS MeasureName
 

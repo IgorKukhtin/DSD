@@ -5,34 +5,40 @@
 -- Процедура проверяет уникальность поля ValueData у объекта
 
 CREATE OR REPLACE FUNCTION lpCheckUnique_ObjectString_ValueData(
-        inId        integer, 
+        inId        integer,
         inDescId    integer,
         inValueData tvarchar,
         inUserId    integer)
-  RETURNS void AS
+RETURNS VOID
+AS
 $BODY$
-DECLARE
-  ObjectName TVarChar;
-  FieldName TVarChar;  
+  DECLARE vbObjectName TVarChar;
+  DECLARE vbFieldName TVarChar;
 BEGIN
-  IF EXISTS (SELECT ValueData FROM ObjectString WHERE DescId = inDescId AND ValueData = inValueData AND ObjectId <> inId) THEN
-     SELECT ObjectDesc.ItemName, ObjectStringDesc.ItemName INTO ObjectName, FieldName
-     FROM ObjectDesc 
-     JOIN ObjectStringDesc 
-       ON ObjectStringDesc.DescId = ObjectDesc.Id
-        WHERE ObjectStringDesc.Id = inDescId;
+     IF EXISTS (SELECT ValueData FROM ObjectString WHERE DescId = inDescId AND ValueData = inValueData AND ObjectId <> COALESCE (inId, 0))
+     THEN
 
-     --RAISE EXCEPTION 'Значение "%" не уникально для поля "%" справочника "%"', inValueData, FieldName, ObjectName;
-       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Значение "<%>" не уникально для поля "<%>" справочника "<%>"' :: TVarChar
-                                             , inProcedureName := 'lpCheckUnique_ObjectString_ValueData'    :: TVarChar
-                                             , inUserId        := inUserId
-                                             , inParam1        := inValueData :: TVarChar
-                                             , inParam2        := FieldName   :: TVarChar
-                                             , inParam3        := ObjectName  :: TVarChar
-                                             );
-  END IF; 
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION lpCheckUnique_ObjectString_ValueData(integer, integer, tvarchar)
-  OWNER TO postgres;
+         --
+         SELECT ObjectDesc.ItemName, ObjectStringDesc.ItemName
+                INTO vbObjectName, vbFieldName
+         FROM ObjectString
+              LEFT JOIN Object           ON Object.Id           = ObjectString.ObjectId
+              LEFT JOIN ObjectDesc       ON ObjectDesc.Id       = Object.DescId
+              LEFT JOIN ObjectStringDesc ON ObjectStringDesc.Id = ObjectString.DescId
+         WHERE ObjectString.DescId = inDescId AND ObjectString.ValueData = inValueData AND ObjectString.ObjectId <> COALESCE (inId, 0);
+
+         --
+         RAISE EXCEPTION 'Значение <%> не уникально для поля <%> справочника <%>.', inValueData, vbFieldName, vbObjectName;
+
+         /*RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Значение "<%>" не уникально для поля "<%>" справочника "<%>"' :: TVarChar
+                                                 , inProcedureName := 'lpCheckUnique_ObjectString_ValueData'    :: TVarChar
+                                                 , inUserId        := inUserId
+                                                 , inParam1        := inValueData :: TVarChar
+                                                 , inParam2        := vbFieldName   :: TVarChar
+                                                 , inParam3        := vbObjectName  :: TVarChar
+                                                 );*/
+     END IF;
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;

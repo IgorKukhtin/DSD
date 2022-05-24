@@ -228,6 +228,7 @@ type
     FieldFilter_Article: TdsdFieldFilter;
     bbedSearchArticle: TdxBarControlContainerItem;
     bblbSearchArticle: TdxBarControlContainerItem;
+    Panel1: TPanel;
   private
   public
   end;

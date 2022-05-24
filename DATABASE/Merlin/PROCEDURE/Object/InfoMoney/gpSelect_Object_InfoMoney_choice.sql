@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
              , ParentId Integer, ParentName TVarChar
              , GroupNameFull TVarChar
              , isUserAll Boolean, isService Boolean
+             , NPP Integer
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
 )
@@ -39,17 +40,19 @@ BEGIN
         , tmp.GroupNameFull
         , tmp.isUserAll
         , tmp.isService
+        
+        , tmp.NPP
 
         , tmp.InsertName
         , tmp.InsertDate
         , tmp.UpdateName
         , tmp.UpdateDate
    FROM gpSelect_Object_InfoMoney (inIsShowAll, inSession) AS tmp
-   WHERE (COALESCE (tmp.isService, FALSE) = inisService OR inisService = FALSE)
+   /*WHERE (COALESCE (tmp.isService, FALSE) = inisService OR inisService = FALSE)
     AND ((inKindName = 'zc_Enum_InfoMoney_In' AND (tmp.InfoMoneyKindId = zc_Enum_InfoMoney_In() OR COALESCE (tmp.InfoMoneyKindId,0)=0) ) 
       OR (inKindName = 'zc_Enum_InfoMoney_Out' AND (tmp.InfoMoneyKindId = zc_Enum_InfoMoney_Out() OR COALESCE (tmp.InfoMoneyKindId,0)=0) )
       OR COALESCE (inKindName,'') = ''  
-        )
+        )*/
   ;
   
 END;$BODY$
@@ -64,4 +67,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_InfoMoney (TRUE, FALSE, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_InfoMoney_choice (TRUE, FALSE, '', zfCalc_UserAdmin())

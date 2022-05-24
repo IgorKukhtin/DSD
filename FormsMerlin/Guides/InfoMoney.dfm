@@ -44,17 +44,25 @@ object InfoMoneyForm: TInfoMoneyForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object NPP: TcxGridDBColumn
+        Caption = #8470' '#1087'/'#1087
+        DataBinding.FieldName = 'NPP'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
       object GroupNameFull: TcxGridDBColumn
-        Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
+        Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GroupNameFull'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
         Options.Editing = False
         Width = 126
       end
       object ParentName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072
+        Caption = '***'#1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'ParentName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -66,6 +74,7 @@ object InfoMoneyForm: TInfoMoneyForm
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -106,17 +115,7 @@ object InfoMoneyForm: TInfoMoneyForm
         Options.Editing = False
         Width = 96
       end
-      object Erased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 78
-      end
-      object colInsertName: TcxGridDBColumn
+      object InsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertName'
         HeaderAlignmentHorz = taCenter
@@ -124,7 +123,7 @@ object InfoMoneyForm: TInfoMoneyForm
         Options.Editing = False
         Width = 120
       end
-      object colUpdateName: TcxGridDBColumn
+      object UpdateName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
         DataBinding.FieldName = 'UpdateName'
         Visible = False
@@ -133,7 +132,7 @@ object InfoMoneyForm: TInfoMoneyForm
         Options.Editing = False
         Width = 120
       end
-      object colInsertDate: TcxGridDBColumn
+      object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertDate'
         HeaderAlignmentHorz = taCenter
@@ -141,7 +140,7 @@ object InfoMoneyForm: TInfoMoneyForm
         Options.Editing = False
         Width = 75
       end
-      object colUpdateDate: TcxGridDBColumn
+      object UpdateDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
         DataBinding.FieldName = 'UpdateDate'
         Visible = False
@@ -149,6 +148,16 @@ object InfoMoneyForm: TInfoMoneyForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 75
+      end
+      object isErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 78
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -663,7 +672,7 @@ object InfoMoneyForm: TInfoMoneyForm
     Left = 88
     Top = 128
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
     Top = 200
   end

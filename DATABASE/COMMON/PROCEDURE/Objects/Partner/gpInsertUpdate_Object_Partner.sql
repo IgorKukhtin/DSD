@@ -144,7 +144,7 @@ BEGIN
        inCode:= 0;
    END IF;
    -- !!!надо так криво обработать когда добавляют несколько пользователей!!!)
-   IF inCode > 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.DescId = zc_Object_Partner() AND Object.ObjectCode = inCode)
+   IF inCode > 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.DescId = zc_Object_Partner() AND Object.ObjectCode = inCode AND Object.Id <> COALESCE (ioId, 0))
    THEN 
        -- Обнулим, что б потом переопределить
        inCode:= 0;

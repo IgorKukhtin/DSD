@@ -11,25 +11,20 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
-    --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_Cash());
-    vbUserId:= lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_Cash());
+     vbUserId:= lpGetUserBySession (inSession);
 
-    -- Удаляем Документ
-    PERFORM lpSetErased_Movement (inMovementId := inMovementId
-                                , inUserId     := vbUserId);
+     -- Проверка - Если Корректировка подтверждена
+     IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Sign() AND MI.isErased = FALSE)
+     THEN
+        RAISE EXCEPTION 'Ошибка.Корректировка подтверждена.Изменения невозможны.';
+     END IF;
 
-    -- когда распроводится или удаляется - обнуляются все его zc_MIFloat_MovementId    
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), MIFloat_MovementId.MovementItemId, 0)
+     -- Удаляем Документ
+     PERFORM lpSetErased_Movement (inMovementId := inMovementId
+                                 , inUserId     := vbUserId);
 
-    FROM MovementItemFloat AS MIFloat_MovementId
-       INNER JOIN MovementItem AS MI_Child_client
-                               ON MI_Child_client.Id = MIFloat_MovementId.MovementItemId
-                              AND MI_Child_client.DescId   = zc_MI_Child()
-                              AND MI_Child_client.isErased = FALSE
-    WHERE MIFloat_MovementId.ValueData ::Integer = inMovementId
-      AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
-    ;
 
 
 END;

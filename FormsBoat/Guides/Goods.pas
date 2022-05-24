@@ -110,8 +110,6 @@ type
     edSearchArticle: TcxTextEdit;
     FieldFilter_Article: TdsdFieldFilter;
     Article_all: TcxGridDBColumn;
-    bbSearchArticle: TdxBarControlContainerItem;
-    bbSearchArticleLabel: TdxBarControlContainerItem;
     lbSearchArticle: TcxLabel;
     actSetFocused: TdsdSetFocusedAction;
     InvNumber_pl: TcxGridDBColumn;
@@ -120,16 +118,23 @@ type
     GoodsArticle: TcxGridDBColumn;
     Metres: TcxGridDBColumn;
     Feet: TcxGridDBColumn;
-    bbSearchCodeLabel: TdxBarControlContainerItem;
-    bbSearchCode: TdxBarControlContainerItem;
     lbSearchCode: TcxLabel;
     lbSearchName: TcxLabel;
     edSearchCode: TcxTextEdit;
     edSearchName: TcxTextEdit;
     FieldFilter_Code: TdsdFieldFilter;
     FieldFilter_Name: TdsdFieldFilter;
-    bbSearchNameLabel: TdxBarControlContainerItem;
-    bbSearchName: TdxBarControlContainerItem;
+    Panel2: TPanel;
+    Len_1: TcxGridDBColumn;
+    Len_2: TcxGridDBColumn;
+    Len_3: TcxGridDBColumn;
+    Len_4: TcxGridDBColumn;
+    Len_5: TcxGridDBColumn;
+    Len_6: TcxGridDBColumn;
+    Len_7: TcxGridDBColumn;
+    Len_8: TcxGridDBColumn;
+    Len_9: TcxGridDBColumn;
+    Len_10: TcxGridDBColumn;
   private
     { Private declarations }
   public

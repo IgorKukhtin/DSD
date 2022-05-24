@@ -33,7 +33,7 @@ BEGIN
      IF COALESCE (inMI_Id_child, 0) = 0
      THEN
 
-     RETURN QUERY 
+     RETURN QUERY
        SELECT
              Movement.Id                        AS Id
            , Movement.InvNumber                 AS InvNumber
@@ -42,18 +42,18 @@ BEGIN
            , COALESCE (MovementBoolean_Sign.ValueData, FALSE) :: Boolean AS isSign
            , ((MovementItem.Amount - COALESCE (tmpChild.Amount,0) ) * CASE WHEN MovementItem.Amount < 0 THEN  (-1) ELSE 1 END)::TFloat AS Amount
            , MovementItem.Id                    AS MI_Id
-           , Object_Cash.Id                     AS CashId
-           , Object_Cash.ValueData              AS CashName
-           , Object_Unit.Id                     AS UnitId
+           , CASE WHEN TRIM (Object_Cash.ValueData) <> '' THEN Object_Cash.Id ELSE 0 END :: Integer AS CashId
+           , Object_Cash.ValueData                                                                  AS CashName
+           , CASE WHEN TRIM (Object_Unit.ValueData) <> '' THEN Object_Unit.Id ELSE 0 END           :: Integer AS UnitId
            , TRIM (COALESCE (ObjectString_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitName
-           , Object_Parent.Id                   AS ParentId_InfoMoney
-           , Object_Parent.ValueData            AS ParentName_InfoMoney
-           , Object_InfoMoney.Id                AS InfoMoneyId
-           , Object_InfoMoney.ValueData         AS InfoMoneyName
-           , Object_InfoMoneyDetail.Id          AS InfoMoneyDetailId
-           , Object_InfoMoneyDetail.ValueData   AS InfoMoneyDetailName
-           , Object_CommentInfoMoney.Id         AS CommentInfoMoneyId
-           , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
+           , CASE WHEN TRIM (Object_Parent.ValueData) <> '' THEN Object_Parent.Id ELSE 0 END :: Integer AS ParentId_InfoMoney
+           , Object_Parent.ValueData                                                                    AS ParentName_InfoMoney
+           , CASE WHEN TRIM (Object_InfoMoney.ValueData) <> '' THEN Object_InfoMoney.Id ELSE 0 END :: Integer AS InfoMoneyId
+           , Object_InfoMoney.ValueData                                                                       AS InfoMoneyName
+           , CASE WHEN TRIM (Object_InfoMoneyDetail.ValueData) <> '' THEN Object_InfoMoneyDetail.Id ELSE 0 END :: Integer AS InfoMoneyDetailId
+           , Object_InfoMoneyDetail.ValueData                                                                             AS InfoMoneyDetailName
+           , CASE WHEN TRIM (Object_CommentInfoMoney.ValueData) <> '' THEN Object_CommentInfoMoney.Id ELSE 0 END :: Integer AS CommentInfoMoneyId
+           , Object_CommentInfoMoney.ValueData                                                                              AS CommentInfoMoneyName
        FROM Movement
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                   AND MovementItem.DescId = zc_MI_Master()
@@ -105,8 +105,8 @@ BEGIN
        WHERE Movement.Id = inMovementId;
 
      ELSE
-     
-     RETURN QUERY 
+
+     RETURN QUERY
        SELECT
              Movement.Id                        AS Id
            , Movement.InvNumber                 AS InvNumber
@@ -114,18 +114,18 @@ BEGIN
            , MIDate_ServiceDate.ValueData  ::TDateTime AS ServiceDate
            , COALESCE (MovementBoolean_Sign.ValueData, FALSE) :: Boolean AS isSign
            , CASE WHEN MovementItem.Amount < 0 THEN MovementItem.Amount * (-1) ELSE MovementItem.Amount END  ::TFloat AS Amount
-           , MovementItem.Id                    AS MI_Id
-           , Object_Cash.Id                     AS CashId
-           , Object_Cash.ValueData              AS CashName
-           , Object_Unit.Id                     AS UnitId
+           , MovementItem.Id                                                                                  AS MI_Id
+           , CASE WHEN TRIM (Object_Cash.ValueData) <> '' THEN Object_Cash.Id ELSE 0 END :: Integer           AS CashId
+           , Object_Cash.ValueData                                                                            AS CashName
+           , CASE WHEN TRIM (Object_Unit.ValueData) <> '' THEN Object_Unit.Id ELSE 0 END :: Integer           AS UnitId
            , TRIM (COALESCE (ObjectString_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitName
-           , Object_Parent.Id                   AS ParentId_InfoMoney
-           , Object_Parent.ValueData            AS ParentName_InfoMoney
-           , Object_InfoMoney.Id                AS InfoMoneyId
-           , Object_InfoMoney.ValueData         AS InfoMoneyName
-           , Object_InfoMoney.Id                AS InfoMoneyDetailId
-           , Object_InfoMoney.ValueData         AS InfoMoneyDetailName
-           , Object_CommentInfoMoney.Id         AS CommentInfoMoneyId
+           , CASE WHEN TRIM (Object_Parent.ValueData) <> '' THEN Object_Parent.Id ELSE 0 END       :: Integer AS ParentId_InfoMoney
+           , Object_Parent.ValueData                                                                          AS ParentName_InfoMoney
+           , CASE WHEN TRIM (Object_InfoMoney.ValueData) <> '' THEN Object_InfoMoney.Id ELSE 0 END :: Integer AS InfoMoneyId
+           , Object_InfoMoney.ValueData                                                                       AS InfoMoneyName
+           , CASE WHEN TRIM (Object_InfoMoneyDetail.ValueData) <> '' THEN Object_InfoMoneyDetail.Id ELSE 0 END   :: Integer AS InfoMoneyDetailId
+           , Object_InfoMoneyDetail.ValueData                                                                               AS InfoMoneyDetailName
+           , CASE WHEN TRIM (Object_CommentInfoMoney.ValueData) <> '' THEN Object_CommentInfoMoney.Id ELSE 0 END :: Integer AS CommentInfoMoneyId
            , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
        FROM Movement
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -172,18 +172,17 @@ BEGIN
 
        WHERE Movement.Id = inMovementId;
 
-   END IF; 
+   END IF;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
-
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 15.01.22         * 
+ 15.01.22         *
 */
 
 -- ÚÂÒÚ
---select * from gpGet_Movement_Cash_Child(inMovementId := 608 , inMI_Id := 0 ,inMI_Id_child := 0, inOperDate := ('31.01.2022')::TDateTime , inKindName := 'zc_Enum_InfoMoney_In' ,  inSession := '5');
+-- select * from gpGet_Movement_Cash_Child(inMovementId := 608 , inMI_Id := 0 ,inMI_Id_child := 0, inOperDate := ('31.01.2022')::TDateTime , inKindName := 'zc_Enum_InfoMoney_In' ,  inSession := '5');
