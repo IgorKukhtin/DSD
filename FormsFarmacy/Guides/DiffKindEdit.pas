@@ -53,7 +53,7 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     isErased: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
+    MinPrice: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     dsdUpdateDataSet: TdsdUpdateDataSet;
     spInsertUpdate_DiffKindPrice: TdsdStoredProc;
@@ -64,6 +64,7 @@ type
     Panel2: TPanel;
     cxButton3: TcxButton;
     cxButton4: TcxButton;
+    Summa: TcxGridDBColumn;
   private
     { Private declarations }
   public

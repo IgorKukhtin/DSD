@@ -1,17 +1,14 @@
--- Function: gpSelect_Object_DiffKindPrice(TVarChar)
+-- Function: gpSelect_Cash_DiffKindPrice(TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_DiffKindPrice(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Cash_DiffKindPrice(TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_DiffKindPrice(
-    IN inDiffKindId  Integer  ,     -- Вид отказа
+CREATE OR REPLACE FUNCTION gpSelect_Cash_DiffKindPrice(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , DiffKindId Integer
+RETURNS TABLE (DiffKindId Integer
              , MinPrice TFloat
              , Amount TFloat
-             , Summa TFloat
-             , isErased Boolean) AS
+             , Summa TFloat) AS
 $BODY$
 BEGIN
 
@@ -19,14 +16,10 @@ BEGIN
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_DiffKind());
 
    RETURN QUERY 
-     SELECT Object_DiffKindPrice.Id                              AS Id
-          , Object_DiffKindPrice.ObjectCode                      AS Code
-          , Object_DiffKindPrice.ValueData                       AS Name
-          , ObjectLink_DiffKind.ChildObjectId                    AS DiffKindId
+     SELECT ObjectLink_DiffKind.ChildObjectId                    AS DiffKindId
           , ObjectFloat_DiffKindPrice_MinPrice.ValueData         AS MinPrice
           , ObjectFloat_DiffKindPrice_Amount.ValueData           AS Amount
           , ObjectFloat_DiffKindPrice_Summa.ValueData            AS Summa
-          , Object_DiffKindPrice.isErased                        AS isErased
      FROM Object AS Object_DiffKindPrice
           LEFT JOIN ObjectLink AS ObjectLink_DiffKind
                                ON ObjectLink_DiffKind.ObjectId = Object_DiffKindPrice.Id
@@ -41,7 +34,7 @@ BEGIN
                                 ON ObjectFloat_DiffKindPrice_Summa.ObjectId = Object_DiffKindPrice.Id 
                                AND ObjectFloat_DiffKindPrice_Summa.DescId = zc_ObjectFloat_DiffKindPrice_Summa() 
      WHERE Object_DiffKindPrice.DescId = zc_Object_DiffKindPrice()
-       AND ObjectLink_DiffKind.ChildObjectId = inDiffKindId
+       AND Object_DiffKindPrice.isErased = False
      ORDER BY ObjectFloat_DiffKindPrice_MinPrice.ValueData;
   
 END;
@@ -52,9 +45,9 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 20.05.22                                                       * 
+ 24.05.22                                                       * 
 */
 
 -- тест
 -- 
-SELECT * FROM gpSelect_Object_DiffKindPrice(1, '3')
+SELECT * FROM gpSelect_Cash_DiffKindPrice('3')
