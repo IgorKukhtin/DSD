@@ -126,7 +126,7 @@ BEGIN
            --, zfFormat_BarCode (zc_BarCodePref_Object(), ObjectString_EAN.ValueData) AS IdBarCode
            , Object_Goods.Id                AS GoodsId
            , Object_Goods.ObjectCode        AS GoodsCode
-           , Object_Goods.ValueData         AS GoodsName
+           , CASE WHEN Object_Goods.isErased = TRUE THEN '***удален ' || Object_Goods.ValueData ELSE Object_Goods.ValueData END :: TVarChar AS GoodsName
            , ObjectString_Article.ValueData      AS Article 
            , zfCalc_Article_all (ObjectString_Article.ValueData) ::TVarChar AS Article_all
            , ObjectString_EAN.ValueData          AS EAN

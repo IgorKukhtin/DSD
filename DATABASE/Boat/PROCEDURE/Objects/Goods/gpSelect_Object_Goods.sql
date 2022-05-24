@@ -114,25 +114,51 @@ BEGIN
                                    AND Object.isErased = FALSE
                                  GROUP BY ObjectLink_GoodsArticle_Goods.ChildObjectId
                                  )
-           , tmpGoods_err AS (SELECT ObjectString_Article.ValueData AS Article
-                              FROM Object AS Object_Goods
-                                   JOIN ObjectString AS ObjectString_Article
-                                                     ON ObjectString_Article.ObjectId = Object_Goods.Id
-                                                    AND ObjectString_Article.DescId   = zc_ObjectString_Article()
-                                                    AND ObjectString_Article.ValueData <> ''
-                              WHERE Object_Goods.DescId   = zc_Object_Goods()
-                                AND Object_Goods.isErased = FALSE
-                              GROUP BY ObjectString_Article.ValueData      
-                              HAVING COUNT (*) > 1
-                             )
+           , tmpGoods_err_1 AS (SELECT LOWER (ObjectString_Article.ValueData) AS Article
+                                FROM Object AS Object_Goods
+                                     JOIN ObjectString AS ObjectString_Article
+                                                       ON ObjectString_Article.ObjectId = Object_Goods.Id
+                                                      AND ObjectString_Article.DescId   = zc_ObjectString_Article()
+                                                      AND ObjectString_Article.ValueData <> ''
+                                WHERE Object_Goods.DescId   = zc_Object_Goods()
+                                  AND Object_Goods.isErased = FALSE
+                                GROUP BY LOWER (ObjectString_Article.ValueData)
+                                HAVING COUNT (*) > 1
+                               )
+           , tmpGoods_err_2 AS (SELECT Object_Goods.ObjectCode AS GoodsCode
+                                FROM Object AS Object_Goods
+                                WHERE Object_Goods.DescId     = zc_Object_Goods()
+                                  AND Object_Goods.ObjectCode <> 0
+                                --AND Object_Goods.isErased = FALSE
+                                --AND 1=0
+                                GROUP BY Object_Goods.ObjectCode
+                                HAVING COUNT (*) > 1
+                               )
+           , tmpGoods_err_3 AS (SELECT ObjectString_EAN.ValueData AS EAN
+                                FROM Object AS Object_Goods
+                                     JOIN ObjectString AS ObjectString_EAN
+                                                       ON ObjectString_EAN.ObjectId = Object_Goods.Id
+                                                      AND ObjectString_EAN.DescId   = zc_ObjectString_EAN()
+                                                      AND ObjectString_EAN.ValueData <> ''
+                                WHERE Object_Goods.DescId   = zc_Object_Goods()
+                                  AND Object_Goods.isErased = FALSE
+                                --AND 1=0
+                                GROUP BY ObjectString_EAN.ValueData      
+                                HAVING COUNT (*) > 1
+                               )
 
        -- Результат
        SELECT Object_Goods.Id                     AS Id
             , Object_Goods.ObjectCode             AS Code
             , SUBSTRING (Object_Goods.ValueData, 1, 128) :: TVarChar AS Name
-            , ObjectString_Article.ValueData      AS Article
+            , CASE WHEN vbUserId = 5 THEN LOWER (ObjectString_Article.ValueData) ELSE ObjectString_Article.ValueData END :: TVarChar AS Article
             , zfCalc_Article_all (ObjectString_Article.ValueData) AS Article_all
-            , (CASE WHEN tmpGoods_err.Article <> '' THEN '***' ELSE '' END || COALESCE (ObjectString_ArticleVergl.ValueData, '')) :: TVarChar AS ArticleVergl
+            , (CASE WHEN tmpGoods_err_1.Article   IS NOT NULL
+                      OR tmpGoods_err_2.GoodsCode IS NOT NULL
+                      OR tmpGoods_err_3.EAN       IS NOT NULL
+                         THEN '***'
+                    ELSE ''
+               END || COALESCE (ObjectString_ArticleVergl.ValueData, '')) :: TVarChar AS ArticleVergl
             , Object_GoodsArticle.GoodsArticle ::TVarChar AS GoodsArticle
             , ObjectString_EAN.ValueData          AS EAN
             , ObjectString_ASIN.ValueData         AS ASIN
@@ -367,7 +393,7 @@ BEGIN
                                    AND ObjectString_ArticleVergl.DescId = zc_ObjectString_ArticleVergl()
              LEFT JOIN ObjectString AS ObjectString_EAN
                                     ON ObjectString_EAN.ObjectId = Object_Goods.Id
-                                   AND ObjectString_EAN.DescId = zc_ObjectString_EAN()
+                                   AND ObjectString_EAN.DescId   = zc_ObjectString_EAN()
              LEFT JOIN ObjectString AS ObjectString_ASIN
                                     ON ObjectString_ASIN.ObjectId = Object_Goods.Id
                                    AND ObjectString_ASIN.DescId = zc_ObjectString_ASIN()
@@ -399,7 +425,10 @@ BEGIN
 
              LEFT JOIN tmpGoodsArticle AS Object_GoodsArticle ON Object_GoodsArticle.GoodsId = Object_Goods.Id
 
-             LEFT JOIN tmpGoods_err ON tmpGoods_err.Article = ObjectString_Article.ValueData
+             LEFT JOIN tmpGoods_err_1 ON tmpGoods_err_1.Article   ILIKE ObjectString_Article.ValueData
+             LEFT JOIN tmpGoods_err_2 ON tmpGoods_err_2.GoodsCode = Object_Goods.ObjectCode
+             LEFT JOIN tmpGoods_err_3 ON tmpGoods_err_3.EAN       = ObjectString_EAN.ValueData
+             
 
 
        WHERE Object_Goods.DescId = zc_Object_Goods()

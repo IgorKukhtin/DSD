@@ -74,7 +74,7 @@ BEGIN
                              INNER JOIN Object ON Object.Id       = ObjectString_Article.ObjectId
                                               AND Object.DescId   = zc_Object_Goods()
                                               AND Object.isErased = FALSE
-                        WHERE ObjectString_Article.ValueData = inArticle
+                        WHERE ObjectString_Article.ValueData ILIKE inArticle
                           AND ObjectString_Article.DescId    = zc_ObjectString_Article()
                         LIMIT 1
                        );
