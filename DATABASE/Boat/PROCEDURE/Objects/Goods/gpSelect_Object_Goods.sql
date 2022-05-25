@@ -154,9 +154,11 @@ BEGIN
             , CASE WHEN vbUserId = 5 THEN LOWER (ObjectString_Article.ValueData) ELSE ObjectString_Article.ValueData END :: TVarChar AS Article
             , zfCalc_Article_all (ObjectString_Article.ValueData) AS Article_all
             , (CASE WHEN tmpGoods_err_1.Article   IS NOT NULL
-                      OR tmpGoods_err_2.GoodsCode IS NOT NULL
-                      OR tmpGoods_err_3.EAN       IS NOT NULL
-                         THEN '***'
+                         THEN '**a*'
+                    WHEN tmpGoods_err_2.GoodsCode IS NOT NULL
+                         THEN '**c*'
+                    WHEN tmpGoods_err_3.EAN       IS NOT NULL
+                         THEN '**e*'
                     ELSE ''
                END || COALESCE (ObjectString_ArticleVergl.ValueData, '')) :: TVarChar AS ArticleVergl
             , Object_GoodsArticle.GoodsArticle ::TVarChar AS GoodsArticle
