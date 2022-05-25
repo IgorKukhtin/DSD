@@ -137,6 +137,17 @@ type
     OperDate_User3: TcxGridDBColumn;
     UnitGroupNameFull: TcxGridDBColumn;
     InvNumber_corr: TcxGridDBColumn;
+    actChoiceFormInfoMoney: TOpenChoiceForm;
+    actChoiceFormUnit: TOpenChoiceForm;
+    spUpdate_Child: TdsdStoredProc;
+    actUpdateDataSetChild: TdsdUpdateDataSet;
+    actSetErased_MI: TdsdUpdateErased;
+    actSetUnErased_MI: TdsdUpdateErased;
+    spErasedMIMaster: TdsdStoredProc;
+    spUnErasedMIMaster: TdsdStoredProc;
+    bbSetErased_MI: TdxBarButton;
+    bbSetUnErased_MI: TdxBarButton;
+    isErased: TcxGridDBColumn;
   private
   public
   end;

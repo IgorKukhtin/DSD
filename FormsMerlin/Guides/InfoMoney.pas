@@ -77,6 +77,9 @@ type
     bbmacUpdate_IsUserAll_Yes: TdxBarButton;
     bbUpdate_IsUserAll: TdxBarButton;
     NPP: TcxGridDBColumn;
+    spUpdate_IsServise: TdsdStoredProc;
+    actUpdate_IsServise: TdsdExecStoredProc;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

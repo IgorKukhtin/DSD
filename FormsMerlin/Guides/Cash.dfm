@@ -26,8 +26,6 @@ object CashForm: TCashForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 8
-    ExplicitWidth = 608
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

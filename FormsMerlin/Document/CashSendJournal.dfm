@@ -26,7 +26,6 @@ object CashSendJournalForm: TCashSendJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 809
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -67,7 +66,6 @@ object CashSendJournalForm: TCashSendJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 809
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

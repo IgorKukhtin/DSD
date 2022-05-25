@@ -2,12 +2,13 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InfoMoney (Integer, Integer, TVarChar, Boolean, Boolean, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InfoMoney (Integer, Integer, TVarChar, Boolean, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InfoMoney (Integer, Integer, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InfoMoney(
- INOUT ioId	          Integer   ,    -- ключ объекта <> 
+ INOUT ioId	              Integer   ,    -- ключ объекта <> 
     IN inCode             Integer   ,    -- код объекта <> 
     IN inName             TVarChar  ,    -- Название объекта <>
-    IN inisService        Boolean   , 
+    --IN inisService        Boolean   , 
     IN inInfoMoneyKindId  Integer   ,    --
     IN inParentId         Integer   ,    -- ключ объекта <Група>
     IN inSession          TVarChar       -- сессия пользователя
@@ -49,7 +50,7 @@ $BODY$
    -- сохранили группа
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_InfoMoney_GroupNameFull(), ioId, vbGroupNameFull);
    -- сохранили
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_Service(), ioId, inisService);
+   --PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_Service(), ioId, inisService);
    -- сохранили
    --PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_UserAll(), ioId, inisUserAll);
    -- сохранили

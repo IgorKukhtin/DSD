@@ -1317,6 +1317,9 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
@@ -2126,6 +2129,9 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
@@ -2183,6 +2189,9 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetInvoice: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridInvoice: TcxGrid
         Left = 0
         Top = 0
@@ -3724,8 +3733,8 @@ object OrderClientForm: TOrderClientForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintProduct_Structure'
-      ReportNameParam.Value = 'PrintProduct_Structure'
+      ReportName = 'PrintProduct_StructureGoods'
+      ReportNameParam.Value = 'PrintProduct_StructureGoods'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
