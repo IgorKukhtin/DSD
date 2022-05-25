@@ -67,10 +67,10 @@ BEGIN
    IF inisVal_1 = TRUE
    THEN
     --RAISE EXCEPTION 'inisVal_1';
-       PERFORM gpInsertUpdate_Object_MarginCategoryItem(inId               := inId_1
+       PERFORM gpInsertUpdate_Object_MarginCategoryItem(ioId               := inId_1
+                                                      , inMarginCategoryId := inMarginCategoryId
                                                       , inMinPrice         := inMinPrice_1 ::TFloat 
                                                       , inMarginPercent    := (COALESCE (inValue_1,0) + COALESCE (inVal_1,0)) ::TFloat 
-                                                      , inMarginCategoryId := inMarginCategoryId
                                                       , inSession          := inSession    ::TVarChar
                                                       );
    END IF;
@@ -78,60 +78,60 @@ BEGIN
    IF inisVal_2 = TRUE
    THEN
    --RAISE EXCEPTION 'inisVal_2';
-       PERFORM gpInsertUpdate_Object_MarginCategoryItem(inId               := inId_2
+       PERFORM gpInsertUpdate_Object_MarginCategoryItem(ioId               := inId_2
+                                                      , inMarginCategoryId := inMarginCategoryId
                                                       , inMinPrice         := inMinPrice_2 ::TFloat 
                                                       , inMarginPercent    := (COALESCE (inValue_2,0) + COALESCE (inVal_2,0)) ::TFloat 
-                                                      , inMarginCategoryId := inMarginCategoryId
                                                       , inSession          := inSession    ::TVarChar
                                                       );
    END IF;
 
    IF inisVal_3 = TRUE
    THEN
-       PERFORM gpInsertUpdate_Object_MarginCategoryItem(inId               := inId_3
+       PERFORM gpInsertUpdate_Object_MarginCategoryItem(ioId               := inId_3
+                                                      , inMarginCategoryId := inMarginCategoryId
                                                       , inMinPrice         := inMinPrice_3 ::TFloat 
                                                       , inMarginPercent    := (COALESCE (inValue_3,0) + COALESCE (inVal_3,0)) ::TFloat 
-                                                      , inMarginCategoryId := inMarginCategoryId
                                                       , inSession          := inSession    ::TVarChar
                                                       );
    END IF;
 
    IF inisVal_4 = TRUE
    THEN
-       PERFORM gpInsertUpdate_Object_MarginCategoryItem(inId               := inId_4
+       PERFORM gpInsertUpdate_Object_MarginCategoryItem(ioId               := inId_4
+                                                      , inMarginCategoryId := inMarginCategoryId
                                                       , inMinPrice         := inMinPrice_4 ::TFloat 
                                                       , inMarginPercent    := (COALESCE (inValue_4,0) + COALESCE (inVal_4,0)) ::TFloat 
-                                                      , inMarginCategoryId := inMarginCategoryId
                                                       , inSession          := inSession    ::TVarChar
                                                       );
    END IF;
 
    IF inisVal_5 = TRUE
    THEN
-       PERFORM gpInsertUpdate_Object_MarginCategoryItem(inId               := inId_5
+       PERFORM gpInsertUpdate_Object_MarginCategoryItem(ioId               := inId_5
+                                                      , inMarginCategoryId := inMarginCategoryId
                                                       , inMinPrice         := inMinPrice_5 ::TFloat 
                                                       , inMarginPercent    := (COALESCE (inValue_5,0) + COALESCE (inVal_5,0)) ::TFloat 
-                                                      , inMarginCategoryId := inMarginCategoryId
                                                       , inSession          := inSession    ::TVarChar
                                                       );
    END IF;
 
    IF inisVal_6 = TRUE
    THEN
-       PERFORM gpInsertUpdate_Object_MarginCategoryItem(inId               := inId_6
+       PERFORM gpInsertUpdate_Object_MarginCategoryItem(ioId               := inId_6
+                                                      , inMarginCategoryId := inMarginCategoryId
                                                       , inMinPrice         := inMinPrice_6 ::TFloat 
                                                       , inMarginPercent    := (COALESCE (inValue_6,0) + COALESCE (inVal_6,0)) ::TFloat 
-                                                      , inMarginCategoryId := inMarginCategoryId
                                                       , inSession          := inSession    ::TVarChar
                                                       );
    END IF;
 
    IF inisVal_7 = TRUE
    THEN
-       PERFORM gpInsertUpdate_Object_MarginCategoryItem(inId               := inId_7
+       PERFORM gpInsertUpdate_Object_MarginCategoryItem(ioId               := inId_7
+                                                      , inMarginCategoryId := inMarginCategoryId
                                                       , inMinPrice         := inMinPrice_7 ::TFloat 
                                                       , inMarginPercent    := (COALESCE (inValue_7,0) + COALESCE (inVal_7,0)) ::TFloat 
-                                                      , inMarginCategoryId := inMarginCategoryId
                                                       , inSession          := inSession    ::TVarChar
                                                       );
    END IF;

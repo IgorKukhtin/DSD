@@ -17,11 +17,13 @@ type
     Label1: TLabel;
     pn1: TPanel;
     pn2: TPanel;
+    procedure edMaskNumberKeyPress(Sender: TObject; var Key: Char);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure edMaskNumberPropertiesValidate(Sender: TObject;
       var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
-    procedure edMaskNumberKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
+    FRecipeNumber : String;
   public
     { Public declarations }
   end;
@@ -44,10 +46,21 @@ begin
   end;
 end;
 
-procedure TEnterRecipeNumber1303Form.edMaskNumberPropertiesValidate(Sender: TObject;
-  var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
+procedure TEnterRecipeNumber1303Form.edMaskNumberPropertiesValidate(
+  Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption;
+  var Error: Boolean);
 begin
-  Error := not CheckLikiDniproReceipt_Number(StringReplace(DisplayValue, '_', '', [rfReplaceAll]));
+  Error := False;
+end;
+
+procedure TEnterRecipeNumber1303Form.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  if ModalResult = mrOk then
+  begin
+    FRecipeNumber := Trim(StringReplace(edMaskNumber.Text, '_', '', [rfReplaceAll]));
+    if not CheckLikiDniproReceipt_Number(FRecipeNumber) then Action := caNone;
+  end;
 end;
 
 function InputEnterRecipeNumber1303(var ANumber : string) : boolean;
@@ -59,7 +72,7 @@ begin
     if ANumber <> '' then EnterRecipeNumber1303Form.edMaskNumber.Text := ANumber;
 
     Result := EnterRecipeNumber1303Form.ShowModal = mrOk;
-    ANumber := Trim(StringReplace(EnterRecipeNumber1303Form.edMaskNumber.Text, '_', '', [rfReplaceAll]));
+    if Result then ANumber := EnterRecipeNumber1303Form.FRecipeNumber;
   finally
     EnterRecipeNumber1303Form.Free;
     LoadKeyboardLayout('00000419', KLF_ACTIVATE);

@@ -14,6 +14,7 @@ object EnterRecipeNumber1303Form: TEnterRecipeNumber1303Form
   Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
+  OnClose = FormClose
   DesignSize = (
     381
     177)
@@ -88,7 +89,10 @@ object EnterRecipeNumber1303Form: TEnterRecipeNumber1303Form
     Anchors = [akLeft, akTop, akRight]
     ParentFont = False
     Properties.CharCase = ecUpperCase
-    Properties.EditMask = 'AAAA\-AAAA\-AA\-AAAAAA;1;_'
+    Properties.MaskKind = emkRegExprEx
+    Properties.EditMask = 
+      '([0-9]?\d\d\d\d)-\d\d\d\d-(\d | [a-zA-Z])(\d | [a-zA-Z])-([0-9]?' +
+      '[0-9]?\d\d\d\d)'
     Properties.ValidationOptions = []
     Properties.OnValidate = edMaskNumberPropertiesValidate
     Style.Font.Charset = DEFAULT_CHARSET
@@ -98,7 +102,6 @@ object EnterRecipeNumber1303Form: TEnterRecipeNumber1303Form
     Style.Font.Style = []
     Style.IsFontAssigned = True
     TabOrder = 0
-    Text = '    -    -  -      '
     OnKeyPress = edMaskNumberKeyPress
     Width = 291
   end
