@@ -1131,7 +1131,7 @@ BEGIN
                                                                 inParamNumber   := 1, 
                                                                 inName          := 'inCode', 
                                                                 inParamType     := 'ftInteger', 
-                                                                inUserParamName := 'Код статьи',
+                                                                inUserParamName := 'Код кассы',
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := vbUserId::TVarChar);
     vbImportSettingsItem := 0;
@@ -1149,7 +1149,7 @@ BEGIN
                                                                 inParamNumber   := 2, 
                                                                 inName          := 'inParentCode', 
                                                                 inParamType     := 'ftInteger', 
-                                                                inUserParamName := 'Код статьи',
+                                                                inUserParamName := 'Код Группы',
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := vbUserId::TVarChar);
     vbImportSettingsItem := 0;
@@ -1240,25 +1240,25 @@ BEGIN
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inConvertFormatInExcel := FALSE ::Boolean,
                                                       inSession           := vbUserId::TVarChar);
+
     vbImportTypeItemId := 0;
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inProtocolDate';
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inValuta';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 6, 
-                                                                inName          := 'inProtocolDate', 
-                                                                inParamType     := 'ftDateTime', 
-                                                                inUserParamName := 'Дата протокола', 
+                                                                inParamNumber   := 7, 
+                                                                inName          := 'inValuta', 
+                                                                inParamType     := 'ftString', 
+                                                                inUserParamName := 'Валюта', 
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := vbUserId::TVarChar);
     vbImportSettingsItem := 0;
     Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
     PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'E',
+                                                      inName              := 'H',
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inConvertFormatInExcel := FALSE ::Boolean,
                                                       inSession           := vbUserId::TVarChar);
-
 END $$;
 
 DO $$
