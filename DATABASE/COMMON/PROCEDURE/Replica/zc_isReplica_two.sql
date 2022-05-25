@@ -28,7 +28,7 @@ $BODY$
  where id >= (select max(Id) from _replica.table_update_data) + 1
 and  Id <= ...
 order by Id
-limit 100000000
+limit 10000000
 */
 
 -- select last_value + 1001 from _replica.table_update_data_two_id_seq

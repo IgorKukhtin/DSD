@@ -23,6 +23,12 @@ BEGIN
    END IF;
 
 
+   -- проверка - что б Админ ничего не ломал
+   IF COALESCE (inId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Элемент справочника не установлен.';
+   END IF;
+
    -- сохранили свойство <вес 1-ого пакета>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker(), inId, inWeightPackageSticker);
 
