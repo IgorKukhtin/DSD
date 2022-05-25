@@ -3,7 +3,7 @@ inherited InventoryForm: TInventoryForm
   ClientHeight = 598
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 633
+  ExplicitHeight = 637
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -457,6 +457,23 @@ inherited InventoryForm: TInventoryForm
       Properties.ReadOnly = False
       TabOrder = 14
       Width = 122
+    end
+    object cxLabel18: TcxLabel
+      Left = 796
+      Top = 5
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+    end
+    object edPriceList: TcxButtonEdit
+      Left = 796
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 16
+      Width = 157
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1688,6 +1705,21 @@ inherited InventoryForm: TInventoryForm
         Component = cbList
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListName'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1744,6 +1776,14 @@ inherited InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPriceListId'
+        Value = 0.000000000000000000
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioisGoodsGroupIn'
         Value = False
         Component = cbisGoodsGroupIn
@@ -1765,12 +1805,6 @@ inherited InventoryForm: TInventoryForm
         Component = cbList
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -1857,6 +1891,7 @@ inherited InventoryForm: TInventoryForm
         Control = cbList
       end
       item
+        Control = edPriceList
       end>
     Left = 232
     Top = 193
@@ -2590,5 +2625,64 @@ inherited InventoryForm: TInventoryForm
     PackSize = 1
     Left = 384
     Top = 488
+  end
+  object GuidesPriceList: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList
+    FormNameParam.Value = 'TPriceList_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceList_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 876
+    Top = 8
   end
 end

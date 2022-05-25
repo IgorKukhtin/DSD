@@ -5,7 +5,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 863
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -206,6 +206,15 @@ inherited InventoryJournalForm: TInventoryJournalForm
             HeaderHint = #1074#1082#1083#1102#1095#1072#1077#1090' '#1074#1099#1073#1088#1072#1085#1085#1091#1102' '#1075#1088#1091#1087#1087#1091' '#1090#1086#1074#1072#1088#1086#1074
             Options.Editing = False
             Width = 90
+          end
+          object PriceListName: TcxGridDBColumn
+            Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+            DataBinding.FieldName = 'PriceListName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object isGoodsGroupExc: TcxGridDBColumn
             Caption = #1050#1088#1086#1084#1077' '#1074#1099#1073#1088'. '#1075#1088#1091#1087#1087#1099

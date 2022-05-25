@@ -1,7 +1,8 @@
 -- Function: lpInsertUpdate_Movement_Inventory()
 
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Boolean, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Inventory(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Inventory(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inGoodsGroupId        Integer   , -- Группа товара
+    IN inPriceListId         Integer   , -- Прайс лист
     IN inIsGoodsGroupIn      Boolean   , -- Только выбр. группа
     IN inIsGoodsGroupExc     Boolean   , -- Кроме выбр. группы
     IN inisList              Boolean   , -- по всем товарам накладной
@@ -49,7 +51,10 @@ BEGIN
 
      -- сохранили связь с <Группа товара>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_GoodsGroup(), ioId, inGoodsGroupId);
-  
+
+     -- сохранили связь с <Прайс лист>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PriceList(), ioId, inPriceListId);
+
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_GoodsGroupIn(), ioId, inIsGoodsGroupIn);
      -- сохранили свойство <>
@@ -71,6 +76,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.05.22         *
  22.07.21         *
  18.09.17         *
  29.05.15                                        *

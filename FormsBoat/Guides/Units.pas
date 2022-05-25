@@ -68,10 +68,6 @@ type
     ParentName: TcxGridDBColumn;
     ChildName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
-    Panel4: TPanel;
-    lbSearchName: TcxLabel;
-    edSearchName: TcxTextEdit;
-    FieldFilter_Name: TdsdFieldFilter;
   private
     { Private declarations }
   public
