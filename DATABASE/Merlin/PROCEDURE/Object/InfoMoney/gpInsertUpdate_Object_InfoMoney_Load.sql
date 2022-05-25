@@ -65,13 +65,17 @@ BEGIN
            -- сохранили
            --PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_Service(), vbInfoMoneyId, inisService);
            -- сохранили
-           PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_UserAll(), vbInfoMoneyId, CASE WHEN TRIM (inUserAll) = 'Нет' THEN FALSE
-                                                                                                           WHEN TRIM (inUserAll) = 'Да'  THEN TRUE
+           PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_UserAll(), vbInfoMoneyId, CASE WHEN TRIM (inUserAll) ILIKE 'Нет' THEN FALSE
+                                                                                                           WHEN TRIM (inUserAll) ILIKE 'Да'  THEN TRUE
                                                                                                            ELSE NULL
                                                                                                       END :: Boolean);
+    RAISE EXCEPTION 'Ошибка.<%>', CASE WHEN TRIM (inInfoMoneyKindName) ILIKE 'Приход' THEN zc_Enum_InfoMoney_In()
+                                                                                                           WHEN TRIM (inInfoMoneyKindName) ILIKE 'расход' THEN zc_Enum_InfoMoney_Out()
+                                                                                                           ELSE NULL
+                                                                                                      END;
            -- сохранили
-           PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_InfoMoney_InfoMoneyKind(), vbInfoMoneyId, CASE WHEN TRIM (inInfoMoneyKindName) = 'Приход' THEN zc_Enum_InfoMoney_In()
-                                                                                                           WHEN TRIM (inInfoMoneyKindName) = 'расход' THEN zc_Enum_InfoMoney_Out()
+           PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_InfoMoney_InfoMoneyKind(), vbInfoMoneyId, CASE WHEN TRIM (inInfoMoneyKindName) ILIKE 'Приход' THEN zc_Enum_InfoMoney_In()
+                                                                                                           WHEN TRIM (inInfoMoneyKindName) ILIKE 'расход' THEN zc_Enum_InfoMoney_Out()
                                                                                                            ELSE NULL
                                                                                                       END :: Integer);
            -- сохранили
