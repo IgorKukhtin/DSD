@@ -21,7 +21,8 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dsdAddOn, dxBarExtItems, ExternalLoad;
+  dsdAddOn, dxBarExtItems, ExternalLoad, cxContainer, cxTextEdit, cxLabel,
+  Vcl.ExtCtrls;
 
 type
   TCommentInfoMoneyForm = class(TParentForm)
@@ -75,6 +76,10 @@ type
     bbStartLoad: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbactShowAll: TdxBarButton;
+    Panel4: TPanel;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    FieldFilter_Name: TdsdFieldFilter;
   private
     { Private declarations }
   public

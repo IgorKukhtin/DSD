@@ -22,7 +22,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit, ExternalLoad;
+  cxCurrencyEdit, ExternalLoad, cxContainer, cxTextEdit, cxLabel, Vcl.ExtCtrls;
 
 type
   TUnitForm = class(TParentForm)
@@ -71,6 +71,11 @@ type
     actGetImportSetting: TdsdExecStoredProc;
     macStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
+    Panel4: TPanel;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    FieldFilter_Name: TdsdFieldFilter;
+    NameFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

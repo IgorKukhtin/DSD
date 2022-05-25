@@ -19,9 +19,9 @@ object InfoMoneyForm: TInfoMoneyForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 59
     Width = 847
-    Height = 350
+    Height = 317
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
@@ -162,6 +162,35 @@ object InfoMoneyForm: TInfoMoneyForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel4: TPanel
+    Left = 0
+    Top = 0
+    Width = 847
+    Height = 33
+    Align = alTop
+    TabOrder = 5
+    object lbSearchName: TcxLabel
+      Left = 22
+      Top = 6
+      Caption = #1055#1086#1080#1089#1082' '#1053#1072#1079#1074#1072#1085#1080#1077' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 144
+      Top = 7
+      TabOrder = 1
+      DesignSize = (
+        126
+        21)
+      Width = 126
     end
   end
   object DataSource: TDataSource
@@ -890,5 +919,14 @@ object InfoMoneyForm: TInfoMoneyForm
     PackSize = 1
     Left = 560
     Top = 80
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = MasterCDS
+    Column = Name
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 224
+    Top = 136
   end
 end

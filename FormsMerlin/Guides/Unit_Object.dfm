@@ -19,13 +19,15 @@ object Unit_ObjectForm: TUnit_ObjectForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 59
     Width = 633
-    Height = 350
+    Height = 317
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 26
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -104,9 +106,46 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
+      object NameFull: TcxGridDBColumn
+        Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'NameFull'
+        Visible = False
+        Options.Editing = False
+        Width = 100
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel4: TPanel
+    Left = 0
+    Top = 0
+    Width = 633
+    Height = 33
+    Align = alTop
+    TabOrder = 5
+    ExplicitTop = -6
+    object lbSearchName: TcxLabel
+      Left = 22
+      Top = 6
+      Caption = #1055#1086#1080#1089#1082' '#1053#1072#1079#1074#1072#1085#1080#1077' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 144
+      Top = 7
+      TabOrder = 1
+      DesignSize = (
+        126
+        21)
+      Width = 126
     end
   end
   object DataSource: TDataSource
@@ -133,7 +172,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 96
-    Top = 64
+    Top = 96
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -153,7 +192,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 48
-    Top = 64
+    Top = 88
     DockControlHeights = (
       0
       0
@@ -489,5 +528,14 @@ object Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 160
     Top = 152
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = MasterCDS
+    Column = NameFull
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 224
+    Top = 136
   end
 end

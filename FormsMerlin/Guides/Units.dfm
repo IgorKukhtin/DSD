@@ -19,14 +19,15 @@ object UnitForm: TUnitForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 59
     Width = 776
-    Height = 350
+    Height = 317
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 608
+    ExplicitTop = 26
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -138,9 +139,46 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 75
       end
+      object NameFull: TcxGridDBColumn
+        Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'NameFull'
+        Visible = False
+        Options.Editing = False
+        Width = 100
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel4: TPanel
+    Left = 0
+    Top = 0
+    Width = 776
+    Height = 33
+    Align = alTop
+    TabOrder = 5
+    ExplicitTop = -14
+    object lbSearchName: TcxLabel
+      Left = 22
+      Top = 6
+      Caption = #1055#1086#1080#1089#1082' '#1053#1072#1079#1074#1072#1085#1080#1077' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 144
+      Top = 7
+      TabOrder = 1
+      DesignSize = (
+        126
+        21)
+      Width = 126
     end
   end
   object DataSource: TDataSource
@@ -697,5 +735,14 @@ object UnitForm: TUnitForm
     PackSize = 1
     Left = 664
     Top = 200
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = MasterCDS
+    Column = NameFull
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 224
+    Top = 136
   end
 end
