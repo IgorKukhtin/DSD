@@ -11,7 +11,9 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Inventory(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
-             , GoodsGroupId Integer, GoodsGroupName TVarChar, isGoodsGroupIn Boolean, isGoodsGroupExc Boolean
+             , GoodsGroupId Integer, GoodsGroupName TVarChar
+             , PriceListId Integer, PriceListName TVarChar
+             , isGoodsGroupIn Boolean, isGoodsGroupExc Boolean
              , isList Boolean
              )
 AS
@@ -40,11 +42,16 @@ BEGIN
              
              , 0                                AS GoodsGroupId
              , CAST ('' as TVarChar)            AS GoodsGroupName
+
+             , Object_PriceList.Id              AS PriceListId
+             , Object_PriceList.ValueData       AS PriceListName
   
              , CAST (FALSE as Boolean)          AS isGoodsGroupIn
              , CAST (FALSE as Boolean)          AS isGoodsGroupExc
              , CAST (FALSE as Boolean)          AS isList
-          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
+          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+               LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
+          ;
 
      ELSE
        RETURN QUERY
@@ -66,6 +73,9 @@ BEGIN
 
            , Object_GoodsGroup.Id                AS GoodsGroupId
            , Object_GoodsGroup.ValueData         AS GoodsGroupName
+
+           , Object_PriceList.Id                 AS PriceListId
+           , Object_PriceList.ValueData          AS PriceListName
  
            , COALESCE (MovementBoolean_GoodsGroupIn.ValueData, FALSE)  :: Boolean AS isGoodsGroupIn
            , COALESCE (MovementBoolean_GoodsGroupExc.ValueData, FALSE) :: Boolean AS isGoodsGroupExc 
@@ -107,6 +117,11 @@ BEGIN
                                          ON MovementLinkObject_GoodsGroup.MovementId = Movement.Id
                                         AND MovementLinkObject_GoodsGroup.DescId = zc_MovementLinkObject_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = MovementLinkObject_GoodsGroup.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+                                         ON MovementLinkObject_PriceList.MovementId = Movement.Id
+                                        AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (MovementLinkObject_PriceList.ObjectId, zc_PriceList_Basis())
 
          WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Inventory();

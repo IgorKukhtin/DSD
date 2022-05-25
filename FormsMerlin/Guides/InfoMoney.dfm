@@ -19,9 +19,9 @@ object InfoMoneyForm: TInfoMoneyForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 59
     Width = 847
-    Height = 350
+    Height = 317
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
@@ -164,6 +164,35 @@ object InfoMoneyForm: TInfoMoneyForm
       GridView = cxGridDBTableView
     end
   end
+  object Panel4: TPanel
+    Left = 0
+    Top = 0
+    Width = 847
+    Height = 33
+    Align = alTop
+    TabOrder = 5
+    object lbSearchName: TcxLabel
+      Left = 22
+      Top = 6
+      Caption = #1055#1086#1080#1089#1082' '#1053#1072#1079#1074#1072#1085#1080#1077' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 144
+      Top = 7
+      TabOrder = 1
+      DesignSize = (
+        126
+        21)
+      Width = 126
+    end
+  end
   object DataSource: TDataSource
     DataSet = MasterCDS
     Left = 56
@@ -289,6 +318,14 @@ object InfoMoneyForm: TInfoMoneyForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbStartLoad'
         end
         item
@@ -370,6 +407,10 @@ object InfoMoneyForm: TInfoMoneyForm
     end
     object bbUpdate_IsUserAll: TdxBarButton
       Action = actUpdate_IsUserAll
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actUpdate_IsServise
       Category = 0
     end
   end
@@ -552,6 +593,19 @@ object InfoMoneyForm: TInfoMoneyForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actUpdate_IsServise: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_IsServise
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_IsServise
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100'  <'#1055#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1102'> '#1044#1072'/'#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100'  <'#1055#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1102'> '#1044#1072'/'#1053#1077#1090
+      ImageIndex = 77
     end
     object actDoLoad: TExecuteImportSettingsAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
@@ -831,5 +885,48 @@ object InfoMoneyForm: TInfoMoneyForm
     PackSize = 1
     Left = 568
     Top = 232
+  end
+  object spUpdate_IsServise: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_InfoMoney_isService'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisService'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isService'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisService'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isService'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 560
+    Top = 80
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = MasterCDS
+    Column = Name
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 224
+    Top = 136
   end
 end

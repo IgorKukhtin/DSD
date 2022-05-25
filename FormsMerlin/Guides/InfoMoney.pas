@@ -22,7 +22,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit, ExternalLoad;
+  cxCurrencyEdit, ExternalLoad, cxContainer, cxTextEdit, cxLabel, Vcl.ExtCtrls;
 
 type
   TInfoMoneyForm = class(TParentForm)
@@ -77,6 +77,13 @@ type
     bbmacUpdate_IsUserAll_Yes: TdxBarButton;
     bbUpdate_IsUserAll: TdxBarButton;
     NPP: TcxGridDBColumn;
+    spUpdate_IsServise: TdsdStoredProc;
+    actUpdate_IsServise: TdsdExecStoredProc;
+    bb: TdxBarButton;
+    Panel4: TPanel;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    FieldFilter_Name: TdsdFieldFilter;
   private
     { Private declarations }
   public

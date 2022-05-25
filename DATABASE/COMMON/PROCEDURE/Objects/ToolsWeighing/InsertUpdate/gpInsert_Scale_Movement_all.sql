@@ -856,6 +856,7 @@ BEGIN
                                                   , inFromId                := FromId
                                                   , inToId                  := ToId
                                                   , inGoodsGroupId          := 0
+                                                  , inPriceListId           := Null ::Integer
                                                   , inisGoodsGroupIn        := FALSE
                                                   , inisGoodsGroupExc       := FALSE
                                                   , inisList                := FALSE

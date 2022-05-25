@@ -13,7 +13,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Inventory(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ItemName_from TVarChar, ToId Integer, ToName TVarChar, ItemName_to TVarChar
-             , GoodsGroupId Integer, GoodsGroupName TVarChar, isGoodsGroupIn Boolean, isGoodsGroupExc Boolean
+             , GoodsGroupId Integer, GoodsGroupName TVarChar
+             , PriceListId Integer, PriceListName TVarChar
+             , isGoodsGroupIn Boolean, isGoodsGroupExc Boolean
              , isList Boolean
              )
 AS
@@ -55,7 +57,10 @@ BEGIN
            , ObjectDesc_to.ItemName                     AS ItemName_to
 
            , Object_GoodsGroup.Id                       AS GoodsGroupId
-           , Object_GoodsGroup.ValueData                AS GoodsGroupName
+           , Object_GoodsGroup.ValueData                AS GoodsGroupName  
+           
+           , Object_PriceList.Id                         AS PriceListId
+           , Object_PriceList.ValueData                  AS PriceListName
 
            , COALESCE (MovementBoolean_GoodsGroupIn.ValueData, FALSE)  :: Boolean AS isGoodsGroupIn
            , COALESCE (MovementBoolean_GoodsGroupExc.ValueData, FALSE) :: Boolean AS isGoodsGroupExc
@@ -105,7 +110,13 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_GoodsGroup
                                          ON MovementLinkObject_GoodsGroup.MovementId = Movement.Id
                                         AND MovementLinkObject_GoodsGroup.DescId = zc_MovementLinkObject_GoodsGroup()
-            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = MovementLinkObject_GoodsGroup.ObjectId
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = MovementLinkObject_GoodsGroup.ObjectId 
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+                                         ON MovementLinkObject_PriceList.MovementId = Movement.Id
+                                        AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
+
     ;
 
 END;
@@ -116,6 +127,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.A.
+ 25.05.22         *
  22.07.21         *
  18.09.17         *
  05.10.16         * add inJuridicalBasisId

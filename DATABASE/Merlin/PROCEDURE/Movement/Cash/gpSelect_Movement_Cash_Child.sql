@@ -16,14 +16,15 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , Amount TFloat
              , MI_Id Integer
              , CashId Integer, CashCode Integer, CashName TVarChar
-             , UnitId Integer, UnitCode Integer, UnitName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar, UnitGroupNameFull TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , InfoMoneyDetailId Integer, InfoMoneyDetailCode Integer, InfoMoneyDetailName TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyCode Integer, CommentInfoMoneyName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , InsertName_mi TVarChar, InsertDate_mi TDateTime
-             , UpdateName_mi TVarChar, UpdateDate_mi TDateTime
+             , UpdateName_mi TVarChar, UpdateDate_mi TDateTime 
+             , isErased Boolean
                )
 
 AS
@@ -59,10 +60,11 @@ BEGIN
                            , MovementItem.Id       AS MI_Id
                            , MovementItem.ObjectId AS ObjectId
                            , MovementItem.Amount   AS Amount
+                           , MovementItem.isErased
                       FROM tmpMovement
                            INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
                                                   AND MovementItem.DescId = zc_MI_Child()
-                                                  AND MovementItem.isErased = FALSE
+                                                  AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
                                                   AND ((MovementItem.Amount < 0 AND inKindName = 'zc_Enum_InfoMoney_Out')
                                                     OR (MovementItem.Amount > 0 AND inKindName = 'zc_Enum_InfoMoney_In'))
 
@@ -95,6 +97,7 @@ BEGIN
            , Object_Unit.Id                     AS UnitId
            , Object_Unit.ObjectCode             AS UnitCode
            , Object_Unit.ValueData              AS UnitName
+           , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
            , Object_InfoMoney.Id                AS InfoMoneyId
            , Object_InfoMoney.ObjectCode        AS InfoMoneyCode
            , Object_InfoMoney.ValueData         AS InfoMoneyName
@@ -113,7 +116,8 @@ BEGIN
            , Object_Insert_mi.ValueData         AS InsertName_mi
            , MIDate_Insert_mi.ValueData         AS InsertDate_mi
            , Object_Update_mi.ValueData         AS UpdateName_mi
-           , MIDate_Update_mi.ValueData         AS UpdateDate_mi
+           , MIDate_Update_mi.ValueData         AS UpdateDate_mi   
+           , tmpData.isErased
        FROM tmpData
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpData.StatusId
 
@@ -144,6 +148,10 @@ BEGIN
                                              ON MILinkObject_Unit.MovementItemId = tmpData.MI_Id
                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_Unit_GroupNameFull
+                                   ON ObjectString_Unit_GroupNameFull.ObjectId = Object_Unit.Id
+                                  AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = tmpData.MI_Id

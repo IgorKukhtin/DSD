@@ -121,6 +121,9 @@ type
     bbInsert_bySale: TdxBarButton;
     bbDelete_bySale: TdxBarButton;
     cbList: TcxCheckBox;
+    cxLabel18: TcxLabel;
+    edPriceList: TcxButtonEdit;
+    GuidesPriceList: TdsdGuides;
   private
     { Private declarations }
   public

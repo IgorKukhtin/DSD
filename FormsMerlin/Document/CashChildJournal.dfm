@@ -395,7 +395,6 @@ object CashChildJournalForm: TCashChildJournalForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
@@ -426,6 +425,7 @@ object CashChildJournalForm: TCashChildJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 53
       end
       object InvNumber_ch: TcxGridDBColumn
@@ -434,6 +434,7 @@ object CashChildJournalForm: TCashChildJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 54
       end
       object OperDate_ch: TcxGridDBColumn
@@ -442,6 +443,7 @@ object CashChildJournalForm: TCashChildJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 89
       end
       object isSign_ch: TcxGridDBColumn
@@ -451,17 +453,18 @@ object CashChildJournalForm: TCashChildJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1088#1072#1079#1088#1077#1096#1077#1085#1072' ('#1076#1072'/'#1085#1077#1090')'
+        Options.Editing = False
         Width = 80
       end
       object ServiceDate_ch: TcxGridDBColumn
         Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
         DataBinding.FieldName = 'ServiceDate'
         PropertiesClassName = 'TcxDateEditProperties'
+        Properties.AssignedValues.EditFormat = True
         Properties.DisplayFormat = 'mmmm yyyy'
         FooterAlignmentHorz = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 89
       end
       object CashCode_ch: TcxGridDBColumn
@@ -481,6 +484,14 @@ object CashChildJournalForm: TCashChildJournalForm
         Options.Editing = False
         Width = 121
       end
+      object UnitGroupNameFull_ch: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'UnitGroupNameFull'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object UnitCode_ch: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
         DataBinding.FieldName = 'UnitCode'
@@ -493,10 +504,17 @@ object CashChildJournalForm: TCashChildJournalForm
       object UnitName_ch: TcxGridDBColumn
         Caption = #1054#1090#1076#1077#1083
         DataBinding.FieldName = 'UnitName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormUnit
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 149
+        Width = 111
       end
       object Amount_ch: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072
@@ -521,9 +539,16 @@ object CashChildJournalForm: TCashChildJournalForm
       object InfoMoneyName_ch: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1100#1103
         DataBinding.FieldName = 'InfoMoneyName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormInfoMoney
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 197
       end
       object InfoMoneyDetailName_ch: TcxGridDBColumn
@@ -578,6 +603,13 @@ object CashChildJournalForm: TCashChildJournalForm
         Options.Editing = False
         Width = 78
       end
+      object isErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        Visible = False
+        Options.Editing = False
+        Width = 70
+      end
     end
     object cxGridLevel1: TcxGridLevel
       GridView = cxGridDBTableView1
@@ -591,8 +623,8 @@ object CashChildJournalForm: TCashChildJournalForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 112
-    Top = 184
+    Left = 144
+    Top = 200
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -663,6 +695,14 @@ object CashChildJournalForm: TCashChildJournalForm
         item
           Visible = True
           ItemName = 'bbEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased_MI'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased_MI'
         end
         item
           BeginGroup = True
@@ -812,6 +852,14 @@ object CashChildJournalForm: TCashChildJournalForm
     end
     object bbStartLoad: TdxBarButton
       Action = macStartLoad
+      Category = 0
+    end
+    object bbSetErased_MI: TdxBarButton
+      Action = actSetErased_MI
+      Category = 0
+    end
+    object bbSetUnErased_MI: TdxBarButton
+      Action = actSetUnErased_MI
       Category = 0
     end
   end
@@ -1475,6 +1523,34 @@ object CashChildJournalForm: TCashChildJournalForm
       Hint = #1056#1072#1079#1088#1077#1096#1080#1090#1100' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1091
       ImageIndex = 76
     end
+    object actChoiceFormUnit: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = 'TUnit_ObjectForm'
+      FormName = 'TUnit_ObjectForm'
+      FormNameParam.Value = 'TUnit_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSetChild
+          ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSetChild
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actDoLoad: TExecuteImportSettingsAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -1503,6 +1579,21 @@ object CashChildJournalForm: TCashChildJournalForm
       Caption = 'actGetImportSetting'
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090#1099'  '#1080#1079' '#1092#1072#1081#1083#1072
     end
+    object actSetUnErased_MI: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUnErasedMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIMaster
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1091
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1091
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DataSourceChild
+    end
     object macStartLoad: TMultiAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -1522,6 +1613,60 @@ object CashChildJournalForm: TCashChildJournalForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 41
       WithoutNext = True
+    end
+    object actChoiceFormInfoMoney: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = 'TInfoMoney_ObjectForm'
+      FormName = 'TInfoMoney_ObjectForm'
+      FormNameParam.Value = 'TInfoMoney_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSetChild
+          ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSetChild
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actUpdateDataSetChild: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Child
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Child
+        end>
+      Caption = 'actUpdateDataSetChild'
+      DataSource = DataSourceChild
+    end
+    object actSetErased_MI: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIMaster
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1091
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1091
+      ImageIndex = 2
+      ErasedFieldName = 'isErased'
+      DataSource = DataSourceChild
     end
   end
   object spSelect: TdsdStoredProc
@@ -1835,8 +1980,8 @@ object CashChildJournalForm: TCashChildJournalForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 152
-    Top = 432
+    Left = 160
+    Top = 456
   end
   object spSelectChild: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_CashChild'
@@ -1880,8 +2025,8 @@ object CashChildJournalForm: TCashChildJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 112
-    Top = 384
+    Left = 288
+    Top = 440
   end
   object spInsertUpdate_Sign: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_Cash_Sign'
@@ -1906,8 +2051,8 @@ object CashChildJournalForm: TCashChildJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 552
-    Top = 128
+    Left = 488
+    Top = 144
   end
   object spUpdate_Sign_isErased: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_Cash_Sign_isErased'
@@ -1957,5 +2102,97 @@ object CashChildJournalForm: TCashChildJournalForm
     PackSize = 1
     Left = 752
     Top = 128
+  end
+  object spUpdate_Child: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Cash_Child'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMI_Id'
+        Value = Null
+        Component = ClientDataSetChild
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inServiceDate'
+        Value = Null
+        Component = ClientDataSetChild
+        ComponentItem = 'ServiceDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = ClientDataSetChild
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = ClientDataSetChild
+        ComponentItem = 'InfoMoneyId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 432
+  end
+  object spErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpSetErased_MovementItem'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ClientDataSetChild
+        ComponentItem = 'MI_Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ClientDataSetChild
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 662
+    Top = 368
+  end
+  object spUnErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpSetUnErased_MovementItem'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ClientDataSetChild
+        ComponentItem = 'MI_Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ClientDataSetChild
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 582
+    Top = 392
   end
 end

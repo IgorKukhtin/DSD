@@ -13,17 +13,19 @@ object InfoMoneyDetail_ObjectForm: TInfoMoneyDetail_ObjectForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 59
     Width = 631
-    Height = 349
+    Height = 316
     Align = alClient
     TabOrder = 0
+    ExplicitTop = 26
+    ExplicitHeight = 349
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -80,6 +82,37 @@ object InfoMoneyDetail_ObjectForm: TInfoMoneyDetail_ObjectForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel4: TPanel
+    Left = 0
+    Top = 0
+    Width = 631
+    Height = 33
+    Align = alTop
+    TabOrder = 5
+    ExplicitLeft = -8
+    ExplicitTop = -14
+    object lbSearchName: TcxLabel
+      Left = 22
+      Top = 6
+      Caption = #1055#1086#1080#1089#1082' '#1053#1072#1079#1074#1072#1085#1080#1077' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 144
+      Top = 7
+      TabOrder = 1
+      DesignSize = (
+        126
+        21)
+      Width = 126
     end
   end
   object DataSource: TDataSource
@@ -210,7 +243,7 @@ object InfoMoneyDetail_ObjectForm: TInfoMoneyDetail_ObjectForm
       Visible = ivAlways
     end
     object bbChoiceGuides: TdxBarButton
-      Action = dsdChoiceGuides
+      Action = actChoiceGuides
       Category = 0
     end
     object bbGridToExcel: TdxBarButton
@@ -244,7 +277,7 @@ object InfoMoneyDetail_ObjectForm: TInfoMoneyDetail_ObjectForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -412,13 +445,13 @@ object InfoMoneyDetail_ObjectForm: TInfoMoneyDetail_ObjectForm
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
       end
       item
       end>
     ActionItemList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
         ShortCut = 13
       end
       item
@@ -468,5 +501,14 @@ object InfoMoneyDetail_ObjectForm: TInfoMoneyDetail_ObjectForm
       end>
     Left = 488
     Top = 84
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = ClientDataSet
+    Column = Name
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 224
+    Top = 136
   end
 end

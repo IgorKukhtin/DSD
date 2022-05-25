@@ -2162,7 +2162,7 @@ object ReceiptGoodsForm: TReceiptGoodsForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'NPP;GoodsGroupNameFull;ObjectName'
+          IndexFieldNames = 'GoodsGroupNameFull;NPP;ObjectName'
         end>
       Params = <
         item
@@ -2172,8 +2172,8 @@ object ReceiptGoodsForm: TReceiptGoodsForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintReceiptProdModel_Structure'
-      ReportNameParam.Value = 'PrintReceiptProdModel_Structure'
+      ReportName = 'PrintReceiptGoods_Structure'
+      ReportNameParam.Value = 'PrintReceiptGoods_Structure'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','

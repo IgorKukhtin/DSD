@@ -94,7 +94,7 @@ BEGIN
      WITH
           -- элементы ReceiptProdModelChild
           tmpReceiptProdModelChild AS(SELECT ObjectLink_ReceiptProdModel.ChildObjectId AS ReceiptProdModelId
-                                           , Object_ReceiptProdModelChild.Id AS  ReceiptProdModelChildId
+                                           , Object_ReceiptProdModelChild.Id           AS ReceiptProdModelChildId
                                              -- элемент который будем раскладывать
                                            , ObjectLink_Object.ChildObjectId           AS ObjectId
                                              -- значение
@@ -125,7 +125,8 @@ BEGIN
 
           -- раскладываем ReceiptProdModelChild
         , tmpProdColorPattern            --tmpReceiptChild --
-        AS (SELECT tmpReceiptProdModelChild.ReceiptProdModelId     AS ReceiptProdModelId
+                              AS (SELECT tmpReceiptProdModelChild.ReceiptProdModelId     AS ReceiptProdModelId 
+                                       , tmpReceiptProdModelChild.ReceiptProdModelChildId
                                        , Object_ReceiptGoodsChild.Id                     AS ReceiptGoodsChildId
                                        , Object_ReceiptGoodsChild.isErased               AS isErased
                                          -- если меняли на другой товар, не тот что в Boat Structure
@@ -157,7 +158,7 @@ BEGIN
                                  AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptGoodsChild_Object()
              -- с этой структурой
              LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
-                                  ON ObjectLink_ProdColorPattern.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
+                                  ON ObjectLink_ProdColorPattern.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId                                                                                                                      
                                  AND ObjectLink_ProdColorPattern.DescId   = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
              -- значение в сборке
              LEFT JOIN ObjectFloat AS ObjectFloat_Value
@@ -253,7 +254,7 @@ BEGIN
          , tmpResult.Value_service
 
          --, tmpResult.ReceiptLevelId
-         --, tmpResult.ReceiptLevelName
+         , tmpResult.ReceiptLevelName
 
          , tmpResult.ObjectCode
          , tmpResult.ObjectName 
@@ -282,7 +283,8 @@ BEGIN
  UNION
      SELECT (1000 + ROW_NUMBER() OVER (PARTITION BY tmpProdColorPattern.ReceiptProdModelId ORDER BY Object_ProdColorPattern.ObjectCode ASC)) :: Integer AS NPP
           , tmpProdColorPattern.Value         :: TFloat   AS Value
-          , 0  AS Value_service
+          , 0  AS Value_service 
+          , Object_ReceiptLevel.ValueData  ::TVarChar AS ReceiptLevelName
 
           , Object_Goods.ObjectCode            ::Integer
           , Object_Goods.ValueData             ::TVarChar
@@ -353,6 +355,11 @@ BEGIN
                             AND tmpPhoto1.Ord = 1
           LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data1
                                ON ObjectBlob_GoodsPhoto_Data1.ObjectId = tmpPhoto1.PhotoId     
+
+          LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
+                               ON ObjectLink_ReceiptLevel.ObjectId = tmpProdColorPattern.ReceiptProdModelChildId
+                              AND ObjectLink_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel()
+          LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = ObjectLink_ReceiptLevel.ChildObjectId
                                
      ;
 

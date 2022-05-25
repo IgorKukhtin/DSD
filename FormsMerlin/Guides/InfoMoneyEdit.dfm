@@ -87,6 +87,7 @@
     Left = 40
     Top = 202
     Caption = #1055#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1102
+    Properties.ReadOnly = True
     TabOrder = 9
     Width = 103
   end
@@ -173,14 +174,6 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisService'
-        Value = ''
-        Component = cbService
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inInfoMoneyKindId'
         Value = Null
         Component = GuidesInfoMoneyKind
@@ -194,6 +187,12 @@
         Component = GuidesParent
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = ''
+        DataType = ftBoolean
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item

@@ -12,7 +12,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Inventory(
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat
-             , HeadCount TFloat, Count TFloat, Price TFloat, Summ TFloat
+             , HeadCount TFloat, Count TFloat
+             , Price TFloat, Price_pr TFloat
+             , Summ TFloat
              , PartionGoodsDate TDateTime, PartionGoods TVarChar
              , GoodsKindId Integer, GoodsKindName  TVarChar
              , GoodsKindId_Complete Integer, GoodsKindName_Complete  TVarChar
@@ -29,10 +31,19 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              )
 AS
 $BODY$
+   DECLARE vbPriceListId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Inventory());
+
+     vbPriceListId := COALESCE ((SELECT MovementLinkObject_PriceList.ObjectId
+                                 FROM MovementLinkObject AS MovementLinkObject_PriceList
+                                 WHERE MovementLinkObject_PriceList.MovementId = inMovementId
+                                   AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList())
+                                 , zc_PriceList_Basis()
+                                 );
+
 
      -- inShowAll:= TRUE;
 
@@ -46,7 +57,17 @@ BEGIN
                          FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId) + INTERVAL '1 DAY')
                               AS lfObjectHistory_PriceListItem
                          WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
-                        )
+                        )  
+           -- цены по прайсу
+          , tmpPricePR AS (SELECT lfObjectHistory_PriceListItem.GoodsId
+                                , lfObjectHistory_PriceListItem.GoodsKindId
+                                , lfObjectHistory_PriceListItem.ValuePrice AS Price
+                           FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId) + INTERVAL '1 DAY')
+                                AS lfObjectHistory_PriceListItem
+                           WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
+                          )
+
+
        SELECT
              0 AS Id
            , tmpGoods.GoodsId
@@ -59,6 +80,7 @@ BEGIN
            , CAST (NULL AS TFloat)              AS HeadCount
            , CAST (NULL AS TFloat)              AS Count
            , COALESCE (tmpPrice_Kind.Price, tmpPrice.Price) :: TFloat AS Price
+           , COALESCE (tmpPricePR_Kind.Price, tmpPricePR.Price) :: TFloat AS Price_pr
            , CAST (NULL AS TFloat)              AS Summ
            , CAST (NULL AS TDateTime)           AS PartionGoodsDate
            , CAST (NULL AS TVarChar)            AS PartionGoods
@@ -136,6 +158,15 @@ BEGIN
             LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
                               AND tmpPrice.GoodsKindId IS NULL
 
+
+            -- привязываем цены по прайсу 2 раза по виду товара и без
+            LEFT JOIN tmpPricePR AS tmpPricePR_Kind 
+                                 ON tmpPricePR_Kind.GoodsId = tmpGoods.GoodsId
+                                AND COALESCE (tmpPricePR_Kind.GoodsKindId,0) = COALESCE (tmpGoods.GoodsKindId,0)
+
+            LEFT JOIN tmpPricePR ON tmpPricePR.GoodsId = tmpGoods.GoodsId
+                                AND tmpPricePR.GoodsKindId IS NULL
+
        WHERE tmpMI.GoodsId IS NULL
 
       UNION ALL
@@ -151,6 +182,7 @@ BEGIN
            , MIFloat_HeadCount.ValueData        AS HeadCount
            , MIFloat_Count.ValueData            AS Count
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectFloat_Price_Partion.ValueData ELSE (CASE WHEN MIFloat_Price.ValueData <> 0 THEN MIFloat_Price.ValueData ELSE COALESCE (tmpPrice_Kind.Price, tmpPrice.Price) END) END:: TFloat AS Price
+           , COALESCE (tmpPricePR_Kind.Price, tmpPricePR.Price) :: TFloat AS Price_pr
            , MIFloat_Summ.ValueData   :: TFloat AS Summ
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectDate_Value.ValueData    ELSE MIDate_PartionGoods.ValueData   END AS PartionGoodsDate
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 AND Object_PartionGoods.ValueData <> '0' THEN Object_PartionGoods.ValueData ELSE MIString_PartionGoods.ValueData END AS PartionGoods
@@ -290,6 +322,14 @@ BEGIN
                                 AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
             LEFT JOIN Object AS Object_Storage_Partion ON Object_Storage_Partion.Id = ObjectLink_Storage.ChildObjectId  
 
+            -- привязываем цены по прайсу 2 раза по виду товара и без
+            LEFT JOIN tmpPricePR AS tmpPricePR_Kind 
+                                 ON tmpPricePR_Kind.GoodsId = MovementItem.ObjectId
+                                AND COALESCE (tmpPricePR_Kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId,0)
+
+            LEFT JOIN tmpPricePR ON tmpPricePR.GoodsId = MovementItem.ObjectId
+                                AND tmpPricePR.GoodsKindId IS NULL
+                                 
        ;
 
      ELSE
@@ -302,6 +342,17 @@ BEGIN
                               AS lfObjectHistory_PriceListItem
                          WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                         )
+
+
+           -- цены по прайсу
+          , tmpPricePR AS (SELECT lfObjectHistory_PriceListItem.GoodsId
+                                , lfObjectHistory_PriceListItem.GoodsKindId
+                                , lfObjectHistory_PriceListItem.ValuePrice AS Price
+                           FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId) + INTERVAL '1 DAY')
+                                AS lfObjectHistory_PriceListItem
+                           WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
+                          )
+
        SELECT
              MovementItem.Id                     AS Id
            , Object_Goods.Id                     AS GoodsId
@@ -314,6 +365,8 @@ BEGIN
            , MIFloat_HeadCount.ValueData         AS HeadCount
            , MIFloat_Count.ValueData             AS Count
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectFloat_Price_Partion.ValueData ELSE (CASE WHEN COALESCE (MIFloat_Price.ValueData, 0) <> 0 THEN MIFloat_Price.ValueData ELSE COALESCE (tmpPrice_Kind.Price, tmpPrice.Price) END) END :: TFloat AS Price
+           , COALESCE (tmpPricePR_Kind.Price, tmpPricePR.Price) :: TFloat AS Price_pr
+           
            , MIFloat_Summ.ValueData  :: TFloat AS Summ
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectDate_Value.ValueData    ELSE MIDate_PartionGoods.ValueData   END AS PartionGoodsDate
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 AND Object_PartionGoods.ValueData <> '0' THEN Object_PartionGoods.ValueData ELSE MIString_PartionGoods.ValueData END AS PartionGoods
@@ -448,6 +501,14 @@ BEGIN
                                  ON ObjectLink_Storage.ObjectId = MILinkObject_PartionGoods.ObjectId	                -- склад
                                 AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
             LEFT JOIN Object AS Object_Storage_Partion ON Object_Storage_Partion.Id = ObjectLink_Storage.ChildObjectId 
+
+            -- привязываем цены по прайсу 2 раза по виду товара и без
+            LEFT JOIN tmpPricePR AS tmpPricePR_Kind 
+                                 ON tmpPricePR_Kind.GoodsId = MovementItem.ObjectId
+                                AND COALESCE (tmpPricePR_Kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId,0)
+
+            LEFT JOIN tmpPricePR ON tmpPricePR.GoodsId = MovementItem.ObjectId
+                                AND tmpPricePR.GoodsKindId IS NULL
        ;
 
      END IF;
