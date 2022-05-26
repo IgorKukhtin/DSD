@@ -60,6 +60,7 @@
     Left = 138
     Top = 71
     EditValue = 42236d
+    Enabled = False
     Properties.ReadOnly = True
     Properties.SaveTime = False
     Properties.ShowTime = False

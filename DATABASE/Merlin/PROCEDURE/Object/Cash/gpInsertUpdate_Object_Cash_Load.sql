@@ -1,5 +1,6 @@
 --
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Cash_Load (Integer, Integer, TVarChar, Integer, Integer, TDateTime, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Cash_Load (Integer, Integer, TVarChar, Integer, Integer, TDateTime, TVarChar,TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Cash_Load(
     IN inCode                Integer,       -- код статьи
@@ -8,7 +9,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Cash_Load(
     IN inUserId              Integer,       -- Id пользователя
     IN inisErased            Integer,       -- удален
     IN inProtocolDate        TDateTime,     -- дата протокола
-    IN inValuta              TVarChar ,
+    IN inValuta              TVarChar , 
+    IN inShortName           TVarChar ,
+    IN inNPP                 TFloat   ,
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS VOID
@@ -63,7 +66,7 @@ BEGIN
            -- сохранили группа
            PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Cash_GroupNameFull(), vbCashId, vbGroupNameFull);
            -- сохранили
-           PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Cash_ShortName(), vbCashId, inName);
+           PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Cash_ShortName(), vbCashId, inShortName);
            -- сохранили
            PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Cash_NPP(), vbCashId, inCode);
            -- сохранили
@@ -72,6 +75,8 @@ BEGIN
            PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Cash_Parent(), vbCashId, vbParentId);
            -- сохранили
            PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Cash_PaidKind(), vbCashId, 40409);
+           -- сохранили
+           PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Cash_NPP(), vbCashId, inNPP);
      
            -- сохранили свойство <Дата создания>
            PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), vbCashId, inProtocolDate ::TDateTime);
@@ -94,6 +99,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.05.22          *
  04.02.21          *
 */
 
