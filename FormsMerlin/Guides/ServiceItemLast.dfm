@@ -274,7 +274,7 @@ object ServiceItemLastForm: TServiceItemLastForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 5
+    TabOrder = 4
     Width = 234
   end
   object edOperDate: TcxDateEdit
@@ -365,6 +365,23 @@ object ServiceItemLastForm: TServiceItemLastForm
       FloatClientWidth = 51
       FloatClientHeight = 59
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -487,6 +504,7 @@ object ServiceItemLastForm: TServiceItemLastForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TServiceItemEditForm'
@@ -502,16 +520,16 @@ object ServiceItemLastForm: TServiceItemLastForm
         item
           Name = 'UnitId'
           Value = Null
-          Component = GuidesUnit
-          ComponentItem = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'UnitId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
           Value = Null
-          Component = GuidesUnit
-          ComponentItem = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'UnitName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -519,6 +537,7 @@ object ServiceItemLastForm: TServiceItemLastForm
         item
           Name = 'StartDate'
           Value = Null
+          Component = edChangeDate
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -575,16 +594,16 @@ object ServiceItemLastForm: TServiceItemLastForm
         item
           Name = 'UnitId'
           Value = Null
-          Component = GuidesUnit
-          ComponentItem = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'UnitId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
           Value = Null
-          Component = GuidesUnit
-          ComponentItem = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'UnitName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -639,10 +658,10 @@ object ServiceItemLastForm: TServiceItemLastForm
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErasedUnErased
+      StoredProc = spErasedErased
       StoredProcList = <
         item
-          StoredProc = spErasedUnErased
+          StoredProc = spErasedErased
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -654,10 +673,10 @@ object ServiceItemLastForm: TServiceItemLastForm
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErasedUnErased
+      StoredProc = spErasedErased
       StoredProcList = <
         item
-          StoredProc = spErasedUnErased
+          StoredProc = spErasedErased
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -896,8 +915,8 @@ object ServiceItemLastForm: TServiceItemLastForm
     Left = 280
     Top = 120
   end
-  object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpDelete_ObjectHistory'
+  object spErasedErased: TdsdStoredProc
+    StoredProcName = 'gpDelete_ObjectHistoryLast'
     DataSets = <>
     OutputType = otResult
     Params = <

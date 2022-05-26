@@ -534,10 +534,10 @@ object ServiceItemForm: TServiceItemForm
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErasedUnErased
+      StoredProc = spErasedErased
       StoredProcList = <
         item
-          StoredProc = spErasedUnErased
+          StoredProc = spErasedErased
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -549,10 +549,10 @@ object ServiceItemForm: TServiceItemForm
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErasedUnErased
+      StoredProc = spErasedErased
       StoredProcList = <
         item
-          StoredProc = spErasedUnErased
+          StoredProc = spErasedErased
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -728,7 +728,7 @@ object ServiceItemForm: TServiceItemForm
     Left = 280
     Top = 120
   end
-  object spErasedUnErased: TdsdStoredProc
+  object spErasedErased: TdsdStoredProc
     StoredProcName = 'gpDelete_ObjectHistory'
     DataSets = <>
     OutputType = otResult
@@ -743,7 +743,7 @@ object ServiceItemForm: TServiceItemForm
       end>
     PackSize = 1
     Left = 344
-    Top = 240
+    Top = 264
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
