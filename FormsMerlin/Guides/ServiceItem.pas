@@ -56,7 +56,7 @@ type
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
     actUpdate: TdsdInsertUpdateAction;
-    spErasedUnErased: TdsdStoredProc;
+    spErasedErased: TdsdStoredProc;
     bbUpdate: TdxBarButton;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
