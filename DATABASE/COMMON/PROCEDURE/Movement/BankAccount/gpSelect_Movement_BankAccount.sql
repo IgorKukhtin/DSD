@@ -153,6 +153,13 @@ BEGIN
                                 )
          , tmpProfitLoss_View AS (SELECT * FROM Object_ProfitLoss_View WHERE Object_ProfitLoss_View.ProfitLossId IN (SELECT tmpMIС_ProfitLoss.ProfitLossId FROM tmpMIС_ProfitLoss))
 
+         , tmpObject_BankAccount AS (SELECT Object_BankAccount_View.*
+                                     FROM Object_BankAccount_View
+                                     WHERE CASE WHEN inJuridicalBasisId = zc_Juridical_Irna()  THEN COALESCE (Object_BankAccount_View.isIrna, FALSE) = TRUE 
+                                                ELSE  COALESCE (Object_BankAccount_View.isIrna, FALSE) = FALSE  --inJuridicalBasisId = zc_Juridical_Basis() THEN
+                                           END
+                                     )
+
 
        SELECT
              Movement.Id
@@ -268,7 +275,9 @@ BEGIN
                                     AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
             --
             LEFT JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
-            LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = MovementItem.ObjectId
+            --показываем только нужные расчетные счета, или Алан или Ирна
+            INNER JOIN tmpObject_BankAccount ON Object_BankAccount_View ON Object_BankAccount_View.Id = MovementItem.ObjectId
+            
             LEFT JOIN ObjectHistory_JuridicalDetails_View AS View_JuridicalDetails_BankAccount ON View_JuridicalDetails_BankAccount.JuridicalId = Object_BankAccount_View.JuridicalId
 
             LEFT JOIN MovementItemString AS MIString_Comment
@@ -321,7 +330,7 @@ BEGIN
        WHERE Object_BankAccount_View.JuridicalId = inJuridicalBasisId OR inJuridicalBasisId = 0
        ;
 
-
+       --zc_Juridical_Irna() = 15512, тогда в селекте COALESCE (zc_Object_BankAccount.zc_ObjectBoolean_Guide_Irna, FALSE) = TRUE
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -330,6 +339,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 26.05.22         *
  04.03.20         *
  06.10.16         * add inJuridicalBasisId
  21.07.16         *

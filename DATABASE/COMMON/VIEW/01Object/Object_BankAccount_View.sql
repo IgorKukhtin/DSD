@@ -31,6 +31,7 @@ CREATE OR REPLACE VIEW Object_BankAccount_View AS
 
            , Object_BankAccount.isErased                        AS isErased
 
+           , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
 
   FROM Object AS Object_BankAccount
   LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
@@ -69,6 +70,10 @@ CREATE OR REPLACE VIEW Object_BankAccount_View AS
         LEFT JOIN ObjectString AS OS_BankAccount_BeneficiarysAccount
                                ON OS_BankAccount_BeneficiarysAccount.ObjectId = Object_BankAccount.Id
                               AND OS_BankAccount_BeneficiarysAccount.DescId = zc_ObjectString_BankAccount_BeneficiarysAccount()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
+                                ON ObjectBoolean_Guide_Irna.ObjectId = Object_BankAccount.Id
+                               AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
 
      WHERE Object_BankAccount.DescId = zc_Object_BankAccount();
 
