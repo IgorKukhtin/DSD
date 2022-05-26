@@ -23,7 +23,8 @@ uses
   cxCurrencyEdit, cxStyles, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData,
   cxDataStorage, Data.DB, cxDBData, Vcl.ActnList, dsdAction, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxClasses,
-  cxGridCustomView, cxGrid, Vcl.ExtCtrls, Datasnap.DBClient, cxMemo, cxDBEdit;
+  cxGridCustomView, cxGrid, Vcl.ExtCtrls, Datasnap.DBClient, cxMemo, cxDBEdit,
+  dxSkinsdxBarPainter, dxBarExtItems, dxBar;
 
 type
   TMCRequestShowPUSHForm = class(TParentForm)
@@ -49,6 +50,45 @@ type
     cxDBMemo1: TcxDBMemo;
     DMarginPercent: TcxGridDBColumn;
     actMarginCategory_All: TdsdOpenForm;
+    BarManager: TdxBarManager;
+    Bar: TdxBar;
+    bbRefresh: TdxBarButton;
+    dxBarStatic: TdxBarStatic;
+    bbGridToExcel: TdxBarButton;
+    bbPrint: TdxBarButton;
+    bbShowAll: TdxBarButton;
+    bbStatic: TdxBarStatic;
+    bbInsertUpdateMovement: TdxBarButton;
+    bbErased: TdxBarButton;
+    bbUnErased: TdxBarButton;
+    bbShowErased: TdxBarButton;
+    bbAddMask: TdxBarButton;
+    bbMovementItemContainer: TdxBarButton;
+    bbMovementItemProtocol: TdxBarButton;
+    dxBarButton1: TdxBarButton;
+    bbUpdateOperDate: TdxBarButton;
+    bbUpdateSpParam: TdxBarButton;
+    bbUpdateUnit: TdxBarButton;
+    bbUpdateMemberSp: TdxBarButton;
+    dxBarButton2: TdxBarButton;
+    dxBarButton3: TdxBarButton;
+    dxBarButton4: TdxBarButton;
+    dxBarButton5: TdxBarButton;
+    dxBarButton6: TdxBarButton;
+    dxBarButton7: TdxBarButton;
+    dxBarButton8: TdxBarButton;
+    dxBarButton9: TdxBarButton;
+    dxBarButton10: TdxBarButton;
+    dxBarButton11: TdxBarButton;
+    dxBarButton12: TdxBarButton;
+    dxBarButton13: TdxBarButton;
+    dxBarButton14: TdxBarButton;
+    dxBarButton15: TdxBarButton;
+    dxBarButton16: TdxBarButton;
+    dxBarButton17: TdxBarButton;
+    dxBarButton18: TdxBarButton;
+    dxBarButton19: TdxBarButton;
+    actGridToExcel: TdsdGridToExcel;
   private
     { Private declarations }
   public

@@ -970,6 +970,34 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 78
           end
+          object isSPRegistry_1303: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090' 1303'
+            DataBinding.FieldName = 'isSPRegistry_1303'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 47
+          end
+          object PriceOOC1303: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1080#1079' '#1056#1054#1054#1062',  '#1073#1077#1079' '#1053#1044#1057
+            DataBinding.FieldName = 'PriceOOC1303'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object DPriceOOC1303: TcxGridDBColumn
+            Caption = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103'  '#1094#1077#1085#1099' 1303'
+            DataBinding.FieldName = 'DPriceOOC1303'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '+,0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 69
+          end
         end
       end
       object cxGrid1: TcxGrid

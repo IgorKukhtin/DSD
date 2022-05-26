@@ -105,6 +105,15 @@ object CashForm: TCashForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
+      object isUserAll: TcxGridDBColumn
+        Caption = #1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084
+        DataBinding.FieldName = 'isUserAll'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084' ('#1076#1072'/'#1085#1077#1090')'
+        Options.Editing = False
+        Width = 60
+      end
       object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -257,6 +266,14 @@ object CashForm: TCashForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_IsUserAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbmacStartLoad'
         end
         item
@@ -330,6 +347,10 @@ object CashForm: TCashForm
     end
     object bbmacStartLoad: TdxBarButton
       Action = macStartLoad
+      Category = 0
+    end
+    object bbUpdate_IsUserAll: TdxBarButton
+      Action = actUpdate_IsUserAll
       Category = 0
     end
   end
@@ -561,6 +582,19 @@ object CashForm: TCashForm
       ImageIndex = 41
       WithoutNext = True
     end
+    object actUpdate_IsUserAll: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isUserAll
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isUserAll
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100'  <'#1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084'> '#1044#1072'/'#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100'  <'#1044#1086#1089#1090#1091#1087' '#1042#1089#1077#1084'> '#1044#1072'/'#1053#1077#1090
+      ImageIndex = 80
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Cash'
@@ -706,5 +740,39 @@ object CashForm: TCashForm
     PackSize = 1
     Left = 664
     Top = 200
+  end
+  object spUpdate_isUserAll: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Cash_UserAll'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUserAll'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isUserAll'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisUserAll'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isUserAll'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 568
+    Top = 232
   end
 end

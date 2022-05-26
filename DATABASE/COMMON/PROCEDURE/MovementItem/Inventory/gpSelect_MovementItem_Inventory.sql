@@ -13,8 +13,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat
              , HeadCount TFloat, Count TFloat
-             , Price TFloat, Price_pr TFloat
-             , Summ TFloat
+             , Price TFloat, Summ TFloat
+             , Price_pr TFloat, Summ_pr TFloat
              , PartionGoodsDate TDateTime, PartionGoods TVarChar
              , GoodsKindId Integer, GoodsKindName  TVarChar
              , GoodsKindId_Complete Integer, GoodsKindName_Complete  TVarChar
@@ -62,11 +62,20 @@ BEGIN
           , tmpPricePR AS (SELECT lfObjectHistory_PriceListItem.GoodsId
                                 , lfObjectHistory_PriceListItem.GoodsKindId
                                 , lfObjectHistory_PriceListItem.ValuePrice AS Price
-                           FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId) + INTERVAL '1 DAY')
+                           FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
                                 AS lfObjectHistory_PriceListItem
                            WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                           )
 
+            --колво движения из проводок
+          , tmpContainer AS (SELECT MIContainer.MovementItemId
+                                 , SUM (MIContainer.Amount) AS Amount
+                             FROM MovementItemContainer AS MIContainer
+                             WHERE MIContainer.MovementId = inMovementId  
+                               AND MIContainer.MovementDescId = zc_Movement_Inventory()
+                               AND MIContainer.DescId = zc_MIContainer_Count()
+                             GROUP BY  MIContainer.MovementItemId
+                             )
 
        SELECT
              0 AS Id
@@ -80,14 +89,15 @@ BEGIN
            , CAST (NULL AS TFloat)              AS HeadCount
            , CAST (NULL AS TFloat)              AS Count
            , COALESCE (tmpPrice_Kind.Price, tmpPrice.Price) :: TFloat AS Price
-           , COALESCE (tmpPricePR_Kind.Price, tmpPricePR.Price) :: TFloat AS Price_pr
            , CAST (NULL AS TFloat)              AS Summ
+           , COALESCE (tmpPricePR_Kind.Price, tmpPricePR.Price) :: TFloat AS Price_pr
+           , CAST (NULL AS TFloat)              AS Summ_pr 
            , CAST (NULL AS TDateTime)           AS PartionGoodsDate
            , CAST (NULL AS TVarChar)            AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
-           , CAST (NULL AS Integer)                AS GoodsKindId_Complete
-           , CAST (NULL AS TVarchar)               AS GoodsKindName_Complete
+           , CAST (NULL AS Integer)             AS GoodsKindId_Complete
+           , CAST (NULL AS TVarchar)            AS GoodsKindName_Complete
            , CAST (0 AS Integer)                AS AssetId
            , CAST (NULL AS TVarChar)            AS AssetName
            , Object_InfoMoney_View.InfoMoneyCode
@@ -101,7 +111,7 @@ BEGIN
 
            , 0 :: Integer AS ContainerId
 
-           , FALSE AS isErased
+           , FALSE        AS isErased
 
            , 0 :: Integer                    AS PartionGoodsId
            , zfFormat_BarCode (zc_BarCodePref_Object(), tmpGoods.GoodsId) :: TVarChar AS IdBarCode
@@ -182,8 +192,11 @@ BEGIN
            , MIFloat_HeadCount.ValueData        AS HeadCount
            , MIFloat_Count.ValueData            AS Count
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectFloat_Price_Partion.ValueData ELSE (CASE WHEN MIFloat_Price.ValueData <> 0 THEN MIFloat_Price.ValueData ELSE COALESCE (tmpPrice_Kind.Price, tmpPrice.Price) END) END:: TFloat AS Price
-           , COALESCE (tmpPricePR_Kind.Price, tmpPricePR.Price) :: TFloat AS Price_pr
-           , MIFloat_Summ.ValueData   :: TFloat AS Summ
+           , MIFloat_Summ.ValueData   :: TFloat AS Summ    
+
+           , COALESCE (tmpPricePR_Kind.Price, tmpPricePR.Price)                         ::TFloat AS Price_pr
+           , (tmpContainer.Amount * COALESCE (tmpPricePR_Kind.Price, tmpPricePR.Price)) ::TFloat AS Summ_pr
+
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectDate_Value.ValueData    ELSE MIDate_PartionGoods.ValueData   END AS PartionGoodsDate
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 AND Object_PartionGoods.ValueData <> '0' THEN Object_PartionGoods.ValueData ELSE MIString_PartionGoods.ValueData END AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
@@ -329,7 +342,8 @@ BEGIN
 
             LEFT JOIN tmpPricePR ON tmpPricePR.GoodsId = MovementItem.ObjectId
                                 AND tmpPricePR.GoodsKindId IS NULL
-                                 
+
+            LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = MovementItem.Id                                 
        ;
 
      ELSE
@@ -348,10 +362,19 @@ BEGIN
           , tmpPricePR AS (SELECT lfObjectHistory_PriceListItem.GoodsId
                                 , lfObjectHistory_PriceListItem.GoodsKindId
                                 , lfObjectHistory_PriceListItem.ValuePrice AS Price
-                           FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId) + INTERVAL '1 DAY')
+                           FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId) )
                                 AS lfObjectHistory_PriceListItem
                            WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                           )
+            --колво движения из проводок
+          , tmpContainer AS (SELECT MIContainer.MovementItemId
+                                 , SUM (MIContainer.Amount) AS Amount
+                             FROM MovementItemContainer AS MIContainer
+                             WHERE MIContainer.MovementId = inMovementId  
+                               AND MIContainer.MovementDescId = zc_Movement_Inventory()
+                               AND MIContainer.DescId = zc_MIContainer_Count()
+                             GROUP BY  MIContainer.MovementItemId
+                             )
 
        SELECT
              MovementItem.Id                     AS Id
@@ -365,9 +388,12 @@ BEGIN
            , MIFloat_HeadCount.ValueData         AS HeadCount
            , MIFloat_Count.ValueData             AS Count
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectFloat_Price_Partion.ValueData ELSE (CASE WHEN COALESCE (MIFloat_Price.ValueData, 0) <> 0 THEN MIFloat_Price.ValueData ELSE COALESCE (tmpPrice_Kind.Price, tmpPrice.Price) END) END :: TFloat AS Price
-           , COALESCE (tmpPricePR_Kind.Price, tmpPricePR.Price) :: TFloat AS Price_pr
            
-           , MIFloat_Summ.ValueData  :: TFloat AS Summ
+           , MIFloat_Summ.ValueData  :: TFloat AS Summ   
+           
+           , COALESCE (tmpPricePR_Kind.Price, tmpPricePR.Price)                         ::TFloat AS Price_pr
+           , (tmpContainer.Amount * COALESCE (tmpPricePR_Kind.Price, tmpPricePR.Price)) ::TFloat AS Summ_pr
+           
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectDate_Value.ValueData    ELSE MIDate_PartionGoods.ValueData   END AS PartionGoodsDate
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 AND Object_PartionGoods.ValueData <> '0' THEN Object_PartionGoods.ValueData ELSE MIString_PartionGoods.ValueData END AS PartionGoods
            , Object_GoodsKind.Id                 AS GoodsKindId
@@ -508,7 +534,9 @@ BEGIN
                                 AND COALESCE (tmpPricePR_Kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId,0)
 
             LEFT JOIN tmpPricePR ON tmpPricePR.GoodsId = MovementItem.ObjectId
-                                AND tmpPricePR.GoodsKindId IS NULL
+                                AND tmpPricePR.GoodsKindId IS NULL  
+            
+            LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = MovementItem.Id
        ;
 
      END IF;

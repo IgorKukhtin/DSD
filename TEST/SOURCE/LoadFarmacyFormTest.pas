@@ -894,7 +894,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryAllDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryAllDialogForm');
   exit;
-
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryItemHistoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryItemHistoryForm');
 

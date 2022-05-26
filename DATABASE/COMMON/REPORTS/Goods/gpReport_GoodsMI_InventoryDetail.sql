@@ -1,12 +1,14 @@
 -- Function: gpReport_GoodsMI_InventoryDetail ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_InventoryDetail (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_InventoryDetail (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_InventoryDetail (
     IN inStartDate    TDateTime ,
     IN inEndDate      TDateTime ,
     IN inUnitId       Integer   ,
-    IN inGoodsGroupId Integer   ,
+    IN inGoodsGroupId Integer   ,  
+    IN inPriceListId  Integer   , 
     IN inisPartion    Boolean   , 
     IN inSession      TVarChar    -- сессия пользователя
 )
@@ -28,7 +30,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , PriceOut_zavod TFloat, PriceOut_branch TFloat
              , Price_zavod TFloat, Price_branch TFloat
              , SummIn_RePrice TFloat, SummOut_RePrice TFloat
-             , SummIn_RePrice_60000 TFloat, SummOut_RePrice_60000 TFloat
+             , SummIn_RePrice_60000 TFloat, SummOut_RePrice_60000 TFloat 
+             , Summ_pr TFloat
               )
 AS
 $BODY$
@@ -83,7 +86,17 @@ BEGIN
            WHERE COALESCE (inUnitId,0) <> 0
           UNION
            SELECT Object.Id AS UnitId FROM Object WHERE Object.DescId = zc_Object_Unit() AND COALESCE (inUnitId,0) = 0
-          )
+          ) 
+
+     -- цены по прайсу
+    , tmpPricePR AS (SELECT lfObjectHistory_PriceListItem.GoodsId
+                          , lfObjectHistory_PriceListItem.GoodsKindId
+                          , lfObjectHistory_PriceListItem.ValuePrice AS Price
+                     FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inEndDate) AS lfObjectHistory_PriceListItem
+                     WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
+                    )
+
+
    -- Результат
     SELECT Movement.Id                                AS MovementId
          , Movement.InvNumber
@@ -139,7 +152,9 @@ BEGIN
          , tmpOperationGroup.SummIn_RePrice        :: TFloat AS SummIn_RePrice
          , tmpOperationGroup.SummOut_RePrice       :: TFloat AS SummOut_RePrice
          , tmpOperationGroup.SummIn_RePrice_60000  :: TFloat AS SummIn_RePrice_60000
-         , tmpOperationGroup.SummOut_RePrice_60000 :: TFloat AS SummOut_RePrice_60000
+         , tmpOperationGroup.SummOut_RePrice_60000 :: TFloat AS SummOut_RePrice_60000     
+         
+         , (tmpOperationGroup.Amount * COALESCE (tmpPricePR_Kind.Price, tmpPricePR.Price)) :: TFloat AS Summ_pr --     Сумма (-)убыль (+)эконом. ПРАЙС
 
      FROM (SELECT tmpContainer.UnitId
                 , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE tmpContainer.GoodsId END AS GoodsId
@@ -147,6 +162,7 @@ BEGIN
                 , CASE WHEN inisPartion = TRUE THEN CLO_PartionGoods.ObjectId ELSE 0 END AS PartionGoodsId
                 , tmpContainer.MovementId
 
+                , SUM (tmpContainer.Amount)     AS Amount
                 , SUM (tmpContainer.AmountIn)   AS AmountIn
                 , SUM (tmpContainer.AmountIn * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END) AS AmountIn_Weight
                 , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpContainer.AmountIn ELSE 0 END) AS AmountIn_sh
@@ -178,7 +194,8 @@ BEGIN
                       , CASE WHEN inisPartion = TRUE THEN MIContainer.MovementId ELSE 0 END AS MovementId
 
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount > 0 THEN      MIContainer.Amount ELSE 0 END) AS AmountIn
-                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS AmountOut
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS AmountOut 
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END)                                 AS Amount                                                     
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND MIContainer.Amount > 0 THEN      MIContainer.Amount ELSE 0 END) AS SummIn
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS SummOut
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() THEN MIContainer.Amount ELSE 0 END) AS Summ
@@ -232,7 +249,16 @@ BEGIN
 
           LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
-                                AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                                AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull() 
+
+          -- привязываем цены по прайсу 2 раза по виду товара и без
+          LEFT JOIN tmpPricePR AS tmpPricePR_Kind 
+                               ON tmpPricePR_Kind.GoodsId = Object_Goods.Id
+                              AND COALESCE (tmpPricePR_Kind.GoodsKindId,0) = COALESCE (tmpOperationGroup.GoodsKindId,0)
+
+          LEFT JOIN tmpPricePR ON tmpPricePR.GoodsId = Object_Goods.Id
+                              AND tmpPricePR.GoodsKindId IS NULL
+
   ;
 
 END;
@@ -242,6 +268,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.05.22         * 
  30.11.21         * add inisPartion
  16.08.15                                        *
 */
@@ -249,3 +276,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpReport_GoodsMI_InventoryDetail (inStartDate:= '01.11.2017', inEndDate:= '01.11.2017', inUnitId:= 8417, inGoodsGroupId:= 0, inisPartion:= FALSE, inSession:= zfCalc_UserAdmin()); -- Склад ГП ф.Одесса
 -- SELECT * FROM gpReport_GoodsMI_InventoryDetail (inStartDate:= '12.11.2021', inEndDate:= '30.11.2021', inUnitId:= 8444, inGoodsGroupId:= 0, inisPartion:= false, inSession:= zfCalc_UserAdmin()) --8417
+-- SELECT * FROM gpReport_GoodsMI_InventoryDetail (inStartDate:= '12.11.2021', inEndDate:= '30.11.2021', inUnitId:= 8444, inGoodsGroupId:= 0, inPriceListId := 0, inisPartion:= false, inSession:= zfCalc_UserAdmin()) --8417

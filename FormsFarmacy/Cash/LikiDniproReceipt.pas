@@ -80,10 +80,10 @@ type
     property DrugsCDS: TClientDataSet read FDrugsCDS;
   end;
 
-function GetReceipt1303(const AReceipt : String) : boolean;
+function GetReceipt1303(var AReceipt : String) : boolean;
 function ClearReceipt1303 : boolean;
 function OrdersСreate1303(const CheckNumber : String; const CheckCDS: TClientDataSet) : boolean;
-function CheckLikiDniproReceipt_Number(ANumber : string) : boolean;
+function CheckLikiDniproReceipt_Number(var ANumber : string) : boolean;
 
 var LikiDniproReceiptApi : TLikiDniproReceiptApi;
 
@@ -91,6 +91,46 @@ implementation
 
 uses RegularExpressions, System.Generics.Collections, Soap.EncdDecd, MainCash2,
      dsdDB, PUSHMessageCash, CommonData;
+
+// что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА
+procedure Add_Log(AMessage: String; ARESTResponse: TRESTResponse = Nil);
+var
+  F: TextFile;
+  S : String;
+begin
+  try
+    AssignFile(F, ChangeFileExt(Application.ExeName, '_LikiDnipro.log'));
+    if not fileExists(ChangeFileExt(Application.ExeName, '_LikiDnipro.log')) then
+    begin
+      Rewrite(F);
+    end
+    else
+      Append(F);
+    //
+    try
+      if (AMessage <> '') or not Assigned(ARESTResponse) then
+        Writeln(F, DateTimeToStr(Now) + ':' + #13#10 + AMessage);
+      if Assigned(ARESTResponse) then
+      begin
+         S := 'StatusCode ' + IntToStr(ARESTResponse.StatusCode) + #13#10 +
+          'StatusText ' + ARESTResponse.StatusText + #13#10 +
+          'ContentType ' + ARESTResponse.ContentType;
+        if ARESTResponse.JSONValue <> Nil then
+          S := S + #13#10 + 'JSONValue ' + ARESTResponse.JSONValue.ToString
+        else if ARESTResponse.Content <> '' then
+          S := 'Content ' + ARESTResponse.Content;
+        Writeln(F, DateTimeToStr(Now) + ':' + #13#10 + S);
+      end;
+    finally
+      CloseFile(F);
+    end;
+  except
+    on E: Exception do
+      ShowMessage
+        ('Ошибка сохранения в лог файл. Покажите это окно системному администратору: '
+        + #13#10 + E.Message);
+  end;
+end;
 
 function DelDoubleQuote(AStr : string) : string;
 begin
@@ -103,29 +143,34 @@ begin
   if Result = 'null' then Result := '';
 end;
 
-function CheckLikiDniproReceipt_Number(ANumber : string) : boolean;
-  var Res: TArray<string>; I, J : Integer;
+function CheckLikiDniproReceipt_Number(var ANumber : string) : boolean;
+  var Res: TArray<string>; I, J : Integer; S : String;
 begin
   Result := False;
   try
-    if (Length(ANumber) < 17) or (Length(ANumber) > 19) then exit;
+    if (Length(ANumber) < 17) or (Length(ANumber) > 20) then exit;
 
     Res := TRegEx.Split(ANumber, '-');
 
     if High(Res) <> 3 then exit;
 
+    S := Trim(Res[0]);
     for I := 0 to High(Res) do
     begin
-      if (I <= 1) and (Length(Res[I]) <> 4) then exit;
-      if (I = 2) and (Length(Res[I]) <> 2) then exit;
-      if (I = 3) and (Length(Res[I]) < 4) then exit;
+      if (I = 0) and (Length(Trim(Res[I])) <> 4) and (Length(Trim(Res[I])) <> 5) then exit;
+      if (I = 1) and (Length(Trim(Res[I])) <> 4) then exit;
+      if (I = 2) and (Length(Trim(Res[I])) <> 2) then exit;
+      if (I = 3) and (Length(Trim(Res[I])) < 4) then exit;
 
-      for J := 1 to Length(Res[I]) do if not CharInSet(Res[I][J], ['0'..'9','A'..'Z']) then exit;
+      for J := 1 to Length(Trim(Res[I])) do if not CharInSet(Trim(Res[I])[J], ['0'..'9','A'..'Z']) then exit;
+      if I > 0 then S := S + '-' +Trim(Res[I]);
+
     end;
+    ANumber := S;
     Result := True;
   finally
     if not Result then ShowMessage ('Ошибка.<Регистрационный номер рецепта>'#13#10#13#10 +
-      'Номер должен содержать 19 символов в 4 блока первых два 4 символа, третий 2 символа и четвертый 4..6 символов разделенных символом "-"'#13#10 +
+      'Номер должен содержать до 20 символов в 4 блока первый 4..5 символа второй 4 символа, третий 2 символа и четвертый 4..6 символов разделенных символом "-"'#13#10 +
       'Cодержать только цыфры и буквы латинского алфовита'#13#10 +
       'В виде XXXX-XXXX-XX-XXXXXX ...');
   end;
@@ -255,11 +300,14 @@ begin
   FRESTRequest.AddParameter('Accept', 'application/json', TRESTRequestParameterKind.pkHTTPHEADER);
   FRESTRequest.AddParameter('pharmacy_id', IntToStr(FPharmacy_Id), TRESTRequestParameterKind.pkGETorPOST);
   FRESTRequest.AddParameter('recipe_number', FNumber, TRESTRequestParameterKind.pkGETorPOST);
+
+  // Add_Log('URL ' + FRESTClient.BaseURL + '/' + FRESTRequest.Resource + #13#10 + 'pharmacy_id ' + IntToStr(FPharmacy_Id) + #13#10 + 'recipe_number ' + FNumber);
   try
     FRESTRequest.Execute;
   except
   end;
 
+  // Add_Log('', FRESTResponse);
   if (FRESTResponse.StatusCode = 200) and (FRESTResponse.ContentType = 'application/json') then
   begin
     Result := False;
@@ -485,7 +533,7 @@ begin
   Result := True;
 end;
 
-function GetReceipt1303(const AReceipt : String) : boolean;
+function GetReceipt1303(var AReceipt : String) : boolean;
    var cResult : String;
 begin
   Result := False;

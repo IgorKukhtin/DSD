@@ -27,7 +27,8 @@ $BODY$
     DECLARE vbPaidKindId Integer;
     DECLARE vbOperDate TDateTime;
 
-    DECLARE vbStoreKeeperName TVarChar;
+    DECLARE vbStoreKeeperName TVarChar; 
+    DECLARE vbPriceListId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -71,7 +72,12 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId);
     END IF;
 
-
+     vbPriceListId := COALESCE ((SELECT MovementLinkObject_PriceList.ObjectId
+                                 FROM MovementLinkObject AS MovementLinkObject_PriceList
+                                 WHERE MovementLinkObject_PriceList.MovementId = inMovementId
+                                   AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList())
+                                 , zc_PriceList_Basis()
+                                 );
 
      --
     OPEN Cursor1 FOR
@@ -138,12 +144,33 @@ BEGIN
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                  , COALESCE (MIString_PartionGoods.ValueData, '')
                                  , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())
-                         )
+                         )  
+
+               -- цены по прайсу
+              , tmpPricePR AS (SELECT lfObjectHistory_PriceListItem.GoodsId
+                                    , lfObjectHistory_PriceListItem.GoodsKindId
+                                    , lfObjectHistory_PriceListItem.ValuePrice AS Price
+                               FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId) )
+                                    AS lfObjectHistory_PriceListItem
+                               WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
+                              )
+
+               --колво движения из проводок
+              , tmpContainer AS (SELECT MIContainer.MovementItemId
+                                     , SUM (MIContainer.Amount) AS Amount
+                                 FROM MovementItemContainer AS MIContainer
+                                 WHERE MIContainer.MovementId = inMovementId  
+                                   AND MIContainer.MovementDescId = zc_Movement_Inventory()
+                                   AND MIContainer.DescId = zc_MIContainer_Count()
+                                 GROUP BY  MIContainer.MovementItemId
+                                 )
+
               , tmpMI AS (SELECT MovementItem.ObjectId                                     AS GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)             AS GoodsKindId
                                , COALESCE (MIString_PartionGoods.ValueData, '')            AS PartionGoods
                                , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())  AS PartionGoodsDate
                                , SUM (MovementItem.Amount)                                 AS Amount
+                               , SUM (tmpContainer.Amount * COALESCE (tmpPricePR_Kind.Price, tmpPricePR.Price)) ::TFloat AS Summ_pr
                            FROM MovementItem
                                 LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                            ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
@@ -154,6 +181,17 @@ BEGIN
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                                -- привязываем цены по прайсу 2 раза по виду товара и без
+                                LEFT JOIN tmpPricePR AS tmpPricePR_Kind 
+                                                     ON tmpPricePR_Kind.GoodsId = MovementItem.ObjectId
+                                                    AND COALESCE (tmpPricePR_Kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId,0)
+                    
+                                LEFT JOIN tmpPricePR ON tmpPricePR.GoodsId = MovementItem.ObjectId
+                                                    AND tmpPricePR.GoodsKindId IS NULL
+  
+                                LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = MovementItem.Id
+
                           WHERE MovementItem.MovementId = inMovementId
                             AND MovementItem.DescId     = zc_MI_Master()
                             AND MovementItem.isErased   = FALSE
@@ -169,6 +207,7 @@ BEGIN
                                , COALESCE (tmpWeighing.PartionGoodsDate, tmpMI.PartionGoodsDate) AS PartionGoodsDate
                                , COALESCE (tmpWeighing.Amount, 0)                                AS Amount_Weighing
                                , COALESCE (tmpMI.Amount, 0)                                      AS Amount
+                               , COALESCE (tmpMI.Summ_pr,0)                                      AS Summ_pr
                            FROM tmpWeighing
                                 FULL JOIN tmpMI ON tmpMI.GoodsId          =  tmpWeighing.GoodsId
                                                AND tmpMI.GoodsKindId      =  tmpWeighing.GoodsKindId
@@ -176,6 +215,8 @@ BEGIN
                                                AND tmpMI.PartionGoodsDate =  tmpWeighing.PartionGoodsDate
                          )
 
+
+                             
        SELECT Object_Goods.ObjectCode  			  AS GoodsCode
             , Object_Goods.ValueData   			  AS GoodsName
             , Object_GoodsKind.ValueData                  AS GoodsKindName
@@ -189,6 +230,8 @@ BEGIN
             , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount_Weighing ELSE 0 END                                :: TFloat AS Amount_Weighing_Sh
             , tmpResult.Amount_Weighing * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END :: TFloat AS Amount_Weighing_Weight
 
+            , tmpResult.Summ_pr  ::TFloat
+            
             , CASE WHEN tmpResult.PartionGoods <> '' THEN tmpResult.PartionGoods WHEN tmpResult.PartionGoodsDate <> zc_DateStart() THEN TO_CHAR (tmpResult.PartionGoodsDate, 'DD.MM.YYYY') ELSE '' END :: TVarChar AS PartionGoods
 
        FROM tmpResult
@@ -227,6 +270,7 @@ ALTER FUNCTION gpSelect_Movement_Inventory_Print (Integer,Integer, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.05.22         *
  10.07.15                                        * ALL
  04.07.15         *
 */

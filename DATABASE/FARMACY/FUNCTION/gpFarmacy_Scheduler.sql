@@ -541,4 +541,5 @@ $BODY$
 */
 
 -- SELECT * FROM Log_Run_Schedule_Function order by Log_Run_Schedule_Function.DateInsert desc LIMIT 50
+-- SELECT * FROM Log_Run_Schedule_Function where isError = True order by Log_Run_Schedule_Function.DateInsert desc LIMIT 50
 -- SELECT * FROM gpFarmacy_Scheduler (inSession := zfCalc_UserAdmin())

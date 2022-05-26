@@ -1,30 +1,30 @@
 inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'  ('#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084')>'
-  ClientHeight = 374
+  ClientHeight = 373
   ClientWidth = 1128
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1144
-  ExplicitHeight = 413
+  ExplicitHeight = 412
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
     Width = 1128
-    Height = 294
+    Height = 293
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1128
     ExplicitHeight = 294
-    ClientRectBottom = 294
+    ClientRectBottom = 293
     ClientRectRight = 1128
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1128
       ExplicitHeight = 294
       inherited cxGrid: TcxGrid
         Width = 1128
-        Height = 294
+        Height = 293
         ExplicitWidth = 1128
         ExplicitHeight = 294
         inherited cxGridDBTableView: TcxGridDBTableView

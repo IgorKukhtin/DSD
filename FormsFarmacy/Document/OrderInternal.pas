@@ -173,6 +173,9 @@ type
     actDataDialog: TExecuteDialog;
     bbUpdateSupplierFailures: TdxBarButton;
     colisSupplierFailures: TcxGridDBColumn;
+    isSPRegistry_1303: TcxGridDBColumn;
+    PriceOOC1303: TcxGridDBColumn;
+    DPriceOOC1303: TcxGridDBColumn;
   private
     { Private declarations }
   public

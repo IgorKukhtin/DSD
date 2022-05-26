@@ -30,6 +30,9 @@ type
     cxLabel7: TcxLabel;
     GuidesFrom: TdsdGuides;
     cbPartion: TcxCheckBox;
+    GuidesPriceList: TdsdGuides;
+    edPriceList: TcxButtonEdit;
+    cxLabel18: TcxLabel;
   private
     { Private declarations }
   public

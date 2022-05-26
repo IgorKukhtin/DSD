@@ -116,6 +116,10 @@ RETURNS TABLE (Id                    Integer
              
              , isSupplierFailures    Boolean
              , SupplierFailuresColor Integer
+             
+             , isSPRegistry_1303     Boolean
+             , PriceOOC1303          TFloat
+             , DPriceOOC1303         TFloat
              )
 AS
 $BODY$
@@ -229,7 +233,7 @@ BEGIN
       AND (inShowAll = FALSE OR inSession <> '3')
     THEN
 
---     raise notice 'Value: %', 1;
+     raise notice 'Value: %', 1;
 
      PERFORM lpCreateTempTable_OrderInternal_MI(inMovementId, vbObjectId, 0, vbUserId);
 
@@ -918,6 +922,7 @@ BEGIN
                              WHERE MI_Child.MovementId = inMovementId
                                AND MI_Child.DescId     = zc_MI_Child()
                              )
+   , tmpGoodsSPRegistry_1303 AS (select * from gpSelect_GoodsSPRegistry_1303_All(inSession := inSession))
 
                     
        -- Результат 1
@@ -1112,6 +1117,12 @@ BEGIN
                             ELSE zc_Color_White()
                        END
               END  AS SupplierFailuresColor
+              
+           , COALESCE (tmpGoodsSPRegistry_1303.GoodsId, 0) <> 0                                                  AS isSPRegistry_1303
+           , Round(tmpGoodsSPRegistry_1303.PriceOptSP * 1.1, 2)::TFloat                                          AS PriceOOC1303
+           , CASE WHEN Round(tmpGoodsSPRegistry_1303.PriceOptSP * 1.1, 2) > 0 AND COALESCE (MIFloat_Price.ValueData,0) > 0
+             THEN ((1.0 - COALESCE (MIFloat_Price.ValueData,0) / Round(tmpGoodsSPRegistry_1303.PriceOptSP * 1.1, 2)) * 100) 
+             ELSE 0 END::TFloat AS DPriceOOC1303
 
        FROM tmpMI        --_tmpOrderInternal_MI AS
             LEFT JOIN tmpOneJuridical ON tmpOneJuridical.MIMasterId = tmpMI.MovementItemId
@@ -1174,6 +1185,8 @@ BEGIN
 
             LEFT JOIN tmpSupplierFailures AS SupplierFailures 
                                           ON SupplierFailures.GoodsId = tmpMI.GoodsId
+                                          
+            LEFT JOIN tmpGoodsSPRegistry_1303 ON tmpGoodsSPRegistry_1303.GoodsId = tmpMI.GoodsId
            ;
 
 
@@ -1182,7 +1195,7 @@ BEGIN
     THEN
 
 
-   --   raise notice 'Value: %', 2;
+      raise notice 'Value: %', 2;
 
 --    PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 
@@ -1447,6 +1460,7 @@ BEGIN
                                                                                AND SupplierFailures.ContractId = LastMovement.ContractId
                                               WHERE COALESCE (SupplierFailures.GoodsId, 0) = 0
                                               )
+   , tmpGoodsSPRegistry_1303 AS (select * from gpSelect_GoodsSPRegistry_1303_All(inSession := inSession))
                                    
        -- Результат
        SELECT row_number() OVER ()
@@ -2857,6 +2871,7 @@ BEGIN
                                   LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods.GoodsMainId
                                                                AND Object_Goods_Retail.RetailId = vbObjectId
                              )
+   , tmpGoodsSPRegistry_1303 AS (select * from gpSelect_GoodsSPRegistry_1303_All(inSession := inSession))
 
        -- Результат 1
        SELECT
@@ -3008,6 +3023,12 @@ BEGIN
                        END
               END  AS SupplierFailuresColor
 
+           , COALESCE (tmpGoodsSPRegistry_1303.GoodsId, 0) <> 0                                                  AS isSPRegistry_1303
+           , Round(tmpGoodsSPRegistry_1303.PriceOptSP * 1.1, 2)::TFloat                                          AS PriceOOC1303
+           , CASE WHEN Round(tmpGoodsSPRegistry_1303.PriceOptSP * 1.1, 2) > 0 AND tmpMI.Price  > 0
+             THEN ((1.0 - tmpMI.Price / Round(tmpGoodsSPRegistry_1303.PriceOptSP * 1.1, 2)) * 100) 
+             ELSE 0 END::TFloat AS DPriceOOC1303
+
        FROM tmpData AS tmpMI
             LEFT JOIN tmpPriceView AS Object_Price_View ON tmpMI.GoodsId                    = Object_Price_View.GoodsId
             LEFT JOIN tmpRemains   AS Remains           ON Remains.ObjectId                 = tmpMI.GoodsId
@@ -3058,6 +3079,8 @@ BEGIN
 
             LEFT JOIN tmpSupplierFailures AS SupplierFailures 
                                           ON SupplierFailures.GoodsId = tmpMI.GoodsId
+
+            LEFT JOIN tmpGoodsSPRegistry_1303 ON tmpGoodsSPRegistry_1303.GoodsId = tmpMI.GoodsId
            ;
 
 
@@ -3066,7 +3089,7 @@ BEGIN
     THEN
 
 
-    -- raise notice 'Value: %', 3;
+     raise notice 'Value: %', 3;
 
 --    PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 
@@ -4701,6 +4724,7 @@ BEGIN
                                   LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods.GoodsMainId
                                                                AND Object_Goods_Retail.RetailId = vbObjectId
                             )
+   , tmpGoodsSPRegistry_1303 AS (select * from gpSelect_GoodsSPRegistry_1303_All(inSession := inSession))
 
        -- Результат 1
        SELECT
@@ -4853,6 +4877,12 @@ BEGIN
                    END
               END  AS SupplierFailuresColor
 
+           , COALESCE (tmpGoodsSPRegistry_1303.GoodsId, 0) <> 0                                                  AS isSPRegistry_1303
+           , Round(tmpGoodsSPRegistry_1303.PriceOptSP * 1.1, 2)::TFloat                                          AS PriceOOC1303
+           , CASE WHEN Round(tmpGoodsSPRegistry_1303.PriceOptSP * 1.1, 2) > 0 AND tmpMI.Price  > 0
+             THEN ((1.0 - tmpMI.Price / Round(tmpGoodsSPRegistry_1303.PriceOptSP * 1.1, 2)) * 100) 
+             ELSE 0 END::TFloat AS DPriceOOC1303
+
        FROM tmpData AS tmpMI
             LEFT JOIN tmpPriceView AS Object_Price_View ON tmpMI.GoodsId                    = Object_Price_View.GoodsId
             LEFT JOIN tmpRemains   AS Remains           ON Remains.ObjectId                 = tmpMI.GoodsId
@@ -4903,6 +4933,8 @@ BEGIN
 
             LEFT JOIN tmpSupplierFailures AS SupplierFailures 
                                           ON SupplierFailures.GoodsId = tmpMI.GoodsId
+
+            LEFT JOIN tmpGoodsSPRegistry_1303 ON tmpGoodsSPRegistry_1303.GoodsId = tmpMI.GoodsId
            ;
 
 

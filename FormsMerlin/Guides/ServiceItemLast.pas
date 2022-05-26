@@ -78,9 +78,11 @@ type
     actSeviceItemOpenForm: TdsdOpenForm;
     bbSeviceItemOpenForm: TdxBarButton;
     cxLabel3: TcxLabel;
-    edOperDate: TcxDateEdit;
+    edChangeDate: TcxDateEdit;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    edOperDate: TcxDateEdit;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public

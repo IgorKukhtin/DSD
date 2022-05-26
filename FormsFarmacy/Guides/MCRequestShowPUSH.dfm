@@ -20,22 +20,25 @@ object MCRequestShowPUSHForm: TMCRequestShowPUSHForm
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 73
+    Top = 119
     Width = 509
-    Height = 231
+    Height = 185
     Align = alClient
     ShowCaption = False
     TabOrder = 0
+    ExplicitTop = 73
+    ExplicitHeight = 231
     object cxGrid: TcxGrid
       Left = 1
       Top = 1
       Width = 507
-      Height = 229
+      Height = 183
       Align = alClient
       TabOrder = 0
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitHeight = 229
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -134,7 +137,7 @@ object MCRequestShowPUSHForm: TMCRequestShowPUSHForm
     Left = 0
     Top = 0
     Width = 509
-    Height = 73
+    Height = 93
     Align = alTop
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -162,7 +165,8 @@ object MCRequestShowPUSHForm: TMCRequestShowPUSHForm
       Style.IsFontAssigned = True
       StyleDisabled.TextColor = clRed
       TabOrder = 0
-      Height = 71
+      ExplicitHeight = 71
+      Height = 91
       Width = 507
     end
   end
@@ -235,10 +239,235 @@ object MCRequestShowPUSHForm: TMCRequestShowPUSHForm
       GuiParams = <>
       isShowModal = False
     end
+    object actGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      MoveParams = <>
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
   end
   object FormParams: TdsdFormParams
     Params = <>
     Left = 160
     Top = 184
+  end
+  object BarManager: TdxBarManager
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    Categories.Strings = (
+      'Default')
+    Categories.ItemsVisibles = (
+      2)
+    Categories.Visibles = (
+      True)
+    ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
+    PopupMenuLinks = <>
+    ShowShortCutInHint = True
+    UseSystemFont = True
+    Left = 104
+    Top = 305
+    DockControlHeights = (
+      0
+      0
+      26
+      0)
+    object Bar: TdxBar
+      Caption = 'Custom'
+      CaptionButtons = <>
+      DockedDockingStyle = dsTop
+      DockedLeft = 0
+      DockedTop = 0
+      DockingStyle = dsTop
+      FloatLeft = 671
+      FloatTop = 8
+      FloatClientWidth = 0
+      FloatClientHeight = 0
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton17'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateOperDate'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton18'
+        end>
+      OneOnRow = True
+      Row = 0
+      UseOwnFont = False
+      Visible = True
+      WholeRow = False
+    end
+    object bbRefresh: TdxBarButton
+      Action = actRefresh
+      Category = 0
+    end
+    object dxBarStatic: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Hint = '     '
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbGridToExcel: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbPrint: TdxBarButton
+      Action = actGridToExcel
+      Category = 0
+    end
+    object bbShowAll: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbStatic: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbInsertUpdateMovement: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbErased: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbUnErased: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbShowErased: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbAddMask: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbMovementItemContainer: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbMovementItemProtocol: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarButton1: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbUpdateOperDate: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbUpdateSpParam: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbUpdateUnit: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbUpdateMemberSp: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 55
+    end
+    object dxBarButton2: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarButton3: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarButton4: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarButton5: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarButton6: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarButton7: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarButton8: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarButton9: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarButton10: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarButton11: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarButton12: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarButton13: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarButton14: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarButton15: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarButton16: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarButton17: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarButton18: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarButton19: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
   end
 end

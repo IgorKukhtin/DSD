@@ -63,10 +63,9 @@ BEGIN
           COALESCE(zfConvert_FloatToString(tmpMarginCategoryItemNext.MinPrice), '.....'))::TVarChar         AS MinPrice 
         , tmpMarginCategoryItem.MarginPercent    AS MarginPercentCurr
         , COALESCE(tmpMCRequesItem.MarginPercent, tmpMarginCategoryItem.MarginPercent) AS MarginPercent
-        , (tmpMarginCategoryItem.MarginPercent - 
-          COALESCE(tmpMCRequesItem.MarginPercent, tmpMarginCategoryItem.MarginPercent))::TFloat AS DMarginPercent
+        , (COALESCE(tmpMCRequesItem.MarginPercent, tmpMarginCategoryItem.MarginPercent) - tmpMarginCategoryItem.MarginPercent)::TFloat AS DMarginPercent
         , ('ВНИМАНИЕ !!!'||Chr(13)||zfConvert_DateTimeToString(tmpMCRequesItem.DataUpdate)||
-          ' Маркетинг проаналезировал цены конкурентов и решил поменять общую наценку по сети:'||Chr(13)||
+          ' Маркетинг проанализировал цены конкурентов и решил поменять общую наценку по сети:'||Chr(13)||
           'Просьба внести новые данные в таблицу "Категории наценок (Новый)"' )::TBlob
         , tmpMCRequesItem.DateDone
    FROM tmpMarginCategoryItem

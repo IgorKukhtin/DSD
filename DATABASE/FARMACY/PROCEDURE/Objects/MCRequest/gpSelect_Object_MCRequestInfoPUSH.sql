@@ -59,7 +59,9 @@ BEGIN
         , tmpMCRequesItem.MarginPercent         AS MarginPercent
         , (tmpMCRequesItem.MarginPercent - tmpMCRequesItem.MarginPercentOld)::TFloat   AS DMarginPercent
         , ('ВНИМАНИЕ !!!'||Chr(13)||zfConvert_DateTimeToString(tmpMCRequesItem.DataUpdate)||
-          ' Маркетинг проаналезировал цены конкурентов и поменял общую наценку по сети:')::TBlob
+          ' Маркетинг проанализировал цены конкурентов и поменял общую наценку по сети.'||Chr(13)||
+          zfConvert_DateTimeToString(tmpMCRequesItem.DateDone)||
+          ' Пелина Любовь наценку по всей сети изиенила . Вам самостоятельно ничего менять не нужно.')::TBlob
         , tmpMCRequesItem.DateDone
    FROM tmpMCRequesItem
    
