@@ -15,8 +15,8 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
  
     -- собственно проводки
-    PERFORM lpComplete_Movement_CashSend(inMovementId, -- ключ Документа
-                                         vbUserId);    -- Пользователь  
+    PERFORM lpComplete_Movement_CashSend (inMovementId, -- ключ Документа
+                                          vbUserId);    -- Пользователь  
 
 END;
 $BODY$

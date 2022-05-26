@@ -74,6 +74,7 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Child
                              ON ObjectLink_Child.ChildObjectId = Object_Cash.Id
                             AND ObjectLink_Child.DescId = zc_ObjectLink_Cash_Parent()
+                            AND 1=0
 
         LEFT JOIN ObjectLink AS ObjectLink_PaidKind
                              ON ObjectLink_PaidKind.ObjectId = Object_Cash.Id
