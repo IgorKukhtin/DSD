@@ -110,9 +110,9 @@ BEGIN
            , Object_InfoMoney.Id                AS InfoMoneyId
            , Object_InfoMoney.ObjectCode        AS InfoMoneyCode
            , Object_InfoMoney.ValueData         AS InfoMoneyName
-           , Object_InfoMoney.Id                AS InfoMoneyDetailId
-           , Object_InfoMoney.ObjectCode        AS InfoMoneyDetailCode
-           , Object_InfoMoney.ValueData         AS InfoMoneyDetailName
+           , Object_InfoMoneyDetail.Id          AS InfoMoneyDetailId
+           , Object_InfoMoneyDetail.ObjectCode  AS InfoMoneyDetailCode
+           , Object_InfoMoneyDetail.ValueData   AS InfoMoneyDetailName
            , Object_CommentInfoMoney.Id         AS CommentInfoMoneyId
            , Object_CommentInfoMoney.ObjectCode AS CommentInfoMoneyCode
            , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName

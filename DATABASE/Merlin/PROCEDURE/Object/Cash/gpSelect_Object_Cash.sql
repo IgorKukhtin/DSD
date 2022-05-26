@@ -71,6 +71,10 @@ BEGIN
                             AND ObjectLink_Parent.DescId = zc_ObjectLink_Cash_Parent()
         LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Parent.ChildObjectId
           
+        LEFT JOIN ObjectLink AS ObjectLink_Child
+                             ON ObjectLink_Child.ChildObjectId = Object_Cash.Id
+                            AND ObjectLink_Child.DescId = zc_ObjectLink_Cash_Parent()
+
         LEFT JOIN ObjectLink AS ObjectLink_PaidKind
                              ON ObjectLink_PaidKind.ObjectId = Object_Cash.Id
                             AND ObjectLink_PaidKind.DescId = zc_ObjectLink_Cash_PaidKind()
@@ -103,6 +107,7 @@ BEGIN
                             AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()
    WHERE Object_Cash.DescId = zc_Object_Cash()
      AND (Object_Cash.isErased = FALSE OR inIsShowAll = TRUE)
+     AND ObjectLink_Child.ObjectId IS NULL
   ;
   
 END;$BODY$

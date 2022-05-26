@@ -37,7 +37,27 @@ BEGIN
                             WHEN inUserId = 11 THEN 40562
                        END;
 
-   IF COALESCE (inInvNumber,'') <> '' AND NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.InvNumber = TRIM (inInvNumber) AND Movement.DescId = zc_Movement_CashSend() AND Movement.StatusId <> zc_Enum_Status_Erased())
+
+   -- Проверка
+   IF 1 < (SELECT COUNT(*) FROM Movement WHERE Movement.InvNumber = TRIM (inInvNumber) AND Movement.DescId = zc_Movement_CashSend() AND Movement.StatusId <> zc_Enum_Status_Erased())
+   THEN
+       RAISE EXCEPTION 'Ошибка.Найдено несколько inInvNumber = <%>', inInvNumber;
+   END IF;
+
+   -- Поиск
+   vbMovementId:= (SELECT Movement.Id FROM Movement WHERE Movement.InvNumber = TRIM (inInvNumber) AND Movement.DescId = zc_Movement_CashSend() AND Movement.StatusId <> zc_Enum_Status_Erased());
+   -- Поиск
+   vbMovementItemId := (SELECT MI.Id FROM MovementItem AS MI WHERE MI.MovementId = vbMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE);
+
+   -- Если Проведен
+   IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.Id = vbMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
+   THEN
+       -- Распровели
+       PERFORM lpUnComplete_Movement (vbMovementId, vbUserId);
+   END IF;
+   
+   -- Сохранение
+   IF COALESCE (inInvNumber,'') <> '' -- AND NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.InvNumber = TRIM (inInvNumber) AND Movement.DescId = zc_Movement_CashSend() AND Movement.StatusId <> zc_Enum_Status_Erased())
    THEN
        
        IF COALESCE (inCommentMoveMoneyCode,0) <> 0
@@ -96,6 +116,11 @@ BEGIN
           PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), vbMovementId, inProtocolDate ::TDateTime);
           -- сохранили свойство <Пользователь (создание)>
           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), vbMovementId, vbUserProtocolId);
+
+          -- Проводки
+          PERFORM lpComplete_Movement_CashSend (vbMovementId  -- ключ Документа
+                                              , vbUserId      -- Пользователь
+                                               );
 
    END IF;
 

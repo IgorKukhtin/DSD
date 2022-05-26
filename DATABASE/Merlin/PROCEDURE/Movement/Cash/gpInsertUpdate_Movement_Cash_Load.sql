@@ -47,12 +47,31 @@ BEGIN
                             WHEN inUserId = 11 THEN 40562 -- Filippova
                        END;
 
-   IF COALESCE (inInvNumber,'') <> '' AND NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.InvNumber = TRIM (inInvNumber) AND Movement.DescId = zc_Movement_Cash() AND Movement.StatusId <> zc_Enum_Status_Erased())
+   -- Проверка
+   IF 1 < (SELECT COUNT(*) FROM Movement WHERE Movement.InvNumber = TRIM (inInvNumber) AND Movement.DescId = zc_Movement_Cash() AND Movement.StatusId <> zc_Enum_Status_Erased())
+   THEN
+       RAISE EXCEPTION 'Ошибка.Найдено несколько inInvNumber = <%>', inInvNumber;
+   END IF;
+
+   -- Поиск
+   vbMovementId:= (SELECT Movement.Id FROM Movement WHERE Movement.InvNumber = TRIM (inInvNumber) AND Movement.DescId = zc_Movement_Cash() AND Movement.StatusId <> zc_Enum_Status_Erased());
+   -- Поиск
+   vbMovementItemId := (SELECT MI.Id FROM MovementItem AS MI WHERE MI.MovementId = vbMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE);
+
+   -- Если Проведен
+   IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.Id = vbMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
+   THEN
+       -- Распровели
+       PERFORM lpUnComplete_Movement (vbMovementId, vbUserId);
+   END IF;
+   
+   -- Сохранение
+   IF COALESCE (inInvNumber,'') <> '' -- AND NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.InvNumber = TRIM (inInvNumber) AND Movement.DescId = zc_Movement_Cash() AND Movement.StatusId <> zc_Enum_Status_Erased())
    THEN
        
        IF COALESCE (inCommentInfoMoneyCode,0) <> 0
        THEN
-           -- поиск в спр. 
+           -- поиск
            vbCommentInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_CommentInfoMoney() AND Object.ObjectCode = inCommentInfoMoneyCode);
     
            -- Eсли не нашли ошибка
@@ -60,6 +79,7 @@ BEGIN
            THEN
                RAISE EXCEPTION 'Ошибка.Не найден элемент справочника Примечание Приход / Расход <%>   .', inCommentInfoMoneyCode;
            END IF;
+
        END IF;
     
        IF COALESCE (inKassaCode,0) <> 0
@@ -112,10 +132,10 @@ BEGIN
 
     
           -- сохранили <Документ>
-          vbMovementId := lpInsertUpdate_Movement (0, zc_Movement_Cash(), inInvNumber, inOperDate, Null, vbUserProtocolId);
+          vbMovementId := lpInsertUpdate_Movement (vbMovementId, zc_Movement_Cash(), inInvNumber, inOperDate, Null, vbUserProtocolId);
      
           -- сохранили <Элемент документа>
-          vbMovementItemId := lpInsertUpdate_MovementItem (0, zc_MI_Master(), vbKassaId, vbMovementId, inSumma, NULL);
+          vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), vbKassaId, vbMovementId, inSumma, NULL);
      
           -- сохранили связь с <>
           PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, vbUnitId);
@@ -135,12 +155,14 @@ BEGIN
           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), vbMovementId, vbUserProtocolId);
 
 
-          --Sign
+          -- Sign
           IF COALESCE (inisProtocolTim,'') = 'Да' AND COALESCE (inisProtocolEvg,'') = 'Да'
           THEN
               PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Sign(), vbMovementId, TRUE);
               PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Child(), vbMovementItemId, TRUE);
-           END IF;    
+          ELSE
+              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Child(), vbMovementItemId, FALSE);
+          END IF;    
 
            IF COALESCE (inisProtocolEvg,'') = 'Да' 
            THEN
@@ -156,7 +178,13 @@ BEGIN
                PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), vbMovementItemId_sign, inProtocolTim);
            END IF;
 
-   END IF;
+  
+           -- Проводки
+           PERFORM lpComplete_Movement_Cash (vbMovementId  -- ключ Документа
+                                           , vbUserId      -- Пользователь
+                                            );
+
+ END IF;
 
 END;
 $BODY$

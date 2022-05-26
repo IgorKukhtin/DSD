@@ -65,7 +65,7 @@ BEGIN
            -- сохранили
            PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Cash_ShortName(), vbCashId, inName);
            -- сохранили
-          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Cash_NPP(), vbCashId, inCode);
+           PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Cash_NPP(), vbCashId, inCode);
            -- сохранили
            PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Cash_Currency(), vbCashId, vbCurrencyId);
            -- сохранили

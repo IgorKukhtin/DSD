@@ -16,10 +16,7 @@ BEGIN
  
     -- собственно проводки
     PERFORM lpComplete_Movement_CashSend(inMovementId, -- ключ Документа
-                                            vbUserId);    -- Пользователь  
-
-    UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
-    WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+                                         vbUserId);    -- Пользователь  
 
 END;
 $BODY$

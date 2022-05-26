@@ -44,7 +44,7 @@ BEGIN
                        END;
 
 
-   IF COALESCE (inInvNumber,'') <> '' AND EXISTS (SELECT 1 FROM Movement WHERE Movement.InvNumber = TRIM (inInvNumber) AND Movement.DescId = zc_Movement_Cash() AND Movement.StatusId <> zc_Enum_Status_Erased())
+   IF COALESCE (inInvNumber,'') <> '' -- AND EXISTS (SELECT 1 FROM Movement WHERE Movement.InvNumber = TRIM (inInvNumber) AND Movement.DescId = zc_Movement_Cash() AND Movement.StatusId <> zc_Enum_Status_Erased())
    THEN
         
        IF COALESCE (inCommentInfoMoneyCode,0) <> 0
@@ -108,14 +108,13 @@ BEGIN
        END IF; 
    
     
-          -- сохранили <Документ>
-          --vbMovementId := lpInsertUpdate_Movement (0, zc_Movement_Cash(), inInvNumber, inOperDate, Null, vbUserProtocolId);
-          --находим документ который корректироуетися
-          vbMovementId := (SELECT Movement.Id FROM Movement WHERE Movement.InvNumber = TRIM (inInvNumber) AND Movement.DescId = zc_Movement_Cash() AND Movement.StatusId <> zc_Enum_Status_Erased());
-          vbisSign := (SELECT MovementBoolean.ValueData FROM MovementBoolean WHERE MovementBoolean.MovementId = vbMovementId AND MovementBoolean.DescId = zc_MovementBoolean_Sign());
+          -- Поиск
+          vbMovementId    := (SELECT Movement.Id FROM Movement WHERE Movement.InvNumber = TRIM (inInvNumber) AND Movement.DescId = zc_Movement_Cash() AND Movement.StatusId <> zc_Enum_Status_Erased());
+          -- Поиск
+          vbMovementItemId:= (SELECT MI.Id FROM MovementItem AS MI WHERE MI.MovementId = vbMovementId AND MI.DescId = zc_MI_Child() AND MI.isErased = FALSE);
 
           -- сохранили <Элемент документа>
-          vbMovementItemId := lpInsertUpdate_MovementItem (0, zc_MI_Child(), vbCashId, vbMovementId, inSumma, NULL);
+          vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Child(), vbCashId, vbMovementId, inSumma, NULL);
      
           -- сохранили связь с <>
           PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, vbUnitId);
@@ -129,9 +128,12 @@ BEGIN
           -- сохранили свойство <Дата начисления>
           PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ServiceDate(), vbMovementItemId, DATE_TRUNC ('MONTH', inDateAdditional));
      
-          IF COALESCE (vbisSign,False) = TRUE 
+          -- 
+          IF EXISTS (SELECT 1 FROM MovementBoolean WHERE MovementBoolean.MovementId = vbMovementId AND MovementBoolean.DescId = zc_MovementBoolean_Sign() AND MovementBoolean.ValueData = TRUE)
           THEN
-              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Child(), vbMovementItemId, TRUE);
+              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Master(), vbMovementItemId, TRUE);
+          ELSE
+              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Master(), vbMovementItemId, FALSE);
           END IF;
       
            -- сохранили свойство <Дата корректировки>
