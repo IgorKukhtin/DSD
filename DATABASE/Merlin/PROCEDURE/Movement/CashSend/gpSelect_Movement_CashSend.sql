@@ -92,9 +92,9 @@ BEGIN
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
 
             --
-            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                   AND MovementItem.DescId = zc_MI_Master()
-                                   AND MovementItem.isErased = FALSE
+            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                  AND MovementItem.DescId = zc_MI_Master()
+                                  AND MovementItem.isErased = FALSE
             LEFT JOIN Object AS Object_Cash_from ON Object_Cash_from.Id = MovementItem.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Cash
