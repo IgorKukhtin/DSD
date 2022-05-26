@@ -25,9 +25,6 @@ object ServiceItemLastForm: TServiceItemLastForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 32
-    ExplicitTop = 58
-    ExplicitWidth = 876
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -48,7 +45,7 @@ object ServiceItemLastForm: TServiceItemLastForm
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.Footer = True
-      OptionsView.HeaderHeight = 40
+      OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object StartDate: TcxGridDBColumn
@@ -95,6 +92,74 @@ object ServiceItemLastForm: TServiceItemLastForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 66
+      end
+      object Value_before: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083'., '#1075#1088#1085' ('#1087#1088#1077#1076'. '#1087#1077#1088'.)'
+        DataBinding.FieldName = 'Value_before'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##'
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083'., '#1075#1088#1085' ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        Width = 86
+      end
+      object Price_before: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'. ('#1087#1088#1077#1076'. '#1087#1077#1088'.)'
+        DataBinding.FieldName = 'Price_before'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##'
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'. ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        Width = 83
+      end
+      object Area_before: TcxGridDBColumn
+        Caption = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'. ('#1087#1088#1077#1076'. '#1087#1077#1088'.)'
+        DataBinding.FieldName = 'Area_before'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##'
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'. ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        Width = 80
+      end
+      object Value_after: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100', '#1075#1088#1085' ('#1089#1083'. '#1087#1077#1088'.)'
+        DataBinding.FieldName = 'Value_after'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##'
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100', '#1075#1088#1085' ('#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        Width = 92
+      end
+      object Price_after: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'.  ('#1089#1083'. '#1087#1077#1088'.)'
+        DataBinding.FieldName = 'Price_after'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##'
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'.  ('#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        Width = 69
+      end
+      object Area_after: TcxGridDBColumn
+        Caption = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'. ('#1089#1083'. '#1087#1077#1088'.)'
+        DataBinding.FieldName = 'Area_after'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##'
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'. ('#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        Width = 67
       end
       object InfoMoneyName: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1100#1103' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
@@ -163,7 +228,6 @@ object ServiceItemLastForm: TServiceItemLastForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 876
     object cxLabel1: TcxLabel
       Left = 3
       Top = 9
@@ -210,7 +274,7 @@ object ServiceItemLastForm: TServiceItemLastForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 5
     Width = 234
   end
   object edOperDate: TcxDateEdit
@@ -859,9 +923,12 @@ object ServiceItemLastForm: TServiceItemLastForm
       end
       item
         Component = GuidesInfoMoney
+      end
+      item
+        Component = edOperDate
       end>
     Left = 416
-    Top = 104
+    Top = 160
   end
   object spGetImportSettingId: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'

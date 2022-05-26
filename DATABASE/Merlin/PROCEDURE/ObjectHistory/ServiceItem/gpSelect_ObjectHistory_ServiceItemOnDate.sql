@@ -12,7 +12,13 @@ RETURNS TABLE (Id Integer, StartDate TDateTime, EndDate TDateTime
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar, NameFull TVarChar, UnitGroupNameFull TVarChar
-             , Value TFloat, Price TFloat, Area TFloat
+             , Value TFloat, Price TFloat, Area TFloat   
+             , Value_before TFloat
+             , Price_before TFloat
+             , Area_before  TFloat
+             , Value_after TFloat
+             , Price_after TFloat
+             , Area_after  TFloat
              , isErased Boolean
              )
 AS
@@ -44,15 +50,71 @@ BEGIN
                           WHERE ObjectLink_Unit.DescId = zc_ObjectLink_ServiceItem_Unit()
                             AND (COALESCE (ObjectLink_InfoMoney.ChildObjectId,0) = inInfoMoneyId OR inInfoMoneyId = 0)
                           )
-       --последнии данные
+       -- данные  на дату
      , ObjectHistory_ServiceItem AS (SELECT *
                                      FROM ObjectHistory
-                                     WHERE ObjectHistory.ObjectId IN (SELECT DISTINCT tmpServiceItem.ObjectId FROM tmpServiceItem) -- WHERE ;= inUnitId OR inUnitId = 0)
+                                     WHERE ObjectHistory.ObjectId IN (SELECT DISTINCT tmpServiceItem.ObjectId FROM tmpServiceItem)
                                        AND ObjectHistory.DescId = zc_ObjectHistory_ServiceItem()
                                        AND ObjectHistory.StartDate <= inOperDate
                                        AND ObjectHistory.EndDate >= inOperDate
                                      )
+       --данные предыдущеного и следующего периодов
+     , ObjectHistory_after AS (SELECT tmp.ObjectId
+   		                            , ObjectHistoryFloat_Value_after.ValueData   AS Value_after
+                                    , ObjectHistoryFloat_Price_after.ValueData   AS Price_after
+                                    , ObjectHistoryFloat_Area_after.ValueData    AS Area_after
+                               FROM (SELECT ObjectHistory_ServiceItem.ObjectId
+                                        , ObjectHistory_after.Id  AS Id_after
+                                        , ObjectHistory_after.StartDate AS StartDate
+                                        , MIN (ObjectHistory_after.StartDate) OVER (PARTITION BY ObjectHistory_ServiceItem.ObjectId) AS StartDate_after
+                                   FROM ObjectHistory_ServiceItem
+                                        LEFT JOIN ObjectHistory AS ObjectHistory_after
+                                                                ON ObjectHistory_after.ObjectId = ObjectHistory_ServiceItem.ObjectId
+                                                               AND ObjectHistory_after.DescId = zc_ObjectHistory_ServiceItem()
+                                                               AND ObjectHistory_after.StartDate >= ObjectHistory_ServiceItem.EndDate
+                                   ) AS tmp    
 
+                                  LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value_after
+                                                               ON ObjectHistoryFloat_Value_after.ObjectHistoryId = tmp.Id_after
+                                                              AND ObjectHistoryFloat_Value_after.DescId = zc_ObjectHistoryFloat_ServiceItem_Value()
+                                  LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price_after
+                                                               ON ObjectHistoryFloat_Price_after.ObjectHistoryId = tmp.Id_after
+                                                              AND ObjectHistoryFloat_Price_after.DescId = zc_ObjectHistoryFloat_ServiceItem_Price()           
+                                  LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Area_after
+                                                               ON ObjectHistoryFloat_Area_after.ObjectHistoryId = tmp.Id_after
+                                                              AND ObjectHistoryFloat_Area_after.DescId = zc_ObjectHistoryFloat_ServiceItem_Area()  
+                             WHERE tmp.StartDate = tmp.StartDate_after
+                             )
+
+     , ObjectHistory_before AS (SELECT tmp.ObjectId
+   		                            , ObjectHistoryFloat_Value_before.ValueData   AS Value_before
+                                    , ObjectHistoryFloat_Price_before.ValueData   AS Price_before
+                                    , ObjectHistoryFloat_Area_before.ValueData    AS Area_before
+                               FROM (SELECT ObjectHistory_ServiceItem.ObjectId
+                                        , ObjectHistory_before.Id  AS Id_before
+                                        , ObjectHistory_before.EndDate AS EndDate
+                                        , MAX (ObjectHistory_before.EndDate)  OVER (PARTITION BY ObjectHistory_ServiceItem.ObjectId) AS EndDate_before
+                                   FROM ObjectHistory_ServiceItem
+                                        LEFT JOIN ObjectHistory AS ObjectHistory_before
+                                                                ON ObjectHistory_before.ObjectId = ObjectHistory_ServiceItem.ObjectId
+                                                               AND ObjectHistory_before.DescId = zc_ObjectHistory_ServiceItem()
+                                                               AND ObjectHistory_before.EndDate <= ObjectHistory_ServiceItem.StartDate
+                                   ) AS tmp    
+
+                                  LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value_before
+                                                               ON ObjectHistoryFloat_Value_before.ObjectHistoryId = tmp.Id_before
+                                                              AND ObjectHistoryFloat_Value_before.DescId = zc_ObjectHistoryFloat_ServiceItem_Value()
+                                  LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price_before
+                                                               ON ObjectHistoryFloat_Price_before.ObjectHistoryId = tmp.Id_before
+                                                              AND ObjectHistoryFloat_Price_before.DescId = zc_ObjectHistoryFloat_ServiceItem_Price()           
+                                  LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Area_before
+                                                               ON ObjectHistoryFloat_Area_before.ObjectHistoryId = tmp.Id_before
+                                                              AND ObjectHistoryFloat_Area_before.DescId = zc_ObjectHistoryFloat_ServiceItem_Area()  
+                             WHERE tmp.EndDate = tmp.EndDate_before
+                             )
+                             
+                             
+                             
        SELECT
              ObjectHistory_ServiceItem.Id                                   AS Id
            , COALESCE(ObjectHistory_ServiceItem.StartDate, CURRENT_DATE) ::TDateTime AS StartDate
@@ -71,7 +133,16 @@ BEGIN
 
            , ObjectHistoryFloat_ServiceItem_Value.ValueData                 AS Value
            , ObjectHistoryFloat_ServiceItem_Price.ValueData                 AS Price
-           , ObjectHistoryFloat_ServiceItem_Area.ValueData                  AS Area
+           , ObjectHistoryFloat_ServiceItem_Area.ValueData                  AS Area    
+
+           , ObjectHistory_before.Value_before ::TFloat
+           , ObjectHistory_before.Price_before ::TFloat
+           , ObjectHistory_before.Area_before  ::TFloat
+
+           , ObjectHistory_after.Value_after ::TFloat
+           , ObjectHistory_after.Price_after ::TFloat
+           , ObjectHistory_after.Area_after  ::TFloat
+
            , FALSE AS isErased
 
        FROM ObjectHistory_ServiceItem
@@ -101,7 +172,10 @@ BEGIN
 
             LEFT JOIN ObjectString AS ObjectString_Unit_GroupNameFull
                                    ON ObjectString_Unit_GroupNameFull.ObjectId = Object_Unit.Id
-                                  AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull()
+                                  AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull()  
+                                  
+            LEFT JOIN ObjectHistory_before ON ObjectHistory_before.ObjectId = ObjectHistory_ServiceItem.ObjectId
+            LEFT JOIN ObjectHistory_after ON ObjectHistory_after.ObjectId = ObjectHistory_ServiceItem.ObjectId
 ;
 
 
@@ -115,6 +189,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.05.22         *
  04.05.22         *
 */
 
