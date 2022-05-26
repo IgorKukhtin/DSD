@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
              , PaidKindId Integer, PaidKindName TVarChar
              , ShortName TVarChar, GroupNameFull TVarChar
              , NPP TFloat
+             , isUserAll Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
 )
@@ -41,7 +42,8 @@ BEGIN
 
         , ObjectString_ShortName.ValueData     AS ShortName
         , ObjectString_GroupNameFull.ValueData AS GroupNameFull
-        , ObjectFloat_NPP.ValueData   ::TFloat AS NPP
+        , ObjectFloat_NPP.ValueData   ::TFloat AS NPP 
+        , COALESCE (ObjectBoolean_UserAll.ValueData, FALSE) ::Boolean AS isUserAll
 
         , Object_Insert.ValueData         AS InsertName
         , ObjectDate_Insert.ValueData     AS InsertDate
@@ -78,6 +80,10 @@ BEGIN
                                 ON ObjectBoolean_isLeaf.ObjectId = Object_Cash.Id
                                AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_UserAll
+                                ON ObjectBoolean_UserAll.ObjectId = Object_Cash.Id
+                               AND ObjectBoolean_UserAll.DescId = zc_ObjectBoolean_Cash_UserAll()
+
         LEFT JOIN ObjectLink AS ObjectLink_Insert
                              ON ObjectLink_Insert.ObjectId = Object_Cash.Id
                             AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
@@ -106,6 +112,7 @@ END;$BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 25.05.22         *
  11.01.22         *
 */
 

@@ -6,7 +6,7 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 915
-  ExplicitHeight = 428
+  ExplicitHeight = 429
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -15,17 +15,17 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
     Height = 307
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 819
+    ExplicitWidth = 899
     ExplicitHeight = 307
     ClientRectBottom = 307
     ClientRectRight = 899
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 819
+      ExplicitWidth = 899
       ExplicitHeight = 307
       inherited cxGrid: TcxGrid
         Width = 899
         Height = 307
-        ExplicitWidth = 819
+        ExplicitWidth = 899
         ExplicitHeight = 307
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -98,6 +98,11 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
               Format = ',0.####'
               Kind = skSum
               Column = Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_pr
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -169,6 +174,11 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
               Format = ',0.####'
               Kind = skSum
               Column = Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_pr
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -452,6 +462,17 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
             Options.Editing = False
             Width = 83
           end
+          object Summ_pr: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'. '#1055#1056#1040#1049#1057
+            DataBinding.FieldName = 'Summ_pr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
       object cbLocation: TcxCheckBox
@@ -486,7 +507,7 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
   inherited Panel: TPanel
     Width = 899
     Height = 57
-    ExplicitWidth = 819
+    ExplicitWidth = 899
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 121
@@ -543,14 +564,31 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
       Width = 256
     end
     object cbPartion: TcxCheckBox
-      Left = 582
-      Top = 6
+      Left = 567
+      Top = 30
       Action = actRefreshPartion
       ParentShowHint = False
       Properties.ReadOnly = False
       ShowHint = True
       TabOrder = 8
       Width = 81
+    end
+    object cxLabel18: TcxLabel
+      Left = 571
+      Top = 6
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
+    end
+    object edPriceList: TcxButtonEdit
+      Left = 642
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 219
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -674,6 +712,23 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
           Value = Null
           Component = cbPartion
           DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceListId'
+          Value = Null
+          Component = GuidesPriceList
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceListName'
+          Value = Null
+          Component = GuidesPriceList
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1463,6 +1518,14 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisPartion'
         Value = Null
         Component = cbPartion
@@ -1629,7 +1692,8 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 488
+    Left = 448
+    Top = 16
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1678,5 +1742,64 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
       end>
     Left = 384
     Top = 65528
+  end
+  object GuidesPriceList: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList
+    FormNameParam.Value = 'TPriceList_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceList_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 756
+    Top = 8
   end
 end

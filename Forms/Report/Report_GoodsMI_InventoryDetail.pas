@@ -71,6 +71,9 @@ type
     actPrintArticleLossPrice: TdsdPrintAction;
     bbPrintArticleLossPrice: TdxBarButton;
     actRefreshPartion: TdsdDataSetRefresh;
+    cxLabel18: TcxLabel;
+    edPriceList: TcxButtonEdit;
+    GuidesPriceList: TdsdGuides;
   private
     { Private declarations }
   public

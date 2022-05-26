@@ -23,9 +23,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CommentMoveMoney_UserAll() RETURNS I
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_CommentMoveMoney(), 'zc_ObjectBoolean_CommentMoveMoney_UserAll', 'Доступ Всем' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CommentMoveMoney_UserAll');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Cash_UserAll() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Cash_UserAll'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Cash(), 'zc_ObjectBoolean_Cash_UserAll', 'Доступ Всем' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Cash_UserAll');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.05.22         * zc_ObjectBoolean_Cash_UserAll
  02.02.22         * zc_ObjectBoolean_InfoMoneyDetail_UserAll
                     zc_ObjectBoolean_CommentMoveMoney_UserAll
                     zc_ObjectBoolean_CommentInfoMoney_UserAll

@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
              , PaidKindId Integer, PaidKindName TVarChar
              , ShortName TVarChar
              , NPP TFloat
+             , isUserAll Boolean
                ) AS
 $BODY$
 BEGIN
@@ -34,6 +35,7 @@ BEGIN
            , CAST ('' as TVarChar)  AS PaidKindName
            , CAST ('' as TVarChar)  AS ShortName
            , CAST (0 as TFloat)     AS NPP
+           , CAST (FALSE as Boolean)  AS isUserAll
            ;
    ELSE
        RETURN QUERY 
@@ -49,7 +51,8 @@ BEGIN
            , Object_PaidKind.Id        AS PaidKindId
            , Object_PaidKind.ValueData AS PaidKindName
            , ObjectString_ShortName.ValueData     AS ShortName
-           , ObjectFloat_NPP.ValueData   ::TFloat AS NPP           
+           , ObjectFloat_NPP.ValueData   ::TFloat AS NPP
+           , COALESCE (ObjectBoolean_UserAll.ValueData, FALSE) ::Boolean AS isUserAll           
        FROM Object AS Object_Cash
         LEFT JOIN ObjectString AS ObjectString_ShortName
                                ON ObjectString_ShortName.ObjectId = Object_Cash.Id
@@ -73,7 +76,11 @@ BEGIN
                              ON ObjectLink_PaidKind.ObjectId = Object_Cash.Id
                             AND ObjectLink_PaidKind.DescId = zc_ObjectLink_Cash_PaidKind()
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_PaidKind.ChildObjectId
-                      
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_UserAll
+                                ON ObjectBoolean_UserAll.ObjectId = Object_Cash.Id
+                               AND ObjectBoolean_UserAll.DescId = zc_ObjectBoolean_Cash_UserAll()
+
        WHERE Object_Cash.Id = inId;
    END IF;  
   
@@ -86,6 +93,7 @@ ALTER FUNCTION gpGet_Object_Cash (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 25.05.22         *
  25.11.14         * add PaidKind
  28.12.13                                        * rename to zc_ObjectLink_Cash_JuridicalBasis
  11.06.13         *

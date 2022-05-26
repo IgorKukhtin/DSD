@@ -3,8 +3,8 @@ object Report_GoodsMI_InventoryDetailDialogForm: TReport_GoodsMI_InventoryDetail
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080'>'
-  ClientHeight = 205
-  ClientWidth = 450
+  ClientHeight = 238
+  ClientWidth = 453
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object Report_GoodsMI_InventoryDetailDialogForm: TReport_GoodsMI_InventoryDetail
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 106
-    Top = 161
+    Left = 122
+    Top = 198
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_GoodsMI_InventoryDetailDialogForm: TReport_GoodsMI_InventoryDetail
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 280
-    Top = 161
+    Left = 296
+    Top = 198
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -107,14 +107,31 @@ object Report_GoodsMI_InventoryDetailDialogForm: TReport_GoodsMI_InventoryDetail
     TabOrder = 10
     Width = 76
   end
+  object edPriceList: TcxButtonEdit
+    Left = 98
+    Top = 150
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 335
+  end
+  object cxLabel18: TcxLabel
+    Left = 27
+    Top = 151
+    Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 80
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 32
-    Top = 120
+    Left = 40
+    Top = 96
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -188,6 +205,23 @@ object Report_GoodsMI_InventoryDetailDialogForm: TReport_GoodsMI_InventoryDetail
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListName'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 200
     Top = 144
@@ -250,5 +284,64 @@ object Report_GoodsMI_InventoryDetailDialogForm: TReport_GoodsMI_InventoryDetail
       end>
     Left = 160
     Top = 48
+  end
+  object GuidesPriceList: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList
+    FormNameParam.Value = 'TPriceList_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceList_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 268
+    Top = 168
   end
 end

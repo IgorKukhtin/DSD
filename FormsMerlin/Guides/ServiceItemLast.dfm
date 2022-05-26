@@ -3,7 +3,7 @@ object ServiceItemLastForm: TServiceItemLastForm
   Top = 0
   Caption = #1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099' - '#1055#1088#1086#1089#1084#1086#1090#1088' / '#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1055#1086'c'#1083#1077#1076#1085#1080#1093' '#1076#1072#1085#1085#1099#1093
   ClientHeight = 398
-  ClientWidth = 876
+  ClientWidth = 954
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,13 +19,15 @@ object ServiceItemLastForm: TServiceItemLastForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 63
-    Width = 876
+    Width = 954
     Height = 335
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 695
+    ExplicitLeft = 32
+    ExplicitTop = 58
+    ExplicitWidth = 876
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -156,19 +158,19 @@ object ServiceItemLastForm: TServiceItemLastForm
   object Panel: TPanel
     Left = 0
     Top = 26
-    Width = 876
+    Width = 954
     Height = 37
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 695
+    ExplicitWidth = 876
     object cxLabel1: TcxLabel
-      Left = 25
+      Left = 3
       Top = 9
       Caption = #1054#1090#1076#1077#1083':'
     end
     object edUnit: TcxButtonEdit
-      Left = 66
+      Left = 44
       Top = 9
       Properties.Buttons = <
         item
@@ -177,31 +179,31 @@ object ServiceItemLastForm: TServiceItemLastForm
         end>
       Properties.ReadOnly = True
       TabOrder = 1
-      Width = 350
+      Width = 317
     end
     object cxLabel3: TcxLabel
-      Left = 711
-      Top = 9
+      Left = 798
+      Top = 10
       Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1089':'
     end
-    object edOperDate: TcxDateEdit
-      Left = 783
-      Top = 9
+    object edChangeDate: TcxDateEdit
+      Left = 870
+      Top = 10
       EditValue = 44713d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 3
-      Width = 84
+      Width = 83
     end
   end
   object cxLabel2: TcxLabel
-    Left = 425
-    Top = 35
+    Left = 369
+    Top = 36
     Caption = #1057#1090#1072#1090#1100#1103':'
   end
   object edInfoMoney: TcxButtonEdit
-    Left = 471
-    Top = 35
+    Left = 415
+    Top = 36
     Properties.Buttons = <
       item
         Default = True
@@ -210,6 +212,20 @@ object ServiceItemLastForm: TServiceItemLastForm
     Properties.ReadOnly = True
     TabOrder = 7
     Width = 234
+  end
+  object edOperDate: TcxDateEdit
+    Left = 709
+    Top = 36
+    EditValue = 44713d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 8
+    Width = 81
+  end
+  object cxLabel4: TcxLabel
+    Left = 659
+    Top = 36
+    Caption = #1053#1072' '#1076#1072#1090#1091':'
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -692,7 +708,7 @@ object ServiceItemLastForm: TServiceItemLastForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_ObjectHistory_ServiceItemLast'
+    StoredProcName = 'gpSelect_ObjectHistory_ServiceItemOnDate'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -712,6 +728,14 @@ object ServiceItemLastForm: TServiceItemLastForm
         Value = Null
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -958,7 +982,7 @@ object ServiceItemLastForm: TServiceItemLastForm
       item
         Name = 'inOperDate'
         Value = 42236d
-        Component = edOperDate
+        Component = edChangeDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
