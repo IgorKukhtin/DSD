@@ -13,6 +13,7 @@ RETURNS TABLE (Id            Integer
              , GoodsCode     Integer
              , GoodsName     TVarChar
              , GoodsNameUkr  TVarChar
+             , MorionCode    Integer
              , NDS           TFloat
              , PriceOptSP    TFloat
              , PriceSale     TFloat
@@ -211,6 +212,7 @@ BEGIN
              , Object_Goods.ObjectCode                    ::Integer  AS GoodsCode
              , Object_Goods.Name                                     AS GoodsName
              , Object_Goods.NameUkr                                  AS GoodsNameUkr
+             , Object_Goods.MorionCode                               AS MorionCode
              , ObjectFloat_NDSKind_NDS.ValueData                     AS NDS
 
              , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP

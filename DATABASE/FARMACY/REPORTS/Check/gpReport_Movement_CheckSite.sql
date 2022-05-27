@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_Movement_CheckSite(
     IN inisSite          Boolean ,
     IN inisSiteTabletki  Boolean ,
     IN inisSiteLiki24    Boolean ,
+    IN inisMobileApplication Boolean ,
     IN inSession         TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer
@@ -45,6 +46,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , CheckSourceKindName TVarChar
              , SummCard TFloat
              , CancelReason TVarChar
+             , isMobileApplication Boolean 
               )
 AS
 $BODY$
@@ -118,6 +120,7 @@ BEGIN
            , MovementFloat_TotalSummCard.ValueData                        AS SummCard
            , CASE WHEN Movement_Check.StatusId = zc_Enum_Status_Erased()
                   THEN COALESCE(Object_CancelReason.ValueData, CancelReasonDefault.Name) END::TVarChar  AS CancelReason
+           , COALESCE(MovementBoolean_MobileApplication.ValueData, False)::Boolean   AS isMobileApplication
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -320,6 +323,10 @@ BEGIN
                                    ON MovementDate_Delay.MovementId = Movement_Check.Id
                                   AND MovementDate_Delay.DescId = zc_MovementDate_Delay()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_MobileApplication
+                                      ON MovementBoolean_MobileApplication.MovementId = Movement_Check.Id
+                                     AND MovementBoolean_MobileApplication.DescId = zc_MovementBoolean_MobileApplication()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckSourceKind
                                          ON MovementLinkObject_CheckSourceKind.MovementId =  Movement_Check.Id
                                         AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
@@ -335,14 +342,15 @@ BEGIN
             LEFT JOIN Object AS Object_CancelReason ON Object_CancelReason.Id = MovementLinkObject_CancelReason.ObjectId
                                      
             LEFT JOIN (SELECT * FROM gpSelect_Object_CancelReason('3') AS CR ORDER BY CR.Code LIMIT 1) AS CancelReasonDefault ON 1 = 1 
-        WHERE inIsRegularSales = True AND COALESCE(Movement_Check.IsDeferred, FALSE) = FALSE
+        WHERE (inIsRegularSales = True AND COALESCE(Movement_Check.IsDeferred, FALSE) = FALSE
            OR inIsVIP = True AND COALESCE(Movement_Check.IsDeferred, FALSE) = TRUE 
                              AND COALESCE(COALESCE(MovementString_InvNumberOrder.ValueData,
                                  CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() THEN MovementString_OrderId.ValueData
                                       WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0 THEN Movement_Check.Id::TVarChar END)::TVarChar, '') = ''
            OR inisSite = True AND COALESCE(MovementString_InvNumberOrder.ValueData, '') <> ''
            OR inisSiteTabletki = True AND COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki()
-           OR inisSiteLiki24 = True AND COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Liki24()
+           OR inisSiteLiki24 = True AND COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Liki24())
+          AND (inisMobileApplication = False or COALESCE(MovementBoolean_MobileApplication.ValueData, False) = TRUE) 
       ;
 
 END;
@@ -359,5 +367,6 @@ $BODY$
 
 -- тест
 --
-select * from gpReport_Movement_CheckSite(inDateStart := ('01.01.2021')::TDateTime , inDateFinal := ('04.01.2021')::TDateTime , inUnitId := 183292 , inIsRegularSales := 'True' , inisVIP := 'True' , inisSite := 'True' , inisSiteTabletki := 'False' , inisSiteLiki24 := 'False' ,  inSession := '3');
-select * from gpReport_Movement_CheckSite(inDateStart := ('01.09.2021')::TDateTime , inDateFinal := ('14.09.2021')::TDateTime , inUnitId := 0 , inIsRegularSales := 'False' , inisVIP := 'False' , inisSite := 'True' , inisSiteTabletki := 'False' , inisSiteLiki24 := 'False' ,  inSession := '3');
+select * from gpReport_Movement_CheckSite(inDateStart := ('01.09.2021')::TDateTime , inDateFinal := ('14.09.2021')::TDateTime , inUnitId := 0 , inIsRegularSales := 'False' , inisVIP := 'False' , inisSite := 'True' , inisSiteTabletki := 'False' , inisSiteLiki24 := 'False' , inisMobileApplication := False, inSession := '3');
+
+

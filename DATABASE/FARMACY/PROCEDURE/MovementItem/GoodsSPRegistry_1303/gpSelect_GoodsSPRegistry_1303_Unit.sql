@@ -1,9 +1,11 @@
  -- Function: gpSelect_GoodsSPRegistry_1303_Unit()
 
-DROP FUNCTION IF EXISTS gpSelect_GoodsSPRegistry_1303_Unit (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsSPRegistry_1303_Unit (Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsSPRegistry_1303_Unit(
     IN inUnitId      Integer   ,    -- Подразделение
+    IN inGoodsId     Integer   ,    -- Товар
+    IN inisCalc      Boolean   ,    -- Выполнять
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (GoodsId         Integer
@@ -18,13 +20,20 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
     DECLARE vbObjectId Integer;  
+    DECLARE vbGoodsId Integer;  
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_GoodsSP_1303());
     vbUserId:= lpGetUserBySession (inSession);
+    
+    IF COALESCE (inisCalc, FALSE) = False
+    THEN
+      Return;
+    END IF;
 
     -- сеть пользователя
     vbObjectId := COALESCE (lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
+    vbGoodsId := (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inGoodsId);
 
     RETURN QUERY
     WITH
@@ -47,8 +56,10 @@ BEGIN
                                  FROM tmpMovGoodsSP_1303 AS Movement
                                             
                                       INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Master()
-                                                            AND MovementItem.MovementId = Movement.Id
-                                                            AND MovementItem.isErased = False
+                                                             AND MovementItem.MovementId = Movement.Id
+                                                             AND MovementItem.isErased = False
+                                                             AND (MovementItem.ObjectId = vbGoodsId OR COALESCE (vbGoodsId, 0) = 0)
+
                                                                                                                                    
                                       LEFT JOIN tmpMovGoodsSP_1303 AS MovementNext
                                                                    ON MovementNext.Ord =  Movement.Ord + 1
@@ -92,6 +103,7 @@ BEGIN
                                                                AND MovementItem.DescId     = zc_MI_Master()
                                                                AND MovementItem.isErased   = FALSE
                                                                AND COALESCE (MovementItem.ObjectId, 0) <> 0
+                                                               AND (MovementItem.ObjectId = vbGoodsId OR COALESCE (vbGoodsId, 0) = 0)
 
                                          LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
                                                                      ON MIFloat_PriceOptSP.MovementItemId = MovementItem.Id
@@ -116,6 +128,7 @@ BEGIN
                           WHERE Container.DescId = zc_Container_Count()
                             AND Container.Amount <> 0
                             AND Container.WhereObjectId = inUnitId
+                            AND (Container.ObjectId = inGoodsId OR COALESCE (inGoodsId, 0) = 0)
                           GROUP BY Container.ObjectId
                          )
        , tmpData_1303 AS (SELECT Object_Goods_Retail.Id    AS GoodsId
@@ -144,36 +157,45 @@ BEGIN
                                                     
                                LEFT JOIN tmpContainer ON tmpContainer.ObjectId = Object_Goods_Retail.Id 
                                                     
-                          WHERE tmpGoodsSPRegistry_1303.Ord = 1)
+                          WHERE COALESCE(tmpGoodsSPRegistry_1303.Ord, 1) = 1
+                            AND COALESCE (Object_Goods_Retail.Id, 0) <> 0
+                          )
        , tmpIncome_1303 AS (SELECT Container.ObjectId    AS GoodsId
                                 , (CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE THEN MIFloat_Price.ValueData
                                         ELSE (MIFloat_Price.ValueData * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData,1)/100))::TFloat    -- в партии инвентаризации  цена с НДС, а параметра НДС нет
                                         END * 1.1)::TFloat    AS PriceSale   -- цена отпускная 1303
                                 , ROW_NUMBER() OVER (PARTITION BY Container.ObjectId ORDER BY MovementLinkObject_To.ObjectId <> inUnitId, MI_Income.MovementId DESC) AS ord   -- Люба сказала смотреть по последней партии
                             FROM Container 
-                                 LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
-                                                                     ON CLI_MI.ContainerId = Container.Id
-                                                                    AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                                 LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                                 INNER JOIN ContainerLinkObject AS CLI_MI 
+                                                                ON CLI_MI.ContainerId = Container.Id
+                                                               AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                 INNER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
 
-                                 LEFT OUTER JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode :: Integer
+                                 INNER JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode :: Integer
+                                 -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                 LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                             ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                            AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                 -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                 LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+
                                  LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                             ON MIFloat_Price.MovementItemId = MI_Income.Id
+                                                             ON MIFloat_Price.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)
                                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
                                  LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                                           ON MovementBoolean_PriceWithVAT.MovementId =  MI_Income.MovementId
+                                                           ON MovementBoolean_PriceWithVAT.MovementId =  COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
                                                           AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
-                                                              ON MovementLinkObject_NDSKind.MovementId = MI_Income.MovementId
+                                                              ON MovementLinkObject_NDSKind.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
                                                              AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                              ON MovementLinkObject_To.MovementId = MI_Income.MovementId
+                                                              ON MovementLinkObject_To.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
                                                              AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()   
                                  LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                                       ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
 
-                              WHERE Container.ObjectId IN (SELECT tmpContainer.ObjectId FROM tmpContainer)
+                              WHERE Container.ObjectId IN (SELECT tmpData_1303.GoodsId FROM tmpData_1303)
                                 AND Container.DescId = zc_Container_Count()
                                 AND Container.WhereObjectId = inUnitId
                                 AND COALESCE (MIFloat_Price.ValueData ,0) > 0
@@ -205,4 +227,4 @@ $BODY$
 
 --ТЕСТ
 -- 
-select * from gpSelect_GoodsSPRegistry_1303_Unit(inUnitId := 13338606, inSession := '3');
+select * from gpSelect_GoodsSPRegistry_1303_Unit(inUnitId := 13338606, inGoodsId := 16242420, inisCalc := True, inSession := '3');

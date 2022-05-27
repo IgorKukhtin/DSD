@@ -148,6 +148,15 @@ type
     mactUpdate_Published_Revert: TMultiAction;
     actUpdate_Published_Revert: TdsdExecStoredProc;
     dxBarButton19: TdxBarButton;
+    dxBarButton20: TdxBarButton;
+    dxBarSubItem5: TdxBarSubItem;
+    spSite_Param: TdsdStoredProc;
+    actForeignDataUpdatePublishedSite: TdsdForeignData;
+    actSite_Param: TdsdExecStoredProc;
+    isPublishedSite: TcxGridDBColumn;
+    dxBarButton21: TdxBarButton;
+    actSetVisiblePublishedSite_False: TdsdSetVisibleAction;
+    actSetVisiblePublishedSite_True: TdsdSetVisibleAction;
   private
     { Private declarations }
   public

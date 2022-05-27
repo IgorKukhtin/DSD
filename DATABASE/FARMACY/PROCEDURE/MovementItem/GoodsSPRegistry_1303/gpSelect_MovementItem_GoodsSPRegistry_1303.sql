@@ -402,7 +402,7 @@ BEGIN
 
                                WHERE MovementItem.DescId = zc_MI_Master()
                                  AND MovementItem.MovementId = inMovementId
-                                 AND (MovementItem.isErased = FALSE OR inIsErased = TRUE))
+                                 AND (MovementItem.isErased = FALSE  OR inIsErased = TRUE))
       , tmpMICount AS (SELECT MovementItem.ObjectId
                             , COUNT(*)               AS CountGoods
                        FROM tmpMovementItem AS MovementItem
@@ -526,6 +526,8 @@ BEGIN
                                         AND MIGoodsSP_1303.Ord = 1 
                                         
              LEFT JOIN tmpMICount ON tmpMICount.ObjectId = MovementItem.ObjectId
+                       
+        WHERE MovementItem.Ord = 1 or inIsErased = True
 
          ;
     END IF;            

@@ -148,7 +148,6 @@ function CheckLikiDniproReceipt_Number(var ANumber : string) : boolean;
 begin
   Result := False;
   try
-    if (Length(ANumber) < 17) or (Length(ANumber) > 20) then exit;
 
     Res := TRegEx.Split(ANumber, '-');
 
@@ -157,10 +156,7 @@ begin
     S := Trim(Res[0]);
     for I := 0 to High(Res) do
     begin
-      if (I = 0) and (Length(Trim(Res[I])) <> 4) and (Length(Trim(Res[I])) <> 5) then exit;
-      if (I = 1) and (Length(Trim(Res[I])) <> 4) then exit;
       if (I = 2) and (Length(Trim(Res[I])) <> 2) then exit;
-      if (I = 3) and (Length(Trim(Res[I])) < 4) then exit;
 
       for J := 1 to Length(Trim(Res[I])) do if not CharInSet(Trim(Res[I])[J], ['0'..'9','A'..'Z']) then exit;
       if I > 0 then S := S + '-' +Trim(Res[I]);
@@ -170,8 +166,8 @@ begin
     Result := True;
   finally
     if not Result then ShowMessage ('Ошибка.<Регистрационный номер рецепта>'#13#10#13#10 +
-      'Номер должен содержать до 20 символов в 4 блока первый 4..5 символа второй 4 символа, третий 2 символа и четвертый 4..6 символов разделенных символом "-"'#13#10 +
-      'Cодержать только цыфры и буквы латинского алфовита'#13#10 +
+      'Номер должен содержать 4 блока разделенных символом "-".'#13#10 +
+      'Tретий 2 цыфры или буквы латинского алфовита, остальные только цифры'#13#10 +
       'В виде XXXX-XXXX-XX-XXXXXX ...');
   end;
 end;
@@ -407,7 +403,7 @@ begin
         end;
         if FPositionCDS.IsEmpty then
         begin
-          if FRecipe.FRecipe_Number = '' then ShowMessage('Ошибка рецепт не найден возможно он уже погашен.')
+          if FRecipe.FRecipe_Number = '' then ShowMessage('Ошибка рецепт не найден возможно он уже погашен уточните у Каштан.')
           else ShowMessage('Ошибка в рецепте не описаны медикаменты.');
         end else Result := True;
       end else ShowError;

@@ -1,27 +1,27 @@
-﻿inherited Report_MovementCheckSiteForm: TReport_MovementCheckSiteForm
+inherited Report_MovementCheckSiteForm: TReport_MovementCheckSiteForm
   Caption = #1055#1088#1086#1076#1072#1078#1080' '#1095#1077#1088#1077#1079' '#1089#1072#1081#1090
   ClientHeight = 480
-  ClientWidth = 1251
+  ClientWidth = 1270
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1267
+  ExplicitWidth = 1286
   ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 58
-    Width = 1251
+    Width = 1270
     Height = 422
     TabOrder = 3
     ExplicitTop = 58
     ExplicitWidth = 1251
     ExplicitHeight = 422
     ClientRectBottom = 422
-    ClientRectRight = 1251
+    ClientRectRight = 1270
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1251
       ExplicitHeight = 422
       inherited cxGrid: TcxGrid
-        Width = 1251
+        Width = 1270
         Height = 422
         ExplicitWidth = 1251
         ExplicitHeight = 422
@@ -162,7 +162,7 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 109
+            Width = 103
           end
           object isCallOrder: TcxGridDBColumn
             Caption = #1047#1072#1082#1072#1079' '#1087#1086' '#1079#1074#1086#1085#1082#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1055#1086#1095#1090#1072')'
@@ -170,14 +170,21 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 95
+            Width = 89
+          end
+          object isMobileApplication: TcxGridDBColumn
+            Caption = #1052#1086#1073'. '#1087#1088#1080#1083'.'
+            DataBinding.FieldName = 'isMobileApplication'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 53
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1251
+    Width = 1270
     Height = 32
     ExplicitWidth = 1251
     ExplicitHeight = 32
@@ -219,45 +226,53 @@
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
       Width = 188
     end
-    object сbSiteLiki24: TcxCheckBox
-      Left = 1024
+    object cbSiteLiki24: TcxCheckBox
+      Left = 992
       Top = 6
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Caption = #1063#1077#1082#1080' '#1089#1072#1081#1090#1072' "Liki 24"'
       TabOrder = 6
       Width = 129
     end
-    object сbSiteTabletki: TcxCheckBox
-      Left = 871
+    object cbSiteTabletki: TcxCheckBox
+      Left = 851
       Top = 6
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Caption = #1063#1077#1082#1080' '#1089#1072#1081#1090#1072' "'#1058#1072#1073#1083#1077#1090#1082#1080'"'
       TabOrder = 7
-      Width = 154
+      Width = 142
     end
-    object сbSite: TcxCheckBox
-      Left = 727
+    object cbSite: TcxCheckBox
+      Left = 710
       Top = 6
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Caption = #1063#1077#1082#1080' '#1089#1072#1081#1090#1072' "'#1053#1077' '#1073#1086#1083#1077#1081'"'
       TabOrder = 8
       Width = 138
     end
-    object сbVIP: TcxCheckBox
-      Left = 647
+    object cbVIP: TcxCheckBox
+      Left = 641
       Top = 6
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Caption = 'VIP '#1095#1077#1082#1080
       TabOrder = 9
       Width = 74
     end
-    object сbRegularSales: TcxCheckBox
+    object cbRegularSales: TcxCheckBox
       Left = 515
       Top = 6
       Hint = #1054#1073#1099#1095#1085#1099#1077' '#1087#1088#1086#1076#1072#1078#1080
       Caption = #1054#1073#1099#1095#1085#1099#1077' '#1087#1088#1086#1076#1072#1078#1080
       TabOrder = 10
       Width = 126
+    end
+    object cbMobileApplication: TcxCheckBox
+      Left = 1112
+      Top = 5
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1058#1086#1083#1100#1082#1086' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088'.'
+      TabOrder = 11
+      Width = 152
     end
   end
   inherited ActionList: TActionList
@@ -370,7 +385,7 @@
         item
           Name = 'isRegularSales'
           Value = False
-          Component = сbRegularSales
+          Component = cbRegularSales
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -378,7 +393,7 @@
         item
           Name = 'isVIP'
           Value = Null
-          Component = сbVIP
+          Component = cbVIP
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -386,7 +401,7 @@
         item
           Name = 'isSite'
           Value = Null
-          Component = сbSite
+          Component = cbSite
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -394,7 +409,7 @@
         item
           Name = 'isSiteTabletki'
           Value = Null
-          Component = сbSiteTabletki
+          Component = cbSiteTabletki
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -402,9 +417,16 @@
         item
           Name = 'isSiteLiki24'
           Value = Null
-          Component = сbSiteLiki24
+          Component = cbSiteLiki24
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMobileApplication'
+          Value = Null
+          Component = cbMobileApplication
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -460,7 +482,7 @@
       item
         Name = 'inIsRegularSales'
         Value = Null
-        Component = сbRegularSales
+        Component = cbRegularSales
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -468,7 +490,7 @@
       item
         Name = 'inisVIP'
         Value = False
-        Component = сbVIP
+        Component = cbVIP
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -476,7 +498,7 @@
       item
         Name = 'inisSite'
         Value = Null
-        Component = сbSite
+        Component = cbSite
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -484,7 +506,7 @@
       item
         Name = 'inisSiteTabletki'
         Value = Null
-        Component = сbSiteTabletki
+        Component = cbSiteTabletki
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -492,7 +514,15 @@
       item
         Name = 'inisSiteLiki24'
         Value = Null
-        Component = сbSiteLiki24
+        Component = cbSiteLiki24
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMobileApplication'
+        Value = Null
+        Component = cbMobileApplication
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -41,12 +41,14 @@ type
     bbPrint: TdxBarButton;
     actRefreshJuridical: TdsdDataSetRefresh;
     actUpdateMainDS: TdsdUpdateDataSet;
-    ñbSiteLiki24: TcxCheckBox;
-    ñbSiteTabletki: TcxCheckBox;
-    ñbSite: TcxCheckBox;
-    ñbVIP: TcxCheckBox;
-    ñbRegularSales: TcxCheckBox;
+    cbSiteLiki24: TcxCheckBox;
+    cbSiteTabletki: TcxCheckBox;
+    cbSite: TcxCheckBox;
+    cbVIP: TcxCheckBox;
+    cbRegularSales: TcxCheckBox;
     isCallOrder: TcxGridDBColumn;
+    cbMobileApplication: TcxCheckBox;
+    isMobileApplication: TcxGridDBColumn;
   private
     { Private declarations }
   public

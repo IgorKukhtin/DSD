@@ -130,7 +130,8 @@ BEGIN
              LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                   ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods.NDSKindId
                                   
-        WHERE tmpGoodsSPRegistry_1303.Ord = 1;
+        WHERE COALESCE(tmpGoodsSPRegistry_1303.Ord, 1) = 1
+          AND COALESCE (Object_Goods_Retail.Id, 0) <> 0;
 
 END;
 $BODY$

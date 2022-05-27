@@ -25,7 +25,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , MakerName TVarChar, FormDispensingId Integer, FormDispensingName TVarChar, NumberPlates Integer, QtyPackage Integer, isRecipe boolean
              , isExpDateExcSite boolean, isHideOnTheSite boolean
              , DiscontSiteStart TDateTime, DiscontSiteEnd TDateTime, DiscontAmountSite TFloat, DiscontPercentSite TFloat
-
+             , isPublishedSite Boolean
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -144,6 +144,8 @@ BEGIN
            , Object_Goods_Retail.DiscontSiteEnd
            , Object_Goods_Retail.DiscontAmountSite
            , Object_Goods_Retail.DiscontPercentSite
+           
+           , Object_Goods_Main.isPublished                                       AS isPublishedSite
 
       FROM Object_Goods_Retail
 
