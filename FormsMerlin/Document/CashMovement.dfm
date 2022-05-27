@@ -130,7 +130,7 @@
     Top = 147
     Caption = #1043#1088#1091#1087#1087#1072' '#1057#1090#1072#1090#1100#1080' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
   end
-  object ceParent_infomoney: TcxButtonEdit [17]
+  object ceParent_InfoMoney: TcxButtonEdit [17]
     Left = 8
     Top = 166
     Properties.Buttons = <
@@ -665,11 +665,11 @@
   end
   object GuidesParent_infomoney: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceParent_infomoney
-    FormNameParam.Value = 'TInfoMoney_ParentForm'
+    LookupControl = ceParent_InfoMoney
+    FormNameParam.Value = 'TInfoMoneyTreeGroupForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TInfoMoney_ParentForm'
+    FormName = 'TInfoMoneyTreeGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

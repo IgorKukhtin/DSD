@@ -18,13 +18,20 @@ BEGIN
            , Object_Unit.ObjectCode          AS Code
            , Object_Unit.ValueData           AS Name
            , Object_Parent.Id                AS ParentId
+           , COALESCE (ObjectBoolean_isLeaf.ValueData,TRUE) ::Boolean  AS isLeaf
            , Object_Unit.isErased            AS isErased
        FROM Object AS Object_Unit
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                                  ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
                                 AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
             LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
+                                    ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
+                                   AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
+
        WHERE Object_Unit.DescId = zc_Object_Unit()
+         AND COALESCE (ObjectBoolean_isLeaf.ValueData,TRUE) = FALSE
        UNION SELECT
              0 AS Id,
              0 AS Code,

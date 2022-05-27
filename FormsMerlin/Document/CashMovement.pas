@@ -42,7 +42,7 @@ type
     edCommentInfoMoney: TcxButtonEdit;
     GuidesCommentInfoMoney: TdsdGuides;
     cxLabel3: TcxLabel;
-    ceParent_infomoney: TcxButtonEdit;
+    ceParent_InfoMoney: TcxButtonEdit;
     GuidesParent_infomoney: TdsdGuides;
     cbSign: TcxCheckBox;
     cxLabel4: TcxLabel;

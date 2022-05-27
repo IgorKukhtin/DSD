@@ -1,7 +1,7 @@
-object UnitTreeForm: TUnitTreeForm
+object UnitTreeGroupForm: TUnitTreeGroupForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1054#1090#1076#1077#1083#1099'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1043#1088#1091#1087#1087' <'#1054#1090#1076#1077#1083#1099'>'
   ClientHeight = 403
   ClientWidth = 811
   Color = clBtnFace
@@ -259,6 +259,18 @@ object UnitTreeForm: TUnitTreeForm
         end
         item
           Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowLeaf'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -318,10 +330,19 @@ object UnitTreeForm: TUnitTreeForm
       Action = dsdOpenUnitForm
       Caption = #1054#1090#1082#1088#1099#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1086#1090#1076#1077#1083#1086#1074
       Category = 0
+      Visible = ivNever
       ImageIndex = 28
     end
     object bbProtocol: TdxBarButton
       Action = actProtocol
+      Category = 0
+    end
+    object bbShowLeaf: TdxBarButton
+      Action = actShowLeaf
+      Category = 0
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
       Category = 0
     end
   end
@@ -360,7 +381,7 @@ object UnitTreeForm: TUnitTreeForm
           Value = Null
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = GridDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
@@ -383,7 +404,7 @@ object UnitTreeForm: TUnitTreeForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = GridDS
       DataSetRefresh = actRefresh
@@ -484,6 +505,47 @@ object UnitTreeForm: TUnitTreeForm
         end>
       isShowModal = False
     end
+    object actShowLeaf: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGrid
+      StoredProcList = <
+        item
+          StoredProc = spGrid
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1101#1083#1077#1084#1077#1085#1090#1099
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1101#1083#1077#1084#1077#1085#1090#1099
+      ImageIndex = 65
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1075#1088#1091#1087#1087#1099
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1101#1083#1077#1084#1077#1085#1090#1099
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1075#1088#1091#1087#1087#1099
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1101#1083#1077#1084#1077#1085#1090#1099
+      ImageIndexTrue = 64
+      ImageIndexFalse = 65
+    end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spTree
+      StoredProcList = <
+        item
+          StoredProc = spTree
+        end
+        item
+          StoredProc = spGrid
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   object spTree: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Unit_Tree'
@@ -513,7 +575,7 @@ object UnitTreeForm: TUnitTreeForm
     Top = 152
   end
   object spGrid: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Unit'
+    StoredProcName = 'gpSelect_Object_Unit_Group'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -523,6 +585,15 @@ object UnitTreeForm: TUnitTreeForm
       item
         Name = 'inIsShowAll'
         Value = True
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisLeaf'
+        Value = False
+        Component = actShowLeaf
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -1,10 +1,12 @@
 -- Function: gpSelect_Object_InfoMoney_Parent()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_InfoMoney_Parent (Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_InfoMoney_Parent (Boolean, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_InfoMoney_Parent(
     IN inisService   Boolean,       -- показывать только По начислению да / нет
     IN inIsShowAll   Boolean,       -- признак показать удаленные да / нет
+    IN inisLeaf      Boolean ,      -- показывать или нет только группы
     IN inKindName    TVarChar,      -- какие статьи показывать только приход или только расход 
     IN inSession     TVarChar        -- сессия пользователя
 )
@@ -12,7 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
              , InfoMoneyKindId Integer, InfoMoneyKindName TVarChar
              , ParentId Integer, ParentName TVarChar
              , GroupNameFull TVarChar
-             , isUserAll Boolean, isService Boolean
+             , isUserAll Boolean, isService Boolean, isLeaf Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
 )
@@ -39,6 +41,7 @@ BEGIN
         , tmp.GroupNameFull
         , tmp.isUserAll
         , tmp.isService
+        , tmp.isLeaf
 
         , tmp.InsertName
         , tmp.InsertDate
@@ -50,7 +53,7 @@ BEGIN
          OR ((inKindName = 'zc_Enum_InfoMoney_Out' AND tmp.InfoMoneyKindId = zc_Enum_InfoMoney_Out()) OR COALESCE (tmp.InfoMoneyKindId,0)=0)
          OR COALESCE (inKindName,'') = ''  
         )
-    AND isLeaf = FALSE  --только группы
+    AND (tmp.isLeaf = inisLeaf OR inisLeaf = TRUE)   --только группы   или все
   ;
   
 END;$BODY$
@@ -60,9 +63,10 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.05.22         *
  16.01.22         * inKindName
  14.01.22         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_InfoMoney_Parent (TRUE, FALSE, 'zc_Enum_InfoMoney_In'::TVarChar, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_InfoMoney_Parent (TRUE, FALSE,FALSE, 'zc_Enum_InfoMoney_In'::TVarChar, zfCalc_UserAdmin())
