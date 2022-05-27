@@ -19,19 +19,6 @@ BEGIN
     PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                 , inUserId     := vbUserId);
 
-    -- когда распроводится или удаляется - обнуляются все его zc_MIFloat_MovementId    
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), MIFloat_MovementId.MovementItemId, 0)
-
-    FROM MovementItemFloat AS MIFloat_MovementId
-       INNER JOIN MovementItem AS MI_Child_client
-                               ON MI_Child_client.Id = MIFloat_MovementId.MovementItemId
-                              AND MI_Child_client.DescId   = zc_MI_Child()
-                              AND MI_Child_client.isErased = FALSE
-    WHERE MIFloat_MovementId.ValueData ::Integer = inMovementId
-      AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
-    ;
-
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
