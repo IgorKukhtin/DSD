@@ -4,8 +4,9 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   ClientWidth = 1028
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1044
-  ExplicitHeight = 394
+  ExplicitHeight = 395
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1314,6 +1315,23 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Value = Null
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisId'
+        Value = Null
+        Component = GuidesJuridicalBasis
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = Null
+        Component = GuidesJuridicalBasis
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited spMovementReComplete: TdsdStoredProc
@@ -1479,7 +1497,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 943
+    Left = 887
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'

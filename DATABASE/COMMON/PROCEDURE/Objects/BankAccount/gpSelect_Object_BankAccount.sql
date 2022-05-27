@@ -39,7 +39,8 @@ $BODY$BEGIN
            , OS_BankAccount_CorrespondentAccount.ValueData      AS CorrespondentAccount
            , OS_BankAccount_BeneficiarysBankAccount.ValueData   AS BeneficiarysBankAccount
            , OS_BankAccount_BeneficiarysAccount.ValueData       AS BeneficiarysAccount 
-           , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
+
+           , Object_BankAccount_View.isIrna          :: Boolean AS isIrna
 
      FROM Object_BankAccount_View
      -- ѕокажем счета только по внутренним фирмам
