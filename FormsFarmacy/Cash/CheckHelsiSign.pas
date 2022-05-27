@@ -108,7 +108,7 @@ begin
     cState := 'Неизв. статус';
   end;
 
-  cProgramIdSP := ClientDataSet.FieldByName('IdSP').AsString;
+  cProgramIdSP := ClientDataSet.FieldByName('ProgramIdSP').AsString;
   if ClientDataSet.FieldByName('MedicalProgramId').AsString <> cMedicalProgramId then
   begin
     try

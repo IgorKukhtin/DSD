@@ -345,6 +345,16 @@ inherited GoodsSiteForm: TGoodsSiteForm
             Options.Editing = False
             Width = 76
           end
+          object isPublishedSite: TcxGridDBColumn
+            Caption = #1054#1087#1091#1073#1083#1077#1082#1086#1074#1072#1085' '#1089' '#1089#1072#1081#1090#1072
+            DataBinding.FieldName = 'isPublishedSite'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 85
+          end
         end
       end
     end
@@ -369,6 +379,7 @@ inherited GoodsSiteForm: TGoodsSiteForm
     Top = 255
     inherited actRefresh: TdsdDataSetRefresh
       Category = 'Refresh'
+      AfterAction = actSetVisiblePublishedSite_False
     end
     inherited actInsert: TInsertUpdateChoiceAction
       MoveParams = <
@@ -930,10 +941,98 @@ inherited GoodsSiteForm: TGoodsSiteForm
         end>
       Caption = 'actUpdate_Published_Revert'
     end
+    object actForeignDataUpdatePublishedSite: TdsdForeignData
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actSetVisiblePublishedSite_True
+      BeforeAction = actSite_Param
+      ZConnection.ControlsCodePage = cCP_UTF16
+      ZConnection.ClientCodepage = 'utf8'
+      ZConnection.Properties.Strings = (
+        'codepage=utf8')
+      ZConnection.Port = 0
+      ZConnection.Protocol = 'mysql-5'
+      HostParam.Value = '172.17.2.13'
+      HostParam.Component = FormParams
+      HostParam.ComponentItem = 'MySQL_Host'
+      HostParam.DataType = ftString
+      HostParam.MultiSelectSeparator = ','
+      PortParam.Value = 3306
+      PortParam.Component = FormParams
+      PortParam.ComponentItem = 'MySQL_Port'
+      PortParam.MultiSelectSeparator = ','
+      UserNameParam.Value = 'neboley'
+      UserNameParam.Component = FormParams
+      UserNameParam.ComponentItem = 'MySQL_Username'
+      UserNameParam.DataType = ftString
+      UserNameParam.MultiSelectSeparator = ','
+      PasswordParam.Value = 'db2012Ne8ol'
+      PasswordParam.Component = FormParams
+      PasswordParam.ComponentItem = 'MySQL_Password'
+      PasswordParam.DataType = ftString
+      PasswordParam.MultiSelectSeparator = ','
+      DataBase.Value = 'neboley'
+      DataBase.Component = FormParams
+      DataBase.ComponentItem = 'MySQL_DataBase'
+      DataBase.DataType = ftString
+      DataBase.MultiSelectSeparator = ','
+      SQLParam.Value = 
+        'select Postgres_drug_id As Id, Status AS isPublished  from pharm' +
+        '_drugs'
+      SQLParam.DataType = ftString
+      SQLParam.MultiSelectSeparator = ','
+      DataSet = MasterCDS
+      UpdateDateSet = True
+      Params = <>
+      UpdateFields = <
+        item
+          FieldNameFrom = 'isPublished'
+          FieldNameTo = 'isPublishedSite'
+        end>
+      IdFieldFrom = 'Id'
+      IdFieldTo = 'Id'
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1087#1088#1080#1079#1085#1072#1082#1072' '#1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1089' '#1089#1072#1081#1090#1072
+      ImageIndex = 27
+    end
+    object actSite_Param: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSite_Param
+      StoredProcList = <
+        item
+          StoredProc = spSite_Param
+        end>
+      Caption = 'actSite_Param'
+    end
+    object actSetVisiblePublishedSite_True: TdsdSetVisibleAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSetVisiblePublishedSite_True'
+      SetVisibleParams = <
+        item
+          Component = isPublishedSite
+          ValueParam.Value = True
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end>
+    end
+    object actSetVisiblePublishedSite_False: TdsdSetVisibleAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSetVisiblePublishedSite_False'
+      SetVisibleParams = <
+        item
+          Component = isPublishedSite
+          ValueParam.Value = False
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end>
+    end
   end
   inherited MasterDS: TDataSource
-    Left = 56
-    Top = 80
+    Left = 80
+    Top = 104
   end
   inherited MasterCDS: TClientDataSet
     FilterOptions = []
@@ -1032,6 +1131,10 @@ inherited GoodsSiteForm: TGoodsSiteForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSubItem5'
         end
         item
           Visible = True
@@ -1518,6 +1621,27 @@ inherited GoodsSiteForm: TGoodsSiteForm
     end
     object dxBarButton19: TdxBarButton
       Action = mactUpdate_Published_Revert
+      Category = 0
+    end
+    object dxBarButton20: TdxBarButton
+      Caption = 'New Button'
+      Category = 0
+      Hint = 'New Button'
+      Visible = ivAlways
+    end
+    object dxBarSubItem5: TdxBarSubItem
+      Caption = #1057#1077#1088#1074#1077#1088' '#1089#1072#1081#1090#1072
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 41
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton21'
+        end>
+    end
+    object dxBarButton21: TdxBarButton
+      Action = actForeignDataUpdatePublishedSite
       Category = 0
     end
   end
@@ -2021,6 +2145,35 @@ inherited GoodsSiteForm: TGoodsSiteForm
         Value = Null
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MySQL_Host'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MySQL_Port'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MySQL_DataBase'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MySQL_Username'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MySQL_Password'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 64
@@ -2458,5 +2611,53 @@ inherited GoodsSiteForm: TGoodsSiteForm
     PackSize = 1
     Left = 672
     Top = 224
+  end
+  object spSite_Param: TdsdStoredProc
+    StoredProcName = 'gpGet_MySQL_Site_Param'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outHost'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MySQL_Host'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPort'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MySQL_Port'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDataBase'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MySQL_DataBase'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUsername'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MySQL_Username'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPassword'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MySQL_Password'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 320
+    Top = 288
   end
 end

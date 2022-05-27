@@ -10,17 +10,17 @@ inherited GoodsSP_1303Form: TGoodsSP_1303Form
   inherited PageControl: TcxPageControl
     Width = 1061
     Height = 468
-    ExplicitWidth = 866
+    ExplicitWidth = 1061
     ExplicitHeight = 468
     ClientRectBottom = 468
     ClientRectRight = 1061
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 866
+      ExplicitWidth = 1061
       ExplicitHeight = 444
       inherited cxGrid: TcxGrid
         Width = 1061
         Height = 444
-        ExplicitWidth = 866
+        ExplicitWidth = 1061
         ExplicitHeight = 444
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -67,7 +67,15 @@ inherited GoodsSP_1303Form: TGoodsSP_1303Form
             Options.Editing = False
             Width = 245
           end
-          object NDS: TcxGridDBColumn [3]
+          object MorionCode: TcxGridDBColumn [3]
+            Caption = #1050#1086#1076' '#1084#1086#1088#1080#1086#1085#1072
+            DataBinding.FieldName = 'MorionCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 72
+          end
+          object NDS: TcxGridDBColumn [4]
             Caption = #1053#1044#1057
             DataBinding.FieldName = 'NDS'
             HeaderAlignmentHorz = taCenter
@@ -75,7 +83,7 @@ inherited GoodsSP_1303Form: TGoodsSP_1303Form
             Options.Editing = False
             Width = 59
           end
-          object PriceOptSP: TcxGridDBColumn [4]
+          object PriceOptSP: TcxGridDBColumn [5]
             Caption = #1062#1077#1085#1072' '#1080#1079' '#1088#1077#1077#1089#1090#1088#1072' '#1054#1054#1062' '#1074#1074#1077#1076#1077#1085#1085#1072#1103
             DataBinding.FieldName = 'PriceOptSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -84,7 +92,7 @@ inherited GoodsSP_1303Form: TGoodsSP_1303Form
             HeaderAlignmentVert = vaCenter
             Width = 91
           end
-          object PriceSale: TcxGridDBColumn [5]
+          object PriceSale: TcxGridDBColumn [6]
             Caption = #1056#1086#1079#1085'. '#1094#1077#1085#1072
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -94,7 +102,7 @@ inherited GoodsSP_1303Form: TGoodsSP_1303Form
             Options.Editing = False
             Width = 95
           end
-          object PriceOptSPRegistry: TcxGridDBColumn [6]
+          object PriceOptSPRegistry: TcxGridDBColumn [7]
             Caption = #1062#1077#1085#1072' '#1054#1054#1062' '#1080#1079' '#1088#1077#1077#1089#1090#1088#1072
             DataBinding.FieldName = 'PriceOptSPRegistry'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -105,7 +113,7 @@ inherited GoodsSP_1303Form: TGoodsSP_1303Form
             Options.Editing = False
             Width = 77
           end
-          object PriceSaleRegistry: TcxGridDBColumn [7]
+          object PriceSaleRegistry: TcxGridDBColumn [8]
             Caption = #1056#1086#1079#1085'. '#1094#1077#1085#1072' '#1080#1079' '#1088#1077#1077#1089#1090#1088#1072
             DataBinding.FieldName = 'PriceSaleRegistry'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -126,7 +134,7 @@ inherited GoodsSP_1303Form: TGoodsSP_1303Form
   inherited DataPanel: TPanel
     Width = 1061
     TabOrder = 3
-    ExplicitWidth = 866
+    ExplicitWidth = 1061
     inherited edInvNumber: TcxTextEdit
       Left = 182
       ExplicitLeft = 182

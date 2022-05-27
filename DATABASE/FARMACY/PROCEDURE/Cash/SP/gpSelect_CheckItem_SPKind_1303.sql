@@ -20,7 +20,6 @@ $BODY$
    DECLARE vbUnitKey TVarChar;
 
    DECLARE vbPriceCalc TFloat;
-   DECLARE vbPersent   TFloat;
    DECLARE vbPriceSale TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
@@ -54,145 +53,50 @@ BEGIN
                    RETURN;
             END IF;
             
-            SELECT CASE WHEN tt.Price < 100 THEN tt.Price * 1.099  --1.249
-                         WHEN tt.Price >= 100 AND tt.Price < 500 THEN tt.Price * 1.099 -- 1.199
-                         WHEN tt.Price >= 500 AND tt.Price < 1000 THEN tt.Price * 1.099 -- 1.149
-                         WHEN tt.Price >= 1000 THEN tt.Price * 1.099
-                    END :: TFloat AS PriceCalc
-                  , CASE WHEN tt.Price < 100 THEN 10 -- 25
-                         WHEN tt.Price >= 100 AND tt.Price < 500 THEN 10 -- 20
-                         WHEN tt.Price >= 500 AND tt.Price < 1000 THEN 10 -- 15
-                         WHEN tt.Price >= 1000 THEN 10
-                    END :: TFloat AS Persent
-            INTO vbPriceCalc, vbPersent
-             FROM (SELECT CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE THEN MIFloat_Price.ValueData
-                               ELSE (MIFloat_Price.ValueData * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData,1)/100))::TFloat    -- в партии инвентаризации  цена с НДС, а параметра НДС нет
-                          END AS Price   -- цена c НДС
-                        , ROW_NUMBER() OVER (ORDER BY MovementLinkObject_To.ObjectId <> vbUnitId, MI_Income.MovementId DESC) AS ord   -- Люба сказала смотреть по последней партии
-                   FROM Container 
-                      LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
-                                                          ON CLI_MI.ContainerId = Container.Id
-                                                         AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                      LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
-
-                      LEFT OUTER JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode :: Integer
-                      LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                  ON MIFloat_Price.MovementItemId = MI_Income.Id
-                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price()
-
-                      LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                                ON MovementBoolean_PriceWithVAT.MovementId =  MI_Income.MovementId
-                                               AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-                      LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
-                                                   ON MovementLinkObject_NDSKind.MovementId = MI_Income.MovementId
-                                                  AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
-                      LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                   ON MovementLinkObject_To.MovementId = MI_Income.MovementId
-                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()   
-                      LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                            ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
-                                           AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
-
-                   WHERE Container.ObjectId = inGoodsId
-                     AND Container.DescId = zc_Container_Count()
-                     AND Container.WhereObjectId = vbUnitId
-                     --AND COALESCE (Container.Amount,0 ) > 0
-                     AND COALESCE (MIFloat_Price.ValueData ,0) > 0
-                   ) AS tt
-             WHERE tt.Ord = 1;
-
-            -- проверка  Цена < 100грн – максимальна торгівельна надбавка може складати 25%. від 100 до 500 грн – надбавка на рівні 20%. Від 500 до 1000 – 15%. Понад 1000 грн надбавка на рівні 10%.
-            IF (COALESCE (vbPriceCalc,0) < inPriceSale) AND (COALESCE (vbPriceCalc,0) <> 0)
-               THEN
-                   IF vbPersent = 25 THEN  outError :=  'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 25 процентов'||Chr(13)||Chr(10)||'(для товара с приходной ценой до 100грн)'; END IF;
-                   IF vbPersent = 20 THEN  outError :=  'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 20 процентов'||Chr(13)||Chr(10)||'(для товара с приходной ценой от 100грн до 500грн)'; END IF;
-                   IF vbPersent = 15 THEN  outError :=  'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 15 процентов'||Chr(13)||Chr(10)||'(для товара с приходной ценой от 500грн до 1000грн)'; END IF;
-                   IF vbPersent = 10 THEN  outError :=  'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 10 процентов'||Chr(13)||Chr(10)||'(для товара с приходной ценой свыше 1000грн)'; END IF;
-                   outError2 :=  Chr(13)||Chr(10)||'Сделать PrintScreen экрана с ошибкой и отправить на Telegram своему менеджеру для  исправления Цены реализации'||Chr(13)||Chr(10)||'(после исправления - препарат можно отпустить по рецепту)';
+            SELECT T1.PriceSale, T1.PriceSaleIncome  
+            INTO vbPriceSale, vbPriceCalc                          
+            FROM gpSelect_GoodsSPRegistry_1303_Unit (inUnitId := vbUnitId, inGoodsId := inGoodsId, inisCalc := True, inSession := inSession) AS T1;
+                        
+            IF COALESCE(vbPriceSale, 0) = 0
+            THEN
+                  outError :=  'БЛОК ОТПУСКА !'||Chr(13)||Chr(10)|| 
+                               'Товар не найден в реестре товаров соц. проекта 1303';
+                  outError2 :=  Chr(13)||Chr(10)||'Сделать PrintScreen экрана с ошибкой и отправить на Telegram   в группу ПКМУ1303  (инфо для Пелиной Любови)';
+                  
+                  RETURN;
             END IF;
+            
             
             -- Предложение по цене
             IF (COALESCE (vbPriceCalc,0) < inPriceSale) AND (COALESCE (trunc(vbPriceCalc * 10) / 10, 0) > 0)
             THEN
-                   outPrice := trunc(vbPriceCalc * 10) / 10;
-                   outSentence :=  'Применить максимально допустимую цену - '||to_char(outPrice, 'G999G999G999G999D99');
+               outError :=  'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 10 процентов';
+               outError2 :=  Chr(13)||Chr(10)||'Сделать PrintScreen экрана с ошибкой и отправить на Telegram своему менеджеру для  исправления Цены реализации'||Chr(13)||Chr(10)||'(после исправления - препарат можно отпустить по рецепту)';
+
+               outPrice := trunc(vbPriceCalc * 10) / 10;
+               outSentence :=  'Применить максимально допустимую цену - '||to_char(outPrice, 'G999G999G999G999D99');
             END IF;
+
+             -- raise notice 'Value 05: % % % %', vbPriceSale, vbPriceCalc, outPrice, (CASE WHEN COALESCE(outPrice, 0) = 0 THEN inPriceSale ELSE outPrice END / vbPriceSale * 100 - 100);
             
-            IF EXISTS(WITH
-                       tmpMovGoodsSP_1303 AS (SELECT Movement.Id                           AS Id
-                                                   , Movement.OperDate                     AS OperDate
-                                                   , ROW_NUMBER() OVER (ORDER BY Movement.OperDate DESC) AS ord
-                                              FROM Movement 
-                                              WHERE Movement.DescId = zc_Movement_GoodsSP_1303()
-                                                AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                              )
-                     , tmpMIGoodsSP_1303 AS (SELECT Movement.OperDate                     AS OperDate
-                                                  , COALESCE (MovementNext.OperDate, zc_DateEnd()) AS DateEnd
-                                                  , MovementItem.ObjectId                 AS GoodsId
-                                                  , MovementItem.Amount                   AS PriceSale
-                                             FROM tmpMovGoodsSP_1303 AS Movement
-                                            
-                                                  INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Master()
-                                                                        AND MovementItem.MovementId = Movement.Id
-                                                                        AND MovementItem.isErased = False
-                                                                       
-                                                  LEFT JOIN tmpMovGoodsSP_1303 AS MovementNext
-                                                                               ON MovementNext.Ord =  Movement.Ord + 1
-                                             WHERE  MovementItem.ObjectId = (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inGoodsId))
-                                             
-                     SELECT tmpMIGoodsSP_1303 .PriceSale
-                     FROM tmpMIGoodsSP_1303 
-                     WHERE tmpMIGoodsSP_1303.OperDate <= CURRENT_DATE
-                       AND tmpMIGoodsSP_1303.DateEnd > CURRENT_DATE
-                     )
+            IF vbPriceSale < inPriceSale and COALESCE(outPrice, 0) = 0 OR vbPriceSale < outPrice and COALESCE(outPrice, 0) > 0
             THEN
-                WITH
-                 tmpMovGoodsSP_1303 AS (SELECT Movement.Id                           AS Id
-                                             , Movement.OperDate                     AS OperDate
-                                             , ROW_NUMBER() OVER (ORDER BY Movement.OperDate DESC) AS ord
-                                        FROM Movement 
-                                        WHERE Movement.DescId = zc_Movement_GoodsSP_1303()
-                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                        )
-               , tmpMIGoodsSP_1303 AS (SELECT Movement.OperDate                     AS OperDate
-                                            , COALESCE (MovementNext.OperDate, zc_DateEnd()) AS DateEnd
-                                            , MovementItem.ObjectId                 AS GoodsId
-                                            , MovementItem.Amount                   AS PriceSale
-                                       FROM tmpMovGoodsSP_1303 AS Movement
-                                            
-                                            INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Master()
-                                                                  AND MovementItem.MovementId = Movement.Id
-                                                                  AND MovementItem.isErased = False
-                                                                       
-                                            LEFT JOIN tmpMovGoodsSP_1303 AS MovementNext
-                                                                         ON MovementNext.Ord =  Movement.Ord + 1
-                                       WHERE  MovementItem.ObjectId = (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inGoodsId))
-                                             
-               SELECT tmpMIGoodsSP_1303.PriceSale
-               INTO vbPriceSale
-               FROM tmpMIGoodsSP_1303 
-               WHERE tmpMIGoodsSP_1303.OperDate <= CURRENT_DATE
-                 AND tmpMIGoodsSP_1303.DateEnd > CURRENT_DATE;            
-                 
-                 
-               IF vbPriceSale < inPriceSale and COALESCE(outPrice, 0) = 0 OR vbPriceSale < outPrice and COALESCE(outPrice, 0) > 0
-               THEN
-                  outError :=  'БЛОК ОТПУСКА !'||Chr(13)||Chr(10)|| 
-                               'Отпускная цена выше чем по реестру товаров соц. проекта 1303'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||
-                               'Максимальная цена реализации должна быть - '||zfConvert_FloatToString(vbPriceSale)||'грн.'||Chr(13)||Chr(10)|| 
-                               'У нас миним. цена для отпуска по ПКМУ 1303 - '||zfConvert_FloatToString(CASE WHEN COALESCE(outPrice, 0) = 0 THEN inPriceSale ELSE outPrice END)||'грн.';
-                  outError2 :=  Chr(13)||Chr(10)||'% расхождения '||zfConvert_FloatToString(CASE WHEN COALESCE(outPrice, 0) = 0 THEN inPriceSale ELSE outPrice END/vbPriceSale*100 - 100)||
-                               Chr(13)||Chr(10)||Chr(13)||Chr(10)||'Сделать PrintScreen экрана с ошибкой и отправить на Telegram   в группу ПКМУ1303  (инфо для Пелиной Любови)';
-                  IF (CASE WHEN COALESCE(outPrice, 0) = 0 THEN inPriceSale ELSE outPrice END/vbPriceSale*100 - 100) <= 1.0
-                  THEN
-                    outPrice := vbPriceSale;
-                    outSentence :=  'Применить максимально допустимую цену - '||to_char(outPrice, 'G999G999G999G999D99');
-                  ELSE
-                    outSentence := '';
-                    outPrice := 0;               
-                  END IF;
-               END IF;
-            END IF;            
+              outError :=  'БЛОК ОТПУСКА !'||Chr(13)||Chr(10)|| 
+                           'Отпускная цена выше чем по реестру товаров соц. проекта 1303'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||
+                           'Максимальная цена реализации должна быть - '||zfConvert_FloatToString(vbPriceSale)||'грн.'||Chr(13)||Chr(10)|| 
+                           'У нас миним. цена для отпуска по ПКМУ 1303 - '||zfConvert_FloatToString(CASE WHEN COALESCE(outPrice, 0) = 0 THEN inPriceSale ELSE outPrice END)||'грн.';
+              outError2 :=  Chr(13)||Chr(10)||'% расхождения '||zfConvert_FloatToString(CASE WHEN COALESCE(outPrice, 0) = 0 THEN inPriceSale ELSE outPrice END/vbPriceSale*100 - 100)||
+                           Chr(13)||Chr(10)||Chr(13)||Chr(10)||'Сделать PrintScreen экрана с ошибкой и отправить на Telegram   в группу ПКМУ1303  (инфо для Пелиной Любови)';
+                           
+              IF (CASE WHEN COALESCE(outPrice, 0) = 0 THEN inPriceSale ELSE outPrice END / vbPriceSale * 100 - 100) <= 1.0
+              THEN
+                outPrice := vbPriceSale;
+                outSentence :=  'Применить максимально допустимую цену - '||to_char(outPrice, 'G999G999G999G999D99');
+              ELSE
+                outSentence := '';
+                outPrice := 0;               
+              END IF;
+            END IF;
     END IF;
 
 
@@ -207,4 +111,4 @@ $BODY$
 
 -- SELECT * FROM gpSelect_CheckItem_SPKind_1303(inSPKindId := zc_Enum_SPKind_1303(), inGoodsId := 36643, inPriceSale := 1000, inSession := '3');
 
-select * from gpSelect_CheckItem_SPKind_1303(inSPKindId := 4823010 , inGoodsId := 18508 , inPriceSale := 164 ,  inSession := '3');
+select * from gpSelect_CheckItem_SPKind_1303(inSPKindId := 4823010 , inGoodsId :=  817, inPriceSale := 159.5,  inSession := '3');

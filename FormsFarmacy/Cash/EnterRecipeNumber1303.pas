@@ -37,6 +37,7 @@ implementation
 procedure TEnterRecipeNumber1303Form.edMaskNumberKeyPress(Sender: TObject;
   var Key: Char);
 begin
+  if Key = ' ' then Key := '-';
   if not CharInSet(Key, ['a'..'z','A'..'Z','0'..'9',#8,#3,#22,'-']) then
   begin
     ShowMessage(IntToStr(Ord(Key)));
@@ -58,7 +59,7 @@ procedure TEnterRecipeNumber1303Form.FormClose(Sender: TObject;
 begin
   if ModalResult = mrOk then
   begin
-    FRecipeNumber := Trim(StringReplace(edMaskNumber.Text, '_', '', [rfReplaceAll]));
+    FRecipeNumber := Trim(edMaskNumber.Text);
     if not CheckLikiDniproReceipt_Number(FRecipeNumber) then Action := caNone;
   end;
 end;

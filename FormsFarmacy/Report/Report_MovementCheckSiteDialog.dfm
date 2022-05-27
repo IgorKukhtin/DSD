@@ -1,10 +1,10 @@
-﻿object Report_MovementCheckSiteDialogForm: TReport_MovementCheckSiteDialogForm
+object Report_MovementCheckSiteDialogForm: TReport_MovementCheckSiteDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1088#1086#1076#1072#1078#1080' '#1095#1077#1088#1077#1079' '#1089#1072#1081#1090'>'
   ClientHeight = 251
-  ClientWidth = 333
+  ClientWidth = 336
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -78,45 +78,53 @@
     Top = 7
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
-  object сbRegularSales: TcxCheckBox
+  object cbRegularSales: TcxCheckBox
     Left = 8
     Top = 99
     Hint = #1054#1073#1099#1095#1085#1099#1077' '#1087#1088#1086#1076#1072#1078#1080
     Caption = #1054#1073#1099#1095#1085#1099#1077' '#1087#1088#1086#1076#1072#1078#1080
     TabOrder = 8
-    Width = 203
+    Width = 153
   end
-  object сbVIP: TcxCheckBox
+  object cbVIP: TcxCheckBox
     Left = 8
     Top = 119
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = 'VIP '#1095#1077#1082#1080
     TabOrder = 9
-    Width = 197
+    Width = 153
   end
-  object сbSite: TcxCheckBox
+  object cbSite: TcxCheckBox
     Left = 8
     Top = 140
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1063#1077#1082#1080' '#1089#1072#1081#1090#1072' "'#1053#1077' '#1073#1086#1083#1077#1081'"'
     TabOrder = 10
-    Width = 203
+    Width = 165
   end
-  object сbSiteTabletki: TcxCheckBox
+  object cbSiteTabletki: TcxCheckBox
     Left = 8
-    Top = 162
+    Top = 161
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1063#1077#1082#1080' '#1089#1072#1081#1090#1072' "'#1058#1072#1073#1083#1077#1090#1082#1080'"'
     TabOrder = 11
-    Width = 203
+    Width = 165
   end
-  object сbSiteLiki24: TcxCheckBox
+  object cbSiteLiki24: TcxCheckBox
     Left = 8
     Top = 182
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1063#1077#1082#1080' '#1089#1072#1081#1090#1072' "Liki 24"'
     TabOrder = 12
-    Width = 203
+    Width = 165
+  end
+  object cbMobileApplication: TcxCheckBox
+    Left = 176
+    Top = 99
+    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+    Caption = #1058#1086#1083#1100#1082#1086' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088'.'
+    TabOrder = 13
+    Width = 152
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -179,7 +187,7 @@
       item
         Name = 'IsRegularSales'
         Value = Null
-        Component = сbRegularSales
+        Component = cbRegularSales
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -187,7 +195,7 @@
       item
         Name = 'isVIP'
         Value = Null
-        Component = сbVIP
+        Component = cbVIP
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -195,7 +203,7 @@
       item
         Name = 'IsSite'
         Value = Null
-        Component = сbSite
+        Component = cbSite
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -203,7 +211,7 @@
       item
         Name = 'isSiteTabletki'
         Value = Null
-        Component = сbSiteTabletki
+        Component = cbSiteTabletki
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -211,9 +219,15 @@
       item
         Name = 'isSiteLiki24'
         Value = Null
-        Component = сbSiteLiki24
+        Component = cbSiteLiki24
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMobileApplication'
+        Value = Null
+        Component = cbMobileApplication
         MultiSelectSeparator = ','
       end>
     Left = 246

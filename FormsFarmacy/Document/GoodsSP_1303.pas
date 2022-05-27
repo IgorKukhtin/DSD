@@ -63,6 +63,7 @@ type
     GoodsNameUkr: TcxGridDBColumn;
     PriceSaleRegistry: TcxGridDBColumn;
     PriceOptSPRegistry: TcxGridDBColumn;
+    MorionCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

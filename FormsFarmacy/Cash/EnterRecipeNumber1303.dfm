@@ -90,9 +90,7 @@ object EnterRecipeNumber1303Form: TEnterRecipeNumber1303Form
     ParentFont = False
     Properties.CharCase = ecUpperCase
     Properties.MaskKind = emkRegExprEx
-    Properties.EditMask = 
-      '([0-9]?\d\d\d\d)-\d\d\d\d-(\d | [a-zA-Z])(\d | [a-zA-Z])-([0-9]?' +
-      '[0-9]?\d\d\d\d)'
+    Properties.EditMask = '\d+-\d+-(\d | [a-zA-Z])(\d | [a-zA-Z])-\d+'
     Properties.ValidationOptions = []
     Properties.OnValidate = edMaskNumberPropertiesValidate
     Style.Font.Charset = DEFAULT_CHARSET

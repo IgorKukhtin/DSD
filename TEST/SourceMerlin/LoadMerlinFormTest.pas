@@ -252,6 +252,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyTreeForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyTreeGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyTreeGroupForm');
 end;
 
 procedure TLoadFormTest.LoadMemberFormTest;
@@ -310,6 +313,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitTreeForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitTreeGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnitTreeGroupForm');
 end;
 
 procedure TLoadFormTest.LoadServiceMovementFormTest;

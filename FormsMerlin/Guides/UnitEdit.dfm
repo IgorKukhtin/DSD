@@ -73,7 +73,7 @@ object UnitEditForm: TUnitEditForm
   end
   object cxLabel7: TcxLabel
     Left = 8
-    Top = 138
+    Top = 135
     Caption = #1043#1088#1091#1087#1087#1072
   end
   object ceParent: TcxButtonEdit
@@ -278,11 +278,11 @@ object UnitEditForm: TUnitEditForm
   object GuidesParent: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceParent
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.Value = 'TUnitTreeGroupForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TUnitTreeGroupForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'

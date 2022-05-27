@@ -36,11 +36,12 @@ type
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
     GuidesUnit: TdsdGuides;
-    ñbRegularSales: TcxCheckBox;
-    ñbVIP: TcxCheckBox;
-    ñbSite: TcxCheckBox;
-    ñbSiteTabletki: TcxCheckBox;
-    ñbSiteLiki24: TcxCheckBox;
+    cbRegularSales: TcxCheckBox;
+    cbVIP: TcxCheckBox;
+    cbSite: TcxCheckBox;
+    cbSiteTabletki: TcxCheckBox;
+    cbSiteLiki24: TcxCheckBox;
+    cbMobileApplication: TcxCheckBox;
   private
     { Private declarations }
   public

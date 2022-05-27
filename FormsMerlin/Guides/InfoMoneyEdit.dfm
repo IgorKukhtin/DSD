@@ -112,8 +112,8 @@
     Width = 273
   end
   object ActionList: TActionList
-    Left = 320
-    Top = 48
+    Left = 32
+    Top = 152
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -339,10 +339,10 @@
   object GuidesParent: TdsdGuides
     KeyField = 'Id'
     LookupControl = edParent
-    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.Value = 'TInfoMoneyTreeGroupForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TInfoMoney_ObjectForm'
+    FormName = 'TInfoMoneyTreeGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -360,7 +360,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 168
-    Top = 117
+    Left = 144
+    Top = 101
   end
 end
