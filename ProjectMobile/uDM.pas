@@ -1035,6 +1035,9 @@ begin
       SyncDataIn := DM.tblObject_ConstSyncDateIn.AsDateTime
     else
       SyncDataIn := varNull;
+    //
+    if SyncDataIn < varNull then SyncDataIn:= varNull;
+    //
     SyncDataOut := DM.tblObject_ConstSyncDateOut.AsDateTime;
   end
   else
