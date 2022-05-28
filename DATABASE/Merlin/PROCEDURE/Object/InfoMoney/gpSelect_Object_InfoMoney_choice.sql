@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_InfoMoney_choice (Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_InfoMoney_choice(
-    IN inisService   Boolean,       -- показывать только По начислению да / нет
+    IN inIsService   Boolean,       -- показывать только По начислению да / нет
     IN inIsShowAll   Boolean,       -- признак показать удаленные да / нет
     IN inKindName    TVarChar,      -- какие статьи показывать только приход или только расход 
     IN inSession     TVarChar        -- сессия пользователя
@@ -48,8 +48,8 @@ BEGIN
         , tmp.UpdateName
         , tmp.UpdateDate
    FROM gpSelect_Object_InfoMoney (inIsShowAll, inSession) AS tmp
-   /*WHERE (COALESCE (tmp.isService, FALSE) = inisService OR inisService = FALSE)
-    AND ((inKindName = 'zc_Enum_InfoMoney_In' AND (tmp.InfoMoneyKindId = zc_Enum_InfoMoney_In() OR COALESCE (tmp.InfoMoneyKindId,0)=0) ) 
+   WHERE (tmp.isService = inIsService OR inIsService = FALSE)
+  /*AND ((inKindName = 'zc_Enum_InfoMoney_In' AND (tmp.InfoMoneyKindId = zc_Enum_InfoMoney_In() OR COALESCE (tmp.InfoMoneyKindId,0)=0) ) 
       OR (inKindName = 'zc_Enum_InfoMoney_Out' AND (tmp.InfoMoneyKindId = zc_Enum_InfoMoney_Out() OR COALESCE (tmp.InfoMoneyKindId,0)=0) )
       OR COALESCE (inKindName,'') = ''  
         )*/

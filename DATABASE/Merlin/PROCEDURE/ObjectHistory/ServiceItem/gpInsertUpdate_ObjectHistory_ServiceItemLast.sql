@@ -1,5 +1,6 @@
 -- Function: gpInsertUpdate_ObjectHistory_ServiceItemLast (Integer, Integer, Integer, TDateTime, TFloat, Boolean, TVarChar)
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_ServiceItem (Integer, Integer, TDateTime, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_ServiceItemLast (Integer, Integer, Integer,Integer, TDateTime, TFloat, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_ServiceItemLast(
@@ -7,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_ServiceItemLast(
     IN inUnitId                 Integer,    -- 
     IN inInfoMoneyId            Integer,    -- 
     IN inCommentInfoMoneyId     Integer,    -- 
-    IN inOperDate               TDateTime,  -- Дата действия цены
+    IN inEndDate               TDateTime,  -- Дата действия цены
    OUT outStartDate             TDateTime,  -- Дата действия цены
    OUT outEndDate               TDateTime,  -- Дата действия цены
     IN inArea                   TFloat,     -- площадь
@@ -43,7 +44,7 @@ BEGIN
    vbServiceItemId := lpGetInsert_Object_ServiceItem (inUnitId, inInfoMoneyId, vbUserId);
 
    -- Сохранили историю
-   ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_ServiceItem(), vbServiceItemId, inOperDate, vbUserId);
+   ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_ServiceItem(), vbServiceItemId, inEndDate, vbUserId);
 
    -- Сохранили 
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_ServiceItem_Area(), ioId, inArea);
@@ -59,7 +60,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectHistoryLink (zc_ObjectHistoryLink_ServiceItem_CommentInfoMoney(), ioId, inCommentInfoMoneyId);
    
    --
-   IF inIsLast = TRUE AND EXISTS (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_ServiceItem() AND ObjectId = vbServiceItemId AND StartDate > inOperDate)
+   IF inIsLast = TRUE AND EXISTS (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_ServiceItem() AND ObjectId = vbServiceItemId AND StartDate > inEndDate)
    THEN
          -- сохранили протокол - "удаление"
          PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, vbUserId, ObjectHistory.StartDate, ObjectHistory.EndDate, ObjectHistoryFloat_Value.ValueData, TRUE, TRUE)
@@ -67,14 +68,14 @@ BEGIN
               LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
                                            ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory.Id
                                           AND ObjectHistoryFloat_Value.DescId = zc_ObjectHistoryFloat_ServiceItem_Value()
-         WHERE ObjectHistory.DescId = zc_ObjectHistory_ServiceItem() AND ObjectHistory.ObjectId = vbServiceItemId AND ObjectHistory.StartDate > inOperDate;
+         WHERE ObjectHistory.DescId = zc_ObjectHistory_ServiceItem() AND ObjectHistory.ObjectId = vbServiceItemId AND ObjectHistory.StartDate > inEndDate;
 
          -- удалили
-         DELETE FROM ObjectHistoryDate WHERE ObjectHistoryId IN (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_ServiceItem() AND ObjectId = vbServiceItemId AND StartDate > inOperDate);
-         DELETE FROM ObjectHistoryFloat WHERE ObjectHistoryId IN (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_ServiceItem() AND ObjectId = vbServiceItemId AND StartDate > inOperDate);
-         DELETE FROM ObjectHistoryString WHERE ObjectHistoryId IN (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_ServiceItem() AND ObjectId = vbServiceItemId AND StartDate > inOperDate);
-         DELETE FROM ObjectHistoryLink WHERE ObjectHistoryId IN (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_ServiceItem() AND ObjectId = vbServiceItemId AND StartDate > inOperDate);
-         DELETE FROM ObjectHistory WHERE Id IN (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_ServiceItem() AND ObjectId = vbServiceItemId AND StartDate > inOperDate);
+         DELETE FROM ObjectHistoryDate WHERE ObjectHistoryId IN (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_ServiceItem() AND ObjectId = vbServiceItemId AND StartDate > inEndDate);
+         DELETE FROM ObjectHistoryFloat WHERE ObjectHistoryId IN (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_ServiceItem() AND ObjectId = vbServiceItemId AND StartDate > inEndDate);
+         DELETE FROM ObjectHistoryString WHERE ObjectHistoryId IN (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_ServiceItem() AND ObjectId = vbServiceItemId AND StartDate > inEndDate);
+         DELETE FROM ObjectHistoryLink WHERE ObjectHistoryId IN (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_ServiceItem() AND ObjectId = vbServiceItemId AND StartDate > inEndDate);
+         DELETE FROM ObjectHistory WHERE Id IN (SELECT Id FROM ObjectHistory WHERE DescId = zc_ObjectHistory_ServiceItem() AND ObjectId = vbServiceItemId AND StartDate > inEndDate);
          -- Здесь надо изменить св-во EndDate
          UPDATE ObjectHistory SET EndDate = zc_DateEnd() WHERE Id = ioId;
    END IF;
@@ -109,4 +110,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_ObjectHistory_ServiceItemLast (ioId := 0, inUnitId:= 4788, inInfoMoneyId := 120766, inOperDate = '26.03.2015', inValue := 59, inIsLast:= TRUE, inSession := zc_User_Sybase() :: TVarChar);
+-- SELECT * FROM gpInsertUpdate_ObjectHistory_ServiceItemLast (ioId := 0, inUnitId:= 4788, inInfoMoneyId := 120766, inEndDate = '26.03.2015', inValue := 59, inIsLast:= TRUE, inSession := zc_User_Sybase() :: TVarChar);

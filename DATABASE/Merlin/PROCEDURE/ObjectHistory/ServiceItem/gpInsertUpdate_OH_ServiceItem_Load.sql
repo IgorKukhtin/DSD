@@ -79,7 +79,7 @@ BEGIN
        vbServiceItemId := lpGetInsert_Object_ServiceItem (vbUnitId, vbInfoMoneyId, vbUserId);
    
              -- Сохранили историю
-       inId := lpInsertUpdate_ObjectHistory (inId, zc_ObjectHistory_ServiceItem(), vbServiceItemId, inStartDate, vbUserProtocolId);
+       inId := lpInsertUpdate_ObjectHistory (inId, zc_ObjectHistory_ServiceItem(), vbServiceItemId, inEndDate, vbUserProtocolId);
     
        -- Сохранили 
        PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_ServiceItem_Area(), inId, inValueArea);
