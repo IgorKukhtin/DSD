@@ -78,11 +78,15 @@ type
     actSeviceItemOpenForm: TdsdOpenForm;
     bbSeviceItemOpenForm: TdxBarButton;
     cxLabel3: TcxLabel;
-    edChangeDate: TcxDateEdit;
+    edEndDate: TcxDateEdit;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     edOperDate: TcxDateEdit;
     cxLabel4: TcxLabel;
+    StartDate_before: TcxGridDBColumn;
+    EndDate_before: TcxGridDBColumn;
+    StartDate_after: TcxGridDBColumn;
+    EndDate_after: TcxGridDBColumn;
   private
     { Private declarations }
   public

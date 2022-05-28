@@ -61,40 +61,67 @@ object ServiceItemForm: TServiceItemForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object Value: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100', '#1075#1088#1085
-        DataBinding.FieldName = 'Value'
+      object Area: TcxGridDBColumn
+        Caption = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'.'
+        DataBinding.FieldName = 'Area'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 92
+        Width = 66
       end
       object Price: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'.'
         DataBinding.FieldName = 'Price'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
-      object Area: TcxGridDBColumn
-        Caption = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'.'
-        DataBinding.FieldName = 'Area'
+      object Value: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100', '#1075#1088#1085
+        DataBinding.FieldName = 'Value'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 66
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 92
+      end
+      object UnitGroupNameFull: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' ('#1054#1090#1076#1077#1083')'
+        DataBinding.FieldName = 'UnitGroupNameFull'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 200
+      end
+      object UnitCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1086#1090#1076#1077#1083#1072
+        DataBinding.FieldName = 'UnitCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object UnitName: TcxGridDBColumn
+        Caption = #1054#1090#1076#1077#1083
+        DataBinding.FieldName = 'UnitName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 89
       end
       object InfoMoneyName: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1100#1103' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
         DataBinding.FieldName = 'InfoMoneyName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 158
@@ -107,33 +134,13 @@ object ServiceItemForm: TServiceItemForm
         Width = 174
       end
       object isErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False
-        VisibleForCustomization = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1059#1076#1072#1083#1077#1085' '#1054#1090#1076#1077#1083' ('#1076#1072'/'#1085#1077#1090')'
         Width = 20
-      end
-      object UnitCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1086#1090#1076#1077#1083#1072
-        DataBinding.FieldName = 'UnitCode'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
-      end
-      object UnitName: TcxGridDBColumn
-        Caption = #1054#1090#1076#1077#1083
-        DataBinding.FieldName = 'UnitName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 89
-      end
-      object UnitGroupNameFull: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' ('#1054#1090#1076#1077#1083')'
-        DataBinding.FieldName = 'UnitGroupNameFull'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 200
       end
       object Id: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -266,6 +273,10 @@ object ServiceItemForm: TServiceItemForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item
@@ -391,31 +402,14 @@ object ServiceItemForm: TServiceItemForm
       GuiParams = <
         item
           Name = 'Id'
-          Value = Null
+          Value = 0
           MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
           Value = Null
-          Component = GuidesUnit
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitName'
-          Value = Null
-          Component = GuidesUnit
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'StartDate'
-          Value = Null
-          DataType = ftDateTime
-          ParamType = ptInput
+          Component = ClientDataSet
+          ComponentItem = 'UnitId'
           MultiSelectSeparator = ','
         end
         item
@@ -423,23 +417,22 @@ object ServiceItemForm: TServiceItemForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyId'
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'InfoMoneyName'
+          Name = 'StartDate'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-          ParamType = ptInput
+          ComponentItem = 'StartDate'
+          DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inIsLast'
-          Value = True
-          DataType = ftBoolean
-          ParamType = ptInput
+          Name = 'EndDate'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'EndDate'
+          DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -464,24 +457,20 @@ object ServiceItemForm: TServiceItemForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
           Value = Null
-          Component = GuidesUnit
-          ComponentItem = 'Key'
-          ParamType = ptInput
+          Component = ClientDataSet
+          ComponentItem = 'UnitId'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'UnitName'
+          Name = 'InfoMoneyId'
           Value = Null
-          Component = GuidesUnit
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyId'
           MultiSelectSeparator = ','
         end
         item
@@ -490,7 +479,6 @@ object ServiceItemForm: TServiceItemForm
           Component = ClientDataSet
           ComponentItem = 'StartDate'
           DataType = ftDateTime
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -499,30 +487,6 @@ object ServiceItemForm: TServiceItemForm
           Component = ClientDataSet
           ComponentItem = 'EndDate'
           DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InfoMoneyId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InfoMoneyId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InfoMoneyName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inIsLast'
-          Value = False
-          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -686,8 +650,8 @@ object ServiceItemForm: TServiceItemForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 224
-    Top = 8
+    Left = 240
+    Top = 40
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -824,14 +788,8 @@ object ServiceItemForm: TServiceItemForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsShowAll'
-        Value = False
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisService'
-        Value = False
+        Name = 'inIsService'
+        Value = True
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

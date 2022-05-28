@@ -42,151 +42,25 @@ object ServiceItemLastForm: TServiceItemLastForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.Footer = True
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object StartDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1089
-        DataBinding.FieldName = 'StartDate'
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 58
-      end
-      object EndDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1087#1086
-        DataBinding.FieldName = 'EndDate'
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 60
-      end
-      object Value: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100', '#1075#1088#1085
-        DataBinding.FieldName = 'Value'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 92
-      end
-      object Price: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'.'
-        DataBinding.FieldName = 'Price'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object Area: TcxGridDBColumn
-        Caption = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'.'
-        DataBinding.FieldName = 'Area'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-        Width = 66
-      end
-      object Value_before: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083'., '#1075#1088#1085' ('#1087#1088#1077#1076'. '#1087#1077#1088'.)'
-        DataBinding.FieldName = 'Value_before'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083'., '#1075#1088#1085' ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
-        Width = 86
-      end
-      object Price_before: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'. ('#1087#1088#1077#1076'. '#1087#1077#1088'.)'
-        DataBinding.FieldName = 'Price_before'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'. ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
-        Width = 83
-      end
-      object Area_before: TcxGridDBColumn
-        Caption = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'. ('#1087#1088#1077#1076'. '#1087#1077#1088'.)'
-        DataBinding.FieldName = 'Area_before'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'. ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
-        Width = 80
-      end
-      object Value_after: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100', '#1075#1088#1085' ('#1089#1083'. '#1087#1077#1088'.)'
-        DataBinding.FieldName = 'Value_after'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100', '#1075#1088#1085' ('#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
-        Width = 92
-      end
-      object Price_after: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'.  ('#1089#1083'. '#1087#1077#1088'.)'
-        DataBinding.FieldName = 'Price_after'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'.  ('#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
-        Width = 69
-      end
-      object Area_after: TcxGridDBColumn
-        Caption = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'. ('#1089#1083'. '#1087#1077#1088'.)'
-        DataBinding.FieldName = 'Area_after'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'. ('#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
-        Width = 67
-      end
-      object InfoMoneyName: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1103' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
-        DataBinding.FieldName = 'InfoMoneyName'
+      object UnitGroupNameFull: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'UnitGroupNameFull'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 158
-      end
-      object CommentInfoMoneyName: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
-        DataBinding.FieldName = 'CommentInfoMoneyName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 174
-      end
-      object isErased: TcxGridDBColumn
-        DataBinding.FieldName = 'isErased'
-        Visible = False
-        Options.Editing = False
-        VisibleForCustomization = False
-        Width = 20
+        Width = 200
       end
       object UnitCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1086#1090#1076#1077#1083#1072
+        Caption = #1050#1086#1076
         DataBinding.FieldName = 'UnitCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -198,15 +72,193 @@ object ServiceItemLastForm: TServiceItemLastForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 89
+        Width = 120
       end
-      object UnitGroupNameFull: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' ('#1054#1090#1076#1077#1083')'
-        DataBinding.FieldName = 'UnitGroupNameFull'
+      object InfoMoneyName: TcxGridDBColumn
+        Caption = #1057#1090#1072#1090#1100#1103
+        DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 200
+        Width = 150
+      end
+      object StartDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1089
+        DataBinding.FieldName = 'StartDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object EndDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1086
+        DataBinding.FieldName = 'EndDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object Area_before: TcxGridDBColumn
+        Caption = '*'#1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'.'
+        DataBinding.FieldName = 'Area_before'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'. ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        Options.Editing = False
+        Width = 80
+      end
+      object Price_before: TcxGridDBColumn
+        Caption = '*'#1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'.'
+        DataBinding.FieldName = 'Price_before'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'. ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        Options.Editing = False
+        Width = 80
+      end
+      object Value_before: TcxGridDBColumn
+        Caption = '*'#1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100
+        DataBinding.FieldName = 'Value_before'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083'., '#1075#1088#1085' ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        Options.Editing = False
+        Width = 80
+      end
+      object StartDate_before: TcxGridDBColumn
+        Caption = '*'#1044#1072#1090#1072' '#1089
+        DataBinding.FieldName = 'StartDate_before'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1089' ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        Options.Editing = False
+        Width = 70
+      end
+      object EndDate_before: TcxGridDBColumn
+        Caption = '*'#1044#1072#1090#1072' '#1087#1086
+        DataBinding.FieldName = 'EndDate_before'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1087#1086' ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        Options.Editing = False
+        Width = 70
+      end
+      object Area: TcxGridDBColumn
+        Caption = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'.'
+        DataBinding.FieldName = 'Area'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object Price: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'.'
+        DataBinding.FieldName = 'Price'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object Value: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100
+        DataBinding.FieldName = 'Value'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100', '#1075#1088#1085
+        Width = 80
+      end
+      object Area_after: TcxGridDBColumn
+        Caption = '***'#1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'.'
+        DataBinding.FieldName = 'Area_after'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'. ('#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        Options.Editing = False
+        Width = 80
+      end
+      object Price_after: TcxGridDBColumn
+        Caption = '***'#1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'.'
+        DataBinding.FieldName = 'Price_after'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'.  ('#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        Options.Editing = False
+        Width = 80
+      end
+      object Value_after: TcxGridDBColumn
+        Caption = '***'#1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100
+        DataBinding.FieldName = 'Value_after'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100', '#1075#1088#1085' ('#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        Options.Editing = False
+        Width = 80
+      end
+      object StartDate_after: TcxGridDBColumn
+        Caption = '***'#1044#1072#1090#1072' '#1089
+        DataBinding.FieldName = 'StartDate_after'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1089' ('#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        Options.Editing = False
+        Width = 70
+      end
+      object EndDate_after: TcxGridDBColumn
+        Caption = '***'#1044#1072#1090#1072' '#1087#1086
+        DataBinding.FieldName = 'EndDate_after'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1087#1086' ('#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+        Options.Editing = False
+        Width = 70
+      end
+      object CommentInfoMoneyName: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'CommentInfoMoneyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 174
+      end
+      object isErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        Visible = False
+        HeaderHint = #1059#1076#1072#1083#1077#1085' '#1054#1090#1076#1077#1083' ('#1076#1072'/'#1085#1077#1090')'
+        Options.Editing = False
+        Width = 20
       end
       object Id: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -234,8 +286,8 @@ object ServiceItemLastForm: TServiceItemLastForm
       Caption = #1054#1090#1076#1077#1083':'
     end
     object edUnit: TcxButtonEdit
-      Left = 44
-      Top = 9
+      Left = 46
+      Top = 10
       Properties.Buttons = <
         item
           Default = True
@@ -243,30 +295,33 @@ object ServiceItemLastForm: TServiceItemLastForm
         end>
       Properties.ReadOnly = True
       TabOrder = 1
-      Width = 317
+      Width = 235
     end
     object cxLabel3: TcxLabel
-      Left = 798
-      Top = 10
-      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1089':'
+      Left = 752
+      Top = 11
+      Hint = #1048#1079#1084#1077#1085#1077#1085#1080#1103
+      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1055#1054':'
+      Visible = False
     end
-    object edChangeDate: TcxDateEdit
-      Left = 870
+    object edEndDate: TcxDateEdit
+      Left = 838
       Top = 10
       EditValue = 44713d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 3
-      Width = 83
+      Visible = False
+      Width = 88
     end
   end
   object cxLabel2: TcxLabel
-    Left = 369
+    Left = 290
     Top = 36
     Caption = #1057#1090#1072#1090#1100#1103':'
   end
   object edInfoMoney: TcxButtonEdit
-    Left = 415
+    Left = 336
     Top = 36
     Properties.Buttons = <
       item
@@ -274,20 +329,20 @@ object ServiceItemLastForm: TServiceItemLastForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 4
+    TabOrder = 3
     Width = 234
   end
   object edOperDate: TcxDateEdit
-    Left = 709
+    Left = 639
     Top = 36
     EditValue = 44713d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 8
-    Width = 81
+    Width = 88
   end
   object cxLabel4: TcxLabel
-    Left = 659
+    Left = 584
     Top = 36
     Caption = #1053#1072' '#1076#1072#1090#1091':'
   end
@@ -305,24 +360,34 @@ object ServiceItemLastForm: TServiceItemLastForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = edEndDate
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = edOperDate
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = GuidesInfoMoney
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesUnit
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
         Component = Owner
         Properties.Strings = (
           'Height'
           'Left'
           'Top'
           'Width')
-      end
-      item
-        Component = GuidesUnit
-        Properties.Strings = (
-          'key'
-          'textvalue')
-      end
-      item
-        Component = GuidesInfoMoney
-        Properties.Strings = (
-          'key'
-          'textvalue')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -365,6 +430,10 @@ object ServiceItemLastForm: TServiceItemLastForm
       FloatClientWidth = 51
       FloatClientHeight = 59
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
         item
           Visible = True
           ItemName = 'bbInsert'
@@ -514,7 +583,7 @@ object ServiceItemLastForm: TServiceItemLastForm
       GuiParams = <
         item
           Name = 'Id'
-          Value = Null
+          Value = 0
           MultiSelectSeparator = ','
         end
         item
@@ -522,24 +591,6 @@ object ServiceItemLastForm: TServiceItemLastForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'UnitId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'UnitName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'StartDate'
-          Value = Null
-          Component = edChangeDate
-          DataType = ftDateTime
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -547,23 +598,21 @@ object ServiceItemLastForm: TServiceItemLastForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyId'
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'InfoMoneyName'
+          Name = 'StartDate'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-          ParamType = ptInput
+          ComponentItem = 'StartDate'
+          DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inIsLast'
-          Value = True
-          DataType = ftBoolean
-          ParamType = ptInput
+          Name = 'EndDate'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'EndDate'
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -588,7 +637,6 @@ object ServiceItemLastForm: TServiceItemLastForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -596,16 +644,13 @@ object ServiceItemLastForm: TServiceItemLastForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'UnitId'
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'UnitName'
+          Name = 'InfoMoneyId'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'UnitName'
-          DataType = ftString
-          ParamType = ptInput
+          ComponentItem = 'InfoMoneyId'
           MultiSelectSeparator = ','
         end
         item
@@ -614,7 +659,6 @@ object ServiceItemLastForm: TServiceItemLastForm
           Component = ClientDataSet
           ComponentItem = 'StartDate'
           DataType = ftDateTime
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -623,30 +667,6 @@ object ServiceItemLastForm: TServiceItemLastForm
           Component = ClientDataSet
           ComponentItem = 'EndDate'
           DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InfoMoneyId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InfoMoneyId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InfoMoneyName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inIsLast'
-          Value = False
-          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -1014,14 +1034,8 @@ object ServiceItemLastForm: TServiceItemLastForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsShowAll'
-        Value = False
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisService'
-        Value = False
+        Name = 'inIsService'
+        Value = True
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -1066,9 +1080,9 @@ object ServiceItemLastForm: TServiceItemLastForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperDate'
+        Name = 'inEndDate'
         Value = 42236d
-        Component = edChangeDate
+        Component = edEndDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1118,7 +1132,7 @@ object ServiceItemLastForm: TServiceItemLastForm
       end
       item
         Name = 'inIsLast'
-        Value = True
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -13,7 +13,7 @@
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = dsdDataSetRefresh
-  AddOnFormData.Params = dsdFormParams
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
@@ -51,6 +51,8 @@
     Left = 24
     Top = 71
     EditValue = 42236d
+    Enabled = False
+    Properties.ReadOnly = True
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 0
@@ -60,8 +62,7 @@
     Left = 138
     Top = 71
     EditValue = 42236d
-    Enabled = False
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 1
@@ -113,12 +114,12 @@
   object cxLabel4: TcxLabel
     Left = 24
     Top = 160
-    Caption = #1057#1090#1072#1090#1100#1103' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076':'
+    Caption = #1057#1090#1072#1090#1100#1103':'
   end
   object cxLabel5: TcxLabel
     Left = 24
-    Top = 206
-    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076':'
+    Top = 205
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077':'
   end
   object edCommentInfoMoney: TcxButtonEdit
     Left = 24
@@ -203,7 +204,7 @@
       item
         Name = 'ioId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -233,9 +234,9 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperDate'
+        Name = 'inEndDate'
         Value = Null
-        Component = edStartDate
+        Component = edEndDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -289,46 +290,36 @@
     Left = 267
     Top = 150
   end
-  object dsdFormParams: TdsdFormParams
+  object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'UnitId'
+        Name = 'Id'
         Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitName'
+        Name = 'UnitId'
         Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
         Value = Null
-        Component = GuidesInfoMoney
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InfoMoneyName'
-        Value = Null
-        Component = GuidesInfoMoney
-        ComponentItem = 'TextValue'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'StartDate'
         Value = Null
-        Component = edStartDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -342,9 +333,17 @@
     OutputType = otResult
     Params = <
       item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inUnitId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'UnitId'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -352,26 +351,49 @@
       item
         Name = 'inInfoMoneyId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperDate'
+        Name = 'inStartDate'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'StartDate'
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inEndDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'EndDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'InfoMoneyId'
-        Value = ''
+        Value = Null
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -380,7 +402,6 @@
         Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -431,21 +452,6 @@
         Value = Null
         Component = ceValue
         DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitId'
-        Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'TextValue'
-        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -504,6 +510,7 @@
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInfoMoney
+    Key = '0'
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -528,24 +535,15 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisService'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsShowAll'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inKindName'
         Value = Null
         DataType = ftString
-        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsService'
+        Value = True
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 128

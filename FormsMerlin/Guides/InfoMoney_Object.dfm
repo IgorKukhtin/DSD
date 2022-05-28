@@ -24,8 +24,6 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
     Height = 316
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 26
-    ExplicitHeight = 349
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -168,7 +166,6 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
     Height = 33
     Align = alTop
     TabOrder = 5
-    ExplicitTop = -6
     object lbSearchName: TcxLabel
       Left = 22
       Top = 6
@@ -492,10 +489,10 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
       end>
     Params = <
       item
-        Name = 'inisService'
+        Name = 'inIsService'
         Value = False
         Component = FormParams
-        ComponentItem = 'iniService'
+        ComponentItem = 'inIsService'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -574,15 +571,23 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'inisService'
-        Value = False
-        DataType = ftBoolean
+        Name = 'inKindName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'iniService'
-        Value = 'false'
-        DataType = ftString
+        Name = 'inIsShowAll'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsService'
+        Value = Null
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

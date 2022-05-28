@@ -1587,9 +1587,10 @@ object CashChildJournalForm: TCashChildJournalForm
         item
           StoredProc = spUnErasedMIMaster
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1091
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1091
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSourceChild
@@ -1630,6 +1631,7 @@ object CashChildJournalForm: TCashChildJournalForm
           Value = Null
           Component = ClientDataSetChild
           ComponentItem = 'InfoMoneyId'
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
@@ -1638,6 +1640,13 @@ object CashChildJournalForm: TCashChildJournalForm
           Component = ClientDataSetChild
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inIsService'
+          Value = False
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1665,6 +1674,7 @@ object CashChildJournalForm: TCashChildJournalForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1091
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1091
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSourceChild
     end

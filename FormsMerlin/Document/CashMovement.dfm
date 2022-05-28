@@ -555,16 +555,11 @@
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
-        Name = 'iniService'
-        Value = True
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'Key'
         Value = ''
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -573,6 +568,7 @@
         Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -596,6 +592,12 @@
         Component = FormParams
         ComponentItem = 'inKindName'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsService'
+        Value = False
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 192

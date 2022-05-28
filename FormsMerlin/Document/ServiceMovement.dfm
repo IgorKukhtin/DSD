@@ -64,7 +64,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    Properties.ReadOnly = False
+    Properties.ReadOnly = True
     TabOrder = 5
     Width = 313
   end
@@ -409,12 +409,6 @@
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
-        Name = 'iniService'
-        Value = True
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'Key'
         Value = ''
         Component = GuidesInfoMoney
@@ -442,6 +436,12 @@
         Component = GuidesParent_infomoney
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsService'
+        Value = True
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 192
