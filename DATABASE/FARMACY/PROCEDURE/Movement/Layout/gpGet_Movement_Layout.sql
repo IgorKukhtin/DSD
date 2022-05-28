@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , LayoutId Integer, LayoutName TVarChar
              , Comment TVarChar
              , isPharmacyItem Boolean
+             , isNotMoveRemainder6 Boolean
               )
 AS
 $BODY$
@@ -36,6 +37,7 @@ BEGIN
              , CAST ('' AS TVarChar) 				            AS LayoutName
              , CAST ('' AS TVarChar) 		                    AS Comment
              , False                                            AS isPharmacyItem
+             , False                                            AS isNotMoveRemainder6
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
      RETURN QUERY
@@ -50,6 +52,7 @@ BEGIN
            , Object_Layout.ValueData                            AS LayoutName
            , COALESCE (MovementString_Comment.ValueData,'')     ::TVarChar AS Comment
            , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE)       AS isPharmacyItem
+           , COALESCE(MovementBoolean_NotMoveRemainder6.ValueData, FALSE)  AS isNotMoveRemainder6
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -69,6 +72,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_PharmacyItem
                                       ON MovementBoolean_PharmacyItem.MovementId = Movement.Id
                                      AND MovementBoolean_PharmacyItem.DescId = zc_MovementBoolean_PharmacyItem()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_NotMoveRemainder6
+                                      ON MovementBoolean_NotMoveRemainder6.MovementId = Movement.Id
+                                     AND MovementBoolean_NotMoveRemainder6.DescId = zc_MovementBoolean_NotMoveRemainder6()
 
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Layout();

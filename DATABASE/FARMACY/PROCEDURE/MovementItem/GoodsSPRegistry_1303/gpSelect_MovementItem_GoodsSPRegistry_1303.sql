@@ -527,7 +527,7 @@ BEGIN
                                         
              LEFT JOIN tmpMICount ON tmpMICount.ObjectId = MovementItem.ObjectId
                        
-        WHERE MovementItem.Ord = 1 or inIsErased = True
+        WHERE MovementItem.Ord = 1 or COALESCE(MovementItem.ObjectId, 0) = 0 or inIsErased = True
 
          ;
     END IF;            

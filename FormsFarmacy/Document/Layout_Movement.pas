@@ -85,6 +85,7 @@ type
     dxBarButton4: TdxBarButton;
     dxBarButton5: TdxBarButton;
     DBViewAddOnChild: TdsdDBViewAddOn;
+    cbNotMoveRemainder6: TcxCheckBox;
   private
     { Private declarations }
   public

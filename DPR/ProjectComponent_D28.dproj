@@ -1,8 +1,8 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{A409EC74-B7D5-47CD-BA6A-8C1B58C73E85}</ProjectGuid>
-        <MainSource>ProjectComponent_D27.dpk</MainSource>
-        <ProjectVersion>19.2</ProjectVersion>
+        <MainSource>ProjectComponent_D28.dpk</MainSource>
+        <ProjectVersion>19.4</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
@@ -65,11 +65,11 @@
         <GenDll>true</GenDll>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
-        <SanitizedProjectName>ProjectComponent_D27</SanitizedProjectName>
+        <SanitizedProjectName>ProjectComponent_D28</SanitizedProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_BplOutput>..\BIN\Bpl\$(ProductVersion)</DCC_BplOutput>
-        <DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;cxDataRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;fs16;frx16;dxBarExtItemsRS16;cxPivotGridRS16;zlibEx;VclSmp;cxVerticalGridRS16;vcl;fsDB16;frxDB16;dxSkinsCoreRS16;adortl;vclx;dxmdsRS16;dxLayoutControlRS16;cxExportRS16;frxe16;Zlib;vclie;GMLib_DXE2;GMLib_DXE2_VCL;ZLibExD27;fs27;frx27;frxDB27;frxe27;dxCoreRS27;cxLibraryRS27;dxGDIPlusRS27;dxThemeRS27;cxDataRS27;cxEditorsRS27;dxmdsRS27;cxPageControlRS27;dxLayoutControlRS27;dxComnRS27;cxTreeListRS27;cxExportRS27;dxBarRS27;dxBarExtItemsRS27;cxGridRS27;cxPivotGridRS27;cxVerticalGridRS27;dxSkinsCoreRS27;GMLib_D27_VCL;GMLib_D27;cxSchedulerRS27;GMLib_D_Sydney10_VCL;GMLib_D_Sydney10;ZComponentD27;ZDbcD27;ZPlainD27;ZCoreD27;ZParseSqlD27;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;cxDataRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;fs16;frx16;dxBarExtItemsRS16;cxPivotGridRS16;zlibEx;VclSmp;cxVerticalGridRS16;vcl;fsDB16;frxDB16;dxSkinsCoreRS16;adortl;vclx;dxmdsRS16;dxLayoutControlRS16;cxExportRS16;frxe16;Zlib;vclie;GMLib_DXE2;GMLib_DXE2_VCL;ZLibExD28;fs28;frx28;frxDB28;frxe28;dxCoreRS28;cxLibraryRS28;dxGDIPlusRS28;dxThemeRS28;cxDataRS28;cxEditorsRS28;dxmdsRS28;cxPageControlRS28;dxLayoutControlRS28;dxComnRS28;cxTreeListRS28;cxExportRS28;dxBarRS28;dxBarExtItemsRS28;cxGridRS28;cxPivotGridRS28;cxVerticalGridRS28;dxSkinsCoreRS28;GMLib_D28_VCL;GMLib_D28;cxSchedulerRS28;GMLib_D_Sydney10_VCL;GMLib_D_Sydney10;ZComponentD28;ZParseSqlD28;ZCoreD28;ZDbcD28;ZPlainD28;$(DCC_UsePackage)</DCC_UsePackage>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_Locale>1033</VerInfo_Locale>
@@ -83,7 +83,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
-        <DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;dxBarExtItemsRS16;cxPivotGridRS16;VclSmp;cxVerticalGridRS16;vcl;dxSkinsCoreRS16;adortl;vclx;dxmdsRS16;dxLayoutControlRS16;cxExportRS16;vclie;GMLib_DXE2;GMLib_DXE2_VCL;dxCoreRS27;cxLibraryRS27;dxGDIPlusRS27;dxThemeRS27;cxDataRS27;cxEditorsRS27;dxmdsRS27;cxPageControlRS27;dxLayoutControlRS27;dxComnRS27;cxTreeListRS27;cxExportRS27;dxBarRS27;dxBarExtItemsRS27;cxGridRS27;cxPivotGridRS27;cxVerticalGridRS27;dxSkinsCoreRS27;GMLib_D27_VCL;GMLib_D27;cxSchedulerRS27;GMLib_D_Sydney10_VCL;GMLib_D_Sydney10;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;dxBarExtItemsRS16;cxPivotGridRS16;VclSmp;cxVerticalGridRS16;vcl;dxSkinsCoreRS16;adortl;vclx;dxmdsRS16;dxLayoutControlRS16;cxExportRS16;vclie;GMLib_DXE2;GMLib_DXE2_VCL;dxCoreRS28;cxLibraryRS28;dxGDIPlusRS28;dxThemeRS28;cxDataRS28;cxEditorsRS28;dxmdsRS28;cxPageControlRS28;dxLayoutControlRS28;dxComnRS28;cxTreeListRS28;cxExportRS28;dxBarRS28;dxBarExtItemsRS28;cxGridRS28;cxPivotGridRS28;cxVerticalGridRS28;dxSkinsCoreRS28;GMLib_D28_VCL;GMLib_D28;cxSchedulerRS28;GMLib_D_Sydney10_VCL;GMLib_D_Sydney10;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
@@ -136,32 +136,32 @@
         <DCCReference Include="IndyProtocols.dcp"/>
         <DCCReference Include="vclie.dcp"/>
         <DCCReference Include="DbxCommonDriver.dcp"/>
-        <DCCReference Include="dxCoreRS27.dcp"/>
-        <DCCReference Include="cxLibraryRS27.dcp"/>
-        <DCCReference Include="dxGDIPlusRS27.dcp"/>
-        <DCCReference Include="dxmdsRS27.dcp"/>
-        <DCCReference Include="dxBarRS27.dcp"/>
-        <DCCReference Include="dxComnRS27.dcp"/>
-        <DCCReference Include="dxBarExtItemsRS27.dcp"/>
-        <DCCReference Include="cxGridRS27.dcp"/>
-        <DCCReference Include="cxExportRS27.dcp"/>
-        <DCCReference Include="cxPivotGridRS27.dcp"/>
-        <DCCReference Include="cxTreeListRS27.dcp"/>
-        <DCCReference Include="cxVerticalGridRS27.dcp"/>
-        <DCCReference Include="fs27.dcp"/>
-        <DCCReference Include="frx27.dcp"/>
-        <DCCReference Include="frxe27.dcp"/>
-        <DCCReference Include="frxDB27.dcp"/>
-        <DCCReference Include="ZLibExD27.dcp"/>
-        <DCCReference Include="GMLib_D27.dcp"/>
-        <DCCReference Include="GMLib_D27_VCL.dcp"/>
-        <DCCReference Include="cxSchedulerRS27.dcp"/>
-        <DCCReference Include="dxSkinsCoreRS27.dcp"/>
-        <DCCReference Include="ZComponentD27.dcp"/>
-        <DCCReference Include="ZDbcD27.dcp"/>
-        <DCCReference Include="ZPlainD27.dcp"/>
-        <DCCReference Include="ZCoreD27.dcp"/>
-        <DCCReference Include="ZParseSqlD27.dcp"/>
+        <DCCReference Include="dxCoreRS28.dcp"/>
+        <DCCReference Include="cxLibraryRS28.dcp"/>
+        <DCCReference Include="dxGDIPlusRS28.dcp"/>
+        <DCCReference Include="dxmdsRS28.dcp"/>
+        <DCCReference Include="dxBarRS28.dcp"/>
+        <DCCReference Include="dxComnRS28.dcp"/>
+        <DCCReference Include="dxBarExtItemsRS28.dcp"/>
+        <DCCReference Include="cxGridRS28.dcp"/>
+        <DCCReference Include="cxExportRS28.dcp"/>
+        <DCCReference Include="cxPivotGridRS28.dcp"/>
+        <DCCReference Include="cxTreeListRS28.dcp"/>
+        <DCCReference Include="cxVerticalGridRS28.dcp"/>
+        <DCCReference Include="fs28.dcp"/>
+        <DCCReference Include="frx28.dcp"/>
+        <DCCReference Include="frxe28.dcp"/>
+        <DCCReference Include="frxDB28.dcp"/>
+        <DCCReference Include="ZLibExD28.dcp"/>
+        <DCCReference Include="GMLib_D28.dcp"/>
+        <DCCReference Include="GMLib_D28_VCL.dcp"/>
+        <DCCReference Include="cxSchedulerRS28.dcp"/>
+        <DCCReference Include="dxSkinsCoreRS28.dcp"/>
+        <DCCReference Include="ZComponentD28.dcp"/>
+        <DCCReference Include="ZParseSqlD28.dcp"/>
+        <DCCReference Include="ZCoreD28.dcp"/>
+        <DCCReference Include="ZDbcD28.dcp"/>
+        <DCCReference Include="ZPlainD28.dcp"/>
         <DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
         <DCCReference Include="..\SOURCE\UtilConst.pas"/>
         <DCCReference Include="..\SOURCE\CommonData.pas"/>
@@ -247,16 +247,20 @@
         <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201111.pas"/>
         <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
         <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
-        <None Include="ModelSupport_ProjectComponent_D27\default.txaPackage"/>
-        <BuildConfiguration Include="Release">
-            <Key>Cfg_2</Key>
-            <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
+        <DCCReference Include="..\SOURCE\DialogPswSms.pas">
+            <Form>DialogPswSmsForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <None Include="ModelSupport_ProjectComponent_D28\default.txaPackage"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_1</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
     </ItemGroup>
@@ -266,7 +270,7 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Source>
-                    <Source Name="MainSource">ProjectComponent_D27.dpk</Source>
+                    <Source Name="MainSource">ProjectComponent_D28.dpk</Source>
                 </Source>
                 <VersionInfo>
                     <VersionInfo Name="IncludeVerInfo">True</VersionInfo>
@@ -296,19 +300,19 @@
                     <VersionInfoKeys Name="Comments"/>
                 </VersionInfoKeys>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\GMLib_D27.bpl">GoogleMaps Library v1.5.5 (Copyright © Xavier Martнnez - cadetill)</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\GMLib_D28.bpl">GoogleMaps Library v1.5.5 (Copyright © Xavier Martнnez - cadetill)</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="..\BIN64\Bpl\21.0\ProjectComponent_D27.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\BIN64\Bpl\21.0\ProjectComponent_D28.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win64">
-                        <RemoteName>ProjectComponent_D27.bpl</RemoteName>
+                        <RemoteName>ProjectComponent_D28.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\Bpl\21.0\ProjectComponent_D27.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\BIN\Bpl\22.0\ProjectComponent_D28.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
-                        <RemoteName>ProjectComponent_D27.bpl</RemoteName>
+                        <RemoteName>ProjectComponent_D28.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -318,6 +322,16 @@
                     </Platform>
                     <Platform Name="Win32">
                         <Operation>0</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="AndroidClasses">
+                    <Platform Name="Android">
+                        <RemoteDir>classes</RemoteDir>
+                        <Operation>64</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>classes</RemoteDir>
+                        <Operation>64</Operation>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="AndroidClassesDexFile">
@@ -558,7 +572,7 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="Android_SplashImage427">
+                <DeployClass Name="Android_SplashImage428">
                     <Platform Name="Android">
                         <RemoteDir>res\drawable-small</RemoteDir>
                         <Operation>1</Operation>
@@ -624,6 +638,10 @@
                         <Operation>1</Operation>
                         <Extensions>.framework</Extensions>
                     </Platform>
+                    <Platform Name="OSXARM64">
+                        <Operation>1</Operation>
+                        <Extensions>.framework</Extensions>
+                    </Platform>
                     <Platform Name="Win32">
                         <Operation>0</Operation>
                     </Platform>
@@ -634,6 +652,10 @@
                         <Extensions>.dylib</Extensions>
                     </Platform>
                     <Platform Name="OSX64">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="OSXARM64">
                         <Operation>1</Operation>
                         <Extensions>.dylib</Extensions>
                     </Platform>
@@ -663,6 +685,10 @@
                         <Operation>1</Operation>
                         <Extensions>.dylib</Extensions>
                     </Platform>
+                    <Platform Name="OSXARM64">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
                     <Platform Name="Win32">
                         <Operation>0</Operation>
                         <Extensions>.bpl</Extensions>
@@ -688,6 +714,9 @@
                         <Operation>0</Operation>
                     </Platform>
                     <Platform Name="OSX64">
+                        <Operation>0</Operation>
+                    </Platform>
+                    <Platform Name="OSXARM64">
                         <Operation>0</Operation>
                     </Platform>
                     <Platform Name="Win32">
@@ -1012,6 +1041,10 @@
                         <RemoteDir>Contents\Resources</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
+                    <Platform Name="OSXARM64">
+                        <RemoteDir>Contents\Resources</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
                 </DeployClass>
                 <DeployClass Required="true" Name="ProjectOutput">
                     <Platform Name="Android">
@@ -1038,6 +1071,9 @@
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="OSX64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="OSXARM64">
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="Win32">
@@ -1078,16 +1114,17 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
-                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="Linux64" Name="$(PROJECTNAME)"/>
-                <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
-                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
-                <ProjectRoot Platform="OSX64" Name="$(PROJECTNAME)"/>
-                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Android64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="Linux64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="OSX64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="OSXARM64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
             </Deployment>
             <Platforms>
                 <Platform value="Win32">True</Platform>

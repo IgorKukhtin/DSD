@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_Layout()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Layout (Integer, TVarChar, TDateTime, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Layout (Integer, TVarChar, TDateTime, Integer, TVarChar, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Layout(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Списания>
@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Layout(
     IN inLayoutId            Integer   , -- название выкладки
     IN inComment             TVarChar  , -- Примечание
     IN inisPharmacyItem      Boolean   , -- Для аптечных пунктов
+    IN inisNotMoveRemainder6 Boolean   , -- Не перемещать остаток менее 6 мес.
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -36,13 +37,14 @@ BEGIN
      END IF;
      
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement_Layout (ioId              := ioId
-                                           , inInvNumber       := inInvNumber
-                                           , inOperDate        := inOperDate
-                                           , inLayoutId        := inLayoutId
-                                           , inComment         := inComment
-                                           , inisPharmacyItem  := inisPharmacyItem
-                                           , inUserId          := vbUserId
+     ioId := lpInsertUpdate_Movement_Layout (ioId                  := ioId
+                                           , inInvNumber           := inInvNumber
+                                           , inOperDate            := inOperDate
+                                           , inLayoutId            := inLayoutId
+                                           , inComment             := inComment
+                                           , inisPharmacyItem      := inisPharmacyItem
+                                           , inisNotMoveRemainder6 := inisNotMoveRemainder6
+                                           , inUserId              := vbUserId
                                             );
 
 END;

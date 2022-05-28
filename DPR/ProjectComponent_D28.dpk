@@ -1,4 +1,4 @@
-package ProjectComponent_D27;
+package ProjectComponent_D28;
 
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
@@ -45,32 +45,32 @@ requires
   IndyProtocols,
   vclie,
   DbxCommonDriver,
-  dxCoreRS27,
-  cxLibraryRS27,
-  dxGDIPlusRS27,
-  dxmdsRS27,
-  dxBarRS27,
-  dxComnRS27,
-  dxBarExtItemsRS27,
-  cxGridRS27,
-  cxExportRS27,
-  cxPivotGridRS27,
-  cxTreeListRS27,
-  cxVerticalGridRS27,
-  fs27,
-  frx27,
-  frxe27,
-  frxDB27,
-  ZLibExD27,
-  GMLib_D27,
-  GMLib_D27_VCL,
-  cxSchedulerRS27,
-  dxSkinsCoreRS27,
-  ZComponentD27,
-  ZDbcD27,
-  ZPlainD27,
-  ZCoreD27,
-  ZParseSqlD27;
+  dxCoreRS28,
+  cxLibraryRS28,
+  dxGDIPlusRS28,
+  dxmdsRS28,
+  dxBarRS28,
+  dxComnRS28,
+  dxBarExtItemsRS28,
+  cxGridRS28,
+  cxExportRS28,
+  cxPivotGridRS28,
+  cxTreeListRS28,
+  cxVerticalGridRS28,
+  fs28,
+  frx28,
+  frxe28,
+  frxDB28,
+  ZLibExD28,
+  GMLib_D28,
+  GMLib_D28_VCL,
+  cxSchedulerRS28,
+  dxSkinsCoreRS28,
+  ZComponentD28,
+  ZParseSqlD28,
+  ZCoreD28,
+  ZDbcD28,
+  ZPlainD28;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
@@ -146,6 +146,7 @@ contains
   Medoc_J1201011 in '..\SOURCE\MeDOC\Medoc_J1201011.pas',
   Medoc_J1201111 in '..\SOURCE\MeDOC\Medoc_J1201111.pas',
   Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
-  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas';
+  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
+  DialogPswSms in '..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm};
 
 end.

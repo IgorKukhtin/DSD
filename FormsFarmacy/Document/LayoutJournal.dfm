@@ -104,6 +104,15 @@ inherited LayoutJournalForm: TLayoutJournalForm
             HeaderHint = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1100#1089#1103' '#1080' '#1076#1083#1103' '#1072#1087#1090#1077#1095#1085#1099#1093' '#1087#1091#1085#1082#1090#1086#1074
             Width = 71
           end
+          object isNotMoveRemainder6: TcxGridDBColumn
+            Caption = #1053#1077' '#1087#1077#1088#1077#1084'. '#1084#1077#1085#1077#1077' 6 '#1084#1077#1089'.'
+            DataBinding.FieldName = 'isNotMoveRemainder6'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077' '#1087#1077#1088#1077#1084#1077#1097#1072#1090#1100' '#1086#1089#1090#1072#1090#1086#1082' '#1084#1077#1085#1077#1077' 6'
+            Options.Editing = False
+            Width = 76
+          end
           object Comment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'Comment'
@@ -475,7 +484,7 @@ inherited LayoutJournalForm: TLayoutJournalForm
       end
       item
         Name = 'outOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -612,7 +621,7 @@ inherited LayoutJournalForm: TLayoutJournalForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

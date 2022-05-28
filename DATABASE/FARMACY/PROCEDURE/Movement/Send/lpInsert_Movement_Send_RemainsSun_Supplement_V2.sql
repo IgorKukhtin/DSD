@@ -656,7 +656,7 @@ BEGIN
      -- Что отдаем
      UPDATE _tmpRemains_all_Supplement_V2 SET Give = floor(_tmpRemains_all_Supplement_V2.AmountRemains - COALESCE(_tmpRemains_all_Supplement_V2.AmountNotSend, 0) -
                                                                            CASE WHEN (COALESCE(_tmpRemains_all_Supplement_V2.MCS, 0) + COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0)) < 1 AND 1 > COALESCE(_tmpRemains_all_Supplement_V2.AmountSalesDay, 0) 
-                                                                                THEN 1 
+                                                                                THEN CASE WHEN COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0) > 1 THEN COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0) ELSE 1  END 
                                                                                 WHEN (COALESCE(_tmpRemains_all_Supplement_V2.MCS, 0) + COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0))  > COALESCE(_tmpRemains_all_Supplement_V2.AmountSalesDay, 0) 
                                                                                 THEN (COALESCE(_tmpRemains_all_Supplement_V2.MCS, 0) + COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0))  
                                                                                 ELSE COALESCE(_tmpRemains_all_Supplement_V2.AmountSalesDay, 0) END)
@@ -761,7 +761,7 @@ BEGIN
      END LOOP; -- финиш цикла по курсору1
      CLOSE curPartion_next; -- закрыли курсор1
 
-raise notice 'Value 04: %', (select Count(*) from _tmpResult_Supplement_V2);      
+--raise notice 'Value 04: %', (select Count(*) from _tmpResult_Supplement_V2);      
 
      -- 3. распределяем до Потребности
      --
@@ -854,7 +854,7 @@ raise notice 'Value 04: %', (select Count(*) from _tmpResult_Supplement_V2);
      END LOOP; -- финиш цикла по курсору1
      CLOSE curPartion_next; -- закрыли курсор1
      
-raise notice 'Value 05: %', (select Count(*) from _tmpResult_Supplement_V2);      
+--raise notice 'Value 05: %', (select Count(*) from _tmpResult_Supplement_V2);      
 
 
      -- Результат
