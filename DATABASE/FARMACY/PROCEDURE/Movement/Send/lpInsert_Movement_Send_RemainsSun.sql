@@ -241,10 +241,14 @@ BEGIN
      -- ¬ыкладки
      WITH tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
                                      , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE) AS isPharmacyItem
+                                     , COALESCE(MovementBoolean_NotMoveRemainder6.ValueData, FALSE) AS isNotMoveRemainder6
                                 FROM Movement
                                      LEFT JOIN MovementBoolean AS MovementBoolean_PharmacyItem
                                                                ON MovementBoolean_PharmacyItem.MovementId = Movement.Id
                                                               AND MovementBoolean_PharmacyItem.DescId = zc_MovementBoolean_PharmacyItem()
+                                     LEFT JOIN MovementBoolean AS MovementBoolean_NotMoveRemainder6
+                                                               ON MovementBoolean_NotMoveRemainder6.MovementId = Movement.Id
+                                                              AND MovementBoolean_NotMoveRemainder6.DescId = zc_MovementBoolean_NotMoveRemainder6()
                                 WHERE Movement.DescId = zc_Movement_Layout()
                                   AND Movement.StatusId = zc_Enum_Status_Complete()
                                )
@@ -252,6 +256,7 @@ BEGIN
                              , MovementItem.ObjectId              AS GoodsId
                              , MovementItem.Amount                AS Amount
                              , Movement.isPharmacyItem            AS isPharmacyItem
+                             , Movement.isNotMoveRemainder6       AS isNotMoveRemainder6
                         FROM tmpLayoutMovement AS Movement
                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                     AND MovementItem.DescId = zc_MI_Master()
@@ -275,7 +280,8 @@ BEGIN
                                  )
         , tmpLayoutAll AS (SELECT tmpLayout.GoodsId                  AS GoodsId
                                 , _tmpUnit_SUN.UnitId                AS UnitId
-                                , tmpLayout.Amount                              AS Amount
+                                , tmpLayout.Amount                   AS Amount
+                                , tmpLayout.isNotMoveRemainder6      AS isNotMoveRemainder6
                            FROM tmpLayout
                            
                                 INNER JOIN _tmpUnit_SUN ON 1 = 1
@@ -293,10 +299,11 @@ BEGIN
                              AND (COALESCE (Unit_PharmacyItem.ValueData, False) = False OR tmpLayout.isPharmacyItem = True)
                            )
                                                               
-     INSERT INTO _tmpGoods_Layout (GoodsId, UnitId, Layout) 
+     INSERT INTO _tmpGoods_Layout (GoodsId, UnitId, Layout, isNotMoveRemainder6) 
      SELECT tmpLayoutAll.GoodsId               AS GoodsId
           , tmpLayoutAll.UnitId                AS UnitId
           , MAX (tmpLayoutAll.Amount):: TFloat AS Amount
+          , SUM (CASE WHEN tmpLayoutAll.isNotMoveRemainder6 = TRUE THEN 1 ELSE 0 END) > 0   AS isNotMoveRemainder6
       FROM tmpLayoutAll      
       GROUP BY tmpLayoutAll.GoodsId
              , tmpLayoutAll.UnitId;
@@ -1161,7 +1168,7 @@ BEGIN
 
 
      -- 3.1. все остатки ќ“ѕ–ј¬»“≈Ћя, —–ќ  + ...
-     INSERT INTO _tmpRemains_Partion_all (ContainerDescId, UnitId, ContainerId_Parent, ContainerId, GoodsId, Amount, PartionDateKindId, ExpirationDate, Amount_sun, Amount_notSold, isNotSold100)
+     INSERT INTO _tmpRemains_Partion_all (ContainerDescId, UnitId, ContainerId_Parent, ContainerId, GoodsId, Amount, PartionDateKindId, ExpirationDate, Amount_sun, Amount_notSold, Amount_6Month, isNotSold100)
         WITH -- список дл€ NotSold
              tmpContainer AS (SELECT Container.DescId           AS ContainerDescId
                                    , Container.Id               AS ContainerId
@@ -1249,6 +1256,29 @@ BEGIN
                                        , tmpNotSold.UnitID
                                        , tmpNotSold.GoodsID
                                )
+     -- дл€ NotSold - ќстаток срок менее 6 мес€цев
+   , tmpNotSold_PartionDate6Month AS (SELECT tmpNotSold.ContainerId
+                                           , tmpNotSold.UnitID
+                                           , tmpNotSold.GoodsID
+                                             -- ќстаток срок менее 6 мес€цев
+                                           , SUM (Container.Amount) AS Amount
+                                      FROM tmpNotSold_all AS tmpNotSold
+                                           INNER JOIN Container ON Container.ParentId = tmpNotSold.ContainerId
+                                                               AND Container.DescId   = zc_Container_CountPartionDate()
+                                                               AND Container.Amount   > 0
+                                           LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                                         ON CLO_PartionGoods.ContainerId = Container.Id
+                                                                        AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                                           LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
+                                                                ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                                               AND ObjectDate_PartionGoods_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+                                      WHERE -- !!!оставили только эту категорию
+                                            ObjectDate_PartionGoods_Value.ValueData <= CURRENT_DATE + INTERVAL '6 MONTH'
+                                            -- !!!оставили только эту категорию
+                                      GROUP BY tmpNotSold.ContainerId
+                                             , tmpNotSold.UnitID
+                                             , tmpNotSold.GoodsID
+                                     )
             -- дл€ NotSold - список "плохой" срок
           , tmpNotSold_list AS (SELECT DISTINCT
                                        tmpNotSold_all.UnitID
@@ -1296,9 +1326,12 @@ BEGIN
                                      , tmpNotSold_all.GoodsID
                                        -- ќстаток "хороших" сроков
                                      , tmpNotSold_all.Amount - COALESCE (tmpNotSold_PartionDate.Amount, 0) AS Amount
+                                     , COALESCE (tmpNotSold_PartionDate6Month.Amount, 0) - COALESCE (tmpNotSold_PartionDate.Amount, 0) AS Amount_6Month
                                 FROM tmpNotSold_all
                                      -- "плохой" срок
                                      LEFT JOIN tmpNotSold_PartionDate ON tmpNotSold_PartionDate.ContainerId = tmpNotSold_all.ContainerId
+                                     -- ќстаток срок менее 6 мес€цев
+                                     LEFT JOIN tmpNotSold_PartionDate6Month ON tmpNotSold_PartionDate6Month.ContainerId = tmpNotSold_all.ContainerId
                                      -- Income - за X дней - если приходило, 100дней без продаж уходить уже не может
                                      LEFT JOIN tmpIncome ON tmpIncome.UnitId_to = tmpNotSold_all.UnitID
                                                         AND tmpIncome.GoodsID   = tmpNotSold_all.GoodsID
@@ -1537,6 +1570,7 @@ BEGIN
              , tmpRes_SUN.ExpirationDate
              , tmpRes_SUN.Amount AS Amount_sun
              , 0                 AS Amount_notSold
+             , 0                 AS Amount_6Month
              , COALESCE(tmpNotSold_all_all.ContainerId, 0) <> 0 AS isNotSold100
         FROM tmpRes_SUN
              -- если он есть в tmpNotSold, тогда распредел€ем только ¬—≈ кол-во из tmpNotSold
@@ -1586,6 +1620,7 @@ BEGIN
              , zc_DateEnd()      AS ExpirationDate
              , 0                 AS Amount_sun
              , tmpNotSold.Amount AS Amount_notSold
+             , tmpNotSold.Amount_6Month AS Amount_6Month
              , COALESCE(tmpNotSold_all_all.ContainerId, 0) <> 0 AS isNotSold100
         FROM tmpNotSold
              -- !!!SUN - за 30 дней - если приходило, уходить уже не может!!!
@@ -1637,6 +1672,7 @@ BEGIN
                               , _tmpRemains_Partion_all.ExpirationDate
                               , SUM (_tmpRemains_Partion_all.Amount_sun)     AS Amount_sun
                               , SUM (_tmpRemains_Partion_all.Amount_notSold) AS Amount_notSold
+                              , SUM (_tmpRemains_Partion_all.Amount_6Month) AS Amount_6Month
                               , SUM (CASE WHEN _tmpRemains_Partion_all.isNotSold100 = FALSE THEN 1 ELSE 0 END) = 0 AS isNotSold100
                          FROM _tmpRemains_Partion_all
                          GROUP BY _tmpRemains_Partion_all.ContainerDescId
@@ -1666,6 +1702,7 @@ BEGIN
                                   , SUM (tmpRemains.Amount)         AS Amount
                                   , SUM (tmpRemains.Amount_sun)     AS Amount_sun
                                   , SUM (tmpRemains.Amount_notSold) AS Amount_notSold
+                                  , SUM (tmpRemains.Amount_6Month)  AS Amount_6Month
                                   , SUM (CASE WHEN tmpRemains.isNotSold100 = FALSE THEN 1 ELSE 0 END) = 0 AS isNotSold100
                              FROM tmpRemains
                              GROUP BY tmpRemains.ContainerDescId, tmpRemains.UnitId, tmpRemains.GoodsId
@@ -1777,7 +1814,7 @@ BEGIN
                                 AND OB_Goods_NOT.ValueData = TRUE
                              )
        -- –езультат: все остатки у ќ“ѕ–ј¬»“≈Ћя - SUN-1
-       INSERT INTO _tmpRemains_Partion (ContainerDescId, UnitId, GoodsId, MCSValue, Amount_sale, Amount, Amount_save, Amount_real, Amount_sun, Amount_notSold, isNotSold100)
+       INSERT INTO _tmpRemains_Partion (ContainerDescId, UnitId, GoodsId, MCSValue, Amount_sale, Amount, Amount_save, Amount_real, Amount_sun, Amount_notSold, Amount_6Month, isNotSold100)
           SELECT tmp.ContainerDescId
                , tmp.UnitId
                , tmp.GoodsId
@@ -1800,6 +1837,14 @@ BEGIN
                        - COALESCE (_tmpRemains_all.AmountSend_out, 0)
                          -- уменьшаем - сколько перемещено
                        - COALESCE (_tmpGoods_Sun_exception.Amount, 0)
+                         -- уменьшаем выкладку
+                       - CASE WHEN _tmpGoods_Layout.isNotMoveRemainder6 = TRUE  or tmp.Amount - COALESCE (tmp.Amount_6Month, 0) >=  COALESCE(_tmpGoods_Layout.Layout, 0) 
+                              THEN COALESCE(_tmpGoods_Layout.Layout, 0) 
+                              WHEN COALESCE(_tmpGoods_Layout.Layout, 0) - (tmp.Amount - COALESCE (tmp.Amount_6Month, 0)) > 0
+                              THEN COALESCE(_tmpGoods_Layout.Layout, 0) - (tmp.Amount - COALESCE (tmp.Amount_6Month, 0))
+                              END
+                         -- уменьшаем выполнение плана по точке
+                       - COALESCE(_tmpGoods_PromoUnit.Amount, 0)
                           -- делим на кратность
                         ) / COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
                        ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
@@ -1825,6 +1870,14 @@ BEGIN
                        - COALESCE (_tmpRemains_all.AmountSend_out, 0)
                          -- уменьшаем - сколько перемещено
                        - COALESCE (_tmpGoods_Sun_exception.Amount, 0)
+                         -- уменьшаем выкладку
+                       - CASE WHEN _tmpGoods_Layout.isNotMoveRemainder6 = TRUE  or tmp.Amount - COALESCE (tmp.Amount_6Month, 0) >=  COALESCE(_tmpGoods_Layout.Layout, 0) 
+                              THEN COALESCE(_tmpGoods_Layout.Layout, 0) 
+                              WHEN COALESCE(_tmpGoods_Layout.Layout, 0) - (tmp.Amount - COALESCE (tmp.Amount_6Month, 0)) > 0
+                              THEN COALESCE(_tmpGoods_Layout.Layout, 0) - (tmp.Amount - COALESCE (tmp.Amount_6Month, 0))
+                              END
+                         -- уменьшаем выполнение плана по точке
+                       - COALESCE(_tmpGoods_PromoUnit.Amount, 0)
                           -- делим на кратность
                         ) / COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
                        ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
@@ -1843,10 +1896,21 @@ BEGIN
                        - COALESCE (_tmpRemains_all.AmountReserve, 0)
                          -- уменьшаем - ѕеремещение - расход (ожидаетс€)
                        - COALESCE (_tmpRemains_all.AmountSend_out, 0)
+                         -- уменьшаем - сколько перемещено
+                       - COALESCE (_tmpGoods_Sun_exception.Amount, 0)
+                         -- уменьшаем выкладку
+                       - CASE WHEN _tmpGoods_Layout.isNotMoveRemainder6 = TRUE  or tmp.Amount - COALESCE (tmp.Amount_6Month, 0) >=  COALESCE(_tmpGoods_Layout.Layout, 0) 
+                              THEN COALESCE(_tmpGoods_Layout.Layout, 0) 
+                              WHEN COALESCE(_tmpGoods_Layout.Layout, 0) - (tmp.Amount - COALESCE (tmp.Amount_6Month, 0)) > 0
+                              THEN COALESCE(_tmpGoods_Layout.Layout, 0) - (tmp.Amount - COALESCE (tmp.Amount_6Month, 0))
+                              END
+                         -- уменьшаем выполнение плана по точке
+                       - COALESCE(_tmpGoods_PromoUnit.Amount, 0)
                           -- делим на кратность
                         ) / COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
                        ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
                  AS Amount_notSold
+               , tmp.Amount_6Month  
                , tmp.isNotSold100
 
           FROM tmpGoods_sum AS tmp
@@ -1865,7 +1929,7 @@ BEGIN
                -- продажи
                LEFT JOIN _tmpSale ON _tmpSale.UnitId  = tmp.UnitId
                                  AND _tmpSale.GoodsId = tmp.GoodsId
-
+                                 
                -- товары дл€  ратность
                LEFT JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId  = tmp.GoodsId
 
@@ -1873,6 +1937,12 @@ BEGIN
                LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = tmp.GoodsId
                -- а здесь, отбросили !!Ќќ“!!
                LEFT JOIN tmpGoods_NOT ON tmpGoods_NOT.ObjectId = tmp.GoodsId
+
+               LEFT JOIN _tmpGoods_Layout ON _tmpGoods_Layout.UnitId = tmp.UnitId
+                                         AND _tmpGoods_Layout.GoodsId = tmp.GoodsId
+
+               LEFT JOIN _tmpGoods_PromoUnit ON _tmpGoods_PromoUnit.UnitId = tmp.UnitId
+                                            AND _tmpGoods_PromoUnit.GoodsId = tmp.GoodsId
 
                -- если товар среди парных
                LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun
@@ -1889,7 +1959,7 @@ BEGIN
                              WHEN tmpMCS.MCSValue > 0 AND tmp.Amount > 0
                                   THEN tmp.Amount - COALESCE(tmpMCS.MCSValue, 0)
                              -- уменьшаем сроковые, если были продажи но в јвтозаказ не попал
-                             WHEN _tmpSale.Amount > 0 AND tmp.Amount > 0 THEN tmp.Amount - COALESCE (_tmpSale.Amount, 0)
+                             WHEN _tmpSale.Amount > 0 AND tmp.Amount > 0 THEN tmp.Amount - COALESCE (_tmpSale.Amount, 0) 
                              ELSE tmp.Amount
                         END
                         -- уменьшаем - отложенные „еки + не проведенные с CommentError
@@ -1898,6 +1968,14 @@ BEGIN
                       - COALESCE (_tmpRemains_all.AmountSend_out, 0)
                         -- уменьшаем - сколько перемещено
                       - COALESCE (_tmpGoods_Sun_exception.Amount, 0)
+                        -- уменьшаем выкладку
+                      - CASE WHEN _tmpGoods_Layout.isNotMoveRemainder6 = TRUE  or tmp.Amount - COALESCE (tmp.Amount_6Month, 0) >=  COALESCE(_tmpGoods_Layout.Layout, 0) 
+                             THEN COALESCE(_tmpGoods_Layout.Layout, 0) 
+                             WHEN COALESCE(_tmpGoods_Layout.Layout, 0) - (tmp.Amount - COALESCE (tmp.Amount_6Month, 0)) > 0
+                             THEN COALESCE(_tmpGoods_Layout.Layout, 0) - (tmp.Amount - COALESCE (tmp.Amount_6Month, 0))
+                             END
+                        -- уменьшаем выполнение плана по точке
+                      - COALESCE(_tmpGoods_PromoUnit.Amount, 0)
                          -- делим на кратность
                        ) / COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
                       ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
@@ -2058,7 +2136,7 @@ BEGIN
                     -- инче берем ост "основного"
                     ELSE _tmpRemains_Partion.Amount
                END */
-             , FLOOR(_tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0)) AS Amount
+             , FLOOR(_tmpRemains_Partion.Amount) AS Amount
 
                -- дл€ получени€ дробной части, нужен весь ост.
 /*             , CASE -- если у парного ост = 0, не отдаем
@@ -2099,12 +2177,6 @@ BEGIN
              LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun
                        ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = _tmpRemains_Partion.GoodsId
                        
-             LEFT JOIN _tmpGoods_PromoUnit ON _tmpGoods_PromoUnit.UnitId = _tmpRemains_Partion.UnitId
-                                          AND _tmpGoods_PromoUnit.GoodsId = _tmpRemains_Partion.GoodsId
-                                          
-             LEFT JOIN _tmpGoods_Layout ON _tmpGoods_Layout.UnitId = _tmpRemains_Partion.UnitId
-                                       AND _tmpGoods_Layout.GoodsId = _tmpRemains_Partion.GoodsId
-
              -- найдем дисконтн≥й товар
              LEFT JOIN _tmpGoods_DiscountExternal AS _tmpGoods_DiscountExternal
                                                   ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_Partion.UnitId
@@ -2115,7 +2187,7 @@ BEGIN
         WHERE -- !!!ќтключили парные!!!
               COALESCE ( _tmpGoods_SUN_PairSun_find.GoodsId_PairSun, 0) = 0
 
-          AND FLOOR(_tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0)) > 0
+          AND FLOOR(_tmpRemains_Partion.Amount) > 0
 
           AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
           
@@ -2361,7 +2433,7 @@ BEGIN
      OPEN curPartion_next FOR
         SELECT _tmpRemains_Partion.UnitId AS UnitId_from
              , _tmpRemains_Partion.GoodsId
-             , FLOOR(_tmpRemains_Partion.Amount -COALESCE (tmp.Amount, 0) - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0)) AS Amount
+             , FLOOR(_tmpRemains_Partion.Amount -COALESCE (tmp.Amount, 0)) AS Amount
              , _tmpRemains_Partion.Amount_sun
              , COALESCE (_tmpGoods_SUN.KoeffSUN, 0)
              , _tmpRemains_Partion.isNotSold100
@@ -2380,12 +2452,6 @@ BEGIN
              -- товары дл€  ратность
              LEFT JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId = _tmpRemains_Partion.GoodsId
 
-             LEFT JOIN _tmpGoods_PromoUnit ON _tmpGoods_PromoUnit.UnitId = _tmpRemains_Partion.UnitId
-                                          AND _tmpGoods_PromoUnit.GoodsId = _tmpRemains_Partion.GoodsId
-
-             LEFT JOIN _tmpGoods_Layout ON _tmpGoods_Layout.UnitId = _tmpRemains_Partion.UnitId
-                                       AND _tmpGoods_Layout.GoodsId = _tmpRemains_Partion.GoodsId
-
              -- найдем дисконтн≥й товар
              LEFT JOIN _tmpGoods_DiscountExternal AS _tmpGoods_DiscountExternal
                                                   ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_Partion.UnitId
@@ -2393,7 +2459,7 @@ BEGIN
 
              LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId  = _tmpRemains_Partion.UnitId
 
-        WHERE FLOOR(_tmpRemains_Partion.Amount - COALESCE (tmp.Amount, 0) - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0)) > 0
+        WHERE FLOOR(_tmpRemains_Partion.Amount - COALESCE (tmp.Amount, 0)) > 0
           AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
           AND (_tmpUnit_SUN.isOnlyTimingSUN = False OR _tmpRemains_Partion.ContainerDescId = zc_Container_CountPartionDate())
         ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId

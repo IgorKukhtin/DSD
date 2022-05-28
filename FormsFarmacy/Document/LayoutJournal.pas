@@ -44,6 +44,7 @@ type
     actChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
     isPharmacyItem: TcxGridDBColumn;
+    isNotMoveRemainder6: TcxGridDBColumn;
   private
     { Private declarations }
   public

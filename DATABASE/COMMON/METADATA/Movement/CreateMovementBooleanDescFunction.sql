@@ -400,9 +400,15 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_PaperRecipeSP() RETURNS integer AS
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_PaperRecipeSP', 'Бумажный рецепт по СП'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_PaperRecipeSP');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_NotMoveRemainder6() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_NotMoveRemainder6'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_NotMoveRemainder6', 'Не перемещать остаток менее 6'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_NotMoveRemainder6');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 27.05.22                                                                                   * zc_MovementBoolean_NotMoveRemainder6
  15.03.22                                                                                   * zc_MovementBoolean_PaperRecipeSP
  08.03.22                                                                                   * zc_MovementBoolean_SupplierFailures
  21.02.22                                                                                   * zc_MovementBoolean_MobileApplication

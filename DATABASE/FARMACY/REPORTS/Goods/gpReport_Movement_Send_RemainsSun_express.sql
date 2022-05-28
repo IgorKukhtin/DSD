@@ -43,7 +43,7 @@ BEGIN
      CREATE TEMP TABLE _tmpUnit_SUN   (UnitId Integer, isSUN_out Boolean, isSUN_in Boolean) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpUnit_SUN_a (UnitId Integer, isSUN_out Boolean, isSUN_in Boolean) ON COMMIT DROP;
      -- Выкладка
-     CREATE TEMP TABLE _tmpGoods_Layout  (UnitId Integer, GoodsId Integer, Layout TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpGoods_Layout  (UnitId Integer, GoodsId Integer, Layout TFloat, isNotMoveRemainder6 boolean) ON COMMIT DROP;
      -- Маркетинговый план для точек
      CREATE TEMP TABLE _tmpGoods_PromoUnit  (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
      -- Товары дисконтных проектов

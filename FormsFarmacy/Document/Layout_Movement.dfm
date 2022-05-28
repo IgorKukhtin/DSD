@@ -261,6 +261,16 @@ inherited Layout_MovementForm: TLayout_MovementForm
       TabOrder = 10
       Width = 235
     end
+    object cbNotMoveRemainder6: TcxCheckBox
+      Left = 342
+      Top = 46
+      Hint = #1053#1077' '#1087#1077#1088#1077#1084#1077#1097#1072#1090#1100' '#1086#1089#1090#1072#1090#1086#1082' '#1084#1077#1085#1077#1077' 6'
+      Caption = #1053#1077' '#1087#1077#1088#1077#1084#1077#1097#1072#1090#1100' '#1086#1089#1090#1072#1090#1086#1082' '#1084#1077#1085#1077#1077' 6 '#1084#1077#1089'.'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 11
+      Width = 235
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 283
@@ -899,7 +909,7 @@ inherited Layout_MovementForm: TLayout_MovementForm
       end
       item
         Name = 'SummaFundAvailable'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -936,7 +946,7 @@ inherited Layout_MovementForm: TLayout_MovementForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -994,6 +1004,13 @@ inherited Layout_MovementForm: TLayout_MovementForm
         Component = cbPharmacyItem
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNotMoveRemainder6'
+        Value = Null
+        Component = cbNotMoveRemainder6
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1048,6 +1065,14 @@ inherited Layout_MovementForm: TLayout_MovementForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotMoveRemainder6'
+        Value = Null
+        Component = cbNotMoveRemainder6
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -1082,6 +1107,9 @@ inherited Layout_MovementForm: TLayout_MovementForm
       end
       item
         Control = cbPharmacyItem
+      end
+      item
+        Control = cbNotMoveRemainder6
       end>
     Left = 232
     Top = 193
@@ -1093,43 +1121,11 @@ inherited Layout_MovementForm: TLayout_MovementForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Loss_SetErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 454
     Top = 360
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Loss_SetUnErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 462
     Top = 416
   end
@@ -1165,7 +1161,7 @@ inherited Layout_MovementForm: TLayout_MovementForm
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1310,7 +1306,7 @@ inherited Layout_MovementForm: TLayout_MovementForm
       end
       item
         Name = 'outOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1495,6 +1491,7 @@ inherited Layout_MovementForm: TLayout_MovementForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -1507,6 +1504,7 @@ inherited Layout_MovementForm: TLayout_MovementForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
+    ShowFieldImageList = <>
     SearchAsFilter = False
     PropertiesCellList = <>
     Left = 614
