@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_CashSend()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_CashSend (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_CashSend (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_CashSend(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_CashSend(
     IN inOperDate             TDateTime , -- Дата документа
     IN inCurrencyValue        TFloat    , -- курс
     IN inParValue             TFloat    , -- номинал
-    IN inAmount               TFloat    , -- Сумма
+    IN inAmountOut            TFloat    , -- Сумма (расход)
+    IN inAmountIn             TFloat    , -- Сумма (приход)
     IN inCashId_from          Integer   , -- касса 
     IN inCashId_to            Integer   , -- касса 
     IN inCommentMoveMoneyId   Integer   , -- Примечание
@@ -20,8 +21,23 @@ $BODY$
    DECLARE vbMovementItemId Integer;
 BEGIN
 
+     -- !замена!
+     IF inAmountIn = 0 THEN inAmountIn:= inAmountOut; END IF;
+
+    -- проверка
+     IF COALESCE (inAmountOut, 0) <= 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.<Сумма расход> не введена.';
+     END IF;
+    -- проверка
+     IF COALESCE (inAmountIn, 0) <= 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.<Сумма приход> не введена.';
+     END IF;
+
+
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_CashSend(), inInvNumber, inOperDate, Null, inUserId);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_CashSend(), inInvNumber, inOperDate, NULL, inUserId);
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, inCurrencyValue);
@@ -34,8 +50,11 @@ BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
 
-     -- сохранили <Элемент документа>
-     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inCashId_from, ioId, inAmount, NULL);
+     -- сохранили <Элемент документа> - Сумма (расход)
+     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inCashId_from, ioId, inAmountOut, NULL);
+
+     -- сохранили - Сумма (приход)
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Amount(), vbMovementItemId, inAmountIn);
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Cash(), vbMovementItemId, inCashId_to);

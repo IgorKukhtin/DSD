@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_CashSend(
 RETURNS TABLE (Id Integer, InvNumber TVarChar
              , OperDate TDateTime
              , CurrencyValue TFloat, ParValue TFloat
-             , Amount TFloat
+             , AmountOut TFloat, AmountIn TFloat
              , CashId_from Integer, CashName_from TVarChar  -- из какой расход
              , CashId_to Integer, CashName_to TVarChar      -- в какую приход
              , CommentMoveMoneyId Integer, CommentMoveMoneyName TVarChar
@@ -34,7 +34,8 @@ BEGIN
            , CAST (CURRENT_DATE AS TDateTime)                  AS OperDate
            , 0::TFloat                                         AS CurrencyValue
            , 0::TFloat                                         AS ParValue
-           , 0::TFloat                                         AS Amount
+           , 0::TFloat                                         AS AmountOut
+           , 0::TFloat                                         AS AmountIn
            , 0                                                 AS CashId_from
            , CAST ('' as TVarChar)                             AS CashName_from
            , 0                                                 AS CashId_to
@@ -51,7 +52,9 @@ BEGIN
            , CASE WHEN inMovementId = 0 THEN CAST (CURRENT_DATE AS TDateTime) ELSE Movement.OperDate END ::TDateTime AS OperDate
            , MovementFloat_CurrencyValue.ValueData ::TFloat AS CurrencyValue
            , MovementFloat_ParValue.ValueData      ::TFloat AS ParValue
-           , MovementItem.Amount                   ::TFloat AS Amount
+           , MovementItem.Amount                   ::TFloat AS AmountOut
+           , MovementItemFloat_Amount.ValueData    ::TFloat AS AmountIn
+
            , CASE WHEN TRIM (Object_Cash_from.ValueData) <> '' THEN Object_Cash_from.Id ELSE 0 END :: Integer AS CashId_from
            , Object_Cash_from.ValueData                                                                       AS CashName_from
            , CASE WHEN TRIM (Object_Cash_to.ValueData) <> '' THEN Object_Cash_to.Id ELSE 0 END :: Integer AS CashId_to
@@ -72,6 +75,10 @@ BEGIN
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND MovementItem.isErased = FALSE
             LEFT JOIN Object AS Object_Cash_from ON Object_Cash_from.Id = MovementItem.ObjectId
+
+            LEFT JOIN MovementItemFloat AS MovementItemFloat_Amount
+                                        ON MovementItemFloat_Amount.MovementItemId = MovementItem.Id
+                                       AND MovementItemFloat_Amount.DescId       = zc_MIFloat_Amount()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Cash
                                              ON MILinkObject_Cash.MovementItemId = MovementItem.Id
@@ -99,4 +106,4 @@ $BODY$
 */
 
 -- тест
---select * from gpGet_Movement_CashSend(inMovementId := 608 , inMovementId_Value := 608 , inOperDate := ('31.01.2022')::TDateTime ,  inSession := '5');
+-- SELECT * FROM gpGet_Movement_CashSend(inMovementId := 608 , inMovementId_Value := 608 , inOperDate := ('31.01.2022')::TDateTime ,  inSession := '5');

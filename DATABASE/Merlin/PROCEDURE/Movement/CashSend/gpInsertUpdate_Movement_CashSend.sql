@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_CashSend()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CashSend(Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_CashSend(Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_CashSend(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -8,10 +9,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_CashSend(
     IN inOperDate             TDateTime , -- Дата документа
     IN inCurrencyValue        TFloat    , -- курс
     IN inParValue             TFloat    , -- номинал
-    IN inAmount               TFloat    , -- Сумма
-    IN inCashId_from          Integer   , -- касса 
-    IN inCashId_to            Integer   , -- касса 
-    IN inCommentMoveMoney     TVarChar   , --Примечание Движение денег
+    IN inAmountOut            TFloat    , -- Сумма (расход)
+    IN inAmountIn             TFloat    , -- Сумма (приход)
+    IN inCashId_from          Integer   , -- касса (расход) 
+    IN inCashId_to            Integer   , -- касса (приход) 
+    IN inCommentMoveMoney     TVarChar  , -- Примечание Движение денег
     IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -43,9 +45,10 @@ BEGIN
      ioId:= lpInsertUpdate_Movement_CashSend (ioId                   := ioId
                                             , inInvNumber            := inInvNumber
                                             , inOperDate             := inOperDate
-                                            , inCurrencyValue        := inCurrencyValue ::TFloat
-                                            , inParValue             := inParValue      ::TFloat
-                                            , inAmount               := inAmount        ::TFloat
+                                            , inCurrencyValue        := inCurrencyValue
+                                            , inParValue             := inParValue
+                                            , inAmountOut            := inAmountOut
+                                            , inAmountIn             := inAmountIn
                                             , inCashId_from          := inCashId_from
                                             , inCashId_to            := inCashId_to
                                             , inCommentMoveMoneyId   := vbCommentMoveMoneyId

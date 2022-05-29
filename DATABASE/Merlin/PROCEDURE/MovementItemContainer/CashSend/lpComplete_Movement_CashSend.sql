@@ -29,17 +29,21 @@ BEGIN
     DELETE FROM _tmpItem;
     
     -- 4.1. предварительно сохранили данные
-    INSERT INTO _tmpItem (MovementDescId, OperDate, ServiceDate, OperSumm, MovementItemId,
+    INSERT INTO _tmpItem (MovementDescId, OperDate, ServiceDate, OperSumm, OperSumm_in, MovementItemId,
                           ObjectId, CashId)
     SELECT
            Movement.DescId                    AS Id
          , Movement.OperDate                  AS OperDate
          , MIDate_ServiceDate.ValueData       AS ServiceDate
+           -- Сумма (расход)
          , MovementItem.Amount                AS Amount
+           -- Сумма (приход)
+         , MovementItemFloat_Amount.ValueData AS AmountIn
          , MovementItem.Id                    AS MovementItemId
          , MovementItem.ObjectId              AS CashToId
          , MILinkObject_Cash.ObjectId         AS CashFromId
      FROM Movement
+          -- Сумма (расход)
           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                  AND MovementItem.DescId = zc_MI_Master()
 
@@ -50,6 +54,11 @@ BEGIN
           LEFT JOIN MovementItemDate AS MIDate_ServiceDate
                                      ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
                                     AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
+
+          -- Сумма (приход)
+          LEFT JOIN MovementItemFloat AS MovementItemFloat_Amount
+                                      ON MovementItemFloat_Amount.MovementItemId = MovementItem.Id
+                                     AND MovementItemFloat_Amount.DescId         = zc_MIFloat_Amount()
 
      WHERE Movement.Id = inMovementId;    
      
@@ -94,7 +103,7 @@ BEGIN
             -- Счет для этой проводки
           , vbAccountId_Cash 
 
-          , _tmpItem.OperSumm
+          , -1 * _tmpItem.OperSumm
           , _tmpItem.OperDate
 
             -- Аналитика, дублируем основное св-во
@@ -106,7 +115,7 @@ BEGIN
             -- Аналитика из проводки-корреспондент
           , NULL                            AS ObjectExtId_Analyzer
 
-          , CASE WHEN _tmpItem.OperSumm > 0 THEN TRUE ELSE FALSE END AS IsActive
+          , FALSE AS IsActive
 
      FROM _tmpItem;     
 
@@ -122,7 +131,7 @@ BEGIN
             -- Счет для этой проводки
           , vbAccountId_Cash                                      AS AccountId
 
-          , -1 * _tmpItem.OperSumm
+          , 1 * _tmpItem.OperSumm_in
           , _tmpItem.OperDate
 
             -- Аналитика, дублируем основное св-во
@@ -135,7 +144,7 @@ BEGIN
             -- Аналитика из проводки-корреспондент
           , 0                     AS ObjectExtId_Analyzer
 
-          , CASE WHEN _tmpItem.OperSumm < 0 THEN TRUE ELSE FALSE END AS IsActive
+          , TRUE AS IsActive
 
      FROM _tmpItem;     
      

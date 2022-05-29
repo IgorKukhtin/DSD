@@ -8,14 +8,15 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_CashSend(
     IN inIsErased          Boolean   , --
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar
+RETURNS TABLE (Id Integer, InvNumber Integer
              , OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , CurrencyValue TFloat, ParValue TFloat
-             , Amount TFloat
+             , AmountOut TFloat, AmountIn TFloat
              , CashId_from Integer, CashCode_from Integer, CashName_from TVarChar  -- из какой расход
              , CashId_to Integer, CashCode_to Integer, CashName_to TVarChar        -- в какую приход
              , CommentMoveMoneyId Integer, CommentMoveMoneyCode Integer, CommentMoveMoneyName TVarChar
+             , CurrencyName_from TVarChar, CurrencyName_to TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
                )
@@ -44,13 +45,14 @@ BEGIN
 
        SELECT
              Movement.Id                 AS Id
-           , Movement.InvNumber                  AS InvNumber
+           , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
            , Movement.OperDate                   AS OperDate
            , Object_Status.ObjectCode           AS StatusCode
            , Object_Status.ValueData            AS StatusName
            , MovementFloat_CurrencyValue.ValueData ::TFloat AS CurrencyValue
            , MovementFloat_ParValue.ValueData      ::TFloat AS ParValue
-           , MovementItem.Amount                   ::TFloat AS Amount
+           , MovementItem.Amount                   ::TFloat AS AmountOut
+           , MovementItemFloat_Amount.ValueData    ::TFloat AS AmountIn
            , Object_Cash_from.Id                AS CashId_from
            , Object_Cash_from.ObjectCode        AS CashCode_from
            , Object_Cash_from.ValueData         AS CashName_from
@@ -60,6 +62,9 @@ BEGIN
            , Object_CommentMoveMoney.Id         AS CommentMoveMoneyId
            , Object_CommentMoveMoney.ObjectCode AS CommentMoveMoneyCode
            , Object_CommentMoveMoney.ValueData  AS CommentMoveMoneyName
+
+           , Object_Currency_from.ValueData     AS CurrencyName_from
+           , Object_Currency_to.ValueData       AS CurrencyName_to
 
            , Object_Insert.ValueData            AS InsertName
            , MovementDate_Insert.ValueData      AS InsertDate
@@ -91,10 +96,16 @@ BEGIN
                                         AND MLO_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
 
-            --
+            -- Сумма (расход)
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                   AND MovementItem.DescId = zc_MI_Master()
                                   AND MovementItem.isErased = FALSE
+
+            -- Сумма (приход)
+            LEFT JOIN MovementItemFloat AS MovementItemFloat_Amount
+                                        ON MovementItemFloat_Amount.MovementItemId = MovementItem.Id
+                                       AND MovementItemFloat_Amount.DescId         = zc_MIFloat_Amount()
+
             LEFT JOIN Object AS Object_Cash_from ON Object_Cash_from.Id = MovementItem.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Cash
@@ -106,6 +117,17 @@ BEGIN
                                              ON MILinkObject_CommentMoveMoney.MovementItemId = MovementItem.Id
                                             AND MILinkObject_CommentMoveMoney.DescId         = zc_MILinkObject_CommentMoveMoney()
             LEFT JOIN Object AS Object_CommentMoveMoney ON Object_CommentMoveMoney.Id = MILinkObject_CommentMoveMoney.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Currency_from
+                                 ON ObjectLink_Currency_from.ObjectId = Object_Cash_from.Id
+                                AND ObjectLink_Currency_from.DescId = zc_ObjectLink_Cash_Currency()
+            LEFT JOIN Object AS Object_Currency_from ON Object_Currency_from.Id = ObjectLink_Currency_from.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Currency_to
+                                 ON ObjectLink_Currency_to.ObjectId = Object_Cash_to.Id
+                                AND ObjectLink_Currency_to.DescId = zc_ObjectLink_Cash_Currency()
+            LEFT JOIN Object AS Object_Currency_to ON Object_Currency_to.Id = ObjectLink_Currency_to.ChildObjectId
+
        ;
 
 END;
@@ -119,4 +141,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Movement_CashSend(inStartDate := ('01.01.2022')::TDateTime , inEndDate := ('01.01.2022')::TDateTime , inIsErased := 'False',  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_CashSend(inStartDate := ('01.01.2022')::TDateTime , inEndDate := ('01.01.2022')::TDateTime , inIsErased := 'False',  inSession := '5');

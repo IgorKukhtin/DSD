@@ -95,13 +95,13 @@ BEGIN
            END IF;
        END IF;
           -- сохранили <Документ>
-          vbMovementId := lpInsertUpdate_Movement (0, zc_Movement_Service(), inInvNumber, inOperDate, Null, vbUserProtocolId);
+          vbMovementId := lpInsertUpdate_Movement (vbMovementId, zc_Movement_Service(), inInvNumber, inOperDate, Null, vbUserProtocolId);
      
           ---
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), vbMovementId, CASE WHEN inisAuto = 'Да' THEN TRUE ELSE FALSE END);
 
           -- сохранили <Элемент документа>
-          vbMovementItemId := lpInsertUpdate_MovementItem (0, zc_MI_Master(), vbUnitId, vbMovementId, inSumma, NULL);
+          vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), vbUnitId, vbMovementId, inSumma, NULL);
      
           -- сохранили связь с <>
           PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), vbMovementItemId, vbInfoMoneyId);

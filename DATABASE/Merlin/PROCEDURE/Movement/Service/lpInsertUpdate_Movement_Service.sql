@@ -27,10 +27,14 @@ BEGIN
      END IF;
 
      -- расчет - 1-ое число месяца
-     inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
+     -- inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
+
+     -- !!!замена!!!
+     inServiceDate:= DATE_TRUNC ('MONTH', inOperDate);
+     
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Service(), inInvNumber, inOperDate, Null, inUserId);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Service(), inInvNumber, inOperDate, NULL, inUserId);
 
      -- определяем <Элемент документа>
      SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();

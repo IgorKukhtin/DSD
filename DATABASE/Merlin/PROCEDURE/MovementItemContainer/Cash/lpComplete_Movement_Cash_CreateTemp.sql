@@ -18,7 +18,7 @@ BEGIN
      ELSE
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementDescId Integer, OperDate TDateTime, ServiceDate TDateTime
-                               , ObjectId Integer, ObjectDescId Integer, CashId Integer, OperSumm TFloat, Price TFloat
+                               , ObjectId Integer, ObjectDescId Integer, CashId Integer, OperSumm TFloat, OperSumm_in TFloat
                                , MovementItemId Integer, ContainerId Integer, ContainerId_Second Integer
                                , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
                                , ProfitLossGroupId Integer, ProfitLossDirectionId Integer

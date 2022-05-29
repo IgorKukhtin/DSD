@@ -2,7 +2,13 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash_Load (Integer, Integer, Integer, Integer, Integer, Integer
                                                          , TFloat, TVarChar, TVarChar, TVarChar
                                                          , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash_Load (Integer, Integer, Integer, Integer, Integer, Integer
+                                                         , TFloat, TVarChar, Integer, TVarChar, TVarChar
+                                                         , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash_Load (Integer, Integer, Integer, Integer, Integer, Integer
+                                                         , TFloat, TVarChar, TVarChar, TVarChar
+                                                         , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Integer, TVarChar);
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash_Load(
     IN inKassaCode            Integer,       -- код
     IN inInfoMoneyCode        Integer,
@@ -19,6 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash_Load(
     IN inDateAdditional       TDateTime,     -- 
     IN inProtocolTim          TDateTime,     -- 
     IN inProtocolEvg          TDateTime,     -- 
+--    IN inInvNumber_ch         Integer,      --  
     IN inSession              TVarChar       -- сессия пользователя
 )
 RETURNS VOID
@@ -34,7 +41,11 @@ $BODY$
   DECLARE vbMovementId       Integer;
   DECLARE vbMovementItemId   Integer;
   DECLARE vbMovementItemId_sign   Integer;
+--  DECLARE inInvNumber_ch         Integer;
 BEGIN
+
+-- inInvNumber_ch:= inInvNumber;
+
 
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (inSession);
@@ -56,7 +67,13 @@ BEGIN
    -- Поиск
    vbMovementId:= (SELECT Movement.Id FROM Movement WHERE Movement.InvNumber = TRIM (inInvNumber) AND Movement.DescId = zc_Movement_Cash() AND Movement.StatusId <> zc_Enum_Status_Erased());
    -- Поиск
-   vbMovementItemId := (SELECT MI.Id FROM MovementItem AS MI WHERE MI.MovementId = vbMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE);
+   vbMovementItemId := 0/*(SELECT MI.Id
+                        FROM MovementItem AS MI 
+                             LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MI.Id
+                                                               AND MIF.DescId         = zc_MIFloat_MovementId()
+                        WHERE MI.MovementId = vbMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE
+                          AND COALESCE (MIF.ValueData, 0) = CASE WHEN inInvNumber = inInvNumber_ch THEN 0 ELSE inInvNumber_ch END
+                       )*/;
 
    -- Если Проведен
    IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.Id = vbMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
@@ -137,6 +154,12 @@ BEGIN
           -- сохранили <Элемент документа>
           vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), vbKassaId, vbMovementId, inSumma, NULL);
      
+          -- сохранили свойство
+          /*IF inInvNumber_ch <> inInvNumber
+          THEN
+              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), vbMovementItemId, inInvNumber_ch);
+          END IF;*/
+
           -- сохранили связь с <>
           PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, vbUnitId);
           -- сохранили связь с <>

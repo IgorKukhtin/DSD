@@ -19,10 +19,11 @@ CREATE OR REPLACE FUNCTION gpReport_UnitBalance(
     IN inServiceDate  TDateTime , -- месяц начислений
     IN inUnitGroupId  Integer,
     IN inInfoMoneyId  Integer,
-    IN inisAll        Boolean,
+    IN inIsAll        Boolean,
     IN inSession      TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (ServiceDate TVarChar
+RETURNS TABLE (ContainerId Integer, ServiceDateId Integer
+             , ServiceDate TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , GroupNameFull_Unit TVarChar, ParentName_Unit TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -57,20 +58,21 @@ BEGIN
                    AND Object.isErased = False
                    AND inUnitGroupId = 0
                  )
-   , tmpMIContainer AS (SELECT Container.ObjectId       AS AccountId
+   , tmpMIContainer AS (SELECT Container.Id             AS ContainerId
+                             , Container.ObjectId       AS AccountId
                              , Container.WhereObjectId  AS UnitId
                              , CLO_ServiceDate.ObjectId AS ServiceDateId
                              , CLO_InfoMoney.ObjectId   AS InfoMoneyId
-                             , COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisAll = TRUE) THEN MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
-                             , COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Cash() AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisAll = TRUE) THEN -MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
+                             , COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) THEN MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
+                             , COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Cash() AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) THEN -MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
                              , Container.Amount - SUM (COALESCE (MIContainer.Amount, 0)) AS AmountRemainsStart
-                             , Container.Amount - SUM (CASE WHEN (MIContainer.OperDate > inEndDate AND inisAll = FALSE) THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS AmountRemainsEnd
+                             , Container.Amount - SUM (CASE WHEN (MIContainer.OperDate > inEndDate) THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS AmountRemainsEnd
                         FROM Container
                              LEFT JOIN MovementItemContainer AS MIContainer
                                                              ON MIContainer.Containerid = Container.Id
-                                                            AND (MIContainer.OperDate >= inStartDate OR inisAll = TRUE)
+                                                            AND (MIContainer.OperDate >= inStartDate)
                              LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
-                                                           ON CLO_InfoMoney.ContainerId = MIContainer.ContainerId
+                                                           ON CLO_InfoMoney.ContainerId = Container.Id
                                                           AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                                                           
                              LEFT JOIN ContainerLinkObject AS CLO_ServiceDate
@@ -80,20 +82,23 @@ BEGIN
                         WHERE Container.DescId = zc_Container_Summ()
                           AND Container.WhereObjectId IN (SELECT DISTINCT tmpUnit.UnitId FROM tmpUnit)
                           AND (CLO_InfoMoney.ObjectId = inInfoMoneyId OR inInfoMoneyId = 0)
-                          AND (( CLO_ServiceDate.ObjectId = vbServiceDateId AND inisAll = TRUE) OR inisAll = FALSE)
-                        GROUP BY Container.ObjectId
+                          AND ((CLO_ServiceDate.ObjectId = vbServiceDateId AND inIsAll = FALSE) OR inIsAll = TRUE)
+                        GROUP BY Container.Id
+                               , Container.ObjectId
                                , Container.Amount
                                , Container.WhereObjectId
                                , CLO_ServiceDate.ObjectId
                                , CLO_InfoMoney.ObjectId 
                         HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
-                            OR (COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisAll = TRUE) THEN  MIContainer.Amount ELSE 0 END), 0) <> 0)
-                            OR (COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Cash() AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate OR inisAll = TRUE) THEN -MIContainer.Amount ELSE 0 END), 0) <> 0)
-                            OR Container.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate AND inisAll = FALSE THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) <> 0
+                            OR (COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) THEN  MIContainer.Amount ELSE 0 END), 0) <> 0)
+                            OR (COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Cash() AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) THEN -MIContainer.Amount ELSE 0 END), 0) <> 0)
+                            OR Container.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) <> 0
                        )
 
 
-       SELECT Object_ServiceDate.ValueData ::TVarChar AS ServiceDate
+       SELECT tmpMIContainer.ContainerId
+            , tmpMIContainer.ServiceDateId
+            , Object_ServiceDate.ValueData ::TVarChar AS ServiceDate
             , Object_Unit.Id         AS UnitId
             , Object_Unit.ObjectCode AS UnitCode
             , Object_Unit.ValueData  AS UnitName
@@ -105,12 +110,12 @@ BEGIN
             , Object_Account.ObjectCode   AS AccountCode
             , Object_Account.ValueData    AS AccountName
 
-            , CAST (CASE WHEN tmpMIContainer.AmountRemainsStart > 0 THEN tmpMIContainer.AmountRemainsStart ELSE 0 END AS TFloat)      AS AmountDebetStart
-            , CAST (CASE WHEN tmpMIContainer.AmountRemainsStart < 0 THEN -1 * tmpMIContainer.AmountRemainsStart ELSE 0 END AS TFloat) AS AmountKreditStart
+            , CAST (CASE WHEN tmpMIContainer.AmountRemainsStart > 0 AND 1=0 THEN tmpMIContainer.AmountRemainsStart ELSE 0 END AS TFloat)      AS AmountDebetStart
+            , CAST (CASE WHEN tmpMIContainer.AmountRemainsStart < 0 OR  1=1 THEN -1 * tmpMIContainer.AmountRemainsStart ELSE 0 END AS TFloat) AS AmountKreditStart
             , CAST (tmpMIContainer.AmountDebet AS TFloat)  AS AmountDebet
             , CAST (tmpMIContainer.AmountKredit AS TFloat) AS AmountKredit
-            , CAST (CASE WHEN tmpMIContainer.AmountRemainsEnd > 0 THEN tmpMIContainer.AmountRemainsEnd ELSE 0 END AS TFloat)      AS AmountDebetEnd
-            , CAST (CASE WHEN tmpMIContainer.AmountRemainsEnd < 0 THEN -1 * tmpMIContainer.AmountRemainsEnd ELSE 0 END AS TFloat) AS AmountKreditEnd
+            , CAST (CASE WHEN tmpMIContainer.AmountRemainsEnd > 0 AND 1=0 THEN tmpMIContainer.AmountRemainsEnd ELSE 0 END AS TFloat)      AS AmountDebetEnd
+            , CAST (CASE WHEN tmpMIContainer.AmountRemainsEnd < 0 OR  1=1 THEN -1 * tmpMIContainer.AmountRemainsEnd ELSE 0 END AS TFloat) AS AmountKreditEnd
 
        FROM tmpMIContainer
            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = tmpMIContainer.InfoMoneyId
@@ -139,4 +144,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_UnitBalance (inStartDate := '01.12.2021', inEndDate:= '01.02.2022', inServiceDate:= '01.12.2021', inUnitGroupId:= 0, inInfoMoneyId:= 0, inisAll:= true , inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_UnitBalance (inStartDate := '01.12.2021', inEndDate:= '01.02.2022', inServiceDate:= '01.12.2021', inUnitGroupId:= 0, inInfoMoneyId:= 0, inIsAll:= true , inSession:= zfCalc_UserAdmin())

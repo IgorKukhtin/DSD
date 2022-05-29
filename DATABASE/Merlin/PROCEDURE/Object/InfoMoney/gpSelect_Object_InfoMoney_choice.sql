@@ -48,7 +48,11 @@ BEGIN
         , tmp.UpdateName
         , tmp.UpdateDate
    FROM gpSelect_Object_InfoMoney (inIsShowAll, inSession) AS tmp
+        LEFT JOIN ObjectLink AS ObjectLink_Child
+                             ON ObjectLink_Child.ChildObjectId = tmp.Id
+                            AND ObjectLink_Child.DescId        = zc_ObjectLink_InfoMoney_Parent()
    WHERE (tmp.isService = inIsService OR inIsService = FALSE)
+     AND ObjectLink_Child.ObjectId IS NULL
   /*AND ((inKindName = 'zc_Enum_InfoMoney_In' AND (tmp.InfoMoneyKindId = zc_Enum_InfoMoney_In() OR COALESCE (tmp.InfoMoneyKindId,0)=0) ) 
       OR (inKindName = 'zc_Enum_InfoMoney_Out' AND (tmp.InfoMoneyKindId = zc_Enum_InfoMoney_Out() OR COALESCE (tmp.InfoMoneyKindId,0)=0) )
       OR COALESCE (inKindName,'') = ''  

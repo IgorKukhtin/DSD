@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Cash(
     IN inKindName          TVarChar  , -- zc_Enum_InfoMoney_In or zc_Enum_InfoMoney_Out
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_corr TVarChar
+RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_corr Integer
              , OperDate TDateTime, ServiceDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , isSign Boolean
@@ -89,8 +89,8 @@ BEGIN
 
        SELECT
              tmpData.MovementId                   AS Id
-           , tmpData.InvNumber                    AS InvNumber
-           , CASE WHEN MovementBoolean_Sign.ValueData IS NOT NULL THEN tmpData.InvNumber ELSE '' END :: TVarChar InvNumber_corr
+           , zfConvert_StringToNumber(tmpData.InvNumber) AS InvNumber
+           , CASE WHEN MovementBoolean_Sign.ValueData IS NOT NULL THEN zfConvert_StringToNumber (tmpData.InvNumber) ELSE 0 END :: Integer InvNumber_corr
            , tmpData.OperDate                     AS OperDate
            , MIDate_ServiceDate.ValueData ::TDateTime AS ServiceDate
            , Object_Status.ObjectCode             AS StatusCode

@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Service(
     IN inIsErased          Boolean ,
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar
+RETURNS TABLE (Id Integer, InvNumber Integer
              , OperDate TDateTime
              , ServiceDate TDateTime
              , StatusCode Integer, StatusName TVarChar
@@ -52,7 +52,7 @@ BEGIN
 
        SELECT
              Movement.Id
-           , Movement.InvNumber
+           , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
            , Movement.OperDate
            , DATE_TRUNC ('Month', MIDate_ServiceDate.ValueData) ::TDateTime AS ServiceDate
            , Object_Status.ObjectCode           AS StatusCode

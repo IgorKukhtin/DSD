@@ -24,17 +24,19 @@ BEGIN
                                  ON ObjectLink_Cash_Parent.ObjectId = Object_Cash.Id
                                 AND ObjectLink_Cash_Parent.DescId = zc_ObjectLink_Cash_Parent()
        WHERE Object_Cash.DescId = zc_Object_Cash()
-       UNION SELECT
-             0 AS Id,
-             0 AS Code,
-             CAST('бяе' AS TVarChar) AS Name,
-             0 AS ParentId,
-             false AS isErased;
+         AND Object_Cash.Id IN (SELECT DISTINCT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Cash_Parent())
+
+      UNION
+       SELECT 0 AS Id,
+              0 AS Code,
+              CAST('бяе' AS TVarChar) AS Name,
+              0 AS ParentId,
+              FALSE AS isErased
+             ;
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*

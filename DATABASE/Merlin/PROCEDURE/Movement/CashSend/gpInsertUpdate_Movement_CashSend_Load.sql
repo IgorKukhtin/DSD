@@ -97,7 +97,7 @@ BEGIN
        END IF; 
        
            -- сохранили <Документ>
-         vbMovementId := lpInsertUpdate_Movement (0, zc_Movement_CashSend(), inInvNumber, inOperDate, Null, vbUserProtocolId);
+         vbMovementId := lpInsertUpdate_Movement (vbMovementId, zc_Movement_CashSend(), inInvNumber, inOperDate, Null, vbUserProtocolId);
     
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), vbMovementId, inKurs);
@@ -107,6 +107,9 @@ BEGIN
          -- сохранили <Элемент документа>
          vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), vbFromKassaId, vbMovementId, inSummaFrom, NULL);
     
+         -- сохранили
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Amount(), vbMovementItemId, inSummaTo);
+
          -- сохранили связь с <>
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Cash(), vbMovementItemId, vbToKassaId);
          -- сохранили связь с <>

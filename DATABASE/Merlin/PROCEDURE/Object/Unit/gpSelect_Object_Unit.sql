@@ -62,9 +62,9 @@ BEGIN
                                 AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
             LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
 
-           LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
-                                   ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
-                                  AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
+                                    ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
+                                   AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
 
             LEFT JOIN ObjectLink AS ObjectLink_Insert
                                  ON ObjectLink_Insert.ObjectId = Object_Unit.Id
