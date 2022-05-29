@@ -88,6 +88,11 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = Summa_To
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = Amount
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsView.Footer = True
@@ -405,6 +410,28 @@ inherited Report_Movement_Send_RemainsSun_SupplementForm: TReport_Movement_Send_
             Width = 45
             Position.BandIndex = 2
             Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object InvNumberLayout: TcxGridDBBandedColumn
+            Caption = #1044#1086#1082'. '#1074#1099#1082#1083'.'
+            DataBinding.FieldName = 'InvNumberLayout'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+            Position.BandIndex = 2
+            Position.ColIndex = 10
+            Position.RowIndex = 0
+          end
+          object LayoutName: TcxGridDBBandedColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074#1099#1082#1083#1072#1076#1082#1080
+            DataBinding.FieldName = 'LayoutName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+            Position.BandIndex = 2
+            Position.ColIndex = 11
             Position.RowIndex = 0
           end
           object MCS_To: TcxGridDBBandedColumn

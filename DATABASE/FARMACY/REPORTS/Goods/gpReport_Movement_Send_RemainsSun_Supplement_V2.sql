@@ -28,6 +28,8 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, isClose b
              , AmountRemains_To TFloat
              , AmountSalesDey_To TFloat
              , Need_To TFloat
+             , InvNumberLayout TVarChar
+             , LayoutName TVarChar
               )
 AS
 $BODY$
@@ -76,6 +78,8 @@ BEGIN
            , Result.AmountRemains_To 
            , Null::TFloat                AS AmountSalesDey_To 
            , Result.Need_To 
+           , Result.InvNumberLayout
+           , Result.LayoutName
       FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2_Sum(inOperDate, 0, vbUserId) AS Result;
     ELSE
      
@@ -108,6 +112,8 @@ BEGIN
            , Result.AmountRemains_To 
            , Result.AmountSalesDey_To 
            , Result.Need_To 
+           , Result.InvNumberLayout
+           , Result.LayoutName
       FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2(inOperDate, 0, vbUserId) AS Result;
     END IF;
 

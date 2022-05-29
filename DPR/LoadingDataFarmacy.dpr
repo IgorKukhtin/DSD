@@ -3,7 +3,7 @@ program LoadingDataFarmacy;
 uses
   MidasLib,
   Vcl.Forms,
-  MainUnit in '..\FormsFarmacy\MainUnitService\BookingsForTabletki\MainUnit.pas' {MainForm};
+  MainUnit in '..\FormsFarmacy\MainUnitService\LoadingDataFarmacy\MainUnit.pas' {MainForm};
 
 {$R *.res}
 

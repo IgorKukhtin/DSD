@@ -85,6 +85,8 @@ type
     isClose: TcxGridDBBandedColumn;
     isCloseMCS_From: TcxGridDBBandedColumn;
     isCloseMCS_To: TcxGridDBBandedColumn;
+    InvNumberLayout: TcxGridDBBandedColumn;
+    LayoutName: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

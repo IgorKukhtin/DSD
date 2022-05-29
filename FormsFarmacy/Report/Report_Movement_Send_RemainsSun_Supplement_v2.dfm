@@ -305,6 +305,28 @@ inherited Report_Movement_Send_RemainsSun_Supplement_v2Form: TReport_Movement_Se
             Position.ColIndex = 1
             Position.RowIndex = 0
           end
+          object InvNumberLayout: TcxGridDBBandedColumn
+            Caption = #1044#1086#1082'. '#1074#1099#1082#1083'.'
+            DataBinding.FieldName = 'InvNumberLayout'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 49
+            Position.BandIndex = 1
+            Position.ColIndex = 7
+            Position.RowIndex = 0
+          end
+          object LayoutName: TcxGridDBBandedColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074#1099#1082#1083#1072#1076#1082#1080
+            DataBinding.FieldName = 'LayoutName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
+            Position.BandIndex = 1
+            Position.ColIndex = 8
+            Position.RowIndex = 0
+          end
           object MCS_To: TcxGridDBBandedColumn
             Caption = #1053#1058#1047
             DataBinding.FieldName = 'MCS_To'

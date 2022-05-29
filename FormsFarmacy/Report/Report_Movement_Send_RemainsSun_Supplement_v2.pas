@@ -79,6 +79,8 @@ type
     cxLabel27: TcxLabel;
     ceDeySupplInSUN2: TcxCurrencyEdit;
     cxLabel26: TcxLabel;
+    InvNumberLayout: TcxGridDBBandedColumn;
+    LayoutName: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public
