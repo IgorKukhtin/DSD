@@ -97,6 +97,9 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProtocolForm');
   //

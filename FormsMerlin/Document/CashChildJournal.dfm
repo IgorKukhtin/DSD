@@ -1,7 +1,7 @@
 object CashChildJournalForm: TCashChildJournalForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' <'#1050#1072#1089#1089#1072'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1050#1072#1089#1089#1072'>'
   ClientHeight = 551
   ClientWidth = 809
   Color = clBtnFace
@@ -27,10 +27,10 @@ object CashChildJournalForm: TCashChildJournalForm
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
-      Left = 101
+      Left = 107
       Top = 5
       EditValue = 44562d
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -40,7 +40,7 @@ object CashChildJournalForm: TCashChildJournalForm
       Left = 310
       Top = 5
       EditValue = 44562d
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -136,6 +136,9 @@ object CashChildJournalForm: TCashChildJournalForm
       object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0.;-0.; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 54
@@ -143,6 +146,9 @@ object CashChildJournalForm: TCashChildJournalForm
       object InvNumber_corr: TcxGridDBColumn
         Caption = #8470' '#1082#1086#1088#1088'.'
         DataBinding.FieldName = 'InvNumber_corr'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0.;-0.; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
@@ -757,6 +763,14 @@ object CashChildJournalForm: TCashChildJournalForm
         item
           Visible = True
           ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIContainer'
         end
         item
           Visible = True
@@ -1848,8 +1862,8 @@ object CashChildJournalForm: TCashChildJournalForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 488
-    Top = 24
+    Left = 320
+    Top = 96
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1858,11 +1872,9 @@ object CashChildJournalForm: TCashChildJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
-      end
-      item
       end>
-    Left = 576
-    Top = 24
+    Left = 392
+    Top = 112
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_CashCorrective_Print'

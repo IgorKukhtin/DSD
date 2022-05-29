@@ -3,7 +3,7 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
   Top = 0
   Caption = #1041#1072#1083#1072#1085#1089' '#1087#1086' '#1050#1072#1089#1089#1072#1084
   ClientHeight = 440
-  ClientWidth = 833
+  ClientWidth = 894
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,14 +21,15 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 833
+    Width = 894
     Height = 65
     Align = alTop
     TabOrder = 0
+    ExplicitWidth = 833
     object deStart: TcxDateEdit
       Left = 118
       Top = 5
-      EditValue = 44197d
+      EditValue = 44562d
       Properties.AssignedValues.DisplayFormat = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -38,7 +39,7 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
     object deEnd: TcxDateEdit
       Left = 118
       Top = 39
-      EditValue = 44197d
+      EditValue = 44562d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -92,15 +93,16 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
   object cxDBPivotGrid: TcxDBPivotGrid
     Left = 0
     Top = 91
-    Width = 833
+    Width = 894
     Height = 349
     Align = alClient
     DataSource = DataSource
     Groups = <>
     TabOrder = 1
+    ExplicitWidth = 833
     object pvNPP: TcxDBPivotGridField
       Area = faRow
-      AreaIndex = 2
+      AreaIndex = 0
       IsCaptionAssigned = True
       Caption = #8470' '#1087'.'#1087'. ('#1082#1072#1089#1089#1072')'
       DataBinding.FieldName = 'NPP'
@@ -108,7 +110,7 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
       UniqueName = #1040'-'#1055
     end
     object pvUnitCode: TcxDBPivotGridField
-      AreaIndex = 0
+      AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' '#1082#1072#1089#1089#1099
       DataBinding.FieldName = 'CashCode'
@@ -117,7 +119,7 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
     end
     object pvCashName: TcxDBPivotGridField
       Area = faRow
-      AreaIndex = 3
+      AreaIndex = 1
       IsCaptionAssigned = True
       Caption = #1050#1072#1089#1089#1072
       DataBinding.FieldName = 'CashName'
@@ -133,7 +135,7 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
       UniqueName = #1057#1095#1077#1090' - '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
     end
     object pvInfoMoneyName: TcxDBPivotGridField
-      AreaIndex = 1
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1057#1090#1072#1090#1100#1103
       DataBinding.FieldName = 'InfoMoneyName'
@@ -141,25 +143,24 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object pvGroupNameFull_Cash: TcxDBPivotGridField
-      Area = faRow
       AreaIndex = 0
       IsCaptionAssigned = True
-      Caption = #1043#1088#1091#1087#1087#1072' '#1082#1072#1089#1089#1099' ('#1074#1089#1077')'
+      Caption = #1043#1088#1091#1087#1087#1072
       DataBinding.FieldName = 'GroupNameFull_Cash'
       Visible = True
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object pvParentName_Cash: TcxDBPivotGridField
-      Area = faRow
       AreaIndex = 1
       IsCaptionAssigned = True
-      Caption = #1043#1088#1091#1087#1087#1072' '#1082#1072#1089#1089#1099
+      Caption = '***'#1043#1088#1091#1087#1087#1072
       DataBinding.FieldName = 'ParentName_Cash'
       Visible = True
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object pvAmountDebetStart: TcxDBPivotGridField
-      AreaIndex = 2
+      Area = faData
+      AreaIndex = 0
       IsCaptionAssigned = True
       Caption = #1044#1077#1073#1077#1090' '#1085#1072' '#1085#1072#1095#1072#1083#1086
       DataBinding.FieldName = 'AmountDebetStart'
@@ -170,7 +171,7 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
       UniqueName = 'AmountDebetStart'
     end
     object pvAmountKreditStart: TcxDBPivotGridField
-      AreaIndex = 3
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = #1050#1088#1077#1076#1080#1090' '#1085#1072' '#1085#1072#1095#1072#1083#1086
       DataBinding.FieldName = 'AmountKreditStart'
@@ -182,7 +183,7 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
     end
     object pvAmountDebet: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 0
+      AreaIndex = 1
       IsCaptionAssigned = True
       Caption = #1044#1077#1073#1077#1090' '#1086#1073#1086#1088#1086#1090
       DataBinding.FieldName = 'AmountDebet'
@@ -194,7 +195,7 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
     end
     object pvAmountKredit: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 1
+      AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1050#1088#1077#1076#1080#1090' '#1086#1073#1086#1088#1086#1090
       DataBinding.FieldName = 'AmountKredit'
@@ -205,7 +206,8 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
       UniqueName = #1050#1088#1077#1076#1080#1090' '#1086#1073#1086#1088#1086#1090
     end
     object pvAmountDebetEnd: TcxDBPivotGridField
-      AreaIndex = 4
+      Area = faData
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1044#1077#1073#1077#1090' '#1085#1072' '#1082#1086#1085#1077#1094
       DataBinding.FieldName = 'AmountDebetEnd'

@@ -26,8 +26,6 @@ object UnitForm: TUnitForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -47,17 +45,19 @@ object UnitForm: TUnitForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object GroupNameFull: TcxGridDBColumn
-        Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
+        Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GroupNameFull'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
         Options.Editing = False
         Width = 126
       end
       object ParentName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072
+        Caption = '***'#1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'ParentName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -158,7 +158,6 @@ object UnitForm: TUnitForm
     Height = 33
     Align = alTop
     TabOrder = 5
-    ExplicitTop = -14
     object lbSearchName: TcxLabel
       Left = 22
       Top = 6

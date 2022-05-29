@@ -4,7 +4,7 @@
   ClientHeight = 312
   ClientWidth = 302
   ExplicitWidth = 318
-  ExplicitHeight = 350
+  ExplicitHeight = 351
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -38,8 +38,8 @@
     TabOrder = 3
     Width = 84
   end
-  object ceAmount: TcxCurrencyEdit [5]
-    Left = 188
+  object ceAmountOut: TcxCurrencyEdit [5]
+    Left = 8
     Top = 176
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
@@ -47,9 +47,9 @@
     Width = 84
   end
   object cxLabel7: TcxLabel [6]
-    Left = 188
+    Left = 8
     Top = 156
-    Caption = #1057#1091#1084#1084#1072
+    Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1093#1086#1076
   end
   object edInvNumber: TcxTextEdit [7]
     Left = 8
@@ -111,20 +111,20 @@
     Width = 264
   end
   object edCurrencyValue: TcxCurrencyEdit [14]
-    Left = 8
+    Left = 190
     Top = 176
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.00##'
     TabOrder = 14
-    Width = 97
+    Width = 28
   end
   object cxLabel3: TcxLabel [15]
-    Left = 8
+    Left = 190
     Top = 156
     Caption = #1050#1091#1088#1089
   end
   object edParValue: TcxCurrencyEdit [16]
-    Left = 125
+    Left = 224
     Top = 176
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
@@ -132,9 +132,22 @@
     Width = 47
   end
   object cxLabel4: TcxLabel [17]
-    Left = 125
+    Left = 224
     Top = 156
     Caption = #1053#1086#1084#1080#1085#1072#1083
+  end
+  object cxLabel5: TcxLabel [18]
+    Left = 98
+    Top = 156
+    Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076
+  end
+  object ceAmountIn: TcxCurrencyEdit [19]
+    Left = 100
+    Top = 176
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 19
+    Width = 84
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 112
@@ -221,9 +234,17 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
+        Name = 'inAmountOut'
         Value = 0.000000000000000000
-        Component = ceAmount
+        Component = ceAmountOut
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountIn'
+        Value = Null
+        Component = ceAmountIn
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -312,9 +333,16 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Amount'
+        Name = 'AmountOut'
         Value = 0.000000000000000000
-        Component = ceAmount
+        Component = ceAmountOut
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountIn'
+        Value = Null
+        Component = ceAmountIn
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

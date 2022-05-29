@@ -111,10 +111,10 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
     Width = 814
     ExplicitWidth = 814
     inherited deStart: TcxDateEdit
-      EditValue = 43101d
+      EditValue = 44562d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 43101d
+      EditValue = 44562d
     end
   end
   inherited ActionList: TActionList
@@ -411,18 +411,6 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
   inherited PeriodChoice: TPeriodChoice
     Left = 224
     Top = 168
-  end
-  inherited RefreshDispatcher: TRefreshDispatcher
-    ComponentList = <
-      item
-        Component = PeriodChoice
-      end
-      item
-        Component = deEnd
-      end
-      item
-        Component = deStart
-      end>
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Currency'

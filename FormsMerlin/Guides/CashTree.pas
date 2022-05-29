@@ -23,7 +23,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox,
-  dxBarExtItems, cxImageComboBox;
+  dxBarExtItems, cxImageComboBox, cxCurrencyEdit;
 
 type
   TCashTreeForm = class(TParentForm)
@@ -73,6 +73,7 @@ type
     PaidKindName: TcxGridDBColumn;
     spErased: TdsdStoredProc;
     spUnErased: TdsdStoredProc;
+    Amount: TcxGridDBColumn;
   private
     { Private declarations }
   public

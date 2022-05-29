@@ -98,9 +98,9 @@ object Report_UnitBalanceDialogForm: TReport_UnitBalanceDialogForm
     Width = 287
   end
   object cbAllMonth: TcxCheckBox
-    Left = 248
+    Left = 254
     Top = 31
-    Caption = #1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
+    Caption = #1042#1089#1077' '#1084#1077#1089#1103#1094#1072
     TabOrder = 10
     Width = 91
   end

@@ -72,6 +72,7 @@ type
     spUpdate_isUserAll: TdsdStoredProc;
     actUpdate_IsUserAll: TdsdExecStoredProc;
     bbUpdate_IsUserAll: TdxBarButton;
+    Amount: TcxGridDBColumn;
   private
     { Private declarations }
   public

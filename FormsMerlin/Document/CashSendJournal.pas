@@ -101,6 +101,9 @@ type
     actGetImportSetting: TdsdExecStoredProc;
     macStartLoad: TMultiAction;
     bbmacStartLoad: TdxBarButton;
+    AmountIn: TcxGridDBColumn;
+    CurrencyName_from: TcxGridDBColumn;
+    CurrencyName_to: TcxGridDBColumn;
   private
   public
   end;

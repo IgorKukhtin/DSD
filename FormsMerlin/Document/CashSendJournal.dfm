@@ -30,7 +30,7 @@ object CashSendJournalForm: TCashSendJournalForm
       Left = 101
       Top = 5
       EditValue = 44562d
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -40,7 +40,7 @@ object CashSendJournalForm: TCashSendJournalForm
       Left = 310
       Top = 5
       EditValue = 44562d
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -77,7 +77,7 @@ object CashSendJournalForm: TCashSendJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Amount
+          Column = AmountOut
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -87,7 +87,7 @@ object CashSendJournalForm: TCashSendJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Amount
+          Column = AmountOut
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -130,6 +130,9 @@ object CashSendJournalForm: TCashSendJournalForm
       object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0.;-0.; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 54
@@ -175,9 +178,9 @@ object CashSendJournalForm: TCashSendJournalForm
         Options.Editing = False
         Width = 149
       end
-      object Amount: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072
-        DataBinding.FieldName = 'Amount'
+      object AmountOut: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1093#1086#1076
+        DataBinding.FieldName = 'AmountOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -185,6 +188,32 @@ object CashSendJournalForm: TCashSendJournalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 94
+      end
+      object CurrencyName_from: TcxGridDBColumn
+        Caption = #1042#1072#1083'. '#1088#1072#1089#1093#1086#1076
+        DataBinding.FieldName = 'CurrencyName_from'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1072#1083#1102#1090#1072' '#1088#1072#1089#1093#1086#1076
+        Width = 70
+      end
+      object AmountIn: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076
+        DataBinding.FieldName = 'AmountIn'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 94
+      end
+      object CurrencyName_to: TcxGridDBColumn
+        Caption = #1042#1072#1083'. '#1087#1088#1080#1093#1086#1076
+        DataBinding.FieldName = 'CurrencyName_to'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1072#1083#1102#1090#1072' '#1087#1088#1080#1093#1086#1076
+        Width = 70
       end
       object CurrencyValue: TcxGridDBColumn
         Caption = #1050#1091#1088#1089
@@ -392,6 +421,14 @@ object CashSendJournalForm: TCashSendJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbMIContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -441,6 +478,7 @@ object CashSendJournalForm: TCashSendJournalForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
@@ -1240,8 +1278,8 @@ object CashSendJournalForm: TCashSendJournalForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 488
-    Top = 24
+    Left = 320
+    Top = 112
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1250,11 +1288,9 @@ object CashSendJournalForm: TCashSendJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
-      end
-      item
       end>
-    Left = 576
-    Top = 24
+    Left = 424
+    Top = 136
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_CashSend_Print'

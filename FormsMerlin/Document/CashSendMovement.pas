@@ -27,7 +27,7 @@ type
     Код: TcxLabel;
     cxLabel1: TcxLabel;
     ceOperDate: TcxDateEdit;
-    ceAmount: TcxCurrencyEdit;
+    ceAmountOut: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
     edInvNumber: TcxTextEdit;
     edCash_to: TcxButtonEdit;
@@ -43,6 +43,8 @@ type
     cxLabel3: TcxLabel;
     edParValue: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
+    cxLabel5: TcxLabel;
+    ceAmountIn: TcxCurrencyEdit;
   private
     { Private declarations }
   public

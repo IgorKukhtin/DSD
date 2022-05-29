@@ -28,7 +28,7 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
     object deStart: TcxDateEdit
       Left = 118
       Top = 5
-      EditValue = 44197d
+      EditValue = 44562d
       Properties.AssignedValues.DisplayFormat = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -38,7 +38,7 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
     object deEnd: TcxDateEdit
       Left = 118
       Top = 39
-      EditValue = 44197d
+      EditValue = 44562d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -91,7 +91,7 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
     object cbAllMonth: TcxCheckBox
       Left = 214
       Top = 39
-      Caption = #1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076
+      Caption = #1042#1089#1077' '#1084#1077#1089#1103#1094#1072
       TabOrder = 8
       Width = 87
     end
@@ -103,7 +103,7 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
     object edServiceDate: TcxDateEdit
       Left = 316
       Top = 5
-      EditValue = 44197d
+      EditValue = 44562d
       Properties.DisplayFormat = 'mmmm yyyy'
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -132,14 +132,14 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
     object pvUnitCode: TcxDBPivotGridField
       AreaIndex = 0
       IsCaptionAssigned = True
-      Caption = #1050#1086#1076' '#1086#1090#1076#1077#1083#1072
+      Caption = #1050#1086#1076
       DataBinding.FieldName = 'UnitCode'
       Visible = True
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
     end
     object pvUnitName: TcxDBPivotGridField
       Area = faRow
-      AreaIndex = 3
+      AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1054#1090#1076#1077#1083
       DataBinding.FieldName = 'UnitName'
@@ -147,7 +147,7 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
       UniqueName = #1057#1095#1077#1090' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvAccountName: TcxDBPivotGridField
-      AreaIndex = 6
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = #1057#1095#1077#1090
       DataBinding.FieldName = 'AccountName'
@@ -166,16 +166,15 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
       Area = faRow
       AreaIndex = 1
       IsCaptionAssigned = True
-      Caption = #1043#1088#1091#1087#1087#1072' '#1086#1090#1076#1077#1083#1072' ('#1074#1089#1077')'
+      Caption = #1043#1088#1091#1087#1087#1072
       DataBinding.FieldName = 'GroupNameFull_Unit'
       Visible = True
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object pvParentName_Unit: TcxDBPivotGridField
-      Area = faRow
-      AreaIndex = 2
+      AreaIndex = 5
       IsCaptionAssigned = True
-      Caption = #1043#1088#1091#1087#1087#1072' '#1086#1090#1076#1077#1083#1072
+      Caption = '***'#1043#1088#1091#1087#1087#1072
       DataBinding.FieldName = 'ParentName_Unit'
       Visible = True
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -192,7 +191,8 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
       UniqueName = 'AmountDebetStart'
     end
     object pvAmountKreditStart: TcxDBPivotGridField
-      AreaIndex = 3
+      Area = faData
+      AreaIndex = 0
       IsCaptionAssigned = True
       Caption = #1050#1088#1077#1076#1080#1090' '#1085#1072' '#1085#1072#1095#1072#1083#1086
       DataBinding.FieldName = 'AmountKreditStart'
@@ -204,9 +204,9 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
     end
     object pvAmountDebet: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 0
+      AreaIndex = 1
       IsCaptionAssigned = True
-      Caption = #1044#1077#1073#1077#1090' '#1086#1073#1086#1088#1086#1090
+      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103
       DataBinding.FieldName = 'AmountDebet'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -216,9 +216,9 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
     end
     object pvAmountKredit: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 1
+      AreaIndex = 2
       IsCaptionAssigned = True
-      Caption = #1050#1088#1077#1076#1080#1090' '#1086#1073#1086#1088#1086#1090
+      Caption = #1054#1087#1083#1072#1090#1072
       DataBinding.FieldName = 'AmountKredit'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -227,7 +227,7 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
       UniqueName = #1050#1088#1077#1076#1080#1090' '#1086#1073#1086#1088#1086#1090
     end
     object pvAmountDebetEnd: TcxDBPivotGridField
-      AreaIndex = 4
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1044#1077#1073#1077#1090' '#1085#1072' '#1082#1086#1085#1077#1094
       DataBinding.FieldName = 'AmountDebetEnd'
@@ -238,7 +238,8 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
       UniqueName = 'AmountDebetEnd'
     end
     object pvAmountKreditEnd: TcxDBPivotGridField
-      AreaIndex = 5
+      Area = faData
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1050#1088#1077#1076#1080#1090' '#1085#1072' '#1082#1086#1085#1077#1094
       DataBinding.FieldName = 'AmountKreditEnd'
@@ -754,7 +755,7 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
         item
           DataSet = ClientDataSet
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'ParentName_Unit;UnitName;'
+          IndexFieldNames = 'GroupNameFull_Unit;ParentName_Unit;UnitName;'
         end>
       Params = <
         item

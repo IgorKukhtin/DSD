@@ -67,6 +67,9 @@ inherited ServiceJournalForm: TServiceJournalForm
           end
           inherited colInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0.;-0.; ;'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 121
@@ -657,7 +660,11 @@ inherited ServiceJournalForm: TServiceJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemContainer'
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintDetail'
         end
         item
           Visible = True
@@ -665,11 +672,7 @@ inherited ServiceJournalForm: TServiceJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintDetail'
+          ItemName = 'bbMovementItemContainer'
         end
         item
           Visible = True
@@ -725,14 +728,6 @@ inherited ServiceJournalForm: TServiceJournalForm
       Action = macStartLoad
       Category = 0
     end
-  end
-  inherited RefreshDispatcher: TRefreshDispatcher
-    ComponentList = <
-      item
-        Component = PeriodChoice
-      end
-      item
-      end>
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Service'

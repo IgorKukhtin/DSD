@@ -30,7 +30,7 @@ object CashJournalForm: TCashJournalForm
       Left = 101
       Top = 5
       EditValue = 44562d
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -40,7 +40,7 @@ object CashJournalForm: TCashJournalForm
       Left = 310
       Top = 5
       EditValue = 44562d
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -136,6 +136,9 @@ object CashJournalForm: TCashJournalForm
       object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0.;-0.; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 54
@@ -143,6 +146,9 @@ object CashJournalForm: TCashJournalForm
       object InvNumber_corr: TcxGridDBColumn
         Caption = #8470' '#1082#1086#1088#1088'.'
         DataBinding.FieldName = 'InvNumber_corr'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0.;-0.; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -481,6 +487,14 @@ object CashJournalForm: TCashJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbMIContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -530,6 +544,7 @@ object CashJournalForm: TCashJournalForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
@@ -583,10 +598,10 @@ object CashJournalForm: TCashJournalForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1093,10 +1108,10 @@ object CashJournalForm: TCashJournalForm
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -1305,7 +1320,7 @@ object CashJournalForm: TCashJournalForm
         item
         end
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1361,7 +1376,7 @@ object CashJournalForm: TCashJournalForm
       WithoutNext = True
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Cash'
     DataSet = ClientDataSet
     DataSets = <
@@ -1530,8 +1545,8 @@ object CashJournalForm: TCashJournalForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 488
-    Top = 24
+    Left = 328
+    Top = 128
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1540,11 +1555,9 @@ object CashJournalForm: TCashJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
-      end
-      item
       end>
-    Left = 576
-    Top = 24
+    Left = 400
+    Top = 136
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Cash_Print'

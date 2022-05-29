@@ -176,7 +176,8 @@ uses
   InfoMoney_Parent in '..\..\FormsMerlin\Guides\InfoMoney_Parent.pas' {InfoMoney_ParentForm: TParentForm},
   ServiceItemLast in '..\..\FormsMerlin\Guides\ServiceItemLast.pas' {ServiceItemLastForm: TParentForm},
   InfoMoneyTreeGroup in '..\..\FormsMerlin\Guides\InfoMoneyTreeGroup.pas' {InfoMoneyTreeGroupForm: TParentForm},
-  UnitTreeGroup in '..\..\FormsMerlin\Guides\UnitTreeGroup.pas' {UnitTreeGroupForm: TParentForm};
+  UnitTreeGroup in '..\..\FormsMerlin\Guides\UnitTreeGroup.pas' {UnitTreeGroupForm: TParentForm},
+  MovementItemContainer in '..\..\FormsMerlin\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

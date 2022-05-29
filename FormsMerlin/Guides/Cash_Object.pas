@@ -21,7 +21,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dsdAddOn, dxBarExtItems;
+  dsdAddOn, dxBarExtItems, cxCurrencyEdit;
 
 type
   TCash_ObjectForm = class(TParentForm)
@@ -52,6 +52,12 @@ type
     spErasedUnErased: TdsdStoredProc;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    GroupNameFull: TcxGridDBColumn;
+    ParentName: TcxGridDBColumn;
+    CurrencyName: TcxGridDBColumn;
+    NPP: TcxGridDBColumn;
+    isUserAll: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
   private
     { Private declarations }
   public

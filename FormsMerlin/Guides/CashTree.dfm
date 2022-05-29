@@ -74,8 +74,18 @@ object CashTreeForm: TCashTreeForm
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
       DataController.Filter.Options = [fcoCaseInsensitive]
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount
+        end>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount
+        end>
       DataController.Summary.SummaryGroups = <>
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
@@ -131,21 +141,14 @@ object CashTreeForm: TCashTreeForm
         Width = 193
       end
       object ShortName: TcxGridDBColumn
-        Caption = #1057#1086#1082#1088'. '#1085#1072#1079#1074#1072#1085#1080#1077
+        Caption = '***'#1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'ShortName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 119
-      end
-      object isErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 94
+        HeaderHint = #1057#1086#1082#1088#1072#1097#1077#1085#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
+        Options.Editing = False
+        Width = 119
       end
       object CurrencyName: TcxGridDBColumn
         Caption = #1042#1072#1083#1102#1090#1072
@@ -158,10 +161,30 @@ object CashTreeForm: TCashTreeForm
       object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object Amount: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1074' '#1082#1072#1089#1089#1077
+        DataBinding.FieldName = 'Amount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object isErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 94
       end
     end
     object cxGridLevel: TcxGridLevel
