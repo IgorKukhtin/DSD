@@ -40,6 +40,8 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, isClose b
              , AverageSalesMonth_To TFloat
              , Need_To TFloat
              , Delta_To TFloat
+             , InvNumberLayout TVarChar
+             , LayoutName TVarChar
               )
 AS
 $BODY$
@@ -91,6 +93,8 @@ BEGIN
          , Result.AverageSalesMonth_To 
          , Result.Need_To 
          , Result.Delta_To  
+         , Result.InvNumberLayout
+         , Result.LayoutName
     FROM lpInsert_Movement_Send_RemainsSun_Supplement(inOperDate, 0, vbUserId) AS Result;
 
 

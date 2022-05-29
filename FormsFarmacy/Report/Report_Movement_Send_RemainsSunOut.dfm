@@ -1923,6 +1923,22 @@ inherited Report_Movement_Send_RemainsSunOutForm: TReport_Movement_Send_RemainsS
             HeaderHint = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1079#1072' 1 '#1084#1077#1089' '#1074' '#1040#1087#1090#1077#1082#1077' "'#1054#1090' '#1082#1086#1075#1086'"'
             Width = 60
           end
+          object chInvNumberLayout: TcxGridDBColumn
+            Caption = #1044#1086#1082'. '#1074#1099#1082#1083'.'
+            DataBinding.FieldName = 'InvNumberLayout'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 53
+          end
+          object chLayoutName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074#1099#1082#1083#1072#1076#1082#1080
+            DataBinding.FieldName = 'LayoutName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
+          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableViewPartion

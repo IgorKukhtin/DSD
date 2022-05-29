@@ -138,6 +138,8 @@ type
     chisClose: TcxGridDBColumn;
     chisCloseMCS: TcxGridDBColumn;
     isCloseMCS: TcxGridDBColumn;
+    chInvNumberLayout: TcxGridDBColumn;
+    chLayoutName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -55,6 +55,9 @@ RETURNS TABLE (UnitId Integer, UnitName TVarChar
              , Summ_not_out_res    TFloat
              , Amount_not_in_res   TFloat
              , Summ_not_in_res     TFloat
+
+             , InvNumberLayout TVarChar
+             , LayoutName TVarChar
               )
 AS
 $BODY$
@@ -239,8 +242,8 @@ BEGIN
        ;
 
      -- Выкладки
-     WITH tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
-                                     , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE) AS isPharmacyItem
+     WITH tmpLayoutMovement AS (SELECT Movement.Id                                                   AS Id
+                                     , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE)      AS isPharmacyItem
                                      , COALESCE(MovementBoolean_NotMoveRemainder6.ValueData, FALSE) AS isNotMoveRemainder6
                                 FROM Movement
                                      LEFT JOIN MovementBoolean AS MovementBoolean_PharmacyItem
@@ -278,32 +281,34 @@ BEGIN
                                  FROM tmpLayoutUnit
                                  GROUP BY tmpLayoutUnit.ID
                                  )
-        , tmpLayoutAll AS (SELECT tmpLayout.GoodsId                  AS GoodsId
+        , tmpLayoutAll AS (SELECT tmpLayout.GoodsId                             AS GoodsId
                                 , _tmpUnit_SUN.UnitId                AS UnitId
-                                , tmpLayout.Amount                   AS Amount
-                                , tmpLayout.isNotMoveRemainder6      AS isNotMoveRemainder6
-                           FROM tmpLayout
-                           
-                                INNER JOIN _tmpUnit_SUN ON 1 = 1
+                                , tmpLayout.Amount                              AS Amount
+                                , tmpLayout.isNotMoveRemainder6                 AS isNotMoveRemainder6
+                                , tmpLayout.ID                                  AS MovementLayoutId
+                           FROM _tmpUnit_SUN
                                 
-                                LEFT JOIN ObjectBoolean AS Unit_PharmacyItem
-                                                        ON Unit_PharmacyItem.ObjectId  = _tmpUnit_SUN.UnitId
-                                                       AND Unit_PharmacyItem.DescId    = zc_ObjectBoolean_Unit_PharmacyItem()
+                                LEFT JOIN Object AS Object_Unit
+                                                 ON Object_Unit.Id        = _tmpUnit_SUN.UnitId
+                                                AND Object_Unit.DescId    = zc_Object_Unit()
                                  
+                                INNER JOIN tmpLayout ON 1 = 1 
+
                                 LEFT JOIN tmpLayoutUnit ON tmpLayoutUnit.Id     = tmpLayout.Id
                                                        AND tmpLayoutUnit.UnitId = _tmpUnit_SUN.UnitId
 
                                 LEFT JOIN tmpLayoutUnitCount ON tmpLayoutUnitCount.Id     = tmpLayout.Id
                                  
                            WHERE (tmpLayoutUnit.UnitId = _tmpUnit_SUN.UnitId OR COALESCE (tmpLayoutUnitCount.CountUnit, 0) = 0)
-                             AND (COALESCE (Unit_PharmacyItem.ValueData, False) = False OR tmpLayout.isPharmacyItem = True)
+                             AND (Object_Unit.ValueData NOT ILIKE 'АП %' OR tmpLayout.isPharmacyItem = True)
                            )
                                                               
-     INSERT INTO _tmpGoods_Layout (GoodsId, UnitId, Layout, isNotMoveRemainder6) 
-     SELECT tmpLayoutAll.GoodsId               AS GoodsId
-          , tmpLayoutAll.UnitId                AS UnitId
-          , MAX (tmpLayoutAll.Amount):: TFloat AS Amount
+     INSERT INTO  _tmpGoods_Layout (GoodsId, UnitId, Layout, isNotMoveRemainder6, MovementLayoutId) 
+     SELECT tmpLayoutAll.GoodsId                 AS GoodsId
+          , tmpLayoutAll.UnitId                  AS UnitId
+          , MAX (tmpLayoutAll.Amount):: TFloat   AS Amount
           , SUM (CASE WHEN tmpLayoutAll.isNotMoveRemainder6 = TRUE THEN 1 ELSE 0 END) > 0   AS isNotMoveRemainder6
+          , MAX (tmpLayoutAll.MovementLayoutId)  AS MovementLayoutId
       FROM tmpLayoutAll      
       GROUP BY tmpLayoutAll.GoodsId
              , tmpLayoutAll.UnitId;
@@ -3210,6 +3215,9 @@ BEGIN
             , tmpSumm_res.Amount_not_in  :: TFloat AS Amount_not_in_res
             , tmpSumm_res.Summ_not_in    :: TFloat AS Summ_not_in_res
 
+            , Movement_Layout.InvNumber                  AS InvNumberLayout
+            , Object_Layout.ValueData                    AS LayoutName
+
        FROM _tmpRemains_calc
             -- оставили только те, где есть Перемещения
             INNER JOIN (SELECT DISTINCT _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId FROM _tmpResult_Partion
@@ -3327,6 +3335,12 @@ BEGIN
                               
             LEFT JOIN _tmpRemains_all ON _tmpRemains_all.UnitId = _tmpRemains_calc.UnitId
                                      AND _tmpRemains_all.GoodsId = _tmpRemains_calc.GoodsId
+
+            LEFT JOIN Movement AS Movement_Layout ON Movement_Layout.Id = _tmpGoods_Layout.MovementLayoutId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Layout
+                                         ON MovementLinkObject_Layout.MovementId = Movement_Layout.Id
+                                        AND MovementLinkObject_Layout.DescId = zc_MovementLinkObject_Layout()
+            LEFT JOIN Object AS Object_Layout ON Object_Layout.Id = MovementLinkObject_Layout.ObjectId
 
 -- тест для пары
 --     WHERE _tmpRemains_calc.GoodsId IN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId FROM _tmpGoods_SUN_PairSun)

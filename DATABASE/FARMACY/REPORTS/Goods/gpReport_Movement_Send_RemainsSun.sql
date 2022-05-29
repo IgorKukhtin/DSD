@@ -103,7 +103,7 @@ BEGIN
      -- Исключения по техническим переучетам по Аптекам - если есть в непроведенных ТП то исключаем из распределения
      CREATE TEMP TABLE _tmpGoods_TP_exception   (UnitId Integer, GoodsId Integer) ON COMMIT DROP;
      -- Выкладка
-     CREATE TEMP TABLE _tmpGoods_Layout  (UnitId Integer, GoodsId Integer, Layout TFloat, isNotMoveRemainder6 boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpGoods_Layout  (UnitId Integer, GoodsId Integer, Layout TFloat, isNotMoveRemainder6 boolean, MovementLayoutId Integer) ON COMMIT DROP;
      -- Маркетинговый план для точек
      CREATE TEMP TABLE _tmpGoods_PromoUnit  (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
      -- Товары дисконтных проектов
@@ -206,6 +206,8 @@ BEGIN
                                  , Summ_not_out_res    TFloat
                                  , Amount_not_in_res   TFloat
                                  , Summ_not_in_res     TFloat
+                                 , InvNumberLayout     TVarChar
+                                 , LayoutName          TVarChar
                                  ) ON COMMIT DROP;
      -- Результат - ПЕРВЫЙ водитель
      INSERT INTO _tmpResult (DriverId, DriverName
@@ -254,6 +256,8 @@ BEGIN
                            , Summ_not_out_res
                            , Amount_not_in_res
                            , Summ_not_in_res
+                           , InvNumberLayout
+                           , LayoutName
                             )
           SELECT COALESCE (vbDriverId_1, 0)                              :: Integer  AS DriverId
                , COALESCE (lfGet_Object_ValueData_sh (vbDriverId_1), '') :: TVarChar AS DriverName
@@ -306,6 +310,8 @@ BEGIN
                , tmp.Summ_not_out_res
                , tmp.Amount_not_in_res
                , tmp.Summ_not_in_res
+               , tmp.InvNumberLayout
+               , tmp.LayoutName
           FROM lpInsert_Movement_Send_RemainsSun (inOperDate := inOperDate
                                                 , inDriverId := 0 -- vbDriverId_1
                                                 , inStep     := 1
@@ -614,6 +620,9 @@ BEGIN
                , tmp.Amount_not_in  -- Кол-во блок приход
                , tmp.Summ_not_in    -- Сумма блок приход
 
+               , Movement_Layout.InvNumber                  AS InvNumberLayout
+               , Object_Layout.ValueData                    AS LayoutName
+
           FROM _tmpResult_Partion_a AS tmp
                LEFT JOIN Object AS Object_UnitFrom  ON Object_UnitFrom.Id  = tmp.UnitId_from
                LEFT JOIN Object AS Object_UnitTo  ON Object_UnitTo.Id  = tmp.UnitId_to
@@ -641,6 +650,11 @@ BEGIN
                LEFT JOIN _tmpGoods_Layout ON _tmpGoods_Layout.UnitId = tmp.UnitId_from
                                          AND _tmpGoods_Layout.GoodsId = tmp.GoodsId
 
+               LEFT JOIN Movement AS Movement_Layout ON Movement_Layout.Id = _tmpGoods_Layout.MovementLayoutId
+               LEFT JOIN MovementLinkObject AS MovementLinkObject_Layout
+                                            ON MovementLinkObject_Layout.MovementId = Movement_Layout.Id
+                                           AND MovementLinkObject_Layout.DescId = zc_MovementLinkObject_Layout()
+               LEFT JOIN Object AS Object_Layout ON Object_Layout.Id = MovementLinkObject_Layout.ObjectId
           ;
      RETURN NEXT Cursor2;
 

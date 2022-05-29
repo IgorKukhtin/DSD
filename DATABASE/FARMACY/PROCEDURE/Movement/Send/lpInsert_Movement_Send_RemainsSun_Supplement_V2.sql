@@ -32,6 +32,9 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, isClose b
              , Need_To TFloat
 
              , AmountUse_To TFloat
+
+             , InvNumberLayout TVarChar
+             , LayoutName TVarChar
               )
 AS
 $BODY$
@@ -92,7 +95,7 @@ BEGIN
      -- Выкладки
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoodsLayout_SUN_Supplement_V2'))
      THEN
-       CREATE TEMP TABLE _tmpGoodsLayout_SUN_Supplement_V2 (GoodsId Integer, UnitId Integer, Layout TFloat) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpGoodsLayout_SUN_Supplement_V2 (GoodsId Integer, UnitId Integer, Layout TFloat, isNotMoveRemainder6 boolean, MovementLayoutId Integer) ON COMMIT DROP;
      END IF;
 
      -- Маркетинговый план для точек
@@ -311,12 +314,16 @@ BEGIN
            ;
                          
      -- Выкладки
-     WITH tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
-                                     , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE) AS isPharmacyItem
+     WITH tmpLayoutMovement AS (SELECT Movement.Id                                                   AS Id
+                                     , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE)      AS isPharmacyItem
+                                     , COALESCE(MovementBoolean_NotMoveRemainder6.ValueData, FALSE) AS isNotMoveRemainder6
                                 FROM Movement
                                      LEFT JOIN MovementBoolean AS MovementBoolean_PharmacyItem
                                                                ON MovementBoolean_PharmacyItem.MovementId = Movement.Id
                                                               AND MovementBoolean_PharmacyItem.DescId = zc_MovementBoolean_PharmacyItem()
+                                     LEFT JOIN MovementBoolean AS MovementBoolean_NotMoveRemainder6
+                                                               ON MovementBoolean_NotMoveRemainder6.MovementId = Movement.Id
+                                                              AND MovementBoolean_NotMoveRemainder6.DescId = zc_MovementBoolean_NotMoveRemainder6()
                                 WHERE Movement.DescId = zc_Movement_Layout()
                                   AND Movement.StatusId = zc_Enum_Status_Complete()
                                )
@@ -324,6 +331,7 @@ BEGIN
                              , MovementItem.ObjectId              AS GoodsId
                              , MovementItem.Amount                AS Amount
                              , Movement.isPharmacyItem            AS isPharmacyItem
+                             , Movement.isNotMoveRemainder6       AS isNotMoveRemainder6
                         FROM tmpLayoutMovement AS Movement
                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                     AND MovementItem.DescId = zc_MI_Master()
@@ -348,11 +356,13 @@ BEGIN
         , tmpLayoutAll AS (SELECT tmpLayout.GoodsId                             AS GoodsId
                                 , _tmpUnit_SUN_Supplement_V2.UnitId             AS UnitId
                                 , tmpLayout.Amount                              AS Amount
+                                , tmpLayout.isNotMoveRemainder6                 AS isNotMoveRemainder6
+                                , tmpLayout.ID                                  AS MovementLayoutId
                            FROM _tmpUnit_SUN_Supplement_V2 
                                 
-                                LEFT JOIN ObjectBoolean AS Unit_PharmacyItem
-                                                        ON Unit_PharmacyItem.ObjectId  = _tmpUnit_SUN_Supplement_V2.UnitId
-                                                       AND Unit_PharmacyItem.DescId    = zc_ObjectBoolean_Unit_PharmacyItem()
+                                LEFT JOIN Object AS Object_Unit
+                                                 ON Object_Unit.Id        = _tmpUnit_SUN_Supplement_V2.UnitId
+                                                AND Object_Unit.DescId    = zc_Object_Unit()
                                  
                                 INNER JOIN tmpLayout ON 1 = 1 
 
@@ -362,13 +372,15 @@ BEGIN
                                 LEFT JOIN tmpLayoutUnitCount ON tmpLayoutUnitCount.Id     = tmpLayout.Id
                                  
                            WHERE (tmpLayoutUnit.UnitId = _tmpUnit_SUN_Supplement_V2.UnitId OR COALESCE (tmpLayoutUnitCount.CountUnit, 0) = 0)
-                             AND (COALESCE (Unit_PharmacyItem.ValueData, False) = False OR tmpLayout.isPharmacyItem = True)
+                             AND (Object_Unit.ValueData NOT ILIKE 'АП %' OR tmpLayout.isPharmacyItem = True)
                            )
                                                               
-     INSERT INTO  _tmpGoodsLayout_SUN_Supplement_V2 (GoodsId, UnitId, Layout) 
-     SELECT tmpLayoutAll.GoodsId               AS GoodsId
-          , tmpLayoutAll.UnitId                AS UnitId
-          , MAX (tmpLayoutAll.Amount):: TFloat AS Amount
+     INSERT INTO  _tmpGoodsLayout_SUN_Supplement_V2 (GoodsId, UnitId, Layout, isNotMoveRemainder6, MovementLayoutId) 
+     SELECT tmpLayoutAll.GoodsId                 AS GoodsId
+          , tmpLayoutAll.UnitId                  AS UnitId
+          , MAX (tmpLayoutAll.Amount):: TFloat   AS Amount
+          , SUM (CASE WHEN tmpLayoutAll.isNotMoveRemainder6 = TRUE THEN 1 ELSE 0 END) > 0   AS isNotMoveRemainder6
+          , MAX (tmpLayoutAll.MovementLayoutId)  AS MovementLayoutId
       FROM tmpLayoutAll      
       GROUP BY tmpLayoutAll.GoodsId
              , tmpLayoutAll.UnitId;
@@ -475,6 +487,9 @@ BEGIN
                               , SUM (CASE WHEN COALESCE (tmpRemainsPD.ExpirationDate, zc_DateEnd()) <= CURRENT_DATE + INTERVAL '100 DAY'
                                           THEN COALESCE (tmpRemainsPD.Amount, Container.Amount, 0)
                                           ELSE 0 END)                                                                         AS AmountNotSend
+                              , SUM (CASE WHEN COALESCE (tmpRemainsPD.ExpirationDate, zc_DateEnd()) <= CURRENT_DATE + INTERVAL '6 MONTH'
+                                          THEN COALESCE (tmpRemainsPD.Amount, Container.Amount, 0)
+                                          ELSE 0 END)                                                                         AS Amount6Month
                               , MIN (CASE WHEN COALESCE (tmpRemainsPD.ExpirationDate, zc_DateEnd()) >= CURRENT_DATE + INTERVAL '100 DAY'
                                           THEN COALESCE (tmpRemainsPD.ExpirationDate, MIDate_ExpirationDate.ValueData, zc_DateEnd())
                                           ELSE zc_DateEnd() END)                                                              AS MinExpirationDate
@@ -624,7 +639,15 @@ BEGIN
              , tmpObject_Price.Price
              , tmpObject_Price.MCSValue
              
-             , _tmpGoodsLayout_SUN_Supplement_V2.Layout
+             , CASE WHEN _tmpGoodsLayout_SUN_Supplement_V2.isNotMoveRemainder6 = TRUE
+                      OR (COALESCE (tmpRemains.Amount, 0) - COALESCE (_tmpGoods_Sun_exception_Supplement_V2.Amount, 0) - 
+                          COALESCE(tmpRemains.Amount6Month, 0))  > _tmpGoodsLayout_SUN_Supplement_V2.Layout
+                    THEN _tmpGoodsLayout_SUN_Supplement_V2.Layout
+                    WHEN _tmpGoodsLayout_SUN_Supplement_V2.Layout - (COALESCE (tmpRemains.Amount, 0) - COALESCE (_tmpGoods_Sun_exception_Supplement_V2.Amount, 0) - 
+                                                                    COALESCE(tmpRemains.Amount6Month, 0)) > 0
+                    THEN _tmpGoodsLayout_SUN_Supplement_V2.Layout - (COALESCE (tmpRemains.Amount, 0) - COALESCE (_tmpGoods_Sun_exception_Supplement_V2.Amount, 0) - 
+                                                                    COALESCE(tmpRemains.Amount6Month, 0)) END  AS Layout
+                    
 
                -- остаток
              , CASE WHEN COALESCE (tmpRemains.Amount, 0) - COALESCE (_tmpGoods_Sun_exception_Supplement_V2.Amount, 0) > 0
@@ -894,6 +917,9 @@ BEGIN
 
             , tmpRemains_all_To.AmountUse                AS AmountUse_To
 
+            , Movement_Layout.InvNumber                  AS InvNumberLayout
+            , Object_Layout.ValueData                    AS LayoutName
+
        FROM _tmpResult_Supplement_V2
 
             LEFT JOIN _tmpRemains_all_Supplement_V2 AS tmpRemains_all_From
@@ -915,6 +941,12 @@ BEGIN
 
             LEFT JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.Id = _tmpResult_Supplement_V2.GoodsId
             LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
+            
+            LEFT JOIN Movement AS Movement_Layout ON Movement_Layout.Id = _tmpGoodsLayout_SUN_Supplement_V2.MovementLayoutId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Layout
+                                         ON MovementLinkObject_Layout.MovementId = Movement_Layout.Id
+                                        AND MovementLinkObject_Layout.DescId = zc_MovementLinkObject_Layout()
+            LEFT JOIN Object AS Object_Layout ON Object_Layout.Id = MovementLinkObject_Layout.ObjectId
             
        ORDER BY Object_Goods.Id
               , Object_Unit_From.ValueData

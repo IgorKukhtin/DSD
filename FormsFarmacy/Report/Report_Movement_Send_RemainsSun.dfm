@@ -956,6 +956,22 @@
             Options.Editing = False
             Width = 100
           end
+          object InvNumberLayout: TcxGridDBColumn
+            Caption = #1044#1086#1082'. '#1074#1099#1082#1083'.'
+            DataBinding.FieldName = 'InvNumberLayout'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
+          object LayoutName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074#1099#1082#1083#1072#1076#1082#1080
+            DataBinding.FieldName = 'LayoutName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
         end
       end
       object cxGrid2: TcxGrid

@@ -88,7 +88,7 @@ BEGIN
      -- Выкладки
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoodsLayout_SUN_SUA'))
      THEN
-       CREATE TEMP TABLE _tmpGoodsLayout_SUN_SUA (GoodsId Integer, UnitId Integer, Layout TFloat, isNotMoveRemainder6 boolean) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpGoodsLayout_SUN_SUA (GoodsId Integer, UnitId Integer, Layout TFloat, isNotMoveRemainder6 boolean, MovementLayoutId Integer) ON COMMIT DROP;
      END IF;
 
      -- Маркетинговый план для точек
