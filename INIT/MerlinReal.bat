@@ -1,0 +1,1 @@
+copy /Y Merlin_init_real.php Merlin_init.php
