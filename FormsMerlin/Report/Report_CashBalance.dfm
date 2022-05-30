@@ -25,7 +25,6 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
     Height = 65
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 833
     object deStart: TcxDateEdit
       Left = 118
       Top = 5
@@ -99,7 +98,6 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
     DataSource = DataSource
     Groups = <>
     TabOrder = 1
-    ExplicitWidth = 833
     object pvNPP: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0
@@ -117,12 +115,29 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
       Visible = True
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
     end
+    object pvCurrencyName: TcxDBPivotGridField
+      AreaIndex = 7
+      IsCaptionAssigned = True
+      Caption = #1042#1072#1083#1102#1090#1072
+      DataBinding.FieldName = 'CurrencyName'
+      Visible = True
+      UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
     object pvCashName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 1
       IsCaptionAssigned = True
       Caption = #1050#1072#1089#1089#1072
       DataBinding.FieldName = 'CashName'
+      Visible = True
+      UniqueName = #1057#1095#1077#1090' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+    end
+    object pvMovementDescName: TcxDBPivotGridField
+      Area = faRow
+      AreaIndex = 2
+      IsCaptionAssigned = True
+      Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      DataBinding.FieldName = 'MovementDescName'
       Visible = True
       UniqueName = #1057#1095#1077#1090' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end

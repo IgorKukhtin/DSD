@@ -25,9 +25,9 @@ CREATE OR REPLACE FUNCTION gpReport_UnitBalance(
 RETURNS TABLE (ContainerId Integer, ServiceDateId Integer
              , ServiceDate TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
-             , GroupNameFull_Unit TVarChar, ParentName_Unit TVarChar
+             , GroupNameFull_Unit TVarChar, ParentName_Unit TVarChar, BuildingName_unit TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
-             , AccountCode Integer, AccountName TVarChar
+             , AccountCode Integer, AccountName TVarChar 
              , AmountDebetStart TFloat, AmountKreditStart TFloat
              , AmountDebet TFloat, AmountKredit TFloat
              , AmountDebetEnd TFloat, AmountKreditEnd TFloat
@@ -49,10 +49,12 @@ BEGIN
      RETURN QUERY
      WITH
      tmpUnit AS (SELECT lfSelect_Object_Unit_byGroup.UnitId AS UnitId
+                      , lfGet_Object_BuildingName (lfSelect_Object_Unit_byGroup.UnitId, zc_ObjectLink_Unit_Parent()) ::TVarChar AS BuildingName
                  FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect_Object_Unit_byGroup
                  WHERE inUnitGroupId <> 0
                 UNION
-                 SELECT Object.Id AS UnitId
+                 SELECT Object.Id AS UnitId 
+                      , lfGet_Object_BuildingName (Object.Id, zc_ObjectLink_Unit_Parent()) ::TVarChar AS BuildingName 
                  FROM Object
                  WHERE Object.DescId = zc_Object_Unit()
                    AND Object.isErased = False
@@ -63,6 +65,7 @@ BEGIN
                              , Container.WhereObjectId  AS UnitId
                              , CLO_ServiceDate.ObjectId AS ServiceDateId
                              , CLO_InfoMoney.ObjectId   AS InfoMoneyId
+
                              , COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) THEN MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
                              , COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Cash() AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) THEN -MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
                              , Container.Amount - SUM (COALESCE (MIContainer.Amount, 0)) AS AmountRemainsStart
@@ -88,7 +91,7 @@ BEGIN
                                , Container.Amount
                                , Container.WhereObjectId
                                , CLO_ServiceDate.ObjectId
-                               , CLO_InfoMoney.ObjectId 
+                               , CLO_InfoMoney.ObjectId
                         HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
                             OR (COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) THEN  MIContainer.Amount ELSE 0 END), 0) <> 0)
                             OR (COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Cash() AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) THEN -MIContainer.Amount ELSE 0 END), 0) <> 0)
@@ -104,13 +107,14 @@ BEGIN
             , Object_Unit.ValueData  AS UnitName
             , ObjectString_Unit_GroupNameFull.ValueData AS GroupNameFull_Unit
             , Object_ParentUnit.ValueData               AS ParentName_Unit
+            , tmpUnit.BuildingName           ::TVarChar AS BuildingName_unit
              
             , Object_InfoMoney.ObjectCode AS InfoMoneyCode
             , Object_InfoMoney.ValueData  AS InfoMoneyName
             , Object_Account.ObjectCode   AS AccountCode
-            , Object_Account.ValueData    AS AccountName
+            , Object_Account.ValueData    AS AccountName   
 
-            , CAST (CASE WHEN tmpMIContainer.AmountRemainsStart > 0 AND 1=0 THEN tmpMIContainer.AmountRemainsStart ELSE 0 END AS TFloat)      AS AmountDebetStart
+, CAST (CASE WHEN tmpMIContainer.AmountRemainsStart > 0 AND 1=0 THEN tmpMIContainer.AmountRemainsStart ELSE 0 END AS TFloat)      AS AmountDebetStart
             , CAST (CASE WHEN tmpMIContainer.AmountRemainsStart < 0 OR  1=1 THEN -1 * tmpMIContainer.AmountRemainsStart ELSE 0 END AS TFloat) AS AmountKreditStart
             , CAST (tmpMIContainer.AmountDebet AS TFloat)  AS AmountDebet
             , CAST (tmpMIContainer.AmountKredit AS TFloat) AS AmountKredit
@@ -121,8 +125,7 @@ BEGIN
            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = tmpMIContainer.InfoMoneyId
            LEFT JOIN Object AS Object_Account ON Object_Account.Id = tmpMIContainer.AccountId
            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMIContainer.UnitId
-           LEFT JOIN Object AS Object_ServiceDate ON Object_ServiceDate.Id = tmpMIContainer.ServiceDateId
-
+           LEFT JOIN Object AS Object_ServiceDate ON Object_ServiceDate.Id = tmpMIContainer.ServiceDateId 
            LEFT JOIN ObjectString AS ObjectString_Unit_GroupNameFull
                                   ON ObjectString_Unit_GroupNameFull.ObjectId = Object_Unit.Id
                                  AND ObjectString_Unit_GroupNameFull.DescId = zc_ObjectString_Unit_GroupNameFull()
@@ -131,6 +134,8 @@ BEGIN
                                 ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
                                AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
            LEFT JOIN Object AS Object_ParentUnit ON Object_ParentUnit.Id = ObjectLink_Unit_Parent.ChildObjectId
+           
+           LEFT JOIN tmpUnit ON tmpUnit.UnitId = tmpMIContainer.UnitId
       ;
 
 END;
@@ -140,6 +145,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 30.05.22         *
  23.02.22         *
 */
 

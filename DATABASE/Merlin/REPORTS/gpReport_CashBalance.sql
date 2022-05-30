@@ -14,7 +14,9 @@ RETURNS TABLE (CashCode Integer, CashName TVarChar
              , GroupNameFull_Cash TVarChar, ParentName_Cash TVarChar
              , NPP TFloat
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
-             , AccountCode Integer, AccountName TVarChar
+             , MovementDescName TVarChar
+             , AccountCode Integer, AccountName TVarChar 
+             , CurrencyName TVarChar
              , AmountDebetStart TFloat, AmountKreditStart TFloat
              , AmountDebet TFloat, AmountKredit TFloat
              , AmountDebetEnd TFloat, AmountKreditEnd TFloat
@@ -57,7 +59,9 @@ BEGIN
                                  , Container.ObjectId       AS AccountId
                                  , Container.Amount         AS Amount
                                  , CLO_Cash.ObjectId        AS CashId
-                                 , MILO_InfoMoney.ObjectId  AS InfoMoneyId
+                                 , CASE WHEN MIContainer.MovementDescId = zc_Movement_CashSend() THEN CLO_Cash.ObjectId ELSE MILO_InfoMoney.ObjectId END AS InfoMoneyId 
+                                 , MIContainer.MovementDescId
+                                 
                                  , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) THEN  1 * MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
                                  , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
                                  , SUM (CASE WHEN (MIContainer.OperDate > inEndDate) THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Amount_summ
@@ -72,15 +76,16 @@ BEGIN
                                  LEFT JOIN MovementItemLinkObject AS MILO_InfoMoney
                                                                   ON MILO_InfoMoney.MovementItemId = MIContainer.MovementItemId
                                                                  AND MILO_InfoMoney.DescId         = zc_MILinkObject_InfoMoney()
-
                             WHERE Container.DescId = zc_Container_Summ()
                             --AND (MILO_InfoMoney.ObjectId = inInfoMoneyId OR inInfoMoneyId = 0)
                             GROUP BY Container.Id
                                    , Container.ObjectId
                                    , Container.Amount
-                                   , CLO_Cash.ObjectId
+                                   , CLO_Cash.ObjectId  
                                    , MILO_InfoMoney.ObjectId
+                                   , MIContainer.MovementDescId
                            )
+
    , tmpMIContainer_rem AS (SELECT tmpMIContainer_all.ContainerId
                                  , tmpMIContainer_all.AccountId
                                  , tmpMIContainer_all.CashId
@@ -102,6 +107,7 @@ BEGIN
                              , tmpMIContainer_all.AmountKredit
                              , 0 AS AmountRemainsStart
                              , 0 AS AmountRemainsEnd
+                             , tmpMIContainer_all.MovementDescId
                         FROM tmpMIContainer_all
                         WHERE (tmpMIContainer_all.InfoMoneyId = inInfoMoneyId OR inInfoMoneyId = 0)
                           AND (tmpMIContainer_all.AmountDebet <> 0
@@ -117,6 +123,7 @@ BEGIN
                              , 0 AS AmountKredit
                              , tmpMIContainer_rem.AmountRemainsStart
                              , tmpMIContainer_rem.AmountRemainsEnd
+                             , 0 AS MovementDescId
                         FROM tmpMIContainer_rem
                        )
        -- Результат
@@ -127,9 +134,13 @@ BEGIN
             , ObjectFloat_NPP.ValueData   ::TFloat AS NPP
 
             , Object_InfoMoney.ObjectCode AS InfoMoneyCode
-            , Object_InfoMoney.ValueData  AS InfoMoneyName
+            , Object_InfoMoney.ValueData  AS InfoMoneyName 
+
+            , MovementDesc.ItemName ::TVarChar AS MovementDescName
+                                   
             , Object_Account.ObjectCode   AS AccountCode
             , Object_Account.ValueData    AS AccountName
+            , Object_Currency.ValueData   AS CurrencyName
 
             , CAST (CASE WHEN tmpMIContainer.AmountRemainsStart > 0 OR  1=1 THEN tmpMIContainer.AmountRemainsStart ELSE 0 END AS TFloat)      AS AmountDebetStart
             , CAST (CASE WHEN tmpMIContainer.AmountRemainsStart < 0 AND 1=1 THEN -1 * tmpMIContainer.AmountRemainsStart ELSE 0 END AS TFloat) AS AmountKreditStart
@@ -141,7 +152,8 @@ BEGIN
        FROM tmpMIContainer
            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = tmpMIContainer.InfoMoneyId
            LEFT JOIN Object AS Object_Account   ON Object_Account.Id   = tmpMIContainer.AccountId
-           LEFT JOIN Object AS Object_Cash      ON Object_Cash.Id      = tmpMIContainer.CashId
+           LEFT JOIN Object AS Object_Cash      ON Object_Cash.Id      = tmpMIContainer.CashId 
+           LEFT JOIN MovementDesc ON MovementDesc.Id = tmpMIContainer.MovementDescId
 
            LEFT JOIN ObjectString AS ObjectString_Cash_GroupNameFull
                                   ON ObjectString_Cash_GroupNameFull.ObjectId = Object_Cash.Id
@@ -155,6 +167,12 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_NPP
                                  ON ObjectFloat_NPP.ObjectId = Object_Cash.Id
                                 AND ObjectFloat_NPP.DescId = zc_ObjectFloat_Cash_NPP()
+
+           LEFT JOIN ObjectLink AS ObjectLink_Currency
+                                ON ObjectLink_Currency.ObjectId = Object_Cash.Id
+                               AND ObjectLink_Currency.DescId = zc_ObjectLink_Cash_Currency()
+           LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Currency.ChildObjectId
+
       ;
 
 END;
