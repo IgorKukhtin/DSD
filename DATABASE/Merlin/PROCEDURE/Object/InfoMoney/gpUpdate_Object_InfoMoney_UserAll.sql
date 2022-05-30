@@ -14,8 +14,8 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   --vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_InfoMoney_UserAll());
-   vbUserId:= lpGetUserBySession (inSession);
+   vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_InfoMoney_UserAll());
+   --vbUserId:= lpGetUserBySession (inSession);
 
    outisUserAll:= NOT inisUserAll;
 
