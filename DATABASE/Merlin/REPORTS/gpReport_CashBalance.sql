@@ -21,26 +21,37 @@ RETURNS TABLE (CashCode Integer, CashName TVarChar
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbServiceDateId Integer;
+   DECLARE vbUserId     Integer;
+   DECLARE vbUser_isAll Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Balance());
      vbUserId:= lpGetUserBySession (inSession);
 
+     --
+     vbUser_isAll:= lpCheckUser_isAll (vbUserId);
+
      -- Результат
      RETURN QUERY
      WITH
-     tmpCash AS (SELECT lfSelect_Object_Cash_byGroup.CashId AS CashId
-                 FROM lfSelect_Object_Cash_byGroup (inCashGroupId) AS lfSelect_Object_Cash_byGroup
+     tmpCash AS (SELECT lfSelect.CashId AS CashId
+                 FROM lfSelect_Object_Cash_byGroup (inCashGroupId) AS lfSelect
+                      LEFT JOIN ObjectBoolean AS ObjectBoolean_UserAll
+                                              ON ObjectBoolean_UserAll.ObjectId = lfSelect.CashId
+                                             AND ObjectBoolean_UserAll.DescId = zc_ObjectBoolean_Cash_UserAll()
                  WHERE inCashGroupId <> 0
+                   AND (vbUser_isAll = TRUE OR ObjectBoolean_UserAll.ValueData = TRUE)
 
                 UNION
                  SELECT Object.Id AS CashId
                  FROM Object
+                      LEFT JOIN ObjectBoolean AS ObjectBoolean_UserAll
+                                              ON ObjectBoolean_UserAll.ObjectId = Object.Id
+                                             AND ObjectBoolean_UserAll.DescId = zc_ObjectBoolean_Cash_UserAll()
                  WHERE Object.DescId = zc_Object_Cash()
-                   AND Object.isErased = False
-                   AND inCashGroupId = 0
+                   AND Object.isErased = FALSE
+                   AND COALESCE (inCashGroupId, 0) = 0
+                   AND (vbUser_isAll = TRUE OR ObjectBoolean_UserAll.ValueData = TRUE)
                  )
    , tmpMIContainer_all AS (SELECT Container.Id             AS ContainerId
                                  , Container.ObjectId       AS AccountId
