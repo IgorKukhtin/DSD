@@ -15,16 +15,20 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
              , NPP Integer
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
-)
+              )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyAll Boolean;
+   DECLARE vbUserId     Integer;
+   DECLARE vbUser_isAll Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_InfoMoney());
    vbUserId:= lpGetUserBySession (inSession);
 
+   -- 
+   vbUser_isAll:= lpCheckUser_isAll (vbUserId);
+
+   -- Результат
    RETURN QUERY 
    SELECT Object_InfoMoney.Id          AS Id 
         , Object_InfoMoney.ObjectCode  AS Code
@@ -94,6 +98,7 @@ BEGIN
                             AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()
    WHERE Object_InfoMoney.DescId = zc_Object_InfoMoney()
      AND (Object_InfoMoney.isErased = FALSE OR inIsShowAll = TRUE)
+     AND (vbUser_isAll = TRUE OR ObjectBoolean_UserAll.ValueData = TRUE)
   ;
   
 END;$BODY$

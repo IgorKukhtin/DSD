@@ -20,13 +20,17 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
 )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyAll Boolean;
+   DECLARE vbUserId     Integer;
+   DECLARE vbUser_isAll Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Cash());
      vbUserId:= lpGetUserBySession (inSession);
 
+     --
+     vbUser_isAll:= lpCheckUser_isAll (vbUserId);
+
+     -- Результат
      RETURN QUERY
        WITH tmpContainer AS (SELECT CLO_Cash.ObjectId AS CashId
                                   , Container.Amount  AS Amount
@@ -123,7 +127,8 @@ BEGIN
        WHERE Object_Cash.DescId = zc_Object_Cash()
          AND (Object_Cash.isErased = FALSE OR inIsShowAll = TRUE)
          AND ObjectLink_Child.ObjectId IS NULL
-    ;
+         AND (vbUser_isAll = TRUE OR ObjectBoolean_UserAll.ValueData = TRUE)
+      ;
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

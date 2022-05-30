@@ -60,7 +60,6 @@ type
     actInfoMoneyDetail: TdsdOpenForm;
     miInfoMoneyDetail: TMenuItem;
     actInfoMoneyTree: TdsdOpenForm;
-    N3: TMenuItem;
     N4: TMenuItem;
     miInfoMoney: TMenuItem;
     miInfoMoneyTree: TMenuItem;
@@ -82,7 +81,7 @@ type
     miCashSendJournal: TMenuItem;
     N7: TMenuItem;
     actReport_UnitRent: TdsdOpenForm;
-    N8: TMenuItem;
+    miReport_UnitRent: TMenuItem;
     actReport_UnitBalance: TdsdOpenForm;
     miReport_UnitBalance: TMenuItem;
     actReport_CashBalance: TdsdOpenForm;

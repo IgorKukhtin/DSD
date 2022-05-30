@@ -6,7 +6,7 @@ BEGIN
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_ObjectHistory_ServiceItem()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 1
-                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_ObjectHistory_ServiceItem())||'> - сохранение данных.'
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectHistoryDesc WHERE Id = zc_ObjectHistory_ServiceItem())||'> - сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_ObjectHistory_ServiceItem');
 
 END $$;

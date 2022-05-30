@@ -10,12 +10,20 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isErased Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
-) AS
-$BODY$BEGIN
-
+              )
+AS
+$BODY$
+   DECLARE vbUserId     Integer;
+   DECLARE vbUser_isAll Boolean;
+BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_CommentMoveMoney());
+   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_CommentMoveMoney());
+   vbUserId:= lpGetUserBySession (inSession);
 
+   -- 
+   vbUser_isAll:= lpCheckUser_isAll (vbUserId);
+
+   -- Результат
    RETURN QUERY 
    SELECT Object_CommentMoveMoney.Id          AS Id
         , Object_CommentMoveMoney.ObjectCode  AS Code
@@ -52,7 +60,8 @@ $BODY$BEGIN
                              ON ObjectDate_Update.ObjectId = Object_CommentMoveMoney.Id
                             AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()
        WHERE Object_CommentMoveMoney.DescId = zc_Object_CommentMoveMoney()
-   ;
+         AND (vbUser_isAll = TRUE OR ObjectBoolean_UserAll.ValueData = TRUE)
+      ;
   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

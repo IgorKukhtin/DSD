@@ -23,11 +23,15 @@ RETURNS TABLE (Id Integer, InvNumber Integer
 
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId     Integer;
+   DECLARE vbUser_isAll Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_CashSend());
      vbUserId:= lpGetUserBySession (inSession);
+
+     --
+     vbUser_isAll:= lpCheckUser_isAll (vbUserId);
 
      -- Результат
      RETURN QUERY
@@ -128,6 +132,15 @@ BEGIN
                                 AND ObjectLink_Currency_to.DescId = zc_ObjectLink_Cash_Currency()
             LEFT JOIN Object AS Object_Currency_to ON Object_Currency_to.Id = ObjectLink_Currency_to.ChildObjectId
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_UserAll_from
+                                    ON ObjectBoolean_UserAll_from.ObjectId = Object_Cash_from.Id
+                                   AND ObjectBoolean_UserAll_from.DescId = zc_ObjectBoolean_Cash_UserAll()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_UserAll_to
+                                    ON ObjectBoolean_UserAll_to.ObjectId = Object_Cash_to.Id
+                                   AND ObjectBoolean_UserAll_to.DescId = zc_ObjectBoolean_Cash_UserAll()
+
+        WHERE vbUser_isAll = TRUE
+           OR (ObjectBoolean_UserAll_from.ValueData = TRUE AND ObjectBoolean_UserAll_to.ValueData = TRUE)
        ;
 
 END;

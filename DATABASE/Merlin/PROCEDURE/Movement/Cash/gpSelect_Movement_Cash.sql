@@ -32,11 +32,15 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_corr Integer
 
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId     Integer;
+   DECLARE vbUser_isAll Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Cash());
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- 
+     vbUser_isAll:= lpCheckUser_isAll (vbUserId);
 
      -- Результат
      RETURN QUERY
@@ -92,7 +96,7 @@ BEGIN
            , zfConvert_StringToNumber(tmpData.InvNumber) AS InvNumber
            , CASE WHEN MovementBoolean_Sign.ValueData IS NOT NULL THEN zfConvert_StringToNumber (tmpData.InvNumber) ELSE 0 END :: Integer InvNumber_corr
            , tmpData.OperDate                     AS OperDate
-           , MIDate_ServiceDate.ValueData ::TDateTime AS ServiceDate
+           , CASE WHEN ObjectBoolean_Service.ValueData = TRUE THEN MIDate_ServiceDate.ValueData ELSE NULL END :: TDateTime AS ServiceDate
            , Object_Status.ObjectCode             AS StatusCode
            , Object_Status.ValueData              AS StatusName
            , COALESCE (MovementBoolean_Sign.ValueData, FALSE) :: Boolean AS isSign
@@ -136,6 +140,7 @@ BEGIN
            , tmpMI_Sign.UserId_3   ::Integer
            , CASE WHEN tmpMI_Sign.UserId_3 > 0 THEN TRUE ELSE FALSE END ::Boolean
            , MID_Sign_User3.ValueData
+
        FROM tmpData
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpData.StatusId
 
@@ -218,6 +223,15 @@ BEGIN
             LEFT JOIN MovementItemDate AS MID_Sign_User3
                                        ON MID_Sign_User3.MovementItemId = tmpMI_Sign.Id_mi_3
                                       AND MID_Sign_User3.DescId         = zc_MIDate_Insert()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Service
+                                    ON ObjectBoolean_Service.ObjectId = Object_InfoMoney.Id
+                                   AND ObjectBoolean_Service.DescId = zc_ObjectBoolean_InfoMoney_Service()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_UserAll
+                                    ON ObjectBoolean_UserAll.ObjectId = Object_Cash.Id
+                                   AND ObjectBoolean_UserAll.DescId = zc_ObjectBoolean_Cash_UserAll()
+
+        WHERE vbUser_isAll = TRUE OR ObjectBoolean_UserAll.ValueData = TRUE OR ObjectBoolean_Service.ValueData = TRUE
        ;
 
 END;

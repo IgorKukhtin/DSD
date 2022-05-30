@@ -538,7 +538,7 @@ inherited MainForm: TMainForm
     end
     object miReport: TMenuItem [2]
       Caption = #1054#1090#1095#1077#1090#1099
-      object N8: TMenuItem
+      object miReport_UnitRent: TMenuItem
         Action = actReport_UnitRent
       end
       object miReport_UnitBalance: TMenuItem
@@ -607,14 +607,11 @@ inherited MainForm: TMainForm
       object N4: TMenuItem
         Caption = '-'
       end
-      object N3: TMenuItem
-        Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077
-        object miInfoMoneyTree: TMenuItem
-          Action = actInfoMoneyTree
-        end
-        object miInfoMoney: TMenuItem
-          Action = actInfoMoney
-        end
+      object miInfoMoneyTree: TMenuItem
+        Action = actInfoMoneyTree
+      end
+      object miInfoMoney: TMenuItem
+        Action = actInfoMoney
       end
     end
     inherited miService: TMenuItem

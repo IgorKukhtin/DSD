@@ -13,12 +13,20 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InfoMoneyKindId Integer, InfoMoneyKindName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
-) AS
-$BODY$BEGIN
-
+              )
+AS
+$BODY$
+   DECLARE vbUserId     Integer;
+   DECLARE vbUser_isAll Boolean;
+BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InfoMoneyDetail());
+   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_InfoMoneyDetail());
+   vbUserId:= lpGetUserBySession (inSession);
 
+   -- 
+   vbUser_isAll:= lpCheckUser_isAll (vbUserId);
+
+   -- Результат
    RETURN QUERY 
    SELECT Object_InfoMoneyDetail.Id          AS Id
         , Object_InfoMoneyDetail.ObjectCode  AS Code
@@ -64,7 +72,8 @@ $BODY$BEGIN
                             AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()
        WHERE Object_InfoMoneyDetail.DescId = zc_Object_InfoMoneyDetail()
          AND (Object_InfoMoneyDetail.isErased = FALSE OR inIsShowAll = TRUE)
-   ;
+         AND (vbUser_isAll = TRUE OR ObjectBoolean_UserAll.ValueData = TRUE)
+      ;
   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -77,4 +86,4 @@ END;$BODY$
 */
 
 -- тест
---  SELECT * FROM gpSelect_Object_InfoMoneyDetail(false, '2')
+-- SELECT * FROM gpSelect_Object_InfoMoneyDetail(false, '2')

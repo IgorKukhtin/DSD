@@ -61,7 +61,7 @@ BEGIN
        FROM (SELECT CAST (CURRENT_DATE AS TDateTime) AS OperDate) AS tmp
            LEFT JOIN Object AS Object_Unit
                             ON Object_Unit.DescId = zc_Object_Unit()
-                           AND Object_Unit.Id = inUnitId        
+                           AND Object_Unit.Id = inUnitId
            LEFT JOIN ObjectString AS ObjectString_GroupNameFull
                                   ON ObjectString_GroupNameFull.ObjectId = Object_Unit.Id
                                  AND ObjectString_GroupNameFull.DescId = zc_ObjectString_Unit_GroupNameFull()
@@ -80,7 +80,12 @@ BEGIN
              inMovementId AS Id
            , CASE WHEN inMovementId = 0 THEN CAST (NEXTVAL ('movement_service_seq') AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
            , CASE WHEN inMovementId = 0 THEN CAST (CURRENT_DATE AS TDateTime) ELSE Movement.OperDate END ::TDateTime AS OperDate
-           , CASE WHEN inMovementId = 0 THEN DATE_TRUNC ('MONTH', inOperDate) ELSE MIDate_ServiceDate.ValueData END ::TDateTime AS ServiceDate
+
+           , CASE WHEN inMovementId = 0 THEN DATE_TRUNC ('MONTH', inOperDate)
+                  WHEN ObjectBoolean_Service.ValueData = TRUE THEN MIDate_ServiceDate.ValueData
+                  ELSE DATE_TRUNC ('MONTH', Movement.OperDate)
+             END ::TDateTime AS ServiceDate
+
            , COALESCE (MovementBoolean_Sign.ValueData, FALSE) :: Boolean AS isSign
            , CASE WHEN MovementItem.Amount < 0 THEN MovementItem.Amount * (-1) ELSE MovementItem.Amount END  ::TFloat AS Amount
            , CASE WHEN inMovementId = 0 THEN 0 ELSE MovementItem.Id END AS MI_Id
@@ -139,6 +144,10 @@ BEGIN
                                       ON MovementBoolean_Sign.MovementId = Movement.Id
                                      AND MovementBoolean_Sign.DescId = zc_MovementBoolean_Sign()
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Service
+                                    ON ObjectBoolean_Service.ObjectId = Object_InfoMoney.Id
+                                   AND ObjectBoolean_Service.DescId = zc_ObjectBoolean_InfoMoney_Service()
+
        WHERE Movement.Id = inMovementId_Value;
 
    END IF;
@@ -156,4 +165,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Cash (inMovementId := 608 , inMovementId_Value := 608 , inOperDate := ('31.01.2022')::TDateTime , inKindName := 'zc_Enum_InfoMoney_In' ,  inSession := '5');
+-- SELECT * FROM gpGet_Movement_Cash (inMovementId:= 608, inMovementId_Value:= 608, inMI_Id:= 1, inUnitId:= 1, inInfoMoneyId:= 1, inOperDate:= '31.01.2022' , inKindName := 'zc_Enum_InfoMoney_In' ,  inSession := '5');

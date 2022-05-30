@@ -168,8 +168,8 @@
     Width = 313
   end
   object edKindName_text: TcxTextEdit [21]
-    Left = 260
-    Top = 52
+    Left = 265
+    Top = 54
     Style.BorderStyle = ebsNone
     Style.Color = clBtnFace
     Style.Edges = [bLeft, bTop, bRight, bBottom]

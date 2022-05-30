@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Unit_Tree(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, 
-               ParentId Integer, isErased boolean) AS
+               ParentId Integer, isLeaf Boolean, isErased Boolean) AS
 $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
@@ -18,7 +18,7 @@ BEGIN
            , Object_Unit.ObjectCode          AS Code
            , Object_Unit.ValueData           AS Name
            , Object_Parent.Id                AS ParentId
-           , COALESCE (ObjectBoolean_isLeaf.ValueData,TRUE) ::Boolean  AS isLeaf
+           , COALESCE (ObjectBoolean_isLeaf.ValueData, TRUE) :: Boolean  AS isLeaf
            , Object_Unit.isErased            AS isErased
        FROM Object AS Object_Unit
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -29,20 +29,22 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
                                     ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
                                    AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
-
        WHERE Object_Unit.DescId = zc_Object_Unit()
-         AND COALESCE (ObjectBoolean_isLeaf.ValueData,TRUE) = FALSE
-       UNION SELECT
-             0 AS Id,
-             0 AS Code,
-             CAST('ВСЕ' AS TVarChar) AS Name,
-             0 AS ParentId,
-             false AS isErased;
+         AND Object_Unit.Id IN (SELECT DISTINCT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Parent())
+
+      UNION
+       SELECT
+             0 AS Id
+           , 0 AS Code
+           , CAST('ВСЕ' AS TVarChar) AS Name
+           , 0 AS ParentId
+           , FALSE :: Boolean AS isLeaf
+           , FALSE :: Boolean AS isErased
+            ;
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -52,4 +54,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Unit ('2')
+-- SELECT * FROM gpSelect_Object_Unit_Tree ('5')
