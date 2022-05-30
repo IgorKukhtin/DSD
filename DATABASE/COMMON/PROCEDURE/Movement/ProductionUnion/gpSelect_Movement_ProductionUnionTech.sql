@@ -35,7 +35,8 @@ BEGIN
 
      -- определяется - ЦЕХ колбаса+дел-сы
      vbIsOrder:= (inFromId = inToId)
-                 AND (inFromId = 2790412  -- ЦЕХ Тушенка
+                 AND (inFromId    = 2790412  -- ЦЕХ Тушенка
+                      OR inFromId = 8020711  -- ЦЕХ колбаса + деликатесы (Ирна)
                       OR EXISTS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect WHERE lfSelect.UnitId = inFromId)
                      );
 

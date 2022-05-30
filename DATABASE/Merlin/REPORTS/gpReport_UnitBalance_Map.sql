@@ -38,7 +38,7 @@ BEGIN
      
      vbStartId := (SELECT tmp.ID FROM gpGet_Object_Unit_Start (0, inSession) AS tmp);
 
-IF inUnitGroupId = 2 THEN inUnitGroupId:= 0; END IF;
+IF inUnitGroupId IN (1, 2) THEN inUnitGroupId:= 0; END IF;
 
      IF EXISTS(SELECT * FROM ObjectLink AS ObjectLink_Unit_Parent
                WHERE ObjectLink_Unit_Parent.ChildObjectId = inUnitGroupId
@@ -107,12 +107,12 @@ IF inUnitGroupId = 2 THEN inUnitGroupId:= 0; END IF;
                         , SUM (COALESCE (tmp.AmountKredit,0))    AS AmountKredit                             
                         , SUM (COALESCE (tmp.AmountDebetEnd,0))  AS AmountDebetEnd
                         , SUM (COALESCE (tmp.AmountKreditEnd,0)) AS AmountKreditEnd                        
-                   FROM gpReport_UnitBalance ( inStartDate   := inStartDate   
-                                             , inEndDate     := inEndDate    
+                   FROM gpReport_UnitBalance ( inStartDate   := zc_DateStart()
+                                             , inEndDate     := zc_DateEnd()
                                              , inServiceDate := inServiceDate
                                              , inUnitGroupId := inUnitGroupId
                                              , inInfoMoneyId := inInfoMoneyId
-                                             , inIsAll       := inIsAll
+                                             , inIsAll       := FALSE
                                              , inSession     := inSession) AS tmp  
                    GROUP BY tmp.UnitId 
                    )    

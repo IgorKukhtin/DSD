@@ -48,7 +48,10 @@ BEGIN
 
 
   -- сохранили протокол
-  PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
+  IF 1=1 -- AND inUserId <> 5
+  THEN
+      PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
+  END IF;
 
 END;
 $BODY$

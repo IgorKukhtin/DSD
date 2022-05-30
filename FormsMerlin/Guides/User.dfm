@@ -489,22 +489,6 @@ object UserForm: TUserForm
           ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'UnitName_Personal'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PositionName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PositionName'
-          DataType = ftString
-          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

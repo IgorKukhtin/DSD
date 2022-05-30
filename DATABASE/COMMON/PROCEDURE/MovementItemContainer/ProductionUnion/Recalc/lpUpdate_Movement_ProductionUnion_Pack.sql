@@ -46,6 +46,9 @@ BEGIN
                              UNION
                               -- ЦЕХ Тушенка
                               SELECT Object.Id AS UnitId FROM Object WHERE Object.Id = 2790412 AND inUnitId = 8006902 -- ЦЕХ упаковки Тушенки
+                             UNION
+                              -- Склад База ГП (Ирна)
+                              SELECT Object.Id AS UnitId FROM Object WHERE Object.Id = 8020714 AND inUnitId = 8006902 -- ЦЕХ упаковки (Ирна)
                              )
               , tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
                              FROM Object_InfoMoney_View AS View_InfoMoney

@@ -51,6 +51,7 @@ BEGIN
 
   -- 4. сохранили протокол
   IF inMovementId <> 0
+     -- AND inUserId <> 5
   THEN
       PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
   END IF;

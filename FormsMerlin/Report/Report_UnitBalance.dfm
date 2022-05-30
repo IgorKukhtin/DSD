@@ -155,7 +155,8 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
       UniqueName = #1057#1095#1077#1090' - '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
     end
     object pvInfoMoneyName: TcxDBPivotGridField
-      AreaIndex = 1
+      Area = faColumn
+      AreaIndex = 0
       IsCaptionAssigned = True
       Caption = #1057#1090#1072#1090#1100#1103
       DataBinding.FieldName = 'InfoMoneyName'
@@ -172,7 +173,7 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object pvParentName_Unit: TcxDBPivotGridField
-      AreaIndex = 5
+      AreaIndex = 1
       IsCaptionAssigned = True
       Caption = '***'#1043#1088#1091#1087#1087#1072
       DataBinding.FieldName = 'ParentName_Unit'

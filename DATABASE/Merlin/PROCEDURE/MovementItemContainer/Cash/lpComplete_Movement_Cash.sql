@@ -13,13 +13,13 @@ $BODY$
   DECLARE vbProfitLossId     Integer;
 BEGIN
 
- 
+
     -- Определить
     vbAccountId_Cash   := zc_Enum_Account_30101();
     vbAccountId_Debts  := zc_Enum_Account_30105();
-    vbAccountId_Profit := zc_Enum_Account_30106(); 
+    vbAccountId_Profit := zc_Enum_Account_30106();
     -- временно
-    vbProfitLossId     := zc_Enum_Account_30106(); 
+    vbProfitLossId     := zc_Enum_Account_30106();
 
     -- Создаем временнве таблицы
     PERFORM lpComplete_Movement_Cash_CreateTemp();
@@ -28,7 +28,7 @@ BEGIN
     DELETE FROM _tmpMIContainer_insert;
     -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
     DELETE FROM _tmpItem;
-    
+
     -- 4.1. предварительно сохранили данные
     INSERT INTO _tmpItem (MovementDescId, OperDate, ServiceDate, OperSumm, MovementItemId,
                           ObjectId, UnitId, InfoMoneyId)
@@ -39,7 +39,7 @@ BEGIN
          , MovementItem.Amount                AS Amount
          , MovementItem.Id                    AS MovementItemId
          , MovementItem.ObjectId              AS CashId
-         , MILinkObject_Unit.ObjectId         AS UnitId
+         , CASE WHEN ObjectBoolean_Service.ValueData = TRUE THEN MILinkObject_Unit.ObjectId ELSE 0 END AS UnitId
          , MILinkObject_InfoMoney.ObjectId    AS InfoMoneyId
      FROM Movement
           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -57,18 +57,22 @@ BEGIN
                                      ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
                                     AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
 
-     WHERE Movement.Id = inMovementId;    
-     
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Service
+                                  ON ObjectBoolean_Service.ObjectId = MILinkObject_InfoMoney.ObjectId
+                                 AND ObjectBoolean_Service.DescId = zc_ObjectBoolean_InfoMoney_Service()
+
+     WHERE Movement.Id = inMovementId;
+
     -- 4.2. Прописали данные
-    
-    UPDATe _tmpItem SET -- 
+
+    UPDATe _tmpItem SET --
                         ServiceDateId = CASE WHEN _tmpItem.UnitId > 0 THEN lpInsertFind_Object_ServiceDate (_tmpItem.ServiceDate) ELSE NULL END
     ;
-     
+
     -- 4.3. Создаем контейнера
-    
+
     UPDATE _tmpItem SET -- Контейнер кассы
-                         ContainerId = 
+                         ContainerId =
                               lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()           -- DescId Суммовой учет
                                                     , inParentId          := NULL                          -- Главный Container
                                                     , inObjectId          := vbAccountId_Cash              -- Объект всегда Счет для Суммовой учет
@@ -78,7 +82,7 @@ BEGIN
                                                     , inObjectId_1        := _tmpItem.ObjectId
                                                       )
                          -- Контейнер Долг или Прибыль
-                       , ContainerId_Second  = 
+                       , ContainerId_Second  =
                               CASE WHEN _tmpItem.UnitId > 0
                                    -- так для Долгов
                                    THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()      -- DescId Суммовой учет
@@ -93,7 +97,7 @@ BEGIN
                                                                , inDescId_3          := zc_ContainerLinkObject_InfoMoney() -- DescId для 3-ой Аналитики
                                                                , inObjectId_3        := _tmpItem.InfoMoneyId
                                                                 )
-                                                                     
+
                                    -- иначе это всегда "Прибыль"
                                    ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()      -- DescId Суммовой учет
                                                               , inParentId          := NULL                     -- Главный Container
@@ -102,7 +106,7 @@ BEGIN
                                                               , inBusinessId        := NULL                     -- Бизнесы
                                                               , inDescId_1          := zc_ContainerLinkObject_ProfitLoss() -- DescId для 1-ой Аналитики
                                                               , inObjectId_1        := vbProfitLossId           -- временно, надо будет потом использовать lpInsertFind_Object_ProfitLoss
-                                                               ) 
+                                                               )
                                    END
     ;
 
@@ -113,9 +117,9 @@ BEGIN
           , _tmpItem.MovementDescId
           , inMovementId
           , _tmpItem.MovementItemId
-          , _tmpItem.ContainerId 
+          , _tmpItem.ContainerId
             -- Счет для этой проводки
-          , vbAccountId_Cash 
+          , vbAccountId_Cash
 
           , _tmpItem.OperSumm
           , _tmpItem.OperDate
@@ -131,7 +135,7 @@ BEGIN
 
           , CASE WHEN _tmpItem.OperSumm > 0 THEN TRUE ELSE FALSE END AS IsActive
 
-     FROM _tmpItem;     
+     FROM _tmpItem;
 
      -- 4.3. формируются Проводки - Долг или Прибыль
      INSERT INTO _tmpMIContainer_insert (DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate
@@ -149,7 +153,7 @@ BEGIN
           , _tmpItem.OperDate
 
             -- Аналитика, дублируем основное св-во
-          , CASE WHEN COALESCE (_tmpItem.UnitId, 0) = 0 THEN vbProfitLossId ELSE _tmpItem.UnitId                END AS ObjectId_analyzer 
+          , CASE WHEN COALESCE (_tmpItem.UnitId, 0) = 0 THEN vbProfitLossId ELSE _tmpItem.UnitId                END AS ObjectId_analyzer
             -- Аналитика, дублируем основное св-во
           , CASE WHEN _tmpItem.UnitId > 0 THEN _tmpItem.ServiceDateId ELSE NULL END AS WhereObjectId_analyzer
 
@@ -165,8 +169,8 @@ BEGIN
                       CASE WHEN _tmpItem.OperSumm > 0 THEN FALSE ELSE TRUE END
             END AS  IsActive
 
-     FROM _tmpItem;     
-     
+     FROM _tmpItem;
+
     -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
     PERFORM lpInsertUpdate_MovementItemContainer_byTable();
 

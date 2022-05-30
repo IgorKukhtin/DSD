@@ -33,6 +33,7 @@ BEGIN
                            -- AND inFromId <> 951601 -- ЦЕХ упаковки мясо
                            AND inFromId <> 981821   -- ЦЕХ шприц. мясо
                            AND inFromId <> 2790412  -- ЦЕХ Тушенка
+                           AND inFromId <> 8020711  -- ЦЕХ колбаса + деликатесы (Ирна)
                               )
    THEN
        RAISE EXCEPTION 'Ошибка.Изменения возможны только для подазделений <%>.', lfGet_Object_ValueData (8446);

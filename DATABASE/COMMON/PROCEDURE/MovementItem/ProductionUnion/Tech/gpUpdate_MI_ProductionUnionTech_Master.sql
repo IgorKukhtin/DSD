@@ -44,6 +44,7 @@ BEGIN
                            -- AND vbFromId <> 951601 -- ЦЕХ упаковки мясо
                            AND vbFromId <> 981821   -- ЦЕХ шприц. мясо
                            AND vbFromId <> 2790412  -- ЦЕХ Тушенка
+                           AND vbFromId <> 8020711  -- ЦЕХ колбаса + деликатесы (Ирна)
                               )
    THEN
        RAISE EXCEPTION 'Ошибка.Изменения возможны только для подазделений <%>.', lfGet_Object_ValueData (8446);

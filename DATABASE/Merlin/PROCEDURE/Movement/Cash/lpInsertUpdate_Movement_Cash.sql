@@ -24,11 +24,18 @@ $BODY$
    DECLARE vbMovementItemId Integer;
 BEGIN
 
-    -- проверка
+     -- проверка
      IF COALESCE (inInfoMoneyId, 0) = 0
      THEN
         RAISE EXCEPTION 'Ошибка.<Статья> не выбрана.';
      END IF;
+
+     -- проверка
+     IF COALESCE (inUnitId, 0) = 0 AND EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = inInfoMoneyId AND OB.DescId = zc_ObjectBoolean_InfoMoney_Service() AND OB.ValueData = TRUE)
+     THEN
+        RAISE EXCEPTION 'Ошибка.<Отдел> не выбран.';
+     END IF;
+
 
      -- расчет - 1-ое число месяца
      inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);

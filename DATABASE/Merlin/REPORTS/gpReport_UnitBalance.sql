@@ -41,7 +41,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Balance());
      vbUserId:= lpGetUserBySession (inSession);
 
-     inServiceDate := DATE_TRUNC ('Month', inServiceDate);
+     inServiceDate := DATE_TRUNC ('MONTH', inServiceDate);
      vbServiceDateId := (SELECT lpInsertFind_Object_ServiceDate (inServiceDate));
      
 
