@@ -15,6 +15,7 @@ object InfoMoneyForm: TInfoMoneyForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = actChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -530,6 +531,52 @@ object InfoMoneyForm: TInfoMoneyForm
           ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isUserAll'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'isUserAll'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isService'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'isService'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyKindid'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyKindid'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ParentId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ParentId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ParentName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ParentName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -707,7 +754,7 @@ object InfoMoneyForm: TInfoMoneyForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_InfoMoney'
+    StoredProcName = 'gpSelect_Object_InfoMoney_Leaf'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -715,10 +762,28 @@ object InfoMoneyForm: TInfoMoneyForm
       end>
     Params = <
       item
+        Name = 'inIsService'
+        Value = False
+        Component = FormParams
+        ComponentItem = 'inIsService'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsShowAll'
         Value = False
         Component = actShowAll
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKindName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inKindName'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -783,6 +848,20 @@ object InfoMoneyForm: TInfoMoneyForm
       item
         Name = 'ImportSettingId'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKindName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsService'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 664

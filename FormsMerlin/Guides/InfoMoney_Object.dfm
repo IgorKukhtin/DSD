@@ -481,7 +481,7 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_InfoMoney_choice'
+    StoredProcName = 'gpSelect_Object_InfoMoney_Leaf'
     DataSet = ClientDataSet
     DataSets = <
       item

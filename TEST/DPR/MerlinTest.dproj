@@ -400,10 +400,6 @@
 				<Form>InfoMoneyEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsMerlin\Guides\InfoMoney_Object.pas">
-				<Form>InfoMoney_ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsMerlin\Guides\InfoMoney.pas">
 				<Form>InfoMoneyForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -500,10 +496,6 @@
 				<Form>Report_UnitRentDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsMerlin\Guides\InfoMoney_Parent.pas">
-				<Form>InfoMoney_ParentForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsMerlin\Guides\ServiceItemLast.pas">
 				<Form>ServiceItemLastForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -518,6 +510,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsMerlin\System\MovementItemContainer.pas">
 				<Form>MovementItemContainerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Guides\InfoMoney_Object.pas">
+				<Form>InfoMoney_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

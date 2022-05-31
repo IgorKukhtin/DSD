@@ -148,7 +148,6 @@ uses
   InfoMoneyDetail in '..\..\FormsMerlin\Guides\InfoMoneyDetail.pas' {InfoMoneyDetailForm: TParentForm},
   InfoMoneyDetailEdit in '..\..\FormsMerlin\Guides\InfoMoneyDetailEdit.pas' {InfoMoneyDetailEditForm: TParentForm},
   InfoMoneyEdit in '..\..\FormsMerlin\Guides\InfoMoneyEdit.pas' {InfoMoneyEditForm: TParentForm},
-  InfoMoney_Object in '..\..\FormsMerlin\Guides\InfoMoney_Object.pas' {InfoMoney_ObjectForm: TParentForm},
   InfoMoney in '..\..\FormsMerlin\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm},
   InfoMoneyTree in '..\..\FormsMerlin\Guides\InfoMoneyTree.pas' {InfoMoneyTreeForm: TParentForm},
   MemberEdit in '..\..\FormsMerlin\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
@@ -173,11 +172,11 @@ uses
   CurrencyJournal in '..\..\FormsMerlin\Document\CurrencyJournal.pas' {CurrencyJournalForm: TParentForm},
   CurrencyMovement in '..\..\FormsMerlin\Document\CurrencyMovement.pas' {CurrencyMovementForm: TParentForm},
   Report_UnitRentDialog in '..\..\FormsMerlin\Report\Report_UnitRentDialog.pas' {Report_UnitRentDialogForm: TParentForm},
-  InfoMoney_Parent in '..\..\FormsMerlin\Guides\InfoMoney_Parent.pas' {InfoMoney_ParentForm: TParentForm},
   ServiceItemLast in '..\..\FormsMerlin\Guides\ServiceItemLast.pas' {ServiceItemLastForm: TParentForm},
   InfoMoneyTreeGroup in '..\..\FormsMerlin\Guides\InfoMoneyTreeGroup.pas' {InfoMoneyTreeGroupForm: TParentForm},
   UnitTreeGroup in '..\..\FormsMerlin\Guides\UnitTreeGroup.pas' {UnitTreeGroupForm: TParentForm},
-  MovementItemContainer in '..\..\FormsMerlin\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm};
+  MovementItemContainer in '..\..\FormsMerlin\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm},
+  InfoMoney_Object in '..\..\FormsMerlin\Guides\InfoMoney_Object.pas' {InfoMoney_ObjectForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
