@@ -245,13 +245,12 @@ procedure TLoadFormTest.LoadInfoMoneyFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyEditForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoney_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoney_ObjectForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoney_ParentForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TInfoMoney_ParentForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyTreeForm');

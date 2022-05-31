@@ -477,6 +477,7 @@ object InfoMoneyTreeForm: TInfoMoneyTreeForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'dsdOpenUnitForm'
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1057#1090#1072#1090#1100#1080
       FormName = 'TInfoMoneyForm'
       FormNameParam.Value = 'TInfoMoneyForm'
       FormNameParam.DataType = ftString

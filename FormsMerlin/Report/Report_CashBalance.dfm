@@ -351,6 +351,14 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -646,15 +654,14 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
           ToParam.MultiSelectSeparator = ','
         end>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' ('#1044#1077#1073#1077#1090'/'#1050#1088#1077#1076#1080#1090')'
-      Hint = #1055#1077#1095#1072#1090#1100' ('#1044#1077#1073#1077#1090'/'#1050#1088#1077#1076#1080#1090')'
-      ImageIndex = 3
-      ShortCut = 16464
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1057#1090#1072#1090#1100#1080')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1057#1090#1072#1090#1100#1080')'
+      ImageIndex = 15
       DataSets = <
         item
           DataSet = ClientDataSet
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'RootName;AccountGroupName;AccountDirectionName;AccountName'
+          IndexFieldNames = 'InfoMoneyName'
         end>
       Params = <
         item
@@ -677,8 +684,8 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089' ('#1044#1077#1073#1077#1090' '#1050#1088#1077#1076#1080#1090')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089' ('#1044#1077#1073#1077#1090' '#1050#1088#1077#1076#1080#1090')'
+      ReportName = 'PrintReport_CashBalance(InfoMoney)'
+      ReportNameParam.Value = 'PrintReport_CashBalance(InfoMoney)'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','

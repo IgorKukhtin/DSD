@@ -655,10 +655,10 @@
   object GuidesParent_infomoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceParent_infomoney
-    FormNameParam.Value = 'TInfoMoneyTreeForm'
+    FormNameParam.Value = 'TInfoMoneyTreeGroupForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TInfoMoneyTreeForm'
+    FormName = 'TInfoMoneyTreeGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
