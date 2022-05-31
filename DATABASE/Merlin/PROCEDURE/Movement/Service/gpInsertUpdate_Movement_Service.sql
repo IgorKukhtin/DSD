@@ -69,6 +69,13 @@ BEGIN
      END IF;
                                                           
      
+       -- Если Проведен
+     IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.Id = ioId AND Movement.StatusId = zc_Enum_Status_Complete())
+     THEN
+         -- Распровели
+         PERFORM lpUnComplete_Movement (ioId, vbUserId);
+     END IF;
+
      -- сохранили <Документ>
      ioId:= lpInsertUpdate_Movement_Service (ioId                   := ioId
                                            , inInvNumber            := inInvNumber
@@ -83,12 +90,13 @@ BEGIN
                                                 
 
      -- 5.3. проводим Документ
-     /*IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Service())
+     IF 1=1 -- vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Service())
      THEN
           PERFORM lpComplete_Movement_Service (inMovementId := ioId
-                                             , inUserId     := vbUserId);
+                                             , inUserId     := vbUserId
+                                              );
      END IF;
-*/
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

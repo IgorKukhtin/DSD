@@ -109,6 +109,13 @@ BEGIN
      END IF;
                                                           
      
+     -- Если Проведен
+     IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.Id = ioId AND Movement.StatusId = zc_Enum_Status_Complete())
+     THEN
+         -- Распровели
+         PERFORM lpUnComplete_Movement (ioId, vbUserId);
+     END IF;
+
      -- сохранили <Документ>
      ioId:= lpInsertUpdate_Movement_Cash (ioId                   := ioId
                                         , inMI_Id                := inMI_Id
@@ -125,9 +132,12 @@ BEGIN
                                          );
                                                 
      -- проводим Документ
-     PERFORM lpComplete_Movement_Cash (inMovementId := ioId
-                                     , inUserId     := vbUserId
-                                      );
+     IF 1=1 -- vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Service())
+     THEN
+         PERFORM lpComplete_Movement_Cash (inMovementId := ioId
+                                         , inUserId     := vbUserId
+                                          );
+     END IF;
 
 
 END;

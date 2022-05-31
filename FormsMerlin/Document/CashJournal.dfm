@@ -417,11 +417,15 @@ object CashJournalForm: TCashJournalForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item
           Visible = True
-          ItemName = 'bbInsertMask'
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -429,6 +433,14 @@ object CashJournalForm: TCashJournalForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertMask'
+        end
+        item
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -759,6 +771,7 @@ object CashJournalForm: TCashJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TCashMovementForm'
@@ -921,6 +934,7 @@ object CashJournalForm: TCashJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       FormName = 'TCashMovementForm'
       FormNameParam.Value = 'TCashMovementForm'
