@@ -384,8 +384,7 @@
     Top = 40
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 8
-    Top = 64
+    Top = 80
   end
   object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
@@ -417,10 +416,10 @@
   object GuidesParent: TdsdGuides
     KeyField = 'Id'
     LookupControl = edParent
-    FormNameParam.Value = 'TCash_ObjectForm'
+    FormNameParam.Value = 'TCashTreeGroupForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TCash_ObjectForm'
+    FormName = 'TCashTreeGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

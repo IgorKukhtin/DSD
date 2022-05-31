@@ -22,8 +22,8 @@ $BODY$
    DECLARE vbOldParentId integer;
  BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Cash());
-   vbUserId:= lpGetUserBySession (inSession);
+   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Cash());
+   --vbUserId:= lpGetUserBySession (inSession);
 
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;

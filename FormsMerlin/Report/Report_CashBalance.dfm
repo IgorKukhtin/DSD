@@ -944,10 +944,10 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
-    FormNameParam.Value = 'TInfoMoneyForm'
+    FormNameParam.Value = 'TInfoMoneyTreeForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TInfoMoneyForm'
+    FormName = 'TInfoMoneyTreeForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -984,7 +984,7 @@ object Report_CashBalanceForm: TReport_CashBalanceForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 688
-    Top = 65533
+    Left = 616
+    Top = 29
   end
 end

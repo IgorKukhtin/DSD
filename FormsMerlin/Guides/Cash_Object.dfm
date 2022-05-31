@@ -3,7 +3,7 @@ object Cash_ObjectForm: TCash_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1072#1089#1089#1099'>'
   ClientHeight = 375
-  ClientWidth = 746
+  ClientWidth = 645
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,10 +19,11 @@ object Cash_ObjectForm: TCash_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 746
+    Width = 645
     Height = 349
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 746
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -409,7 +410,7 @@ object Cash_ObjectForm: TCash_ObjectForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Cash'
+    StoredProcName = 'gpSelect_Object_Cash_Leaf'
     DataSet = ClientDataSet
     DataSets = <
       item
