@@ -292,7 +292,9 @@ BEGIN
 
                           WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_30102()) -- Тушенка
                            AND MILinkObject_GoodsKind.ObjectId <> zc_GoodsKind_Basis()
-                           AND vbUnitId_From = 8006902 -- ЦЕХ упаковки Тушенки
+                           AND vbUnitId_From IN (8006902 -- ЦЕХ упаковки Тушенки
+                                               , 8451    -- ЦЕХ упаковки
+                                                )
                                THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
 
                           WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье

@@ -97,7 +97,12 @@ return;
    FROM Movement_Medoc_View 
    WHERE zfConvert_StringToNumber(InvNumber) = inMedocCode AND InvNumberBranch = inInvNumberBranch;
 
-
+/*
+ IF TRIM (inInvNumber) = '235'
+ then 
+     RAISE EXCEPTION '%   %   %   %', inInvNumberRegistered, vbMedocId, inInvNumberBranch, vbAccessKey;
+ end if;
+*/
 -- IF TRIM (inInvNumberRegistered) = '9159204066'
 -- then 
        -- INSERT INTO ObjectProtocol (ObjectId, OperDate, UserId, ProtocolData, isInsert)

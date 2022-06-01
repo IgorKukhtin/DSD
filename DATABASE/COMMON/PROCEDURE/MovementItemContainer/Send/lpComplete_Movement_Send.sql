@@ -1028,6 +1028,7 @@ BEGIN
                                                                                                                        WHEN _tmpItem.InfoMoneyId IN (zc_Enum_InfoMoney_30102())
                                                                                                                         AND _tmpItem.OperDate >= '01.05.2022'
                                                                                                                         AND _tmpItem.UnitId_From <> 8006902 -- ЦЕХ упаковки Тушенки
+                                                                                                                        AND _tmpItem.UnitId_From <> 8451    -- ЦЕХ упаковки
                                                                                                                             THEN 0
 
                                                                                                                        ELSE _tmpItem.GoodsKindId
@@ -1144,6 +1145,12 @@ BEGIN
                                                                                     , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                      )
                                                  END;
+
+/*IF  inUserId = 5 
+THEN
+    RAISE EXCEPTION 'Ошибка.<%>', (select min(_tmpItem.ContainerId_GoodsFrom) from _tmpItem);
+END IF;
+*/
 
      -- 1.1.1. определяется для количественного учета
      UPDATE _tmpItem SET ContainerId_countFrom = lpInsertFind_Container (inContainerDescId   := zc_Container_CountCount()

@@ -159,8 +159,8 @@ order by 4*/
           -- , ObjectLink_Juridical_GoodsProperty.ChildObjectId         AS GoodsPropertyId
           -- , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId    AS GoodsPropertyId_basis
 
-          , CASE WHEN (CURRENT_DATE >= '01.03.2021'  OR vbUserId = 5) AND COALESCE (MovementString_InvNumberRegistered.ValueData, '') = ''
-                      THEN '01.03.2021'
+          , CASE --WHEN (CURRENT_DATE >= '01.03.2021'  /*OR vbUserId = 5*/) AND COALESCE (MovementString_InvNumberRegistered.ValueData, '') = ''
+                   --   THEN '01.03.2021'
                  WHEN MovementDate_DateRegistered.ValueData > Movement_Tax.OperDate
                       THEN MovementDate_DateRegistered.ValueData
                  ELSE Movement_Tax.OperDate
@@ -262,6 +262,8 @@ order by 4*/
                               ON ObjectFloat_Price.ObjectId = MovementLinkObject_DocumentTaxKind.ObjectId
                              AND ObjectFloat_Price.DescId = zc_objectFloat_DocumentTaxKind_Price()
      ;
+
+     -- RAISE EXCEPTION 'Ошибка.Документ <%> .', vbOperDate_begin;
 
      -- очень важная проверка
      IF COALESCE (vbMovementId_Tax, 0) = 0 OR (COALESCE (vbStatusId_Tax, 0) <> zc_Enum_Status_Complete() AND vbDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Prepay())
