@@ -708,12 +708,6 @@
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
-        Name = 'iniService'
-        Value = True
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'Key'
         Value = ''
         Component = GuidesInfoMoneyDetail
@@ -724,21 +718,6 @@
         Name = 'TextValue'
         Value = ''
         Component = GuidesInfoMoneyDetail
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ParentId'
-        Value = ''
-        Component = GuidesParent_infomoney
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ParentName'
-        Value = ''
-        Component = GuidesParent_infomoney
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
