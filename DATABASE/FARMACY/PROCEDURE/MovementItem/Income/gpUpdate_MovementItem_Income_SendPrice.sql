@@ -208,7 +208,6 @@ BEGIN
                                WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                  AND Object_BarCode.isErased = False
                                  AND COALESCE(ObjectFloat_MaxPrice.ValueData, 0) > 0
-                                 AND FALSE
                                GROUP BY ObjectLink_BarCode_Goods.ChildObjectId)
      --  если стоит свойство подразделнеия не учитывать ТОП , тогда при расчете цены берем обычную наценку!!! 05,09,2019
      SELECT COUNT(lpInsertUpdate_MovementItemFloat

@@ -1843,11 +1843,14 @@ BEGIN
                          -- уменьшаем - сколько перемещено
                        - COALESCE (_tmpGoods_Sun_exception.Amount, 0)
                          -- уменьшаем выкладку
-                       - CASE WHEN _tmpGoods_Layout.isNotMoveRemainder6 = TRUE  or tmp.Amount - COALESCE (tmp.Amount_6Month, 0) >=  COALESCE(_tmpGoods_Layout.Layout, 0) 
+                       - COALESCE(_tmpGoods_Layout.Layout, 0)
+                       /*- CASE WHEN _tmpGoods_Layout.isNotMoveRemainder6 = TRUE  OR 
+                                   tmp.Amount - COALESCE (tmp.Amount_6Month, 0) >=  COALESCE(_tmpGoods_Layout.Layout, 0) OR
+                                   COALESCE (tmp.Amount_6Month, 0) = 0
                               THEN COALESCE(_tmpGoods_Layout.Layout, 0) 
-                              WHEN COALESCE(_tmpGoods_Layout.Layout, 0) - (tmp.Amount - COALESCE (tmp.Amount_6Month, 0)) > 0
-                              THEN COALESCE(_tmpGoods_Layout.Layout, 0) - (tmp.Amount - COALESCE (tmp.Amount_6Month, 0))
-                              END
+                              WHEN (tmp.Amount - COALESCE (tmp.Amount_6Month, 0)) >= 0
+                              THEN tmp.Amount - COALESCE (tmp.Amount_6Month, 0)
+                              ELSE 0 END*/
                          -- уменьшаем выполнение плана по точке
                        - COALESCE(_tmpGoods_PromoUnit.Amount, 0)
                           -- делим на кратность
@@ -1876,11 +1879,14 @@ BEGIN
                          -- уменьшаем - сколько перемещено
                        - COALESCE (_tmpGoods_Sun_exception.Amount, 0)
                          -- уменьшаем выкладку
-                       - CASE WHEN _tmpGoods_Layout.isNotMoveRemainder6 = TRUE  or tmp.Amount - COALESCE (tmp.Amount_6Month, 0) >=  COALESCE(_tmpGoods_Layout.Layout, 0) 
+                       - COALESCE(_tmpGoods_Layout.Layout, 0)
+                       /*- CASE WHEN _tmpGoods_Layout.isNotMoveRemainder6 = TRUE  OR
+                                   tmp.Amount - COALESCE (tmp.Amount_6Month, 0) >=  COALESCE(_tmpGoods_Layout.Layout, 0) OR
+                                   COALESCE (tmp.Amount_6Month, 0) = 0
                               THEN COALESCE(_tmpGoods_Layout.Layout, 0) 
-                              WHEN COALESCE(_tmpGoods_Layout.Layout, 0) - (tmp.Amount - COALESCE (tmp.Amount_6Month, 0)) > 0
-                              THEN COALESCE(_tmpGoods_Layout.Layout, 0) - (tmp.Amount - COALESCE (tmp.Amount_6Month, 0))
-                              END
+                              WHEN (tmp.Amount - COALESCE (tmp.Amount_6Month, 0)) >= 0
+                              THEN (tmp.Amount - COALESCE (tmp.Amount_6Month, 0))
+                              ELSE 0 END*/
                          -- уменьшаем выполнение плана по точке
                        - COALESCE(_tmpGoods_PromoUnit.Amount, 0)
                           -- делим на кратность
@@ -1904,11 +1910,14 @@ BEGIN
                          -- уменьшаем - сколько перемещено
                        - COALESCE (_tmpGoods_Sun_exception.Amount, 0)
                          -- уменьшаем выкладку
-                       - CASE WHEN _tmpGoods_Layout.isNotMoveRemainder6 = TRUE  or tmp.Amount - COALESCE (tmp.Amount_6Month, 0) >=  COALESCE(_tmpGoods_Layout.Layout, 0) 
+                       - COALESCE(_tmpGoods_Layout.Layout, 0)
+                       /*- CASE WHEN _tmpGoods_Layout.isNotMoveRemainder6 = TRUE  OR 
+                                   tmp.Amount - COALESCE (tmp.Amount_6Month, 0) >=  COALESCE(_tmpGoods_Layout.Layout, 0) OR
+                                   COALESCE (tmp.Amount_6Month, 0) = 0
                               THEN COALESCE(_tmpGoods_Layout.Layout, 0) 
-                              WHEN COALESCE(_tmpGoods_Layout.Layout, 0) - (tmp.Amount - COALESCE (tmp.Amount_6Month, 0)) > 0
-                              THEN COALESCE(_tmpGoods_Layout.Layout, 0) - (tmp.Amount - COALESCE (tmp.Amount_6Month, 0))
-                              END
+                              WHEN (tmp.Amount - COALESCE (tmp.Amount_6Month, 0)) >= 0
+                              THEN (tmp.Amount - COALESCE (tmp.Amount_6Month, 0))
+                              ELSE 0 END*/
                          -- уменьшаем выполнение плана по точке
                        - COALESCE(_tmpGoods_PromoUnit.Amount, 0)
                           -- делим на кратность
@@ -1974,11 +1983,15 @@ BEGIN
                         -- уменьшаем - сколько перемещено
                       - COALESCE (_tmpGoods_Sun_exception.Amount, 0)
                         -- уменьшаем выкладку
-                      - CASE WHEN _tmpGoods_Layout.isNotMoveRemainder6 = TRUE  or tmp.Amount - COALESCE (tmp.Amount_6Month, 0) >=  COALESCE(_tmpGoods_Layout.Layout, 0) 
+                      - COALESCE(_tmpGoods_Layout.Layout, 0)
+                      /*- CASE WHEN _tmpGoods_Layout.isNotMoveRemainder6 = TRUE  OR 
+                                  tmp.Amount - COALESCE (tmp.Amount_6Month, 0) >=  COALESCE(_tmpGoods_Layout.Layout, 0) OR
+                                  COALESCE (tmp.Amount_6Month, 0) = 0
                              THEN COALESCE(_tmpGoods_Layout.Layout, 0) 
-                             WHEN COALESCE(_tmpGoods_Layout.Layout, 0) - (tmp.Amount - COALESCE (tmp.Amount_6Month, 0)) > 0
-                             THEN COALESCE(_tmpGoods_Layout.Layout, 0) - (tmp.Amount - COALESCE (tmp.Amount_6Month, 0))
-                             END
+                             WHEN (tmp.Amount - COALESCE (tmp.Amount_6Month, 0)) >= 0
+                             THEN (tmp.Amount - COALESCE (tmp.Amount_6Month, 0))
+                             ELSE 0 
+                             END*/
                         -- уменьшаем выполнение плана по точке
                       - COALESCE(_tmpGoods_PromoUnit.Amount, 0)
                          -- делим на кратность

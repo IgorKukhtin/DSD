@@ -140,6 +140,7 @@ type
     chisCloseMCS: TcxGridDBColumn;
     InvNumberLayout: TcxGridDBColumn;
     LayoutName: TcxGridDBColumn;
+    Layout: TcxGridDBColumn;
   private
     { Private declarations }
   public

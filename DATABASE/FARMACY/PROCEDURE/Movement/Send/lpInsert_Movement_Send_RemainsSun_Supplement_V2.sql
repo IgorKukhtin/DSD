@@ -639,14 +639,17 @@ BEGIN
              , tmpObject_Price.Price
              , tmpObject_Price.MCSValue
              
-             , CASE WHEN _tmpGoodsLayout_SUN_Supplement_V2.isNotMoveRemainder6 = TRUE
+             , _tmpGoodsLayout_SUN_Supplement_V2.Layout
+             /*, CASE WHEN _tmpGoodsLayout_SUN_Supplement_V2.isNotMoveRemainder6 = TRUE
                       OR (COALESCE (tmpRemains.Amount, 0) - COALESCE (_tmpGoods_Sun_exception_Supplement_V2.Amount, 0) - 
                           COALESCE(tmpRemains.Amount6Month, 0))  > _tmpGoodsLayout_SUN_Supplement_V2.Layout
+                      OR COALESCE(tmpRemains.Amount6Month, 0) = 0
                     THEN _tmpGoodsLayout_SUN_Supplement_V2.Layout
-                    WHEN _tmpGoodsLayout_SUN_Supplement_V2.Layout - (COALESCE (tmpRemains.Amount, 0) - COALESCE (_tmpGoods_Sun_exception_Supplement_V2.Amount, 0) - 
-                                                                    COALESCE(tmpRemains.Amount6Month, 0)) > 0
-                    THEN _tmpGoodsLayout_SUN_Supplement_V2.Layout - (COALESCE (tmpRemains.Amount, 0) - COALESCE (_tmpGoods_Sun_exception_Supplement_V2.Amount, 0) - 
-                                                                    COALESCE(tmpRemains.Amount6Month, 0)) END  AS Layout
+                    WHEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (_tmpGoods_Sun_exception_Supplement_V2.Amount, 0) - 
+                                                            COALESCE(tmpRemains.Amount6Month, 0)) >= 0
+                    THEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (_tmpGoods_Sun_exception_Supplement_V2.Amount, 0) - 
+                                                            COALESCE(tmpRemains.Amount6Month, 0)) 
+                    ELSE 0 END  AS Layout*/
                     
 
                -- остаток
