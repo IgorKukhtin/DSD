@@ -63,4 +63,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Unit (TRUE, false, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Unit_Parent (TRUE, false, zfCalc_UserAdmin())
