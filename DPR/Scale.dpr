@@ -115,7 +115,8 @@ uses
   GuideReason in '..\Scale\GuideReason.pas' {GuideReasonForm},
   GuideAsset in '..\Scale\GuideAsset.pas' {GuideAssetForm},
   GuideMovementTransport in '..\Scale\GuideMovementTransport.pas' {GuideMovementTransportForm},
-  GuideSubjectDoc in '..\Scale\GuideSubjectDoc.pas' {GuideSubjectDocForm};
+  GuideSubjectDoc in '..\Scale\GuideSubjectDoc.pas' {GuideSubjectDocForm},
+  frxPreview in '..\Scale\Util\frxPreview.pas' {frxPreviewForm};
 
 {$R *.res}
 
