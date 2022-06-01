@@ -74,6 +74,8 @@ type
     spErased: TdsdStoredProc;
     spUnErased: TdsdStoredProc;
     Amount: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

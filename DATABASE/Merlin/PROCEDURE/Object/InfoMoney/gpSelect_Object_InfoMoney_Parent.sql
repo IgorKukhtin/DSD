@@ -48,12 +48,14 @@ BEGIN
         , tmp.UpdateName
         , tmp.UpdateDate
    FROM gpSelect_Object_InfoMoney (inIsShowAll, inSession) AS tmp
-   WHERE /*(COALESCE (tmp.isService, FALSE) = inisService OR inisService = FALSE)
-    AND */( ((inKindName = 'zc_Enum_InfoMoney_In' AND tmp.InfoMoneyKindId = zc_Enum_InfoMoney_In()) OR COALESCE (tmp.InfoMoneyKindId,0)=0)  
+   WHERE tmp.Id IN (SELECT DISTINCT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_InfoMoney_Parent())
+      OR inisLeaf = TRUE   --только "Группы"   или все 
+   
+      /*WHERE (COALESCE (tmp.isService, FALSE) = inisService OR inisService = FALSE)
+    AND ( ((inKindName = 'zc_Enum_InfoMoney_In' AND tmp.InfoMoneyKindId = zc_Enum_InfoMoney_In()) OR COALESCE (tmp.InfoMoneyKindId,0)=0)  
          OR ((inKindName = 'zc_Enum_InfoMoney_Out' AND tmp.InfoMoneyKindId = zc_Enum_InfoMoney_Out()) OR COALESCE (tmp.InfoMoneyKindId,0)=0)
          OR COALESCE (inKindName,'') = ''  
-        )
-    AND (tmp.isLeaf = inisLeaf OR inisLeaf = TRUE)   --только группы   или все
+        )*/
   ;
   
 END;$BODY$

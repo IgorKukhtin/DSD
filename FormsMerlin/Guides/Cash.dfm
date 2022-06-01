@@ -625,7 +625,7 @@ object CashForm: TCashForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Cash'
+    StoredProcName = 'gpSelect_Object_Cash_Leaf'
     DataSet = MasterCDS
     DataSets = <
       item

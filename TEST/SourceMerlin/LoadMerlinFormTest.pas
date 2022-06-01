@@ -162,6 +162,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashTreeForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashTreeGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashTreeGroupForm');
 end;
 
 procedure TLoadFormTest.LoadCashMovementFormTest;
