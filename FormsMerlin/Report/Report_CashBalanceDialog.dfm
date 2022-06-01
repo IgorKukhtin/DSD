@@ -141,7 +141,7 @@ object Report_CashBalanceDialogForm: TReport_CashBalanceDialogForm
       item
         Name = 'CashId'
         Value = Null
-        Component = GuidesUnit
+        Component = GuidesCash
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -149,7 +149,7 @@ object Report_CashBalanceDialogForm: TReport_CashBalanceDialogForm
       item
         Name = 'CashName'
         Value = Null
-        Component = GuidesUnit
+        Component = GuidesCash
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -175,7 +175,7 @@ object Report_CashBalanceDialogForm: TReport_CashBalanceDialogForm
     Left = 311
     Top = 100
   end
-  object GuidesUnit: TdsdGuides
+  object GuidesCash: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCash
     FormNameParam.Value = 'TCashTreeForm'
@@ -187,14 +187,14 @@ object Report_CashBalanceDialogForm: TReport_CashBalanceDialogForm
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesUnit
+        Component = GuidesCash
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesUnit
+        Component = GuidesCash
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -205,10 +205,10 @@ object Report_CashBalanceDialogForm: TReport_CashBalanceDialogForm
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
-    FormNameParam.Value = 'TInfoMoneyForm'
+    FormNameParam.Value = 'TInfoMoneyTreeForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TInfoMoneyForm'
+    FormName = 'TInfoMoneyTreeForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

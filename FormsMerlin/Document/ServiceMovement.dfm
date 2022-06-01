@@ -115,7 +115,7 @@
   end
   object edCommentInfoMoney: TcxButtonEdit [15]
     Left = 8
-    Top = 267
+    Top = 270
     Properties.Buttons = <
       item
         Default = True

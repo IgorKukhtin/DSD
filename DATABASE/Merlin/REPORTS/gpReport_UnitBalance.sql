@@ -60,6 +60,17 @@ BEGIN
                    AND Object.isErased = False
                    AND inUnitGroupId = 0
                  )
+   , tmpInfoMoney AS (SELECT lfSelect_Object_InfoMoney_byGroup.InfoMoneyId AS InfoMoneyId
+                      FROM lfSelect_Object_InfoMoney_byGroup (inInfoMoneyId) AS lfSelect_Object_InfoMoney_byGroup
+                      WHERE inInfoMoneyId <> 0
+                     UNION
+                      SELECT Object.Id AS InfoMoneyId 
+                      FROM Object
+                      WHERE Object.DescId = zc_Object_InfoMoney()
+                        AND Object.isErased = False
+                        AND inInfoMoneyId = 0
+                      )
+
    , tmpMIContainer AS (SELECT Container.Id             AS ContainerId
                              , Container.ObjectId       AS AccountId
                              , Container.WhereObjectId  AS UnitId
@@ -84,7 +95,7 @@ BEGIN
 
                         WHERE Container.DescId = zc_Container_Summ()
                           AND Container.WhereObjectId IN (SELECT DISTINCT tmpUnit.UnitId FROM tmpUnit)
-                          AND (CLO_InfoMoney.ObjectId = inInfoMoneyId OR inInfoMoneyId = 0)
+                          AND (CLO_InfoMoney.ObjectId IN (SELECT tmp.InfoMoneyId FROM tmpInfoMoney AS tmp) OR inInfoMoneyId = 0)
                           AND ((CLO_ServiceDate.ObjectId = vbServiceDateId AND inIsAll = FALSE) OR inIsAll = TRUE)
                         GROUP BY Container.Id
                                , Container.ObjectId

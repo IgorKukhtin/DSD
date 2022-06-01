@@ -69,6 +69,8 @@ type
     actProtocol: TdsdOpenForm;
     bbProtocol: TdxBarButton;
     Comment: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

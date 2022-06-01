@@ -575,7 +575,7 @@ object UnitTreeGroupForm: TUnitTreeGroupForm
     Top = 152
   end
   object spGrid: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Unit_Group'
+    StoredProcName = 'gpSelect_Object_Unit_Parent'
     DataSet = ClientDataSet
     DataSets = <
       item

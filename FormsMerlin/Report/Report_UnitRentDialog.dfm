@@ -243,10 +243,10 @@ object Report_UnitRentDialogForm: TReport_UnitRentDialogForm
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
-    FormNameParam.Value = 'TInfoMoneyForm'
+    FormNameParam.Value = 'TInfoMoneyTreeForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TInfoMoneyForm'
+    FormName = 'TInfoMoneyTreeForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

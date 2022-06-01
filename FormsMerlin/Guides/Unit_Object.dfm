@@ -402,7 +402,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Unit'
+    StoredProcName = 'gpSelect_Object_Unit_Leaf'
     DataSet = MasterCDS
     DataSets = <
       item

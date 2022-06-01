@@ -269,6 +269,10 @@ object UnitForm: TUnitForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -591,7 +595,7 @@ object UnitForm: TUnitForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Unit'
+    StoredProcName = 'gpSelect_Object_Unit_Leaf'
     DataSet = MasterCDS
     DataSets = <
       item

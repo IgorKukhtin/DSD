@@ -54,7 +54,19 @@ BEGIN
                    AND Object.isErased = FALSE
                    AND COALESCE (inCashGroupId, 0) = 0
                    AND (vbUser_isAll = TRUE OR ObjectBoolean_UserAll.ValueData = TRUE)
-                 )
+                 )     
+
+   , tmpInfoMoney AS (SELECT lfSelect_Object_InfoMoney_byGroup.InfoMoneyId AS InfoMoneyId
+                      FROM lfSelect_Object_InfoMoney_byGroup (inInfoMoneyId) AS lfSelect_Object_InfoMoney_byGroup
+                      WHERE inInfoMoneyId <> 0
+                     UNION
+                      SELECT Object.Id AS InfoMoneyId 
+                      FROM Object
+                      WHERE Object.DescId = zc_Object_InfoMoney()
+                        AND Object.isErased = False
+                        AND inInfoMoneyId = 0
+                      )
+
    , tmpMIContainer_all AS (SELECT Container.Id             AS ContainerId
                                  , Container.ObjectId       AS AccountId
                                  , Container.Amount         AS Amount
@@ -77,7 +89,7 @@ BEGIN
                                                                   ON MILO_InfoMoney.MovementItemId = MIContainer.MovementItemId
                                                                  AND MILO_InfoMoney.DescId         = zc_MILinkObject_InfoMoney()
                             WHERE Container.DescId = zc_Container_Summ()
-                            --AND (MILO_InfoMoney.ObjectId = inInfoMoneyId OR inInfoMoneyId = 0)
+                            --AND (CLO_InfoMoney.ObjectId IN (SELECT tmp.InfoMoneyId FROM tmpInfoMoney AS tmp) OR inInfoMoneyId = 0)
                             GROUP BY Container.Id
                                    , Container.ObjectId
                                    , Container.Amount
@@ -109,7 +121,7 @@ BEGIN
                              , 0 AS AmountRemainsEnd
                              , tmpMIContainer_all.MovementDescId
                         FROM tmpMIContainer_all
-                        WHERE (tmpMIContainer_all.InfoMoneyId = inInfoMoneyId OR inInfoMoneyId = 0)
+                        WHERE (tmpMIContainer_all.InfoMoneyId IN (SELECT tmp.InfoMoneyId FROM tmpInfoMoney AS tmp) OR inInfoMoneyId = 0)
                           AND (tmpMIContainer_all.AmountDebet <> 0
                             OR tmpMIContainer_all.AmountKredit <> 0
                               )

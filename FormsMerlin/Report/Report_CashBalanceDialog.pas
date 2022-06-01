@@ -24,7 +24,7 @@ type
     cxLabel7: TcxLabel;
     cxLabel14: TcxLabel;
     ceCash: TcxButtonEdit;
-    GuidesUnit: TdsdGuides;
+    GuidesCash: TdsdGuides;
     cxLabel5: TcxLabel;
     ceInfoMoney: TcxButtonEdit;
     GuidesInfoMoney: TdsdGuides;
