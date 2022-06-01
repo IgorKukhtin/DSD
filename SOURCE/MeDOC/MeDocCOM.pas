@@ -203,6 +203,8 @@ var DocumentList: IZDataset;
 begin
   with TMedocCOM.Create do
     try
+      if ParamStr(0) = '/log'
+      then ShowMessage(CharCode.Value);
       // Получили список документов Медок
       DocumentList := GetDocumentList(CharCode.Value, StartOfTheMonth(PeriodDate.Value));
       //
@@ -243,7 +245,7 @@ begin
                    and (FormCode <> 14027)
                  then
                      //
-                     if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) or (FormCode = 14025) or (FormCode = 16271) or (FormCode = 16325) or (FormCode = 19580) or (FormCode = 19583) or (FormCode = 20097) or (FormCode = 20100)
+                     if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) or (FormCode = 14025) or (FormCode = 16271) or (FormCode = 16325) or (FormCode = 19580) or (FormCode = 19583) or (FormCode = 20097) or (FormCode = 20100) or (FormCode = 21343)
                      then
                        DocKind := 'Tax'
                      else
@@ -322,9 +324,10 @@ end;
                   if  (FormCode <> 12943)
                    //and (FormCode <> 14025)
                    and (FormCode <> 14027)
+                   and (FormCode <> 21340)
                   then begin
                      //
-                      if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) or (FormCode = 14025) or (FormCode = 16271) or (FormCode = 16325) or (FormCode = 19580) or (FormCode = 19583) or (FormCode = 20097) or (FormCode = 20100)
+                      if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) or (FormCode = 14025) or (FormCode = 16271) or (FormCode = 16325) or (FormCode = 19580) or (FormCode = 19583) or (FormCode = 20097) or (FormCode = 20100) or (FormCode = 21343)
                      then
                        DocKind := 'Tax'
                      else
