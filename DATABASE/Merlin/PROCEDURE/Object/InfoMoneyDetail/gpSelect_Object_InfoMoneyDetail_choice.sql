@@ -1,9 +1,9 @@
 -- Function: gpSelect_Object_InfoMoneyDetail_choice()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_InfoMoneyDetail_choice (Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_InfoMoneyDetail_choice (Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_InfoMoneyDetail_choice(
-    IN inisService   Boolean,       -- показывать только По начислению да / нет
     IN inIsShowAll   Boolean,       -- признак показать удаленные да / нет
     IN inKindName    TVarChar,      -- какие статьи показывать только приход или только расход 
     IN inSession     TVarChar        -- сессия пользователя
@@ -51,4 +51,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_InfoMoneyDetail (TRUE, FALSE, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_InfoMoneyDetail (TRUE, zfCalc_UserAdmin())

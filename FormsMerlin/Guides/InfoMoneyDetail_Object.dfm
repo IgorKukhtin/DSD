@@ -24,8 +24,6 @@ object InfoMoneyDetail_ObjectForm: TInfoMoneyDetail_ObjectForm
     Height = 316
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 26
-    ExplicitHeight = 349
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -91,8 +89,6 @@ object InfoMoneyDetail_ObjectForm: TInfoMoneyDetail_ObjectForm
     Height = 33
     Align = alTop
     TabOrder = 5
-    ExplicitLeft = -8
-    ExplicitTop = -14
     object lbSearchName: TcxLabel
       Left = 22
       Top = 6
@@ -306,14 +302,6 @@ object InfoMoneyDetail_ObjectForm: TInfoMoneyDetail_ObjectForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'isService'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'isService'
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'InfoMoneyKindid'
           Value = Null
           Component = ClientDataSet
@@ -325,21 +313,6 @@ object InfoMoneyDetail_ObjectForm: TInfoMoneyDetail_ObjectForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ParentId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'ParentId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ParentName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'ParentName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -410,15 +383,6 @@ object InfoMoneyDetail_ObjectForm: TInfoMoneyDetail_ObjectForm
         DataSet = ClientDataSet
       end>
     Params = <
-      item
-        Name = 'inisService'
-        Value = False
-        Component = FormParams
-        ComponentItem = 'iniService'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
       item
         Name = 'inIsShowAll'
         Value = Null
