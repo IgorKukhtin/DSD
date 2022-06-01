@@ -114,7 +114,7 @@ BEGIN
             , Object_Account.ObjectCode   AS AccountCode
             , Object_Account.ValueData    AS AccountName   
 
-, CAST (CASE WHEN tmpMIContainer.AmountRemainsStart > 0 AND 1=0 THEN tmpMIContainer.AmountRemainsStart ELSE 0 END AS TFloat)      AS AmountDebetStart
+            , CAST (CASE WHEN tmpMIContainer.AmountRemainsStart > 0 AND 1=0 THEN tmpMIContainer.AmountRemainsStart ELSE 0 END AS TFloat)      AS AmountDebetStart
             , CAST (CASE WHEN tmpMIContainer.AmountRemainsStart < 0 OR  1=1 THEN -1 * tmpMIContainer.AmountRemainsStart ELSE 0 END AS TFloat) AS AmountKreditStart
             , CAST (tmpMIContainer.AmountDebet AS TFloat)  AS AmountDebet
             , CAST (tmpMIContainer.AmountKredit AS TFloat) AS AmountKredit
