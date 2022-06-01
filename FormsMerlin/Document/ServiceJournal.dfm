@@ -67,9 +67,6 @@ inherited ServiceJournalForm: TServiceJournalForm
           end
           inherited colInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = '0.;-0.; ;'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 121
@@ -229,6 +226,7 @@ inherited ServiceJournalForm: TServiceJournalForm
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       FormName = 'TServiceMovementForm'
       FormNameParam.Value = 'TServiceMovementForm'
       GuiParams = <
@@ -295,6 +293,7 @@ inherited ServiceJournalForm: TServiceJournalForm
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       FormName = 'TServiceMovementForm'
       FormNameParam.Value = 'TServiceMovementForm'
       GuiParams = <
@@ -598,11 +597,15 @@ inherited ServiceJournalForm: TServiceJournalForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item
           Visible = True
-          ItemName = 'bbInsertMask'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -610,6 +613,14 @@ inherited ServiceJournalForm: TServiceJournalForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertMask'
+        end
+        item
           Visible = True
           ItemName = 'dxBarStatic'
         end

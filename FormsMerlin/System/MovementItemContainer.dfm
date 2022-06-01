@@ -4,7 +4,7 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
   ClientWidth = 982
   AddOnFormData.Params = FormParams
   ExplicitWidth = 998
-  ExplicitHeight = 403
+  ExplicitHeight = 407
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

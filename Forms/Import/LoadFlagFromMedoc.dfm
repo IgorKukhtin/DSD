@@ -4,7 +4,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
   ClientHeight = 99
   ClientWidth = 359
   ExplicitWidth = 365
-  ExplicitHeight = 124
+  ExplicitHeight = 128
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -63,7 +63,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       PeriodDate.Value = 42005d
       PeriodDate.Component = dePeriodDate
       PeriodDate.MultiSelectSeparator = ','
-      CharCode.Value = 'J1201012'
+      CharCode.Value = 'J1201013'
       CharCode.MultiSelectSeparator = ','
       Caption = 'TaxJur'
     end
@@ -73,7 +73,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       PeriodDate.Value = 42005d
       PeriodDate.Component = dePeriodDate
       PeriodDate.MultiSelectSeparator = ','
-      CharCode.Value = 'J1201212'
+      CharCode.Value = 'J1201213'
       CharCode.MultiSelectSeparator = ','
       Caption = 'TaxCorrectiveJur'
     end
@@ -83,7 +83,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       PeriodDate.Value = Null
       PeriodDate.Component = dePeriodDate
       PeriodDate.MultiSelectSeparator = ','
-      CharCode.Value = 'F1201012'
+      CharCode.Value = 'F1201013'
       CharCode.MultiSelectSeparator = ','
       Caption = 'TaxFiz'
     end
@@ -93,7 +93,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       PeriodDate.Value = Null
       PeriodDate.Component = dePeriodDate
       PeriodDate.MultiSelectSeparator = ','
-      CharCode.Value = 'F1201212'
+      CharCode.Value = 'F1201213'
       CharCode.MultiSelectSeparator = ','
       Caption = 'TaxCorrectiveFiz'
     end
@@ -112,6 +112,12 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
         end
         item
           Action = TaxCorrectiveJur
+        end
+        item
+          Action = TaxJur_old
+        end
+        item
+          Action = TaxCorrectiveJur_old
         end
         item
           Action = actUpdateGlobalConstMedoc
@@ -136,6 +142,26 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
           StoredProc = spUpdate_Object_GlobalConst_MEDOC
         end>
       Caption = 'actUpdateGlobalConstMedoc'
+    end
+    object TaxJur_old: TMedocComAction
+      Category = 'TaxLib'
+      MoveParams = <>
+      PeriodDate.Value = 43101d
+      PeriodDate.Component = dePeriodDate
+      PeriodDate.MultiSelectSeparator = ','
+      CharCode.Value = 'J1201012'
+      CharCode.MultiSelectSeparator = ','
+      Caption = 'TaxJur'
+    end
+    object TaxCorrectiveJur_old: TMedocComAction
+      Category = 'TaxLib'
+      MoveParams = <>
+      PeriodDate.Value = 43101d
+      PeriodDate.Component = dePeriodDate
+      PeriodDate.MultiSelectSeparator = ','
+      CharCode.Value = 'J1201212'
+      CharCode.MultiSelectSeparator = ','
+      Caption = 'TaxCorrectiveJur'
     end
   end
   inherited FormParams: TdsdFormParams
