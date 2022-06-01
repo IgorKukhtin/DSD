@@ -1,10 +1,9 @@
--- Function: gpSelect_Object_Unit (Boolean, Boolean, TVarChar)
+-- Function: gpSelect_Object_Unit_Leaf (Boolean, TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Unit_Parent (Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Unit_Leaf (Boolean,  TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_Unit_Parent(
+CREATE OR REPLACE FUNCTION gpSelect_Object_Unit_Leaf(
     IN inIsShowAll   Boolean,       -- признак показать удаленные да / нет   
-    IN inisLeaf      Boolean ,      -- показывать или нет только группы
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameFull TVarChar
@@ -47,8 +46,7 @@ BEGIN
            , Object_Unit.isErased
 
        FROM gpSelect_Object_Unit (inIsShowAll, inSession) AS Object_Unit
-       WHERE Object_Unit.Id IN (SELECT DISTINCT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Parent())
-          OR inisLeaf = TRUE   --только "Группы"   или все 
+       WHERE Object_Unit.Id NOT IN (SELECT DISTINCT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Parent())
     ;
 
 END;
@@ -63,4 +61,8 @@ $BODY$
 */
 
 -- тест
+<<<<<<< HEAD:DATABASE/Merlin/PROCEDURE/Object/Unit/gpSelect_Object_Unit_Group.sql
 -- SELECT * FROM gpSelect_Object_Unit_Parent (TRUE, false, zfCalc_UserAdmin())
+=======
+-- SELECT * FROM gpSelect_Object_Unit_Leaf (TRUE,  zfCalc_UserAdmin())
+>>>>>>> origin/master:DATABASE/Merlin/PROCEDURE/Object/Unit/gpSelect_Object_Unit_Leaf.sql
