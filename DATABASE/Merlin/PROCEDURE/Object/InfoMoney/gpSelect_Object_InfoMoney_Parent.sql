@@ -21,7 +21,6 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyAll Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_InfoMoney());

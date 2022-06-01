@@ -28,11 +28,15 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
               )
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+  DECLARE vbUserId     Integer;
+  DECLARE vbUser_isAll Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Cash());
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- 
+     vbUser_isAll:= lpCheckUser_isAll (vbUserId);
 
      IF COALESCE (inMovementId_Value, 0) = 0
      THEN
@@ -46,8 +50,8 @@ BEGIN
            , FALSE :: Boolean                                  AS isSign
            , 0::TFloat                                         AS Amount
            , 0                                                 AS MI_Id
-           , 0                                                 AS CashId
-           , CAST ('' as TVarChar)                             AS CashName
+           , Object_Cash.Id                                    AS CashId
+           , Object_Cash.ValueData                             AS CashName
            , Object_Unit.Id                                    AS UnitId
            , TRIM (COALESCE (ObjectString_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitName
            , Object_Parent.Id                                  AS ParentId_InfoMoney
@@ -59,6 +63,9 @@ BEGIN
            , 0                                                 AS CommentInfoMoneyId
            , ''::TVarChar                                      AS CommentInfoMoneyName
        FROM (SELECT CAST (CURRENT_DATE AS TDateTime) AS OperDate) AS tmp
+           LEFT JOIN Object AS Object_Cash
+                            ON Object_Cash.DescId = zc_Object_Unit()
+                           AND Object_Cash.Id     = CASE WHEN vbUser_isAll = FALSE THEN 102964 ELSE 0 END -- Бухгалтерия
            LEFT JOIN Object AS Object_Unit
                             ON Object_Unit.DescId = zc_Object_Unit()
                            AND Object_Unit.Id = inUnitId

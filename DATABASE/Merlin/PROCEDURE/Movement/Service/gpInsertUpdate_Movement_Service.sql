@@ -44,8 +44,6 @@ BEGIN
              vbInfoMoneyId := gpInsertUpdate_Object_InfoMoney (ioId   := 0
                                                              , inCode := 0
                                                              , inName := TRIM (inInfoMoney)::TVarChar
-                                                             , inisService := TRUE
-                                                             , inisUserAll := COALESCE ( (SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = inParent_InfoMoneyId AND OB.DescId = zc_ObjectBoolean_InfoMoney_UserAll()), FALSE)
                                                              , inInfoMoneyKindId := COALESCE ( (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inParent_InfoMoneyId AND OL.DescId = zc_ObjectLink_InfoMoney_InfoMoneyKind()), NULL) 
                                                              , inParentId := inParent_InfoMoneyId
                                                              , inSession := inSession

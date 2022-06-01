@@ -61,8 +61,4 @@ $BODY$
 */
 
 -- тест
-<<<<<<< HEAD:DATABASE/Merlin/PROCEDURE/Object/Unit/gpSelect_Object_Unit_Group.sql
--- SELECT * FROM gpSelect_Object_Unit_Parent (TRUE, false, zfCalc_UserAdmin())
-=======
 -- SELECT * FROM gpSelect_Object_Unit_Leaf (TRUE,  zfCalc_UserAdmin())
->>>>>>> origin/master:DATABASE/Merlin/PROCEDURE/Object/Unit/gpSelect_Object_Unit_Leaf.sql

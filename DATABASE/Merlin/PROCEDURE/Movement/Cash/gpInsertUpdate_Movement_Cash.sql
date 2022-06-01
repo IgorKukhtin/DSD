@@ -57,8 +57,6 @@ BEGIN
              vbInfoMoneyId := gpInsertUpdate_Object_InfoMoney (ioId             := 0
                                                              , inCode           := 0
                                                              , inName           := TRIM (inInfoMoneyName)::TVarChar
-                                                             , inIsService      := FALSE
-                                                             , inIsUserAll      := NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbUserId AND OB.DescId = zc_ObjectBoolean_User_Sign() AND OB.ValueData = TRUE)
                                                              , inInfoMoneyKindId:= CASE WHEN inKindName = 'zc_Enum_InfoMoney_In' THEN zc_Enum_InfoMoney_In() ELSE zc_Enum_InfoMoney_Out() END
                                                              , inParentId       := inParent_InfoMoneyId
                                                              , inSession        := inSession
@@ -138,6 +136,11 @@ BEGIN
                                          , inUserId     := vbUserId
                                           );
      END IF;
+
+IF vbUserId = zfCalc_UserAdmin() :: Integer
+THEN
+    RAISE EXCEPTION 'Ошибка.<%>', inAmount;
+END IF;
 
 
 END;
