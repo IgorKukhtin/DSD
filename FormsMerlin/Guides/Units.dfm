@@ -15,6 +15,7 @@ object UnitForm: TUnitForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = actChoiceGuides
+  AddOnFormData.SetFocusedAction = actSetFocused
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -596,6 +597,14 @@ object UnitForm: TUnitForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1054#1090#1076#1077#1083#1099' '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 41
       WithoutNext = True
+    end
+    object actSetFocused: TdsdSetFocusedAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSetFocused'
+      ControlName.Value = 'edSearchName'
+      ControlName.DataType = ftString
+      ControlName.MultiSelectSeparator = ','
     end
   end
   object spSelect: TdsdStoredProc

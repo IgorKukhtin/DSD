@@ -42,7 +42,8 @@ BEGIN
                                                   ON ObjectString_EAN.ObjectId  = Object.Id
                                                  AND ObjectString_EAN.DescId    = zc_ObjectString_EAN()
                                                  AND ObjectString_EAN.ValueData ILIKE TRIM (inBarCode)
-                     WHERE Object.DescId = zc_Object_Goods()
+                     WHERE Object.DescId   = zc_Object_Goods()
+                     --AND Object.isErased = FALSE
                     )
              THEN
                  RAISE EXCEPTION 'Ошибка.Штрих-код <%> найден у разных Комплектующих.%<%>%и <%>'

@@ -15,6 +15,7 @@ object CommentMoveMoneyForm: TCommentMoveMoneyForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.SetFocusedAction = actSetFocused
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -24,8 +25,6 @@ object CommentMoveMoneyForm: TCommentMoveMoneyForm
     Height = 316
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 26
-    ExplicitHeight = 349
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -126,7 +125,6 @@ object CommentMoveMoneyForm: TCommentMoveMoneyForm
     Height = 33
     Align = alTop
     TabOrder = 5
-    ExplicitTop = -14
     object lbSearchName: TcxLabel
       Left = 22
       Top = 6
@@ -609,6 +607,14 @@ object CommentMoveMoneyForm: TCommentMoveMoneyForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' <'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1044#1074#1080#1078#1077#1085#1080#1077' '#1076#1077#1085#1077#1075'> '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 41
       WithoutNext = True
+    end
+    object actSetFocused: TdsdSetFocusedAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSetFocused'
+      ControlName.Value = 'edSearchName'
+      ControlName.DataType = ftString
+      ControlName.MultiSelectSeparator = ','
     end
   end
   object spSelect: TdsdStoredProc

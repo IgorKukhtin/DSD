@@ -77,6 +77,7 @@ type
     lbSearchName: TcxLabel;
     edSearchName: TcxTextEdit;
     FieldFilter_Name: TdsdFieldFilter;
+    actSetFocused: TdsdSetFocusedAction;
   private
     { Private declarations }
   public

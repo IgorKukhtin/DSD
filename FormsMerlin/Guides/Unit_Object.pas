@@ -65,6 +65,7 @@ type
     edSearchName: TcxTextEdit;
     FieldFilter_NameFull: TdsdFieldFilter;
     NameFull: TcxGridDBColumn;
+    actSetFocused: TdsdSetFocusedAction;
   private
     { Private declarations }
   public
