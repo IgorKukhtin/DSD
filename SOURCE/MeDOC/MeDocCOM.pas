@@ -135,6 +135,7 @@ begin
     FspUpdate_IsElectronFromMedoc.Params.AddParam('inDocKind', ftString, ptInput, '');
     FspUpdate_IsElectronFromMedoc.Params.AddParam('inContract', ftString, ptInput, '');
     FspUpdate_IsElectronFromMedoc.Params.AddParam('inTotalSumm', ftFloat, ptInput, 0);
+    FspUpdate_IsElectronFromMedoc.Params.AddParam('inMedocCharCode', ftString, ptInput, 0);
   end;
 
   FspInsertUpdate_MovementItem_TaxFromMedoc := TdsdStoredProc.Create(nil);
@@ -203,8 +204,10 @@ var DocumentList: IZDataset;
 begin
   with TMedocCOM.Create do
     try
-      if ParamStr(0) = '/log'
-      then ShowMessage(CharCode.Value);
+      //if ParamStr(0) = '/log'
+      //then
+      //ShowMessage(' start ' + CharCode.Value);
+      //
       // Получили список документов Медок
       DocumentList := GetDocumentList(CharCode.Value, StartOfTheMonth(PeriodDate.Value));
       //
@@ -245,7 +248,7 @@ begin
                    and (FormCode <> 14027)
                  then
                      //
-                     if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) or (FormCode = 14025) or (FormCode = 16271) or (FormCode = 16325) or (FormCode = 19580) or (FormCode = 19583) or (FormCode = 20097) or (FormCode = 20100) or (FormCode = 21343)
+                     if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) or (FormCode = 14025) or (FormCode = 16271) or (FormCode = 16325) or (FormCode = 19580) or (FormCode = 19583) or (FormCode = 20097) or (FormCode = 20100) or (FormCode = 21343) or (FormCode = 21340)
                      then
                        DocKind := 'Tax'
                      else
@@ -324,10 +327,10 @@ end;
                   if  (FormCode <> 12943)
                    //and (FormCode <> 14025)
                    and (FormCode <> 14027)
-                   and (FormCode <> 21340)
+                   //and (FormCode <> 21340)
                   then begin
                      //
-                      if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) or (FormCode = 14025) or (FormCode = 16271) or (FormCode = 16325) or (FormCode = 19580) or (FormCode = 19583) or (FormCode = 20097) or (FormCode = 20100) or (FormCode = 21343)
+                      if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) or (FormCode = 14025) or (FormCode = 16271) or (FormCode = 16325) or (FormCode = 19580) or (FormCode = 19583) or (FormCode = 20097) or (FormCode = 20100) or (FormCode = 21343) or (FormCode = 21340)
                      then
                        DocKind := 'Tax'
                      else
@@ -382,6 +385,7 @@ ii_date:= ii;
                       else
                          ParamByName('inDateRegistered').Value := Date;
                       ParamByName('inDocKind').Value := DocKind;
+                      ParamByName('inMedocCharCode').Value := CharCode.Value;
 
                       //try s_err:='Execute'; Execute; s_err:=''; except raise;end;
 
@@ -436,6 +440,9 @@ ii_date:= ii;
     finally
       Free;
     end;
+    //
+    ShowMessage(' end ' + CharCode.Value);
+
 end;
 
 initialization

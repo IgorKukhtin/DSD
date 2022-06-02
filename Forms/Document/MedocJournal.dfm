@@ -3,7 +3,7 @@ inherited MedocJournalForm: TMedocJournalForm
   ClientWidth = 916
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 932
-  ExplicitHeight = 713
+  ExplicitHeight = 714
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -163,6 +163,14 @@ inherited MedocJournalForm: TMedocJournalForm
             Options.Editing = False
             Width = 70
           end
+          object MedocCharCode: TcxGridDBColumn
+            Caption = 'CharCode'
+            DataBinding.FieldName = 'MedocCharCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
@@ -181,6 +189,7 @@ inherited MedocJournalForm: TMedocJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -188,6 +197,7 @@ inherited MedocJournalForm: TMedocJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -195,6 +205,7 @@ inherited MedocJournalForm: TMedocJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -210,6 +221,7 @@ inherited MedocJournalForm: TMedocJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -217,6 +229,7 @@ inherited MedocJournalForm: TMedocJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited BarManager: TdxBarManager

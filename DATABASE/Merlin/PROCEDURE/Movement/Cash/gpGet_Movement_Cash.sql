@@ -17,7 +17,8 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Cash(
 RETURNS TABLE (Id Integer, InvNumber TVarChar
              , OperDate TDateTime, ServiceDate TDateTime
              , isSign Boolean
-             , Amount TFloat
+           --, Amount TFloat
+             , Amount TVarChar
              , MI_Id Integer
              , CashId Integer, CashName TVarChar
              , UnitId Integer, UnitName TVarChar
@@ -48,7 +49,8 @@ BEGIN
            , tmp.OperDate                     :: TDateTime     AS OperDate
            , DATE_TRUNC ('MONTH', inOperDate) :: TDateTime     AS ServiceDate
            , FALSE :: Boolean                                  AS isSign
-           , 0::TFloat                                         AS Amount
+           , '' :: TVARCHAR                                    AS Amount
+         --, 0::TFloat                                         AS Amount
            , 0                                                 AS MI_Id
            , Object_Cash.Id                                    AS CashId
            , Object_Cash.ValueData                             AS CashName
@@ -64,7 +66,7 @@ BEGIN
            , ''::TVarChar                                      AS CommentInfoMoneyName
        FROM (SELECT CAST (CURRENT_DATE AS TDateTime) AS OperDate) AS tmp
            LEFT JOIN Object AS Object_Cash
-                            ON Object_Cash.DescId = zc_Object_Unit()
+                            ON Object_Cash.DescId = zc_Object_Cash()
                            AND Object_Cash.Id     = CASE WHEN vbUser_isAll = FALSE THEN 102964 ELSE 0 END -- Бухгалтерия
            LEFT JOIN Object AS Object_Unit
                             ON Object_Unit.DescId = zc_Object_Unit()
@@ -94,7 +96,8 @@ BEGIN
              END ::TDateTime AS ServiceDate
 
            , COALESCE (MovementBoolean_Sign.ValueData, FALSE) :: Boolean AS isSign
-           , CASE WHEN MovementItem.Amount < 0 THEN MovementItem.Amount * (-1) ELSE MovementItem.Amount END  ::TFloat AS Amount
+         --, CASE WHEN MovementItem.Amount < 0 THEN MovementItem.Amount * -1 ELSE MovementItem.Amount END  ::TFloat   AS Amount
+           , CASE WHEN MovementItem.Amount < 0 THEN MovementItem.Amount * -1 ELSE MovementItem.Amount END  ::TVarChar AS Amount
            , CASE WHEN inMovementId = 0 THEN 0 ELSE MovementItem.Id END AS MI_Id
            , Object_Cash.Id                     AS CashId
            , Object_Cash.ValueData              AS CashName

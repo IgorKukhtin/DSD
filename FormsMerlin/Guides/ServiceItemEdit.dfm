@@ -94,7 +94,8 @@
     Left = 24
     Top = 124
     Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
+    Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+    Properties.EditFormat = ',0.00##;-,0.00##; ;'
     Properties.UseDisplayFormatWhenEditing = True
     TabOrder = 9
     Width = 69
@@ -142,7 +143,8 @@
     Left = 102
     Top = 124
     Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
+    Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+    Properties.EditFormat = ',0.00##;-,0.00##; ;'
     Properties.UseDisplayFormatWhenEditing = True
     TabOrder = 15
     Width = 80
@@ -156,7 +158,8 @@
     Left = 192
     Top = 124
     Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
+    Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+    Properties.EditFormat = ',0.00##;-,0.00##; ;'
     Properties.UseDisplayFormatWhenEditing = True
     TabOrder = 17
     Width = 105

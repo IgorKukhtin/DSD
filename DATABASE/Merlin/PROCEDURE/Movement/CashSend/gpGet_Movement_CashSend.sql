@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_CashSend(
 RETURNS TABLE (Id Integer, InvNumber TVarChar
              , OperDate TDateTime
              , CurrencyValue TFloat, ParValue TFloat
-             , AmountOut TFloat, AmountIn TFloat
+             , AmountOut TVarChar, AmountIn TVarChar
              , CashId_from Integer, CashName_from TVarChar  -- из какой расход
              , CashId_to Integer, CashName_to TVarChar      -- в какую приход
              , CommentMoveMoneyId Integer, CommentMoveMoneyName TVarChar
@@ -32,10 +32,10 @@ BEGIN
              0 AS Id
            , CAST (NEXTVAL ('movement_CashSend_seq') AS TVarChar)  AS InvNumber
            , CAST (CURRENT_DATE AS TDateTime)                  AS OperDate
-           , 0::TFloat                                         AS CurrencyValue
-           , 0::TFloat                                         AS ParValue
-           , 0::TFloat                                         AS AmountOut
-           , 0::TFloat                                         AS AmountIn
+           , 0  :: TFloat                                      AS CurrencyValue
+           , 0  :: TFloat                                      AS ParValue
+           , '' :: TVarChar                                    AS AmountOut
+           , '' :: TVarChar                                    AS AmountIn
            , 0                                                 AS CashId_from
            , CAST ('' as TVarChar)                             AS CashName_from
            , 0                                                 AS CashId_to
@@ -50,10 +50,10 @@ BEGIN
              inMovementId AS Id
            , CASE WHEN inMovementId = 0 THEN CAST (NEXTVAL ('movement_cashsend_seq') AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
            , CASE WHEN inMovementId = 0 THEN CAST (CURRENT_DATE AS TDateTime) ELSE Movement.OperDate END ::TDateTime AS OperDate
-           , MovementFloat_CurrencyValue.ValueData ::TFloat AS CurrencyValue
-           , MovementFloat_ParValue.ValueData      ::TFloat AS ParValue
-           , MovementItem.Amount                   ::TFloat AS AmountOut
-           , MovementItemFloat_Amount.ValueData    ::TFloat AS AmountIn
+           , MovementFloat_CurrencyValue.ValueData ::TFloat   AS CurrencyValue
+           , MovementFloat_ParValue.ValueData      ::TFloat   AS ParValue
+           , MovementItem.Amount                   ::TVarChar AS AmountOut
+           , MovementItemFloat_Amount.ValueData    ::TVarChar AS AmountIn
 
            , CASE WHEN TRIM (Object_Cash_from.ValueData) <> '' THEN Object_Cash_from.Id ELSE 0 END :: Integer AS CashId_from
            , Object_Cash_from.ValueData                                                                       AS CashName_from

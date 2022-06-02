@@ -42,7 +42,8 @@
     Left = 224
     Top = 75
     Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
+    Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+    Properties.EditFormat = ',0.00##;-,0.00##; ;'
     TabOrder = 4
     Width = 97
   end

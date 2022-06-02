@@ -102,16 +102,16 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       MoveParams = <>
       ActionList = <
         item
-          Action = TaxFiz
-        end
-        item
-          Action = TaxCorrectiveFiz
-        end
-        item
           Action = TaxJur
         end
         item
           Action = TaxCorrectiveJur
+        end
+        item
+          Action = TaxFiz
+        end
+        item
+          Action = TaxCorrectiveFiz
         end
         item
           Action = TaxJur_old

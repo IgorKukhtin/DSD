@@ -20,7 +20,7 @@ BEGIN
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_CommentMoveMoney());
    vbUserId:= lpGetUserBySession (inSession);
 
-   -- 
+   -- Права доступа - обязательно
    vbUser_isAll:= lpCheckUser_isAll (vbUserId);
 
    -- Результат
