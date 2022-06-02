@@ -313,6 +313,14 @@ type
     GuidesOrderReturnTare: TdsdGuides;
     edParPartnerValue: TcxCurrencyEdit;
     cxLabel32: TcxLabel;
+    actSaleJournalChoiceMasc: TOpenChoiceForm;
+    actUpdateMask: TdsdExecStoredProc;
+    spUpdateMask: TdsdStoredProc;
+    mactUpdateMaskSale: TMultiAction;
+    bbUpdateMaskSale: TdxBarButton;
+    actSendJournalChoiceMasc: TOpenChoiceForm;
+    mactUpdateMaskSend: TMultiAction;
+    bbUpdateMaskSend: TdxBarButton;
   private
     { Private declarations }
   public

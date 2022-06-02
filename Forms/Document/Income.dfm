@@ -1225,6 +1225,22 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateMaskSend'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMaskReturnOut'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1400,6 +1416,14 @@ object IncomeForm: TIncomeForm
     end
     object bbOpenFormService: TdxBarButton
       Action = macOpenFormService
+      Category = 0
+    end
+    object bbUpdateMaskReturnOut: TdxBarButton
+      Action = mactUpdateMaskReturnOut
+      Category = 0
+    end
+    object bbUpdateMaskSend: TdxBarButton
+      Action = mactUpdateMaskSend
       Category = 0
     end
   end
@@ -2238,6 +2262,91 @@ object IncomeForm: TIncomeForm
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
       ImageIndex = 25
+    end
+    object actSendJournalChoiceMasc: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'SendJournalChoice'
+      FormName = 'TSendJournalChoiceForm'
+      FormNameParam.Value = 'TSendJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MaskId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actUpdateMask: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMask
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMask
+        end>
+      Caption = 'actUpdateMask'
+    end
+    object mactUpdateMaskSend: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSendJournalChoiceMasc
+        end
+        item
+          Action = actUpdateMask
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
+      ImageIndex = 59
+    end
+    object actReturnOutJournalChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ReturnOutJournalChoice'
+      FormName = 'TReturnOutJournalChoiceForm'
+      FormNameParam.Value = 'TReturnOutJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MaskId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object mactUpdateMaskReturnOut: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actReturnOutJournalChoice
+        end
+        item
+          Action = actUpdateMask
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+      ImageIndex = 82
     end
   end
   object MasterDS: TDataSource
@@ -4135,5 +4244,30 @@ object IncomeForm: TIncomeForm
       end>
     Left = 636
     Top = 56
+  end
+  object spUpdateMask: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Income_isMask'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId '
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementMaskId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MaskId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 472
+    Top = 371
   end
 end

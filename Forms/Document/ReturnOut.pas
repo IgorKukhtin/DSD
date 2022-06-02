@@ -82,6 +82,14 @@ type
     actGoodsChoiceForm: TOpenChoiceForm;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
+    spUpdateMask: TdsdStoredProc;
+    actSendJournalChoiceMasc: TOpenChoiceForm;
+    actUpdateMask: TdsdExecStoredProc;
+    mactUpdateMaskSend: TMultiAction;
+    actIncomeJournalChoice: TOpenChoiceForm;
+    mactUpdateMaskIncome: TMultiAction;
+    bbUpdateMaskSend: TdxBarButton;
+    bbUpdateMaskIncome: TdxBarButton;
   private
     { Private declarations }
   public

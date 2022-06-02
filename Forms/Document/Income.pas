@@ -226,6 +226,14 @@ type
     cxLabel18: TcxLabel;
     edPriceList: TcxButtonEdit;
     GuidesPriceList: TdsdGuides;
+    spUpdateMask: TdsdStoredProc;
+    actSendJournalChoiceMasc: TOpenChoiceForm;
+    actUpdateMask: TdsdExecStoredProc;
+    mactUpdateMaskSend: TMultiAction;
+    actReturnOutJournalChoice: TOpenChoiceForm;
+    mactUpdateMaskReturnOut: TMultiAction;
+    bbUpdateMaskReturnOut: TdxBarButton;
+    bbUpdateMaskSend: TdxBarButton;
   private
   public
   end;

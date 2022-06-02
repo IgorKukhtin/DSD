@@ -252,6 +252,14 @@ type
     cbisWeighing_inf: TcxCheckBox;
     edParPartnerValue: TcxCurrencyEdit;
     cxLabel32: TcxLabel;
+    spUpdateMask: TdsdStoredProc;
+    actSaleJournalChoiceMasc: TOpenChoiceForm;
+    actSendJournalChoiceMasc: TOpenChoiceForm;
+    actUpdateMask: TdsdExecStoredProc;
+    mactUpdateMaskSale: TMultiAction;
+    mactUpdateMaskSend: TMultiAction;
+    bbUpdateMaskSale: TdxBarButton;
+    bbUpdateMaskSend: TdxBarButton;
   private
     { Private declarations }
   public

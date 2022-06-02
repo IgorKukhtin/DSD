@@ -139,9 +139,23 @@ type
     bbMISetErasedDetail: TdxBarButton;
     bbMISetUnErasedDetail: TdxBarButton;
     actShowErasedDetail: TBooleanStoredProcAction;
-    bb: TdxBarButton;
+    bbShowErasedDetail: TdxBarButton;
     PartionGoodsId: TcxGridDBColumn;
     ord: TcxGridDBColumn;
+    actSaleJournalChoice: TOpenChoiceForm;
+    actUpdateMask: TdsdExecStoredProc;
+    spUpdateMask: TdsdStoredProc;
+    mactUpdateMaskSale: TMultiAction;
+    bbUpdateMaskSale: TdxBarButton;
+    actReturnInJournalChoice: TOpenChoiceForm;
+    mactUpdateMaskReturn: TMultiAction;
+    bbUpdateMaskReturn: TdxBarButton;
+    actReturnOutJournalChoice: TOpenChoiceForm;
+    actIncomeJournalChoice: TOpenChoiceForm;
+    mactUpdateMaskIncome: TMultiAction;
+    mactUpdateMaskReturnOut: TMultiAction;
+    bbUpdateMaskIncome: TdxBarButton;
+    bbUpdateMaskReturnOut: TdxBarButton;
   private
     { Private declarations }
   public
