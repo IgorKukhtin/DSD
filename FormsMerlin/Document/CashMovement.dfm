@@ -618,6 +618,7 @@
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -626,6 +627,7 @@
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 73
@@ -748,6 +750,7 @@
         Value = ''
         Component = GuidesCash
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -756,6 +759,7 @@
         Component = GuidesCash
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 65
@@ -769,9 +773,6 @@
     GuidesList = <
       item
         Guides = GuidesCash
-      end
-      item
-        Guides = GuidesUnit
       end
       item
         Guides = GuidesInfoMoney

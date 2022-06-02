@@ -41,7 +41,7 @@ BEGIN
 
      IF COALESCE (inInfoMoneyName,'') <> ''
      THEN
-         --пробуем найти
+         -- пробуем найти
          vbInfoMoneyId := (SELECT Object.Id 
                            FROM Object
                                 LEFT JOIN ObjectLink AS ObjectLink_Parent
@@ -50,6 +50,7 @@ BEGIN
                            WHERE Object.ValueData = TRIM (inInfoMoneyName)
                              AND Object.DescId    = zc_Object_InfoMoney()
                              AND (COALESCE (ObjectLink_Parent.ChildObjectId, 0) = COALESCE (inParent_InfoMoneyId, 0))
+                             AND Object.isErased = FALSE
                           );
 
          IF COALESCE (vbInfoMoneyId,0) = 0
@@ -72,7 +73,7 @@ BEGIN
      IF COALESCE (inInfoMoneyDetailName,'') <> ''
      THEN
          -- пробуем найти InfoMoneyDetailId
-         vbInfoMoneyDetailId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inInfoMoneyDetailName) AND Object.DescId = zc_Object_InfoMoneyDetail());
+         vbInfoMoneyDetailId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inInfoMoneyDetailName) AND Object.DescId = zc_Object_InfoMoneyDetail() AND Object.isErased = FALSE);
          IF COALESCE (vbInfoMoneyDetailId,0) = 0
          THEN
              vbInfoMoneyDetailId := gpInsertUpdate_Object_InfoMoneyDetail (ioId   := 0
@@ -91,7 +92,7 @@ BEGIN
      IF COALESCE (inCommentInfoMoney,'') <> ''
      THEN
          -- пробуем найти CommentInfoMoneyId
-         vbCommentInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inCommentInfoMoney) AND Object.DescId = zc_Object_CommentInfoMoney());
+         vbCommentInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inCommentInfoMoney) AND Object.DescId = zc_Object_CommentInfoMoney() AND Object.isErased = FALSE);
          IF COALESCE (vbCommentInfoMoneyId,0) = 0
          THEN
              vbCommentInfoMoneyId := gpInsertUpdate_Object_CommentInfoMoney (ioId             := 0
@@ -139,7 +140,7 @@ BEGIN
 
 IF vbUserId = zfCalc_UserAdmin() :: Integer
 THEN
-    RAISE EXCEPTION 'Ошибка.<%>', inAmount;
+    RAISE EXCEPTION 'Ошибка.test summa = <%>', inAmount;
 END IF;
 
 

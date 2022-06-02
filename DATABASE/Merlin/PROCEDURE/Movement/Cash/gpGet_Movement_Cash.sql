@@ -76,7 +76,10 @@ BEGIN
                                  AND ObjectString_GroupNameFull.DescId = zc_ObjectString_Unit_GroupNameFull()
            LEFT JOIN Object AS Object_InfoMoney
                             ON Object_InfoMoney.DescId = zc_Object_InfoMoney()
-                           AND Object_InfoMoney.Id = inInfoMoneyId
+                           AND Object_InfoMoney.Id     = CASE WHEN inKindName ILIKE 'zc_Enum_InfoMoney_In' AND COALESCE (inInfoMoneyId, 0) = 0
+                                                                   THEN 76878 -- _Аренда
+                                                              ELSE inInfoMoneyId
+                                                         END
            LEFT JOIN ObjectLink AS ObjectLink_Parent
                                 ON ObjectLink_Parent.ObjectId = Object_InfoMoney.Id
                                AND ObjectLink_Parent.DescId = zc_ObjectLink_InfoMoney_Parent()

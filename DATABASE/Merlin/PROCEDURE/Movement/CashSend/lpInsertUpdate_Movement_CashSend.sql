@@ -25,6 +25,16 @@ BEGIN
      IF inAmountIn = 0 THEN inAmountIn:= inAmountOut; END IF;
 
     -- проверка
+     IF COALESCE (inCashId_from, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.<Касса расход> не введена.';
+     END IF;
+    -- проверка
+     IF COALESCE (inCashId_to, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.<Касса приход> не введена.';
+     END IF;
+    -- проверка
      IF COALESCE (inAmountOut, 0) <= 0
      THEN
         RAISE EXCEPTION 'Ошибка.<Сумма расход> не введена.';
@@ -33,6 +43,23 @@ BEGIN
      IF COALESCE (inAmountIn, 0) <= 0
      THEN
         RAISE EXCEPTION 'Ошибка.<Сумма приход> не введена.';
+     END IF;
+    -- проверка
+     IF NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inCashId_from AND OL.ChildObjectId > 0 AND OL.DescId = zc_ObjectLink_Cash_Currency())
+     THEN
+        RAISE EXCEPTION 'Ошибка.<Валюта Касса расход> не введена = %.', lfGet_Object_ValueData_sh (inCashId_from);
+     END IF;
+    -- проверка
+     IF NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inCashId_to AND OL.ChildObjectId > 0 AND OL.DescId = zc_ObjectLink_Cash_Currency())
+     THEN
+        RAISE EXCEPTION 'Ошибка.<Валюта Касса приход> не введена = %.', lfGet_Object_ValueData_sh (inCashId_to);
+     END IF;
+     -- проверка
+     IF  (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inCashId_from AND OL.DescId = zc_ObjectLink_Cash_Currency())
+       = (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inCashId_to   AND OL.DescId = zc_ObjectLink_Cash_Currency())
+       AND COALESCE (inAmountOut, 0) <> COALESCE (inAmountIn, 0)
+     THEN
+        RAISE EXCEPTION 'Ошибка.Сумма расход = <%> и сумма приход = <%> не могут отличаться.', zfConvert_FloatToString (inAmountOut), zfConvert_FloatToString (inAmountIn);
      END IF;
 
 

@@ -46,7 +46,7 @@ type
     Code: TcxGridDBColumn;
     Name: TcxGridDBColumn;
     Erased: TcxGridDBColumn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     actChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     actProtocol: TdsdOpenForm;
@@ -63,7 +63,7 @@ type
     Panel4: TPanel;
     lbSearchName: TcxLabel;
     edSearchName: TcxTextEdit;
-    FieldFilter_Name: TdsdFieldFilter;
+    FieldFilter_NameFull: TdsdFieldFilter;
     NameFull: TcxGridDBColumn;
   private
     { Private declarations }
