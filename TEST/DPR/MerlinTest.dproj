@@ -520,6 +520,14 @@
 				<Form>CashTreeGroupForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Document\ServiceItemJournal.pas">
+				<Form>ServiceItemJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Document\ServiceItemMovement.pas">
+				<Form>ServiceItemMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

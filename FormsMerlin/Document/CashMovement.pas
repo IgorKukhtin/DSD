@@ -52,6 +52,7 @@ type
     cxLabel6: TcxLabel;
     edCash: TcxButtonEdit;
     GuidesCash: TdsdGuides;
+    GuidesFiller: TGuidesFiller;
   private
     { Private declarations }
   public

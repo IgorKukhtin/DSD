@@ -144,6 +144,14 @@ object CashSendJournalForm: TCashSendJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 89
       end
+      object CashGroupNameFull_from: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1082#1072#1089#1089#1072'  '#1056#1072#1089#1093#1086#1076
+        DataBinding.FieldName = 'CashGroupNameFull_from'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object CashCode_from: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1082#1072#1089#1089#1072' '#1088#1072#1089#1093#1086#1076
         DataBinding.FieldName = 'CashCode_from'
@@ -160,6 +168,14 @@ object CashSendJournalForm: TCashSendJournalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 121
+      end
+      object CashGroupNameFull_to: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1082#1072#1089#1089#1072' '#1055#1088#1080#1093#1086#1076
+        DataBinding.FieldName = 'CashGroupNameFull_to'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
       end
       object CashCode_to: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1082#1072#1089#1089#1072' '#1087#1088#1080#1093#1086#1076

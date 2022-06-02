@@ -761,4 +761,23 @@
     Left = 65
     Top = 49
   end
+  object GuidesFiller: TGuidesFiller
+    IdParam.Value = '0'
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
+    GuidesList = <
+      item
+        Guides = GuidesCash
+      end
+      item
+        Guides = GuidesUnit
+      end
+      item
+        Guides = GuidesInfoMoney
+      end>
+    ActionItemList = <>
+    Left = 128
+    Top = 40
+  end
 end

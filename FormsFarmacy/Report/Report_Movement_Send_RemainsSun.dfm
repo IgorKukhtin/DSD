@@ -956,6 +956,16 @@
             Options.Editing = False
             Width = 100
           end
+          object Layout: TcxGridDBColumn
+            Caption = #1042#1099#1082#1083'.'
+            DataBinding.FieldName = 'Layout'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object InvNumberLayout: TcxGridDBColumn
             Caption = #1044#1086#1082'. '#1074#1099#1082#1083'.'
             DataBinding.FieldName = 'InvNumberLayout'
@@ -2642,9 +2652,6 @@
   inherited ActionList: TActionList
     Left = 103
     Top = 287
-    inherited actGridToExcel: TdsdGridToExcel
-      Grid = cxGrid1
-    end
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>

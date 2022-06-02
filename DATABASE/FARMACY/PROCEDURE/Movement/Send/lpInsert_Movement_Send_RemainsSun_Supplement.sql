@@ -735,15 +735,19 @@ BEGIN
              , tmpObject_Price.GoodsId
              , tmpObject_Price.Price
              , tmpObject_Price.MCSValue
+             
+             , _tmpGoodsLayout_SUN_Supplement.Layout
 
-             , CASE WHEN _tmpGoodsLayout_SUN_Supplement.isNotMoveRemainder6 = TRUE
+             /*, CASE WHEN _tmpGoodsLayout_SUN_Supplement.isNotMoveRemainder6 = TRUE
                       OR (COALESCE (tmpRemains.Amount, 0) - COALESCE (_tmpGoods_Sun_exception_Supplement.Amount, 0) - 
                           COALESCE(tmpRemains.Amount6Month, 0))  > _tmpGoodsLayout_SUN_Supplement.Layout
+                      OR COALESCE(tmpRemains.Amount6Month, 0) = 0
                     THEN _tmpGoodsLayout_SUN_Supplement.Layout
-                    WHEN _tmpGoodsLayout_SUN_Supplement.Layout - (COALESCE (tmpRemains.Amount, 0) - COALESCE (_tmpGoods_Sun_exception_Supplement.Amount, 0) - 
-                                                                    COALESCE(tmpRemains.Amount6Month, 0)) > 0
-                    THEN _tmpGoodsLayout_SUN_Supplement.Layout - (COALESCE (tmpRemains.Amount, 0) - COALESCE (_tmpGoods_Sun_exception_Supplement.Amount, 0) - 
-                                                                    COALESCE(tmpRemains.Amount6Month, 0)) END  AS Layout
+                    WHEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (_tmpGoods_Sun_exception_Supplement.Amount, 0) - 
+                                                            COALESCE(tmpRemains.Amount6Month, 0)) >= 0
+                    THEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (_tmpGoods_Sun_exception_Supplement.Amount, 0) - 
+                                                            COALESCE(tmpRemains.Amount6Month, 0)) 
+                    ELSE 0  END  AS Layout*/
 
                -- остаток
              , CASE WHEN COALESCE (tmpRemains.Amount - COALESCE (_tmpGoods_Sun_exception_Supplement.Amount, 0), 0) > 0
@@ -1013,7 +1017,9 @@ BEGIN
                - CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
                  CASE WHEN (_tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True) AND 
                            COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= 0
-                      THEN - _tmpRemains_all_Supplement.AmountRemains
+                      THEN CASE WHEN TRUNC(_tmpRemains_all_Supplement.AmountRemains - COALESCE(_tmpRemains_all_Supplement.Layout, 0)) > 0 
+                                THEN - TRUNC(_tmpRemains_all_Supplement.AmountRemains - COALESCE(_tmpRemains_all_Supplement.Layout, 0))
+                                ELSE 0 END
                       ELSE TRUNC(_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
                                                             + CASE WHEN _tmpRemains_all_Supplement.AmountNotSend > 
                                                                        COALESCE(_tmpRemains_all_Supplement.Layout, 0) 
@@ -1025,7 +1031,9 @@ BEGIN
                  ELSE
                  TRUNC (CASE WHEN (_tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True) AND 
                            COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= 0
-                             THEN - _tmpRemains_all_Supplement.AmountRemains
+                             THEN CASE WHEN TRUNC(_tmpRemains_all_Supplement.AmountRemains - COALESCE(_tmpRemains_all_Supplement.Layout, 0)) > 0 
+                                       THEN - TRUNC(_tmpRemains_all_Supplement.AmountRemains - COALESCE(_tmpRemains_all_Supplement.Layout, 0))
+                                       ELSE 0 END
                              ELSE FLOOR(_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
                                                                    + CASE WHEN _tmpRemains_all_Supplement.AmountNotSend > 
                                                                               COALESCE(_tmpRemains_all_Supplement.Layout, 0) 
@@ -1054,7 +1062,9 @@ BEGIN
                - CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
                  CASE WHEN (_tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True) AND 
                            COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= 0
-                      THEN - _tmpRemains_all_Supplement.AmountRemains
+                      THEN CASE WHEN TRUNC(_tmpRemains_all_Supplement.AmountRemains - COALESCE(_tmpRemains_all_Supplement.Layout, 0)) > 0 
+                                THEN - TRUNC(_tmpRemains_all_Supplement.AmountRemains - COALESCE(_tmpRemains_all_Supplement.Layout, 0))
+                                ELSE 0 END
                       ELSE TRUNC(_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
                                                             + CASE WHEN _tmpRemains_all_Supplement.AmountNotSend > 
                                                                        COALESCE(_tmpRemains_all_Supplement.Layout, 0) 
@@ -1066,7 +1076,9 @@ BEGIN
                  ELSE
                  TRUNC (CASE WHEN (_tmpRemains_all_Supplement.AmountSalesMonth = 0 OR _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = True) AND 
                                    COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= 0
-                             THEN - _tmpRemains_all_Supplement.AmountRemains
+                             THEN CASE WHEN TRUNC(_tmpRemains_all_Supplement.AmountRemains - COALESCE(_tmpRemains_all_Supplement.Layout, 0)) > 0 
+                                       THEN - TRUNC(_tmpRemains_all_Supplement.AmountRemains - COALESCE(_tmpRemains_all_Supplement.Layout, 0))
+                                       ELSE 0 END
                              ELSE FLOOR(_tmpRemains_all_Supplement.Need - _tmpRemains_all_Supplement.AmountRemains 
                                                                    + CASE WHEN _tmpRemains_all_Supplement.AmountNotSend > 
                                                                               COALESCE(_tmpRemains_all_Supplement.Layout, 0) 

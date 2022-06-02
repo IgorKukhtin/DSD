@@ -2,8 +2,8 @@
   BorderStyle = bsSizeable
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1089#1089#1072', '#1076#1074#1080#1078#1077#1085#1080#1077' '#1076#1077#1085#1077#1075'>'
   ClientHeight = 312
-  ClientWidth = 302
-  ExplicitWidth = 318
+  ClientWidth = 292
+  ExplicitWidth = 308
   ExplicitHeight = 351
   PixelsPerInch = 96
   TextHeight = 13
@@ -20,8 +20,8 @@
     ExplicitTop = 270
   end
   object Код: TcxLabel [2]
-    Left = 8
-    Top = 5
+    Left = 120
+    Top = 28
     Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object cxLabel1: TcxLabel [3]
@@ -158,12 +158,25 @@
     Top = 262
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 248
-    Top = 242
+    Left = 200
+    Top = 250
   end
   inherited ActionList: TActionList
     Left = 279
     Top = 19
+    object actRefresh_Amount: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_exit
+      StoredProcList = <
+        item
+          StoredProc = spGet_exit
+        end>
+      Caption = 'actRefresh_Price'
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -486,5 +499,102 @@
       end>
     Left = 65
     Top = 49
+  end
+  object HeaderExit: THeaderExit
+    ExitList = <
+      item
+        Control = ceAmountOut
+      end>
+    Action = actRefresh_Amount
+    Left = 176
+    Top = 108
+  end
+  object spGet_exit: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_CashSend_exit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = 0.000000000000000000
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCashId_from'
+        Value = 0.000000000000000000
+        Component = GuidesCash_from
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCashId_to'
+        Value = 1.000000000000000000
+        Component = GuidesCash_to
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValue'
+        Value = 0.000000000000000000
+        Component = edCurrencyValue
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParValue'
+        Value = 0.000000000000000000
+        Component = edParValue
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountOut'
+        Value = 0.000000000000000000
+        Component = ceAmountOut
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountIn'
+        Value = Null
+        Component = ceAmountIn
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountIn'
+        Value = Null
+        Component = ceAmountIn
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 184
+    Top = 64
+  end
+  object GuidesFiller: TGuidesFiller
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
+    GuidesList = <
+      item
+        Guides = GuidesCash_from
+      end
+      item
+        Guides = GuidesCash_to
+      end>
+    ActionItemList = <>
+    Left = 128
+    Top = 40
   end
 end

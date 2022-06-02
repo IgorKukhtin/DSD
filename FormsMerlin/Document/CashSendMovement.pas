@@ -45,6 +45,10 @@ type
     cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
     ceAmountIn: TcxCurrencyEdit;
+    HeaderExit: THeaderExit;
+    spGet_exit: TdsdStoredProc;
+    actRefresh_Amount: TdsdDataSetRefresh;
+    GuidesFiller: TGuidesFiller;
   private
     { Private declarations }
   public

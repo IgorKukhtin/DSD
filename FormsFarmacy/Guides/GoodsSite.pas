@@ -151,12 +151,15 @@ type
     dxBarButton20: TdxBarButton;
     dxBarSubItem5: TdxBarSubItem;
     spSite_Param: TdsdStoredProc;
-    actForeignDataUpdatePublishedSite: TdsdForeignData;
+    actFD_DownloadPublishedSite: TdsdForeignData;
     actSite_Param: TdsdExecStoredProc;
     isPublishedSite: TcxGridDBColumn;
     dxBarButton21: TdxBarButton;
-    actSetVisiblePublishedSite_False: TdsdSetVisibleAction;
-    actSetVisiblePublishedSite_True: TdsdSetVisibleAction;
+    spUpdate_PublishedSite: TdsdStoredProc;
+    actUpdate_PublishedSite: TdsdExecStoredProc;
+    actFD_DownloadPublishedSiteOne: TdsdForeignData;
+    dxBarButton22: TdxBarButton;
+    actFD_UpdatePublishedSite_Revert: TdsdForeignData;
   private
     { Private declarations }
   public

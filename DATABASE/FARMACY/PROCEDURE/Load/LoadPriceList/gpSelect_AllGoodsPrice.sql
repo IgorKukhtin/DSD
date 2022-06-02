@@ -299,7 +299,6 @@ BEGIN
                          WHERE Object_BarCode.DescId = zc_Object_BarCode()
                            AND Object_BarCode.isErased = False
                            AND COALESCE(ObjectFloat_MaxPrice.ValueData, 0) > 0
-                           AND FALSE
                          GROUP BY ObjectLink_BarCode_Goods.ChildObjectId)
   , ResultSet AS
     (

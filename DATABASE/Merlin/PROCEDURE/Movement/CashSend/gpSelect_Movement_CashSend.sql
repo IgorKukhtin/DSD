@@ -13,8 +13,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer
              , StatusCode Integer, StatusName TVarChar
              , CurrencyValue TFloat, ParValue TFloat
              , AmountOut TFloat, AmountIn TFloat
-             , CashId_from Integer, CashCode_from Integer, CashName_from TVarChar  -- из какой расход
-             , CashId_to Integer, CashCode_to Integer, CashName_to TVarChar        -- в какую приход
+             , CashId_from Integer, CashCode_from Integer, CashName_from TVarChar, CashGroupNameFull_from TVarChar  -- из какой расход
+             , CashId_to Integer, CashCode_to Integer, CashName_to TVarChar, CashGroupNameFull_to TVarChar        -- в какую приход
              , CommentMoveMoneyId Integer, CommentMoveMoneyCode Integer, CommentMoveMoneyName TVarChar
              , CurrencyName_from TVarChar, CurrencyName_to TVarChar
              , InsertName TVarChar, InsertDate TDateTime
@@ -60,9 +60,11 @@ BEGIN
            , Object_Cash_from.Id                AS CashId_from
            , Object_Cash_from.ObjectCode        AS CashCode_from
            , Object_Cash_from.ValueData         AS CashName_from
+           , ObjectString_CashFrom_GroupNameFull.ValueData AS CashGroupNameFull_from
            , Object_Cash_to.Id                  AS CashId_to
            , Object_Cash_to.ObjectCode          AS CashCode_to
            , Object_Cash_to.ValueData           AS CashName_to
+           , ObjectString_CashTo_GroupNameFull.ValueData AS CashGroupNameFull_to
            , Object_CommentMoveMoney.Id         AS CommentMoveMoneyId
            , Object_CommentMoveMoney.ObjectCode AS CommentMoveMoneyCode
            , Object_CommentMoveMoney.ValueData  AS CommentMoveMoneyName
@@ -138,6 +140,13 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_UserAll_to
                                     ON ObjectBoolean_UserAll_to.ObjectId = Object_Cash_to.Id
                                    AND ObjectBoolean_UserAll_to.DescId = zc_ObjectBoolean_Cash_UserAll()
+
+            LEFT JOIN ObjectString AS ObjectString_CashFrom_GroupNameFull
+                                   ON ObjectString_CashFrom_GroupNameFull.ObjectId = Object_Cash_from.Id
+                                  AND ObjectString_CashFrom_GroupNameFull.DescId = zc_ObjectString_Cash_GroupNameFull()
+            LEFT JOIN ObjectString AS ObjectString_CashTo_GroupNameFull
+                                   ON ObjectString_CashTo_GroupNameFull.ObjectId = Object_Cash_to.Id
+                                  AND ObjectString_CashTo_GroupNameFull.DescId = zc_ObjectString_Cash_GroupNameFull()
 
         WHERE vbUser_isAll = TRUE
            OR (ObjectBoolean_UserAll_from.ValueData = TRUE AND ObjectBoolean_UserAll_to.ValueData = TRUE)

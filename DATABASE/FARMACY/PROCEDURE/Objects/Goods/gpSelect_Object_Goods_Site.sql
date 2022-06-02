@@ -145,7 +145,7 @@ BEGIN
            , Object_Goods_Retail.DiscontAmountSite
            , Object_Goods_Retail.DiscontPercentSite
            
-           , Object_Goods_Main.isPublished                                       AS isPublishedSite
+           , Object_Goods_Main.isPublishedSite                                   AS isPublishedSite
 
       FROM Object_Goods_Retail
 

@@ -43,6 +43,15 @@ object Unit_ObjectForm: TUnit_ObjectForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object NameFull: TcxGridDBColumn
+        Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'NameFull'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object GroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GroupNameFull'
@@ -95,13 +104,6 @@ object Unit_ObjectForm: TUnit_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 90
-      end
-      object NameFull: TcxGridDBColumn
-        Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'NameFull'
-        Visible = False
-        Options.Editing = False
-        Width = 100
       end
       object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -290,7 +292,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 8
-    Top = 64
+    Top = 120
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -322,6 +324,14 @@ object Unit_ObjectForm: TUnit_ObjectForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'NameFull'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GroupNameFull'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GroupNameFull'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
