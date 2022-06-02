@@ -350,6 +350,59 @@ BEGIN
     END IF;
 
     -- Поиск MovementItemId
+    IF 1 < (SELECT COUNT(*)
+            FROM (SELECT MI_SheetWorkTime.Id 
+                  FROM MovementItem AS MI_SheetWorkTime
+                       LEFT OUTER JOIN MovementItemLinkObject AS MIObject_Position
+                                                              ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
+                                                             AND MIObject_Position.DescId = zc_MILinkObject_Position() 
+                       LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PositionLevel
+                                                              ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id 
+                                                             AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel() 
+                       LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PersonalGroup
+                                                              ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
+                                                             AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
+                       LEFT OUTER JOIN MovementItemLinkObject AS MIObject_StorageLine
+                                                              ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id 
+                                                             AND MIObject_StorageLine.DescId = zc_MILinkObject_StorageLine() 
+
+                       -- нужно учитывать тип Раб. времени только при вызове из док. список бригад
+                       LEFT JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
+                                                        ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id
+                                                       AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
+
+                   WHERE MI_SheetWorkTime.MovementId = vbMovementId
+                     AND MI_SheetWorkTime.ObjectId   = inMemberId
+                     AND COALESCE (MIObject_Position.ObjectId, 0)      = COALESCE (inPositionId, 0)
+                     AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inPositionLevelId, 0)
+                     AND COALESCE (MIObject_PersonalGroup.ObjectId, 0) = COALESCE (inPersonalGroupId, 0)
+                     AND COALESCE (MIObject_StorageLine.ObjectId, 0)   = COALESCE (inStorageLineId, 0)
+                     --
+                     AND MI_SheetWorkTime.isErased   = FALSE
+                     --
+                     AND (inIsPersonalGroup = FALSE OR (inIsPersonalGroup = TRUE AND MIObject_WorkTimeKind.ObjectId = ioWorkTimeKindId_key))
+                  LIMIT CASE WHEN inIsPersonalGroup = TRUE THEN 1 ELSE 100 END
+                 ) AS tmp)
+        OR vbUserId = 5
+    THEN
+        RAISE EXCEPTION 'Ошибка.Найдено несколько элементов в Табеле%<%> %<%> %<%> %<%> %<%> %<%> %<%> %<%>'
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (inMemberId)
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (inPositionId)
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (inPositionLevelId)
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (inPersonalGroupId)
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (inStorageLineId)
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (ioWorkTimeKindId_key)
+                       , CHR (13)
+                       , inIsPersonalGroup
+                        ;
+    END IF;
+
     vbMovementItemId := (SELECT MI_SheetWorkTime.Id 
                          FROM MovementItem AS MI_SheetWorkTime
                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_Position

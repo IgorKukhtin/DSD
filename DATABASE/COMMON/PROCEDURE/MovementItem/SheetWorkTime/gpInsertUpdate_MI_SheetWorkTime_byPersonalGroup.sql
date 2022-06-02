@@ -34,9 +34,10 @@ BEGIN
                                                      , tmp.OperDate           :: TDateTime  -- дата
                                                      , COALESCE (tmp.Value,NULL)              :: TVarChar   -- часы
                                                      , COALESCE (tmp.WorkTimeKindId,NULL)     :: Integer
+                                                     , COALESCE (tmp.WorkTimeKindId,NULL)     :: Integer
                                                      , TRUE                   :: Boolean    -- inisPersonalGroup   -- если вызываем от сюда нужно учесть вид смены при поиске MovementItem
                                                      , inSession              :: TVarChar
-                                                     )
+                                                      )
      FROM (WITH
            tmpMemberHoliday AS (SELECT MovementLinkObject_Member.ObjectId AS MemberId
                                 FROM MovementLinkObject AS MovementLinkObject_Member

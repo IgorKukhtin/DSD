@@ -3,8 +3,8 @@
 DROP FUNCTION IF EXISTS gpUpdate_IsElectronFromMedoc(TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_IsElectronFromMedoc(TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_IsElectronFromMedoc(Integer, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_IsElectronFromMedoc
-       (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TFloat, TVarChar);
+-- DROP FUNCTION IF EXISTS gpUpdate_IsElectronFromMedoc (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_IsElectronFromMedoc (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_IsElectronFromMedoc(
    OUT outId                 Integer    ,
@@ -21,6 +21,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_IsElectronFromMedoc(
     IN inDocKind             TVarChar   , -- Тип документа
     IN inContract            TVarChar   , -- Договор
     IN inTotalSumm           TFloat     , -- Сумма документа
+    IN inMedocCharCode       TVarChar   , -- 
     IN inSession             TVarChar     -- Пользователь
 )                              
 RETURNS integer AS
@@ -269,6 +270,11 @@ return;
    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_User(), vbMedocId, /*zc_Enum_Process_Auto_Medoc()*/ vbUserId);
    -- сохранили 
    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), vbMedocId, CURRENT_TIMESTAMP);
+
+   -- сохранили 
+   PERFORM lpInsertUpdate_MovementString (zc_MovementString_CommentCustomer(), vbMedocId, inMedocCharCode);
+  
+   -- RAISE EXCEPTION 'Ошибка.<%>', vbMedocId;
 
    -- !!!не загружать строчную часть!!!
    outId := 0;   	

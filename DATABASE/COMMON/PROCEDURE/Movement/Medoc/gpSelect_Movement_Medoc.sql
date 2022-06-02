@@ -9,8 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Medoc(
 )
 RETURNS TABLE (Id Integer
            , StatusCode Integer
-           , StatusName TVarChar 
-           , InvNumber TVarChar 
+           , StatusName TVarChar
+           , InvNumber TVarChar
            , OperDate TDateTime
            , InvNumberPartner TVarChar
            , InvNumberBranch TVarChar
@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer
            , isIncome  Boolean
            , MovementInvNumber TVarChar
            , MovementOperDate TDateTime
+           , MedocCharCode TVarChar
            , UserName TVarChar
            , UpdateDate TDateTime
 )
@@ -50,16 +51,17 @@ BEGIN
            , Movement_Medoc.ToINN
            , Movement_Medoc.Desc
            , Movement_Medoc.TotalSumm
-           , Movement_Medoc.isIncome 
+           , Movement_Medoc.isIncome
            , Movement.InvNumber
            , Movement.OperDate
+           , MovementString_CommentCustomer.ValueData AS MedocCharCode
            , Object_User.ValueData AS UserName
            , MovementDate_Update.ValueData AS UpdateDate
 
        FROM  Movement_Medoc_View AS Movement_Medoc
 
-            LEFT JOIN Movement 
-                   ON Movement_Medoc.ParentId = Movement.Id AND Movement.StatusId <> zc_Enum_Status_Erased() 
+            LEFT JOIN Movement
+                   ON Movement_Medoc.ParentId = Movement.Id AND Movement.StatusId <> zc_Enum_Status_Erased()
 
             LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                    ON MovementDate_DateRegistered.MovementId =  Movement.Id
@@ -68,7 +70,7 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberRegistered
                                      ON MovementString_InvNumberRegistered.MovementId = Movement.Id
                                     AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
-                                    
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_User
                                          ON MovementLinkObject_User.MovementId = Movement_Medoc.Id
                                         AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
@@ -77,8 +79,12 @@ BEGIN
                                    ON MovementDate_Update.MovementId =  Movement_Medoc.Id
                                   AND MovementDate_Update.DescId = zc_MovementDate_Update()
 
+            LEFT JOIN MovementString AS MovementString_CommentCustomer
+                                     ON MovementString_CommentCustomer.MovementId = Movement_Medoc.Id
+                                    AND MovementString_CommentCustomer.DescId = zc_MovementString_CommentCustomer()
+
          WHERE Movement_Medoc.OperDate BETWEEN inStartDate AND inEndDate;
-          
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -87,9 +93,9 @@ ALTER FUNCTION gpSelect_Movement_Medoc (TDateTime, TDateTime, TVarChar) OWNER TO
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
- 25.05.15                        * 
- 18.05.15                        * 
- 18.04.15                        * 
+ 25.05.15                        *
+ 18.05.15                        *
+ 18.04.15                        *
 */
 
 -- ÚÂÒÚ
