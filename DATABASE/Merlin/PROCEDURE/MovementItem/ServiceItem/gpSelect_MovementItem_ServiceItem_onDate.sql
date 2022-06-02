@@ -36,7 +36,7 @@ BEGIN
                                     , MILinkObject_InfoMoney.ObjectId AS InfoMoneyId
                                     , MovementItem.Amount
                                     , COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd()) AS DateEnd
-                                    , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MILinkObject_InfoMoney.ObjectId ORDER BY COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd()) DESC) AS Ord
+                                    , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MILinkObject_InfoMoney.ObjectId ORDER BY COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd()) asc) AS Ord
                                FROM Movement
                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                            AND MovementItem.DescId     = zc_MI_Master()
@@ -46,10 +46,10 @@ BEGIN
                                                                      ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                                     AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
     
-                                    LEFT JOIN MovementItemDate AS MIDate_DateEnd
+                                    INNER JOIN MovementItemDate AS MIDate_DateEnd
                                                                ON MIDate_DateEnd.MovementItemId = MovementItem.Id
                                                               AND MIDate_DateEnd.DescId = zc_MIDate_DateEnd()
-                                                              AND COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd()) < inOperDate
+                                                              AND COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd()) > inOperDate
                                WHERE Movement.DescId = zc_Movement_ServiceItem()
                                AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                               ) AS tmp
@@ -81,7 +81,7 @@ BEGIN
                                                                                               ON tmp_before.UnitId = MovementItem.UnitId
                                                                                              AND tmp_before.InfoMoneyId = MovementItem.InfoMoneyId
                      WHERE MovementItem.Ord = 1
-                      )
+                     )
          
 
            SELECT 0                     AS Id
@@ -99,12 +99,12 @@ BEGIN
                 , Object_CommentInfoMoney.ValueData  AS Object_CommentInfoMoneyName
 
                 , COALESCE (tmpMI.DateStart, zc_DateStart()) :: TDateTime AS DateStart
-                , tmpMI.DateEnd              :: TDateTime AS DateEnd
+                , COALESCE (tmpMI.DateEnd, zc_DateEnd())     :: TDateTime AS DateEnd
                 , tmpMI.Amount               :: TFloat    AS Amount
                 , tmpMI.Price                :: TFloat    AS Price
                 , tmpMI.Area                 :: TFloat    AS Area   
 
-                , tmpMI.isErased
+                , FALSE isErased
            FROM tmpMI
                 LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMI.UnitId
                 LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = tmpMI.InfoMoneyId
@@ -114,8 +114,6 @@ BEGIN
                                        ON ObjectString_Unit_GroupNameFull.ObjectId = tmpMI.UnitId
                                       AND ObjectString_Unit_GroupNameFull.DescId   = zc_ObjectString_Unit_GroupNameFull() 
            ;
-
-     END IF;
 
 END;
 $BODY$
@@ -128,5 +126,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_ServiceItem (inMovementId:= 7, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpSelect_MovementItem_ServiceItem (inMovementId:= 7, inShowAll:= TRUE,  inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_MovementItem_ServiceItem_onDate (inOperDAte := '01.06.2022'::TDateTime, inSession:= zfCalc_UserAdmin()) order by 2
