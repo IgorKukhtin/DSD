@@ -147,7 +147,7 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
       UniqueName = #1057#1095#1077#1090' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvAccountName: TcxDBPivotGridField
-      AreaIndex = 5
+      AreaIndex = 7
       IsCaptionAssigned = True
       Caption = #1057#1095#1077#1090
       DataBinding.FieldName = 'AccountName'
@@ -188,8 +188,24 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
       Visible = True
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
-    object pvAmountDebetStart: TcxDBPivotGridField
+    object pvNameFull_unit: TcxDBPivotGridField
       AreaIndex = 3
+      IsCaptionAssigned = True
+      Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' ('#1074#1089#1077')'
+      DataBinding.FieldName = 'NameFull_unit'
+      Visible = True
+      UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object pvFloorName_unit: TcxDBPivotGridField
+      AreaIndex = 4
+      IsCaptionAssigned = True
+      Caption = #1069#1090#1072#1078
+      DataBinding.FieldName = 'FloorName_unit'
+      Visible = True
+      UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object pvAmountDebetStart: TcxDBPivotGridField
+      AreaIndex = 5
       IsCaptionAssigned = True
       Caption = #1044#1077#1073#1077#1090' '#1085#1072' '#1085#1072#1095#1072#1083#1086
       DataBinding.FieldName = 'AmountDebetStart'
@@ -236,7 +252,7 @@ object Report_UnitBalanceForm: TReport_UnitBalanceForm
       UniqueName = #1050#1088#1077#1076#1080#1090' '#1086#1073#1086#1088#1086#1090
     end
     object pvAmountDebetEnd: TcxDBPivotGridField
-      AreaIndex = 4
+      AreaIndex = 6
       IsCaptionAssigned = True
       Caption = #1044#1077#1073#1077#1090' '#1085#1072' '#1082#1086#1085#1077#1094
       DataBinding.FieldName = 'AmountDebetEnd'

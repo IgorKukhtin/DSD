@@ -468,10 +468,6 @@
 				<Form>Report_UnitRentForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsMerlin\Report\Report_UnitBalance.pas">
-				<Form>Report_UnitBalanceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsMerlin\Report\Report_UnitBalanceDialog.pas">
 				<Form>Report_UnitBalanceDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -526,6 +522,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsMerlin\Document\ServiceItemMovement.pas">
 				<Form>ServiceItemMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Report\Report_UnitBalance.pas">
+				<Form>Report_UnitBalanceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

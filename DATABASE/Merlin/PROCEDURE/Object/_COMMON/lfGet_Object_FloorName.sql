@@ -1,9 +1,8 @@
--- Function: lfGet_Object_BuildingName (Integer, Integer)
+-- Function: lfGet_Object_FloorName (Integer, Integer)
 
-DROP FUNCTION IF EXISTS lfGet_Object_BuildingName (Integer, Integer);
-DROP FUNCTION IF EXISTS lfGet_Object_BuildingName (Integer);
+DROP FUNCTION IF EXISTS lfGet_Object_FloorName (Integer);
 
-CREATE OR REPLACE FUNCTION lfGet_Object_BuildingName (
+CREATE OR REPLACE FUNCTION lfGet_Object_FloorName (
  inObjectId               Integer    -- начальный эл-нт дерева
 )
   RETURNS TVarChar
@@ -12,8 +11,8 @@ $BODY$
 DECLARE
   vbNameFull TVarChar;  
 BEGIN
-     vbNameFull:= (SELECT CASE WHEN COALESCE (ObjectLink_parent3.ChildObjectId, 0) = 0 THEN Parent1.ValueData
-                               WHEN COALESCE (ObjectLink_parent4.ChildObjectId, 0) = 0 THEN Parent2.ValueData
+     vbNameFull:= (SELECT CASE WHEN COALESCE (ObjectLink_parent4.ChildObjectId, 0) = 0 THEN Parent1.ValueData
+                              -- WHEN COALESCE (ObjectLink_parent4.ChildObjectId, 0) = 0 THEN Parent2.ValueData
                                ELSE ''
                           END
                    FROM Object
@@ -52,4 +51,4 @@ $BODY$
 */
 
 -- тест
---     SELECT * FROM lfGet_Object_BuildingName (52474) --52778 )
+--     SELECT * FROM lfGet_Object_FloorName (52474) --52778 )
