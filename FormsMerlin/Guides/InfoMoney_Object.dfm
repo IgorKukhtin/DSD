@@ -580,13 +580,14 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
       item
         Name = 'inIsShowAll'
         Value = Null
+        Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inIsService'
-        Value = Null
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

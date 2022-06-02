@@ -41,22 +41,8 @@ BEGIN
              Movement.Id
            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
            , Movement.OperDate
-           , DATE_TRUNC ('Month', MIDate_ServiceDate.ValueData) ::TDateTime AS ServiceDate
-           , Object_Status.ObjectCode           AS StatusCode
-           , Object_Status.ValueData            AS StatusName
-           , MovementItem.Amount  ::TFloat      AS Amount
-           , Object_Unit.Id                     AS UnitId
-           , Object_Unit.ObjectCode             AS UnitCode
-           , Object_Unit.ValueData              AS UnitName
-           , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
-           , Object_InfoMoney.Id                AS InfoMoneyId
-           , Object_InfoMoney.ObjectCode        AS InfoMoneyCode
-           , Object_InfoMoney.ValueData         AS InfoMoneyName
-           , Object_CommentInfoMoney.Id         AS CommentInfoMoneyId
-           , Object_CommentInfoMoney.ObjectCode AS CommentInfoMoneyCode
-           , Object_CommentInfoMoney.ValueData  AS CommentInfoMoneyName
-
-           , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) ::Boolean AS isAuto
+           , Object_Status.ObjectCode             AS StatusCode
+           , Object_Status.ValueData              AS StatusName
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
            , Object_Update.ValueData              AS UpdateName

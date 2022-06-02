@@ -138,6 +138,15 @@ object UnitTreeForm: TUnitTreeForm
         Options.Editing = False
         Width = 80
       end
+      object NameFull: TcxGridDBColumn
+        Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'NameFull'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 138
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'

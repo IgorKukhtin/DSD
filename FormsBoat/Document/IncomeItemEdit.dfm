@@ -1017,8 +1017,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Control = ceSummIn
       end>
     Action = actRefresh_Price
-    Left = 352
-    Top = 156
+    Left = 296
+    Top = 180
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null

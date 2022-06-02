@@ -14,9 +14,14 @@ CREATE OR REPLACE FUNCTION zc_Movement_Currency() RETURNS Integer AS $BODY$BEGIN
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_Currency', 'Курсы валют (Курсовая разница)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_Currency');
 
+CREATE OR REPLACE FUNCTION zc_Movement_ServiceItem() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_ServiceItem'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_ServiceItem', 'Условия аренды (история)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_ServiceItem');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    
+ 01.06.22         * zc_Movement_ServiceItem
  19.04.22         * zc_Movement_Currency
  19.01.22         * zc_Movement_CashSend
  14.01.22         * zc_Movement_Service

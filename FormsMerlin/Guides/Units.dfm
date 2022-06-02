@@ -81,6 +81,15 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 201
       end
+      object NameFull: TcxGridDBColumn
+        Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'NameFull'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object Phone: TcxGridDBColumn
         Caption = #1058#1077#1083#1077#1092#1086#1085
         DataBinding.FieldName = 'Phone'
@@ -138,13 +147,6 @@ object UnitForm: TUnitForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 75
-      end
-      object NameFull: TcxGridDBColumn
-        Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'NameFull'
-        Visible = False
-        Options.Editing = False
-        Width = 100
       end
     end
     object cxGridLevel: TcxGridLevel

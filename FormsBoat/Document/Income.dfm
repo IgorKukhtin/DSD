@@ -3527,8 +3527,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 64
-    Top = 88
+    Left = 208
+    Top = 224
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'
@@ -3980,8 +3980,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 872
-    Top = 185
+    Left = 904
+    Top = 129
   end
   object spInsertUpdate_IncomeCost: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_IncomeCost'
@@ -4306,7 +4306,7 @@ object IncomeForm: TIncomeForm
       item
         Control = ceTotalSummTaxMVAT
       end>
-    Left = 672
+    Left = 736
     Top = 40
   end
   object FieldFilter_Article: TdsdFieldFilter

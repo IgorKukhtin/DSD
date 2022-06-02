@@ -1,9 +1,9 @@
 -- Function: gpGet_Movement_Cash()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_Service (Integer, Integer, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_Service (Integer, Integer, Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_ServiceItem (Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_ServiceItem (Integer, Integer, Integer, Integer, TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Movement_Service(
+CREATE OR REPLACE FUNCTION gpGet_Movement_ServiceItem(
     IN inMovementId        Integer  , -- ключ Документа
     IN inMovementId_Value  Integer   ,    
     IN inUnitId            Integer  , -- отдел
@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Service(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar
              , OperDate TDateTime
-             , ServiceDate TDateTime
+             , ServiceItemDate TDateTime
              , Amount TFloat
              , UnitId Integer, UnitName TVarChar
              , ParentId_InfoMoney Integer, ParentName_InfoMoney TVarChar
@@ -35,9 +35,9 @@ BEGIN
      RETURN QUERY 
        SELECT
              0 AS Id
-           , CAST (NEXTVAL ('movement_Service_seq') AS TVarChar)  AS InvNumber
+           , CAST (NEXTVAL ('movement_ServiceItem_seq') AS TVarChar)  AS InvNumber
            , tmp.OperDate                     :: TDateTime     AS OperDate
-           , DATE_TRUNC ('MONTH', inOperDate) :: TDateTime     AS ServiceDate
+           , DATE_TRUNC ('MONTH', inOperDate) :: TDateTime     AS ServiceItemDate
            
            , 0::TFloat                                         AS Amount
            , CASE WHEN TRIM (Object_Unit.ValueData) <> '' THEN Object_Unit.Id ELSE 0 END           :: Integer AS UnitId

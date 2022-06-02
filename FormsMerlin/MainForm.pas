@@ -89,6 +89,8 @@ type
     actCurrencyJournal: TdsdOpenForm;
     miCurrencyJournal: TMenuItem;
     N10: TMenuItem;
+    actServiceItemJournal: TdsdOpenForm;
+    N3: TMenuItem;
   private
     { Private declarations }
   public

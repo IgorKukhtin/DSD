@@ -1,8 +1,8 @@
--- Function: gpInsertUpdate_Movement_Service()
+-- Function: gpInsertUpdate_Movement_ServiceItem()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Service (Integer, TVarChar, TDateTime, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ServiceItem (Integer, TVarChar, TDateTime, Integer);
 
-CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Service(
+CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ServiceItem(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
     IN inInvNumber            TVarChar  , -- Номер документа
     IN inOperDate             TDateTime , -- Дата документа
@@ -11,17 +11,15 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Service(
 RETURNS Integer AS
 $BODY$
    DECLARE vbIsInsert Boolean;
-   DECLARE vbMovementItemId Integer;
 BEGIN
 
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
      
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Service(), inInvNumber, inOperDate, NULL, inUserId);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ServiceItem(), inInvNumber, inOperDate, NULL, inUserId);
 
-
-      -- !!!протокол через свойства конкретного объекта!!!
+        -- !!!протокол через свойства конкретного объекта!!!
      IF vbIsInsert = FALSE
      THEN
          -- сохранили свойство <Дата корректировки>

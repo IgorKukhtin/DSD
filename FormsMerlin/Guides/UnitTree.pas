@@ -71,6 +71,7 @@ type
     Comment: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    NameFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -15,8 +15,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , isSign Boolean
              , Amount TFloat
              , MI_Id Integer
-             , CashId Integer, CashCode Integer, CashName TVarChar
-             , UnitId Integer, UnitCode Integer, UnitName TVarChar, UnitGroupNameFull TVarChar
+             , CashId Integer, CashCode Integer, CashName TVarChar, CashGroupNameFull TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar, UnitGroupNameFull TVarChar, UnitNameFull TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , InfoMoneyDetailId Integer, InfoMoneyDetailCode Integer, InfoMoneyDetailName TVarChar
              , CommentInfoMoneyId Integer, CommentInfoMoneyCode Integer, CommentInfoMoneyName TVarChar
@@ -94,10 +94,12 @@ BEGIN
            , Object_Cash.Id                     AS CashId
            , Object_Cash.ObjectCode             AS CashCode
            , Object_Cash.ValueData              AS CashName
+           , ObjectString_Cash_GroupNameFull.ValueData AS CashGroupNameFull
            , Object_Unit.Id                     AS UnitId
            , Object_Unit.ObjectCode             AS UnitCode
            , Object_Unit.ValueData              AS UnitName
            , ObjectString_Unit_GroupNameFull.ValueData AS UnitGroupNameFull
+           , TRIM (COALESCE (ObjectString_Unit_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS UnitNameFull
            , Object_InfoMoney.Id                AS InfoMoneyId
            , Object_InfoMoney.ObjectCode        AS InfoMoneyCode
            , Object_InfoMoney.ValueData         AS InfoMoneyName
@@ -192,6 +194,10 @@ BEGIN
                                              ON MILO_Update_mi.MovementItemId = tmpData.MI_Id
                                             AND MILO_Update_mi.DescId = zc_MILinkObject_Update()
             LEFT JOIN Object AS Object_Update_mi ON Object_Update_mi.Id = MILO_Update_mi.ObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_Cash_GroupNameFull
+                                   ON ObjectString_Cash_GroupNameFull.ObjectId = Object_Cash.Id
+                                  AND ObjectString_Cash_GroupNameFull.DescId = zc_ObjectString_Cash_GroupNameFull()
 
        --
        

@@ -34,6 +34,7 @@ type
     procedure LoadReportFormTest;
     procedure LoadServiceFormTest;
     procedure LoadServiceMovementFormTest;
+    procedure LoadServiceItemMovementFormTest;
     procedure LoadUnitFormTest;
     procedure FormTest;
   end;
@@ -330,6 +331,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TServiceJournalForm');
 end;
 
+procedure TLoadFormTest.LoadServiceItemMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceItemMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceItemJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceItemJournalForm');
+end;
 
 procedure TLoadFormTest.LoadImportSettingsFormTest;
 begin

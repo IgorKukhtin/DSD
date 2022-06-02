@@ -1,9 +1,9 @@
--- Function: gpInsertUpdate_Movement_Service()
+-- Function: gpInsertUpdate_Movement_ServiceItem()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service(Integer, TVarChar, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ServiceItem(Integer, TVarChar, TDateTime, TVarChar);
 
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ServiceItem(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
     IN inInvNumber            TVarChar  , -- Номер документа
     IN inOperDate             TDateTime , -- Дата документа
