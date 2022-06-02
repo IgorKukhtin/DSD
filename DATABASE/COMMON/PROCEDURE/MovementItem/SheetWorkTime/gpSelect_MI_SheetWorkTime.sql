@@ -26,7 +26,7 @@ $BODY$
   DECLARE vbEndDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
+     vbUserId:= lpGetUserBySession (inSession);
      
      vbStartDate := DATE_TRUNC ('MONTH', inDate);
      vbEndDate   := DATE_TRUNC ('MONTH', inDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
@@ -46,15 +46,18 @@ BEGIN
      -- уволенные сотрудники в период табеля
      CREATE TEMP TABLE tmpListOut ON COMMIT DROP AS 
         SELECT Object_Personal_View.MemberId
-             , Object_Personal_View.PersonalId
+             , MAX (Object_Personal_View.PersonalId) AS PersonalId
              , Object_Personal_View.PositionId
-             , Object_Personal_View.DateIn
-             , Object_Personal_View.DateOut
+             , MAX (Object_Personal_View.DateIn)  AS DateIn
+             , MAX (Object_Personal_View.DateOut) AS DateOut
         FROM Object_Personal_View
         WHERE ((Object_Personal_View.DateOut >= vbStartDate AND Object_Personal_View.DateOut <= vbEndDate)
             OR (Object_Personal_View.DateIn >= vbStartDate AND Object_Personal_View.DateIn <= vbEndDate))
-          AND Object_Personal_View.UnitId = inUnitId;
-
+          AND Object_Personal_View.UnitId = inUnitId
+        GROUP BY Object_Personal_View.MemberId
+             --, Object_Personal_View.PersonalId
+               , Object_Personal_View.PositionId
+                ;
 
      CREATE TEMP TABLE tmpDateOut_All ON COMMIT DROP AS
        /* WITH
@@ -72,7 +75,7 @@ BEGIN
                    )   */
         --
         SELECT tmpList.MemberId
-             , tmpList.PersonalId
+           --, tmpList.PersonalId
              , tmpList.PositionId
              , tmpOperDate.OperDate
              , 12918                                         AS WorkTimeKindId 
@@ -80,7 +83,7 @@ BEGIN
         FROM tmpOperDate
              LEFT JOIN tmpListOut AS tmpList
                                   ON tmpList.DateOut < tmpOperDate.OperDate
-                                  OR tmpList.DateIn > tmpOperDate.OperDate
+                                  OR tmpList.DateIn  > tmpOperDate.OperDate
              LEFT JOIN ObjectString AS ObjectString_WorkTimeKind_ShortName
                                     ON ObjectString_WorkTimeKind_ShortName.ObjectId = 12918 --  уволен  Х
                                    AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()
