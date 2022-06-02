@@ -165,7 +165,6 @@ uses
   CashSendMovement in '..\..\FormsMerlin\Document\CashSendMovement.pas' {CashSendMovementForm: TParentForm},
   CashSendJournal in '..\..\FormsMerlin\Document\CashSendJournal.pas' {CashSendJournalForm: TParentForm},
   Report_UnitRent in '..\..\FormsMerlin\Report\Report_UnitRent.pas' {Report_UnitRentForm: TParentForm},
-  Report_UnitBalance in '..\..\FormsMerlin\Report\Report_UnitBalance.pas' {Report_UnitBalanceForm: TParentForm},
   Report_UnitBalanceDialog in '..\..\FormsMerlin\Report\Report_UnitBalanceDialog.pas' {Report_UnitBalanceDialogForm: TParentForm},
   Report_CashBalance in '..\..\FormsMerlin\Report\Report_CashBalance.pas' {Report_CashBalanceForm: TParentForm},
   Report_CashBalanceDialog in '..\..\FormsMerlin\Report\Report_CashBalanceDialog.pas' {Report_CashBalanceDialogForm: TParentForm},
@@ -179,7 +178,8 @@ uses
   InfoMoney_Object in '..\..\FormsMerlin\Guides\InfoMoney_Object.pas' {InfoMoney_ObjectForm: TParentForm},
   CashTreeGroup in '..\..\FormsMerlin\Guides\CashTreeGroup.pas' {CashTreeGroupForm: TParentForm},
   ServiceItemJournal in '..\..\FormsMerlin\Document\ServiceItemJournal.pas' {ServiceItemJournalForm: TParentForm},
-  ServiceItemMovement in '..\..\FormsMerlin\Document\ServiceItemMovement.pas' {ServiceItemMovementForm: TParentForm};
+  ServiceItemMovement in '..\..\FormsMerlin\Document\ServiceItemMovement.pas' {ServiceItemMovementForm: TParentForm},
+  Report_UnitBalance in '..\..\FormsMerlin\Report\Report_UnitBalance.pas' {Report_UnitBalanceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

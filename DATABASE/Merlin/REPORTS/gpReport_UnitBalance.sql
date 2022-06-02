@@ -25,7 +25,8 @@ CREATE OR REPLACE FUNCTION gpReport_UnitBalance(
 RETURNS TABLE (ContainerId Integer, ServiceDateId Integer
              , ServiceDate TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
-             , GroupNameFull_Unit TVarChar, ParentName_Unit TVarChar, BuildingName_unit TVarChar
+             , GroupNameFull_Unit TVarChar, NameFull_unit TVarChar
+             , ParentName_Unit TVarChar, BuildingName_unit TVarChar, FloorName_unit TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
              , AccountCode Integer, AccountName TVarChar 
              , AmountDebetStart TFloat, AmountKreditStart TFloat
@@ -49,12 +50,14 @@ BEGIN
      RETURN QUERY
      WITH
      tmpUnit AS (SELECT lfSelect_Object_Unit_byGroup.UnitId AS UnitId
-                      , lfGet_Object_BuildingName (lfSelect_Object_Unit_byGroup.UnitId, zc_ObjectLink_Unit_Parent()) ::TVarChar AS BuildingName
+                      , lfGet_Object_BuildingName (lfSelect_Object_Unit_byGroup.UnitId) ::TVarChar AS BuildingName
+                      , lfGet_Object_FloorName (lfSelect_Object_Unit_byGroup.UnitId)    ::TVarChar AS FloorName
                  FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect_Object_Unit_byGroup
                  WHERE inUnitGroupId <> 0
                 UNION
                  SELECT Object.Id AS UnitId 
-                      , lfGet_Object_BuildingName (Object.Id, zc_ObjectLink_Unit_Parent()) ::TVarChar AS BuildingName 
+                      , lfGet_Object_BuildingName (Object.Id) ::TVarChar AS BuildingName
+                      , lfGet_Object_FloorName (Object.Id)    ::TVarChar AS FloorName 
                  FROM Object
                  WHERE Object.DescId = zc_Object_Unit()
                    AND Object.isErased = False
@@ -116,9 +119,11 @@ BEGIN
             , Object_Unit.Id         AS UnitId
             , Object_Unit.ObjectCode AS UnitCode
             , Object_Unit.ValueData  AS UnitName
-            , ObjectString_Unit_GroupNameFull.ValueData AS GroupNameFull_Unit
+            , ObjectString_Unit_GroupNameFull.ValueData AS GroupNameFull_Unit 
+            , TRIM (COALESCE (ObjectString_Unit_GroupNameFull.ValueData,'')||' '||Object_Unit.ValueData) ::TVarChar AS NameFull_unit
             , Object_ParentUnit.ValueData               AS ParentName_Unit
             , tmpUnit.BuildingName           ::TVarChar AS BuildingName_unit
+            , tmpUnit.FloorName              ::TVarChar AS FloorName_unit
              
             , Object_InfoMoney.ObjectCode AS InfoMoneyCode
             , Object_InfoMoney.ValueData  AS InfoMoneyName
