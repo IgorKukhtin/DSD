@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ServiceItem_onDate(
     IN inOperDate         TDateTime      , -- 
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer
+RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar
+             , Id Integer
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , UnitGroupNameFull TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -14,7 +15,6 @@ RETURNS TABLE (Id Integer
              
              , DateStart TDateTime, DateEnd TDateTime
              , Amount TFloat, Price TFloat, Area TFloat
-             
              
              , isErased Boolean
               )
@@ -31,7 +31,10 @@ BEGIN
           WITH 
           --данные за другие периоды для определения даты начала и предыдущих и след.значений
           tmpMI_All AS (SELECT tmp.*
-                        FROM  (SELECT MovementItem.Id
+                        FROM  (SELECT MovementItem.MovementId
+                                    , Movement.OperDate
+                                    , Movement.InvNumber
+                                    , MovementItem.Id
                                     , MovementItem.ObjectId           AS UnitId
                                     , MILinkObject_InfoMoney.ObjectId AS InfoMoneyId
                                     , MovementItem.Amount
@@ -63,7 +66,10 @@ BEGIN
                           , MovementItem.DateEnd 
                           , MovementItem.Amount 
                           , COALESCE (MIFloat_Price.ValueData, 0)  AS Price
-                          , COALESCE (MIFloat_Area.ValueData, 0)   AS Area
+                          , COALESCE (MIFloat_Area.ValueData, 0)   AS Area 
+                          , MovementItem.MovementId
+                          , MovementItem.OperDate
+                          , MovementItem.InvNumber
                      FROM tmpMI_All AS MovementItem
                         LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -84,7 +90,10 @@ BEGIN
                      )
          
 
-           SELECT 0                     AS Id
+           SELECT MovementItem.MovementId
+                , MovementItem.OperDate
+                , MovementItem.InvNumber
+                , tmpMI.Id                      AS Id
                 , Object_Unit.Id                AS UnitId
                 , Object_Unit.ObjectCode        AS UnitCode
                 , Object_Unit.ValueData         AS UnitName
