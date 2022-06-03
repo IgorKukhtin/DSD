@@ -179,7 +179,9 @@ uses
   CashTreeGroup in '..\..\FormsMerlin\Guides\CashTreeGroup.pas' {CashTreeGroupForm: TParentForm},
   ServiceItemJournal in '..\..\FormsMerlin\Document\ServiceItemJournal.pas' {ServiceItemJournalForm: TParentForm},
   ServiceItemMovement in '..\..\FormsMerlin\Document\ServiceItemMovement.pas' {ServiceItemMovementForm: TParentForm},
-  Report_UnitBalance in '..\..\FormsMerlin\Report\Report_UnitBalance.pas' {Report_UnitBalanceForm: TParentForm};
+  Report_UnitBalance in '..\..\FormsMerlin\Report\Report_UnitBalance.pas' {Report_UnitBalanceForm: TParentForm},
+  ServiceItemUpdate in '..\..\FormsMerlin\Document\ServiceItemUpdate.pas' {ServiceItemUpdateForm: TParentForm},
+  ServiceItemEditMI in '..\..\FormsMerlin\Document\ServiceItemEditMI.pas' {ServiceItemEditMIForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

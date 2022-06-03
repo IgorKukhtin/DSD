@@ -317,6 +317,7 @@
       end
       item
         Name = 'MovementId'
+        Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

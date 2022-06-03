@@ -26,6 +26,9 @@ BEGIN
      --vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_ServiceItem());
      vbUserId:= lpGetUserBySession (inSession);
 
+     --
+     inOperDate := CASE WHEN inOperDate IS NULL THEN CURRENT_DATE ELSE inOperDate END;
+     
           -- Результат 
          RETURN QUERY 
           WITH 
@@ -67,6 +70,7 @@ BEGIN
                           , MovementItem.Amount 
                           , COALESCE (MIFloat_Price.ValueData, 0)  AS Price
                           , COALESCE (MIFloat_Area.ValueData, 0)   AS Area 
+                          , MovementItem.Id
                           , MovementItem.MovementId
                           , MovementItem.OperDate
                           , MovementItem.InvNumber
@@ -90,9 +94,9 @@ BEGIN
                      )
          
 
-           SELECT MovementItem.MovementId
-                , MovementItem.OperDate
-                , MovementItem.InvNumber
+           SELECT tmpMI.MovementId
+                , tmpMI.OperDate
+                , tmpMI.InvNumber
                 , tmpMI.Id                      AS Id
                 , Object_Unit.Id                AS UnitId
                 , Object_Unit.ObjectCode        AS UnitCode
