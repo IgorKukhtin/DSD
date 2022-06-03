@@ -27,7 +27,6 @@ type
   TServiceItemEditMIForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
-    cxLabel3: TcxLabel;
     cxLabel2: TcxLabel;
     ActionList: TActionList;
     dsdDataSetRefresh: TdsdDataSetRefresh;
@@ -37,7 +36,6 @@ type
     spGet: TdsdStoredProc;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    edStartDate: TcxDateEdit;
     edEndDate: TcxDateEdit;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     Код: TcxLabel;

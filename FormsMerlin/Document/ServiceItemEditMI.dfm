@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1089#1083#1086#1074#1080#1103' '#1072#1088#1077#1085#1076#1099'>'
-  ClientHeight = 306
-  ClientWidth = 327
+  ClientHeight = 256
+  ClientWidth = 415
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,55 +17,39 @@
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 75
-    Top = 266
+    Left = 91
+    Top = 210
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
-    TabOrder = 2
+    TabOrder = 1
   end
   object cxButton2: TcxButton
-    Left = 208
-    Top = 266
+    Left = 224
+    Top = 210
     Width = 75
     Height = 25
     Action = dsdFormClose1
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
-    TabOrder = 3
-  end
-  object cxLabel3: TcxLabel
-    Left = 24
-    Top = 51
-    Caption = #1044#1072#1090#1072' '#1089' :'
+    TabOrder = 2
   end
   object cxLabel2: TcxLabel
-    Left = 138
+    Left = 24
     Top = 51
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
-  object edStartDate: TcxDateEdit
-    Left = 24
-    Top = 71
-    EditValue = 42236d
-    Enabled = False
-    Properties.ReadOnly = True
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    TabOrder = 0
-    Width = 92
-  end
   object edEndDate: TcxDateEdit
-    Left = 138
+    Left = 24
     Top = 71
     EditValue = 42236d
     Properties.ReadOnly = False
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 1
+    TabOrder = 0
     Width = 92
   end
   object Код: TcxLabel
@@ -82,91 +66,91 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 7
-    Width = 273
+    TabOrder = 5
+    Width = 374
   end
   object cxLabel1: TcxLabel
-    Left = 24
-    Top = 106
+    Left = 125
+    Top = 53
     Caption = #1055#1083#1086#1097#1072#1076#1100' :'
   end
   object ceArea: TcxCurrencyEdit
-    Left = 24
-    Top = 124
+    Left = 125
+    Top = 71
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
     Properties.EditFormat = ',0.00##;-,0.00##; ;'
     Properties.UseDisplayFormatWhenEditing = True
-    TabOrder = 9
+    TabOrder = 7
     Width = 69
   end
   object edInfoMoney: TcxButtonEdit
     Left = 24
-    Top = 178
+    Top = 122
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 10
-    Width = 273
+    TabOrder = 8
+    Width = 374
   end
   object cxLabel4: TcxLabel
     Left = 24
-    Top = 160
+    Top = 104
     Caption = #1057#1090#1072#1090#1100#1103':'
   end
   object cxLabel5: TcxLabel
     Left = 24
-    Top = 205
+    Top = 149
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077':'
   end
   object edCommentInfoMoney: TcxButtonEdit
     Left = 24
-    Top = 224
+    Top = 168
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 13
-    Width = 273
+    TabOrder = 11
+    Width = 374
   end
   object cxLabel6: TcxLabel
-    Left = 102
-    Top = 106
+    Left = 203
+    Top = 53
     Caption = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'. :'
   end
   object cePrice: TcxCurrencyEdit
-    Left = 102
-    Top = 124
+    Left = 203
+    Top = 71
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+    Properties.EditFormat = ',0.00##;-,0.00##; ;'
+    Properties.UseDisplayFormatWhenEditing = True
+    TabOrder = 13
+    Width = 80
+  end
+  object cxLabel7: TcxLabel
+    Left = 293
+    Top = 53
+    Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100' :'
+  end
+  object ceAmount: TcxCurrencyEdit
+    Left = 293
+    Top = 71
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
     Properties.EditFormat = ',0.00##;-,0.00##; ;'
     Properties.UseDisplayFormatWhenEditing = True
     TabOrder = 15
-    Width = 80
-  end
-  object cxLabel7: TcxLabel
-    Left = 192
-    Top = 106
-    Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100' :'
-  end
-  object ceAmount: TcxCurrencyEdit
-    Left = 192
-    Top = 124
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-    Properties.EditFormat = ',0.00##;-,0.00##; ;'
-    Properties.UseDisplayFormatWhenEditing = True
-    TabOrder = 17
     Width = 105
   end
   object ActionList: TActionList
-    Left = 272
-    Top = 72
+    Left = 328
+    Top = 200
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -200,16 +184,16 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_ServiceItem'
+    StoredProcName = 'gpUpdate_Movement_ServiceItem'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -217,7 +201,6 @@
         Value = Null
         Component = FormParams
         ComponentItem = 'MovementId'
-        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -278,8 +261,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 267
-    Top = 150
+    Left = 275
+    Top = 102
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -322,7 +305,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 16
-    Top = 256
+    Top = 184
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_MI_ServiceItem'
@@ -334,14 +317,6 @@
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'MovementId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -427,7 +402,6 @@
       item
         Name = 'StartDate'
         Value = Null
-        Component = edStartDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -453,15 +427,15 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Value'
+        Name = 'Amount'
         Value = Null
         Component = ceAmount
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 280
-    Top = 22
+    Left = 376
+    Top = 198
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -476,11 +450,11 @@
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 152
-    Top = 200
+    Top = 144
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 280
-    Top = 216
+    Left = 296
+    Top = 160
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -552,7 +526,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 128
-    Top = 157
+    Top = 101
   end
   object GuidesCommentInfoMoney: TdsdGuides
     KeyField = 'Id'
@@ -580,7 +554,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 152
-    Top = 203
+    Left = 184
+    Top = 147
   end
 end
