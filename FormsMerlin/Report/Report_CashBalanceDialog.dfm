@@ -88,7 +88,7 @@ object Report_CashBalanceDialogForm: TReport_CashBalanceDialogForm
         Default = True
         Kind = bkEllipsis
       end>
-    Properties.ReadOnly = False
+    Properties.ReadOnly = True
     TabOrder = 8
     Width = 287
   end
@@ -209,7 +209,7 @@ object Report_CashBalanceDialogForm: TReport_CashBalanceDialogForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoneyTreeForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'iniService'
