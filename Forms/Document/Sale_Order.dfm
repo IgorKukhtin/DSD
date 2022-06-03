@@ -1,28 +1,28 @@
 inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 585
-  ClientWidth = 1388
-  ExplicitWidth = 1404
+  ClientWidth = 1370
+  ExplicitWidth = 1386
   ExplicitHeight = 624
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1388
+    Width = 1370
     Height = 419
     ExplicitTop = 166
-    ExplicitWidth = 1388
-    ExplicitHeight = 290
+    ExplicitWidth = 1370
+    ExplicitHeight = 419
     ClientRectBottom = 419
-    ClientRectRight = 1388
+    ClientRectRight = 1370
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1388
-      ExplicitHeight = 266
+      ExplicitWidth = 1370
+      ExplicitHeight = 395
       inherited cxGrid: TcxGrid
-        Width = 1388
+        Width = 1370
         Height = 395
-        ExplicitWidth = 1388
-        ExplicitHeight = 266
+        ExplicitWidth = 1370
+        ExplicitHeight = 395
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -496,10 +496,10 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1388
+    Width = 1370
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1388
+    ExplicitWidth = 1370
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -2585,6 +2585,21 @@ inherited Sale_OrderForm: TSale_OrderForm
           Component = FormParams
           ComponentItem = 'MaskId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerId'
+          Value = Null
+          Component = GuidesTo
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerName'
+          Value = Null
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True

@@ -1,27 +1,27 @@
 inherited Sale_PartnerForm: TSale_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')>'
   ClientHeight = 490
-  ClientWidth = 1373
-  ExplicitWidth = 1389
+  ClientWidth = 1370
+  ExplicitWidth = 1386
   ExplicitHeight = 529
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1373
+    Width = 1370
     Height = 324
     ExplicitTop = 166
-    ExplicitWidth = 1373
+    ExplicitWidth = 1370
     ExplicitHeight = 324
     ClientRectBottom = 324
-    ClientRectRight = 1373
+    ClientRectRight = 1370
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1373
+      ExplicitWidth = 1370
       ExplicitHeight = 300
       inherited cxGrid: TcxGrid
-        Width = 1373
+        Width = 1370
         Height = 300
-        ExplicitWidth = 1373
+        ExplicitWidth = 1370
         ExplicitHeight = 300
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -527,10 +527,10 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1373
+    Width = 1370
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1373
+    ExplicitWidth = 1370
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -2435,6 +2435,21 @@ inherited Sale_PartnerForm: TSale_PartnerForm
           Component = FormParams
           ComponentItem = 'MaskId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerId'
+          Value = Null
+          Component = GuidesTo
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerName'
+          Value = Null
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True
