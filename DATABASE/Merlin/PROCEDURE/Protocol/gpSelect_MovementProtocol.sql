@@ -31,28 +31,44 @@ BEGIN
 
   IF inMovementId <> 0 
   THEN
-  -- real-1
-  RETURN QUERY 
-  SELECT 
-     MovementProtocol.OperDate,
-     MovementProtocol.ProtocolData::Text,
-     Object_User.ValueData,
-     Movement.InvNumber, 
-     Movement.OperDate, 
-     MovementDesc.ItemName AS MovementDescName,
-     MovementProtocol.isInsert
-  FROM MovementProtocol 
-  JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
-  JOIN Movement ON Movement.Id = MovementProtocol.MovementId AND Movement.Id = inMovementId
-  JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-  ;
+      -- Результат
+      RETURN QUERY 
+         SELECT 
+            MovementProtocol.OperDate,
+            MovementProtocol.ProtocolData::Text,
+            Object_User.ValueData,
+            Movement.InvNumber, 
+            Movement.OperDate, 
+            MovementDesc.ItemName AS MovementDescName,
+            MovementProtocol.isInsert
+         FROM MovementProtocol 
+             JOIN Object AS Object_User ON Object_User.Id = MovementProtocol.UserId
+             JOIN Movement ON Movement.Id = MovementProtocol.MovementId
+             JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+         WHERE MovementProtocol.MovementId = inMovementId
+
+        UNION ALL
+            SELECT
+               MovementItemProtocol.OperDate,
+               MovementItemProtocol.ProtocolData::Text,
+               Object_User.ValueData AS UserName,
+               Movement.InvNumber, 
+               Movement.OperDate, 
+               MovementDesc.ItemName AS MovementDescName,
+               TRUE  :: Boolean AS isInsert
+            FROM MovementItem
+                 JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
+                 JOIN Object AS Object_User ON Object_User.Id = MovementItemProtocol.UserId
+                 JOIN Movement ON Movement.Id = MovementItem.MovementId
+                 JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+            WHERE MovementItem.MovementId = inMovementId
+        ;
 
   ELSE
-     --RAISE EXCEPTION 'Ошибка.Просмотр протокола недоступен.';
-     RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Просмотр протокола недоступен.' :: TVarChar
-                                           , inProcedureName := 'gpSelect_Protocol' :: TVarChar
-                                           , inUserId        := inUserId
-                                           );
+      RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Просмотр протокола недоступен.' :: TVarChar
+                                            , inProcedureName := 'gpSelect_Protocol' :: TVarChar
+                                            , inUserId        := inUserId
+                                             );
 
   END IF;
 
