@@ -1631,7 +1631,7 @@ begin
      end;
      //
      //
-     if (saveMonth <> Month2) {and ((ParamStr(6)<>'next-'))} then begin
+     if (saveMonth <> Month2) and ((ParamStr(6)<>'next-')) then begin
        pInsertHistoryCost_Period(calcEndDate+1,saveEndDate,TRUE);
        //
        tmpDate3:=NOw;
