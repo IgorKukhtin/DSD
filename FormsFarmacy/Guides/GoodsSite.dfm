@@ -173,13 +173,17 @@ inherited GoodsSiteForm: TGoodsSiteForm
           object isPublished: TcxGridDBColumn
             Caption = #1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1077
             DataBinding.FieldName = 'isPublished'
-            PropertiesClassName = 'TcxCheckBoxProperties'
-            Properties.AllowGrayed = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1077
-            Options.Editing = False
             Width = 86
+          end
+          object isPublishedSite: TcxGridDBColumn
+            Caption = #1054#1087#1091#1073#1083#1077#1082#1086#1074#1072#1085' '#1079#1072#1075#1088#1091#1078#1077#1085#1086' '#1089' '#1089#1072#1081#1090#1072
+            DataBinding.FieldName = 'isPublishedSite'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
           end
           object isPromo: TcxGridDBColumn
             Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090
@@ -345,13 +349,12 @@ inherited GoodsSiteForm: TGoodsSiteForm
             Options.Editing = False
             Width = 76
           end
-          object isPublishedSite: TcxGridDBColumn
-            Caption = #1054#1087#1091#1073#1083#1077#1082#1086#1074#1072#1085' '#1079#1072#1075#1088#1091#1078#1077#1085#1086' '#1089' '#1089#1072#1081#1090#1072
-            DataBinding.FieldName = 'isPublishedSite'
+          object isNotUploadSites: TcxGridDBColumn
+            Caption = #1053#1077' '#1074#1099#1075#1088#1091#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1090#1086#1088#1086#1085#1085#1080#1093' '#1089#1072#1081#1090#1086#1074
+            DataBinding.FieldName = 'isNotUploadSites'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 85
+            Width = 95
           end
         end
       end
@@ -548,6 +551,7 @@ inherited GoodsSiteForm: TGoodsSiteForm
     object UpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = mactUpdatePublishedSiteHide
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_Goods_isNotUploadSites
       StoredProcList = <
@@ -555,9 +559,7 @@ inherited GoodsSiteForm: TGoodsSiteForm
           StoredProc = spUpdate_Goods_isNotUploadSites
         end
         item
-          StoredProc = spUpdate_Goods_DoesNotShare
-        end
-        item
+          StoredProc = spUpdate_PublishedAll
         end>
       Caption = 'UpdateDataSet'
       DataSource = MasterDS
@@ -1030,7 +1032,7 @@ inherited GoodsSiteForm: TGoodsSiteForm
         item
           StoredProc = spUpdate_PublishedSite
         end>
-      Caption = 'actSite_Param'
+      Caption = 'actUpdate_PublishedSite'
     end
     object actFD_DownloadPublishedSiteOne: TdsdForeignData
       Category = 'DSDLib'
@@ -1041,8 +1043,6 @@ inherited GoodsSiteForm: TGoodsSiteForm
           ToParam.Value = Null
           ToParam.MultiSelectSeparator = ','
         end>
-      AfterAction = actRefresh
-      BeforeAction = actSite_Param
       ZConnection.ControlsCodePage = cCP_UTF16
       ZConnection.ClientCodepage = 'utf8'
       ZConnection.Properties.Strings = (
@@ -1118,8 +1118,6 @@ inherited GoodsSiteForm: TGoodsSiteForm
           ToParam.Value = Null
           ToParam.MultiSelectSeparator = ','
         end>
-      AfterAction = actFD_DownloadPublishedSiteOne
-      BeforeAction = actSite_Param
       ZConnection.ControlsCodePage = cCP_UTF16
       ZConnection.ClientCodepage = 'utf8'
       ZConnection.Properties.Strings = (
@@ -1184,9 +1182,433 @@ inherited GoodsSiteForm: TGoodsSiteForm
           PairName = 'P'
         end>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1072
-      ImageIndex = 79
+    end
+    object mactUpdatePublishedSite_Revert: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSite_Param
+        end
+        item
+          Action = actFD_UpdatePublishedSite_Revert
+        end
+        item
+          Action = actFD_DownloadPublishedSiteOne
+        end
+        item
+          Action = actRefresh
+        end>
       QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1072'?'
       InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1072
+      ImageIndex = 79
+    end
+    object actFD_UpdatePublishedSite_Yes: TdsdForeignData
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ZConnection.ControlsCodePage = cCP_UTF16
+      ZConnection.ClientCodepage = 'utf8'
+      ZConnection.Properties.Strings = (
+        'codepage=utf8')
+      ZConnection.Port = 0
+      ZConnection.Protocol = 'mysql-5'
+      HostParam.Value = Null
+      HostParam.Component = FormParams
+      HostParam.ComponentItem = 'MySQL_Host'
+      HostParam.DataType = ftString
+      HostParam.MultiSelectSeparator = ','
+      PortParam.Value = Null
+      PortParam.Component = FormParams
+      PortParam.ComponentItem = 'MySQL_Port'
+      PortParam.MultiSelectSeparator = ','
+      UserNameParam.Value = Null
+      UserNameParam.Component = FormParams
+      UserNameParam.ComponentItem = 'MySQL_Username'
+      UserNameParam.DataType = ftString
+      UserNameParam.MultiSelectSeparator = ','
+      PasswordParam.Value = Null
+      PasswordParam.Component = FormParams
+      PasswordParam.ComponentItem = 'MySQL_Password'
+      PasswordParam.DataType = ftString
+      PasswordParam.MultiSelectSeparator = ','
+      DataBase.Value = Null
+      DataBase.Component = FormParams
+      DataBase.ComponentItem = 'MySQL_DataBase'
+      DataBase.DataType = ftString
+      DataBase.MultiSelectSeparator = ','
+      SQLParam.Value = 'update pharm_drugs set Status = 1 where Postgres_drug_id = :Id'
+      SQLParam.DataType = ftString
+      SQLParam.MultiSelectSeparator = ','
+      TypeTransaction = ttExecSQL
+      DataSet = MasterCDS
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      UpdateFields = <>
+      IdFieldFrom = 'Id'
+      IdFieldTo = 'Id'
+      JsonParam.Value = Null
+      JsonParam.Component = FormParams
+      JsonParam.ComponentItem = 'JSON'
+      JsonParam.DataType = ftWideString
+      JsonParam.MultiSelectSeparator = ','
+      PairParams = <
+        item
+          FieldName = 'Id'
+          PairName = 'I'
+        end
+        item
+          FieldName = 'isPublished'
+          PairName = 'P'
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1072
+    end
+    object mactDoUpdatePublishedSite_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actFD_UpdatePublishedSite_Yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1072' '#1087#1088#1080#1079#1085#1072#1082' '#1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1090#1086#1083#1100#1082#1086' '#1085#1072' '#1089#1072#1081#1090#1077
+    end
+    object mactFD_DownloadPublishedSiteOne: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actFD_DownloadPublishedSiteOne
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1086#1083#1091#1095#1077#1085#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' '#1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1089' '#1089#1072#1081#1090#1072
+    end
+    object mactUpdatePublishedSite_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSite_Param
+        end
+        item
+          Action = mactDoUpdatePublishedSite_Yes
+        end
+        item
+          Action = mactFD_DownloadPublishedSiteOne
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1090#1086#1083#1100#1082#1086' '#1085#1072' '#1089#1072#1081#1090#1077' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1090#1086#1083#1100#1082#1086' '#1085#1072' '#1089#1072#1081#1090#1077' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      ImageIndex = 79
+    end
+    object actFD_UpdatePublishedSite_No: TdsdForeignData
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ZConnection.ControlsCodePage = cCP_UTF16
+      ZConnection.ClientCodepage = 'utf8'
+      ZConnection.Properties.Strings = (
+        'codepage=utf8')
+      ZConnection.Port = 0
+      ZConnection.Protocol = 'mysql-5'
+      HostParam.Value = Null
+      HostParam.Component = FormParams
+      HostParam.ComponentItem = 'MySQL_Host'
+      HostParam.DataType = ftString
+      HostParam.MultiSelectSeparator = ','
+      PortParam.Value = Null
+      PortParam.Component = FormParams
+      PortParam.ComponentItem = 'MySQL_Port'
+      PortParam.MultiSelectSeparator = ','
+      UserNameParam.Value = Null
+      UserNameParam.Component = FormParams
+      UserNameParam.ComponentItem = 'MySQL_Username'
+      UserNameParam.DataType = ftString
+      UserNameParam.MultiSelectSeparator = ','
+      PasswordParam.Value = Null
+      PasswordParam.Component = FormParams
+      PasswordParam.ComponentItem = 'MySQL_Password'
+      PasswordParam.DataType = ftString
+      PasswordParam.MultiSelectSeparator = ','
+      DataBase.Value = Null
+      DataBase.Component = FormParams
+      DataBase.ComponentItem = 'MySQL_DataBase'
+      DataBase.DataType = ftString
+      DataBase.MultiSelectSeparator = ','
+      SQLParam.Value = 'update pharm_drugs set Status = 0 where Postgres_drug_id = :Id'
+      SQLParam.DataType = ftString
+      SQLParam.MultiSelectSeparator = ','
+      TypeTransaction = ttExecSQL
+      DataSet = MasterCDS
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      UpdateFields = <>
+      IdFieldFrom = 'Id'
+      IdFieldTo = 'Id'
+      JsonParam.Value = Null
+      JsonParam.Component = FormParams
+      JsonParam.ComponentItem = 'JSON'
+      JsonParam.DataType = ftWideString
+      JsonParam.MultiSelectSeparator = ','
+      PairParams = <
+        item
+          FieldName = 'Id'
+          PairName = 'I'
+        end
+        item
+          FieldName = 'isPublished'
+          PairName = 'P'
+        end>
+      Caption = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1072
+    end
+    object mactDoUpdatePublishedSite_No: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actFD_UpdatePublishedSite_No
+        end>
+      View = cxGridDBTableView
+      Caption = #1057#1085#1103#1090#1080#1077' '#1087#1088#1080#1079#1085#1072#1082' '#1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1090#1086#1083#1100#1082#1086' '#1085#1072' '#1089#1072#1081#1090#1077
+    end
+    object mactUpdatePublishedSite_No: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSite_Param
+        end
+        item
+          Action = mactDoUpdatePublishedSite_No
+        end
+        item
+          Action = mactFD_DownloadPublishedSiteOne
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1073#1088#1072#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1090#1086#1083#1100#1082#1086' '#1085#1072' '#1089#1072#1081#1090#1077' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1059#1073#1088#1072#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1090#1086#1083#1100#1082#1086' '#1085#1072' '#1089#1072#1081#1090#1077' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      ImageIndex = 76
+    end
+    object actUpdate_Published_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Published_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Published_Yes
+        end>
+      Caption = 'actUpdate_Published_Yes'
+    end
+    object mactUpdate_Published_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Published_Revert
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1072' '#1087#1088#1080#1079#1085#1072#1082#1072' "'#1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1077'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1082#1072' '#1087#1088#1080#1079#1085#1072#1082#1072' "'#1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1077'"'
+    end
+    object mactUpdatePublishedSiteAll_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSite_Param
+        end
+        item
+          Action = mactDoUpdatePublishedSite_Yes
+        end
+        item
+          Action = mactUpdate_Published_Yes
+        end
+        item
+          Action = mactFD_DownloadPublishedSiteOne
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1091' '#1085#1072#1089' '#1080' '#1085#1072' '#1089#1072#1081#1090#1077' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1091' '#1085#1072#1089' '#1080' '#1085#1072' '#1089#1072#1081#1090#1077' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      ImageIndex = 80
+    end
+    object actUpdate_Published_No: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Published_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Published_No
+        end>
+      Caption = 'actUpdate_Published_No'
+    end
+    object mactUpdate_Published_No: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Published_Revert
+        end>
+      View = cxGridDBTableView
+      Caption = #1057#1085#1103#1090#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' "'#1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1077'"'
+      Hint = #1057#1085#1103#1090#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' "'#1054#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1077'"'
+    end
+    object mactUpdatePublishedSiteAll_No: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSite_Param
+        end
+        item
+          Action = mactDoUpdatePublishedSite_No
+        end
+        item
+          Action = mactUpdate_Published_No
+        end
+        item
+          Action = mactFD_DownloadPublishedSiteOne
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1073#1088#1072#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1091' '#1085#1072#1089' '#1080' '#1085#1072' '#1089#1072#1081#1090#1077' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1059#1073#1088#1072#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1091' '#1085#1072#1089' '#1080' '#1085#1072' '#1089#1072#1081#1090#1077' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      ImageIndex = 77
+    end
+    object actFD_UpdatePublishedSiteHide: TdsdForeignData
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ZConnection.ControlsCodePage = cCP_UTF16
+      ZConnection.ClientCodepage = 'utf8'
+      ZConnection.Properties.Strings = (
+        'codepage=utf8')
+      ZConnection.Port = 0
+      ZConnection.Protocol = 'mysql-5'
+      HostParam.Value = Null
+      HostParam.Component = FormParams
+      HostParam.ComponentItem = 'MySQL_Host'
+      HostParam.DataType = ftString
+      HostParam.MultiSelectSeparator = ','
+      PortParam.Value = Null
+      PortParam.Component = FormParams
+      PortParam.ComponentItem = 'MySQL_Port'
+      PortParam.MultiSelectSeparator = ','
+      UserNameParam.Value = Null
+      UserNameParam.Component = FormParams
+      UserNameParam.ComponentItem = 'MySQL_Username'
+      UserNameParam.DataType = ftString
+      UserNameParam.MultiSelectSeparator = ','
+      PasswordParam.Value = Null
+      PasswordParam.Component = FormParams
+      PasswordParam.ComponentItem = 'MySQL_Password'
+      PasswordParam.DataType = ftString
+      PasswordParam.MultiSelectSeparator = ','
+      DataBase.Value = Null
+      DataBase.Component = FormParams
+      DataBase.ComponentItem = 'MySQL_DataBase'
+      DataBase.DataType = ftString
+      DataBase.MultiSelectSeparator = ','
+      SQLParam.Value = 
+        'update pharm_drugs set Status = case when Status = 0 then 1 else' +
+        ' 0 end where Postgres_drug_id = :Id and Status <> :isPublishedSi' +
+        'te'
+      SQLParam.DataType = ftString
+      SQLParam.MultiSelectSeparator = ','
+      TypeTransaction = ttExecSQL
+      DataSet = MasterCDS
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPublishedSite'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'isPublishedSite'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      UpdateFields = <>
+      IdFieldFrom = 'Id'
+      IdFieldTo = 'Id'
+      JsonParam.Value = Null
+      JsonParam.Component = FormParams
+      JsonParam.ComponentItem = 'JSON'
+      JsonParam.DataType = ftWideString
+      JsonParam.MultiSelectSeparator = ','
+      PairParams = <
+        item
+          FieldName = 'Id'
+          PairName = 'I'
+        end
+        item
+          FieldName = 'isPublished'
+          PairName = 'P'
+        end>
+      HideError = True
+      ParamBollToInt = True
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1086#1087#1091#1073#1083#1080#1082#1086#1074#1072#1085' '#1085#1072' '#1089#1072#1081#1090#1072
+    end
+    object mactUpdatePublishedSiteHide: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSite_Param
+        end
+        item
+          Action = actFD_UpdatePublishedSiteHide
+        end>
+      Caption = 'mactUpdatePublishedSiteHide'
     end
   end
   inherited MasterDS: TDataSource
@@ -1800,7 +2222,27 @@ inherited GoodsSiteForm: TGoodsSiteForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton22'
+          ItemName = 'dxBarSeparator4'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton23'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton24'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton25'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton26'
         end>
     end
     object dxBarButton21: TdxBarButton
@@ -1808,8 +2250,48 @@ inherited GoodsSiteForm: TGoodsSiteForm
       Category = 0
     end
     object dxBarButton22: TdxBarButton
-      Action = actFD_UpdatePublishedSite_Revert
+      Action = mactUpdatePublishedSite_Revert
       Category = 0
+    end
+    object dxBarButton23: TdxBarButton
+      Action = mactUpdatePublishedSite_Yes
+      Category = 0
+    end
+    object dxBarButton24: TdxBarButton
+      Action = mactUpdatePublishedSite_No
+      Category = 0
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Caption = '-'
+      Category = 0
+      Hint = '-'
+      Visible = ivAlways
+    end
+    object dxBarButton25: TdxBarButton
+      Action = mactUpdatePublishedSiteAll_Yes
+      Category = 0
+    end
+    object dxBarButton26: TdxBarButton
+      Action = mactUpdatePublishedSiteAll_No
+      Category = 0
+    end
+    object dxBarSeparator2: TdxBarSeparator
+      Caption = 'New Separator'
+      Category = 0
+      Hint = 'New Separator'
+      Visible = ivAlways
+    end
+    object dxBarSeparator3: TdxBarSeparator
+      Category = 0
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object dxBarSeparator4: TdxBarSeparator
+      Caption = 'New Separator'
+      Category = 0
+      Hint = 'New Separator'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2516,40 +2998,6 @@ inherited GoodsSiteForm: TGoodsSiteForm
     Left = 472
     Top = 184
   end
-  object spUpdate_Goods_DoesNotShare: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Goods_DoesNotShare'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDoesNotShare'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DoesNotShare'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outDoesNotShare'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'DoesNotShare'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 840
-    Top = 184
-  end
   object spUpdate_isMultiplicityError_Revert: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_isMultiplicityError_Revert'
     DataSets = <>
@@ -2850,5 +3298,88 @@ inherited GoodsSiteForm: TGoodsSiteForm
     PackSize = 1
     Left = 672
     Top = 312
+  end
+  object spUpdate_Published_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_Published_Revert'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ininIsPublished'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 272
+  end
+  object spUpdate_Published_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_Published_Revert'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ininIsPublished'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 848
+    Top = 344
+  end
+  object spUpdate_PublishedAll: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_PublishedAll'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPublished'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isPublished'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPublishedSite'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPublishedSite'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 664
+    Top = 376
   end
 end

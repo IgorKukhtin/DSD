@@ -22,6 +22,7 @@ $BODY$
    DECLARE vbUnitKey TVarChar;
    DECLARE vbNotCashListDiff Boolean;
    DECLARE vbParticipDistribListDiff Boolean;
+   DECLARE vbPartnerMedicalId  Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -32,17 +33,28 @@ BEGIN
       vbUnitKey := '0';
    END IF;
    vbUnitId := vbUnitKey::Integer;
-   
-   vbNotCashListDiff := COALESCE((SELECT COALESCE (ObjectBoolean_NotCashListDiff.ValueData, FALSE)
-                                  FROM ObjectBoolean AS ObjectBoolean_NotCashListDiff
-                                  WHERE ObjectBoolean_NotCashListDiff.ObjectId = vbUnitId
-                                    AND ObjectBoolean_NotCashListDiff.DescId = zc_ObjectBoolean_Unit_NotCashListDiff()), FALSE);
 
-   vbParticipDistribListDiff := COALESCE((SELECT COALESCE (ObjectBoolean_ParticipDistribListDiff.ValueData, FALSE)
-                                          FROM ObjectBoolean AS ObjectBoolean_ParticipDistribListDiff
-                                          WHERE ObjectBoolean_ParticipDistribListDiff.ObjectId = vbUnitId
-                                            AND ObjectBoolean_ParticipDistribListDiff.DescId = zc_ObjectBoolean_Unit_ParticipDistribListDiff()), FALSE);
 
+   SELECT COALESCE (ObjectBoolean_NotCashListDiff.ValueData, FALSE)
+        , COALESCE (ObjectBoolean_ParticipDistribListDiff.ValueData, FALSE)
+        , COALESCE (ObjectLink_Unit_PartnerMedical.ChildObjectId, 0)
+   INTO vbNotCashListDiff, vbParticipDistribListDiff, vbPartnerMedicalId
+   FROM Object AS Object_Unit
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_ParticipDistribListDiff
+                                ON ObjectBoolean_ParticipDistribListDiff.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_ParticipDistribListDiff.DescId = zc_ObjectBoolean_Unit_ParticipDistribListDiff()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NotCashListDiff
+                                ON ObjectBoolean_NotCashListDiff.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_NotCashListDiff.DescId = zc_ObjectBoolean_Unit_NotCashListDiff()
+
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_PartnerMedical
+                             ON ObjectLink_Unit_PartnerMedical.ObjectId = Object_Unit.Id
+                            AND ObjectLink_Unit_PartnerMedical.DescId = zc_ObjectLink_Unit_PartnerMedical()
+
+   WHERE Object_Unit.Id = vbUnitId;
+     
    RETURN QUERY 
      SELECT Object_DiffKind.Id                                                   AS Id
           , Object_DiffKind.ObjectCode                                           AS Code
@@ -82,6 +94,7 @@ BEGIN
                                AND ObjectFloat_DiffKind_Packages.DescId = zc_ObjectFloat_DiffKind_Packages() 
      WHERE Object_DiffKind.DescId = zc_Object_DiffKind()
        AND Object_DiffKind.isErased = FALSE
+       AND (COALESCE (vbPartnerMedicalId, 0) <> 0 OR Object_DiffKind.ValueData NOT ILIKE '%1303%')
      ORDER BY Object_DiffKind.ValueData;
   
 END;

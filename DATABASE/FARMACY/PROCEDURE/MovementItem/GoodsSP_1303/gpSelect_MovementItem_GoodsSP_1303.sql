@@ -97,6 +97,8 @@ BEGIN
              , tmpGoodsMain.ObjectCode                               AS GoodsCode
              , tmpGoodsMain.Name                                     AS GoodsName
              , tmpGoodsMain.NameUkr                                  AS GoodsNameUkr
+             , tmpGoodsMain.MorionCode                               AS MorionCode
+
              , ObjectFloat_NDSKind_NDS.ValueData                     AS NDS
 
              , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
@@ -253,4 +255,6 @@ $BODY$
 
 --реяр
 -- 
-select * from gpSelect_MovementItem_GoodsSP_1303(inMovementId := 27423073 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+
+select * from gpSelect_MovementItem_GoodsSP_1303(inMovementId := 27423073 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
+

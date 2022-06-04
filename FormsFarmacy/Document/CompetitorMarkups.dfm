@@ -50,6 +50,11 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
               Format = #1057#1090#1088#1086#1082' 0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = Price
             end>
           OptionsBehavior.IncSearch = True
           Styles.Content = nil

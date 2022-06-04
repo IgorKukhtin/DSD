@@ -516,12 +516,12 @@ begin
     begin
       if (ClientDataSet.FieldByName('Amount').AsCurrency = 0) or
         (ClientDataSet.FieldByName('AmountPlanTab').AsCurrency = 0) or
-        (ClientDataSet.FieldByName('Amount').AsCurrency * IfThen( ClientDataSet.FieldByName('Koeff' + FUnit.Strings[FUnitCalck]).IsNull,
+        (ClientDataSet.FieldByName('Amount').AsCurrency * IfThen( ClientDataSet.FieldByName('Koeff' + FUnit.Strings[FUnitCalck]).AsCurrency = 0,
          ClientDataSet.FieldByName('Koeff').AsCurrency,
          ClientDataSet.FieldByName('Koeff' + FUnit.Strings[FUnitCalck]).AsCurrency) < ClientDataSet.FieldByName('AmountPlanTab').AsCurrency) then Inc(FCountO);
       if (ClientDataSet.FieldByName('Amount').AsCurrency = 0) or
         (ClientDataSet.FieldByName('AmountPlan').AsCurrency = 0) or
-        (ClientDataSet.FieldByName('Amount').AsCurrency * IfThen( ClientDataSet.FieldByName('Koeff' + FUnit.Strings[FUnitCalck]).IsNull,
+        (ClientDataSet.FieldByName('Amount').AsCurrency * IfThen( ClientDataSet.FieldByName('Koeff' + FUnit.Strings[FUnitCalck]).AsCurrency = 0,
          ClientDataSet.FieldByName('Koeff').AsCurrency,
          ClientDataSet.FieldByName('Koeff' + FUnit.Strings[FUnitCalck]).AsCurrency) < ClientDataSet.FieldByName('AmountPlan').AsCurrency) then Inc(FCountAllO);
       ClientDataSet.Edit;

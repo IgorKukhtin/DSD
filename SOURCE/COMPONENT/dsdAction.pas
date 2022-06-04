@@ -9,7 +9,7 @@ uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj, Clipb
   cxGridDBTableView, frxClass, frxExportPDF, frxExportXLS, cxGridCustomView, Dialogs, Controls,
   dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, IdFTPCommon,
   System.IOUtils, IdHTTP, IdSSLOpenSSL, IdURI, IdAuthentication, {IdMultipartFormData,}
-  Winapi.ActiveX
+  Winapi.ActiveX, ZConnection, ZDataset
   {$IFDEF DELPHI103RIO}, System.JSON, Actions {$ELSE} , Data.DBXJSON {$ENDIF}, Vcl.Graphics;
 
 type
@@ -961,7 +961,7 @@ type
   private
     FHostParam: TdsdParam;
     FPortParam: TdsdParam;
-    FUsernameParam: TdsdParam;
+    FUserNameParam: TdsdParam;
     FPasswordParam: TdsdParam;
     FDirParam: TdsdParam;
 
@@ -980,7 +980,7 @@ type
   published
     property HostParam: TdsdParam read FHostParam write FHostParam;
     property PortParam: TdsdParam read FPortParam write FPortParam;
-    property UsernameParam: TdsdParam read FUsernameParam write FUsernameParam;
+    property UserNameParam: TdsdParam read FUserNameParam write FUserNameParam;
     property PasswordParam: TdsdParam read FPasswordParam write FPasswordParam;
     property DirParam: TdsdParam read FDirParam write FDirParam;
     property FullFileNameParam: TdsdParam read FFullFileNameParam write FFullFileNameParam;
@@ -1419,6 +1419,98 @@ type
     property OnRunTask: TNotifyEvent read FRunTask write FRunTask;
   end;
 
+  TdsdUpdateFieldItem = class(TCollectionItem)
+  private
+    FFieldNameFrom : String;
+    FFieldNameTo : String;
+  protected
+    function GetDisplayName: string; override;
+  public
+    procedure Assign(Source: TPersistent); override;
+  published
+    property FieldNameFrom: String read FFieldNameFrom write FFieldNameFrom;
+    property FieldNameTo: String read FFieldNameTo write FFieldNameTo;
+  end;
+
+  TTypeTransaction = (ttSelect, ttExecSQL);
+  TForeignDataOperation = (fdoDataSet, fdoUpdateDataSet, fdoToJSON, fdoMultiExecuteJSON);
+
+  TdsdFDPairParamsItem = class(TCollectionItem)
+  private
+    FFieldName : String;
+    FPairName : String;
+  protected
+    constructor Create(Collection: TCollection); overload; override;
+    function GetDisplayName: string; override;
+  public
+    procedure Assign(Source: TPersistent); override;
+  published
+    property FieldName: String read FFieldName write FFieldName;
+    property PairName: String read FPairName write FPairName;
+  end;
+
+  TdsdForeignData = class(TdsdCustomAction)
+  private
+    FHostParam: TdsdParam;
+    FPortParam: TdsdParam;
+    FDataBase: TdsdParam;
+    FUserNameParam: TdsdParam;
+    FPasswordParam: TdsdParam;
+
+    FSQLParam: TdsdParam;
+    FDataSet: TClientDataSet;
+
+    FTypeTransaction : TTypeTransaction;
+    FOperation : TForeignDataOperation;
+    FParams: TdsdParams;
+    FUpdateFields: TCollection;
+
+    FIdFieldFrom : String;
+    FIdFieldTo : String;
+
+    FJsonParam: TdsdParam;
+    FPairParams: TCollection;
+    FMultiExecuteAction: TCustomAction;
+    FMultiExecuteCount: Integer;
+
+    FZConnection : TZConnection;
+    FZQuery: TZQuery;
+    FHideError: Boolean;
+    FParamBollToInt: Boolean;
+  protected
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property ZConnection : TZConnection read FZConnection;
+    property HostParam: TdsdParam read FHostParam write FHostParam;
+    property PortParam: TdsdParam read FPortParam write FPortParam;
+    property UserNameParam: TdsdParam read FUserNameParam write FUserNameParam;
+    property PasswordParam: TdsdParam read FPasswordParam write FPasswordParam;
+    property DataBase: TdsdParam read FDataBase write FDataBase;
+    property SQLParam: TdsdParam read FSQLParam write FSQLParam;
+    property TypeTransaction : TTypeTransaction read FTypeTransaction write FTypeTransaction default ttSelect;
+    property DataSet: TClientDataSet read FDataSet write FDataSet;
+    property Operation : TForeignDataOperation read FOperation write FOperation default fdoDataSet;
+    property Params: TdsdParams read FParams write FParams;
+    property UpdateFields: TCollection read FUpdateFields write FUpdateFields;
+    property IdFieldFrom : String read FIdFieldFrom write FIdFieldFrom;
+    property IdFieldTo : String read FIdFieldTo write FIdFieldTo;
+    property JsonParam: TdsdParam read FJsonParam write FJsonParam;
+    property PairParams: TCollection read FPairParams write FPairParams;
+    property MultiExecuteAction: TCustomAction read FMultiExecuteAction write FMultiExecuteAction;
+    property MultiExecuteCount: Integer read FMultiExecuteCount write FMultiExecuteCount default 1000;
+    property HideError: Boolean read FHideError write FHideError default False;
+    property ParamBollToInt: Boolean read FParamBollToInt write FParamBollToInt default False;
+    property Caption;
+    property Hint;
+    property ImageIndex;
+    property QuestionBeforeExecute;
+    property ShortCut;
+    property SecondaryShortCuts;
+    property InfoAfterExecute;
+  end;
 
 procedure Register;
 
@@ -1487,6 +1579,7 @@ begin
   RegisterActions('DSDLib', [TdsdSendClipboardAction], TdsdSendClipboardAction);
   RegisterActions('DSDLib', [TdsdSetEnabledAction], TdsdSetEnabledAction);
   RegisterActions('DSDLib', [TdsdRunAction], TdsdRunAction);
+  RegisterActions('DSDLib', [TdsdForeignData], TdsdRunAction);
 
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
@@ -4799,9 +4892,9 @@ begin
   FPortParam.DataType := ftInteger;
   FPortParam.Value := FIdFTP.Port;
 
-  FUsernameParam := TdsdParam.Create(nil);
-  FUsernameParam.DataType := ftString;
-  FUsernameParam.Value := '';
+  FUserNameParam := TdsdParam.Create(nil);
+  FUserNameParam.DataType := ftString;
+  FUserNameParam.Value := '';
 
   FPasswordParam := TdsdParam.Create(nil);
   FPasswordParam.DataType := ftString;
@@ -4834,7 +4927,7 @@ destructor TdsdFTP.Destroy;
 begin
   FreeAndNil(FHostParam);
   FreeAndNil(FPortParam);
-  FreeAndNil(FUsernameParam);
+  FreeAndNil(FUserNameParam);
   FreeAndNil(FPasswordParam);
   FreeAndNil(FDirParam);
   FreeAndNil(FFullFileNameParam);
@@ -4852,7 +4945,7 @@ begin
   Result := False;
 
   if (FHostParam.Value = '') or
-     (FUsernameParam.Value = '') or
+     (FUserNameParam.Value = '') or
      (FPasswordParam.Value = '') then
   begin
     ShowMessage('Не заполнены Host, Username или Password.');
@@ -4933,7 +5026,7 @@ begin
     FIdFTP.Disconnect;
     FIdFTP.Host := FHostParam.Value;
     FIdFTP.Port := FPortParam.Value;
-    FIdFTP.Username := FUsernameParam.Value;
+    FIdFTP.Username := FUserNameParam.Value;
     FIdFTP.Password := FPasswordParam.Value;
 
     try
@@ -5915,6 +6008,7 @@ begin
   begin
      FFieldName := TdsdPairParamsItem(Source).FieldName;
      FPairName := TdsdPairParamsItem(Source).PairName;
+     FDataType := TdsdPairParamsItem(Source).DataType;
   end
   else
     inherited Assign(Source);
@@ -6710,6 +6804,442 @@ begin
     Result := True;
   end else raise Exception.Create('Не определена функция для выполнения.');
 
+end;
+
+{  TdsdUpdateFieldItem  }
+
+
+function TdsdUpdateFieldItem.GetDisplayName: string;
+begin
+  if (FFieldNameFrom <> '') or (FFieldNameTo <> '') then result := FFieldNameFrom + ' -> ' + FFieldNameTo
+  else Result := inherited;
+end;
+
+procedure TdsdUpdateFieldItem.Assign(Source: TPersistent);
+var Owner: TComponent;
+begin
+  if Source is TdsdUpdateFieldItem then
+  begin
+     FFieldNameFrom := TdsdUpdateFieldItem(Source).FieldNameFrom;
+     FFieldNameTo := TdsdUpdateFieldItem(Source). FieldNameTo;
+  end
+  else
+    inherited Assign(Source);
+end;
+
+{  TdsdFDPairParamsItem  }
+
+constructor TdsdFDPairParamsItem.Create(Collection: TCollection);
+begin
+  inherited;
+  FFieldName := '';
+  FPairName := '';
+end;
+
+function TdsdFDPairParamsItem.GetDisplayName: string;
+begin
+  result := inherited;
+  if FPairName <> '' then result := FPairName
+  else Result := inherited;;
+end;
+
+procedure TdsdFDPairParamsItem.Assign(Source: TPersistent);
+var Owner: TComponent;
+begin
+  if Source is TdsdPairParamsItem then
+  begin
+     FFieldName := TdsdPairParamsItem(Source).FieldName;
+     FPairName := TdsdPairParamsItem(Source).PairName;
+  end
+  else
+    inherited Assign(Source);
+end;
+
+  {TdsdForeignData}
+
+constructor TdsdForeignData.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  FZConnection := TZConnection.Create(Self);
+  FZConnection.SetSubComponent(true);
+  FZConnection.FreeNotification(Self);
+  FZQuery := TZQuery.Create(Self);
+  FZQuery.Connection := FZConnection;
+
+  FHostParam := TdsdParam.Create(nil);
+  FHostParam.DataType := ftString;
+  FHostParam.Value := '';
+
+  FPortParam := TdsdParam.Create(nil);
+  FPortParam.DataType := ftInteger;
+  FPortParam.Value := 3306;
+
+  FDataBase := TdsdParam.Create(nil);
+  FDataBase.DataType := ftString;
+  FDataBase.Value := '';
+
+  FUserNameParam := TdsdParam.Create(nil);
+  FUserNameParam.DataType := ftString;
+  FUserNameParam.Value := '';
+
+  FPasswordParam := TdsdParam.Create(nil);
+  FPasswordParam.DataType := ftString;
+  FPasswordParam.Value := '';
+
+  FSQLParam := TdsdParam.Create(nil);
+  FSQLParam.DataType := ftString;
+  FSQLParam.Value := '';
+
+  FJsonParam := TdsdParam.Create(nil);
+  FJsonParam.DataType := ftWideString;
+  FJsonParam.Value := '';
+
+  FParams := TdsdParams.Create(Self, TdsdParam);
+  FUpdateFields := TCollection.Create(TdsdUpdateFieldItem);
+
+  FPairParams := TCollection.Create(TdsdFDPairParamsItem);
+
+  FTypeTransaction := ttSelect;
+  FOperation := fdoDataSet;
+  FIdFieldFrom := '';
+  FIdFieldTo := '';
+  FMultiExecuteCount := 1000;
+  FHideError := False;
+  FParamBollToInt := False;
+end;
+
+destructor TdsdForeignData.Destroy;
+begin
+  FreeAndNil(FHostParam);
+  FreeAndNil(FPortParam);
+  FreeAndNil(FDataBase);
+  FreeAndNil(FUserNameParam);
+  FreeAndNil(FPasswordParam);
+  FreeAndNil(FSQLParam);
+  FreeAndNil(FJsonParam);
+
+  FreeAndNil(FUpdateFields);
+  FreeAndNil(FParams);
+  FreeAndNil(FZQuery);
+  FreeAndNil(FZConnection);
+  inherited;
+end;
+
+function TdsdForeignData.LocalExecute: Boolean;
+  var I, nCount : Integer; isUpdate : Boolean;
+      JsonArray: TJSONArray;
+      JSONObject: TJSONObject;
+
+  procedure AddParamToJSON(AName: string; AValue: Variant; ADataType: TFieldType);
+    var intValue: integer; n : Double;
+  begin
+    try
+      if AValue = NULL then
+        JSONObject.AddPair(LowerCase(AName), TJSONNull.Create)
+      else if ADataType = ftDateTime then
+        JSONObject.AddPair(LowerCase(AName), FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', AValue))
+      else if ADataType = ftFloat then
+      begin
+        if TryStrToFloat(AValue, n) then
+          JSONObject.AddPair(LowerCase(AName), TJSONNumber.Create(n))
+        else
+          JSONObject.AddPair(LowerCase(AName), TJSONNull.Create);
+      end else if ADataType in [ftInteger, ftSmallint] then
+      begin
+        if TryStrToInt(AValue, intValue) then
+          JSONObject.AddPair(LowerCase(AName), TJSONNumber.Create(intValue))
+        else
+          JSONObject.AddPair(LowerCase(AName), TJSONNull.Create);
+      end
+      else
+        JSONObject.AddPair(LowerCase(AName), TJSONString.Create(AValue));
+    except
+      on E:Exception do raise Exception.Create('Ошибка добавления <' + AName + '> в Json: ' + e.Message);
+    end;
+  end;
+
+begin
+  inherited;
+
+  Result := FHideError;
+
+  FZQuery.Close;
+  FZConnection.Disconnect;
+
+  if not Assigned(FDataSet) and (FTypeTransaction = ttSelect) and (FOperation <> fdoToJSON) then
+  begin
+    ShowMessage('Ошибка. Не определен DataSet.');
+    Exit;
+  end;
+
+  if (FOperation = fdoUpdateDataSet) and ((FIdFieldFrom = '') or (FIdFieldTo = '')) then
+  begin
+    ShowMessage('Ошибка. Не определены Id источника или получателя.');
+    Exit;
+  end;
+
+  if (FOperation = fdoUpdateDataSet) and (FUpdateFields.Count = 0) then
+  begin
+    ShowMessage('Ошибка. Не определены поля для обновления.');
+    Exit;
+  end;
+
+  if (FOperation = fdoMultiExecuteJSON) and not Assigned(FMultiExecuteAction) then
+  begin
+    ShowMessage('Ошибка. Не определены акшин обновления.');
+    Exit;
+  end;
+
+  if FHostParam.Value <> '' then FZConnection.HostName := FHostParam.Value;
+  if FPortParam.Value <> 0 then FZConnection.Port := FPortParam.Value;
+  if FDataBase.Value <> '' then FZConnection.Database := FDataBase.Value;
+  if FUserNameParam.Value <> '' then FZConnection.User := FUserNameParam.Value;
+  if FPasswordParam.Value <> '' then FZConnection.Password := FPasswordParam.Value;
+
+  try
+    FZConnection.Connect;
+  Except ON E: Exception DO
+    Begin
+      if not FHideError then ShowMessage(E.Message);
+      exit;
+    End;
+  end;
+
+  try
+    if FSQLParam.Value <> '' then FZQuery.SQL.Text := FSQLParam.Value;
+
+    for I := 0 to FParams.Count - 1 do
+      if FParamBollToInt and (FParams.Items[I].DataType = ftBoolean) then
+        FZQuery.ParamByName(FParams.Items[I].Name).Value := IfThen(FParams.Items[I].Value, 1, 0)
+      else FZQuery.ParamByName(FParams.Items[I].Name).Value := FParams.Items[I].Value;
+
+    if FTypeTransaction = ttSelect then
+    begin
+
+      try
+        FZQuery.Open;
+        if FZQuery.Fields.Count = 0 then Exit;
+      Except ON E: Exception DO
+        Begin
+          if not FHideError then ShowMessage(E.Message);
+          exit;
+        End;
+      end;
+
+      if FOperation = fdoDataSet then
+      begin
+        FDataSet.DisableControls;
+        try
+          if FDataSet.Active then FDataSet.Close;
+          FDataSet.FieldDefs.Clear;
+
+          FDataSet.FieldDefs.Assign(FZQuery.FieldDefs);
+          FDataSet.CreateDataSet;
+
+          with TGaugeFactory.GetGauge(Caption, 0, FZQuery.RecordCount) do
+          begin
+            Start;
+            try
+              FZQuery.First;
+              while not FZQuery.Eof do
+              begin
+
+                IncProgress(1);
+
+                FDataSet.Append;
+                for I := 0 to FZQuery.FieldCount - 1 do
+                  FDataSet.Fields.Fields[I].AsVariant := FZQuery.Fields.Fields[I].AsVariant;
+                FDataSet.Post;
+
+                FZQuery.Next;
+              end;
+            finally
+              Finish;
+            end;
+          end;
+        finally
+          FDataSet.EnableControls;
+        end;
+        Result := True;
+      end else if FOperation = fdoUpdateDataSet then
+      begin
+        FDataSet.DisableControls;
+        try
+          with TGaugeFactory.GetGauge(Caption, 0, FDataSet.RecordCount) do
+          begin
+            Start;
+            try
+              FDataSet.First;
+              while not FDataSet.Eof do
+              begin
+
+                IncProgress(1);
+
+                if FZQuery.Locate(IdFieldFrom, FDataSet.FieldByName(IdFieldTo).Value, []) then
+                begin
+                  isUpdate := False;
+                  for I := 0 to FUpdateFields.Count - 1 do
+                    if FDataSet.FieldByName(TdsdUpdateFieldItem(FUpdateFields.Items[I]).FieldNameTo).AsVariant <>
+                       FZQuery.FieldByName(TdsdUpdateFieldItem(FUpdateFields.Items[I]).FieldNameFrom).AsVariant then
+                    begin
+                      isUpdate := True;
+                    end;
+
+                  if isUpdate then
+                  begin
+                    FDataSet.Edit;
+                    for I := 0 to FUpdateFields.Count - 1 do
+                      FDataSet.FieldByName(TdsdUpdateFieldItem(FUpdateFields.Items[I]).FieldNameTo).AsVariant :=
+                         FZQuery.FieldByName(TdsdUpdateFieldItem(FUpdateFields.Items[I]).FieldNameFrom).AsVariant;
+                    FDataSet.Post;
+                  end;
+                end else
+                begin
+                  FDataSet.Edit;
+                  for I := 0 to FUpdateFields.Count - 1 do
+                    FDataSet.FieldByName(TdsdUpdateFieldItem(FUpdateFields.Items[I]).FieldNameTo).AsVariant := Null;
+                  FDataSet.Post;
+                end;
+
+                FDataSet.Next;
+              end;
+            finally
+              Finish;
+            end;
+          end;
+        finally
+          FDataSet.EnableControls;
+        end;
+        Result := True;
+      end else if FOperation = fdoToJSON then
+      begin
+
+        JSONArray := TJSONArray.Create();
+        try
+          with TGaugeFactory.GetGauge(Caption, 0, FZQuery.RecordCount) do
+          begin
+            Start;
+            try
+              FZQuery.First;
+              while not FZQuery.Eof do
+              begin
+                IncProgress(1);
+
+                JSONObject := TJSONObject.Create;
+                if FPairParams.Count > 0 then
+                begin
+                  for I := 0 to FPairParams.Count - 1 do
+                    if (TdsdFDPairParamsItem(FPairParams.Items[I]).PairName <> '') and (TdsdFDPairParamsItem(FPairParams.Items[I]).FieldName <> '') then
+                    begin
+                      if Assigned(FZQuery.FindField(TdsdFDPairParamsItem(FPairParams.Items[I]).FieldName)) then
+                        AddParamToJSON(TdsdFDPairParamsItem(FPairParams.Items[I]).PairName,
+                                       FZQuery.FieldByName(TdsdFDPairParamsItem(FPairParams.Items[I]).FieldName).Value,
+                                       FZQuery.FieldByName(TdsdFDPairParamsItem(FPairParams.Items[I]).FieldName).DataType)
+                      else AddParamToJSON(TdsdFDPairParamsItem(FPairParams.Items[I]).PairName, Null, ftString);
+                    end;
+                end else
+                begin
+                  for I := 0 to FZQuery.FieldCount - 1 do
+                    AddParamToJSON(FZQuery.Fields.Fields[I].FieldName,
+                                   FZQuery.Fields.Fields[I].Value,
+                                   FZQuery.Fields.Fields[I].DataType);
+                end;
+                JsonArray.AddElement(JSONObject);
+
+                FZQuery.Next;
+              end;
+            finally
+              Finish;
+            end;
+          end;
+
+          FJsonParam.Value := JSONArray.ToString;
+          Result := FJsonParam.Value <> '';
+        finally
+          JSONArray.Free;
+        end;
+      end else if FOperation = fdoMultiExecuteJSON then
+      begin
+
+        JSONArray := TJSONArray.Create();
+        try
+          with TGaugeFactory.GetGauge(Caption, 0, FZQuery.RecordCount) do
+          begin
+            Start;
+            try
+              nCount := 0;
+              FZQuery.First;
+              while not FZQuery.Eof do
+              begin
+                IncProgress(1);
+                Inc(nCount);
+
+                JSONObject := TJSONObject.Create;
+                if FPairParams.Count > 0 then
+                begin
+                  for I := 0 to FPairParams.Count - 1 do
+                    if (TdsdFDPairParamsItem(FPairParams.Items[I]).PairName <> '') and (TdsdFDPairParamsItem(FPairParams.Items[I]).FieldName <> '') then
+                    begin
+                      if Assigned(FZQuery.FindField(TdsdFDPairParamsItem(FPairParams.Items[I]).FieldName)) then
+                        AddParamToJSON(TdsdFDPairParamsItem(FPairParams.Items[I]).PairName,
+                                       FZQuery.FieldByName(TdsdFDPairParamsItem(FPairParams.Items[I]).FieldName).Value,
+                                       FZQuery.FieldByName(TdsdFDPairParamsItem(FPairParams.Items[I]).FieldName).DataType)
+                      else AddParamToJSON(TdsdFDPairParamsItem(FPairParams.Items[I]).PairName, Null, ftString);
+                    end;
+                end else
+                begin
+                  for I := 0 to FZQuery.FieldCount - 1 do
+                    AddParamToJSON(FZQuery.Fields.Fields[I].FieldName,
+                                   FZQuery.Fields.Fields[I].Value,
+                                   FZQuery.Fields.Fields[I].DataType);
+                end;
+                JsonArray.AddElement(JSONObject);
+
+                if FMultiExecuteCount <= nCount then
+                begin
+                  FJsonParam.Value := JSONArray.ToString;
+                  FMultiExecuteAction.Execute;
+                  JSONArray.Free;
+                  JSONArray := TJSONArray.Create();
+                  nCount := 0;
+                end;
+
+                FZQuery.Next;
+              end;
+
+              if nCount > 0 then
+              begin
+                FJsonParam.Value := JSONArray.ToString;
+                FMultiExecuteAction.Execute;
+              end;
+
+            finally
+              Finish;
+            end;
+          end;
+
+          Result := True;
+        finally
+          JSONArray.Free;
+        end;
+      end;
+    end else
+    begin
+      try
+        FZQuery.ExecSQL;
+      Except ON E: Exception DO
+        Begin
+          if not FHideError then ShowMessage(E.Message);
+          exit;
+        End;
+      end;
+      Result := True;
+    end;
+  finally
+    FZQuery.Close;
+    FZConnection.Disconnect;
+  end;
 end;
 
 initialization

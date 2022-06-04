@@ -1042,6 +1042,18 @@ begin  //+
         ReleaseMutex(MutexDiffKind);
       end;
 
+      sp.StoredProcName := 'gpSelect_Cash_DiffKindPrice';
+      sp.Params.Clear;
+      sp.Execute;
+      Add_Log('Start MutexDiffKind');
+      WaitForSingleObject(MutexDiffKind, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+      try
+        SaveLocalData(ds,DiffKindPrice_lcl);
+      finally
+        Add_Log('End MutexDiffKind');
+        ReleaseMutex(MutexDiffKind);
+      end;
+
     finally
       ds.free;
     end;

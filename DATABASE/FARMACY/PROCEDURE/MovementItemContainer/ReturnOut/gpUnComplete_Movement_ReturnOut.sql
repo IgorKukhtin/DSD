@@ -22,13 +22,16 @@ BEGIN
 
      --»щем св€занный документ изменени€ долга по приходам
      SELECT
-         MovementChildId
+         MovementLinkMovement.MovementChildId
      INTO
          vbChangeIncmePaymentId
      FROM
          MovementLinkMovement
-     WHERE
-         MovementLinkMovement.MovementId = inMovementId;
+
+     WHERE MovementLinkMovement.MovementId = inMovementId
+       AND MovementLinkMovement.DescId = zc_MovementLinkMovement_ChangeIncomePayment();
+
+
      --≈сли такой документ есть - распроводим его
      IF COALESCE(vbChangeIncmePaymentId,0) <> 0
      THEN
