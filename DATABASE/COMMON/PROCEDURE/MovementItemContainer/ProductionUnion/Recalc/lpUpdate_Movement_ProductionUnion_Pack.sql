@@ -173,11 +173,16 @@ BEGIN
                                  INNER JOIN MovementBoolean AS MovementBoolean_isAuto ON MovementBoolean_isAuto.MovementId = MIContainer.MovementId
                                                                                      AND MovementBoolean_isAuto.DescId     = zc_MovementBoolean_isAuto()
                                                                                      AND MovementBoolean_isAuto.ValueData  = TRUE
+                                 LEFT JOIN MovementLinkMovement AS MLM_ProductionUnion
+                                                                ON MLM_ProductionUnion.MovementId      = MIContainer.MovementId
+                                                               AND MLM_ProductionUnion.DescId          = zc_MovementLinkMovement_Production()
+                                                               AND MLM_ProductionUnion.MovementChildId > 0
                             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               AND MIContainer.DescId                 = zc_MIContainer_Count()
                               AND MIContainer.WhereObjectId_Analyzer = inUnitId
                               AND MIContainer.AnalyzerId             = inUnitId
                               AND MIContainer.MovementDescId         = zc_Movement_ProductionUnion()
+                              AND MLM_ProductionUnion.MovementId     IS NULL
                            )
           , tmpMovement AS (-- поиск одного документа за OperDate
                             SELECT tmpMI_all.OperDate

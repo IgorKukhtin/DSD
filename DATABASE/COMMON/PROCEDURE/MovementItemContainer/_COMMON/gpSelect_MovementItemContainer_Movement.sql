@@ -32,6 +32,7 @@ RETURNS TABLE (InvNumber Integer, OperDate TDateTime
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyCode_Detail Integer, InfoMoneyName_Detail TVarChar
              , CurrencyName TVarChar
              , ContainerId_Asset Integer
+             , AnalyzerId Integer
               )
 AS
 $BODY$
@@ -77,6 +78,8 @@ BEGIN
                                                 , tmpMovement.isDestination
                                                 , tmpMovement.isParentDetail
                                                 , tmpMovement.isInfoMoneyDetail
+                                                , 0 AS AnalyzerId
+                                              --, MIContainer.AnalyzerId
                                            FROM tmpMovement
                                                 LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.MovementId = tmpMovement.MovementId
                                            GROUP BY MIContainer.DescId
@@ -94,6 +97,7 @@ BEGIN
                                                 , tmpMovement.isDestination
                                                 , tmpMovement.isParentDetail
                                                 , tmpMovement.isInfoMoneyDetail
+                                              --, MIContainer.AnalyzerId
                                           )
                -- проводки: только суммовые + определяется Счет
              , tmpMIContainer_Summ_all AS (SELECT tmpMIContainer_all.*
@@ -123,6 +127,7 @@ BEGIN
                                                 , tmpMIContainer_all.isDestination
                                                 , tmpMIContainer_all.isParentDetail
                                                 , tmpMIContainer_all.isInfoMoneyDetail
+                                                , tmpMIContainer_all.AnalyzerId
                                                 , Container.ObjectId AS AccountId
                                                 , COALESCE (tmpMIContainer_all.ContainerId, 0) AS ContainerId_Currency, COALESCE (tmpMIContainer_all.Amount, 0) AS Amount_Currency
                                                 , 0 AS ContainerId_Asset, 0 AS Amount_Asset
@@ -147,6 +152,7 @@ BEGIN
                                                 , tmpMIContainer_all.isDestination
                                                 , tmpMIContainer_all.isParentDetail
                                                 , tmpMIContainer_all.isInfoMoneyDetail
+                                                , tmpMIContainer_all.AnalyzerId
                                                 , Container.ObjectId AS AccountId
                                                 , 0 AS ContainerId_Currency, 0 AS Amount_Currency
                                                 , COALESCE (tmpMIContainer_all.ContainerId, 0) AS ContainerId_Asset, COALESCE (tmpMIContainer_all.Amount, 0) AS Amount_Asset
@@ -240,6 +246,7 @@ BEGIN
                                                   , tmpMIContainer_Count_4.isDestination
                                                   , tmpMIContainer_Count_4.isParentDetail
                                                   , tmpMIContainer_Count_4.isInfoMoneyDetail
+                                                  , 0 AS AnalyzerId
                                              FROM tmpMIContainer_Count_4
                                             UNION ALL
                                              SELECT tmpMIContainer_Summ_all.MovementItemId
@@ -257,6 +264,7 @@ BEGIN
                                                   , tmpMIContainer_Summ_all.isDestination
                                                   , tmpMIContainer_Summ_all.isParentDetail
                                                   , tmpMIContainer_Summ_all.isInfoMoneyDetail
+                                                  , tmpMIContainer_Summ_all.AnalyzerId
                                              FROM tmpMIContainer_Summ_all
                                                   -- LEFT JOIN tmpMIContainer_Count_all ON tmpMIContainer_Count_all.MovementId = tmpMIContainer_Summ_all.MovementId
                                                   LEFT JOIN tmpMIContainer_Count_all ON tmpMIContainer_Count_all.MovementItemId = tmpMIContainer_Summ_all.MovementItemId
@@ -273,6 +281,7 @@ BEGIN
                                                     , tmpMIContainer_Summ_all.isDestination
                                                     , tmpMIContainer_Summ_all.isParentDetail
                                                     , tmpMIContainer_Summ_all.isInfoMoneyDetail
+                                                    , tmpMIContainer_Summ_all.AnalyzerId
                                             )
             -- проводки: к количественным привязываются суммовые !!!по MovementItemId + IsActive!!!
           , tmpMIContainer AS (SELECT tmpMIContainer_Summ_all.Id
@@ -304,6 +313,8 @@ BEGIN
                                     , tmpMIContainer_Count.isDestination
                                     , tmpMIContainer_Count.isParentDetail
                                     , tmpMIContainer_Count.isInfoMoneyDetail
+                                    
+                                    , tmpMIContainer_Summ_all.AnalyzerId
                                FROM tmpMIContainer_Count
                                     INNER JOIN tmpMIContainer_Summ_all ON tmpMIContainer_Summ_all.MovementItemId = tmpMIContainer_Count.MovementItemId
                                                                       AND tmpMIContainer_Summ_all.IsActive = tmpMIContainer_Count.IsActive
@@ -343,6 +354,8 @@ BEGIN
                                     , tmpMIContainer.isDestination
                                     , tmpMIContainer.isParentDetail
                                     , tmpMIContainer.isInfoMoneyDetail
+                                    
+                                    , tmpMIContainer.AnalyzerId
                                FROM tmpMIContainer
                                     LEFT JOIN tmpMIContainer AS tmpMIContainer_parent ON tmpMIContainer_parent.Id = tmpMIContainer.ParentId
                               )
@@ -479,6 +492,7 @@ BEGIN
            , tmpMovementItemContainer.InfoMoneyName_Detail
            , Object_Currency.ValueData AS CurrencyName
            , tmpMovementItemContainer.ContainerId_asset
+           , tmpMovementItemContainer.AnalyzerId
        FROM
            (SELECT
                   tmpMIContainer_Summ.InvNumber
@@ -559,6 +573,7 @@ BEGIN
                 , tmpMIContainer_Summ.isDestination
                 , tmpMIContainer_Summ.isParentDetail
                 , tmpMIContainer_Summ.isInfoMoneyDetail
+                , tmpMIContainer_Summ.AnalyzerId
 
             FROM
            (SELECT
@@ -626,6 +641,8 @@ BEGIN
                 , tmpMIContainer_Summ.isDestination
                 , tmpMIContainer_Summ.isParentDetail
                 , tmpMIContainer_Summ.isInfoMoneyDetail
+                
+                , tmpMIContainer_Summ.AnalyzerId
 
             FROM tmpMIContainer_Summ
                  LEFT JOIN tmpCLO_find AS ContainerLinkObject_Juridical
@@ -785,6 +802,7 @@ BEGIN
                    , tmpMIContainer_Summ.isDestination
                    , tmpMIContainer_Summ.isParentDetail
                    , tmpMIContainer_Summ.isInfoMoneyDetail
+                   , tmpMIContainer_Summ.AnalyzerId
 
            ) AS tmpMovementItemContainer
 

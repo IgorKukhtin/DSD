@@ -98,6 +98,7 @@ BEGIN
                                   AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
                                   AND (ObjectBoolean_isCorporate.ValueData = TRUE
                                     OR Object_BankAccount_View.JuridicalId = 15505 -- ִ׃Ê־ ׂ־ֲ 
+                                    OR Object_BankAccount_View.JuridicalId = 15512 -- ²נםא-1 װ³נלא ׂ־ֲ
                                       )
           LEFT JOIN tmpCurrency ON tmpCurrency.CurrencyToId = Object_BankAccount_View.CurrencyId
      WHERE Object_BankAccount_View.isErased = FALSE
@@ -116,4 +117,4 @@ $BODY$
 */
 
 -- עוסע
--- SELECT * FROM gpSelect_Object_BankAccount_Currency (inOperDate:= CURRENT_DATE,  inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_BankAccount_Currency (inOperDate:= CURRENT_DATE, inIsShowAll:= FALSE, inSession:= zfCalc_UserAdmin())

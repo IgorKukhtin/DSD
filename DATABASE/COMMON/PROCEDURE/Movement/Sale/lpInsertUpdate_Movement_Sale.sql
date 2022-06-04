@@ -164,6 +164,9 @@ BEGIN
                                THEN zc_Enum_Process_AccessKey_DocumentKharkov() 
                           WHEN /*COALESCE (ioId, 0) = 0 AND*/ inFromId = 8415 -- Склад ГП ф.Черкассы (Кировоград)
                                THEN zc_Enum_Process_AccessKey_DocumentCherkassi() 
+                          WHEN /*COALESCE (ioId, 0) = 0 AND*/ inFromId = 3080691 -- Склад ГП ф.Львов
+                               THEN zc_Enum_Process_AccessKey_DocumentLviv()
+
                           ELSE lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner())
                      END;
 
