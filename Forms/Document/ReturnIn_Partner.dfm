@@ -11,17 +11,17 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Width = 1290
     Height = 329
     ExplicitTop = 191
-    ExplicitWidth = 1242
+    ExplicitWidth = 1290
     ExplicitHeight = 329
     ClientRectBottom = 329
     ClientRectRight = 1290
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1242
+      ExplicitWidth = 1290
       ExplicitHeight = 305
       inherited cxGrid: TcxGrid
         Width = 1290
         Height = 305
-        ExplicitWidth = 1242
+        ExplicitWidth = 1290
         ExplicitHeight = 305
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -376,7 +376,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitWidth = 1242
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -384,7 +383,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         Height = 305
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1242
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -737,8 +735,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Width = 1290
     Height = 165
     TabOrder = 3
-    ExplicitTop = -4
-    ExplicitWidth = 1242
+    ExplicitWidth = 1290
     ExplicitHeight = 165
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1279,7 +1276,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 20
-    ExplicitWidth = 1242
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DetailDS
@@ -1606,7 +1602,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
     Control = cxGrid1
-    ExplicitWidth = 1242
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 155
@@ -3137,6 +3132,17 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072
       ImageIndex = 80
     end
+    object actUpdateMask: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMask
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMask
+        end>
+      Caption = 'actUpdateMask'
+    end
     object actOpenSubjectDocForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -3178,6 +3184,80 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072
       Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072
       ImageIndex = 80
+    end
+    object actSaleJournalChoiceMasc: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'SaleJournalChoice'
+      FormName = 'TSaleJournalChoiceForm'
+      FormNameParam.Value = 'TSaleJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MaskId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actSendJournalChoiceMasc: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'SendJournalChoice'
+      FormName = 'TSendJournalChoiceForm'
+      FormNameParam.Value = 'TSendJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MaskId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object mactUpdateMaskSale: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSaleJournalChoiceMasc
+        end
+        item
+          Action = actUpdateMask
+        end
+        item
+          Action = actRefreshPrice
+        end>
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      ImageIndex = 30
+    end
+    object mactUpdateMaskSend: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSendJournalChoiceMasc
+        end
+        item
+          Action = actUpdateMask
+        end
+        item
+          Action = actRefreshPrice
+        end>
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
+      ImageIndex = 59
     end
   end
   inherited MasterDS: TDataSource
@@ -3350,6 +3430,18 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         item
           Visible = True
           ItemName = 'bbSetErasedTaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMaskSale'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMaskSend'
         end
         item
           Visible = True
@@ -3576,6 +3668,14 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     end
     object bbUpdateMovementSubjectDoc: TdxBarButton
       Action = macUpdateMovementSubjectDoc
+      Category = 0
+    end
+    object bbUpdateMaskSale: TdxBarButton
+      Action = mactUpdateMaskSale
+      Category = 0
+    end
+    object bbUpdateMaskSend: TdxBarButton
+      Action = mactUpdateMaskSend
       Category = 0
     end
   end
@@ -6213,5 +6313,30 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       end>
     Left = 464
     Top = 128
+  end
+  object spUpdateMask: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_ReturnIn_isMask'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId '
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementMaskId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MaskId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 376
+    Top = 443
   end
 end

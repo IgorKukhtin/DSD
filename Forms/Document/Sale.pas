@@ -269,6 +269,14 @@ type
     spInsert_MI_Sale_byReturnIn: TdsdStoredProc;
     HeaderExit: THeaderExit;
     actInsert_MI_Sale_byReturnIn: TdsdExecStoredProc;
+    spUpdateMask: TdsdStoredProc;
+    actSendJournalChoiceMasc: TOpenChoiceForm;
+    mactUpdateMaskSend: TMultiAction;
+    actUpdateMask: TdsdExecStoredProc;
+    actReturnJournalChoiceMasc: TOpenChoiceForm;
+    mactUpdateMaskReturn: TMultiAction;
+    bbUpdateMaskReturn: TdxBarButton;
+    bbUpdateMaskSend: TdxBarButton;
   private
     { Private declarations }
   public

@@ -93,7 +93,7 @@ object Report_UnitBalanceDialogForm: TReport_UnitBalanceDialogForm
         Default = True
         Kind = bkEllipsis
       end>
-    Properties.ReadOnly = False
+    Properties.ReadOnly = True
     TabOrder = 9
     Width = 287
   end
@@ -247,7 +247,7 @@ object Report_UnitBalanceDialogForm: TReport_UnitBalanceDialogForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoneyTreeForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'iniService'

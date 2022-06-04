@@ -65,7 +65,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
           Default = True
           Kind = bkEllipsis
         end>
-      Properties.ReadOnly = False
+      Properties.ReadOnly = True
       TabOrder = 6
       Width = 257
     end
@@ -1155,7 +1155,7 @@ inherited Report_UnitRentForm: TReport_UnitRentForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoneyTreeForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'iniService'

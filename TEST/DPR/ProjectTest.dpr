@@ -1364,7 +1364,8 @@ uses
   OrderReturnTareJournalChoice in '..\..\Forms\Document\OrderReturnTareJournalChoice.pas' {OrderReturnTareJournalChoiceForm: TParentForm},
   Report_OrderReturnTare_Sale in '..\..\Forms\Report\Report_OrderReturnTare_Sale.pas' {Report_OrderReturnTare_SaleForm: TParentForm},
   Report_OrderReturnTare_Order in '..\..\Forms\Report\Report_OrderReturnTare_Order.pas' {Report_OrderReturnTare_OrderForm: TParentForm},
-  Report_GoodsMI_OrderExternal in '..\..\Forms\Report\Report_GoodsMI_OrderExternal.pas' {Report_GoodsMI_OrderExternalForm: TParentForm};
+  Report_GoodsMI_OrderExternal in '..\..\Forms\Report\Report_GoodsMI_OrderExternal.pas' {Report_GoodsMI_OrderExternalForm: TParentForm},
+  ReturnOutJournalChoice in '..\..\Forms\Document\ReturnOutJournalChoice.pas' {ReturnOutJournalChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

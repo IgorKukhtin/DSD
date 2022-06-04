@@ -224,6 +224,14 @@ type
     cxLabel31: TcxLabel;
     edReturnIn: TcxButtonEdit;
     GuidesReturnIn: TdsdGuides;
+    spUpdateMask: TdsdStoredProc;
+    actUpdateMask: TdsdExecStoredProc;
+    actSendJournalChoiceMasc: TOpenChoiceForm;
+    mactUpdateMaskSend: TMultiAction;
+    actReturnJournalChoiceMasc: TOpenChoiceForm;
+    mactUpdateMaskReturn: TMultiAction;
+    bbUpdateMaskReturn: TdxBarButton;
+    bbUpdateMaskSend: TdxBarButton;
   private
     { Private declarations }
   public
