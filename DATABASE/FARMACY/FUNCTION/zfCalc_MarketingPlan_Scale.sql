@@ -76,7 +76,7 @@ BEGIN
       vbTotal := 0;
     END IF;  
 
-    IF inOperDate >= '01.06.2021' AND inOperDate < '01.08.2021' AND vbTotal < 0
+    IF (inOperDate >= '01.06.2021' AND inOperDate < '01.08.2021') AND vbTotal < 0
     THEN
       vbTotal := vbTotal / 2;   
     END IF;
@@ -96,4 +96,4 @@ ALTER FUNCTION zfCalc_MarketingPlan_Scale (Integer, TDateTime, TFloat, TFloat, T
 */
 
 -- тест 
-SELECT * FROM zfCalc_MarketingPlan_Scale (zc_Enum_ScaleCalcMarketingPlan_CC1(), '01.04.2022', 70, 20, 10)
+SELECT * FROM zfCalc_MarketingPlan_Scale (zc_Enum_ScaleCalcMarketingPlan_CC1(), '01.06.2022', 51.11, 313.11, 78.51)	

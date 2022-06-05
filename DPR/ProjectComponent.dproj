@@ -67,11 +67,11 @@
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_Locale>1033</VerInfo_Locale>
 			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;dxBarExtItemsRS16;cxPivotGridRS16;VclSmp;cxVerticalGridRS16;vcl;dxSkinsCoreRS16;adortl;vclx;dxmdsRS16;dxLayoutControlRS16;cxExportRS16;vclie;GMLib_DXE2;GMLib_DXE2_VCL;cxSchedulerRS16;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;dxBarExtItemsRS16;cxPivotGridRS16;VclSmp;cxVerticalGridRS16;vcl;dxSkinsCoreRS16;adortl;vclx;dxmdsRS16;dxLayoutControlRS16;cxExportRS16;vclie;GMLib_DXE2;GMLib_DXE2_VCL;cxSchedulerRS16;ZComponentD16;ZDbcD16;ZPlainD16;ZCoreD16;ZParseSqlD16;$(DCC_UsePackage)</DCC_UsePackage>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win32)'!=''">
 			<DCC_BplOutput>..\BIN</DCC_BplOutput>
-			<DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;cxDataRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;fs16;frx16;dxBarExtItemsRS16;cxPivotGridRS16;zlibEx;VclSmp;cxVerticalGridRS16;vcl;fsDB16;frxDB16;dxSkinsCoreRS16;adortl;vclx;dxmdsRS16;dxLayoutControlRS16;cxExportRS16;frxe16;Zlib;vclie;GMLib_DXE2;GMLib_DXE2_VCL;cxSchedulerRS16;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;cxDataRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;fs16;frx16;dxBarExtItemsRS16;cxPivotGridRS16;zlibEx;VclSmp;cxVerticalGridRS16;vcl;fsDB16;frxDB16;dxSkinsCoreRS16;adortl;vclx;dxmdsRS16;dxLayoutControlRS16;cxExportRS16;frxe16;Zlib;vclie;GMLib_DXE2;GMLib_DXE2_VCL;cxSchedulerRS16;ZComponentD16;ZDbcD16;ZPlainD16;ZCoreD16;ZParseSqlD16;$(DCC_UsePackage)</DCC_UsePackage>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -154,6 +154,11 @@
 			<DCCReference Include="GMLib_DXE2_VCL.dcp"/>
 			<DCCReference Include="DbxCommonDriver.dcp"/>
 			<DCCReference Include="cxSchedulerRS16.dcp"/>
+			<DCCReference Include="ZComponentD16.dcp"/>
+			<DCCReference Include="ZDbcD16.dcp"/>
+			<DCCReference Include="ZPlainD16.dcp"/>
+			<DCCReference Include="ZCoreD16.dcp"/>
+			<DCCReference Include="ZParseSqlD16.dcp"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\CommonData.pas"/>

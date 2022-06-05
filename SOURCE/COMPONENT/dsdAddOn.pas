@@ -18,7 +18,9 @@ const
   WM_SETFLAG = WM_USER + 2;
   WM_SETFLAGHeaderSaver = WM_USER + 3;
   CUSTOM_FILTER = -1;
+  CUSTOM_FILTERLOAD = -2;
   MY_CUST_FILTER = '(Отметить все)';
+  MY_CUST_FILTERLOAD = '(Звгрузить из файла)';
 
 type
   TMultiplyType = (mtRight, mtBottom, mtLeft, mtTop);
@@ -374,6 +376,7 @@ type
     FAfterScroll: TDataSetNotifyEvent;
     FMemoryStream: TMemoryStream;
     FFilterSelectAll: boolean;
+    FFilterLoadFile: boolean;
     FOnGetFilterValues : TcxGridGetFilterValuesEvent;
     FOnUserFiltering : TcxGridUserFilteringEvent;
 
@@ -463,6 +466,8 @@ type
     property PropertiesCellList: TCollection read FPropertiesCellList write FPropertiesCellList;
     // В автофильтре кнопка "Отметить все"
     property FilterSelectAll: boolean read FFilterSelectAll write FFilterSelectAll default False;
+    // В автофильтре кнопка "Отметить все"
+    property FilterLoadFile: boolean read FFilterLoadFile write FFilterLoadFile default False;
 
   end;
 
@@ -1488,7 +1493,7 @@ type
 
 implementation
 
-uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf,
+uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, ADODB,
      dxCore, cxFilter, cxClasses, cxLookAndFeelPainters,
      cxGridCommon, math, cxPropertiesStore, UtilConst, cxStorage,
      cxGeometry, dxBar, cxButtonEdit, cxDBEdit, cxCurrencyEdit,
@@ -1701,6 +1706,7 @@ begin
   FGroupByBox := False;
   FGroupIndex := -1;
   FFilterSelectAll := False;
+  FFilterLoadFile := False;
 end;
 
 procedure TdsdDBViewAddOn.OnAfterOpen(ADataSet: TDataSet);
@@ -2702,12 +2708,24 @@ begin
        (TcxGridDBColumn(Sender).DataBinding.Field.DataType in [ftString, ftWideString]) then
       AValueList.Add(fviUser, CUSTOM_FILTER, MY_CUST_FILTER, True);
   end;
+
+  if FilterLoadFile then
+  begin
+    if (Sender is TcxGridDBBandedColumn) and Assigned(TcxGridDBBandedColumn(Sender).DataBinding.Field) and
+       (TcxGridDBBandedColumn(Sender).DataBinding.Field.DataType in [ftInteger, ftSmallint]) then
+      AValueList.Add(fviUser, CUSTOM_FILTERLOAD, MY_CUST_FILTERLOAD, True);
+    if (Sender is TcxGridDBColumn) and Assigned(TcxGridDBColumn(Sender).DataBinding.Field) and
+       (TcxGridDBColumn(Sender).DataBinding.Field.DataType in [ftInteger, ftSmallint]) then
+      AValueList.Add(fviUser, CUSTOM_FILTERLOAD, MY_CUST_FILTERLOAD, True);
+  end;
 end;
 
 procedure TdsdDBViewAddOn.OnUserFiltering(Sender: TcxCustomGridTableItem; const AValue: Variant;
   const ADisplayText: string);
   var I, J : Integer; lFilter : TStringList;
-      ItemList: TcxFilterCriteriaItemList;
+      ItemList: TcxFilterCriteriaItemList; cFileName, strConn : String;
+      pAdoConnection : TAdoConnection; pADOQuery : TADOQuery;
+      List: TStringList; ListName: string;
 begin
   if (AValue = CUSTOM_FILTER) then
   begin
@@ -2740,6 +2758,97 @@ begin
         EndUpdate;
         lFilter.Free;
       end;
+    end;
+  end;
+
+  if (AValue = CUSTOM_FILTERLOAD) then
+  begin
+
+    if not Assigned(Sender) or not Assigned(FView) then Exit;
+
+    with TFileOpenDialog.Create(nil) do
+    try
+      SetSubComponent(true);
+      FreeNotification(Self);
+      OkButtonLabel := 'Загрузить фильтр из файла';
+      with FileTypes.Add do
+      begin
+        DisplayName := 'Файл с данными для фильтра';
+        FileMask := '*.xls;*.xlsx';
+      end;
+      if Execute then cFileName := FileName
+      else Exit;
+    finally
+      Free;
+    end;
+
+    pAdoConnection := TAdoConnection.Create(nil);
+    pAdoConnection.LoginPrompt := false;
+    pADOQuery := TADOQuery.Create(nil);
+    pADOQuery.Connection := pAdoConnection;
+    try
+      // Подключение для  xlsx
+      if Pos('.xlsx', AnsiLowerCase(cFileName)) > 0 then
+        strConn:='Provider=Microsoft.ACE.OLEDB.12.0;Mode=Read;' +
+                 'Data Source="' + cFileName + '";' +
+                 'Extended Properties="Excel 12.0 Xml;HDR=Yes;IMEX=1;"'
+      else strConn:='Provider=Microsoft.Jet.OLEDB.4.0;Mode=Read;' +
+               'Data Source="' + cFileName + '";' +
+               'Extended Properties="Excel 8.0;IMEX=1;"';
+      pAdoConnection.Connected := False;
+      pAdoConnection.ConnectionString := strConn;
+      pAdoConnection.Open;
+
+      List := TStringList.Create;
+      try
+        pAdoConnection.GetTableNames(List, True);
+        pADOQuery.ParamCheck := false;
+        ListName := '';
+        if Copy(ListName, 1, 1) = chr(39) then
+           ListName := Copy(List[0], 2, length(List[0])-2);
+        if Pos('.xlsx', AnsiLowerCase(cFileName)) > 0 then
+          pADOQuery.SQL.Text := 'SELECT * FROM [' + ListName + 'A' + IntToStr(1)+ ':CZ60000]'
+        else pADOQuery.SQL.Text := 'SELECT * FROM [' + ListName + 'A' + IntToStr(1)+ ':CZ60000]';
+        pADOQuery.Open;
+      finally
+        FreeAndNil(List);
+      end;
+
+      if pADOQuery.RecordCount = 0 then Exit;
+
+      with FView.DataController.Filter do
+      begin
+        lFilter := TStringList.Create;
+        lFilter.Sorted := True;
+        BeginUpdate;
+        try
+          Clear;
+          root.BoolOperatorKind := TcxFilterBoolOperatorKind.fboAnd;
+          ItemList := root.AddItemList(TcxFilterBoolOperatorKind.fboOr);
+
+          pADOQuery.First;
+          while not pADOQuery.Eof do
+          begin
+           if not lFilter.Find(VarToStr(pADOQuery.Fields.Fields[0].Value), J) and
+             (VarToStr(pADOQuery.Fields.Fields[0].Value) <> '') and
+             TryStrToInt(VarToStr(pADOQuery.Fields.Fields[0].Value), J) then
+           begin
+             ItemList.AddItem(FView.Columns[Sender.Index], TcxFilterOperatorKind.foEqual,
+                  pADOQuery.Fields.Fields[0].Value,
+                  VarToStr(pADOQuery.Fields.Fields[0].Value));
+             lFilter.Add(VarToStr(pADOQuery.Fields.Fields[0].Value));
+           end;
+            pADOQuery.Next;
+          end;
+          Active := true;
+        finally
+          EndUpdate;
+          lFilter.Free;
+        end;
+      end;
+    finally
+      pADOQuery.Free;
+      pAdoConnection.Free;
     end;
   end;
 end;

@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ExchangeRates_Set(
     IN inExchange           TFloat    ,     -- Курс
     IN inSession            TVarChar        -- Формировать заявку на изменения срока
 )
-  RETURNS integer AS
+  RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;   

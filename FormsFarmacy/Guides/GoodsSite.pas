@@ -65,7 +65,6 @@ type
     bbUpdateNDS: TdxBarButton;
     bbUpdate_CountPrice: TdxBarButton;
     spUpdate_Goods_isNotUploadSites: TdsdStoredProc;
-    spUpdate_Goods_DoesNotShare: TdsdStoredProc;
     bbStartLoad: TdxBarButton;
     bbUpdateNotMarion_Yes: TdxBarButton;
     bbUpdateNotMarion_No: TdxBarButton;
@@ -160,6 +159,34 @@ type
     actFD_DownloadPublishedSiteOne: TdsdForeignData;
     dxBarButton22: TdxBarButton;
     actFD_UpdatePublishedSite_Revert: TdsdForeignData;
+    actFD_UpdatePublishedSite_Yes: TdsdForeignData;
+    actFD_UpdatePublishedSite_No: TdsdForeignData;
+    mactUpdatePublishedSite_Yes: TMultiAction;
+    mactDoUpdatePublishedSite_Yes: TMultiAction;
+    mactUpdatePublishedSite_Revert: TMultiAction;
+    mactFD_DownloadPublishedSiteOne: TMultiAction;
+    dxBarButton23: TdxBarButton;
+    mactUpdatePublishedSite_No: TMultiAction;
+    mactDoUpdatePublishedSite_No: TMultiAction;
+    dxBarButton24: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
+    spUpdate_Published_Yes: TdsdStoredProc;
+    spUpdate_Published_No: TdsdStoredProc;
+    actUpdate_Published_Yes: TdsdExecStoredProc;
+    actUpdate_Published_No: TdsdExecStoredProc;
+    mactUpdate_Published_Yes: TMultiAction;
+    mactUpdate_Published_No: TMultiAction;
+    mactUpdatePublishedSiteAll_Yes: TMultiAction;
+    mactUpdatePublishedSiteAll_No: TMultiAction;
+    dxBarButton25: TdxBarButton;
+    dxBarButton26: TdxBarButton;
+    dxBarSeparator2: TdxBarSeparator;
+    dxBarSeparator3: TdxBarSeparator;
+    spUpdate_PublishedAll: TdsdStoredProc;
+    actFD_UpdatePublishedSiteHide: TdsdForeignData;
+    mactUpdatePublishedSiteHide: TMultiAction;
+    isNotUploadSites: TcxGridDBColumn;
+    dxBarSeparator4: TdxBarSeparator;
   private
     { Private declarations }
   public

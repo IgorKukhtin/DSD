@@ -22,6 +22,8 @@ RETURNS TABLE (Id Integer,
                isFirst  Boolean,
                isSecond Boolean,
                isResolution_224 Boolean,
+               isSPRegistry_1303 Boolean,
+               PriceSaleOOC1303 TFloat, 
                AmoutDiffUser TFloat,
                AmoutDiff TFloat,
                AmountDiffPrev TFloat)
@@ -35,6 +37,7 @@ $BODY$
   DECLARE vbRetailId    Integer;
   DECLARE vbAreaId      Integer;
   DECLARE vbJuridicalId Integer;
+  DECLARE vbPartnerMedicalId  Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -48,8 +51,11 @@ BEGIN
      	vbUnitId := 0;
      END IF;
 
-     SELECT ObjectLink_Unit_Juridical.ChildObjectId, ObjectLink_Juridical_Retail.ChildObjectId, ObjectLink_ObjectLink_Unit_Area.ChildObjectId
-     INTO vbJuridicalId, vbRetailId, vbAreaId
+     SELECT ObjectLink_Unit_Juridical.ChildObjectId
+          , ObjectLink_Juridical_Retail.ChildObjectId
+          , ObjectLink_ObjectLink_Unit_Area.ChildObjectId
+          , COALESCE (ObjectLink_Unit_PartnerMedical.ChildObjectId, 0)
+     INTO vbJuridicalId, vbRetailId, vbAreaId, vbPartnerMedicalId
      FROM ObjectLink AS ObjectLink_Unit_Juridical
           INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
@@ -57,6 +63,9 @@ BEGIN
           INNER JOIN ObjectLink AS ObjectLink_ObjectLink_Unit_Area
                                 ON ObjectLink_ObjectLink_Unit_Area.ObjectId = ObjectLink_Unit_Juridical.ObjectId
                                AND ObjectLink_ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_PartnerMedical
+                               ON ObjectLink_Unit_PartnerMedical.ObjectId = ObjectLink_Unit_Juridical.ObjectId
+                              AND ObjectLink_Unit_PartnerMedical.DescId = zc_ObjectLink_Unit_PartnerMedical()
      WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
        AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();
 
@@ -401,6 +410,9 @@ BEGIN
                                   AND Object_BarCode.isErased = False
                                   AND COALESCE(ObjectBoolean_GoodsForProject.ValueData, False) = TRUE
                                   AND COALESCE(tmpGoodsDiscountTools.DiscountExternalID, 0) = 0)
+       , tmpGoodsSP_1303 AS (SELECT * 
+                             FROM gpSelect_GoodsSPRegistry_1303_Unit (inUnitId := vbUnitId, inGoodsId := 0, inisCalc := COALESCE (vbPartnerMedicalId, 0) > 0, inSession := inSession)
+                             )
 
      SELECT
               GoodsPriceAll.GoodsId             AS Id,
@@ -420,10 +432,11 @@ BEGIN
               GoodsPriceAll.isFirst             AS isFirst,
               GoodsPriceAll.isSecond            AS isSecond,
               GoodsPriceAll.isResolution_224    AS isResolution_224,
+              COALESCE (tmpGoodsSP_1303.GoodsId, 0) <> 0  AS isSPRegistry_1303,
+              tmpGoodsSP_1303.PriceSale         AS PriceSaleOOC1303,
               NULL::TFloat                      AS AmoutDiffUser,
               NULL::TFloat                      AS AmoutDiff,
               NULL::TFloat                      AS AmountDiffPrev
-
 
      FROM GoodsPriceAll
 
@@ -435,6 +448,7 @@ BEGIN
           LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = GoodsPriceAll.ContractId
           LEFT JOIN Object AS Object_Area ON Object_Area.Id = GoodsPriceAll.AreaId
           LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.ID =  GoodsPriceAll.GoodsId
+          LEFT JOIN tmpGoodsSP_1303 ON tmpGoodsSP_1303.GoodsId = GoodsPriceAll.GoodsId
 
      WHERE Ord = 1
        AND COALESCE(tmpGoodsDiscount.ID, 0) = 0;

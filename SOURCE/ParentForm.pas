@@ -584,7 +584,10 @@ begin
   if gc_ProgramName = 'Farmacy.exe' then
     for I := 0 to ComponentCount - 1 do
       if Components[I] is TdsdDBViewAddOn then
+      begin
         TdsdDBViewAddOn(Components[I]).FilterSelectAll := True;
+        TdsdDBViewAddOn(Components[I]).FilterLoadFile := True;
+      end;
 end;
 
 procedure TParentForm.Loaded;
@@ -810,6 +813,7 @@ initialization
   RegisterClass (TdsdSendClipboardAction);
   RegisterClass (TdsdSetEnabledAction);
   RegisterClass (TdsdRunAction);
+  RegisterClass (TdsdForeignData);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);
@@ -853,3 +857,5 @@ finalization
 
   DestroyLocalizer;
 end.
+
+
