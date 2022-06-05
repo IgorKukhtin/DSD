@@ -32,6 +32,11 @@ RETURNS TABLE (ContainerId Integer, ServiceDateId Integer
              , AmountDebetStart TFloat, AmountKreditStart TFloat
              , AmountDebet TFloat, AmountKredit TFloat
              , AmountDebetEnd TFloat, AmountKreditEnd TFloat
+             , OperDate TDateTime--, InvNumber TVarChar
+             , InfoMoneyDetailCode Integer, InfoMoneyDetailName TVarChar
+             , CommentInfoMoneyCode Integer, CommentInfoMoneyName TVarChar
+             , InsertName TVarChar, InsertDate TDateTime
+             , UpdateName TVarChar, UpdateDate TDateTime
               )
 AS
 $BODY$
@@ -84,6 +89,8 @@ BEGIN
                              , COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Cash() AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) THEN -MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
                              , Container.Amount - SUM (COALESCE (MIContainer.Amount, 0)) AS AmountRemainsStart
                              , Container.Amount - SUM (CASE WHEN (MIContainer.OperDate > inEndDate) THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS AmountRemainsEnd
+                             , MIContainer.MovementItemId
+                             , MIContainer.OperDate
                         FROM Container
                              LEFT JOIN MovementItemContainer AS MIContainer
                                                              ON MIContainer.Containerid = Container.Id
@@ -106,12 +113,53 @@ BEGIN
                                , Container.WhereObjectId
                                , CLO_ServiceDate.ObjectId
                                , CLO_InfoMoney.ObjectId
+                               , MIContainer.MovementItemId
+                               , MIContainer.OperDate
                         HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
                             OR (COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) THEN  MIContainer.Amount ELSE 0 END), 0) <> 0)
                             OR (COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Cash() AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate) THEN -MIContainer.Amount ELSE 0 END), 0) <> 0)
                             OR Container.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) <> 0
                        )
 
+   , tmpMov_Param AS AS (SELECT tmp.MovementItemId
+                              , Object_InfoMoneyDetail.ObjectCode    AS InfoMoneyDetailCode
+                              , Object_InfoMoneyDetail.ValueData     AS InfoMoneyDetailName
+                              , Object_CommentInfoMoney.ObjectCode   AS CommentInfoMoneyCode
+                              , Object_CommentInfoMoney.ValueData    AS CommentInfoMoneyName
+                              , Object_Insert.ValueData              AS InsertName
+                              , MovementDate_Insert.ValueData        AS InsertDate
+                              , Object_Update.ValueData              AS UpdateName
+                              , MovementDate_Update.ValueData        AS UpdateDate
+                         FROM (SELECT DISTINCT tmpMIContainer.MovementItemId FROM tmpMIContainer) AS tmp
+                               LEFT JOIN MovementItem ON MovementItem.Id = tmp.MovementItemId
+
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoneyDetail
+                                                                ON MILinkObject_InfoMoneyDetail.MovementItemId = tmp.MovementItemId
+                                                               AND MILinkObject_InfoMoneyDetail.DescId = zc_MILinkObject_InfoMoneyDetail()
+                               LEFT JOIN Object AS Object_InfoMoneyDetail ON Object_InfoMoneyDetail.Id = MILinkObject_InfoMoneyDetail.ObjectId
+
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentInfoMoney
+                                                                ON MILinkObject_CommentInfoMoney.MovementItemId = tmp.MovementItemId
+                                                               AND MILinkObject_CommentInfoMoney.DescId         = zc_MILinkObject_CommentInfoMoney()
+                               LEFT JOIN Object AS Object_CommentInfoMoney ON Object_CommentInfoMoney.Id = MILinkObject_CommentInfoMoney.ObjectId
+                   
+                               LEFT JOIN MovementDate AS MovementDate_Insert
+                                                      ON MovementDate_Insert.MovementId = MovementItem.MovementId
+                                                     AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+                               LEFT JOIN MovementLinkObject AS MLO_Insert
+                                                            ON MLO_Insert.MovementId = MovementItem.MovementId
+                                                           AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+                               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
+                   
+                               LEFT JOIN MovementDate AS MovementDate_Update
+                                                      ON MovementDate_Update.MovementId = MovementItem.MovementId
+                                                     AND MovementDate_Update.DescId = zc_MovementDate_Update()
+                               LEFT JOIN MovementLinkObject AS MLO_Update
+                                                            ON MLO_Update.MovementId = MovementItem.MovementId
+                                                           AND MLO_Update.DescId = zc_MovementLinkObject_Update()
+                               LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
+
+                         )
 
        SELECT tmpMIContainer.ContainerId
             , tmpMIContainer.ServiceDateId
@@ -128,7 +176,7 @@ BEGIN
             , Object_InfoMoney.ObjectCode AS InfoMoneyCode
             , Object_InfoMoney.ValueData  AS InfoMoneyName
             , Object_Account.ObjectCode   AS AccountCode
-            , Object_Account.ValueData    AS AccountName   
+            , Object_Account.ValueData    AS AccountName 
 
             , CAST (CASE WHEN tmpMIContainer.AmountRemainsStart > 0 AND 1=0 THEN tmpMIContainer.AmountRemainsStart ELSE 0 END AS TFloat)      AS AmountDebetStart
             , CAST (CASE WHEN tmpMIContainer.AmountRemainsStart < 0 OR  1=1 THEN -1 * tmpMIContainer.AmountRemainsStart ELSE 0 END AS TFloat) AS AmountKreditStart
@@ -137,6 +185,15 @@ BEGIN
             , CAST (CASE WHEN tmpMIContainer.AmountRemainsEnd > 0 AND 1=0 THEN tmpMIContainer.AmountRemainsEnd ELSE 0 END AS TFloat)      AS AmountDebetEnd
             , CAST (CASE WHEN tmpMIContainer.AmountRemainsEnd < 0 OR  1=1 THEN -1 * tmpMIContainer.AmountRemainsEnd ELSE 0 END AS TFloat) AS AmountKreditEnd
 
+            , tmpMIContainer.OperDate
+            , tmpMov_Param.InfoMoneyDetailCode  
+            , tmpMov_Param.InfoMoneyDetailName
+            , tmpMov_Param.CommentInfoMoneyCode
+            , tmpMov_Param.CommentInfoMoneyName
+            , tmpMov_Param.InsertName
+            , tmpMov_Param.InsertDate
+            , tmpMov_Param.UpdateName
+            , tmpMov_Param.UpdateDate
        FROM tmpMIContainer
            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = tmpMIContainer.InfoMoneyId
            LEFT JOIN Object AS Object_Account ON Object_Account.Id = tmpMIContainer.AccountId
@@ -151,7 +208,8 @@ BEGIN
                                AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
            LEFT JOIN Object AS Object_ParentUnit ON Object_ParentUnit.Id = ObjectLink_Unit_Parent.ChildObjectId
            
-           LEFT JOIN tmpUnit ON tmpUnit.UnitId = tmpMIContainer.UnitId
+           LEFT JOIN tmpUnit ON tmpUnit.UnitId = tmpMIContainer.UnitId  
+           LEFT JOIN tmpMov_Param ON tmpMov_Param.MovementItemId = tmpMIContainer.MovementItemId
       ;
 
 END;
