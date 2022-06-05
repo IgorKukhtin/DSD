@@ -124,7 +124,7 @@ BEGIN
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT()
                                           , inMovementId
                                           , (SELECT COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) ::Boolean
-                                             FROM tmpMovementBoolean AS MovementBoolean_PriceWithVAT
+                                             FROM MovementBoolean AS MovementBoolean_PriceWithVAT
                                              WHERE MovementBoolean_PriceWithVAT.MovementId = inMovementMaskId
                                                AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT())
                                           );
