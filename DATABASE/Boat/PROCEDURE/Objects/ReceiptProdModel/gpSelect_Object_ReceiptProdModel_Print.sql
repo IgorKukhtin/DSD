@@ -375,4 +375,4 @@ $BODY$
 */
 
 -- тест
---
+-- SELECT * FROM gpSelect_Object_ReceiptProdModel_Print (inReceiptProdModelId:= 122175, inReceiptLevelId:= 1, inSession:= zfCalc_UserAdmin())
