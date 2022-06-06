@@ -87,7 +87,9 @@ uses
   Medoc_J1201211 in '..\SOURCE\MeDOC\Medoc_J1201211.pas',
   Medoc_J1201012 in '..\SOURCE\MeDOC\Medoc_J1201012.pas',
   Medoc_J1201212 in '..\SOURCE\MeDOC\Medoc_J1201212.pas',
-  DialogPswSms in '..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm};
+  DialogPswSms in '..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
+  DOCUMENTINVOICE_PRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
+  DOCUMENTINVOICE_TN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas';
 
 {$R *.res}
 
