@@ -70,12 +70,7 @@ requires
   GMLib_DXE2,
   GMLib_DXE2_VCL,
   DbxCommonDriver,
-  cxSchedulerRS16,
-  ZComponent160,
-  ZDbc160,
-  ZPlain160,
-  ZCore160,
-  ZParseSql160;
+  cxSchedulerRS16;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',

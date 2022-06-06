@@ -154,11 +154,6 @@
 			<DCCReference Include="GMLib_DXE2_VCL.dcp"/>
 			<DCCReference Include="DbxCommonDriver.dcp"/>
 			<DCCReference Include="cxSchedulerRS16.dcp"/>
-			<DCCReference Include="ZComponent160.dcp"/>
-			<DCCReference Include="ZDbc160.dcp"/>
-			<DCCReference Include="ZPlain160.dcp"/>
-			<DCCReference Include="ZCore160.dcp"/>
-			<DCCReference Include="ZParseSql160.dcp"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\CommonData.pas"/>
@@ -246,7 +241,6 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas"/>
-			<None Include="ModelSupport_ProjectComponent\default.txaPackage"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
