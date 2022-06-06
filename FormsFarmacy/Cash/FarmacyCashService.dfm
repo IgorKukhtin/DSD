@@ -58,7 +58,7 @@ object MainCashForm2: TMainCashForm2
     Left = 104
     Top = 176
   end
-  object gpUpdate_Log_CashRemains: TdsdStoredProc
+  object spUpdate_Log_CashRemains: TdsdStoredProc
     StoredProcName = 'gpUpdate_Log_CashRemains_Version'
     DataSets = <>
     OutputType = otResult
@@ -87,7 +87,7 @@ object MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    AfterExecute = gpUpdate_Log_CashRemainsAfterExecute
+    AfterExecute = spUpdate_Log_CashRemainsAfterExecute
     Left = 168
     Top = 80
   end
@@ -25979,6 +25979,13 @@ object MainCashForm2: TMainCashForm2
         Name = 'inOldServise'
         Value = Null
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIp'
+        Value = Null
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

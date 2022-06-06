@@ -77,7 +77,8 @@ uses
   OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
   DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
-  dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas';
+  dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas',
+  UnitMyIP in '..\SOURCE\UnitMyIP.pas';
 
 {$R *.res}
 

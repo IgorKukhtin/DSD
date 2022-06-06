@@ -26,6 +26,7 @@ BEGIN
     -- Сохранили в плоскую таблицй
     BEGIN
       UPDATE Object_Goods_Main SET isPublished = inStatus <> 0
+                                 , isPublishedSite = inStatus <> 0
                                  , DateUpdateSite = CURRENT_TIMESTAMP
       WHERE Object_Goods_Main.ID = (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inId);  
     EXCEPTION

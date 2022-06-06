@@ -445,9 +445,6 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actExecuteDataChoiceDialog
-        end
-        item
           Action = actExecuteIntegerDialog
         end
         item
@@ -1190,8 +1187,7 @@ inherited CompetitorMarkupsForm: TCompetitorMarkupsForm
       item
         Name = 'inOperDate'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'OperDate'
+        Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','

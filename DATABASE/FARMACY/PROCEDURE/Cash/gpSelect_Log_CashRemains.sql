@@ -37,6 +37,7 @@ BEGIN
       WHERE EmployeeWorkLog.DateLogIn >= vbDateStart AND EmployeeWorkLog.DateLogIn < vbDateEnd)  
 
     SELECT EmployeeWorkLog.CashSessionId      AS CashSessionId
+         , EmployeeWorkLog.IP
          , OUnit.objectcode   AS UnitCode
          , OUnit.valuedata    AS UnitName
          , OUser.objectcode   AS UserCode
@@ -67,7 +68,8 @@ BEGIN
          LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
          
     WHERE EmployeeWorkLog.DateLogIn >= vbDateStart AND EmployeeWorkLog.DateLogIn < vbDateEnd
-    GROUP BY EmployeeWorkLog.CashSessionId,
+    GROUP BY EmployeeWorkLog.CashSessionId, 
+             EmployeeWorkLog.IP, 
              OUnit.objectcode, OUnit.valuedata,
              OUser.objectcode, OUser.valuedata, 
              tmpOldNew.OldProgram, tmpOldNew.OldServise,

@@ -139,7 +139,7 @@ BEGIN
                                   LIMIT 1
                                  )
                                             
-    SELECT STRING_AGG (COALESCE (Movement.Id :: TVarChar, ''), ';') AS RetV
+    SELECT STRING_AGG (COALESCE (Movement.Id :: TVarChar, ''), ';')::TVarChar AS RetV
          , SUM(CASE WHEN COALESCE (ObjectBoolean_CheckSourceKind_Site.ValueData, FALSE) = FALSE
                          OR COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) 
                             NOT IN (zc_Enum_CheckSourceKind_Liki24(), zc_Enum_CheckSourceKind_Tabletki()) THEN 1 ELSE 0 END) > 0 
@@ -188,4 +188,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpGet_Movement_Check_ConfirmedKind (inSession:= zfCalc_UserAdmin())
+
 select * from gpGet_Movement_Check_ConfirmedKind( inSession := '3');

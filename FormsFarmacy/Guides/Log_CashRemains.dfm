@@ -1,26 +1,26 @@
 inherited Log_CashRemainsForm: TLog_CashRemainsForm
   Caption = 'GUID '#1082#1072#1089#1089' '#1080' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
   ClientHeight = 463
-  ClientWidth = 1005
+  ClientWidth = 1112
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1021
+  ExplicitWidth = 1128
   ExplicitHeight = 502
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1005
+    Width = 1112
     Height = 406
-    ExplicitWidth = 734
+    ExplicitWidth = 1005
     ExplicitHeight = 406
     ClientRectBottom = 406
-    ClientRectRight = 1005
+    ClientRectRight = 1112
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 734
+      ExplicitWidth = 1005
       ExplicitHeight = 406
       inherited cxGrid: TcxGrid
-        Width = 1005
+        Width = 1112
         Height = 269
-        ExplicitWidth = 734
+        ExplicitWidth = 1005
         ExplicitHeight = 269
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -62,6 +62,14 @@ inherited Log_CashRemainsForm: TLog_CashRemainsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 223
+          end
+          object IP: TcxGridDBColumn
+            Caption = #1042#1085#1077#1096#1085#1080#1081' IP'
+            DataBinding.FieldName = 'IP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 105
           end
           object UserName: TcxGridDBColumn
             Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
@@ -123,12 +131,12 @@ inherited Log_CashRemainsForm: TLog_CashRemainsForm
       object cxGridDouble: TcxGrid
         Left = 0
         Top = 277
-        Width = 1005
+        Width = 1112
         Height = 129
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 734
+        ExplicitWidth = 1005
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DoubleDS
@@ -191,17 +199,17 @@ inherited Log_CashRemainsForm: TLog_CashRemainsForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 269
-        Width = 1005
+        Width = 1112
         Height = 8
         AlignSplitter = salBottom
         Control = cxGridDouble
-        ExplicitWidth = 734
+        ExplicitWidth = 1005
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1005
-    ExplicitWidth = 734
+    Width = 1112
+    ExplicitWidth = 1005
     inherited deStart: TcxDateEdit
       EditValue = 43344d
       Properties.AssignedValues.DisplayFormat = True

@@ -328,4 +328,23 @@ object ListDiffAddGoodsForm: TListDiffAddGoodsForm
     Left = 496
     Top = 144
   end
+  object DiffKindPriceCDS: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <>
+    IndexDefs = <
+      item
+        Name = 'DiffKindPriceCDSIndex1'
+      end
+      item
+        Name = 'DiffKindPriceCDSIndex2'
+      end
+      item
+        Name = 'DiffKindPriceCDSIndex3'
+      end>
+    IndexFieldNames = 'DiffKindId'
+    Params = <>
+    StoreDefs = True
+    Left = 376
+    Top = 16
+  end
 end

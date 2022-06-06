@@ -198,6 +198,15 @@ inherited ListGoodsForm: TListGoodsForm
         Options.Editing = False
         Width = 72
       end
+      object colPriceOOC1303: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1084#1079' '#1056#1054#1054#1062', '#1073#1077#1079' '#1053#1044#1057
+        DataBinding.FieldName = 'PriceOOC1303'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 101
+      end
     end
     object ListGoodsGridLevel: TcxGridLevel
       Caption = #1040#1083#1100#1090' (24 '#1087#1086#1079') "*"'

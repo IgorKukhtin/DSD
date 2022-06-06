@@ -6352,11 +6352,11 @@ inherited MainCashForm2: TMainCashForm2
       PortParam.Component = FormParams
       PortParam.ComponentItem = 'LayoutFilePort'
       PortParam.MultiSelectSeparator = ','
-      UsernameParam.Value = ''
-      UsernameParam.Component = FormParams
-      UsernameParam.ComponentItem = 'LayoutFileUsername'
-      UsernameParam.DataType = ftString
-      UsernameParam.MultiSelectSeparator = ','
+      UserNameParam.Value = ''
+      UserNameParam.Component = FormParams
+      UserNameParam.ComponentItem = 'LayoutFileUsername'
+      UserNameParam.DataType = ftString
+      UserNameParam.MultiSelectSeparator = ','
       PasswordParam.Value = ''
       PasswordParam.Component = FormParams
       PasswordParam.ComponentItem = 'LayoutFilePassword'

@@ -41,6 +41,7 @@ type
     CheckCDS: TClientDataSet;
     spExistsRemainsGoods: TdsdStoredProc;
     actCustomerThresho_RemainsGoodsCash: TdsdOpenForm;
+    DiffKindPriceCDS: TClientDataSet;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDestroy(Sender: TObject);
@@ -280,6 +281,83 @@ begin
     end;
   end;
 
+  if Pos('1303', DiffKindCDS.FieldByName('Name').AsString) > 0 then
+  begin
+    if  MainCashForm.UnitConfigCDS.FieldByName('PartnerMedicalID').IsNull then
+    begin
+      Action := TCloseAction.caNone;
+      ShowMessage('Аптека не подключена к СП по постановлению 1303'#13#10'Использование вида отказа <' + DiffKindCDS.FieldByName('Name').AsString + '> запрещено...');
+      beDiffKind.SetFocus;
+      Exit;
+    end;
+
+    if GoodsCDS.FieldByName('PriceOOC1303').AsCurrency = 0 then
+    begin
+      Action := TCloseAction.caNone;
+      ShowMessage('Товар <' + GoodsCDS.FieldByName('GoodsName').AsString + '> не участвует в СП по постановлению 1303...');
+      beDiffKind.SetFocus;
+      Exit;
+    end;
+
+    if GoodsCDS.FieldByName('NDS').AsCurrency = 20 then
+    begin
+      Action := TCloseAction.caNone;
+      ShowMessage('Запрещено использовать товар <' + GoodsCDS.FieldByName('GoodsName').AsString + '> с НДС 20% в СП по постановлению 1303...');
+      beDiffKind.SetFocus;
+      Exit;
+    end;
+
+
+    if (GoodsCDS.FieldByName('PriceOOC1303').AsCurrency < GoodsCDS.FieldByName('JuridicalPrice').AsCurrency) and
+      ((GoodsCDS.FieldByName('JuridicalPrice').AsCurrency / GoodsCDS.FieldByName('PriceOOC1303').AsCurrency * 100.0 - 100) > 1.0) then
+    begin
+      Action := TCloseAction.caNone;
+      ShowMessage('Отпускная цена товара <' + GoodsCDS.FieldByName('GoodsName').AsString + '> выше чем по реестру товаров соц. проекта 1303...');
+      beDiffKind.SetFocus;
+      Exit;
+    end;
+  end;
+
+  if DiffKindPriceCDS.Active then
+  begin
+    try
+      DiffKindPriceCDS.Filter := 'DiffKindId = ' + DiffKindCDS.FieldByName('Id').AsString  +
+                                 ' and MinPrice <= ' + GoodsCDS.FieldByName('Price').AsString +
+                                 ' and MaxPrice > ' + GoodsCDS.FieldByName('Price').AsString;
+      DiffKindPriceCDS.Filtered := True;
+      if DiffKindPriceCDS.RecordCount = 1 then
+      begin
+        if ((nAmountDiffKind + nAmount) > 1) and (DiffKindPriceCDS.FieldByName('Amount').AsCurrency > 0) and
+          ((nAmountDiffKind + nAmount) > DiffKindPriceCDS.FieldByName('Amount').AsCurrency) then
+        begin
+          Action := TCloseAction.caNone;
+          ShowMessage('Количество заказа по позиции :'#13#10 + GoodsCDS.FieldByName('GoodsName').AsString +
+            #13#10'С видом отказа "' + DiffKindCDS.FieldByName('Name').AsString +
+            ' и ценой ' + GoodsCDS.FieldByName('Price').AsString +
+            ' " превышает ' + CurrToStr(DiffKindPriceCDS.FieldByName('Amount').AsCurrency) + ' уп. ...');
+          ceAmount.SetFocus;
+          Exit;
+        end;
+
+        if ((nAmountDiffKind + nAmount) > 1) and (DiffKindPriceCDS.FieldByName('Summa').AsCurrency > 0) and
+          (((nAmountDiffKind + nAmount) * GoodsCDS.FieldByName('Price').AsCurrency) > DiffKindPriceCDS.FieldByName('Summa').AsCurrency) then
+        begin
+          Action := TCloseAction.caNone;
+          ShowMessage('Сумма заказа по позиции :'#13#10 + GoodsCDS.FieldByName('GoodsName').AsString +
+            #13#10'С видом отказа "' + DiffKindCDS.FieldByName('Name').AsString +
+            ' и ценой ' + GoodsCDS.FieldByName('Price').AsString +
+            '" превышает ' + CurrToStr(DiffKindPriceCDS.FieldByName('Amount').AsCurrency) + ' грн. ...');
+          ceAmount.SetFocus;
+          Exit;
+        end;
+      end;
+    finally
+      DiffKindPriceCDS.Filtered := False;
+      DiffKindPriceCDS.Filter := '';
+    end;
+  end;
+
+
   if GoodsCDS.FieldByName('Id').AsInteger = 0 then
   begin
     Action := TCloseAction.caNone;
@@ -404,6 +482,17 @@ begin
           if not DiffKindCDS.Active then DiffKindCDS.Open;
           if Assigned(DiffKindCDS.FindField('Name')) then
             DiffKindCDS.FindField('Name').DisplayLabel := 'Вид отказа';
+        finally
+          ReleaseMutex(MutexDiffKind);
+        end;
+      end;
+
+      if FileExists(DiffKindPrice_lcl) then
+      begin
+        WaitForSingleObject(MutexDiffKind, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          LoadLocalData(DiffKindPriceCDS,DiffKindPrice_lcl);
+          if not DiffKindPriceCDS.Active then DiffKindPriceCDS.Open;
         finally
           ReleaseMutex(MutexDiffKind);
         end;

@@ -2,6 +2,7 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_EmployeeWorkLog_Cash (TVarChar, Integer, TDateTime, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_EmployeeWorkLog_Cash (TVarChar, TVarChar, Integer, TDateTime, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_EmployeeWorkLog_Cash (TVarChar, TVarChar, Integer, TDateTime, TDateTime, TDateTime, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_EmployeeWorkLog_Cash(
     IN inCashSessionId TVarChar,   -- Сессия кассового места
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_EmployeeWorkLog_Cash(
     IN inDateLogOut    TDateTime,  -- Дата и время выхода
     IN inOldProgram    Boolean,    -- Вход старой кассой
     IN inOldServise    Boolean,    -- Не обновлен сервис
+    IN inIP            TVarChar,   -- Внешний IP
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS Void
@@ -47,8 +49,8 @@ BEGIN
       UPDATE EmployeeWorkLog SET RetailId = vbRetailId, DateZReport = inDateZReport, DateLogOut = inDateLogOut
       WHERE CashSessionId = inCashSessionId AND UserId = inUserId AND UnitId = vbUnitId AND DateLogIn = inDateLogIn;
     ELSE
-      INSERT INTO EmployeeWorkLog (CashSessionId, CashRegister, UserId, UnitId, RetailId, DateLogIn, DateZReport, DateLogOut, OldProgram, OldServise)
-      VALUES (inCashSessionId, inCashRegister, inUserId, vbUnitId, vbRetailId, inDateLogIn, inDateZReport, inDateLogOut, inOldProgram, inOldServise);
+      INSERT INTO EmployeeWorkLog (CashSessionId, CashRegister, IP, UserId, UnitId, RetailId, DateLogIn, DateZReport, DateLogOut, OldProgram, OldServise)
+      VALUES (inCashSessionId, inCashRegister, inIP, inUserId, vbUnitId, vbRetailId, inDateLogIn, inDateZReport, inDateLogOut, inOldProgram, inOldServise);
     END IF;
 
 END;

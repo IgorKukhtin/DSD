@@ -3509,13 +3509,13 @@ end;
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
 
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TNewUserForm'));
+{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TNewUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TNewUserForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPickUpLogsAndDBFForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPickUpLogsAndDBFForm');
 
-{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGUIDUnitForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGUIDUnitForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGUIDUnitForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckoutTestingForm'));

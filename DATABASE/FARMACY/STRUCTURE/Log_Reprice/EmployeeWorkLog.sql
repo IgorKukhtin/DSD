@@ -14,6 +14,7 @@ CREATE TABLE EmployeeWorkLog
   
   CashSessionId     TVarChar,   -- Сессия кассового места
   CashRegister      TVarChar,   -- Фискальный номер
+  IP                TVarChar,   -- Внешний IP адрес
 
   UserId            Integer,    -- Пользователь
   UnitId            Integer,    -- Подразделение
@@ -31,6 +32,7 @@ CREATE TABLE EmployeeWorkLog
 ALTER TABLE EmployeeWorkLog
   OWNER TO postgres;
  
+-- ALTER TABLE EmployeeWorkLog ADD COLUMN IP                TVarChar
 
 -------------------------------------------------------------------------------
 
