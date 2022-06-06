@@ -184,6 +184,8 @@ type
     actChoiceFormGoods_limit: TOpenChoiceForm;
     bbInsertRecordGood: TdxBarButton;
     bbBarSeparetor: TdxBarSeparator;
+    actGridCh1ToExcel: TdsdGridToExcel;
+    bbGridCh1ToExcel: TdxBarButton;
   private
     { Private declarations }
   public

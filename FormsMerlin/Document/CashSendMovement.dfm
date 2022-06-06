@@ -441,10 +441,10 @@
   object GuidesCommentMoveMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCommentMoveMoney
-    FormNameParam.Value = 'TCommentInfoMoneyForm'
+    FormNameParam.Value = 'TCommentMoveMoneyForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TCommentInfoMoneyForm'
+    FormName = 'TCommentMoveMoneyForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

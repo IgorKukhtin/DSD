@@ -307,7 +307,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inParent_infomoney'
+        Name = 'inParent_InfoMoneyId'
         Value = Null
         Component = GuidesParent_infomoney
         ComponentItem = 'Key'
