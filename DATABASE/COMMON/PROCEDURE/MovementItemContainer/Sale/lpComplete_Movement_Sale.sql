@@ -3184,7 +3184,7 @@ END IF;*/
              FROM _tmpItem
              WHERE _tmpItem.isLossMaterials = FALSE -- !!!если НЕ списание!!!
              GROUP BY _tmpItem.MovementItemId, _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Partner, _tmpItem.ContainerId_Goods, _tmpItem.GoodsId, _tmpItem.GoodsKindId --, _tmpItem.isLossMaterials
-             HAVING SUM (_tmpItem.OperSumm_Partner - _tmpItem.OperSumm_PriceList) <> 0 -- !!!можно ограничить!!!
+             HAVING SUM (_tmpItem.OperSumm_Partner + _tmpItem.OperSumm_Partner_ChangePromo - _tmpItem.OperSumm_PriceList) <> 0 -- !!!можно ограничить!!!
 
            UNION ALL
              -- Скидка Акция
