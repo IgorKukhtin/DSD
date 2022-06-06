@@ -5,7 +5,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1066
-  ExplicitHeight = 434
+  ExplicitHeight = 435
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -708,7 +708,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
     end
-    object actPrintTotal: TdsdPrintAction [3]
+    object actPrintTotal: TdsdPrintAction [2]
       Category = 'Print'
       MoveParams = <
         item
@@ -763,7 +763,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object mactSilentList: TMultiAction [5]
+    object mactSilentList: TMultiAction [3]
       Category = 'Print'
       MoveParams = <
         item
@@ -788,35 +788,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       Hint = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
       ImageIndex = 3
     end
-    inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TOrderExternalForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inMask'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
-    end
-    inherited actUpdate: TdsdInsertUpdateAction [7]
+    inherited actUpdate: TdsdInsertUpdateAction [4]
       FormName = 'TOrderExternalForm'
       GuiParams = <
         item
@@ -847,25 +819,29 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    inherited actUnComplete: TdsdChangeMovementStatus [8]
+    inherited actUnComplete: TdsdChangeMovementStatus [5]
     end
-    inherited actComplete: TdsdChangeMovementStatus [9]
+    inherited actComplete: TdsdChangeMovementStatus [6]
     end
-    inherited actSetErased: TdsdChangeMovementStatus [10]
+    inherited actSetErased: TdsdChangeMovementStatus [7]
     end
-    inherited actReCompleteList: TMultiAction [11]
+    inherited mactReCompleteList: TMultiAction [8]
     end
-    inherited actCompleteList: TMultiAction [12]
+    inherited mactCompleteList: TMultiAction [9]
     end
-    inherited actUnCompleteList: TMultiAction [13]
+    inherited mactUnCompleteList: TMultiAction [10]
     end
-    inherited actSetErasedList: TMultiAction [14]
+    inherited mactSetErasedList: TMultiAction [11]
     end
-    inherited actMovementItemContainer: TdsdOpenForm [15]
+    inherited actRefresh: TdsdDataSetRefresh [12]
     end
-    inherited MovementProtocolOpenForm: TdsdOpenForm [16]
+    inherited actMovementItemContainer: TdsdOpenForm [13]
     end
-    object actRefreshStart: TdsdDataSetRefresh [17]
+    inherited actGridToExcel: TdsdGridToExcel [14]
+    end
+    inherited MovementProtocolOpenForm: TdsdOpenForm [15]
+    end
+    object actRefreshStart: TdsdDataSetRefresh [16]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet_UserJuridicalBasis
@@ -880,6 +856,34 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    inherited actInsert: TdsdInsertUpdateAction [17]
+      FormName = 'TOrderExternalForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMask'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
     end
     inherited actShowErased: TBooleanStoredProcAction [18]
     end
@@ -918,11 +922,11 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    inherited actSimpleReCompleteList: TMultiAction [21]
+    inherited mactSimpleReCompleteList: TMultiAction [21]
     end
-    inherited actSimpleErased: TMultiAction [23]
+    inherited mactSimpleErasedList: TMultiAction [22]
     end
-    object actOpenReportForm: TdsdOpenForm [24]
+    object actOpenReportForm: TdsdOpenForm [23]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -962,15 +966,15 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end>
       isShowModal = False
     end
-    inherited actSimpleUncompleteList: TMultiAction [25]
+    inherited mactSimpleUncompleteList: TMultiAction [24]
     end
-    inherited spCompete: TdsdExecStoredProc [26]
+    inherited spCompete: TdsdExecStoredProc [25]
     end
-    inherited spUncomplete: TdsdExecStoredProc [27]
+    inherited spUncomplete: TdsdExecStoredProc [26]
     end
-    inherited spErased: TdsdExecStoredProc [28]
+    inherited spErased: TdsdExecStoredProc [27]
     end
-    object actPrint: TdsdPrintAction [29]
+    object actPrint: TdsdPrintAction [28]
       Category = 'Print'
       MoveParams = <
         item
@@ -1025,7 +1029,9 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    inherited actSimpleCompleteList: TMultiAction [30]
+    inherited mactSimpleCompleteList: TMultiAction [29]
+    end
+    inherited spReCompete: TdsdExecStoredProc [30]
     end
     inherited actInsertMask: TdsdInsertUpdateAction [31]
       FormName = 'TOrderExternalForm'

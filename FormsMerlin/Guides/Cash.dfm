@@ -23,8 +23,6 @@ object CashForm: TCashForm
     Height = 350
     Align = alClient
     TabOrder = 0
-    LookAndFeel.NativeStyle = True
-    LookAndFeel.SkinName = 'UserSkin'
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

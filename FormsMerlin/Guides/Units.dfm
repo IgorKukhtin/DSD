@@ -25,8 +25,6 @@ object UnitForm: TUnitForm
     Height = 317
     Align = alClient
     TabOrder = 0
-    LookAndFeel.NativeStyle = True
-    LookAndFeel.SkinName = 'UserSkin'
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -34,7 +32,6 @@ object UnitForm: TUnitForm
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
-      Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False

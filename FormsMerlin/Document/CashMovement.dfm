@@ -259,7 +259,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ininvnumber'
+        Name = 'inInvNumber'
         Value = '0'
         Component = edInvNumber
         DataType = ftString
@@ -267,7 +267,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inoperdate'
+        Name = 'inOperDate'
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
@@ -283,7 +283,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inamount'
+        Name = 'inAmount'
         Value = 0.000000000000000000
         Component = ceAmount
         DataType = ftFloat

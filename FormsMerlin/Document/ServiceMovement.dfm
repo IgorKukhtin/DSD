@@ -184,7 +184,7 @@
     StoredProcName = 'gpInsertUpdate_Movement_Service'
     Params = <
       item
-        Name = 'ioid'
+        Name = 'ioId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
@@ -192,7 +192,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ininvnumber'
+        Name = 'inInvNumber'
         Value = '0'
         Component = edInvNumber
         DataType = ftString
@@ -200,7 +200,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inoperdate'
+        Name = 'inOperDate'
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
@@ -216,7 +216,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inamount'
+        Name = 'inAmount'
         Value = 0.000000000000000000
         Component = ceAmount
         DataType = ftFloat
@@ -232,7 +232,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inParent_infomoney'
+        Name = 'inParent_InfoMoneyId'
         Value = Null
         Component = GuidesParent_infomoney
         ComponentItem = 'Key'
@@ -240,7 +240,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ininfomoney'
+        Name = 'inInfoMoneyName'
         Value = ''
         Component = ceInfoMoney
         DataType = ftString
