@@ -14,7 +14,7 @@ uses
   cxGrid,  cxSplitter, cxContainer,  cxTextEdit, cxCurrencyEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxLookupEdit,
   cxDBLookupEdit, cxDBLookupComboBox,  cxCheckBox, cxNavigator, CashInterface,  cxImageComboBox , dsdAddOn,
   Vcl.ImgList, LocalStorage, IdFTPCommon, IdGlobal, IdFTP, IdSSLOpenSSL, IdExplicitTLSClientServerBase,
-  UnilWin, System.ImageList, System.Actions, System.Zip, System.RegularExpressions;
+  UnilWin, System.ImageList, System.Actions, System.Zip, System.RegularExpressions, UnitMyIP;
 
 type
  THeadRecord = record
@@ -141,7 +141,7 @@ type
   TMainCashForm2 = class(TForm)
     FormParams: TdsdFormParams;
     spDelete_CashSession: TdsdStoredProc;
-    gpUpdate_Log_CashRemains: TdsdStoredProc;
+    spUpdate_Log_CashRemains: TdsdStoredProc;
     AlternativeCDS: TClientDataSet;
     AlternativeDS: TDataSource;
     spSelectRemains: TdsdStoredProc;
@@ -198,7 +198,7 @@ type
     procedure N5Click(Sender: TObject);
     procedure N7Click(Sender: TObject);
     procedure actCashRemainsExecute(Sender: TObject);
-    procedure gpUpdate_Log_CashRemainsAfterExecute(Sender: TObject);
+    procedure spUpdate_Log_CashRemainsAfterExecute(Sender: TObject);
     procedure spSelectRemainsAfterExecute(Sender: TObject);
     procedure TimerNeedRemainsDiffTimer(Sender: TObject);
     procedure CashRemainsDiffExecute;
@@ -2805,6 +2805,7 @@ begin
         begin
           if not EmployeeWorkLogCDS.FieldByName('IsSend').AsBoolean then
           begin
+            spEmployeeWorkLog.ParamByName('inIP').Value := GetMyIP_Day;
             if EmployeeWorkLogCDS.RecNo = EmployeeWorkLogCDS.RecordCount then
             begin
               spEmployeeWorkLog.ParamByName('inOldProgram').Value := OldProgram;
@@ -2923,9 +2924,9 @@ begin
 
     if OldProgram or OldServise then
     begin
-      gpUpdate_Log_CashRemains.Params.ParamByName('inOldProgram').Value := OldProgram;
-      gpUpdate_Log_CashRemains.Params.ParamByName('inOldServise').Value := OldServise;
-      gpUpdate_Log_CashRemains.Execute;
+      spUpdate_Log_CashRemains.Params.ParamByName('inOldProgram').Value := OldProgram;
+      spUpdate_Log_CashRemains.Params.ParamByName('inOldServise').Value := OldServise;
+      spUpdate_Log_CashRemains.Execute;
     end;
   except
     on E: Exception do Add_Log('SecureUpdateVersion Exception: ' + E.Message);
@@ -2942,7 +2943,7 @@ begin
     Result := 0;
 end;
 
-procedure TMainCashForm2.gpUpdate_Log_CashRemainsAfterExecute(Sender: TObject);
+procedure TMainCashForm2.spUpdate_Log_CashRemainsAfterExecute(Sender: TObject);
 begin
 
 end;

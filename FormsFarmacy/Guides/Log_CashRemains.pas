@@ -40,6 +40,7 @@ type
     TimeLogOut: TcxGridDBColumn;
     TimeZReport: TcxGridDBColumn;
     PositionName: TcxGridDBColumn;
+    IP: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -71,11 +71,11 @@ requires
   GMLib_DXE2_VCL,
   DbxCommonDriver,
   cxSchedulerRS16,
-  ZComponentD16,
-  ZDbcD16,
-  ZPlainD16,
-  ZCoreD16,
-  ZParseSqlD16;
+  ZComponent160,
+  ZDbc160,
+  ZPlain160,
+  ZCore160,
+  ZParseSql160;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',

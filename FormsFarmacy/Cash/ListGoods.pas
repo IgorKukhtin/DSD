@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDialog, Vcl.ActnList, dsdAction, System.DateUtils,
-  cxClasses, cxPropertiesStore, dsdAddOn, cxGraphics, cxControls,
+  cxClasses, cxPropertiesStore, dsdAddOn, cxGraphics, cxControls, Math,
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
   Vcl.StdCtrls, cxButtons, cxTextEdit, Vcl.ExtCtrls, dsdGuides, dsdDB,
   cxMaskEdit, cxButtonEdit, AncestorBase, dxSkinsCore, dxSkinsDefaultPainters, Data.DB,
@@ -76,6 +76,7 @@ type
     colContractName: TcxGridDBColumn;
     colAreaName: TcxGridDBColumn;
     colisResolution_224: TcxGridDBColumn;
+    colPriceOOC1303: TcxGridDBColumn;
     procedure ParentFormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure edt1Exit(Sender: TObject);
@@ -159,6 +160,10 @@ begin
   FStyle.Assign(dmMain.cxContentStyle);
   if (ARecord.Values[colExpirationDate.Index] <> Null) and ((ARecord.Values[colExpirationDate.Index]) < IncYear(Date, 1)) then
     FStyle.TextColor := clRed;
+  if (ARecord.Values[colPriceOOC1303.Index] <> Null) and
+    (ARecord.Values[colPriceOOC1303.Index] < ARecord.Values[colJuridicalPrice.Index]) and
+    ((ARecord.Values[colJuridicalPrice.Index]/ARecord.Values[colPriceOOC1303.Index] * 100.0 - 100) > 1.0)
+     then FStyle.Color := TColor($0083D3FA);
   AStyle := FStyle;
 end;
 

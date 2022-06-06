@@ -15,6 +15,7 @@ CREATE TABLE Log_CashRemains
   CashSessionId     TVarChar,   -- Сессия кассового места
   DateStart         TDateTime,  -- Дата выполнения
   DateEnd           TDateTime,  -- Дата последнего действия
+  IP                TVarChar,   -- Внешний IP адрес
 
   FullRemains       Boolean,    -- Полное обновление остатков
   UserId            Integer,    -- Пользователь
@@ -29,7 +30,7 @@ CREATE TABLE Log_CashRemains
 ALTER TABLE Log_CashRemains
   OWNER TO postgres;
  
-
+-- ALTER TABLE Log_CashRemains ADD COLUMN IP                TVarChar
 
 /*-------------------------------------------------------------------------------*/
 
