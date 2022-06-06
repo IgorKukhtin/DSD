@@ -110,7 +110,8 @@ uses
   GuidePersonal in '..\Scale\GuidePersonal.pas' {GuidePersonalForm},
   DialogPswSms in '..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
   DOCUMENTINVOICE_PRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
-  DOCUMENTINVOICE_TN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas';
+  DOCUMENTINVOICE_TN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
+  IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas';
 
 {$R *.res}
 
