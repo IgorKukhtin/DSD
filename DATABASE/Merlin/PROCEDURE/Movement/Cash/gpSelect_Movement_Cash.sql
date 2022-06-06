@@ -39,7 +39,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Cash());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- 
+     -- Доступ
      vbUser_isAll:= lpCheckUser_isAll (vbUserId);
 
      -- Результат

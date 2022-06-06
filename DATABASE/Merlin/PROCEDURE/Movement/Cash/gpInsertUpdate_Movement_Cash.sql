@@ -22,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbUser_isAll Boolean;
    DECLARE vbInfoMoneyId Integer;
    DECLARE vbInfoMoneyDetailId Integer;
    DECLARE vbCommentInfoMoneyId Integer;
@@ -30,6 +31,8 @@ BEGIN
      --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- Доступ
+     vbUser_isAll:= lpCheckUser_isAll (vbUserId);
 
      -- Проверка - Если Корректировка подтверждена
      IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = ioId AND MI.DescId = zc_MI_Sign() AND MI.isErased = FALSE)
@@ -41,16 +44,42 @@ BEGIN
 
      IF COALESCE (inInfoMoneyName,'') <> ''
      THEN
+         -- Проверка
+         IF 1 < (SELECT COUNT(*)
+                 FROM Object
+                      LEFT JOIN ObjectLink AS ObjectLink_Parent
+                                           ON ObjectLink_Parent.ObjectId = Object.Id
+                                          AND ObjectLink_Parent.DescId   = zc_ObjectLink_InfoMoney_Parent()
+                      LEFT JOIN ObjectBoolean AS ObjectBoolean_UserAll
+                                              ON ObjectBoolean_UserAll.ObjectId = Object.Id
+                                             AND ObjectBoolean_UserAll.DescId = zc_ObjectBoolean_InfoMoney_UserAll()
+                 WHERE Object.ValueData = TRIM (inInfoMoneyName)
+                   AND Object.DescId    = zc_Object_InfoMoney()
+                   AND (COALESCE (ObjectLink_Parent.ChildObjectId, 0) = COALESCE (inParent_InfoMoneyId, 0))
+                   AND Object.isErased = FALSE
+                   AND (ObjectBoolean_UserAll.ValueData = TRUE OR vbUser_isAll = TRUE)
+                   AND 1=0
+                )
+         THEN
+             RAISE EXCEPTION 'Ошибка.Найдена Статья с одинаковым значением <%> <%>.', inInfoMoneyName, lfGet_Object_ValueData_sh (inParent_InfoMoneyId);
+         END IF;
+         
          -- пробуем найти
          vbInfoMoneyId := (SELECT Object.Id 
                            FROM Object
                                 LEFT JOIN ObjectLink AS ObjectLink_Parent
                                                      ON ObjectLink_Parent.ObjectId = Object.Id
                                                     AND ObjectLink_Parent.DescId   = zc_ObjectLink_InfoMoney_Parent()
+                                LEFT JOIN ObjectBoolean AS ObjectBoolean_UserAll
+                                                        ON ObjectBoolean_UserAll.ObjectId = Object.Id
+                                                       AND ObjectBoolean_UserAll.DescId = zc_ObjectBoolean_InfoMoney_UserAll()
                            WHERE Object.ValueData = TRIM (inInfoMoneyName)
                              AND Object.DescId    = zc_Object_InfoMoney()
                              AND (COALESCE (ObjectLink_Parent.ChildObjectId, 0) = COALESCE (inParent_InfoMoneyId, 0))
                              AND Object.isErased = FALSE
+                             AND (ObjectBoolean_UserAll.ValueData = TRUE OR vbUser_isAll = TRUE)
+                           ORDER BY 1 ASC
+                           LIMIT 1
                           );
 
          IF COALESCE (vbInfoMoneyId,0) = 0
@@ -65,15 +94,33 @@ BEGIN
              -- сохранили
              PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_Service(), vbInfoMoneyId, FALSE);
              -- сохранили
-             PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_UserAll(), vbInfoMoneyId, NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbUserId AND OB.DescId = zc_ObjectBoolean_User_Sign() AND OB.ValueData = TRUE));
+             PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_UserAll(), vbInfoMoneyId, NOT vbUser_isAll);
 
          END IF;
      END IF;
 
      IF COALESCE (inInfoMoneyDetailName,'') <> ''
      THEN
+         -- Проверка
+         IF 1 < (SELECT COUNT(*)
+                 FROM Object
+                 WHERE Object.ValueData = TRIM (inInfoMoneyDetailName) AND Object.DescId = zc_Object_InfoMoneyDetail()
+                  AND Object.isErased = FALSE
+                  AND 1=0
+                )
+         THEN
+             RAISE EXCEPTION 'Ошибка.Найдена Статья детально с одинаковым значением <%>.', inInfoMoneyDetailName;
+         END IF;
+
          -- пробуем найти InfoMoneyDetailId
-         vbInfoMoneyDetailId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inInfoMoneyDetailName) AND Object.DescId = zc_Object_InfoMoneyDetail() AND Object.isErased = FALSE);
+         vbInfoMoneyDetailId := (SELECT Object.Id
+                                 FROM Object
+                                 WHERE Object.ValueData = TRIM (inInfoMoneyDetailName)
+                                   AND Object.DescId = zc_Object_InfoMoneyDetail()
+                                   AND Object.isErased = FALSE
+                                 ORDER BY 1 ASC
+                                 LIMIT 1
+                                );
          IF COALESCE (vbInfoMoneyDetailId,0) = 0
          THEN
              vbInfoMoneyDetailId := gpInsertUpdate_Object_InfoMoneyDetail (ioId   := 0
@@ -83,7 +130,7 @@ BEGIN
                                                                          , inSession := inSession
                                                                           );
              -- сохранили
-             PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoneyDetail_UserAll(), vbInfoMoneyDetailId, NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbUserId AND OB.DescId = zc_ObjectBoolean_User_Sign() AND OB.ValueData = TRUE));
+             PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoneyDetail_UserAll(), vbInfoMoneyDetailId, NOT vbUser_isAll);
 
          END IF;
 
@@ -91,8 +138,14 @@ BEGIN
      
      IF COALESCE (inCommentInfoMoney,'') <> ''
      THEN
+         -- Проверка
+         IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.ValueData = TRIM (inCommentInfoMoney) AND Object.DescId = zc_Object_CommentInfoMoney() AND Object.isErased = FALSE AND 1=0)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Найдено Примечание с одинаковым значением <%>.', inCommentInfoMoney;
+         END IF;
+
          -- пробуем найти CommentInfoMoneyId
-         vbCommentInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inCommentInfoMoney) AND Object.DescId = zc_Object_CommentInfoMoney() AND Object.isErased = FALSE);
+         vbCommentInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inCommentInfoMoney) AND Object.DescId = zc_Object_CommentInfoMoney() AND Object.isErased = FALSE ORDER BY 1 ASC LIMIT 1);
          IF COALESCE (vbCommentInfoMoneyId,0) = 0
          THEN
              vbCommentInfoMoneyId := gpInsertUpdate_Object_CommentInfoMoney (ioId             := 0
@@ -102,7 +155,7 @@ BEGIN
                                                                            , inSession        := inSession
                                                                            );
              -- сохранили
-             PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CommentInfoMoney_UserAll(), vbCommentInfoMoneyId, NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbUserId AND OB.DescId = zc_ObjectBoolean_User_Sign() AND OB.ValueData = TRUE));
+             PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CommentInfoMoney_UserAll(), vbCommentInfoMoneyId, NOT vbUser_isAll);
 
          END IF;
      END IF;

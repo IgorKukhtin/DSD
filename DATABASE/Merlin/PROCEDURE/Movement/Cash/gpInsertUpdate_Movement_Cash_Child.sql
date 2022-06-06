@@ -22,8 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash_Child(
 RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
-   --DECLARE vbInfoMoneyId Integer;
-   --DECLARE vbInfoMoneyDetailId Integer;
+   DECLARE vbUser_isAll Boolean;
    DECLARE vbCommentInfoMoneyId Integer;
    
    DECLARE vbAmount TFloat;
@@ -33,6 +32,8 @@ BEGIN
      --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- Доступ
+     vbUser_isAll:= lpCheckUser_isAll (vbUserId);
 
      -- Проверка - Если Корректировка подтверждена
      IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Sign() AND MI.isErased = FALSE)
@@ -88,7 +89,8 @@ BEGIN
      IF COALESCE (inCommentInfoMoney,'') <> ''
      THEN
          -- пробуем найти CommentInfoMoneyId
-         vbCommentInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inCommentInfoMoney) AND Object.DescId = zc_Object_CommentInfoMoney());
+         vbCommentInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inCommentInfoMoney) AND Object.DescId = zc_Object_CommentInfoMoney() ORDER BY 1 ASC LIMIT 1);
+         --
          IF COALESCE (vbCommentInfoMoneyId,0) = 0
          THEN
              vbCommentInfoMoneyId := gpInsertUpdate_Object_CommentInfoMoney (ioId   := 0
@@ -98,7 +100,8 @@ BEGIN
                                                                            , inSession := inSession
                                                                            );
              -- сохранили
-             PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CommentInfoMoney_UserAll(), vbCommentInfoMoneyId, NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbUserId AND OB.DescId = zc_ObjectBoolean_User_Sign() AND OB.ValueData = TRUE));
+             PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CommentInfoMoney_UserAll(), vbCommentInfoMoneyId, NOT vbUser_isAll);
+
          END IF;
      END IF;
                                                           

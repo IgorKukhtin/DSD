@@ -19,17 +19,30 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_CashSend(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbUser_isAll Boolean;
    DECLARE vbCommentMoveMoneyId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_CashSend());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- Доступ
+     vbUser_isAll:= lpCheckUser_isAll (vbUserId);
      
      IF COALESCE (inCommentMoveMoney,'') <> ''
      THEN
          -- пробуем найти CommentMoveMoneyId
-         vbCommentMoveMoneyId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inCommentMoveMoney) AND Object.DescId = zc_Object_CommentMoveMoney());
+         vbCommentMoveMoneyId := (SELECT Object.Id
+                                  FROM Object
+                                       LEFT JOIN ObjectBoolean AS ObjectBoolean_UserAll
+                                                               ON ObjectBoolean_UserAll.ObjectId = Object.Id
+                                                              AND ObjectBoolean_UserAll.DescId = zc_ObjectBoolean_InfoMoney_UserAll()
+                                  WHERE Object.ValueData = TRIM (inCommentMoveMoney)
+                                    AND Object.DescId = zc_Object_CommentMoveMoney()
+                                    AND (ObjectBoolean_UserAll.ValueData = TRUE OR vbUser_isAll = TRUE)
+                                  ORDER BY 1 ASC
+                                  LIMIT 1
+                                 );
          IF COALESCE (vbCommentMoveMoneyId,0) = 0
          THEN
              vbCommentMoveMoneyId := gpInsertUpdate_Object_CommentMoveMoney (ioId   := 0
@@ -37,6 +50,8 @@ BEGIN
                                                                            , inName := TRIM (inCommentMoveMoney)::TVarChar
                                                                            , inSession := inSession
                                                                            );
+             -- сохранили
+             PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CommentMoveMoney_UserAll(), vbCommentMoveMoneyId, NOT vbUser_isAll);
          END IF;
      END IF;
                                                           

@@ -13,13 +13,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
     IN inAmount               TFloat    , -- Сумма
     IN inUnitId               Integer   , -- отдел 
     IN inParent_InfoMoneyId   Integer   , -- Статьи  группа
-    IN inInfoMoney            TVarChar   , -- Статьи 
+    IN inInfoMoneyName        TVarChar   , -- Статьи 
     IN inCommentInfoMoney     TVarChar   , -- Примечание
     IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbUser_isAll Boolean;
    DECLARE vbInfoMoneyId Integer;
    DECLARE vbCommentInfoMoneyId Integer;
 BEGIN
@@ -27,7 +28,10 @@ BEGIN
      --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Service());
      vbUserId:= lpGetUserBySession (inSession);
 
-     IF COALESCE (inInfoMoney,'') <> ''
+     -- Доступ
+     vbUser_isAll:= lpCheckUser_isAll (vbUserId);
+
+     IF COALESCE (inInfoMoneyName,'') <> ''
      THEN
          --пробуем найти
          vbInfoMoneyId := (SELECT Object.Id 
@@ -35,16 +39,21 @@ BEGIN
                                 LEFT JOIN ObjectLink AS ObjectLink_Parent
                                                      ON ObjectLink_Parent.ObjectId = Object.Id
                                                     AND ObjectLink_Parent.DescId = zc_ObjectLink_InfoMoney_Parent()
-                           WHERE Object.ValueData = TRIM (inInfoMoney) AND Object.DescId = zc_Object_InfoMoney()
+                           WHERE Object.ValueData = TRIM (inInfoMoneyName) AND Object.DescId = zc_Object_InfoMoney()
                              AND (ObjectLink_Parent.ChildObjectId = inParent_InfoMoneyId OR inParent_InfoMoneyId = 0)
-                           );
+                             AND Object.isErased = FALSE
+                           ORDER BY 1 ASC
+                           LIMIT 1
+                          );
 
          IF COALESCE (vbInfoMoneyId,0) = 0
          THEN
+             RAISE EXCEPTION 'Ошибка.Не определена Статья.';
+             --
              vbInfoMoneyId := gpInsertUpdate_Object_InfoMoney (ioId   := 0
                                                              , inCode := 0
-                                                             , inName := TRIM (inInfoMoney)::TVarChar
-                                                             , inInfoMoneyKindId := COALESCE ( (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inParent_InfoMoneyId AND OL.DescId = zc_ObjectLink_InfoMoney_InfoMoneyKind()), NULL) 
+                                                             , inName := TRIM (inInfoMoneyName)::TVarChar
+                                                             , inInfoMoneyNameKindId := COALESCE ( (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inParent_InfoMoneyId AND OL.DescId = zc_ObjectLink_InfoMoney_InfoMoneyKind()), NULL) 
                                                              , inParentId := inParent_InfoMoneyId
                                                              , inSession := inSession
                                                              );
@@ -54,15 +63,19 @@ BEGIN
      IF COALESCE (inCommentInfoMoney,'') <> ''
      THEN
          -- пробуем найти CommentInfoMoneyId
-         vbCommentInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inCommentInfoMoney) AND Object.DescId = zc_Object_CommentInfoMoney());
+         vbCommentInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inCommentInfoMoney) AND Object.DescId = zc_Object_CommentInfoMoney() ORDER BY 1 ASC LIMIT 1);
+         --
          IF COALESCE (vbCommentInfoMoneyId,0) = 0
          THEN
              vbCommentInfoMoneyId := gpInsertUpdate_Object_CommentInfoMoney (ioId   := 0
                                                                            , inCode := 0
                                                                            , inName := TRIM (inCommentInfoMoney)::TVarChar
-                                                                           , inInfoMoneyKindId := 0
+                                                                           , inInfoMoneyNameKindId := 0
                                                                            , inSession := inSession
-                                                                           );
+                                                                            );
+             -- сохранили
+             PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CommentInfoMoney_UserAll(), vbCommentInfoMoneyId, NOT vbUser_isAll);
+
          END IF;
      END IF;
                                                           
@@ -81,7 +94,7 @@ BEGIN
                                            , inServiceDate          := DATE_TRUNC ('Month', inServiceDate) ::TDateTime   --inServiceDate
                                            , inAmount               := inAmount
                                            , inUnitId               := inUnitId
-                                           , inInfoMoneyId          := vbInfoMoneyId
+                                           , inInfoMoneyNameId          := vbInfoMoneyId
                                            , inCommentInfoMoneyId   := vbCommentInfoMoneyId
                                            , inUserId               := vbUserId
                                             );
