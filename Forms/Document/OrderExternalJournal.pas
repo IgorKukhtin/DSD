@@ -89,6 +89,12 @@ type
     mactPrint_Order2: TMultiAction;
     bbPrint_Order2: TdxBarButton;
     actInsertMaskMulti: TMultiAction;
+    spGetReporNameBill: TdsdStoredProc;
+    spSelectPrintBill: TdsdStoredProc;
+    actPrint_Account: TdsdPrintAction;
+    actPrint_Account_ReportName: TdsdExecStoredProc;
+    mactPrint_Account: TMultiAction;
+    bbPrint_Account: TdxBarButton;
   private
     { Private declarations }
   public

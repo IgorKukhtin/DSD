@@ -1,14 +1,12 @@
--- Function: gpInsertUpdate_MI_PersonalService_Excel()
+-- Function: gpInsertUpdate_MI_PersonalServiceSMER_Excel()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Excel (Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalServiceSMER_Excel (Integer, TVarChar, TVarChar, TFloat, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PersonalService_Excel(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PersonalServiceSMER_Excel(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inINN                 TVarChar  , -- ИНН
     IN inFIO                 TVarChar  , -- ФИО
-    IN inSummNalogRecalc     TFloat    , -- Сумма Налоги - удержания с ЗП для распределения
-    IN inSummCardRecalc1     TFloat    , -- Сумма1 на карточку (БН) для распределения
-    IN inSummCardRecalc2     TFloat    , -- Сумма2 на карточку (БН) для распределения
+    IN inSummMinusExtRecalc     TFloat    , -- Удержания сторон. юр.л. (ввод)
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -30,12 +28,12 @@ BEGIN
      END IF;
 
      -- проверка
-     IF inINN = '' AND inFIO = '' AND COALESCE (inSummNalogRecalc, 0) = 0 AND COALESCE (inSummCardRecalc1, 0) = 0 AND COALESCE (inSummCardRecalc2, 0) = 0
+     IF inINN = '' AND inFIO = '' AND COALESCE (inSummMinusExtRecalc, 0) = 0
      THEN
          RETURN;
      END IF;
      -- проверка
-     IF inINN = '-' AND inFIO = '-' AND COALESCE (inSummNalogRecalc, 0) = 0 AND COALESCE (inSummCardRecalc1, 0) = 0 AND COALESCE (inSummCardRecalc2, 0) = 0
+     IF inINN = '-' AND inFIO = '-' AND COALESCE (inSummMinusExtRecalc, 0) = 0
      THEN
          RETURN;
      END IF;
@@ -43,7 +41,7 @@ BEGIN
      -- проверка
      IF COALESCE (inINN, '') = ''
      THEN
-         RAISE EXCEPTION 'Ошибка.У <%> не заполненное поле <ИНН> в файле Excel для сумм <%> <%> <%>.', inFIO, inSummCardRecalc1, inSummCardRecalc2, inSummNalogRecalc;
+         RAISE EXCEPTION 'Ошибка.У <%> не заполненное поле <ИНН> в файле Excel для суммы <%> <%>.', inSummMinusExtRecalc, inFIO;
      END IF;
 
 
@@ -85,7 +83,7 @@ BEGIN
      -- проверка
      IF COALESCE (vbPersonalId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Сотрудник <%> не найден с ИНН = <%> и суммы <%> <%> <%>.', inFIO, inINN, inSummCardRecalc1, inSummCardRecalc2, inSummNalogRecalc;
+         RAISE EXCEPTION 'Ошибка.Сотрудник <%> не найден с ИНН = <%> и суммой <%> .', inFIO, inINN, inSummMinusExtRecalc;
      END IF;
 
      -- сохранили
@@ -94,10 +92,10 @@ BEGIN
                                                         , inPersonalId         := tmpPersonal.PersonalId
                                                         , inIsMain             := COALESCE (gpSelect.IsMain, tmpPersonal.IsMain)
                                                         , inSummService        := COALESCE (gpSelect.SummService, 0)
-                                                        , inSummCardRecalc     := COALESCE (inSummCardRecalc1, 0) + COALESCE (inSummCardRecalc2, 0)
+                                                        , inSummCardRecalc     := COALESCE (gpSelect.SummCardRecalc, 0)
                                                         , inSummCardSecondRecalc:= 0
                                                         , inSummCardSecondCash := 0
-                                                        , inSummNalogRecalc    := COALESCE (inSummNalogRecalc, 0)
+                                                        , inSummNalogRecalc    := COALESCE (gpSelect.SummNalogRecalc, 0)
                                                         , inSummNalogRetRecalc := 0
                                                         , inSummMinus          := COALESCE (gpSelect.SummMinus, 0)
                                                         , inSummAdd            := COALESCE (gpSelect.SummAdd, 0)
@@ -106,7 +104,7 @@ BEGIN
                                                         , inSummSocialIn       := COALESCE (gpSelect.SummSocialIn, 0)
                                                         , inSummSocialAdd      := COALESCE (gpSelect.SummSocialAdd, 0)
                                                         , inSummChildRecalc    := COALESCE (gpSelect.SummChildRecalc, 0)
-                                                        , inSummMinusExtRecalc := COALESCE (gpSelect.SummMinusExtRecalc, 0)
+                                                        , inSummMinusExtRecalc := COALESCE (inSummMinusExtRecalc, 0)
                                                         , inSummFine           := COALESCE (gpSelect.SummFine, 0)
                                                         , inSummFineOthRecalc  := COALESCE (gpSelect.SummFineOthRecalc, 0)
                                                         , inSummHosp           := COALESCE (gpSelect.SummHosp, 0)
@@ -124,7 +122,7 @@ BEGIN
                                                         , inFineSubjectId          := COALESCE (gpSelect.FineSubjectId,0)     ::Integer
                                                         , inUnitFineSubjectId      := COALESCE (gpSelect.UnitFineSubjectId,0) ::Integer
                                                         , inUserId             := vbUserId
-                                                         ) 
+                                                         )
       FROM (SELECT View_Personal.PersonalId
                  , View_Personal.UnitId
                  , View_Personal.PositionId
@@ -144,13 +142,9 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 29.07.19         *
- 05.01.18         *
- 20.06.17         * add inSummCardSecondCash 
- 28.01.17                                        *
- 18.01.17         *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.06.22         *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MI_PersonalService_Excel(inMovementId :=0 , inINN := '2565555555', inSum1 := 15 ::TFloat, inSum2 := 45 ::TFloat , inSession :='3':: TVarChar)
+--
