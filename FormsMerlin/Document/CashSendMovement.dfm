@@ -20,8 +20,8 @@
     ExplicitTop = 270
   end
   object Код: TcxLabel [2]
-    Left = 120
-    Top = 28
+    Left = 8
+    Top = 5
     Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object cxLabel1: TcxLabel [3]

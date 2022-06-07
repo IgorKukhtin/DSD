@@ -1,7 +1,7 @@
 -- Function: gpComplete_SelectAll_Sybase_ALL()
 
- DROP FUNCTION IF EXISTS gpComplete_SelectAll_Sybase (TDateTime, TDateTime, Boolean, Boolean);
- DROP FUNCTION IF EXISTS gpComplete_SelectAll_Sybase (TDateTime, TDateTime, Boolean, Boolean, Integer);
+DROP FUNCTION IF EXISTS gpComplete_SelectAll_Sybase (TDateTime, TDateTime, Boolean, Boolean);
+DROP FUNCTION IF EXISTS gpComplete_SelectAll_Sybase (TDateTime, TDateTime, Boolean, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION gpComplete_SelectAll_Sybase(
     IN inStartDate          TDateTime , --
@@ -26,7 +26,9 @@ THEN
 --    inGroupId:= -1; -- Все
 --  inGroupId:=  0; -- ф.Днепр
 --  inGroupId:=  1; -- ф.Киев
---  inGroupId:=  2; -- остальные филиалы
+--  inGroupId:=  2; -- филиал Одесса
+--  inGroupId:=  3; -- остальные филиалы
+--  inGroupId:=  4; -- продажа/возврат - ф.Днепр
 END IF;
 
 
@@ -101,8 +103,9 @@ END IF;
                           WHERE  ObjectLink.DescId = zc_ObjectLink_Unit_Branch()
                              AND ObjectLink.ChildObjectId > 0
                              AND ObjectLink.ChildObjectId <> zc_Branch_Basis()
-                             AND (inGroupId < 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+                             AND (inGroupId < 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
                                OR inGroupId = 0
+                               OR inGroupId = 4
                                OR (inGroupId = 1 AND ObjectLink.ChildObjectId IN (8379     -- филиал Киев
                                                                               --, 3080683  -- филиал Львов
                                                                                  )
@@ -186,7 +189,7 @@ END IF;
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_IncomeCost())
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+       AND inGroupId <= 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
 
     UNION
      -- 1.1. From: Sale + !!!NOT SendOnPrice!!!
@@ -216,7 +219,7 @@ END IF;
          OR Movement.DescId = zc_Movement_SaleAsset()
        --OR tmpUnit_To.UnitId > 0
            )
-       AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+       AND inGroupId = 4 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
        -- !!!НУЖНЫ ли ПРОДАЖИ!!!
        AND (vbIsSale = TRUE OR Movement.DescId = zc_Movement_SaleAsset())
 
@@ -245,7 +248,7 @@ END IF;
        AND inIsBefoHistoryCost = FALSE
        -- AND (tmpUnit_from.UnitId > 0)
        AND (tmpUnit_branch_from.UnitId IS NULL OR Movement.DescId = zc_Movement_LossAsset())
-       AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+       AND inGroupId <= 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
 
     UNION
      -- 1.3. To: ReturnIn
@@ -269,7 +272,7 @@ END IF;
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
        AND (tmpUnit_To.UnitId > 0)
-       AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+       AND inGroupId = 4 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
        -- !!!НУЖНЫ ли ВОЗВРАТЫ!!!
        AND vbIsReturnIn = TRUE
 
@@ -295,7 +298,7 @@ END IF;
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
        AND (tmpUnit_from.UnitId > 0)
-       AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+       AND inGroupId <= 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
 
      -- !!!Internal - PACK!!!
     UNION
@@ -324,7 +327,7 @@ END IF;
        AND (tmpUnit_from.UnitId > 0 AND tmpUnit_To.UnitId IS NULL)
      --AND ((tmpUnit_from.UnitId > 0 AND tmpUnit_To.UnitId IS NULL AND Movement.DescId = zc_Movement_Send())
      --  OR (tmpUnit_from.UnitId > 0 AND Movement.DescId = zc_Movement_ProductionUnion()))
-       AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+       AND inGroupId <= 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
 
      -- !!!Internal!!!
     UNION
@@ -353,7 +356,7 @@ END IF;
        AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
        -- AND inIsBefoHistoryCost = TRUE -- !!!***
        -- AND tmpUnit_pack_from.UnitId IS NULL AND tmpUnit_pack_To.UnitId IS NULL -- !!!***
-       AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+       AND inGroupId <= 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
 
     UNION
      -- 2.2. !!!Internal - SendOnPrice!!!
@@ -378,7 +381,7 @@ END IF;
        AND Movement.StatusId = zc_Enum_Status_Complete()
        -- AND inIsBefoHistoryCost = TRUE -- !!!***
        --***** AND (tmpUnit_from.UnitId > 0 OR tmpUnit_To.UnitId > 0)
-       AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+       AND inGroupId <= 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
 
     UNION
      -- 3. !!!Inventory!!!
@@ -403,10 +406,11 @@ END IF;
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND Movement.DescId IN (zc_Movement_Inventory())
     -- AND inIsBefoHistoryCost = FALSE
-       AND (inGroupId < 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+       AND (inGroupId < 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
          OR (inGroupId = 0 AND tmpUnit_branch.UnitId IS NULL)
          OR (inGroupId > 0 AND tmpUnit_branch.UnitId IS NOT NULL)
            )
+       AND inGroupId <> 4
 
 
      -- !!!BRANCH!!!
@@ -431,7 +435,8 @@ END IF;
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
        --*** AND (inIsSale           = TRUE OR Movement.DescId = zc_Movement_SendOnPrice())
-       AND inGroupId <> 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+       AND inGroupId <> 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
+       AND inGroupId <> 4
        -- !!!НУЖНЫ ли ПРОДАЖИ!!!
        AND (vbIsSale = TRUE OR Movement.DescId = zc_Movement_SendOnPrice())
 
@@ -455,7 +460,8 @@ END IF;
        AND Movement.DescId IN (zc_Movement_Loss())
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
-       AND inGroupId <> 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+       AND inGroupId <> 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
+       AND inGroupId <> 4
 
     UNION
      -- 4.3. To: ReturnIn
@@ -477,7 +483,8 @@ END IF;
        AND Movement.DescId IN (zc_Movement_ReturnIn())
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE -- *****?????
-       AND inGroupId <> 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+       AND inGroupId <> 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
+       AND inGroupId <> 4
        -- !!!НУЖНЫ ли ВОЗВРАТЫ!!!
        AND vbIsReturnIn = TRUE
 
@@ -502,7 +509,8 @@ END IF;
        AND Movement.DescId IN (zc_Movement_ProductionUnion())
        AND Movement.StatusId = zc_Enum_Status_Complete()
        -- AND inIsBefoHistoryCost = TRUE -- *****
-       AND inGroupId <> 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+       AND inGroupId <> 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
+       AND inGroupId <> 4
 
     ) AS tmp
     -- INNER JOIN tmpMovContainer ON tmpMovContainer.MovementId = tmp.MovementId

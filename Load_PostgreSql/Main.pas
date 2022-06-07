@@ -508,6 +508,7 @@ begin
          or((GroupId_branch = 1) and (((Hour = zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H<=23))))
          or((GroupId_branch = 2) and (((Hour = zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime2_Auto_PrimeCost_H<=23))))
          or((GroupId_branch = 3) and (((Hour = zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime3_Auto_PrimeCost_H<=23))))
+         or((GroupId_branch = 4) and (((Hour = zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H) and (Min >= zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_M))or(Hour > zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H)or((Hour>=0) and (Hour<=4) and (zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H>=10) and (zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H<=23))))
         then begin
             fEnabled:= false;
             //
@@ -1052,7 +1053,7 @@ procedure TMainForm.StartProcess;
                if GroupId_branch = 0
                then
                     myLogMemo_add('wait time ... '+IntToStr(zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_H)+':'+IntToStr(zc_Enum_GlobalConst_StartTime0_Auto_PrimeCost_M))
-               else if GroupId_branch = 1
+               else if (GroupId_branch = 1) or (GroupId_branch = 4)
                then
                     myLogMemo_add('wait time ... '+IntToStr(zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_H)+':'+IntToStr(zc_Enum_GlobalConst_StartTime1_Auto_PrimeCost_M))
                else if GroupId_branch = 2

@@ -59,7 +59,7 @@ BEGIN
                   AND Movement.StatusId = zc_Enum_Status_Complete() 
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                   AND (MovementLO_DocumentTaxKind.ObjectId = inDocumentTaxKindId OR COALESCE (inDocumentTaxKindId, 0) = 0)
-                  AND MovementLO_DocumentTaxKind.ObjectId NOT IN (zc_Enum_DocumentTaxKind_Prepay())
+                --AND MovementLO_DocumentTaxKind.ObjectId NOT IN (zc_Enum_DocumentTaxKind_Prepay())
                )
        , tmpUnit_Corrective AS
                (SELECT tmpMovement_TaxCorrective.DocumentTaxKindId
@@ -876,7 +876,7 @@ BEGIN
                   AND Movement.StatusId = zc_Enum_Status_Complete() 
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                   AND (MovementLO_DocumentTaxKind.ObjectId = inDocumentTaxKindId OR COALESCE (inDocumentTaxKindId, 0) = 0)
-                  AND MovementLO_DocumentTaxKind.ObjectId NOT IN (zc_Enum_DocumentTaxKind_Prepay())
+                --AND MovementLO_DocumentTaxKind.ObjectId NOT IN (zc_Enum_DocumentTaxKind_Prepay())
                   
                 GROUP BY MovementLinkObject_From.ObjectId
                        , MovementLinkObject_To.ObjectId
@@ -947,10 +947,18 @@ BEGIN
          
          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpGroupMovement.BranchId
          
-    WHERE tmpGroupMovement.Amount_ReturnIn <> tmpGroupMovement.Amount_TaxCorrective
-       OR (inDocumentTaxKindId <> 0
-           AND (tmpGroupMovement.Amount_ReturnIn <> 0 OR tmpGroupMovement.Amount_TaxCorrective <> 0)
+         LEFT JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
+                                      ON MovementLO_DocumentTaxKind.MovementId = Movement_TaxCorrective.Id
+                                     AND MovementLO_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind()
+                                     AND MovementLO_DocumentTaxKind.ObjectId   = zc_Enum_DocumentTaxKind_Prepay()
+
+    WHERE ((tmpGroupMovement.Amount_ReturnIn <> tmpGroupMovement.Amount_TaxCorrective
+        OR (inDocumentTaxKindId <> 0
+            AND (tmpGroupMovement.Amount_ReturnIn <> 0 OR tmpGroupMovement.Amount_TaxCorrective <> 0)
+           ))
+       AND MovementLO_DocumentTaxKind.MovementId IS NULL
           )
+
        OR (Movement_TaxCorrective.OperDate < Movement_DocumentChild.OperDate)
    ;
             

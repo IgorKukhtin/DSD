@@ -55,7 +55,7 @@ BEGIN
                   AND Movement.StatusId = zc_Enum_Status_Complete() 
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                   AND (MovementLO_DocumentTaxKind.ObjectId = inDocumentTaxKindId OR COALESCE (inDocumentTaxKindId, 0) = 0)
-                  AND MovementLO_DocumentTaxKind.ObjectId NOT IN (zc_Enum_DocumentTaxKind_Prepay())
+                --AND MovementLO_DocumentTaxKind.ObjectId NOT IN (zc_Enum_DocumentTaxKind_Prepay())
                )
        , tmpPartner_Tax AS
                (SELECT PartnerId, ContractId FROM tmpMovement_Tax GROUP BY PartnerId, ContractId
@@ -659,7 +659,7 @@ BEGIN
                   AND Movement.StatusId = zc_Enum_Status_Complete() 
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                   AND (MovementLO_DocumentTaxKind.ObjectId = inDocumentTaxKindId OR COALESCE (inDocumentTaxKindId, 0) = 0)
-                  AND MovementLO_DocumentTaxKind.ObjectId NOT IN (zc_Enum_DocumentTaxKind_Prepay())
+                --AND MovementLO_DocumentTaxKind.ObjectId NOT IN (zc_Enum_DocumentTaxKind_Prepay())
                   
                 GROUP BY MovementLinkObject_From.ObjectId
                        , MovementLinkObject_To.ObjectId
