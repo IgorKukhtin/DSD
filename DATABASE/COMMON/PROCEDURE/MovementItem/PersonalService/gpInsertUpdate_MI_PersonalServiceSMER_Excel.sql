@@ -19,6 +19,8 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService());
      vbUserId := lpGetUserBySession (inSession);
 
+     RAISE EXCEPTION 'Сотрудник <%> не найден с ИНН = <%> и суммой <%> .', inFIO, inINN, inSummMinusExtRecalc;
+
      -- замена
      inINN:= TRIM (inINN);
 
@@ -41,7 +43,7 @@ BEGIN
      -- проверка
      IF COALESCE (inINN, '') = ''
      THEN
-         RAISE EXCEPTION 'Ошибка.У <%> не заполненное поле <ИНН> в файле Excel для суммы <%> <%>.', inSummMinusExtRecalc, inFIO;
+         RAISE EXCEPTION 'Ошибка.У <%> не заполненное поле <ИНН> в файле Excel для суммы <%> <%>.', inFIO, inSummMinusExtRecalc;
      END IF;
 
 
