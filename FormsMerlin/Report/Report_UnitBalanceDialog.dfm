@@ -112,7 +112,7 @@ object Report_UnitBalanceDialogForm: TReport_UnitBalanceDialogForm
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 11
-    Width = 89
+    Width = 174
   end
   object cxLabel3: TcxLabel
     Left = 26

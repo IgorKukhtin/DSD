@@ -82,6 +82,9 @@ type
     cbAllMonth: TcxCheckBox;
     cxLabel3: TcxLabel;
     edServiceDate: TcxDateEdit;
+    pvContainerId: TcxDBPivotGridField;
+    pvAmountRemainsStart_info: TcxDBPivotGridField;
+    pvAmountRemainsEnd_info: TcxDBPivotGridField;
   private
   public
   end;
