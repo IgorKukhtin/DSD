@@ -51,6 +51,10 @@ type
     UnitName: TcxGridDBColumn;
     actRefreshList: TdsdDataSetRefresh;
     cbList: TcxCheckBox;
+    spSelect_GoodsCategoryCopy: TdsdStoredProc;
+    actSelect_GoodsCategoryCopy: TdsdExecStoredProc;
+    actChoiceUnit: TOpenChoiceForm;
+    bbSelect_GoodsCategoryCopy: TdxBarButton;
   private
     { Private declarations }
   public

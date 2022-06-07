@@ -36,8 +36,8 @@ BEGIN
          INNER JOIN (SELECT AnalysisContainerItem.GoodsId
                           , (SUM(AnalysisContainerItem.AmountCheckSum) / SUM(AnalysisContainerItem.AmountCheck))::TFloat AS Price
                      FROM AnalysisContainerItem
-                     WHERE AnalysisContainerItem.OperDate >= inOperDate - (inDay::tvarchar||' DAY')::INTERVAL 
-                       AND AnalysisContainerItem.OperDate < inOperDate + INTERVAL '1 DAY'
+                     WHERE AnalysisContainerItem.OperDate >= inOperDate - ((inDay + 1)::tvarchar||' DAY')::INTERVAL 
+                       AND AnalysisContainerItem.OperDate < inOperDate
                      GROUP BY AnalysisContainerItem.GoodsId
                      HAVING SUM(AnalysisContainerItem.AmountCheck) > 0) AS tmpPrice
                                                                         ON tmpPrice.GoodsId = MovementItem.ObjectId  
@@ -61,5 +61,4 @@ $BODY$
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  05.05.22                                                        *
 */
--- 
-select * from gpUpdate_MovementItem_PriceAverage(inMovementId := 27717912, inOperDate := '07.05.2022', inDay := 10, inSession := '3');
+-- select * from gpUpdate_MovementItem_PriceAverage(inMovementId := 27717912, inOperDate := '07.05.2022', inDay := 10, inSession := '3');

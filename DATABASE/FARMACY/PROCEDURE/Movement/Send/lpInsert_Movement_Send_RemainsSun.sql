@@ -300,7 +300,7 @@ BEGIN
                                 LEFT JOIN tmpLayoutUnitCount ON tmpLayoutUnitCount.Id     = tmpLayout.Id
                                  
                            WHERE (tmpLayoutUnit.UnitId = _tmpUnit_SUN.UnitId OR COALESCE (tmpLayoutUnitCount.CountUnit, 0) = 0)
-                             AND (Object_Unit.ValueData NOT ILIKE 'АП %' OR tmpLayout.isPharmacyItem = True)
+                             AND (Object_Unit.ValueData NOT ILIKE 'Апт. пункт %' OR tmpLayout.isPharmacyItem = True)
                            )
                                                               
      INSERT INTO  _tmpGoods_Layout (GoodsId, UnitId, Layout, isNotMoveRemainder6, MovementLayoutId) 

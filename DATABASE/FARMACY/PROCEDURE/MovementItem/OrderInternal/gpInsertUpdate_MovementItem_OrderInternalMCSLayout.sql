@@ -18,11 +18,13 @@ $BODY$
    DECLARE vbOperDate TDateTime;
 
    DECLARE vbDate180 TDateTime;
+   DECLARE vbDate9 TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_OrderInternal());
     
     vbDate180 := CURRENT_DATE + zc_Interval_ExpirationDate()+ zc_Interval_ExpirationDate();   -- нужен 1 год (функция =6 мес.)
+    vbDate9 := CURRENT_DATE + INTERVAL '9 MONTH';
         
     IF inNeedCreate = True  --Если в интерфейсе поставили галку на подразделении
     THEN -- то перезаливаем заявку на разницу между остатком и НТЗ
@@ -557,9 +559,9 @@ BEGIN
        */
 
        -- получим "текущие" данные, МАстера со сроком годности менее года
-       CREATE TEMP TABLE _tmpMI_OrderInternal_Master (MovementItemId Integer, GoodsId Integer, Amount TFloat, Price TFloat, MCS TFloat, CalcAmountAll TFloat, PartionGoodsDate TDateTime) ON COMMIT DROP;
-       INSERT INTO _tmpMI_OrderInternal_Master (MovementItemId, GoodsId, Amount, Price, MCS, CalcAmountAll, PartionGoodsDate)
-       SELECT tmp.Id, tmp.GoodsId, tmp.Amount, tmp.Price, tmp.MCS, tmp.CalcAmountAll, tmp.PartionGoodsDate
+       CREATE TEMP TABLE _tmpMI_OrderInternal_Master (MovementItemId Integer, GoodsId Integer, Amount TFloat, Layout TFloat,  Price TFloat, MCS TFloat, CalcAmountAll TFloat, PartionGoodsDate TDateTime) ON COMMIT DROP;
+       INSERT INTO _tmpMI_OrderInternal_Master (MovementItemId, GoodsId, Amount, Price, MCS, Layout, CalcAmountAll, PartionGoodsDate)
+       SELECT tmp.Id, tmp.GoodsId, tmp.Amount, tmp.Price, tmp.MCS, tmp.Layout, tmp.CalcAmountAll, tmp.PartionGoodsDate
        FROM gpSelect_MovementItem_OrderInternal_Master (vbMovementId, FALSE, FALSE, FALSE, inSession) AS tmp
        ;
 
@@ -580,7 +582,7 @@ BEGIN
              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual(), tmp.MovementItemId, 0 :: TFloat)
              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), tmp.MovementItemId, 0 :: TFloat)
        FROM _tmpMI_OrderInternal_Master AS tmp
-       WHERE tmp.PartionGoodsDate < vbDate180;
+       WHERE tmp.PartionGoodsDate < CASE WHEN COALESCE (tmp.Layout, 0) > 0 THEN vbDate9 ELSE vbDate180 END;
 
     --
     IF EXISTS(  SELECT Movement.Id

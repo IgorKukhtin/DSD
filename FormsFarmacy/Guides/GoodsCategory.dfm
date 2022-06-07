@@ -6,7 +6,7 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 798
-  ExplicitHeight = 461
+  ExplicitHeight = 462
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -202,7 +202,7 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
         end
         item
           Name = 'Value'
-          Value = '0'
+          Value = 0.000000000000000000
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -426,6 +426,41 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actChoiceUnit: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceUnit'
+      FormName = 'TUnitTreeForm'
+      FormNameParam.Value = 'TUnitTreeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'UnitToId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actSelect_GoodsCategoryCopy: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actChoiceUnit
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelect_GoodsCategoryCopy
+      StoredProcList = <
+        item
+          StoredProc = spSelect_GoodsCategoryCopy
+        end>
+      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074#1099#1082#1083#1072#1076#1082#1091' '#1074' '#1076#1088#1091#1075#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074#1099#1082#1083#1072#1076#1082#1091' '#1074' '#1076#1088#1091#1075#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      ImageIndex = 30
+      QuestionBeforeExecute = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074#1099#1082#1083#1072#1076#1082#1091' '#1074' '#1076#1088#1091#1075#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086'?'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -537,6 +572,14 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
           ItemName = 'bbGridToExcel'
         end
         item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSelect_GoodsCategoryCopy'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -573,6 +616,10 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
+    end
+    object bbSelect_GoodsCategoryCopy: TdxBarButton
+      Action = actSelect_GoodsCategoryCopy
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -659,7 +706,7 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
       end
       item
         Name = 'inValue'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'Value'
         DataType = ftFloat
@@ -693,7 +740,12 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
     Top = 104
   end
   object FormParams: TdsdFormParams
-    Params = <>
+    Params = <
+      item
+        Name = 'UnitToId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
     Left = 224
     Top = 224
   end
@@ -722,5 +774,30 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
         MultiSelectSeparator = ','
       end>
     Left = 337
+  end
+  object spSelect_GoodsCategoryCopy: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_GoodsCategoryCopy'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitFromId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitToId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitToId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 568
+    Top = 168
   end
 end

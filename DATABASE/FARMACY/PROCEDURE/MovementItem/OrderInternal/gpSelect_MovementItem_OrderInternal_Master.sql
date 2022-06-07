@@ -131,6 +131,7 @@ $BODY$
   DECLARE vbOperDateEnd TDateTime;
   DECLARE vbisDocument Boolean;
   DECLARE vbDate180 TDateTime;
+  DECLARE vbDate9 TDateTime;
 
   DECLARE vbMainJuridicalId Integer;
 
@@ -206,6 +207,7 @@ BEGIN
     vbOperDateEnd := vbOperDate + INTERVAL '1 DAY';
     vbDate180 := CURRENT_DATE + zc_Interval_ExpirationDate()+ zc_Interval_ExpirationDate();   -- нужен 1 год (функция =6 мес.)
     --vbDate180 := CURRENT_DATE + INTERVAL '180 DAY';
+    vbDate9 := CURRENT_DATE + INTERVAL '9 MONTH';
 
 
     vbAVGDateStart := vbOperDate - INTERVAL '30 day';
@@ -979,7 +981,7 @@ BEGIN
 
            , COALESCE(MIBoolean_Calculated.ValueData , FALSE)       AS isCalculated--
            , CASE WHEN tmpMI.isSP = TRUE THEN 25088 --zc_Color_GreenL()   --товар соц.проекта
-                  WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Red() --456
+                  WHEN tmpMI.PartionGoodsDate < CASE WHEN COALESCE (tmpLayoutAll.Amount, 0) > 0 THEN vbDate9 ELSE vbDate180 END THEN zc_Color_Red() --456
                   WHEN tmpMI.isTOP = TRUE OR tmpMI.isUnitTOP = TRUE  THEN zc_Color_Blue()--15993821 -- 16440317    -- для топ розовый шрифт
                      ELSE 0
                 END                                                 AS PartionGoodsDateColor
@@ -2926,7 +2928,7 @@ BEGIN
            , CASE WHEN tmpGoodsMain.isSP = TRUE AND (tmpMI.Price > (COALESCE (tmpGoodsMain.PriceOptSP,0))) THEN TRUE ELSE FALSE END isPriceDiff
            , COALESCE(tmpMI.isCalculated, FALSE)                      AS isCalculated
            , CASE WHEN tmpGoodsMain.isSP = TRUE THEN 25088 --zc_Color_GreenL()   --товар соц.проекта
-                  WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Red() --456
+                  WHEN tmpMI.PartionGoodsDate < CASE WHEN COALESCE (tmpLayoutAll.Amount, 0) > 0 THEN vbDate9 ELSE vbDate180 END THEN zc_Color_Red() --456
                   WHEN (tmpMI.isTOP = TRUE OR COALESCE (Object_Price_View.isTOP, FALSE)= TRUE) THEN zc_Color_Blue()--15993821 -- 16440317    -- для топ розовый шрифт
                      ELSE 0
                 END AS PartionGoodsDateColor
@@ -4779,7 +4781,7 @@ BEGIN
            , CASE WHEN tmpGoodsMain.isSP = TRUE AND (tmpMI.Price > (COALESCE (tmpGoodsMain.PriceOptSP,0))) THEN TRUE ELSE FALSE END isPriceDiff
            , COALESCE(tmpMI.isCalculated, FALSE)                      AS isCalculated
            , CASE WHEN tmpGoodsMain.isSP = TRUE THEN 25088 --zc_Color_GreenL()   --товар соц.проекта
-                  WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Red() --456
+                  WHEN tmpMI.PartionGoodsDate < CASE WHEN COALESCE (tmpLayoutAll.Amount, 0) > 0 THEN vbDate9 ELSE vbDate180 END THEN zc_Color_Red() --456
                   WHEN (tmpMI.isTOP = TRUE OR COALESCE (Object_Price_View.isTOP, FALSE)= TRUE) THEN zc_Color_Blue()--15993821 -- 16440317    -- для топ розовый шрифт
                      ELSE 0
                 END AS PartionGoodsDateColor

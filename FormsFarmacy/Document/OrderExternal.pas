@@ -130,6 +130,7 @@ type
     actUpdate_SetSupplierFailures: TdsdExecStoredProc;
     HeaderSaverSupplierFailures: THeaderSaver;
     spUpdate_isSupplierFailures: TdsdStoredProc;
+    Layout: TcxGridDBColumn;
   private
     { Private declarations }
   public

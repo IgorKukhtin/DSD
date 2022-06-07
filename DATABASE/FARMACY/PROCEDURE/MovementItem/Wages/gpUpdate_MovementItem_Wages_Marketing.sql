@@ -67,7 +67,7 @@ BEGIN
           WHERE COALESCE (MIFloat_Marketing.ValueData, 0) <> 
                 CASE WHEN ROUND(COALESCE (IPE.Total, 0)) > 0 OR ROUND(COALESCE (IPE.Total, 0)) < 0 AND
                 COALESCE (IPE.isReleasedMarketingPlan, False) = False THEN  ROUND(COALESCE (IPE.Total, 0)) ELSE 0 END
-            AND IPE.UnitName NOT ILIKE 'ÀÏ %'
+            AND IPE.UnitName NOT ILIKE 'Àïò. ïóíêò %'
           ) AS T1;
 
 END;

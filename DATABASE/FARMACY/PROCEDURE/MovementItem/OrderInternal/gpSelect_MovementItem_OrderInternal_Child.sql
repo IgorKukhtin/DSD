@@ -61,6 +61,7 @@ $BODY$
   DECLARE vbOperDateEnd TDateTime;
   DECLARE vbisDocument Boolean;
   DECLARE vbDate180 TDateTime;
+  DECLARE vbDate9 TDateTime;
 
   DECLARE vbMainJuridicalId Integer;
 
@@ -129,6 +130,7 @@ BEGIN
     vbOperDateEnd := vbOperDate + INTERVAL '1 DAY';
     vbDate180 := CURRENT_DATE + zc_Interval_ExpirationDate()+ zc_Interval_ExpirationDate();   -- нужен 1 год (функция =6 мес.)
     --vbDate180 := CURRENT_DATE + INTERVAL '180 DAY';
+    vbDate9 := CURRENT_DATE + INTERVAL '9 MONTH';
 
 
     vbAVGDateStart := vbOperDate - INTERVAL '30 day';
@@ -361,6 +363,57 @@ BEGIN
                                        ) AS tmp
                                  WHERE tmp.ORD = 1
                                  )
+        -- Выкладка       
+       , tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
+                                    , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE) AS isPharmacyItem
+                               FROM Movement
+                                    LEFT JOIN MovementBoolean AS MovementBoolean_PharmacyItem
+                                                              ON MovementBoolean_PharmacyItem.MovementId = Movement.Id
+                                                             AND MovementBoolean_PharmacyItem.DescId = zc_MovementBoolean_PharmacyItem()
+                               WHERE Movement.DescId = zc_Movement_Layout()
+                                 AND Movement.StatusId = zc_Enum_Status_Complete()
+                              )
+      , tmpLayout AS (SELECT Movement.ID                        AS Id
+                            , MovementItem.ObjectId              AS GoodsId
+                            , MovementItem.Amount                AS Amount
+                            , Movement.isPharmacyItem            AS isPharmacyItem
+                       FROM tmpLayoutMovement AS Movement
+                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                   AND MovementItem.DescId = zc_MI_Master()
+                                                   AND MovementItem.isErased = FALSE
+                                                   AND MovementItem.Amount > 0
+                      )
+      , tmpLayoutUnit AS (SELECT Movement.ID                        AS Id
+                               , MovementItem.ObjectId              AS UnitId
+                          FROM tmpLayoutMovement AS Movement
+                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                      AND MovementItem.DescId = zc_MI_Child()
+                                                      AND MovementItem.isErased = FALSE
+                                                      AND MovementItem.Amount > 0
+                         )
+                                         
+      , tmpLayoutUnitCount AS (SELECT tmpLayoutUnit.ID                  AS Id
+                                    , count(*)                          AS CountUnit
+                               FROM tmpLayoutUnit
+                               GROUP BY tmpLayoutUnit.ID
+                               )
+      , tmpLayoutAll AS (SELECT tmpLayout.GoodsId                  AS GoodsId
+                              , MAX(tmpLayout.Amount)::TFloat      AS Amount
+                         FROM tmpLayout
+                                     
+                              LEFT JOIN ObjectBoolean AS Unit_PharmacyItem
+                                                      ON Unit_PharmacyItem.ObjectId  = vbUnitId
+                                                     AND Unit_PharmacyItem.DescId    = zc_ObjectBoolean_Unit_PharmacyItem()
+                                           
+                              LEFT JOIN tmpLayoutUnit ON tmpLayoutUnit.Id     = tmpLayout.Id
+                                                     AND tmpLayoutUnit.UnitId = vbUnitId
+
+                              LEFT JOIN tmpLayoutUnitCount ON tmpLayoutUnitCount.Id     = tmpLayout.Id
+                                           
+                         WHERE (tmpLayoutUnit.UnitId = vbUnitId OR COALESCE (tmpLayoutUnitCount.CountUnit, 0) = 0)
+                           AND (COALESCE (Unit_PharmacyItem.ValueData, False) = False OR tmpLayout.isPharmacyItem = True)
+                         GROUP BY tmpLayout.GoodsId 
+                         )                                 
 
         SELECT tmpMI.Id
              , tmpMI.MovementItemId
@@ -392,7 +445,7 @@ BEGIN
              , MI_Child.SuperFinalPrice_Deferment
 
 
-             , CASE WHEN MI_Child.PartionGoodsDate < vbDate180 THEN zc_Color_Red() --zc_Color_Blue() --456
+             , CASE WHEN MI_Child.PartionGoodsDate < CASE WHEN COALESCE (tmpLayoutAll.Amount, 0) > 0 THEN vbDate9 ELSE vbDate180 END THEN zc_Color_Red() --zc_Color_Blue() --456
                     ELSE 0
                END                                           AS PartionGoodsDateColor
              , tmpGoods.MinimumLot                 ::TFLoat  AS MinimumLot
@@ -461,6 +514,7 @@ BEGIN
                                           ON MIBoolean_SupplierFailures.MovementItemId = MI_Child.Id
                                          AND MIBoolean_SupplierFailures.DescId = zc_MIBoolean_SupplierFailures()
 
+            LEFT JOIN tmpLayoutAll ON tmpLayoutAll.GoodsId = tmpMI.GoodsId 
           ;
 
 
@@ -1678,4 +1732,5 @@ where Movement.DescId = zc_Movement_OrderInternal()
 
 --select * from gpSelect_MovementItem_OrderInternal_Child(inMovementId := 22066168  , inShowAll := 'True' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
 
-select * from gpSelect_MovementItem_OrderInternal_Child(inMovementId := 26912498     , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
+
+select * from gpSelect_MovementItem_OrderInternal_Child(inMovementId := 28111158 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'False' ,  inSession := '3');
