@@ -177,6 +177,7 @@ procedure TMainForm.btnAllClick(Sender: TObject);
 var
   Ini: TIniFile;
 begin
+  Add_Log('Старт. ***************************');
   try
     if not qryUnit.Active then Exit;
     if qryUnit.IsEmpty then Exit;
@@ -207,6 +208,7 @@ begin
     on E: Exception do
       Add_Log(E.Message);
   end;
+  Add_Log('Стоп. ***************************');
 end;
 
 procedure TMainForm.btnCancelledOrdersClick(Sender: TObject);
@@ -335,10 +337,13 @@ var
     qryCheckBody.First;
     while not qryCheckBody.Eof do
     begin
-      jsonItem := TJSONObject.Create;
-      jsonItem.AddPair('goodsCode', TJSONString.Create(qryCheckBody.FieldByName('GoodsCode').AsString));
-      jsonItem.AddPair('qty', TJSONNumber.Create(qryCheckBody.FieldByName('Amount').AsCurrency));
-      Result.AddElement(jsonItem);
+      if qryCheckBody.FieldByName('isCancelReason').AsBoolean then
+      begin
+        jsonItem := TJSONObject.Create;
+        jsonItem.AddPair('goodsCode', TJSONString.Create(qryCheckBody.FieldByName('GoodsCode').AsString));
+        jsonItem.AddPair('qty', TJSONNumber.Create(qryCheckBody.FieldByName('AmountOrder').AsCurrency - qryCheckBody.FieldByName('Amount').AsCurrency));
+        Result.AddElement(jsonItem);
+      end;
       qryCheckBody.Next;
     end;
   end;

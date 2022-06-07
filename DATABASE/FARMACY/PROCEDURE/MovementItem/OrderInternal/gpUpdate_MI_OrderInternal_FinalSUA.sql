@@ -204,7 +204,9 @@ BEGIN
      WHERE COALESCE (tmpOrderInternalAll.AmountSUA, 0) > 0
        AND COALESCE (_tmp_MI.AmountManual, 0) = 0
        AND (COALESCE(tmpOrderInternalAll.ContractId, 0) = 0
-        OR COALESCE(tmpOrderInternalAll.PartionGoodsDate, zc_DateEnd()) <= CURRENT_DATE + INTERVAL '1 YEAR')
+        OR COALESCE(tmpOrderInternalAll.PartionGoodsDate, zc_DateEnd()) <= CASE WHEN COALESCE (tmpOrderInternalAll.Layout, 0) > 0 
+                                                                                THEN  CURRENT_DATE + INTERVAL '9 MONTH' 
+                                                                                ELSE CURRENT_DATE + INTERVAL '1 YEAR' END)
      ;     
      
 END;

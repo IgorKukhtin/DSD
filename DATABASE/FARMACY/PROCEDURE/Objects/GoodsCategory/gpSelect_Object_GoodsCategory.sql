@@ -26,6 +26,7 @@ $BODY$
     DECLARE vbObjectId Integer;
 BEGIN
 
+
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsCategory());
     vbUserId:= lpGetUserBySession (inSession);
@@ -38,7 +39,7 @@ BEGIN
         WITH 
         /*tmpUnit AS (SELECT inUnitId AS UnitId
                     WHERE COALESCE (inUnitId, 0) <> 0 
-                   /*   AND inisUnitList = FALSE
+                      AND inisUnitList = FALSE
                    UNION 
                     SELECT ObjectBoolean_GoodsCategory.ObjectId AS UnitId
                     FROM ObjectBoolean AS ObjectBoolean_GoodsCategory
@@ -159,7 +160,7 @@ BEGIN
            INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Unit
                                  ON ObjectLink_GoodsCategory_Unit.ObjectId = Object_GoodsCategory.Id
                                 AND ObjectLink_GoodsCategory_Unit.DescId = zc_ObjectLink_GoodsCategory_Unit()
-                                AND ObjectLink_GoodsCategory_Unit.ChildObjectId = inUnitId
+                                AND (ObjectLink_GoodsCategory_Unit.ChildObjectId = inUnitId )  --or  inUnitId =0
            --INNER JOIN tmpUnit ON tmpUnit.UnitId = ObjectLink_GoodsCategory_Unit.ChildObjectId
            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_GoodsCategory_Unit.ChildObjectId 
 
@@ -202,3 +203,5 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 -- SELECT * FROM gpSelect_Object_GoodsCategory (0, 0, TRUE, TRUE, '2')
+
+select * from gpSelect_Object_GoodsCategory(inUnitCategoryId := 0 , inUnitId := 5120968 , inisUnitList := 'False' , inShowAll := 'False' , inisErased := 'True' ,  inSession := '3');

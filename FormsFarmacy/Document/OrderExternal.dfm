@@ -1,26 +1,26 @@
 inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1082#1072#1079' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1091'>'
   ClientHeight = 611
-  ClientWidth = 1222
+  ClientWidth = 1227
   AddOnFormData.PUSHMessage = actPUSHInfo
-  ExplicitWidth = 1238
+  ExplicitWidth = 1243
   ExplicitHeight = 650
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 221
-    Width = 1222
+    Width = 1227
     Height = 390
     ExplicitTop = 221
     ExplicitWidth = 1222
     ExplicitHeight = 390
     ClientRectBottom = 390
-    ClientRectRight = 1222
+    ClientRectRight = 1227
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1222
       ExplicitHeight = 366
       inherited cxGrid: TcxGrid
-        Width = 1222
+        Width = 1227
         Height = 366
         ExplicitWidth = 1222
         ExplicitHeight = 366
@@ -330,6 +330,16 @@ inherited OrderExternalForm: TOrderExternalForm
             Visible = False
             VisibleForCustomization = False
           end
+          object Layout: TcxGridDBColumn
+            Caption = #1042#1099#1082#1083#1072#1076#1082#1072
+            DataBinding.FieldName = 'Layout'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
         end
       end
       object cxGridExport: TcxGrid
@@ -353,7 +363,7 @@ inherited OrderExternalForm: TOrderExternalForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1222
+    Width = 1227
     Height = 195
     TabOrder = 3
     ExplicitWidth = 1222

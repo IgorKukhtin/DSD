@@ -531,7 +531,7 @@ BEGIN
    IF date_part('DAY',    CURRENT_DATE)::Integer in (1, 15)
      AND date_part('HOUR',  CURRENT_TIME)::Integer % 2 = 00
      AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 20
-     AND vbUnitName NOT ILIKE 'ÀÏ %'
+     AND vbUnitName NOT ILIKE 'Àïò. ïóíêò %'
    THEN
      INSERT INTO _PUSH (Id, Text) VALUES (10, 'ÂÍÈÌÀÍÈÅ!!!'||Chr(13)||'ÆÓÐÍÀË ÏÎÊÀÇÀÍÈÉ Ñ×¨Ò×ÈÊÀ ÂÎÄÛ!!!'||Chr(13)||Chr(13)||'ÑÅÃÎÄÍß ñíÿòü è âíåñòè ïîêàçàíèÿ â æóðíàë!!!');
    END IF;
@@ -766,7 +766,7 @@ BEGIN
      FROM _PUSH;
      
      
-  -- raise notice 'Value: % %', vbUnitName, vbUnitName NOT ILIKE 'ÀÏ %';
+  -- raise notice 'Value: % %', vbUnitName, vbUnitName NOT ILIKE 'Àïò. ïóíêò %';
 
 END;
 $BODY$

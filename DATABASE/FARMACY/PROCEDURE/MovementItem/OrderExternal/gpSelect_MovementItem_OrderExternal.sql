@@ -31,6 +31,7 @@ RETURNS TABLE (Id Integer
              , MultiplicityColor Integer                -- убрать со временем
              , isSupplierFailures Boolean
              , SupplierFailuresColor Integer
+             , Layout TFloat
               )
 AS
 $BODY$
@@ -38,6 +39,7 @@ $BODY$
   DECLARE vbPartnerId Integer;
   DECLARE vbUnitId    Integer;
   DECLARE vbDate180   TDateTime;
+  DECLARE vbDate9 TDateTime;
   DECLARE vbOperDate  TDateTime;
   DECLARE vbStatusId Integer;
   DECLARE vbJuridicalId Integer;
@@ -81,6 +83,7 @@ BEGIN
 
      -- + пол года к текущей для определения сроков годности
      vbDate180 := CURRENT_DATE + zc_Interval_ExpirationDate()+ zc_Interval_ExpirationDate(); --+ INTERVAL '180 DAY';  -- нужен 1 год (функция =6 мес.)
+     vbDate9 := CURRENT_DATE + INTERVAL '9 MONTH';
    
      -- ПАРАМЕТРЫ
      SELECT MovementLinkObject.ObjectId AS UnitId
@@ -271,6 +274,58 @@ BEGIN
                                       WHERE tmp.JuridicalId = vbJuridicalId
                                       ))
                              )
+    -- Выкладка       
+   , tmpLayoutMovement AS (SELECT Movement.Id                                             AS Id
+                                , COALESCE(MovementBoolean_PharmacyItem.ValueData, FALSE) AS isPharmacyItem
+                           FROM Movement
+                                LEFT JOIN MovementBoolean AS MovementBoolean_PharmacyItem
+                                                          ON MovementBoolean_PharmacyItem.MovementId = Movement.Id
+                                                         AND MovementBoolean_PharmacyItem.DescId = zc_MovementBoolean_PharmacyItem()
+                           WHERE Movement.DescId = zc_Movement_Layout()
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                          )
+  , tmpLayout AS (SELECT Movement.ID                        AS Id
+                        , MovementItem.ObjectId              AS GoodsId
+                        , MovementItem.Amount                AS Amount
+                        , Movement.isPharmacyItem            AS isPharmacyItem
+                   FROM tmpLayoutMovement AS Movement
+                        INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                               AND MovementItem.DescId = zc_MI_Master()
+                                               AND MovementItem.isErased = FALSE
+                                               AND MovementItem.Amount > 0
+                  )
+  , tmpLayoutUnit AS (SELECT Movement.ID                        AS Id
+                           , MovementItem.ObjectId              AS UnitId
+                      FROM tmpLayoutMovement AS Movement
+                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.DescId = zc_MI_Child()
+                                                  AND MovementItem.isErased = FALSE
+                                                  AND MovementItem.Amount > 0
+                     )
+                                     
+  , tmpLayoutUnitCount AS (SELECT tmpLayoutUnit.ID                  AS Id
+                                , count(*)                          AS CountUnit
+                           FROM tmpLayoutUnit
+                           GROUP BY tmpLayoutUnit.ID
+                           )
+  , tmpLayoutAll AS (SELECT tmpLayout.GoodsId                  AS GoodsId
+                          , MAX(tmpLayout.Amount)::TFloat      AS Amount
+                     FROM tmpLayout
+                                 
+                          LEFT JOIN ObjectBoolean AS Unit_PharmacyItem
+                                                  ON Unit_PharmacyItem.ObjectId  = vbUnitId
+                                                 AND Unit_PharmacyItem.DescId    = zc_ObjectBoolean_Unit_PharmacyItem()
+                                       
+                          LEFT JOIN tmpLayoutUnit ON tmpLayoutUnit.Id     = tmpLayout.Id
+                                                 AND tmpLayoutUnit.UnitId = vbUnitId
+
+                          LEFT JOIN tmpLayoutUnitCount ON tmpLayoutUnitCount.Id     = tmpLayout.Id
+                                       
+                     WHERE (tmpLayoutUnit.UnitId = vbUnitId OR COALESCE (tmpLayoutUnitCount.CountUnit, 0) = 0)
+                       AND (COALESCE (Unit_PharmacyItem.ValueData, False) = False OR tmpLayout.isPharmacyItem = True)
+                     GROUP BY tmpLayout.GoodsId 
+                     )
+                             
 
        SELECT
              tmpMI.Id
@@ -300,7 +355,7 @@ BEGIN
            , COALESCE (tmpMainParam.isResolution_224, FALSE) :: Boolean AS isResolution_224
 
            , CASE WHEN tmpMainParam.isSP = TRUE THEN 25088                                                          -- товар соц.проекта
-               WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Red()                                          -- если срок годности менее 6 мес.
+               WHEN tmpMI.PartionGoodsDate < CASE WHEN COALESCE (tmpLayoutAll.Amount, 0) > 0 THEN vbDate9 ELSE vbDate180 END THEN zc_Color_Red()                                          -- если срок годности менее 6 мес.
                WHEN COALESCE (GoodsPrice.isTop, GoodsParam_TOP.ValueData, FALSE) = TRUE THEN zc_Color_Blue()        --15993821 -- 16440317    -- для топ голубой
                ELSE 0
              END                                                 AS PartionGoodsDateColor
@@ -324,6 +379,7 @@ BEGIN
                   WHEN COALESCE (SupplierFailures.GoodsId, 0) <> 0 THEN zfCalc_Color (255, 165, 0) -- orange 
                   ELSE zc_Color_White()
               END  AS SupplierFailuresColor
+           , tmpLayoutAll.Amount::TFloat                                     AS Layout
       
        FROM tmpData AS tmpMI
             -- торговая сеть
@@ -366,6 +422,8 @@ BEGIN
                                         
             LEFT JOIN tmpSupplierFailures AS SupplierFailures 
                                           ON SupplierFailures.GoodsId = tmpMI.PartnerGoodsId
+
+            LEFT JOIN tmpLayoutAll ON tmpLayoutAll.GoodsId = tmpMI.GoodsId 
        ;
 
 END;

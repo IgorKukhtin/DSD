@@ -140,7 +140,8 @@ begin
           jsonObject.Free;
         end;
       end;
-    except
+    except  on E: Exception do
+       Result := Copy('Ошибка получения IP: ' + E.Message, 1, 250);
     end;
 
   finally
