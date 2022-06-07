@@ -105,7 +105,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsKindSubSend(), ioId, inGoodsKindSubSendId);
 
    -- сохранили связь с <Товары (пересортица на филиалах - расход)>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsSub_Br(), ioId, inGoodsSubId_Br)
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsSub_Br(), ioId, inGoodsSubId_Br);
    -- сохранили связь с <Виды товаров (перемещ.пересортица на филиалах - расход)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsKindSubSend_Br(), ioId, inGoodsKindSubSendId_Br);
 
