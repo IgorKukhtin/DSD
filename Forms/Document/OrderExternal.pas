@@ -123,6 +123,12 @@ type
     ChangeGuidesStatuswms2: TChangeGuidesStatus;
     ChangeGuidesStatuswms3: TChangeGuidesStatus;
     cbPrintComment: TcxCheckBox;
+    spGetReporNameBill: TdsdStoredProc;
+    actPrint_Account_ReportName: TdsdExecStoredProc;
+    actPrint_Account: TdsdPrintAction;
+    mactPrint_Account: TMultiAction;
+    bbPrint_Account: TdxBarButton;
+    spSelectPrintBill: TdsdStoredProc;
   private
     { Private declarations }
   public

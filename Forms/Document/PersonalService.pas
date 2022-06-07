@@ -258,6 +258,11 @@ type
     macInsertUpdate_MemberMinus: TMultiAction;
     bbInsertUpdate_MemberMinus: TdxBarButton;
     StaffListSummKindName: TcxGridDBColumn;
+    spGetImportSetting_SMER: TdsdStoredProc;
+    actDoLoad_SMER: TExecuteImportSettingsAction;
+    actGetImportSetting_SMER: TdsdExecStoredProc;
+    macStartLoad_SMER: TMultiAction;
+    bbStartLoad_SMER: TdxBarButton;
   private
     { Private declarations }
   public

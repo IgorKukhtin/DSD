@@ -53,6 +53,8 @@ type
     spUpdateNewQuality: TdsdStoredProc;
     actUpdateNewQuality: TdsdDataSetRefresh;
     bbUpdateNewQuality: TdxBarButton;
+    GoodsSubOpenChoice_Br: TOpenChoiceForm;
+    GoodsKindSubSendChoiceForm_Br: TOpenChoiceForm;
   private
     { Private declarations }
   public

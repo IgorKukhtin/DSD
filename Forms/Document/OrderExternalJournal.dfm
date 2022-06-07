@@ -22,6 +22,8 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       inherited cxGrid: TcxGrid
         Width = 1050
         Height = 339
+        ExplicitLeft = 48
+        ExplicitTop = -144
         ExplicitWidth = 1050
         ExplicitHeight = 339
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1190,6 +1192,70 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
+    object actPrint_Account: TdsdPrintAction
+      Category = 'Print_Account'
+      MoveParams = <>
+      StoredProc = spSelectPrintBill
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintBill
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
+      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1057#1095#1077#1090
+      ReportNameParam.Value = ''
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameOrderExternalBill'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_Account_ReportName: TdsdExecStoredProc
+      Category = 'Print_Account'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporNameBill
+      StoredProcList = <
+        item
+          StoredProc = spGetReporNameBill
+        end>
+      Caption = 'actPrint_Account_ReportName'
+    end
+    object mactPrint_Account: TMultiAction
+      Category = 'Print_Account'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPrint_Account_ReportName
+        end
+        item
+          Action = actPrint_Account
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
+      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
+      ImageIndex = 21
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1335,6 +1401,14 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Account'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -1368,6 +1442,10 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     end
     object bbPrint_Order2: TdxBarButton
       Action = mactPrint_Order2
+      Category = 0
+    end
+    object bbPrint_Account: TdxBarButton
+      Action = mactPrint_Account
       Category = 0
     end
   end
@@ -1681,5 +1759,54 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     PackSize = 1
     Left = 551
     Top = 160
+  end
+  object spGetReporNameBill: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_OrderExternal_ReportNameBill'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_OrderExternal_ReportNameBill'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameOrderExternalBill'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 832
+    Top = 176
+  end
+  object spSelectPrintBill: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderExternal_PrintBill'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 823
+    Top = 248
   end
 end
