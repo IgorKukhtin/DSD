@@ -13,6 +13,7 @@ object Movement_PeriodDialogForm: TMovement_PeriodDialogForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -105,5 +106,62 @@ object Movement_PeriodDialogForm: TMovement_PeriodDialogForm
       end>
     Left = 23
     Top = 102
+  end
+  object gpGetDate_Journal: TdsdStoredProc
+    StoredProcName = 'gpGetDate_MovementJournal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42005d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42005d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStartDate'
+        Value = 42005d
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEndDate'
+        Value = 42005d
+        Component = deEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 87
+    Top = 69
+  end
+  object ActionList: TActionList
+    Left = 59
+    Top = 17
+    object actRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = gpGetDate_Journal
+      StoredProcList = <
+        item
+          StoredProc = gpGetDate_Journal
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
 end
