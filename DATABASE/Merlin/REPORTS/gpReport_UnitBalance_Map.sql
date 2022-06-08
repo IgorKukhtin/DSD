@@ -128,6 +128,15 @@ IF inUnitGroupId IN (1, 2) THEN inUnitGroupId:= 0; END IF;
                         ) AS tmp
 	              WHERE tmp.UnitGroupId is not null
                   )
+   , tmpOH AS (SELECT tmp.UnitId
+                    , CASE WHEN tmp.InfoMoneyId = 76878 THEN COALESCE (tmp.Value,0) ELSE 0 END AS Value_A     --76878 Аренда
+                    , CASE WHEN tmp.InfoMoneyId = 76879 THEN COALESCE (tmp.Value,0) ELSE 0 END AS Value_K     -- 76879 Комунальніе
+               FROM gpSelect_ObjectHistory_ServiceItemOnDate(inUnitId      := inUnitGroupId
+                                                           , inInfoMoneyId := 0  
+                                                           , inOperDate    := inServiceDate ::TDateTime
+                                                           , inSession     := inSession     ::TVarChar
+                                                            ) AS tmp
+              )
 
      --Результат
      SELECT
@@ -136,6 +145,8 @@ IF inUnitGroupId IN (1, 2) THEN inUnitGroupId:= 0; END IF;
       , (Object_Unit.ValueData||chr(13)||'Н: ' || zfConvert_FloatToString (SUM (COALESCE (tmpReport.AmountDebet, 0)))
                               ||chr(13)||'О: ' || zfConvert_FloatToString (SUM (COALESCE (tmpReport.AmountKredit, 0)))
                               ||chr(13)||'Д: ' || zfConvert_FloatToString (SUM (COALESCE (tmpReport.AmountDebetEnd, 0) - COALESCE (tmpReport.AmountKreditEnd, 0)))
+                              ||chr(13)||'A: ' || zfConvert_FloatToString (SUM (COALESCE (tmpOH.Value_A, 0)))
+                              ||chr(13)||'К: ' || zfConvert_FloatToString (SUM (COALESCE (tmpOH.Value_K, 0)))
 		)::TVarChar AS Name  -- Н-начислено;  О - оплачено; Д-ДОЛГ
 
       , COALESCE (Object_Parent.Id,0)   AS ParentId
@@ -160,7 +171,10 @@ IF inUnitGroupId IN (1, 2) THEN inUnitGroupId:= 0; END IF;
                    
             LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = tmpUnitGroup.ParentId
 
-            LEFT JOIN tmpUnitLast ON tmpUnitLast.Id = Object_Unit.Id 
+            LEFT JOIN tmpUnitLast ON tmpUnitLast.Id = Object_Unit.Id    
+            
+            LEFT JOIN tmpOH ON tmpOH.UnitId = tmpGroup.UnitId
+
      WHERE (Object_Unit.Id = 52460 AND inUnitGroupId = 0) OR inUnitGroupId <> 0
      GROUP BY Object_Unit.Id
             , Object_Unit. ObjectCode
@@ -177,6 +191,8 @@ IF inUnitGroupId IN (1, 2) THEN inUnitGroupId:= 0; END IF;
      HAVING SUM (COALESCE (tmpReport.AmountDebet, 0))  <> 0
          OR SUM (COALESCE (tmpReport.AmountKredit, 0)) <> 0
          OR SUM (COALESCE (tmpReport.AmountDebetEnd, 0) - COALESCE (tmpReport.AmountKreditEnd, 0)) <> 0
+         OR SUM (COALESCE (tmpOH.Value_A, 0)) <> 0
+         OR SUM (COALESCE (tmpOH.Value_K, 0)) <> 0
          OR Object_Unit.isErased = FALSE
       ;
 

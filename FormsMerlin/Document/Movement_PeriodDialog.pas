@@ -9,7 +9,7 @@ uses
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod,
   dsdGuides, cxDropDownEdit, cxCalendar, cxTextEdit, cxMaskEdit, cxButtonEdit,
   cxPropertiesStore, dsdAddOn, dsdDB, cxLabel, dxSkinsCore,
-  dxSkinsDefaultPainters, cxCheckBox;
+  dxSkinsDefaultPainters, cxCheckBox, Vcl.ActnList, dsdAction;
 
 type
   TMovement_PeriodDialogForm = class(TParentForm)
@@ -23,6 +23,9 @@ type
     FormParams: TdsdFormParams;
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
+    gpGetDate_Journal: TdsdStoredProc;
+    ActionList: TActionList;
+    actRefresh: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
