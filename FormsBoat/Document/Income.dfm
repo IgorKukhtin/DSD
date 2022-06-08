@@ -229,12 +229,12 @@ object IncomeForm: TIncomeForm
       Width = 164
     end
     object cxLabel9: TcxLabel
-      Left = 18
+      Left = 265
       Top = 96
       Caption = '- Rabbat %'
     end
     object ceDiscountTax: TcxCurrencyEdit
-      Left = 104
+      Left = 351
       Top = 95
       Hint = '% '#1089#1082#1080#1076#1082#1080
       ParentShowHint = False
@@ -246,12 +246,12 @@ object IncomeForm: TIncomeForm
       Width = 70
     end
     object cxLabel14: TcxLabel
-      Left = 18
+      Left = 265
       Top = 119
       Caption = '- Rabbat Brutto'
     end
     object ceSummTaxPVAT: TcxCurrencyEdit
-      Left = 103
+      Left = 350
       Top = 118
       Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057
       ParentShowHint = False
@@ -263,12 +263,12 @@ object IncomeForm: TIncomeForm
       Width = 70
     end
     object cxLabel15: TcxLabel
-      Left = 18
+      Left = 265
       Top = 143
       Caption = '- Rabbat Netto'
     end
     object ceSummTaxMVAT: TcxCurrencyEdit
-      Left = 103
+      Left = 350
       Top = 142
       Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057
       ParentShowHint = False
@@ -280,22 +280,22 @@ object IncomeForm: TIncomeForm
       Width = 70
     end
     object cxLabel17: TcxLabel
-      Left = 205
+      Left = 452
       Top = 96
       Caption = '+ Porto Netto'
     end
     object cxLabel18: TcxLabel
-      Left = 205
+      Left = 452
       Top = 119
       Caption = '+ Verpackung Netto'
     end
     object cxLabel19: TcxLabel
-      Left = 205
+      Left = 452
       Top = 143
       Caption = '+ Versicherung Netto'
     end
     object ceSummInsur: TcxCurrencyEdit
-      Left = 316
+      Left = 563
       Top = 142
       Hint = #1057#1090#1088#1072#1093#1086#1074#1082#1072' '#1088#1072#1089#1093#1086#1076#1099', '#1073#1077#1079' '#1053#1044#1057
       ParentShowHint = False
@@ -307,7 +307,7 @@ object IncomeForm: TIncomeForm
       Width = 70
     end
     object ceSummPack: TcxCurrencyEdit
-      Left = 316
+      Left = 563
       Top = 118
       Hint = #1059#1087#1072#1082#1086#1074#1082#1072' '#1088#1072#1089#1093#1086#1076#1099', '#1073#1077#1079' '#1053#1044#1057
       ParentShowHint = False
@@ -319,7 +319,7 @@ object IncomeForm: TIncomeForm
       Width = 70
     end
     object ceSummPost: TcxCurrencyEdit
-      Left = 316
+      Left = 563
       Top = 95
       Hint = #1055#1086#1095#1090#1086#1074#1099#1077' '#1088#1072#1089#1093#1086#1076#1099', '#1073#1077#1079' '#1053#1044#1057
       ParentShowHint = False
@@ -331,12 +331,12 @@ object IncomeForm: TIncomeForm
       Width = 70
     end
     object cxLabel20: TcxLabel
-      Left = 430
+      Left = 677
       Top = 96
       Caption = '- Scontobetr%'
     end
     object ceTotalDiscountTax: TcxCurrencyEdit
-      Left = 533
+      Left = 780
       Top = 95
       Hint = '% '#1089#1082#1080#1076#1082#1080' '#1080#1090#1086#1075#1086
       ParentShowHint = False
@@ -348,12 +348,12 @@ object IncomeForm: TIncomeForm
       Width = 70
     end
     object cxLabel21: TcxLabel
-      Left = 430
+      Left = 677
       Top = 119
       Caption = '- Scontobetr Brutto'
     end
     object ceTotalSummTaxPVAT: TcxCurrencyEdit
-      Left = 533
+      Left = 780
       Top = 118
       Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1089' '#1053#1044#1057' '#1080#1090#1086#1075#1086
       ParentShowHint = False
@@ -365,12 +365,12 @@ object IncomeForm: TIncomeForm
       Width = 70
     end
     object cxLabel22: TcxLabel
-      Left = 430
+      Left = 677
       Top = 143
       Caption = '- Scontobetr Netto'
     end
     object ceTotalSummTaxMVAT: TcxCurrencyEdit
-      Left = 533
+      Left = 780
       Top = 142
       Hint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1073#1077#1079' '#1053#1044#1057' '#1080#1090#1086#1075#1086
       ParentShowHint = False
@@ -382,8 +382,8 @@ object IncomeForm: TIncomeForm
       Width = 70
     end
     object cbPrice: TcxCheckBox
-      Left = 641
-      Top = 90
+      Left = 9
+      Top = 98
       Hint = '1. '#1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' ('#1044#1072'/ '#1053#1077#1090')'
       Caption = '1. '#1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' ('#1044#1072'/ '#1053#1077#1090')'
       TabOrder = 43
@@ -391,13 +391,13 @@ object IncomeForm: TIncomeForm
       Width = 169
     end
     object Panel1: TPanel
-      Left = 641
+      Left = 2
       Top = 127
-      Width = 288
+      Width = 255
       Height = 36
       TabOrder = 44
       object lbSearchArticle: TcxLabel
-        Left = 17
+        Left = 3
         Top = 8
         Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
         ParentFont = False
@@ -409,7 +409,7 @@ object IncomeForm: TIncomeForm
         Style.IsFontAssigned = True
       end
       object edSearchArticle: TcxTextEdit
-        Left = 148
+        Left = 126
         Top = 8
         TabOrder = 1
         DesignSize = (
@@ -1523,11 +1523,19 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbAddMask'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
           Visible = True
-          ItemName = 'bbAddMask'
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAdd_limit'
         end
         item
           Visible = True
@@ -1822,6 +1830,10 @@ object IncomeForm: TIncomeForm
       Action = macPrintStikerOne
       Category = 0
     end
+    object bbAdd_limit: TdxBarButton
+      Action = mactAdd_limit
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1948,6 +1960,19 @@ object IncomeForm: TIncomeForm
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
+    end
+    object actRefreshMI: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectMI
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -2352,6 +2377,57 @@ object IncomeForm: TIncomeForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
+    end
+    object actAdd_limit: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1080' '#1094#1077#1085#1099'>  ('#1083#1080#1084#1080#1090')'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1080' '#1094#1077#1085#1099'>  ('#1083#1080#1084#1080#1090')'
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TIncomeItemEdit_limitForm'
+      FormNameParam.Value = 'TIncomeItemEdit_limitForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = 0
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      DataSource = MasterDS
+      IdFieldName = 'Id'
     end
     object actInsertAction: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -2904,6 +2980,21 @@ object IncomeForm: TIncomeForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1069#1090#1080#1082#1077#1090#1082#1080
       ImageIndex = 18
     end
+    object mactAdd_limit: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actAdd_limit
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      ImageIndex = 54
+      WithoutNext = True
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -3257,8 +3348,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 138
-    Top = 104
+    Left = 122
+    Top = 192
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -3312,8 +3403,8 @@ object IncomeForm: TIncomeForm
       item
       end>
     GetStoredProc = spGet
-    Left = 376
-    Top = 65
+    Left = 888
+    Top = 97
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Income'
@@ -3986,8 +4077,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 904
-    Top = 129
+    Left = 656
+    Top = 209
   end
   object spInsertUpdate_IncomeCost: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_IncomeCost'
@@ -4033,8 +4124,8 @@ object IncomeForm: TIncomeForm
   end
   object CostDS: TDataSource
     DataSet = CostCDS
-    Left = 782
-    Top = 191
+    Left = 742
+    Top = 215
   end
   object CostCDS: TClientDataSet
     Aggregates = <>
@@ -4321,8 +4412,8 @@ object IncomeForm: TIncomeForm
     Column = Article_all
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 280
-    Top = 192
+    Left = 328
+    Top = 240
   end
   object spSelectPrintStickerOne: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Income_PrintSticker'

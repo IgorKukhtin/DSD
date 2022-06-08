@@ -322,7 +322,8 @@ uses
   InventoryItemEdit_limit in '..\..\FormsBoat\Document\InventoryItemEdit_limit.pas' {InventoryItemEdit_limitForm: TParentForm},
   PriceListItemEdit in '..\..\FormsBoat\Document\PriceListItemEdit.pas' {PriceListItemEditForm: TParentForm},
   PriceListItemEdit_limit in '..\..\FormsBoat\Document\PriceListItemEdit_limit.pas' {PriceListItemEdit_limitForm: TParentForm},
-  Goods in '..\..\FormsBoat\Guides\Goods.pas' {GoodsForm: TParentForm};
+  Goods in '..\..\FormsBoat\Guides\Goods.pas' {GoodsForm: TParentForm},
+  IncomeItemEdit_limit in '..\..\FormsBoat\Document\IncomeItemEdit_limit.pas' {IncomeItemEdit_limitForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

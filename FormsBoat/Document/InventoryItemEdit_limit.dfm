@@ -667,7 +667,7 @@ object InventoryItemEdit_limitForm: TInventoryItemEdit_limitForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 164
+    Left = 140
     Top = 96
   end
   object GuidesGoodsGroup: TdsdGuides

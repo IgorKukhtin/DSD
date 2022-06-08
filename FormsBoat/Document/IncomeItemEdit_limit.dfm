@@ -1,7 +1,7 @@
-object IncomeItemEditForm: TIncomeItemEditForm
+object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1087#1088#1080#1093#1086#1076#1072'>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100' ***'#1055#1088#1080#1093#1086#1076
   ClientHeight = 288
   ClientWidth = 520
   Color = clBtnFace
@@ -702,10 +702,10 @@ object IncomeItemEditForm: TIncomeItemEditForm
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsName
-    FormNameParam.Value = 'TGoodsForm'
+    FormNameParam.Value = 'TGoods_limitForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsForm'
+    FormName = 'TGoods_limitForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -759,8 +759,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 89
-    Top = 47
+    Left = 65
+    Top = 55
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
