@@ -210,9 +210,12 @@ end;
 
 procedure TMainForm.Timer1Timer(Sender: TObject);
 begin
-  btnAllClick(Sender);
-
-  Close;
+  try
+    Timer1.Enabled := False;
+    btnAllClick(Sender);
+  finally
+    Close;
+  end;
 end;
 
 end.

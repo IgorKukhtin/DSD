@@ -337,11 +337,11 @@ var
     qryCheckBody.First;
     while not qryCheckBody.Eof do
     begin
-      if qryCheckBody.FieldByName('isCancelReason').AsBoolean then
+      if qryCheckBody.FieldByName('Amount').AsCurrency > 0 then
       begin
         jsonItem := TJSONObject.Create;
         jsonItem.AddPair('goodsCode', TJSONString.Create(qryCheckBody.FieldByName('GoodsCode').AsString));
-        jsonItem.AddPair('qty', TJSONNumber.Create(qryCheckBody.FieldByName('AmountOrder').AsCurrency - qryCheckBody.FieldByName('Amount').AsCurrency));
+        jsonItem.AddPair('qty', TJSONNumber.Create(qryCheckBody.FieldByName('Amount').AsCurrency));
         Result.AddElement(jsonItem);
       end;
       qryCheckBody.Next;
@@ -359,19 +359,19 @@ begin
     while not qryCheckHead.Eof do
     begin
 
-      if qryCheckHead.FieldByName('CancelReasonID').AsInteger > 0 then
-      begin
-        if not TabletkiAPI.CancelReason(qryUnit.FieldByName('SerialNumber').AsInteger,
-                                        qryCheckHead.FieldByName('BookingId').AsString,
-                                        qryCheckHead.FieldByName('CancelReasonId').AsInteger,
-                                        GetJSONAItemsCancelReason) then
-        begin
-          Add_Log(TabletkiAPI.ErrorsText);
-        end else
-        begin
-          Add_LogSend(qryCheckHead.FieldByName('Id').AsString + ' ' + GetJSONAItemsCancelReason.ToString);
-        end;
-      end;
+//      if qryCheckHead.FieldByName('CancelReasonID').AsInteger > 0 then
+//      begin
+//        if not TabletkiAPI.CancelReason(qryUnit.FieldByName('SerialNumber').AsInteger,
+//                                        qryCheckHead.FieldByName('BookingId').AsString,
+//                                        qryCheckHead.FieldByName('CancelReasonId').AsInteger,
+//                                        GetJSONAItemsCancelReason) then
+//        begin
+//          Add_Log(TabletkiAPI.ErrorsText);
+//        end else
+//        begin
+//          Add_LogSend(qryCheckHead.FieldByName('Id').AsString + ' cancelledOrders ' + qryCheckHead.FieldByName('CancelReasonId').AsString + ' ' + GetJSONAItemsCancelReason.ToString);
+//        end;
+//      end;
 
       if Status = '7.0' then
       begin
@@ -392,6 +392,7 @@ begin
                                    qryCheckHead.FieldByName('OperDate').AsDateTime,
                                    GetJSONItems) then
         begin
+          Add_LogSend(qryCheckHead.FieldByName('Id').AsString + ' ' + qryCheckHead.FieldByName('OrderId').AsString + ' UpdateStaus ' + qryCheckHead.FieldByName('BookingStatus').AsString +' на ' + qryCheckHead.FieldByName('BookingStatusNew').AsString);
           spUpdateMovementStatus.Params.ParamByName('inMovementId').AsInteger := qryCheckHead.FieldByName('Id').AsInteger;
           spUpdateMovementStatus.Params.ParamByName('inBookingStatus').AsString := qryCheckHead.FieldByName('BookingStatusNew').AsString;
           spUpdateMovementStatus.Params.ParamByName('inSession').AsString := '3';

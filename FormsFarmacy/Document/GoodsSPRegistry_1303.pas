@@ -80,6 +80,7 @@ type
     PriceSale: TcxGridDBColumn;
     PriceSaleOOC: TcxGridDBColumn;
     Color_Count: TcxGridDBColumn;
+    PriceOOC: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -20,6 +20,8 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
       inherited cxGrid: TcxGrid
         Width = 1043
         Height = 444
+        ExplicitLeft = 144
+        ExplicitTop = -24
         ExplicitWidth = 1043
         ExplicitHeight = 444
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -310,6 +312,16 @@ inherited GoodsSPRegistry_1303Form: TGoodsSPRegistry_1303Form
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 74
+          end
+          object PriceOOC: TcxGridDBColumn
+            Caption = #1052#1072#1082#1089'. '#1087#1088#1080#1093#1086#1076' '#1094#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'  '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'PriceOOC'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 92
           end
           object PriceSaleOOC: TcxGridDBColumn
             Caption = #1056#1086#1079#1085'. '#1094#1077#1085#1072' '#1080#1079' '#1088#1077#1077#1089#1090#1088#1072' '#1054#1054#1062

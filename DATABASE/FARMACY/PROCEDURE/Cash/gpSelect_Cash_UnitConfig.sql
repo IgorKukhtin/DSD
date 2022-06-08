@@ -31,8 +31,8 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                isPromoForSale Boolean, isCheckUKTZED Boolean, isGoodsUKTZEDRRO Boolean, isMessageByTime Boolean, isMessageByTimePD Boolean,
                LikiDneproURL TVarChar, LikiDneproToken TVarChar, LikiDneproId Integer,
                LikiDneproeHealthURL TVarChar, LikiDneproeLocation TVarChar, LikiDneproeHealthToken TVarChar,
-               isRemovingPrograms Boolean, isErrorRROToVIP Boolean, LayoutFileCount Integer, LayoutFileID Integer, 
-               isSupplementAddCash Boolean
+               isRemovingPrograms Boolean, ExpressVIPConfirm Integer, isErrorRROToVIP Boolean, LayoutFileCount Integer, LayoutFileID Integer, 
+               isSupplementAddCash Boolean, isExpressVIPConfirm Boolean
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -184,7 +184,8 @@ BEGIN
                                     AND (vbRetailId = 4)                                                     AS isGetHardwareData
                                   , COALESCE(ObjectBoolean_CashSettings_PairedOnlyPromo.ValueData, FALSE)    AS isPairedOnlyPromo
                                   , COALESCE(ObjectBoolean_CashSettings_CustomerThreshold.ValueData, 0)::TFLoat  AS CustomerThreshold
-                                  , COALESCE(ObjectBoolean_CashSettings_RemovingPrograms.ValueData, FALSE)   AS isRemovingPrograms
+                                  , COALESCE(ObjectBoolean_CashSettings_RemovingPrograms.ValueData, FALSE)       AS isRemovingPrograms
+                                  , COALESCE(ObjectFloat_CashSettings_ExpressVIPConfirm.ValueData, 0)::Integer   AS ExpressVIPConfirm
                              FROM Object AS Object_CashSettings
                                   LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                                          ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id
@@ -204,6 +205,9 @@ BEGIN
                                   LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_RemovingPrograms
                                                           ON ObjectBoolean_CashSettings_RemovingPrograms.ObjectId = Object_CashSettings.Id 
                                                          AND ObjectBoolean_CashSettings_RemovingPrograms.DescId = zc_ObjectBoolean_CashSettings_RemovingPrograms()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_ExpressVIPConfirm
+                                                        ON ObjectFloat_CashSettings_ExpressVIPConfirm.ObjectId = Object_CashSettings.Id 
+                                                       AND ObjectFloat_CashSettings_ExpressVIPConfirm.DescId = zc_ObjectFloat_CashSettings_ExpressVIPConfirm()
                              WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
                              LIMIT 1)
        , tmpPromoCodeDoctor AS (SELECT PromoUnit.ID
@@ -354,12 +358,14 @@ BEGIN
        , tmpCashSettings.isRemovingPrograms AND
          CASE WHEN EXISTS (SELECT 1 FROM ObjectLink_UserRole_View
          WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) THEN FALSE ELSE TRUE END AS isRemovingPrograms
+       , tmpCashSettings.ExpressVIPConfirm
        , COALESCE (ObjectBoolean_ErrorRROToVIP.ValueData, FALSE)                  AS isErrorRROToVIP
        
        , tmpLayoutFileCount.LayoutFileCount                                       AS LayoutFileCount
        , tmpLayoutFile.ID                                                         AS LayoutFileID
        
        , COALESCE (ObjectBoolean_SUN_v2_SupplementAddCash.ValueData, FALSE):: Boolean     AS isSupplementAddCash
+       , COALESCE (ObjectBoolean_ExpressVIPConfirm.ValueData, FALSE):: Boolean            AS isExpressVIPConfirm
 
    FROM Object AS Object_Unit
 
@@ -390,6 +396,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_ErrorRROToVIP
                                 ON ObjectBoolean_ErrorRROToVIP.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_ErrorRROToVIP.DescId = zc_ObjectBoolean_Unit_ErrorRROToVIP()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_ExpressVIPConfirm
+                                ON ObjectBoolean_ExpressVIPConfirm.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_ExpressVIPConfirm.DescId = zc_ObjectBoolean_Unit_ExpressVIPConfirm()
 
         LEFT JOIN ObjectString AS ObjectString_PromoForSale
                                ON ObjectString_PromoForSale.ObjectId = Object_Unit.Id 

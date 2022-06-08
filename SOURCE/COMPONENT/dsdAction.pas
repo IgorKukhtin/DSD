@@ -6967,7 +6967,7 @@ begin
   FZQuery.Close;
   FZConnection.Disconnect;
 
-  if not Assigned(FDataSet) and (FTypeTransaction = ttSelect) and (FOperation <> fdoToJSON) then
+  if not Assigned(FDataSet) and (FTypeTransaction = ttSelect) and not (FOperation in [fdoToJSON, fdoMultiExecuteJSON]) then
   begin
     ShowMessage('Ошибка. Не определен DataSet.');
     Exit;

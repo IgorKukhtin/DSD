@@ -70,6 +70,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isBlockCommentSendTP Boolean, isOnlyTimingSUN Boolean
              , PharmacyManager TVarChar, PharmacyManagerPhone TVarChar
              , TelegramId TVarChar, isErrorRROToVIP Boolean, isShowMessageSite Boolean, isSupplementAddCash Boolean, isSupplementAdd30Cash Boolean
+             , isExpressVIPConfirm Boolean
 ) AS
 $BODY$
 BEGIN
@@ -285,6 +286,8 @@ BEGIN
       , COALESCE (ObjectBoolean_ShowMessageSite.ValueData, FALSE)         :: Boolean     AS isShowMessageSite
       , COALESCE (ObjectBoolean_SUN_v1_SupplementAddCash.ValueData, FALSE):: Boolean     AS isSupplementAddCash
       , COALESCE (ObjectBoolean_SUN_v1_SupplementAdd30Cash.ValueData, FALSE):: Boolean   AS isSupplementAdd30Cash
+
+      , COALESCE (ObjectBoolean_ExpressVIPConfirm.ValueData, FALSE):: Boolean            AS isExpressVIPConfirm
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -670,6 +673,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_ShowMessageSite
                                 ON ObjectBoolean_ShowMessageSite.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_ShowMessageSite.DescId = zc_ObjectBoolean_Unit_ShowMessageSite()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_ExpressVIPConfirm
+                                ON ObjectBoolean_ExpressVIPConfirm.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_ExpressVIPConfirm.DescId = zc_ObjectBoolean_Unit_ExpressVIPConfirm()
 
         LEFT JOIN ObjectDate AS ObjectDate_StartServiceNigth
                              ON ObjectDate_StartServiceNigth.ObjectId = Object_Unit.Id

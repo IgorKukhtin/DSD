@@ -64,6 +64,7 @@ type
     PriceSaleRegistry: TcxGridDBColumn;
     PriceOptSPRegistry: TcxGridDBColumn;
     MorionCode: TcxGridDBColumn;
+    PriceOOC: TcxGridDBColumn;
   private
     { Private declarations }
   public
