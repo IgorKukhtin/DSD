@@ -165,6 +165,7 @@ order by 4*/
                       THEN MovementDate_DateRegistered.ValueData
                  ELSE Movement_Tax.OperDate
             END AS OperDate_begin
+
           , CASE WHEN MovementString_InvNumberRegistered.ValueData <> ''
                       THEN COALESCE (MovementDate_DateRegistered.ValueData, Movement_Tax.OperDate)
                  ELSE CURRENT_DATE

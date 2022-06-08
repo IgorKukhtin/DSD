@@ -98,12 +98,21 @@ BEGIN
      -- определяется <Налоговый документ> и его параметры
      SELECT COALESCE (tmpMovement.MovementId_TaxCorrective, 0) AS MovementId_TaxCorrective
           , Movement_TaxCorrective.StatusId                    AS StatusId_TaxCorrective
-          , CASE WHEN (CURRENT_DATE >= '01.03.2021'  OR vbUserId = 5) AND COALESCE (MovementString_InvNumberRegistered.ValueData, '') = ''
-                      THEN '01.03.2021'
+          , CASE WHEN (CURRENT_DATE >= '01.03.2021' /*OR vbUserId = 5*/)
+                  AND COALESCE (MovementString_InvNumberRegistered.ValueData, '') = ''
+                  AND COALESCE (MovementString_InvNumberRegistered_tax.ValueData, '') = ''
+                      THEN Movement_TaxCorrective.OperDate -- '01.03.2021'
+
                  WHEN MovementDate_DateRegistered.ValueData > Movement_TaxCorrective.OperDate
                       THEN MovementDate_DateRegistered.ValueData
+
+                 WHEN MovementDate_DateRegistered_tax.ValueData > Movement_TaxCorrective.OperDate AND MovementString_InvNumberRegistered_tax.ValueData <> ''
+                      THEN MovementDate_DateRegistered_tax.ValueData
+
                  ELSE Movement_TaxCorrective.OperDate
+
             END AS OperDate_begin
+
           , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)    AS isLongUKTZED
             -- вид налоговой
           , MLO_DocumentTaxKind_tax.ObjectId  AS DocumentTaxKindId_tax
@@ -150,6 +159,12 @@ BEGIN
           LEFT JOIN MovementLinkObject AS MLO_DocumentTaxKind_tax
                                        ON MLO_DocumentTaxKind_tax.MovementId = MovementLinkMovement_Child.MovementChildId
                                       AND MLO_DocumentTaxKind_tax.DescId     = zc_MovementLinkObject_DocumentTaxKind()
+          LEFT JOIN MovementDate AS MovementDate_DateRegistered_tax
+                                 ON MovementDate_DateRegistered_tax.MovementId = MovementLinkMovement_Child.MovementChildId
+                                AND MovementDate_DateRegistered_tax.DescId = zc_MovementDate_DateRegistered()
+          LEFT JOIN MovementString AS MovementString_InvNumberRegistered_tax
+                                   ON MovementString_InvNumberRegistered_tax.MovementId = tmpMovement.MovementId_TaxCorrective
+                                  AND MovementString_InvNumberRegistered_tax.DescId = zc_MovementString_InvNumberRegistered()
      ;
 /* пока убрал, т.к. проверка сумм происходит в непроведенном состоянии, надо или добавить параметр - "когда ругаться" или сделать еще одну печать-проверку
      -- очень важная проверка
