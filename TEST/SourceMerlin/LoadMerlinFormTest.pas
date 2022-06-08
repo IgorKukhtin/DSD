@@ -132,6 +132,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_PeriodDialogCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialogCashForm');
 end;
 
 

@@ -2,16 +2,18 @@
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, Integer, TDateTime, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, Integer, Integer, TDateTime, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Cash(
     IN inMovementId        Integer  , -- ключ Документа
     IN inMovementId_Value  Integer  ,
-    IN inMI_Id             Integer  , --Мастер
+    IN inMI_Id             Integer  , -- Мастер
     IN inUnitId            Integer  , -- отдел
     IN inInfoMoneyId       Integer  , -- статья
+    IN inCashId            Integer  , -- Касса
     IN inOperDate          TDateTime, -- дата Документа
-    IN inKindName          TVarChar  , --
+    IN inKindName          TVarChar , --
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar
@@ -67,7 +69,7 @@ BEGIN
        FROM (SELECT CAST (CURRENT_DATE AS TDateTime) AS OperDate) AS tmp
            LEFT JOIN Object AS Object_Cash
                             ON Object_Cash.DescId = zc_Object_Cash()
-                           AND Object_Cash.Id     = CASE WHEN vbUser_isAll = FALSE THEN 102964 ELSE 0 END -- Бухгалтерия
+                           AND Object_Cash.Id     = inCashId --CASE WHEN vbUser_isAll = FALSE THEN 102964 ELSE 0 END -- Бухгалтерия
            LEFT JOIN Object AS Object_Unit
                             ON Object_Unit.DescId = zc_Object_Unit()
                            AND Object_Unit.Id = inUnitId
@@ -83,7 +85,8 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_Parent
                                 ON ObjectLink_Parent.ObjectId = Object_InfoMoney.Id
                                AND ObjectLink_Parent.DescId = zc_ObjectLink_InfoMoney_Parent()
-           LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Parent.ChildObjectId
+           LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Parent.ChildObjectId 
+           
       ;
      ELSE
 

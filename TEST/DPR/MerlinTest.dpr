@@ -181,7 +181,8 @@ uses
   ServiceItemMovement in '..\..\FormsMerlin\Document\ServiceItemMovement.pas' {ServiceItemMovementForm: TParentForm},
   Report_UnitBalance in '..\..\FormsMerlin\Report\Report_UnitBalance.pas' {Report_UnitBalanceForm: TParentForm},
   ServiceItemUpdate in '..\..\FormsMerlin\Document\ServiceItemUpdate.pas' {ServiceItemUpdateForm: TParentForm},
-  ServiceItemEditMI in '..\..\FormsMerlin\Document\ServiceItemEditMI.pas' {ServiceItemEditMIForm: TParentForm};
+  ServiceItemEditMI in '..\..\FormsMerlin\Document\ServiceItemEditMI.pas' {ServiceItemEditMIForm: TParentForm},
+  Movement_PeriodDialogCash in '..\..\FormsMerlin\Document\Movement_PeriodDialogCash.pas' {Movement_PeriodDialogCashForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

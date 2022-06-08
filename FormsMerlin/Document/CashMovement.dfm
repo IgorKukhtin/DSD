@@ -235,6 +235,21 @@
         Component = edKindName_text
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CashId'
+        Value = Null
+        Component = GuidesCash
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CashName'
+        Value = Null
+        Component = GuidesCash
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 256
     Top = 140
@@ -390,6 +405,14 @@
         Value = Null
         Component = FormParams
         ComponentItem = 'InfoMoneyId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCashId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CashId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
