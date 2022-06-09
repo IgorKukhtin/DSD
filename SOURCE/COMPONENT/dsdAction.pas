@@ -1477,6 +1477,7 @@ type
     FZQuery: TZQuery;
     FHideError: Boolean;
     FParamBollToInt: Boolean;
+    FShowGaugeForm: Boolean;
   protected
     function LocalExecute: Boolean; override;
   public
@@ -1503,6 +1504,7 @@ type
     property MultiExecuteCount: Integer read FMultiExecuteCount write FMultiExecuteCount default 1000;
     property HideError: Boolean read FHideError write FHideError default False;
     property ParamBollToInt: Boolean read FParamBollToInt write FParamBollToInt default False;
+    property ShowGaugeForm: Boolean read FShowGaugeForm write FShowGaugeForm default True;
     property Caption;
     property Hint;
     property ImageIndex;
@@ -4757,22 +4759,31 @@ var FormClass: TFormClass; Form: TForm;
 begin
   Result := False;
 
-  if FFormName = '' then
+  if FormName = '' then
   begin
     raise Exception.Create('Не задано имя формы.')
   end;
 
-  FormClass := TFormClass(GetClass(FFormName));
+  FormClass := TFormClass(GetClass(FormName));
 
   if not Assigned(FormClass) then
   begin
-    raise Exception.Create('Класс ' + FFormName + ' не найден.')
+    raise Exception.Create('Класс ' + FormName + ' не найден.')
   end;
 
   Form := FormClass.Create(Application);
 
   if Form is TParentForm then
     if not TParentForm(Form).Execute(Self, FParams) then
+  begin
+    Form.Free;
+    Exit;
+  end;
+
+  if Form is TParentForm then
+    if Assigned(TParentForm(Form).AddOnFormData.Params) then
+      if Assigned(TParentForm(Form).AddOnFormData.Params.ParamByName('isShow')) then
+        if not TParentForm(Form).AddOnFormData.Params.ParamByName('isShow').Value then
   begin
     Form.Free;
     Exit;
@@ -6907,6 +6918,7 @@ begin
   FMultiExecuteCount := 1000;
   FHideError := False;
   FParamBollToInt := False;
+  FShowGaugeForm := True;
 end;
 
 destructor TdsdForeignData.Destroy;
@@ -7039,13 +7051,13 @@ begin
 
           with TGaugeFactory.GetGauge(Caption, 0, FZQuery.RecordCount) do
           begin
-            Start;
+            if FShowGaugeForm then Start;
             try
               FZQuery.First;
               while not FZQuery.Eof do
               begin
 
-                IncProgress(1);
+                if FShowGaugeForm then IncProgress(1);
 
                 FDataSet.Append;
                 for I := 0 to FZQuery.FieldCount - 1 do
@@ -7068,13 +7080,13 @@ begin
         try
           with TGaugeFactory.GetGauge(Caption, 0, FDataSet.RecordCount) do
           begin
-            Start;
+            if FShowGaugeForm then Start;
             try
               FDataSet.First;
               while not FDataSet.Eof do
               begin
 
-                IncProgress(1);
+                if FShowGaugeForm then IncProgress(1);
 
                 if FZQuery.Locate(IdFieldFrom, FDataSet.FieldByName(IdFieldTo).Value, []) then
                 begin
@@ -7119,12 +7131,12 @@ begin
         try
           with TGaugeFactory.GetGauge(Caption, 0, FZQuery.RecordCount) do
           begin
-            Start;
+            if FShowGaugeForm then Start;
             try
               FZQuery.First;
               while not FZQuery.Eof do
               begin
-                IncProgress(1);
+                if FShowGaugeForm then IncProgress(1);
 
                 JSONObject := TJSONObject.Create;
                 if FPairParams.Count > 0 then
@@ -7166,13 +7178,13 @@ begin
         try
           with TGaugeFactory.GetGauge(Caption, 0, FZQuery.RecordCount) do
           begin
-            Start;
+            if FShowGaugeForm then Start;
             try
               nCount := 0;
               FZQuery.First;
               while not FZQuery.Eof do
               begin
-                IncProgress(1);
+                if FShowGaugeForm then IncProgress(1);
                 Inc(nCount);
 
                 JSONObject := TJSONObject.Create;

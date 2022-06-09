@@ -1,76 +1,45 @@
 -- Function: gpInsertUpdate_Movement_PUSH()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_PUSH_Message (TBlob, TVarChar, TVarChar, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PUSH (Integer, TVarChar, TDateTime, TDateTime, Integer, Boolean, TBlob, TVarChar, Boolean, Boolean, Integer, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Movement_PUSH_Message(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PUSH(
+ INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
+    IN inInvNumber             TVarChar   , -- Номер документа
+    IN inOperDate              TDateTime  , -- Дата документа
+    IN inDateEndPUSH           TDateTime  ,
+    IN inReplays               Integer    , -- Количество повторов  
+    IN inDaily                 Boolean    , -- Повт. ежедневно
     IN inMessage               TBlob      , -- Сообщение
     IN inFunction              TVarChar   , -- Функция
-    IN inForm                  TVarChar   , -- Форма
-    IN inMovementID            Integer    , -- Movement PUSH
-    IN inUnitID                Integer    , -- Подразделение
-    IN inUserId                Integer      -- Сотрудник
+    IN inisPoll                Boolean    , -- Опрос
+    IN inisPharmacist          Boolean    , -- Только фармацевтам
+    IN inRetailId              Integer    , -- Только для торговая сети 
+    IN inForm                  TVarChar   , -- Открывать форму если функция возвращает не пусто
+    IN inSession               TVarChar     -- сессия пользователя
 )
-RETURNS TABLE (Message TBlob
-             , FormName TVarChar
-             , Button TVarChar
-             , Params TVarChar
-             , TypeParams TVarChar
-             , ValueParams TVarChar
-             , isFormOpen boolean)
-AS
+RETURNS Integer AS
 $BODY$
-   DECLARE text_var1   Text;
-   DECLARE vbQueryText Text;
-   DECLARE vbRec Record;
+   DECLARE vbUserId Integer;
 BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_UnnamedEnterprises());
+    vbUserId := inSession;
 
-  if COALESCE(inFunction, '') <> '' AND  COALESCE(inForm, '') <> ''
-  THEN
-    BEGIN
-       FOR vbRec IN EXECUTE 'SELECT Count(*) AS CountRecord FROM '||inFunction||'('''||inUserId::TVarChar||''')'
-       LOOP
-         IF vbRec.CountRecord > 0
-         THEN
-            RETURN QUERY
-            SELECT ''::TBlob,
-                   inForm,
-                   ''::TVarChar,
-                   ''::TVarChar,
-                   ''::TVarChar,
-                   ''::TVarChar,
-                   True;
-         END IF;
-       END LOOP;
-    EXCEPTION
-       WHEN others THEN
-         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
-       PERFORM lpLog_Run_Schedule_Function('gpGet_Movement_PUSH_Message', True, text_var1::TVarChar, inUserId);
-    END;
-  ELSEif COALESCE(inFunction, '') <> ''
-  THEN
-    BEGIN
-       FOR vbRec IN EXECUTE 'SELECT * FROM '||inFunction||'('||COALESCE(inMovementID, 0)::TVarChar||', '||inUnitID::TVarChar||', '||inUserId::TVarChar||')'
-       LOOP
-         RETURN QUERY
-         SELECT vbRec.Message, vbRec.FormName, vbRec.Button, vbRec.Params, vbRec.TypeParams, vbRec.ValueParams, False AS isFormOpen;
-       END LOOP;
-    EXCEPTION
-       WHEN others THEN
-         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
-       PERFORM lpLog_Run_Schedule_Function('gpGet_Movement_PUSH_Message', True, text_var1::TVarChar, inUserId);
-    END;
-
-  ELSE
-    RETURN QUERY
-    SELECT  inMessage,
-           ''::TVarChar,
-           ''::TVarChar,
-           ''::TVarChar,
-           ''::TVarChar,
-           ''::TVarChar,
-           False;
-  END IF;
-
+    -- сохранили <Документ>
+    ioId := lpInsertUpdate_Movement_PUSH (ioId              := ioId
+                                        , inInvNumber       := inInvNumber
+                                        , inOperDate        := inOperDate
+                                        , inDateEndPUSH     := inDateEndPUSH
+                                        , inReplays         := inReplays 
+                                        , inDaily           := inDaily 
+                                        , inMessage         := inMessage
+                                        , inFunction        := inFunction
+                                        , inisPoll          := inisPoll
+                                        , inisPharmacist    := inisPharmacist
+                                        , inRetailId        := inRetailId
+                                        , inForm            := inForm
+                                        , inUserId          := vbUserId
+                                        );
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -78,8 +47,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
- 19.02.20         *
+ 05.03.20        *
+ 19.02.20        *
+ 11.05.19        *
+ 13.03.19        *
+ 10.03.19        *
 */
-
--- SELECT * FROM Log_Run_Schedule_Function
--- SELECT * FROM gpGet_Movement_PUSH_Message( '', 'gpSelect_SendVIP_PUSH_Cash', '', 18971753 , 183292 , 3);

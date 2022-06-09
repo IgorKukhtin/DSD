@@ -1206,7 +1206,9 @@ uses
   GoodsSPRegistry_1303 in '..\..\FormsFarmacy\Document\GoodsSPRegistry_1303.pas' {GoodsSPRegistry_1303Form: TParentForm},
   MCRequestAllDialog in '..\..\FormsFarmacy\Guides\MCRequestAllDialog.pas' {MCRequestAllDialogForm: TParentForm},
   MCRequestShowPUSH in '..\..\FormsFarmacy\Guides\MCRequestShowPUSH.pas' {MCRequestShowPUSHForm: TParentForm},
-  MCRequestInfoPUSH in '..\..\FormsFarmacy\Guides\MCRequestInfoPUSH.pas' {MCRequestInfoPUSHForm: TParentForm};
+  MCRequestInfoPUSH in '..\..\FormsFarmacy\Guides\MCRequestInfoPUSH.pas' {MCRequestInfoPUSHForm: TParentForm},
+  GoodsCategoryCopy in '..\..\FormsFarmacy\Guides\GoodsCategoryCopy.pas' {GoodsCategoryCopyForm: TParentForm},
+  ExpressVIPConfirm in '..\..\FormsFarmacy\Document\ExpressVIPConfirm.pas' {ExpressVIPConfirmForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

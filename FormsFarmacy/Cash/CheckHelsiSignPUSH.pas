@@ -55,18 +55,17 @@ type
     actGridToExcel: TdsdGridToExcel;
     dxBarButton6: TdxBarButton;
     spGet_MedicalProgram: TdsdStoredProc;
+    FormParams: TdsdFormParams;
     procedure ParentFormCreate(Sender: TObject);
     procedure ParentFormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure actLoadStateExecute(Sender: TObject);
     procedure actLoadStateCurrExecute(Sender: TObject);
     procedure actSignExecute(Sender: TObject);
-    function GetIsShow : boolean;
     procedure ClientDataSetAfterOpen(DataSet: TDataSet);
   private
     { Private declarations }
     FIniError : Boolean;
   public
-    property isShow : Boolean read GetIsShow;
   end;
 
 implementation
@@ -125,7 +124,7 @@ begin
   ClientDataSet.FieldByName('ProgramIdSP').AsString := cProgramIdSP;
   ClientDataSet.FieldByName('State').AsString := cState;
   ClientDataSet.FieldByName('Color_calc').AsInteger := nColor;
-  ClientDataSet.FieldByName('isState').AsBoolean := nColor <> clWindow;
+  ClientDataSet.FieldByName('isState').AsBoolean := nColor = clWindow;
   ClientDataSet.Post;
 end;
 
@@ -151,6 +150,8 @@ begin
     if ClientDataSet.FieldByName('isState').AsBoolean then ClientDataSet.Delete
     else ClientDataSet.Next;
   end;
+
+  FormParams.ParamByName('isShow').Value := ClientDataSet.RecordCount > 0;
 end;
 
 procedure TCheckHelsiSignPUSHForm.actSignExecute(Sender: TObject);
@@ -213,9 +214,8 @@ begin
   actRefresh.Execute;
 end;
 
-function TCheckHelsiSignPUSHForm.GetIsShow : Boolean;
-begin
-  Result := ClientDataSet.RecordCount > 0;
-end;
+initialization
+  RegisterClass(TCheckHelsiSignPUSHForm);
+
 
 End.

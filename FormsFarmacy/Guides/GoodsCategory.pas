@@ -55,6 +55,8 @@ type
     actSelect_GoodsCategoryCopy: TdsdExecStoredProc;
     actChoiceUnit: TOpenChoiceForm;
     bbSelect_GoodsCategoryCopy: TdxBarButton;
+    actGoodsCategoryCopy: TdsdOpenForm;
+    bbGoodsCategoryCopy: TdxBarButton;
   private
     { Private declarations }
   public

@@ -709,6 +709,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsCategoryForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsCategoryEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsCategoryEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsCategoryCopyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsCategoryCopyForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
@@ -2960,14 +2963,17 @@ end;
 
 procedure TLoadFormTest.LoadCheckSiteFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckSiteForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TExpressVIPConfirmForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TExpressVIPConfirmForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckSiteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckSiteForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckSite_SearchForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckSite_SearchForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckDelaySiteForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TCheckDelaySiteForm');
+  TdsdFormStorageFactory.GetStorage.Load('TCheckDelaySiteForm');}
 end;
 
 procedure TLoadFormTest.LoadOverFormTest;
