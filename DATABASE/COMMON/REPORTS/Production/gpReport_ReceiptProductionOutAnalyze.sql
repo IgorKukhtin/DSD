@@ -143,9 +143,9 @@ BEGIN
 
      -- Расходы
      INSERT INTO tmpResult_out (ReceiptId, PartionGoodsDate_in, GoodsId_in, GoodsKindId_in, GoodsKindId_complete_in, PartionGoodsDate, GoodsId, GoodsKindId, GoodsKindId_complete, OperCountPlan, OperSummPlan1, OperSummPlan2, OperSummPlan3, PricePlan1, PricePlan2, PricePlan3, OperCount, OperSumm, CuterCount, OperCount_ReWork)
-       WITH tmpPrice1 AS (SELECT * FROM ObjectHistory_PriceListItem_View AS PriceList WHERE PriceList.PriceListId = inPriceListId_1 AND inEndDate >= PriceList.StartDate AND inEndDate < PriceList.EndDate)
-          , tmpPrice2 AS (SELECT * FROM ObjectHistory_PriceListItem_View AS PriceList WHERE PriceList.PriceListId = inPriceListId_2 AND inEndDate >= PriceList.StartDate AND inEndDate < PriceList.EndDate)
-          , tmpPrice3 AS (SELECT * FROM ObjectHistory_PriceListItem_View AS PriceList WHERE PriceList.PriceListId = inPriceListId_3 AND inEndDate >= PriceList.StartDate AND inEndDate < PriceList.EndDate)
+       WITH tmpPrice1 AS (SELECT PriceList.GoodsId, MAX (PriceList.Price) AS Price FROM ObjectHistory_PriceListItem_View AS PriceList WHERE PriceList.PriceListId = inPriceListId_1 AND inEndDate >= PriceList.StartDate AND inEndDate < PriceList.EndDate GROUP BY PriceList.GoodsId)
+          , tmpPrice2 AS (SELECT PriceList.GoodsId, MAX (PriceList.Price) AS Price FROM ObjectHistory_PriceListItem_View AS PriceList WHERE PriceList.PriceListId = inPriceListId_2 AND inEndDate >= PriceList.StartDate AND inEndDate < PriceList.EndDate GROUP BY PriceList.GoodsId)
+          , tmpPrice3 AS (SELECT PriceList.GoodsId, MAX (PriceList.Price) AS Price FROM ObjectHistory_PriceListItem_View AS PriceList WHERE PriceList.PriceListId = inPriceListId_3 AND inEndDate >= PriceList.StartDate AND inEndDate < PriceList.EndDate GROUP BY PriceList.GoodsId)
           , -- Расходы - Факт
             tmpMIContainer AS
            (SELECT COALESCE (MIReceipt.ObjectId, 0)                AS ReceiptId
