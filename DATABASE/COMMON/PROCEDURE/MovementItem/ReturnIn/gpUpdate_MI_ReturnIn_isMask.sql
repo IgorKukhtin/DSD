@@ -54,7 +54,7 @@ BEGIN
              , MIFloat_Price.ValueData                       AS Price
              , MIFloat_CountForPrice.ValueData               AS CountForPrice
              , MIFloat_HeadCount.ValueData                   AS HeadCount
-             , MIString_PartionGoods.ValueData               AS PartionGoods
+             , COALESCE (MIString_PartionGoods.ValueData, MIString_PartionGoodsCalc.ValueData, '') AS PartionGoods
 
        FROM MovementItem 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
@@ -80,6 +80,10 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                                        AND MIString_PartionGoods.ValueData <> ''
+            LEFT JOIN MovementItemString AS MIString_PartionGoodsCalc
+                                         ON MIString_PartionGoodsCalc.MovementItemId =  MovementItem.Id
+                                        AND MIString_PartionGoodsCalc.DescId = zc_MIString_PartionGoodsCalc()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
