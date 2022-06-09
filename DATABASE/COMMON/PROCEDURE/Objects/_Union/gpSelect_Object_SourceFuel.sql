@@ -242,6 +242,41 @@ BEGIN
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_TicketFuel.DescId
 
      WHERE Object_TicketFuel.DescId = zc_Object_TicketFuel()
+
+
+    UNION ALL
+     SELECT Object_Unit.Id           AS Id
+          , Object_Unit.ObjectCode   AS Code
+          , Object_Unit.ValueData    AS Name
+
+          , 0 :: Integer   AS JuridicalCode
+          , '' :: TVarChar AS JuridicalName
+
+
+          , 0 :: Integer   AS PaidKindId
+          , '' :: TVarChar AS PaidKindName
+
+          , 0 :: Integer   AS ContractId
+          , '' :: TVarChar AS InvNumber
+          , 0 :: TFloat    AS ChangePercent
+          , 0 :: TFloat    AS ChangePrice
+
+          , 0 :: Integer   AS GoodsId
+          , 0 :: Integer   AS GoodsCode
+          , '' :: TVarChar AS GoodsName
+          , '' :: TVarChar AS FuelName
+          , COALESCE (inToId,0) :: Integer  AS PersonalDriverId
+          , ''                  :: TVarChar AS PersonalDriverName
+          , vbToName            :: TVarChar AS PersonalDriverName_inf
+
+          , ObjectDesc.ItemName
+
+          , Object_Unit.isErased   AS isErased
+
+     FROM Object AS Object_Unit
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Unit.DescId
+
+     WHERE Object_Unit.DescId = zc_Object_Unit()
     ;
 
 
