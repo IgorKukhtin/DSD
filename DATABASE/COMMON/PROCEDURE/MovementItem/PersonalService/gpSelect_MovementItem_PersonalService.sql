@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalService(
 RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , INN TVarChar, Card TVarChar, CardSecond TVarChar
              , CardIBAN TVarChar, CardIBANSecond TVarChar
-             , isMain Boolean, isOfficial Boolean, DateOut TDateTime
+             , isMain Boolean, isOfficial Boolean, DateOut TDateTime, DateIn TDateTime
              , PersonalCode_to Integer, PersonalName_to TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , PositionId Integer, PositionName TVarChar
@@ -58,6 +58,7 @@ $BODY$
    DECLARE vbInfoMoneyName TVarChar;
    DECLARE vbInfoMoneyName_all TVarChar;
    DECLARE vbIsSummCardRecalc Boolean;
+   DECLARE vbServiceDate TDateTime;
    DECLARE vbServiceDateId         Integer;
    DECLARE vbPersonalServiceListId Integer;
 BEGIN
@@ -82,7 +83,8 @@ BEGIN
                                  );
 
      -- из шапки док.
-     vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MIDate_ServiceDate()));
+     vbServiceDate  := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MIDate_ServiceDate());
+     vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= vbServiceDate);
      vbPersonalServiceListId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList());
 
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE ('tmpPersonalServiceList_check'))
@@ -332,7 +334,8 @@ BEGIN
             , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial
               -- дата увольнения
             , CASE WHEN COALESCE (ObjectDate_Personal_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE ObjectDate_Personal_DateOut.ValueData END     :: TDateTime AS DateOut
-
+             --дата приема на работу - только если мес начислений соотв месяцу приема 
+            , CASE WHEN DATE_TRUNC ('Month', ObjectDate_DateIn.ValueData) = DATE_TRUNC ('Month', vbServiceDate) THEN ObjectDate_DateIn.ValueData ELSE NULL END ::TDateTime AS DateIn 
             , Object_PersonalTo.ObjectCode            AS PersonalCode_to
             , Object_PersonalTo.ValueData             AS PersonalName_to
 
@@ -627,7 +630,11 @@ BEGIN
             LEFT JOIN ObjectDate AS ObjectDate_Personal_DateOut
                                  ON ObjectDate_Personal_DateOut.ObjectId = tmpAll.PersonalId
                                 AND ObjectDate_Personal_DateOut.DescId = zc_ObjectDate_Personal_Out()
- 
+
+            LEFT JOIN ObjectDate AS ObjectDate_DateIn
+                                 ON ObjectDate_DateIn.ObjectId = tmpAll.PersonalId
+                                AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()
+
             LEFT JOIN ObjectString AS ObjectString_Member_INN
                                    ON ObjectString_Member_INN.ObjectId = tmpAll.MemberId_Personal
                                   AND ObjectString_Member_INN.DescId = zc_ObjectString_Member_INN()
@@ -677,6 +684,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.06.22         *
  13.03.22         *
  17.11.21         *
  04.06.20         * DayAudit
