@@ -56,7 +56,7 @@ BEGIN
         SELECT COALESCE (tmp.MovementItemId, 0)              AS MovementItemId
              , Object_Goods.Id                               AS GoodsId
              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-             , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS AmountPartner
+             , COALESCE (MovementItem.Amount, 0)             AS AmountPartner
              , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()) AS PartionGoodsDate
              , COALESCE (MIString_PartionGoods.ValueData, MIString_PartionGoodsCalc.ValueData, '') AS PartionGoods
        FROM MovementItem
@@ -91,7 +91,7 @@ BEGIN
         AND MovementItem.isErased   = FALSE;
 
 
-     --cохраняем
+     -- cохраняем
      PERFORM lpInsertUpdate_MovementItem_Send (ioId                  := tmpMI.MovementItemId
                                              , inMovementId          := inMovementId
                                              , inGoodsId             := tmpMI.GoodsId
