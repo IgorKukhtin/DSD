@@ -211,7 +211,8 @@ BEGIN
             , Object_Partner.ValueData            AS PartnerName
             , Object_Unit.ValueData               AS UnitName
             , Object_PartionGoods.OperDate        AS OperDate
-            , Object_PartionGoods.GoodsId         AS GoodsId
+          --, Object_PartionGoods.GoodsId         AS GoodsId
+            , Object_Goods.Id                     AS GoodsId
             , Object_Goods.ObjectCode             AS GoodsCode
             , Object_Goods.ValueData              AS GoodsName
             , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull

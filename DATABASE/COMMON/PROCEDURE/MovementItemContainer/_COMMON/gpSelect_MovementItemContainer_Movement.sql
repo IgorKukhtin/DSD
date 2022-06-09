@@ -627,7 +627,7 @@ BEGIN
                 , ContainerLinkObject_Business.ObjectId   AS BusinessId
                 , ContainerLinkObject_ProfitLoss.ObjectId AS ProfitLossId
                 , ContainerLinkObject_PaidKind.ObjectId   AS PaidKindId
-                , COALESCE (ContainerLO_Branch.ObjectId,  COALESCE (MILinkObject_Branch.ObjectId, MovementLinkObject_Branch.ObjectId)) AS BranchId
+                , CASE WHEN vbUserId = 5 THEN ContainerLO_Branch.ObjectId ELSE COALESCE (ContainerLO_Branch.ObjectId,  COALESCE (MILinkObject_Branch.ObjectId, MovementLinkObject_Branch.ObjectId)) END AS BranchId
 
 
                 , ContainerLinkObject_Currency.ObjectId AS CurrencyId
