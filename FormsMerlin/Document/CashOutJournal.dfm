@@ -1,7 +1,7 @@
-object CashJournalForm: TCashJournalForm
+object CashOutJournalForm: TCashOutJournalForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072' '#1056#1072#1089#1093#1086#1076'>'
   ClientHeight = 381
   ClientWidth = 869
   Color = clBtnFace

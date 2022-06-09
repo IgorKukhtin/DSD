@@ -436,10 +436,6 @@
 				<Form>ServiceMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsMerlin\Document\CashJournal.pas">
-				<Form>CashJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsMerlin\Document\CashMovement.pas">
 				<Form>CashMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -538,6 +534,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsMerlin\Document\Movement_PeriodDialogCash.pas">
 				<Form>Movement_PeriodDialogCashForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Document\CashInJournal.pas">
+				<Form>CashInJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsMerlin\Document\CashOutJournal.pas">
+				<Form>CashOutJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
