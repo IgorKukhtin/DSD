@@ -1699,6 +1699,7 @@ end if;
                    LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container_Summ.ObjectId
               WHERE View_Account.AccountDirectionId <> zc_Enum_AccountDirection_60200() -- Прибыль будущих периодов + на филиалах
                 AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
              /*UNION ALL
               -- это расчетные остатки (их надо вычесть) - !!!для филиала!!!
               SELECT _tmpRemainsCount.MovementItemId
@@ -1732,6 +1733,7 @@ end if;
                                           ON lfSelect_PriceListItem.GoodsId     = _tmpItem.GoodsId
                                          AND lfSelect_PriceListItem.GoodsKindId IS NULL
               WHERE _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
              ) AS _tmp
         GROUP BY _tmp.MovementItemId;
 
