@@ -113,7 +113,17 @@ inherited GoodsSP_1303Form: TGoodsSP_1303Form
             Options.Editing = False
             Width = 77
           end
-          object PriceSaleRegistry: TcxGridDBColumn [8]
+          object PriceOOC: TcxGridDBColumn [8]
+            Caption = #1052#1072#1082#1089'. '#1087#1088#1080#1093#1086#1076' '#1094#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'  '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'PriceOOC'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 86
+          end
+          object PriceSaleRegistry: TcxGridDBColumn [9]
             Caption = #1056#1086#1079#1085'. '#1094#1077#1085#1072' '#1080#1079' '#1088#1077#1077#1089#1090#1088#1072
             DataBinding.FieldName = 'PriceSaleRegistry'
             PropertiesClassName = 'TcxCurrencyEditProperties'

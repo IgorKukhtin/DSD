@@ -44,6 +44,8 @@ BEGIN
      SELECT 10, (CURRENT_DATE + INTERVAL '18 HOUR')::TDateTime, '568330367,300408824'::TVarChar, 'SELECT * FROM gpReport_TelegramBot_CheckRed (''3'')'::TVarChar
      UNION ALL
      SELECT 11, (CURRENT_DATE + INTERVAL '21 HOUR')::TDateTime, '568330367,300408824'::TVarChar, 'SELECT * FROM gpReport_TelegramBot_CheckRed (''3'')'::TVarChar
+     UNION ALL
+     SELECT 12, (CURRENT_DATE + INTERVAL '8 HOUR')::TDateTime, '568330367,300408824'::TVarChar, 'SELECT * FROM gpReport_TelegramBot_PublishedSite (''3'')'::TVarChar
 
 /*     UNION ALL
      SELECT 100, CURRENT_DATE::TDateTime, ''::TVarChar, 'SELECT * FROM gpSelect_TelegramBot_TestMessage (:OperDate, ''3'')'::TVarChar*/

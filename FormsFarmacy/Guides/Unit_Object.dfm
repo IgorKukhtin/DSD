@@ -1073,6 +1073,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 92
           end
+          object isExpressVIPConfirm: TcxGridDBColumn
+            Caption = #1069#1082#1089#1087#1088#1077#1089#1089' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1042#1048#1055
+            DataBinding.FieldName = 'isExpressVIPConfirm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
+          end
         end
       end
     end
@@ -4115,6 +4123,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       Caption = 'actUpdate_SupplementAdd30Cash'
     end
+    object mactUpdate_ExpressVIPConfirm: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_ExpressVIPConfirm
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1069#1082#1089#1087#1088#1077#1089#1089' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1042#1048#1055'"?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1069#1082#1089#1087#1088#1077#1089#1089' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1042#1048#1055'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1069#1082#1089#1087#1088#1077#1089#1089' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1042#1048#1055'"'
+      ImageIndex = 79
+    end
+    object actUpdate_ExpressVIPConfirm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_ExpressVIPConfirm
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ExpressVIPConfirm
+        end>
+      Caption = 'actUpdate_SupplementAdd30Cash'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -4886,6 +4919,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton35'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton11'
         end>
     end
@@ -5037,6 +5074,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton34: TdxBarButton
       Action = mactUpdate_SupplementAdd30Cash
+      Category = 0
+    end
+    object dxBarButton35: TdxBarButton
+      Action = mactUpdate_ExpressVIPConfirm
       Category = 0
     end
   end
@@ -8203,5 +8244,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 442
     Top = 528
+  end
+  object spUpdate_ExpressVIPConfirm: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_ExpressVIPConfirm'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisExpressVIPConfirm'
+        Value = True
+        Component = MasterCDS
+        ComponentItem = 'isExpressVIPConfirm'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 912
+    Top = 515
   end
 end

@@ -243,6 +243,10 @@ type
     macPrintStikerOne: TMultiAction;
     cbPrice: TcxCheckBox;
     Panel1: TPanel;
+    actAdd_limit: TdsdInsertUpdateAction;
+    mactAdd_limit: TMultiAction;
+    actRefreshMI: TdsdDataSetRefresh;
+    bbAdd_limit: TdxBarButton;
   private
   public
   end;

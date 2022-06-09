@@ -16,6 +16,7 @@ RETURNS TABLE (Id            Integer
              , MorionCode    Integer
              , NDS           TFloat
              , PriceOptSP    TFloat
+             , PriceOOC      TFloat
              , PriceSale     TFloat
              , PriceOptSPRegistry TFloat
              , PriceSaleRegistry TFloat
@@ -218,6 +219,8 @@ BEGIN
              , ObjectFloat_NDSKind_NDS.ValueData                     AS NDS
 
              , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
+             , ROUND(MIFloat_PriceOptSP.ValueData * 
+               (100.0 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0)) / 100.0 * 1.1, 2)::TFloat AS PriceOOC
              , MovementItem.Amount                                   AS PriceSale
              , tmpGoodsSPRegistry_1303.PriceOptSP                    AS PriceOptSPRegistry 
              , tmpGoodsSPRegistry_1303.PriceSale                     AS PriceSaleRegistry 
@@ -256,5 +259,4 @@ $BODY$
 --реяр
 -- 
 
-select * from gpSelect_MovementItem_GoodsSP_1303(inMovementId := 27423073 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
-
+select * from gpSelect_MovementItem_GoodsSP_1303(inMovementId := 27423073 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

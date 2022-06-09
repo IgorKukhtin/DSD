@@ -2,12 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Cash (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Cash (TDateTime, TDateTime, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cash (TDateTime, TDateTime, Boolean, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Cash(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
     IN inIsErased          Boolean   , --
-    IN inKindName          TVarChar  , -- zc_Enum_InfoMoney_In or zc_Enum_InfoMoney_Out
+    IN inKindName          TVarChar  , -- zc_Enum_InfoMoney_In or zc_Enum_InfoMoney_Out 
+    IN inCashId            Integer   ,
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_corr Integer
@@ -70,6 +72,7 @@ BEGIN
                                                   AND ((MovementItem.Amount < 0 AND inKindName = 'zc_Enum_InfoMoney_Out')
                                                     OR (MovementItem.Amount > 0 AND inKindName = 'zc_Enum_InfoMoney_In')
                                                       )
+                                                  AND (MovementItem.ObjectId = inCashId OR inCashId = 0)
                      )
           -- 
         , tmpMI_Sign AS (SELECT tmp.MovementId

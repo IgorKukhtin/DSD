@@ -108,6 +108,9 @@ type
     bbPrint1: TdxBarButton;
     UnitGroupNameFull: TcxGridDBColumn;
     InvNumber_corr: TcxGridDBColumn;
+    cxLabel14: TcxLabel;
+    ceCash: TcxButtonEdit;
+    GuidesCash: TdsdGuides;
   private
   public
   end;

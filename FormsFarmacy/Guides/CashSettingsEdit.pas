@@ -87,6 +87,8 @@ type
     ceDeySupplOutSUN2: TcxCurrencyEdit;
     cxLabel26: TcxLabel;
     cxLabel27: TcxLabel;
+    ceExpressVIPConfirm: TcxCurrencyEdit;
+    cxLabel28: TcxLabel;
   private
     { Private declarations }
   public

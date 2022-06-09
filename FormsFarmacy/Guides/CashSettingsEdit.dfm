@@ -456,6 +456,19 @@ object CashSettingsEditForm: TCashSettingsEditForm
     Top = 490
     Caption = #1055#1088#1086#1076#1072#1078#1080' '#1076#1085#1077#1081' '#1076#1083#1103' '#1072#1087#1090#1077#1082' '#1086#1090#1082#1091#1076#1072' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1057#1059#1053' 2'
   end
+  object ceExpressVIPConfirm: TcxCurrencyEdit
+    Left = 404
+    Top = 531
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 62
+    Width = 121
+  end
+  object cxLabel28: TcxLabel
+    Left = 20
+    Top = 532
+    Caption = #1063#1077#1082#1086#1074' '#1076#1083#1103' '#1101#1082#1089#1087#1088#1077#1089#1089' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1042#1048#1055
+  end
   object ActionList: TActionList
     Left = 344
     Top = 76
@@ -748,6 +761,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Component = ceDeySupplInSUN2
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inExpressVIPConfirm'
+        Value = Null
+        Component = ceExpressVIPConfirm
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -986,6 +1006,12 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Name = 'DeySupplInSUN2'
         Value = Null
         Component = ceDeySupplInSUN2
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ExpressVIPConfirm'
+        Value = Null
+        Component = ceExpressVIPConfirm
         MultiSelectSeparator = ','
       end>
     PackSize = 1

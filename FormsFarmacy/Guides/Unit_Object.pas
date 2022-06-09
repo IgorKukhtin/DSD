@@ -472,6 +472,11 @@ type
     mactUpdate_SupplementAdd30Cash: TMultiAction;
     actUpdate_SupplementAdd30Cash: TdsdExecStoredProc;
     dxBarButton34: TdxBarButton;
+    isExpressVIPConfirm: TcxGridDBColumn;
+    spUpdate_ExpressVIPConfirm: TdsdStoredProc;
+    mactUpdate_ExpressVIPConfirm: TMultiAction;
+    actUpdate_ExpressVIPConfirm: TdsdExecStoredProc;
+    dxBarButton35: TdxBarButton;
   private
     { Private declarations }
   public

@@ -46,6 +46,7 @@ RETURNS TABLE (Id            Integer
              , CurrencyName TVarChar
 
              , NDS           TFloat
+             , PriceOOC      TFloat
              , PriceSale     TFloat
              , PriceSaleOOC  TFloat
              
@@ -213,6 +214,8 @@ BEGIN
 
              , COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0)::TFloat       AS NDS
              , ROUND(MovementItem.PriceOptSP  *  1.1 * 1.1 * (1.0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2)::TFloat AS PriceSale
+             , ROUND(MovementItem.PriceOptSP * (1.0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) * 1.1, 2)::TFloat AS PriceOOC
+
              , MIGoodsSP_1303.PriceSale                                     AS PriceSaleOOC
 
              , CASE
@@ -450,6 +453,8 @@ BEGIN
 
              , ObjectFloat_NDSKind_NDS.ValueData                    AS NDS
              , ROUND(MovementItem.PriceOptSP  *  1.1 * 1.1 * (1.0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2)::TFloat AS PriceSale
+             , ROUND(MovementItem.PriceOptSP * (1.0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) * 1.1, 2)::TFloat AS PriceOOC
+
              , MIGoodsSP_1303.PriceSale                                     AS PriceSaleOOC
              
              , CASE
