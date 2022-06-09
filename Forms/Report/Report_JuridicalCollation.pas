@@ -112,6 +112,7 @@ type
     cbIsUpdate: TcxCheckBox;
     actOpenProtocol: TdsdOpenForm;
     bbOpenProtocol: TdxBarButton;
+    BranchName: TcxGridDBColumn;
   private
     { Private declarations }
   public

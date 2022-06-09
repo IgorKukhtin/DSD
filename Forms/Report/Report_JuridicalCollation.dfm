@@ -4,8 +4,9 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   ClientWidth = 1156
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -262
   ExplicitWidth = 1172
-  ExplicitHeight = 461
+  ExplicitHeight = 462
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -371,6 +372,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
+          end
+          object BranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object ContractStateKindCode: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
