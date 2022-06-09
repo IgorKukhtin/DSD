@@ -38,6 +38,8 @@ RETURNS TABLE (MovementSumm TFloat,
                ContractTagName TVarChar,
                ContractStateKindCode Integer, ContractComment TVarChar,
                PaidKindId Integer, PaidKindName TVarChar,
+               BranchId Integer, BranchName TVarChar,
+
                InfoMoneyGroupCode Integer,
                InfoMoneyGroupName TVarChar,
                InfoMoneyDestinationCode Integer,
@@ -87,6 +89,7 @@ BEGIN
                                 , Container_Currency.Id                   AS ContainerId_Currency
                                 , Container.ObjectId                      AS AccountId
                                 , CLO_InfoMoney.ObjectId                  AS InfoMoneyId
+                                , CLO_Branch.ObjectId                     AS BranchId
                                   -- "оригинал"
                                 , CLO_Contract.ObjectId                   AS ContractId
                                   -- подставили "главный", если есть
@@ -101,6 +104,9 @@ BEGIN
                            FROM ContainerLinkObject AS CLO_Juridical
                                 INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId
                                                     AND Container.DescId IN (zc_Container_Summ(), zc_Container_SummAsset())
+                                LEFT JOIN ContainerLinkObject AS CLO_Branch
+                                                              ON CLO_Branch.ContainerId = CLO_Juridical.ContainerId
+                                                             AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
                                 LEFT JOIN ContainerLinkObject AS CLO_Partner
                                                               ON CLO_Partner.ContainerId = CLO_Juridical.ContainerId
                                                              AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
@@ -136,6 +142,7 @@ BEGIN
                                SELECT tmpContainer.ContainerId,
                                       tmpContainer.AccountId,
                                       tmpContainer.InfoMoneyId,
+                                      tmpContainer.BranchId,
                                       tmpContainer.ContractId,
                                       tmpContainer.PaidKindId,
                                       tmpContainer.PartionMovementId,
@@ -151,7 +158,7 @@ BEGIN
                                     INNER JOIN MovementItemContainer AS MIContainer
                                                                      ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                                     AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                               GROUP BY tmpContainer.AccountId, tmpContainer.InfoMoneyId, tmpContainer.ContractId, tmpContainer.PaidKindId, tmpContainer.PartionMovementId, tmpContainer.CurrencyId
+                               GROUP BY tmpContainer.AccountId, tmpContainer.InfoMoneyId, tmpContainer.BranchId, tmpContainer.ContractId, tmpContainer.PaidKindId, tmpContainer.PartionMovementId, tmpContainer.CurrencyId
                                       , MIContainer.MovementId, MIContainer.OperDate
                                       , tmpContainer.ContainerId
                                       , tmpContainer.isNotBalance
@@ -162,6 +169,7 @@ BEGIN
                                SELECT tmpContainer.ContainerId,
                                       tmpContainer.AccountId,
                                       tmpContainer.InfoMoneyId,
+                                      tmpContainer.BranchId,
                                       tmpContainer.ContractId,
                                       tmpContainer.PaidKindId,
                                       tmpContainer.PartionMovementId,
@@ -178,7 +186,7 @@ BEGIN
                                                                      ON MIContainer.ContainerId = tmpContainer.ContainerId_Currency
                                                                     AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                WHERE tmpContainer.ContainerId_Currency > 0
-                               GROUP BY tmpContainer.AccountId, tmpContainer.InfoMoneyId, tmpContainer.ContractId, tmpContainer.PaidKindId, tmpContainer.PartionMovementId, tmpContainer.CurrencyId
+                               GROUP BY tmpContainer.AccountId, tmpContainer.InfoMoneyId, tmpContainer.BranchId, tmpContainer.ContractId, tmpContainer.PaidKindId, tmpContainer.PartionMovementId, tmpContainer.CurrencyId
                                       , MIContainer.MovementId, MIContainer.OperDate
                                       , tmpContainer.ContainerId
                                       , tmpContainer.isNotBalance
@@ -188,6 +196,7 @@ BEGIN
                          SELECT tmpContainer.ContainerId,
                                 tmpContainer.AccountId,
                                 tmpContainer.InfoMoneyId,
+                                tmpContainer.BranchId,
                                 -- объединили по "главному"
                                 tmpContainer.ContractId_Key AS ContractId,
                                 -- оставили "оригинал"
@@ -204,7 +213,7 @@ BEGIN
                               LEFT JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                              AND MIContainer.OperDate >= inStartDate
-                         GROUP BY tmpContainer.AccountId, tmpContainer.InfoMoneyId, tmpContainer.PaidKindId, tmpContainer.PartionMovementId, tmpContainer.CurrencyId
+                         GROUP BY tmpContainer.AccountId, tmpContainer.InfoMoneyId, tmpContainer.BranchId, tmpContainer.PaidKindId, tmpContainer.PartionMovementId, tmpContainer.CurrencyId
                                 , tmpContainer.ContainerId, tmpContainer.Amount
                                 , tmpContainer.ContractId_Key
                                 -- , tmpContainer.ContractId
@@ -214,6 +223,7 @@ BEGIN
                          SELECT tmpContainer.ContainerId,
                                 tmpContainer.AccountId,
                                 tmpContainer.InfoMoneyId,
+                                tmpContainer.BranchId,
                                 -- объединили по "главному"
                                 tmpContainer.ContractId_Key AS ContractId,
                                 -- оставили "оригинал"
@@ -231,7 +241,7 @@ BEGIN
                                                               ON MIContainer.ContainerId = tmpContainer.ContainerId_Currency
                                                              AND MIContainer.OperDate >= inStartDate
                          WHERE tmpContainer.ContainerId_Currency > 0
-                         GROUP BY tmpContainer.AccountId, tmpContainer.InfoMoneyId, tmpContainer.PaidKindId, tmpContainer.PartionMovementId, tmpContainer.CurrencyId
+                         GROUP BY tmpContainer.AccountId, tmpContainer.InfoMoneyId, tmpContainer.BranchId, tmpContainer.PaidKindId, tmpContainer.PartionMovementId, tmpContainer.CurrencyId
                                 , tmpContainer.ContainerId, tmpContainer.ContainerId_Currency, tmpContainer.Amount_Currency
                                 , tmpContainer.ContractId_Key
                                 -- , tmpContainer.ContractId
@@ -241,6 +251,7 @@ BEGIN
                                0 AS ContainerId,
                                tmpContainer.AccountId,
                                tmpContainer.InfoMoneyId,
+                               tmpContainer.BranchId,
                                -- оставили "оригинал"
                                tmpContainer.ContractId,
                                tmpContainer.PaidKindId,
@@ -261,6 +272,7 @@ BEGIN
                         FROM tmpContainer_All AS tmpContainer
                         GROUP BY tmpContainer.AccountId,
                                  tmpContainer.InfoMoneyId,
+                                 tmpContainer.BranchId,
                                  tmpContainer.ContractId,
                                  tmpContainer.PaidKindId,
                                  tmpContainer.PartionMovementId,
@@ -275,6 +287,7 @@ BEGIN
                                0 AS ContainerId,
                                tmpRemains.AccountId,
                                tmpRemains.InfoMoneyId,
+                               tmpRemains.BranchId,
                                -- "главноый" или "оригинал"
                                tmpRemains.ContractId,
                                tmpRemains.PaidKindId,
@@ -292,7 +305,7 @@ BEGIN
                                -1 AS OperationSort
                              , tmpRemains.isNotBalance
                         FROM tmpRemains
-                        GROUP BY tmpRemains.AccountId, tmpRemains.InfoMoneyId, tmpRemains.ContractId, tmpRemains.PaidKindId, tmpRemains.PartionMovementId, tmpRemains.CurrencyId
+                        GROUP BY tmpRemains.AccountId, tmpRemains.InfoMoneyId, tmpRemains.BranchId, tmpRemains.ContractId, tmpRemains.PaidKindId, tmpRemains.PartionMovementId, tmpRemains.CurrencyId
                                -- , tmpRemains.ContainerId
                                , tmpRemains.isNotBalance
                         HAVING SUM (tmpRemains.StartSumm) <> 0 OR SUM (tmpRemains.EndSumm) <> 0
@@ -351,6 +364,9 @@ BEGIN
 
           Object_PaidKind.Id AS PaidKindId,
           Object_PaidKind.ValueData AS PaidKindName,
+          Object_Branch.Id AS BranchId,
+          Object_Branch.ValueData AS BranchName,
+          
           Object_InfoMoney_View.InfoMoneyGroupCode,
           Object_InfoMoney_View.InfoMoneyGroupName,
           Object_InfoMoney_View.InfoMoneyDestinationCode,
@@ -447,6 +463,7 @@ BEGIN
                                                            ELSE COALESCE (MovementLinkObject_To.ObjectId, COALESCE (CASE WHEN Operation.MovementSumm > 0 THEN MILinkObject_MoneyPlace.ObjectId ELSE MovementItem_by.ObjectId END, MILinkObject_Unit.ObjectId))
                                                       END
       LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Operation.PaidKindId
+      LEFT JOIN Object AS Object_Branch   ON Object_Branch.Id   = Operation.BranchId
 
       -- путевой из реестра
       -- реестр
