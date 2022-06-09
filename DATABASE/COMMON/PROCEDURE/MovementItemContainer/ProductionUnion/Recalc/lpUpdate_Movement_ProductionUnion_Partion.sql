@@ -47,11 +47,13 @@ BEGIN
                                                            AND MovementLinkObject_From.ObjectId = inFromId
                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                      AND MovementItem.isErased = FALSE
-                                                     AND MovementItem.Amount <> 0
+                                                     AND (MovementItem.Amount <> 0 OR inFromId = 8020711) -- ЦЕХ колбаса + деликатесы (Ирна)
                               INNER JOIN ObjectLink ON ObjectLink.ObjectId = MovementItem.ObjectId
                                                    AND ObjectLink.DescId = zc_ObjectLink_Goods_InfoMoney()
                               INNER JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink.ChildObjectId
-                                                                                AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Продукция
+                                                                                AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
+                                                                                                                            , zc_Enum_InfoMoneyDestination_30100() -- Продукция
+                                                                                                                             )
                          WHERE Movement.OperDate = DATE_TRUNC ('MONTH', inStartDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
                            AND Movement.StatusId <> zc_Enum_Status_Erased()
                            AND Movement.DescId = zc_Movement_Inventory()
@@ -84,6 +86,9 @@ BEGIN
                         ) AS Movement
                          --LIMIT 1
                         );
+
+
+     --RAISE EXCEPTION '<%> <%>  <%>', inFromId, inToId, vbMovementId_inv;
 
 
      -- таблица - Приходы ГП с пр-ва
@@ -509,6 +514,8 @@ END;$BODY$
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.07.2017', inEndDate:= '20.07.2017', inFromId:=8447,   inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ колбасный         + Склад База ГП
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.02.2017', inEndDate:= '13.02.2017', inFromId:=951601, inToId:=8439, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ упаковки мясо + Участок мясного сырья
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.03.2017', inEndDate:= '02.03.2017', inFromId:=981821, inToId:=951601, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ шприц. мясо + ЦЕХ упаковки мясо
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '30.05.2022', inEndDate:= '30.05.2022', inFromId:=8020711, inToId:=8020714, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ колбаса + деликатесы (Ирна) + Склад База ГП (Ирна)
+
 
 -- where ContainerId = 628180
 -- select * from MovementItemContainer where ContainerId = 568111
