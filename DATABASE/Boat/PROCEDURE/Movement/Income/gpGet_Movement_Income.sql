@@ -62,8 +62,8 @@ BEGIN
              
              , 0                         AS FromId
              , CAST ('' AS TVarChar)     AS FromName
-             , 0                         AS ToId
-             , CAST ('' AS TVarChar)     AS ToName
+             , Object_To.Id              AS ToId
+             , Object_To.ValueData       AS ToName
              , 0                         AS PaidKindId
              , CAST ('' AS TVarChar)     AS PaidKindName
              , CAST ('' AS TVarChar)     AS Comment
@@ -73,6 +73,7 @@ BEGIN
              , CURRENT_TIMESTAMP  ::TDateTime  AS InsertDate
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
+               LEFT JOIN Object AS Object_To ON Object_To.Id = 35139 -- Склад Основной
           ;
 
      ELSE
