@@ -19,7 +19,8 @@ AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
-
+        RAISE EXCEPTION 'Ошибка.Не установлено значение <ццц>.';
+        
      -- проверка - документ должен быть сохранен
      IF COALESCE (inMovementId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
@@ -33,6 +34,21 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Статья>.';
      END IF;
 
+     --проверка для ServiceItemAdd
+     IF (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId) = zc_Movement_ServiceItemAdd()
+     THEN   
+         IF NOT EXISTS (SELECT 1 FROM gpSelect_MovementItem_ServiceItem_onDate (inOperDate := inDateEnd ::TDateTime
+                                                                              , inUnitId   := inUnitId
+                                                                              , inSession  := inUserId  ::TVarChar
+                                                                               ) AS tmpMI_Main 
+                        WHERE tmpMI_Main.InfoMoneyId = inInfoMoneyId
+                        )
+         THEN   
+              RAISE EXCEPTION 'Ошибка.Не найдено Основное условие аренды для <%> <%>', lfGet_Object_TreeNameFull (inUnitId  ,zc_ObjectLink_Unit_Parent()), lfGet_Object_ValueData (inInfoMoneyId); 
+         END IF;
+     END IF;
+     
+     
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 

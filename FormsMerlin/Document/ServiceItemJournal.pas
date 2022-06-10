@@ -99,6 +99,12 @@ type
     bbInsertAdd: TdxBarButton;
     bbUpdateAdd: TdxBarButton;
     isAdd: TcxGridDBColumn;
+    spCheckDesc: TdsdStoredProc;
+    spCheckDescAdd: TdsdStoredProc;
+    mactUpdate: TMultiAction;
+    actCheckDesc: TdsdExecStoredProc;
+    actCheckDescAdd: TdsdExecStoredProc;
+    mactUpdateAdd: TMultiAction;
   private
   public
   end;

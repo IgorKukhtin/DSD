@@ -245,43 +245,6 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object Area_before: TcxGridDBColumn
-            Caption = '*'#1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'.'
-            DataBinding.FieldName = 'Area_before'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'. ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
-            Options.Editing = False
-            Width = 80
-          end
-          object Price_before: TcxGridDBColumn
-            Caption = '*'#1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'.'
-            DataBinding.FieldName = 'Price_before'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'. ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
-            Options.Editing = False
-            Width = 80
-          end
-          object Amount_before: TcxGridDBColumn
-            Caption = '*'#1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100
-            DataBinding.FieldName = 'Amount_before'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083'., '#1075#1088#1085' ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
-            Options.Editing = False
-            Width = 80
-          end
           object Area: TcxGridDBColumn
             Caption = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'.'
             DataBinding.FieldName = 'Area'
@@ -314,40 +277,55 @@ object ServiceItemAddMovementForm: TServiceItemAddMovementForm
             HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100', '#1075#1088#1085
             Width = 80
           end
-          object Area_after: TcxGridDBColumn
-            Caption = '***'#1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'.'
-            DataBinding.FieldName = 'Area_after'
+          object DateStart_Main: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089' ('#1086#1089#1085'.)'
+            DataBinding.FieldName = 'DateStart_Main'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object EndDate_Main: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086' ('#1086#1089#1085'.)'
+            DataBinding.FieldName = 'DateEnd_Main'
+            PropertiesClassName = 'TcxDateEditProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Area_Main: TcxGridDBColumn
+            Caption = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'. ('#1086#1089#1085'.)'
+            DataBinding.FieldName = 'Area_Main'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1086#1097#1072#1076#1100', '#1082#1074'.'#1084'. ('#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
             Options.Editing = False
             Width = 80
           end
-          object Price_after: TcxGridDBColumn
-            Caption = '***'#1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'.'
-            DataBinding.FieldName = 'Price_after'
+          object Price_Main: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'. ('#1086#1089#1085'.)'
+            DataBinding.FieldName = 'Price_Main'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1079#1072' '#1082#1074'.'#1084'.  ('#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
             Options.Editing = False
             Width = 80
           end
-          object Amount_after: TcxGridDBColumn
-            Caption = '***'#1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100
-            DataBinding.FieldName = 'Amount_after'
+          object Amount_Main: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100' ('#1086#1089#1085'.)'
+            DataBinding.FieldName = 'Amount_Main'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100', '#1075#1088#1085' ('#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1087#1077#1088#1080#1086#1076')'
+            HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072' '#1087#1083#1086#1097#1072#1076#1100', '#1075#1088#1085
             Options.Editing = False
             Width = 80
           end

@@ -448,7 +448,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       Category = 0
     end
     object bbEdit: TdxBarButton
-      Action = actUpdate
+      Action = mactUpdate
       Category = 0
     end
     object bbComplete: TdxBarButton
@@ -497,7 +497,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       Category = 0
     end
     object bbUpdateAdd: TdxBarButton
-      Action = actUpdateAdd
+      Action = mactUpdateAdd
       Category = 0
     end
   end
@@ -1068,6 +1068,56 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       QuestionBeforeExecute = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1048#1089#1090#1086#1088#1080#1080'?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099
     end
+    object mactUpdateAdd: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCheckDescAdd
+        end
+        item
+          Action = actUpdateAdd
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
+      ImageIndex = 1
+    end
+    object mactUpdate: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCheckDesc
+        end
+        item
+          Action = actUpdate
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
+      ImageIndex = 1
+    end
+    object actCheckDescAdd: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCheckDescAdd
+      StoredProcList = <
+        item
+          StoredProc = spCheckDescAdd
+        end>
+      Caption = 'actCheckDescAdd'
+    end
+    object actCheckDesc: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCheckDesc
+      StoredProcList = <
+        item
+          StoredProc = spCheckDesc
+        end>
+      Caption = 'actCheckDesc'
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ServiceItem'
@@ -1229,7 +1279,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 440
+    Left = 480
     Top = 136
   end
   object RefreshDispatcher: TRefreshDispatcher
@@ -1331,6 +1381,62 @@ object ServiceItemJournalForm: TServiceItemJournalForm
     Params = <>
     PackSize = 1
     Left = 458
+    Top = 312
+  end
+  object spCheckDesc: TdsdStoredProc
+    StoredProcName = 'gpCheckDesc_Movement'
+    DataSet = ClientDataSet
+    DataSets = <
+      item
+        DataSet = ClientDataSet
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDescId'
+        Value = 44562d
+        Component = ClientDataSet
+        ComponentItem = 'DescId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode_open'
+        Value = 'zc_Movement_ServiceItem'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 176
+    Top = 264
+  end
+  object spCheckDescAdd: TdsdStoredProc
+    StoredProcName = 'gpCheckDesc_Movement'
+    DataSet = ClientDataSet
+    DataSets = <
+      item
+        DataSet = ClientDataSet
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDescId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'DescId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode_open'
+        Value = 'zc_Movement_ServiceItemAdd'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 176
     Top = 312
   end
 end
