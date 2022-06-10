@@ -1,12 +1,12 @@
 -- Function: gpInsertUpdate_Movement_PUSH()
 
---DROP FUNCTION IF EXISTS gpGet_Movement_PUSH_Message (TBlob, TVarChar, Integer, Integer);
-DROP FUNCTION IF EXISTS gpGet_Movement_PUSH_Message (TBlob, TVarChar, TVarChar, Integer, Integer);
+DROP FUNCTION IF EXISTS gpGet_Movement_PUSH_Message (TBlob, TVarChar, TVarChar, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_PUSH_Message(
     IN inMessage               TBlob      , -- Сообщение
     IN inFunction              TVarChar   , -- Функция
     IN inForm                  TVarChar   , -- Форма
+    IN inMovementID            Integer    , -- Movement PUSH
     IN inUnitID                Integer    , -- Подразделение
     IN inUserId                Integer      -- Сотрудник
 )
@@ -16,7 +16,8 @@ RETURNS TABLE (Message TBlob
              , Params TVarChar
              , TypeParams TVarChar
              , ValueParams TVarChar
-             , isFormOpen boolean)
+             , isFormOpen boolean
+             , isFormLoad boolean)
 AS
 $BODY$
    DECLARE text_var1   Text;
@@ -38,37 +39,41 @@ BEGIN
                    ''::TVarChar,
                    ''::TVarChar,
                    ''::TVarChar,
-                   True;
+                   True,
+                   EXISTS(SELECT Object.Id FROM Object WHERE Object.ValueData = inForm AND Object.DescId = zc_Object_Form());
          END IF;
        END LOOP;
     EXCEPTION
        WHEN others THEN
          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
-       PERFORM lpLog_Run_Schedule_Function('gpGet_Movement_PUSH_Message  run '::inFunction, True, text_var1::TVarChar, inUserId);
+       PERFORM lpLog_Run_Schedule_Function('gpGet_Movement_PUSH_Message', True, text_var1::TVarChar, inUserId);
     END;
   ELSEif COALESCE(inFunction, '') <> ''
   THEN
     BEGIN
-       FOR vbRec IN EXECUTE 'SELECT * FROM '||inFunction||'('||inUnitID::TVarChar||', '||inUserId::TVarChar||')'
+       FOR vbRec IN EXECUTE 'SELECT * FROM '||inFunction||'('||COALESCE(inMovementID, 0)::TVarChar||', '||inUnitID::TVarChar||', '||inUserId::TVarChar||')'
        LOOP
          RETURN QUERY
-         SELECT vbRec.Message, vbRec.FormName, vbRec.Button, vbRec.Params, vbRec.TypeParams, vbRec.ValueParams, False AS isFormOpen;
+         SELECT vbRec.Message, vbRec.FormName, vbRec.Button, vbRec.Params, vbRec.TypeParams, vbRec.ValueParams, 
+                COALESCE(vbRec.Message, '') = '' AND COALESCE(vbRec.FormName, '') <> '' AS isFormOpen,
+                EXISTS(SELECT Object.Id FROM Object WHERE Object.ValueData = vbRec.FormName AND Object.DescId = zc_Object_Form());
        END LOOP;
     EXCEPTION
        WHEN others THEN
          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
-       PERFORM lpLog_Run_Schedule_Function('gpGet_Movement_PUSH_Message run '::inFunction, True, text_var1::TVarChar, inUserId);
+       PERFORM lpLog_Run_Schedule_Function('gpGet_Movement_PUSH_Message', True, text_var1::TVarChar, inUserId);
     END;
 
   ELSE
     RETURN QUERY
-    SELECT  inMessage,
+    SELECT inMessage,
+           inForm::TVarChar,
            ''::TVarChar,
            ''::TVarChar,
            ''::TVarChar,
            ''::TVarChar,
-           ''::TVarChar,
-           False;
+           COALESCE(inMessage, '') = '' AND COALESCE(inForm, '') <> '' AS isFormOpen,
+           EXISTS(SELECT Object.Id FROM Object WHERE Object.ValueData = inForm AND Object.DescId = zc_Object_Form());
   END IF;
 
 END;
@@ -82,4 +87,5 @@ $BODY$
 */
 
 -- SELECT * FROM Log_Run_Schedule_Function
--- SELECT * FROM gpGet_Movement_PUSH_Message( 'dddd'::TBlob, 'gpSelect_MovementItem_OrderInternal_WillNotOrder', 'TReport_WillNotOrderForm', 183292 , 3);
+-- 
+SELECT * FROM gpGet_Movement_PUSH_Message( '', '', 'TCheckHelsiSignPUSHForm', 18971753 , 183292 , 3);

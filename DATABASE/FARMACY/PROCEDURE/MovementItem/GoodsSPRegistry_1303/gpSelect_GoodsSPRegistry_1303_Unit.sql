@@ -131,24 +131,30 @@ BEGIN
                             AND (Container.ObjectId = inGoodsId OR COALESCE (inGoodsId, 0) = 0)
                           GROUP BY Container.ObjectId
                          )
-       , tmpData_1303 AS (SELECT Object_Goods_Retail.Id    AS GoodsId
-                               , Object_Goods.Id           AS GoodsMainId  
-                               , ObjectFloat_NDSKind_NDS.ValueData                     AS NDS
+       , tmpData_Union AS (SELECT COALESCE(tmpGoodsSPRegistry_1303.GoodsId, tmpMIGoodsSP_1303.GoodsId)    AS GoodsId
 
                                , COALESCE (tmpMIGoodsSP_1303.PriceOptSP,  tmpGoodsSPRegistry_1303.PriceOptSP, 0)::TFloat                                               AS PriceOptSP
-
-                               , COALESCE (tmpMIGoodsSP_1303.PriceSale,
-                                 ROUND(tmpGoodsSPRegistry_1303.PriceOptSP  *  1.1 * 1.1 * (1.0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2), 0)::TFloat AS PriceSale
-                                 
-                               , tmpContainer.Amount::TFloat      AS Remains
 
                           FROM tmpGoodsSPRegistry_1303
                           
                                FULL JOIN tmpMIGoodsSP_1303 ON tmpMIGoodsSP_1303.GoodsId = tmpGoodsSPRegistry_1303.GoodsId
                                                           AND tmpMIGoodsSP_1303.Ord = 1
+                                                                              
+                          WHERE COALESCE(tmpGoodsSPRegistry_1303.Ord, 1) = 1
+                           )
+       , tmpData_1303 AS (SELECT Object_Goods_Retail.Id    AS GoodsId
+                               , Object_Goods.Id           AS GoodsMainId  
+                               , ObjectFloat_NDSKind_NDS.ValueData                     AS NDS
+
+                               , tmpData_Union.PriceOptSP                              AS PriceOptSP
+
+                               , Round(tmpData_Union.PriceOptSP  *  1.1 * 1.1 * (1.0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2)::TFloat  AS PriceSale
+                                 
+                               , tmpContainer.Amount::TFloat      AS Remains
+
+                          FROM tmpData_Union
                           
-                          
-                               LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = COALESCE(tmpGoodsSPRegistry_1303.GoodsId, tmpMIGoodsSP_1303.GoodsId) 
+                               LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id =tmpData_Union.GoodsId
                                LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods.Id
                                                                                    AND Object_Goods_Retail.RetailId = vbObjectId
                               
@@ -157,14 +163,11 @@ BEGIN
                                                     
                                LEFT JOIN tmpContainer ON tmpContainer.ObjectId = Object_Goods_Retail.Id 
                                                     
-                          WHERE COALESCE(tmpGoodsSPRegistry_1303.Ord, 1) = 1
-                            AND COALESCE (Object_Goods_Retail.Id, 0) <> 0
+                          WHERE COALESCE (Object_Goods_Retail.Id, 0) <> 0
                           )
-       , tmpIncome_1303 AS (SELECT Container.ObjectId    AS GoodsId
-                                , (CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE THEN MIFloat_Price.ValueData
-                                        ELSE (MIFloat_Price.ValueData * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData,1)/100))::TFloat    -- в партии инвентаризации  цена с НДС, а параметра НДС нет
-                                        END * 1.1)::TFloat    AS PriceSale   -- цена отпускная 1303
-                                , ROW_NUMBER() OVER (PARTITION BY Container.ObjectId ORDER BY MovementLinkObject_To.ObjectId <> inUnitId, MI_Income.MovementId DESC) AS ord   -- Люба сказала смотреть по последней партии
+       , tmpIncome_All AS (SELECT Container.ObjectId                                          AS GoodsId
+                                , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)   AS MovementId
+                                , MovementLinkObject_To.ObjectId                              AS UnitId
                             FROM Container 
                                  INNER JOIN ContainerLinkObject AS CLI_MI 
                                                                 ON CLI_MI.ContainerId = Container.Id
@@ -179,26 +182,48 @@ BEGIN
                                  -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
                                  LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
 
-                                 LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                             ON MIFloat_Price.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)
-                                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
-
-                                 LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                                           ON MovementBoolean_PriceWithVAT.MovementId =  COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
-                                                          AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
-                                                              ON MovementLinkObject_NDSKind.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
-                                                             AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                               ON MovementLinkObject_To.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
                                                              AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()   
-                                 LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
-                                                      ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
 
                               WHERE Container.ObjectId IN (SELECT tmpData_1303.GoodsId FROM tmpData_1303)
                                 AND Container.DescId = zc_Container_Count()
                                 AND Container.WhereObjectId = inUnitId
-                                AND COALESCE (MIFloat_Price.ValueData ,0) > 0
+                                AND Container.ID > 10000000
+                              )
+       , tmpIncome_Last AS (SELECT tmpIncome_All.GoodsId
+                                 , tmpIncome_All.MovementId
+                                 , ROW_NUMBER() OVER (PARTITION BY tmpIncome_All.GoodsId ORDER BY tmpIncome_All.UnitId <> inUnitId, tmpIncome_All.MovementId DESC) AS ord   -- Люба сказала смотреть по последней партии
+                             FROM tmpIncome_All                                
+                             )
+       , tmpIncome_1303 AS (SELECT tmpIncome_Last.GoodsId
+                                , Max(COALESCE(MIFloat_PriceSample.ValueData, 
+                                      CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE THEN MIFloat_Price.ValueData
+                                           ELSE (MIFloat_Price.ValueData * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData,1)/100))::TFloat 
+                                           END) * 1.1)::TFloat    AS PriceSale   -- цена отпускная 1303
+                            FROM tmpIncome_Last 
+                            
+                                 LEFT JOIN MovementItem ON MovementItem.MovementId =  tmpIncome_Last.MovementId
+                                                       AND MovementItem.ObjectId = tmpIncome_Last.GoodsId
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                             ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_PriceSample
+                                                             ON MIFloat_PriceSample.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_PriceSample.DescId = zc_MIFloat_PriceSample()
+
+                                 LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                                           ON MovementBoolean_PriceWithVAT.MovementId =  tmpIncome_Last.MovementId
+                                                          AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                              ON MovementLinkObject_NDSKind.MovementId = tmpIncome_Last.MovementId
+                                                             AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                                 LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
+                                                      ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
+
+                              WHERE tmpIncome_Last.ord = 1
+                              GROUP BY tmpIncome_Last.GoodsId
                               )
                           
     SELECT tmpData_1303.GoodsId
@@ -211,7 +236,6 @@ BEGIN
     FROM tmpData_1303  
     
          LEFT JOIN tmpIncome_1303 ON tmpIncome_1303.GoodsId = tmpData_1303.GoodsId
-                                 AND tmpIncome_1303.ord = 1  
     ;                        
       
 
@@ -226,5 +250,7 @@ $BODY$
 */
 
 --ТЕСТ
--- 
-select * from gpSelect_GoodsSPRegistry_1303_Unit(inUnitId := 13338606, inGoodsId := 16242420, inisCalc := True, inSession := '3');
+-- select * from gpSelect_GoodsSPRegistry_1303_Unit(inUnitId := 13338606, inGoodsId := 16242420, inisCalc := True, inSession := '3');
+
+SELECT * 
+FROM gpSelect_GoodsSPRegistry_1303_Unit (inUnitId := COALESCE (lpGet_DefaultValue ('zc_Object_Unit', 3), '0')::Integer , inGoodsId := 0, inisCalc := True, inSession := '3')

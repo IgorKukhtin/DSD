@@ -1,4 +1,4 @@
-unit CashJournal;
+unit CashOutJournal;
 
 interface
 
@@ -28,7 +28,7 @@ uses
   dsdGuides, cxButtonEdit, ExternalLoad;
 
 type
-  TCashJournalForm = class(TParentForm)
+  TCashOutJournalForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -120,6 +120,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TCashJournalForm);
+  RegisterClass(TCashOutJournalForm);
 
 end.

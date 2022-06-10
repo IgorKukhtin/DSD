@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_PUSH_Cash(
 )
 RETURNS TABLE (Id Integer, Text TBlob, isPoll boolean,
                FormName TVarChar, Button TVarChar, Params TVarChar, TypeParams TVarChar, ValueParams TVarChar,
-               isFormOpen boolean, isSpecialLighting Boolean, TextColor Integer, Color Integer, isBold Boolean)
+               isFormOpen boolean, isFormLoad boolean, isSpecialLighting Boolean, TextColor Integer, Color Integer, isBold Boolean)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -58,6 +58,7 @@ BEGIN
                            , TypeParams TVarChar
                            , ValueParams TVarChar
                            , isFormOpen boolean
+                           , isFormLoad boolean
                            , isSpecialLighting Boolean
                            , TextColor Integer
                            , Color Integer
@@ -634,6 +635,7 @@ BEGIN
                                  , PUSH_Message.TypeParams                                         AS TypeParams
                                  , PUSH_Message.ValueParams                                        AS ValueParams
                                  , PUSH_Message.isFormOpen                                         AS isFormOpen
+                                 , PUSH_Message.isFormLoad                                         AS isFormLoad
                             FROM Movement
 
                                  LEFT JOIN MovementDate AS MovementDate_DateEndPUSH
@@ -734,7 +736,7 @@ BEGIN
                             )
 
 
-   INSERT INTO _PUSH (Id, Text, isPoll, FormName, Button, Params, TypeParams, ValueParams, isFormOpen)
+   INSERT INTO _PUSH (Id, Text, isPoll, FormName, Button, Params, TypeParams, ValueParams, isFormOpen, isFormLoad)
    SELECT
           tmpMovementPUSH.Id
         , tmpMovementPUSH.Message                                            AS Message
@@ -745,10 +747,26 @@ BEGIN
         , tmpMovementPUSH.TypeParams                                         AS TypeParams
         , tmpMovementPUSH.ValueParams                                        AS ValueParams
         , tmpMovementPUSH.isFormOpen                                         AS isFormOpen
+        , tmpMovementPUSH.isFormLoad                                         AS isFormLoad
    FROM tmpMovementPUSH
    WHERE tmpMovementPUSH.Message <> '' OR COALESCE(tmpMovementPUSH.FormName, '') <> '' AND tmpMovementPUSH.isFormOpen = True;
-
-
+   
+   IF vbUserId = 3
+   THEN
+     INSERT INTO _PUSH (Id, Text, isPoll, FormName, Button, Params, TypeParams, ValueParams, isFormOpen, isFormLoad)
+     SELECT
+          1111111                          AS Id
+        , ''                               AS Message
+        , False                            AS isPoll
+        , 'TCheckHelsiSignPUSHForm'        AS FormName
+        , ''                               AS Button
+        , ''                               AS Params
+        , ''                               AS TypeParams
+        , ''                               AS ValueParams
+        , True                             AS isFormOpen
+        , False                            AS isFormLoad;
+   END IF;
+   
    RETURN QUERY
      SELECT _PUSH.Id                                  AS Id
           , _PUSH.Text                                AS Text
@@ -759,6 +777,7 @@ BEGIN
           , _PUSH.TypeParams                          AS TypeParams
           , _PUSH.ValueParams                         AS ValueParams
           , COALESCE(_PUSH.isFormOpen, False)         AS isFormOpen
+          , COALESCE(_PUSH.isFormLoad, False)         AS isFormLoad
           , COALESCE(_PUSH.isSpecialLighting, False)  AS isSpecialLighting
           , _PUSH.TextColor                           AS TextColor
           , _PUSH.Color                               AS Color

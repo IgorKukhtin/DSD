@@ -338,10 +338,14 @@ begin
   FRESTRequest.AddParameter('username', FUserName, TRESTRequestParameterKind.pkGETorPOST);
   FRESTRequest.AddParameter('password', FPassword, TRESTRequestParameterKind.pkGETorPOST);
 
+  ShowMessage('BaseURL - ' + FHelsi_Id + '; client_id - ' + FClientId + '; client_secret - ' + FClientSecret + '; username - ' + FUserName + '; password - ' + FPassword);
+
   try
     FRESTRequest.Execute;
   except
   end;
+
+  ShowMessage('StatusText - ' + FRESTResponse.StatusText + '; Content - ' + FRESTResponse.Content);
 
   if FRESTResponse.StatusCode = 200 then
   begin

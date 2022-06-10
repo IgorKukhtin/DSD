@@ -1,6 +1,5 @@
 -- Function: gpSelect_GoodsPrice_ForSite()
 
---DROP FUNCTION IF EXISTS gpSelect_GoodsPrice_ForSite (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_GoodsPrice_ForSite (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsPrice_ForSite(
@@ -53,6 +52,8 @@ BEGIN
                                    , Price_Goods.ChildObjectId                  AS GoodsId
                                    , Object_Goods_Main.Name                     AS Name
                                    , Object_Goods_Main.NameUkr                  AS NameUkr
+                                   , COALESCE(Object_Goods_Retail.Price, 0)     AS PriceTop 
+                                   , Object_Goods_Retail.isTop                  AS isTop 
                               FROM Object AS Object_PriceSite
 
                                    INNER JOIN ObjectLink AS Price_Goods
@@ -84,49 +85,79 @@ BEGIN
                                                                         AND Object_BarCode.isErased = False
                                                                         AND Object_Object.isErased = False)
                               )
+          , tmpContainerRemains AS (SELECT Container.ObjectId           AS GoodsId
+                                         , SUM(Container.Amount)        AS Remains 
+                                    FROM Container
+                                         INNER JOIN tmpPrice_Site ON tmpPrice_Site.GoodsId = Container.ObjectId
+                                    WHERE Container.DescId = zc_Container_Count()
+                                      AND Container.Amount <> 0
+                                    GROUP BY Container.ObjectId  
+                                    HAVING SUM(Container.Amount) > 0
+                                    )
+          , tmpData AS (SELECT Price_Site.GoodsId
+
+                             , Price_Site.Name                                              AS Name
+                             , Price_Site.NameUkr                                           AS NameUkr
+
+                             , Price_Site.Price                                             AS Price
+
+                             , tmpContainerRemains.Remains::TFloat                          AS Remains
+                              
+                        FROM tmpPrice_Site AS Price_Site         
+
+                             LEFT JOIN tmpContainerRemains ON tmpContainerRemains.GoodsId = Price_Site.GoodsId
+                                            
+                        WHERE COALESCE (inSearch, '') = '' OR 
+                              CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END ILIKE '%'||inSearch||'%'
+
+                        ORDER BY CASE WHEN COALESCE (tmpContainerRemains.Remains, 0) = 0 THEN 1 ELSE 0 END 
+                               , CASE WHEN inSortType = 0 THEN Price_Site.Price END
+                               , CASE WHEN inSortType = 1 THEN Price_Site.Price END DESC
+                               , CASE WHEN inSortType = 2 THEN CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END END
+                               , CASE WHEN inSortType = 3 THEN CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END END DESC
+                               , Price_Site.Name
+                        LIMIT inLimit OFFSET inStart      
+                        )
           , tmpContainer AS (SELECT Container.WhereObjectId      AS UnitId
                                   , Container.ObjectId           AS GoodsId
                                   , SUM(Container.Amount)        AS Remains 
                              FROM Container
-                                  INNER JOIN tmpPrice_Site ON tmpPrice_Site.GoodsId = Container.ObjectId
+                                  --INNER JOIN tmpData ON tmpData.GoodsId = Container.ObjectId
                              WHERE Container.DescId = zc_Container_Count()
                                AND Container.Amount <> 0
+                               AND Container.ObjectId in (SELECT tmpData.GoodsId FROM tmpData)
                              GROUP BY Container.WhereObjectId
                                     , Container.ObjectId  
                              HAVING SUM(Container.Amount) > 0
                              )
-          , tmpContainerAll AS (SELECT Container.GoodsId             AS GoodsId
-                                     , SUM(Container.Remains)        AS Remains 
-                                     , MIN(CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
-                                                 AND ObjectFloat_Goods_Price.ValueData > 0
-                                                THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+          , tmpContainerAll AS (SELECT Price_Goods.ChildObjectId            AS GoodsId
+                                     , MIN(CASE WHEN tmpPrice_Site.IsTop = TRUE
+                                                 AND tmpPrice_Site.PriceTop > 0
+                                                THEN ROUND (tmpPrice_Site.PriceTop, 2)
                                                 ELSE ROUND (Price_Value.ValueData, 2) END)           AS PriceMin
-                                     , MAX(CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
-                                                 AND ObjectFloat_Goods_Price.ValueData > 0
-                                                THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                                     , MAX(CASE WHEN tmpPrice_Site.IsTop = TRUE
+                                                 AND tmpPrice_Site.PriceTop > 0
+                                                THEN ROUND (tmpPrice_Site.PriceTop, 2)
                                                 ELSE ROUND (Price_Value.ValueData, 2) END)           AS PriceMax
-                                FROM tmpContainer AS Container
-
+                                FROM ObjectLink AS Price_Goods
+                                
                                      INNER JOIN ObjectLink AS ObjectLink_Price_Unit
-                                                           ON ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                                                          AND ObjectLink_Price_Unit.ChildObjectId = Container.UnitId                                                           
-                                     INNER JOIN ObjectLink AS Price_Goods
                                                            ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                                          AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                                                          AND Price_Goods.ChildObjectId = Container.GoodsId
-                                                          
+                                                          AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                                         
+                                     INNER JOIN tmpContainer ON tmpContainer.UnitId = ObjectLink_Price_Unit.ChildObjectId
+                                                            AND tmpContainer.GoodsId = Price_Goods.ChildObjectId
+
                                      LEFT JOIN ObjectFloat AS Price_Value
                                                            ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                           AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
-                                     -- Фикс цена для всей Сети
-                                     LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
-                                                            ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
-                                                           AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
-                                     LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
-                                                             ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
-                                                            AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
 
-                                GROUP BY Container.GoodsId  
+                                     -- Фикс цена для всей Сети
+                                     LEFT JOIN tmpPrice_Site  ON tmpPrice_Site.Id = Price_Goods.ChildObjectId
+
+                                WHERE Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                  AND Price_Goods.ChildObjectId in (SELECT tmpData.GoodsId FROM tmpData)               
+                                GROUP BY Price_Goods.ChildObjectId 
                                 )
                               
                            
@@ -140,22 +171,12 @@ BEGIN
              , tmpContainerAll.PriceMin::TFloat                             AS PriceMin
              , tmpContainerAll.PriceMax::TFloat                             AS PriceMax
 
-             , tmpContainerAll.Remains::TFloat                              AS Remains
+             , Price_Site.Remains                                           AS Remains
              
-        FROM tmpPrice_Site AS Price_Site         
+        FROM tmpData AS Price_Site         
 
              LEFT JOIN tmpContainerAll ON tmpContainerAll.GoodsId = Price_Site.GoodsId
                           
-        WHERE COALESCE (inSearch, '') = '' OR 
-              CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END ILIKE '%'||inSearch||'%'
-
-        ORDER BY CASE WHEN COALESCE (tmpContainerAll.Remains, 0) = 0 THEN 1 ELSE 0 END 
-               , CASE WHEN inSortType = 0 THEN Price_Site.Price END
-               , CASE WHEN inSortType = 1 THEN Price_Site.Price END DESC
-               , CASE WHEN inSortType = 2 THEN CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END END
-               , CASE WHEN inSortType = 3 THEN CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END END DESC
-               , Price_Site.Name
-        LIMIT inLimit OFFSET inStart                                                                                                                 
        ;       
 
 END;
@@ -171,7 +192,5 @@ $BODY$
 -- тест
 --
  
-SELECT * FROM gpSelect_GoodsPrice_ForSite (inCategoryId := 394964 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'Мило', inSession:= zfCalc_UserSite());
-
-
+select *, null as img_url from gpSelect_GoodsPrice_ForSite(394759, 1, 'uk', 0, 8, 0, '', zfCalc_UserSite())
 

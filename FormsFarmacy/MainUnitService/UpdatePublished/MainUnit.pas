@@ -92,6 +92,7 @@ end;
 procedure TMainForm.btnDownloadPublishedClick(Sender: TObject);
 begin
   try
+    actFD_DownloadPublishedSite.ShowGaugeForm := Application.ShowMainForm;
     actFD_DownloadPublishedSite.Execute;
   except
     on E:Exception do

@@ -4211,6 +4211,16 @@ inherited MainCashForm2: TMainCashForm2
       GuiParams = <>
       isShowModal = True
     end
+    object actOpenStaticFormPUSH: TdsdOpenStaticForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actOpenStaticFormPUSH'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = True
+    end
     object actSendCashJournalVip: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>

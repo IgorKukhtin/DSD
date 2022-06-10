@@ -6,6 +6,7 @@ inherited CheckHelsiSignPUSHForm: TCheckHelsiSignPUSHForm
   OnCloseQuery = ParentFormCloseQuery
   OnCreate = ParentFormCreate
   AddOnFormData.RefreshAction = nil
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 937
   ExplicitHeight = 557
   PixelsPerInch = 96
@@ -475,5 +476,16 @@ inherited CheckHelsiSignPUSHForm: TCheckHelsiSignPUSHForm
     PackSize = 1
     Left = 432
     Top = 208
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'isShow'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    Left = 592
+    Top = 216
   end
 end

@@ -617,6 +617,7 @@ type
     MainPriceSale1303: TcxGridDBColumn;
     RemainsUnitOneCDS: TClientDataSet;
     spRemainsUnitOne: TdsdStoredProc;
+    actOpenStaticFormPUSH: TdsdOpenStaticForm;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1038,6 +1039,14 @@ function IntToSVar(AInt : Variant) : String;
 begin
   if AInt = Null then Result := 'Null'
   else Result := IntToStr(AInt);
+end;
+
+function MinCurr(N1, N2: Variant) : Currency;
+begin
+  if (N1 = Null) and (N2 = Null) then Result := 0
+  else if (N1 = Null) then Result := N2
+  else if (N2 = Null) then Result := N1
+  else Result := Min(N1, N2);
 end;
 
 // что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА
@@ -2756,7 +2765,6 @@ procedure TMainCashForm2.TimerPUSHTimer(Sender: TObject);
 var
   cResult: string;
   LocalVersionInfo, BaseVersionInfo: TVersionInfo;
-  bHelsiPUSH : Boolean;
 
   procedure Load_PUSH(ARun: Boolean);
   begin
@@ -2791,7 +2799,6 @@ var
 begin
   TimerPUSH.Enabled := false;
   TimerPUSH.Interval := 60 * 1000;
-  bHelsiPUSH := False;
   if TimeOf(FPUSHEnd) > TimeOf(Now) then
     FPUSHEnd := Now;
   try
@@ -2835,13 +2842,19 @@ begin
       PUSHDS.First;
       try
         TimerPUSH.Interval := 1000;
-        bHelsiPUSH := bHelsiPUSH or (PUSHDS.FieldByName('Id').AsInteger = 22536449) or (PUSHDS.FieldByName('Id').AsInteger = 22536475);
         if PUSHDS.FieldByName('Id').AsInteger > 1000 then
         begin
           if PUSHDS.FieldByName('isFormOpen').AsBoolean then
           begin
-            actOpenFormPUSH.FormNameParam.Value := PUSHDS.FieldByName('FormName').AsString;
-            actOpenFormPUSH.Execute;
+            if PUSHDS.FieldByName('isFormLoad').AsBoolean then
+            begin
+              actOpenFormPUSH.FormNameParam.Value := PUSHDS.FieldByName('FormName').AsString;
+              actOpenFormPUSH.Execute;
+            end else
+            begin
+              actOpenStaticFormPUSH.FormNameParam.Value := PUSHDS.FieldByName('FormName').AsString;
+              actOpenStaticFormPUSH.Execute;
+            end;
             try
               spInsert_MovementItem_PUSH.ParamByName('inMovement').Value :=
                 PUSHDS.FieldByName('Id').AsInteger;
@@ -2927,15 +2940,6 @@ begin
       UnitConfigCDS.FindField('isRemovingPrograms').AsBoolean := False;
       UnitConfigCDS.Post;
       ShellExecute(0,'open','powershell.exe','Get-AppxPackage *skypeapp* | Remove-AppxPackage', nil, SW_HIDE);
-    end;
-
-    // Проверим погашение чеков Хелси
-    if bHelsiPUSH then
-    begin
-      with TCheckHelsiSignPUSHForm.Create(Self) do
-      begin
-        if GetIsShow then Show else Free;
-      end;
     end;
 
   finally
@@ -10319,8 +10323,8 @@ begin
   if not AViewInfo.Focused then
   begin
     if (FormParams.ParamByName('SPKindId').Value = 4823010) and (AViewInfo.GridRecord.Values[MainPriceSaleOOC1303.Index] <> Null) and
-      (AViewInfo.GridRecord.Values[MainPriceSaleOOC1303.Index] < MIN(AViewInfo.GridRecord.Values[MainColPrice.Index], AViewInfo.GridRecord.Values[MainPriceSale1303.Index])) and
-      ((MIN(AViewInfo.GridRecord.Values[MainColPrice.Index], AViewInfo.GridRecord.Values[MainPriceSale1303.Index])/AViewInfo.GridRecord.Values[MainPriceSaleOOC1303.Index]*100.0 - 100) > 1.0) then
+      (AViewInfo.GridRecord.Values[MainPriceSaleOOC1303.Index] < MinCurr(AViewInfo.GridRecord.Values[MainColPrice.Index], AViewInfo.GridRecord.Values[MainPriceSale1303.Index])) and
+      ((MinCurr(AViewInfo.GridRecord.Values[MainColPrice.Index], AViewInfo.GridRecord.Values[MainPriceSale1303.Index])/AViewInfo.GridRecord.Values[MainPriceSaleOOC1303.Index]*100.0 - 100) > 1.0) then
       ACanvas.Brush.Color := TColor($0083D3FA);
   end;
 
@@ -10372,8 +10376,8 @@ procedure TMainCashForm2.MainFixPercentStylesGetContentStyle(
   AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
 begin
   if (FormParams.ParamByName('SPKindId').Value = 4823010) and (ARecord.Values[MainPriceSaleOOC1303.Index] <> Null) and
-     (ARecord.Values[MainPriceSaleOOC1303.Index] < MIN(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])) and
-     ((MIN(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])/ARecord.Values[MainPriceSaleOOC1303.Index]*100.0 - 100) > 1.0) then
+     (ARecord.Values[MainPriceSaleOOC1303.Index] < MinCurr(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])) and
+     ((MinCurr(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])/ARecord.Values[MainPriceSaleOOC1303.Index]*100.0 - 100) > 1.0) then
      FStyle.Color := TColor($0083D3FA);
 
   if (ARecord.Values[MainFixPercent.Index] <> Null) AND (ARecord.Values[MainFixPercent.Index] <> 0) OR
@@ -10487,8 +10491,8 @@ begin
   FStyle.Assign(MainGridDBTableView.Styles.Content);
   if ((FormParams.ParamByName('SPKindId').Value = 4823010) or (AItem.Index = MainPriceSaleOOC1303.Index) or (AItem.Index = MainPriceSale1303.Index)) and
     (ARecord.Values[MainPriceSaleOOC1303.Index] <> Null) and
-    (ARecord.Values[MainPriceSaleOOC1303.Index] < MIN(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])) and
-    ((MIN(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])/ARecord.Values[MainPriceSaleOOC1303.Index]*100.0 - 100) > 1.0)
+    (ARecord.Values[MainPriceSaleOOC1303.Index] < MinCurr(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])) and
+    ((MinCurr(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])/ARecord.Values[MainPriceSaleOOC1303.Index]*100.0 - 100) > 1.0)
      then
     FStyle.Color := TColor($0083D3FA);
   AStyle := FStyle;

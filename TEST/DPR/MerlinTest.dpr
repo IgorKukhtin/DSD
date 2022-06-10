@@ -157,7 +157,6 @@ uses
   ServiceJournal in '..\..\FormsMerlin\Document\ServiceJournal.pas' {ServiceJournalForm: TParentForm},
   Movement_PeriodDialog in '..\..\FormsMerlin\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm},
   ServiceMovement in '..\..\FormsMerlin\Document\ServiceMovement.pas' {ServiceMovementForm: TParentForm},
-  CashJournal in '..\..\FormsMerlin\Document\CashJournal.pas' {CashJournalForm: TParentForm},
   CashMovement in '..\..\FormsMerlin\Document\CashMovement.pas' {CashMovementForm: TParentForm},
   InfoMoneyDetail_Object in '..\..\FormsMerlin\Guides\InfoMoneyDetail_Object.pas' {InfoMoneyDetail_ObjectForm: TParentForm},
   CashChildJournal in '..\..\FormsMerlin\Document\CashChildJournal.pas' {CashChildJournalForm: TParentForm},
@@ -182,7 +181,9 @@ uses
   Report_UnitBalance in '..\..\FormsMerlin\Report\Report_UnitBalance.pas' {Report_UnitBalanceForm: TParentForm},
   ServiceItemUpdate in '..\..\FormsMerlin\Document\ServiceItemUpdate.pas' {ServiceItemUpdateForm: TParentForm},
   ServiceItemEditMI in '..\..\FormsMerlin\Document\ServiceItemEditMI.pas' {ServiceItemEditMIForm: TParentForm},
-  Movement_PeriodDialogCash in '..\..\FormsMerlin\Document\Movement_PeriodDialogCash.pas' {Movement_PeriodDialogCashForm: TParentForm};
+  Movement_PeriodDialogCash in '..\..\FormsMerlin\Document\Movement_PeriodDialogCash.pas' {Movement_PeriodDialogCashForm: TParentForm},
+  CashInJournal in '..\..\FormsMerlin\Document\CashInJournal.pas' {CashInJournalForm: TParentForm},
+  CashOutJournal in '..\..\FormsMerlin\Document\CashOutJournal.pas' {CashOutJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

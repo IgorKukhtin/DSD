@@ -25,8 +25,8 @@ inherited MainForm: TMainForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1050#1072#1089#1089#1072', '#1088#1072#1089#1093#1086#1076
-      FormName = 'TCashJournalForm'
-      FormNameParam.Value = 'TCashJournalForm'
+      FormName = 'TCashOutJournalForm'
+      FormNameParam.Value = 'TCashOutJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -144,8 +144,8 @@ inherited MainForm: TMainForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076
-      FormName = 'TCashJournalForm'
-      FormNameParam.Value = 'TCashJournalForm'
+      FormName = 'TCashInJournalForm'
+      FormNameParam.Value = 'TCashInJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

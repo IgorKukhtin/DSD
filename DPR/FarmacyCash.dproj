@@ -396,26 +396,22 @@
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\CashCloseJeckdawsDialog.pas">
             <Form>CashCloseJeckdawsDialogForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\SOURCE\COMPONENT\dsdXMLTransform.pas"/>
         <DCCReference Include="..\FormsFarmacy\Cash\PrintSendDialog.pas">
             <Form>PrintSendDialogForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\UnitGetCash.pas"/>
         <DCCReference Include="..\FormsFarmacy\Cash\ChoiceMedicalProgramSP.pas">
             <Form>ChoiceMedicalProgramSPForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\VchasnoKasaAPI.pas"/>
         <DCCReference Include="..\FormsFarmacy\Cash\Cash_VchasnoKasa.pas"/>
         <DCCReference Include="..\FormsFarmacy\Cash\CheckHelsiSignPUSH.pas">
             <Form>CheckHelsiSignPUSHForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Cash\PrinterInterface.pas"/>
@@ -424,7 +420,6 @@
         <DCCReference Include="..\FormsFarmacy\Cash\Printer_Emulation.pas"/>
         <DCCReference Include="..\FormsFarmacy\Cash\ListGoodsKeyword.pas">
             <Form>ListGoodsKeywordForm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
         <BuildConfiguration Include="Release">

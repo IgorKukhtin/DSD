@@ -1,5 +1,5 @@
 inherited GoodsCategoryForm: TGoodsCategoryForm
-  Caption = #1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1072#1103' '#1084#1072#1090#1088#1080#1094#1072'('#1050#1072#1090#1077#1075#1086#1088#1080#1080')'
+  Caption = #1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1072#1103' '#1084#1072#1090#1088#1080#1094#1072' ('#1050#1072#1090#1077#1075#1086#1088#1080#1080')'
   ClientHeight = 423
   ClientWidth = 782
   AddOnFormData.isAlwaysRefresh = True
@@ -466,11 +466,39 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
         item
           StoredProc = spSelect_GoodsCategoryCopy
         end>
-      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074#1099#1082#1083#1072#1076#1082#1091' '#1074' '#1076#1088#1091#1075#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-      Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074#1099#1082#1083#1072#1076#1082#1091' '#1074' '#1076#1088#1091#1075#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1072#1103' '#1084#1072#1090#1088#1080#1094#1091' '#1074' '#1076#1088#1091#1075#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1072#1103' '#1084#1072#1090#1088#1080#1094#1091' '#1074' '#1076#1088#1091#1075#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
       ImageIndex = 30
-      QuestionBeforeExecute = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074#1099#1082#1083#1072#1076#1082#1091' '#1074' '#1076#1088#1091#1075#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'?'
+      QuestionBeforeExecute = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1072#1103' '#1084#1072#1090#1088#1080#1094#1091' '#1074' '#1076#1088#1091#1075#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'?'
       InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086'?'
+    end
+    object actGoodsCategoryCopy: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1085#1080#1077' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1072#1103' '#1084#1072#1090#1088#1080#1094#1091' '#1074' '#1076#1088#1091#1075#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+      Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1085#1080#1077' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1072#1103' '#1084#1072#1090#1088#1080#1094#1091' '#1074' '#1076#1088#1091#1075#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+      ImageIndex = 27
+      FormName = 'TGoodsCategoryCopyForm'
+      FormNameParam.Value = 'TGoodsCategoryCopyForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -591,6 +619,18 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
           ItemName = 'bbSelect_GoodsCategoryCopy'
         end
         item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsCategoryCopy'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -630,6 +670,10 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
     end
     object bbSelect_GoodsCategoryCopy: TdxBarButton
       Action = actSelect_GoodsCategoryCopy
+      Category = 0
+    end
+    object bbGoodsCategoryCopy: TdxBarButton
+      Action = actGoodsCategoryCopy
       Category = 0
     end
   end

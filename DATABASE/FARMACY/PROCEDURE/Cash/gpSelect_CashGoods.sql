@@ -51,6 +51,9 @@ BEGIN
      	vbUnitId := 0;
      END IF;
 
+
+     RAISE notice '1 <%>', CLOCK_TIMESTAMP();
+
      SELECT ObjectLink_Unit_Juridical.ChildObjectId
           , ObjectLink_Juridical_Retail.ChildObjectId
           , ObjectLink_ObjectLink_Unit_Area.ChildObjectId
@@ -69,6 +72,8 @@ BEGIN
      WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
        AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();
 
+     RAISE notice '2 <%>', CLOCK_TIMESTAMP();
+     
     --
     CREATE TEMP TABLE _GoodsPriceAll (
                              GoodsId Integer,
@@ -266,6 +271,31 @@ BEGIN
                        LEFT JOIN ObjectFloat AS ObjectFloat_ExpirationDateMonth
                                              ON ObjectFloat_ExpirationDateMonth.ObjectId = LoadPriceListItem.JuridicalId
                                             AND ObjectFloat_ExpirationDateMonth.DescId = zc_ObjectFloat_Juridical_ExpirationDateMonth())
+          , tmpObject_MarginCategoryLink AS (SELECT
+                                                     ObjectLink_MarginCategoryLink_MarginCategory.ObjectId      AS Id
+                                                   , ObjectLink_MarginCategoryLink_MarginCategory.ChildObjectId AS MarginCategoryId
+                                                   , ObjectLink_MarginCategoryLink_Unit.ChildObjectId           AS UnitId
+                                                   , ObjectLink_MarginCategoryLink_Juridical.ChildObjectId      AS JuridicalId
+                                                   , Object_MarginCategoryLink.isErased                         AS isErased
+
+                                             FROM ObjectLink AS ObjectLink_MarginCategoryLink_MarginCategory
+                                                   LEFT JOIN Object AS Object_MarginCategoryLink ON Object_MarginCategoryLink.Id = ObjectLink_MarginCategoryLink_MarginCategory.ObjectId
+                                                   LEFT JOIN Object AS Object_MarginCategory ON Object_MarginCategory.Id = ObjectLink_MarginCategoryLink_MarginCategory.ChildObjectId
+
+                                                   LEFT JOIN ObjectLink AS ObjectLink_MarginCategoryLink_Unit
+                                                                        ON ObjectLink_MarginCategoryLink_Unit.ObjectId = ObjectLink_MarginCategoryLink_MarginCategory.ObjectId
+                                                                       AND ObjectLink_MarginCategoryLink_Unit.DescId = zc_ObjectLink_MarginCategoryLink_Unit()
+                                                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_MarginCategoryLink_Unit.ChildObjectId
+                                                       
+                                                   LEFT JOIN ObjectLink AS ObjectLink_MarginCategoryLink_Juridical
+                                                                        ON ObjectLink_MarginCategoryLink_Juridical.ObjectId = ObjectLink_MarginCategoryLink_MarginCategory.ObjectId
+                                                                       AND ObjectLink_MarginCategoryLink_Juridical.DescId = zc_ObjectLink_MarginCategoryLink_Juridical()
+                                                   LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_MarginCategoryLink_Juridical.ChildObjectId
+
+                                             WHERE ObjectLink_MarginCategoryLink_MarginCategory.DescId = zc_ObjectLink_MarginCategoryLink_MarginCategory()
+                                               AND Object_MarginCategoryLink.isErased    = FALSE
+                                               AND (ObjectLink_MarginCategoryLink_Unit.ChildObjectId = vbUnitId OR COALESCE (ObjectLink_MarginCategoryLink_Unit.ChildObjectId, 0) = 0)
+                                             )
 
 
         INSERT INTO _GoodsPriceAll
@@ -320,12 +350,12 @@ BEGIN
                                     ON ObjectFloat_ExpirationDateMonth.ObjectId = LoadPriceListItem.JuridicalId
                                    AND ObjectFloat_ExpirationDateMonth.DescId = zc_ObjectFloat_Juridical_ExpirationDateMonth()
 
-              LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink
+              LEFT JOIN tmpObject_MarginCategoryLink AS Object_MarginCategoryLink
                                                        ON (Object_MarginCategoryLink.UnitId = vbUnitId)
                                                       AND Object_MarginCategoryLink.JuridicalId = LoadPriceListItem.JuridicalId
                                                       AND Object_MarginCategoryLink.isErased    = FALSE
 
-              LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink_all
+              LEFT JOIN tmpObject_MarginCategoryLink AS Object_MarginCategoryLink_all
                                                        ON COALESCE (Object_MarginCategoryLink_all.UnitId, 0) = 0
                                                       AND Object_MarginCategoryLink_all.JuridicalId = LoadPriceListItem.JuridicalId
                                                       AND Object_MarginCategoryLink_all.isErased    = FALSE
@@ -355,6 +385,8 @@ BEGIN
              CURRENT_DATE + (COALESCE(ObjectFloat_ExpirationDateMonth.ValueData::Integer, 0)::tvarchar||' MONTH')::INTERVAL
           OR COALESCE(tmpExpirationDate.ExpirationDate, zc_DateEnd()) <=
              CURRENT_DATE + (COALESCE(tmpExpirationDateMonth.DateMonth::Integer, 0)::tvarchar||' MONTH')::INTERVAL);
+
+     RAISE notice '3 <%>', CLOCK_TIMESTAMP();
 
      ANALYSE _GoodsPriceAll;
      
@@ -440,7 +472,6 @@ BEGIN
 
      FROM GoodsPriceAll
 
---          INNER JOIN Object AS Object_Goods ON Object_Goods.Id = GoodsPriceAll.GoodsId
           INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = GoodsPriceAll.GoodsId
           INNER JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
 
@@ -450,8 +481,10 @@ BEGIN
           LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.ID =  GoodsPriceAll.GoodsId
           LEFT JOIN tmpGoodsSP_1303 ON tmpGoodsSP_1303.GoodsId = GoodsPriceAll.GoodsId
 
-     WHERE Ord = 1
+     WHERE GoodsPriceAll.Ord = 1
        AND COALESCE(tmpGoodsDiscount.ID, 0) = 0;
+
+     RAISE notice '4 <%>', CLOCK_TIMESTAMP();
 
 END;
 $BODY$
@@ -470,4 +503,5 @@ $BODY$
 */
 
 -- тест 
+
 SELECT * FROM gpSelect_CashGoods('3')
