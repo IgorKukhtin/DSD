@@ -170,6 +170,13 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object isAdd: TcxGridDBColumn
+        Caption = #1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
+        DataBinding.FieldName = 'isAdd'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
       object Status: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
@@ -338,6 +345,23 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertAdd'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateAdd'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbComplete'
         end
         item
@@ -422,12 +446,10 @@ object ServiceItemJournalForm: TServiceItemJournalForm
     object bbInsert: TdxBarButton
       Action = actInsert
       Category = 0
-      ImageIndex = 0
     end
     object bbEdit: TdxBarButton
       Action = actUpdate
       Category = 0
-      ImageIndex = 1
     end
     object bbComplete: TdxBarButton
       Action = actComplete
@@ -468,6 +490,14 @@ object ServiceItemJournalForm: TServiceItemJournalForm
     end
     object bbInsertUpdatebyHistory: TdxBarButton
       Action = actInsertUpdatebyHistory
+      Category = 0
+    end
+    object bbInsertAdd: TdxBarButton
+      Action = actInsertAdd
+      Category = 0
+    end
+    object bbUpdateAdd: TdxBarButton
+      Action = actUpdateAdd
       Category = 0
     end
   end
@@ -546,11 +576,52 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actInsertAdd: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TServiceItemAddMovementForm'
+      FormNameParam.Value = 'TServiceItemAddMovementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id_Value'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 44562d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
+      ImageIndex = 0
       FormName = 'TServiceItemMovementForm'
       FormNameParam.Value = 'TServiceItemMovementForm'
       FormNameParam.DataType = ftString
@@ -614,11 +685,57 @@ object ServiceItemJournalForm: TServiceItemJournalForm
         end>
       isShowModal = False
     end
+    object actUpdateAdd: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TServiceItemAddMovementForm'
+      FormNameParam.Value = 'TServiceItemAddMovementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id_Value'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 44562d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
+      ImageIndex = 1
       FormName = 'TServiceItemMovementForm'
       FormNameParam.Value = 'TServiceItemMovementForm'
       FormNameParam.DataType = ftString
