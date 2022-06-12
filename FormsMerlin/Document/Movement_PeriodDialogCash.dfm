@@ -201,10 +201,10 @@ object Movement_PeriodDialogCashForm: TMovement_PeriodDialogCashForm
   object GuidesCash: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCash
-    FormNameParam.Value = 'TCashTreeForm'
+    FormNameParam.Value = 'TCash_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TCashTreeForm'
+    FormName = 'TCash_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

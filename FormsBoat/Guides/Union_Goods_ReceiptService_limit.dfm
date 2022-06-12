@@ -12,7 +12,6 @@ object Union_Goods_ReceiptService_limitForm: TUnion_Goods_ReceiptService_limitFo
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams

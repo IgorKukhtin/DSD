@@ -51,8 +51,16 @@ object Goods_limitForm: TGoods_limitForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object isReceiptGoods: TcxGridDBColumn
+        Caption = #1059#1079#1077#1083' ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'isReceiptGoods'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
       object GoodsGroupNameFull: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+        Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GoodsGroupNameFull'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -63,10 +71,11 @@ object Goods_limitForm: TGoods_limitForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
         Width = 150
       end
       object GoodsGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072
+        Caption = '***'#1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GoodsGroupName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <

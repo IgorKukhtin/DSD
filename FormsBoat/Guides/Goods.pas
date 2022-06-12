@@ -135,6 +135,7 @@ type
     Len_8: TcxGridDBColumn;
     Len_9: TcxGridDBColumn;
     Len_10: TcxGridDBColumn;
+    isReceiptGoods: TcxGridDBColumn;
   private
     { Private declarations }
   public

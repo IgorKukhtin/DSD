@@ -130,6 +130,7 @@ type
     FieldFilter_Name: TdsdFieldFilter;
     bbSearchNameLabel: TdxBarControlContainerItem;
     bbSearchName: TdxBarControlContainerItem;
+    isReceiptGoods: TcxGridDBColumn;
   private
     { Private declarations }
   public
