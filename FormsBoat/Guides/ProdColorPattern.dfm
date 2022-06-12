@@ -13,7 +13,6 @@ object ProdColorPatternForm: TProdColorPatternForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -1113,6 +1112,7 @@ object ProdColorPatternForm: TProdColorPatternForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

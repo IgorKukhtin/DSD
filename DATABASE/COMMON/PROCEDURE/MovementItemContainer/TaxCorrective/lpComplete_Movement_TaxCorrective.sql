@@ -47,14 +47,14 @@ BEGIN
                       AND MovementItem.isErased   = FALSE
                       AND MovementItem.Amount     <> 0
                       AND COALESCE (MIFloat_Price.ValueData, 0) <> vbPrice
-                   ) 
-         THEN 
+                   )
+         THEN
              RAISE EXCEPTION 'Ошибка.Для документа <%> должна быть цена = <%>'
                             , lfGet_Object_ValueData_sh ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_DocumentTaxKind()))
                             , vbPrice
                              ;
          END IF;
-     END IF; 
+     END IF;
 
      -- !!!сохранили - НОВАЯ схема с 30.03.18!!!
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_NPP_calc(), inMovementId
@@ -92,47 +92,59 @@ BEGIN
             ;
      END IF;
 
-     --  если сумма налоговой меньше чем сумма всех корректировок, показать в ошибке и сумму итого всех корр и сумму налоговой
-     IF inUserId = 5 OR inUserId = 9457
-     THEN  
-        -- налоговая и сумма
-		SELECT Movement_DocumentChild.Id         AS MovementId
-             , MovementFloat_TotalSumm.ValueData AS TotalSumm 
-      INTO vbMovementId_tax, vbTotalSumm_tax
-		FROM MovementLinkMovement AS MovementLinkMovement_Child
-             INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Child.MovementChildId
-                                AND Movement.StatusId <> zc_Enum_Status_Erased()
-             INNER JOIN MovementFloat AS MovementFloat_TotalSumm
-                                      ON MovementFloat_TotalSumm.MovementId = MovementLinkMovement_Child.MovementChildId  -- сумма налоговой
-                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-		WHERE MovementLinkMovement_Child.MovementId = inMovementId
-             AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child();
-			  
-        -- Сумма корректировок по налоговой	  
-        SELECT SUM ( COALESCE (MovementFloat_TotalSumm.ValueData,0)) AS TotalSumm
-      INTO vbTotalSumm_corr
-        FROM MovementLinkMovement AS MovementLinkMovement_Child
-             INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Child.MovementId
-                                AND Movement.StatusId <> zc_Enum_Status_Erased()
-             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                     ON MovementFloat_TotalSumm.MovementId = MovementLinkMovement_Child.MovementId  -- сумма корректировка
-                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-			WHERE MovementLinkMovement_Child.MovementChildId = vbMovementId_tax
-              AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child();
-                   
-        -- проверка
-        IF COALESCE (vbTotalSumm_tax,0) < COALESCE (vbTotalSumm_corr,0)
-        THEN   
-            RAISE EXCEPTION 'Ошибка.Сумма налоговой <%> меньше суммы корректировок <%>', vbTotalSumm_tax, vbTotalSumm_corr;
-        END IF;
-     END IF;
-     
-     
+
      -- ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := zc_Movement_TaxCorrective()
                                 , inUserId     := inUserId
                                  );
+
+     -- если сумма налоговой меньше чем сумма всех корректировок, показать в ошибке и сумму итого всех корр и сумму налоговой
+     IF 1=1 -- inUserId = 5 OR inUserId = 9457
+     THEN
+         -- налоговая и сумма
+         SELECT Movement.Id                       AS MovementId
+              , MovementFloat_TotalSumm.ValueData AS TotalSumm
+                INTO vbMovementId_tax, vbTotalSumm_tax
+         FROM MovementLinkMovement AS MovementLinkMovement_Child
+              INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Child.MovementChildId
+--                               AND Movement.StatusId = zc_Enum_Status_Complete()
+              -- сумма налоговой
+              INNER JOIN MovementFloat AS MovementFloat_TotalSumm
+                                       ON MovementFloat_TotalSumm.MovementId = MovementLinkMovement_Child.MovementChildId
+                                      AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSummPVAT()
+         WHERE MovementLinkMovement_Child.MovementId = inMovementId
+           AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child();
+
+         -- Сумма ВСЕХ корректировок к налоговой
+         SELECT SUM ( COALESCE (MovementFloat_TotalSumm.ValueData,0)) AS TotalSumm
+                INTO vbTotalSumm_corr
+         FROM MovementLinkMovement AS MovementLinkMovement_Child
+              INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Child.MovementId
+                                 AND Movement.StatusId = zc_Enum_Status_Complete()
+              -- сумма корректировка
+              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                      ON MovementFloat_TotalSumm.MovementId = MovementLinkMovement_Child.MovementId
+                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSummPVAT()
+	 WHERE MovementLinkMovement_Child.MovementChildId = vbMovementId_tax
+           AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child();
+
+        -- проверка
+        IF COALESCE (vbTotalSumm_tax,0) < COALESCE (vbTotalSumm_corr,0)
+        THEN
+            -- RAISE EXCEPTION 'Ошибка.Сумма налоговой <%> меньше суммы корректировок <%>', vbTotalSumm_tax, vbTotalSumm_corr;
+            RAISE EXCEPTION 'Ошибка.Сумма <%> по всем документам % больше чем сумма <%> в документе <%> № <%> от <%>.%Проведение невозможно.'
+                           , zfConvert_FloatToString (vbTotalSumm_corr)
+                           , (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TaxCorrective())
+                           , zfConvert_FloatToString (vbTotalSumm_tax)
+                           , (SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Tax())
+                           , (SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = vbMovementId_tax AND MS.DescId = zc_MovementString_InvNumberPartner())
+                           , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_tax))
+                           , CHR (13)
+                            ;
+        END IF;
+     END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

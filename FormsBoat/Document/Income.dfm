@@ -574,15 +574,16 @@ object IncomeForm: TIncomeForm
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object GoodsGroupNameFull: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             Options.Editing = False
             Width = 120
           end
           object GoodsGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074'.'
+            Caption = '***'#1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -1124,6 +1125,9 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GridCost: TcxGrid
         Left = 0
         Top = 0
@@ -1972,6 +1976,7 @@ object IncomeForm: TIncomeForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh

@@ -1,4 +1,4 @@
--- Function: gpSelect_MovementItem_PersonalService()
+ -- Function: gpSelect_MovementItem_PersonalService()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_PersonalService (Integer, Boolean, Boolean, TVarChar);
 
@@ -334,7 +334,7 @@ BEGIN
             , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial
               -- дата увольнения
             , CASE WHEN COALESCE (ObjectDate_Personal_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE ObjectDate_Personal_DateOut.ValueData END     :: TDateTime AS DateOut
-             --дата приема на работу - только если мес начислений соотв месяцу приема 
+             -- дата приема на работу - только если мес начислений соотв месяцу приема 
             , CASE WHEN DATE_TRUNC ('Month', ObjectDate_DateIn.ValueData) = DATE_TRUNC ('Month', vbServiceDate) THEN ObjectDate_DateIn.ValueData ELSE NULL END ::TDateTime AS DateIn 
             , Object_PersonalTo.ObjectCode            AS PersonalCode_to
             , Object_PersonalTo.ValueData             AS PersonalName_to
