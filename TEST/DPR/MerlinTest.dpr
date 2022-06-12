@@ -183,7 +183,8 @@ uses
   ServiceItemEditMI in '..\..\FormsMerlin\Document\ServiceItemEditMI.pas' {ServiceItemEditMIForm: TParentForm},
   Movement_PeriodDialogCash in '..\..\FormsMerlin\Document\Movement_PeriodDialogCash.pas' {Movement_PeriodDialogCashForm: TParentForm},
   CashInJournal in '..\..\FormsMerlin\Document\CashInJournal.pas' {CashInJournalForm: TParentForm},
-  CashOutJournal in '..\..\FormsMerlin\Document\CashOutJournal.pas' {CashOutJournalForm: TParentForm};
+  CashOutJournal in '..\..\FormsMerlin\Document\CashOutJournal.pas' {CashOutJournalForm: TParentForm},
+  ServiceItemAddMovement in '..\..\FormsMerlin\Document\ServiceItemAddMovement.pas' {ServiceItemAddMovementForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

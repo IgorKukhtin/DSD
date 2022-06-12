@@ -94,6 +94,17 @@ type
     spInsertUpdatebyHistory: TdsdStoredProc;
     bbInsertUpdatebyHistory: TdxBarButton;
     actInsertUpdatebyHistory: TdsdExecStoredProc;
+    actInsertAdd: TdsdInsertUpdateAction;
+    actUpdateAdd: TdsdInsertUpdateAction;
+    bbInsertAdd: TdxBarButton;
+    bbUpdateAdd: TdxBarButton;
+    isAdd: TcxGridDBColumn;
+    spCheckDesc: TdsdStoredProc;
+    spCheckDescAdd: TdsdStoredProc;
+    mactUpdate: TMultiAction;
+    actCheckDesc: TdsdExecStoredProc;
+    actCheckDescAdd: TdsdExecStoredProc;
+    mactUpdateAdd: TMultiAction;
   private
   public
   end;

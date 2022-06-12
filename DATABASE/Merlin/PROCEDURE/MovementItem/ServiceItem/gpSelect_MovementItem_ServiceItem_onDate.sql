@@ -1,9 +1,11 @@
 -- Function: gpSelect_MovementItem_ServiceItem_onDate()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItem_onDate (TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_ServiceItem_onDate (TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ServiceItem_onDate(
-    IN inOperDate         TDateTime      , -- 
+    IN inOperDate         TDateTime , --
+    IN inUnitId           Integer   , 
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar
@@ -47,15 +49,16 @@ BEGIN
                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                            AND MovementItem.DescId     = zc_MI_Master()
                                                            AND MovementItem.isErased   = FALSE
+                                                           AND (MovementItem.ObjectId = inUnitId OR inUnitId = 0)
     
                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                                      ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                                     AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
     
                                     INNER JOIN MovementItemDate AS MIDate_DateEnd
-                                                               ON MIDate_DateEnd.MovementItemId = MovementItem.Id
-                                                              AND MIDate_DateEnd.DescId = zc_MIDate_DateEnd()
-                                                              AND COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd()) > inOperDate
+                                                                ON MIDate_DateEnd.MovementItemId = MovementItem.Id
+                                                               AND MIDate_DateEnd.DescId = zc_MIDate_DateEnd()
+                                                               AND COALESCE (MIDate_DateEnd.ValueData, zc_DateEnd()) > inOperDate
                                WHERE Movement.DescId = zc_Movement_ServiceItem()
                                AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                               ) AS tmp

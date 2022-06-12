@@ -8,11 +8,12 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ServiceItem(
     IN inIsErased          Boolean ,
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber Integer
+RETURNS TABLE (Id Integer, DescId Integer, InvNumber Integer
              , OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
-             , UpdateName TVarChar, UpdateDate TDateTime
+             , UpdateName TVarChar, UpdateDate TDateTime 
+             , isAdd Boolean
               )
 AS
 $BODY$
@@ -32,13 +33,14 @@ BEGIN
                          )
          , tmpMovement AS (SELECT Movement.*
                            FROM tmpStatus
-                               JOIN Movement ON Movement.DescId = zc_Movement_ServiceItem()
+                               JOIN Movement ON Movement.DescId IN (zc_Movement_ServiceItem(), zc_Movement_ServiceItemAdd())
                                             AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                             AND Movement.StatusId = tmpStatus.StatusId
                            )
 
        SELECT
              Movement.Id
+           , Movement.DescId
            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
            , Movement.OperDate
            , Object_Status.ObjectCode             AS StatusCode
@@ -47,6 +49,7 @@ BEGIN
            , MovementDate_Insert.ValueData        AS InsertDate
            , Object_Update.ValueData              AS UpdateName
            , MovementDate_Update.ValueData        AS UpdateDate
+           , CASE WHEN Movement.DescId = zc_Movement_ServiceItemAdd() THEN TRUE ELSE FALSE END :: Boolean AS isAdd
 
        FROM tmpMovement AS Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
