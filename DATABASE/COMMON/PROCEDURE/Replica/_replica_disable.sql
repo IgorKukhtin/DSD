@@ -69,6 +69,9 @@ ALTER TABLE MovementProtocol DISABLE TRIGGER trigger_notify_changes_MovementProt
 ALTER TABLE MovementItemProtocol DISABLE TRIGGER trigger_notify_changes_MovementItemProtocol;
 ALTER TABLE loginprotocol DISABLE TRIGGER trigger_notify_changes_loginprotocol;
 ALTER TABLE Userprotocol DISABLE TRIGGER trigger_notify_changes_Userprotocol;
+--
+-- ALTER TABLE MovementProtocol_arc DISABLE TRIGGER trigger_notify_changes_MovementProtocol_arc;
+-- ALTER TABLE MovementItemProtocol_arc DISABLE TRIGGER trigger_notify_changes_MovementItemProtocol_arc;
 
 
 ALTER TABLE SoldTable DISABLE TRIGGER trigger_notify_changes_SoldTable;

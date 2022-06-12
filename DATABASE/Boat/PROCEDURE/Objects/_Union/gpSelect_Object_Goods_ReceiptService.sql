@@ -52,11 +52,19 @@ BEGIN
                               FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
                                                                        , inOperDate   := CURRENT_DATE) AS tmp
                               )
+         , tmpReceiptGoods AS (SELECT DISTINCT ObjectLink_Goods.ChildObjectId AS GoodsId
+                               FROM Object AS Object_ReceiptGoods
+                                    LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                         ON ObjectLink_Goods.ObjectId = Object_ReceiptGoods.Id
+                                                        AND ObjectLink_Goods.DescId = zc_ObjectLink_ReceiptGoods_Object()
+                               WHERE Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
+                                 AND Object_ReceiptGoods.isErased = FALSE
+                              )
             -- Комплектующие
           , tmpGoods AS (SELECT Object_Goods.Id                     AS Id
                               , Object_Goods.ObjectCode             AS Code
                               , Object_Goods.ValueData              AS Name
-                              , ObjectDesc.ItemName                 AS DescName
+                              , CASE WHEN tmpReceiptGoods.GoodsId > 0 THEN 'Узел' ELSE ObjectDesc.ItemName END :: TVarChar AS DescName
                               , ObjectString_Article.ValueData      AS Article
                               , zfCalc_Article_all (ObjectString_Article.ValueData) AS Article_all
                               , ObjectString_ArticleVergl.ValueData AS ArticleVergl
@@ -233,12 +241,14 @@ BEGIN
 
                                LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
 
+                               LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = Object_Goods.Id
+
                                LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Goods.DescId
 
                          WHERE Object_Goods.DescId = zc_Object_Goods()
                            AND Object_Goods.isErased = FALSE
-                         ORDER BY Id DESC
-                         LIMIT CASE WHEN inIsLimit_100 = TRUE THEN 100 ELSE 300000 END
+                         ORDER BY CASE WHEN tmpReceiptGoods.GoodsId > 0 THEN 0 ELSE 1 END ASC, Object_Goods.Id DESC
+                         LIMIT CASE WHEN inIsLimit_100 = TRUE THEN 200 ELSE 300000 END
                         )
        -- Результат
        -- Комплектующие
@@ -268,11 +278,11 @@ BEGIN
             , tmpGoods.EmpfPrice
             , tmpGoods.EmpfPriceWVAT-- расчет рекомендованной цены с НДС, до 4 знаков
 
-             -- расчет базовой цены без НДС, до 2 знаков
-           , tmpGoods.BasisPrice   -- сохраненная цена - цена без НДС
+              -- расчет базовой цены без НДС, до 2 знаков
+            , tmpGoods.BasisPrice   -- сохраненная цена - цена без НДС
 
-             -- расчет базовой цены с НДС, до 2 знаков
-           , tmpGoods.BasisPriceWVAT
+              -- расчет базовой цены с НДС, до 2 знаков
+            , tmpGoods.BasisPriceWVAT
 
             , tmpGoods.GoodsGroupId
             , tmpGoods.GoodsGroupName

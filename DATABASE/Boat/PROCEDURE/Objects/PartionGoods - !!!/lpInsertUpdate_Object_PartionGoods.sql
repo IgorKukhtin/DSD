@@ -335,7 +335,7 @@ AND 1=0
                                        , TRUE, TRUE
                                         );
         -- сохранили партию
-        IF vbMovementDescId = zc_MovementDesc_Income()
+        IF vbMovementDescId = zc_Movement_Income()
         THEN
             UPDATE MovementItem SET PartionId = inMovementItemId WHERE MovementItem.Id = inMovementItemId;
         END IF;

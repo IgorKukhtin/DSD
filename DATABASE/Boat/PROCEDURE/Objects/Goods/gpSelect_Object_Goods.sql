@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EAN TVarChar, ASIN TVarChar, MatchCode TVarChar
              , FeeNumber TVarChar, GoodsGroupNameFull TVarChar, Comment TVarChar
              , PartnerDate TDateTime
+             , isReceiptGoods Boolean
              , isArc Boolean
              , Feet TFloat, Metres TFloat
              , AmountMin TFloat, AmountRefer TFloat
@@ -143,9 +144,32 @@ BEGIN
                                 WHERE Object_Goods.DescId   = zc_Object_Goods()
                                   AND Object_Goods.isErased = FALSE
                                 --AND 1=0
-                                GROUP BY ObjectString_EAN.ValueData      
+                                GROUP BY ObjectString_EAN.ValueData
                                 HAVING COUNT (*) > 1
                                )
+         , tmpReceiptGoods AS (SELECT DISTINCT ObjectLink_Goods.ChildObjectId AS GoodsId
+                               FROM Object AS Object_ReceiptGoods
+                                    LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                         ON ObjectLink_Goods.ObjectId = Object_ReceiptGoods.Id
+                                                        AND ObjectLink_Goods.DescId = zc_ObjectLink_ReceiptGoods_Object()
+                               WHERE Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
+                                 AND Object_ReceiptGoods.isErased = FALSE
+                              )
+         , tmpGoods_limit AS (SELECT Object_Goods.*
+                              FROM Object AS Object_Goods
+                              WHERE Object_Goods.DescId = zc_Object_Goods()
+                              --AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE)
+                              ORDER BY Object_Goods.Id DESC
+                              LIMIT CASE WHEN vbUserId = 5 AND 1=0 THEN 50000 WHEN inIsLimit_100 = TRUE THEN 100 ELSE 350000 END
+                             )
+         , tmpGoods AS (SELECT tmpGoods_limit.*
+                        FROM tmpGoods_limit
+                       UNION
+                        SELECT Object_Goods.*
+                        FROM Object AS Object_Goods
+                        WHERE Object_Goods.DescId = zc_Object_Goods()
+                        AND Object_Goods.Id IN (SELECT DISTINCT tmpReceiptGoods.GoodsId FROM tmpReceiptGoods)
+                       )
 
        -- Результат
        SELECT Object_Goods.Id                     AS Id
@@ -172,6 +196,8 @@ BEGIN
             , SUBSTRING (ObjectString_Comment.ValueData, 1, 128) :: TVarChar AS Comment
 
             , ObjectDate_PartnerDate.ValueData  :: TDateTime AS PartnerDate
+
+            , CASE WHEN tmpReceiptGoods.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isReceiptGoods
             , COALESCE (ObjectBoolean_Arc.ValueData, FALSE) :: Boolean AS isArc
 
             , ObjectFloat_Feet.ValueData    ::TFloat AS Feet
@@ -260,7 +286,7 @@ BEGIN
 
             , Object_Goods.isErased              AS isErased
 
-       FROM Object AS Object_Goods
+       FROM tmpGoods AS Object_Goods
             LEFT JOIN tmpMovementPL ON tmpMovementPL.GoodsId = Object_Goods.Id
             LEFT JOIN (SELECT tmpMovementPL_count.GoodsId, MAX (tmpMovementPL_count.myCount) AS myCount
                        FROM (SELECT tmpMovementPL_all.Id, tmpMovementPL_all.GoodsId, COUNT(*) AS myCount
@@ -432,17 +458,9 @@ BEGIN
              LEFT JOIN tmpGoods_err_1 ON tmpGoods_err_1.Article   ILIKE ObjectString_Article.ValueData
              LEFT JOIN tmpGoods_err_2 ON tmpGoods_err_2.GoodsCode = Object_Goods.ObjectCode
              LEFT JOIN tmpGoods_err_3 ON tmpGoods_err_3.EAN       = ObjectString_EAN.ValueData
-             
 
-
-       WHERE Object_Goods.DescId = zc_Object_Goods()
-       --AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE)
-       -- and Object_Goods.Id = 236863
-       ORDER BY Object_Goods.Id DESC
-     --LIMIT CASE WHEN vbUserId IN (5, 236658) THEN 100 ELSE 300000 END
-     --LIMIT CASE WHEN vbUserId IN (236658) THEN 100 ELSE 350000 END
-       LIMIT CASE WHEN vbUserId = 5 AND 1=0 THEN 50000 WHEN inIsLimit_100 = TRUE THEN 100 ELSE 350000 END
-      ;
+             LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = Object_Goods.Id
+            ;
 
 END;
 $BODY$
