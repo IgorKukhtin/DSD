@@ -591,6 +591,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPLZForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPLZEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPLZEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPLZ_CityForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPLZ_CityForm');
 end;
 
 procedure TLoadFormTest.LoadPositionFormTest;

@@ -41,12 +41,13 @@ type
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
     edComment: TcxTextEdit;
-    edCity: TcxTextEdit;
     edAreaCode: TcxTextEdit;
     cxLabel5: TcxLabel;
     edCountry: TcxButtonEdit;
     GuidesCountry: TdsdGuides;
     cxLabel6: TcxLabel;
+    GuidesCity: TdsdGuides;
+    edCity: TcxButtonEdit;
   private
     { Private declarations }
   public
