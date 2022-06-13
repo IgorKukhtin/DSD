@@ -116,6 +116,11 @@ type
     CurrencyName_child: TcxGridDBColumn;
     actOpenReportJuridicalCollationForm: TdsdOpenForm;
     bbReportJuridicalCollation: TdxBarButton;
+    spInsertUpdate_ByGrid_1_2: TdsdStoredProc;
+    macInsertUpdate_ByGrid_koeff: TMultiAction;
+    macInsertUpdate_ByGrid_list_Koeff: TMultiAction;
+    actInsertUpdate_ByGrid_Koeff: TdsdExecStoredProc;
+    bbInsertUpdate_ByGrid_koeff: TdxBarButton;
   private
     { Private declarations }
   public
