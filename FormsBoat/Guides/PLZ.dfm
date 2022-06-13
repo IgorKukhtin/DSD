@@ -40,7 +40,6 @@ object PLZForm: TPLZForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -52,8 +51,16 @@ object PLZForm: TPLZForm
         HeaderAlignmentVert = vaCenter
         Width = 63
       end
+      object City: TcxGridDBColumn
+        Caption = #1043#1086#1088#1086#1076
+        DataBinding.FieldName = 'City'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 116
+      end
       object Name: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = 'PLZ'
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -68,17 +75,10 @@ object PLZForm: TPLZForm
         Options.Editing = False
         Width = 106
       end
-      object City: TcxGridDBColumn
-        Caption = #1043#1086#1088#1086#1076
-        DataBinding.FieldName = 'City'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 116
-      end
       object AreaCode: TcxGridDBColumn
-        Caption = #1048#1085#1076#1077#1082#1089
+        Caption = #1055#1088#1077#1092#1080#1082#1089' '
         DataBinding.FieldName = 'AreaCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -543,10 +543,12 @@ object PLZForm: TPLZForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 104
     Top = 248

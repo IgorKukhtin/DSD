@@ -2,7 +2,7 @@ object PLZEditForm: TPLZEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1086#1095#1090#1086#1074#1099#1077' '#1072#1076#1088#1077#1089#1072'>'
-  ClientHeight = 330
+  ClientHeight = 299
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -25,11 +25,11 @@ object PLZEditForm: TPLZEditForm
   object cxLabel1: TcxLabel
     Left = 10
     Top = 54
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+    Caption = 'PLZ'
   end
   object cxButton1: TcxButton
     Left = 33
-    Top = 299
+    Top = 257
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object PLZEditForm: TPLZEditForm
   end
   object cxButton2: TcxButton
     Left = 177
-    Top = 299
+    Top = 257
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -63,40 +63,42 @@ object PLZEditForm: TPLZEditForm
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 144
+    Top = 103
     Caption = #1043#1086#1088#1086#1076
   end
   object cxLabel4: TcxLabel
     Left = 10
-    Top = 236
+    Top = 197
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
     Left = 10
-    Top = 254
+    Top = 215
     TabOrder = 2
     Width = 273
   end
   object edCity: TcxTextEdit
     Left = 10
-    Top = 162
+    Top = 121
     TabOrder = 1
     Width = 273
   end
   object edAreaCode: TcxTextEdit
-    Left = 10
-    Top = 208
+    Left = 120
+    Top = 259
     TabOrder = 3
-    Width = 273
+    Visible = False
+    Width = 51
   end
   object cxLabel5: TcxLabel
-    Left = 10
-    Top = 193
-    Caption = #1048#1085#1076#1077#1082#1089
+    Left = 120
+    Top = 242
+    Caption = #1055#1088#1077#1092#1080#1082#1089' '
+    Visible = False
   end
   object edCountry: TcxButtonEdit
     Left = 10
-    Top = 116
+    Top = 170
     Properties.Buttons = <
       item
         Default = True
@@ -108,7 +110,7 @@ object PLZEditForm: TPLZEditForm
   end
   object cxLabel6: TcxLabel
     Left = 10
-    Top = 100
+    Top = 151
     Caption = #1057#1090#1088#1072#1085#1072
   end
   object ActionList: TActionList
