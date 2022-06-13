@@ -120,10 +120,15 @@ BEGIN
           , MovementLinkObject_DocumentTaxKind.ObjectId  AS DocumentTaxKindId
           -- налоговая
           , MovementLinkMovement_Child.MovementChildId AS MovementId_tax
-          , Movement_Tax.OperDate AS OperDate_Tax
+
+          , CASE WHEN MovementDate_DateRegistered_tax.ValueData > Movement_TaxCorrective.OperDate AND MovementString_InvNumberRegistered_tax.ValueData <> ''
+                      THEN MovementDate_DateRegistered_tax.ValueData
+                 ELSE Movement_Tax.OperDate
+            END AS OperDate_Tax
 
             INTO vbMovementId_TaxCorrective, vbStatusId_TaxCorrective, vbOperDate_begin, vbIsLongUKTZED, vbDocumentTaxKindId_tax, vbDocumentTaxKindId
                , vbMovementId_tax, vbOperDate_Tax
+
      FROM (SELECT CASE WHEN Movement.DescId = zc_Movement_TaxCorrective()
                             THEN inMovementId
                        ELSE MovementLinkMovement_Master.MovementChildId
@@ -163,7 +168,7 @@ BEGIN
                                  ON MovementDate_DateRegistered_tax.MovementId = MovementLinkMovement_Child.MovementChildId
                                 AND MovementDate_DateRegistered_tax.DescId = zc_MovementDate_DateRegistered()
           LEFT JOIN MovementString AS MovementString_InvNumberRegistered_tax
-                                   ON MovementString_InvNumberRegistered_tax.MovementId = tmpMovement.MovementId_TaxCorrective
+                                   ON MovementString_InvNumberRegistered_tax.MovementId = MovementLinkMovement_Child.MovementChildId
                                   AND MovementString_InvNumberRegistered_tax.DescId = zc_MovementString_InvNumberRegistered()
      ;
 /* пока убрал, т.к. проверка сумм происходит в непроведенном состоянии, надо или добавить параметр - "когда ругаться" или сделать еще одну печать-проверку
