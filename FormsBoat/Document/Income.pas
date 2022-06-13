@@ -247,6 +247,8 @@ type
     mactAdd_limit: TMultiAction;
     actRefreshMI: TdsdDataSetRefresh;
     bbAdd_limit: TdxBarButton;
+    macInsertAction: TMultiAction;
+    macUpdateAction: TMultiAction;
   private
   public
   end;
