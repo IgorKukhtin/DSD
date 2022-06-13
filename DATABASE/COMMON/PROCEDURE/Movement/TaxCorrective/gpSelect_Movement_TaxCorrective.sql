@@ -314,16 +314,6 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS ObjectHistory_JuridicalDetails_View
-                                                                ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_From.Id
-                                                               AND Movement.OperDate >= ObjectHistory_JuridicalDetails_View.StartDate AND Movement.OperDate < ObjectHistory_JuridicalDetails_View.EndDate
-
-            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectHistory_JuridicalDetails_View.JuridicalId
-                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-            LEFT JOIN ObjectString AS ObjectString_Retail_OKPO
-                                   ON ObjectString_Retail_OKPO.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
-                                  AND ObjectString_Retail_OKPO.DescId = zc_ObjectString_Retail_OKPO()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
@@ -418,6 +408,18 @@ BEGIN
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
                                            ON MovementLinkMovement_ChildEDI.MovementId = Movement.Id 
                                           AND MovementLinkMovement_ChildEDI.DescId = zc_MovementLinkMovement_ChildEDI()
+
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS ObjectHistory_JuridicalDetails_View
+                                                                ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_From.Id
+                                                               AND COALESCE (Movement_DocumentChild.OperDate, Movement.OperDate) >= ObjectHistory_JuridicalDetails_View.StartDate
+                                                               AND COALESCE (Movement_DocumentChild.OperDate, Movement.OperDate) <  ObjectHistory_JuridicalDetails_View.EndDate
+
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectHistory_JuridicalDetails_View.JuridicalId
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+            LEFT JOIN ObjectString AS ObjectString_Retail_OKPO
+                                   ON ObjectString_Retail_OKPO.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                                  AND ObjectString_Retail_OKPO.DescId = zc_ObjectString_Retail_OKPO()
            ;
 
 END;
