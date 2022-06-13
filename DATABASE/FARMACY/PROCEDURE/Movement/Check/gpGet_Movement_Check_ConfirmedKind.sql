@@ -3,13 +3,14 @@
 DROP FUNCTION IF EXISTS gpGet_Movement_Check_ConfirmedKind (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Check_ConfirmedKind(
-   OUT outMovementId_list  TVarChar,  -- 
-   OUT outIsVIP            Boolean,  -- 
-   OUT outIsSite           Boolean,  -- 
-   OUT outIsTabletki       Boolean,  -- 
-   OUT outIsLiki24         Boolean,  -- 
-   OUT outIsOrderTabletki  Boolean,  -- 
-    IN inSession           TVarChar   -- сессия пользователя
+   OUT outMovementId_list    TVarChar,  -- 
+   OUT outIsVIP              Boolean,  -- 
+   OUT outIsSite             Boolean,  -- 
+   OUT outIsTabletki         Boolean,  -- 
+   OUT outIsLiki24           Boolean,  -- 
+   OUT outIsOrderTabletki    Boolean,  -- 
+   OUT outExpressVIPConfirm  Integer,  -- 
+    IN inSession             TVarChar   -- сессия пользователя
 )
 RETURNS RECORD
 AS
@@ -147,7 +148,8 @@ BEGIN
          , SUM(CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() THEN 1 ELSE 0 END) > 0 
          , SUM(CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Liki24() THEN 1 ELSE 0 END) > 0 
          , COALESCE (max(tmpMovTabletki.Id), 0) > 0
-    INTO outMovementId_list, outIsVIP, outIsSite, outIsTabletki, outIsLiki24, outIsOrderTabletki
+         , COUNT(*)::Integer
+    INTO outMovementId_list, outIsVIP, outIsSite, outIsTabletki, outIsLiki24, outIsOrderTabletki, outExpressVIPConfirm
     FROM tmpMov AS Movement
          LEFT JOIN tmpErr ON tmpErr.MovementId = Movement.Id
 
@@ -173,6 +175,7 @@ BEGIN
                                  WHERE ObjectBoolean_ShowMessageSite.ObjectId = vbUnitId
                                    AND ObjectBoolean_ShowMessageSite.DescId = zc_ObjectBoolean_Unit_ShowMessageSite()
                                    AND ObjectBoolean_ShowMessageSite.ValueData = True);
+    outExpressVIPConfirm := COALESCE (outExpressVIPConfirm, 0);
 
 END;
 $BODY$

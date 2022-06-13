@@ -338,14 +338,10 @@ begin
   FRESTRequest.AddParameter('username', FUserName, TRESTRequestParameterKind.pkGETorPOST);
   FRESTRequest.AddParameter('password', FPassword, TRESTRequestParameterKind.pkGETorPOST);
 
-  ShowMessage('BaseURL - ' + FHelsi_Id + '; client_id - ' + FClientId + '; client_secret - ' + FClientSecret + '; username - ' + FUserName + '; password - ' + FPassword);
-
   try
     FRESTRequest.Execute;
   except
   end;
-
-  ShowMessage('StatusText - ' + FRESTResponse.StatusText + '; Content - ' + FRESTResponse.Content);
 
   if FRESTResponse.StatusCode = 200 then
   begin
@@ -442,7 +438,7 @@ function THelsiApi.GetReceiptId : boolean;
 var
   jValue, j : TJSONValue;
   JSONA: TJSONArray;
-  I : integer;
+  I : integer; s : string;
 begin
   Result := False;
   FDispense_sign_ID := '';
@@ -466,6 +462,9 @@ begin
     FRESTRequest.Execute;
   except
   end;
+
+  if FRESTResponse.JSONValue <> Nil then InputBox('11', s, FHelsi_be + #13#10 + FRESTResponse.JSONValue.ToString)
+  else InputBox('11', s, FHelsi_be + #13#10 + IntToStr(FRESTResponse.StatusCode) + ' - ' + FRESTResponse.StatusText + #13#10 + FRESTResponse.Content);
 
   if (FRESTResponse.StatusCode = 200) and (FRESTResponse.ContentType = 'application/json') then
   begin
@@ -1089,8 +1088,8 @@ function InitHelsiApi : boolean;
       ds : TClientDataSet;
       S : string;
        // временно
-//      fileStream: TFileStream;
-//      base64Stream: TStringStream;
+      fileStream: TFileStream;
+      base64Stream: TStringStream;
 begin
 
   Result := False;
@@ -1157,18 +1156,18 @@ begin
         HelsiApi.FKeyPassword := DecodeString(ds.FieldByName('KeyPassword').AsString);
 
         // временно
-//        if HelsiApi.FUserName = 'roza.y+gonchar@helsi.me' then
-//        begin
-//          fileStream := TFileStream.Create('Копия.ZS2', fmOpenRead);
-//          base64Stream := TStringStream.Create;
-//          try
-//            EncodeStream(fileStream, base64Stream);
-//            HelsiApi.FBase64Key := base64Stream.DataString;
-//          finally
-//            FreeAndNil(fileStream);
-//            FreeAndNil(base64Stream);
-//          end;
-//        end;
+        if HelsiApi.FUserName = 'roza.y+gonchar@helsi.me' then
+        begin
+          fileStream := TFileStream.Create('Копия.ZS2', fmOpenRead);
+          base64Stream := TStringStream.Create;
+          try
+            EncodeStream(fileStream, base64Stream);
+            HelsiApi.FBase64Key := base64Stream.DataString;
+          finally
+            FreeAndNil(fileStream);
+            FreeAndNil(base64Stream);
+          end;
+        end;
 
       finally
         ds.free;

@@ -789,7 +789,7 @@ begin
                              on E: EVariantTypeCastError do
                                 vParamValue := Date;
                              on E: Exception do
-                                raise E;
+                                raise Exception.Create(E.Message);
                            end;
                         if bJSON then
                           AddParamToJSON(cParamName, vParamValue, TImportSettingsItems(Items[i]).Param.DataType)
@@ -805,7 +805,7 @@ begin
                            on E: EVariantTypeCastError do
                               vParamValue := 0;
                            on E: Exception do
-                              raise E;
+                              raise Exception.Create(E.Message);
                          end;
                         if bJSON then
                           AddParamToJSON(cParamName, vParamValue, TImportSettingsItems(Items[i]).Param.DataType)

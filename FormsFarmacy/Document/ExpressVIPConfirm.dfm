@@ -265,8 +265,10 @@ inherited ExpressVIPConfirmForm: TExpressVIPConfirmForm
             OptionsCustomize.ColumnHiding = True
             OptionsCustomize.ColumnsQuickCustomization = True
             OptionsCustomize.DataRowSizing = True
+            OptionsData.CancelOnExit = False
             OptionsData.Deleting = False
             OptionsData.DeletingConfirmation = False
+            OptionsData.Editing = False
             OptionsData.Inserting = False
             OptionsView.Footer = True
             OptionsView.GroupByBox = False
@@ -285,13 +287,6 @@ inherited ExpressVIPConfirmForm: TExpressVIPConfirmForm
             object GoodsName: TcxGridDBColumn
               Caption = #1053#1072#1079#1074#1072#1085#1080#1077
               DataBinding.FieldName = 'GoodsName'
-              PropertiesClassName = 'TcxButtonEditProperties'
-              Properties.Buttons = <
-                item
-                  Default = True
-                  Kind = bkEllipsis
-                end>
-              Properties.ReadOnly = True
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Width = 150

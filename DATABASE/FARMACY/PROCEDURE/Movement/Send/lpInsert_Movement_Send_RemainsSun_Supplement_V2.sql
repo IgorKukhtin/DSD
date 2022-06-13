@@ -748,6 +748,11 @@ BEGIN
                   -- отбросили !!исключения!!
                   LEFT JOIN _tmpUnit_SunExclusion_Supplement_v2 ON _tmpUnit_SunExclusion_Supplement_v2.UnitId_from = vbUnitId_from
                                                                AND _tmpUnit_SunExclusion_Supplement_v2.UnitId_to   = _tmpRemains_all_Supplement_v2.UnitId
+                  
+                  -- отключена Получать товар который отдавался
+                  LEFT JOIN _tmpGoods_Sun_exception_Supplement_V2 AS _tmpGoods_Sun_exception_Supplement_V2
+                                                                  ON _tmpGoods_Sun_exception_Supplement_V2.UnitId  = _tmpRemains_all_Supplement_v2.UnitId
+                                                                 AND _tmpGoods_Sun_exception_Supplement_V2.GoodsId = _tmpRemains_all_Supplement_v2.GoodsId
 
              WHERE CASE WHEN COALESCE (vbKoeffSUN, 0) = 0 
                         THEN FLOOR((COALESCE(_tmpRemains_all_Supplement_v2.MCS, 0)  + COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0)) - _tmpRemains_all_Supplement_v2.AmountRemains - _tmpRemains_all_Supplement_v2.AmountUse)
@@ -755,6 +760,7 @@ BEGIN
                AND _tmpRemains_all_Supplement_v2.UnitId <> vbUnitId_from
                AND _tmpRemains_all_Supplement_v2.GoodsId = vbGoodsId
                AND _tmpUnit_SunExclusion_Supplement_v2.UnitId_to IS NULL
+               AND  COALESCE(_tmpGoods_Sun_exception_Supplement_V2.Amount, 0) = 0
              ORDER BY FLOOR((COALESCE(_tmpRemains_all_Supplement_v2.MCS, 0)  + COALESCE(_tmpRemains_all_Supplement_V2.Layout, 0)) - _tmpRemains_all_Supplement_v2.AmountRemains - _tmpRemains_all_Supplement_v2.AmountUse) DESC
                     , _tmpRemains_all_Supplement_v2.UnitId
                     , _tmpRemains_all_Supplement_v2.GoodsId;
@@ -968,4 +974,4 @@ $BODY$
 
 -- 
 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3);

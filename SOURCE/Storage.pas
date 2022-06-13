@@ -700,12 +700,21 @@ begin
                         case E.LastError of
                           10051: raise EStorageException.Create('Отсутсвует подключение к сети. Обратитесь к системному администратору. context TStorage. ' + E.Message);
                           10054: raise EStorageException.Create('Соединение сброшено сервером. Попробуйте действие еще раз. context TStorage. ' + E.Message);
-                          10060: raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
-                          11001: raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
-                          10065: raise EStorageException.Create('Нет соединения с интернетом. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                          10060: if gc_ProgramName = 'FarmacyCash.exe' then
+                                   raise EStorageException.Create('Нет доступа к серверу. Вы работаете в OfflIne режиме. context TStorage. ' + E.Message)
+                                 else raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                          11001: if gc_ProgramName = 'FarmacyCash.exe' then
+                                   raise EStorageException.Create('Нет доступа к серверу. Вы работаете в OfflIne режиме. context TStorage. ' + E.Message)
+                                 else raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                          11004: if gc_ProgramName = 'FarmacyCash.exe' then
+                                   raise EStorageException.Create('Нет доступа к серверу. Вы работаете в OfflIne режиме. context TStorage. ' + E.Message)
+                                 else raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                          10065: if gc_ProgramName = 'FarmacyCash.exe' then
+                                   raise EStorageException.Create('Нет соединения с интернетом. Вы работаете в OfflIne режиме. context TStorage. ' + E.Message)
+                                 else raise EStorageException.Create('Нет соединения с интернетом. Обратитесь к системному администратору. context TStorage. ' + E.Message);
                           10061: raise EStorageException.Create('Потеряно соединения с WEB сервером. Необходимо перезайти в программу после восстановления соединения.');
                         else
-                          raise E;
+                          raise EStorageException.Create(E.Message);
                         end;
                      ctReport :
                         case E.LastError of
@@ -713,10 +722,11 @@ begin
                           10054: raise EStorageException.Create('Соединение сброшено сервером отчетов. Попробуйте действие еще раз. context TStorage. ' + E.Message);
                           10060: raise EStorageException.Create('Нет доступа к серверу отчетов. Обратитесь к системному администратору. context TStorage. ' + E.Message);
                           11001: raise EStorageException.Create('Нет доступа к серверу отчетов. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                          11004: raise EStorageException.Create('Нет доступа к серверу отчетов. Обратитесь к системному администратору. context TStorage. ' + E.Message);
                           10065: raise EStorageException.Create('Нет соединения с интернетом. Обратитесь к системному администратору. context TStorage. ' + E.Message);
                           10061: raise EStorageException.Create('Потеряно соединения с WEB сервером отчетов. Необходимо перезайти в программу после восстановления соединения.');
                         else
-                          raise E;
+                          raise EStorageException.Create(E.Message);
                         end;
                      ctReportLocal :
                         case E.LastError of
@@ -724,10 +734,11 @@ begin
                           10054: raise EStorageException.Create('Соединение сброшено локальным сервером отчетов. Попробуйте действие еще раз. context TStorage. ' + E.Message);
                           10060: raise EStorageException.Create('Нет доступа к локальному серверу отчетов. Обратитесь к системному администратору. context TStorage. ' + E.Message);
                           11001: raise EStorageException.Create('Нет доступа к локальному серверу отчетов. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                          11004: raise EStorageException.Create('Нет доступа к локальному серверу отчетов. Обратитесь к системному администратору. context TStorage. ' + E.Message);
                           10065: raise EStorageException.Create('Нет соединения с интернетом. Обратитесь к системному администратору. context TStorage. ' + E.Message);
                           10061: raise EStorageException.Create('Потеряно соединения с локальному WEB серверу отчетов. Необходимо перезайти в программу после восстановления соединения.');
                         else
-                          raise E;
+                          raise EStorageException.Create(E.Message);
                         end;
                   end;
                 End;

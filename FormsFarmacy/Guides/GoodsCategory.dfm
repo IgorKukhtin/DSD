@@ -500,6 +500,19 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
         end>
       isShowModal = False
     end
+    object actGoodsCategoryAddGoods: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1074' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1091#1102' '#1084#1072#1090#1088#1080#1094#1091
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1074' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1091#1102' '#1084#1072#1090#1088#1080#1094#1091
+      ImageIndex = 54
+      FormName = 'TGoodsCategoryAddGoodsForm'
+      FormNameParam.Value = 'TGoodsCategoryAddGoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -624,11 +637,15 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
         end
         item
           Visible = True
+          ItemName = 'bbGoodsCategoryCopy'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbGoodsCategoryCopy'
+          ItemName = 'dxBarButton1'
         end
         item
           BeginGroup = True
@@ -674,6 +691,10 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
     end
     object bbGoodsCategoryCopy: TdxBarButton
       Action = actGoodsCategoryCopy
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actGoodsCategoryAddGoods
       Category = 0
     end
   end

@@ -712,6 +712,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsCategoryCopyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsCategoryCopyForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsCategoryAddGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsCategoryAddGoodsForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
