@@ -2,14 +2,16 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid (TDateTime, TFloat, TFloat, Integer, Integer, Integer, Integer ,Integer ,Integer ,Integer ,Integer ,Integer ,Integer ,TVarChar,TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid (TDateTime, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer ,Integer ,Integer ,Integer ,Integer ,Integer ,Integer ,TVarChar,TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid (TDateTime, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer ,Integer ,Integer ,Integer ,Integer , Integer, Integer ,Integer ,TVarChar,TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid (TDateTime, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer ,Integer ,Integer ,Integer ,Integer , Integer, Integer ,Integer ,TVarChar,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid (TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer ,Integer ,Integer ,Integer ,Integer , Integer, Integer ,Integer ,TVarChar,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService_ByReport_ByGrid (
    OUT outId                    Integer ,
     IN inOperDate               TDateTime ,  
     IN inSum_Bonus              TFloat ,
     IN inSumIn                  TFloat ,
-    IN inValue                  TFloat ,
+    IN inValue                  TFloat , 
+    IN inKoeff                  TFloat ,
     IN inAmountCurrency         TFloat ,
     IN inContractId_find        Integer ,
     IN inContractId_master      Integer ,
@@ -47,7 +49,7 @@ BEGIN
                                                       , inOperDate          := inOperDate
                                                       , inAmountIn          := COALESCE (inSumIn,0)              :: TFloat
                                                       , inAmountOut         := COALESCE (inSum_Bonus,0)          :: TFloat
-                                                      , inBonusValue        := CAST (inValue AS NUMERIC (16, 2)) :: TFloat
+                                                      , inBonusValue        := CAST (CASE WHEN COALESCE (inKoeff,0) = 0 THEN inValue ELSE inValue / inKoeff END AS NUMERIC (16, 2)) :: TFloat
                                                       , inAmountCurrency    := COALESCE (inAmountCurrency,0)     :: TFloat
                                                       , inComment           := inComment                         :: TVarChar
                                                       , inContractId        := inContractId_find
