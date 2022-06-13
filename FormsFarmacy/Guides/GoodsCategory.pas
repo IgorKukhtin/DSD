@@ -57,6 +57,8 @@ type
     bbSelect_GoodsCategoryCopy: TdxBarButton;
     actGoodsCategoryCopy: TdsdOpenForm;
     bbGoodsCategoryCopy: TdxBarButton;
+    actGoodsCategoryAddGoods: TdsdOpenForm;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

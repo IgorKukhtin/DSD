@@ -2261,10 +2261,16 @@ BEGIN
                  LEFT JOIN ObjectBoolean AS OB_SUN_NotSoldIn
                                          ON OB_SUN_NotSoldIn.ObjectId  = _tmpRemains_calc.UnitId
                                         AND OB_SUN_NotSoldIn.DescId    = zc_ObjectBoolean_Unit_SUN_NotSoldIn()
+                                        
+                 -- отключена Получать товар который отдавался
+                 LEFT JOIN _tmpGoods_Sun_exception AS _tmpGoods_Sun_exception
+                                                   ON _tmpGoods_Sun_exception.UnitId  = _tmpRemains_calc.UnitId
+                                                  AND _tmpGoods_Sun_exception.GoodsId = _tmpRemains_calc.GoodsId
 
             WHERE _tmpRemains_calc.GoodsId = vbGoodsId
               AND _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) > 0
               AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
+              AND COALESCE(_tmpGoods_Sun_exception.Amount, 0) = 0
               -- !!!только в те аптеки, которые удовлетворяют ЛИМИТУ!!!
               --!!! AND _tmpRemains_calc.UnitId IN (SELECT DISTINCT _tmpSumm_limit.UnitId_to FROM _tmpSumm_limit WHERE _tmpSumm_limit.UnitId_from = vbUnitId_from AND _tmpSumm_limit.Summ >= vbSumm_limit)
             ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_calc.UnitId
@@ -2540,6 +2546,12 @@ BEGIN
                  LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_NotSoldIn
                                          ON ObjectBoolean_SUN_NotSoldIn.ObjectId = _tmpRemains_calc.UnitId
                                         AND ObjectBoolean_SUN_NotSoldIn.DescId = zc_ObjectBoolean_Unit_SUN_NotSoldIn()
+
+                 -- отключена Получать товар который отдавался
+                 LEFT JOIN _tmpGoods_Sun_exception AS _tmpGoods_Sun_exception
+                                                   ON _tmpGoods_Sun_exception.UnitId  = _tmpRemains_calc.UnitId
+                                                  AND _tmpGoods_Sun_exception.GoodsId = _tmpRemains_calc.GoodsId
+
             WHERE _tmpRemains_calc.GoodsId = vbGoodsId
               AND _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) > 0
               -- !!!НЕ распределяем
@@ -2554,6 +2566,7 @@ BEGIN
               -- !!!
               AND _tmpUnit_SunExclusion_MCS.UnitId_to IS NULL
               AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
+              AND COALESCE(_tmpGoods_Sun_exception.Amount, 0) = 0
 
             ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_calc.UnitId
            ;

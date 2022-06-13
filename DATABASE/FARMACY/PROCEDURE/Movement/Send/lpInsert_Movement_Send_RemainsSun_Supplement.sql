@@ -1147,6 +1147,11 @@ BEGIN
                   LEFT JOIN _tmpUnit_SunExclusion_Supplement ON _tmpUnit_SunExclusion_Supplement.UnitId_from = vbUnitId_from
                                                             AND _tmpUnit_SunExclusion_Supplement.UnitId_to   = _tmpRemains_all_Supplement.UnitId
 
+                  -- отключена Получать товар который отдавался
+                  LEFT JOIN _tmpGoods_Sun_exception_Supplement AS _tmpGoods_Sun_exception_Supplement
+                                                               ON _tmpGoods_Sun_exception_Supplement.UnitId  = _tmpRemains_all_Supplement.UnitId
+                                                              AND _tmpGoods_Sun_exception_Supplement.GoodsId = _tmpRemains_all_Supplement.GoodsId
+
              WHERE FLOOR(CASE WHEN COALESCE (GiveAway, 0) < 0 THEN - COALESCE (GiveAway, 0) ELSE 
                               CASE WHEN COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0) = 0 THEN
                               CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) <= 0
@@ -1170,6 +1175,7 @@ BEGIN
                AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
                AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) >= 0
                AND _tmpUnit_SunExclusion_Supplement.UnitId_to IS NULL
+               AND  COALESCE(_tmpGoods_Sun_exception_Supplement.Amount, 0) = 0
              ORDER BY CASE WHEN COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) = 0 THEN 1000000 
                            ELSE (CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0
                                  THEN - _tmpRemains_all_Supplement.AmountRemains
@@ -1321,4 +1327,4 @@ $BODY$
 
 -- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('16.11.2021')::TDateTime ,  inSession := '3');
 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '2 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= 0, inUserId:= 3);

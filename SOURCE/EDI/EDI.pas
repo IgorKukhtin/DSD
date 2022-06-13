@@ -3682,7 +3682,7 @@ begin
     on E: Exception do begin
         if (err_msg <> '')
         then raise Exception.Create (err_msg)
-        else raise E;
+        else raise Exception.Create(E.Message);
     end;
   end;
 end;

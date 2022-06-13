@@ -6441,6 +6441,18 @@ inherited MainCashForm2: TMainCashForm2
       Caption = #1057#1087#1080#1089#1086#1082' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1082#1083#1102#1095#1077#1074#1086#1084#1091' '#1089#1083#1086#1074#1091' '
       OnExecute = actListGoodsKeywordExecute
     end
+    object actExpressVIPConfirm: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1069#1082#1089#1087#1088#1077#1089#1089' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1095#1077#1082#1086#1074
+      Hint = #1052#1077#1090#1086#1076#1080#1095#1082#1072
+      FormName = 'TExpressVIPConfirmForm'
+      FormNameParam.Value = 'TExpressVIPConfirmForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = True
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -7907,6 +7919,11 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'outIsOrderTabletki'
         Value = Null
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outExpressVIPConfirm'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     PackSize = 1

@@ -1208,7 +1208,8 @@ uses
   MCRequestShowPUSH in '..\..\FormsFarmacy\Guides\MCRequestShowPUSH.pas' {MCRequestShowPUSHForm: TParentForm},
   MCRequestInfoPUSH in '..\..\FormsFarmacy\Guides\MCRequestInfoPUSH.pas' {MCRequestInfoPUSHForm: TParentForm},
   GoodsCategoryCopy in '..\..\FormsFarmacy\Guides\GoodsCategoryCopy.pas' {GoodsCategoryCopyForm: TParentForm},
-  ExpressVIPConfirm in '..\..\FormsFarmacy\Document\ExpressVIPConfirm.pas' {ExpressVIPConfirmForm: TParentForm};
+  ExpressVIPConfirm in '..\..\FormsFarmacy\Document\ExpressVIPConfirm.pas' {ExpressVIPConfirmForm: TParentForm},
+  GoodsCategoryAddGoods in '..\..\FormsFarmacy\Guides\GoodsCategoryAddGoods.pas' {GoodsCategoryAddGoodsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
