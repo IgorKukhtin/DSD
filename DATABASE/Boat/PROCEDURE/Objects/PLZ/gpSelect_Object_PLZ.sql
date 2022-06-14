@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PLZ(
     IN inSession     TVarChar            -- сессия пользователя
    
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameFull TVarChar
              , CountryId Integer, CountryName TVarChar
              , City TVarChar, AreaCode TVarChar
              , Comment TVarChar
@@ -25,7 +25,9 @@ BEGIN
    RETURN QUERY
       SELECT Object_PLZ.Id                   AS Id
            , Object_PLZ.ObjectCode           AS Code
-           , Object_PLZ.ValueData            AS Name
+           , Object_PLZ.ValueData            AS Name         
+           --PLZ + Город + Страна
+           , TRIM (COALESCE (Object_PLZ.ValueData,'')||' '||ObjectString_City.ValueData||' '||Object_Country.ValueData) ::TVarChar AS NameFull
            , Object_Country.Id               AS CountryId
            , Object_Country.ValueData        AS CountryName
            , ObjectString_City.ValueData     AS City

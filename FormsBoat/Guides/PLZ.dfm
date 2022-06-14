@@ -51,14 +51,6 @@ object PLZForm: TPLZForm
         HeaderAlignmentVert = vaCenter
         Width = 63
       end
-      object City: TcxGridDBColumn
-        Caption = #1043#1086#1088#1086#1076
-        DataBinding.FieldName = 'City'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 116
-      end
       object Name: TcxGridDBColumn
         Caption = 'PLZ'
         DataBinding.FieldName = 'Name'
@@ -66,6 +58,14 @@ object PLZForm: TPLZForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Width = 136
+      end
+      object City: TcxGridDBColumn
+        Caption = #1043#1086#1088#1086#1076
+        DataBinding.FieldName = 'City'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 116
       end
       object CountryName: TcxGridDBColumn
         Caption = #1057#1090#1088#1072#1085#1072
@@ -406,7 +406,7 @@ object PLZForm: TPLZForm
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Name'
+          ComponentItem = 'NameFull'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

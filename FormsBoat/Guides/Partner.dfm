@@ -193,6 +193,15 @@ object PartnerForm: TPartnerForm
         Options.Editing = False
         Width = 80
       end
+      object PLZName_full: TcxGridDBColumn
+        Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1072#1076#1088#1077#1089' ('#1080#1085#1092'.)'
+        DataBinding.FieldName = 'PLZName_full'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 116
+      end
       object DatePriceList: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1088#1072#1081#1089#1072
         DataBinding.FieldName = 'DatePriceList'

@@ -34,7 +34,7 @@ object PLZEditForm: TPLZEditForm
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
-    TabOrder = 4
+    TabOrder = 3
   end
   object cxButton2: TcxButton
     Left = 177
@@ -44,7 +44,7 @@ object PLZEditForm: TPLZEditForm
     Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 5
+    TabOrder = 4
   end
   object cxLabel2: TcxLabel
     Left = 10
@@ -58,7 +58,7 @@ object PLZEditForm: TPLZEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
-    TabOrder = 6
+    TabOrder = 5
     Width = 273
   end
   object cxLabel3: TcxLabel
@@ -74,19 +74,13 @@ object PLZEditForm: TPLZEditForm
   object edComment: TcxTextEdit
     Left = 10
     Top = 215
-    TabOrder = 2
-    Width = 273
-  end
-  object edCity: TcxTextEdit
-    Left = 10
-    Top = 121
     TabOrder = 1
     Width = 273
   end
   object edAreaCode: TcxTextEdit
     Left = 120
     Top = 259
-    TabOrder = 3
+    TabOrder = 2
     Visible = False
     Width = 51
   end
@@ -105,7 +99,7 @@ object PLZEditForm: TPLZEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 12
+    TabOrder = 11
     Width = 273
   end
   object cxLabel6: TcxLabel
@@ -113,9 +107,20 @@ object PLZEditForm: TPLZEditForm
     Top = 151
     Caption = #1057#1090#1088#1072#1085#1072
   end
+  object edCity: TcxButtonEdit
+    Left = 10
+    Top = 121
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 13
+    Width = 273
+  end
   object ActionList: TActionList
-    Left = 152
-    Top = 56
+    Left = 240
+    Top = 48
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -174,9 +179,17 @@ object PLZEditForm: TPLZEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inINN'
+        Name = 'inCity'
         Value = Null
         Component = edCity
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAreaCode'
+        Value = Null
+        Component = edAreaCode
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -185,14 +198,6 @@ object PLZEditForm: TPLZEditForm
         Name = 'inComment'
         Value = Null
         Component = edComment
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEMail'
-        Value = Null
-        Component = edAreaCode
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -299,12 +304,12 @@ object PLZEditForm: TPLZEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 160
-    Top = 104
+    Left = 152
+    Top = 136
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 104
-    Top = 104
+    Left = 96
+    Top = 112
   end
   object GuidesCountry: TdsdGuides
     KeyField = 'Id'
@@ -332,7 +337,44 @@ object PLZEditForm: TPLZEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 221
-    Top = 100
+    Left = 69
+    Top = 148
+  end
+  object GuidesCity: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCity
+    FormNameParam.Value = 'TPLZ_CityForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPLZ_CityForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = Null
+        Component = GuidesCountry
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCountry
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'City'
+        Value = ''
+        Component = edCity
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 213
+    Top = 115
   end
 end

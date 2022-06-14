@@ -1125,9 +1125,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GridCost: TcxGrid
         Left = 0
         Top = 0
@@ -1765,7 +1762,7 @@ object IncomeForm: TIncomeForm
       Category = 0
     end
     object bbInsertRecordGoods: TdxBarButton
-      Action = actInsertAction
+      Action = macInsertAction
       Category = 0
     end
     object bbPrintSticker: TdxBarButton
@@ -1823,7 +1820,7 @@ object IncomeForm: TIncomeForm
       Category = 0
     end
     object bbUpdateAction: TdxBarButton
-      Action = actUpdateAction
+      Action = macUpdateAction
       Category = 0
     end
     object bbUpdateActionMovement: TdxBarButton
@@ -2484,6 +2481,20 @@ object IncomeForm: TIncomeForm
       DataSource = MasterDS
       IdFieldName = 'Id'
     end
+    object macInsertAction: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertAction
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1080' '#1094#1077#1085#1099'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1080' '#1094#1077#1085#1099'>'
+      ImageIndex = 0
+    end
     object actOpenFormInvoice: TdsdOpenForm
       Category = 'OpenForm'
       TabSheet = cxTabSheetCost
@@ -2513,6 +2524,20 @@ object IncomeForm: TIncomeForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object macUpdateAction: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateAction
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1080' '#1094#1077#1085#1099'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1080' '#1094#1077#1085#1099'>'
+      ImageIndex = 1
     end
     object actUpdateAction: TdsdInsertUpdateAction
       Category = 'DSDLib'

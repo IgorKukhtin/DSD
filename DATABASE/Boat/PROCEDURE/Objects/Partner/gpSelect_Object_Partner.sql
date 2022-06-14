@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TaxNumber TVarChar
              , Comment TVarChar
              , BankId Integer, BankName TVarChar
-             , PLZId Integer, PLZName TVarChar
+             , PLZId Integer, PLZName TVarChar, PLZName_full TVarChar            
              , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
@@ -59,6 +59,7 @@ BEGIN
            , Object_Bank.ValueData           AS BankName
            , Object_PLZ.Id                   AS PLZId
            , Object_PLZ.ValueData            AS PLZName
+           , TRIM (COALESCE (Object_PLZ.ValueData,'')||' '||ObjectString_City.ValueData||' '||Object_Country.ValueData) ::TVarChar AS PLZName_full
 
            , Object_TaxKind.Id               AS TaxKindId
            , Object_TaxKind.ValueData        AS TaxKindName
@@ -139,6 +140,13 @@ BEGIN
                                ON ObjectLink_PLZ.ObjectId = Object_Partner.Id
                               AND ObjectLink_PLZ.DescId = zc_ObjectLink_Partner_PLZ()
           LEFT JOIN Object AS Object_PLZ ON Object_PLZ.Id = ObjectLink_PLZ.ChildObjectId
+          LEFT JOIN ObjectString AS ObjectString_City
+                                 ON ObjectString_City.ObjectId = Object_PLZ.Id
+                                AND ObjectString_City.DescId = zc_ObjectString_PLZ_City()
+          LEFT JOIN ObjectLink AS ObjectLink_Country
+                               ON ObjectLink_Country.ObjectId = Object_PLZ.Id
+                              AND ObjectLink_Country.DescId = zc_ObjectLink_PLZ_Country()
+          LEFT JOIN Object AS Object_Country ON Object_Country.Id = ObjectLink_Country.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Bank
                                ON ObjectLink_Bank.ObjectId = Object_Partner.Id
