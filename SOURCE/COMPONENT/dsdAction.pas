@@ -1514,6 +1514,100 @@ type
     property InfoAfterExecute;
   end;
 
+  TdsdMyIPAction = class(TdsdCustomAction)
+  private
+
+    FIP: TdsdParam;
+    FContinent: TdsdParam;
+    FContinent_Code: TdsdParam;
+    FCountry: TdsdParam;
+    FCountry_Code: TdsdParam;
+    FRegion: TdsdParam;
+    FRegion_Code: TdsdParam;
+    FCity: TdsdParam;
+    FLatitude: TdsdParam;
+    FLongitude: TdsdParam;
+    FPstal: TdsdParam;
+    FCalling_Code: TdsdParam;
+    FCapital: TdsdParam;
+    FBorders: TdsdParam;
+    FConnection: TdsdParam;
+
+    FIdHTTP: TIdHTTP;
+
+  protected
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property IP: TdsdParam read FIP write FIP;
+    property Continent: TdsdParam read FContinent write FContinent;
+    property Continent_Code: TdsdParam read FContinent_Code write FContinent_Code;
+    property Country: TdsdParam read FCountry write FCountry;
+    property Country_Code: TdsdParam read FCountry_Code write FCountry_Code;
+    property Region: TdsdParam read FRegion write FRegion;
+    property Region_Code : TdsdParam read FRegion_Code write FRegion_Code;
+    property City: TdsdParam read FCity write FCity;
+    property Latitude : TdsdParam read FLatitude write FLatitude;
+    property Longitude: TdsdParam read FLongitude write FLongitude;
+    property Pstal: TdsdParam read FPstal write FPstal;
+    property Calling_Code : TdsdParam read FCalling_Code write FCalling_Code;
+    property Capital : TdsdParam read FCapital write FCapital;
+    property Borders: TdsdParam read FBorders write FBorders;
+    property Connection: TdsdParam read FConnection write FConnection;
+
+    property Caption;
+    property Hint;
+    property ImageIndex;
+    property QuestionBeforeExecute;
+    property ShortCut;
+    property SecondaryShortCuts;
+    property InfoAfterExecute;
+  end;
+
+  TdsdVATNumberValidation = class(TdsdCustomAction)
+  private
+
+    FAccess_Key: TdsdParam;
+    FVat_Number: TdsdParam;
+
+    FValid: TdsdParam;
+
+    FCountry_Code: TdsdParam;
+    FCompany_Name: TdsdParam;
+    FCompany_Address: TdsdParam;
+
+    FIdHTTP: TIdHTTP;
+
+  protected
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    // API Access Key - для доступа к сервису
+    property Access_Key: TdsdParam read FAccess_Key write FAccess_Key;
+    // vat_number - клиента
+    property Vat_Number: TdsdParam read FVat_Number write FVat_Number;
+    // Результат успешности получения
+    property Valid: TdsdParam read FValid write FValid;
+    // Код страны
+    property Country_Code: TdsdParam read FCountry_Code write FCountry_Code;
+    // Название
+    property Company_Name: TdsdParam read FCompany_Name write FCompany_Name;
+    // Адрес
+    property Company_Address: TdsdParam read FCompany_Address write FCompany_Address;
+
+    property Caption;
+    property Hint;
+    property ImageIndex;
+    property QuestionBeforeExecute;
+    property ShortCut;
+    property SecondaryShortCuts;
+    property InfoAfterExecute;
+  end;
+
 procedure Register;
 
 implementation
@@ -1582,6 +1676,8 @@ begin
   RegisterActions('DSDLib', [TdsdSetEnabledAction], TdsdSetEnabledAction);
   RegisterActions('DSDLib', [TdsdRunAction], TdsdRunAction);
   RegisterActions('DSDLib', [TdsdForeignData], TdsdRunAction);
+  RegisterActions('DSDLib', [TdsdMyIPAction], TdsdMyIPAction);
+  RegisterActions('DSDLib', [TdsdVATNumberValidation], TdsdVATNumberValidation);
 
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
@@ -7253,6 +7349,256 @@ begin
     FZConnection.Disconnect;
   end;
 end;
+
+  {TdsdMyIPAction}
+
+constructor TdsdMyIPAction.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  FIdHTTP := TIdHTTP.Create;
+
+  FIP := TdsdParam.Create(nil);
+  FIP.DataType := ftString;
+  FIP.Value := '';
+
+  FContinent := TdsdParam.Create(nil);
+  FContinent.DataType := ftString;
+  FContinent.Value := '';
+
+  FContinent_Code := TdsdParam.Create(nil);
+  FContinent_Code.DataType := ftString;
+  FContinent_Code.Value := '';
+
+  FCountry := TdsdParam.Create(nil);
+  FCountry.DataType := ftString;
+  FCountry.Value := '';
+
+  FCountry_Code := TdsdParam.Create(nil);
+  FCountry_Code.DataType := ftString;
+  FCountry_Code.Value := '';
+
+  FRegion := TdsdParam.Create(nil);
+  FRegion.DataType := ftString;
+  FRegion.Value := '';
+
+  FRegion_Code := TdsdParam.Create(nil);
+  FRegion_Code.DataType := ftString;
+  FRegion_Code.Value := '';
+
+  FCity := TdsdParam.Create(nil);
+  FCity.DataType := ftString;
+  FCity.Value := '';
+
+  FLatitude := TdsdParam.Create(nil);
+  FLatitude.DataType := ftString;
+  FLatitude.Value := '';
+
+  FLongitude := TdsdParam.Create(nil);
+  FLongitude.DataType := ftString;
+  FLongitude.Value := '';
+
+  FPstal := TdsdParam.Create(nil);
+  FPstal.DataType := ftString;
+  FPstal.Value := '';
+
+  FCalling_Code := TdsdParam.Create(nil);
+  FCalling_Code.DataType := ftString;
+  FCalling_Code.Value := '';
+
+  FCapital := TdsdParam.Create(nil);
+  FCapital.DataType := ftString;
+  FCapital.Value := '';
+
+  FBorders := TdsdParam.Create(nil);
+  FBorders.DataType := ftString;
+  FBorders.Value := '';
+
+  FConnection := TdsdParam.Create(nil);
+  FConnection.DataType := ftString;
+  FConnection.Value := '';
+end;
+
+destructor TdsdMyIPAction.Destroy;
+begin
+  FreeAndNil(FIP);
+  FreeAndNil(FContinent);
+  FreeAndNil(FContinent_Code);
+  FreeAndNil(FCountry);
+  FreeAndNil(FCountry_Code);
+  FreeAndNil(FRegion);
+  FreeAndNil(FRegion_Code);
+  FreeAndNil(FCity);
+  FreeAndNil(FLatitude);
+  FreeAndNil(FLongitude);
+  FreeAndNil(FPstal);
+  FreeAndNil(FCalling_Code);
+  FreeAndNil(FCapital);
+  FreeAndNil(FBorders);
+  FreeAndNil(FConnection);
+
+  FreeAndNil(FIdHTTP);
+  inherited;
+end;
+
+function TdsdMyIPAction.LocalExecute: Boolean;
+var jsonObject: TJSONObject;
+    S : String;
+begin
+  Result := False;
+  FIP.Value := '';
+  FContinent.Value := '';
+  FContinent_Code.Value := '';
+  FCountry.Value := '';
+  FCountry_Code.Value := '';
+  FRegion.Value := '';
+  FRegion_Code.Value := '';
+  FCity.Value := '';
+  FLatitude.Value := '';
+  FLongitude.Value := '';
+  FPstal.Value := '';
+  FCalling_Code.Value := '';
+  FCapital.Value := '';
+  FBorders.Value := '';
+  FConnection.Value := '';
+
+  FIdHTTP.Request.ContentType := 'application/json';
+  FIdHTTP.Request.CustomHeaders.Clear;
+  FIdHTTP.Request.CustomHeaders.FoldLines := False;
+
+  try
+    S := FIdHTTP.Get('http://ipwho.is/');
+
+    if FIdHTTP.ResponseCode = 200 then
+    begin
+      jsonObject := TJSONObject.ParseJSONValue(s) as TJSONObject;
+      try
+        FIP.Value := jsonObject.Get('ip').JsonValue.Value;
+        FContinent.Value := jsonObject.Get('continent').JsonValue.Value;
+        FContinent_Code.Value := jsonObject.Get('continent_code').JsonValue.Value;
+        FCountry.Value := jsonObject.Get('country').JsonValue.Value;
+        FCountry_Code.Value := jsonObject.Get('country_code').JsonValue.Value;
+        FRegion.Value := jsonObject.Get('region').JsonValue.Value;
+        FRegion_Code.Value := jsonObject.Get('region_code').JsonValue.Value;
+        FCity.Value := jsonObject.Get('city').JsonValue.Value;
+        FLatitude.Value := jsonObject.Get('latitude').JsonValue.Value;
+        FLongitude.Value := jsonObject.Get('longitude').JsonValue.Value;
+        FPstal.Value := jsonObject.Get('postal').JsonValue.Value;
+        FCalling_Code.Value := jsonObject.Get('calling_code').JsonValue.Value;
+        FCapital.Value := jsonObject.Get('capital').JsonValue.Value;
+        FBorders.Value := jsonObject.Get('borders').JsonValue.Value;
+        FConnection.Value := TJSONObject(jsonObject.Get('connection').JsonValue).Get('org').JsonValue.Value;
+        Result := True;
+      finally
+        jsonObject.Free;
+      end;
+    end;
+  except  on E: Exception do
+     ShowMessage('Ошибка получения IP: ' + E.Message);
+  end;
+
+end;
+
+  {TdsdVATNumberValidation}
+
+constructor TdsdVATNumberValidation.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  FIdHTTP := TIdHTTP.Create;
+
+  FAccess_Key := TdsdParam.Create(nil);
+  FAccess_Key.DataType := ftString;
+  FAccess_Key.Value := '';
+
+  FVat_Number := TdsdParam.Create(nil);
+  FVat_Number.DataType := ftString;
+  FVat_Number.Value := '';
+
+  FValid := TdsdParam.Create(nil);
+  FValid.DataType := ftBoolean;
+  FValid.Value := False;
+
+  FCountry_Code := TdsdParam.Create(nil);
+  FCountry_Code.DataType := ftString;
+  FCountry_Code.Value := '';
+
+  FCompany_Name := TdsdParam.Create(nil);
+  FCompany_Name.DataType := ftString;
+  FCompany_Name.Value := '';
+
+  FCompany_Address := TdsdParam.Create(nil);
+  FCompany_Address.DataType := ftString;
+  FCompany_Address.Value := '';
+
+end;
+
+destructor TdsdVATNumberValidation.Destroy;
+begin
+  FreeAndNil(FAccess_Key);
+  FreeAndNil(FVat_Number);
+  FreeAndNil(FValid);
+  FreeAndNil(FCountry_Code);
+  FreeAndNil(FCompany_Name);
+  FreeAndNil(FCompany_Address);
+
+  FreeAndNil(FIdHTTP);
+  inherited;
+end;
+
+function TdsdVATNumberValidation.LocalExecute: Boolean;
+var jsonObject: TJSONObject;
+    S : String;
+begin
+  Result := False;
+  FValid.Value := False;
+  FCountry_Code.Value := '';
+  FCompany_Name.Value := '';
+  FCompany_Address.Value := '';
+
+  FIdHTTP.Request.ContentType := 'application/json';
+  FIdHTTP.Request.CustomHeaders.Clear;
+  FIdHTTP.Request.CustomHeaders.FoldLines := False;
+
+  try
+    S := FIdHTTP.Get(TIdURI.URLEncode('http://apilayer.net/api/validate?access_key=' + FAccess_Key.Value +
+                                                                      '&vat_number=' + FVat_Number.Value));
+    if FIdHTTP.ResponseCode = 200 then
+    begin
+      jsonObject := TJSONObject.ParseJSONValue(s) as TJSONObject;
+      try
+
+        if jsonObject.Get('valid') <> Nil then
+        begin
+          FValid.Value := jsonObject.Get('valid').JsonValue.ClassNameIs('TJSONTrue');
+          FCountry_Code.Value := jsonObject.Get('country_code').JsonValue.Value;
+          FCompany_Name.Value := jsonObject.Get('company_name').JsonValue.Value;
+          FCompany_Address.Value := jsonObject.Get('company_address').JsonValue.Value;
+        end else if jsonObject.Get('success') <> Nil then
+        begin
+          ShowMessage('Ошибка получения информации о клиенте: ' + TJSONObject(jsonObject.Get('error').JsonValue).Get('info').JsonValue.Value);
+          Exit;
+        end else
+        begin
+          ShowMessage('Ошибка получения информации о клиенте: ' + S);
+          Exit;
+        end;
+
+        if not Assigned (FValid.Component) then
+        begin
+          Result := FValid.Value;
+          if not FValid.Value then ShowMessage('Клиент с Vat_Number ' + FVat_Number.Value + ' не найден.' );
+        end else Result := True;
+      finally
+        jsonObject.Free;
+      end;
+    end;
+  except  on E: Exception do
+     ShowMessage('Ошибка получения информации о клиенте: ' + E.Message);
+  end;
+
+end;
+
 
 initialization
 
