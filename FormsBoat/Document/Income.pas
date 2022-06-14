@@ -249,6 +249,14 @@ type
     bbAdd_limit: TdxBarButton;
     macInsertAction: TMultiAction;
     macUpdateAction: TMultiAction;
+    cxLabel8: TcxLabel;
+    ceTotalSummMVAT: TcxCurrencyEdit;
+    cxLabel23: TcxLabel;
+    ceSumm2: TcxCurrencyEdit;
+    cxLabel24: TcxLabel;
+    ceSumm3: TcxCurrencyEdit;
+    cxLabel25: TcxLabel;
+    ceTotalSumm: TcxCurrencyEdit;
   private
   public
   end;

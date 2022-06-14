@@ -20,7 +20,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , SummInsur TFloat
              , TotalDiscountTax TFloat
              , TotalSummTaxPVAT TFloat
-             , TotalSummTaxMVAT TFloat
+             , TotalSummTaxMVAT TFloat 
+             , TotalSummMVAT TFloat, Summ2 TFloat, Summ3 TFloat, Summ4 TFloat
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -56,10 +57,18 @@ BEGIN
              , CAST (0 as TFloat)        AS SummPost
              , CAST (0 as TFloat)        AS SummPack
              , CAST (0 as TFloat)        AS SummInsur
-             , CAST (0 as TFloat)        AS TotalDiscountTax
-             , CAST (0 as TFloat)        AS TotalSummTaxMVAT
+             , CAST (0 as TFloat)        AS TotalDiscountTax 
              , CAST (0 as TFloat)        AS TotalSummTaxPVAT
-             
+             , CAST (0 as TFloat)        AS TotalSummTaxMVAT
+              --
+             , CAST (0 as TFloat)        AS TotalSummMVAT
+               -- сумма без НДС, после п.1.
+             , CAST (0 as TFloat)        AS Summ2
+               -- сумма без НДС, после п.2.
+             , CAST (0 as TFloat)        AS Summ3
+               -- сумма без НДС, после п.3.
+             , CAST (0 as TFloat)        AS Summ4
+
              , 0                         AS FromId
              , CAST ('' AS TVarChar)     AS FromName
              , Object_To.Id              AS ToId
@@ -100,6 +109,26 @@ BEGIN
           , MovementFloat_TotalDiscountTax.ValueData  :: TFloat AS TotalDiscountTax
           , MovementFloat_TotalSummTaxPVAT.ValueData  :: TFloat AS TotalSummTaxPVAT
           , MovementFloat_TotalSummTaxMVAT.ValueData  :: TFloat AS TotalSummTaxMVAT
+          --
+          , MovementFloat_TotalSummMVAT.ValueData                     :: TFloat AS TotalSummMVAT
+            -- сумма без НДС, после п.1.
+          , (COALESCE (MovementFloat_TotalSummMVAT.ValueData,0)
+             - COALESCE (MovementFloat_SummTaxMVAT.ValueData,0))      :: TFloat AS Summ2
+            -- сумма без НДС, после п.2.
+          , (COALESCE (MovementFloat_TotalSummMVAT.ValueData,0) 
+             - COALESCE (MovementFloat_SummTaxMVAT.ValueData,0) 
+             + COALESCE (MovementFloat_SummPost.ValueData,0)
+             + COALESCE (MovementFloat_SummPack.ValueData,0)
+             + COALESCE (MovementFloat_SummInsur.ValueData,0))        :: TFloat AS Summ3
+            -- сумма без НДС, после п.3.
+          , (COALESCE (MovementFloat_TotalSummMVAT.ValueData,0) 
+             - COALESCE (MovementFloat_SummTaxMVAT.ValueData,0) 
+             + COALESCE (MovementFloat_SummPost.ValueData,0)
+             + COALESCE (MovementFloat_SummPack.ValueData,0)
+             + COALESCE (MovementFloat_SummInsur.ValueData,0)
+             - COALESCE (MovementFloat_TotalSummTaxMVAT.ValueData,0)) :: TFloat AS Summ4
+
+          --
           , Object_From.Id                            AS FromId
           , Object_From.ValueData                     AS FromName
           , Object_To.Id                              AS ToId      
@@ -144,6 +173,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_DiscountTax
                                     ON MovementFloat_DiscountTax.MovementId = Movement_Income.Id
                                    AND MovementFloat_DiscountTax.DescId = zc_MovementFloat_DiscountTax()
+
+             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+                                     ON MovementFloat_TotalSummMVAT.MovementId = Movement_Income.Id
+                                    AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
 
              LEFT JOIN MovementFloat AS MovementFloat_SummTaxMVAT
                                      ON MovementFloat_SummTaxMVAT.MovementId = Movement_Income.Id
@@ -198,6 +231,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.06.22         *
  08.02.21         *
 */
 
