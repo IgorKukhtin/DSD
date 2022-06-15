@@ -111,6 +111,9 @@ BEGIN
                                THEN zc_Enum_Process_AccessKey_DocumentCherkassi() 
                           WHEN COALESCE (ioId, 0) = 0 AND inToId IN (3080691, 3080696) -- Склад ГП ф.Львов + Склад возвратов ф.Львов
                                THEN zc_Enum_Process_AccessKey_DocumentLviv() 
+                          WHEN /*COALESCE (ioId, 0) = 0 AND*/ inToId IN (301309, 309599) -- Склад ГП ф.Запорожье + Склад возвратов ф.Запорожье
+                               THEN zc_Enum_Process_AccessKey_DocumentZaporozhye() 
+
                           ELSE lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_ReturnIn())
                      END;
 
