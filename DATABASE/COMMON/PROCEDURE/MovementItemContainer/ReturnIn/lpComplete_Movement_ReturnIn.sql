@@ -1458,9 +1458,23 @@ BEGIN
        AND _tmpItem.PartionMovementId = _tmpItem_byInfoMoney.PartionMovementId
      ;
 
+     --
+     IF 1 < (SELECT COUNT(*) FROM (SELECT DISTINCT _tmpItem.ContainerId_Partner FROM _tmpItem) AS tmp)
+     THEN
+         RAISE EXCEPTION 'Ошибка. ContainerId_Partner = <%><%> or <%><%> № док = <%> от <%> <%> Товар = <%>'
+                       , (SELECT MIN (_tmpItem.ContainerId_Partner) FROM _tmpItem)
+                       , (SELECT COUNT(*) FROM _tmpItem WHERE _tmpItem.ContainerId_Partner = (SELECT MIN (_tmpItem.ContainerId_Partner) FROM _tmpItem))
+                       , (SELECT MAX (_tmpItem.ContainerId_Partner) FROM _tmpItem)
+                       , (SELECT COUNT(*) FROM _tmpItem WHERE _tmpItem.ContainerId_Partner = (SELECT MAX (_tmpItem.ContainerId_Partner) FROM _tmpItem))
+                       , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
+                       , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
+                       , inMovementId
+                       , (SELECT MIN (lfGet_Object_ValueData (_tmpItem.GoodsId)) FROM _tmpItem WHERE _tmpItem.ContainerId_Partner = (SELECT MIN (_tmpItem.ContainerId_Partner) FROM _tmpItem))
+                        ;
+     END IF;
 
      -- 3.3. !!!Очень важно - определили здесь vbContainerId_Analyzer для ВСЕХ!!!, если он не один - тогда ошибка
-     vbContainerId_Analyzer:= (SELECT ContainerId_Partner FROM _tmpItem GROUP BY ContainerId_Partner);
+     vbContainerId_Analyzer:= (SELECT DISTINCT _tmpItem.ContainerId_Partner FROM _tmpItem);
      -- определили
      vbContainerId_Analyzer_PartnerTo:= (SELECT ContainerId_Partner FROM _tmpItemPartnerTo GROUP BY ContainerId_Partner);
      -- определили
