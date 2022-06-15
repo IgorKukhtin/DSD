@@ -97,6 +97,7 @@ type
     bbPrint_Account: TdxBarButton;
     CarInfo_Date: TcxGridDBColumn;
     CarInfoName: TcxGridDBColumn;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

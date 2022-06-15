@@ -1463,6 +1463,12 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       Action = mactPrint_Account
       Category = 0
     end
+    object bb: TdxBarButton
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320

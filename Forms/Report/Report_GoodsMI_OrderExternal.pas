@@ -107,6 +107,11 @@ type
     CodeSticker: TcxGridDBColumn;
     actPrint_byRouteGroup: TdsdPrintAction;
     bb: TdxBarButton;
+    mactOpenDocument: TMultiAction;
+    actMovementCheck: TdsdExecStoredProc;
+    actOpenForm: TdsdOpenForm;
+    bbOpenDocument: TdxBarButton;
+    getMovementCheck: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -15,7 +15,8 @@ CREATE OR REPLACE FUNCTION gpReport_OrderExternal(
     IN inIsByDoc            Boolean   ,
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (OperDate               TDateTime
+RETURNS TABLE (MovementId             Integer
+             , OperDate               TDateTime
              , InvNumber              TVarChar
              , InvNumberPartner       TVarChar
              , InvNumber_Master       TVarChar
@@ -420,7 +421,8 @@ BEGIN
 
        -- Результат
        SELECT
-             Movement.OperDate                          AS OperDate
+             tmpMovement.MovementId                     AS MovementId
+           , Movement.OperDate                          AS OperDate
            , Movement.InvNumber                         AS InvNumber
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
 
