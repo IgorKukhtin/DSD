@@ -28,19 +28,42 @@ BEGIN
       AND Object_User.isErased = FALSE
       AND Object_User.DescId = zc_Object_User();
 
-    IF NOT found THEN
-       RAISE EXCEPTION 'Неправильный логин или пароль.';
-    ELSE
-        INSERT INTO LoginProtocol (UserId, OperDate, ProtocolData)
-           SELECT vbUserId, current_timestamp
-                , '<XML>'
-               || '<Field FieldName = "IP" FieldValue = "' || zfStrToXmlStr (inIP) || '"/>'
-               || '<Field FieldName = "Логин" FieldValue = "' || zfStrToXmlStr (inUserLogin) || '"/>'
-               || '<Field FieldName = "Программа" FieldValue = "' || zfStrToXmlStr (inProjectName) || '"/>'
-               || '</XML>'
-                ;
-        
+    IF NOT found 
+    THEN
+    
+      SELECT Object_User.Id, Object_User.Id
+             INTO Session, vbUserId
+        FROM Object AS Object_User
+       WHERE Object_User.ValueData = RTRIM(inUserLogin)
+         AND Object_User.isErased = FALSE
+         AND Object_User.DescId = zc_Object_User();
+
+      IF NOT found 
+      THEN
+        RAISE EXCEPTION 'Неправильный логин или пароль.';
+      ELSE
+        IF NOT EXISTS(SELECT 1 
+                      FROM ObjectLink_UserRole_View  
+                          JOIN ObjectString AS UserPassword
+                                            ON UserPassword.ValueData = RTRIM(inUserPassword) AND RTRIM(inUserPassword) <> ''
+                                           AND UserPassword.DescId = zc_ObjectString_User_Password()
+                                           AND UserPassword.ObjectId = ObjectLink_UserRole_View.UserId
+                      WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin())
+        THEN
+          RAISE EXCEPTION 'Неправильный логин или пароль.';
+        END IF;
+      END IF;
     END IF;
+
+    INSERT INTO LoginProtocol (UserId, OperDate, ProtocolData)
+       SELECT vbUserId, current_timestamp
+            , '<XML>'
+           || '<Field FieldName = "IP" FieldValue = "' || zfStrToXmlStr (inIP) || '"/>'
+           || '<Field FieldName = "Логин" FieldValue = "' || zfStrToXmlStr (inUserLogin) || '"/>'
+           || '<Field FieldName = "Программа" FieldValue = "' || zfStrToXmlStr (inProjectName) || '"/>'
+           || '</XML>'
+            ;
+        
 
 
 END;$BODY$
@@ -55,3 +78,5 @@ END;$BODY$
 -- тест
 -- SELECT * FROM LoginProtocol order by 1 desc
 -- SELECT * FROM gpCheckLogin ('Руденко В.В.', 'rdn132745', '', '')
+
+select * from gpCheckLogin(inUserLogin := 'Михалев Олег' , inUserPassword := 'Админ1234' , inIP := '192.168.92.1' , inProjectName := 'Farmacy' ,  Session := '');

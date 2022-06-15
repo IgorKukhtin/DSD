@@ -229,7 +229,7 @@ WITH -- Товары соц-проект
                                 AND tmpGoodsSP.Ord     = 1 -- № п/п - на всякий случай
             LEFT JOIN  Object AS Object_IntenalSP ON Object_IntenalSP.Id = tmpGoodsSP.IntenalSPId
 
-      WHERE Movement.OperDate >= DATE_TRUNC ('DAY', CURRENT_DATE) - INTERVAL '2 DAY'
+      WHERE Movement.OperDate >= DATE_TRUNC ('DAY', CURRENT_DATE) - INTERVAL '3 DAY'
         AND Movement.OperDate < DATE_TRUNC ('DAY', CURRENT_DATE) + INTERVAL '1 DAY'
         AND Movement.DescId = zc_Movement_Check()
         AND Movement.StatusId = zc_Enum_Status_Complete()

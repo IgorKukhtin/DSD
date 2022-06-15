@@ -750,23 +750,7 @@ BEGIN
         , tmpMovementPUSH.isFormLoad                                         AS isFormLoad
    FROM tmpMovementPUSH
    WHERE tmpMovementPUSH.Message <> '' OR COALESCE(tmpMovementPUSH.FormName, '') <> '' AND tmpMovementPUSH.isFormOpen = True;
-   
-   IF vbUserId = 3
-   THEN
-     INSERT INTO _PUSH (Id, Text, isPoll, FormName, Button, Params, TypeParams, ValueParams, isFormOpen, isFormLoad)
-     SELECT
-          1111111                          AS Id
-        , ''                               AS Message
-        , False                            AS isPoll
-        , 'TCheckHelsiSignPUSHForm'        AS FormName
-        , ''                               AS Button
-        , ''                               AS Params
-        , ''                               AS TypeParams
-        , ''                               AS ValueParams
-        , True                             AS isFormOpen
-        , False                            AS isFormLoad;
-   END IF;
-   
+      
    RETURN QUERY
      SELECT _PUSH.Id                                  AS Id
           , _PUSH.Text                                AS Text
