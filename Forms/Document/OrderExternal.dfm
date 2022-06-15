@@ -11,17 +11,17 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 1434
     Height = 294
     ExplicitTop = 166
-    ExplicitWidth = 1364
+    ExplicitWidth = 1434
     ExplicitHeight = 294
     ClientRectBottom = 294
     ClientRectRight = 1434
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1364
+      ExplicitWidth = 1434
       ExplicitHeight = 270
       inherited cxGrid: TcxGrid
         Width = 1434
         Height = 270
-        ExplicitWidth = 1364
+        ExplicitWidth = 1434
         ExplicitHeight = 270
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -371,7 +371,7 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 1434
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1364
+    ExplicitWidth = 1434
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1935,7 +1935,7 @@ inherited OrderExternalForm: TOrderExternalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CarInfo_Date'
+        Name = 'OperDate_CarInfo'
         Value = Null
         Component = edCarInfo_Date
         DataType = ftDateTime

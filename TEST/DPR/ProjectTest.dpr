@@ -1367,7 +1367,9 @@ uses
   Report_GoodsMI_OrderExternal in '..\..\Forms\Report\Report_GoodsMI_OrderExternal.pas' {Report_GoodsMI_OrderExternalForm: TParentForm},
   ReturnOutJournalChoice in '..\..\Forms\Document\ReturnOutJournalChoice.pas' {ReturnOutJournalChoiceForm: TParentForm},
   CarInfoEdit in '..\..\Forms\Guides\CarInfoEdit.pas' {CarInfoEditForm: TParentForm},
-  CarInfo in '..\..\Forms\Guides\CarInfo.pas' {CarInfoForm: TParentForm};
+  CarInfo in '..\..\Forms\Guides\CarInfo.pas' {CarInfoForm: TParentForm},
+  Report_OrderExternal_Update in '..\..\Forms\Report\Report_OrderExternal_Update.pas' {Report_OrderExternal_UpdateForm: TParentForm},
+  Report_OrderExternal_UpdateDialog in '..\..\Forms\Report\Report_OrderExternal_UpdateDialog.pas' {Report_OrderExternal_UpdateDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
