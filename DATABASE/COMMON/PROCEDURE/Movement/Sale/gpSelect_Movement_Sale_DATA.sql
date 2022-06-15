@@ -59,9 +59,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 AS
 $BODY$
    DECLARE vbIsXleb Boolean;
+   DECLARE vbIsZp Boolean;
 BEGIN
      -- !!!Хлеб!!!
      vbIsXleb:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 131936  AND UserId = inUserId);
+     
+     vbIsZp:= EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_AccessKey_DocumentZaporozhye() AND Object_RoleAccessKey_View.UserId = inUserId);
 
 /*
 if inUserId = 1613484 then
@@ -135,12 +138,17 @@ end if;
                             AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                             AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                          )
+        , tmpMovementLinkObject_From AS (SELECT MovementLinkObject.*
+                                         FROM MovementLinkObject
+                                         WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement_all.Id FROM tmpMovement_all)
+                                           AND MovementLinkObject.DescId = zc_MovementLinkObject_From()
+                                        )
         , tmpMovementLinkObject_To AS (SELECT MovementLinkObject.*
                                        FROM MovementLinkObject
                                        WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement_all.Id FROM tmpMovement_all)
                                      --WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id     FROM tmpMovement)
                                          AND MovementLinkObject.DescId = zc_MovementLinkObject_To()
-                                       )
+                                      )
 
        , tmpJuridicalTo AS (SELECT ObjectLink_Partner_Juridical.ObjectId AS ToId
                                  , Object_JuridicalTo.*
@@ -160,10 +168,14 @@ end if;
              , tmpRoleAccessKey.AccessKeyId
         FROM tmpMovement_all AS Movement
              LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+             LEFT JOIN tmpMovementLinkObject_From ON tmpMovementLinkObject_From.MovementId = Movement.Id
              LEFT JOIN tmpMovementLinkObject_To ON tmpMovementLinkObject_To.MovementId = Movement.Id
              LEFT JOIN tmpJuridicalTo ON tmpJuridicalTo.ToId = tmpMovementLinkObject_To.ObjectId
              LEFT JOIN tmpBranchJuridical ON tmpBranchJuridical.JuridicalId = tmpJuridicalTo.Id
-        WHERE (tmpBranchJuridical.JuridicalId > 0 OR tmpRoleAccessKey.AccessKeyId > 0);
+        WHERE (tmpBranchJuridical.JuridicalId > 0 OR tmpRoleAccessKey.AccessKeyId > 0
+               -- Склад ГП ф.Запорожье
+            OR (vbIsZp = TRUE AND tmpMovementLinkObject_From.ObjectId = 301309)
+              );
 
 -- analyze tmpMovement;
 -- RAISE EXCEPTION '<%>', (select count(*) from tmpMovement);
