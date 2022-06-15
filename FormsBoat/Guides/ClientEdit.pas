@@ -81,6 +81,11 @@ type
     cxLabel21: TcxLabel;
     edPaidKind: TcxButtonEdit;
     GuidesPaidKind: TdsdGuides;
+    actVATNumberValidation: TdsdVATNumberValidation;
+    cxButton3: TcxButton;
+    edName1: TcxTextEdit;
+    edName2: TcxTextEdit;
+    edName3: TcxTextEdit;
   private
     { Private declarations }
   public

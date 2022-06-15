@@ -2,7 +2,7 @@ object ClientEditForm: TClientEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <Kunden>'
-  ClientHeight = 456
+  ClientHeight = 490
   ClientWidth = 587
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@ object ClientEditForm: TClientEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 174
-    Top = 423
+    Left = 168
+    Top = 457
     Width = 75
     Height = 25
     Action = actInsertUpdateGuides
@@ -37,8 +37,8 @@ object ClientEditForm: TClientEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 318
-    Top = 423
+    Left = 310
+    Top = 457
     Width = 75
     Height = 25
     Action = actFormClose
@@ -310,6 +310,33 @@ object ClientEditForm: TClientEditForm
     TabOrder = 43
     Width = 130
   end
+  object cxButton3: TcxButton
+    Left = 397
+    Top = 457
+    Width = 160
+    Height = 25
+    Action = actVATNumberValidation
+    Default = True
+    TabOrder = 44
+  end
+  object edName1: TcxTextEdit
+    Left = 10
+    Top = 416
+    TabOrder = 45
+    Width = 183
+  end
+  object edName2: TcxTextEdit
+    Left = 204
+    Top = 416
+    TabOrder = 46
+    Width = 183
+  end
+  object edName3: TcxTextEdit
+    Left = 397
+    Top = 416
+    TabOrder = 47
+    Width = 171
+  end
   object ActionList: TActionList
     Left = 176
     Top = 48
@@ -340,6 +367,34 @@ object ClientEditForm: TClientEditForm
     object actFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
+    end
+    object actVATNumberValidation: TdsdVATNumberValidation
+      Category = 'DSDLib'
+      MoveParams = <>
+      Access_Key.Value = '4f011b51823843d9c30db83325aea9a3'
+      Access_Key.DataType = ftString
+      Access_Key.MultiSelectSeparator = ','
+      Vat_Number.Value = ''
+      Vat_Number.Component = edTaxNumber
+      Vat_Number.DataType = ftString
+      Vat_Number.ParamType = ptInput
+      Vat_Number.MultiSelectSeparator = ','
+      Valid.Value = False
+      Valid.DataType = ftBoolean
+      Valid.MultiSelectSeparator = ','
+      Country_Code.Value = ''
+      Country_Code.Component = edName3
+      Country_Code.DataType = ftString
+      Country_Code.MultiSelectSeparator = ','
+      Company_Name.Value = ''
+      Company_Name.Component = edName1
+      Company_Name.DataType = ftString
+      Company_Name.MultiSelectSeparator = ','
+      Company_Address.Value = ''
+      Company_Address.Component = edName2
+      Company_Address.DataType = ftString
+      Company_Address.MultiSelectSeparator = ','
+      Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' Tax Number'
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -873,7 +928,7 @@ object ClientEditForm: TClientEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 477
+    Left = 413
     Top = 359
   end
   object GuidesPaidKind: TdsdGuides
